@@ -20,7 +20,8 @@ from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteReceiveProtocol,
                                                 ShowRouteTableLabelSwitchedName,
                                                 ShowRouteProtocolProtocolExtensiveIpaddress,
-                                                ShowRouteReceiveProtocolExtensive)
+                                                ShowRouteReceiveProtocolExtensive,
+                                                ShowRouteReceiveProtocolPeerAddressExtensive)
 
 '''
 Unit test for:
@@ -60267,42 +60268,42 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             show route extensive
 
         inet.0: 13 destinations, 13 routes (13 active, 0 holddown, 0 hidden)
-        100.0.0.1/32 (1 entry, 1 announced)
+        10.55.0.1/32 (1 entry, 1 announced)
         TSI:
-        KRT in-kernel 100.0.0.1/32 -> {indirect(1048574)}
+        KRT in-kernel 10.55.0.1/32 -> {indirect(1048574)}
             *BGP    Preference: 170/-101
                     Next hop type: Indirect, Next hop index: 0
                     Address: 0xbb68bf4
                     Next-hop reference count: 4
-                    Source: 2.2.2.2
+                    Source: 10.16.2.2
                     Next hop type: Router, Next hop index: 595
-                    Next hop: 20.0.0.2 via ge-0/0/0.0, selected
+                    Next hop: 10.145.0.2 via ge-0/0/0.0, selected
                     Session Id: 0x3bf
-                    Protocol next hop: 5.5.5.5
+                    Protocol next hop: 10.100.5.5
                     Indirect next hop: 0xc298604 1048574 INH Session ID: 0x3c1
                     State: <Active Int Ext>
                     Local AS:     2 Peer AS:     2
                     Age: 13         Metric2: 3
                     Validation State: unverified
-                    Task: BGP_2.2.2.2.2
+                    Task: BGP_10.16.2.2.2
                     Announcement bits (2): 0-KRT 5-Resolve tree 1
                     AS path: I  (Originator)
-                    Cluster list:  2.2.2.2 4.4.4.4
-                    Originator ID: 5.5.5.5
+                    Cluster list:  10.16.2.2 10.64.4.4
+                    Originator ID: 10.100.5.5
                     Accepted
                     Localpref: 100
-                    Router ID: 2.2.2.2
+                    Router ID: 10.16.2.2
                     Indirect next hops: 1
-                            Protocol next hop: 5.5.5.5 Metric: 3
+                            Protocol next hop: 10.100.5.5 Metric: 3
                             Indirect next hop: 0xc298604 1048574 INH Session ID: 0x3c1
                             Indirect path forwarding next hops: 1
                                     Next hop type: Router
-                                    Next hop: 20.0.0.2 via ge-0/0/0.0
+                                    Next hop: 10.145.0.2 via ge-0/0/0.0
                                     Session Id: 0x3bf
-                                    5.5.5.5/32 Originating RIB: inet.0
+                                    10.100.5.5/32 Originating RIB: inet.0
                                       Metric: 3     Node path count: 1
                                       Forwarding nexthops: 1
-                                            Nexthop: 20.0.0.2 via ge-0/0/0.0
+                                            Nexthop: 10.145.0.2 via ge-0/0/0.0
                                             Session Id: 3bf
     '''
     }
@@ -60318,7 +60319,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                     "rt": [
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "100.0.0.1/32",
+                            "rt-destination": "10.55.0.1/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -60333,15 +60334,15 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                         "attr-value": "I  (Originator)"
                                     }
                                 },
-                                "cluster-list": "2.2.2.2 4.4.4.4",
-                                "gateway": "2.2.2.2",
+                                "cluster-list": "10.16.2.2 10.64.4.4",
+                                "gateway": "10.16.2.2",
                                 "local-as": "2",
                                 "metric2": "3",
                                 "nh": [
                                     {
                                         "nh-string": "Next hop",
                                         "session": "3bf",
-                                        "to": "20.0.0.2",
+                                        "to": "10.145.0.2",
                                         "via": "ge-0/0/0.0"
                                     }
                                 ],
@@ -60350,14 +60351,14 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 "nh-reference-count": "4",
                                 "nh-type": "Router",
                                 "peer-as": "2",
-                                "peer-id": "2.2.2.2",
+                                "peer-id": "10.16.2.2",
                                 "preference": "170",
                                 "preference2": "101",
                                 "protocol-name": "BGP",
                                 "protocol-nh": [
                                     {
                                         "indirect-nh": "0xc298604 1048574 INH Session ID: 0x3c1",
-                                        "to": "5.5.5.5"
+                                        "to": "10.100.5.5"
                                     },
                                     {
                                         "forwarding-nh-count": "1",
@@ -60367,16 +60368,16 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                             {
                                                 "nh-string": "Next hop",
                                                 "session": "3bf",
-                                                "to": "20.0.0.2",
+                                                "to": "10.145.0.2",
                                                 "via": "ge-0/0/0.0"
                                             }
                                         ],
-                                        "output": "5.5.5.5/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 20.0.0.2 via ge-0/0/0.0\nSession Id: 3bf\n",
-                                        "to": "5.5.5.5"
+                                        "output": "10.100.5.5/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 10.145.0.2 via ge-0/0/0.0\nSession Id: 3bf\n",
+                                        "to": "10.100.5.5"
                                     }
                                 ],
                                 "rt-entry-state": "Active Int Ext",
-                                "task-name": "BGP_2.2.2.2.2",
+                                "task-name": "BGP_10.16.2.2.2",
                                 "validation-state": "unverified"
                             },
                             "rt-entry-count": {
@@ -60384,7 +60385,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 "@junos:format": "1 entry"
                             },
                             "tsi": {
-                                "#text": "KRT in-kernel 100.0.0.1/32 -> {indirect(1048574)}\nLocalpref: 100"
+                                "#text": "KRT in-kernel 10.55.0.1/32 -> {indirect(1048574)}\nLocalpref: 100"
                             }
                         }
                     ],
@@ -60396,21 +60397,21 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
     }
 
     golden_output_7 = {'execute.return_value': '''
-            show route 12.12.12.12/32 extensive 
+            show route 10.66.12.12/32 extensive 
 
         inet.0: 16 destinations, 16 routes (16 active, 0 holddown, 0 hidden)
 
-        12.12.12.12/32 (1 entry, 1 announced)
+        10.66.12.12/32 (1 entry, 1 announced)
 
         TSI:
 
-        KRT in-kernel 12.12.12.12/32 -> {indirect(1048578)}
+        KRT in-kernel 10.66.12.12/32 -> {indirect(1048578)}
 
         Page 0 idx 1, (group ibgp-DUT type Internal) Type 1 val 0x134b0034 (adv_entry)
 
         Advertised metrics:
 
-            Nexthop: 2.2.2.2
+            Nexthop: 10.16.2.2
 
             Localpref: 100
 
@@ -60418,15 +60419,15 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
             Cluster list:  0.0.0.4
 
-            Originator ID: 2.2.2.2
+            Originator ID: 10.16.2.2
 
             Communities:
 
             Cluster ID: 0.0.0.1
 
-        Path 12.12.12.12
+        Path 10.66.12.12
 
-        from 4.4.4.4
+        from 10.64.4.4
 
         Vector len 4.  Val: 1
 
@@ -60438,15 +60439,15 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
                         Next-hop reference count: 3
 
-                        Source: 4.4.4.4
+                        Source: 10.64.4.4
 
                         Next hop type: Router, Next hop index: 614
 
-                        Next hop: 50.0.0.2 via ge-0/0/1.0, selected
+                        Next hop: 10.205.0.2 via ge-0/0/1.0, selected
 
                         Session Id: 0x1304
 
-                        Protocol next hop: 2.2.2.2
+                        Protocol next hop: 10.16.2.2
 
                         Indirect next hop: 0xc296984 1048578 INH Session ID: 0x130c
 
@@ -60458,7 +60459,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
                         Validation State: unverified 
 
-                        Task: BGP_3.4.4.4.4
+                        Task: BGP_10.169.64.4.4
 
                         Announcement bits (3): 0-KRT 5-BGP_RT_Background 6-Resolve tree 1 
 
@@ -60466,17 +60467,17 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
                         Cluster list:  0.0.0.4
 
-                        Originator ID: 2.2.2.2
+                        Originator ID: 10.16.2.2
 
                         Accepted
 
                         Localpref: 100
 
-                        Router ID: 4.4.4.4
+                        Router ID: 10.64.4.4
 
                         Indirect next hops: 1
 
-                                Protocol next hop: 2.2.2.2 Metric: 2
+                                Protocol next hop: 10.16.2.2 Metric: 2
 
                                 Indirect next hop: 0xc296984 1048578 INH Session ID: 0x130c
 
@@ -60484,17 +60485,17 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
 
                                         Next hop type: Router
 
-                                        Next hop: 50.0.0.2 via ge-0/0/1.0
+                                        Next hop: 10.205.0.2 via ge-0/0/1.0
 
                                         Session Id: 0x1304
 
-                        2.2.2.2/32 Originating RIB: inet.0
+                        10.16.2.2/32 Originating RIB: inet.0
 
                         Metric: 2	Node path count: 1
 
                         Forwarding nexthops: 1
 
-                            Nexthop: 50.0.0.2 via ge-0/0/1.0
+                            Nexthop: 10.205.0.2 via ge-0/0/1.0
 
                             Session Id: 1304
     '''
@@ -60511,7 +60512,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                     "rt": [
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "12.12.12.12/32",
+                            "rt-destination": "10.66.12.12/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -60527,14 +60528,14 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     }
                                 },
                                 "cluster-list": "0.0.0.4",
-                                "gateway": "4.4.4.4",
+                                "gateway": "10.64.4.4",
                                 "local-as": "3",
                                 "metric2": "2",
                                 "nh": [
                                     {
                                         "nh-string": "Next hop",
                                         "session": "1304",
-                                        "to": "50.0.0.2",
+                                        "to": "10.205.0.2",
                                         "via": "ge-0/0/1.0"
                                     }
                                 ],
@@ -60543,14 +60544,14 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 "nh-reference-count": "3",
                                 "nh-type": "Router",
                                 "peer-as": "3",
-                                "peer-id": "4.4.4.4",
+                                "peer-id": "10.64.4.4",
                                 "preference": "170",
                                 "preference2": "101",
                                 "protocol-name": "BGP",
                                 "protocol-nh": [
                                     {
                                         "indirect-nh": "0xc296984 1048578 INH Session ID: 0x130c",
-                                        "to": "2.2.2.2"
+                                        "to": "10.16.2.2"
                                     },
                                     {
                                         "forwarding-nh-count": "1",
@@ -60560,16 +60561,16 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                             {
                                                 "nh-string": "Next hop",
                                                 "session": "1304",
-                                                "to": "50.0.0.2",
+                                                "to": "10.205.0.2",
                                                 "via": "ge-0/0/1.0"
                                             }
                                         ],
-                                        "output": "2.2.2.2/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 50.0.0.2 via ge-0/0/1.0\n",
-                                        "to": "2.2.2.2"
+                                        "output": "10.16.2.2/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 10.205.0.2 via ge-0/0/1.0\n",
+                                        "to": "10.16.2.2"
                                     }
                                 ],
                                 "rt-entry-state": "Active Int Ext",
-                                "task-name": "BGP_3.4.4.4.4",
+                                "task-name": "BGP_10.169.64.4.4",
                                 "validation-state": "unverified"
                             },
                             "rt-entry-count": {
@@ -60577,7 +60578,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 "@junos:format": "1 entry"
                             },
                             "tsi": {
-                                "#text": "KRT in-kernel 12.12.12.12/32 -> {indirect(1048578)}\nPage 0 idx 1, (group ibgp-DUT type Internal) Type 1 val 0x134b0034 (adv_entry)\nAdvertised metrics:\nNexthop: 2.2.2.2\nLocalpref: 100\nAS path: [3] I (Originator)\nCommunities:\nPath 12.12.12.12\nfrom 4.4.4.4\nVector len 4.  Val: 1\nLocalpref: 100"
+                                "#text": "KRT in-kernel 10.66.12.12/32 -> {indirect(1048578)}\nPage 0 idx 1, (group ibgp-DUT type Internal) Type 1 val 0x134b0034 (adv_entry)\nAdvertised metrics:\nNexthop: 10.16.2.2\nLocalpref: 100\nAS path: [3] I (Originator)\nCommunities:\nPath 10.66.12.12\nfrom 10.64.4.4\nVector len 4.  Val: 1\nLocalpref: 100"
                             }
                         }
                     ],
@@ -60636,7 +60637,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
     def test_golden_7(self):
         self.device = Mock(**self.golden_output_7)
         obj = ShowRouteProtocolExtensive(device=self.device)
-        parsed_output = obj.parse(route='12.12.12.12/32')
+        parsed_output = obj.parse(route='10.66.12.12/32')
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
 '''
@@ -61061,38 +61062,38 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
     golden_output_2 = {
         'execute.return_value':
         '''
-        show route receive-protocol bgp 2001:268:ff00::4
+        show route receive-protocol bgp 2001:db8:7fc5:ca45::4
 
         inet.0: 21 destinations, 34 routes (21 active, 0 holddown, 0 hidden)
 
         inet6.0: 24 destinations, 36 routes (24 active, 0 holddown, 0 hidden)
         Prefix                  Nexthop              MED     Lclpref    AS path
-        2001:268:ff00::1/128
-                                2001:268:ff00::4     2       100        I
-        2001:268:ff00::2/128
-                                2001:268:ff00::4     1       100        I
-        2001:268:ff00::3/128
-                                2001:268:ff00::4     1       100        I
-        2001:268:ff00::4/128
-                                2001:268:ff00::4             100        I
-        2001:268:ff00::5/128
-                                2001:268:ff00::4     3       100        I
-        2001:268:ff00:2::/64
-                                2001:268:ff00::4     2       100        I
-        2001:268:ff00:3::/64
-                                2001:268:ff00::4     2       100        I
-        2001:268:ff00:4::/64
-                                2001:268:ff00::4             100        I
-        2001:268:ff00:5::/64
-                                2001:268:ff00::4             100        I
-        2001:268:ff00:6::/64
-                                2001:268:ff00::4     3       100        I
-        2001:268:ff00:100::2/128
-                                2001:268:ff00::2             100        I
-        2001:268:ff00:100::3/128
-                                2001:268:ff00::3             100        I
-        2001:268:ff00:100::4/128
-        *                         2001:268:ff00::4             100        I
+        2001:db8:7fc5:ca45::1/128
+                                2001:db8:7fc5:ca45::4     2       100        I
+        2001:db8:7fc5:ca45::2/128
+                                2001:db8:7fc5:ca45::4     1       100        I
+        2001:db8:7fc5:ca45::3/128
+                                2001:db8:7fc5:ca45::4     1       100        I
+        2001:db8:7fc5:ca45::4/128
+                                2001:db8:7fc5:ca45::4             100        I
+        2001:db8:7fc5:ca45::5/128
+                                2001:db8:7fc5:ca45::4     3       100        I
+        2001:db8:7fc5:d3e9::/64
+                                2001:db8:7fc5:ca45::4     2       100        I
+        2001:db8:7fc5:d8be::/64
+                                2001:db8:7fc5:ca45::4     2       100        I
+        2001:db8:7fc5:dd95::/64
+                                2001:db8:7fc5:ca45::4             100        I
+        2001:db8:7fc5:e26e::/64
+                                2001:db8:7fc5:ca45::4             100        I
+        2001:db8:7fc5:e749::/64
+                                2001:db8:7fc5:ca45::4     3       100        I
+        2001:db8:7fc5:9a4b::2/128
+                                2001:db8:7fc5:ca45::2             100        I
+        2001:db8:7fc5:9a4b::3/128
+                                2001:db8:7fc5:ca45::3             100        I
+        2001:db8:7fc5:9a4b::4/128
+        *                         2001:db8:7fc5:ca45::4             100        I
     '''
     }
 
@@ -61114,152 +61115,152 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
                 "holddown-route-count": "0",
                 "rt": [
                     {
-                        "rt-destination": "2001:268:ff00::1/128",
+                        "rt-destination": "2001:db8:7fc5:ca45::1/128",
                         "rt-entry": {
                             "as-path": "I",
                             "local-preference": "100",
                             "med": "2",
                             "nh": {
-                                "to": "2001:268:ff00::4"
+                                "to": "2001:db8:7fc5:ca45::4"
                             },
                             "protocol-name": "BGP"
                         }
                     },
                     {
-                        "rt-destination": "2001:268:ff00::2/128",
+                        "rt-destination": "2001:db8:7fc5:ca45::2/128",
                         "rt-entry": {
                             "as-path": "I",
                             "local-preference": "100",
                             "med": "1",
                             "nh": {
-                                "to": "2001:268:ff00::4"
+                                "to": "2001:db8:7fc5:ca45::4"
                             },
                             "protocol-name": "BGP"
                         }
                     },
                     {
-                        "rt-destination": "2001:268:ff00::3/128",
+                        "rt-destination": "2001:db8:7fc5:ca45::3/128",
                         "rt-entry": {
                             "as-path": "I",
                             "local-preference": "100",
                             "med": "1",
                             "nh": {
-                                "to": "2001:268:ff00::4"
+                                "to": "2001:db8:7fc5:ca45::4"
                             },
                             "protocol-name": "BGP"
                         }
                     },
                     {
-                        "rt-destination": "2001:268:ff00::4/128",
+                        "rt-destination": "2001:db8:7fc5:ca45::4/128",
                         "rt-entry": {
                             "as-path": "I",
                             "local-preference": "100",
                             "nh": {
-                                "to": "2001:268:ff00::4"
+                                "to": "2001:db8:7fc5:ca45::4"
                             },
                             "protocol-name": "BGP"
                         }
                     },
                     {
-                        "rt-destination": "2001:268:ff00::5/128",
-                        "rt-entry": {
-                            "as-path": "I",
-                            "local-preference": "100",
-                            "med": "3",
-                            "nh": {
-                                "to": "2001:268:ff00::4"
-                            },
-                            "protocol-name": "BGP"
-                        }
-                    },
-                    {
-                        "rt-destination": "2001:268:ff00:2::/64",
-                        "rt-entry": {
-                            "as-path": "I",
-                            "local-preference": "100",
-                            "med": "2",
-                            "nh": {
-                                "to": "2001:268:ff00::4"
-                            },
-                            "protocol-name": "BGP"
-                        }
-                    },
-                    {
-                        "rt-destination": "2001:268:ff00:3::/64",
-                        "rt-entry": {
-                            "as-path": "I",
-                            "local-preference": "100",
-                            "med": "2",
-                            "nh": {
-                                "to": "2001:268:ff00::4"
-                            },
-                            "protocol-name": "BGP"
-                        }
-                    },
-                    {
-                        "rt-destination": "2001:268:ff00:4::/64",
-                        "rt-entry": {
-                            "as-path": "I",
-                            "local-preference": "100",
-                            "nh": {
-                                "to": "2001:268:ff00::4"
-                            },
-                            "protocol-name": "BGP"
-                        }
-                    },
-                    {
-                        "rt-destination": "2001:268:ff00:5::/64",
-                        "rt-entry": {
-                            "as-path": "I",
-                            "local-preference": "100",
-                            "nh": {
-                                "to": "2001:268:ff00::4"
-                            },
-                            "protocol-name": "BGP"
-                        }
-                    },
-                    {
-                        "rt-destination": "2001:268:ff00:6::/64",
+                        "rt-destination": "2001:db8:7fc5:ca45::5/128",
                         "rt-entry": {
                             "as-path": "I",
                             "local-preference": "100",
                             "med": "3",
                             "nh": {
-                                "to": "2001:268:ff00::4"
+                                "to": "2001:db8:7fc5:ca45::4"
                             },
                             "protocol-name": "BGP"
                         }
                     },
                     {
-                        "rt-destination": "2001:268:ff00:100::2/128",
+                        "rt-destination": "2001:db8:7fc5:d3e9::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "2",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:d8be::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "2",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:dd95::/64",
                         "rt-entry": {
                             "as-path": "I",
                             "local-preference": "100",
                             "nh": {
-                                "to": "2001:268:ff00::2"
+                                "to": "2001:db8:7fc5:ca45::4"
                             },
                             "protocol-name": "BGP"
                         }
                     },
                     {
-                        "rt-destination": "2001:268:ff00:100::3/128",
+                        "rt-destination": "2001:db8:7fc5:e26e::/64",
                         "rt-entry": {
                             "as-path": "I",
                             "local-preference": "100",
                             "nh": {
-                                "to": "2001:268:ff00::3"
+                                "to": "2001:db8:7fc5:ca45::4"
                             },
                             "protocol-name": "BGP"
                         }
                     },
                     {
-                        "rt-destination": "2001:268:ff00:100::4/128",
+                        "rt-destination": "2001:db8:7fc5:e749::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "3",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:9a4b::2/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::2"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:9a4b::3/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::3"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:9a4b::4/128",
                         "rt-entry": {
                             "active-tag": "*",
                             "as-path": "I",
                             "local-preference": "100",
                             "nh": {
-                                "to": "2001:268:ff00::4"
+                                "to": "2001:db8:7fc5:ca45::4"
                             },
                             "protocol-name": "BGP"
                         }
@@ -61271,6 +61272,46 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         ]
     }
         
+    }
+
+    golden_output_3 = {'execute.return_value': '''
+        show route receive-protocol bgp 10.64.4.4 192.168.225.0 
+
+
+
+        inet.0: 850018 destinations, 850021 routes (850018 active, 0 holddown, 0 hidden)
+
+        Prefix		  Nexthop	       MED     Lclpref    AS path
+
+        * 192.168.225.0/24           10.64.4.4                      100        200000 4 5 6 I
+        
+    '''}
+
+    golden_parsed_output_3 = {
+        'route-information': {
+            'route-table': [{
+                'active-route-count': '850018', 
+                'destination-count': '850018', 
+                'hidden-route-count': '0', 
+                'holddown-route-count': '0', 
+                'rt': [{
+                    'rt-destination': '192.168.225.0/24', 
+                    'rt-entry': {
+                        'active-tag': '*', 
+                        'as-path': '4 5 6 I', 
+                        'local-preference': 
+                        '200000', 'med': '100', 
+                        'nh': {
+                            'to': '10.64.4.4'
+                            }, 
+                            'protocol-name': 'BGP'
+                            }
+                        }
+                    ], 
+                'table-name': 'inet.0', 
+                'total-route-count': 
+                '850021'}],
+        },
     }
 
     def test_empty(self):
@@ -61288,8 +61329,17 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
     def test_golden2(self):
         self.device = Mock(**self.golden_output_2)
         obj = ShowRouteReceiveProtocol(device=self.device)
-        parsed_output = obj.parse(protocol='bgp', peer='2001:268:ff00::4')
+        parsed_output = obj.parse(protocol='bgp', peer='2001:db8:7fc5:ca45::4')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowRouteReceiveProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp', 
+            peer='10.64.4.4',
+            target='192.168.225.0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)        
 
 
 '''
@@ -61477,35 +61527,35 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
     golden_output_3 = {
         'execute.return_value':
         '''
-    show route advertising-protocol bgp 2001:268:ff00::1
+    show route advertising-protocol bgp 2001:db8:7fc5:ca45::1
 
     inet6.0: 21 destinations, 23 routes (21 active, 0 holddown, 0 hidden)
     Prefix                  Nexthop              MED     Lclpref    AS path
-        2001:268:ff00::1/128
+        2001:db8:7fc5:ca45::1/128
     *                         Self                 2       100        I
-        2001:268:ff00::2/128
+        2001:db8:7fc5:ca45::2/128
     *                         Self                 1       100        I
-        2001:268:ff00::3/128
+        2001:db8:7fc5:ca45::3/128
     *                         Self                 1       100        I
-        2001:268:ff00::4/128
+        2001:db8:7fc5:ca45::4/128
     *                         Self                         100        I
-        2001:268:ff00::5/128
+        2001:db8:7fc5:ca45::5/128
     *                         Self                 3       100        I
-        2001:268:ff00:2::/64
+        2001:db8:7fc5:d3e9::/64
     *                         Self                 2       100        I
-        2001:268:ff00:3::/64
+        2001:db8:7fc5:d8be::/64
     *                         Self                 2       100        I
-        2001:268:ff00:4::/64
+        2001:db8:7fc5:dd95::/64
     *                         Self                         100        I
-        2001:268:ff00:5::/64
+        2001:db8:7fc5:e26e::/64
     *                         Self                         100        I
-        2001:268:ff00:6::/64
+        2001:db8:7fc5:e749::/64
     *                         Self                 3       100        I
-        2001:268:ff00:100::2/128
-    *                         2001:268:ff00::2             100        I
-        2001:268:ff00:100::3/128
-    *                         2001:268:ff00::3             100        I
-        2001:268:ff00:100::4/128
+        2001:db8:7fc5:9a4b::2/128
+    *                         2001:db8:7fc5:ca45::2             100        I
+        2001:db8:7fc5:9a4b::3/128
+    *                         2001:db8:7fc5:ca45::3             100        I
+        2001:db8:7fc5:9a4b::4/128
     *                         Self                         100        I
     '''
     }
@@ -61519,7 +61569,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
             "holddown-route-count": "0",
             "rt": [
                 {
-                    "rt-destination": "2001:268:ff00::1/128",
+                    "rt-destination": "2001:db8:7fc5:ca45::1/128",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
@@ -61533,7 +61583,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00::2/128",
+                    "rt-destination": "2001:db8:7fc5:ca45::2/128",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
@@ -61547,7 +61597,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00::3/128",
+                    "rt-destination": "2001:db8:7fc5:ca45::3/128",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
@@ -61561,7 +61611,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00::4/128",
+                    "rt-destination": "2001:db8:7fc5:ca45::4/128",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
@@ -61574,7 +61624,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00::5/128",
+                    "rt-destination": "2001:db8:7fc5:ca45::5/128",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
@@ -61588,7 +61638,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00:2::/64",
+                    "rt-destination": "2001:db8:7fc5:d3e9::/64",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
@@ -61602,7 +61652,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00:3::/64",
+                    "rt-destination": "2001:db8:7fc5:d8be::/64",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
@@ -61616,7 +61666,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00:4::/64",
+                    "rt-destination": "2001:db8:7fc5:dd95::/64",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
@@ -61629,7 +61679,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00:5::/64",
+                    "rt-destination": "2001:db8:7fc5:e26e::/64",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
@@ -61642,7 +61692,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00:6::/64",
+                    "rt-destination": "2001:db8:7fc5:e749::/64",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
@@ -61656,33 +61706,33 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00:100::2/128",
+                    "rt-destination": "2001:db8:7fc5:9a4b::2/128",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
                         "bgp-metric-flags": "Nexthop Change",
                         "local-preference": "100",
                         "nh": {
-                            "to": "2001:268:ff00::2"
+                            "to": "2001:db8:7fc5:ca45::2"
                         },
                         "protocol-name": "BGP"
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00:100::3/128",
+                    "rt-destination": "2001:db8:7fc5:9a4b::3/128",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
                         "bgp-metric-flags": "Nexthop Change",
                         "local-preference": "100",
                         "nh": {
-                            "to": "2001:268:ff00::3"
+                            "to": "2001:db8:7fc5:ca45::3"
                         },
                         "protocol-name": "BGP"
                     }
                 },
                 {
-                    "rt-destination": "2001:268:ff00:100::4/128",
+                    "rt-destination": "2001:db8:7fc5:9a4b::4/128",
                     "rt-entry": {
                         "active-tag": "*",
                         "as-path": "I",
@@ -61723,7 +61773,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
     def test_golden_3(self):
         self.device = Mock(**self.golden_output_3)
         obj = ShowRouteAdvertisingProtocol(device=self.device)
-        parsed_output = obj.parse(protocol='bgp', neighbor='2001:268:ff00::1')
+        parsed_output = obj.parse(protocol='bgp', neighbor='2001:db8:7fc5:ca45::1')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
@@ -62280,10 +62330,10 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
     }
 
     golden_output_3 = {'execute.return_value':'''
-    show route advertising-protocol bgp 20.0.0.3 3.3.3.3 detail 
+    show route advertising-protocol bgp 10.145.0.3 10.36.3.3 detail 
 
     inet.3: 1 destinations, 1 routes (1 active, 0 holddown, 0 hidden)
-    * 3.3.3.3/32 (1 entry, 1 announced)
+    * 10.36.3.3/32 (1 entry, 1 announced)
     BGP group eBGP_SUT-2 type External
         Route Label: 17
         Nexthop: Self
@@ -62306,7 +62356,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                                                      'nh': {'to': 'Self'},
                                                      'route-label': '17',
                                                      'rt-announced-count': '1',
-                                                     'rt-destination': '3.3.3.3',
+                                                     'rt-destination': '10.36.3.3',
                                                      'rt-entry-count': '1',
                                                      'rt-prefix-length': '32'},
                                         'table-name': 'inet.3',
@@ -62347,8 +62397,8 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
         obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
         parsed_output = obj.parse(
             protocol='bgp',
-            ip_address='20.0.0.3',
-            route="3.3.3.3",
+            ip_address='10.145.0.3',
+            route="10.36.3.3",
         )
         self.assertEqual(parsed_output, self.golden_parsed_output_3)        
 
@@ -62458,7 +62508,7 @@ class TestShowRouteTableLabelSwitchedName(unittest.TestCase):
         + = Active Route, - = Last Active, * = Both
 
         46                 *[RSVP/7/1] 00:10:22, metric 1
-                            >  to 203.181.106.218 via ge-0/0/1.1, label-switched-path test_lsp_01
+                            >  to 192.168.145.218 via ge-0/0/1.1, label-switched-path test_lsp_01
     '''}
 
     golden_parsed_output_1 = {
@@ -62483,7 +62533,7 @@ class TestShowRouteTableLabelSwitchedName(unittest.TestCase):
                 'metric': '1',
                 'nh': [{
                     'selected-next-hop': True,
-                    'to': '203.181.106.218',
+                    'to': '192.168.145.218',
                     'via': 'ge-0/0/1.1',
                     'lsp-name': 'test_lsp_01'
                 }]
@@ -62513,29 +62563,29 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': '''
-            show route protocol bgp extensive 2.2.2.2
+            show route protocol bgp extensive 10.16.2.2
 
             inet.0: 8 destinations, 8 routes (8 active, 0 holddown, 0 hidden)
-            2.2.2.2/32 (1 entry, 1 announced)
+            10.16.2.2/32 (1 entry, 1 announced)
             TSI:
-            KRT in-kernel 2.2.2.2/32 -> {20.0.0.3}
+            KRT in-kernel 10.16.2.2/32 -> {10.145.0.3}
                     *BGP    Preference: 170/-101
                             Next hop type: Router, Next hop index: 604
                             Address: 0xf991014
                             Next-hop reference count: 2
-                            Source: 20.0.0.3
-                            Next hop: 20.0.0.3 via ge-0/0/0.0, selected
+                            Source: 10.145.0.3
+                            Next hop: 10.145.0.3 via ge-0/0/0.0, selected
                             Session Id: 0xe78
                             State: <Active Ext>
                             Local AS:     1 Peer AS: 30000
                             Age: 7:14:16
                             Validation State: unverified
-                            Task: BGP_30000.20.0.0.3
+                            Task: BGP_30000.10.145.0.3
                             Announcement bits (1): 0-KRT
                             AS path: 30000 I
                             Accepted
                             Localpref: 100
-                            Router ID: 2.2.2.2
+                            Router ID: 10.16.2.2
     '''}
 
     golden_parsed_output_1 = {
@@ -62547,7 +62597,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                     "holddown-route-count": "0",
                     "rt": {
                         "rt-announced-count": "1",
-                        "rt-destination": "2.2.2.2",
+                        "rt-destination": "10.16.2.2",
                         "rt-entry": {
                             "active-tag": "*",
                             "age": {
@@ -62563,13 +62613,13 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                                 }
                             },
                             "bgp-rt-flag": "Accepted",
-                            "gateway": "20.0.0.3",
+                            "gateway": "10.145.0.3",
                             "local-as": "1",
                             "local-preference": "100",
                             "nh": {
                                 "nh-string": "Next hop",
                                 "session": "0xe78",
-                                "to": "20.0.0.3",
+                                "to": "10.145.0.3",
                                 "via": "ge-0/0/0.0"
                             },
                             "nh-address": "0xf991014",
@@ -62577,12 +62627,12 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                             "nh-reference-count": "2",
                             "nh-type": "Router",
                             "peer-as": "30000",
-                            "peer-id": "2.2.2.2",
+                            "peer-id": "10.16.2.2",
                             "preference": "170",
                             "preference2": "101",
                             "protocol-name": "BGP",
                             "rt-entry-state": "Active Ext",
-                            "task-name": "BGP_30000.20.0.0.3",
+                            "task-name": "BGP_30000.10.145.0.3",
                             "validation-state": "unverified"
                         },
                         "rt-entry-count": {
@@ -62590,7 +62640,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                         },
                         "rt-prefix-length": "32",
                         "tsi": {
-                            "#text": "KRT in-kernel 2.2.2.2/32 -> {20.0.0.3}"
+                            "#text": "KRT in-kernel 10.16.2.2/32 -> {10.145.0.3}"
                         }
                     },
                     "table-name": "inet.0",
@@ -62604,37 +62654,37 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
 
     golden_output_2= {'execute.return_value':
         '''
-            show route protocol bgp extensive 2.2.2.2
+            show route protocol bgp extensive 10.16.2.2
             
             inet.0: 1250009 destinations, 1250009 routes (1250009 active, 0 holddown, 0 hidden)
-            100.0.0.0/32 (1 entry, 1 announced)
+            10.55.0.0/32 (1 entry, 1 announced)
             TSI:
-            KRT in-kernel 100.0.0.0/32 -> {60.0.0.2}
+            KRT in-kernel 10.55.0.0/32 -> {10.30.0.2}
             Page 0 idx 0, (group eBGP_SUT-2 type External) Type 1 val 0x2b47ac54 (adv_entry)
             Advertised metrics:
                 Nexthop: Self
                 AS path: [1] 2 I
                 Communities:
-            Path 100.0.0.0
-            from 60.0.0.2
+            Path 10.55.0.0
+            from 10.30.0.2
             Vector len 4.  Val: 0
                     *BGP    Preference: 170/-101
                             Next hop type: Router, Next hop index: 605
                             Address: 0x17b226b4
                             Next-hop reference count: 800002
-                            Source: 60.0.0.2
-                            Next hop: 60.0.0.2 via ge-0/0/2.0, selected
+                            Source: 10.30.0.2
+                            Next hop: 10.30.0.2 via ge-0/0/2.0, selected
                             Session Id: 0xf44
                             State: <Active Ext>
                             Local AS:     1 Peer AS:     2
                             Age: 4:32 
                             Validation State: unverified 
-                            Task: BGP_2.60.0.0.2
+                            Task: BGP_10.144.30.0.2
                             Announcement bits (2): 0-KRT 1-BGP_RT_Background 
                             AS path: 2 I 
                             Accepted
                             Localpref: 100
-                            Router ID: 206.26.0.1
+                            Router ID: 192.168.19.1
                 '''
     }
 
@@ -62647,7 +62697,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                 "holddown-route-count": "0",
                 "rt": {
                     "rt-announced-count": "1",
-                    "rt-destination": "100.0.0.0",
+                    "rt-destination": "10.55.0.0",
                     "rt-entry": {
                         "active-tag": "*",
                         "age": {
@@ -62663,13 +62713,13 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                             }
                         },
                         "bgp-rt-flag": "Accepted",
-                        "gateway": "60.0.0.2",
+                        "gateway": "10.30.0.2",
                         "local-as": "1",
                         "local-preference": "100",
                         "nh": {
                             "nh-string": "Next hop",
                             "session": "0xf44",
-                            "to": "60.0.0.2",
+                            "to": "10.30.0.2",
                             "via": "ge-0/0/2.0"
                         },
                         "nh-address": "0x17b226b4",
@@ -62677,12 +62727,12 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                         "nh-reference-count": "800002",
                         "nh-type": "Router",
                         "peer-as": "2",
-                        "peer-id": "206.26.0.1",
+                        "peer-id": "192.168.19.1",
                         "preference": "170",
                         "preference2": "101",
                         "protocol-name": "BGP",
                         "rt-entry-state": "Active Ext",
-                        "task-name": "BGP_2.60.0.0.2",
+                        "task-name": "BGP_10.144.30.0.2",
                         "validation-state": "unverified"
                     },
                     "rt-entry-count": {
@@ -62690,7 +62740,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                     },
                     "rt-prefix-length": "32",
                     "tsi": {
-                        "#text": "KRT in-kernel 100.0.0.0/32 -> {60.0.0.2}"
+                        "#text": "KRT in-kernel 10.55.0.0/32 -> {10.30.0.2}"
                     }
                 },
                 "table-name": "inet.0",
@@ -62704,18 +62754,18 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteProtocolProtocolExtensiveIpaddress(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(protocol="bgp", ipaddress='2.2.2.2')
+            parsed_output = obj.parse(protocol="bgp", ipaddress='10.16.2.2')
 
     def test_golden_1(self):
         self.device = Mock(**self.golden_output_1)
         obj = ShowRouteProtocolProtocolExtensiveIpaddress(device=self.device)
-        parsed_output = obj.parse(protocol="bgp", ipaddress='2.2.2.2')
+        parsed_output = obj.parse(protocol="bgp", ipaddress='10.16.2.2')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         obj = ShowRouteProtocolProtocolExtensiveIpaddress(device=self.device)
-        parsed_output = obj.parse(protocol="bgp", ipaddress='2.2.2.2')
+        parsed_output = obj.parse(protocol="bgp", ipaddress='10.16.2.2')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
@@ -62727,12 +62777,12 @@ class TestShowRouteReceiveProtocolExtensive(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    # show route receive-protocol bgp 4.4.4.4 4.4.4.4 extensive
+    # show route receive-protocol bgp 10.64.4.4 10.64.4.4 extensive
     golden_output = {'execute.return_value':'''
     inet.0: 18 destinations, 22 routes (18 active, 0 holddown, 0 hidden)
-    4.4.4.4/32 (3 entries, 2 announced)
+    10.64.4.4/32 (3 entries, 2 announced)
         Accepted
-        Nexthop: 4.4.4.4
+        Nexthop: 10.64.4.4
         Localpref: 100
         AS path: I
 
@@ -62749,7 +62799,7 @@ class TestShowRouteReceiveProtocolExtensive(unittest.TestCase):
                         "holddown-route-count": "0",
                         "rt": {
                             "rt-announced-count": "2",
-                            "rt-destination": "4.4.4.4",
+                            "rt-destination": "10.64.4.4",
                             "rt-entry": {
                                 "as-path": "AS path: I",
                                 "bgp-path-attributes": {
@@ -62761,7 +62811,7 @@ class TestShowRouteReceiveProtocolExtensive(unittest.TestCase):
                                 "bgp-rt-flag": "Accepted",
                                 "local-preference": "100",
                                 "nh": {
-                                    "to": "4.4.4.4"
+                                    "to": "10.64.4.4"
                                 },
                             },
                             "rt-entry-count": {
@@ -62797,10 +62847,251 @@ class TestShowRouteReceiveProtocolExtensive(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowRouteReceiveProtocolExtensive(device=self.device)
         parsed_output = obj.parse(
-                peer_address='4.4.4.4',
-                target_address='4.4.4.4')
+                peer_address='10.64.4.4',
+                target_address='10.64.4.4')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+# Unit test for 'show route receive-protocol bgp {peer_addrress} extensive'
+class TestShowRouteReceiveProtocolPeerAddressExtensive(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    # show route receive-protocol bgp 10.64.4.4 extensive 
+    golden_output = {'execute.return_value': '''
+        inet.0: 16 destinations, 19 routes (16 active, 0 holddown, 0 hidden)
+
+        10.1.0.0/24 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        10.64.4.4/32 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        10.145.0.0/24 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        * 192.168.220.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        * 192.168.240.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 5 6 I 
+
+
+
+        * 192.168.205.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 7 8 I 
+
+
+
+        * 192.168.115.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 100000 8 I 
+
+
+
+        inet6.0: 18 destinations, 20 routes (18 active, 0 holddown, 0 hidden)
+    
+    '''}
+
+    golden_parsed_output = {'route-information': {'route-table': [{'active-route-count': '16',
+                                        'destination-count': '16',
+                                        'hidden-route-count': '0',
+                                        'holddown-route-count': '0',
+                                        'rt': [{'rt-announced-count': '1',
+                                                'rt-destination': '10.1.0.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '2'},
+                                                'rt-prefix-length': '24'},
+                                               {'rt-announced-count': '1',
+                                                'rt-destination': '10.64.4.4',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '2'},
+                                                'rt-prefix-length': '32'},
+                                               {'rt-announced-count': '1',
+                                                'rt-destination': '10.145.0.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '2'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '192.168.220.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '192.168.240.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        '200000 '
+                                                                        '4 5 6 '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': '200000 '
+                                                                                                                              '4 '
+                                                                                                                              '5 '
+                                                                                                                              '6 '
+                                                                                                                              'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '192.168.205.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        '200000 '
+                                                                        '4 7 8 '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': '200000 '
+                                                                                                                              '4 '
+                                                                                                                              '7 '
+                                                                                                                              '8 '
+                                                                                                                              'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '192.168.115.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        '200000 '
+                                                                        '4 '
+                                                                        '100000 '
+                                                                        '8 I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': '200000 '
+                                                                                                                              '4 '
+                                                                                                                              '100000 '
+                                                                                                                              '8 '
+                                                                                                                              'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'}],
+                                        'table-name': 'inet.0',
+                                        'total-route-count': '19'},
+                                       {'active-route-count': '18',
+                                        'destination-count': '18',
+                                        'hidden-route-count': '0',
+                                        'holddown-route-count': '0',
+                                        'table-name': 'inet6.0',
+                                        'total-route-count': '20'}]}}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteReceiveProtocolPeerAddressExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                peer_address=None)
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteReceiveProtocolPeerAddressExtensive(device=self.device)
+        parsed_output = obj.parse(peer_address='10.64.4.4')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':

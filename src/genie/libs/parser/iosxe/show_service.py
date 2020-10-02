@@ -372,7 +372,7 @@ class ShowServiceInsertionTypeAppqoeServiceNodeGroup(ShowServiceInsertionTypeApp
             m = p0_2.match(line)
             if m:
                 group = m.groupdict()
-                service_node['member_service_node_count'] = group['count']
+                service_node['member_service_node_count'] = int(group['count'])
                 continue
 
 

@@ -29,7 +29,8 @@ from genie.libs.parser.nxos.show_interface import (ShowInterface,
 
 class TestShowInterface(unittest.TestCase):
     device = Device(name='aDevice')
-    
+    maxDiff = None
+
     empty_output = {'execute.return_value': ''}
     
     golden_parsed_output1 = {
@@ -1205,6 +1206,136 @@ class TestShowInterface(unittest.TestCase):
         },
     }
 
+    golden_output_6 = {'execute.return_value': '''
+        show interface
+        Ethernet1/1 is down (SFP validation failed)
+         Dedicated Interface
+
+          Hardware: 1000/10000 Ethernet, address: 8c60.4fff.ea8f (bia 8c60.4fff.ea8f)
+          MTU 1500 bytes,  BW 10000000 Kbit,, BW 10000000 Kbit, DLY 10 usec
+          reliability 255/255, txload 1/255, rxload 1/255
+          Encapsulation ARPA, medium is broadcast
+          Port mode is access
+          auto-duplex, 10 Gb/s, media type is 1G
+          Beacon is turned off
+          Input flow-control is off, output flow-control is off
+          Rate mode is dedicated
+          Switchport monitor is off
+          EtherType is 0x8100
+          Last link flapped never
+          Last clearing of "show interface" counters never
+          0 interface resets
+          30 seconds input rate 0 bits/sec, 0 packets/sec
+          30 seconds output rate 0 bits/sec, 0 packets/sec
+          Load-Interval #2: 5 minute (300 seconds)
+            input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
+          RX
+            0 unicast packets  0 multicast packets  0 broadcast packets
+            0 input packets  0 bytes
+            0 jumbo packets  0 storm suppression bytes
+            0 runts  0 giants  0 CRC  0 no buffer
+            0 input error  0 short frame  0 overrun   0 underrun  0 ignored
+            0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
+            0 input with dribble  0 input discard
+            0 Rx pause
+          TX
+            0 unicast packets  0 multicast packets  0 broadcast packets
+            0 output packets  0 bytes
+            0 jumbo packets
+            0 output error  0 collision  0 deferred  0 late collision
+            0 lost carrier  0 no carrier  0 babble 0 output discard
+            0 Tx pause
+    '''}
+    golden_parsed_output_6 = {
+        'Ethernet1/1': {
+            'bandwidth': 10000000,
+            'beacon': 'off',
+            'counters': {
+                'in_bad_etype_drop': 0,
+                'in_broadcast_pkts': 0,
+                'in_crc_errors': 0,
+                'in_discard': 0,
+                'in_errors': 0,
+                'in_if_down_drop': 0,
+                'in_ignored': 0,
+                'in_mac_pause_frames': 0,
+                'in_multicast_pkts': 0,
+                'in_no_buffer': 0,
+                'in_octets': 0,
+                'in_overrun': 0,
+                'in_oversize_frame': 0,
+                'in_pkts': 0,
+                'in_runts': 0,
+                'in_short_frame': 0,
+                'in_underrun': 0,
+                'in_unicast_pkts': 0,
+                'in_unknown_protos': 0,
+                'in_watchdog': 0,
+                'in_with_dribble': 0,
+                'last_clear': 'never',
+                'out_babble': 0,
+                'out_broadcast_pkts': 0,
+                'out_collision': 0,
+                'out_deferred': 0,
+                'out_discard': 0,
+                'out_errors': 0,
+                'out_jumbo_packets': 0,
+                'out_late_collision': 0,
+                'out_lost_carrier': 0,
+                'out_mac_pause_frames': 0,
+                'out_multicast_pkts': 0,
+                'out_no_carrier': 0,
+                'out_octets': 0,
+                'out_pkts': 0,
+                'out_unicast_pkts': 0,
+                'rate': {
+                    'in_rate': 0,
+                    'in_rate_bps': 0,
+                    'in_rate_pkts': 0,
+                    'in_rate_pps': 0,
+                    'load_interval': 30,
+                    'out_rate': 0,
+                    'out_rate_bps': 0,
+                    'out_rate_pkts': 0,
+                    'out_rate_pps': 0,
+                },
+                'rx': True,
+                'tx': True,
+            },
+            'dedicated_interface': True,
+            'delay': 10,
+            'duplex_mode': 'auto',
+            'enabled': False,
+            'encapsulations': {
+                'encapsulation': 'arpa',
+            },
+            'ethertype': '0x8100',
+            'flow_control': {
+                'receive': False,
+                'send': False,
+            },
+            'interface_reset': 0,
+            'last_link_flapped': 'never',
+            'link_state': 'down',
+            'mac_address': '8c60.4fff.ea8f',
+            'media_type': '1G',
+            'medium': 'broadcast',
+            'mtu': 1500,
+            'oper_status': 'down',
+            'phys_address': '8c60.4fff.ea8f',
+            'port_channel': {
+                'port_channel_member': False,
+            },
+            'port_mode': 'access',
+            'port_speed': '10',
+            'reliability': '255/255',
+            'rxload': '1/255',
+            'switchport_monitor': 'off',
+            'txload': '1/255',
+            'types': '1000/10000 Ethernet',
+        },
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         interface_obj = ShowInterface(device=self.device1)
@@ -1215,43 +1346,43 @@ class TestShowInterface(unittest.TestCase):
         self.device = Mock(**self.golden_output1)
         interface_obj = ShowInterface(device=self.device)
         parsed_output = interface_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output1)
 
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
         interface_obj = ShowInterface(device=self.device)
         parsed_output = interface_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output2)
 
     def test_golden3(self):
         self.device = Mock(**self.golden_output3)
         interface_obj = ShowInterface(device=self.device)
         parsed_output = interface_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output3)
 
     def test_golden_custom(self):
         self.device = Mock(**self.golden_output_custom)
         interface_obj = ShowInterface(device=self.device)
         parsed_output = interface_obj.parse(interface='Ethernet2/1')
-        self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_custom)
 
     def test_golden_4(self):
         self.device = Mock(**self.golden_output_4)
         interface_obj = ShowInterface(device=self.device)
         parsed_output = interface_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
     def test_golden_5(self):
         self.device = Mock(**self.golden_output_5)
         interface_obj = ShowInterface(device=self.device)
         parsed_output = interface_obj.parse()
-        self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
+
+    def test_golden_6(self):
+        self.device = Mock(**self.golden_output_6)
+        interface_obj = ShowInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
 # #############################################################################
 # # Unittest For Show Ip Interface Vrf All
@@ -6175,7 +6306,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
                                    'protocol': 'none',
                                    'reason': 'No operational '
                                              'members',
-                                   'speed': 'auto(I) ',
+                                   'speed': 'auto(I)',
                                    'status': 'down',
                                    'type': 'eth',
                                    'vlan': '1'}}}}
@@ -6381,6 +6512,162 @@ class TestShowInterfaceBrief(unittest.TestCase):
         },
     }
 
+    golden_output4 = {'execute.return_value': '''
+        --------------------------------------------------------------------------------
+
+        Port   VRF          Status IP Address                              Speed    MTU
+
+        --------------------------------------------------------------------------------
+
+        mgmt0  --           up     172.28.249.175                          1000    1500    
+
+        --------------------------------------------------------------------------------
+
+        Ethernet        VLAN    Type Mode   Status  Reason                 Speed     Port
+
+        Interface                                                                    Ch #
+
+        --------------------------------------------------------------------------------
+
+        Eth1/1          --      eth  routed down    XCVR not inserted        auto(D) --
+
+        Eth1/2          --      eth  routed down    XCVR not inserted        auto(D) --
+
+        Eth1/3          --      eth  routed down    XCVR not inserted        auto(D) --
+
+        Eth1/4          --      eth  routed down    XCVR not inserted        auto(D) --
+
+        Eth1/5          --      eth  routed down    XCVR not inserted        auto(D) --
+
+        Eth1/6          --      eth  routed down    XCVR not inserted        auto(D) --
+    
+
+        ------------------------------------------------------------------------------------------
+
+        Port-channel VLAN    Type Mode   Status  Reason                              Speed   Protocol
+
+        Interface                                                                            
+
+        ------------------------------------------------------------------------------------------
+
+        Po10         --      eth  routed up      none                                 a-40G(D)  lacp
+
+        Po10.1       2       eth  routed up      none                                 a-40G(D)    --
+
+        Po10.2       3       eth  routed up      none                                 a-40G(D)    --
+
+        Po10.3       4       eth  routed up      none                                 a-40G(D)    --
+
+    '''}
+
+    golden_parsed_output4 = {
+        'interface': {
+            'ethernet': {
+                'Ethernet1/1': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/2': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/3': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/4': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/5': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Ethernet1/6': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'XCVR not inserted',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+            },
+            'port': {
+                'mgmt0': {
+                    'ip_address': '172.28.249.175',
+                    'mtu': 1500,
+                    'speed': '1000',
+                    'status': 'up',
+                    'vrf': '--',
+                },
+            },
+            'port_channel': {
+                'Port-channel10': {
+                    'mode': 'routed',
+                    'protocol': 'lacp',
+                    'reason': 'none',
+                    'speed': 'a-40G(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '--',
+                },
+                'Port-channel10.1': {
+                    'mode': 'routed',
+                    'protocol': '--',
+                    'reason': 'none',
+                    'speed': 'a-40G(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '2',
+                },
+                'Port-channel10.2': {
+                    'mode': 'routed',
+                    'protocol': '--',
+                    'reason': 'none',
+                    'speed': 'a-40G(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '3',
+                },
+                'Port-channel10.3': {
+                    'mode': 'routed',
+                    'protocol': '--',
+                    'reason': 'none',
+                    'speed': 'a-40G(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '4',
+                },
+            },
+        },
+    }
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfaceBrief(device=self.device)
@@ -6404,6 +6691,12 @@ class TestShowInterfaceBrief(unittest.TestCase):
         intf_obj = ShowInterfaceBrief(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = intf_obj.parse()
+
+    def test_golden4(self):
+        self.device = Mock(**self.golden_output4)
+        intf_obj = ShowInterfaceBrief(device=self.device)
+        parsed_output = intf_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output4)            
 
 
 class TestShowRunInterface(unittest.TestCase):

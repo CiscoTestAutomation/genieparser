@@ -33,7 +33,9 @@ _class = args.class_name
 # This is the list of Classes that currently have no testing. It was found during the process
 # of converting to folder based testing strategy
 CLASS_SKIP = {
-    "asa": {"ShowVpnSessiondbSuper": True},
+    "asa": {
+        "ShowVpnSessiondbSuper": True,
+        },
     "iosxe": {
         "ShowPimNeighbor": True,
         "ShowIpInterfaceBrief": True,
@@ -84,7 +86,10 @@ CLASS_SKIP = {
         "ShowInterfaceSummary": True,
         "ShowAuthenticationSessionsInterface": True,
         "ShowVersion_viptela": True,
+        "ShowOmpPeers_viptela": True,
         "ShowBfdSummary_viptela": True,
+        "ShowOmpTlocPath_viptela": True,
+        "ShowOmpTlocs_viptela": True,
         "ShowSoftwaretab_viptela": True, # PR submitted
         "ShowRebootHistory_viptela": True,
         "ShowOmpSummary_viptela": True,
@@ -198,7 +203,7 @@ class FileBasedTest(aetest.Testcase):
                     #    start = 1
                     # if not start:
                     #    continue
-                    with steps.start(f"{operating_system} -> {name}") as class_step:
+                    with steps.start(f"{operating_system} -> {name}", continue_=True) as class_step:
                         with class_step.start(
                             f"Test Golden -> {operating_system} -> {name}",
                             continue_=True,
@@ -218,6 +223,7 @@ class FileBasedTest(aetest.Testcase):
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
         if len(output_glob) == 0:
             self.failed(f"No files found in appropriate directory for {local_class}")
+
         # Look for any files ending with _output.txt, presume the user defined name from that (based
         # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
         for user_defined in output_glob:
@@ -257,6 +263,7 @@ class FileBasedTest(aetest.Testcase):
             self.failed(
                 f"No files found in appropriate directory for {local_class} empty file"
             )
+
         for user_defined in output_glob:
             user_test = os.path.basename(user_defined[: -len("_output.txt")])
             with steps.start(
@@ -279,6 +286,8 @@ class FileBasedTest(aetest.Testcase):
                     obj.parse(**arguments)
                     self.failed(f"File parsed, when expected not to for {local_class}")
                 except SchemaEmptyParserError:
+                    return True
+                except AttributeError:
                     return True
 
 

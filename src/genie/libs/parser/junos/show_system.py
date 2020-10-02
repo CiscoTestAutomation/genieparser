@@ -5058,7 +5058,7 @@ class ShowSystemConnections(ShowSystemConnectionsSchema):
         # Proto Recv-Q Send-Q  Local Address                                 Foreign Address                               (state)
         p2 = re.compile(r'^Proto +Recv-Q +Send-Q +Local +Address +Foreign +Address +\(state\) *$')
 
-        # tcp4       0      0  1.0.0.192.22                                  1.0.0.1.56714                                 ESTABLISHED
+        # tcp4       0      0  10.1.0.192.22                                  10.1.0.1.56714                                 ESTABLISHED
         p3 = re.compile(r'^(?P<proto>\S+) +(?P<recv_q>\S+) +(?P<send_q>\S+) +'
                         r'(?P<local_address>\S+) +(?P<foreign_address>\S+) +(?P<state>.*)$')
 
@@ -5075,7 +5075,7 @@ class ShowSystemConnections(ShowSystemConnectionsSchema):
             if m:
                 continue
 
-            # tcp4       0      0  1.0.0.192.22                                  1.0.0.1.56714                                 ESTABLISHED
+            # tcp4       0      0  10.1.0.192.22                                  10.1.0.1.56714                                 ESTABLISHED
             m = p3.match(line)
             if m:
                 group = m.groupdict()

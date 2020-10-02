@@ -4358,13 +4358,13 @@ class TestShowOspfNeighborInstanceAll(unittest.TestCase):
 
         Realm: ipv6-unicast
         ID               Interface              State     Pri   Dead
-        2.2.2.2          ge-0/0/0.0             Full      128     32
+        10.16.2.2          ge-0/0/0.0             Full      128     32
           Neighbor-address fe80::250:56ff:fe8d:c305
-        3.3.3.3          ge-0/0/1.0             Full      128     32
+        10.36.3.3          ge-0/0/1.0             Full      128     32
           Neighbor-address fe80::250:56ff:fe8d:fe22
-        2.2.2.2          ge-0/0/2.0             Full      128     35
+        10.16.2.2          ge-0/0/2.0             Full      128     35
           Neighbor-address fe80::250:56ff:fe8d:54f2
-        135.231.0.1      ge-0/0/3.0             Full        0     38
+        172.16.81.1      ge-0/0/3.0             Full        0     38
           Neighbor-address fe80::200:23ff:fed6:9656
         """
     }
@@ -4379,7 +4379,7 @@ class TestShowOspfNeighborInstanceAll(unittest.TestCase):
                       {
                          "interface-name": "ge-0/0/0.0",
                          "ospf-neighbor-state": "Full",
-                         "neighbor-id": "2.2.2.2",
+                         "neighbor-id": "10.16.2.2",
                          "neighbor-priority": "128",
                          "activity-timer": "32",
                          "neighbor-address": "fe80::250:56ff:fe8d:c305"
@@ -4387,7 +4387,7 @@ class TestShowOspfNeighborInstanceAll(unittest.TestCase):
                       {
                          "interface-name": "ge-0/0/1.0",
                          "ospf-neighbor-state": "Full",
-                         "neighbor-id": "3.3.3.3",
+                         "neighbor-id": "10.36.3.3",
                          "neighbor-priority": "128",
                          "activity-timer": "32",
                          "neighbor-address": "fe80::250:56ff:fe8d:fe22"
@@ -4395,7 +4395,7 @@ class TestShowOspfNeighborInstanceAll(unittest.TestCase):
                       {
                          "interface-name": "ge-0/0/2.0",
                          "ospf-neighbor-state": "Full",
-                         "neighbor-id": "2.2.2.2",
+                         "neighbor-id": "10.16.2.2",
                          "neighbor-priority": "128",
                          "activity-timer": "35",
                          "neighbor-address": "fe80::250:56ff:fe8d:54f2"
@@ -4403,7 +4403,7 @@ class TestShowOspfNeighborInstanceAll(unittest.TestCase):
                       {
                          "interface-name": "ge-0/0/3.0",
                          "ospf-neighbor-state": "Full",
-                         "neighbor-id": "135.231.0.1",
+                         "neighbor-id": "172.16.81.1",
                          "neighbor-priority": "0",
                          "activity-timer": "38",
                          "neighbor-address": "fe80::200:23ff:fed6:9656"
