@@ -5884,19 +5884,19 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
 
         return parsed_dict
 
-class RmSoftwareMemoryChassisActiveBacktrace(ShowPlatformSoftwareMemoryBacktrace):
-    """ Parser for rm platform software memory <process> chassis active <R0> alloc backtrace """
+# class RmSoftwareMemoryChassisActiveBacktrace(ShowPlatformSoftwareMemoryBacktrace):
+#     """ Parser for rm platform software memory <process> chassis active <R0> alloc backtrace """
 
-    cli_command = 'rm software memory {process} chassis active {slot} alloc backtrace'
+#     cli_command = 'rm software memory {process} chassis active {slot} alloc backtrace'
 
-    def cli(self, process, slot, output=None):
-        if output is None:
-            out = self.device.execute(
-                self.cli_command.format(process=process, slot=slot))
-        else:
-            out = output
+#     def cli(self, process, slot, output=None):
+#         if output is None:
+#             out = self.device.execute(
+#                 self.cli_command.format(process=process, slot=slot))
+#         else:
+#             out = output
         
-        return super().cli(process=process, slot=slot)
+#         return super().cli(process=process, slot=slot, output=out)
 
 class ShowProcessesMemorySortedSchema(MetaParser):
     schema = {

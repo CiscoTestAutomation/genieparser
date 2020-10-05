@@ -1,3 +1,4 @@
+show platform software memory mdt-pubd RP active brief
   module                  allocated     requested     allocs        frees
   ------------------------------------------------------------------------------
   Summary                 420136        364136        3706          206
