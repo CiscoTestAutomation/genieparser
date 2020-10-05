@@ -1,0 +1,35 @@
+e memory mdt-pubd chassis active R0 alloc type component brief
+  Module                  Allocated     Requested     Allocations   Frees
+  ------------------------------------------------------------------------------
+  Summary                 6573449       6422025       216427        213723
+  avl                     336           168           3             0
+  be                      0             0             2             2
+  binos                   112           56            1             0
+  binos_svcs              1880          1544          6             0
+  bipc                    934624        931040        160           96
+  bmalloc                 187305        177393        658           481
+  btrace                  221103        214047        135           9
+  chasfs                  14123         12835         75            52
+  cyan                    0             0             2             2
+  default                 503864        410400        1672          3
+  fe                      80            24            1             0
+  file_alloc              2112          880           22            0
+  json                    63            7             6             5
+  lib                     0             0             24            24
+  lru_id_mgr              137           81            1             0
+  mdtcommon               144           32            2             0
+  mdtman                  272           160           2             0
+  mdtpub                  1200          416           14            0
+  mgr                     0             0             4             4
+  mqipc                   4388          2876          174           147
+  pcohort                 577           185           12            5
+  prelib                  3158          2654          15            6
+  sec_key_agent           8536          8480          1             0
+  subscribe-changes       280           112           3             0
+  syshw                   37056         37000         1             0
+  systime                 72            16            1             0
+  tdllib                  1132597       1107341       213327        212876
+  tdllib_c                1584          1304          6             1
+  trccfg                  236           12            4             0
+  vista                   3514250       3510274       81            10
+  vs_lock                 3360          2688          12            0

@@ -7303,7 +7303,7 @@ class ShowPlatformSoftwareMemorySwitchActive(ShowPlatformSoftwareMemoryRpActive)
         else:
             out = output
         
-        return super().cli(process=process, output=output)
+        return super().cli(process=process, output=out)
 
 class ShowPlatformSoftwareMemoryChassisActive(ShowPlatformSoftwareMemoryRpActive):
     """ Parser for 
@@ -7321,7 +7321,7 @@ class ShowPlatformSoftwareMemoryChassisActive(ShowPlatformSoftwareMemoryRpActive
         else:
             out = output
         
-        return super().cli(process=process, output=output)
+        return super().cli(process=process, output=out)
 
 class ShowPlatformSoftwareMemoryRpActiveBriefSchema(MetaParser):
     """ Schema for 
@@ -7389,7 +7389,7 @@ class ShowPlatformSoftwareMemorySwitchActiveBrief(ShowPlatformSoftwareMemoryRpAc
         else:
             out = output
         
-        return super().cli(process=process, output=output)
+        return super().cli(process=process, output=out)
 
 class ShowPlatformSoftwareMemoryChassisActiveBrief(ShowPlatformSoftwareMemoryRpActiveBrief):
     """ Parser for 
@@ -7407,7 +7407,7 @@ class ShowPlatformSoftwareMemoryChassisActiveBrief(ShowPlatformSoftwareMemoryRpA
         else:
             out = output
         
-        return super().cli(process=process, output=output)
+        return super().cli(process=process, output=out)
 
 class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteSchema(MetaParser):
     """ Schema for 
@@ -7490,7 +7490,7 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocCallsite(ShowPlatformSoftwareMe
         else:
             out = output
         
-        return super().cli(process=process, output=output)
+        return super().cli(process=process, output=out)
 
 class RmSoftwareMemoryChassisActiveAllocCallsite(ShowPlatformSoftwareMemoryRpActiveAllocCallsite):
     """ Parser for 
@@ -7508,7 +7508,7 @@ class RmSoftwareMemoryChassisActiveAllocCallsite(ShowPlatformSoftwareMemoryRpAct
         else:
             out = output
         
-        return super().cli(process=process, output=output)
+        return super().cli(process=process, output=out)
 
 class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteBriefSchema(MetaParser):
     """ Schema for 
@@ -7684,7 +7684,7 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocType(ShowPlatformSoftwareMemory
         else:
             out = output
         
-        return super().cli(process=process, output=output, alloc_type=alloc_type)
+        return super().cli(process=process, output=out, alloc_type=alloc_type)
 
 class RmSoftwareMemoryChassisActiveAllocType(ShowPlatformSoftwareMemoryRpActiveAllocType):
     """ Parser for 
@@ -7703,7 +7703,7 @@ class RmSoftwareMemoryChassisActiveAllocType(ShowPlatformSoftwareMemoryRpActiveA
         else:
             out = output
         
-        return super().cli(process=process, output=output, alloc_type=alloc_type)
+        return super().cli(process=process, output=out, alloc_type=alloc_type)
 
 class EMemoryChassisActiveAllocType(ShowPlatformSoftwareMemoryRpActiveAllocType):
     """ Parser for 
@@ -7722,7 +7722,7 @@ class EMemoryChassisActiveAllocType(ShowPlatformSoftwareMemoryRpActiveAllocType)
         else:
             out = output
         
-        return super().cli(process=process, output=output, alloc_type=alloc_type)
+        return super().cli(process=process, output=out, alloc_type=alloc_type)
 
 class ShowPlatformSoftwareMemoryRpActiveAllocTypeBriefSchema(MetaParser):
     """ Schema for 
@@ -7793,7 +7793,7 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareM
         else:
             out = output
         
-        return super().cli(process=process, alloc_type=alloc_type, output=output)
+        return super().cli(process=process, alloc_type=alloc_type, output=out)
 
 class RmSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief):
     """ Parser for 
@@ -7812,7 +7812,7 @@ class RmSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpAct
         else:
             out = output
         
-        return super().cli(process=process, alloc_type=alloc_type, output=output)
+        return super().cli(process=process, alloc_type=alloc_type, output=out)
 
 class EMemoryChassisActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief):
     """ Parser for 
@@ -7831,4 +7831,4 @@ class EMemoryChassisActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpActiveAlloc
         else:
             out = output
         
-        return super().cli(process=process, alloc_type=alloc_type, output=output)
+        return super().cli(process=process, alloc_type=alloc_type, output=out)

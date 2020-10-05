@@ -1,0 +1,143 @@
+expected_output = {
+    'module': {
+        'BYTE': {
+            'allocated': 5828126,
+            'allocations': 216119,
+            'frees': 213604,
+            'requested': 5687286,
+        },
+        'BYTE*': {
+            'allocated': 27890,
+            'allocations': 80,
+            'frees': 41,
+            'requested': 25706,
+        },
+        'Summary': {
+            'allocated': 6573444,
+            'allocations': 216538,
+            'frees': 213834,
+            'requested': 6422020,
+        },
+        '_btrace_ctx_global_': {
+            'allocated': 1619,
+            'allocations': 13,
+            'frees': 2,
+            'requested': 1003,
+        },
+        'bipc_channel_': {
+            'allocated': 119112,
+            'allocations': 57,
+            'frees': 50,
+            'requested': 118720,
+        },
+        'bipc_rx_stream_': {
+            'allocated': 401912,
+            'allocations': 57,
+            'frees': 50,
+            'requested': 401520,
+        },
+        'brand_context_s': {
+            'allocated': 0,
+            'allocations': 9,
+            'frees': 9,
+            'requested': 0,
+        },
+        'chasfs_ctx_int_': {
+            'allocated': 12576,
+            'allocations': 6,
+            'frees': 3,
+            'requested': 12408,
+        },
+        'evContext_p': {
+            'allocated': 12640,
+            'allocations': 1,
+            'frees': 0,
+            'requested': 12584,
+        },
+        'file_alloc_handle_s': {
+            'allocated': 880,
+            'allocations': 11,
+            'frees': 0,
+            'requested': 264,
+        },
+        'file_info': {
+            'allocated': 10520,
+            'allocations': 5,
+            'frees': 0,
+            'requested': 10240,
+        },
+        'green_args_s': {
+            'allocated': 0,
+            'allocations': 2,
+            'frees': 2,
+            'requested': 0,
+        },
+        'green_subscribe_toc_tb': {
+            'allocated': 104,
+            'allocations': 1,
+            'frees': 0,
+            'requested': 48,
+        },
+        'hash_table_s': {
+            'allocated': 1352,
+            'allocations': 13,
+            'frees': 0,
+            'requested': 624,
+        },
+        'hashtable': {
+            'allocated': 96,
+            'allocations': 1,
+            'frees': 0,
+            'requested': 40,
+        },
+        'lru_id_mgr_handle_': {
+            'allocated': 137,
+            'allocations': 1,
+            'frees': 0,
+            'requested': 81,
+        },
+        'mqipc_ctl_': {
+            'allocated': 2232,
+            'allocations': 39,
+            'frees': 30,
+            'requested': 1728,
+        },
+        'section_data_s': {
+            'allocated': 0,
+            'allocations': 3,
+            'frees': 3,
+            'requested': 0,
+        },
+        'tdl_epoch_s': {
+            'allocated': 304,
+            'allocations': 2,
+            'frees': 0,
+            'requested': 192,
+        },
+        'tdldb_info_': {
+            'allocated': 2464,
+            'allocations': 11,
+            'frees': 0,
+            'requested': 1848,
+        },
+        'tdldb_plat_data_s*': {
+            'allocated': 1976,
+            'allocations': 13,
+            'frees': 0,
+            'requested': 1248,
+        },
+        'tdlhandle_s': {
+            'allocated': 47280,
+            'allocations': 70,
+            'frees': 40,
+            'requested': 45600,
+        },
+        'vista_context_': {
+            'allocated': 102224,
+            'allocations': 24,
+            'frees': 0,
+            'requested': 100880,
+        },
+    },
+}
+				
