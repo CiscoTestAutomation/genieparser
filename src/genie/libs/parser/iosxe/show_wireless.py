@@ -143,9 +143,9 @@ class ShowWirelessProfilePolicyDetailedSchema(MetaParser):
 class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema):
     """Parser for show wireless profile policy detailed"""
 
-    cli_command = 'show wireless profile policy detailed'
+    cli_command = 'show wireless profile policy detailed {policy_name}'
 
-    def cli(self, output=None):
+    def cli(self, policy_name="",  output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
         else:
