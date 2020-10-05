@@ -5828,7 +5828,6 @@ class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
 
     }
 
-
 class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSchema):
     """ Parser for show platform software memory <process> switch active <R0> alloc backtrace """
 
@@ -5885,6 +5884,19 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
 
         return parsed_dict
 
+class RmSoftwareMemoryChassisActiveBacktrace(ShowPlatformSoftwareMemoryBacktrace):
+    """ Parser for rm platform software memory <process> chassis active <R0> alloc backtrace """
+
+    cli_command = 'rm software memory {process} chassis active {slot} alloc backtrace'
+
+    def cli(self, process, slot, output=None):
+        if output is None:
+            out = self.device.execute(
+                self.cli_command.format(process=process, slot=slot))
+        else:
+            out = output
+        
+        return super().cli(process=process, slot=slot)
 
 class ShowProcessesMemorySortedSchema(MetaParser):
     schema = {
@@ -7293,6 +7305,24 @@ class ShowPlatformSoftwareMemorySwitchActive(ShowPlatformSoftwareMemoryRpActive)
         
         return super().cli(process=process, output=output)
 
+class ShowPlatformSoftwareMemoryChassisActive(ShowPlatformSoftwareMemoryRpActive):
+    """ Parser for 
+        * show platform software memory mdt-pubd chassis active <R0>
+    """
+
+    cli_command = 'show platform software memory {process} chassis active {slot}'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=output)
+
 class ShowPlatformSoftwareMemoryRpActiveBriefSchema(MetaParser):
     """ Schema for 
         * show platform software memory mdt-pubd RP active brief
@@ -7349,6 +7379,24 @@ class ShowPlatformSoftwareMemorySwitchActiveBrief(ShowPlatformSoftwareMemoryRpAc
     """
 
     cli_command = 'show platform software memory {process} switch active {slot} brief'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=output)
+
+class ShowPlatformSoftwareMemoryChassisActiveBrief(ShowPlatformSoftwareMemoryRpActiveBrief):
+    """ Parser for 
+        * show platform software memory mdt-pubd chassis active R0 brief
+    """
+
+    cli_command = 'show platform software memory {process} chassis active {slot} brief'
 
     def cli(self, process, slot, output=None):
 
@@ -7432,6 +7480,24 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocCallsite(ShowPlatformSoftwareMe
     """
 
     cli_command = 'show platform software memory {process} switch active {slot} alloc callsite'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=output)
+
+class RmSoftwareMemoryChassisActiveAllocCallsite(ShowPlatformSoftwareMemoryRpActiveAllocCallsite):
+    """ Parser for 
+        * rm software memory mdt-pubd chassis active <R0> alloc callsite
+    """
+
+    cli_command = 'rm software memory {process} chassis active {slot} alloc callsite'
 
     def cli(self, process, slot, output=None):
 
@@ -7534,6 +7600,7 @@ class ShowPlatformSoftwareMemoryRpActiveAllocTypeSchema(MetaParser):
 class ShowPlatformSoftwareMemoryRpActiveAllocType(ShowPlatformSoftwareMemoryRpActiveAllocTypeSchema):
     """ Parser for 
         * show platform software memory mdt-pubd RP active alloc type component
+        * show platform software memory mdt-pubd RP active alloc type data
     """
 
     cli_command = 'show platform software memory {process} RP active alloc type {alloc_type}'
@@ -7600,6 +7667,63 @@ class ShowPlatformSoftwareMemoryRpActiveAllocType(ShowPlatformSoftwareMemoryRpAc
 
         return ret_dict
 
+class ShowPlatformSoftwareMemorySwitchActiveAllocType(ShowPlatformSoftwareMemoryRpActiveAllocType):
+    """ Parser for 
+        * show platform software memory mdt-pubd switch active <R0> alloc type component
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot} alloc type {alloc_type}'
+
+    def cli(self, process, slot, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot,
+                alloc_type=alloc_type))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=output, alloc_type=alloc_type)
+
+class RmSoftwareMemoryChassisActiveAllocType(ShowPlatformSoftwareMemoryRpActiveAllocType):
+    """ Parser for 
+        * rm software memory mdt-pubd switch active <R0> alloc type component
+    """
+
+    cli_command = 'rm software memory {process} chassis active {slot} alloc type {alloc_type}'
+
+    def cli(self, process, slot, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot,
+                alloc_type=alloc_type))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=output, alloc_type=alloc_type)
+
+class EMemoryChassisActiveAllocType(ShowPlatformSoftwareMemoryRpActiveAllocType):
+    """ Parser for 
+        * e memory mdt-pubd chassis active <R0> alloc type component
+    """
+
+    cli_command = 'e memory {process} chassis active {slot} alloc type {alloc_type}'
+
+    def cli(self, process, slot, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot,
+                alloc_type=alloc_type))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=output, alloc_type=alloc_type)
+
 class ShowPlatformSoftwareMemoryRpActiveAllocTypeBriefSchema(MetaParser):
     """ Schema for 
         * show platform software memory mdt-pubd RP active alloc type component brief
@@ -7651,3 +7775,61 @@ class ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief(ShowPlatformSoftwareMemor
                 continue
 
         return ret_dict
+
+class ShowPlatformSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief):
+    """ Parser for 
+        * show platform software memory mdt-pubd switch active <R0> alloc type component brief
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot} alloc type {alloc_type} brief'
+
+    def cli(self, process, slot, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot,
+                alloc_type=alloc_type))
+        else:
+            out = output
+        
+        return super().cli(process=process, alloc_type=alloc_type, output=output)
+
+class RmSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief):
+    """ Parser for 
+        * rm software memory mdt-pubd switch active <R0> alloc type component brief
+    """
+
+    cli_command = 'rm software memory {process} chassis active {slot} alloc type {alloc_type} brief'
+
+    def cli(self, process, slot, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot,
+                alloc_type=alloc_type))
+        else:
+            out = output
+        
+        return super().cli(process=process, alloc_type=alloc_type, output=output)
+
+
+class EMemoryChassisActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief):
+    """ Parser for 
+        * e memory mdt-pubd chassis active <R0> alloc type component brief
+    """
+
+    cli_command = 'e memory {process} chassis active {slot} alloc type {alloc_type} brief'
+
+    def cli(self, process, slot, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot,
+                alloc_type=alloc_type))
+        else:
+            out = output
+        
+        return super().cli(process=process, alloc_type=alloc_type, output=output)
