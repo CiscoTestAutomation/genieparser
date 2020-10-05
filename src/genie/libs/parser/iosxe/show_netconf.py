@@ -63,27 +63,6 @@ class ShowNetconfYangSessionsSchema(MetaParser):
         * show netconf-yang sessions
     '''
 
-    def validate_sessions_list(value):
-        if not isinstance(value, list):
-            raise SchemaTypeError('Session is not a list')
-    
-        sessions_list = Schema({
-            'session-id': int,
-            'transport': str,
-            'username': str,
-            'source-host': str,
-            'global-lock': str,
-            Optional('login-time'): str,
-            Optional('in-rpcs'): str,
-            Optional('in-bad-rpcs'): str,
-            Optional('out-rpc-errors'): str,
-            Optional('out-notifications'): str,
-        })
-    
-        for item in value:
-            sessions_list.validate(item)
-        return value
-
     schema = {
         'session_count': int,
         'session_id': {
@@ -263,19 +242,15 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ret_dict['session-count'] = int(group.get('session_count'))
+                ret_dict['session_count'] = int(group.get('session_count'))
                 continue
 
             # session-id             : 24
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                sessions_list = ret_dict.setdefault('sessions', [])
-                session = dict()
-                session.update({
-                    'session-id': int(group['session_id']),
-                })
-                sessions_list.append(session)
+                sessions = ret_dict.setdefault('session_id', {})
+                session = sessions.setdefault(int(group['session_id']), {})
                 continue
 
             # transport : netconf-ssh
@@ -290,7 +265,7 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                session_id.update({
+                session.update({
                     group['key'].replace('-', '_'): group['data']
                 })
                 continue
