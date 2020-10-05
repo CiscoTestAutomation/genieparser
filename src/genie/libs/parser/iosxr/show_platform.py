@@ -13,6 +13,8 @@ IOSXR parsers for the following show commands:
     * 'show redundancy summary'
     * 'show redundancy'
     * 'dir'
+    * 'show processes memory detail'
+    * 'show processes memory detail | include <WORD>'
 '''
 
 # Python
@@ -63,7 +65,7 @@ class ShowVersion(ShowVersionSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         # Init vars
         show_version_dict = {}
 
@@ -100,7 +102,7 @@ class ShowVersion(ShowVersionSchema):
 
         # ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
         p7 = re.compile(r'\s*.*Chassis.*$')
-        
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -162,8 +164,8 @@ class ShowVersion(ShowVersionSchema):
 class ShowSdrDetailSchema(MetaParser):
     """Schema for show sdr detail"""
     schema = {
-        'sdr_id': 
-            {Any(): 
+        'sdr_id':
+            {Any():
                 {'sdr_name': str,
                  Optional('dsdrsc_node'): str,
                  Optional('dsdrsc_partner_node'): str,
@@ -171,13 +173,13 @@ class ShowSdrDetailSchema(MetaParser):
                  'primary_node2': str,
                  Optional('mac_address'): str,
                  'membership':
-                    {Any(): 
+                    {Any():
                         {'type': str,
                          'node_status': str,
                          Optional('red_state'): str,
                          'partner_name': str,
                         },
-                    },              
+                    },
                 },
             },
         }
@@ -191,13 +193,13 @@ class ShowSdrDetail(ShowSdrDetailSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         # Init vars
         sdr_detail = {}
-        
+
         for line in out.splitlines():
             line = line.rstrip()
-            
+
             # SDR_id               : 0
             # SDR ID             : 2
             p1 = re.compile(r'\s*(SDR_id|SDR ID) *: +(?P<sdr_id>[0-9]+)$')
@@ -268,7 +270,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
                 continue
 
             # RP         0/0/CPU0      IOS XR RUN        Primary    NONE
-            # RP         0/RSP0/CPU0   IOS XR RUN        Primary    0/RSP1/CPU0 
+            # RP         0/RSP0/CPU0   IOS XR RUN        Primary    0/RSP1/CPU0
             # RP         0/RSP0/CPU0   IOS XR RUN        Primary    0/RSP1/CPU0
             p8 = re.compile(r'\s*(?P<type>[a-zA-Z0-9\-]+)'
                              ' +(?P<node_name>[a-zA-Z0-9\/]+)'
@@ -279,7 +281,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
             if m:
                 if 'membership' not in sdr_detail['sdr_id'][sdr_id]:
                     sdr_detail['sdr_id'][sdr_id]['membership'] = {}
-                
+
                 node_name = str(m.groupdict()['node_name']).strip()
 
                 if node_name not in sdr_detail['sdr_id'][sdr_id]['membership']:
@@ -305,17 +307,17 @@ class ShowSdrDetail(ShowSdrDetailSchema):
 class ShowPlatformSchema(MetaParser):
     """Schema for show platform"""
     schema = {
-        'slot': 
+        'slot':
             {Any():
-                {Any(): 
+                {Any():
                     {'name': str,
                      'state': str,
                      'config_state': str,
                      'full_slot': str,
                      Optional('redundancy_state'): str,
                      Optional('plim'): str,
-                     Optional('subslot'): 
-                        {Optional(Any()): 
+                     Optional('subslot'):
+                        {Optional(Any()):
                             {Optional('name'): str,
                              Optional('state'): str,
                              Optional('config_state'): str,
@@ -347,11 +349,12 @@ class ShowPlatform(ShowPlatformSchema):
 
             # 0/RSP0/CPU0     A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
             # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
+            # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
             p1 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/]+)'
                              ' +(?P<name>[a-zA-Z0-9\-]+)'
                              '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                              '(?: +(?P<plim>[a-zA-Z\/]+))?'
-                             ' +(?P<state>(IOS XR RUN|OK)+)'
+                             ' +(?P<state>(IOS XR RUN|OK|OPERATIONAL)+)'
                              ' +(?P<config_state>[a-zA-Z\,]+)$')
             m = p1.match(line)
             if m:
@@ -362,12 +365,9 @@ class ShowPlatform(ShowPlatformSchema):
                 plim = str(m.groupdict()['plim']).strip()
                 state = str(m.groupdict()['state']).strip()
                 config_state = str(m.groupdict()['config_state']).strip()
-                
+
                 # Parse node for rack, slot, subslot details
-                parse_node = re.compile(r'\s*(?P<rack>[0-9]+)'
-                                         '\/(?P<slot>[0-9A-Z]+)'
-                                         '\/(?P<last_entry>[0-9A-Z]+)'
-                                         '$').match(node)
+                parse_node = re.compile(r'\s*(?P<rack>[0-9]+)\/(?P<slot>[0-9A-Z]+)(?:\/(?P<last_entry>[0-9A-Z]+))?$').match(node)
                 rack = str(parse_node.groupdict()['rack'])
                 slot = rack + '/' + str(parse_node.groupdict()['slot'])
                 last_entry = str(parse_node.groupdict()['last_entry'])
@@ -378,7 +378,7 @@ class ShowPlatform(ShowPlatformSchema):
                     # This entry is a daughtercard/subslot
                     entry_is_daughter = True
                     subslot = last_entry
-                
+
                 # Determine if slot is RP/LineCard/OtherCard
                 parse_rp = re.compile(r'.*(RSP|RP).*').match(slot)
                 parse_lc = re.compile(r'.*(0\/0).*').match(slot)
@@ -447,7 +447,7 @@ class ShowPlatform(ShowPlatformSchema):
 class ShowPlatformVmSchema(MetaParser):
     """Schema for show platform vm"""
     schema = {
-        'node': 
+        'node':
             {Any():
                 {'type': str,
                  'partner_name': str,
@@ -469,7 +469,7 @@ class ShowPlatformVm(ShowPlatformVmSchema):
             out = output
         # Init vars
         show_platform_vm = {}
-        
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -527,7 +527,7 @@ class ShowInstallActiveSummary(ShowInstallActiveSummarySchema):
         install_active_dict = {}
         previous_line_sdr = False
         previous_line_active_packages = False
-        
+
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -579,9 +579,9 @@ class ShowInstallInactiveSummarySchema(MetaParser):
 
 class ShowInstallInactiveSummary(ShowInstallInactiveSummarySchema):
     """Parser for show install inactive summary"""
-    
+
     cli_command = 'show install inactive summary'
-    
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
@@ -591,22 +591,22 @@ class ShowInstallInactiveSummary(ShowInstallInactiveSummarySchema):
         install_inactive_dict = {}
         previous_line_sdr = False
         previous_line_inactive_packages = False
-        
+
         for line in out.splitlines():
             line = line.rstrip()
-            
+
             p1 = re.compile(r'\s*SDRs:*$')
             m = p1.match(line)
             if m:
                 previous_line_sdr = True
                 continue
-            
+
             if previous_line_sdr:
                 previous_line_sdr = False
                 install_inactive_dict.setdefault('sdr', []).append(str(line).strip())
                 continue
-            
-            
+
+
             # disk0:xrvr-full-x-6.2.1.23I
             # disk0:asr9k-mini-px-6.1.21.15I
             # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
@@ -621,13 +621,13 @@ class ShowInstallInactiveSummary(ShowInstallInactiveSummarySchema):
                     install_inactive_dict['num_inactive_packages'] = \
                         int(m.groupdict()['num_inactive_packages'])
                 continue
-            
+
             if previous_line_inactive_packages and line is not None:
                 clean_line = str(line).strip()
                 if line and '/' not in line:
                     install_inactive_dict['inactive_packages'].append(clean_line)
                     continue
-        
+
         return install_inactive_dict
 
 # ========================================
@@ -644,9 +644,9 @@ class ShowInstallCommitSummarySchema(MetaParser):
 
 class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
     """Parser for show install commit summary"""
-    
+
     cli_command = 'show install commit summary'
-    
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
@@ -657,22 +657,22 @@ class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
         previous_line_sdr = False
         previous_line_committed_packages = False
         previous_line_active_packages = False
-        
+
         for line in out.splitlines():
             line = line.rstrip()
-            
+
             p1 = re.compile(r'\s*SDRs:*$')
             m = p1.match(line)
             if m:
                 previous_line_sdr = True
                 continue
-            
+
             if previous_line_sdr:
                 previous_line_sdr = False
                 install_commit_dict.setdefault('sdr', []).append(str(line).strip())
                 continue
-            
-            
+
+
             # disk0:xrvr-full-x-6.2.1.23I
             # disk0:asr9k-mini-px-6.1.21.15I
             # xrv9k-xr-6.2.2.14I version=6.2.2.14I [Boot image]
@@ -687,7 +687,7 @@ class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
                     install_commit_dict['num_committed_packages'] = \
                         int(m.groupdict()['num_committed_packages'])
                 continue
-            
+
             if previous_line_committed_packages and line is not None:
                 clean_line = str(line).strip()
                 if line and '/' not in line:
@@ -713,7 +713,7 @@ class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
                 if line and '/' not in line:
                     install_commit_dict['active_packages'].append(clean_line)
                     continue
-        
+
         return install_commit_dict
 
 # ===========================
@@ -723,8 +723,8 @@ class ShowInstallCommitSummary(ShowInstallCommitSummarySchema):
 class ShowInventorySchema(MetaParser):
     """Schema for show inventory"""
     schema = {
-        'module_name': 
-            {Any(): 
+        'module_name':
+            {Any():
                 {'descr': str,
                  'pid': str,
                  'vid': str,
@@ -743,10 +743,10 @@ class ShowInventory(ShowInventorySchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         # Init vars
         inventory_dict = {}
-        
+
         # NAME: "module 0/RSP0/CPU0", DESCR: "ASR9K Route Switch Processor with 440G/slot Fabric and 6GB"
         # NAME: "Rack 0", DESCR: "Cisco XRv9K Centralized Virtual Router"
         # NAME: "Rack 0", DESCR: "Sherman 1RU Chassis with 24x400GE QSFP56-DD & 12x100G QSFP28"
@@ -757,7 +757,7 @@ class ShowInventory(ShowInventorySchema):
 
         # PID: A9K-MPA-20X1GE, VID: V02, SN: FOC1811N49J
         # PID: SFP-1G-NIC-X      , VID: N/A, SN: N/A
-        # PID: N/A, VID: N/A, SN: 
+        # PID: N/A, VID: N/A, SN:
         p2 = re.compile(r'^PID: *(?P<pid>[\S\s]*),'
                          r' +VID: *(?P<vid>[\S\s]*),'
                          r' SN: *(?P<sn>[\S\s]*)$')
@@ -766,7 +766,7 @@ class ShowInventory(ShowInventorySchema):
             line = line.strip()
             if not line:
                 continue
-            
+
             # NAME: "0/FT4", DESCR: "Sherman Fan Module Reverse Airflow / exhaust, BLUE"
             # NAME: "TenGigE0/0/0/0", DESCR: "Cisco SFP+ 10G SR Pluggable Optics Module"
             m = p1.match(line)
@@ -792,7 +792,7 @@ class ShowInventory(ShowInventorySchema):
                     str(m.groupdict()['sn']).strip()
                 continue
         return inventory_dict
-            
+
 # ====================================
 # Schema for 'admin show diag chassis'
 # ====================================
@@ -823,12 +823,12 @@ class AdminShowDiagChassisSchema(MetaParser):
         Optional('part_revision'): str,
         Optional('hw_version'): str,
         Optional('top_assembly_block'): {
-            'serial_number': str,
+            Optional('serial_number'): str,
             'part_number': str,
-            'part_revision': str,
-            'mfg_deviation': str,
-            'hw_version': str,
-            'mfg_bits': str,
+            Optional('part_revision'): str,
+            Optional('mfg_deviation'): str,
+            Optional('hw_version'): str,
+            Optional('mfg_bits'): str,
         }
     }
 
@@ -841,12 +841,12 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         # Init vars
         admin_show_diag_dict = {}
         top_assembly_flag = False
         main_flag = False
-        
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -896,11 +896,11 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                     int(m.groupdict()['rack_num'])
                 continue
 
-            
+
             # S/N:   FOX1810G8LR
             # Serial Number   : FOC23158L99
-            p3 = re.compile(r'^(S\/N|Serial +Number)(\s+)?(\:)? '
-                            r'+(?P<serial_number>\S+)$')
+            # Chassis Serial Number    : FOC23158L99
+            p3 = re.compile(r'^(S\/N|(?:Chassis +)?Serial +Number)(\s+)?(\:)? +(?P<serial_number>\S+)$')
             m = p3.match(line)
             if m:
                 serial_num = str(m.groupdict()['serial_number'])
@@ -912,7 +912,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                     admin_show_diag_dict['sn'] = serial_num
 
                 continue
-            
+
             # PID:   ASR-9006-AC-V2
             # Product ID      : NCS-5501
             p4 = re.compile(r'(PID|Product ID)(\s+)?\: '
@@ -922,10 +922,11 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 admin_show_diag_dict['pid'] = \
                     str(m.groupdict()['pid'])
                 continue
-            
+
             # VID:   V02
             # VID             : V01
-            p5 = re.compile(r'VID(\s+)?\: +(?P<vid>[a-zA-Z0-9\-]+)$')
+            # Version Identifier       : V01
+            p5 = re.compile(r'(?:VID|Version +Identifier)(\s+)?\: +(?P<vid>[a-zA-Z0-9\-]+)$')
             m = p5.match(line)
             if m:
                 admin_show_diag_dict['vid'] = \
@@ -948,7 +949,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 admin_show_diag_dict['clei'] = \
                     str(m.groupdict()['clei'])
                 continue
-            
+
             # Top Assy. Number:   68-4235-02
             p8 = re.compile(r'Top +Assy. +Number\:'
                              ' *(?P<top_assy_num>[a-zA-Z0-9\-\s]+)$')
@@ -957,7 +958,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 admin_show_diag_dict['top_assy_num'] = \
                     str(m.groupdict()['top_assy_num'])
                 continue
-            
+
             # PCA:   73-7806-01 rev B0
             p9 = re.compile(r'^PCA\: +(?P<pca>[\S ]+)$')
             m = p9.match(line)
@@ -1000,9 +1001,10 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 main_flag = True
                 main_dict['dev'] = dev
                 continue
-            
+
             # 0 Rack 0-IDPROM Info
-            p15 = re.compile(r'(?P<rack_num>[0-9]+) +Rack +\d\-IDPROM +Info$')
+            # Rack 0-IDPROM Info
+            p15 = re.compile(r'(?:[0-9]+ +)?Rack +(?P<rack_num>[0-9]+)\-IDPROM +Info$')
 
             m15 = p15.match(line)
             if m15:
@@ -1018,7 +1020,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 top_assembly_dict = admin_show_diag_dict.setdefault('top_assembly_block', {})
 
                 continue
-            
+
             # Part Number     : 73-101057-02
             p17 = re.compile(r'^Part +(n|N)umber(\s+)?\: +(?P<part_number>\S+)$')
             m17 = p17.match(line)
@@ -1028,8 +1030,17 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                     top_assembly_dict['part_number'] = part_num
                 else:
                     admin_show_diag_dict['part_number'] = part_num
-                
+
                 continue
+
+            # Top Assy. Part Number    : 73-101057-02
+            p17_1 = re.compile(r'^Top +Assy\. +Part +Number +: +(?P<part_number>\S+)$')
+            m = p17_1.match(line)
+            if m:
+                part_num = str(m.groupdict()['part_number'])
+                top_assembly_dict = admin_show_diag_dict.setdefault('top_assembly_block', {})
+                top_assembly_dict.update({'part_number': part_num})
+
 
             # Part Revision   : D0
             p18 = re.compile(r'^Part +(r|R)evision(\s+)?\: +(?P<part_revision>\S+)$')
@@ -1040,9 +1051,9 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                     top_assembly_dict['part_revision'] = part_rev
                 else:
                     admin_show_diag_dict['part_revision'] = part_rev
-                
+
                 continue
-            
+
             # H/W Version     : 1.0
             p19 = re.compile(r'^H\/W +[v|V]ersion(\s+)?\: +(?P<hw_version>\S+)$')
             m19 = p19.match(line)
@@ -1060,7 +1071,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             if m20:
                 mfg_dev = str(m20.groupdict()['mfg_deviation'])
                 top_assembly_dict['mfg_deviation'] = mfg_dev
-                
+
                 continue
 
             # Mfg Bits        : 1
@@ -1082,8 +1093,8 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
 class ShowRedundancySummarySchema(MetaParser):
     """Schema for show redundancy summary"""
     schema = {
-        'node': 
-            {Any(): 
+        'node':
+            {Any():
                 {'type': str,
                  Optional('standby_node'): str,
                  Optional('backup_node'): str,
@@ -1105,7 +1116,7 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
         # Init vars
         redundancy_summary = {}
         redundancy_communication = False
-        
+
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -1137,7 +1148,7 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
                     backup_node = standby_node
                 elif standby_node == 'N/A':
                     continue
-                
+
                 # set everything
                 redundancy_summary['node'][node] = {}
                 redundancy_summary['node'][node]['type'] = type
@@ -1154,7 +1165,7 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
                         backup_node
                     continue
 
-            # 0/0/CPU0             N/A 
+            # 0/0/CPU0             N/A
             p2 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/\(\)]+)'
                              ' +(?P<standby_node>[a-zA-Z0-9\/\(\)]+)$')
             m = p2.match(line)
@@ -1174,7 +1185,7 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
                 standby_node = str(m.groupdict()['standby_node'])
                 if re.search("\(B\)", standby_node):
                     backup_node = standby_node
-                
+
                 # set everything
                 redundancy_summary['node'][node] = {}
                 redundancy_summary['node'][node]['type'] = type
@@ -1194,12 +1205,12 @@ class ShowRedundancySummary(ShowRedundancySummarySchema):
 class ShowRedundancySchema(MetaParser):
     """Schema for show redundancy"""
     schema = {
-        'node': 
-            {Any(): 
+        'node':
+            {Any():
                 {'role': str,
                  Optional('valid_partner'): str,
                  Optional('ready'): str,
-                 Optional('group'): 
+                 Optional('group'):
                     {Any():
                         {'primary': str,
                          'backup': str,
@@ -1243,10 +1254,10 @@ class ShowRedundancy(ShowRedundancySchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         # Init vars
         redundancy_dict = {}
-        
+
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -1492,7 +1503,7 @@ class Dir(DirSchema):
 
         # Init vars
         dir_dict = {}
-        
+
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -1519,7 +1530,7 @@ class Dir(DirSchema):
                 dir_dict['dir']['total_free_bytes'] = \
                     str(m.groupdict()['total_free_bytes'])
                 continue
-        
+
             # 20 -rw-r--r-- 1   773 May 10  2017 cvac.log
             # 15 lrwxrwxrwx 1    12 May 10  2017 config -> /misc/config
             # 11 drwx------ 2 16384 Mar 28 12:23 lost+found
@@ -1558,3 +1569,158 @@ class Dir(DirSchema):
         return dir_dict
 
 # vim: ft=python et sw=4
+
+
+class ShowProcessesMemorySchema(MetaParser):
+    """Schema for show processes memory
+                  show processes memory | include <WORD>
+    """
+
+    schema = {
+        'jid': {
+            Any(): {
+                'index':{
+                    Any():{
+                        'jid': int,
+                        'text': int,
+                        'data': int,
+                        'stack': int,
+                        'dynamic': int,
+                        'process': str,
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowProcessesMemory(ShowProcessesMemorySchema):
+    """Schema for show processes memory
+                  show processes memory | include <WORD>
+    """
+
+    cli_command = [
+        'show processes memory', 'show processes memory | include {include}'
+    ]
+
+    def cli(self, include=None, output=None):
+
+        ret_dict = {}
+        jid_index = {}
+
+        if not output:
+            if include:
+                cmd = self.cli_command[1].format(include=include)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        #  8178  45387776  4294967295  1029939200  ffc31360/ffc311a0  bgp
+        p1 = re.compile(
+            r'^(\s+)?(?P<jid>\d+)\s+(?P<text>\d+)\s+(?P<data>\d+)\s+(?P<stack>\d+)\s+(?P<dynamic>\S+)\s+(?P<process>\S+)'
+        )
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #  8178  45387776  4294967295  1029939200  ffc31360/ffc311a0  bgp
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                jid = int(group['jid'])
+                index = jid_index.get(jid, 0) + 1
+                jid_dict = ret_dict.setdefault('jid', {}). \
+                    setdefault(jid, {}). \
+                    setdefault('index', {}). \
+                    setdefault(index, {})
+
+                jid_index.update({jid: index})
+
+                jid_dict.update({
+                    k: int(v) if v.isdigit() else v
+                    for k, v in group.items() if v is not None
+                })
+
+        return ret_dict
+
+
+class ShowProcessesMemoryDetailSchema(MetaParser):
+    """Schema for show processes memory detail
+                  show processes memory detail | include <WORD>
+    """
+
+    schema = {
+        'jid': {
+            int: {
+                'index': {
+                    int: {
+                        'jid': int,
+                        'text': str,
+                        'data': str,
+                        'stack': str,
+                        'dynamic': str,
+                        'dyn_limit': str,
+                        'shm_tot': str,
+                        'phy_tot': str,
+                        'process': str,
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowProcessesMemoryDetail(ShowProcessesMemoryDetailSchema):
+    """Schema for show processes memory detail
+                  show processes memory detail | include <WORD>
+    """
+
+    cli_command = [
+        'show processes memory detail',
+        'show processes memory detail | include {include}'
+    ]
+
+    def cli(self, include=None, output=None):
+
+        ret_dict = {}
+        jid_index = {}
+
+        if not output:
+            if include:
+                cmd = self.cli_command[1].format(include=include)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        #  1078           2M      1021M       136K        39M     14894M        23M        62M bgp
+        #  1257          60K       261M       136K         1M  unlimited         6M         9M bgp_epe
+        p1 = re.compile(
+            r'^(\s+)?(?P<jid>\d+)\s+(?P<text>\S+)\s+(?P<data>\S+)\s+(?P<stack>\S+)\s+(?P<dynamic>\S+)\s+(?P<dyn_limit>\S+)\s+(?P<shm_tot>\S+)\s+(?P<phy_tot>\S+)\s+(?P<process>\S+)'
+        )
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #  1078           2M      1021M       136K        39M     14894M        23M        62M bgp
+            #  1257          60K       261M       136K         1M  unlimited         6M         9M bgp_epe
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                jid = int(group['jid'])
+                index = jid_index.get(jid, 0) + 1
+                jid_index.update({jid: index})
+                jid_dict = ret_dict.setdefault('jid', {}). \
+                    setdefault(jid, {}). \
+                    setdefault('index', {}). \
+                    setdefault(index, {})
+
+                jid_dict.update({
+                    k: int(v) if v.isdigit() else v
+                    for k, v in group.items()
+                })
+
+        return ret_dict

@@ -16,6 +16,8 @@ IOSXE parsers for the following show commands:
     * 'show platform hardware fed switch active fwd-asic resource tcam utilization'
     * 'show module'
     * 'show platform hardware qfp active datapath utilization summary'
+    * 'show platform resources'
+    * 'show platform hardware qfp active tcam resource-manager usage'
 '''
 
 # Python
@@ -398,9 +400,10 @@ class ShowVersion(ShowVersionSchema):
         # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
         # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
         # cisco WS-C4507R+E (MPC8572) processor (revision 10) with 2097152K/20480K bytes of memory.
+        # Cisco CISCO1941/K9 (revision 1.0) with 491520K/32768K bytes of memory.
         p18 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) '
-                         r'+\((?P<processor_type>.+)\) +((processor.*)|with) '
-                         r'+with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
+                         r'+\((?P<processor_type>[^)]*)\) +(.*?)with '
+                         r'+(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
 
         # Cisco CISCO3945-CHASSIS (revision 1.0) with C3900-SPE150/K9 with 1835264K/261888K bytes of memory.
         p18_2 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) +.* '
@@ -1483,7 +1486,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # conf_red_mode
-            p6 = re.compile(r'\s*[Cc]onfigured +[Rr]edundancy +[Mm]ode +\= +(?P<conf_red_mode>\S+)$')
+            p6 = re.compile(r'\s*[Cc]onfigured +[Rr]edundancy +[Mm]ode +\= +(?P<conf_red_mode>[\s\S]+)$')
             m = p6.match(line)
             if m:
                 redundancy_dict['red_sys_info']['conf_red_mode'] = \
@@ -1653,11 +1656,11 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
 
         # Redundancy Mode (Operational) = sso
         p6 = re.compile(r'^Redundancy +Mode +\(Operational\) += +'
-                        '(?P<redundancy_mode_operational>[\S]+)$')
+                        '(?P<redundancy_mode_operational>[\s\S]+)$')
 
         # Redundancy Mode (Configured)  = sso
         p7 = re.compile(r'^Redundancy +Mode +\(Configured\) += +'
-                        '(?P<redundancy_mode_configured>[\S]+)$')
+                        '(?P<redundancy_mode_configured>[\s\S]+)$')
 
         # Redundancy State              = sso
         p8 = re.compile(r'^Redundancy +State += +(?P<redundancy_state>[\s\S]+)$')
@@ -1801,7 +1804,7 @@ class ShowInventorySchema(MetaParser):
     schema = {
         Optional('main'):
             {Optional('swstack'): bool,
-             Optional('chassis'):
+             Optional(Any()):
                 {Any():
                     {Optional('name'): str,
                      Optional('descr'): str,
@@ -1955,7 +1958,6 @@ class ShowInventory(ShowInventorySchema):
         # PID: , VID: 1.0  , SN: 1162722191
         p2 = re.compile(r'^PID: +(?P<pid>[\S\s]+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
                         r' +SN:(?: +(?P<sn>(\S+)))?$')
-
         for line in out.splitlines():
             line = line.strip()
 
@@ -1966,6 +1968,7 @@ class ShowInventory(ShowInventorySchema):
             # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
             # NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
             m = p1.match(line)
+            
             if m:
                 group = m.groupdict()
                 name = group['name'].strip()
@@ -2027,6 +2030,16 @@ class ShowInventory(ShowInventorySchema):
                 if 'Chassis' in name:
                     main_dict = ret_dict.setdefault('main', {}).\
                         setdefault('chassis', {}).\
+                        setdefault(pid, {})
+                    main_dict['name'] = name
+                    main_dict['descr'] = descr
+                    main_dict['pid'] = pid
+                    main_dict['vid'] = vid
+                    main_dict['sn'] = sn
+
+                if 'Switch1' in name or 'Switch2' in name or 'TenGigabitEthernet' in name:
+                    main_dict = ret_dict.setdefault('main', {}).\
+                        setdefault(name, {}).\
                         setdefault(pid, {})
                     main_dict['name'] = name
                     main_dict['descr'] = descr
@@ -2772,13 +2785,14 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         # -----------------------------------------------------------
         # *1       Active   689c.e2ff.b9d9     3      V04     Ready
         #  2       Standby  689c.e2ff.b9d9     14             Ready
+        #  3       Member   bbcc.fcff.7b00     15     0       V-Mismatch
         p3_0 = re.compile(r'^Switch#\s+Role\s+Mac\sAddress\s+Priority\s+Version\s+State$')
 
         p3_1 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
                            '(?P<mac_address>[\w\.]+) +'
                            '(?P<priority>\d+) +'
                            '(?P<hw_ver>\w+)? +'
-                           '(?P<state>[\w\s]+)$')
+                           '(?P<state>[\w\s-]+)$')
 
         #          Stack Port Status             Neighbors
         # Switch#  Port 1     Port 2           Port 1   Port 2
@@ -5623,7 +5637,7 @@ class ShowProcessesMemorySchema(MetaParser):
             'used': int,
             'free': int,
         },
-        'lsmi_io_pool': {
+        Optional('lsmi_io_pool'): {
             'total': int,
             'used': int,
             'free': int,
@@ -5648,7 +5662,6 @@ class ShowProcessesMemorySchema(MetaParser):
 
 
 class ShowProcessesMemory(ShowProcessesMemorySchema):
-
     cli_command = [
         'show processes memory',
         'show processes memory | include {include}'
@@ -6191,6 +6204,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
 # =======================================================================
 # Parser for 'show platform hardware qfp active feature appqoe stats all'
 # =======================================================================
+# =======================================================================
 class ShowPlatformHardwareQfpActiveFeatureAppqoeSchema(MetaParser):
     schema = {
         'feature': {
@@ -6200,15 +6214,37 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoeSchema(MetaParser):
                     'not_enabled': int,
                     'cft_handle_pkt': int,
                     'sdvt_divert_req_fail': int,
-                    'syn_policer_rate': int,
+                    Optional('syn_policer_rate'): int,
+                    Optional('sn_data_pkts_processed'): int,
                     'sdvt_global_stats': {
-                        'appnav_registration': int,
+                        Optional('appnav_registration'): int,
+                        Optional('control_decaps_could_not_find_flow_from_tuple'): int,
                         'within_sdvt_syn_policer_limit': int
                     }
                 },
                 'sn_index': {
                     Any(): {
+                        Optional('ip'): str,
+                        Optional('oce_id'): int,
+                        Optional('del'): int,
+                        Optional('key'): str,
+                        Optional('id'): int,
+                        Optional('ver'): int,
+                        Optional('status'): int,
+                        Optional('type'): int,
+                        Optional('sng'): int,
+                        Optional('appnav_stats'): {
+                            Optional('to_sn'): {
+                                'packets': int,
+                                'bytes': int
+                            },
+                            Optional('from_sn'): {
+                                'packets': int,
+                                'bytes': int
+                            }
+                        },
                         'sdvt_count_stats': {
+                            Optional('active_connections'): int,
                             Optional('decaps'): int,
                             Optional('encaps'): int,
                             Optional('packets_unmarked_in_ingress'): int,
@@ -6284,6 +6320,15 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
         # syn_policer_rate: 800
         p8 = re.compile(r'^(?P<key>[\s\S]+): +(?P<value>\d+)$')
 
+        # SN Index [0 (Green)], IP: 10.136.1.250, oce_id: 1243618816
+        p9 = re.compile(r'^SN +Index +\[(?P<index>[\s\S]+)\], +IP: +(?P<ip>[\s\S]+), +oce_id: +(?P<oce_id>[\s\S]+)$')
+
+        # del 0, key 0x0301, id 1, ver 1, status 1, type 3, sng 0
+        p10 = re.compile(r'^del +(?P<del>[\s\S]+), key +(?P<key>[\s\S]+), id +(?P<id>[\s\S]+), ver +(?P<ver>[\s\S]+), status +(?P<status>[\s\S]+), type +(?P<type>[\s\S]+), sng +(?P<sng>[\s\S]+)$')
+
+        # APPNAV STATS: toSN 2662751642/2206742552009, fromSN 2715505607/2260448392656
+        p11 = re.compile(r'^APPNAV STATS: +(?P<to_sn>[\S]+) +(?P<tosn_packets>[\d]+)\/(?P<tosn_bytes>\d+), +(?P<from_sn>[\S]+) +(?P<frmsn_packets>[\d]+)\/(?P<frmsn_bytes>\d+)$')
+
         ret_dict = {}
 
         for line in output.splitlines():
@@ -6329,6 +6374,51 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
             if m:
                 groups = m.groupdict()
                 index_dict = feature_dict.setdefault('sn_index', {}).setdefault(groups['index'], {})
+
+                last_dict_ptr = index_dict
+                continue
+
+            # SN Index [0 (Green)], IP: 10.136.1.250, oce_id: 1243618816
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                index_dict = feature_dict.setdefault('sn_index', {}).setdefault(groups['index'], {})
+                index_dict.update({'ip': groups['ip']})
+                index_dict.update({'oce_id': int(groups['oce_id'])})
+
+                last_dict_ptr = index_dict
+                continue
+
+            # del 0, key 0x0301, id 1, ver 1, status 1, type 3, sng 0
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                index_dict.update({'del': int(groups['del'])})
+                index_dict.update({'key': groups['key']})
+                index_dict.update({'id': int(groups['id'])})
+                index_dict.update({'ver': int(groups['ver'])})
+                index_dict.update({'status': int(groups['status'])})
+                index_dict.update({'type': int(groups['type'])})
+                index_dict.update({'sng': int(groups['sng'])})
+
+                last_dict_ptr = index_dict
+                continue
+
+            # APPNAV STATS: toSN 2662751642/2206742552009, fromSN 2715505607/2260448392656
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                appnav_stats_dict = index_dict.setdefault('appnav_stats', {})
+                to_sn_dict = appnav_stats_dict.setdefault('to_sn', {})
+                to_sn_dict.update({
+                    'packets': int(groups['tosn_packets']),
+                    'bytes': int(groups['tosn_bytes'])
+                    })
+                from_sn_dict = appnav_stats_dict.setdefault('from_sn', {})
+                from_sn_dict.update({
+                    'packets': int(groups['frmsn_packets']),
+                    'bytes': int(groups['frmsn_bytes'])
+                    })
 
                 last_dict_ptr = index_dict
                 continue
@@ -6393,7 +6483,7 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
             m = p8.match(line)
             if m:
                 groups = m.groupdict()
-                key = groups['key'].replace('-', '_').replace(' ', '_').lower()
+                key = groups['key'].replace('-', '_').replace(' ', '_').replace(':', '').lower()
                 last_dict_ptr.update({key: int(groups['value'])})
 
         return ret_dict
@@ -6521,7 +6611,8 @@ class ShowPlatformHardwareQfpActiveDatapathUtilSumSchema(MetaParser):
             }
         }
     }
-    
+
+
 class ShowPlatformHardwareQfpActiveDatapathUtilSum(ShowPlatformHardwareQfpActiveDatapathUtilSumSchema):
 
     cli_command = ['show platform hardware qfp active datapath utilization summary']
@@ -6581,3 +6672,358 @@ class ShowPlatformHardwareQfpActiveDatapathUtilSum(ShowPlatformHardwareQfpActive
                 continue
         
         return ret_dict
+
+# =======================================================================
+# Schema for 'show platform hardware qfp active tcam resource-manager usage'
+# =======================================================================
+class ShowPlatformHardwareQfpActiveTcamResourceManagerUsageSchema(MetaParser):
+     schema = {
+                'qfp_tcam_usage_information': {
+                    Any(): {
+                        'name': str,
+                        'number_of_cells_per_entry': int,
+                        Optional('current_80_bit_entries_used'): int,
+                        Optional('current_160_bits_entries_used'): int,
+                        Optional('current_320_bits_entries_used'): int,
+                        'current_used_cell_entries': int,
+                        'current_free_cell_entries': int
+                        },
+                    'total_tcam_cell_usage_information': {
+                        'name': str,
+                        'total_number_of_regions': int,
+                        'total_tcam_used_cell_entries': int,
+                        'total_tcam_free_cell_entries': int,
+                        'threshold_status': str
+                        }
+                    }
+                }
+
+# =======================================================================
+# Parser for 'show platform hardware qfp active tcam resource-manager usage'
+# =======================================================================
+class ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(ShowPlatformHardwareQfpActiveTcamResourceManagerUsageSchema):
+
+    cli_command = ['show platform hardware qfp active tcam resource-manager usage']
+
+
+    def cli(self, output=None):
+
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if not output:
+            output = self.device.execute(self.cli_command[0])
+
+        #QFP TCAM Usage Information
+        p1 = re.compile(r'^(?P<key>QFP TCAM Usage Information)$')
+     
+        #80 Bit Region Information
+        #Total TCAM Cell Usage Information
+        p2 = re.compile(r'^(?P<num>\d+|Total TCAM)(?P<region>[\s\S]+)$')
+  
+        # Name                                : Leaf Region #1
+        # Number of cells per entry           : 2
+        # Current 160 bits entries used       : 19
+        # Current used cell entries           : 38
+        # Current free cell entries           : 4058
+        p3 = re.compile(r'^(?P<key>[\s\S]+)\:(?P<value>[\s\S]+\S)$')
+
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+           
+            #QFP TCAM Usage Information
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                key1 = groups['key'].replace(' ','_').lower()
+                feature_dict = ret_dict.setdefault(key1, {})    
+                continue
+            
+            #80 Bit Region Information
+            #Total TCAM Cell Usage Information
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                reg = groups['region'].strip().replace(' ','_').lower()
+                reg_name = groups['num'].replace(' ','_').lower() +'_'+reg
+                region_hash = feature_dict.setdefault(reg_name, {})
+                continue
+
+            # Name                                : Leaf Region #1
+            # Number of cells per entry           : 2
+            # Current 160 bits entries used       : 19
+            # Current used cell entries           : 38
+            # Current free cell entries           : 4058
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                name = groups['key'].strip().replace(' ','_').lower()
+                val = groups['value'].strip()
+                if name not in ['threshold_status', 'name']:
+                    val = int(groups['value'])
+
+                region_hash.update({name : val})
+                continue
+
+        
+        return ret_dict
+
+# =======================================================================
+# Schema for 'show platform resources'
+# =======================================================================
+class ShowPlatformResourcesSchema(MetaParser):
+    schema = {
+        'rp': {
+            Any():  {
+
+            'state': str,
+            'role': str,
+            'control_processer': {
+                'usage_perc': float,
+                'max_perc': int,
+                'warning_perc': int,
+                'critical_perc': int,
+                'state': str,
+                'dram': {
+                    'usage_mb': int,
+                    'usage_perc': int,
+                    'max_mb': int,
+                    'warning_perc': int,
+                    'critical_perc': int,
+                    'state': str
+                },
+                Optional('bootflash'): {
+                'usage_mb': int,
+                'usage_perc': int,
+                'max_mb': int,
+                'warning_perc': int,
+                'critical_perc': int,
+                'state': str
+                },
+                Optional('harddisk'): {
+                'usage_mb': int,
+                'usage_perc': int,
+                'max_mb': int,
+                'warning_perc': int,
+                'critical_perc': int,
+                'state': str
+                }
+            }
+            }
+        },
+        'esp': {
+            Any(): {
+                'state': str,
+                'role': str,
+                Optional('control_processer'): {
+                    'usage_perc': float,
+                    'max_perc': int,
+                    'warning_perc': int,
+                    'critical_perc': int,
+                    'state': str,
+                    'dram': {
+                        'usage_mb': int,
+                        'usage_perc': int,
+                        'max_mb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    }
+                },
+                'qfp': {
+                    'state': str,
+                    'tcam': {
+                        'usage_cells': int,
+                        'usage_perc': int,
+                        'max_cells': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': 'H'
+                    },
+                    'dram': {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    },
+                    'iram': {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    },
+                    'cpu_utilization': {
+                        'usage_perc': float,
+                        'max_perc': int,
+                        'warning_perc': int,
+                        'state': str
+                    },
+                    Optional('pkt_buf_mem_0'): {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    },
+                    Optional('pkt_buf_mem_1'): {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    }
+                }
+            }    
+        },
+        Optional('sip'): {
+            Any(): {
+                'state': str,
+                'control_processer': {
+                    'usage_perc': float,
+                    'max_perc': int,
+                    'warning_perc': int,
+                    'critical_perc': int,
+                    'state': str,
+                    'dram': {
+                        'usage_mb': int,
+                        'usage_perc': int,
+                        'max_mb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    }
+                }
+            }
+        }
+    }    
+
+# =======================================================================
+# Parser for 'show platform resources'
+# =======================================================================
+class ShowPlatformResources(ShowPlatformResourcesSchema):
+
+    cli_command = ['show platform resources']
+
+
+    def cli(self, output=None):
+
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if not output:
+            output = self.device.execute(self.cli_command[0])
+
+
+        #RP0 (ok, active)                                                                               H 
+        #RP1 (ok, standby)                                                                               H  
+        #ESP0(ok, active)                                                                               H 
+        #ESP1(ok, standby)                                                                               H   
+        p1 = re.compile(r'^(?P<type>RP|ESP)(?P<key>[0-9]) ?\((?P<status>\S+)\, +(?P<role>\S+)\) +(?P<state>\S)$')
+
+        #SIP0                                                                                           H 
+        p2 = re.compile(r'^SIP(?P<key>[0-9]) +(?P<state>\S)$')
+
+        # Control Processor       0.51%                 100%            80%             90%             H    
+        p3 = re.compile(r'^Control Processor +(?P<usage>(\d*\.?\d+))\S+ +(?P<max>\d+)\S+ +(?P<warning>\d+)\S+ +(?P<critical>\d+)\S+ +(?P<state>\S)$')
+
+        #QFP                                                                                           H
+        p4 = re.compile(r'^QFP +(?P<state>\S)$')
+
+        #CPU Utilization        0.00%                 100%            90%             95%             H    
+        p5 = re.compile(r'^(?P<resource>[\S\s]+\S) +(?P<usage>(\d*\.?\d+))\S+ +(?P<max>\d+)\S+ +(?P<warning>\d+)\S+ +(?P<critical>\d+)\S+ +(?P<state>\S)$')
+
+        # TCAM                   16cells(0%)           1048576cells    65%             85%             H    
+        # DRAM                   238906KB(5%)          4194304KB       85%             95%             H    
+        # IRAM                   13014KB(9%)           131072KB        85%             95%             H    
+        p6 = re.compile(r'^(?P<resource>[\s\S]+\S) +(?P<use_val>(\d*\.?\d+))(?P<type>\S+)\((?P<val>\d+)\%\) +(?P<max>\d+)(?P<max_type>\S+) +(?P<warning>\d+)\S+ +(?P<critical>\d+)\S+ +(?P<state>\S)$')
+        
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            #RP1 (ok, standby)                                                                               H  
+            #ESP0 (ok, active)                                                                               H 
+            m = p1.match(line)
+
+            if m:
+                groups = m.groupdict()
+                type_ = groups['type'].lower()
+                
+                feature_dict = ret_dict.setdefault(type_, {}).setdefault(groups['key'], {})
+                
+                feature_dict.update(({'state': (groups['state'])}))
+                feature_dict.update(({'role': (groups['role'])}))
+                
+                last_dict_ptr1 = feature_dict
+                continue
+
+            #SIP0                                                                                           H      
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict() 
+                feature_dict = ret_dict.setdefault('sip', {}).setdefault(groups['key'], {})
+                feature_dict.update(({'state': (groups['state'])}))
+                last_dict_ptr1 = feature_dict
+                continue
+
+            # Control Processor       0.51%                 100%            80%             90%             H     
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict() 
+                feature_dict = feature_dict.setdefault('control_processer', {})
+                feature_dict.update({'usage_perc': float(groups['usage'])})
+                feature_dict.update({'max_perc': int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'critical_perc': int(groups['critical'])})
+                feature_dict.update({'state': (groups['state'])})
+                last_dict_ptr = feature_dict
+                continue
+            
+            #QFP                                                                                           H
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict() 
+                feature_dict = last_dict_ptr1
+                feature_dict = feature_dict.setdefault('qfp', {})
+                feature_dict.update({'state': (groups['state'])})
+                last_dict_ptr = feature_dict
+                continue
+
+            #CPU Utilization        0.00%                 100%            90%             95%             H 
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                feature_dict = last_dict_ptr
+                res1 = groups['resource'].replace(' ','_').replace('(','').replace(')','').lower()
+                feature_dict = feature_dict.setdefault(res1,{})  
+                feature_dict.update({'usage_' + groups['type'].lower(): int(groups['use_val'])})
+                feature_dict.update({'usage_perc': int(groups['val'])})
+                feature_dict.update({'max_' + groups['max_type'].lower(): int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'critical_perc': int(groups['critical'])})
+                feature_dict.update({'state': (groups['state'])})
+                continue
+            
+            #TCAM                   16cells(0%)           1048576cells    65%             85%             H    
+            # DRAM                   238906KB(5%)          4194304KB       85%             95%             H    
+            # IRAM                   13014KB(9%)           131072KB        85%             95%             H  
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                feature_dict = last_dict_ptr
+                res1 = groups['resource'].replace(' ','_').replace('(','').replace(')','').lower()
+                feature_dict = feature_dict.setdefault(res1,{})     
+                feature_dict.update({'usage_perc': float(groups['usage'])})
+                feature_dict.update({'max_perc': int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'state': (groups['state'])})
+                continue
+
+        return(ret_dict)

@@ -1885,7 +1885,7 @@ class ShowIpInterfaceSchema(MetaParser):
                     },
                     Optional('mtu'): int,
                     Optional('address_determined_by'): str,
-                    Optional('helper_address'): list,
+                    Optional('helper_address'): Or(str, list),
                     Optional('directed_broadcast_forwarding'): bool,
                     Optional('out_common_access_list'): str,
                     Optional('out_access_list'): str,
@@ -2002,9 +2002,28 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                     ['secondary'] = False
                 continue
 
+            # Interface is unnumbered. Using address of GigabitEthernet0/0.101 (10.1.98.10)
+            p2_0 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +(\S+)'
+                              r' +\((?P<ipv4>(?P<ip>[0-9\.]+))\)$')
+            m = p2_0.match(line)
+            if m:
+                ip = m.groupdict()['ip']
+                address = m.groupdict()['ipv4']
+
+                if 'ipv4' not in interface_dict[interface]:
+                    interface_dict[interface]['ipv4'] = {}
+                if address not in interface_dict[interface]['ipv4']:
+                    interface_dict[interface]['ipv4'][address] = {}
+
+                interface_dict[interface]['ipv4'][address]\
+                    ['ip'] = ip
+                interface_dict[interface]['ipv4'][address]\
+                    ['secondary'] = False
+                continue
+
             # Secondary address 10.2.2.2/24
             p2_1 = re.compile(r'^Secondary +address +(?P<ipv4>(?P<ip>[0-9\.]+)'
-                             r'\/(?P<prefix_length>[0-9]+))$')
+                              r'\/(?P<prefix_length>[0-9]+))$')
             m = p2_1.match(line)
             if m:
                 ip = m.groupdict()['ip']
@@ -2065,13 +2084,19 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 continue
 
             # Helper address is not set
-            p5 = re.compile(r'^Helper +address +is +(?P<address>[\w\.\:\s]+)$')
+            p5 = re.compile(r'^Helper +address +is +not +set$')
             m = p5.match(line)
             if m:
-                if 'not set' not in m.groupdict()['address']:
-                    interface_dict[interface]['helper_address'] = \
-                        m.groupdict()['address']
                 continue
+
+            # Helper address is 10.1.1.1
+            p5_0 = re.compile(r'^Helper +address +is +(?P<address>[\d\.]+)$')
+            m = p5_0.match(line)
+            if m:
+                interface_dict[interface]['helper_address'] = \
+                    m.groupdict()['address']
+                continue
+
             # Helper addresses are 10.1.1.1
             p5_1 = re.compile(r'^Helper +addresses +are +(?P<address>[\w\.\:\s]+)$')
             m = p5_1.match(line)

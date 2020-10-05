@@ -1,0 +1,7 @@
+
+#show sdwan ipsec inbound-connections 
+SOURCE                                  SOURCE  DEST                                    DEST    REMOTE           REMOTE           LOCAL            LOCAL            NEGOTIATED                   
+IP                                      PORT    IP                                      PORT    TLOC ADDRESS     TLOC COLOR       TLOC ADDRESS     TLOC COLOR       ENCRYPTION ALGORITHM  TC SPIs
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+10.106.2.2                               12366   10.106.8.2                               12346   10.111.0.6        biz-internet     10.111.0.9        biz-internet     AES-GCM-256           8      
+    

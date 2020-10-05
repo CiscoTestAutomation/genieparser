@@ -1,0 +1,6 @@
+
+vm11#show app-hosting list                                                                                                                                
+App id                                   State                                                                                                            
+---------------------------------------------------------                                                                                                 
+utd                                      RUNNING   
+        

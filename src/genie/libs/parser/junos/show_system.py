@@ -13,6 +13,7 @@ JunOS parsers for the following show commands:
     - 'show system users'
     - 'show system storage'
     - 'show system storage no-forwarding'
+    - 'show system connections'
 """
 
 # python
@@ -408,9 +409,10 @@ class ShowSystemUsers(ShowSystemUsersSchema):
         # 12:58PM up 2 days, 5:30, 2 users, load averages: 0.36, 0.33, 0.35
         # 10:08PM up 7 days, 10:56, 1 user, load averages: 0.02, 0.02, 0.00
         # 1:08AM up 8 days, 5 hrs, 1 user, load averages: 0.07, 0.02, 0.01
+        # 9:38AM up 209 day, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
         p1 = re.compile(
             r'^(?P<time>[\d\:a-zA-Z]+) +up +'
-            r'(?P<up_time>(\d+ +days, +)?([\d:]+( +mins)?( +hrs)?)), +'
+            r'(?P<up_time>(\d+ +(days|day), +)?([\d:]+( +mins)?( +hrs)?)), +'
             r'(?P<user_count>\d+) +user(s)?, +'
             r'load +averages: (?P<avg1>[\d\.]+), +'
             r'(?P<avg2>[\d\.]+), +(?P<avg3>[\d\.]+)$')
@@ -427,6 +429,7 @@ class ShowSystemUsers(ShowSystemUsersSchema):
             # 9:38AM up 209 days, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
             # 12:58PM up 2 days, 5:30, 2 users, load averages: 0.36, 0.33, 0.35
             # 10:08PM up 7 days, 10:56, 1 user, load averages: 0.02, 0.02, 0.00
+            # 9:38AM up 209 day, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1078,8 +1081,9 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
 
         #8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
         # 2:08PM  up 11:03, 1 users, load averages: 0.31, 0.48, 0.50
+        # 3:57AM  up 1 day, 16:57, 1 users, load averages: 0.55, 0.46, 0.44
         p6 = re.compile(r'^(?P<date_time>\d+\:\w+)\s+up\s+'
-                        r'((?P<days>\d+)\s+days,\s+)?(?P<mins>'
+                        r'((?P<days>\d+)\s+day(s)?,\s+)?(?P<mins>'
                         r'[\w\:]+)[^,]*,\s+(?P<user_count>\d+)'
                         r'\s+users,\s+load\s+averages:\s+'
                         r'(?P<avg1>[\d\.]+),\s+(?P<avg2>[\d\.]+),'
@@ -4905,3 +4909,189 @@ class ShowSystemStatisticsNoForwarding(ShowSystemStatistics):
             out = output
 
         return super().cli(output=out)
+    
+class ShowSystemInformationSchema(MetaParser):
+    """ Schema for:
+            * show system information
+    """
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "system-information": {
+            "hardware-model": str,
+            "host-name": str,
+            "os-name": str,
+            "os-version": str,
+            Optional("serial-number"): str
+        }
+    }
+
+
+class ShowSystemInformation(ShowSystemInformationSchema):
+    """ Parser for:
+            * show system information
+    """
+    cli_command = 'show system information'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Model: vmx
+        p1 = re.compile(r'^Model: +(?P<hardware_model>\S+)$')
+        
+        # Family: junos
+        p2 = re.compile(r'^Family: +(?P<os_name>\S+)$')
+        
+        # Junos: 19.2R1.8
+        p3 = re.compile(r'^Junos: +(?P<os_version>\S+)$')
+        
+        # Hostname: P4
+        p4 = re.compile(r'^Hostname: +(?P<host_name>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+    
+            # Model: vmx
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Family: junos
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Junos: 19.2R1.8
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Hostname: P4
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+
+        return ret_dict
+
+class ShowSystemConnectionsSchema(MetaParser):
+    """ Schema for:
+            * show system connections
+    """
+    """ schema = {
+        "output": {
+            "connections-table": [
+                {
+                    "proto": str,
+                    "recv-q": str,
+                    "send-q": str,
+                    "local-address": str,
+                    "foreign-address": str,
+                    "state": str,
+                }
+            ]
+        }
+    } """
+    def validate_system_connections_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('connections-table is not a list')
+        connections_schema = Schema({
+            "proto": str,
+            "recv-q": str,
+            "send-q": str,
+            "local-address": str,
+            "foreign-address": str,
+            "state": str,
+        })
+        for item in value:
+            connections_schema.validate(item)
+        return value
+
+    schema = {
+        "output": {
+            "connections-table": Use(validate_system_connections_list)
+        }
+    }
+
+
+class ShowSystemConnections(ShowSystemConnectionsSchema):
+    """ Parser for:
+            * show system connections
+    """
+    cli_command = 'show system connections'
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Active Internet connections (including servers)
+        p1 = re.compile(r'^Active +Internet +connections +\(including servers\) *$')
+
+        # Proto Recv-Q Send-Q  Local Address                                 Foreign Address                               (state)
+        p2 = re.compile(r'^Proto +Recv-Q +Send-Q +Local +Address +Foreign +Address +\(state\) *$')
+
+        # tcp4       0      0  10.1.0.192.22                                  10.1.0.1.56714                                 ESTABLISHED
+        p3 = re.compile(r'^(?P<proto>\S+) +(?P<recv_q>\S+) +(?P<send_q>\S+) +'
+                        r'(?P<local_address>\S+) +(?P<foreign_address>\S+) +(?P<state>.*)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Active Internet connections (including servers)
+            m = p1.match(line)
+            if m:
+                continue
+
+            # Proto Recv-Q Send-Q  Local Address
+            m = p2.match(line)
+            if m:
+                continue
+
+            # tcp4       0      0  10.1.0.192.22                                  10.1.0.1.56714                                 ESTABLISHED
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = {}
+                connections_table_entry_list = ret_dict.setdefault('output', {}).\
+                    setdefault('connections-table', [])
+
+                entry_dict["proto"] = group["proto"]
+                entry_dict["recv-q"] = group["recv_q"]
+                entry_dict["send-q"] = group["send_q"]
+                entry_dict["local-address"] = group["local_address"]
+                entry_dict["foreign-address"] = group["foreign_address"]
+                entry_dict["state"] = group["state"]
+
+                connections_table_entry_list.append(entry_dict)
+
+                continue
+
+        return ret_dict

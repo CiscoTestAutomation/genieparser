@@ -1,0 +1,7 @@
+
+        LABDR-ISR-1# show bgp all neighbors 10.251.15.5 policy
+        Neighbor: 10.251.15.5, Address-Family: VPNv4 Unicast (LABDR_HoC_AZS_Transit)
+          Locally configured policies:
+            route-map HoC_AZSPREFIXES_in in
+            route-map HoC_LOCALPREFIXES_out out
+    
