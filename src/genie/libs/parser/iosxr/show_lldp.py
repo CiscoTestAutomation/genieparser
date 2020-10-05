@@ -181,7 +181,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p15 = re.compile(r'IPv4 +address: +(?P<management_address>[\d\.]+)$')
         # Total entries displayed: 2
         p16 = re.compile(r'Total +entries +displayed: +(?P<total_entries>\d+)$')
-        # Peer MAC Address: 30:b2:b1:1c:b2:3a
+        # Peer MAC Address: 30:b2:b1:ff:ce:56
         p17 = re.compile(r'Peer +MAC +Address: +(?P<mac>[\s\S]+)$')
 
         for line in out.splitlines():

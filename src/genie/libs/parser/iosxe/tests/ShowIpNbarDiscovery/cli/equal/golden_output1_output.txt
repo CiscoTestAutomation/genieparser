@@ -1,0 +1,83 @@
+R1#sh ip nbar protocol-discovery 
+
+ GigabitEthernet1 
+
+ Last clearing of "show ip nbar protocol-discovery" counters 00:03:29
+
+
+                              Input                    Output                  
+                              -----                    ------                  
+ Protocol                     Packet Count             Packet Count            
+                              Byte Count               Byte Count              
+                              5min Bit Rate (bps)      5min Bit Rate (bps)     
+                              5min Max Bit Rate (bps)  5min Max Bit Rate (bps) 
+ ---------------------------- ------------------------ ------------------------
+ ssh                          52                       34                      
+                              7001                     5344                    
+                              3000                     2000                    
+                              3000                     2000                    
+ unknown                      93                       8                       
+                              17064                    590                     
+                              3000                     0                       
+                              3000                     0                       
+ dns                          28                       0                       
+                              4803                     0                       
+                              2000                     0                       
+                              2000                     0                       
+ eigrp                        43                       43                      
+                              3182                     3182                    
+                              0                        0                       
+                              0                        0                       
+ ldp                          39                       38                      
+                              2964                     2888                    
+                              0                        0                       
+                              0                        0                       
+ ospf                         22                       21                      
+                              2420                     2310                    
+                              0                        0                       
+                              0                        0                       
+ ping                         9                        9                       
+                              1026                     1026                    
+                              0                        0                       
+                              0                        0                       
+ Total                        286                      153                     
+                              38460                    15340                   
+                              8000                     2000                    
+                              8000                     2000                    
+
+ GigabitEthernet2 
+
+ Last clearing of "show ip nbar protocol-discovery" counters 00:03:29
+
+
+                              Input                    Output                  
+                              -----                    ------                  
+ Protocol                     Packet Count             Packet Count            
+                              Byte Count               Byte Count              
+                              5min Bit Rate (bps)      5min Bit Rate (bps)     
+                              5min Max Bit Rate (bps)  5min Max Bit Rate (bps) 
+ ---------------------------- ------------------------ ------------------------
+ unknown                      91                       7                       
+                              16936                    532                     
+                              3000                     0                       
+                              3000                     0                       
+ dns                          28                       0                       
+                              4803                     0                       
+                              2000                     0                       
+                              2000                     0                       
+ eigrp                        43                       43                      
+                              3182                     3182                    
+                              0                        0                       
+                              0                        0                       
+ ldp                          38                       39                      
+                              2888                     2964                    
+                              0                        0                       
+                              0                        0                       
+ ospf                         21                       22                      
+                              2310                     2420                    
+                              0                        0                       
+                              0                        0                       
+ Total                        221                      111                     
+                              30119                    9098                    
+                              5000                     0                       
+                              5000                     0   
