@@ -3,5 +3,5 @@
 SOURCE                                  SOURCE  DEST                                    DEST    REMOTE           REMOTE           LOCAL            LOCAL            NEGOTIATED                   
 IP                                      PORT    IP                                      PORT    TLOC ADDRESS     TLOC COLOR       TLOC ADDRESS     TLOC COLOR       ENCRYPTION ALGORITHM  TC SPIs
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-77.27.2.2                               12366   77.27.8.2                               12346   78.78.0.6        biz-internet     78.78.0.9        biz-internet     AES-GCM-256           8      
+10.106.2.2                               12366   10.106.8.2                               12346   10.111.0.6        biz-internet     10.111.0.9        biz-internet     AES-GCM-256           8      
     

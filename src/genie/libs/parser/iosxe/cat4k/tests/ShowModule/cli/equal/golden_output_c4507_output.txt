@@ -1,0 +1,26 @@
+Chassis Type : WS-C4507R+E
+
+Power consumed by backplane : 40 Watts
+
+Mod Ports Card Type                              Model              Serial No.
+---+-----+--------------------------------------+------------------+-----------
+ 1    48  10/100/1000BaseT Premium POE E Series  WS-X4648-RJ45V+E   ABCDE123456
+ 3     6  Sup 7L-E 10GE (SFP+), 1000BaseX (SFP)  WS-X45-SUP7L-E     QWERT987654
+ 6    48  10/100/1000BaseT Premium POE E Series  WS-X4648-RJ45V+E   CDEFGH12345
+ 7    48  10/100/1000BaseT Premium POE E Series  WS-X4648-RJ45V+E   ASDFGH56789
+
+ M MAC addresses                    Hw  Fw           Sw               Status
+--+--------------------------------+---+------------+----------------+---------
+ 1 11a1.b2ff.ee55 to 11a1.b2ff.ee61 3.1                               Ok
+ 3 555a.88ff.584c to 555a.88ff.5859 3.0 15.0(1r)SG10 03.06.07.E       Ok
+ 6 00a0.bbff.114c to 00a0.bbff.1150 3.1                               Ok
+ 7 b888.11ff.cc88 to b888.11ff.cc8a 3.1                               Ok
+
+Mod  Redundancy role     Operating mode      Redundancy status
+----+-------------------+-------------------+----------------------------------
+ 3   Active Supervisor   RPR                 Active
+
+System Failures:
+----------------
+Power Supply:   bad/off (see 'show power')
+    

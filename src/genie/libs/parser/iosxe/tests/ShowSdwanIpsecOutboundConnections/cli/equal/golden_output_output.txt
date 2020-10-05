@@ -3,7 +3,7 @@
 SOURCE                                  SOURCE  DEST                                    DEST                        REMOTE           REMOTE           AUTHENTICATION            NEGOTIATED                   
 IP                                      PORT    IP                                      PORT    SPI     TUNNEL MTU  TLOC ADDRESS     TLOC COLOR       USED           KEY HASH   ENCRYPTION ALGORITHM  TC SPIs
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-77.27.8.2                               12346   77.27.2.2                               12366   271     1438        78.78.0.6        biz-internet     AH_SHA1_HMAC   *****b384  AES-GCM-256           8
-77.27.8.2                               12346   77.27.3.2                               12366   271     1438        78.78.0.6        biz-internet     AH_SHA1_HMAC   *****b384  AES-GCM-256           8
-77.27.9.2                               12346   77.27.2.2                               12366   271     1438        78.78.0.6        biz-internet     AH_SHA1_HMAC   *****b384  AES-GCM-256           8
+10.106.8.2                               12346   10.106.2.2                               12366   271     1438        10.111.0.6        biz-internet     AH_SHA1_HMAC   *****b384  AES-GCM-256           8
+10.106.8.2                               12346   10.106.3.2                               12366   271     1438        10.111.0.6        biz-internet     AH_SHA1_HMAC   *****b384  AES-GCM-256           8
+10.106.9.2                               12346   10.106.2.2                               12366   271     1438        10.111.0.6        biz-internet     AH_SHA1_HMAC   *****b384  AES-GCM-256           8
     
