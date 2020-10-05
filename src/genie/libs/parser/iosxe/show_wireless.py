@@ -385,7 +385,6 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
         return ap_info_obj
 
 
-
 # ===================================
 # Schema for:
 #  * 'show wireless mobility summary'
@@ -417,7 +416,6 @@ class ShowWirelessMobilitySummarySchema(MetaParser):
             "multi_ipv6": str,
         },
     }
-
 
 
 # ===================================
