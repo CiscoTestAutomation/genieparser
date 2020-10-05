@@ -7814,7 +7814,6 @@ class RmSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpAct
         
         return super().cli(process=process, alloc_type=alloc_type, output=output)
 
-
 class EMemoryChassisActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief):
     """ Parser for 
         * e memory mdt-pubd chassis active <R0> alloc type component brief
