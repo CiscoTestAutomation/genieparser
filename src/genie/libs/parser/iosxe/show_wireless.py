@@ -20,7 +20,7 @@ class ShowWirelessProfilePolicyDetailedSchema(MetaParser):
         Optional("wireless_mgmt_interface_vlan"): str,
         "multicast_filter": str,
         "qbss_load": str,
-        "passive_client": "DISABLED",
+        "passive_client": str,
         "et_analytics": str,
         "staticip_mobility": str,
         "wlan_switching_policy": {
@@ -194,10 +194,8 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
         # Anchor                            : DISABLED
         # AVC VISIBILITY                      : Enabled
         # IPv4 Flow Monitors
-        # Ingress
-        #     sc-udp-vip-001               
-        # Egress
-        #     sc-udp-vip-001               
+        # Ingress             
+        # Egress               
         # IPv6 Flow Monitors
         # Ingress
         # Egress
@@ -264,6 +262,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
         # 2.4Ghz ATF Policy                 : default-atf-policy
         # 5Ghz ATF Policy                   : default-atf-policy
         # Policy Profile Name                 : default-policy-profile
+        
         p_policy_profile_name = re.compile(r"^Policy\s+Profile\s+Name\s+:\s+(?P<name>\S+)$")
         # Description                         : default policy profile
         p_description = re.compile(r"^Description\s+:\s+(?P<value>.*)$")

@@ -41,10 +41,8 @@ WLAN Mobility
  Anchor                            : DISABLED
 AVC VISIBILITY                      : Enabled
 IPv4 Flow Monitors
- Ingress
-     sc-udp-vip-001               
- Egress
-     sc-udp-vip-001               
+ Ingress              
+ Egress            
 IPv6 Flow Monitors
  Ingress
  Egress
