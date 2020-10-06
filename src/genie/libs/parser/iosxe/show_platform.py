@@ -7323,7 +7323,6 @@ class ShowPlatformSoftwareMemoryChassisActive(ShowPlatformSoftwareMemoryRpActive
         
         return super().cli(process=process, output=out)
 
-
 class ShowPlatformSoftwareMemoryRpActiveBriefSchema(MetaParser):
     """ Schema for 
         * show platform software memory mdt-pubd RP active brief
@@ -7410,7 +7409,6 @@ class ShowPlatformSoftwareMemoryChassisActiveBrief(ShowPlatformSoftwareMemoryRpA
         
         return super().cli(process=process, output=out)
 
-
 class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteSchema(MetaParser):
     """ Schema for 
         * show platform software memory mdt-pubd RP active alloc callsite
@@ -7464,7 +7462,7 @@ class ShowPlatformSoftwareMemoryRpActiveAllocCallsite(ShowPlatformSoftwareMemory
                 thread_id = group.get('thread_id')
                 thread_dict = ret_dict.setdefault('callsite', {}). \
                     setdefault(callsite, {})
-                thread_dict.update({'thread': int(thread_id)})
+                thread_dict.update({'thread_id': int(thread_id)})
                 continue
 
             # allocs: 138151, frees: 138141, alloc_bytes: 15466123, free_bytes: 15464846, call_diff: 10, byte_diff: 1277
@@ -7494,8 +7492,6 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocCallsite(ShowPlatformSoftwareMe
         
         return super().cli(process=process, output=out)
 
-
-
 class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteBriefSchema(MetaParser):
     """ Schema for 
         * show platform software memory mdt-pubd RP active alloc callsite
@@ -7504,7 +7500,7 @@ class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteBriefSchema(MetaParser):
         'tracekey': str,
         'callsite': {
             Any(): {
-                'thread': int,
+                'thread_id': int,
                 'diff_byte': int,
                 'diff_call': int,
             }
@@ -7550,7 +7546,7 @@ class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteBrief(ShowPlatformSoftwareM
                 thread_id = group.pop('thread_id')
                 thread_dict = ret_dict.setdefault('callsite', {}). \
                     setdefault(callsite, {})
-                thread_dict.update({'thread': int(thread_id)})
+                thread_dict.update({'thread_id': int(thread_id)})
                 thread_dict.update({k:int(v) for k, v in group.items() if v is not None})
                 continue
 
