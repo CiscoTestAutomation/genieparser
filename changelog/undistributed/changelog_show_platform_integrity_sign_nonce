@@ -1,0 +1,3 @@
+IOSXE:
+Added support for sign nonce
+    show platform integrity sign nonce <nonce>
