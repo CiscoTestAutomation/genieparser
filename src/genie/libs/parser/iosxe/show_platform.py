@@ -7323,6 +7323,7 @@ class ShowPlatformSoftwareMemoryChassisActive(ShowPlatformSoftwareMemoryRpActive
         
         return super().cli(process=process, output=out)
 
+
 class ShowPlatformSoftwareMemoryRpActiveBriefSchema(MetaParser):
     """ Schema for 
         * show platform software memory mdt-pubd RP active brief
@@ -7409,6 +7410,7 @@ class ShowPlatformSoftwareMemoryChassisActiveBrief(ShowPlatformSoftwareMemoryRpA
         
         return super().cli(process=process, output=out)
 
+
 class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteSchema(MetaParser):
     """ Schema for 
         * show platform software memory mdt-pubd RP active alloc callsite
@@ -7416,7 +7418,7 @@ class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteSchema(MetaParser):
     schema = {
         'callsite': {
             Any(): {
-                'thread': int,
+                'thread_id': int,
                 'allocs': int,
                 'frees': int,
                 'alloc_bytes': int,
@@ -7491,6 +7493,8 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocCallsite(ShowPlatformSoftwareMe
             out = output
         
         return super().cli(process=process, output=out)
+
+
 
 class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteBriefSchema(MetaParser):
     """ Schema for 
