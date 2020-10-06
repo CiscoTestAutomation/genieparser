@@ -6016,10 +6016,14 @@ class ShowPlatformIntegritySchema(MetaParser):
     }
 
 class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
-    cli_command = 'show platform integrity'
-    def cli(self, output=None):
+    # cli_command = 'show platform integrity'
+    cli_command = ['show platform integrity', 'show platform integrity sign nonce {nonce}']
+    def cli(self, output=None, nonce=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if nonce:
+                out = self.device.execute(self.cli_command[1].format(nonce=nonce))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
         
@@ -6153,9 +6157,10 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 continue
         return ret_dict
     
-    def yang(self, output=None):
+    def yang(self, output=None, nonce=None):
         if not output:
-            out = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
+            if nonce:
+                out = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
         else:
             out = output
 
