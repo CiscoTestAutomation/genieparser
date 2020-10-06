@@ -699,6 +699,95 @@ class ShowWirelessClientSummary(ShowWirelessClientSummarySchema):
 
         return show_wireless_client_summary_dict
 
+
+# =========================================
+# Schema for:
+#  * 'show wireless profile policy summary'
+# =========================================
+class ShowWirelessProfilePolicySummarySchema(MetaParser):
+    """Schema for show wireless profile policy summary."""
+
+    schema = {
+        "policy_count": int,
+        "policy_name": {
+            Any(): {"description": str, "status": str},
+
+# =========================================
+# Parser for:
+#  * 'show wireless profile policy summary'
+# =========================================
+class ShowWirelessProfilePolicySummary(ShowWirelessProfilePolicySummarySchema):
+    """Parser for show wireless profile policy summary"""
+
+    cli_command = ['show wireless profile policy summary']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+        else:
+            output = output
+
+
+        # Number of Policy Profiles: 31
+
+        # Policy Profile Name               Description                             Status           
+        # -----------------------------------------------------------------------------------------
+        # wip-b60                        b60-voice                             ENABLED          
+        # wip-b70                        b70-voice                             ENABLED          
+        # wip-b80                        b80-voice                             ENABLED          
+        # lizzard_b60                    b60-lizzard/legacy                   ENABLED          
+        # lizzard_b70                    b70-lizzard/legacy                   ENABLED          
+        # lizzard_b80                    b80-lizzard/legacy                   ENABLED          
+        # internet-b60                    b60-guest                             ENABLED          
+        # internet-b70                    b70-guest                             ENABLED          
+        # internet-b80                    b80-guest                             ENABLED          
+        # lizzard_b70_1                  Not required                            ENABLED          
+
+        # Number of Policy Profiles: 31
+        policy_count_capture = re.compile(r"^Number of Policy Profiles:\s+(?P<policy_count>\d+)$")
+
+        # wip-b60                        b60-voice                             ENABLED          
+        policy_info_capture = re.compile(
+            # wip-b60
+            r"^(?P<policy_name>\S+)\s+"
+            # b60-voice 
+            r"(?P<description>Not required|default policy profile|\S+)\s+"
+            # ENABLED
+            r"(?P<status>ENABLED|DISABLED)$"
+        )
+
+        policy_info_obj = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            if policy_count_capture.match(line):
+                policy_count_match = policy_count_capture.match(line)
+
+                # only grab the first entry from output
+                if not policy_info_obj.get("policy_count"):
+                    group = policy_count_match.groupdict()
+
+                    # convert value from str to int
+                    policy_count_dict = {"policy_count": int(group["policy_count"])}
+
+                    policy_info_obj.update(policy_count_dict)
+
+            if policy_info_capture.match(line):
+                policy_info_match = policy_info_capture.match(line)
+                group = policy_info_match.groupdict()
+
+                policy_info_dict = {group["policy_name"]: {}}
+                policy_info_dict[group["policy_name"]].update(group)
+                policy_info_dict[group["policy_name"]].pop("policy_name")
+
+                if not policy_info_obj.get("policy_name"):
+                    policy_info_obj["policy_name"] = {}
+
+                policy_info_obj["policy_name"].update(policy_info_dict)
+
+        return policy_info_obj
+          
 # ===================================
 # Schema for:
 #  * 'show wireless stats ap join summary'
@@ -728,7 +817,7 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
     """Parser for show wireless stats ap join summary"""
 
     cli_command = ["show wireless stats ap join summary"]
-
+          
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command[0])
@@ -772,21 +861,18 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
         )
 
         wireless_info_obj = {}
+          
+          if ap_count_capture.match(line):
 
-        for line in output.splitlines():
-            line = line.strip()
+              # only grab the first entry from output
+              if not wireless_info_obj.get("ap_count"):
+                  ap_count_match = ap_count_capture.match(line)
+                  group = ap_count_match.groupdict()
 
-            if ap_count_capture.match(line):
+                  # convert value from str to int
+                  ap_count_dict = {"ap_count": int(group["ap_count"])}
 
-                # only grab the first entry from output
-                if not wireless_info_obj.get("ap_count"):
-                    ap_count_match = ap_count_capture.match(line)
-                    group = ap_count_match.groupdict()
-
-                    # convert value from str to int
-                    ap_count_dict = {"ap_count": int(group["ap_count"])}
-
-                    wireless_info_obj.update(ap_count_dict)
+                  wireless_info_obj.update(ap_count_dict)
 
             if ap_join_capture.match(line):
                 ap_join_match = ap_join_capture.match(line)
