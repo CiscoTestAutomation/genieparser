@@ -7,7 +7,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1074089987': {
             'alloc_bytes': 20512,
@@ -16,7 +16,7 @@ expected_output = {
             'call_diff': 2,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1074942976': {
             'alloc_bytes': 10752,
@@ -25,7 +25,7 @@ expected_output = {
             'call_diff': 2,
             'free_bytes': 10368,
             'frees': 54,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1074942977': {
             'alloc_bytes': 1400,
@@ -34,7 +34,7 @@ expected_output = {
             'call_diff': 2,
             'free_bytes': 1350,
             'frees': 54,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1074949121': {
             'alloc_bytes': 5824,
@@ -43,7 +43,7 @@ expected_output = {
             'call_diff': 2,
             'free_bytes': 5616,
             'frees': 54,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1213692934': {
             'alloc_bytes': 1547,
@@ -52,7 +52,7 @@ expected_output = {
             'call_diff': 61,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1213692935': {
             'alloc_bytes': 992,
@@ -61,7 +61,7 @@ expected_output = {
             'call_diff': 62,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1213713410': {
             'alloc_bytes': 160,
@@ -70,7 +70,7 @@ expected_output = {
             'call_diff': 2,
             'free_bytes': 96,
             'frees': 3,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1213725696': {
             'alloc_bytes': 1579,
@@ -79,7 +79,7 @@ expected_output = {
             'call_diff': 64,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1213725697': {
             'alloc_bytes': 1024,
@@ -88,7 +88,7 @@ expected_output = {
             'call_diff': 64,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1213725698': {
             'alloc_bytes': 619005,
@@ -97,7 +97,7 @@ expected_output = {
             'call_diff': 13,
             'free_bytes': 617633,
             'frees': 6159,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1213725701': {
             'alloc_bytes': 1837680,
@@ -106,7 +106,7 @@ expected_output = {
             'call_diff': 2,
             'free_bytes': 1834640,
             'frees': 1207,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '1477513216': {
             'alloc_bytes': 6272,
@@ -115,7 +115,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 6144,
             'frees': 48,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '2013427730': {
             'alloc_bytes': 3888,
@@ -124,7 +124,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 3816,
             'frees': 53,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '2013430790': {
             'alloc_bytes': 2320,
@@ -133,7 +133,7 @@ expected_output = {
             'call_diff': 29,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '2013431809': {
             'alloc_bytes': 7840,
@@ -142,7 +142,7 @@ expected_output = {
             'call_diff': 54,
             'free_bytes': 4816,
             'frees': 86,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '2013432832': {
             'alloc_bytes': 2320,
@@ -151,7 +151,7 @@ expected_output = {
             'call_diff': 29,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '2013574145': {
             'alloc_bytes': 80,
@@ -160,7 +160,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '2013814784': {
             'alloc_bytes': 6740,
@@ -169,7 +169,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 6720,
             'frees': 28,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673849344': {
             'alloc_bytes': 6105600,
@@ -178,7 +178,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 6088640,
             'frees': 359,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673856512': {
             'alloc_bytes': 21911520,
@@ -187,7 +187,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 21854160,
             'frees': 381,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673897474': {
             'alloc_bytes': 678288,
@@ -196,7 +196,7 @@ expected_output = {
             'call_diff': 2,
             'free_bytes': 676416,
             'frees': 798,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673897475': {
             'alloc_bytes': 20730064,
@@ -205,7 +205,7 @@ expected_output = {
             'call_diff': 2,
             'free_bytes': 20672640,
             'frees': 720,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673897476': {
             'alloc_bytes': 35930048,
@@ -214,7 +214,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 35921840,
             'frees': 4260,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673897485': {
             'alloc_bytes': 1688,
@@ -223,7 +223,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673897622': {
             'alloc_bytes': 40,
@@ -232,7 +232,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673897623': {
             'alloc_bytes': 36,
@@ -241,7 +241,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673897624': {
             'alloc_bytes': 40,
@@ -250,7 +250,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673899521': {
             'alloc_bytes': 504,
@@ -259,7 +259,7 @@ expected_output = {
             'call_diff': 9,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673899523': {
             'alloc_bytes': 12368922,
@@ -268,7 +268,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 12368899,
             'frees': 305542,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '673899528': {
             'alloc_bytes': 288,
@@ -277,7 +277,7 @@ expected_output = {
             'call_diff': 9,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '674238496': {
             'alloc_bytes': 29,
@@ -286,7 +286,7 @@ expected_output = {
             'call_diff': 2,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '674238501': {
             'alloc_bytes': 470,
@@ -295,7 +295,7 @@ expected_output = {
             'call_diff': 13,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '808471554': {
             'alloc_bytes': 9233,
@@ -304,7 +304,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 9216,
             'frees': 96,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '808471556': {
             'alloc_bytes': 88,
@@ -313,7 +313,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '808471557': {
             'alloc_bytes': 32,
@@ -322,7 +322,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 0,
             'frees': 0,
-            'thread': 30464,
+            'thread_id': 30464,
         },
         '940238865': {
             'alloc_bytes': 34862,
@@ -331,7 +331,7 @@ expected_output = {
             'call_diff': 1,
             'free_bytes': 34848,
             'frees': 132,
-            'thread': 30464,
+            'thread_id': 30464,
         },
     },
 }

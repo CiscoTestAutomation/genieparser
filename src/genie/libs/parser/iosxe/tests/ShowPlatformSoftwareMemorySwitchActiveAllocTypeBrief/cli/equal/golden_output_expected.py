@@ -1,5 +1,5 @@
 expected_output = {
-    'module': {
+    'type': {
         'BYTE': {
             'allocated': 7045122,
             'allocations': 737743,

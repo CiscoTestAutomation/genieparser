@@ -7673,7 +7673,7 @@ class ShowPlatformSoftwareMemoryRpActiveAllocTypeBriefSchema(MetaParser):
         * show platform software memory mdt-pubd RP active alloc type component brief
     """
     schema = {
-        'module': {
+        'type': {
             Any(): {
                 'allocated': int,
                 'requested': int,
@@ -7702,7 +7702,7 @@ class ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief(ShowPlatformSoftwareMemor
         ret_dict = {}
         
         # Summary                 4989412       4501988       150851        142147
-        p1 = re.compile(r'(?P<module>\S+) +(?P<allocated>\d+) +'
+        p1 = re.compile(r'(?P<type>\S+) +(?P<allocated>\d+) +'
             r'(?P<requested>\d+) +(?P<allocations>\d+) +(?P<frees>\d+)$')
 
         for line in out.splitlines():
@@ -7712,8 +7712,8 @@ class ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief(ShowPlatformSoftwareMemor
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                module = group.pop('module')
-                module_dict = ret_dict.setdefault('module', {}). \
+                module = group.pop('type')
+                module_dict = ret_dict.setdefault('type', {}). \
                     setdefault(module, {})
                 module_dict.update({k:int(v) for k, v in group.items() if v is not None})
                 continue
