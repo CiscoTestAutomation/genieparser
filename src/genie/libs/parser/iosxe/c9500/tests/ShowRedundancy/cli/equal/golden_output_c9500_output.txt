@@ -1,0 +1,52 @@
+show redundancy
+
+Redundant System Information :
+
+------------------------------
+
+       Available system uptime = 1 day, 18 hours, 48 minutes
+
+Switchovers system experienced = 0
+
+              Standby failures = 0
+
+        Last switchover reason = none
+
+
+
+                 Hardware Mode = Simplex
+
+    Configured Redundancy Mode = Non-redundant
+
+     Operating Redundancy Mode = Non-redundant
+
+              Maintenance Mode = Disabled
+
+                Communications = Down      Reason: Failure
+
+
+
+Current Processor Information :
+
+-------------------------------
+
+               Active Location = slot 1
+
+        Current Software state = ACTIVE
+
+       Uptime in current state = 1 day, 18 hours, 48 minutes
+
+                 Image Version = Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.2.20191101:003833 [HEAD-/nobackup/makale/puntject2/polaris 106]
+
+Copyright (c) 1986-2019 by Cisco Systems, Inc.
+
+Compiled Thu 31-Oct-19 17:43 by makale
+
+                          BOOT = bootflash:/ecr.bin;
+
+        Configuration register = 0x102
+
+
+
+Peer (slot: 1) information is not available because it is in 'DISABLED' state
+    

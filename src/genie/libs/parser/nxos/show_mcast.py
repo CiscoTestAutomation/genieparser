@@ -39,12 +39,14 @@ class ShowIpMrouteVrfAllSchema(MetaParser):
                                              Optional('incoming_interface_list'):
                                                 {Any(): 
                                                     {Optional('rpf_nbr'): str,
+                                                     Optional('internal'): bool
                                                     },
                                                 },
                                              Optional('outgoing_interface_list'): 
                                                 {Any(): 
                                                     {Optional('oil_uptime'): str,
                                                      Optional('oil_flags'): str,
+                                                     Optional('flag'): str,
                                                     },
                                                 },
                                             },
@@ -144,14 +146,15 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 continue
 
             # Incoming interface: Null, RPF nbr: 0.0.0.0 
+            # Incoming interface: Ethernet1/9, RPF nbr: 10.234.1.2, internal.
             p3 = re.compile(r'^\s*Incoming +interface:'
                              ' +(?P<incoming_interface>[a-zA-Z0-9\/\-\.]+),'
-                             ' +RPF +nbr: +(?P<rpf_nbr>[0-9\.]+)$')
+                             ' +RPF +nbr: +(?P<rpf_nbr>[0-9\.]+)(, *(?P<internal>internal)\.?)?$')
             m = p3.match(line)
             if m:
                 incoming_interface = m.groupdict()['incoming_interface']
                 rpf_nbr = m.groupdict()['rpf_nbr']
-
+                internal = m.groupdict().get('internal')
                 if 'incoming_interface_list' not in mroute_dict['vrf'][vrf]['address_family'][address_family]\
                 ['multicast_group'][multicast_group]['source_address'][source_address]:
                     mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
@@ -163,6 +166,9 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                     ['incoming_interface_list'][incoming_interface] = {}
                 mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address']\
                 [source_address]['incoming_interface_list'][incoming_interface]['rpf_nbr'] = rpf_nbr
+                if internal:
+                    mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]['source_address']\
+                    [source_address]['incoming_interface_list'][incoming_interface]['internal'] = True
                 continue
 
             # Outgoing interface list: (count: 0) 
@@ -177,14 +183,16 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
 
             # loopback2, uptime: 3d11h, igmp 
             # port-channel80, uptime: 3d23h, pim6
+            # Vlan200, uptime: 03:01:01, mrib, (bridge-only)
             p5 = re.compile(r'^\s*(?:(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),)?'
                             r' +uptime: +(?:(?P<oil_uptime>[a-zA-Z0-9\:]+),)?'
-                            r' +(?:(?P<oil_flags>[a-zA-Z0-9\(\)\s]+))?( *\((?P<rpf>\w+)\))?$')
+                            r' +(?:(?P<oil_flags>[a-zA-Z0-9\,\.\(\)\s]+))?(, *\((?P<flag>[\S\s]+)\))?$')
             m = p5.match(line)
             if m:
                 outgoing_interface = m.groupdict()['outgoing_interface']
                 oil_uptime = m.groupdict()['oil_uptime']
                 oil_flags = m.groupdict()['oil_flags']
+                flag = m.groupdict().get('flag')
 
                 if 'outgoing_interface_list' not in mroute_dict['vrf'][vrf]['address_family'][address_family]\
                 ['multicast_group'][multicast_group]['source_address'][source_address]:
@@ -201,6 +209,10 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
                 mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
                 ['source_address'][source_address]['outgoing_interface_list']\
                 [outgoing_interface]['oil_flags'] = ' '.join(sorted(oil_flags.split()))
+                if flag:
+                    mroute_dict['vrf'][vrf]['address_family'][address_family]['multicast_group'][multicast_group]\
+                    ['source_address'][source_address]['outgoing_interface_list']\
+                    [outgoing_interface]['flag'] = flag
                 continue
 
         return mroute_dict

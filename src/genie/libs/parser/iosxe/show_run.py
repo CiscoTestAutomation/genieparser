@@ -294,8 +294,8 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 		# ip address 10.1.21.249 255.255.255.0
 		p4 = re.compile(r'^ip +address +(?P<ip>[\S]+) +(?P<netmask>[\S]+)$')
 
-		# ipv6 address 1:1:1::1/64
- 		# ipv6 address 2000:1::2/112
+		# ipv6 address 2001:db8:4:1::1/64
+ 		# ipv6 address 2001:db8:400:1::2/112
 		p5 = re.compile(r'^ipv6 address +(?P<ipv6>[\S\s]+)$')
 
 		# shutdown
@@ -446,7 +446,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 								})
 				continue
 			
-			# ipv6 address 1:1:1::1/64
+			# ipv6 address 2001:db8:4:1::1/64
 			m = p5.match(line)
 			if m:
 				group = m.groupdict()
