@@ -727,7 +727,6 @@ class ShowWirelessProfilePolicySummary(ShowWirelessProfilePolicySummarySchema):
         else:
             output = output
 
-
         # Number of Policy Profiles: 31
 
         # Policy Profile Name               Description                             Status           
