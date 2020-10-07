@@ -149,11 +149,15 @@ class ShowRibTablesSummary(ShowRibTablesSummarySchema):
         result_dict = {}
         
         result_dict.setdefault('rib_summary', {}).setdefault('table_id', {})
-
+        # Summary of number of tables and cumulative prefix counts in <IPv4> RIB:
         p1 = re.compile(r'^Summary\sof.+in +(?P<rib>\S+)')
+        # Number of unicast tables:          <3>
         p2 = re.compile(r'^Number of unicast tables:\s+(?P<uni_tbl>\d+)')
+        # Total number of unicast prefixes:         <4>
         p3 = re.compile(r'^Total number of unicast prefixes:\s+(?P<uni_pfx>\d+)')
+        # Number of multicast tables:          <1>
         p4 = re.compile(r'^Number of multicast tables:\s+(?P<multi_tbl>\d+)')
+        # Total number of multicast prefixes:          <0>
         p5 = re.compile(r'^Total number of multicast prefixes:\s+(?P<multi_pfx>\d+)')
 
         for line in out.splitlines():
@@ -195,5 +199,5 @@ class ShowRibTablesSummary(ShowRibTablesSummarySchema):
                 group = m.groupdict()
                 result_dict['rib_summary']['table_id'][table_id].update({'total_multicast_prefixes': int(group['multi_pfx'])})
         
-        return result_dict
+        return result_dict           
     
