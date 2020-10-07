@@ -200,3 +200,74 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
                 continue
 
         return ret_dict
+
+class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
+    '''parser for:
+        * show netconf-yang sessions detail
+    '''
+
+    cli_command = 'show netconf-yang sessions detail'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+
+        # Number of sessions : 1
+        p1 = re.compile(r'^Number +of +sessions *: +(?P<session_count>\d+)$')
+
+        # session-id             : 24
+        p2 = re.compile(r'^session-id *: +(?P<session_id>\d+)$')
+
+        # transport : netconf-ssh
+        # username : admin
+        # source-host : 5.28.35.35
+        # login-time : 2020-09-29T15:19:54+00:00
+        # in-rpcs : 1
+        # in-bad-rpcs : 0
+        # out-rpc-errors : 0
+        # out-notifications : 0
+        # global-lock : None  
+        p3 = re.compile(r'^(?P<key>\S+) *: +(?P<data>\S+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+            
+
+            # Number of sessions : 1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['session_count'] = int(group.get('session_count'))
+                continue
+
+            # session-id             : 24
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                sessions = ret_dict.setdefault('session_id', {})
+                session = sessions.setdefault(int(group['session_id']), {})
+                continue
+
+            # transport : netconf-ssh
+            # username : admin
+            # source-host : 5.28.35.35
+            # login-time : 2020-09-29T15:19:54+00:00
+            # in-rpcs : 1
+            # in-bad-rpcs : 0
+            # out-rpc-errors : 0
+            # out-notifications : 0
+            # global-lock : None  
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                session.update({
+                    group['key'].replace('-', '_'): group['data']
+                })
+                continue
+
+        return ret_dict
