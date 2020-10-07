@@ -104,7 +104,7 @@ expected_output = {
         "non-client-nrt-class": {
             "match_criteria": "match-any",
             "cm_id": 1,
-            "match_policy": "non-client-nrt",
+            "match_policy": "non_client_nrt",
         },
         "system-cpp-police-routing-control": {
             "match_criteria": "match-any",

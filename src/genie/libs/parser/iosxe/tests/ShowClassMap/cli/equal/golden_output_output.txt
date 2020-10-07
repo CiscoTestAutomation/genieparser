@@ -1,0 +1,3 @@
+ Class Map match-any AutoConf-4.0-Output-Trans-Data-Queue (id 6)
+   Match   dscp af21 (18) af22 (20) af23 (22)
+   Match cos  2
