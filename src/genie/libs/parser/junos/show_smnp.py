@@ -87,11 +87,11 @@ class ShowSnmpConfigurationSchema(MetaParser):
             "snmp": {
                 Optional("location"): str,
                 Optional(("contact"): str,
-                "community": [
+                Optional("community"): [
                     {
                         "community-name": str,
-                        "authorization": str,
-                        "clients": [
+                        Optional("authorization"): str,
+                        Optional("clients"): [
                             {
                                 "name": str,
                                 Optional("restrict"): bool
@@ -104,13 +104,13 @@ class ShowSnmpConfigurationSchema(MetaParser):
                 },
                 "trap-group": {
                     "trap-group-name": str,
-                    "version": str,
-                    "categories": [
+                    Optional("version"): str,
+                    Optional("categories"): [
                         {
                             "name": str,
                         },
                     ],
-                    "targets": [
+                    Optional("targets"): [
                         {
                             "name": str
                         },
@@ -139,8 +139,8 @@ class ShowSnmpConfigurationSchema(MetaParser):
 
         snmp_community_schema = Schema({
                     "name": str,
-                    "authorization": str,
-                    "clients": Use(validate_clients_list),
+                    Optional("authorization"): str,
+                    Optional("clients"): Use(validate_clients_list),
                 })
         # Validate each dictionary in list
         for item in value:
@@ -165,15 +165,15 @@ class ShowSnmpConfigurationSchema(MetaParser):
             "snmp": {
                 Optional("location"): str,
                 Optional("contact"): str,
-                "community": Use(validate_community_list),
+                Optional("community"): Use(validate_community_list),
                 Optional("trap-options"): {
                     "source-address": str
                 },
-                "trap-group": {
+                Optional("trap-group"): {
                     "name": str,
-                    "version": str,
-                    "categories": Use(validate_categories_or_targets_list),
-                    "targets": Use(validate_categories_or_targets_list),
+                    Optional("version"): str,
+                    Optional("categories"): Use(validate_categories_or_targets_list),
+                    Optional("targets"): Use(validate_categories_or_targets_list),
                 }
             }
         }
@@ -207,13 +207,14 @@ class ShowSnmpConfiguration(ShowSnmpConfigurationSchema):
         #         2001:268:fd06:2::/64;
         #     }
         # }
-        p3 = re.compile(r'^community +(?P<name>.+) +\{authorization +(?P<authorization>.+);clients'
-                        r' +\{(?P<clients>.+)\}\}$')
+        p3 = re.compile(r'^(community +(?P<name>.+) +\{)$')
+        p4 = re.compile(r'^(authorization +(?P<authorization>.+);)$')
+        p5 = re.compile(r'^(?P<client>((\d+\.[\d\.]+\/[\d]+)|(\w+\:[\w\:]+\/[\d]+)|(0x\d+))([\s\S])*);$')
 
         # trap-options {
         #     source-address lo0;
         # }
-        p4 = re.compile(r'^trap-options +\{source-address +(?P<source_address>.+);\}$')
+        p6 = re.compile(r'^source-address +(?P<source_address>.+);$')
 
         # trap-group safaripub {
         #     version v1;
@@ -227,31 +228,17 @@ class ShowSnmpConfiguration(ShowSnmpConfigurationSchema):
         #         106.162.249.67;
         #     }
         # }
-        p5 = re.compile(r'^trap-group +(?P<name>.+) +\{version +(?P<version>.+);categories +\{(?P<categories>.+);\}'
-                        r'targets +\{(?P<targets>.+);\}\}$')
+        p7 = re.compile(r'^trap-group +(?P<name>.+) +\{$')
+        p8 = re.compile(r'^version +(?P<version>.+);$')
+        p9 = re.compile(r'^categories +\{(?P<categories>.+);$')
+        p10 = re.compile(r'^(?P<target>((\d+\.[\d\.]+)|(\w+\:[\w\:]+)|(0x\d+)));$')
 
         ret_dict = {}
         inner_block_text = ''
-        block_started = False
-        opening_brackets = []
+        category_block_started = False
 
         for line in out.splitlines():
             line = line.strip()
-
-            # Extracting content of inner brackets
-            if '{' in line:
-                block_started = True
-                opening_brackets.append('{')
-            elif '}' in line and block_started:
-                opening_brackets.pop()
-                if not opening_brackets:
-                    inner_block_text += line
-                    line = inner_block_text
-                    inner_block_text = ''
-                    block_started = False
-            if block_started:
-                inner_block_text += line
-                continue
 
             # location TH-HK2/floor_1B-002/rack_KHK1104;
             m = p1.match(line)
@@ -266,6 +253,9 @@ class ShowSnmpConfiguration(ShowSnmpConfigurationSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                if "configuration" not in ret_dict:
+                    snmp_dict = ret_dict.setdefault("configuration", {}) \
+                        .setdefault("snmp", {})
                 snmp_dict['contact'] = group['contact']
                 continue
 
@@ -288,29 +278,43 @@ class ShowSnmpConfiguration(ShowSnmpConfigurationSchema):
                     community_list = snmp_dict.setdefault('community', [])
                 community_list.append({})
                 community_list[-1]['name'] = group['name']
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
                 community_list[-1]['authorization'] = group['authorization']
-                clients = group['clients'].split(';')
+
+            if 'client' in line:
                 community_list[-1]['clients'] = []
-                for client in clients:
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                client = group['client']
+                if '/' in client:
                     client = client.split()
                     if client:
                         client_dict = {}
                         client_dict['name'] = client[0]
-                        if len(client) > 1:
+                        if len(client) > 1 and 'restrict' in client:
                             client_dict['restrict'] = True
                         community_list[-1]['clients'].append(client_dict)
-
                 continue
 
             # trap-options {
             #     source-address lo0;
             # }
-            m = p4.match(line)
+            m = p6.match(line)
             if m:
                 group = m.groupdict()
+                if "configuration" not in ret_dict:
+                    snmp_dict = ret_dict.setdefault("configuration", {}) \
+                        .setdefault("snmp", {})
                 trap_options = snmp_dict.setdefault('trap-options', {})
                 trap_options['source-address'] = group['source_address']
                 continue
+
 
             # trap-group safaripub {
             #     version v1;
@@ -324,18 +328,48 @@ class ShowSnmpConfiguration(ShowSnmpConfigurationSchema):
             #         106.162.249.67;
             #     }
             # }
-            m = p5.match(line)
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
+                if "configuration" not in ret_dict:
+                    snmp_dict = ret_dict.setdefault("configuration", {}) \
+                        .setdefault("snmp", {})
                 trap_group = snmp_dict.setdefault('trap-group', {})
                 trap_group['name'] = group['name']
+                continue
+
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
                 trap_group['version'] = group['version']
-                categories = trap_group.setdefault('categories', [])
-                for category in group['categories'].split(';'):
-                    categories.append({'name': category})
+                continue
+
+            if 'categories' in line:
+                category_block_started = True
+
+            if category_block_started:
+                if not '}' in line:
+                    inner_block_text += line
+                    continue
+
+            if inner_block_text and category_block_started:
+                category_block_started = False
+                m = p9.match(inner_block_text)
+                if m:
+                    group = m.groupdict()
+                    categories = trap_group.setdefault('categories', [])
+                    for category in group['categories'].split(';'):
+                        categories.append({'name': category})
+                inner_block_text = ''
+                continue
+
+            if 'targets' in line:
                 targets = trap_group.setdefault('targets', [])
-                for target in group['targets'].split(';'):
-                    targets.append({'name': target})
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                targets.append({'name': group['target']})
                 continue
 
         return ret_dict

@@ -40,6 +40,7 @@ class ShowSpanningTreeSummarySchema(MetaParser):
         Optional('root_bridge_for'): str,
         Optional('pvst_simulation'): bool,
         Optional('pvst_simulation_status'): str,
+        Optional('platform_pvst_simulation'): bool,
         Optional("configured_pathcost"): {
             'method': str,
             Optional('operational_value'): str,
@@ -86,18 +87,18 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         #p3 = re.compile(r'^(?P<name>\w+(?: \S+){,5}?) +is '
         #                 '+(?P<value>disabled|enabled)(?: +but +inactive +in (?P<simulation_value>\S+) +mode)?$')
         p3 = re.compile(r'^(?P<name>\w+(?: \S+){,5}?) +is +(?P<value>disable|disabled|enabled)'
-                         '(?: +but (?P<simulation_value>active|inactive) +in +rapid-pvst +mode)?$')
+                        r'(?: +but (?P<simulation_value>active|inactive) +in +rapid-pvst +mode)?$')
 
         p4 = re.compile(r'^(?P<id>(?!Total)\w+) +(?P<blocking>\d+) +(?P<listening>\d+)'
-                         ' +(?P<learning>\d+) +(?P<forwarding>\d+) +(?P<stp_active>\d+)$')
+                        r' +(?P<learning>\d+) +(?P<forwarding>\d+) +(?P<stp_active>\d+)$')
         p5 = re.compile(r'^(?P<num>\d+) +(msts?|vlans?) +(?P<blockings>\d+) +(?P<listenings>\d+)'
-                         ' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
+                        r' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
 
         p6 = re.compile(r'^(?:Configured +)?Pathcost +method +used +is '
-                         '+(?P<method>\w+)(?: +\(Operational +value +is +(?P<operational_value>\w+)\))?$')
+                        r'+(?P<method>\w+)(?: +\(Operational +value +is +(?P<operational_value>\w+)\))?$')
 
         p7 = re.compile(r'Total +(?P<blockings>\d+) +(?P<listenings>\d+)'
-                         ' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
+                        r' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
 
         p8 = re.compile(r'^(?P<root_bridge_for>(?:(?:[\w-]+, +)+)?[\w-]+)$')
 
@@ -113,7 +114,8 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                    'UplinkFast': 'uplink_fast',
                    'Bridge Assurance': 'bridge_assurance',
                    'BackboneFast': 'backbone_fast',
-                   'PVST Simulation': 'pvst_simulation'}
+                   'PVST Simulation': 'pvst_simulation',
+                   'Platform PVST Simulation': 'platform_pvst_simulation'}
 
         for line in out.splitlines():
             line = line.strip()
@@ -145,6 +147,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
             # BackboneFast                 is disabled
             # PVST Simulation              is enabled
             # PVST Simulation Default                 is enabled but inactive in rapid-pvst mode
+            # Platform PVST Simulation is enabled
             m = p3.match(line)
             if m:
                 group = m.groupdict()

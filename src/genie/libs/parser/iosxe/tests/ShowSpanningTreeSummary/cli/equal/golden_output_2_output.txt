@@ -1,0 +1,29 @@
+show spanning-tree summary
+Switch is in mst mode (IEEE Standard)
+Root bridge for: MST0-MST5, MST7-MST8
+EtherChannel misconfig guard is enabled
+Extended system ID is enabled
+Portfast Default is disabled
+Portfast Edge BPDU Guard Default is disabled
+Portfast Edge BPDU Filter Default is disabled
+Loopguard Default is enabled
+Platform PVST Simulation is enabled
+PVST Simulation is enabled
+Bridge Assurance is enabled
+UplinkFast is disabled
+BackboneFast is disabled
+Pathcost method used is long
+
+Name                   Blocking Listening Learning Forwarding STP Active
+---------------------- -------- --------- -------- ---------- ----------
+MST0                         0         0        0         53         53
+MST1                         0         0        0         30         30
+MST2                         0         0        0         34         34
+MST3                         0         0        0         20         20
+MST4                         0         0        0         16         16
+MST5                         0         0        0         15         15
+MST6                         1         0        0         14         15
+MST7                         0         0        0         29         29
+MST8                         0         0        0         15         15
+---------------------- -------- --------- -------- ---------- ----------
+9 msts                       1         0        0        226        227
