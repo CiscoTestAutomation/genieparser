@@ -1,6 +1,6 @@
 expected_output = {
-                'rib_summary': {
-                        'table_id': {
+
+                        'rib_table': {
                                 'ipv4': {
                                         'num_multicast_tables': 1,
                                         'num_unicast_tables': 3,
@@ -8,5 +8,4 @@ expected_output = {
                                         'total_unicast_prefixes': 14
                                 }
                         }
-                }
-        }
+                   }
