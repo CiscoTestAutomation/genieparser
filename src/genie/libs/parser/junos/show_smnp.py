@@ -85,8 +85,8 @@ class ShowSnmpConfigurationSchema(MetaParser):
     schema = {
         "configuration": {
             "snmp": {
-                "location": str,
-                "contact": str,
+                Optional("location"): str,
+                Optional(("contact"): str,
                 "community": [
                     {
                         "community-name": str,
@@ -99,7 +99,7 @@ class ShowSnmpConfigurationSchema(MetaParser):
                         ]
                     },
                 ],
-                "trap-options": {
+                Optional("trap-options"): {
                     "source-address": str
                 },
                 "trap-group": {
@@ -163,10 +163,10 @@ class ShowSnmpConfigurationSchema(MetaParser):
     schema = {
         "configuration": {
             "snmp": {
-                "location": str,
-                "contact": str,
+                Optional("location"): str,
+                Optional("contact"): str,
                 "community": Use(validate_community_list),
-                "trap-options": {
+                Optional("trap-options"): {
                     "source-address": str
                 },
                 "trap-group": {
@@ -234,6 +234,7 @@ class ShowSnmpConfiguration(ShowSnmpConfigurationSchema):
         inner_block_text = ''
         block_started = False
         opening_brackets = []
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -280,6 +281,9 @@ class ShowSnmpConfiguration(ShowSnmpConfigurationSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
+                if "configuration" not in ret_dict:
+                    snmp_dict = ret_dict.setdefault("configuration", {}) \
+                        .setdefault("snmp", {})
                 if not snmp_dict.get('community', []):
                     community_list = snmp_dict.setdefault('community', [])
                 community_list.append({})
