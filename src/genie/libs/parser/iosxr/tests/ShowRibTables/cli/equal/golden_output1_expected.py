@@ -1,6 +1,4 @@
 expected_output = {
-
-        'rib_tables': {
                 'table_id': {
                         '0xe0000000': {
                                 'forward_referenced': 'No',
@@ -56,4 +54,5 @@ expected_output = {
                         }
                 }
         }
-}
+
+        
