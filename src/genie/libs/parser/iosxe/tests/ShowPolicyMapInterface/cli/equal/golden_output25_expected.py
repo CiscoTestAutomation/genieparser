@@ -24,7 +24,15 @@ expected_output = {
                                         'queue_limit_bytes': 312500,
                                         'queueing': True,
                                         'random_detect': 
-                                            {'exp_weight_constant': '9 (1/512)',
+                                            {'class': 
+                                                {'default': 
+                                                    {'mark_prob': '1/10',
+                                                    'maximum_thresh': '156250',
+                                                    'minimum_thresh': '115625',
+                                                    'random_drop': '0/0',
+                                                    'tail_drop': '0/0',
+                                                    'transmitted': '22466/1437824'}},
+                                            'exp_weight_constant': '9 (1/512)',
                                             'mean_queue_depth': 64},
                                         'rate':
                                             {'drop_rate_bps': 0,
@@ -48,7 +56,15 @@ expected_output = {
                                         'queue_limit_bytes': 525000,
                                         'queueing': True,
                                         'random_detect': 
-                                            {'exp_weight_constant': '9 (1/512)',
+                                            {'class': 
+                                                {'cs6': 
+                                                    {'mark_prob': '1/10',
+                                                    'maximum_thresh': '262500',
+                                                    'minimum_thresh': '225750',
+                                                    'random_drop': '0/0',
+                                                    'tail_drop': '0/0',
+                                                    'transmitted': '3000454/262033337'}},
+                                            'exp_weight_constant': '9 (1/512)',
                                             'mean_queue_depth': 94},
                                         'rate': 
                                             {'drop_rate_bps': 0,
@@ -94,7 +110,15 @@ expected_output = {
                                         'queue_limit_bytes': 312500,
                                         'queueing': True,
                                         'random_detect': 
-                                            {'exp_weight_constant': '9 (1/512)',
+                                            {'class': 
+                                                {'af31': 
+                                                    {'mark_prob': '1/10',
+                                                    'maximum_thresh': '156250',
+                                                    'minimum_thresh': '134375',
+                                                    'random_drop': '0/0',
+                                                    'tail_drop': '0/0',
+                                                    'transmitted': '0/0'}},
+                                            'exp_weight_constant': '9 (1/512)',
                                             'mean_queue_depth': 0},
                                         'rate': 
                                             {'drop_rate_bps': 0,
@@ -119,7 +143,15 @@ expected_output = {
                                         'queue_limit_bytes': 312500,
                                         'queueing': True,
                                         'random_detect': 
-                                            {'exp_weight_constant': '9 (1/512)',
+                                            {'class': 
+                                                {'af21': 
+                                                    {'mark_prob': '1/10',
+                                                    'maximum_thresh': '156250',
+                                                    'minimum_thresh': '134375',
+                                                    'random_drop': '0/0',
+                                                    'tail_drop': '0/0',
+                                                    'transmitted': '0/0'}},
+                                            'exp_weight_constant': '9 (1/512)',
                                             'mean_queue_depth': 0},
                                         'rate': 
                                             {'drop_rate_bps': 0,
@@ -143,8 +175,16 @@ expected_output = {
                                         'queue_limit_bytes': 312500,
                                         'queueing': True,
                                         'random_detect': 
-                                            {'exp_weight_constant': '9 (1/512)',
-                                        'mean_queue_depth': 0},
+                                            {'class': 
+                                                {'af11': 
+                                                    {'mark_prob': '1/10',
+                                                    'maximum_thresh': '156250',
+                                                    'minimum_thresh': '78125',
+                                                    'random_drop': '0/0',
+                                                    'tail_drop': '0/0',
+                                                    'transmitted': '0/0'}},
+                                            'exp_weight_constant': '9 (1/512)',
+                                            'mean_queue_depth': 0},
                                         'rate': 
                                             {'drop_rate_bps': 0,
                                             'interval': 60,
