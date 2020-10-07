@@ -1,8 +1,0 @@
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* IOSXE
-    * Updated ShowBgpSummarySuperParser
-        * Updated Regex in p9 to capture '*'
-    * Updated test_show_ip_bgp_all_summary_golden2
-        * Added '*' in test case
