@@ -12,7 +12,14 @@ class ShowRedundancySwitchoverHistorySchema(MetaParser):
     """Schema for show redundancy switchover history."""
 
     schema = {
-        
+        Optional("index"): {
+            Any(): {
+                "current_active": int,
+                "previous_active": int,
+                "switchover_reason": str,
+                "switchover_time": str,
+            },
+        }
     }
 
 
