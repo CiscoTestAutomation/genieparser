@@ -1,0 +1,75 @@
+show platform software memory mdt-pubd switch active R0 alloc callsite
+  callsite: 1213725698, thread_id: 30464
+  allocs: 6172, frees: 6159, alloc_bytes: 619005, free_bytes: 617633, call_diff: 13, byte_diff: 1372
+  callsite: 1074089986, thread_id: 30464
+  allocs: 1, frees: 0, alloc_bytes: 272, free_bytes: 0, call_diff: 1, byte_diff: 272
+  callsite: 673899523, thread_id: 30464
+  allocs: 305543, frees: 305542, alloc_bytes: 12368922, free_bytes: 12368899, call_diff: 1, byte_diff: 23
+  callsite: 1074089987, thread_id: 30464
+  allocs: 2, frees: 0, alloc_bytes: 20512, free_bytes: 0, call_diff: 2, byte_diff: 20512
+  callsite: 2013431809, thread_id: 30464
+  allocs: 140, frees: 86, alloc_bytes: 7840, free_bytes: 4816, call_diff: 54, byte_diff: 3024
+  callsite: 2013814784, thread_id: 30464
+  allocs: 29, frees: 28, alloc_bytes: 6740, free_bytes: 6720, call_diff: 1, byte_diff: 20
+  callsite: 2013432832, thread_id: 30464
+  allocs: 29, frees: 0, alloc_bytes: 2320, free_bytes: 0, call_diff: 29, byte_diff: 2320
+  callsite: 2013430790, thread_id: 30464
+  allocs: 29, frees: 0, alloc_bytes: 2320, free_bytes: 0, call_diff: 29, byte_diff: 2320
+  callsite: 1213725701, thread_id: 30464
+  allocs: 1209, frees: 1207, alloc_bytes: 1837680, free_bytes: 1834640, call_diff: 2, byte_diff: 3040
+  callsite: 940238865, thread_id: 30464
+  allocs: 133, frees: 132, alloc_bytes: 34862, free_bytes: 34848, call_diff: 1, byte_diff: 14
+  callsite: 1213692935, thread_id: 30464
+  allocs: 62, frees: 0, alloc_bytes: 992, free_bytes: 0, call_diff: 62, byte_diff: 992
+  callsite: 1213692934, thread_id: 30464
+  allocs: 61, frees: 0, alloc_bytes: 1547, free_bytes: 0, call_diff: 61, byte_diff: 1547
+  callsite: 674238496, thread_id: 30464
+  allocs: 2, frees: 0, alloc_bytes: 29, free_bytes: 0, call_diff: 2, byte_diff: 29
+  callsite: 1213713410, thread_id: 30464
+  allocs: 5, frees: 3, alloc_bytes: 160, free_bytes: 96, call_diff: 2, byte_diff: 64
+  callsite: 673899521, thread_id: 30464
+  allocs: 9, frees: 0, alloc_bytes: 504, free_bytes: 0, call_diff: 9, byte_diff: 504
+  callsite: 673899528, thread_id: 30464
+  allocs: 9, frees: 0, alloc_bytes: 288, free_bytes: 0, call_diff: 9, byte_diff: 288
+  callsite: 673849344, thread_id: 30464
+  allocs: 360, frees: 359, alloc_bytes: 6105600, free_bytes: 6088640, call_diff: 1, byte_diff: 16960
+  callsite: 673856512, thread_id: 30464
+  allocs: 382, frees: 381, alloc_bytes: 21911520, free_bytes: 21854160, call_diff: 1, byte_diff: 57360
+  callsite: 673897474, thread_id: 30464
+  allocs: 800, frees: 798, alloc_bytes: 678288, free_bytes: 676416, call_diff: 2, byte_diff: 1872
+  callsite: 673897475, thread_id: 30464
+  allocs: 722, frees: 720, alloc_bytes: 20730064, free_bytes: 20672640, call_diff: 2, byte_diff: 57424
+  callsite: 673897476, thread_id: 30464
+  allocs: 4261, frees: 4260, alloc_bytes: 35930048, free_bytes: 35921840, call_diff: 1, byte_diff: 8208
+  callsite: 1213725696, thread_id: 30464
+  allocs: 64, frees: 0, alloc_bytes: 1579, free_bytes: 0, call_diff: 64, byte_diff: 1579
+  callsite: 1213725697, thread_id: 30464
+  allocs: 64, frees: 0, alloc_bytes: 1024, free_bytes: 0, call_diff: 64, byte_diff: 1024
+  callsite: 808471554, thread_id: 30464
+  allocs: 97, frees: 96, alloc_bytes: 9233, free_bytes: 9216, call_diff: 1, byte_diff: 17
+  callsite: 1477513216, thread_id: 30464
+  allocs: 49, frees: 48, alloc_bytes: 6272, free_bytes: 6144, call_diff: 1, byte_diff: 128
+  callsite: 1074942976, thread_id: 30464
+  allocs: 56, frees: 54, alloc_bytes: 10752, free_bytes: 10368, call_diff: 2, byte_diff: 384
+  callsite: 1074942977, thread_id: 30464
+  allocs: 56, frees: 54, alloc_bytes: 1400, free_bytes: 1350, call_diff: 2, byte_diff: 50
+  callsite: 1074949121, thread_id: 30464
+  allocs: 56, frees: 54, alloc_bytes: 5824, free_bytes: 5616, call_diff: 2, byte_diff: 208
+  callsite: 2013427730, thread_id: 30464
+  allocs: 54, frees: 53, alloc_bytes: 3888, free_bytes: 3816, call_diff: 1, byte_diff: 72
+  callsite: 2013574145, thread_id: 30464
+  allocs: 1, frees: 0, alloc_bytes: 80, free_bytes: 0, call_diff: 1, byte_diff: 80
+  callsite: 674238501, thread_id: 30464
+  allocs: 13, frees: 0, alloc_bytes: 470, free_bytes: 0, call_diff: 13, byte_diff: 470
+  callsite: 673897485, thread_id: 30464
+  allocs: 1, frees: 0, alloc_bytes: 1688, free_bytes: 0, call_diff: 1, byte_diff: 1688
+  callsite: 673897622, thread_id: 30464
+  allocs: 1, frees: 0, alloc_bytes: 40, free_bytes: 0, call_diff: 1, byte_diff: 40
+  callsite: 808471557, thread_id: 30464
+  allocs: 1, frees: 0, alloc_bytes: 32, free_bytes: 0, call_diff: 1, byte_diff: 32
+  callsite: 673897623, thread_id: 30464
+  allocs: 1, frees: 0, alloc_bytes: 36, free_bytes: 0, call_diff: 1, byte_diff: 36
+  callsite: 673897624, thread_id: 30464
+  allocs: 1, frees: 0, alloc_bytes: 40, free_bytes: 0, call_diff: 1, byte_diff: 40
+  callsite: 808471556, thread_id: 30464
+  allocs: 1, frees: 0, alloc_bytes: 88, free_bytes: 0, call_diff: 1, byte_diff: 88
