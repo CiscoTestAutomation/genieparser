@@ -2067,15 +2067,19 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 continue
 
             # Helper address is not set
-            p5 = re.compile(r'^Helper +address +is +(?P<address>[\w\.\:\s]+)$')
+            p5 = re.compile(r'^Helper +address +is +not +set$')
             m = p5.match(line)
             if m:
-                if 'not set' not in m.groupdict()['address']:
-                    helper_list = []
-                    helper_list.append(m.groupdict()['address'])
-                    interface_dict[interface]['helper_address'] = \
-                        helper_list
                 continue
+
+            # Helper address is 10.1.1.1
+            p5_0 = re.compile(r'^Helper +address +is +(?P<address>[\d\.]+)$')
+            m = p5_0.match(line)
+            if m:
+                interface_dict[interface]['helper_address'] = \
+                    m.groupdict()['address']
+                continue
+
             # Helper addresses are 10.1.1.1
             p5_1 = re.compile(r'^Helper +addresses +are +(?P<address>[\w\.\:\s]+)$')
             m = p5_1.match(line)

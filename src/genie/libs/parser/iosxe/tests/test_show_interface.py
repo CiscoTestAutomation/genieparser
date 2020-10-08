@@ -17872,6 +17872,7 @@ class TestShowIpInterface(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output4)
 
+
 #############################################################################
 # unitest For show ipv6 interface
 #############################################################################
