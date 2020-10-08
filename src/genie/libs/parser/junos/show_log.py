@@ -2,6 +2,7 @@
 
 JunOs parsers for the following show commands:
     * show log {filename}
+    * show log {filename} | match {match}
 """
 # Python
 import re

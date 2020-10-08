@@ -3,6 +3,7 @@
 JUNOS parsers for the following commands:
     * show configuration protocols mpls label-switched-path {path}
     * show configuration protocols mpls path {path}
+    * show configuration interfaces {interface} unit {unit} family bridge vlan-id
 """
 
 import re
