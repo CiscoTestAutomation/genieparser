@@ -6012,12 +6012,15 @@ class ShowPlatformIntegritySchema(MetaParser):
         'os_version': str,
         'os_hashes': {
             Any(): str,
-        }
+        },
+        'signature_version': str,
+        'signature': str,
     }
 
 class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
     # cli_command = 'show platform integrity'
     cli_command = ['show platform integrity', 'show platform integrity sign nonce {nonce}']
+
     def cli(self, output=None, nonce=None):
         if not output:
             if nonce:
@@ -6049,6 +6052,16 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
         p9 = re.compile(r'^(?P<hash_key>\S+): +(?P<hash_val>\S+)$')
         # cat9k_iosxe.2019-07-11_16.25_mzafar.SSA.bin: 
         p10 = re.compile(r'^(?P<os_hash>\S+):$')
+        # Signature version: 1
+        p11 = re.compile(r'^Signature version: +(?P<signature_version>\S+)$')
+        # Signature:
+        # AD7B89E69E9F09C1F476007760D14EED79B7E2FB0A9E2872AF39E051D4A0751EA8D0EED7366E9E6313B53D327ED13A13C9EFE27169FDB7D6C201549AE2F32E7CFDE6B1EF588113BAFB1AC834B7A48FDB93102AC68E6AA19B4A8D2BAEDD08A89F720D67B96274D9D3BF41236A250BAF517A31DBC22D0D455926E9CED4604DEC6132B47B5F45D9F0D266DD7FCD824236F3BCA5C357AFB880A7738FA6384B3D88B62654E76E2723039DAF63443CA70FE18E9A7523D1B4EAE51363094C85468EB264104251099A75EAF53F0A03C5491B604CF5489769F666EA254115984EDE19F3B8536391D1C89791501B0FE7E80942F0C4984E072D5E5F89B1D50AF445AA5DE270
+        p12 = re.search(r'.*Signature:\s+(.*)$', out, re.I|re.M)
+
+        if p12:
+            m = p12.group()
+            if m:
+                ret_dict.update({'signature': m})
 
         for line in out.splitlines():
             line = line.strip()
@@ -6140,7 +6153,12 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 os_hash_dict = ret_dict.setdefault('os_hashes', {})
                 os_hash_dict.update({os_hash: ''})
                 continue
-            
+            # Signature version: 1
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'signature_version': group['signature_version']})
+                continue
             # 51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57
             m = p6.match(line)
             if m:
@@ -6155,11 +6173,14 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                     os_hash_val = '{}{}'.format(os_hash_val, hash_val)
                     os_hash_dict.update({'os_hash': os_hash_val})
                 continue
+
         return ret_dict
     
     def yang(self, output=None, nonce=None):
         if not output:
             if nonce:
+                out = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
+            else:
                 out = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
         else:
             out = output
@@ -6208,7 +6229,10 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                     elif name and sub_child.tag.endswith('pcr-content'):
                         os_hashes.update({name: sub_child.text})
                         name = None
-        
+            elif child.tag.endswith('sig-version'):
+                ret_dict.update({'signature_version': child.text})
+            elif child.tag.endswith('signature'):
+                ret_dict.update({'signature': child.text})
         return ret_dict
 
 

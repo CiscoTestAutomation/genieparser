@@ -25,4 +25,6 @@ expected_output = {
     },
     "os_version": "2019-07-11_16.25_mzafar",
     "platform": "C9300-24U",
+    'signature_version': str,
+    'signature': str,
 }
