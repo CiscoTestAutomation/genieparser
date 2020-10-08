@@ -36,8 +36,8 @@ expected_output = {
                 "status": "ALIVE",
                 "auto_test": "FALSE",
                 "keywrap_enable": "FALSE",
-                "idle_time": "60 mins",
-                "deadtime": "20 secs"
+                "idle_time_mins": 60,
+                "deadtime_secs": 20
             },
             "10.100.123.2": {
                 "port": 1812,
@@ -45,8 +45,8 @@ expected_output = {
                 "status": "ALIVE",
                 "auto_test": "FALSE",
                 "keywrap_enable": "FALSE",
-                "idle_time": "60 mins",
-                "deadtime": "20 secs"
+                "idle_time_mins": 60,
+                "deadtime_secs": 20
             },
             "10.100.123.3": {
                 "port": 1812,
@@ -54,8 +54,8 @@ expected_output = {
                 "status": "ALIVE",
                 "auto_test": "FALSE",
                 "keywrap_enable": "FALSE",
-                "idle_time": "60 mins",
-                "deadtime": "20 secs"
+                "idle_time_mins": 60,
+                "deadtime_secs": 20
             },
             "10.100.123.4": {
                 "port": 1812,
@@ -63,8 +63,8 @@ expected_output = {
                 "status": "ALIVE",
                 "auto_test": "FALSE",
                 "keywrap_enable": "FALSE",
-                "idle_time": "60 mins",
-                "deadtime": "20 secs"
+                "idle_time_mins": 60,
+                "deadtime_secs": 20
             },
             "10.100.123.5": {
                 "port": 1812,
@@ -72,8 +72,8 @@ expected_output = {
                 "status": "ALIVE",
                 "auto_test": "FALSE",
                 "keywrap_enable": "FALSE",
-                "idle_time": "60 mins",
-                "deadtime": "20 secs"
+                "idle_time_mins": 60,
+                "deadtime_secs": 20
             },
             "10.100.123.6": {
                 "port": 1812,
@@ -81,8 +81,8 @@ expected_output = {
                 "status": "ALIVE",
                 "auto_test": "FALSE",
                 "keywrap_enable": "FALSE",
-                "idle_time": "60 mins",
-                "deadtime": "20 secs"
+                "idle_time_mins": 60,
+                "deadtime_secs": 20
             },
             "10.100.123.7": {
                 "port": 1812,
@@ -90,12 +90,16 @@ expected_output = {
                 "status": "ALIVE",
                 "auto_test": "FALSE",
                 "keywrap_enable": "FALSE",
-                "idle_time": "60 mins",
-                "deadtime": "20 secs"
+                "idle_time_mins": 60,
+                "deadtime_secs": 20
             }
         }
     },
-    "pac_valid_until": "19:56:32 PDT Sep 6 2020",
+    "pac_summary": {
+        "pac_info": {
+            "pac_valid_until": "19:56:32 PDT Sep 6 2020"
+        }
+    },
     "environment_data_summary": {
         "data_last_recieved": "20:04:41 PDT Mon Jul 13 2020",
         "data_valid_until": {
@@ -110,8 +114,8 @@ expected_output = {
         "default_key_chain": "Not Set",
         "default_key_chain_name": "Not Applicable",
         "default_source_ip": "192.168.2.24",
-        "retry_open_period": "120 secs",
-        "reconcile_period": "120 secs",
+        "retry_open_period_secs": 120,
+        "reconcile_period_secs": 120,
         "retry_open_timer": "disabled",
         "peer_sequence_limit_export": "Not Set",
         "peer_sequence_limit_import": "Not Set",
@@ -255,10 +259,12 @@ expected_output = {
         "ipv6": {
             "total_sxp_bindings": 111,
             "total_active_bindings": 111
-        }
+        },
+        "cts_role_based_enforcement": "Enabled",
+        "cts_role_based_vlan_enforcement": "Enabled",
     },
-    "cts_role_based_enforcement": "Enabled",
-    "cts_role_based_vlan_enforcement": "Enabled",
-    "number_trusted_links": 0,
-    "number_untrusted_links": 0
+    "trusted_untrusted_links": {
+        "number_trusted_links": 0,
+        "number_untrusted_links": 0
+    }
 }

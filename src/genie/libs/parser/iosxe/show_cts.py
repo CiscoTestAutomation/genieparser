@@ -508,12 +508,16 @@ class ShowCtsSchema(MetaParser):
                     Optional("status"): str,
                     Optional("auto_test"): str,
                     Optional("keywrap_enable"): str,
-                    Optional("idle_time"): str,
-                    Optional("deadtime"): str
+                    Optional("idle_time_mins"): int,
+                    Optional("deadtime_secs"): int
                 }
             }
         },
-        Optional("pac_valid_until"): str,
+        Optional("pac_summary") : {
+            Optional("pac_info"): {
+                Optional("pac_valid_until"): str,
+            }
+        },
         Optional("environment_data_summary"): {
             Optional("data_last_recieved"): str,
             Optional("data_valid_until"): {
@@ -528,8 +532,8 @@ class ShowCtsSchema(MetaParser):
             Optional("default_key_chain"): str,
             Optional("default_key_chain_name"): str,
             Optional("default_source_ip"): str,
-            Optional("retry_open_period"): str,
-            Optional("reconcile_period"): str,
+            Optional("retry_open_period_secs"): int,
+            Optional("reconcile_period_secs"): int,
             Optional("retry_open_timer"): str,
             Optional("peer_sequence_limit_export"): str,
             Optional("peer_sequence_limit_import"): str,
@@ -553,12 +557,14 @@ class ShowCtsSchema(MetaParser):
             Optional("ipv6"): {
                 Optional("total_sxp_bindings"): int,
                 Optional("total_active_bindings"): int
-            }
+            },
+            Optional("cts_role_based_enforcement"): str,
+            Optional("cts_role_based_vlan_enforcement"): str
         },
-        Optional("cts_role_based_enforcement"): str,
-        Optional("cts_role_based_vlan_enforcement"): str,
-        Optional("number_trusted_links"): int,
-        Optional("number_untrusted_links"): int
+        Optional("trusted_untrusted_links"): {
+            Optional("number_trusted_links"): int,
+            Optional("number_untrusted_links"): int
+        }
     }
 
 
@@ -817,7 +823,7 @@ class ShowCts(ShowCtsSchema):
 
         # auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
         p_server_attributes = re.compile(
-        r"^auto-test\s+=\s+(?P<test>[^,]+),\s+keywrap-enable\s+=\s+(?P<keywrap>[^,]+),\s+idle-time\s+=\s+(?P<idle>[^,]+),\s+deadtime\s+=\s+(?P<dead>[^,]+)$")
+        r"^auto-test\s+=\s+(?P<test>[^,]+),\s+keywrap-enable\s+=\s+(?P<keywrap>[^,]+),\s+idle-time\s+=\s+(?P<idle>\d+)\s+mins,\s+deadtime\s+=\s+(?P<dead>\d+)\s+secs$")
 
         # ===================
         p_equal_header = re.compile(r"^=+")
@@ -862,10 +868,10 @@ class ShowCts(ShowCtsSchema):
         p_sxp_source = re.compile(r"Default\s+Source\s+IP:\s+(?P<ip>.*)$")
 
         # Connection retry open period: 120 secs
-        p_sxp_retry = re.compile(r"^Connection\s+retry\s+open\s+period:\s+(?P<time>.*)$")
+        p_sxp_retry = re.compile(r"^Connection\s+retry\s+open\s+period:\s+(?P<time>\d+)\s+secs$")
 
         # Reconcile period: 120 secs
-        p_reconcile = re.compile(r"^Reconcile\s+period:\s+(?P<period>.*)$")
+        p_reconcile = re.compile(r"^Reconcile\s+period:\s+(?P<period>\d+)\s+secs$")
 
         # Retry open timer is not running
         p_open_timer = re.compile(r"^Retry\s+open\s+timer\s+is\s+not\s+running$")
@@ -1129,7 +1135,7 @@ class ShowCts(ShowCtsSchema):
                 match = p_server_attributes.match(line)
                 group = match.groupdict()
                 cts_dict["installed_list"]["server_ip"][serv_ip].update({ "auto_test": group["test"], "keywrap_enable": group["keywrap"],
-                                                                        "idle_time": group["idle"], "deadtime": group["dead"] })
+                                                                        "idle_time_mins": int(group["idle"]), "deadtime_secs": int(group["dead"]) })
                 continue
             # Any number of '=' ex: "======" or "================================"
             elif p_equal_header.match(line):
@@ -1143,7 +1149,8 @@ class ShowCts(ShowCtsSchema):
             # PAC Valid Until: 09:24:04 UTC Oct 10 2020
             elif p_pac_valid.match(line):
                 match = p_pac_valid.match(line)
-                cts_dict.update({ "pac_valid_until": match.group("valid")})
+                cts_dict.update({ "pac_summary": { "pac_info": {} }})
+                cts_dict["pac_summary"]["pac_info"].update({ "pac_valid_until": match.group("valid")})
                 continue
             # CTS Environment-Data Summary
             elif p_environment_header.match(line):
@@ -1200,12 +1207,12 @@ class ShowCts(ShowCtsSchema):
             # Connection retry open period: 120 secs
             elif p_sxp_retry.match(line):
                 match = p_sxp_retry.match(line)
-                cts_dict["sxp_connections_summary"].update({ "retry_open_period": match.group("time") })
+                cts_dict["sxp_connections_summary"].update({ "retry_open_period_secs": int(match.group("time")) })
                 continue
             # Reconcile period: 120 secs
             elif p_reconcile.match(line):
                 match = p_reconcile.match(line)
-                cts_dict["sxp_connections_summary"].update({ "reconcile_period": match.group("period") })
+                cts_dict["sxp_connections_summary"].update({ "reconcile_period_secs": int(match.group("period")) })
                 continue
             # Retry open timer is not running
             elif p_open_timer.match(line):
@@ -1281,24 +1288,26 @@ class ShowCts(ShowCtsSchema):
             # CTS Role Based Enforcement: Enabled
             elif p_role_based.match(line):
                 match = p_role_based.match(line)
-                cts_dict.update({ "cts_role_based_enforcement": match.group("value") })
+                cts_dict["ip_sgt_bindings"].update({ "cts_role_based_enforcement": match.group("value") })
                 continue
             # CTS Role Based VLAN Enforcement: Enabled
             elif p_role_based_vlan.match(line):
                 match = p_role_based_vlan.match(line)
-                cts_dict.update({ "cts_role_based_vlan_enforcement": match.group("value") })
+                cts_dict["ip_sgt_bindings"].update({ "cts_role_based_vlan_enforcement": match.group("value") })
                 continue
             # Trusted/Un-Trusted Links
             elif p_links_header.match(line):
+                if not cts_dict.get("trusted_untrusted_links"):
+                    cts_dict.update({ "trusted_untrusted_links" : {} })
                 continue
             # Number of Trusted interfaces = 0
             elif p_trusted_links.match(line):
                 match = p_trusted_links.match(line)
-                cts_dict.update({ "number_trusted_links": int(match.group("count")) })
+                cts_dict["trusted_untrusted_links"].update({ "number_trusted_links": int(match.group("count")) })
             # Number of Un-Trusted interfaces = 0
             elif p_untrusted_links.match(line):
                 match = p_untrusted_links.match(line)
-                cts_dict.update({ "number_untrusted_links": int(match.group("count")) })
+                cts_dict["trusted_untrusted_links"].update({ "number_untrusted_links": int(match.group("count")) })
                 continue
 
 
