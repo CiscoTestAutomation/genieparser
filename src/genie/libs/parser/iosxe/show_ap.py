@@ -974,6 +974,26 @@ class ShowApLedBrightnessLevelSummary(ShowApLedBrightnessLevelSummarySchema):
         return ap_led_brightness_level_summary_dict
 
 
+# =========================================
+# Schema for:
+#  * 'show ap cdp neighbor'
+# =========================================
+class ShowApCdpNeighborSchema(MetaParser):
+    """Schema for show ap cdp neighbor."""
+
+    schema = {
+        "ap_cdp_neighbor_count": int,
+        "ap_name": {
+            Optional(str): {
+                Optional("ap_ip"): str,
+                Optional("neighbor_name"): str,
+                Optional("neighbor_port"): str,
+                Optional("neighbor_ip_count"): int,
+                Optional("neighbor_ip_addresses"): list
+            }
+        }
+    }
+
 # =========================
 # Parser for:
 #  * 'show ap cdp neighbor'
@@ -1043,7 +1063,6 @@ class ShowApCdpNeighbor(ShowApCdpNeighborSchema):
                 continue
             # 0221-cap22                   10.8.33.106                              a02-21-sd-sw1.cisco.com TenGigabitEthernet3/0/47
             elif neighbor_info_capture.match(line):
-                neighbor_ip_index = 0
                 neighbor_info_capture_match = neighbor_info_capture.match(line)
                 groups = neighbor_info_capture_match.groupdict()
                 ap_name = groups['ap_name']
@@ -1064,13 +1083,12 @@ class ShowApCdpNeighbor(ShowApCdpNeighborSchema):
                 ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_ip_count'] = neighbor_ip_count
             # 10.8.32.1
             elif neighbor_ip_capture.match(line):
-                neighbor_ip_index = neighbor_ip_index + 1
                 neighbor_ip_match = neighbor_ip_capture.match(line)
                 groups = neighbor_ip_match.groupdict()
                 neighbor_ip = groups['neighbor_ip']
                 if not ap_cdp_neighbor_dict['ap_name'][ap_name].get('neighbor_ip_addresses', {}):
-                    ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_ip_addresses'] = {}
-                ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_ip_addresses'][neighbor_ip_index] = neighbor_ip
+                    ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_ip_addresses'] = []
+                ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_ip_addresses'].append(neighbor_ip)
                 continue
 
         return ap_cdp_neighbor_dict
