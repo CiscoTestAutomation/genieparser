@@ -69,7 +69,7 @@ expected_output = {
                             "prefix_or_tunnel_id": {
                                 "192.168.10.0/24[V]": {
                                     "outgoing_interface": {
-                                        "Aggregate/L3VPN-0051": {
+                                        "aggregate/L3VPN-0051": {
                                             "bytes_label_switched": 12189672,
                                             "mac": 0,
                                             "encaps": 0,

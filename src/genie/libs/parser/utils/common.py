@@ -529,14 +529,18 @@ class Common():
                    'vr': 'vasiright',
                    'BE': 'Bundle-Ether'
                    }
-        m = re.search('([a-zA-Z]+)', intf) 
-        m1 = re.search('([\d\/\.]+)', intf)
+        m = re.search(r'([a-zA-Z]+)', intf) 
+        m1 = re.search(r'([\d\/\.]+)', intf)
         if hasattr(m, 'group') and hasattr(m1, 'group'):
             int_type = m.group(0)
             int_port = m1.group(0)
             if int_type in convert.keys():
                 return(convert[int_type] + int_port)
             else:
+                # check if it is Junos interface name
+                m2 = re.search(r'([\w]+)-([\d\/\.]+)', intf)
+                if m2:
+                    return intf
                 # Unifying interface names
                 converted_intf = intf[0].capitalize()+intf[1:].replace(
                     ' ','').replace('ethernet', 'Ethernet')
