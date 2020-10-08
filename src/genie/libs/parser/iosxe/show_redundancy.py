@@ -54,7 +54,7 @@ class ShowRedundancySwitchoverHistory(ShowRedundancySwitchoverHistorySchema):
             # Active lost GW
             r"(?P<switchover_reason>.+)\s+"
             # 03:26:09 UTC Wed Sep 23 2020
-            r"(?P<switchover_time>\d+:\d+:\d+\sUTC\s\S+\s\S+\s\d+\s\d+)$"
+            r"(?P<switchover_time>\d+:\d+:\d+\s\S+\s\S+\s\S+\s\d+\s\d+)$"
         )
 
         redundancy_info_obj = {}
