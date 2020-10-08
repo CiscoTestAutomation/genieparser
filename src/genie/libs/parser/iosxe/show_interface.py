@@ -2077,7 +2077,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
             m = p5_0.match(line)
             if m:
                 interface_dict[interface]['helper_address'] = \
-                    m.groupdict()['address']
+                    [m.groupdict()['address']]
                 continue
 
             # Helper addresses are 10.1.1.1
