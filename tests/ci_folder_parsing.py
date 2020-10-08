@@ -102,6 +102,11 @@ CLASS_SKIP = {
         "ShowRebootHistory_viptela": True,
         "ShowOmpSummary_viptela": True,
         "ShowSystemStatus_viptela": True,
+        "ShowTcpProxyStatistics": True, # PR submitted
+        "ShowTcpproxyStatus": True, # PR submitted
+        "ShowPlatformTcamUtilization": True, # PR submitted
+        "ShowLicense": True, # PR submitted
+        "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
         "ShowSoftwaretab": True, # PR submitted
         "ShowOmpPeers_viptela": True,
         "ShowOmpTlocPath_viptela": True,
