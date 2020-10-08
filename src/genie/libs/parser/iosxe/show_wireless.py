@@ -16,7 +16,7 @@ class ShowWirelessCtsSummarySchema(MetaParser):
             "policy_profile_name": {
                 Optional(Any()): {
                     Optional("sgacl_enforcement"): str,
-                    Optional("inline-tagging"): str,
+                    Optional("inline_tagging"): str,
                     Optional("default_sgt"): int
                 }
             }
@@ -25,7 +25,7 @@ class ShowWirelessCtsSummarySchema(MetaParser):
             "policy_profile_name": {
                 Optional(Any()): {
                     Optional("sgacl_enforcement"): str,
-                    Optional("inline-tagging"): str
+                    Optional("inline_tagging"): str
                 }
             }
         } 
@@ -47,57 +47,21 @@ class ShowWirelessCtsSummary(ShowWirelessCtsSummarySchema):
         else:
             output=output
 
-        #Local Mode CTS Configuration
-        #
-        #Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt      
-        #----------------------------------------------------------------------------------------
-        #wip-b60                        DISABLED              DISABLED         0                
-        #wip-b70                        DISABLED              DISABLED         0                
-        #wip-b80                        DISABLED              DISABLED         0                
-        #lizzard_b60                    DISABLED              DISABLED         0                
-        #lizzard_b70                    DISABLED              DISABLED         0                
-        #lizzard_b80                    DISABLED              DISABLED         0                
-        #internet-b60                    DISABLED              DISABLED         0                
-        #internet-b70                    DISABLED              DISABLED         0                
-        #internet-b80                    DISABLED              DISABLED         0                
-        #lizzard_b70_1                  DISABLED              DISABLED         0                
-        #lizzard_b70_6                  DISABLED              DISABLED         0                
-        #lizzard_b70_8                  DISABLED              DISABLED         0                
-        #lizzard_b80_0                  DISABLED              DISABLED         0                
-        #lizzard_b80_1                  DISABLED              DISABLED         0                
-        #lizzard_b80_2                  DISABLED              DISABLED         0                
-        #lizzard_b80_3                  DISABLED              DISABLED         0                
-        #lizzard_b80_4                  DISABLED              DISABLED         0                
-        #lizzard_b80_5                  DISABLED              DISABLED         0                
-        #lizzard_b80_6                  DISABLED              DISABLED         0                
-        #lizzard_b80_7                  DISABLED              DISABLED         0                
-        #lizzard_b80_8                  DISABLED              DISABLED         0                
-        #lizzard_b60_1_2                DISABLED              DISABLED         0                
-        #lizzard_b70_3_4                DISABLED              DISABLED         0                
-        #lizzard_b70_5_6                DISABLED              DISABLED         0                
-        #lizzard_b70_7_8                DISABLED              DISABLED         0                
-        #
-        #
-        #Flex Mode CTS Configuration
-        #
-        #Flex Profile Name                 SGACL Enforcement     Inline-Tagging   
-        #-----------------------------------------------------------------------
-        #default-flex-profile              DISABLED              DISABLED         
-        #
-        #
-        #Local Mode CTS Configuration
-        #
-        #Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt      
-        #----------------------------------------------------------------------------------------
-        #lizzard_b60_3_4_5              DISABLED              DISABLED         0                
-        #default-policy-profile            DISABLED              DISABLED         0                
-        #lizzard_b60_cafeteria          DISABLED              DISABLED         0                
-        #lizzard_b70_cafeteria          DISABLED              DISABLED         0                
-        #internet-b70-launchpad          DISABLED              DISABLED         0                
-        #lizzard_b70_eventcenter        DISABLED              DISABLED         0                
-        #
-        #
-        #Flex Mode CTS Configuration
+        # Local Mode CTS Configuration
+        # 
+        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt      
+        # ----------------------------------------------------------------------------------------
+        # default-policy-profile            DISABLED              DISABLED         0                
+        # lizzard_Fabric_F_dee07a54        DISABLED              DISABLED         0                
+        # internet_Fabric_F_ed7a6bda        DISABLED              DISABLED         0                
+        # lizzard_l_Fabric_F_90c6dccd      DISABLED              DISABLED         0                
+        # 
+        # 
+        # Flex Mode CTS Configuration
+        # 
+        # Flex Profile Name                 SGACL Enforcement     Inline-Tagging   
+        # -----------------------------------------------------------------------
+        # default-flex-profile              DISABLED              DISABLED    
 
         # Local Mode CTS Configuration
         p_local = re.compile(r"Local\s+Mode\s+CTS\s+Configuration$")
@@ -144,7 +108,7 @@ class ShowWirelessCtsSummary(ShowWirelessCtsSummarySchema):
                     wireless_cts_summary_dict["local_mode_cts_configuration"].update({ "policy_profile_name": {} })
                 wireless_cts_summary_dict["local_mode_cts_configuration"]["policy_profile_name"].update({ group["name"] : {} })
                 wireless_cts_summary_dict["local_mode_cts_configuration"]["policy_profile_name"][group["name"]].update({ "sgacl_enforcement": group["sgacl"],
-                                                                                                                        "inline-tagging": group["tag"],
+                                                                                                                        "inline_tagging": group["tag"],
                                                                                                                         "default_sgt": int(group["sgt"]) 
                                                                                                                         })
                 continue
@@ -164,7 +128,7 @@ class ShowWirelessCtsSummary(ShowWirelessCtsSummarySchema):
                     wireless_cts_summary_dict["flex_mode_cts_configuration"].update({ "policy_profile_name": {} })
                 wireless_cts_summary_dict["flex_mode_cts_configuration"]["policy_profile_name"].update({ group["name"] : {} })
                 wireless_cts_summary_dict["flex_mode_cts_configuration"]["policy_profile_name"][group["name"]].update({ "sgacl_enforcement": group["sgacl"],
-                                                                                                                        "inline-tagging": group["tag"]
+                                                                                                                        "inline_tagging": group["tag"]
                                                                                                                         })
                 continue
 
