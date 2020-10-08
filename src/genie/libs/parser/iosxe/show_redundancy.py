@@ -65,17 +65,14 @@ class ShowRedundancySwitchoverHistory(ShowRedundancySwitchoverHistorySchema):
             if switchover_history_capture.match(line):
                 match = switchover_history_capture.match(line)
                 group = match.groupdict()
+                
+                # remove trailing spaces from regex capture
+                group["switchover_reason"] = group["switchover_reason"].strip()
 
-                # cleanup dict
-                for item in group:
-                    # remove trailing spaces from regex capture
-                    group[item] = group[item].strip()
-
-                    # convert str to int
-                    try:
-                        group[item] = int(group[item])
-                    except ValueError:
-                        continue
+                # convert str to int
+                key_list = ["index", "current_active", "previous_active"]
+                for key in key_list:
+                    group[key] = int(group[key])    
 
                 # pull a key from dict to use as new_key
                 new_key = "index"
