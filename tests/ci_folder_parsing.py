@@ -1,24 +1,19 @@
 """Testing strategy for dynamic testing via folder structure."""
 
-# Python
+import importlib
+import inspect
 import os
-import re
 import glob
 import json
-import inspect
 import argparse
-import importlib
 from unittest.mock import Mock
-
-# pyATS
 from pyats import aetest
-from pyats.topology import Device
 from pyats.aetest.steps import Steps
 
-# Genie
 from genie.libs import parser as _parser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
+from pyats.topology import Device
 
 # Create the parser
 my_parser = argparse.ArgumentParser(description="Optional arguments for 'nose'-like tests")
@@ -34,16 +29,11 @@ my_parser.add_argument('-t', "--token",
                        type=str,
                        help="The Token associated with the class, such as 'asr1k'",
                        default=None)
-my_parser.add_argument('-n', "--number",
-                       type=str,
-                       help="The specific unittest we want to run, such as '25'",
-                       default=None)
 args = my_parser.parse_args()
 
 _os = args.operating_system
 _class = args.class_name
 _token = args.token
-_number = args.number
 
 # This is the list of Classes that currently have no testing. It was found during the process
 # of converting to folder based testing strategy
@@ -196,7 +186,6 @@ def get_tokens(folder):
         tokens.append(path.split('/')[-2])
     return tokens
 
-
 def get_files(folder, token=None):
     files = []
     for parse_file in glob.glob(f"{folder}/*.py"):
@@ -212,7 +201,7 @@ class FileBasedTest(aetest.Testcase):
     OPERATING_SYSTEMS = get_operating_systems()
     @aetest.test
     @aetest.test.loop(operating_system=OPERATING_SYSTEMS)
-    def check_os_folder(self, steps, operating_system, number=_number):
+    def check_os_folder(self, steps, operating_system):
         """Loop through OS's and run appropriate tests."""
         base_folder = f"../src/genie/libs/parser/{operating_system}"
         # Please refer to get_tokens comments for the how, the what is a genie token, such as
@@ -273,7 +262,7 @@ class FileBasedTest(aetest.Testcase):
                             continue_=True,
                         ) as golden_steps:
                             self.test_golden(
-                                golden_steps, local_class, operating_system, token, _number
+                                golden_steps, local_class, operating_system, token
                             )
                         with class_step.start(
                             f"Test Empty -> {operating_system} -> {name}",
@@ -281,21 +270,13 @@ class FileBasedTest(aetest.Testcase):
                         ) as empty_steps:
                             self.test_empty(empty_steps, local_class, operating_system, token)
 
-    def test_golden(self, steps, local_class, operating_system, token=None, number=None):
+    def test_golden(self, steps, local_class, operating_system, token=None):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/equal"
         else:
             folder_root = f"{operating_system}/{local_class.__name__}/cli/equal"
-
-        # Get list of output files to parse and sort
-        convert = lambda text: int(text) if text.isdigit() else text
-        aph_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
-        if number:
-            output_glob = sorted(glob.glob(f"{folder_root}/golden_output{number}_output.txt"), key=aph_key)
-        else:
-            output_glob = sorted(glob.glob(f"{folder_root}/*_output.txt"), key=aph_key)
-
+        output_glob = glob.glob(f"{folder_root}/*_output.txt")
         if len(output_glob) == 0:
             self.failed(f"No files found in appropriate directory for {local_class}")
 
