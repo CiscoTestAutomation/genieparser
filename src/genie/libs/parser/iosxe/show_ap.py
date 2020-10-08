@@ -986,20 +986,22 @@ class ShowApLedBrightnessLevelSummary(ShowApLedBrightnessLevelSummarySchema):
 
 # =============================
 # Schema for:
-#  * 'show_ap_config_general'
+#  * 'show ap config general'
 # =============================
 class ShowApConfigGeneralSchema(MetaParser):
-    """Schema for show_ap_config_general."""
+    """Schema for show ap config general."""
 
     schema = {
-        "ap_config_general_info": {
+        "ap_name": {
             str: {
                 Optional("cisco_ap_identifier"): str,
                 Optional("country_code"): str,
                 Optional("regulatory_domain_allowed_by_country"): str,
                 Optional("ap_country_code"): str,
-                Optional("slot_0"): str,
-                Optional("slot_1"): str,
+                Optional("ap_regulatory_domain"): {
+                    Optional("slot_0"): str,
+                    Optional("slot_1"): str,
+                },
                 Optional("mac_address"): str,
                 Optional("ip_address_configuration"): str,
                 Optional("ip_address"): str,
@@ -1013,7 +1015,7 @@ class ShowApConfigGeneralSchema(MetaParser):
                 Optional("telnet_state"): str,
                 Optional("cpu_type"): str,
                 Optional("memory_type"): str,
-                Optional("memory_size"): str,
+                Optional("memory_size_kb"): int,
                 Optional("ssh_state"): str,
                 Optional("cisco_ap_location"): str,
                 Optional("site_tag_name"): str,
@@ -1295,7 +1297,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
         # Memory Type                                     : DDR3
         memory_type_capture = re.compile(r"^Memory\s+Type\s+:\s+(?P<memory_type>.*)$")
         # Memory Size                                     : 1028096 KB
-        memory_size_capture = re.compile(r"^Memory\s+Size\s+:\s+(?P<memory_size>.*)$")
+        memory_size_capture = re.compile(r"^Memory\s+Size\s+:\s+(?P<memory_size>\d+)\s+KB$")
         # SSH State                                       : Enabled
         ssh_state_capture = re.compile(r"^SSH\s+State\s+:\s+(?P<ssh_state>.*)$")
         # Cisco AP Location                               : default location
@@ -1547,16 +1549,16 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = cisco_ap_name_match.groupdict()
                 cisco_ap_name = groups['cisco_ap_name']
                 ap_name_key = cisco_ap_name
-                if not ap_config_general_dict.get('ap_config_general_info', {}):
-                    ap_config_general_dict['ap_config_general_info'] = {}
-                ap_config_general_dict['ap_config_general_info'].update({ap_name_key: {}})
+                if not ap_config_general_dict.get('ap_name', {}):
+                    ap_config_general_dict['ap_name'] = {}
+                ap_config_general_dict['ap_name'].update({ap_name_key: {}})
             # Cisco AP Identifier                             : 70b3.d278.e03e
             elif cisco_ap_identifier_capture.match(line):
                 cisco_ap_identifier_match = cisco_ap_identifier_capture.match(line)
                 groups = cisco_ap_identifier_match.groupdict()
                 cisco_ap_identifier = groups['cisco_ap_identifier']
                 cisco_ap_identifier = change_data_type(value=cisco_ap_identifier)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'cisco_ap_identifier': cisco_ap_identifier})
             # Country Code                                    : IN
             elif country_code_capture.match(line):
@@ -1564,14 +1566,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = country_code_match.groupdict()
                 country_code = groups['country_code']
                 country_code = change_data_type(value=country_code)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'country_code': country_code})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'country_code': country_code})
             # Regulatory Domain Allowed by Country            : 802.11bg:-A   802.11a:-DN
             elif regulatory_domain_allowed_by_country_capture.match(line):
                 regulatory_domain_allowed_by_country_match = regulatory_domain_allowed_by_country_capture.match(line)
                 groups = regulatory_domain_allowed_by_country_match.groupdict()
                 regulatory_domain_allowed_by_country = groups['regulatory_domain_allowed_by_country']
                 regulatory_domain_allowed_by_country = change_data_type(value=regulatory_domain_allowed_by_country)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'regulatory_domain_allowed_by_country': regulatory_domain_allowed_by_country})
             # AP Country Code                                 : IN  - India
             elif ap_country_code_capture.match(line):
@@ -1579,36 +1581,40 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_country_code_match.groupdict()
                 ap_country_code = groups['ap_country_code']
                 ap_country_code = change_data_type(value=ap_country_code)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_country_code': ap_country_code})
             # Slot 0                                        : -A
             elif slot_0_capture.match(line):
+                if not ap_config_general_dict["ap_name"][ap_name_key].get("ap_regulatory_domain"):
+                    ap_config_general_dict["ap_name"][ap_name_key].update({ "ap_regulatory_domain": {} })
                 slot_0_match = slot_0_capture.match(line)
                 groups = slot_0_match.groupdict()
                 slot_0 = groups['slot_0']
                 slot_0 = change_data_type(value=slot_0)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'slot_0': slot_0})
+                ap_config_general_dict['ap_name'][ap_name_key]["ap_regulatory_domain"].update({'slot_0': slot_0})
             # Slot 1                                        : -D
             elif slot_1_capture.match(line):
+                if not ap_config_general_dict["ap_name"][ap_name_key].get("ap_regulatory_domain"):
+                    ap_config_general_dict["ap_name"][ap_name_key].update({ "ap_regulatory_domain": {} })
                 slot_1_match = slot_1_capture.match(line)
                 groups = slot_1_match.groupdict()
                 slot_1 = groups['slot_1']
                 slot_1 = change_data_type(value=slot_1)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'slot_1': slot_1})
+                ap_config_general_dict['ap_name'][ap_name_key]["ap_regulatory_domain"].update({'slot_1': slot_1})
             # MAC Address                                     : 70b3.1711.acbb
             elif mac_address_capture.match(line):
                 mac_address_match = mac_address_capture.match(line)
                 groups = mac_address_match.groupdict()
                 mac_address = groups['mac_address']
                 mac_address = change_data_type(value=mac_address)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'mac_address': mac_address})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'mac_address': mac_address})
             # IP Address Configuration                        : DHCP
             elif ip_address_configuration_capture.match(line):
                 ip_address_configuration_match = ip_address_configuration_capture.match(line)
                 groups = ip_address_configuration_match.groupdict()
                 ip_address_configuration = groups['ip_address_configuration']
                 ip_address_configuration = change_data_type(value=ip_address_configuration)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ip_address_configuration': ip_address_configuration})
             # IP Address                                      : 10.10.5.14
             elif ip_address_capture.match(line):
@@ -1616,21 +1622,21 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ip_address_match.groupdict()
                 ip_address = groups['ip_address']
                 ip_address = change_data_type(value=ip_address)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ip_address': ip_address})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'ip_address': ip_address})
             # IP Netmask                                      : 255.255.254.0
             elif ip_netmask_capture.match(line):
                 ip_netmask_match = ip_netmask_capture.match(line)
                 groups = ip_netmask_match.groupdict()
                 ip_netmask = groups['ip_netmask']
                 ip_netmask = change_data_type(value=ip_netmask)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ip_netmask': ip_netmask})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'ip_netmask': ip_netmask})
             # Gateway IP Address                              : 10.10.5.1
             elif gateway_ip_address_capture.match(line):
                 gateway_ip_address_match = gateway_ip_address_capture.match(line)
                 groups = gateway_ip_address_match.groupdict()
                 gateway_ip_address = groups['gateway_ip_address']
                 gateway_ip_address = change_data_type(value=gateway_ip_address)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'gateway_ip_address': gateway_ip_address})
             # Fallback IP Address Being Used                  :
             elif fallback_ip_address_being_used_capture.match(line):
@@ -1638,7 +1644,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = fallback_ip_address_being_used_match.groupdict()
                 fallback_ip_address_being_used = groups['fallback_ip_address_being_used']
                 fallback_ip_address_being_used = change_data_type(value=fallback_ip_address_being_used)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'fallback_ip_address_being_used': fallback_ip_address_being_used})
             # Domain                                          :
             elif domain_capture.match(line):
@@ -1646,21 +1652,21 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = domain_match.groupdict()
                 domain = groups['domain']
                 domain = change_data_type(value=domain)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'domain': domain})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'domain': domain})
             # Name Server                                     :
             elif name_server_capture.match(line):
                 name_server_match = name_server_capture.match(line)
                 groups = name_server_match.groupdict()
                 name_server = groups['name_server']
                 name_server = change_data_type(value=name_server)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'name_server': name_server})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'name_server': name_server})
             # CAPWAP Path MTU                                 : 1485
             elif capwap_path_mtu_capture.match(line):
                 capwap_path_mtu_match = capwap_path_mtu_capture.match(line)
                 groups = capwap_path_mtu_match.groupdict()
                 capwap_path_mtu = groups['capwap_path_mtu']
                 capwap_path_mtu = change_data_type(value=capwap_path_mtu)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'capwap_path_mtu': capwap_path_mtu})
             # Capwap Active Window Size                       : 1
             elif capwap_active_window_size_capture.match(line):
@@ -1668,7 +1674,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = capwap_active_window_size_match.groupdict()
                 capwap_active_window_size = groups['capwap_active_window_size']
                 capwap_active_window_size = change_data_type(value=capwap_active_window_size)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'capwap_active_window_size': capwap_active_window_size})
             # Telnet State                                    : Disabled
             elif telnet_state_capture.match(line):
@@ -1676,42 +1682,42 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = telnet_state_match.groupdict()
                 telnet_state = groups['telnet_state']
                 telnet_state = change_data_type(value=telnet_state)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'telnet_state': telnet_state})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'telnet_state': telnet_state})
             # CPU Type                                        :  ARMv7 Processor rev 1 (v7l)
             elif cpu_type_capture.match(line):
                 cpu_type_match = cpu_type_capture.match(line)
                 groups = cpu_type_match.groupdict()
                 cpu_type = groups['cpu_type']
                 cpu_type = change_data_type(value=cpu_type)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'cpu_type': cpu_type})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'cpu_type': cpu_type})
             # Memory Type                                     : DDR3
             elif memory_type_capture.match(line):
                 memory_type_match = memory_type_capture.match(line)
                 groups = memory_type_match.groupdict()
                 memory_type = groups['memory_type']
                 memory_type = change_data_type(value=memory_type)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'memory_type': memory_type})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'memory_type': memory_type})
             # Memory Size                                     : 1028096 KB
             elif memory_size_capture.match(line):
                 memory_size_match = memory_size_capture.match(line)
                 groups = memory_size_match.groupdict()
                 memory_size = groups['memory_size']
                 memory_size = change_data_type(value=memory_size)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'memory_size': memory_size})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'memory_size_kb': memory_size})
             # SSH State                                       : Enabled
             elif ssh_state_capture.match(line):
                 ssh_state_match = ssh_state_capture.match(line)
                 groups = ssh_state_match.groupdict()
                 ssh_state = groups['ssh_state']
                 ssh_state = change_data_type(value=ssh_state)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ssh_state': ssh_state})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'ssh_state': ssh_state})
             # Cisco AP Location                               : default location
             elif cisco_ap_location_capture.match(line):
                 cisco_ap_location_match = cisco_ap_location_capture.match(line)
                 groups = cisco_ap_location_match.groupdict()
                 cisco_ap_location = groups['cisco_ap_location']
                 cisco_ap_location = change_data_type(value=cisco_ap_location)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'cisco_ap_location': cisco_ap_location})
             # Site Tag Name                                   : b8
             elif site_tag_name_capture.match(line):
@@ -1719,21 +1725,21 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = site_tag_name_match.groupdict()
                 site_tag_name = groups['site_tag_name']
                 site_tag_name = change_data_type(value=site_tag_name)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'site_tag_name': site_tag_name})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'site_tag_name': site_tag_name})
             # RF Tag Name                                     : Custom-RF
             elif rf_tag_name_capture.match(line):
                 rf_tag_name_match = rf_tag_name_capture.match(line)
                 groups = rf_tag_name_match.groupdict()
                 rf_tag_name = groups['rf_tag_name']
                 rf_tag_name = change_data_type(value=rf_tag_name)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'rf_tag_name': rf_tag_name})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'rf_tag_name': rf_tag_name})
             # Policy Tag Name                                 : b1_policy_tag
             elif policy_tag_name_capture.match(line):
                 policy_tag_name_match = policy_tag_name_capture.match(line)
                 groups = policy_tag_name_match.groupdict()
                 policy_tag_name = groups['policy_tag_name']
                 policy_tag_name = change_data_type(value=policy_tag_name)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'policy_tag_name': policy_tag_name})
             # AP join Profile                                 : APG_b18
             elif ap_join_profile_capture.match(line):
@@ -1741,7 +1747,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_join_profile_match.groupdict()
                 ap_join_profile = groups['ap_join_profile']
                 ap_join_profile = change_data_type(value=ap_join_profile)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_join_profile': ap_join_profile})
             # Flex Profile                                    : default-flex-profile
             elif flex_profile_capture.match(line):
@@ -1749,21 +1755,21 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = flex_profile_match.groupdict()
                 flex_profile = groups['flex_profile']
                 flex_profile = change_data_type(value=flex_profile)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'flex_profile': flex_profile})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'flex_profile': flex_profile})
             # AP Filter name                                  : b8
             elif ap_filter_name_capture.match(line):
                 ap_filter_name_match = ap_filter_name_capture.match(line)
                 groups = ap_filter_name_match.groupdict()
                 ap_filter_name = groups['ap_filter_name']
                 ap_filter_name = change_data_type(value=ap_filter_name)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_filter_name': ap_filter_name})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'ap_filter_name': ap_filter_name})
             # Primary Cisco Controller Name                   : b7-wl-ewlc1
             elif primary_cisco_controller_name_capture.match(line):
                 primary_cisco_controller_name_match = primary_cisco_controller_name_capture.match(line)
                 groups = primary_cisco_controller_name_match.groupdict()
                 primary_cisco_controller_name = groups['primary_cisco_controller_name']
                 primary_cisco_controller_name = change_data_type(value=primary_cisco_controller_name)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'primary_cisco_controller_name': primary_cisco_controller_name})
             # Primary Cisco Controller IP Address             : 10.6.4.17
             elif primary_cisco_controller_ip_address_capture.match(line):
@@ -1771,7 +1777,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = primary_cisco_controller_ip_address_match.groupdict()
                 primary_cisco_controller_ip_address = groups['primary_cisco_controller_ip_address']
                 primary_cisco_controller_ip_address = change_data_type(value=primary_cisco_controller_ip_address)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'primary_cisco_controller_ip_address': primary_cisco_controller_ip_address})
             # Secondary Cisco Controller Name                 : b8-wl-wlc3
             elif secondary_cisco_controller_name_capture.match(line):
@@ -1779,7 +1785,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = secondary_cisco_controller_name_match.groupdict()
                 secondary_cisco_controller_name = groups['secondary_cisco_controller_name']
                 secondary_cisco_controller_name = change_data_type(value=secondary_cisco_controller_name)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'secondary_cisco_controller_name': secondary_cisco_controller_name})
             # Secondary Cisco Controller IP Address           : 10.6.7.16
             elif secondary_cisco_controller_ip_address_capture.match(line):
@@ -1787,7 +1793,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = secondary_cisco_controller_ip_address_match.groupdict()
                 secondary_cisco_controller_ip_address = groups['secondary_cisco_controller_ip_address']
                 secondary_cisco_controller_ip_address = change_data_type(value=secondary_cisco_controller_ip_address)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'secondary_cisco_controller_ip_address': secondary_cisco_controller_ip_address})
             # Tertiary Cisco Controller Name                  : b3-wl-wlc3
             elif tertiary_cisco_controller_name_capture.match(line):
@@ -1795,7 +1801,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = tertiary_cisco_controller_name_match.groupdict()
                 tertiary_cisco_controller_name = groups['tertiary_cisco_controller_name']
                 tertiary_cisco_controller_name = change_data_type(value=tertiary_cisco_controller_name)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'tertiary_cisco_controller_name': tertiary_cisco_controller_name})
             # Tertiary Cisco Controller IP Address            : 10.6.4.17
             elif tertiary_cisco_controller_ip_address_capture.match(line):
@@ -1803,7 +1809,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = tertiary_cisco_controller_ip_address_match.groupdict()
                 tertiary_cisco_controller_ip_address = groups['tertiary_cisco_controller_ip_address']
                 tertiary_cisco_controller_ip_address = change_data_type(value=tertiary_cisco_controller_ip_address)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'tertiary_cisco_controller_ip_address': tertiary_cisco_controller_ip_address})
             # Administrative State                            : Enabled
             elif administrative_state_capture.match(line):
@@ -1811,7 +1817,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = administrative_state_match.groupdict()
                 administrative_state = groups['administrative_state']
                 administrative_state = change_data_type(value=administrative_state)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'administrative_state': administrative_state})
             # Operation State                                 : Registered
             elif operation_state_capture.match(line):
@@ -1819,7 +1825,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = operation_state_match.groupdict()
                 operation_state = groups['operation_state']
                 operation_state = change_data_type(value=operation_state)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'operation_state': operation_state})
             # NAT External IP Address                         : 10.10.5.12
             elif nat_external_ip_address_capture.match(line):
@@ -1827,7 +1833,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = nat_external_ip_address_match.groupdict()
                 nat_external_ip_address = groups['nat_external_ip_address']
                 nat_external_ip_address = change_data_type(value=nat_external_ip_address)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'nat_external_ip_address': nat_external_ip_address})
             # AP Certificate type                             : Manufacturer Installed Certificate
             elif ap_certificate_type_capture.match(line):
@@ -1835,7 +1841,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_certificate_type_match.groupdict()
                 ap_certificate_type = groups['ap_certificate_type']
                 ap_certificate_type = change_data_type(value=ap_certificate_type)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_certificate_type': ap_certificate_type})
             # AP Mode                                         : Local
             elif ap_mode_capture.match(line):
@@ -1843,14 +1849,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_mode_match.groupdict()
                 ap_mode = groups['ap_mode']
                 ap_mode = change_data_type(value=ap_mode)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_mode': ap_mode})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'ap_mode': ap_mode})
             # AP VLAN tagging state                           : Disabled
             elif ap_vlan_tagging_state_capture.match(line):
                 ap_vlan_tagging_state_match = ap_vlan_tagging_state_capture.match(line)
                 groups = ap_vlan_tagging_state_match.groupdict()
                 ap_vlan_tagging_state = groups['ap_vlan_tagging_state']
                 ap_vlan_tagging_state = change_data_type(value=ap_vlan_tagging_state)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_vlan_tagging_state': ap_vlan_tagging_state})
             # AP VLAN tag                                     : 0
             elif ap_vlan_tag_capture.match(line):
@@ -1858,14 +1864,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_vlan_tag_match.groupdict()
                 ap_vlan_tag = groups['ap_vlan_tag']
                 ap_vlan_tag = change_data_type(value=ap_vlan_tag)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_vlan_tag': ap_vlan_tag})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'ap_vlan_tag': ap_vlan_tag})
             # CAPWAP Preferred mode                           : IPv4
             elif capwap_preferred_mode_capture.match(line):
                 capwap_preferred_mode_match = capwap_preferred_mode_capture.match(line)
                 groups = capwap_preferred_mode_match.groupdict()
                 capwap_preferred_mode = groups['capwap_preferred_mode']
                 capwap_preferred_mode = change_data_type(value=capwap_preferred_mode)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'capwap_preferred_mode': capwap_preferred_mode})
             # CAPWAP UDP-Lite                                 : Not Configured
             elif capwap_udp_lite_capture.match(line):
@@ -1873,7 +1879,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = capwap_udp_lite_match.groupdict()
                 capwap_udp_lite = groups['capwap_udp_lite']
                 capwap_udp_lite = change_data_type(value=capwap_udp_lite)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'capwap_udp_lite': capwap_udp_lite})
             # AP Submode                                      : Not Configured
             elif ap_submode_capture.match(line):
@@ -1881,14 +1887,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_submode_match.groupdict()
                 ap_submode = groups['ap_submode']
                 ap_submode = change_data_type(value=ap_submode)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_submode': ap_submode})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'ap_submode': ap_submode})
             # Office Extend Mode                              : Disabled
             elif office_extend_mode_capture.match(line):
                 office_extend_mode_match = office_extend_mode_capture.match(line)
                 groups = office_extend_mode_match.groupdict()
                 office_extend_mode = groups['office_extend_mode']
                 office_extend_mode = change_data_type(value=office_extend_mode)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'office_extend_mode': office_extend_mode})
             # Dhcp Server                                     : Disabled
             elif dhcp_server_capture.match(line):
@@ -1896,14 +1902,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = dhcp_server_match.groupdict()
                 dhcp_server = groups['dhcp_server']
                 dhcp_server = change_data_type(value=dhcp_server)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'dhcp_server': dhcp_server})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'dhcp_server': dhcp_server})
             # Remote AP Debug                                 : Disabled
             elif remote_ap_debug_capture.match(line):
                 remote_ap_debug_match = remote_ap_debug_capture.match(line)
                 groups = remote_ap_debug_match.groupdict()
                 remote_ap_debug = groups['remote_ap_debug']
                 remote_ap_debug = change_data_type(value=remote_ap_debug)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'remote_ap_debug': remote_ap_debug})
             # Logging Trap Severity Level                     : information
             elif logging_trap_severity_level_capture.match(line):
@@ -1911,7 +1917,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = logging_trap_severity_level_match.groupdict()
                 logging_trap_severity_level = groups['logging_trap_severity_level']
                 logging_trap_severity_level = change_data_type(value=logging_trap_severity_level)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'logging_trap_severity_level': logging_trap_severity_level})
             # Logging Syslog facility                         : kern
             elif logging_syslog_facility_capture.match(line):
@@ -1919,7 +1925,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = logging_syslog_facility_match.groupdict()
                 logging_syslog_facility = groups['logging_syslog_facility']
                 logging_syslog_facility = change_data_type(value=logging_syslog_facility)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'logging_syslog_facility': logging_syslog_facility})
             # Software Version                                : 17.3.1.9
             elif software_version_capture.match(line):
@@ -1927,7 +1933,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = software_version_match.groupdict()
                 software_version = groups['software_version']
                 software_version = change_data_type(value=software_version)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'software_version': software_version})
             # Boot Version                                    : 1.1.2.4
             elif boot_version_capture.match(line):
@@ -1935,14 +1941,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = boot_version_match.groupdict()
                 boot_version = groups['boot_version']
                 boot_version = change_data_type(value=boot_version)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'boot_version': boot_version})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'boot_version': boot_version})
             # Mini IOS Version                                : 0.0.0.0
             elif mini_ios_version_capture.match(line):
                 mini_ios_version_match = mini_ios_version_capture.match(line)
                 groups = mini_ios_version_match.groupdict()
                 mini_ios_version = groups['mini_ios_version']
                 mini_ios_version = change_data_type(value=mini_ios_version)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'mini_ios_version': mini_ios_version})
             # Stats Reporting Period                          : 0
             elif stats_reporting_period_capture.match(line):
@@ -1950,7 +1956,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = stats_reporting_period_match.groupdict()
                 stats_reporting_period = groups['stats_reporting_period']
                 stats_reporting_period = change_data_type(value=stats_reporting_period)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'stats_reporting_period': stats_reporting_period})
             # LED State                                       : Enabled
             elif led_state_capture.match(line):
@@ -1958,14 +1964,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = led_state_match.groupdict()
                 led_state = groups['led_state']
                 led_state = change_data_type(value=led_state)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'led_state': led_state})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'led_state': led_state})
             # LED Flash State                                 : Enabled
             elif led_flash_state_capture.match(line):
                 led_flash_state_match = led_flash_state_capture.match(line)
                 groups = led_flash_state_match.groupdict()
                 led_flash_state = groups['led_flash_state']
                 led_flash_state = change_data_type(value=led_flash_state)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'led_flash_state': led_flash_state})
             # LED Flash Timer                                 : 0
             elif led_flash_timer_capture.match(line):
@@ -1973,7 +1979,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = led_flash_timer_match.groupdict()
                 led_flash_timer = groups['led_flash_timer']
                 led_flash_timer = change_data_type(value=led_flash_timer)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'led_flash_timer': led_flash_timer})
             # MDNS Group Id                                   : 0
             elif mdns_group_id_capture.match(line):
@@ -1981,21 +1987,21 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = mdns_group_id_match.groupdict()
                 mdns_group_id = groups['mdns_group_id']
                 mdns_group_id = change_data_type(value=mdns_group_id)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'mdns_group_id': mdns_group_id})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'mdns_group_id': mdns_group_id})
             # MDNS Rule Name                                  :
             elif mdns_rule_name_capture.match(line):
                 mdns_rule_name_match = mdns_rule_name_capture.match(line)
                 groups = mdns_rule_name_match.groupdict()
                 mdns_rule_name = groups['mdns_rule_name']
                 mdns_rule_name = change_data_type(value=mdns_rule_name)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'mdns_rule_name': mdns_rule_name})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'mdns_rule_name': mdns_rule_name})
             # PoE Pre-Standard Switch                         : Disabled
             elif poe_pre_standard_switch_capture.match(line):
                 poe_pre_standard_switch_match = poe_pre_standard_switch_capture.match(line)
                 groups = poe_pre_standard_switch_match.groupdict()
                 poe_pre_standard_switch = groups['poe_pre_standard_switch']
                 poe_pre_standard_switch = change_data_type(value=poe_pre_standard_switch)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'poe_pre_standard_switch': poe_pre_standard_switch})
             # PoE Power Injector MAC Address                  : Disabled
             elif poe_power_injector_mac_address_capture.match(line):
@@ -2003,7 +2009,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = poe_power_injector_mac_address_match.groupdict()
                 poe_power_injector_mac_address = groups['poe_power_injector_mac_address']
                 poe_power_injector_mac_address = change_data_type(value=poe_power_injector_mac_address)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'poe_power_injector_mac_address': poe_power_injector_mac_address})
             # Power Type/Mode                                 : PoE/Full Power
             elif power_type_mode_capture.match(line):
@@ -2011,7 +2017,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = power_type_mode_match.groupdict()
                 power_type_mode = groups['power_type_mode']
                 power_type_mode = change_data_type(value=power_type_mode)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'power_type_mode': power_type_mode})
             # Number of Slots                                 : 3
             elif number_of_slots_capture.match(line):
@@ -2019,7 +2025,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = number_of_slots_match.groupdict()
                 number_of_slots = groups['number_of_slots']
                 number_of_slots = change_data_type(value=number_of_slots)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'number_of_slots': number_of_slots})
             # AP Model                                        : AIR-AP4800-D-K9
             elif ap_model_capture.match(line):
@@ -2027,28 +2033,28 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_model_match.groupdict()
                 ap_model = groups['ap_model']
                 ap_model = change_data_type(value=ap_model)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_model': ap_model})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'ap_model': ap_model})
             # IOS Version                                     : 17.3.1.9
             elif ios_version_capture.match(line):
                 ios_version_match = ios_version_capture.match(line)
                 groups = ios_version_match.groupdict()
                 ios_version = groups['ios_version']
                 ios_version = change_data_type(value=ios_version)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ios_version': ios_version})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'ios_version': ios_version})
             # Reset Button                                    : Disabled
             elif reset_button_capture.match(line):
                 reset_button_match = reset_button_capture.match(line)
                 groups = reset_button_match.groupdict()
                 reset_button = groups['reset_button']
                 reset_button = change_data_type(value=reset_button)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'reset_button': reset_button})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'reset_button': reset_button})
             # AP Serial Number                                : FGL2102AZZZ
             elif ap_serial_number_capture.match(line):
                 ap_serial_number_match = ap_serial_number_capture.match(line)
                 groups = ap_serial_number_match.groupdict()
                 ap_serial_number = groups['ap_serial_number']
                 ap_serial_number = change_data_type(value=ap_serial_number)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_serial_number': ap_serial_number})
             # Management Frame Validation                     : Capable
             elif management_frame_validation_capture.match(line):
@@ -2056,7 +2062,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = management_frame_validation_match.groupdict()
                 management_frame_validation = groups['management_frame_validation']
                 management_frame_validation = change_data_type(value=management_frame_validation)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'management_frame_validation': management_frame_validation})
             # Management Frame Protection                     : Capable
             elif management_frame_protection_capture.match(line):
@@ -2064,7 +2070,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = management_frame_protection_match.groupdict()
                 management_frame_protection = groups['management_frame_protection']
                 management_frame_protection = change_data_type(value=management_frame_protection)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'management_frame_protection': management_frame_protection})
             # AP User Name                                    : admin
             elif ap_user_name_capture.match(line):
@@ -2072,14 +2078,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_user_name_match.groupdict()
                 ap_user_name = groups['ap_user_name']
                 ap_user_name = change_data_type(value=ap_user_name)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_user_name': ap_user_name})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'ap_user_name': ap_user_name})
             # AP 802.1X User Mode                             : Global
             elif ap_802_1x_user_mode_capture.match(line):
                 ap_802_1x_user_mode_match = ap_802_1x_user_mode_capture.match(line)
                 groups = ap_802_1x_user_mode_match.groupdict()
                 ap_802_1x_user_mode = groups['ap_802_1x_user_mode']
                 ap_802_1x_user_mode = change_data_type(value=ap_802_1x_user_mode)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_802_1x_user_mode': ap_802_1x_user_mode})
             # AP 802.1X User Name                             : Not Configured
             elif ap_802_1x_user_name_capture.match(line):
@@ -2087,7 +2093,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_802_1x_user_name_match.groupdict()
                 ap_802_1x_user_name = groups['ap_802_1x_user_name']
                 ap_802_1x_user_name = change_data_type(value=ap_802_1x_user_name)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_802_1x_user_name': ap_802_1x_user_name})
             # Cisco AP System Logging Host                    : 10.16.19.6
             elif cisco_ap_system_logging_host_capture.match(line):
@@ -2095,7 +2101,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = cisco_ap_system_logging_host_match.groupdict()
                 cisco_ap_system_logging_host = groups['cisco_ap_system_logging_host']
                 cisco_ap_system_logging_host = change_data_type(value=cisco_ap_system_logging_host)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'cisco_ap_system_logging_host': cisco_ap_system_logging_host})
             # Cisco AP Secured Logging TLS mode               : Disabled
             elif cisco_ap_secured_logging_tls_mode_capture.match(line):
@@ -2103,7 +2109,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = cisco_ap_secured_logging_tls_mode_match.groupdict()
                 cisco_ap_secured_logging_tls_mode = groups['cisco_ap_secured_logging_tls_mode']
                 cisco_ap_secured_logging_tls_mode = change_data_type(value=cisco_ap_secured_logging_tls_mode)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'cisco_ap_secured_logging_tls_mode': cisco_ap_secured_logging_tls_mode})
             # AP Up Time                                      : 3 days 9 hours 44 minutes 18 seconds
             elif ap_up_time_capture.match(line):
@@ -2111,14 +2117,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_up_time_match.groupdict()
                 ap_up_time = groups['ap_up_time']
                 ap_up_time = change_data_type(value=ap_up_time)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'ap_up_time': ap_up_time})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'ap_up_time': ap_up_time})
             # AP CAPWAP Up Time                               : 3 days 9 hours 37 minutes 20 seconds
             elif ap_capwap_up_time_capture.match(line):
                 ap_capwap_up_time_match = ap_capwap_up_time_capture.match(line)
                 groups = ap_capwap_up_time_match.groupdict()
                 ap_capwap_up_time = groups['ap_capwap_up_time']
                 ap_capwap_up_time = change_data_type(value=ap_capwap_up_time)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_capwap_up_time': ap_capwap_up_time})
             # Join Date and Time                              : 08/14/2020 19:48:09
             elif join_date_and_time_capture.match(line):
@@ -2126,7 +2132,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = join_date_and_time_match.groupdict()
                 join_date_and_time = groups['join_date_and_time']
                 join_date_and_time = change_data_type(value=join_date_and_time)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'join_date_and_time': join_date_and_time})
             # Join Taken Time                                 : 6 minutes 57 seconds
             elif join_taken_time_capture.match(line):
@@ -2134,7 +2140,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = join_taken_time_match.groupdict()
                 join_taken_time = groups['join_taken_time']
                 join_taken_time = change_data_type(value=join_taken_time)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'join_taken_time': join_taken_time})
             # Join Priority                                   : 1
             elif join_priority_capture.match(line):
@@ -2142,14 +2148,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = join_priority_match.groupdict()
                 join_priority = groups['join_priority']
                 join_priority = change_data_type(value=join_priority)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'join_priority': join_priority})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'join_priority': join_priority})
             # AP Link Latency                                 : Disable
             elif ap_link_latency_capture.match(line):
                 ap_link_latency_match = ap_link_latency_capture.match(line)
                 groups = ap_link_latency_match.groupdict()
                 ap_link_latency = groups['ap_link_latency']
                 ap_link_latency = change_data_type(value=ap_link_latency)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_link_latency': ap_link_latency})
             # AP Lag Configuration Status                     : Disabled
             elif ap_lag_configuration_status_capture.match(line):
@@ -2157,7 +2163,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_lag_configuration_status_match.groupdict()
                 ap_lag_configuration_status = groups['ap_lag_configuration_status']
                 ap_lag_configuration_status = change_data_type(value=ap_lag_configuration_status)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_lag_configuration_status': ap_lag_configuration_status})
             # Lag Support for AP                              : Yes
             elif lag_support_for_ap_capture.match(line):
@@ -2165,7 +2171,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = lag_support_for_ap_match.groupdict()
                 lag_support_for_ap = groups['lag_support_for_ap']
                 lag_support_for_ap = change_data_type(value=lag_support_for_ap)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'lag_support_for_ap': lag_support_for_ap})
             # Rogue Detection                                 : Enabled
             elif rogue_detection_capture.match(line):
@@ -2173,7 +2179,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = rogue_detection_match.groupdict()
                 rogue_detection = groups['rogue_detection']
                 rogue_detection = change_data_type(value=rogue_detection)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'rogue_detection': rogue_detection})
             # Rogue Containment auto-rate                     : Disabled
             elif rogue_containment_auto_rate_capture.match(line):
@@ -2181,7 +2187,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = rogue_containment_auto_rate_match.groupdict()
                 rogue_containment_auto_rate = groups['rogue_containment_auto_rate']
                 rogue_containment_auto_rate = change_data_type(value=rogue_containment_auto_rate)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'rogue_containment_auto_rate': rogue_containment_auto_rate})
             # Rogue Containment of standalone flexconnect APs : Disabled
             elif rogue_containment_of_standalone_flexconnect_aps_capture.match(line):
@@ -2192,7 +2198,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                     'rogue_containment_of_standalone_flexconnect_aps']
                 rogue_containment_of_standalone_flexconnect_aps = change_data_type(
                     value=rogue_containment_of_standalone_flexconnect_aps)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({
+                ap_config_general_dict['ap_name'][ap_name_key].update({
                     'rogue_containment_of_standalone_flexconnect_aps': rogue_containment_of_standalone_flexconnect_aps})
             # Rogue Detection Report Interval                 : 10
             elif rogue_detection_report_interval_capture.match(line):
@@ -2200,7 +2206,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = rogue_detection_report_interval_match.groupdict()
                 rogue_detection_report_interval = groups['rogue_detection_report_interval']
                 rogue_detection_report_interval = change_data_type(value=rogue_detection_report_interval)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'rogue_detection_report_interval': rogue_detection_report_interval})
             # Rogue AP minimum RSSI                           : -70
             elif rogue_ap_minimum_rssi_capture.match(line):
@@ -2208,7 +2214,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = rogue_ap_minimum_rssi_match.groupdict()
                 rogue_ap_minimum_rssi = groups['rogue_ap_minimum_rssi']
                 rogue_ap_minimum_rssi = change_data_type(value=rogue_ap_minimum_rssi)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'rogue_ap_minimum_rssi': rogue_ap_minimum_rssi})
             # Rogue AP minimum transient time                 : 0
             elif rogue_ap_minimum_transient_time_capture.match(line):
@@ -2216,7 +2222,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = rogue_ap_minimum_transient_time_match.groupdict()
                 rogue_ap_minimum_transient_time = groups['rogue_ap_minimum_transient_time']
                 rogue_ap_minimum_transient_time = change_data_type(value=rogue_ap_minimum_transient_time)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'rogue_ap_minimum_transient_time': rogue_ap_minimum_transient_time})
             # AP TCP MSS Adjust                               : Enabled
             elif ap_tcp_mss_adjust_capture.match(line):
@@ -2224,7 +2230,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_tcp_mss_adjust_match.groupdict()
                 ap_tcp_mss_adjust = groups['ap_tcp_mss_adjust']
                 ap_tcp_mss_adjust = change_data_type(value=ap_tcp_mss_adjust)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_tcp_mss_adjust': ap_tcp_mss_adjust})
             # AP TCP MSS Size                                 : 1250
             elif ap_tcp_mss_size_capture.match(line):
@@ -2232,7 +2238,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_tcp_mss_size_match.groupdict()
                 ap_tcp_mss_size = groups['ap_tcp_mss_size']
                 ap_tcp_mss_size = change_data_type(value=ap_tcp_mss_size)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_tcp_mss_size': ap_tcp_mss_size})
             # AP IPv6 TCP MSS Adjust                          : Enabled
             elif ap_ipv6_tcp_mss_adjust_capture.match(line):
@@ -2240,7 +2246,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_ipv6_tcp_mss_adjust_match.groupdict()
                 ap_ipv6_tcp_mss_adjust = groups['ap_ipv6_tcp_mss_adjust']
                 ap_ipv6_tcp_mss_adjust = change_data_type(value=ap_ipv6_tcp_mss_adjust)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_ipv6_tcp_mss_adjust': ap_ipv6_tcp_mss_adjust})
             # AP IPv6 TCP MSS Size                            : 1250
             elif ap_ipv6_tcp_mss_size_capture.match(line):
@@ -2248,7 +2254,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ap_ipv6_tcp_mss_size_match.groupdict()
                 ap_ipv6_tcp_mss_size = groups['ap_ipv6_tcp_mss_size']
                 ap_ipv6_tcp_mss_size = change_data_type(value=ap_ipv6_tcp_mss_size)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ap_ipv6_tcp_mss_size': ap_ipv6_tcp_mss_size})
             # Hyperlocation Admin Status                      : Disabled
             elif hyperlocation_admin_status_capture.match(line):
@@ -2256,7 +2262,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = hyperlocation_admin_status_match.groupdict()
                 hyperlocation_admin_status = groups['hyperlocation_admin_status']
                 hyperlocation_admin_status = change_data_type(value=hyperlocation_admin_status)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'hyperlocation_admin_status': hyperlocation_admin_status})
             # Retransmit count                                : 5
             elif retransmit_count_capture.match(line):
@@ -2264,7 +2270,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = retransmit_count_match.groupdict()
                 retransmit_count = groups['retransmit_count']
                 retransmit_count = change_data_type(value=retransmit_count)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'retransmit_count': retransmit_count})
             # Retransmit interval                             : 3
             elif retransmit_interval_capture.match(line):
@@ -2272,7 +2278,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = retransmit_interval_match.groupdict()
                 retransmit_interval = groups['retransmit_interval']
                 retransmit_interval = change_data_type(value=retransmit_interval)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'retransmit_interval': retransmit_interval})
             # Fabric status                                   : Disabled
             elif fabric_status_capture.match(line):
@@ -2280,28 +2286,28 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = fabric_status_match.groupdict()
                 fabric_status = groups['fabric_status']
                 fabric_status = change_data_type(value=fabric_status)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'fabric_status': fabric_status})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'fabric_status': fabric_status})
             # FIPS status                                     : Disabled
             elif fips_status_capture.match(line):
                 fips_status_match = fips_status_capture.match(line)
                 groups = fips_status_match.groupdict()
                 fips_status = groups['fips_status']
                 fips_status = change_data_type(value=fips_status)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'fips_status': fips_status})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'fips_status': fips_status})
             # WLANCC status                                   : Disabled
             elif wlancc_status_capture.match(line):
                 wlancc_status_match = wlancc_status_capture.match(line)
                 groups = wlancc_status_match.groupdict()
                 wlancc_status = groups['wlancc_status']
                 wlancc_status = change_data_type(value=wlancc_status)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'wlancc_status': wlancc_status})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'wlancc_status': wlancc_status})
             # USB Module Type                                 : USB Module
             elif usb_module_type_capture.match(line):
                 usb_module_type_match = usb_module_type_capture.match(line)
                 groups = usb_module_type_match.groupdict()
                 usb_module_type = groups['usb_module_type']
                 usb_module_type = change_data_type(value=usb_module_type)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'usb_module_type': usb_module_type})
             # USB Module State                                : Enabled
             elif usb_module_state_capture.match(line):
@@ -2309,7 +2315,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = usb_module_state_match.groupdict()
                 usb_module_state = groups['usb_module_state']
                 usb_module_state = change_data_type(value=usb_module_state)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'usb_module_state': usb_module_state})
             # USB Operational State                           : Disabled
             elif usb_operational_state_capture.match(line):
@@ -2317,7 +2323,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = usb_operational_state_match.groupdict()
                 usb_operational_state = groups['usb_operational_state']
                 usb_operational_state = change_data_type(value=usb_operational_state)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'usb_operational_state': usb_operational_state})
             # USB Override                                    : Disabled
             elif usb_override_capture.match(line):
@@ -2325,14 +2331,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = usb_override_match.groupdict()
                 usb_override = groups['usb_override']
                 usb_override = change_data_type(value=usb_override)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'usb_override': usb_override})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'usb_override': usb_override})
             # GAS rate limit Admin status                     : Disabled
             elif gas_rate_limit_admin_status_capture.match(line):
                 gas_rate_limit_admin_status_match = gas_rate_limit_admin_status_capture.match(line)
                 groups = gas_rate_limit_admin_status_match.groupdict()
                 gas_rate_limit_admin_status = groups['gas_rate_limit_admin_status']
                 gas_rate_limit_admin_status = change_data_type(value=gas_rate_limit_admin_status)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'gas_rate_limit_admin_status': gas_rate_limit_admin_status})
             # WPA3 Capability                                 : Enabled
             elif wpa3_capability_capture.match(line):
@@ -2340,7 +2346,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = wpa3_capability_match.groupdict()
                 wpa3_capability = groups['wpa3_capability']
                 wpa3_capability = change_data_type(value=wpa3_capability)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'wpa3_capability': wpa3_capability})
             # EWC-AP Capability                               : Disabled
             elif ewc_ap_capability_capture.match(line):
@@ -2348,7 +2354,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = ewc_ap_capability_match.groupdict()
                 ewc_ap_capability = groups['ewc_ap_capability']
                 ewc_ap_capability = change_data_type(value=ewc_ap_capability)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'ewc_ap_capability': ewc_ap_capability})
             # AWIPS Capability                                : Enabled
             elif awips_capability_capture.match(line):
@@ -2356,7 +2362,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = awips_capability_match.groupdict()
                 awips_capability = groups['awips_capability']
                 awips_capability = change_data_type(value=awips_capability)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'awips_capability': awips_capability})
             # Proxy Hostname                                  : Not Configured
             elif proxy_hostname_capture.match(line):
@@ -2364,21 +2370,21 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = proxy_hostname_match.groupdict()
                 proxy_hostname = groups['proxy_hostname']
                 proxy_hostname = change_data_type(value=proxy_hostname)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'proxy_hostname': proxy_hostname})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'proxy_hostname': proxy_hostname})
             # Proxy Port                                      : Not Configured
             elif proxy_port_capture.match(line):
                 proxy_port_match = proxy_port_capture.match(line)
                 groups = proxy_port_match.groupdict()
                 proxy_port = groups['proxy_port']
                 proxy_port = change_data_type(value=proxy_port)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update({'proxy_port': proxy_port})
+                ap_config_general_dict['ap_name'][ap_name_key].update({'proxy_port': proxy_port})
             # Proxy NO_PROXY list                             : Not Configured
             elif proxy_no_proxy_list_capture.match(line):
                 proxy_no_proxy_list_match = proxy_no_proxy_list_capture.match(line)
                 groups = proxy_no_proxy_list_match.groupdict()
                 proxy_no_proxy_list = groups['proxy_no_proxy_list']
                 proxy_no_proxy_list = change_data_type(value=proxy_no_proxy_list)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'proxy_no_proxy_list': proxy_no_proxy_list})
             # GRPC server status                              : Disabled
             elif grpc_server_status_capture.match(line):
@@ -2386,7 +2392,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = grpc_server_status_match.groupdict()
                 grpc_server_status = groups['grpc_server_status']
                 grpc_server_status = change_data_type(value=grpc_server_status)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'grpc_server_status': grpc_server_status})
             # Unencrypted Data Keep Alive                     : Enabled
             elif unencrypted_data_keep_alive_capture.match(line):
@@ -2394,7 +2400,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = unencrypted_data_keep_alive_match.groupdict()
                 unencrypted_data_keep_alive = groups['unencrypted_data_keep_alive']
                 unencrypted_data_keep_alive = change_data_type(value=unencrypted_data_keep_alive)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'unencrypted_data_keep_alive': unencrypted_data_keep_alive})
             # Local DHCP Server                               : Disabled
             elif local_dhcp_server_capture.match(line):
@@ -2402,7 +2408,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = local_dhcp_server_match.groupdict()
                 local_dhcp_server = groups['local_dhcp_server']
                 local_dhcp_server = change_data_type(value=local_dhcp_server)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'local_dhcp_server': local_dhcp_server})
             # Traffic Distribution Statistics Capability      : Enabled
             elif traffic_distribution_statistics_capability_capture.match(line):
@@ -2412,7 +2418,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 traffic_distribution_statistics_capability = groups['traffic_distribution_statistics_capability']
                 traffic_distribution_statistics_capability = change_data_type(
                     value=traffic_distribution_statistics_capability)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'traffic_distribution_statistics_capability': traffic_distribution_statistics_capability})
             # Dual DFS Statistics                             : Disabled
             elif dual_dfs_statistics_capture.match(line):
@@ -2420,6 +2426,6 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 groups = dual_dfs_statistics_match.groupdict()
                 dual_dfs_statistics = groups['dual_dfs_statistics']
                 dual_dfs_statistics = change_data_type(value=dual_dfs_statistics)
-                ap_config_general_dict['ap_config_general_info'][ap_name_key].update(
+                ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'dual_dfs_statistics': dual_dfs_statistics})
         return ap_config_general_dict

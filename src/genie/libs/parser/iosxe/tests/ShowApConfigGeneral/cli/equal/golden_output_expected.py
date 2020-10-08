@@ -1,12 +1,14 @@
 expected_output = {
-    "ap_config_general_info": {
+    "ap_name": {
         "bg-1-cap1": {
             "cisco_ap_identifier": "70b3.d278.e03e",
             "country_code": "IN",
             "regulatory_domain_allowed_by_country": "802.11bg:-A   802.11a:-DN",
             "ap_country_code": "IN  - India",
-            "slot_0": "-A",
-            "slot_1": "-D",
+            "ap_regulatory_domain": {
+                "slot_0": "-A",
+                "slot_1": "-D",
+            },
             "mac_address": "70b3.1711.acbb",
             "ip_address_configuration": "DHCP",
             "ip_address": "10.10.5.14",
@@ -17,7 +19,7 @@ expected_output = {
             "telnet_state": "Disabled",
             "cpu_type": "ARMv7 Processor rev 1 (v7l)",
             "memory_type": "DDR3",
-            "memory_size": "1028096 KB",
+            "memory_size_kb": 1028096,
             "ssh_state": "Enabled",
             "cisco_ap_location": "default location",
             "site_tag_name": "b8",
