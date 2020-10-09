@@ -46,8 +46,8 @@ _class = args.class_name
 _token = args.token
 _number = args.number
 
-if _number and not _class or not _os:
-    sys.exit("Unittest number provided without specifying supporting arguments:"
+if _number and not _class or _number and not _os:
+    sys.exit("Unittest number provided but missing supporting arguments:"
              "\n* '-c' or '--class_name' for the parser class"
              "\n* '-o' or '--operating_system' for operating system")
 
@@ -297,7 +297,7 @@ class FileBasedTest(aetest.Testcase):
         # Get list of output files to parse and sort
         convert = lambda text: int(text) if text.isdigit() else text
         aph_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
-        if number:
+        if number and not operating_system or not local_class:
             output_glob = sorted(glob.glob(f"{folder_root}/golden_output{number}_output.txt"), key=aph_key)
         else:
             output_glob = sorted(glob.glob(f"{folder_root}/*_output.txt"), key=aph_key)
