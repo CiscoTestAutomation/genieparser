@@ -1,6 +1,6 @@
 expected_output = {
     "peer": {
-        "1.1.1.4": {
+        "10.4.1.4": {
             "type": "vsmart",
             "domain_id": 1,
             "overlay_id": 1,
@@ -9,7 +9,7 @@ expected_output = {
             "uptime": "6:13:57:28",
             "route": {"recv": 4, "install": 0, "sent": 4},
         },
-        "55.55.55.5": {
+        "10.115.55.5": {
             "type": "vedge",
             "domain_id": 1,
             "overlay_id": 1,
@@ -18,7 +18,7 @@ expected_output = {
             "uptime": "0:01:24:29",
             "route": {"recv": 1, "install": 0, "sent": 1},
         },
-        "105.105.105.6": {
+        "10.240.105.6": {
             "type": "vedge",
             "domain_id": 1,
             "overlay_id": 1,
@@ -27,7 +27,7 @@ expected_output = {
             "uptime": "6:13:58:46",
             "route": {"recv": 1, "install": 0, "sent": 1},
         },
-        "177.177.175.170": {
+        "172.16.106.170": {
             "type": "vedge",
             "domain_id": 1,
             "overlay_id": 1,
