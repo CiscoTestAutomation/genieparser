@@ -922,7 +922,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Next-hop reference count: 458
         p7 = re.compile(r'^Next-hop +reference +count: +(?P<nh_reference_count>\d+)$')
 
-        # Source: 2.2.2.2
+        # Source: 10.16.2.2
         p7_1 = re.compile(r'^Source: +(?P<gateway>\S+)$')
 
         # Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
@@ -1041,10 +1041,10 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
         # Forwarding nexthops: 1
         p35 = re.compile(r'^(Node +path +count: +)|(Forwarding +nexthops: +)[\S\s]+$')
 
-        # Cluster list:  2.2.2.2 4.4.4.4
+        # Cluster list:  10.16.2.2 10.64.4.4
         p36 = re.compile(r'^Cluster +list: +(?P<cluster_list>[\S\s]+)$')
 
-        # Router ID: 2.2.2.2
+        # Router ID: 10.16.2.2
         p37 = re.compile(r'^Router +ID: +(?P<peer_id>\S+)$')
 
         for line in out.splitlines():
@@ -1159,7 +1159,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 rt_entry_dict.update({'nh-reference-count': group['nh_reference_count']})
                 continue
 
-            # Source: 2.2.2.2
+            # Source: 10.16.2.2
             m = p7_1.match(line)
             if m:
                 group = m.groupdict()
@@ -1485,7 +1485,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 protocol_nh_dict.update({'output': proto_output})
                 continue
 
-            # Cluster list:  2.2.2.2 4.4.4.4
+            # Cluster list:  10.16.2.2 10.64.4.4
             m = p36.match(line)
             if m:
                 group = m.groupdict()
@@ -1493,7 +1493,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                     rt_entry_dict.update({'cluster-list': group['cluster_list']})
                 continue
             
-            # Router ID: 2.2.2.2 
+            # Router ID: 10.16.2.2 
             m = p37.match(line)
             if m:
                 group = m.groupdict()
@@ -1724,13 +1724,21 @@ class ShowRouteReceiveProtocolSchema(MetaParser):
 class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
     """ Parser for:
             * show route receive-protocol {protocol} {peer}
+            * show route receive-protocol {protocol} {peer} {target}
     """
 
-    cli_command = 'show route receive-protocol {protocol} {peer}'
-    def cli(self, protocol, peer, output=None):
+    cli_command = ['show route receive-protocol {protocol} {peer}',
+                   'show route receive-protocol {protocol} {peer} {target}']
+    def cli(self, protocol, peer, target=None, output=None):
         if not output:
-            cmd = self.cli_command.format(protocol=protocol,
-                    peer=peer)
+            if target:
+                cmd = self.cli_command[1].format(
+                            protocol=protocol,
+                            peer=peer,
+                            target=target)
+            else:
+                cmd = self.cli_command[0].format(protocol=protocol,
+                        peer=peer)
             out = self.device.execute(cmd)
         else:
             out = output
@@ -1746,12 +1754,13 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
         # 10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
         # * 10.4.1.1/32              Self                                    I
-        # * 10.36.3.3/32              Self                                    2 I        
+        # * 10.36.3.3/32              Self                                    2 I     
+        # * 192.168.225.0/24           10.64.4.4                      100        200000 4 5 6 I   
         p2 = re.compile(r'^((?P<active_tag>\*) +)?(?P<rt_destination>[\d\.\:\/]+) '
                         r'+(?P<to>\S+)( +(?P<med>\d+)? +(?P<local_preference>\d+))? '
-                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|((\d\s)?\w))$')
+                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|([\d\s]+?\w))$')
 
-        # 2001:268:ff00::1
+        # 2001:db8:7fc5:ca45::1
         p3 = re.compile(r'^(?P<rt_destination>[\d\:\w\/]+)$')
 
         # *                         Self                 2       100        I
@@ -1789,7 +1798,7 @@ class ShowRouteReceiveProtocol(ShowRouteReceiveProtocolSchema):
                 rt_entry_dict.update({'protocol-name': protocol.upper()})
                 rt_list.append(rt_dict)
 
-            # 2001:268:ff00::1
+            # 2001:db8:7fc5:ca45::1
             m = p3.match(line)
             if m:
                 
@@ -1940,7 +1949,7 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
                         r' +(?P<to>\S+)( +(?P<med>\d+) +(?P<local_preference>\d+))? '
                         r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|((\d\s)?\w))')
         
-        # 2001:268:ff00::1
+        # 2001:db8:7fc5:ca45::1
         p3 = re.compile(r'^(?P<rt_destination>[\d\:\w\/]+)$')
 
         # *                         Self                 2       100        I
@@ -1980,7 +1989,7 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
 
                 rt_list.append(rt_dict)
 
-            # 2001:268:ff00::1
+            # 2001:db8:7fc5:ca45::1
             m = p3.match(line)
             if m:
                 
@@ -2644,7 +2653,7 @@ class ShowRouteForwardingTableLabel(ShowRouteForwardingTableLabelSchema):
         # 16(S=0)            user     0 10.169.14.158    Pop        579     2 ge-0/0/0.0
         # 16(S=0) user 0 2001:AE Pop 579 2 ge-0/0/0.0
         # default            perm     0                    dscd      535     1
-        # 575                user     0 203.181.106.218   Swap 526      590     2 ge-0/0/1.0
+        # 575                user     0 192.168.145.218   Swap 526      590     2 ge-0/0/1.0
         p5 = re.compile(r'^(?P<rt_destination>\S+) +(?P<destination_type>\S+) +'
                         r'(?P<route_reference_count>\d+) +(?P<to>[\d\.|\d\:a-fA-F]+)? +'
                         r'(?P<nh_type>\S+( \S+)?) +(?P<nh_index>\d+) +'
@@ -2798,7 +2807,7 @@ class ShowRouteTableLabelSwitchedName(ShowRouteTableLabelSwitchedNameSchema):
                         r'\[(?P<protocol_name>[^\s/]+)/(?P<preference>\d+)/(?P<preference2>\d+)\] +'
                         r'(?P<age>[\d:]+), +metric +(?P<metric>\d+)$')
 
-        # >  to 203.181.106.218 via ge-0/0/1.1, label-switched-path test_lsp_01
+        # >  to 192.168.145.218 via ge-0/0/1.1, label-switched-path test_lsp_01
         p3 = re.compile(r'^(?P<selected_next_hop>\> +)?to +(?P<to>\S+) +via +'
                         r'(?P<via>[^\s,]+), +label-switched-path +(?P<lsp_name>\S+)$')
 
@@ -2833,7 +2842,7 @@ class ShowRouteTableLabelSwitchedName(ShowRouteTableLabelSwitchedNameSchema):
                 rt_list.append(rt_dict)
 
 
-            # >  to 203.181.106.218 via ge-0/0/1.1, label-switched-path test_lsp_01
+            # >  to 192.168.145.218 via ge-0/0/1.1, label-switched-path test_lsp_01
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -2944,11 +2953,11 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
                         r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         
-        # 2.2.2.2/32 (1 entry, 1 announced)
-        # 2201:110::1/128 (1 entry, 1 announced)
+        # 10.16.2.2/32 (1 entry, 1 announced)
+        # 2001:db8:4885:2101::1/128 (1 entry, 1 announced)
         p2 = re.compile(r'^(?P<rt_destination>[\d\:\.]+)+\/+(?P<rt_prefix_length>\d+) +\((?P<text>\d+) +entry, +(?P<rt_announced_count>\d+) +announced\)$')
 
-        # KRT in-kernel 2.2.2.2/32 -> {20.0.0.3}
+        # KRT in-kernel 10.16.2.2/32 -> {10.145.0.3}
         p3 = re.compile(r'^(?P<text>KRT +in-kernel+[\S\s]+)$')
 
         # *BGP Preference: 170/-101
@@ -2965,10 +2974,10 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
         # Next-hop reference count: 2
         p7 = re.compile(r'^Next-hop +reference +count: +(?P<nh_reference_count>\d+)$')
 
-        # Source: 20.0.0.3
+        # Source: 10.145.0.3
         p8 = re.compile(r'^Source: +(?P<gateway>\S+)$')
 
-        # Next hop: 20.0.0.3 via ge-0/0/0.0, selected
+        # Next hop: 10.145.0.3 via ge-0/0/0.0, selected
         p9 = re.compile(r'^(?P<nh_string>Next hop):( +(?P<to>\S+))? '
                         r'+via +(?P<via>\S+), +selected$')
 
@@ -2987,7 +2996,7 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
         # Validation State: unverified 
         p14 = re.compile(r'^Validation +State: +(?P<validation_state>\S+)$')
 
-        # Task: BGP_30000.20.0.0.3
+        # Task: BGP_30000.10.145.0.3
         p15 = re.compile(r'^Task: +(?P<task_name>\S+)$')
 
         # Announcement bits (1): 0-KRT
@@ -3003,7 +3012,7 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
         # Localpref: 100 
         p19 = re.compile(r'^Localpref: +(?P<local_preference>\d+)$')
 
-        # Router ID: 2.2.2.2
+        # Router ID: 10.16.2.2
         p20 = re.compile(r'^Router +ID: +(?P<peer_id>[\d\.]+)$')
 
         for line in out.splitlines():
@@ -3019,7 +3028,7 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
                 )
                 continue
 
-            # 2.2.2.2/32 (1 entry, 1 announced)
+            # 10.16.2.2/32 (1 entry, 1 announced)
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -3036,7 +3045,7 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
                 
                 continue
 
-            # KRT in-kernel 2.2.2.2/32 -> {20.0.0.3}
+            # KRT in-kernel 10.16.2.2/32 -> {10.145.0.3}
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -3088,7 +3097,7 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
 
                 continue
 
-            # Source: 20.0.0.3
+            # Source: 10.145.0.3
             m = p8.match(line)
             if m:
                 group = m.groupdict()
@@ -3098,7 +3107,7 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
 
                 continue
 
-            # Next hop: 20.0.0.3 via ge-0/0/0.0, selected
+            # Next hop: 10.145.0.3 via ge-0/0/0.0, selected
             m = p9.match(line)
             if m:
                 group = m.groupdict()
@@ -3161,7 +3170,7 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
 
                 continue
 
-            # Task: BGP_30000.20.0.0.3
+            # Task: BGP_30000.10.145.0.3
             m = p15.match(line)
             if m:
                 group = m.groupdict()
@@ -3218,7 +3227,7 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
 
                 continue
 
-            # Router ID: 2.2.2.2 
+            # Router ID: 10.16.2.2 
             m = p20.match(line)
             if m:
                 group = m.groupdict()
@@ -3233,7 +3242,8 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
 
         return ret_dict
 
-# Schema for 'show route receive-protocol bgp {peer_address} {target_address} extensive'
+# Schema for 
+#   *'show route receive-protocol bgp {peer_address} {target_address} extensive'
 class ShowRouteReceiveProtocolExtensiveSchema(MetaParser):
     """ Schema for:
             * 'show route receive-protocol bgp {peer_address} {target_address} extensive'
@@ -3292,12 +3302,12 @@ class ShowRouteReceiveProtocolExtensiveSchema(MetaParser):
 
 # Parser for 'show route receive-protocol bgp {peer_address} {target_address} extensive'
 class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema):
-    cli_command = 'show route receive-protocol {protocol} {peer_address} {target_address} extensive'
+    cli_command = ['show route receive-protocol {protocol} {peer_address} {target_address} extensive']
 
     def cli(self, peer_address, target_address, protocol='bgp', output=None):
 
         if not output:
-            out = self.device.execute(self.cli_command.format(
+            out = self.device.execute(self.cli_command[0].format(
                 peer_address=peer_address,
                 target_address=target_address,
                 protocol=protocol
@@ -3314,15 +3324,15 @@ class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema)
                         r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
 
         # 0.0.0.0/0 (1 entry, 1 announced)
-        # * 100.50.1.0/24 (1 entry, 1 announced)
-        # * 2001:500::/64 (1 entry, 1 announced)
+        # * 10.60.1.0/24 (1 entry, 1 announced)
+        # * 2001:db8:4401:19::/64 (1 entry, 1 announced)
         p2 = re.compile(r'^(?P<active_tag>\*)? *(?P<rt_destination>[\w.:]+)(\/(?P<rt_prefix_length>\d+))? +'
                         r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<rt_announced_count>\d+) +announced\)$')        
 
         # Accepted
         p3 = re.compile(r'^(?P<bgp_rt_flag>Accepted)$')
 
-        # Nexthop: 4.4.4.4
+        # Nexthop: 10.64.4.4
         p4 = re.compile(r'^Nexthop: +(?P<to>[0-9.]+)$')
 
         # Localpref: 100
@@ -3347,7 +3357,7 @@ class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema)
                 continue
 
             # 0.0.0.0/0 (1 entry, 1 announced)
-            # * 100.50.1.0/24 (1 entry, 1 announced)
+            # * 10.60.1.0/24 (1 entry, 1 announced)
             m = p2.match(line)
             if m:
                 group = m.groupdict()                
@@ -3373,7 +3383,7 @@ class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema)
                 rt_entry_dict['bgp-rt-flag'] = m.groupdict()['bgp_rt_flag']
                 continue
             
-            # Nexthop: 4.4.4.4
+            # Nexthop: 10.64.4.4
             m = p4.match(line) 
             if m:
                 group = m.groupdict()
@@ -3406,3 +3416,193 @@ class ShowRouteReceiveProtocolExtensive(ShowRouteReceiveProtocolExtensiveSchema)
                     continue 
 
         return ret_dict                 
+
+
+# Schema for 
+#   *'show route receive-protocol bgp {peer_address} extensive'
+class ShowRouteReceiveProtocolPeerAddressExtensiveSchema(MetaParser):
+    """ Schema for:
+            * 'show route receive-protocol bgp {peer_address} extensive'
+    """
+    def validate_route_table_list(value):
+        # Pass route-table list of dict in value
+        if not isinstance(value, list):
+            raise SchemaError('route-table is not a list')
+        
+        def validate_rt_list(value): 
+            # Pass rt list of dict in value
+            if not isinstance(value, list):
+                raise SchemaError('rt is not a list')
+            # Create rt entry Schema
+            rt_entry_schema = Schema(
+                    {Optional("@junos:style"): str,
+                    Optional("active-tag"): str,
+                    "rt-announced-count": str,
+                    "rt-destination": str,
+                    Optional("rt-entry"): {
+                        Optional("as-path"): str,
+                        Optional("bgp-rt-flag"): str,
+                        Optional("bgp-path-attributes"): {
+                            "attr-as-path-effective": {
+                                "aspath-effective-string": str,
+                                "attr-value": str
+                            }
+                        },
+                        Optional("local-preference"): str,
+                        Optional("nh"): {
+                            'to': str,
+                        }
+                    },
+                    "rt-entry-count": {
+                        "#text": str,
+                    },
+                    Optional("rt-prefix-length"): str,
+                    Optional("rt-state"): str,}
+            )
+            # Validate each dictionary in list
+            for item in value:
+                rt_entry_schema.validate(item)
+            return value
+        # Create Route Table Schema
+        route_table_schema = Schema({
+            "active-route-count": str,
+            "destination-count": str,
+            "hidden-route-count": str,
+            "holddown-route-count": str,
+            Optional("rt"): Use(validate_rt_list),
+            "table-name": str,
+            "total-route-count": str
+        })
+        # Validate each dictionary in list
+        for item in value:
+            route_table_schema.validate(item)
+        return value
+
+    # Main Schema
+    schema = {
+        "route-information": {
+            Optional("@xmlns"): str,
+            "route-table": Use(validate_route_table_list)
+        }
+    }        
+
+# Parser for 'show route receive-protocol bgp {peer_address} extensive'
+class ShowRouteReceiveProtocolPeerAddressExtensive(ShowRouteReceiveProtocolPeerAddressExtensiveSchema):
+    cli_command = 'show route receive-protocol {protocol} {peer_address} extensive'
+
+    def cli(self, peer_address, protocol='bgp', output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                peer_address=peer_address,
+                protocol=protocol
+            ))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        p1 = re.compile(r'^(?P<table_name>\S+): +(?P<destination_count>\d+) +'
+                        r'destinations, +(?P<total_route_count>\d+) +routes +'
+                        r'\((?P<active_route_count>\d+) +active, +(?P<holddown_route_count>\d+) +'
+                        r'holddown, +(?P<hidden_route_count>\d+) +hidden\)$')
+
+        # 0.0.0.0/0 (1 entry, 1 announced)
+        # * 192.168.115.0/24 (1 entry, 1 announced)
+        p2 = re.compile(r'^(?P<active_tag>\* )?(?P<rt_destination>[0-9.:]+)(\/(?P<rt_prefix_length>\d+))? +'
+                        r'\((?P<format>(?P<text>\d+) +(entry|entries)), +(?P<rt_announced_count>\d+) +announced\)$')        
+
+        # Accepted
+        p3 = re.compile(r'^(?P<bgp_rt_flag>Accepted)$')
+
+        # Nexthop: 10.64.4.4
+        p4 = re.compile(r'^Nexthop: +(?P<to>[0-9.]+)$')
+
+        # Localpref: 100
+        p5 = re.compile(r'^Localpref: +(?P<local_preference>\d+)$')
+
+        # AS path: I 
+        # AS path: 30000 4 103 104 105 106 107 108 109 I
+        p6 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>([\S]+( +)?)+)$')        
+
+        for line in out.splitlines():
+            line = line.strip()     
+
+            # inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                route_table = ret_dict.setdefault('route-information', {}). \
+                    setdefault('route-table', [])
+                route_table_dict = {k.replace('_', '-'):
+                    v for k, v in group.items() if v is not None}
+                route_table.append(route_table_dict)
+                continue
+
+            # 0.0.0.0/0 (1 entry, 1 announced)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()                
+                rt_dict_list = route_table_dict.setdefault('rt', [])
+
+                rt_dict = {}
+
+                if group['active_tag']:
+                    rt_dict['active-tag'] = group['active_tag']
+
+                rt_dict['rt-announced-count'] = group['rt_announced_count']
+                rt_dict['rt-destination'] = group['rt_destination']
+                rt_dict['rt-prefix-length'] = group['rt_prefix_length']
+
+                rt_entry_count_dict = rt_dict.setdefault('rt-entry-count', {})
+                rt_entry_count_dict['#text'] = group['text']
+
+                rt_dict_list.append(rt_dict)
+                
+                continue               
+
+            # Accepted
+            m = p3.match(line)
+            if m:
+                rt_entry_exist = rt_dict.get('rt-entry', None)
+
+                if not rt_entry_exist:
+                    rt_entry_dict = rt_dict.setdefault('rt-entry', {})
+                
+                rt_entry_dict['bgp-rt-flag'] = m.groupdict()['bgp_rt_flag']
+                continue
+            
+            # Nexthop: 10.64.4.4
+            m = p4.match(line) 
+            if m:
+                group = m.groupdict()
+                
+                nh_dict = rt_entry_dict.setdefault('nh', {})
+                nh_dict['to'] = group['to']
+                continue
+            
+            # Localpref: 100
+            m = p5.match(line)
+            if m:
+                rt_entry_dict['local-preference'] = m.groupdict()['local_preference']
+                continue      
+
+            # AS path: I 
+            m = p6.match(line)
+            if m:
+                rt_entry_exist = rt_dict.get('rt-entry', None)
+                if rt_entry_exist:
+                    group = m.groupdict()
+                    attr_as_path_dict = rt_entry_dict.setdefault('bgp-path-attributes', {}). \
+                                        setdefault('attr-as-path-effective', {})
+
+                    rt_entry_dict['as-path'] = line
+
+                    attr_as_path_dict.update({
+                        'aspath-effective-string': group['aspath_effective_string'],
+                        'attr-value': group['attr_value']})
+
+                    continue 
+
+        return ret_dict       

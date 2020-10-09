@@ -81,7 +81,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
 
         return ret_dict
 
-class ShowEnvironmentAllSchema(MetaParser):
+class ShowEnvironmentAllIncludeLocationSchema(MetaParser):
     """Schema for show environment all
                   show environment all | include <WORD>"""
 
@@ -100,7 +100,7 @@ class ShowEnvironmentAllSchema(MetaParser):
     }
 
 
-class ShowEnvironmentAllIncludeLocation(ShowEnvironmentAllSchema):
+class ShowEnvironmentAllIncludeLocation(ShowEnvironmentAllIncludeLocationSchema):
     """Parser for show environment all | include Sensor |<WORD>"""
 
     cli_command = 'show environment all | include Sensor'
