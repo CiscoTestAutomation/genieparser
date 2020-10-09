@@ -22,50 +22,50 @@ from genie.libs.parser.iosxr.show_mrib import ShowMribVrfRoute,\
 class test_show_mrib_vrf_route(unittest.TestCase):
 
     '''Unit test for 'show mrib vrf <WORD> <WORD> route'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'vrf': 
-            {'default': 
-                {'address_family': 
-                    {'ipv4': 
-                        {'multicast_group': 
-                            {'224.0.0.0/24': 
-                                {'source_address': 
-                                    {'*': 
+        'vrf':
+            {'default':
+                {'address_family':
+                    {'ipv4':
+                        {'multicast_group':
+                            {'224.0.0.0/24':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'D P',
                                         'uptime': '00:00:58'}}},
-                            '224.0.0.0/4': 
-                                {'source_address': 
-                                    {'*': 
+                            '224.0.0.0/4':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'C RPF P',
                                         'rpf_nbr': '0.0.0.0',
                                         'uptime': '00:00:58'}}},
-                            '224.0.1.39': 
-                                {'source_address': 
-                                    {'*': 
+                            '224.0.1.39':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'S P',
                                         'uptime': '00:00:58'}}},
-                            '227.1.1.1': 
-                                {'source_address': 
-                                    {'*': 
+                            '227.1.1.1':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'C RPF MD MH CD',
                                         'mdt_ifh': '0x803380',
                                         'mvpn_payload': 'ipv4',
                                         'mvpn_remote_tid': '0x0',
                                         'mvpn_tid': '0xe000001f',
-                                        'outgoing_interface_list': 
-                                            {'Loopback0': 
+                                        'outgoing_interface_list':
+                                            {'Loopback0':
                                                 {'flags': 'F NS',
                                                 'uptime': '00:00:54'}},
                                         'rpf_nbr': '0.0.0.0',
                                         'uptime': '00:00:54'},
-                                    '192.168.0.12': 
+                                    '192.168.0.12':
                                         {'flags': 'RPF ME MH',
-                                        'incoming_interface_list': 
-                                            {'Loopback0': 
+                                        'incoming_interface_list':
+                                            {'Loopback0':
                                                 {'flags': 'F NS',
                                                 'uptime': '00:00:58',
                                                 'rpf_nbr': '192.168.0.12',}},
@@ -73,56 +73,56 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                         'mvpn_payload': 'ipv4',
                                         'mvpn_remote_tid': '0x0',
                                         'mvpn_tid': '0xe000001f',
-                                        'outgoing_interface_list': 
-                                            {'Loopback0': 
+                                        'outgoing_interface_list':
+                                            {'Loopback0':
                                                 {'flags': 'F A',
                                                 'uptime': '00:00:54'}},
                                         'rpf_nbr': '192.168.0.12',
                                         'uptime': '00:00:54'}}},
-                            '232.0.0.0/8': 
-                                {'source_address': 
-                                    {'*': 
+                            '232.0.0.0/8':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'D P',
                                         'uptime': '00:00:58'}}},
-                            '236.5.5.5': 
-                                {'source_address': 
-                                    {'*': 
+                            '236.5.5.5':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'C RPF MD MH CD',
                                         'mdt_ifh': '0x803480',
                                         'mvpn_remote_tid': '0xe0800018',
                                         'mvpn_tid': '0xe0000018',
-                                        'outgoing_interface_list': 
-                                            {'Loopback0': 
+                                        'outgoing_interface_list':
+                                            {'Loopback0':
                                                 {'flags': 'F NS',
                                                 'uptime': '00:00:54'}},
                                         'rpf_nbr': '0.0.0.0',
                                         'uptime': '00:00:54'},
-                                    '192.168.0.12': 
+                                    '192.168.0.12':
                                         {'flags': 'RPF ME MH',
-                                        'incoming_interface_list': 
-                                            {'Loopback0': 
+                                        'incoming_interface_list':
+                                            {'Loopback0':
                                                 {'flags': 'F A',
                                                 'uptime': '00:00:54',
                                                 'rpf_nbr': '192.168.0.12',}},
                                         'mdt_ifh': '0x803480',
                                         'mvpn_remote_tid': '0xe0800018',
                                         'mvpn_tid': '0xe0000018',
-                                        'outgoing_interface_list': 
-                                            {'Loopback0': 
+                                        'outgoing_interface_list':
+                                            {'Loopback0':
                                                 {'flags': 'F A',
                                                 'uptime': '00:00:54'}},
                                         'rpf_nbr': '192.168.0.12',
                                         'uptime': '00:00:54'},
-                                    '192.168.0.22': 
+                                    '192.168.0.22':
                                         {'flags': 'C RPF MD MH CD',
                                         'mdt_ifh': '0x803480',
                                         'mvpn_remote_tid': '0xe0800018',
                                         'mvpn_tid': '0xe0000018',
-                                        'outgoing_interface_list': 
-                                            {'GigabitEthernet0/1/0/1': 
+                                        'outgoing_interface_list':
+                                            {'GigabitEthernet0/1/0/1':
                                                 {'flags': 'NS',
                                                 'uptime': '00:00:01'},
-                                            'Loopback0': 
+                                            'Loopback0':
                                                 {'flags': 'F NS',
                                                 'uptime': '00:00:13'}},
                                         'rpf_nbr': '10.121.1.22',
@@ -213,291 +213,291 @@ class test_show_mrib_vrf_route(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'vrf': 
-            {'vpn1': 
-                {'address_family': 
-                    {'ipv6': 
-                        {'multicast_group': 
-                            {'ff00::/15': 
-                                {'source_address': 
-                                    {'*': 
+        'vrf':
+            {'vpn1':
+                {'address_family':
+                    {'ipv6':
+                        {'multicast_group':
+                            {'ff00::/15':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'D P',
                                         'uptime': '00:04:45'}}},
-                            'ff00::/8': 
-                                {'source_address': 
-                                    {'*': 
+                            'ff00::/8':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'L C RPF P',
-                                        'outgoing_interface_list': 
-                                            {'Decaps6tunnel0': 
+                                        'outgoing_interface_list':
+                                            {'Decaps6tunnel0':
                                                 {'flags': 'NS DI',
                                                 'uptime': '00:04:40'}},
                                         'rpf_nbr': '2001:db8:b901:0:150:150:150:150',
                                         'uptime': '00:04:45'}}},
-                            'ff02::/16': 
-                                {'source_address': 
-                                    {'*': 
+                            'ff02::/16':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'D P',
                                         'uptime': '00:04:45'}}},
-                            'ff10::/15': 
-                                {'source_address': 
-                                    {'*': 
+                            'ff10::/15':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'D P',
                                         'uptime': '00:04:45'}}},
-                            'ff12::/16': 
-                                {'source_address': 
-                                    {'*': 
+                            'ff12::/16':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'D P',
                                         'uptime': '00:04:45'}}},
-                            'ff15::1:1': 
-                                {'source_address': 
-                                    {'2001:db8:1:0:1:1:1:2': 
+                            'ff15::1:1':
+                                {'source_address':
+                                    {'2001:db8:1:0:1:1:1:2':
                                         {'flags': 'L RPF MT',
-                                        'incoming_interface_list': 
-                                            {'GigabitEthernet150/0/0/6': 
+                                        'incoming_interface_list':
+                                            {'GigabitEthernet150/0/0/6':
                                                 {'flags': 'A',
                                                 'uptime': '00:02:53',
                                                 'rpf_nbr': '2001:db8:1:0:1:1:1:2'}},
                                         'mt_slot': '0/2/CPU0',
-                                        'outgoing_interface_list': 
-                                            {'mdtvpn1': 
+                                        'outgoing_interface_list':
+                                            {'mdtvpn1':
                                                 {'flags': 'F NS MI MT MA',
                                                 'uptime': '00:02:53'}},
                                         'rpf_nbr': '2001:db8:1:0:1:1:1:2',
                                         'uptime': '00:02:53'}}},
-                            'ff15::2:1': 
-                                {'source_address': 
-                                    {'2001:db8:10:0:4:4:4:5': 
+                            'ff15::2:1':
+                                {'source_address':
+                                    {'2001:db8:10:0:4:4:4:5':
                                         {'flags': 'L RPF',
-                                        'incoming_interface_list': 
-                                            {'mdtvpn1': 
+                                        'incoming_interface_list':
+                                            {'mdtvpn1':
                                                 {'flags': 'A MI',
                                                 'uptime': '00:03:35',
                                                 'rpf_nbr': '::ffff:192.168.195.200'}},
-                                        'outgoing_interface_list': 
-                                            {'GigabitEthernet150/0/0/6': 
+                                        'outgoing_interface_list':
+                                            {'GigabitEthernet150/0/0/6':
                                                 {'flags': 'F NS',
                                                 'uptime': '00:03:59'}},
                                         'rpf_nbr': '::ffff:192.168.195.200',
                                         'uptime': '00:03:59'}}},
-                            'ff20::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff22::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff30::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff32::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff33::/32':
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff34::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff35::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff36::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff37::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff38::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff39::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff3a::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff3b::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff3c::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff3d::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff3e::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff3f::/32': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff40::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff42::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff50::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff52::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff60::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff62::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff70::/12': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'C RPF P',
-                                        'rpf_nbr': '::',
-                                        'uptime': '00:04:45'}}},
-                            'ff70::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff72::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff80::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff82::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff90::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ff92::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ffa0::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ffa2::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ffb0::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ffb2::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ffc0::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ffc2::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ffd0::/15': 
-                                {'source_address':  
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ffd2::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ffe0::/15': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'ffe2::/16': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'fff0::/12': 
-                                {'source_address': 
-                                    {'*': 
-                                        {'flags': 'D P',
-                                        'uptime': '00:04:45'}}},
-                            'fff0::/15': 
-                                {'source_address': 
+                            'ff20::/15':
+                                {'source_address':
                                     {'*':
                                         {'flags': 'D P',
                                         'uptime': '00:04:45'}}},
-                            'fff2::/16': 
-                                {'source_address': 
-                                    {'*': 
+                            'ff22::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff30::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff32::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff33::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff34::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff35::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff36::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff37::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff38::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff39::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff3a::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff3b::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff3c::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff3d::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff3e::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff3f::/32':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff40::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff42::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff50::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff52::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff60::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff62::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff70::/12':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'C RPF P',
+                                        'rpf_nbr': '::',
+                                        'uptime': '00:04:45'}}},
+                            'ff70::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff72::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff80::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff82::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff90::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ff92::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ffa0::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ffa2::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ffb0::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ffb2::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ffc0::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ffc2::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ffd0::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ffd2::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ffe0::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'ffe2::/16':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'fff0::/12':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'fff0::/15':
+                                {'source_address':
+                                    {'*':
+                                        {'flags': 'D P',
+                                        'uptime': '00:04:45'}}},
+                            'fff2::/16':
+                                {'source_address':
+                                    {'*':
                                         {'flags': 'D P',
                                         'uptime': '00:04:45'}}}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
-        RP/0/1/CPU0:rtr1#show mrib vrf vpn1 ipv6 route  
+        RP/0/1/CPU0:rtr1#show mrib vrf vpn1 ipv6 route
         Mon Nov  2 15:26:01.015 PST
 
         IP Multicast Routing Information Base
