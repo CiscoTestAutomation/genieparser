@@ -46,8 +46,10 @@ _class = args.class_name
 _token = args.token
 _number = args.number
 
-if _number and not _class:
-    sys.exit("Unittest number provided without specifying argument '-c' or '--class_name' for the parser class")
+if _number and not _class or not _os:
+    sys.exit("Unittest number provided without specifying supporting arguments:"
+             "\n* '-c' or '--class_name' for the parser class"
+             "\n* '-o' or '--operating_system' for operating system")
 
 # This is the list of Classes that currently have no testing. It was found during the process
 # of converting to folder based testing strategy
@@ -183,8 +185,7 @@ def get_operating_systems():
     # Update and fix as more OS's converted to folder baed tests
     if _os:
         return [_os]
-    sys.exit("Argument '-o' or '--operating_system' for operating system not provided")
-    # return ["asa", "ios", "iosxe"]
+    return ["asa", "ios", "iosxe"]
     # operating_system = []
     # for folder in os.listdir("./"):
     #    if os.path.islink("./" + folder):
