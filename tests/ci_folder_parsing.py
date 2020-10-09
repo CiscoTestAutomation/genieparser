@@ -46,6 +46,9 @@ _class = args.class_name
 _token = args.token
 _number = args.number
 
+if _number and not _class:
+    sys.exit("Unittest number provided without specifying argument '-c' or '--class_name' for the parser class")
+
 # This is the list of Classes that currently have no testing. It was found during the process
 # of converting to folder based testing strategy
 CLASS_SKIP = {
