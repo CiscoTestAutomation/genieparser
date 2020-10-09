@@ -210,7 +210,11 @@ class ShowLldpEntry(ShowLldpEntrySchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                port_id = Common.convert_intf_name(group['port_id'])
+                port_id = group['port_id']
+                # check if it is Junos interface name
+                match = re.search(r'([\w]+)-([\d\/\.]+)', port_id)
+                if not match:
+                    port_id = Common.convert_intf_name(group['port_id'])
                 port_dict = intf_dict.setdefault('port_id', {}). \
                     setdefault(port_id, {})
 

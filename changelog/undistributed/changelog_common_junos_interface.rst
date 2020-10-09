@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
-* Common
-    * Updated convert_intf_name to ignore junos interface name
+* IOSXR
+    * Updated ShowLldpNeighborsDetail not to convert junos interface name
