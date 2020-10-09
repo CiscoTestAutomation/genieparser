@@ -3,6 +3,7 @@
 # Python
 import os
 import re
+import sys
 import glob
 import json
 import inspect
@@ -35,7 +36,7 @@ my_parser.add_argument('-t', "--token",
                        help="The Token associated with the class, such as 'asr1k'",
                        default=None)
 my_parser.add_argument('-n', "--number",
-                       type=str,
+                       type=int,
                        help="The specific unittest we want to run, such as '25'",
                        default=None)
 args = my_parser.parse_args()
@@ -179,7 +180,8 @@ def get_operating_systems():
     # Update and fix as more OS's converted to folder baed tests
     if _os:
         return [_os]
-    return ["asa", "ios", "iosxe"]
+    sys.exit("Argument '-o' or '--operating_system' for operating system not provided")
+    # return ["asa", "ios", "iosxe"]
     # operating_system = []
     # for folder in os.listdir("./"):
     #    if os.path.islink("./" + folder):
