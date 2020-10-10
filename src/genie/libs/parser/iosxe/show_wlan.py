@@ -708,7 +708,6 @@ class ShowWlanAll(ShowWlanAllSchema):
         current_wlan = ""
 
         for line in output.splitlines():
-            print(line)
             line = line.strip()
             if p_name.match(line):
                 # WLAN Profile Name     : north
