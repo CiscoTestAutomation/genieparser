@@ -84,6 +84,22 @@ class test_show_mrib_vrf_route(unittest.TestCase):
                                     {'*':
                                         {'flags': 'D P',
                                         'uptime': '00:00:58'}}},
+                            '232.1.1.1':
+                                {'source_address':
+                                    {'172.16.1.2':
+                                        {'flags': 'RPF',
+                                        'incoming_interface_list':
+                                            {'Bundle-Ether2.200':
+                                                {'flags': 'A',
+                                                'uptime': '1w3d',
+                                                'rpf_nbr': '10.100.1.1',}},
+                                        'outgoing_interface_list':
+                                            {'Bundle-Ether1.100':
+                                                {'flags': 'F NS',
+                                                'uptime': '5d22h',
+                                                'location': '0/12/CPU0'}},
+                                        'rpf_nbr': '10.100.1.1',
+                                        'uptime': '13w2d'}}},
                             '236.5.5.5':
                                 {'source_address':
                                     {'*':
@@ -180,6 +196,13 @@ class test_show_mrib_vrf_route(unittest.TestCase):
 
         (*,232.0.0.0/8) Flags: D P
             Up: 00:00:58
+
+        (172.16.1.2,232.1.1.1) RPF nbr: 10.100.1.1 Flags: RPF
+            Up: 13w2d
+            Incoming Interface List
+                Bundle-Ether2.200 Flags: A, Up: 1w3d
+            Outgoing Interface List
+                Bundle-Ether1.100 (0/12/CPU0) Flags: F NS, Up: 5d22h
 
         (*,236.5.5.5) RPF nbr: 0.0.0.0 Flags: C RPF MD MH CD
             MVPN TID: 0xe0000018

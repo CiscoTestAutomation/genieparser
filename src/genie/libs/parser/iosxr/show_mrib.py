@@ -49,6 +49,7 @@ class ShowMribVrfRouteSchema(MetaParser):
                                             {Any():
                                                 {'uptime': str,
                                                 'flags': str,
+                                                Optional('location'): str,
                                                 },
                                             },
                                         },
@@ -220,8 +221,10 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
             # GigabitEthernet0/1/0/1 Flags: NS, Up: 00:00:01
             # Decaps6tunnel0 Flags: NS DI, Up: 00:04:40
             # mdtvpn1 Flags: F NS MI MT MA, Up: 00:02:53
-            p12 = re.compile(r'^\s*(?P<interface>(\S+)) +Flags:'
-                              ' +(?P<flags>[a-zA-Z\s]+), +Up:'
+            # Bundle-Ether1.100 (0/12/CPU0) Flags: F NS, Up: 5d22h
+            p12 = re.compile(r'^\s*(?P<interface>(\S+))'
+                              '( *\((?P<location>[\S\s]+)\))?'
+                              ' +Flags: +(?P<flags>[a-zA-Z\s]+), +Up:'
                               ' +(?P<uptime>(\S+))$')
             m = p12.match(line)
             if m:
@@ -229,12 +232,15 @@ class ShowMribVrfRoute(ShowMribVrfRouteSchema):
                 interface = m.groupdict()['interface']
                 flags = m.groupdict()['flags']
                 uptime = m.groupdict()['uptime']
+                location = m.groupdict()['location']
                 if interface not in sub_dict[intf_list_type]:
                     sub_dict[intf_list_type][interface] = {}
                 if flags:
                     sub_dict[intf_list_type][interface]['flags'] = flags
                 if uptime:
                     sub_dict[intf_list_type][interface]['uptime'] = uptime
+                if location:
+                    sub_dict[intf_list_type][interface]['location'] = location
                 if intf_list_type == 'incoming_interface_list' and rpf_nbr:
                     sub_dict[intf_list_type][interface]['rpf_nbr'] = rpf_nbr
                     continue
