@@ -1,0 +1,41 @@
+
+Syslog logging: enabled (0 messages dropped, 0 messages rate-limited, 0 flushes, 0 overruns, xml disabled, filtering disabled)
+
+No Active Message Discriminator.
+
+
+
+No Inactive Message Discriminator.
+
+
+    Console logging: disabled
+    Monitor logging: level debugging, 13 messages logged, xml disabled,
+                     filtering disabled
+    Buffer logging:  level debugging, 1566 messages logged, xml disabled,
+                    filtering disabled
+    Exception Logging: size (4096 bytes)
+    Count and timestamp logging messages: disabled
+    File logging: disabled
+    Persistent logging: disabled
+
+No active filter modules.
+
+    Trap logging: level informational, 1570 message lines logged
+        Logging to 192.168.1.3  (tcp port 1514, audit disabled,
+              link down),
+              787 message lines logged,
+              0 message lines rate-limited,
+              0 message lines dropped-by-MD,
+              xml disabled, sequence number disabled
+              filtering disabled
+        Logging to 10.19.33.4  (udp port 888, audit disabled,
+              link down),
+              0 message lines logged,
+              0 message lines rate-limited,
+              0 message lines dropped-by-MD,
+              xml disabled, sequence number disabled
+              filtering disabled
+        Logging Source-Interface:       VRF Name:
+        Vlan200
+
+Log Buffer (32000 bytes):

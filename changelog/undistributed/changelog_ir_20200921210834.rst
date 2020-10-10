@@ -1,0 +1,7 @@
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* NXOS
+	* Modified ShowInterfaceBrief:
+        * Updated regex pattern p6 to accommodate various outputs.
+        
