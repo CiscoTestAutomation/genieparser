@@ -18,8 +18,20 @@ from genie.libs.parser.utils.common import Common
 # =============================================
 
 class ShowImDampeningSchema(MetaParser):
-    schema = {}
-
+    schema = {
+                'interface': {
+                    Any(): {
+                    'protocol': {
+                        Any(): {
+                        'capsulation': str,
+                        'penalty': int,
+                        'suppressed': str,
+                        }
+                    }
+                }
+            }
+        }
+                    
 class ShowImDampening(ShowImDampeningSchema):
     """ Parser for show im dampening"""
     
