@@ -151,8 +151,11 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
         p6 = re.compile(r'suppress:\s+(?P<suppress>\d+) +max-suppress-time:\s(?P<max_suppress>\d+)')
         
         # ipv6           ipv6               1625  YES    42s  remaining        Down
-        p7 = re.compile(r'^(?P<prot>[a-z\d<>].{1,12}) +(?P<prot_cap>[a-z\d<>].{1,12}) +(?P<prot_pen>\d+) +(?P<prot_sup>YES|NO) +(?P<prot_sup_time>\d+). +remaining\s+(?P<prot_state>\S+)')
+        p7 = re.compile(r'^(?P<prot>[a-z\d<>].{1,12}) +(?P<prot_cap>[a-z\d<>].{1,12})'
+                         ' +(?P<prot_pen>\d+) +(?P<prot_sup>YES|NO) +(?P<prot_sup_time>\d+).'
+                         ' +remaining\s+(?P<prot_state>\S+)')
         
+        # Dampening not enabled
         p8 = re.compile(r'^(?P<stat>Dampening not enabled)')
         
         for line in out.splitlines():
