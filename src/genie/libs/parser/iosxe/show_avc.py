@@ -12,7 +12,17 @@ class ShowAvcSdServiceInfoSummarySchema(MetaParser):
     """Schema for show avc sd-service info summary."""
 
     schema = {
-        
+        Optional("active_controller"): {
+            "ipv4_address": str,
+            "status": str,
+            "type": "Primary",
+        },
+        Optional("device"): {
+            "id": str,
+            "ipv4_address": str,
+            "segment_name": str,
+        },
+        "sdavc": {"status": str},
     }
 
 
@@ -23,14 +33,13 @@ class ShowAvcSdServiceInfoSummarySchema(MetaParser):
 class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
     """Parser for show avc sd-service info summary"""
 
-    cli_command = ['show avc sd-service info summary']
+    cli_command = ["show avc sd-service info summary"]
 
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command[0])
 
         # Status: CONNECTED
-
         # Device ID: sd-sw2.lab.com
         # Device segment name: core-pop
         # Device address: 10.18.29.33
@@ -90,7 +99,11 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
 
         avc_info_obj = {}
 
-        capture_list = [avc_connected_capture, avc_disconnected_capture, avc_disabled_capture]
+        capture_list = [
+            avc_connected_capture,
+            avc_disconnected_capture,
+            avc_disabled_capture,
+        ]
 
         for capture in capture_list:
             if re.search(capture, output, re.MULTILINE):
@@ -102,7 +115,7 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
 
                     group = search.groupdict()
 
-                    # iterate through key_list to format the keys in group 
+                    # iterate through key_list to format the keys in group
                     for key in key_list:
                         new_group = {key: {}}
 
@@ -116,12 +129,11 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
 
                         avc_info_obj.update(new_group)
 
+                    # if active_controller is an empty dict, update it to show it's not configured
+                    if not avc_info_obj["active_controller"].get("status"):
+                        avc_info_obj["active_controller"] = {"status": "not configured"}
+
                 if capture == avc_disabled_capture:
                     avc_info_obj = {"sdavc": {"status": "DISABLED"}}
-
-
-                # if active_controller is an empty dict, update it to show it's not configured
-                if not avc_info_obj["active_controller"].get("status"):
-                    avc_info_obj["active_controller"] = {"status": "not configured"}
 
         return avc_info_obj
