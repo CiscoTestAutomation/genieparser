@@ -13,9 +13,9 @@ class ShowAvcSdServiceInfoSummarySchema(MetaParser):
 
     schema = {
         Optional("active_controller"): {
-            "ipv4_address": str,
+            Optional("ipv4_address"): str,
             "status": str,
-            "type": "Primary",
+            Optional("type"): "Primary",
         },
         Optional("device"): {
             "id": str,
