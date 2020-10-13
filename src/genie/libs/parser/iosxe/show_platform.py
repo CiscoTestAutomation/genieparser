@@ -2259,6 +2259,7 @@ class ShowPlatform(ShowPlatformSchema):
         # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
         # ------  -----   ---------             -----------  --------------  -------       --------
         #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
+        #  1       32     C9200-24P             JAD2310213C  dc8c.3721.8c00  V01           17.05.01
         p3 = re.compile(r'^(?P<switch>\d+) +(?P<ports>\d+) +'
                         '(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
                         '(?P<mac_address>[\w\.\:]+) +'
@@ -2318,7 +2319,7 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'] = {}
                 if slot not in platform_dict['slot']:
                     platform_dict['slot'][slot] = {}
-                if ('WS-C' in model) or ('C9500' in model) or ('C9300' in model):
+                if ('WS-C' in model) or ('C9500' in model) or ('C9300' in model) or ('C9200' in model):
                     lc_type = 'rp'
                 else:
                     lc_type = 'other'
