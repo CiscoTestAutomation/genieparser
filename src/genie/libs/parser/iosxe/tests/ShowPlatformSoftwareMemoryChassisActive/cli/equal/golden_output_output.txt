@@ -1,0 +1,94 @@
+show platform software memory mdt-pubd chassis active R0
+Module: error-wrong-component
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 242, failed: 0, frees: 242
+Module: process
+  allocated: 168, requested: 136, overhead: 32
+  Allocations: 2, failed: 0, frees: 0
+Module: cdllib
+  allocated: 1688, requested: 1672, overhead: 16
+  Allocations: 4, failed: 0, frees: 3
+Module: eventutil
+  allocated: 120685, requested: 119757, overhead: 928
+  Allocations: 68, failed: 0, frees: 10
+Module: uipeer
+  allocated: 26816, requested: 26736, overhead: 80
+  Allocations: 14, failed: 0, frees: 9
+Module: chunk
+  allocated: 3065, requested: 2953, overhead: 112
+  Allocations: 11, failed: 0, frees: 4
+Module: trccfg
+  allocated: 512, requested: 496, overhead: 16
+  Allocations: 5, failed: 0, frees: 4
+Module: dbal-intf-mgr
+  allocated: 111, requested: 63, overhead: 48
+  Allocations: 3, failed: 0, frees: 0
+Module: dbal-exec-mgr
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 2, failed: 0, frees: 2
+Module: dbal-batch-mgr
+  allocated: 1070, requested: 1038, overhead: 32
+  Allocations: 2, failed: 0, frees: 0
+Module: dbal-tunnel-mgr
+  allocated: 4959, requested: 4879, overhead: 80
+  Allocations: 5, failed: 0, frees: 0
+Module: dbal-scn-mgr
+  allocated: 3160, requested: 3096, overhead: 64
+  Allocations: 4, failed: 0, frees: 0
+Module: dbal-channel-mgr
+  allocated: 3184, requested: 3120, overhead: 64
+  Allocations: 4, failed: 0, frees: 0
+Module: dbal-bipc
+  allocated: 4465, requested: 4401, overhead: 64
+  Allocations: 4, failed: 0, frees: 0
+Module: dbal-conn
+  allocated: 784, requested: 672, overhead: 112
+  Allocations: 7, failed: 0, frees: 0
+Module: eiapi
+  allocated: 64, requested: 48, overhead: 16
+  Allocations: 20, failed: 0, frees: 19
+Module: eiapi
+  allocated: 48, requested: 32, overhead: 16
+  Allocations: 1, failed: 0, frees: 0
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 19, failed: 0, frees: 19
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 21, failed: 0, frees: 21
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 19, failed: 0, frees: 19
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 38, failed: 0, frees: 38
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 21, failed: 0, frees: 21
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 19, failed: 0, frees: 19
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 19, failed: 0, frees: 19
+Module: eiapi
+  allocated: 40, requested: 24, overhead: 16
+  Allocations: 1, failed: 0, frees: 0
+Module: ndbutil
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 2, failed: 0, frees: 2
+Module: bcrdu_avl
+  allocated: 72, requested: 56, overhead: 16
+  Allocations: 1, failed: 0, frees: 0
+Module: opssl-parser
+  allocated: 2102, requested: 2070, overhead: 32
+  Allocations: 2, failed: 0, frees: 0
+Module: libconfd
+  allocated: 552, requested: 472, overhead: 80
+  Allocations: 5, failed: 0, frees: 0
+Module: ewlc_telemetry
+  allocated: 1056, requested: 1040, overhead: 16
+  Allocations: 1, failed: 0, frees: 0
+Module: Summary
+  allocated: 174601, requested: 172761, overhead: 1840
+  Allocations: 566, failed: 0, frees: 451

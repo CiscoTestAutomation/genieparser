@@ -529,8 +529,8 @@ class Common():
                    'vr': 'vasiright',
                    'BE': 'Bundle-Ether'
                    }
-        m = re.search('([a-zA-Z]+)', intf) 
-        m1 = re.search('([\d\/\.]+)', intf)
+        m = re.search(r'([a-zA-Z]+)', intf) 
+        m1 = re.search(r'([\d\/\.]+)', intf)
         if hasattr(m, 'group') and hasattr(m1, 'group'):
             int_type = m.group(0)
             int_port = m1.group(0)
