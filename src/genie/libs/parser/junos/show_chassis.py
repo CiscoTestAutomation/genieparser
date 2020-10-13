@@ -1667,7 +1667,8 @@ class ShowChassisRoutingEngineSchema(MetaParser):
                 "#text": str,
                 Optional("@junos:seconds"): str
                 }
-            }]
+            }],
+        Optional("re-state"): str
         }
     }
 
@@ -1739,7 +1740,8 @@ class ShowChassisRoutingEngineSchema(MetaParser):
     Optional("@xmlns:junos"): str,
     "route-engine-information": {
         Optional("@xmlns"): str,
-        "route-engine": Use(validate_chassis_routing_list)
+        "route-engine": Use(validate_chassis_routing_list),
+        Optional("re-state"): str
         }
     }
    
@@ -1814,6 +1816,9 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
         p16 = re.compile(r'^(?P<load_average_one>[\d\.]+) '
                          r'+(?P<load_average_five>[\d\.]+) '
                          r'+(?P<load_average_fifteen>[\d\.]+)$')
+
+        #{master}
+        p17 = re.compile(r'^(?P<re_state>[\{\S\s]+\})$')
 
         ret_dict = {}
 
@@ -1976,7 +1981,14 @@ class ShowChassisRoutingEngine(ShowChassisRoutingEngineSchema):
                 route_engine_entry_dict["load-average-five"] = group["load_average_five"]
                 route_engine_entry_dict["load-average-fifteen"] = group["load_average_fifteen"]
                 continue
-                
+
+            #{master}
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict["route-engine-information"]["re-state"] = group["re_state"]
+                continue
+
         return ret_dict
 
 

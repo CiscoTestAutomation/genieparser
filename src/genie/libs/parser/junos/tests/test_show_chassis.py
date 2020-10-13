@@ -1366,6 +1366,8 @@ class TestShowChassisRoutingEngine(unittest.TestCase):
             Last reboot reason             Router rebooted after a normal shutdown.
             Load averages:                 1 minute   5 minute  15 minute
                                             0.00       0.00       0.00
+                                            
+        {master}
     '''}
 
     golden_parsed_output2 = {
@@ -1427,7 +1429,8 @@ class TestShowChassisRoutingEngine(unittest.TestCase):
                         "#text": "5 days, 3 hours, 23 minutes, 59 seconds"
                     }
                 }
-            ]
+            ],
+            "re-state": "{master}"
         }
         
     }
