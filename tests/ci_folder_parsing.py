@@ -46,7 +46,7 @@ _class = args.class_name
 _token = args.token
 _number = args.number
 
-if _number and not _class or _number and not _os:
+if _number and (not _class or not _number):
     sys.exit("Unittest number provided but missing supporting arguments:"
              "\n* '-c' or '--class_name' for the parser class"
              "\n* '-o' or '--operating_system' for operating system")
