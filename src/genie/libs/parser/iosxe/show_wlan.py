@@ -30,6 +30,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
         else:
             output = output
 
+            
         wlan_capture = (
             # Wlan Profile Name: lizzard_Global, Wlan Id: 17
             r"^Wlan Profile Name:\s+(?P<profile_name>\S+), Wlan Id: (?P<id>\d+)$"
@@ -429,39 +430,63 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             r"\s+NACK IFID mismatch\s+:\s+(?P<nack_ifid_mismatch>\d+)\n+"
         )
 
-        capture = client_delete_capture
-        info_search = re.search(capture, output, re.MULTILINE)
-        info_group = info_search.groupdict()
-
         wlan_obj = {}
 
-        dict_keys = [
-            "anchor",
-            "ap",
-            "apinit",
-            "conn",
-            "dot11",
-            "dot11v",
-            "dot11x",
-            "eap",
-            "eogre",
-            "invalid",
-            "mac",
-            "mobility",
-            "no",
-            "policy",
-            "qos",
-            "wired",
-            "wrong",
-        ]
+        if re.search(wlan_capture, output, re.MULTILINE):
+            search = re.search(wlan_capture, output, re.MULTILINE)
+            group = search.groupdict()
 
-        for dict_key in dict_keys:
-            rendered_dict = {dict_key: {}}
-            for group in info_group:
-                # if dict_key plus _ matches the first part in the key
-                if f"{dict_key}_" in group:
-                    # strip the first part of the key because now it's in a dict
-                    group_dict = {group.strip(f"{dict_key}_"): info_group[group]}
-                    rendered_dict[dict_key].update(group_dict)
+            new_group = {"wlan": group}
+            wlan_obj.update(new_group)
 
-            wlan_obj.update(rendered_dict)
+        if re.search(client_stats_capture, output, re.MULTILINE):
+            search = re.search(client_stats_capture, output, re.MULTILINE)
+            group = search.groupdict()
+
+            new_group = {"client_stats": group}
+            wlan_obj.update(new_group)
+
+        if re.search(client_delete_capture, output, re.MULTILINE):
+            search = re.search(client_delete_capture, output, re.MULTILINE)
+            group = search.groupdict()
+
+            new_group = {"client_delete": group}
+
+            key_list = [
+                "anchor",
+                "ap",
+                "apinit",
+                "conn",
+                "dot11",
+                "dot11v",
+                "dot11x",
+                "eap",
+                "eogre",
+                "invalid",
+                "mac",
+                "mobility",
+                "no",
+                "policy",
+                "qos",
+                "wired",
+                "wrong",
+            ]
+
+            for key in key_list: 
+                new_key_group = {key: {}}
+
+                for item in new_group["client_delete"].copy():
+                    # if the key from key_list is found in item
+                    if f"{key}_" in item:
+                        # replace the key and update with new_dict
+                        new_key = re.sub(f"{key}_", "", item)
+                        new_dict = {new_key: new_group["client_delete"][item]}
+
+                        new_key_group[key].update(new_dict)
+                        new_group["client_delete"].pop(item)
+
+                new_group["client_delete"].update(new_key_group)
+            
+            wlan_obj.update(new_group)
+
+        return(wlan_obj)
