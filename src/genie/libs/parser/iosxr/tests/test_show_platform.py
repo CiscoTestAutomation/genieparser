@@ -1369,6 +1369,39 @@ class TestAdminShowDiagChassis(unittest.TestCase):
         'clei': 'INM4710ARA'
     }
 
+    golden_output5 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:ios#admin show diag chassis
+        Tue Sep 22 23:23:54.013 UTC
+        
+        Diag Information For : 0
+        
+        Rack 0-Chassis IDPROM Info
+            Controller Family        : 0009
+            Controller Type          : 09d2
+            PID                      : NCS1004
+            Version Identifier       : V01
+            UDI Description          : Network Convergence System 1004 4 line card slots
+            CLEI Code                : WOMS400GRA
+            Top Assy. Part Number    : 800-47655-01
+            Top Assy. Revision       : A0
+            PCB Serial Number        : CAT2311B0AK
+        RP/0/RP0/CPU0:ios#
+    '''
+    }
+    golden_parsed_output5 = {
+        'clei': 'WOMS400GRA',
+        'controller_family': '0009',
+        'controller_type': '09d2',
+        'desc': 'Network Convergence System 1004 4 line card slots',
+        'pid': 'NCS1004',
+        'rack_num': 0,
+        'sn': 'CAT2311B0AK',
+        'top_assembly_block': {
+            'part_number': '800-47655-01',
+            'revision': 'A0',
+        },
+        'vid': 'V01',
+    }
 
     def test_show_inventory_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1410,6 +1443,13 @@ class TestAdminShowDiagChassis(unittest.TestCase):
         obj = AdminShowDiagChassis(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_admin_show_diag_chassis_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        obj = AdminShowDiagChassis(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 # ========================================
 #  Unit test for 'show redundancy summary'       

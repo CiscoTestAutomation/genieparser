@@ -406,9 +406,10 @@ class ShowVersion(ShowVersionSchema):
         # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
         # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
         # cisco WS-C4507R+E (MPC8572) processor (revision 10) with 2097152K/20480K bytes of memory.
+        # Cisco CISCO1941/K9 (revision 1.0) with 491520K/32768K bytes of memory.
         p18 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) '
-                         r'+\((?P<processor_type>.+)\) +((processor.*)|with) '
-                         r'+with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
+                         r'+\((?P<processor_type>[^)]*)\) +(.*?)with '
+                         r'+(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
 
         # Cisco CISCO3945-CHASSIS (revision 1.0) with C3900-SPE150/K9 with 1835264K/261888K bytes of memory.
         p18_2 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) +.* '
@@ -2258,6 +2259,7 @@ class ShowPlatform(ShowPlatformSchema):
         # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
         # ------  -----   ---------             -----------  --------------  -------       --------
         #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
+        #  1       32     C9200-24P             JAD2310213C  dc8c.3721.8c00  V01           17.05.01
         p3 = re.compile(r'^(?P<switch>\d+) +(?P<ports>\d+) +'
                         '(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
                         '(?P<mac_address>[\w\.\:]+) +'
@@ -2317,7 +2319,7 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'] = {}
                 if slot not in platform_dict['slot']:
                     platform_dict['slot'][slot] = {}
-                if ('WS-C' in model) or ('C9500' in model) or ('C9300' in model):
+                if ('WS-C' in model) or ('C9500' in model) or ('C9300' in model) or ('C9200' in model):
                     lc_type = 'rp'
                 else:
                     lc_type = 'other'
@@ -5828,7 +5830,6 @@ class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
 
     }
 
-
 class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSchema):
     """ Parser for show platform software memory <process> switch active <R0> alloc backtrace """
 
@@ -5885,6 +5886,19 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
 
         return parsed_dict
 
+# class RmSoftwareMemoryChassisActiveBacktrace(ShowPlatformSoftwareMemoryBacktrace):
+#     """ Parser for rm platform software memory <process> chassis active <R0> alloc backtrace """
+
+#     cli_command = 'rm software memory {process} chassis active {slot} alloc backtrace'
+
+#     def cli(self, process, slot, output=None):
+#         if output is None:
+#             out = self.device.execute(
+#                 self.cli_command.format(process=process, slot=slot))
+#         else:
+#             out = output
+        
+#         return super().cli(process=process, slot=slot, output=out)
 
 class ShowProcessesMemorySortedSchema(MetaParser):
     schema = {
@@ -7202,3 +7216,527 @@ class ShowPlatformSoftwareYangManagementProcessState(ShowPlatformSoftwareYangMan
                 continue
 
         return ret_dict
+
+class ShowPlatformSoftwareMemoryRpActiveSchema(MetaParser):
+    """ Schema for 
+        * show platform software memory mdt-pubd RP active
+    """
+    schema = {
+        'module': {
+            Any(): {
+                'allocated': int,
+                'requested': int,
+                'overhead': int,
+                Optional('allocations'): int,
+                Optional('failed'): int,
+                Optional('frees'): int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryRpActive(ShowPlatformSoftwareMemoryRpActiveSchema):
+    """ Parser for 
+        * show platform software memory mdt-pubd RP active
+    """
+
+    cli_command = 'show platform software memory {process} RP active'
+
+    def cli(self, process, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process=process))
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # Module: process
+        p1 = re.compile(r'Module: +(?P<module>[\S\s]+)$')
+
+        # allocated: 16695, requested: 16647, overhead: 48
+        p2 = re.compile(r'allocated: +(?P<allocated>\d+), +requested: +'
+            r'(?P<requested>\d+), +overhead: +(?P<overhead>\d+)$')
+
+        # Allocations: 3, failed: 0, frees: 0
+        p3 = re.compile(r'Allocations: +(?P<allocations>\d+), +failed: +'
+            r'(?P<failed>\d+), +frees: +(?P<frees>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Module: process
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                module = group.get('module')
+                module_dict = ret_dict.setdefault('module', {}). \
+                    setdefault(module, {})
+                continue
+
+            # allocated: 16695, requested: 16647, overhead: 48
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Allocations: 3, failed: 0, frees: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemorySwitchActive(ShowPlatformSoftwareMemoryRpActive):
+    """ Parser for 
+        * show platform software memory mdt-pubd switch active <R0>
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot}'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=out)
+
+class ShowPlatformSoftwareMemoryChassisActive(ShowPlatformSoftwareMemoryRpActive):
+    """ Parser for 
+        * show platform software memory mdt-pubd chassis active <R0>
+    """
+
+    cli_command = 'show platform software memory {process} chassis active {slot}'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=out)
+
+class ShowPlatformSoftwareMemoryRpActiveBriefSchema(MetaParser):
+    """ Schema for 
+        * show platform software memory mdt-pubd RP active brief
+    """
+    schema = {
+        'module': {
+            Any(): {
+                'allocated': int,
+                'requested': int,
+                'allocs': int,
+                'frees': int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryRpActiveBrief(ShowPlatformSoftwareMemoryRpActiveBriefSchema):
+    """ Parser for 
+        * show platform software memory mdt-pubd RP active brief
+    """
+
+    cli_command = 'show platform software memory {process} RP active brief'
+
+    def cli(self, process, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process=process))
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # Summary                 420136        364136        3706          206
+        p1 = re.compile(r'^(?P<module>\S+) +(?P<allocated>\d+) +'
+            r'(?P<requested>\d+) +(?P<allocs>\d+) +(?P<frees>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Summary                 420136        364136        3706          206
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                module = group.pop('module')
+                module_dict = ret_dict.setdefault('module', {}). \
+                    setdefault(module, {})
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemorySwitchActiveBrief(ShowPlatformSoftwareMemoryRpActiveBrief):
+    """ Parser for 
+        * show platform software memory mdt-pubd switch active R0 brief
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot} brief'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=out)
+
+class ShowPlatformSoftwareMemoryChassisActiveBrief(ShowPlatformSoftwareMemoryRpActiveBrief):
+    """ Parser for 
+        * show platform software memory mdt-pubd chassis active R0 brief
+    """
+
+    cli_command = 'show platform software memory {process} chassis active {slot} brief'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=out)
+
+class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteSchema(MetaParser):
+    """ Schema for 
+        * show platform software memory mdt-pubd RP active alloc callsite
+    """
+    schema = {
+        'callsite': {
+            Any(): {
+                'thread_id': int,
+                'allocs': int,
+                'frees': int,
+                'alloc_bytes': int,
+                'free_bytes': int,
+                'call_diff': int,
+                'byte_diff': int
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryRpActiveAllocCallsite(ShowPlatformSoftwareMemoryRpActiveAllocCallsiteSchema):
+    """ Parser for 
+        * show platform software memory mdt-pubd RP active alloc callsite
+    """
+
+    cli_command = 'show platform software memory {process} RP active alloc callsite'
+
+    def cli(self, process, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process=process))
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # callsite: 1355696130, thread_id: 24813
+        p1 = re.compile(r'^callsite: +(?P<callsite>\d+), +thread_id: +(?P<thread_id>\d+)$')
+        
+        # allocs: 138151, frees: 138141, alloc_bytes: 15466123, free_bytes: 15464846, call_diff: 10, byte_diff: 1277
+        p2 = re.compile(r'^allocs: +(?P<allocs>\d+), +frees: +(?P<frees>\d+), +'
+            r'alloc_bytes: +(?P<alloc_bytes>\d+), +free_bytes: +(?P<free_bytes>\d+), +'
+            r'call_diff: +(?P<call_diff>\d+), +byte_diff: +(?P<byte_diff>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # callsite: 1355696130, thread_id: 24813
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                callsite = group.get('callsite')
+                thread_id = group.get('thread_id')
+                thread_dict = ret_dict.setdefault('callsite', {}). \
+                    setdefault(callsite, {})
+                thread_dict.update({'thread_id': int(thread_id)})
+                continue
+
+            # allocs: 138151, frees: 138141, alloc_bytes: 15466123, free_bytes: 15464846, call_diff: 10, byte_diff: 1277
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                thread_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemorySwitchActiveAllocCallsite(ShowPlatformSoftwareMemoryRpActiveAllocCallsite):
+    """ Parser for 
+        * show platform software memory mdt-pubd switch active <R0> alloc callsite
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot} alloc callsite'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=out)
+
+class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteBriefSchema(MetaParser):
+    """ Schema for 
+        * show platform software memory mdt-pubd RP active alloc callsite
+    """
+    schema = {
+        'tracekey': str,
+        'callsite': {
+            Any(): {
+                'thread_id': int,
+                'diff_byte': int,
+                'diff_call': int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteBrief(ShowPlatformSoftwareMemoryRpActiveAllocCallsiteBriefSchema):
+    """ Parser for 
+        * show platform software memory mdt-pubd RP active alloc callsite brief
+    """
+
+    cli_command = 'show platform software memory {process} RP active alloc callsite brief'
+
+    def cli(self, process, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process=process))
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # callsite: 1355696130, thread_id: 24813
+        p1 = re.compile(r'^The +current +tracekey +is +: +(?P<tracekey>\S+)$')
+        
+        # allocs: 138151, frees: 138141, alloc_bytes: 15466123, free_bytes: 15464846, call_diff: 10, byte_diff: 1277
+        p2 = re.compile(r'^(?P<callsite>\d+) +(?P<thread_id>\d+) +(?P<diff_byte>\d+) +(?P<diff_call>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'tracekey': group['tracekey']})
+                continue
+
+            # callsite: 1355696130, thread_id: 24813
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                callsite = group.pop('callsite')
+                thread_id = group.pop('thread_id')
+                thread_dict = ret_dict.setdefault('callsite', {}). \
+                    setdefault(callsite, {})
+                thread_dict.update({'thread_id': int(thread_id)})
+                thread_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemoryRpActiveAllocTypeSchema(MetaParser):
+    """ Schema for 
+        * show platform software memory mdt-pubd RP active alloc type component
+    """
+    schema = {
+        Optional('module'): {
+            Any(): {
+                'allocated': int,
+                'requested': int,
+                'overhead': int,
+                'allocations': int,
+                'null_allocations': int,
+                'frees': int,
+            }
+        },
+        Optional('type'): {
+            Any(): {
+                'allocated': int,
+                'requested': int,
+                'overhead': int,
+                'allocations': int,
+                'null_allocations': int,
+                'frees': int,
+            }
+        },
+    }
+
+class ShowPlatformSoftwareMemoryRpActiveAllocType(ShowPlatformSoftwareMemoryRpActiveAllocTypeSchema):
+    """ Parser for 
+        * show platform software memory mdt-pubd RP active alloc type component
+        * show platform software memory mdt-pubd RP active alloc type data
+    """
+
+    cli_command = 'show platform software memory {process} RP active alloc type {alloc_type}'
+
+    def cli(self, process, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                alloc_type=alloc_type))
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # Module: process
+        p1 = re.compile(r'Module: +(?P<module>[\S\s]+)$')
+
+        # Type: process
+        p1_1 = re.compile(r'Type: +(?P<type>[\S\s]+)$')
+
+        # allocated: 16695, requested: 16647, overhead: 48
+        p2 = re.compile(r'Allocated: +(?P<allocated>\d+), +'
+            r'Requested: +(?P<requested>\d+), +Overhead: +(?P<overhead>\d+)$')
+
+        # Allocations: 3, failed: 0, frees: 0
+        p3 = re.compile(r'Allocations: +(?P<allocations>\d+), +Null +Allocations: +'
+            r'(?P<null_allocations>\d+), +Frees: +(?P<frees>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Module: process
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                module = group.get('module')
+                module_dict = ret_dict.setdefault('module', {}). \
+                    setdefault(module, {})
+                continue
+            
+            # type: process
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                module = group.get('type')
+                module_dict = ret_dict.setdefault('type', {}). \
+                    setdefault(module, {})
+                continue
+
+            # allocated: 16695, requested: 16647, overhead: 48
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Allocations: 3, failed: 0, frees: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemorySwitchActiveAllocType(ShowPlatformSoftwareMemoryRpActiveAllocType):
+    """ Parser for 
+        * show platform software memory mdt-pubd switch active <R0> alloc type component
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot} alloc type {alloc_type}'
+
+    def cli(self, process, slot, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot,
+                alloc_type=alloc_type))
+        else:
+            out = output
+        
+        return super().cli(process=process, output=out, alloc_type=alloc_type)
+
+class ShowPlatformSoftwareMemoryRpActiveAllocTypeBriefSchema(MetaParser):
+    """ Schema for 
+        * show platform software memory mdt-pubd RP active alloc type component brief
+    """
+    schema = {
+        'type': {
+            Any(): {
+                'allocated': int,
+                'requested': int,
+                'allocations': int,
+                'frees': int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpActiveAllocTypeBriefSchema):
+    """ Parser for 
+        * show platform software memory mdt-pubd RP active alloc type component brief
+    """
+
+    cli_command = 'show platform software memory {process} RP active alloc type {alloc_type} brief'
+
+    def cli(self, process, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                alloc_type=alloc_type))
+        else:
+            out = output
+        
+        ret_dict = {}
+        
+        # Summary                 4989412       4501988       150851        142147
+        p1 = re.compile(r'(?P<type>\S+) +(?P<allocated>\d+) +'
+            r'(?P<requested>\d+) +(?P<allocations>\d+) +(?P<frees>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Summary                 4989412       4501988       150851        142147
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                module = group.pop('type')
+                module_dict = ret_dict.setdefault('type', {}). \
+                    setdefault(module, {})
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief):
+    """ Parser for 
+        * show platform software memory mdt-pubd switch active <R0> alloc type component brief
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot} alloc type {alloc_type} brief'
+
+    def cli(self, process, slot, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot,
+                alloc_type=alloc_type))
+        else:
+            out = output
+        
+        return super().cli(process=process, alloc_type=alloc_type, output=out)

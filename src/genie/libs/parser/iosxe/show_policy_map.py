@@ -569,7 +569,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
         # class     Transmitted       Random drop      Tail drop     Minimum Maximum Mark
-        p27_1 = re.compile(r'^class +Transmitted +Random +drop +Tail +drop +Minimum +Maximum +Mark$')
+        # dscp       Transmitted         Random drop      Tail drop          Minimum        Maximum     Mark
+        p27_1 = re.compile(r'^(class|dscp) +Transmitted +Random +drop +Tail +drop +Minimum +Maximum +Mark$')
 
         # Class Random       Tail    Minimum    Maximum     Mark      Output
         p27_2 = re.compile(r'^Class +Random +Tail +Minimum +Maximum +Mark +Output$')
