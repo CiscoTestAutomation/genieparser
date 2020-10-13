@@ -104,29 +104,30 @@ class ShowSnmpSchema(MetaParser):
             "get_request_pdus": int,
             "get_next_pdus": int,
             "set_request_pdus": int,
-            "input_queue_drops": int
+            "input_queue_drops": int,
+            "maximum_queue_size": int
         },
         "snmp_output": {
             "packet_count": int,
             "too_big_errors": int,
+            "maximum_packet_size": int,
             "no_such_name_errors": int,
             "bad_value_errors": int,
             "general_errors": int,
             "response_pdus": int,
             "trap_pdus": int
         },
-        Optional("snmp_input_queue"): Optional(int),
-        Optional("snmp_global_trap"): Optional(str),
+        Optional("snmp_input_queue"): int,
+        Optional("snmp_global_trap"): str,
         "snmp_logging" : {
             "status": str,
             Optional("endpoints") : {
-                Optional("ip_address"): {
-                    Optional(Any()) : {
-                        Optional("port") : Optional(int),
-                        Optional("buffer"): Optional(str),
-                        Optional("sent"): Optional(int),
-                        Optional("dropped"): Optional(int)
-                    }
+                Optional(Any()) : {
+                    Optional("port") : int,
+                    Optional("queue"): int,
+                    Optional("queue_size"): int,
+                    Optional("sent"): int,
+                    Optional("dropped"): int
                 }
             }
         }
@@ -221,13 +222,13 @@ class ShowSnmp(ShowSnmpSchema):
         p_input_set_pdu = re.compile(r"^(?P<input_set_pdu>\d+)\s+Set-request\s+PDUs$")
 
         # 0 Input queue packet drops (Maximum queue size 1000)
-        p_input_drops = re.compile(r"^(?P<input_drops>\d+)\s+Input\s+queue\s+packet\s+drops\s+\(Maximum\s+queue\s+size\s+1000\)$")
+        p_input_drops = re.compile(r"^(?P<input_drops>\d+)\s+Input\s+queue\s+packet\s+drops\s+\(Maximum\s+queue\s+size\s+(?P<size>\d+)\)$")
 
         # 35598123 SNMP packets output
         p_output_count = re.compile(r"^(?P<output_count>\d+)\s+SNMP\s+packets\s+output$")
 
         # 0 Too big errors (Maximum packet size 1500)
-        p_output_big = re.compile(r"^(?P<output_big>\d+)\s+Too\s+big\s+errors\s+\(Maximum\s+packet\s+size\s+1500\)$")
+        p_output_big = re.compile(r"^(?P<output_big>\d+)\s+Too\s+big\s+errors\s+\(Maximum\s+packet\s+size\s+(?P<size>\d+)\)$")
 
         # 1 No such name errors
         p_output_name = re.compile(r"^(?P<output_name>\d+)\s+No\s+such\s+name\s+errors$")
@@ -248,13 +249,13 @@ class ShowSnmp(ShowSnmpSchema):
         p_packet_queue = re.compile(r"^Packets\s+currently\s+in\s+SNMP\s+process\s+input\s+queue:\s+(?P<queue>\d+)")
 
         # SNMP global trap: enabled
-        p_global_trap = re.compile(r"^SNMP\s+global\s+trap:\s+enabled")
+        p_global_trap = re.compile(r"^SNMP\s+global\s+trap:\s+(?P<global_status>enabled|disabled)")
 
         # SNMP logging: enabled
-        p_logging = re.compile(r"^SNMP\s+logging:\s+(?P<logging_status>(enabled|disabled))$")
+        p_logging = re.compile(r"^SNMP\s+logging:\s+(?P<logging_status>enabled|disabled)$")
 
         # Logging to 13.43.1.12.151, 0/10, 102045 sent, 3065 dropped.
-        p_logging_endpoint = re.compile(r"^Logging\s+to\s+(?P<endpoint_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\.(?P<endpoint_port>\d+),\s+(?P<endpoint_buffer>\d+\/\d+),\s+(?P<endpoint_sent>\d+)\s+sent,\s+(?P<endpoint_dropped>\d+)\s+dropped.$")
+        p_logging_endpoint = re.compile(r"^Logging\s+to\s+(?P<endpoint_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\.(?P<endpoint_port>\d+),\s+(?P<endpoint_queue>\d+)\/(?P<endpoint_queue_size>\d+),\s+(?P<endpoint_sent>\d+)\s+sent,\s+(?P<endpoint_dropped>\d+)\s+dropped.$")
 
         snmp_obj = {}
 
@@ -286,7 +287,7 @@ class ShowSnmp(ShowSnmpSchema):
                 match = p_input_count.match(line)
                 if not snmp_obj.get("snmp_input"):
                     snmp_obj["snmp_input"] = {}
-                snmp_obj["snmp_input"].update({ "packet_count": int(match.group("input_count"))})
+                snmp_obj.setdefault("snmp_input", {})["packet_count"] = int(match.group("input_count"))
                 continue
             # 0 Bad SNMP version errors
             elif p_input_bad.match(line):
@@ -337,6 +338,7 @@ class ShowSnmp(ShowSnmpSchema):
             elif p_input_drops.match(line):
                 match = p_input_drops.match(line)
                 snmp_obj["snmp_input"].update({"input_queue_drops": int(match.group("input_drops"))})
+                snmp_obj["snmp_input"].update({"maximum_queue_size": int(match.group("size"))})
                 continue
             # 35598123 SNMP packets output
             elif p_output_count.match(line):
@@ -349,6 +351,7 @@ class ShowSnmp(ShowSnmpSchema):
             elif p_output_big.match(line):
                 match = p_output_big.match(line)
                 snmp_obj["snmp_output"].update({"too_big_errors": int(match.group("output_big"))})
+                snmp_obj["snmp_output"].update({"maximum_packet_size": int(match.group("size"))})
                 continue
             # 1 No such name errors
             elif p_output_name.match(line):
@@ -377,7 +380,12 @@ class ShowSnmp(ShowSnmpSchema):
                 continue
             # SNMP global trap: enabled
             elif p_global_trap.match(line):
-                snmp_obj["snmp_global_trap"] = "enabled"
+                match = p_global_trap.match(line)
+                global_trap = match.group("global_status")
+                if global_trap == "enabled":
+                    snmp_obj["snmp_global_trap"] = "enabled"
+                else:
+                    snmp_obj["snmp_global_trap"] = "disabled"
                 continue
             # Packets currently in SNMP process input queue: 0
             elif p_packet_queue.match(line):
@@ -389,17 +397,18 @@ class ShowSnmp(ShowSnmpSchema):
                 match = p_logging.match(line)
                 logging_status = match.group("logging_status")
                 if logging_status == "disabled":
-                    snmp_obj.update({"snmp_logging" : {"status" : "disabled"}})
+                    snmp_obj.setdefault("snmp_logging", {}).update({ "status": "disabled" })
                 else:
-                    snmp_obj.update({"snmp_logging" : {"status" : "enabled"}})
+                    snmp_obj.setdefault("snmp_logging", {}).update({ "status": "enabled" })
                 continue
             # Logging to 13.43.1.12.151, 0/10, 102045 sent, 3065 dropped.
             elif p_logging_endpoint.match(line):
                 match = p_logging_endpoint.match(line)
                 if not snmp_obj["snmp_logging"].get("endpoints"):
-                    snmp_obj["snmp_logging"]["endpoints"] = {"ip_address" : {}}
-                snmp_obj["snmp_logging"]["endpoints"]["ip_address"].update({ match.group("endpoint_ip") : {"port" : int(match.group("endpoint_port")), "buffer" : match.group("endpoint_buffer"), 
-                                                                                                        "sent" : int(match.group("endpoint_sent")), "dropped" : int(match.group("endpoint_dropped"))} })
+                    snmp_obj["snmp_logging"].update({ "endpoints": {} })
+                snmp_obj["snmp_logging"]["endpoints"].update({ match.group("endpoint_ip") : {"port" : int(match.group("endpoint_port")), "queue" : int(match.group("endpoint_queue")), 
+                                                                                                        "queue_size" : int(match.group("endpoint_queue_size")), "sent" : int(match.group("endpoint_sent")), 
+                                                                                                        "dropped" : int(match.group("endpoint_dropped"))} })
 
         return snmp_obj
 
