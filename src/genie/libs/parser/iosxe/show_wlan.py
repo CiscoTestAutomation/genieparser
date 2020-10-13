@@ -115,7 +115,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # Mobility tunnel down                                            : 0
             r"\s+Mobility tunnel down\s+:\s+(?P<mobility_tunnel_down>\d+)\n+"
             # 80211v smart roam failed                                        : 0
-            r"\s+80211v smart roam failed\s+:\s+(?P<smart_roam_fail>\d+)\n+"
+            r"\s+80211v smart roam failed\s+:\s+(?P<dot11v_smart_roam_fail>\d+)\n+"
             # DOT11v timer timeout                                            : 0
             r"\s+DOT11v timer timeout\s+:\s+(?P<dot11v_timeout>\d+)\n+"
             # DOT11v association failed                                       : 0
@@ -137,7 +137,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # DOT11 denied data rates                                         : 0
             r"\s+DOT11 denied data rates\s+:\s+(?P<dot11_data_rates>\d+)\n+"
             # 802.11v Client RSSI lower than the association RSSI threshold   : 0
-            r"\s+802.11v Client RSSI lower than the association RSSI threshold\s+:\s+(?P<rssi_low_threshold>\d+)\n+"
+            r"\s+802.11v Client RSSI lower than the association RSSI threshold\s+:\s+(?P<dot11v_rssi_low_threshold>\d+)\n+"
             # invalid QoS parameter                                           : 0
             r"\s+invalid QoS parameter\s+:\s+(?P<invalid_qos>\d+)\n+"
             # DOT11 IE validation failed                                      : 0
@@ -209,7 +209,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # Client DOT1x timeout                                            : 0
             r"\s+Client DOT1x timeout\s+:\s+(?P<dot1x_timeout>\d+)\n+"
             # Malformed EAP key frame                                         : 0
-            r"\s+Malformed EAP key frame\s+:\s+(?P<bad_eap_keyframe>\d+)\n+"
+            r"\s+Malformed EAP key frame\s+:\s+(?P<eap_bad_keyframe>\d+)\n+"
             # EAP key install bit is not expected                             : 0
             r"\s+EAP key install bit is not expected\s+:\s+(?P<eap_keyinstall_unexpected>\d+)\n+"
             # EAP key error bit is not expected                               : 0
