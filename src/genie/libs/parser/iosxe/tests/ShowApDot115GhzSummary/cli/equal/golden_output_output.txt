@@ -1,0 +1,25 @@
+AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
+---------------------------------------------------------------------------------------------------------------------------------
+ab-1-test-4800                 5c50.1501.40e0  1       Enabled        Down          20     *1/8 (23 dBm)   (36)*                        
+ab21-cap40                    5c50.15f5.e5c0  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*                       
+ab12-cap2                     5c50.1504.7b20  1       Enabled        Up            20     *7/8 (6 dBm)    (116)*                       
+ab21-cap36                    5c50.1504.87e0  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*                       
+ab21-cap28                    5c50.1504.8920  1       Enabled        Up            20     *7/8 (6 dBm)    (120)*                       
+ab31-cap26                    5c50.1504.8940  1       Enabled        Up            20     *6/8 (9 dBm)    (128)*                       
+ab22-cap16                    5c50.1504.89a0  1       Enabled        Up            20     *7/8 (8 dBm)    (48)*                        
+ab22-cap24                    5c50.1504.89e0  1       Enabled        Up            20     *7/8 (8 dBm)    (36)*                        
+ab22-cap18                    5c50.1504.8ac0  1       Enabled        Up            20     *7/8 (6 dBm)    (124)*                       
+ab32-cap13                    5c50.1504.8bc0  1       Enabled        Up            20     *6/8 (9 dBm)    (124)*                       
+
+AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
+---------------------------------------------------------------------------------------------------------------------------------
+ab22-cap10                    5c50.1504.8be0  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*                       
+ab11-cap18                    5c50.1504.8c20  1       Enabled        Up            20     *7/8 (8 dBm)    (48)*                        
+ab22-cap8                     5c50.1504.8c40  1       Enabled        Up            20     *7/8 (8 dBm)    (149)*                       
+ab22-cap22                    5c50.1504.8ce0  1       Enabled        Up            20     *8/8 (5 dBm)    (40)*                        
+ab22-cap6                     5c50.1504.8d80  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*                       
+ab31-cap29                    5c50.1504.8dc0  1       Enabled        Up            20     *5/8 (12 dBm)   (52)*                        
+ab21-cap33                    5c50.1504.8de0  1       Enabled        Up            20     *7/8 (8 dBm)    (36)*                        
+ab31-cap21                    5c50.1504.8f20  1       Enabled        Up            20     *7/8 (6 dBm)    (116)*                       
+ab21-cap27                    5c50.1504.8f60  1       Enabled        Up            20     *7/8 (6 dBm)    (132)*                       
+ab21-cap35                    5c50.1504.aca0  1       Enabled        Up            20     *7/8 (6 dBm)    (140)*                       

@@ -113,13 +113,13 @@ class ShowOmpTlocPath(ShowOmpTlocPathSchema):
 
         parsed_dict = {}
 
-        # tloc-paths entries 100.100.100.10 default ipsec
+        # tloc-paths entries 10.220.100.10 default ipsec
         p1 = re.compile(r'^tloc-paths entries +(?P<ip_add>\S+) +(?P<tloc>\S+) +(?P<transport>\S+)$')
         
         for line in out.splitlines():
             line = line.strip()
 
-            # tloc-paths entries 100.100.100.10 default ipsec
+            # tloc-paths entries 10.220.100.10 default ipsec
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -171,7 +171,7 @@ class ShowOmpPeers(ShowOmpPeersSchema):
 
         peer_dict = {}
 
-        #100.100.100.3    vsmart  1         1         100       up       43:06:01:54      3/3/2
+        #10.220.100.3    vsmart  1         1         100       up       43:06:01:54      3/3/2
         p1 = re.compile(r'^(?P<ip_add>\d\S+) +(?P<type>\S+) +(?P<domain_id>\S+) +(?P<overlay_id>\S+) +(?P<site_id>\S+) +(?P<state>\S+) +(?P<uptime>\S+) +(?P<route>\S+)$')
 
         
@@ -271,7 +271,7 @@ class ShowOmpTlocs(ShowOmpTlocsSchema):
 
         # -------------------------------                
         p0= re.compile(r'^[\-]+$')
-        #tloc entries for 100.100.100.10
+        #tloc entries for 10.220.100.10
         p1 =  re.compile(r'^tloc entries for +(?P<ip_add>\S+)$')
         #RECEIVED FROM: 
         p2 = re.compile(r'^(?P<recv>RECEIVED FROM)\:$')
@@ -298,7 +298,7 @@ class ShowOmpTlocs(ShowOmpTlocsSchema):
                 groups = m.groupdict()
                 continue
 
-            #tloc entries for 100.100.100.10
+            #tloc entries for 10.220.100.10
             m = p1.match(line)
             if m:
                 groups = m.groupdict()

@@ -1,0 +1,10 @@
+
+Number of WLANs: 4
+
+ID   Profile Name                     SSID                             Status Security
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+17   lizzard_Global                  lizzard                         UP     [WPA2][802.1x][FT + 802.1x][AES],[FT Enabled]
+18   wip_Global                      wip                             UP     [WPA2][802.1x + CCKM][AES]
+19   internet_Global                  internet                         UP     [open],MAC Filtering
+20   lizzard-l_Global                lizzard-legacy                  UP     [WPA2][802.1x][AES]
+

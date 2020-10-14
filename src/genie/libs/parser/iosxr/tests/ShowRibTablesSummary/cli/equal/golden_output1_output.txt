@@ -1,0 +1,10 @@
+RP/0/RP0/CPU0:R7#sh rib tables summary 
+Fri Oct  2 07:33:58.177 UTC
+
+Summary of number of tables and cumulative prefix counts in IPv4 RIB:
+
+              Number of unicast tables:          3
+      Total number of unicast prefixes:         14
+
+            Number of multicast tables:          1
+    Total number of multicast prefixes:          0
