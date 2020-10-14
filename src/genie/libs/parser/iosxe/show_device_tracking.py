@@ -164,3 +164,29 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
 
 
 
+
+
+# ======================================
+# Schema for:
+#  * 'show device-tracking database int'
+# ======================================
+class ShowDeviceTrackingDatabaseIntSchema(MetaParser):
+    """Schema for show device-tracking database int."""
+
+    schema = {
+        
+    }
+
+
+# ======================================
+# Parser for:
+#  * 'show device-tracking database int'
+# ======================================
+class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
+    """Parser for show device-tracking database int"""
+
+    cli_command = ['show device-tracking database int']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
