@@ -1,0 +1,8 @@
+Chassis/Stack Mac Address : 58bf.ea9b.23c0 - Local Mac Address
+Mac persistency wait time: Indefinite
+Local Redundancy Port Type: Twisted Pair
+                                             H/W   Current
+Chassis#   Role    Mac Address     Priority Version  State                 IP
+-------------------------------------------------------------------------------------
+ 1       Standby  58bf.ea9b.23c0     2      V02     Ready                169.254.168.52   
+*2       Active   58bf.ea3c.4b20     1      V02     Ready                169.254.168.54

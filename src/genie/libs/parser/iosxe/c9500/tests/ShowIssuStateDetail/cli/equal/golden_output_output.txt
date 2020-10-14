@@ -1,0 +1,31 @@
+--- Starting local lock acquisition on R0 ---
+
+Finished local lock acquisition on R0
+
+
+
+Current ISSU Status: Disabled       
+
+Previous ISSU Operation: N/A        
+
+=======================================================
+
+System Check                        Status
+
+-------------------------------------------------------
+
+Platform ISSU Support               No
+
+Standby Online                      No
+
+Autoboot Enabled                    Yes
+
+SSO Mode                            No
+
+Install Boot                        No
+
+Valid Boot Media                    Yes
+
+=======================================================
+
+No ISSU operation is in progress
