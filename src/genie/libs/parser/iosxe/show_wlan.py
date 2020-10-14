@@ -246,6 +246,37 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
         else:
             output = output
 
+        # Wlan Profile Name: lizzard_Global, Wlan Id: 17
+        # Current client state statistics:
+        # -----------------------------------------------------------------------------
+        # Authenticating         : 7
+        # Mobility               : 0
+        # IP Learn               : 0
+        # Webauth Pending        : 0
+        # Run                    : 2
+
+        # Total client delete reasons
+        # ---------------------------
+        #     No Operation                                                    : 0
+        #     Internal error                                                  : 0
+        #     Deauthentication or disassociation request                      : 0
+        #     Session Manager                                                 : 0
+        #     L3 authentication failure                                       : 0
+        #     Delete received from AP                                         : 0
+        #     BSSID down                                                      : 1
+        #     AP down/disjoin                                                 : 2
+        #     Connection timeout                                              : 0
+        #     MAC authentication failure                                      : 0
+        #     Datapath plumb                                                  : 0
+        #     Due to SSID change                                              : 163
+        #
+        # [--OUTPUT OMITTED--]
+        #
+        #     L3 VLAN Override connection timeout                         : 0
+        #     Mobility peer delete                                            : 0
+        #     NACK IFID mismatch                                              : 0
+
+
         wlan_capture = (
             # Wlan Profile Name: lizzard_Global, Wlan Id: int
             r"^Wlan Profile Name:\s+(?P<profile_name>\S+), Wlan Id: (?P<id>\d+)$"
