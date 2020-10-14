@@ -1,3 +1,6 @@
-IOSXE:
-Added support for sign nonce
-    show platform integrity sign nonce <nonce>
+--------------------------------------------------------------------------------
+                                New
+--------------------------------------------------------------------------------
+* IOSXE
+    * Modified ShowPlatformIntegrity:
+        * To add support for 'show platform integrity sign nonce {nonce}'
