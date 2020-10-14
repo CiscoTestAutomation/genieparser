@@ -1,0 +1,110 @@
+Policy Profile Name                 : lizzard_Fabric_F_90c67354
+Description                         : lizzard_Fabric_F_90c67354
+Status                              : ENABLED
+VLAN                                : 1
+Multicast VLAN                      : 0
+Wireless management interface VLAN  : 10
+Multicast Filter                    : DISABLED
+QBSS Load                           : ENABLED
+Passive Client                      : DISABLED
+ET-Analytics                        : DISABLED
+StaticIP Mobility                   : DISABLED
+WLAN Switching Policy
+ Flex Central Switching            : DISABLED
+ Flex Central Authentication       : ENABLED
+ Flex Central DHCP                 : DISABLED
+ Flex NAT PAT                      : DISABLED
+ Flex Central Assoc                : ENABLED
+WLAN Flex Policy
+ VLAN based Central Switching      : DISABLED
+WLAN ACL
+ IPv4 ACL                          : Not Configured
+ IPv6 ACL                          : Not Configured
+ Layer2 ACL                        : Not Configured
+ Preauth urlfilter list            : Not Configured
+ Postauth urlfilter list           : Not Configured
+WLAN Timeout
+ Session Timeout                   : 36000
+ Idle Timeout                      : 7200
+ Idle Threshold                    : 0
+ Guest LAN Session Timeout         : DISABLED
+WLAN Local Profiling
+ Subscriber Policy Name            : Not Configured
+ RADIUS Profiling                  : ENABLED
+ HTTP TLV caching                  : DISABLED
+ DHCP TLV caching                  : DISABLED
+CTS Policy
+ Inline Tagging                    : DISABLED
+ SGACL Enforcement                 : DISABLED
+ Default SGT                       : 0
+WLAN Mobility
+ Anchor                            : DISABLED
+AVC VISIBILITY                      : Enabled
+IPv4 Flow Monitors
+ Ingress              
+ Egress            
+IPv6 Flow Monitors
+ Ingress
+ Egress
+NBAR Protocol Discovery             : Disabled
+Reanchoring                         : Disabled
+Classmap name for Reanchoring
+ Reanchoring Classmap Name         : Not Configured
+QOS per SSID
+ Ingress Service Name              : platinum-up
+ Egress Service Name               : platinum
+QOS per Client
+ Ingress Service Name              : Not Configured
+ Egress Service Name               : Not Configured
+Umbrella information
+ Cisco Umbrella Parameter Map      : Not Configured
+ DHCP DNS Option                   : ENABLED
+ Mode                              : ignore
+Autoqos Mode                        : None
+Call Snooping                       : Disabled
+Tunnel Profile
+ Profile Name                      : Not Configured
+Calendar Profile
+Fabric Profile
+ Profile Name                      : lizzard_Fabric_F_90c67354
+Accounting list
+ Accounting List                   : dnac-client-radius-group
+DHCP
+ required                          : ENABLED
+ server address                    : 0.0.0.0
+Opt82
+ DhcpOpt82Enable                   : DISABLED
+ DhcpOpt82Ascii                    : DISABLED
+ DhcpOpt82Rid                      : DISABLED
+ APMAC                             : DISABLED
+ SSID                              : DISABLED
+ AP_ETHMAC                         : DISABLED
+ APNAME                            : DISABLED
+ POLICY TAG                        : DISABLED
+ AP_LOCATION                       : DISABLED
+ VLAN_ID                           : DISABLED
+Exclusionlist Params
+ Exclusionlist                     : ENABLED
+ Exclusion Timeout                 : 60
+AAA Policy Params
+ AAA Override                      : ENABLED
+ NAC                               : ENABLED
+ NAC Type                          : ISE NAC
+ AAA Policy name                   : default-aaa-policy
+WGB Policy Params
+ Broadcast Tagging                 : DISABLED
+ Client VLAN                       : Unknown
+Hotspot 2.0 Server name             : Not Configured
+Mobility Anchor List
+ IP Address                                  Priority
+ -------------------------------------------------------
+mDNS Gateway
+ mDNS Service Policy name          : default-mdns-service-policy
+User Private Network              : Disabled
+User Private Network Unicast Drop  : Disabled
+Policy Proxy Settings
+ ARP Proxy State                   : DISABLED
+ IPv6 Proxy State                  : None
+Airtime-fairness Profile
+ 2.4Ghz ATF Policy                 : default-atf-policy
+ 5Ghz ATF Policy                   : default-atf-policy
