@@ -6,10 +6,10 @@ from genie.metaparser.util.schemaengine import Any, Optional
 
 # ==========================================
 # Schema for:
-#  * 'show wireless profile policy detailed'
+#  * 'show wireless profile policy detailed {policy_name}'
 # ==========================================
 class ShowWirelessProfilePolicyDetailedSchema(MetaParser):
-    """Schema for show wireless profile policy detailed."""
+    """Schema for show wireless profile policy detailed {policy_name}."""
 
     schema = {
         "policy_profile_name" : str,
@@ -138,10 +138,10 @@ class ShowWirelessProfilePolicyDetailedSchema(MetaParser):
 
 # ==========================================
 # Parser for:
-#  * 'show wireless profile policy detailed'
+#  * 'show wireless profile policy detailed {policy_name}'
 # ==========================================
 class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema):
-    """Parser for show wireless profile policy detailed"""
+    """Parser for show wireless profile policy detailed {policy_name}"""
 
     cli_command = 'show wireless profile policy detailed {policy_name}'
 
