@@ -54,6 +54,7 @@ class ShowRouteTableSchema(MetaParser):
                             Optional('preference2'): str,
                             'age': str,
                             Optional('metric'): str,
+                            Optional('tag'): str,
                             'next_hop': {
                                 'next_hop_list': {
                                     Any(): {
@@ -112,7 +113,7 @@ class ShowRouteTable(ShowRouteTableSchema):
         # 118420             *[VPN/170] 31w3d 20:13:54
         r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?'
                         r'\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)\/?(?P<preference2>\d+)?\]'
-                        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?(, +tag +\d+)?$')
+                        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?(, +tag +(?P<tag>\d+))?$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
