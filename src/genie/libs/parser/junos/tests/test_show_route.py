@@ -373,7 +373,7 @@ class test_show_route_table(unittest.TestCase):
                         },
                         'preference': '9',
                         'protocol_name': 'LDP',
-                        'tag': '0',
+                        'rt-tag': '0',
                     },
                 },
                 'total_route_count': 11,
