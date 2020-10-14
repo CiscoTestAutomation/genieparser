@@ -1,0 +1,9 @@
+
+Router#show ntp associations 
+
+address            ref clock         st      when    poll   reach   delay   offset    disp
+*~192.168.13.57    192.168.1.111     3       32      128    377     7.9     11.18     3.6  
+~172.31.32.2       172.31.32.1       5       29      1024   377     4.2     -8.59     1.6 
++~192.168.13.33    192.168.1.111     3       69      128    377     4.1     3.48      2.3 
+* master (synced), # master (unsynced), + selected, - candidate, ~ configured
+    

@@ -1,0 +1,220 @@
+
+OTT-LISP-C9K-20-MSMR#show lisp all instance-id * ethernet server detail internal
+=================================================
+Output for router lisp 2 instance-id 101
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+LISP Site Registration Information
+
+Site name: prov1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov3
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: provider
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_3
+Allowed configured locators: any
+Allowed EID-prefixes:
+
+=================================================
+Output for router lisp 2 instance-id 102
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+LISP Site Registration Information
+
+Site name: prov1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov3
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: provider
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_3
+Allowed configured locators: any
+Allowed EID-prefixes:
+
+=================================================
+Output for router lisp 2 instance-id 103
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+LISP Site Registration Information
+
+Site name: prov1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov3
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: provider
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_3
+Allowed configured locators: any
+Allowed EID-prefixes:
+
+=================================================
+Output for router lisp 2 instance-id 104
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+LISP Site Registration Information
+
+Site name: prov1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov3
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: provider
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_3
+Allowed configured locators: any
+Allowed EID-prefixes:
+
+=================================================
+Output for router lisp 2 instance-id 107
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+LISP Site Registration Information
+
+Site name: prov1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov3
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: provider
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_3
+Allowed configured locators: any
+Allowed EID-prefixes:
+
+=================================================
+Output for router lisp 2 instance-id 108
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+LISP Site Registration Information
+
+Site name: prov1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov3
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: provider
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_3
+Allowed configured locators: any
+Allowed EID-prefixes:
+
+=================================================
+Output for router lisp 2 instance-id 109
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+LISP Site Registration Information
+
+Site name: prov1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: prov3
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: provider
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_1
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_2
+Allowed configured locators: any
+Allowed EID-prefixes:
+Site name: xtr1_3
+Allowed configured locators: any
+Allowed EID-prefixes:
+
+        

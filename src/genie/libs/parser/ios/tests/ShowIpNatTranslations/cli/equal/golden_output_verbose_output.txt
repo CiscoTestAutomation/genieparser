@@ -1,0 +1,17 @@
+
+Device# show ip nat translations verbose
+Pro Inside global Inside local Outside local Outside global
+tcp 192.168.1.1:514 192.168.2.3:53 192.168.2.22:256 192.168.2.22:256
+create 04/09/11 10:51:48, use 04/09/11 10:52:31, timeout: 00:01:00
+Map-Id(In):1, Mac-Address: 0000.0000.0000 Input-IDB: GigabitEthernet0/3/1
+entry-id: 0x8ef80350, use_count:1
+tcp 192.168.1.1:513 192.168.2.2:53 192.168.2.22:256 192.168.2.22:256
+create 04/09/11 10:51:48, use 04/09/11 10:52:31, timeout: 00:01:00
+Map-Id(In):1, Mac-Address: 0000.0000.0000 Input-IDB: GigabitEthernet0/3/1
+entry-id: 0x8ef801b0, use_count:1
+tcp 192.168.1.1:512 192.168.2.4:53 192.168.2.22:256 192.168.2.22:256
+create 04/09/11 10:51:48, use 04/09/11 10:52:31, timeout: 00:01:00
+Map-Id(In):1, Mac-Address: 0000.0000.0000 Input-IDB: GigabitEthernet0/3/1
+entry-id: 0x8ef80280, use_count:1
+Total number of translations: 3
+    

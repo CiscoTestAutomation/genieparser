@@ -1,0 +1,17 @@
+Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver. 
+------  -----   ---------             -----------  --------------  -------       --------
+ 1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1        
+ 2       32     WS-C3850-24P-E        FCW1932D0TF  3820.56ff.e9db  V06           16.6.1        
+ 3       32     WS-C3850-24P-E        FCW1932D0L8  3820.56ff.b729  V06           16.6.1        
+ 4       32     WS-C3850-24P-E        FCW1932C0VB  3820.56ff.04a9  V06           16.6.1        
+ 5       32     WS-C3850-24P-E        FCW1932C0M9  3820.56ff.a329  V06           16.6.1        
+Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
+Mac persistency wait time: Indefinite
+                                   Current
+Switch#   Role        Priority      State 
+-------------------------------------------
+*1       Active          3          Ready               
+ 2       Member          1          Ready               
+ 3       Member          1          Ready               
+ 4       Member          1          Ready               
+ 5       Standby         1          Ready   

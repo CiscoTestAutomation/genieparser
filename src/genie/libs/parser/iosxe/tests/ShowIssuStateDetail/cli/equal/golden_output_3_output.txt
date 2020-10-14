@@ -1,0 +1,19 @@
+
+PE1#show issu state detail 
+--- Starting local lock acquisition on R0 ---
+Finished local lock acquisition on R0
+
+--- Starting installation state synchronization ---
+Finished installation state synchronization
+
+--- Starting local lock acquisition on R1 ---
+Finished local lock acquisition on R1
+
+Slot being modified: R1
+  Loadversion time: 20180430 19:13:51 on vty 0
+  Last operation: loadversion
+  Rollback: automatic, remaining time before rollback: 00:29:53
+  Original (rollback) image: harddisk:asr1000rpx86-universalk9.16.08.01sprd1.SPA.bin
+  Running image: harddisk:asr1000rpx86-universalk9.BLD_V168_1_THROTTLE_LATEST_20180426_165658_V16_8_0_265.SSA.bin
+  Operating mode: sso, terminal state reached
+        

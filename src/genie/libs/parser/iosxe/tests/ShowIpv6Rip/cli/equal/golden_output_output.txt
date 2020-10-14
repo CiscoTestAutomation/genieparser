@@ -1,0 +1,15 @@
+    R1#show ipv6 rip
+RIP VRF "Default VRF", port 521, multicast-group FF02::9, pid 635
+     Administrative distance is 120. Maximum paths is 16
+     Updates every 30 seconds, expire after 180
+     Holddown lasts 0 seconds, garbage collect after 120
+     Split horizon is on; poison reverse is off
+     Default routes are not generated
+     Periodic updates 399, trigger updates 8
+     Full Advertisement 0, Delayed Events 0
+  Interfaces:
+    GigabitEthernet3.100
+    GigabitEthernet2.100
+  Redistribution:
+    Redistributing protocol static with metric 3
+    

@@ -1,0 +1,17 @@
+Chassis type: ASR1002-X          
+         
+Slot      Type                State                 Insert time (ago)
+--------- ------------------- --------------------- -----------------
+0         ASR1002-X           ok                    22w5d        
+ 0/0      6XGE-BUILT-IN       ok                    22w5d        
+R0        ASR1002-X           ok, active            22w5d        
+F0        ASR1002-X           ok, active            22w5d        
+P0        ASR1002-PWR-AC      ok                    22w5d        
+P1        ASR1002-PWR-AC      ok                    22w5d        
+         
+Slot      CPLD Version        Firmware Version                        
+--------- ------------------- ---------------------------------------
+0         11112222            16.7(2r)                            
+R0        11112222            16.7(2r)                            
+F0        11112222            16.7(2r)            
+    

@@ -1,0 +1,18 @@
+
+show ip eigrp neighbors detail
+EIGRP-IPv4 VR(test) Address-Family Neighbors for AS(100)
+H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                                   (sec)         (ms)       Cnt Num
+1   10.12.90.2              Gi0/2.90                 13 01:40:00   29   174  0  5
+   Version 3.3/2.0, Retrans: 1, Retries: 0, Prefixes: 3
+   Topology-ids from peer - 0
+   Topologies advertised to peer:   base
+
+0   10.13.90.3              Gi0/3.90                 12 01:42:54   13   100  0  9
+   Version 8.0/1.2, Retrans: 1, Retries: 0, Prefixes: 3
+   Topology-ids from peer - 0
+   Topologies advertised to peer:   base
+
+Max Nbrs: 0, Current Nbrs: 0
+
+    

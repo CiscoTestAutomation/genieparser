@@ -19,7 +19,9 @@ from genie.libs.parser.junos.show_route import (ShowRouteTable,
                                                 ShowRouteForwardingTableLabel,
                                                 ShowRouteReceiveProtocol,
                                                 ShowRouteTableLabelSwitchedName,
-                                                ShowRouteProtocolProtocolExtensiveIpaddress)
+                                                ShowRouteProtocolProtocolExtensiveIpaddress,
+                                                ShowRouteReceiveProtocolExtensive,
+                                                ShowRouteReceiveProtocolPeerAddressExtensive)
 
 '''
 Unit test for:
@@ -4904,6 +4906,5302 @@ class TestShowRoute(unittest.TestCase):
                         "active-tag": "*",
                         "age": {
                             "#text": "29w6d 21:48:09"
+                        },
+                        "metric": "1",
+                        "nh-type": "MultiRecv",
+                        "preference": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }],
+                "table-name":
+                "inet.0",
+                "total-route-count":
+                "1615"
+            }, {
+                "active-route-count":
+                "11",
+                "destination-count":
+                "11",
+                "hidden-route-count":
+                "0",
+                "holddown-route-count":
+                "0",
+                "rt": [{
+                    "rt-destination": "10.100.5.5/32",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w0d 04:11:34"
+                        },
+                        "metric":
+                        "1201",
+                        "nh": [{
+                            "mpls-label": "Push 17000",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }, {
+                            "mpls-label":
+                            "Push 17000, Push 1650, Push 1913(top)",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.19.198.239/32",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "1w6d 20:52:49"
+                        },
+                        "metric":
+                        "1001",
+                        "nh": [{
+                            "to": "10.19.198.26",
+                            "via": "ge-0/0/2.0"
+                        }, {
+                            "mpls-label": "Push 16073",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.34.2.250/32",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w0d 04:51:49"
+                        },
+                        "metric":
+                        "200",
+                        "nh": [{
+                            "mpls-label": "Push 16061",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.34.2.251/32",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w0d 04:51:49"
+                        },
+                        "metric":
+                        "205",
+                        "nh": [{
+                            "mpls-label": "Push 16062",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.196.241/32",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "1w0d 15:56:49"
+                        },
+                        "metric":
+                        "1201",
+                        "nh": [{
+                            "mpls-label": "Push 16063",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }, {
+                            "mpls-label":
+                            "Push 16063, Push 1650, Push 1913(top)",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.14.240/32",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:14"
+                        },
+                        "metric":
+                        "100",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }, {
+                            "mpls-label": "Push 16051, Push 1913(top)",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.14.241/32",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w3d 03:24:58"
+                        },
+                        "metric":
+                        "105",
+                        "nh": [{
+                            "mpls-label": "Push 16052",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.189.5.253/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w1d 17:03:19"
+                        },
+                        "metric": "5",
+                        "nh": [{
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "5",
+                        "protocol-name": "L-OSPF"
+                    }
+                }],
+                "table-name":
+                "inet.3",
+                "total-route-count":
+                "11"
+            }, {
+                "active-route-count":
+                "44",
+                "destination-count":
+                "44",
+                "hidden-route-count":
+                "0",
+                "holddown-route-count":
+                "0",
+                "rt": [{
+                    "rt-destination": "2567",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "2w0d 19:07:25"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }, {
+                            "mpls-label": "Swap 16051, Push 1913(top)",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "2567(S=0)",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "2w0d 19:07:25"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }, {
+                            "mpls-label": "Swap 16051, Push 1913(top)",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "2568",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w3d 03:24:58"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "2568(S=0)",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w3d 03:24:58"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "16051",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:14"
+                        },
+                        "metric":
+                        "100",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }, {
+                            "mpls-label": "Swap 16051, Push 1913(top)",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "16051(S=0)",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:14"
+                        },
+                        "metric":
+                        "100",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }, {
+                            "mpls-label": "Swap 16051, Push 1913(top)",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "16052",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w3d 03:24:58"
+                        },
+                        "metric":
+                        "105",
+                        "nh": [{
+                            "mpls-label": "Swap 16052",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "16061",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w0d 04:51:49"
+                        },
+                        "metric":
+                        "200",
+                        "nh": [{
+                            "mpls-label": "Swap 16061",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "16062",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w0d 04:51:49"
+                        },
+                        "metric":
+                        "205",
+                        "nh": [{
+                            "mpls-label": "Swap 16062",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "16063",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "1w0d 15:56:49"
+                        },
+                        "metric":
+                        "1201",
+                        "nh": [{
+                            "mpls-label": "Swap 16063",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }, {
+                            "mpls-label":
+                            "Swap 16063, Push 1650, Push 1913(top)",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "16072",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:19"
+                        },
+                        "metric":
+                        "5",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "16072(S=0)",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:19"
+                        },
+                        "metric":
+                        "5",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "16073",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "1w6d 20:52:49"
+                        },
+                        "metric":
+                        "1001",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.19.198.26",
+                            "via": "ge-0/0/2.0"
+                        }, {
+                            "mpls-label": "Swap 16073",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "16073(S=0)",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "1w6d 20:52:49"
+                        },
+                        "metric":
+                        "1001",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.19.198.26",
+                            "via": "ge-0/0/2.0"
+                        }, {
+                            "mpls-label": "Swap 16073",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "17000",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w0d 04:11:34"
+                        },
+                        "metric":
+                        "1201",
+                        "nh": [{
+                            "mpls-label": "Swap 17000",
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }, {
+                            "mpls-label":
+                            "Swap 17000, Push 1650, Push 1913(top)",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "28985",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:19"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "28985(S=0)",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:19"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "28986",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:19"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "28986(S=0)",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:19"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "167966",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "1w6d 20:52:49"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.19.198.26",
+                            "via": "ge-0/0/2.0"
+                        }, {
+                            "mpls-label": "Swap 16073",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "167966(S=0)",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "1w6d 20:52:49"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.19.198.26",
+                            "via": "ge-0/0/2.0"
+                        }, {
+                            "mpls-label": "Swap 16073",
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "167967",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "1w6d 20:52:58"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.19.198.26",
+                            "via": "ge-0/0/2.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }, {
+                    "rt-destination": "167967(S=0)",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "1w6d 20:52:58"
+                        },
+                        "metric":
+                        "0",
+                        "nh": [{
+                            "mpls-label": "Pop",
+                            "to": "10.19.198.26",
+                            "via": "ge-0/0/2.0"
+                        }],
+                        "preference":
+                        "10",
+                        "preference2":
+                        "5",
+                        "protocol-name":
+                        "L-OSPF"
+                    }
+                }],
+                "table-name":
+                "mpls.0",
+                "total-route-count":
+                "44"
+            }, {
+                "active-route-count":
+                "22",
+                "destination-count":
+                "22",
+                "hidden-route-count":
+                "0",
+                "holddown-route-count":
+                "0",
+                "rt": [{
+                    "rt-destination": "::/0",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:18"
+                        },
+                        "metric":
+                        "101",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:72bd",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "150",
+                        "protocol-name":
+                        "OSPF3",
+                        "rt-tag":
+                        "0"
+                    }
+                }, {
+                    "rt-destination": "2001:db8:6aa8:6a53::1001/128",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:18"
+                        },
+                        "metric":
+                        "150",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:72bd",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "150",
+                        "protocol-name":
+                        "OSPF3",
+                        "rt-tag":
+                        "0"
+                    }
+                }, {
+                    "rt-destination": "2001:db8:b0f8:ca45::13/128",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w0d 04:51:40"
+                        },
+                        "metric":
+                        "200",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:72bd",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "protocol-name":
+                        "OSPF3"
+                    }
+                }, {
+                    "rt-destination": "2001:db8:b0f8:ca45::14/128",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w0d 04:51:40"
+                        },
+                        "metric":
+                        "205",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:72bd",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "protocol-name":
+                        "OSPF3"
+                    }
+                }, {
+                    "rt-destination": "2001:db8:b0f8:3ab::/64",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w0d 04:51:40"
+                        },
+                        "metric":
+                        "205",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:72bd",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "protocol-name":
+                        "OSPF3"
+                    }
+                }, {
+                    "rt-destination": "2001:db8:eb18:ca45::1/128",
+                    "rt-entry": {
+                        "age": {
+                            "#text": "3w1d 17:03:18"
+                        },
+                        "metric":
+                        "100",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:72bd",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "protocol-name":
+                        "OSPF3"
+                    }
+                }, {
+                    "rt-destination": "2001:db8:eb18:ca45::2/128",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:18"
+                        },
+                        "metric":
+                        "105",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:72bd",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "protocol-name":
+                        "OSPF3"
+                    }
+                }, {
+                    "rt-destination": "2001:db8:eb18:e26e::/64",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:18"
+                        },
+                        "metric":
+                        "105",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:72bd",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "protocol-name":
+                        "OSPF3"
+                    }
+                }, {
+                    "rt-destination": "2001:db8:eb18:f5e6::/64",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w0d 04:11:35"
+                        },
+                        "metric":
+                        "225",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:72bd",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "protocol-name":
+                        "OSPF3"
+                    }
+                }, {
+                    "rt-destination": "2001:db8:eb18:6d57::/64",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:23"
+                        },
+                        "metric":
+                        "125",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:53c0",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "protocol-name":
+                        "OSPF3"
+                    }
+                }, {
+                    "rt-destination": "2001:db8:eb18:9627::/64",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w0d 04:51:40"
+                        },
+                        "metric":
+                        "200",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:72bd",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference":
+                        "10",
+                        "protocol-name":
+                        "OSPF3"
+                    }
+                }, {
+                    "rt-destination": "2001:db8:223c:ca45::c/128",
+                    "rt-entry": {
+                        "active-tag":
+                        "*",
+                        "age": {
+                            "#text": "3w1d 17:03:23"
+                        },
+                        "metric":
+                        "5",
+                        "nh": [{
+                            "to": "fe80::250:56ff:fe8d:53c0",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference":
+                        "10",
+                        "protocol-name":
+                        "OSPF3"
+                    }
+                }, {
+                    "rt-destination": "ff02::5/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "29w6d 21:48:09"
+                        },
+                        "metric": "1",
+                        "nh-type": "MultiRecv",
+                        "preference": "10",
+                        "protocol-name": "OSPF3"
+                    }
+                }],
+                "table-name":
+                "inet6.0",
+                "total-route-count":
+                "23"
+            }]
+        }
+    }
+
+    golden_output_4 = {
+        'execute.return_value':
+        '''
+        show route protocol ospf table inet.0
+
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        0.0.0.0/0          *[OSPF/150/10] 3w2d 04:45:37, metric 101, tag 0
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.1.0.0/24          [OSPF/150/10] 3w2d 04:45:37, metric 20, tag 0
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.36.3.3/32         *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.16.0.0/30         *[OSPF/10/10] 2w6d 06:12:28, metric 1200
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.100.5.5/32         *[OSPF/10/10] 2w6d 06:12:28, metric 1201
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.19.198.28/30    *[OSPF/10/10] 3w0d 18:23:58, metric 1005
+                            >  to 10.189.5.94 via ge-0/0/0.0
+        10.19.198.239/32   *[OSPF/10/10] 1w5d 22:13:37, metric 1001
+                            >  to 10.19.198.26 via ge-0/0/2.0
+        10.174.132.237/32   *[OSPF/150/10] 3w2d 04:45:37, metric 150, tag 0
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.34.2.200/30    *[OSPF/10/10] 2w6d 06:12:28, metric 205
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.34.2.250/32    *[OSPF/10/10] 2w6d 06:12:28, metric 200
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.34.2.251/32    *[OSPF/10/10] 2w6d 06:12:28, metric 205
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.15.0.0/30        *[OSPF/10/10] 1w5d 22:13:37, metric 1001
+                            >  to 10.19.198.26 via ge-0/0/2.0
+        10.64.0.0/30        *[OSPF/10/10] 6d 17:17:33, metric 1201
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.169.196.212/30 *[OSPF/10/10] 2w6d 06:12:28, metric 1200
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.169.196.216/30 *[OSPF/10/10] 2w6d 06:12:28, metric 1205
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.169.196.241/32 *[OSPF/10/10] 6d 17:17:33, metric 1201
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.169.14.16/30   *[OSPF/10/10] 3w2d 04:45:37, metric 105
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.169.14.32/30   *[OSPF/10/10] 2w6d 05:32:25, metric 225
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.169.14.128/30  *[OSPF/10/10] 3w0d 18:23:58, metric 125
+                            >  to 10.189.5.94 via ge-0/0/0.0
+        10.169.14.156/30  *[OSPF/10/10] 2w6d 06:12:30, metric 200
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.169.14.240/32   [OSPF/10/10] 3w2d 04:45:37, metric 100
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.169.14.241/32  *[OSPF/10/10] 3w2d 04:45:37, metric 105
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.169.14.242/32  *[OSPF/10/10] 3w2d 04:45:37, metric 100
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.169.14.243/32  *[OSPF/10/10] 3w2d 04:45:37, metric 105
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        10.189.5.253/32    *[OSPF/10/10] 3w0d 18:23:58, metric 5
+                            >  to 10.189.5.94 via ge-0/0/0.0
+        192.168.220.0/30       *[OSPF/10/10] 2w6d 06:12:28, metric 1200
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.0/32       *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.1/32       *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.2/32       *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.3/32       *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.4/32       *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.5/32       *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.6/32       *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.7/32       *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.8/32       *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.9/32       *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.10/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.11/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.12/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.13/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.14/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.15/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.16/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.17/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.18/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.19/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.20/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.21/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.22/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.23/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.24/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.25/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.26/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.27/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.28/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.29/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.30/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.31/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.32/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.33/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.34/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.35/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.36/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.37/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.38/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.39/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.40/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.41/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.42/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.43/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.44/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.45/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.46/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.47/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.48/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.49/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.50/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.51/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.52/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.53/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.54/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.55/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.56/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.57/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.58/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.59/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.60/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.61/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.62/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.63/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.64/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.65/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.66/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.67/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.68/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.69/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.70/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.71/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.72/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.73/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.74/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.75/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.76/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.77/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.78/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.79/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.80/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.81/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.82/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.83/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.84/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.85/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.86/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.87/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.88/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.89/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.90/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.91/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.92/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.93/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.94/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.95/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.96/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.97/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.98/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.99/32      *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.100/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.101/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.102/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.103/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.104/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.105/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.106/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.107/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.108/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.109/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.110/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.111/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.112/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.113/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.114/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.115/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.116/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.117/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.118/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.119/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.120/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.121/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.122/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.123/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.124/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.125/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.126/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.127/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.128/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.129/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.130/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.131/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.132/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.133/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.134/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.135/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.136/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.137/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.138/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.139/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.140/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.141/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.142/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.143/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.144/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.145/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.146/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.147/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.148/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.149/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.150/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.151/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.152/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.153/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.154/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.155/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.156/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.157/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.158/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.159/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.160/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.161/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.162/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.163/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.164/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.165/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.166/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.167/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.168/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.169/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.170/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.171/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.172/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.173/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.174/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.175/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.176/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.177/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.178/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.179/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.180/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.181/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.182/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.183/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.184/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.185/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.186/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.187/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.188/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.189/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.190/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.191/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.192/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.193/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.194/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.195/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.196/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.197/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.198/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.199/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.220.200/32     *[OSPF/10/10] 6d 17:17:33, metric 1202
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.111.0/30       *[OSPF/10/10] 6d 17:17:33, metric 1201
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.4.0/30       *[OSPF/10/10] 6d 17:17:08, metric 1201
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.100.0/25   *[OSPF/150/10] 2w5d 16:20:47, metric 32000, tag 65000500
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.100.252/32 *[OSPF/150/10] 2w5d 16:20:47, metric 32000, tag 65000500
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.36.48/30  *[OSPF/10/10] 3w2d 04:45:37, metric 10100
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.36.56/30  *[OSPF/10/10] 3w2d 04:45:37, metric 10100
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.36.119/32 *[OSPF/10/10] 3w2d 04:45:37, metric 10101
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        192.168.36.120/32 *[OSPF/10/10] 3w2d 04:45:37, metric 10101
+                            >  to 10.169.14.121 via ge-0/0/1.0
+        224.0.0.5/32       *[OSPF/10] 29w5d 23:08:48, metric 1
+                            MultiRecv
+    '''
+    }
+
+    golden_parsed_output_4 = {
+        "route-information": {
+            "route-table": [{
+                "active-route-count":
+                "929",
+                "destination-count":
+                "929",
+                "hidden-route-count":
+                "0",
+                "holddown-route-count":
+                "0",
+                "rt": [{
+                    "rt-destination": "0.0.0.0/0",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "101",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "150",
+                        "preference2": "10",
+                        "protocol-name": "OSPF",
+                        "rt-tag": "0"
+                    }
+                }, {
+                    "rt-destination": "10.1.0.0/24",
+                    "rt-entry": {
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "20",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "150",
+                        "preference2": "10",
+                        "protocol-name": "OSPF",
+                        "rt-tag": "0"
+                    }
+                }, {
+                    "rt-destination": "10.36.3.3/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.16.0.0/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w6d 06:12:28"
+                        },
+                        "metric": "1200",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.100.5.5/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w6d 06:12:28"
+                        },
+                        "metric": "1201",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.19.198.28/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w0d 18:23:58"
+                        },
+                        "metric": "1005",
+                        "nh": [{
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.19.198.239/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "1w5d 22:13:37"
+                        },
+                        "metric": "1001",
+                        "nh": [{
+                            "to": "10.19.198.26",
+                            "via": "ge-0/0/2.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.174.132.237/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "150",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "150",
+                        "preference2": "10",
+                        "protocol-name": "OSPF",
+                        "rt-tag": "0"
+                    }
+                }, {
+                    "rt-destination": "10.34.2.200/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w6d 06:12:28"
+                        },
+                        "metric": "205",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.34.2.250/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w6d 06:12:28"
+                        },
+                        "metric": "200",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.34.2.251/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w6d 06:12:28"
+                        },
+                        "metric": "205",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.15.0.0/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "1w5d 22:13:37"
+                        },
+                        "metric": "1001",
+                        "nh": [{
+                            "to": "10.19.198.26",
+                            "via": "ge-0/0/2.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.64.0.0/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1201",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.196.212/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w6d 06:12:28"
+                        },
+                        "metric": "1200",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.196.216/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w6d 06:12:28"
+                        },
+                        "metric": "1205",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.196.241/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1201",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.14.16/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "105",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.14.32/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w6d 05:32:25"
+                        },
+                        "metric": "225",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.14.128/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w0d 18:23:58"
+                        },
+                        "metric": "125",
+                        "nh": [{
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.14.156/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w6d 06:12:30"
+                        },
+                        "metric": "200",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.14.240/32",
+                    "rt-entry": {
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "100",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.14.241/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "105",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.14.242/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "100",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.169.14.243/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "105",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "10.189.5.253/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w0d 18:23:58"
+                        },
+                        "metric": "5",
+                        "nh": [{
+                            "to": "10.189.5.94",
+                            "via": "ge-0/0/0.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.0/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w6d 06:12:28"
+                        },
+                        "metric": "1200",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.0/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.1/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.2/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.3/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.4/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.5/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.6/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.7/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.8/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.9/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.10/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.11/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.12/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.13/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.14/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.15/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.16/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.17/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.18/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.19/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.20/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.21/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.22/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.23/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.24/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.25/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.26/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.27/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.28/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.29/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.30/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.31/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.32/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.33/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.34/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.35/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.36/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.37/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.38/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.39/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.40/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.41/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.42/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.43/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.44/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.45/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.46/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.47/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.48/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.49/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.50/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.51/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.52/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.53/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.54/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.55/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.56/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.57/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.58/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.59/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.60/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.61/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.62/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.63/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.64/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.65/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.66/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.67/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.68/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.69/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.70/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.71/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.72/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.73/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.74/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.75/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.76/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.77/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.78/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.79/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.80/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.81/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.82/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.83/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.84/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.85/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.86/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.87/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.88/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.89/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.90/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.91/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.92/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.93/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.94/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.95/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.96/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.97/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.98/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.99/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.100/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.101/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.102/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.103/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.104/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.105/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.106/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.107/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.108/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.109/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.110/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.111/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.112/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.113/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.114/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.115/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.116/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.117/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.118/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.119/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.120/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.121/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.122/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.123/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.124/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.125/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.126/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.127/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.128/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.129/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.130/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.131/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.132/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.133/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.134/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.135/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.136/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.137/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.138/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.139/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.140/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.141/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.142/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.143/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.144/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.145/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.146/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.147/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.148/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.149/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.150/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.151/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.152/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.153/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.154/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.155/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.156/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.157/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.158/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.159/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.160/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.161/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.162/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.163/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.164/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.165/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.166/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.167/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.168/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.169/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.170/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.171/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.172/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.173/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.174/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.175/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.176/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.177/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.178/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.179/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.180/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.181/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.182/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.183/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.184/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.185/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.186/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.187/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.188/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.189/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.190/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.191/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.192/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.193/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.194/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.195/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.196/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.197/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.198/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.199/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.220.200/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1202",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.111.0/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:33"
+                        },
+                        "metric": "1201",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.4.0/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "6d 17:17:08"
+                        },
+                        "metric": "1201",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.100.0/25",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w5d 16:20:47"
+                        },
+                        "metric": "32000",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "150",
+                        "preference2": "10",
+                        "protocol-name": "OSPF",
+                        "rt-tag": "65000500"
+                    }
+                }, {
+                    "rt-destination": "192.168.100.252/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "2w5d 16:20:47"
+                        },
+                        "metric": "32000",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "150",
+                        "preference2": "10",
+                        "protocol-name": "OSPF",
+                        "rt-tag": "65000500"
+                    }
+                }, {
+                    "rt-destination": "192.168.36.48/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "10100",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.36.56/30",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "10100",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.36.119/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "10101",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "192.168.36.120/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "3w2d 04:45:37"
+                        },
+                        "metric": "10101",
+                        "nh": [{
+                            "to": "10.169.14.121",
+                            "via": "ge-0/0/1.0"
+                        }],
+                        "preference": "10",
+                        "preference2": "10",
+                        "protocol-name": "OSPF"
+                    }
+                }, {
+                    "rt-destination": "224.0.0.5/32",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "age": {
+                            "#text": "29w5d 23:08:48"
                         },
                         "metric": "1",
                         "nh-type": "MultiRecv",
@@ -54839,9 +60137,15 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "active-tag": "*",
                                     "announce-bits": "3",
                                     "announce-tasks": "0-KRT 6-BGP_RT_Background 7-Resolve tree 3",
+                                    "as-path": "AS path: (65151 65000) I",
+                                    "bgp-path-attributes": {
+                                        "attr-as-path-effective": {
+                                            "aspath-effective-string": "AS path:",
+                                            "attr-value": "(65151 65000) I"
+                                        }
+                                    },
                                     "gateway": "10.169.14.240",
                                     "local-as": "65171",
-                                    "peer-as": "65151",
                                     "nh": [
                                         {
                                             "nh-string": "Next hop",
@@ -54854,6 +60158,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "nh-index": "613",
                                     "nh-reference-count": "1366",
                                     "nh-type": "Router",
+                                    "peer-as": "65151",
+                                    "peer-id": "10.169.14.240",
                                     "preference": "170",
                                     "preference2": "121",
                                     "protocol-name": "BGP",
@@ -54882,10 +60188,16 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "validation-state": "unverified"
                                 },
                                 {
-                                    "inactive-reason": "IGP metric",
+                                    "as-path": "AS path: (65151 65000) I",
+                                    "bgp-path-attributes": {
+                                        "attr-as-path-effective": {
+                                            "aspath-effective-string": "AS path:",
+                                            "attr-value": "(65151 65000) I"
+                                        }
+                                    },
                                     "gateway": "10.189.5.253",
+                                    "inactive-reason": "IGP metric",
                                     "local-as": "65171",
-                                    "peer-as": "65171",
                                     "nh": [
                                         {
                                             "label-element": "0xc5cda38",
@@ -54904,6 +60216,8 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "nh-index": "0",
                                     "nh-reference-count": "682",
                                     "nh-type": "Router",
+                                    "peer-as": "65171",
+                                    "peer-id": "10.189.5.253",
                                     "preference": "170",
                                     "preference2": "121",
                                     "protocol-name": "BGP",
@@ -54939,7 +60253,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 "@junos:format": "2 entries"
                             },
                             "tsi": {
-                                "#text": "KRT in-kernel 10.220.0.0/16 -> {indirect(1048574)}\nPage 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)\nAdvertised metrics:\nFlags: Nexthop Change\nNexthop: Self\nMED: 12003\nLocalpref: 120\nAS path: [65171] (65151 65000) I\nCommunities: 65001:10 65151:244\nPath 10.220.0.0\nfrom 10.169.14.240\nVector len 4.  Val: 1\nAS path: (65151 65000) I\nCommunities: 65001:10 65151:244\nLocalpref: 120\nAS path: (65151 65000) I\nCommunities: 65001:10 65151:244\nLocalpref: 120"
+                                "#text": "KRT in-kernel 10.220.0.0/16 -> {indirect(1048574)}\nPage 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)\nAdvertised metrics:\nFlags: Nexthop Change\nNexthop: Self\nMED: 12003\nLocalpref: 120\nAS path: [65171] (65151 65000) I\nCommunities: 65001:10 65151:244\nPath 10.220.0.0\nfrom 10.169.14.240\nVector len 4.  Val: 1\nCommunities: 65001:10 65151:244\nLocalpref: 120\nCommunities: 65001:10 65151:244\nLocalpref: 120"
                             }
                         }
                     ],
@@ -54954,124 +60268,327 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             show route extensive
 
         inet.0: 13 destinations, 13 routes (13 active, 0 holddown, 0 hidden)
-        100.0.0.1/32 (1 entry, 1 announced)
+        10.55.0.1/32 (1 entry, 1 announced)
         TSI:
-        KRT in-kernel 100.0.0.1/32 -> {indirect(1048574)}
+        KRT in-kernel 10.55.0.1/32 -> {indirect(1048574)}
             *BGP    Preference: 170/-101
                     Next hop type: Indirect, Next hop index: 0
                     Address: 0xbb68bf4
                     Next-hop reference count: 4
-                    Source: 2.2.2.2
+                    Source: 10.16.2.2
                     Next hop type: Router, Next hop index: 595
-                    Next hop: 20.0.0.2 via ge-0/0/0.0, selected
+                    Next hop: 10.145.0.2 via ge-0/0/0.0, selected
                     Session Id: 0x3bf
-                    Protocol next hop: 5.5.5.5
+                    Protocol next hop: 10.100.5.5
                     Indirect next hop: 0xc298604 1048574 INH Session ID: 0x3c1
                     State: <Active Int Ext>
                     Local AS:     2 Peer AS:     2
                     Age: 13         Metric2: 3
                     Validation State: unverified
-                    Task: BGP_2.2.2.2.2
+                    Task: BGP_10.16.2.2.2
                     Announcement bits (2): 0-KRT 5-Resolve tree 1
                     AS path: I  (Originator)
-                    Cluster list:  2.2.2.2 4.4.4.4
-                    Originator ID: 5.5.5.5
+                    Cluster list:  10.16.2.2 10.64.4.4
+                    Originator ID: 10.100.5.5
                     Accepted
                     Localpref: 100
-                    Router ID: 2.2.2.2
+                    Router ID: 10.16.2.2
                     Indirect next hops: 1
-                            Protocol next hop: 5.5.5.5 Metric: 3
+                            Protocol next hop: 10.100.5.5 Metric: 3
                             Indirect next hop: 0xc298604 1048574 INH Session ID: 0x3c1
                             Indirect path forwarding next hops: 1
                                     Next hop type: Router
-                                    Next hop: 20.0.0.2 via ge-0/0/0.0
+                                    Next hop: 10.145.0.2 via ge-0/0/0.0
                                     Session Id: 0x3bf
-                                    5.5.5.5/32 Originating RIB: inet.0
+                                    10.100.5.5/32 Originating RIB: inet.0
                                       Metric: 3     Node path count: 1
                                       Forwarding nexthops: 1
-                                            Nexthop: 20.0.0.2 via ge-0/0/0.0
+                                            Nexthop: 10.145.0.2 via ge-0/0/0.0
                                             Session Id: 3bf
     '''
     }
 
     golden_parsed_output_6 = {
-            "route-information": {
-                "route-table": [
-                    {
-                        "table-name": "inet.0",
-                        "destination-count": "13",
-                        "total-route-count": "13",
-                        "active-route-count": "13",
-                        "holddown-route-count": "0",
-                        "hidden-route-count": "0",
-                        "rt": [
-                            {
-
-                                "rt-announced-count": "1",
-                                "rt-destination": "100.0.0.1/32",
-                                "rt-entry-count": {
-                                    "#text": "1",
-                                    "@junos:format": "1 entry"
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "13",
+                    "destination-count": "13",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "10.55.0.1/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "13"
                                 },
-                                "tsi": {
-                                    "#text": "KRT in-kernel 100.0.0.1/32 -> {indirect(1048574)}\nAS path: I  (Originator)\nLocalpref: 100"
+                                "announce-bits": "2",
+                                "announce-tasks": "0-KRT 5-Resolve tree 1",
+                                "as-path": "AS path: I  (Originator)",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I  (Originator)"
+                                    }
                                 },
-                                "rt-entry": {
-                                    "active-tag": "*",
-                                    "protocol-name": "BGP",
-                                    "preference": "170",
-                                    "preference2": "101",
-                                    "nh-type": "Router",
-                                    "nh-index": "595",
-                                    "nh-address": "0xbb68bf4",
-                                    "nh-reference-count": "4",
-                                    "gateway": "2.2.2.2",
-                                    "local-as": "2",
-                                    "peer-as": "2",
-                                    'age': {'#text': '13'},
-                                    'metric2': '3',
-                                    "nh": [
-                                        {
-                                            "to": "20.0.0.2",
-                                            "via": "ge-0/0/0.0",
-                                            "nh-string": "Next hop",
-                                            "session": "3bf"
-                                        }
-                                    ],
-                                    "protocol-nh": [
-                                        {
-                                            "to": "5.5.5.5",
-                                            "indirect-nh": "0xc298604 1048574 INH Session ID: 0x3c1"
-                                        },
-                                        {
-                                            "to": "5.5.5.5",
-                                            "metric": "3",
-                                            "forwarding-nh-count": "1",
-                                            "indirect-nh": "0xc298604 1048574 INH Session ID: 0x3c1",
-                                            "nh": [
-                                                {
-                                                    "to": "20.0.0.2",
-                                                    "via": "ge-0/0/0.0",
-                                                    "nh-string": "Next hop",
-                                                    "session": "3bf"
-                                                }
-                                            ],
-                                            "output": "5.5.5.5/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 20.0.0.2 via ge-0/0/0.0\nSession Id: 3bf\n"
-                                        }
-                                    ],
-                                    "rt-entry-state": "Active Int Ext",
-                                    "validation-state": "unverified",
-                                    "task-name": "BGP_2.2.2.2.2",
-                                    "announce-bits": "2",
-                                    "announce-tasks": "0-KRT 5-Resolve tree 1",
-                                    "cluster-list": "2.2.2.2 4.4.4.4"
-                                }
+                                "cluster-list": "10.16.2.2 10.64.4.4",
+                                "gateway": "10.16.2.2",
+                                "local-as": "2",
+                                "metric2": "3",
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "session": "3bf",
+                                        "to": "10.145.0.2",
+                                        "via": "ge-0/0/0.0"
+                                    }
+                                ],
+                                "nh-address": "0xbb68bf4",
+                                "nh-index": "595",
+                                "nh-reference-count": "4",
+                                "nh-type": "Router",
+                                "peer-as": "2",
+                                "peer-id": "10.16.2.2",
+                                "preference": "170",
+                                "preference2": "101",
+                                "protocol-name": "BGP",
+                                "protocol-nh": [
+                                    {
+                                        "indirect-nh": "0xc298604 1048574 INH Session ID: 0x3c1",
+                                        "to": "10.100.5.5"
+                                    },
+                                    {
+                                        "forwarding-nh-count": "1",
+                                        "indirect-nh": "0xc298604 1048574 INH Session ID: 0x3c1",
+                                        "metric": "3",
+                                        "nh": [
+                                            {
+                                                "nh-string": "Next hop",
+                                                "session": "3bf",
+                                                "to": "10.145.0.2",
+                                                "via": "ge-0/0/0.0"
+                                            }
+                                        ],
+                                        "output": "10.100.5.5/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 10.145.0.2 via ge-0/0/0.0\nSession Id: 3bf\n",
+                                        "to": "10.100.5.5"
+                                    }
+                                ],
+                                "rt-entry-state": "Active Int Ext",
+                                "task-name": "BGP_10.16.2.2.2",
+                                "validation-state": "unverified"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "tsi": {
+                                "#text": "KRT in-kernel 10.55.0.1/32 -> {indirect(1048574)}\nLocalpref: 100"
                             }
-                        ]
-                    }
-                ]
-            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "13"
+                }
+            ]
         }
+    }
+
+    golden_output_7 = {'execute.return_value': '''
+            show route 10.66.12.12/32 extensive 
+
+        inet.0: 16 destinations, 16 routes (16 active, 0 holddown, 0 hidden)
+
+        10.66.12.12/32 (1 entry, 1 announced)
+
+        TSI:
+
+        KRT in-kernel 10.66.12.12/32 -> {indirect(1048578)}
+
+        Page 0 idx 1, (group ibgp-DUT type Internal) Type 1 val 0x134b0034 (adv_entry)
+
+        Advertised metrics:
+
+            Nexthop: 10.16.2.2
+
+            Localpref: 100
+
+            AS path: [3] I (Originator)
+
+            Cluster list:  0.0.0.4
+
+            Originator ID: 10.16.2.2
+
+            Communities:
+
+            Cluster ID: 0.0.0.1
+
+        Path 10.66.12.12
+
+        from 10.64.4.4
+
+        Vector len 4.  Val: 1
+
+                *BGP    Preference: 170/-101
+
+                        Next hop type: Indirect, Next hop index: 0
+
+                        Address: 0xbb7fff4
+
+                        Next-hop reference count: 3
+
+                        Source: 10.64.4.4
+
+                        Next hop type: Router, Next hop index: 614
+
+                        Next hop: 10.205.0.2 via ge-0/0/1.0, selected
+
+                        Session Id: 0x1304
+
+                        Protocol next hop: 10.16.2.2
+
+                        Indirect next hop: 0xc296984 1048578 INH Session ID: 0x130c
+
+                        State: <Active Int Ext>
+
+                        Local AS:     3 Peer AS:     3
+
+                        Age: 9 	Metric2: 2 
+
+                        Validation State: unverified 
+
+                        Task: BGP_10.169.64.4.4
+
+                        Announcement bits (3): 0-KRT 5-BGP_RT_Background 6-Resolve tree 1 
+
+                        AS path: I  (Originator)
+
+                        Cluster list:  0.0.0.4
+
+                        Originator ID: 10.16.2.2
+
+                        Accepted
+
+                        Localpref: 100
+
+                        Router ID: 10.64.4.4
+
+                        Indirect next hops: 1
+
+                                Protocol next hop: 10.16.2.2 Metric: 2
+
+                                Indirect next hop: 0xc296984 1048578 INH Session ID: 0x130c
+
+                                Indirect path forwarding next hops: 1
+
+                                        Next hop type: Router
+
+                                        Next hop: 10.205.0.2 via ge-0/0/1.0
+
+                                        Session Id: 0x1304
+
+                        10.16.2.2/32 Originating RIB: inet.0
+
+                        Metric: 2	Node path count: 1
+
+                        Forwarding nexthops: 1
+
+                            Nexthop: 10.205.0.2 via ge-0/0/1.0
+
+                            Session Id: 1304
+    '''
+    }
+
+    golden_parsed_output_7 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "16",
+                    "destination-count": "16",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "10.66.12.12/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "9"
+                                },
+                                "announce-bits": "3",
+                                "announce-tasks": "0-KRT 5-BGP_RT_Background 6-Resolve tree 1",
+                                "as-path": "AS path: I  (Originator)",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I  (Originator)"
+                                    }
+                                },
+                                "cluster-list": "0.0.0.4",
+                                "gateway": "10.64.4.4",
+                                "local-as": "3",
+                                "metric2": "2",
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "session": "1304",
+                                        "to": "10.205.0.2",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "nh-address": "0xbb7fff4",
+                                "nh-index": "614",
+                                "nh-reference-count": "3",
+                                "nh-type": "Router",
+                                "peer-as": "3",
+                                "peer-id": "10.64.4.4",
+                                "preference": "170",
+                                "preference2": "101",
+                                "protocol-name": "BGP",
+                                "protocol-nh": [
+                                    {
+                                        "indirect-nh": "0xc296984 1048578 INH Session ID: 0x130c",
+                                        "to": "10.16.2.2"
+                                    },
+                                    {
+                                        "forwarding-nh-count": "1",
+                                        "indirect-nh": "0xc296984 1048578 INH Session ID: 0x130c",
+                                        "metric": "2",
+                                        "nh": [
+                                            {
+                                                "nh-string": "Next hop",
+                                                "session": "1304",
+                                                "to": "10.205.0.2",
+                                                "via": "ge-0/0/1.0"
+                                            }
+                                        ],
+                                        "output": "10.16.2.2/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 10.205.0.2 via ge-0/0/1.0\n",
+                                        "to": "10.16.2.2"
+                                    }
+                                ],
+                                "rt-entry-state": "Active Int Ext",
+                                "task-name": "BGP_10.169.64.4.4",
+                                "validation-state": "unverified"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "tsi": {
+                                "#text": "KRT in-kernel 10.66.12.12/32 -> {indirect(1048578)}\nPage 0 idx 1, (group ibgp-DUT type Internal) Type 1 val 0x134b0034 (adv_entry)\nAdvertised metrics:\nNexthop: 10.16.2.2\nLocalpref: 100\nAS path: [3] I (Originator)\nCommunities:\nPath 10.66.12.12\nfrom 10.64.4.4\nVector len 4.  Val: 1\nLocalpref: 100"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "16"
+                }
+            ]
+        }
+    }
+
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -55116,6 +60633,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         obj = ShowRouteProtocolExtensive(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
+
+    def test_golden_7(self):
+        self.device = Mock(**self.golden_output_7)
+        obj = ShowRouteProtocolExtensive(device=self.device)
+        parsed_output = obj.parse(route='10.66.12.12/32')
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
 '''
 Unit test for:
@@ -55536,6 +61059,261 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         }
     }
 
+    golden_output_2 = {
+        'execute.return_value':
+        '''
+        show route receive-protocol bgp 2001:db8:7fc5:ca45::4
+
+        inet.0: 21 destinations, 34 routes (21 active, 0 holddown, 0 hidden)
+
+        inet6.0: 24 destinations, 36 routes (24 active, 0 holddown, 0 hidden)
+        Prefix                  Nexthop              MED     Lclpref    AS path
+        2001:db8:7fc5:ca45::1/128
+                                2001:db8:7fc5:ca45::4     2       100        I
+        2001:db8:7fc5:ca45::2/128
+                                2001:db8:7fc5:ca45::4     1       100        I
+        2001:db8:7fc5:ca45::3/128
+                                2001:db8:7fc5:ca45::4     1       100        I
+        2001:db8:7fc5:ca45::4/128
+                                2001:db8:7fc5:ca45::4             100        I
+        2001:db8:7fc5:ca45::5/128
+                                2001:db8:7fc5:ca45::4     3       100        I
+        2001:db8:7fc5:d3e9::/64
+                                2001:db8:7fc5:ca45::4     2       100        I
+        2001:db8:7fc5:d8be::/64
+                                2001:db8:7fc5:ca45::4     2       100        I
+        2001:db8:7fc5:dd95::/64
+                                2001:db8:7fc5:ca45::4             100        I
+        2001:db8:7fc5:e26e::/64
+                                2001:db8:7fc5:ca45::4             100        I
+        2001:db8:7fc5:e749::/64
+                                2001:db8:7fc5:ca45::4     3       100        I
+        2001:db8:7fc5:9a4b::2/128
+                                2001:db8:7fc5:ca45::2             100        I
+        2001:db8:7fc5:9a4b::3/128
+                                2001:db8:7fc5:ca45::3             100        I
+        2001:db8:7fc5:9a4b::4/128
+        *                         2001:db8:7fc5:ca45::4             100        I
+    '''
+    }
+
+    golden_parsed_output_2 = {
+        "route-information": {
+        "route-table": [
+            {
+                "active-route-count": "21",
+                "destination-count": "21",
+                "hidden-route-count": "0",
+                "holddown-route-count": "0",
+                "table-name": "inet.0",
+                "total-route-count": "34"
+            },
+            {
+                "active-route-count": "24",
+                "destination-count": "24",
+                "hidden-route-count": "0",
+                "holddown-route-count": "0",
+                "rt": [
+                    {
+                        "rt-destination": "2001:db8:7fc5:ca45::1/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "2",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:ca45::2/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "1",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:ca45::3/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "1",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:ca45::4/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:ca45::5/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "3",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:d3e9::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "2",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:d8be::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "2",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:dd95::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:e26e::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:e749::/64",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "med": "3",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:9a4b::2/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::2"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:9a4b::3/128",
+                        "rt-entry": {
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::3"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    },
+                    {
+                        "rt-destination": "2001:db8:7fc5:9a4b::4/128",
+                        "rt-entry": {
+                            "active-tag": "*",
+                            "as-path": "I",
+                            "local-preference": "100",
+                            "nh": {
+                                "to": "2001:db8:7fc5:ca45::4"
+                            },
+                            "protocol-name": "BGP"
+                        }
+                    }
+                ],
+                "table-name": "inet6.0",
+                "total-route-count": "36"
+            }
+        ]
+    }
+        
+    }
+
+    golden_output_3 = {'execute.return_value': '''
+        show route receive-protocol bgp 10.64.4.4 192.168.225.0 
+
+
+
+        inet.0: 850018 destinations, 850021 routes (850018 active, 0 holddown, 0 hidden)
+
+        Prefix		  Nexthop	       MED     Lclpref    AS path
+
+        * 192.168.225.0/24           10.64.4.4                      100        200000 4 5 6 I
+        
+    '''}
+
+    golden_parsed_output_3 = {
+        'route-information': {
+            'route-table': [{
+                'active-route-count': '850018', 
+                'destination-count': '850018', 
+                'hidden-route-count': '0', 
+                'holddown-route-count': '0', 
+                'rt': [{
+                    'rt-destination': '192.168.225.0/24', 
+                    'rt-entry': {
+                        'active-tag': '*', 
+                        'as-path': '4 5 6 I', 
+                        'local-preference': 
+                        '200000', 'med': '100', 
+                        'nh': {
+                            'to': '10.64.4.4'
+                            }, 
+                            'protocol-name': 'BGP'
+                            }
+                        }
+                    ], 
+                'table-name': 'inet.0', 
+                'total-route-count': 
+                '850021'}],
+        },
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteReceiveProtocol(device=self.device)
@@ -55547,6 +61325,21 @@ class TestShowRouteReceiveProtocol(unittest.TestCase):
         obj = ShowRouteReceiveProtocol(device=self.device)
         parsed_output = obj.parse(protocol='bgp', peer='10.189.5.253')
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowRouteReceiveProtocol(device=self.device)
+        parsed_output = obj.parse(protocol='bgp', peer='2001:db8:7fc5:ca45::4')
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowRouteReceiveProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp', 
+            peer='10.64.4.4',
+            target='192.168.225.0')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)        
 
 
 '''
@@ -55730,6 +61523,235 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
         }
     }
 
+
+    golden_output_3 = {
+        'execute.return_value':
+        '''
+    show route advertising-protocol bgp 2001:db8:7fc5:ca45::1
+
+    inet6.0: 21 destinations, 23 routes (21 active, 0 holddown, 0 hidden)
+    Prefix                  Nexthop              MED     Lclpref    AS path
+        2001:db8:7fc5:ca45::1/128
+    *                         Self                 2       100        I
+        2001:db8:7fc5:ca45::2/128
+    *                         Self                 1       100        I
+        2001:db8:7fc5:ca45::3/128
+    *                         Self                 1       100        I
+        2001:db8:7fc5:ca45::4/128
+    *                         Self                         100        I
+        2001:db8:7fc5:ca45::5/128
+    *                         Self                 3       100        I
+        2001:db8:7fc5:d3e9::/64
+    *                         Self                 2       100        I
+        2001:db8:7fc5:d8be::/64
+    *                         Self                 2       100        I
+        2001:db8:7fc5:dd95::/64
+    *                         Self                         100        I
+        2001:db8:7fc5:e26e::/64
+    *                         Self                         100        I
+        2001:db8:7fc5:e749::/64
+    *                         Self                 3       100        I
+        2001:db8:7fc5:9a4b::2/128
+    *                         2001:db8:7fc5:ca45::2             100        I
+        2001:db8:7fc5:9a4b::3/128
+    *                         2001:db8:7fc5:ca45::3             100        I
+        2001:db8:7fc5:9a4b::4/128
+    *                         Self                         100        I
+    '''
+    }
+
+    golden_parsed_output_3 = {
+        "route-information": {
+        "route-table": {
+            "active-route-count": "21",
+            "destination-count": "21",
+            "hidden-route-count": "0",
+            "holddown-route-count": "0",
+            "rt": [
+                {
+                    "rt-destination": "2001:db8:7fc5:ca45::1/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "2",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:ca45::2/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "1",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:ca45::3/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "1",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:ca45::4/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:ca45::5/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "3",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:d3e9::/64",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "2",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:d8be::/64",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "2",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:dd95::/64",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:e26e::/64",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:e749::/64",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "med": "3",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:9a4b::2/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "2001:db8:7fc5:ca45::2"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:9a4b::3/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "2001:db8:7fc5:ca45::3"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                },
+                {
+                    "rt-destination": "2001:db8:7fc5:9a4b::4/128",
+                    "rt-entry": {
+                        "active-tag": "*",
+                        "as-path": "I",
+                        "bgp-metric-flags": "Nexthop Change",
+                        "local-preference": "100",
+                        "nh": {
+                            "to": "Self"
+                        },
+                        "protocol-name": "BGP"
+                    }
+                }
+            ],
+            "table-name": "inet6.0",
+            "total-route-count": "23"
+        }
+    }
+    }
+
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteAdvertisingProtocol(device=self.device)
@@ -55747,6 +61769,12 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
         obj = ShowRouteAdvertisingProtocol(device=self.device)
         parsed_output = obj.parse(protocol='bgp', neighbor='10.145.0.3')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+    def test_golden_3(self):
+        self.device = Mock(**self.golden_output_3)
+        obj = ShowRouteAdvertisingProtocol(device=self.device)
+        parsed_output = obj.parse(protocol='bgp', neighbor='2001:db8:7fc5:ca45::1')
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
 '''
@@ -56302,10 +62330,10 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
     }
 
     golden_output_3 = {'execute.return_value':'''
-    show route advertising-protocol bgp 20.0.0.3 3.3.3.3 detail 
+    show route advertising-protocol bgp 10.145.0.3 10.36.3.3 detail 
 
     inet.3: 1 destinations, 1 routes (1 active, 0 holddown, 0 hidden)
-    * 3.3.3.3/32 (1 entry, 1 announced)
+    * 10.36.3.3/32 (1 entry, 1 announced)
     BGP group eBGP_SUT-2 type External
         Route Label: 17
         Nexthop: Self
@@ -56328,7 +62356,7 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
                                                      'nh': {'to': 'Self'},
                                                      'route-label': '17',
                                                      'rt-announced-count': '1',
-                                                     'rt-destination': '3.3.3.3',
+                                                     'rt-destination': '10.36.3.3',
                                                      'rt-entry-count': '1',
                                                      'rt-prefix-length': '32'},
                                         'table-name': 'inet.3',
@@ -56369,8 +62397,8 @@ class TestShowRouteAdvertisingProtocolDetail(unittest.TestCase):
         obj = ShowRouteAdvertisingProtocolDetail(device=self.device)
         parsed_output = obj.parse(
             protocol='bgp',
-            ip_address='20.0.0.3',
-            route="3.3.3.3",
+            ip_address='10.145.0.3',
+            route="10.36.3.3",
         )
         self.assertEqual(parsed_output, self.golden_parsed_output_3)        
 
@@ -56480,7 +62508,7 @@ class TestShowRouteTableLabelSwitchedName(unittest.TestCase):
         + = Active Route, - = Last Active, * = Both
 
         46                 *[RSVP/7/1] 00:10:22, metric 1
-                            >  to 203.181.106.218 via ge-0/0/1.1, label-switched-path test_lsp_01
+                            >  to 192.168.145.218 via ge-0/0/1.1, label-switched-path test_lsp_01
     '''}
 
     golden_parsed_output_1 = {
@@ -56505,7 +62533,7 @@ class TestShowRouteTableLabelSwitchedName(unittest.TestCase):
                 'metric': '1',
                 'nh': [{
                     'selected-next-hop': True,
-                    'to': '203.181.106.218',
+                    'to': '192.168.145.218',
                     'via': 'ge-0/0/1.1',
                     'lsp-name': 'test_lsp_01'
                 }]
@@ -56535,29 +62563,29 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_output_1 = {'execute.return_value': '''
-            show route protocol bgp extensive 2.2.2.2
+            show route protocol bgp extensive 10.16.2.2
 
             inet.0: 8 destinations, 8 routes (8 active, 0 holddown, 0 hidden)
-            2.2.2.2/32 (1 entry, 1 announced)
+            10.16.2.2/32 (1 entry, 1 announced)
             TSI:
-            KRT in-kernel 2.2.2.2/32 -> {20.0.0.3}
+            KRT in-kernel 10.16.2.2/32 -> {10.145.0.3}
                     *BGP    Preference: 170/-101
                             Next hop type: Router, Next hop index: 604
                             Address: 0xf991014
                             Next-hop reference count: 2
-                            Source: 20.0.0.3
-                            Next hop: 20.0.0.3 via ge-0/0/0.0, selected
+                            Source: 10.145.0.3
+                            Next hop: 10.145.0.3 via ge-0/0/0.0, selected
                             Session Id: 0xe78
                             State: <Active Ext>
                             Local AS:     1 Peer AS: 30000
                             Age: 7:14:16
                             Validation State: unverified
-                            Task: BGP_30000.20.0.0.3
+                            Task: BGP_30000.10.145.0.3
                             Announcement bits (1): 0-KRT
                             AS path: 30000 I
                             Accepted
                             Localpref: 100
-                            Router ID: 2.2.2.2
+                            Router ID: 10.16.2.2
     '''}
 
     golden_parsed_output_1 = {
@@ -56569,7 +62597,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                     "holddown-route-count": "0",
                     "rt": {
                         "rt-announced-count": "1",
-                        "rt-destination": "2.2.2.2",
+                        "rt-destination": "10.16.2.2",
                         "rt-entry": {
                             "active-tag": "*",
                             "age": {
@@ -56585,13 +62613,13 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                                 }
                             },
                             "bgp-rt-flag": "Accepted",
-                            "gateway": "20.0.0.3",
+                            "gateway": "10.145.0.3",
                             "local-as": "1",
                             "local-preference": "100",
                             "nh": {
                                 "nh-string": "Next hop",
                                 "session": "0xe78",
-                                "to": "20.0.0.3",
+                                "to": "10.145.0.3",
                                 "via": "ge-0/0/0.0"
                             },
                             "nh-address": "0xf991014",
@@ -56599,12 +62627,12 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                             "nh-reference-count": "2",
                             "nh-type": "Router",
                             "peer-as": "30000",
-                            "peer-id": "2.2.2.2",
+                            "peer-id": "10.16.2.2",
                             "preference": "170",
                             "preference2": "101",
                             "protocol-name": "BGP",
                             "rt-entry-state": "Active Ext",
-                            "task-name": "BGP_30000.20.0.0.3",
+                            "task-name": "BGP_30000.10.145.0.3",
                             "validation-state": "unverified"
                         },
                         "rt-entry-count": {
@@ -56612,7 +62640,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                         },
                         "rt-prefix-length": "32",
                         "tsi": {
-                            "#text": "KRT in-kernel 2.2.2.2/32 -> {20.0.0.3}"
+                            "#text": "KRT in-kernel 10.16.2.2/32 -> {10.145.0.3}"
                         }
                     },
                     "table-name": "inet.0",
@@ -56626,37 +62654,37 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
 
     golden_output_2= {'execute.return_value':
         '''
-            show route protocol bgp extensive 2.2.2.2
+            show route protocol bgp extensive 10.16.2.2
             
             inet.0: 1250009 destinations, 1250009 routes (1250009 active, 0 holddown, 0 hidden)
-            100.0.0.0/32 (1 entry, 1 announced)
+            10.55.0.0/32 (1 entry, 1 announced)
             TSI:
-            KRT in-kernel 100.0.0.0/32 -> {60.0.0.2}
+            KRT in-kernel 10.55.0.0/32 -> {10.30.0.2}
             Page 0 idx 0, (group eBGP_SUT-2 type External) Type 1 val 0x2b47ac54 (adv_entry)
             Advertised metrics:
                 Nexthop: Self
                 AS path: [1] 2 I
                 Communities:
-            Path 100.0.0.0
-            from 60.0.0.2
+            Path 10.55.0.0
+            from 10.30.0.2
             Vector len 4.  Val: 0
                     *BGP    Preference: 170/-101
                             Next hop type: Router, Next hop index: 605
                             Address: 0x17b226b4
                             Next-hop reference count: 800002
-                            Source: 60.0.0.2
-                            Next hop: 60.0.0.2 via ge-0/0/2.0, selected
+                            Source: 10.30.0.2
+                            Next hop: 10.30.0.2 via ge-0/0/2.0, selected
                             Session Id: 0xf44
                             State: <Active Ext>
                             Local AS:     1 Peer AS:     2
                             Age: 4:32 
                             Validation State: unverified 
-                            Task: BGP_2.60.0.0.2
+                            Task: BGP_10.144.30.0.2
                             Announcement bits (2): 0-KRT 1-BGP_RT_Background 
                             AS path: 2 I 
                             Accepted
                             Localpref: 100
-                            Router ID: 206.26.0.1
+                            Router ID: 192.168.19.1
                 '''
     }
 
@@ -56669,7 +62697,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                 "holddown-route-count": "0",
                 "rt": {
                     "rt-announced-count": "1",
-                    "rt-destination": "100.0.0.0",
+                    "rt-destination": "10.55.0.0",
                     "rt-entry": {
                         "active-tag": "*",
                         "age": {
@@ -56685,13 +62713,13 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                             }
                         },
                         "bgp-rt-flag": "Accepted",
-                        "gateway": "60.0.0.2",
+                        "gateway": "10.30.0.2",
                         "local-as": "1",
                         "local-preference": "100",
                         "nh": {
                             "nh-string": "Next hop",
                             "session": "0xf44",
-                            "to": "60.0.0.2",
+                            "to": "10.30.0.2",
                             "via": "ge-0/0/2.0"
                         },
                         "nh-address": "0x17b226b4",
@@ -56699,12 +62727,12 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                         "nh-reference-count": "800002",
                         "nh-type": "Router",
                         "peer-as": "2",
-                        "peer-id": "206.26.0.1",
+                        "peer-id": "192.168.19.1",
                         "preference": "170",
                         "preference2": "101",
                         "protocol-name": "BGP",
                         "rt-entry-state": "Active Ext",
-                        "task-name": "BGP_2.60.0.0.2",
+                        "task-name": "BGP_10.144.30.0.2",
                         "validation-state": "unverified"
                     },
                     "rt-entry-count": {
@@ -56712,7 +62740,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                     },
                     "rt-prefix-length": "32",
                     "tsi": {
-                        "#text": "KRT in-kernel 100.0.0.0/32 -> {60.0.0.2}"
+                        "#text": "KRT in-kernel 10.55.0.0/32 -> {10.30.0.2}"
                     }
                 },
                 "table-name": "inet.0",
@@ -56726,19 +62754,345 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteProtocolProtocolExtensiveIpaddress(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse(protocol="bgp", ipaddress='2.2.2.2')
+            parsed_output = obj.parse(protocol="bgp", ipaddress='10.16.2.2')
 
     def test_golden_1(self):
         self.device = Mock(**self.golden_output_1)
         obj = ShowRouteProtocolProtocolExtensiveIpaddress(device=self.device)
-        parsed_output = obj.parse(protocol="bgp", ipaddress='2.2.2.2')
+        parsed_output = obj.parse(protocol="bgp", ipaddress='10.16.2.2')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         obj = ShowRouteProtocolProtocolExtensiveIpaddress(device=self.device)
-        parsed_output = obj.parse(protocol="bgp", ipaddress='2.2.2.2')
+        parsed_output = obj.parse(protocol="bgp", ipaddress='10.16.2.2')
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+
+# Unit test for 'show route receive-protocol bgp {peer_addrress} {target_address} extensive'
+class TestShowRouteReceiveProtocolExtensive(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    # show route receive-protocol bgp 10.64.4.4 10.64.4.4 extensive
+    golden_output = {'execute.return_value':'''
+    inet.0: 18 destinations, 22 routes (18 active, 0 holddown, 0 hidden)
+    10.64.4.4/32 (3 entries, 2 announced)
+        Accepted
+        Nexthop: 10.64.4.4
+        Localpref: 100
+        AS path: I
+
+    inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
+    '''}
+
+    golden_parsed_output = {
+            "route-information": {
+                "route-table": [
+                    {
+                        "active-route-count": "18",
+                        "destination-count": "18",
+                        "hidden-route-count": "0",
+                        "holddown-route-count": "0",
+                        "rt": {
+                            "rt-announced-count": "2",
+                            "rt-destination": "10.64.4.4",
+                            "rt-entry": {
+                                "as-path": "AS path: I",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "I"
+                                    }
+                                },
+                                "bgp-rt-flag": "Accepted",
+                                "local-preference": "100",
+                                "nh": {
+                                    "to": "10.64.4.4"
+                                },
+                            },
+                            "rt-entry-count": {
+                                "#text": "3",
+                            },
+                            "rt-prefix-length": "32",
+                        },
+                        "table-name": "inet.0",
+                        "total-route-count": "22"
+                    },
+                    {
+                        "active-route-count": "3",
+                        "destination-count": "3",
+                        "hidden-route-count": "0",
+                        "holddown-route-count": "0",
+                        "table-name": "inet.3",
+                        "total-route-count": "3"
+                    }
+                ]
+            }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteReceiveProtocolExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                peer_address=None,
+                target_address=None,
+            )
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteReceiveProtocolExtensive(device=self.device)
+        parsed_output = obj.parse(
+                peer_address='10.64.4.4',
+                target_address='10.64.4.4')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# Unit test for 'show route receive-protocol bgp {peer_addrress} extensive'
+class TestShowRouteReceiveProtocolPeerAddressExtensive(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    # show route receive-protocol bgp 10.64.4.4 extensive 
+    golden_output = {'execute.return_value': '''
+        inet.0: 16 destinations, 19 routes (16 active, 0 holddown, 0 hidden)
+
+        10.1.0.0/24 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        10.64.4.4/32 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        10.145.0.0/24 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        * 192.168.220.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        * 192.168.240.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 5 6 I 
+
+
+
+        * 192.168.205.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 7 8 I 
+
+
+
+        * 192.168.115.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 100000 8 I 
+
+
+
+        inet6.0: 18 destinations, 20 routes (18 active, 0 holddown, 0 hidden)
+    
+    '''}
+
+    golden_parsed_output = {'route-information': {'route-table': [{'active-route-count': '16',
+                                        'destination-count': '16',
+                                        'hidden-route-count': '0',
+                                        'holddown-route-count': '0',
+                                        'rt': [{'rt-announced-count': '1',
+                                                'rt-destination': '10.1.0.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '2'},
+                                                'rt-prefix-length': '24'},
+                                               {'rt-announced-count': '1',
+                                                'rt-destination': '10.64.4.4',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '2'},
+                                                'rt-prefix-length': '32'},
+                                               {'rt-announced-count': '1',
+                                                'rt-destination': '10.145.0.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '2'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '192.168.220.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': 'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '192.168.240.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        '200000 '
+                                                                        '4 5 6 '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': '200000 '
+                                                                                                                              '4 '
+                                                                                                                              '5 '
+                                                                                                                              '6 '
+                                                                                                                              'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '192.168.205.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        '200000 '
+                                                                        '4 7 8 '
+                                                                        'I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': '200000 '
+                                                                                                                              '4 '
+                                                                                                                              '7 '
+                                                                                                                              '8 '
+                                                                                                                              'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'},
+                                               {'active-tag': '* ',
+                                                'rt-announced-count': '1',
+                                                'rt-destination': '192.168.115.0',
+                                                'rt-entry': {'as-path': 'AS '
+                                                                        'path: '
+                                                                        '200000 '
+                                                                        '4 '
+                                                                        '100000 '
+                                                                        '8 I',
+                                                             'bgp-path-attributes': {'attr-as-path-effective': {'aspath-effective-string': 'AS '
+                                                                                                                                           'path:',
+                                                                                                                'attr-value': '200000 '
+                                                                                                                              '4 '
+                                                                                                                              '100000 '
+                                                                                                                              '8 '
+                                                                                                                              'I'}},
+                                                             'bgp-rt-flag': 'Accepted',
+                                                             'local-preference': '100',
+                                                             'nh': {'to': '10.64.4.4'}},
+                                                'rt-entry-count': {'#text': '1'},
+                                                'rt-prefix-length': '24'}],
+                                        'table-name': 'inet.0',
+                                        'total-route-count': '19'},
+                                       {'active-route-count': '18',
+                                        'destination-count': '18',
+                                        'hidden-route-count': '0',
+                                        'holddown-route-count': '0',
+                                        'table-name': 'inet6.0',
+                                        'total-route-count': '20'}]}}
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRouteReceiveProtocolPeerAddressExtensive(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(
+                peer_address=None)
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowRouteReceiveProtocolPeerAddressExtensive(device=self.device)
+        parsed_output = obj.parse(peer_address='10.64.4.4')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()

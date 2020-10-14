@@ -1,0 +1,19 @@
+
+NAME: "3825 chassis", DESCR: "3825 chassis"
+PID: CISCO3825         , VID: V05 , SN: FTX7908A3RQ
+    
+NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC65428K9F
+    
+NAME: "Wan Interface Card BRI U (2091, 3086) on Slot 0 SubSlot 1", DESCR: "Wan Interface Card BRI U (2091, 3086)"
+PID: WIC-1B-U-V2       , VID: V01, SN: 10293847   
+    
+NAME: "PVDMII DSP SIMM with four DSPs on Slot 0 SubSlot 4", DESCR: "PVDMII DSP SIMM with four DSPs"
+PID: PVDM2-64          , VID: V01 , SN: FOC63358WSI
+    
+NAME: "High Density Voice Module - 8FXS/DID on Slot 1", DESCR: "High Density Voice Module - 8FXS/DID"
+PID: EVM-HD-8FXS/DID   , VID: V04 , SN: FOC65798TG8
+    
+NAME: "Six port FXO voice interface daughtercard on Slot 1 SubSlot 1", DESCR: "Six port FXO voice interface daughtercard"
+PID: EM-HDA-6FXO       , VID: V03 , SN: FOC85389QXB
+    

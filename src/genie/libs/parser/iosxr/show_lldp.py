@@ -144,6 +144,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         # Chassis id: 001e.49ff.24f7
         p2 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\w\.]+)$')
         # Port id: Gi2
+        # Port id: xe-0/1/2
         p3 = re.compile(r'^Port +id: +(?P<port_id>\S+)$')
 
         # Port Description: GigabitEthernet2
@@ -181,7 +182,7 @@ class ShowLldpEntry(ShowLldpEntrySchema):
         p15 = re.compile(r'IPv4 +address: +(?P<management_address>[\d\.]+)$')
         # Total entries displayed: 2
         p16 = re.compile(r'Total +entries +displayed: +(?P<total_entries>\d+)$')
-        # Peer MAC Address: 30:b2:b1:1c:b2:3a
+        # Peer MAC Address: 30:b2:b1:ff:ce:56
         p17 = re.compile(r'Peer +MAC +Address: +(?P<mac>[\s\S]+)$')
 
         for line in out.splitlines():
@@ -205,13 +206,18 @@ class ShowLldpEntry(ShowLldpEntrySchema):
                 continue
             
             # Port id: Gi1/0/4
+            # Port id: xe-0/1/2
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                port_id = Common.convert_intf_name(group['port_id'])
+                port_id = group['port_id']
+                # check if it is Junos interface name
+                match = re.search(r'([\w]+)-([\d\/\.]+)', port_id)
+                if not match:
+                    port_id = Common.convert_intf_name(group['port_id'])
                 port_dict = intf_dict.setdefault('port_id', {}). \
                     setdefault(port_id, {})
-                
+
                 continue
 
             # Port Description: GigabitEthernet1/0/4

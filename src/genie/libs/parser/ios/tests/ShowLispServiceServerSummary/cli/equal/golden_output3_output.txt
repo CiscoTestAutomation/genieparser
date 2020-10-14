@@ -1,0 +1,122 @@
+
+OTT-LISP-C9K-20-MSMR#show lisp all instance-id * ethernet server summary
+=================================================
+Output for router lisp 2 instance-id 101
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+                     -----------  MAC  -----------
+ Site name            Configured Registered Incons
+xtr1_1                        0          0      0
+
+Site-registration limit for router lisp 2:            0
+Site-registration count for router lisp 2:            0
+Number of configured sites:                           1
+Number of registered sites:                           0
+Sites with inconsistent registrations:                0
+
+=================================================
+Output for router lisp 2 instance-id 102
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+                     -----------  MAC  -----------
+ Site name            Configured Registered Incons
+xtr1_2                        0          0      0
+
+Site-registration limit for router lisp 2:            0
+Site-registration count for router lisp 2:            0
+Number of configured sites:                           1
+Number of registered sites:                           0
+Sites with inconsistent registrations:                0
+
+=================================================
+Output for router lisp 2 instance-id 103
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+                     -----------  MAC  -----------
+ Site name            Configured Registered Incons
+provider                      0          0      0
+
+Site-registration limit for router lisp 2:            0
+Site-registration count for router lisp 2:            0
+Number of configured sites:                           1
+Number of registered sites:                           0
+Sites with inconsistent registrations:                0
+
+=================================================
+Output for router lisp 2 instance-id 104
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+                     -----------  MAC  -----------
+ Site name            Configured Registered Incons
+xtr1_3                        0          0      0
+
+Site-registration limit for router lisp 2:            0
+Site-registration count for router lisp 2:            0
+Number of configured sites:                           1
+Number of registered sites:                           0
+Sites with inconsistent registrations:                0
+
+=================================================
+Output for router lisp 2 instance-id 107
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+                     -----------  MAC  -----------
+ Site name            Configured Registered Incons
+prov1                         0          0      0
+
+Site-registration limit for router lisp 2:            0
+Site-registration count for router lisp 2:            0
+Number of configured sites:                           1
+Number of registered sites:                           0
+Sites with inconsistent registrations:                0
+
+=================================================
+Output for router lisp 2 instance-id 108
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+                     -----------  MAC  -----------
+ Site name            Configured Registered Incons
+prov2                         0          0      0
+
+Site-registration limit for router lisp 2:            0
+Site-registration count for router lisp 2:            0
+Number of configured sites:                           1
+Number of registered sites:                           0
+Sites with inconsistent registrations:                0
+
+=================================================
+Output for router lisp 2 instance-id 109
+=================================================
+*********************************
+** NO LOCATOR-TABLE CONFIGURED **
+*********************************
+
+                     -----------  MAC  -----------
+ Site name            Configured Registered Incons
+prov3                         0          0      0
+
+Site-registration limit for router lisp 2:            0
+Site-registration count for router lisp 2:            0
+Number of configured sites:                           1
+Number of registered sites:                           0
+Sites with inconsistent registrations:                0
+
+        

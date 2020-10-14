@@ -1,0 +1,25 @@
+VTP Version capable             : 1 to 3
+VTP version running             : 3
+VTP Domain Name                 : GENIE
+VTP Pruning Mode                : Disabled
+VTP Traps Generation            : Disabled
+Device ID                       : 885a.92ff.7c92
+        
+Feature VLAN:
+--------------
+VTP Operating Mode                : Client
+Number of existing VLANs          : 47
+Number of existing extended VLANs : 0
+Maximum VLANs supported locally   : 2048
+Configuration Revision            : 15
+Primary ID                        : 501c.bfff.a91e
+Primary Description               : sw001
+MD5 digest                        : 0xD9 0xAA 0x42 0x1D 0xD7 0xD6 0xA7 0x23
+                                    0xE8 0xBE 0xA0 0xB3 0x33 0xB1 0x7A 0x62
+        
+        
+Feature MST:
+--------------
+VTP Operating Mode                : Transparent
+
+    

@@ -1,0 +1,4 @@
+
+csr1000v-2#show lacp sys-id
+32768, 001e.49ff.3caf
+    

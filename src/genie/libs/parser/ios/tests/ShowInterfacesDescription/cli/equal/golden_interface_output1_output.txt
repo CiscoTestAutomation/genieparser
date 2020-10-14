@@ -1,0 +1,9 @@
+
+Interface                      Status         Protocol Description
+        
+Gi0/0                          up             up       OOB Management
+        
+Gi0/1                          admin down     down     to router2
+        
+Lo0                            up             up       Loopback   
+    

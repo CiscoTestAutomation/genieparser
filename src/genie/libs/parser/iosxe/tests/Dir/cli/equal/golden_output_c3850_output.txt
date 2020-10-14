@@ -1,0 +1,22 @@
+Directory of flash:/
+
+30530  -rw-            16872  Apr 10 2017 17:20:51 +00:00  bootloader_evt_handle.log
+30531  drwx             4096  Apr 10 2017 00:17:34 +00:00  core
+30532  drwx             4096  Apr 10 2017 14:35:35 +00:00  .prst_sync
+30534  drwx             4096  Jan 15 2017 20:53:32 +00:00  .rollback_timer
+30535  drwx             4096  Apr 10 2017 17:21:10 +00:00  dc_profile_dir
+30537  drwx             4096  Jan 15 2017 20:53:40 +00:00  gs_script
+30540  -rw-            65301  Apr 10 2017 17:21:27 +00:00  memleak.tcl
+30542  -rw-               66  Apr 10 2017 17:21:28 +00:00  boothelper.log
+30541  drwx             4096  Jan 15 2017 20:54:21 +00:00  .installer
+30539  -rw-          2097152  Apr 10 2017 17:25:37 +00:00  nvram_config
+68689  drwx             4096  Mar 18 2017 20:39:57 +00:00  tools
+30544  -rw-            17500  Apr 10 2017 17:23:01 +00:00  mscfips_post_test.dbg
+30548  -rw-             3436  Apr 10 2017 11:52:23 +00:00  vlan.dat
+30545  -rw-             6856  Apr 10 2017 17:23:01 +00:00  mscfips_post_test.output
+30546  -rw-               35  Apr 10 2017 17:25:57 +00:00  pnp-tech-time
+30550  -rw-        630812001  Jan 16 2017 11:05:56 +00:00  ISSUCleanGolden
+30547  -rw-            21107  Apr 10 2017 17:26:38 +00:00  pnp-tech-discovery-summary
+30552  drwx             4096  Jan 17 2017 10:21:50 +00:00  onep
+
+1598627840 bytes total (880939008 bytes free)

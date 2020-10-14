@@ -1,0 +1,8 @@
+        interface GigabitEthernet0/0/0.101
+         encapsulation dot1Q 101
+         vrf forwarding VRF1
+         ip address 192.168.111.1 255.255.255.0
+         ipv6 address 2001::1/112
+         ipv6 enable
+         ospfv3 1 ipv6 area 0
+        end

@@ -1,0 +1,17 @@
+
+202-XTR#show lisp all instance-id 101 dynamic-eid detail
+Output for router lisp 0
+
+-----------------------------------------------------
+LISP Dynamic EID Information for VRF "red"
+
+Dynamic-EID name: 192
+  Database-mapping EID-prefix: 192.168.0.0/24, locator-set RLOC
+  Registering more-specific dynamic-EIDs
+  Map-Server(s): none configured, use global Map-Server
+  Site-based multicast Map-Notify group: none configured
+  Number of roaming dynamic-EIDs discovered: 1
+  Last dynamic-EID discovered: 192.168.0.1, 01:17:25 ago
+    192.168.0.1, GigabitEthernet5, uptime: 01:17:25
+      last activity: 00:00:23, discovered by: Packet Reception
+        

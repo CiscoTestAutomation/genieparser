@@ -1,0 +1,10 @@
+
+PE1#show issu state detail
+--- Starting local lock acquisition on R0 ---
+Finished local lock acquisition on R0
+
+--- Starting installation state synchronization ---
+Finished installation state synchronization
+
+No ISSU operation is in progress
+        

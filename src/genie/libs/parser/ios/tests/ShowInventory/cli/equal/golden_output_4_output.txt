@@ -1,0 +1,32 @@
+
+NAME: "1", DESCR: "WS-C8888X-88"
+PID: WS-C0123X-45T-S   , VID: V00  , SN: FDO123R12W
+    
+NAME: "Switch 1 - Power Supply 1", DESCR: "ABC Power Supply"
+PID: C3KX-PWR-350WAC   , VID: V01D , SN: DTN1504L0E9
+    
+NAME: "TenGigabitEthernet1/1/1", DESCR: "SFP-10GBase-SR"
+PID: SFP-10G-SR          , VID: V03  , SN: SPC1519005V
+
+NAME: "2", DESCR: "WS-C3210X-48"
+PID: WS-C3210X-48T-S   , VID: V02  , SN: FD5678Z90P
+    
+NAME: "Switch 2 - Power Supply 1", DESCR: "BCA Power Supply"
+PID: C3KX-PWR-007CBA   , VID: V01L , SN: LTP13579L3R
+    
+    
+NAME: "TenGigabitEthernet2/1/1", DESCR: "SFP-10GBase-LR"
+PID: SFP-10G-LR          , VID: V02  , SN: ONT182746GZ
+    
+NAME: "1", DESCR: "WS-C1010XR-48FPS-I"
+PID: WS-C1010XR-48FPS-I, VID: V05  , SN: FD2043B0K3
+    
+NAME: "Switch 1 - Power Supply 1", DESCR: "LLL Power Supply"
+PID: PWR-C2-2929WAC    , VID: V02L , SN: LIT03728KKK
+    
+NAME: "Switch 1 - FlexStackPlus Module", DESCR: "Stacking Module"
+PID: C1010X-STACK      , VID: V02  , SN: FD232323XXZ
+    
+NAME: "GigabitEthernet1/0/49", DESCR: "1000BaseSX SFP"
+PID: GLC-SX-MMD          , VID: V01  , SN: ACW102938VS  
+    

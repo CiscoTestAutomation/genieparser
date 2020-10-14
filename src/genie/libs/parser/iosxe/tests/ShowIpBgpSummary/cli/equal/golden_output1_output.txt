@@ -1,0 +1,20 @@
+
+        Router#show ip bgp vpnv4 vrf L3VPN-1151 summary
+        Load for five secs: 1%/0%; one minute: 57%; five minutes: 26%
+        Time source is NTP, 20:39:33.145 EST Wed Jun 2 2016
+        BGP router identifier 192.168.10.254, local AS number 5918
+        BGP table version is 9370786, main routing table version 9370786
+        102 network entries using 26112 bytes of memory
+        203 path entries using 24360 bytes of memory
+        5101/4901 BGP path/bestpath attribute entries using 1346664 bytes of memory
+        502 BGP rrinfo entries using 20080 bytes of memory
+        201 BGP AS-PATH entries using 4824 bytes of memory
+        2303 BGP extended community entries using 60120 bytes of memory
+        0 BGP route-map cache entries using 0 bytes of memory
+        0 BGP filter-list cache entries using 0 bytes of memory
+        BGP using 1482160 total bytes of memory
+        BGP activity 2722671/700066 prefixes, 5564978/1540171 paths, scan interval 60 secs
+
+        Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        192.168.10.253  4        61100       0       0        1    0    0 never    Idle
+        

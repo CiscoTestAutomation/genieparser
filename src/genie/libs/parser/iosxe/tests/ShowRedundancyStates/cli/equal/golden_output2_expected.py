@@ -1,0 +1,16 @@
+expected_output = {
+    "my_state": "13 -ACTIVE",
+    "peer_state": "8  -STANDBY HOT",
+    "mode": "Duplex",
+    "unit": "Primary",
+    "unit_id": 48,
+    "redundancy_mode_operational": "sso",
+    "redundancy_mode_configured": "sso",
+    "redundancy_state": "sso",
+    "maintenance_mode": "Disabled",
+    "manual_swact": "enabled",
+    "communications": "Up",
+    "client_count": 76,
+    "client_notification_tmr_msec": 30000,
+    "rf_debug_mask": "0x0",
+}

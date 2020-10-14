@@ -1,0 +1,41 @@
+
+show ip ospf segment-routing             
+    
+        OSPF Router with ID (10.16.2.2) (Process ID 65109)
+    
+Global segment-routing state: Enabled
+        
+Segment Routing enabled:
+        Area    Topology name    Forwarding    Strict SPF   
+            8    Base             MPLS          Capable
+    AS external    Base             MPLS          Not applicable
+        
+SR Attributes
+    Prefer non-SR (LDP) Labels
+    Do not advertise Explicit Null
+        
+Global Block (SRGB):
+    Range: 16000 - 23999
+    State: Created
+        
+Local Block (SRLB):
+    Range: 15000 - 15999
+    State: Created
+        
+Registered with SR App, client handle: 2
+SR algo 0 Connected map notifications active (handle 0x0), bitmask 0x1
+SR algo 0 Active policy map notifications active (handle 0x2), bitmask 0xC
+SR algo 1 Connected map notifications active (handle 0x1), bitmask 0x1
+SR algo 1 Active policy map notifications active (handle 0x3), bitmask 0xC
+Registered with MPLS, client-id: 100
+        
+Max labels: platform 16, available 13
+Max labels pushed by OSPF: uloop tunnels 10, TI-LFA tunnels 10
+mfi label reservation ack not pending
+        
+Bind Retry timer not running
+Adj Label Bind Retry timer not running
+sr-app locks requested: srgb 0, srlb 0
+TEAPP:
+TE Router ID 10.16.2.2
+    

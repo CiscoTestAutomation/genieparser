@@ -1,0 +1,13 @@
+
+Device#show flow monitor FLOW-MONITOR-1 cache format table
+Cache type:                               Normal (Platform cache)
+Cache size:                                   16
+Current entries:                               1
+
+Flows added:                                   1
+Flows aged:                                    0
+
+There are no cache entries to display.
+
+Device#
+        

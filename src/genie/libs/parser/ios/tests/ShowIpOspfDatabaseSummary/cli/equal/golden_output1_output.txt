@@ -1,0 +1,175 @@
+
+R1_ospf_xe#show ip ospf database summary 
+
+    OSPF Router with ID (10.4.1.1) (Process ID 1)
+
+        Summary Net Link States (Area 0)
+
+  LS age: 131
+  Options: (No TOS-capability, No DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.64.4.4 (summary Network Number)
+  Advertising Router: 10.36.3.3
+  LS Seq Number: 80000003
+  Checksum: 0xEF26
+  Length: 28
+  Network Mask: /32
+        MTID: 0         Metric: 41 
+
+  LS age: 422
+  Options: (No TOS-capability, DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.186.3.0 (summary Network Number)
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000001
+  Checksum: 0x43DC
+  Length: 28
+  Network Mask: /24
+        MTID: 0         Metric: 1 
+
+  LS age: 372
+  Options: (No TOS-capability, No DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.186.3.0 (summary Network Number)
+  Advertising Router: 10.36.3.3
+  LS Seq Number: 80000002
+  Checksum: 0x6EA1
+  Length: 28
+  Network Mask: /24
+        MTID: 0         Metric: 40 
+
+  LS age: 372
+  Options: (No TOS-capability, No DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.229.3.0 (summary Network Number)
+  Advertising Router: 10.36.3.3
+  LS Seq Number: 80000002
+  Checksum: 0x62AC
+  Length: 28
+  Network Mask: /24
+        MTID: 0         Metric: 40 
+
+  LS age: 131
+  Options: (No TOS-capability, No DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.229.4.0 (summary Network Number)
+  Advertising Router: 10.36.3.3
+  LS Seq Number: 80000004
+  Checksum: 0x5DAD
+  Length: 28
+  Network Mask: /24
+        MTID: 0         Metric: 41 
+
+  LS age: 372
+  Options: (No TOS-capability, No DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.19.4.0 (summary Network Number)
+  Advertising Router: 10.36.3.3
+  LS Seq Number: 80000002
+  Checksum: 0x4BC1
+  Length: 28
+  Network Mask: /24
+        MTID: 0         Metric: 40 
+
+
+                Summary Net Link States (Area 1)
+
+  LS age: 424
+  Options: (No TOS-capability, DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.4.0.0 (summary Network Number)
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000001
+  Checksum: 0x5CCA
+  Length: 28
+  Network Mask: /16
+        MTID: 0         Metric: 10 
+
+  LS age: 365
+  Options: (No TOS-capability, DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.36.3.3 (summary Network Number)
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000001
+  Checksum: 0x8E97
+  Length: 28
+  Network Mask: /32
+        MTID: 0         Metric: 65536 
+
+  LS age: 130
+  Options: (No TOS-capability, DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.64.4.4 (summary Network Number)
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000002
+  Checksum: 0xEF09
+  Length: 28
+  Network Mask: /32
+        MTID: 0         Metric: 65576 
+
+  LS age: 422
+  Options: (No TOS-capability, DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.1.2.0 (summary Network Number)
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000001
+  Checksum: 0xC6EF
+  Length: 28
+  Network Mask: /24
+        MTID: 0         Metric: 111 
+
+  LS age: 364
+  Options: (No TOS-capability, DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.1.3.0 (summary Network Number)
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000002
+  Checksum: 0x5FC4
+  Length: 28
+  Network Mask: /24
+        MTID: 0         Metric: 65535 
+
+  LS age: 365
+  Options: (No TOS-capability, DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.2.3.0 (summary Network Number)
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000001
+  Checksum: 0x6174
+  Length: 28
+  Network Mask: /24
+        MTID: 0         Metric: 65868 
+
+  LS age: 365
+  Options: (No TOS-capability, DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.229.3.0 (summary Network Number)
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000001
+  Checksum: 0x628F
+  Length: 28
+  Network Mask: /24
+        MTID: 0         Metric: 65575 
+
+  LS age: 130
+  Options: (No TOS-capability, DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.229.4.0 (summary Network Number)
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000003
+  Checksum: 0x5D90
+  Length: 28
+  Network Mask: /24
+        MTID: 0         Metric: 65576 
+                  
+  LS age: 365
+  Options: (No TOS-capability, DC, Upward)
+  LS Type: Summary Links(Network)
+  Link State ID: 10.19.4.0 (summary Network Number)
+  Advertising Router: 10.4.1.1
+  LS Seq Number: 80000001
+  Checksum: 0x4BA4
+  Length: 28
+  Network Mask: /24
+        MTID: 0         Metric: 65575 
+        

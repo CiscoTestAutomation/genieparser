@@ -1,0 +1,6 @@
+
+Microblock type: Storm-Control
+   storm-control unicast cir 8005
+   storm-control broadcast cir 8005
+   storm-control multicast cir 8005
+    

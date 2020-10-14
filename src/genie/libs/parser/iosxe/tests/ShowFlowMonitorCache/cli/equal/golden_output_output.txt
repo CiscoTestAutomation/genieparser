@@ -1,0 +1,22 @@
+
+Device#show flow monitor mon_vrf_1 cache
+Load for five secs: 3%/0%; one minute: 2%; five minutes: 5%
+Time source is NTP, 16:04:38.706 UTC Wed Nov 6 2019
+
+Cache type:                               Normal (Platform cache)
+Cache size:                               200000
+Current entries:                               1
+High Watermark:                                3
+
+Flows added:                                  16
+Flows aged:                                   15
+    - Inactive timeout    (    15 secs)         15
+
+IP VRF ID INPUT                IPV4 SRC ADDR    IPV4 DST ADDR    intf input            intf output                 pkts
+=============================  ===============  ===============  ====================  ====================  ==========
+0          (DEFAULT)           192.168.189.254    192.168.189.253    Null                  Te0/0/0.1003                   2
+0          (DEFAULT)           192.168.16.254    192.168.16.253    Null                  Te0/0/0.1001                   3
+0          (DEFAULT)           192.168.229.254    192.168.229.253    Null                  Te0/0/0.1002                   3
+        
+Device#
+    

@@ -1,0 +1,24 @@
+
+Router#sh ip ospf mpls ldp interface
+Load for five secs: 8%/0%; one minute: 6%; five minutes: 7%
+Time source is NTP, 10:36:51.278 EST Mon Nov 7 2016
+
+Loopback0
+  Process ID 65109, Area 8
+  LDP is not configured through LDP autoconfig
+  LDP-IGP Synchronization : Not required
+  Holddown timer is disabled
+  Interface is up 
+GigabitEthernet0/0/2
+  Process ID 65109, Area 8
+  LDP is not configured through LDP autoconfig
+  LDP-IGP Synchronization : Required
+  Holddown timer is not configured
+  Interface is up 
+GigabitEthernet0/0/0
+  Process ID 65109, Area 8
+  LDP is not configured through LDP autoconfig
+  LDP-IGP Synchronization : Required
+  Holddown timer is not configured
+  Interface is up 
+        

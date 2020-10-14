@@ -1,0 +1,16 @@
+# show interface GigabitEthernet1/0/0 transceiver detail
+
+transceiver is present
+type is 10Gbase-LR
+name is CISCO-FINISAR   
+part number is FTLX1474D3BCL-CS
+revision is A   
+serial number is FNS17221JJZ     
+nominal bitrate is 10300 MBit/sec
+Link length supported for 9/125um fiber is 10 km
+cisco id is --
+cisco extended id number is 4
+cisco part number is 10-2457-02
+cisco product id is SFP-10G-LR          
+cisco vendor id is V02 
+number of lanes 1

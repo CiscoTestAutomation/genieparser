@@ -1,0 +1,38 @@
+expected_output = {
+    "bpduguard_timeout_recovery": 333,
+    "timer_status": {
+        "gbic-invalid": False,
+        "oam-remote-failure": False,
+        "arp-inspection": False,
+        "dtp-flap": False,
+        "port-mode-failure": False,
+        "loopback": False,
+        "mac-limit": False,
+        "psp": False,
+        "channel-misconfig (STP)": False,
+        "l2ptguard": False,
+        'Recovery command: "clear': False,
+        "link-monitor-failure": False,
+        "vmps": False,
+        "bpduguard": False,
+        "sfp-config-mismatch": False,
+        "dual-active-recovery": False,
+        "pagp-flap": False,
+        "security-violation": False,
+        "storm-control": False,
+        "psecure-violation": False,
+        "udld": False,
+        "inline-power": False,
+        "link-flap": False,
+        "evc-lite input mapping fa": False,
+        "pppoe-ia-rate-limit": False,
+        "dhcp-rate-limit": False,
+    },
+    "interfaces": {
+        "FastEthernet2/4": {
+            "interface": "FastEthernet2/4",
+            "errdisable_reason": "bpduguard",
+            "time_left": 273,
+        }
+    },
+}

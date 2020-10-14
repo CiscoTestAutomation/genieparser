@@ -1,0 +1,4 @@
+iosv-1#show ntp config
+ ntp server 10.16.2.2 source Loopback0
+ ntp server 10.36.3.3
+    

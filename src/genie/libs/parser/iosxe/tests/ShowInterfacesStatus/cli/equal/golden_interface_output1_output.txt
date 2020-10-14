@@ -1,0 +1,26 @@
+ 
+show interfaces status
+    
+Port      Name               Status       Vlan       Duplex  Speed Type
+Gi1/1     To Abcde           notconnect   1            auto   auto 10/100/1000-TX
+Gi1/2     TelenlqPOIU        notconnect   125          full    100 10/100/1000-TX
+Gi1/3     SE                 connected    132        a-full a-1000 10/100/1000-TX
+Gi1/7                        notconnect   99           auto   auto 10/100/1000-TX
+Gi1/10    To cft123          connected    trunk      a-full a-1000 10/100/1000-TX
+Gi1/44                       connected    550        a-full a-1000 10/100/1000-TX
+Gi1/45    ASDFGH             connected    trunk      a-full a-1000 10/100/1000-TX
+Gi1/46                       notconnect   99           auto   auto 10/100/1000-TX
+Gi2/11    APQWSR             connected    136        a-full a-1000 10/100/1000-TX
+Gi2/12                       notconnect   99           auto   auto 10/100/1000-TX
+Gi2/23                       connected    140        a-full  a-100 10/100/1000-TX
+Gi2/24    ASDFGH             connected    trunk      a-full a-1000 10/100/1000-TX
+Te3/2                        inactive     1            full   auto No XCVR
+Gi3/4                        notconnect   99           full   1000 No Gbic
+Gi3/5     To loedutjb234     connected    trunk        full   1000 1000BaseSX
+Gi3/6     To loedutjb345     connected    trunk        full   1000 1000BaseSX
+Gi1/1/0/1 FAST-HELLO         connected    4094       a-full a-1000 10/100/1000BaseTX
+Te1/1/2   VSL                connected    trunk        full  a-10G 10GBase-SR
+Te2/1/20                     disabled     1            full   auto No XCVR
+Te2/1/21  VSL LINK1          disabled     1            full   auto No XCVR
+Po10      VSL LINK2          connected    trunk      a-full  a-10G
+    

@@ -1,0 +1,6 @@
+
+Protocol  Address          Age (min)  Hardware Addr   Type   Interface
+Internet  192.168.234.1           -   58bf.eaff.e508  ARPA   Vlan100
+Internet  192.168.234.2          29   3820.56ff.6fc3  ARPA   Vlan100
+Internet  192.168.70.1            -   58bf.eaff.e519  ARPA   Vlan200
+    

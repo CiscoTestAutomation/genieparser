@@ -1,0 +1,4 @@
+{
+    "address_family": "vpnv4",
+    "rd": "65109:10000"
+}

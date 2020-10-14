@@ -1,0 +1,35 @@
+
+------------------------------------------------
+Local Intf: Gi1/0/19
+Chassis id: 6400.33ff.4444
+Port id: 6400.33ff.4444
+Port Description - not advertised
+System Name - not advertised
+System Description - not advertised
+
+Time remaining: 3284 seconds
+System Capabilities - not advertised
+Enabled Capabilities - not advertised
+Management Addresses - not advertised
+Auto Negotiation - supported, enabled
+Physical media capabilities:
+    1000baseT(FD)
+Media Attachment Unit type - not advertised
+Vlan ID: - not advertised
+
+MED Information:
+
+    MED Codes:
+            (NP) Network Policy, (LI) Location Identification
+            (PS) Power Source Entity, (PD) Power Device
+            (IN) Inventory
+
+    Inventory information - not advertised
+    Capabilities: 
+    Device type: Endpoint Class I
+    Network Policies - not advertised
+    Power requirements - not advertised
+    Location - not advertised
+
+
+Total entries displayed: 1

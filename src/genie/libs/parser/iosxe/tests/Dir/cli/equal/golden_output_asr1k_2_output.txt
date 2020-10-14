@@ -1,0 +1,26 @@
+Directory of bootflash:/
+
+   11  drwx            16384  Nov 25 2016 19:32:53 -07:00  lost+found
+   12  -rw-                0  Dec 13 2016 11:36:36 -07:00  ds_stats.txt
+104417  drwx             4096  Apr 10 2017 09:09:11 -07:00  .prst_sync
+80321  drwx             4096  Nov 25 2016 19:40:38 -07:00  .rollback_timer
+64257  drwx             4096  Nov 25 2016 19:41:02 -07:00  .installer
+48193  drwx             4096  Nov 25 2016 19:41:14 -07:00  virtual-instance-stby-sync
+ 8033  drwx             4096  Nov 25 2016 18:42:07 -07:00  onep
+   13  -rw-               35  Apr 10 2017 09:11:45 -07:00  pnp-tech-time
+   14  -rw-            19957  Apr 10 2017 09:13:55 -07:00  pnp-tech-discovery-summary
+   15  -rw-            24970  Dec 13 2016 12:07:18 -07:00  aaa1
+   16  -rw-           177449   Feb 3 2017 15:57:50 -07:00  crashinfo_RP_00_00_20170203-155749-PDT
+   17  -rw-           168196   Feb 6 2017 12:21:59 -07:00  crashinfo_RP_00_00_20170206-122158-PDT
+   18  -rw-           163081   Feb 6 2017 17:25:31 -07:00  crashinfo_RP_00_00_20170206-172530-PDT
+   19  -rw-           160713   Feb 7 2017 13:30:18 -07:00  crashinfo_RP_00_00_20170207-133017-PDT
+   20  -rw-           177276   Feb 8 2017 18:08:56 -07:00  crashinfo_RP_00_00_20170208-180855-PDT
+   21  -rw-           160725  Feb 10 2017 12:03:13 -07:00  crashinfo_RP_00_00_20170210-120312-PDT
+   22  -rw-           163143  Feb 10 2017 16:32:02 -07:00  crashinfo_RP_00_00_20170210-163201-PDT
+   23  -rw-           168245  Feb 13 2017 11:24:21 -07:00  crashinfo_RP_00_00_20170213-112420-PDT
+   24  -rw-        794609595  Feb 17 2017 11:50:21 -07:00  testimage
+   25  -rw-           167767   Mar 7 2017 04:30:14 -07:00  crashinfo_RP_00_00_20170307-043013-PDT
+   28  -rw-           163152   Mar 7 2017 16:57:42 -07:00  crashinfo_RP_00_00_20170307-165741-PDT
+   37  -rw-            25189  Dec 14 2016 09:15:37 -07:00  kak1
+
+1940303872 bytes total (1036210176 bytes free)

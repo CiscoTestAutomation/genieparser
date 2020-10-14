@@ -1,0 +1,54 @@
+
+R1_ospf_xe#show ip ospf 
+Load for five secs: 1%/0%; one minute: 1%; five minutes: 1%
+Time source is NTP, 23:17:46.919 EST Fri May 3 2019
+
+ Routing Process "ospf 65109" with ID 10.169.197.254
+ Start time: 00:02:39.151, Time elapsed: 13:07:02.634
+ Supports only single TOS(TOS0) routes
+ Supports opaque LSA
+ Supports Link-local Signaling (LLS)
+ Supports area transit capability
+ Supports NSSA (compatible with RFC 3101)
+ Supports Database Exchange Summary List Optimization (RFC 5243)
+ Event-log enabled, Maximum number of events: 1000, Mode: cyclic
+ Originating router-LSAs with maximum metric
+    Condition: on startup for 300 seconds, State: inactive
+    Advertise stub links with maximum metric in router-LSAs
+    Unset reason: timer expired, Originated for 300 seconds
+    Unset time: 00:07:39.152, Time elapsed: 13:02:02.633
+ Initial SPF schedule delay 500 msecs
+ Minimum hold time between two consecutive SPFs 3000 msecs
+ Maximum wait time between two consecutive SPFs 3000 msecs
+ Incremental-SPF disabled
+ Initial LSA throttle delay 50 msecs
+ Minimum hold time for LSA throttle 200 msecs
+ Maximum wait time for LSA throttle 5000 msecs
+ Minimum LSA arrival 100 msecs
+ LSA group pacing timer 240 secs
+ Interface flood pacing timer 33 msecs
+ Retransmission pacing timer 66 msecs
+ EXCHANGE/LOADING adjacency limit: initial 300, process maximum 300
+ Number of external LSA 2. Checksum Sum 0x00F934
+ Number of opaque AS LSA 0. Checksum Sum 0x000000
+ Number of DCbitless external and opaque AS LSA 0
+ Number of DoNotAge external and opaque AS LSA 0
+ Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+ Number of areas transit capable is 0
+ External flood list length 0
+ IETF NSF helper support enabled
+ Cisco NSF helper support enabled
+ Reference bandwidth unit is 2488 mbps
+    Area 8
+        Number of interfaces in this area is 2 (1 loopback)
+    Area has no authentication
+    SPF algorithm last executed 13:02:02.080 ago
+    SPF algorithm executed 8 times
+    Area ranges are
+    Number of LSA 21. Checksum Sum 0x07FAE2
+    Number of opaque link LSA 0. Checksum Sum 0x000000
+    Number of DCbitless LSA 0
+    Number of indication LSA 0
+    Number of DoNotAge LSA 0
+    Flood list length 0
+        

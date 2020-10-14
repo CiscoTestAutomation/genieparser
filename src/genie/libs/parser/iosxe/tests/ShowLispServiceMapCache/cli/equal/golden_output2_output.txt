@@ -1,0 +1,19 @@
+
+202-XTR#show lisp all instance-id 101 ipv6 map-cache 
+
+=====================================================
+Output for router lisp 0
+=====================================================
+LISP IPv6 Mapping Cache for EID-table vrf red (IID 101), 2 entries
+
+::/0, uptime: 00:11:28, expires: never, via static-send-map-request
+  Negative cache entry, action: send-map-request
+2001:192:168:9::/64, uptime: 00:06:51, expires: 23:53:08, via map-reply, complete
+  Locator  Uptime    State      Pri/Wgt     Encap-IID
+  10.1.8.8 00:06:51  up          50/50        -
+172.16.10.0/24, uptime: 00:00:00, expires: 23:59:59, via map-reply, complete
+  Locator                     Uptime    State      Pri/Wgt
+  172.16.156.134              00:00:00  up           1/50
+  192.168.65.94               00:00:00  up           1/50
+  2001:DB8:BBED:2829::80DF:9C86  00:00:00  up           2/100
+        

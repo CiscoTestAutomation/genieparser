@@ -110,7 +110,7 @@ class ShowAccessListsSchema(MetaParser):
                         Optional('logging'): str,
                     },
                     Optional('statistics'): {
-                        'matched_packets': int,
+                        'matched_packets': Or(int,str)
                     }
                 }
             }
@@ -268,7 +268,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                                        r'?(?P<actions_forwarding>permit|deny) '
                                        r'+(?P<src>\S+|any)( (?P<log>log))?(?:, +wildcard '
                                        r'+bits +(?P<wildcard_bits>any|\S+))'
-                                       r'?(?: +\((?P<matched_packets>\d+)+ matches\))?$')
+                                       r'?(?: +\((?P<matched_packets>\d+|\S+)+ matches\))?$')
 
         # 10 permit ip host 10.3.3.3 host 10.5.5.34
         # 20 permit icmp any any
@@ -388,8 +388,10 @@ class ShowAccessLists(ShowAccessListsSchema):
 
             if m:
                 group = m.groupdict()
-
-                seq = int(sorted(acl_dict.get('aces', {'0': 'dummy'}).keys())[-1]) + 10
+                
+                seq = group['seq']
+                if seq == None:
+                    seq = int(sorted(acl_dict.get('aces', {'0': 'dummy'}).keys())[-1]) + 10
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(str(seq), {})
                 seq_dict['name'] = str(seq)
 
@@ -426,7 +428,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 if group['matched_packets']:
                     stats_dict = seq_dict.setdefault('statistics', {})
                     stats_dict.update(
-                        {'matched_packets': int(group['matched_packets'])})
+                        {'matched_packets': group['matched_packets']})
 
                 # Optional keys
                 # actions
@@ -674,7 +676,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 left = left.strip()
                 if left:
                     l2_dict['ether_type'] = left
-
+                    
         return ret_dict
 
 

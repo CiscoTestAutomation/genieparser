@@ -1,0 +1,4 @@
+{
+    "address_family": "l2vpn vpls",
+    "rd": "5918:3051"
+}

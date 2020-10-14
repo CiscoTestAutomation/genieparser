@@ -1,0 +1,10 @@
+
+Extended IP access list acl1
+10 permit icmp any any echo
+20 permit icmp any any echo-reply (1195 matches)
+30 permit icmp any any ttl-exceeded
+40 permit icmp any any unreachable
+50 permit icmp any any packet-too-big
+60 deny icmp any any
+80 permit udp any host 10.4.1.1 eq 1985
+    

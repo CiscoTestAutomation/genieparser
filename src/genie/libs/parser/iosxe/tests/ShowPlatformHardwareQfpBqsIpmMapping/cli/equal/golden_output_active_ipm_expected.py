@@ -1,0 +1,28 @@
+expected_output = {
+    "channel": {
+        "1": {"cfifo": 1, "interface": "SPI0", "name": "CC3 Low", "port": 0},
+        "10": {"cfifo": 0, "interface": "SPI0", "name": "RP1 Hi", "port": 9},
+        "11": {"cfifo": 1, "interface": "SPI0", "name": "RP0 Low", "port": 10},
+        "12": {"cfifo": 0, "interface": "SPI0", "name": "RP0 Hi", "port": 11},
+        "13": {"cfifo": 3, "interface": "SPI0", "name": "Peer-FP Low", "port": 12},
+        "14": {"cfifo": 2, "interface": "SPI0", "name": "Peer-FP Hi", "port": 13},
+        "15": {"cfifo": 1, "interface": "SPI0", "name": "Nitrox Low", "port": 14},
+        "16": {"cfifo": 0, "interface": "SPI0", "name": "Nitrox Hi", "port": 15},
+        "17": {"cfifo": 1, "interface": "HT", "name": "HT Pkt Low", "port": 0},
+        "18": {"cfifo": 0, "interface": "HT", "name": "HT Pkt Hi", "port": 1},
+        "19": {"cfifo": 3, "interface": "HT", "name": "HT IPC Low", "port": 2},
+        "2": {"cfifo": 0, "interface": "SPI0", "name": "CC3 Hi", "port": 1},
+        "20": {"cfifo": 2, "interface": "HT", "name": "HT IPC Hi", "port": 3},
+        "21": {"cfifo": 1, "interface": "SPI0", "name": "CC4 Low", "port": 16},
+        "22": {"cfifo": 0, "interface": "SPI0", "name": "CC4 Hi", "port": 17},
+        "23": {"cfifo": 1, "interface": "SPI0", "name": "CC5 Low", "port": 18},
+        "24": {"cfifo": 0, "interface": "SPI0", "name": "CC5 Hi", "port": 19},
+        "3": {"cfifo": 1, "interface": "SPI0", "name": "CC2 Low", "port": 2},
+        "4": {"cfifo": 0, "interface": "SPI0", "name": "CC2 Hi", "port": 3},
+        "5": {"cfifo": 1, "interface": "SPI0", "name": "CC1 Low", "port": 4},
+        "6": {"cfifo": 0, "interface": "SPI0", "name": "CC1 Hi", "port": 5},
+        "7": {"cfifo": 1, "interface": "SPI0", "name": "CC0 Low", "port": 6},
+        "8": {"cfifo": 0, "interface": "SPI0", "name": "CC0 Hi", "port": 7},
+        "9": {"cfifo": 1, "interface": "SPI0", "name": "RP1 Low", "port": 8},
+    }
+}

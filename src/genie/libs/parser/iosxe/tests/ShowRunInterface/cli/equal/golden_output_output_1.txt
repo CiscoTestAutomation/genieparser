@@ -1,0 +1,11 @@
+#show running-config interface GigabitEthernet0
+Building configuration...
+Current configuration : 150 bytes
+!
+interface GigabitEthernet0
+ description "Boot lan interface"
+ vrf forwarding Mgmt-intf
+ ip address 10.1.21.249 255.255.255.0
+ negotiation auto
+end
+    

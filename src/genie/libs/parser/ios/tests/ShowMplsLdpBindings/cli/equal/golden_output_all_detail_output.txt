@@ -1,0 +1,26 @@
+  Router#show mpls ldp bindings all detail
+  Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+  Time source is NTP, 16:10:10.910 EST Tue Nov 8 2016
+
+lib entry: 10.120.202.48/30, rev 18, chkpt: none
+      local binding:  label: 2030 (owner LDP)
+        Advertised to:
+        10.169.197.252:0      10.169.197.253:0
+      remote binding: lsr: 10.169.197.252:0, label: imp-null checkpointed
+lib entry: 10.120.202.56/30, rev 1085, chkpt: none
+      local binding:  label: 6589 (owner LDP)
+        Advertised to:
+        10.169.197.252:0      10.169.197.253:0
+      remote binding: lsr: 10.169.197.252:0, label: 1014 checkpointed
+lib entry: 10.120.202.64/32, rev 12, chkpt: none
+      local binding:  label: 2027 (owner LDP)
+        Advertised to:
+        10.169.197.252:0      10.169.197.253:0
+      remote binding: lsr: 10.169.197.252:0, label: 516 checkpointed
+      remote binding: lsr: 10.169.197.253:0, label: 308016 checkpointed
+lib entry: 10.169.197.92/30, rev 4, chkpt: none
+      local binding:  label: imp-null (owner LDP)
+        Advertised to:
+        10.169.197.252:0      10.169.197.253:0
+      remote binding: lsr: 10.169.197.252:0, label: 126 checkpointed
+    

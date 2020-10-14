@@ -1,0 +1,7 @@
+interface Port-channel1.100
+ encapsulation dot1Q 201
+ ip address 192.168.4.1 255.255.255.0
+ ipv6 address 2001:db8:8404::1/112
+ ipv6 ospf 1 area 0
+end
+    

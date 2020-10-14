@@ -1,0 +1,14 @@
+Router#show mpls interfaces detail
+Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+Time source is NTP, 16:10:10.438 EST Tue Nov 8 2016
+
+Interface GigabitEthernet0/0/0:
+        Type Unknown
+        IP labeling enabled (ldp) :
+          Interface config
+        LSP Tunnel labeling not enabled
+        IP FRR labeling not enabled
+        BGP labeling not enabled
+        MPLS operational
+        MTU = 1552
+    
