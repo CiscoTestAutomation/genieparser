@@ -15,6 +15,7 @@ from genie.metaparser.util.exceptions import (
 from genie.libs.parser.junos.show_configuration import (
     ShowConfigurationProtocolsMplsLabelSwitchedPath,
     ShowConfigurationProtocolsMplsPath,
+    ShowConfigurationFamilyBridgeVlanId,
 )
 
 class TestShowConfigurationProtocolsMplsLabelSwitchedPath(unittest.TestCase):
@@ -144,6 +145,54 @@ class TestShowConfigurationProtocolsMplsPath(unittest.TestCase):
         obj = ShowConfigurationProtocolsMplsPath(
             device=self.device)
         parsed_output = obj.parse(path='test_data')
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+class TestShowConfigurationFamilyBridgeVlanId(unittest.TestCase):
+
+    device = Device(name="aDevice")
+
+    maxDiff = None
+    empty_output = {"execute.return_value": ""}
+
+    golden_parsed_output_1 = {
+        'configuration': {
+                'interfaces': {
+                    'interface': {
+                        'name': 'ge-0/0/1',
+                        'unit': {
+                            'family': {
+                                'bridge': {
+                                    'vlan-id': '10'
+                                    }
+                                },
+                            'name': '0'
+                            }
+                        }
+                    }
+                }
+            }
+
+    golden_output_1 = {
+        "execute.return_value":
+        """
+            show configuration interfaces ge-0/0/1 unit 0 family bridge vlan-id 
+
+            vlan-id 10;
+        """
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowConfigurationFamilyBridgeVlanId(
+            device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(interface='ge-0/0/1', unit='0')
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowConfigurationFamilyBridgeVlanId(
+            device=self.device)
+        parsed_output = obj.parse(interface='ge-0/0/1', unit='0')
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 if __name__ == '__main__':

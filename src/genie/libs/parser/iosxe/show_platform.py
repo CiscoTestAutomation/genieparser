@@ -2259,6 +2259,7 @@ class ShowPlatform(ShowPlatformSchema):
         # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
         # ------  -----   ---------             -----------  --------------  -------       --------
         #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
+        #  1       32     C9200-24P             JAD2310213C  dc8c.3721.8c00  V01           17.05.01
         p3 = re.compile(r'^(?P<switch>\d+) +(?P<ports>\d+) +'
                         '(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
                         '(?P<mac_address>[\w\.\:]+) +'
@@ -2318,7 +2319,7 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'] = {}
                 if slot not in platform_dict['slot']:
                     platform_dict['slot'][slot] = {}
-                if ('WS-C' in model) or ('C9500' in model) or ('C9300' in model):
+                if ('WS-C' in model) or ('C9500' in model) or ('C9300' in model) or ('C9200' in model):
                     lc_type = 'rp'
                 else:
                     lc_type = 'other'
@@ -6024,16 +6025,21 @@ class ShowPlatformIntegritySchema(MetaParser):
         'os_version': str,
         'os_hashes': {
             Any(): str,
-        }
+        },
+        Optional('signature_version'): int,
+        Optional('signature'): str,
     }
 
 class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
-    cli_command = 'show platform integrity'
-    def cli(self, output=None):
+    # cli_command = 'show platform integrity'
+    cli_command = ['show platform integrity', 'show platform integrity sign nonce {nonce}']
+
+    def cli(self, nonce=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            if nonce:
+                output = self.device.execute(self.cli_command[1].format(nonce=nonce))
+            else:
+                output = self.device.execute(self.cli_command[0])
         
         ret_dict = {}
 
@@ -6045,7 +6051,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
         p3 = re.compile(r'^Boot +(?P<boot>\d+) +Hash: +(?P<hash>\S+)$')
         # Boot Loader Version: System Bootstrap, Version 16.10.1r[FC2], DEVELOPMENT SOFTWARE
         p4 = re.compile(r'^Boot +Loader +Version: +(?P<boot_loader_version>[\S ]+)$')
-        # Boot Loader Hash: 
+        # Boot Loader Hash: 523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF
         p5 = re.compile(r'^Boot +Loader +Hash: *(?P<hash>\S+)$')
         # 51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57
         p6 = re.compile(r'^(?P<hash>\S+)$')
@@ -6057,8 +6063,12 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
         p9 = re.compile(r'^(?P<hash_key>\S+): +(?P<hash_val>\S+)$')
         # cat9k_iosxe.2019-07-11_16.25_mzafar.SSA.bin: 
         p10 = re.compile(r'^(?P<os_hash>\S+):$')
+        # Signature version: 1
+        p11 = re.compile(r'^Signature version: +(?P<signature_version>\S+)$')
+        # Signature:
+        p12 = re.compile(r'^Signature:$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # Platform: C9300-24U
@@ -6100,7 +6110,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 boot_loader_dict.update({'version': boot_loader_version})
                 continue
             
-            # Boot Loader Hash: 
+            # Boot Loader Hash: 523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -6126,6 +6136,12 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
             if m:
                 hash_type = 'os_hashes'
                 continue
+
+            # Signature:
+            m = p12.match(line)
+            if m:
+                hash_type = 'signature'
+                continue
             
             # PCR0: BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E
             m = p9.match(line)
@@ -6148,7 +6164,14 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 os_hash_dict = ret_dict.setdefault('os_hashes', {})
                 os_hash_dict.update({os_hash: ''})
                 continue
-            
+
+            # Signature version: 1
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'signature_version': int(group['signature_version'])})
+                continue
+
             # 51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57
             m = p6.match(line)
             if m:
@@ -6162,18 +6185,20 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                     os_hash_val = os_hash_dict.get(os_hash, '')
                     os_hash_val = '{}{}'.format(os_hash_val, hash_val)
                     os_hash_dict.update({'os_hash': os_hash_val})
+                elif hash_type == 'signature':
+                    ret_dict.update({'signature': hash_val})
                 continue
+
         return ret_dict
     
-    def yang(self, output=None):
+    def yang(self, nonce=None, output=None):
         if not output:
-            out = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
-        else:
-            out = output
+            # xpath is the same regardless of if nonce is passed or not
+            output = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
 
-        log.info(minidom.parseString(out).toprettyxml())
+        log.info(minidom.parseString(output).toprettyxml())
 
-        root = ET.fromstring(out)
+        root = ET.fromstring(output)
         boot_integrity_oper_data = Common.retrieve_xml_child(root=root, key='boot-integrity-oper-data')
         boot_integrity = Common.retrieve_xml_child(root=boot_integrity_oper_data, key='boot-integrity')
         ret_dict = {}
@@ -6215,7 +6240,10 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                     elif name and sub_child.tag.endswith('pcr-content'):
                         os_hashes.update({name: sub_child.text})
                         name = None
-        
+            elif child.tag.endswith('sig-version'):
+                ret_dict.update({'signature_version': int(child.text)})
+            elif child.tag.endswith('signature'):
+                ret_dict.update({'signature': child.text})
         return ret_dict
 
 

@@ -586,53 +586,53 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
     }
 
     golden_output = {'execute.return_value': '''\
-    Mon Mar 19 18:24:29.512 UTC
-    Capability codes:
-			(R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
-			(W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+        Mon Mar 19 18:24:29.512 UTC
+        Capability codes:
+                (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+                (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
 
-    ------------------------------------------------
-    Local Interface: GigabitEthernet0/0/0/0
-    Chassis id: 001e.49ff.24f7
-    Port id: Gi2
-    Port Description: GigabitEthernet2
-    System Name: Ge_nie1000v.openstacklocal
+        ------------------------------------------------
+        Local Interface: GigabitEthernet0/0/0/0
+        Chassis id: 001e.49ff.24f7
+        Port id: Gi2
+        Port Description: GigabitEthernet2
+        System Name: Ge_nie1000v.openstacklocal
 
-    System Description:
-    Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
-    Technical Support: http://www.cisco.com/techsupport
-    Copyright (c) 1986-2017 by Cisco Systems, Inc.
-    Compiled Sat 22-Jul-17 05:51 by
+        System Description:
+        Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2017 by Cisco Systems, Inc.
+        Compiled Sat 22-Jul-17 05:51 by
 
-    Time remaining: 90 seconds
-    Hold Time: 120 seconds
-    System Capabilities: B,R
-    Enabled Capabilities: R
-    Management Addresses:
-     IPv4 address: 10.1.2.1
-
-
-
-    ------------------------------------------------
-    Local Interface: GigabitEthernet0/0/0/1
-    Chassis id: 5e00.80ff.020b
-    Port id: Ethernet1/2
-    Port Description: Ethernet1/2
-    System Name: G1_n9ie
-
-    System Description:
-    Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
-    TAC support: http://www.cisco.com/tac
-    Copyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.
-
-    Time remaining: 106 seconds
-    Hold Time: 120 seconds
-    System Capabilities: B,R
-    Enabled Capabilities: B,R
-    Management Addresses - not advertised
+        Time remaining: 90 seconds
+        Hold Time: 120 seconds
+        System Capabilities: B,R
+        Enabled Capabilities: R
+        Management Addresses:
+        IPv4 address: 10.1.2.1
 
 
-    Total entries displayed: 2
+
+        ------------------------------------------------
+        Local Interface: GigabitEthernet0/0/0/1
+        Chassis id: 5e00.80ff.020b
+        Port id: Ethernet1/2
+        Port Description: Ethernet1/2
+        System Name: G1_n9ie
+
+        System Description:
+        Cisco Nexus Operating System (NX-OS) Software 7.0(3)I7(1)
+        TAC support: http://www.cisco.com/tac
+        Copyright (c) 2002-2017, Cisco Systems, Inc. All rights reserved.
+
+        Time remaining: 106 seconds
+        Hold Time: 120 seconds
+        System Capabilities: B,R
+        Enabled Capabilities: B,R
+        Management Addresses - not advertised
+
+
+        Total entries displayed: 2
     '''}
 
     golden_output_2 = {'execute.return_value': '''
@@ -878,179 +878,179 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
     }
 
     golden_output_4 = {'execute.return_value': '''
-    show lldp neighbors detail
+        show lldp neighbors detail
 
-     
-    
-    Thu Apr 30 16:14:06.186 UTC
-    
-    Capability codes:
-    
-         (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
-    
-         (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
-    
-     
-    
-    ------------------------------------------------
-    
-    Local Interface: TenGigE0/0/0/1
-    
-    Chassis id: 0026.88ff.c416
-    
-    Port id: 655
-    
-    Port Description: PHY|BW|L3|CORE|type:CRAN-P2P|rhost:ASR-01|rport:TenGigE0/0/0/1
-    
-    System Name: MX480-01.comcast.net
-    
-     
-    
-    System Description:
-    
-    Juniper Networks, Inc. mx480 internet router, kernel JUNOS 18.4R2.7, Build date: 2019-06-27 10:00:44 UTC Copyright (c) 1996-2019 Juniper Networks, Inc.
-    
-     
-    
-    Time remaining: 98 seconds
-    
-    Hold Time: 120 seconds
-    
-    System Capabilities: B,R
-    
-    Enabled Capabilities: B,R
-    
-    Management Addresses:
-    
-      IPv4 address: 10.253.47.140
-    
-     
-    
-     
-    
-     
-    
-    ------------------------------------------------
-    
-    Local Interface: TenGigE0/2/0/1
-    
-    Parent Interface: Bundle-Ether10
-    
-    Chassis id: 444c.a8ff.39f5
-    
-    Port id: Ethernet1/4
-    
-    Port Description: PHY|BW|AGG-MEMBER|CORE|type:CRAN-P2P|rhost:ASR-01|rport:TenGigE0/2/0/1|lagg:Port-Channel10|ragg:Bundle-Ether10
-    
-    System Name: 7280CR2A-01.comcast.net
-    
-     
-    
-    System Description:
-    
-    Arista Networks EOS version 4.21.6F running on an Arista Networks DCS-7280CR-48
-    
-     
-    
-    Time remaining: 97 seconds
-    
-    Hold Time: 120 seconds
-    
-    System Capabilities: B,R
-    
-    Enabled Capabilities: B,R
-    
-    Management Addresses:
-    
-      IPv4 address: 10.252.26.104
-    
-     
-    
-     
-    
-     
-    
-    ------------------------------------------------
-    
-    Local Interface: TenGigE0/2/0/11
-    
-    Chassis id: 6c41.0eff.3712
-    
-    Port id: Te0/0/0/0
-    
-    Port Description: PHY|BW|L3|CORE|type:CRAN-P2P|rhost:ASR-01|rport:te0/2/0/11
-    
-    System Name: ASR9904.netlabs.nj.ula.comcast.net
-    
-     
-    
-    System Description:
-    
-    Cisco IOS XR Software, Version 6.1.4[Default]
-    
-    Copyright (c) 2017 by Cisco Systems, Inc., ASR9K Series
-    
-     
-    
-    Time remaining: 116 seconds
-    
-    Hold Time: 120 seconds
-    
-    System Capabilities: R
-    
-    Enabled Capabilities: R
-    
-    Management Addresses:
-    
-      IPv4 address: 10.253.47.122
-    
-      IPv6 address: 2001:db8:fbd1:8e5c::4
-    
-     
-    
-     
-    
-     
-    
-    ------------------------------------------------
-    
-    Local Interface: TenGigE0/2/0/23
-    
-    Chassis id: 7c31.0eff.203f
-    
-    Port id: TenGigE0/0/0/4
-    
-    Port Description: ASR-01 T0/2/0/23
-    
-    System Name: NCS5501
-    
-     
-    
-    System Description:
-    
-     6.5.2, NCS-5500
-    
-     
-    
-    Time remaining: 114 seconds
-    
-    Hold Time: 120 seconds
-    
-    System Capabilities: R
-    
-    Enabled Capabilities: R
-    
-    Management Addresses:
-    
-      IPv4 address: 10.253.47.30
-    
-     
-    
-     
-    
-     
-    
-    Total entries displayed: 4
+        
+        
+        Thu Apr 30 16:14:06.186 UTC
+        
+        Capability codes:
+        
+            (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+        
+            (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+        
+        
+        
+        ------------------------------------------------
+        
+        Local Interface: TenGigE0/0/0/1
+        
+        Chassis id: 0026.88ff.c416
+        
+        Port id: 655
+        
+        Port Description: PHY|BW|L3|CORE|type:CRAN-P2P|rhost:ASR-01|rport:TenGigE0/0/0/1
+        
+        System Name: MX480-01.comcast.net
+        
+        
+        
+        System Description:
+        
+        Juniper Networks, Inc. mx480 internet router, kernel JUNOS 18.4R2.7, Build date: 2019-06-27 10:00:44 UTC Copyright (c) 1996-2019 Juniper Networks, Inc.
+        
+        
+        
+        Time remaining: 98 seconds
+        
+        Hold Time: 120 seconds
+        
+        System Capabilities: B,R
+        
+        Enabled Capabilities: B,R
+        
+        Management Addresses:
+        
+        IPv4 address: 10.253.47.140
+        
+        
+        
+        
+        
+        
+        
+        ------------------------------------------------
+        
+        Local Interface: TenGigE0/2/0/1
+        
+        Parent Interface: Bundle-Ether10
+        
+        Chassis id: 444c.a8ff.39f5
+        
+        Port id: Ethernet1/4
+        
+        Port Description: PHY|BW|AGG-MEMBER|CORE|type:CRAN-P2P|rhost:ASR-01|rport:TenGigE0/2/0/1|lagg:Port-Channel10|ragg:Bundle-Ether10
+        
+        System Name: 7280CR2A-01.comcast.net
+        
+        
+        
+        System Description:
+        
+        Arista Networks EOS version 4.21.6F running on an Arista Networks DCS-7280CR-48
+        
+        
+        
+        Time remaining: 97 seconds
+        
+        Hold Time: 120 seconds
+        
+        System Capabilities: B,R
+        
+        Enabled Capabilities: B,R
+        
+        Management Addresses:
+        
+        IPv4 address: 10.252.26.104
+        
+        
+        
+        
+        
+        
+        
+        ------------------------------------------------
+        
+        Local Interface: TenGigE0/2/0/11
+        
+        Chassis id: 6c41.0eff.3712
+        
+        Port id: Te0/0/0/0
+        
+        Port Description: PHY|BW|L3|CORE|type:CRAN-P2P|rhost:ASR-01|rport:te0/2/0/11
+        
+        System Name: ASR9904.netlabs.nj.ula.comcast.net
+        
+        
+        
+        System Description:
+        
+        Cisco IOS XR Software, Version 6.1.4[Default]
+        
+        Copyright (c) 2017 by Cisco Systems, Inc., ASR9K Series
+        
+        
+        
+        Time remaining: 116 seconds
+        
+        Hold Time: 120 seconds
+        
+        System Capabilities: R
+        
+        Enabled Capabilities: R
+        
+        Management Addresses:
+        
+        IPv4 address: 10.253.47.122
+        
+        IPv6 address: 2001:db8:fbd1:8e5c::4
+        
+        
+        
+        
+        
+        
+        
+        ------------------------------------------------
+        
+        Local Interface: TenGigE0/2/0/23
+        
+        Chassis id: 7c31.0eff.203f
+        
+        Port id: TenGigE0/0/0/4
+        
+        Port Description: ASR-01 T0/2/0/23
+        
+        System Name: NCS5501
+        
+        
+        
+        System Description:
+        
+        6.5.2, NCS-5500
+        
+        
+        
+        Time remaining: 114 seconds
+        
+        Hold Time: 120 seconds
+        
+        System Capabilities: R
+        
+        Enabled Capabilities: R
+        
+        Management Addresses:
+        
+        IPv4 address: 10.253.47.30
+        
+        
+        
+        
+        
+        
+        
+        Total entries displayed: 4
     '''}
 
     golden_parsed_output_4 = {
@@ -1163,6 +1163,67 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         'total_entries': 4,
     }
 
+    golden_output_5 = {'execute.return_value': '''
+        #show lldp neighbors detail TenGigE0/0/0/28/0
+        Tue Oct  6 13:56:33.804 UTC
+        Capability codes:
+                (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+                (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+
+        ------------------------------------------------
+        Local Interface: TenGigE0/0/0/28/0
+        Chassis id: 6464.9b31.3d00
+        Port id: xe-0/1/2
+        Port Description: port description
+        System Name: switch1
+
+        System Description:
+        Juniper Networks, Inc. ex4200-48t , version 12.3R9.4 Build date: 2015-02-12 12:01:56 UTC
+
+        Time remaining: 108 seconds
+        Hold Time: 120 seconds
+        System Capabilities: B,R
+        Enabled Capabilities: B,R
+        Management Addresses - not advertised
+        Peer MAC Address: 64:64:9b:31:3d:35
+
+
+        Total entries displayed: 1
+    '''}
+    golden_parsed_output_5 = {
+        'interfaces': {
+            'TenGigE0/0/0/28/0': {
+                'port_id': {
+                    'xe-0/1/2': {
+                        'neighbors': {
+                            'switch1': {
+                                'capabilities': {
+                                    'bridge': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                    'router': {
+                                        'enabled': True,
+                                        'system': True,
+                                    },
+                                },
+                                'chassis_id': '6464.9b31.3d00',
+                                'hold_time': 120,
+                                'neighbor_id': 'switch1',
+                                'peer_mac': '64:64:9b:31:3d:35',
+                                'port_description': 'port description',
+                                'system_description': '',
+                                'system_name': 'switch1',
+                                'time_remaining': 108,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+        'total_entries': 1,
+    }
+
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowLldpNeighborsDetail(device=self.dev)
@@ -1196,6 +1257,13 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         obj = ShowLldpNeighborsDetail(device=self.dev1)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.maxDiff = None
+        self.dev1 = Mock(**self.golden_output_5)
+        obj = ShowLldpNeighborsDetail(device=self.dev1)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
 
 class test_show_lldp_traffic(unittest.TestCase):
