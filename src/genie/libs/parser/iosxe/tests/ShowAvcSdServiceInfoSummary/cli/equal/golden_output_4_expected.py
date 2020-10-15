@@ -10,5 +10,5 @@ expected_output = {
         "id": "sd-sw2.lab.com",
         "segment_name": "core-pop",
     },
-    "sdavc": {"status": "CONNECTED"},
+    "status": "CONNECTED",
 }
