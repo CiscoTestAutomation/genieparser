@@ -1,1 +1,1 @@
-expected_output = {"sdavc": {"status": "DISABLED"}}
+expected_output = {"sd_vac_status": "disabled"}
