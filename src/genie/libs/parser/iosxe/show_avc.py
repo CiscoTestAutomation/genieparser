@@ -13,13 +13,13 @@ class ShowAvcSdServiceInfoSummarySchema(MetaParser):
 
     schema = {
         Optional("active_controller"): {
-            Optional("ipv4_address"): str,
+            Optional("ip"): str,
             "status": str,
             Optional("type"): "Primary",
         },
         Optional("device"): {
             "id": str,
-            "ipv4_address": str,
+            "address": str,
             "segment_name": str,
         },
         "sdavc": {"status": str},
@@ -87,7 +87,7 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
             # Device segment name: global (default)
             r"Device segment name: (?P<device_segment_name>\S+) \(default\)\s+"
             # Device address: 0.0.0.0
-            r"Device address: (?P<device_ipv4_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+            r"Device address: (?P<device_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+"
         )
 
         # SD-AVC is disabled
