@@ -58,13 +58,13 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
             # Device segment name: core-pop
             r"Device segment name: (?P<device_segment_name>\S+)\s+"
             # Device address: 10.18.29.33
-            r"Device address: (?P<device_ipv4_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+            r"Device address: (?P<device_ipv4_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+"
             # Active controller:
             r"Active controller:\s+"
             #    Type  : Primary
             r"Type\s+: (?P<active_controller_type>\S+)\s+"
             #    IP    : 10.11.236.21
-            r"IP\s+: (?P<active_controller_ipv4_address>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+            r"IP\s+: (?P<active_controller_ipv4_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+"
             #    Status: Connected
             r"Status: (?P<active_controller_status>\S+)\s+"
             #    Last connection: 18:42:02.000 UTC Fri Oct 2 2020
