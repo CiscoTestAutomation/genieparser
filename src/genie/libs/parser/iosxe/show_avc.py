@@ -13,10 +13,10 @@ class ShowAvcSdServiceInfoSummarySchema(MetaParser):
 
     schema = {
         Optional("active_controller"): {
-            Optional("ip"): str,
-            Optional("last_connection"): str,
+            "ip": str,
+            "last_connection": str,
             "status": str,
-            Optional("type"): str,
+            "type": str,
         },
         Optional("device"): {
             "id": str,
@@ -129,9 +129,9 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
 
                         avc_info_obj.update(new_group)
 
-                    # if active_controller is an empty dict, update it to show it's not configured
+                    # if active_controller is an empty dict, pop it
                     if not avc_info_obj["active_controller"].get("status"):
-                        avc_info_obj["active_controller"] = {"status": "not configured"}
+                        avc_info_obj.pop("active_controller")
 
                 if capture == avc_disabled_capture:
                     avc_info_obj = {"sdavc": {"status": "DISABLED"}}
