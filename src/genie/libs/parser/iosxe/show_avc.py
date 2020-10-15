@@ -14,8 +14,9 @@ class ShowAvcSdServiceInfoSummarySchema(MetaParser):
     schema = {
         Optional("active_controller"): {
             Optional("ip"): str,
+            Optional("last_connection"): str,
             "status": str,
-            Optional("type"): "Primary",
+            Optional("type"): str,
         },
         Optional("device"): {
             "id": str,
@@ -68,7 +69,7 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
             #    Status: Connected
             r"Status: (?P<active_controller_status>\S+)\s+"
             #    Last connection: 18:42:02.000 UTC Fri Oct 2 2020
-            r"Last connection: (?P<active_contoller_last_connection>.+)$"
+            r"Last connection: (?P<active_controller_last_connection>.+)$"
         )
 
         # Status: DISCONNECTED
@@ -108,12 +109,11 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
         for capture in capture_list:
             if re.search(capture, output, re.MULTILINE):
                 search = re.search(capture, output, re.MULTILINE)
+                group = search.groupdict()
 
                 if capture == avc_connected_capture or avc_disconnected_capture:
 
                     key_list = ["sdavc", "active_controller", "device"]
-
-                    group = search.groupdict()
 
                     # iterate through key_list to format the keys in group
                     for key in key_list:
@@ -121,7 +121,7 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
 
                         for item in group:
                             # if the key from key_list is found in item
-                            if f"{key}_" in item:
+                            if re.search(f"{key}_", item):
                                 # replace the key and update with new_dict
                                 new_key = re.sub(f"{key}_", "", item)
                                 new_dict = {new_key: group[item]}
