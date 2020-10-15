@@ -23,7 +23,8 @@ class ShowAvcSdServiceInfoSummarySchema(MetaParser):
             "address": str,
             "segment_name": str,
         },
-        "sdavc": {"status": str},
+        Optional("status"): str,
+        Optional("sd_vac_status"): str,
     }
 
 
@@ -53,7 +54,7 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
 
         avc_connected_capture = (
             # Status: CONNECTED
-            r"^Status: (?P<sdavc_status>CONNECTED)\s+"
+            r"^Status: (?P<status>CONNECTED)\s+"
             # Device ID: sd-sw2.lab.com
             r"Device ID: (?P<device_id>\S+)\s+"
             # Device segment name: core-pop
@@ -82,7 +83,7 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
 
         avc_disconnected_capture = (
             # Status: DISCONNECTED
-            r"^Status: (?P<sdavc_status>DISCONNECTED)\s+"
+            r"^Status: (?P<status>DISCONNECTED)\s+"
             # Device ID:
             r"Device ID: (?P<device_id>)\s+"
             # Device segment name: global (default)
@@ -113,13 +114,13 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
 
                 if capture == avc_connected_capture or avc_disconnected_capture:
 
-                    key_list = ["sdavc", "active_controller", "device"]
+                    key_list = ["active_controller", "device"]
 
                     # iterate through key_list to format the keys in group
                     for key in key_list:
                         new_group = {key: {}}
 
-                        for item in group:
+                        for item in group.copy():
                             # if the key from key_list is found in item
                             if re.search(f"{key}_", item):
                                 # replace the key and update with new_dict
@@ -127,13 +128,18 @@ class ShowAvcSdServiceInfoSummary(ShowAvcSdServiceInfoSummarySchema):
                                 new_dict = {new_key: group[item]}
                                 new_group[key].update(new_dict)
 
-                        avc_info_obj.update(new_group)
+                                # pop old keys
+                                group.pop(item)
+
+                        group.update(new_group)
+
+                    avc_info_obj.update(group)
 
                     # if active_controller is an empty dict, pop it
                     if not avc_info_obj["active_controller"].get("status"):
                         avc_info_obj.pop("active_controller")
 
                 if capture == avc_disabled_capture:
-                    avc_info_obj = {"sdavc": {"status": "DISABLED"}}
+                    avc_info_obj = {"sd_vac_status": "disabled"}
 
         return avc_info_obj
