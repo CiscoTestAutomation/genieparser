@@ -205,9 +205,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # Known via "connected", distance 0, metric 0 (connected)
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
+        # Known via "ospf 3", distance 110, metric 32001, type extern 1
         p6 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +distance +'
                 r'(?P<distance>\d+), +metric +(?P<metric>\d+)( \(connected\))?'
-                r'(, +type +(?P<type>\S+))?(, +candidate +default +path)?$')
+                r'(, +type +(?P<type>[\S\s]+))?(, +candidate +default +path)?$')
 
         # * directly connected, via GigabitEthernet1.120
         p7 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
@@ -430,6 +431,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             # Known via "connected", distance 0, metric 0 (connected)
             # Known via "eigrp 1", distance 130, metric 10880, type internal
             # Known via "bgp 65161", distance 20, metric 0, candidate default path
+            # Known via "ospf 3", distance 110, metric 32001, type extern 1
             m = p6.match(line)
             if m:
                 group = m.groupdict()
