@@ -17,12 +17,14 @@ expected_output = {
          "status": "disabled"
       },
       "monitor":{
+         "status": "enabled",
          "level": "debugging",
          "messages_logged": 13,
          "xml": "disabled",
          "filtering": "disabled"
       },
       "buffer":{
+         "status": "enabled",
          "level": "debugging",
          "messages_logged": 1566,
          "xml": "disabled",
