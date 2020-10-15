@@ -94,9 +94,9 @@ class TestVimCmdVmsvcGetAllVms(unittest.TestCase):
 
 # ======================================
 # Unit tests for:
-#   'vim-cmd vmsvc/snapshot.get {vm_id}'
+#   'vim-cmd vmsvc/snapshot.get {vmid}'
 # ======================================
-class TestVimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmId):    
+class TestVimCmdVmsvcSnapshotGetVmId(unittest.TestCase):    
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}        
     
@@ -105,20 +105,20 @@ class TestVimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmId):
         |-ROOT
         --Snapshot Name        : P1_4_golden
         --Snapshot Id        : 8
-        --Snapshot Desciption  : 
+        --Snapshot Desciption  :
         --Snapshot Created On  : 2/10/2016 11:10:47
         --Snapshot State       : powered off
     '''}
     
     golden_parsed_output = {
-        'vmid': {
-            '42': {
-                'snapshot': {
+        "vmid": {
+            "42": {
+                "snapshot": {
                     '8': {
-                        'name': 'P1_4_golden',
-                        'id': '8',
-                        'created': '2/10/2016 11:10:47',
-                        'state': 'powered off'
+                        "created": "2/10/2016 11:10:47",
+                        "id": "8",
+                        "name": "P1_4_golden",
+                        "state": "powered off"
                     }
                 }
             }
@@ -133,10 +133,10 @@ class TestVimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmId):
         self.assertEqual(parsed_output, {'vmid': {}})
 
     def test_get_snapshot_vmid_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
-        obj = VimCmdVmsvcSnapshotGetVmId(device=self.device, vm_id=42)
-        parsed_output = obj.parse()
+        obj = VimCmdVmsvcSnapshotGetVmId(device=self.device)
+        parsed_output = obj.parse(vmid='42')
+        self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output)    
 
 if __name__ == '__main__':

@@ -2,7 +2,7 @@
 
 Linux parsers for the following commands:
     * vim-cmd vmsvc/getallvms
-    * vim-cmd vmsvc/snapshot.get {vm_id}
+    * vim-cmd vmsvc/snapshot.get {vmid}
 """
 
 # python
@@ -91,10 +91,10 @@ class VimCmdVmsvcGetAllVms(VimCmdVmsvcGetAllVmsSchema):
     
 
 # =======================================================
-# Schema for 'vim-cmd vmsvc/snapshot.get {vm_id}'
+# Schema for 'vim-cmd vmsvc/snapshot.get {vmid}'
 # =======================================================
 class VimCmdVmsvcSnapshotGetVmIdSchema(MetaParser):
-    """Schema for vim-cmd vmsvc/snapshot.get {vm_id}"""
+    """Schema for vim-cmd vmsvc/snapshot.get {vmid}"""
     
     schema = {
         'vmid': {
@@ -102,7 +102,7 @@ class VimCmdVmsvcSnapshotGetVmIdSchema(MetaParser):
                 'snapshot': {
                     Any(): {   # snapshot id
                         'name': str,
-                        'id': int,
+                        'id': str,
                         Optional('description'): str,
                         'created': str,
                         'state': str
@@ -114,18 +114,23 @@ class VimCmdVmsvcSnapshotGetVmIdSchema(MetaParser):
 
 
 # =======================================================
-# Parser for 'vim-cmd vmsvc/snapshot.get {vm_id}'
+# Parser for 'vim-cmd vmsvc/snapshot.get {vmid}'
 # =======================================================
 class VimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmIdSchema):
-    """Parser for vim-cmd vmsvc/snapshot.get {vm_id}"""
+    """Parser for vim-cmd vmsvc/snapshot.get {vmid}"""
     
-    cli_command = ['vim-cmd vmsvc/snapshot.get {vm_id}']
+    cli_command = ['vim-cmd vmsvc/snapshot.get {vmid}']
     
-    def cli(self, vm_id=None, output=None):
+    def cli(self, vmid=None, output=None):
         if output is None:
-            cmd = self.cli_command[0]
-            out = self.device.execute(cmd.format(vm_id=vm_id))
-            
+
+            if vmid:
+                cmd = self.cli_command[0].format(vmid=vmid)
+                out = self.device.execute(cmd)
+            else:
+                return {
+                    'vmid': {}
+                }
         else:
             out = output
             
@@ -146,12 +151,13 @@ class VimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmIdSchema):
         
         # --Snapshot Created On  : 12/1/2014 14:39:4
         # ----Snapshot Created On  : 10/2/2015 9:13:45
-        p4 = re.compile(r'^.*Snapshot\s+Created\s+On\s+:\s+(?P<created>\S+\s+\S+)$')
+        p4 = re.compile(r'^.*Snapshot\s+Created\s+On\s+:\s+(?P<created>[\S\s]+)$')
         
         # --Snapshot State       : powered off
         # ----Snapshot State       : powered off
-        p5 = re.compile(r'^.*Snapshot\s+State\s+:\s+(?P<state>\S+\s+\S+)$')
+        p5 = re.compile(r'^.*Snapshot\s+State\s+:\s+(?P<state>[\S\s]+)$')
         
+        snapshot_name = ''
         for line in out.splitlines():
             line = line.strip()
             
@@ -161,8 +167,15 @@ class VimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmIdSchema):
             if m:
                 groups = m.groupdict()
                 snapshot_id = groups['id']
-                ret_dict.setdefault('vmid', {}).setdefault(vm_id, {}).\
-                    setdefault('snapshot', {}).setdefault(snapshot_id, groups)
+                
+                # We add the snapshot name into the groups dictionary
+                # Since the snapshot name pattern will come first than the 
+                # snapshot id pattern which we use it as the unique key in
+                # our return dictionary
+                groups['name'] = snapshot_name
+                snapshot_info_dict = ret_dict.setdefault('vmid', {}).\
+                    setdefault(vmid, {}).setdefault('snapshot', {}).\
+                        setdefault(snapshot_id, groups)
                 continue
             
             # --Snapshot Name        : PE1RebootGoldenSnapshot
@@ -170,8 +183,7 @@ class VimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmIdSchema):
             m = p2.match(line)
             if m:
                 groups = m.groupdict()
-                ret_dict.setdefault('vmid', {}).setdefault(vm_id, {}).\
-                    setdefault('snapshot', {}).setdefault(snapshot_id, groups)
+                snapshot_name = groups['name']
                 continue
             
             # --Snapshot Desciption  :
@@ -179,8 +191,7 @@ class VimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmIdSchema):
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
-                ret_dict.setdefault('vmid', {}).setdefault(vm_id, {}).\
-                    setdefault('snapshot', {}).setdefault(snapshot_id, groups)
+                snapshot_info_dict.update(groups)
                 continue
             
             # --Snapshot Created On  : 12/1/2014 14:39:4
@@ -188,8 +199,7 @@ class VimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmIdSchema):
             m = p4.match(line)
             if m:
                 groups = m.groupdict()
-                ret_dict.setdefault('vmid', {}).setdefault(vm_id, {}).\
-                    setdefault('snapshot', {}).setdefault(snapshot_id, groups)
+                snapshot_info_dict.update(groups)
                 continue
                 
             # --Snapshot State       : powered off
@@ -197,13 +207,10 @@ class VimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmIdSchema):
             m = p5.match(line)
             if m:
                 groups = m.groupdict()
-                ret_dict.setdefault('vmid', {}).setdefault(vm_id, {}).\
-                    setdefault('snapshot', {}).setdefault(snapshot_id, groups)
+                snapshot_info_dict.update(groups)
                 continue
             
         if len(ret_dict) == 0:
             ret_dict.setdefault('vmid', {})
-            
         return ret_dict
-        
-        
+
