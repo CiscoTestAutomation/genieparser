@@ -121,16 +121,10 @@ class VimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmIdSchema):
     
     cli_command = ['vim-cmd vmsvc/snapshot.get {vmid}']
     
-    def cli(self, vmid=None, output=None):
+    def cli(self, vmid, output=None):
         if output is None:
-
-            if vmid:
-                cmd = self.cli_command[0].format(vmid=vmid)
-                out = self.device.execute(cmd)
-            else:
-                return {
-                    'vmid': {}
-                }
+            cmd = self.cli_command[0].format(vmid=vmid)
+            out = self.device.execute(cmd)
         else:
             out = output
             
@@ -210,7 +204,5 @@ class VimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmIdSchema):
                 snapshot_info_dict.update(groups)
                 continue
             
-        if len(ret_dict) == 0:
-            ret_dict.setdefault('vmid', {})
         return ret_dict
 

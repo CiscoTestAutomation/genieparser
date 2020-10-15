@@ -129,8 +129,8 @@ class TestVimCmdVmsvcSnapshotGetVmId(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = VimCmdVmsvcSnapshotGetVmId(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, {'vmid': {}})
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(vmid='42')
 
     def test_get_snapshot_vmid_golden(self):
         self.device = Mock(**self.golden_output)
