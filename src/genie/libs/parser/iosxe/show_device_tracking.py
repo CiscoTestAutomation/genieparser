@@ -190,3 +190,51 @@ class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command[0])
+
+        else:
+            output = output
+
+        # Binding Table has 87 entries, 75 dynamic (limit 100000)
+        # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+        # Preflevel flags (prlvl):
+        # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
+        # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
+        # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
+
+        # Network Layer Address               Link Layer Address Interface        vlan prlvl  age   state     Time left
+        # L   10.160.48.1                             0000.0c9f.f45f  Vl1024         1024  0100 42473mn REACHABLE
+        # DH4 10.160.43.197                           94d4.690b.dbfa  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+        # DH4 10.160.42.157                           0896.ad77.1224  Gi7/0/11       1023  0025   33s  REACHABLE  271 s try 0(447985 s)
+        # DH4 10.160.42.124                           00b1.e3ba.0d62  Te2/0/39       1023  0025   30s  REACHABLE  272 s try 0(450251 s)
+        #
+        # ...OUTPUT OMMITTED...
+        #
+        # L   2001:420:307:2000::1                    0000.0c9f.f45e  Vl1023         1023  0100 42475mn REACHABLE
+        # L   2001:420:307::1                         0000.0c9f.f45d  Vl1022         1022  0100 42473mn REACHABLE
+
+        # Binding Table has 87 entries, 75 dynamic (limit 100000)
+        binding_table_capture = r"^Binding Table has (?P<entries>\d+) entries, (?P<dynamic>\d+) dynamic \(limit 100000\)$"
+
+        # DH4 10.160.43.197                           94d4.690b.dbfa  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+        tracking_database = r"^(?P<code>\S+)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+.*)$"
+
+        # L   10.160.48.1                             0000.0c9f.f45f  Vl1024         1024  0100 42473mn REACHABLE
+        local_database = r"^(?P<code>L)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)$"
+
+        device_info_obj = {}
+
+        capture_list = [binding_table_capture, tracking_database, local_database]
+
+        for capture in capture_list:
+            for line in output.splitlines():
+                line = line.strip()
+
+                if re.search(capture, line):
+                    search = re.search(capture, line)
+                    group = search.groupdict()
+                    
+                    if search == local_database:
+                        new_group = {"binding_table" : group}
+                        device_info_obj.update(new_group)
+
+        return device_info_obj
