@@ -196,7 +196,7 @@ class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
 
     cli_command = ['show device-tracking database int {interface}']
 
-    def cli(self, interface, output=None):
+    def cli(self, interface='', output=None):
         if output is None:
             output = self.device.execute(self.cli_command[0])
 
