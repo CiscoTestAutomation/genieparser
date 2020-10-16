@@ -339,12 +339,13 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
 
     cli_command = "show wlan id {id_number} client stats"
 
-    def cli(self, id_number="", output=None):
+    def cli(self, id_number, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            cmd = self.cli_command.format(id_number=id_number)
+            out = self.device.execute(cmd)
 
         else:
-            output = output
+            out = output
 
         # Wlan Profile Name: lizzard_Global, Wlan Id: 17
         # Current client state statistics:
@@ -778,8 +779,8 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
 
         wlan_obj = {}
 
-        if re.search(wlan_capture, output, re.MULTILINE):
-            search = re.search(wlan_capture, output, re.MULTILINE)
+        if re.search(wlan_capture, out, re.MULTILINE):
+            search = re.search(wlan_capture, out, re.MULTILINE)
             group = search.groupdict()
 
             # convert str to int
@@ -788,8 +789,8 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             new_group = {"wlan": group}
             wlan_obj.update(new_group)
 
-        if re.search(client_stats_capture, output, re.MULTILINE):
-            search = re.search(client_stats_capture, output, re.MULTILINE)
+        if re.search(client_stats_capture, out, re.MULTILINE):
+            search = re.search(client_stats_capture, out, re.MULTILINE)
             group = search.groupdict()
 
             for item in group:
@@ -799,8 +800,8 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             new_group = {"client_stats": group}
             wlan_obj.update(new_group)
 
-        if re.search(client_delete_capture, output, re.MULTILINE):
-            search = re.search(client_delete_capture, output, re.MULTILINE)
+        if re.search(client_delete_capture, out, re.MULTILINE):
+            search = re.search(client_delete_capture, out, re.MULTILINE)
             group = search.groupdict()
 
             for item in group:
