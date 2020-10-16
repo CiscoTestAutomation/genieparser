@@ -1989,9 +1989,9 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
           
     def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command[0])
+            out = self.device.execute(self.cli_command[0])
         else:
-            output = output
+            out = self.device.execute(self.cli_command[0], output=output)
 
         # Number of APs: 61
 
@@ -2031,7 +2031,7 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
 
         wireless_info_obj = {}
 
-        for line in output.splitlines():
+        for line in out.splitlines():
             line = line.strip()
             if ap_count_capture.match(line):
                 # only grab the first entry from output
