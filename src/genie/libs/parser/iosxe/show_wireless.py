@@ -1167,7 +1167,6 @@ class ShowWirelessCtsSummary(ShowWirelessCtsSummarySchema):
 
         return wireless_cts_summary_dict
 
-=======
 # ========================================
 # Schema for:
 #  * 'show wireless fabric client summary'
@@ -1537,7 +1536,7 @@ class ShowWirelessClientSummary(ShowWirelessClientSummarySchema):
         include_index = 0
         exclude_index = 0
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
             # Number of Clients: 13
             if wireless_client_count_capture.match(line):
@@ -1875,7 +1874,12 @@ class ShowWirelessProfilePolicySummarySchema(MetaParser):
     schema = {
         "policy_count": int,
         "policy_name": {
-            Any(): {"description": str, "status": str},
+            Any(): {
+              "description": str,
+              "status": str
+            },
+        }
+    }
 
 # =========================================
 # Parser for:
@@ -1985,9 +1989,9 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
           
     def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command[0])
+            out = self.device.execute(self.cli_command[0])
         else:
-            output = output
+            out = output
 
         # Number of APs: 61
 
@@ -2026,31 +2030,26 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
         )
 
         wireless_info_obj = {}
-          
-          if ap_count_capture.match(line):
 
-              # only grab the first entry from output
-              if not wireless_info_obj.get("ap_count"):
-                  ap_count_match = ap_count_capture.match(line)
-                  group = ap_count_match.groupdict()
-
-                  # convert value from str to int
-                  ap_count_dict = {"ap_count": int(group["ap_count"])}
-
-                  wireless_info_obj.update(ap_count_dict)
-
+        for line in out.splitlines():
+            line = line.strip()
+            if ap_count_capture.match(line):
+                # only grab the first entry from output
+                if not wireless_info_obj.get("ap_count"):
+                    ap_count_match = ap_count_capture.match(line)
+                    group = ap_count_match.groupdict()
+                    # convert value from str to int
+                    ap_count_dict = {"ap_count": int(group["ap_count"])}
+                    wireless_info_obj.update(ap_count_dict)
             if ap_join_capture.match(line):
                 ap_join_match = ap_join_capture.match(line)
                 group = ap_join_match.groupdict()
-
                 # pull the base_mac to use as key then pop it from the dict
                 ap_info_dict = {group["base_mac"]: {}}
                 ap_info_dict[group["base_mac"]].update(group)
                 ap_info_dict[group["base_mac"]].pop("base_mac")
-
                 if not wireless_info_obj.get("base_mac"):
                     wireless_info_obj["base_mac"] = {}
-
                 wireless_info_obj["base_mac"].update(ap_info_dict)
 
         return wireless_info_obj
