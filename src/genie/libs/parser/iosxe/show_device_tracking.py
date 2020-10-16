@@ -163,9 +163,6 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         return device_tracking_database_dict
 
 
-
-
-
 # ======================================
 # Schema for:
 #  * 'show device-tracking database int'
@@ -176,7 +173,7 @@ class ShowDeviceTrackingDatabaseIntSchema(MetaParser):
     schema = {
         "binding_table": {"dynamic": int, "entries": int},
         "network_layer_address": {
-            "10.102.32.44": {
+            Any(): {
                 "age": str,
                 "code": str,
                 "interface": str,
@@ -195,11 +192,11 @@ class ShowDeviceTrackingDatabaseIntSchema(MetaParser):
 #  * 'show device-tracking database int'
 # ======================================
 class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
-    """Parser for show device-tracking database int"""
+    """Parser for show device-tracking database int <interface>"""
 
-    cli_command = ['show device-tracking database int']
+    cli_command = ['show device-tracking database int {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface, output=None):
         if output is None:
             output = self.device.execute(self.cli_command[0])
 
