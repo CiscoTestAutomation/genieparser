@@ -174,7 +174,19 @@ class ShowDeviceTrackingDatabaseIntSchema(MetaParser):
     """Schema for show device-tracking database int."""
 
     schema = {
-        
+        "binding_table": {"dynamic": int, "entries": int},
+        "network_layer_address": {
+            "10.102.32.44": {
+                "age": str,
+                "code": str,
+                "interface": str,
+                "link_layer_address": str,
+                "prlvl": str,
+                "state": str,
+                Optional("time_left"): str,
+                "vlan": int,
+            }
+        },
     }
 
 
@@ -238,6 +250,10 @@ class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
                     group = search.groupdict()
 
                     if capture == binding_table_capture:
+                        # convert str to int
+                        for item in group:
+                            group[item] = int(group[item])
+
                         new_group = {"binding_table": group}
                         device_info_obj.update(new_group)
 
@@ -245,6 +261,8 @@ class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
                         capture == tracking_database_capture
                         or capture == local_database_capture
                     ):
+                        # convert str to int
+                        group["vlan"] = int(group["vlan"])
 
                         # pull a key from dict to use as new_key
                         new_key = "network_layer_address"
