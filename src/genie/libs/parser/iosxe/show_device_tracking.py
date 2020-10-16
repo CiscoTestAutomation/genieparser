@@ -194,14 +194,15 @@ class ShowDeviceTrackingDatabaseIntSchema(MetaParser):
 class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
     """Parser for show device-tracking database int <interface>"""
 
-    cli_command = ['show device-tracking database int {interface}']
+    cli_command = 'show device-tracking database int {interface}'
 
-    def cli(self, interface='', output=None):
+    def cli(self, interface, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command[0])
+            cmd = self.cli_command.format(interface=interface)
+            out = self.device.execute(cmd)
 
         else:
-            output = output
+            out = output
 
         # Binding Table has 87 entries, 75 dynamic (limit 100000)
         # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
@@ -239,7 +240,7 @@ class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
         ]
 
         for capture in capture_list:
-            for line in output.splitlines():
+            for line in out.splitlines():
                 line = line.strip()
 
                 if re.search(capture, line):
