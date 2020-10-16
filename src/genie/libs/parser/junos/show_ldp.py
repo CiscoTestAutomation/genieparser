@@ -321,6 +321,7 @@ class ShowLDPOverviewSchema(MetaParser):
                 "ldp-message-id": int,
                 "ldp-configuration-sequence": int,
                 Optional("ldp-control-mode"): str,
+                Optional("ldp-closing-mode"): str,
                 "ldp-deaggregate": str,
                 "ldp-explicit-null": str,
                 "ldp-ipv6-tunneling": str,
@@ -481,6 +482,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
             'Operational': ['ldp-session-operational', 'int'],
             'Retention': ['ldp-retention-mode', 'str'],
             'Control': ['ldp-control-mode', 'str'],
+            'Closing': ['ldp-closing-mode', 'str'],
             # Auto targeted sessions
             'Auto targeted': ['ldp-auto-targeted-session-enabled', 'str'],
             'Dynamic tunnel session count': ['ldp-auto-targeted-dyn-tun-ses-count', 'int'],
@@ -809,7 +811,12 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                 interface_dict = overview_dict.setdefault(
                     'ldp-interface-address', {})
                 interface_dict.update({'interface-address': group['ip']})
-
+        import json
+        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
+        f = open("dict1016.txt","w")
+        f.write(json_data)
+        f.close()
+        import pdb;pdb.set_trace()
         return ret_dict
 
 
