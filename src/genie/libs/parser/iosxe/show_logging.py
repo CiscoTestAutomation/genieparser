@@ -70,7 +70,7 @@ class ShowLoggingSchema(MetaParser):
                 Optional('filtering'): str,
             },
             'monitor': {
-                Optional('status'): str, # 'enabled'|'disabled'
+                'status': str, # 'enabled'|'disabled'
                 'level': str,
                 'messages_logged': int,
                 'xml': str,
@@ -85,13 +85,13 @@ class ShowLoggingSchema(MetaParser):
                 }
             },
             'buffer': {
-                Optional('status'): str, # 'enabled'|'disabled'
+                'status': str, # 'enabled'|'disabled'
                 'level': str,
                 'messages_logged': int,
                 'xml': str, # 'enabled'|'disabled'
                 Optional('xml_buffer_count'): int,
                 'filtering': str, # 'enabled'|'disabled'
-                Optional('buffer_count'): int, 
+                Optional('buffer_count'): int,
                 Optional('discriminator'): str,
                 Optional('messages_rate_limited'): int,
                 Optional('messages_dropped_by_md'): int
@@ -183,22 +183,18 @@ class ShowLogging(ShowLoggingSchema):
                         r'+messages +dropped, +(?P<messages_rate_limited>\d+) +messages +rate-limited, '
                         r'+(?P<flushes>\d+) +flushes, +(?P<overruns>\d+) +overruns, +xml +(?P<xml>\S+), '
                         r'filtering +(?P<filtering>\S+)\)$')
-        
+
         #Console logging: disabled
-        p2 = re.compile(r'(?P<tag>Console) +logging: +(?P<status>\S+)$')
+        p2 = re.compile(r'(?P<tag>\S+) +logging: +(?P<status>\S+)$')
 
         #Monitor logging: level debugging, 13 messages logged, xml disabled,
-        p3 = re.compile(r'(?P<tag>Monitor) +logging: +level '
+        #Console logging: level debugging, 9789 messages logged, xml disabled,
+        p3 = re.compile(r'(?P<tag>\S+) +logging: +level '
                         r'+(?P<level>\S+), +(?P<messages_logged>\d+) '
                         r'+messages +logged, +xml +(?P<xml>\S+),$')
 
         #filtering disabled
         p4 = re.compile(r'filtering +(?P<filtering>\S+)$')
-
-        #Buffer logging:  level debugging, 1566 messages logged, xml disabled,
-        p5 = re.compile(r'(?P<tag>Buffer) +logging: +level +(?P<level>\S+), '
-                        r'+(?P<messages_logged>\d+) +messages +logged, +xml '
-                        r'+(?P<xml>\S+),$')
 
         #Exception Logging: size (4096 bytes)
         p6 = re.compile(r'Exception +Logging: size +\((?P<size_bytes>\d+) +bytes+\)$')
@@ -211,10 +207,11 @@ class ShowLogging(ShowLoggingSchema):
         p8 = re.compile(r'(?P<tag>File +logging): +(?P<status>\S+)$')
 
         #Persistent logging: disabled
-        p9 = re.compile(r'(?P<tag>Persistent +logging): +(?P<status>\S+)$')
+        #Persistent logging: enabled, url bootflash:/syslog, disk space 104857600 bytes, file size 10485760 bytes, batch size 4096 bytes
+        p9 = re.compile(r'Persistent\s+logging:\s+(?P<status>\w+)(,\s+url\s+(?P<url>[\w:/]+),\s+disk\s+space\s+(?P<disk_space_bytes>\d+)\s+bytes,\s+file\s+size\s+(?P<file_size_bytes>\d+)\s+bytes,\s+batch\s+size\s+(?P<batch_size_bytes>\d+)\s+bytes)?$')
 
         #Trap logging: level informational, 1570 message lines logged
-        p10 = re.compile(r'(?P<tag>Trap +logging): +level +'
+        p10 = re.compile(r'(?P<tag>Trap) +logging: +level +'
                          r'(?P<level>\S+), +(?P<message_lines_logged>\d+) '
                          r'+message +lines +logged$')
 
@@ -247,10 +244,8 @@ class ShowLogging(ShowLoggingSchema):
 
         #Log Buffer (32000 bytes):
         p19 = re.compile(r'Log +Buffer +\((?P<vrf>\d+) +bytes+\):$')
-                         
+
         ret_dict = {}
-        read_logs_in_list = False
-        logging_source_interface = False
         for line in out.splitlines():
 
             line = line.strip()
@@ -261,22 +256,22 @@ class ShowLogging(ShowLoggingSchema):
                 group = m.groupdict()
                 sys_log_entry = ret_dict.setdefault("syslog_logging", {})
                 logging_entry = ret_dict.setdefault("logging", {})
-                filter_modules_entry = ret_dict.setdefault("syslog_logging", {})
-                log_buffer_bytes_entry = ret_dict.setdefault("log_buffer_bytes", {})
-                
-                
+                filter_modules_entry = ret_dict.setdefault(
+                    "syslog_logging", {})
+                log_buffer_bytes_entry = ret_dict.setdefault(
+                    "log_buffer_bytes", {})
 
                 outer_logging_dict = {}
                 inner_key = group['enable_disable']
                 parent_dict = {}
-                counter_dict = {}
-
-                counter_dict['messages_dropped'] = int(group['messages_dropped'])
-                counter_dict['messages_rate_limited'] = int(group['messages_rate_limited'])
-                counter_dict['flushes'] = int(group['flushes'])
-                counter_dict['overruns'] = int(group['overruns'])
-                counter_dict['xml'] = group['xml']
-                counter_dict['filtering'] = group['filtering']
+                counter_dict = {
+                    'messages_dropped': int(group['messages_dropped']),
+                    'messages_rate_limited': int(group['messages_rate_limited']),
+                    'flushes': int(group['flushes']),
+                    'overruns': int(group['overruns']),
+                    'xml': group['xml'],
+                    'filtering': group['filtering'],
+                }
 
                 parent_dict['counters'] = counter_dict
                 sys_log_entry[inner_key] = parent_dict
@@ -286,60 +281,45 @@ class ShowLogging(ShowLoggingSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                console_dict = {}
-                console_dict['status'] = group['status']
-                logging_entry['console'] = console_dict
+                current_tag = group['tag'].lower()
+                logging_entry.setdefault(current_tag, {}).setdefault(
+                    'status', group['status'])
                 continue
 
             #Monitor logging: level debugging, 13 messages logged, xml disabled,
+            #Console logging: level debugging, 9789 messages logged, xml disabled,
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                monitor_dict = {}
-                current_tag = group['tag']
-
-                monitor_dict['level'] = group['level']
-                monitor_dict['messages_logged'] = int(group['messages_logged'])
-                monitor_dict['xml'] = group['xml']
-
-                logging_entry['monitor'] = monitor_dict
+                current_tag = group['tag'].lower()
+                logging_entry.setdefault(current_tag,
+                                         {}).setdefault('status', 'enabled')
+                logging_entry[current_tag].setdefault('level', group['level'])
+                logging_entry[current_tag].setdefault(
+                    'messages_logged', int(group['messages_logged']))
+                logging_entry[current_tag].setdefault('xml', group['xml'])
                 continue
 
             #filtering disabled
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                if current_tag == 'Monitor':
-                    monitor_dict['filtering'] = group['filtering']
-                elif current_tag == 'Console':
-                    console_dict['filtering'] = group['filtering']
-                elif current_tag == 'Buffer':
-                    buffer_dict['filtering'] = group['filtering']
-                elif current_tag == 'Trap logging':
-                    logging_dict['filtering'] = group['filtering']
-                continue
-
-            #Buffer logging:  level debugging, 1566 messages logged, xml disabled,
-            m = p5.match(line)
-            if m:
-                group = m.groupdict()
-                buffer_dict = {}
-                current_tag = group['tag']
-
-                buffer_dict['level'] = group['level']
-                buffer_dict['messages_logged'] = int(group['messages_logged'])
-                buffer_dict['xml'] = group['xml']
-
-                logging_entry['buffer'] = buffer_dict
+                if current_tag == 'trap':
+                    logging_entry.setdefault(current_tag, {}).setdefault(
+                        'logging_to',
+                        {}).setdefault(current_logging_to,
+                                       {}).setdefault('filtering',
+                                                     group['filtering'])
+                else:
+                    logging_entry.setdefault(current_tag, {}).setdefault(
+                        'filtering', group['filtering'])
                 continue
 
             #Exception Logging: size (4096 bytes)
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                exception_dict = {}
-                exception_dict['size_bytes'] = int(group['size_bytes'])
-
+                exception_dict = {'size_bytes': int(group['size_bytes'])}
                 logging_entry['exception'] = exception_dict
                 continue
 
@@ -347,25 +327,29 @@ class ShowLogging(ShowLoggingSchema):
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                logging_entry['count_and_time_stamp_logging_messages'] = group['count_and_time_stamp_logging_messages']
+                logging_entry['count_and_time_stamp_logging_messages'] = group[
+                    'count_and_time_stamp_logging_messages']
                 continue
-            
+
             #File logging: disabled
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                file_dict = {}
-                file_dict['status'] = group['status']
+                file_dict = {'status': group['status']}
                 logging_entry['file'] = file_dict
                 continue
 
             #Persistent logging: disabled
+            #Persistent logging: enabled, url bootflash:/syslog, disk space 104857600 bytes, file size 10485760 bytes, batch size 4096 bytes
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                persistent_dict = {}
-                persistent_dict['status'] = group['status']
-                logging_entry['persistent'] = persistent_dict
+                for item in group:
+                    if group[item]:
+                        logging_entry.setdefault('persistent', {}).setdefault(
+                            item,
+                            int(group[item])
+                            if 'bytes' in item else group[item])
                 continue
 
             #Trap logging: level informational, 1570 message lines logged
@@ -373,29 +357,27 @@ class ShowLogging(ShowLoggingSchema):
             if m:
                 group = m.groupdict()
                 trap_dict = {}
-                current_tag = group['tag']
+                current_tag = group['tag'].lower()
 
                 trap_dict['level'] = group['level']
-                trap_dict['message_lines_logged'] = int(group['message_lines_logged'])
+                trap_dict['message_lines_logged'] = int(
+                    group['message_lines_logged'])
 
                 logging_entry['trap'] = trap_dict
                 continue
-            
+
             #Logging to 192.168.1.3  (tcp port 1514, audit disabled,
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 logging_dict = {}
-                
+                current_logging_to = group['logging_to']
+
                 logging_dict['protocol'] = group['protocol']
                 logging_dict['port'] = int(group['port'])
                 logging_dict['audit'] = group['audit']
-                
-                
-                #outer_logging_dict[group['logging_to']] = logging_dict
-                
 
-                outer_logging_dict.update({group['logging_to']: logging_dict})
+                outer_logging_dict.update({current_logging_to: logging_dict})
                 trap_dict['logging_to'] = outer_logging_dict
                 continue
 
@@ -410,21 +392,24 @@ class ShowLogging(ShowLoggingSchema):
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                logging_dict['message_lines_logged'] = int(group['message_lines_logged'])
+                logging_dict['message_lines_logged'] = int(
+                    group['message_lines_logged'])
                 continue
 
             #0 message lines rate-limited,
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                logging_dict['message_lines_rate_limited'] = int(group['message_lines_rate_limited'])
+                logging_dict['message_lines_rate_limited'] = int(
+                    group['message_lines_rate_limited'])
                 continue
 
             #0 message lines dropped-by-MD,
             m = p15.match(line)
             if m:
                 group = m.groupdict()
-                logging_dict['message_lines_dropped_by_md'] = int(group['message_lines_dropped_by_md'])
+                logging_dict['message_lines_dropped_by_md'] = int(
+                    group['message_lines_dropped_by_md'])
                 continue
 
             #xml disabled, sequence number disabled
@@ -438,8 +423,7 @@ class ShowLogging(ShowLoggingSchema):
             #Logging Source-Interface:       VRF Name:
             m = p17.match(line)
             if m:
-                group = m.groupdict()
-                logging_source_interface = True
+                # do nothing, but need to parse for skipping this line
                 continue
 
             #Vlan200
@@ -449,9 +433,11 @@ class ShowLogging(ShowLoggingSchema):
                 group = m.groupdict()
                 logging_source_dict = {}
                 if group['vrf']:
-                    logging_source_dict['logging_configuration'] = group['interface'] + ':' +group['vrf']
+                    logging_source_dict['logging_configuration'] = group[
+                        'interface'] + ':' + group['vrf']
                 else:
-                    logging_source_dict['logging_configuration'] = group['interface']
+                    logging_source_dict['logging_configuration'] = group[
+                        'interface']
 
                 logging_dict['logging_source_interface'] = logging_source_dict
                 continue
@@ -465,10 +451,10 @@ class ShowLogging(ShowLoggingSchema):
                 continue
 
             if line:
-                if line.lower().startswith('no active') or line.lower().startswith('no inactive'):
-                    continue
-                else:
+                if not line.lower().startswith(
+                    'no active'
+                ) and not line.lower().startswith('no inactive'):
                     log_lines.append(line)
                     ret_dict['logs'] = log_lines
-                    continue
+                continue
         return ret_dict
