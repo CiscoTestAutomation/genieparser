@@ -145,11 +145,11 @@ class VimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmIdSchema):
         
         # --Snapshot Created On  : 12/1/2014 14:39:4
         # ----Snapshot Created On  : 10/2/2015 9:13:45
-        p4 = re.compile(r'^.*Snapshot\s+Created\s+On\s+:\s+(?P<created>[\S\s]+)$')
+        p4 = re.compile(r'^.*Snapshot\s+Created\s+On\s+:\s+(?P<created>\S+\s+\S+)$')
         
         # --Snapshot State       : powered off
         # ----Snapshot State       : powered off
-        p5 = re.compile(r'^.*Snapshot\s+State\s+:\s+(?P<state>[\S\s]+)$')
+        p5 = re.compile(r'^.*Snapshot\s+State\s+:\s+(?P<state>\S+\s+\S+)$')
         
         snapshot_name = ''
         for line in out.splitlines():
@@ -203,6 +203,6 @@ class VimCmdVmsvcSnapshotGetVmId(VimCmdVmsvcSnapshotGetVmIdSchema):
                 groups = m.groupdict()
                 snapshot_info_dict.update(groups)
                 continue
-            
+
         return ret_dict
 
