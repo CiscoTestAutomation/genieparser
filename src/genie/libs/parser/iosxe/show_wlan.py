@@ -371,7 +371,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
         #     Datapath plumb                                                  : 0
         #     Due to SSID change                                              : 163
         #
-        # [--OUTPUT OMITTED--]
+        # ...OUTPUT OMITTED...
         #
         #     L3 VLAN Override connection timeout                         : 0
         #     Mobility peer delete                                            : 0
