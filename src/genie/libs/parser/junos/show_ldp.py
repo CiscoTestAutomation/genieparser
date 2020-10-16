@@ -823,7 +823,7 @@ class ShowLDPInterfaceSchema(MetaParser):
             Optional("@xmlns"): str,
             "ldp-interface": {
                 "interface-name": str,
-                "ldp-interface-local-address": str,
+                Optional("ldp-interface-local-address"): str,
                 "ldp-label-space-id": str,
                 "ldp-neighbor-count": str,
                 "ldp-next-hello": str,
@@ -850,7 +850,8 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
             out = output
 
         # ge-0/0/0.0         10.1.2.2                   10.204.14.100:0  1      3
-        p1 = re.compile(r'^(?P<interface_name>\S+) +(?P<local_address>\S+) +'
+        # et-0/0/0.0           1.1.14.240:0         1           3
+        p1 = re.compile(r'^(?P<interface_name>\S+)( +(?P<local_address>\S+))? +'
                         r'(?P<space_id>\S+) +(?P<neighbor_count>\d+) +(?P<next_hello>\d+)$')
 
         # Hello interval: 5, Hold time: 15, Transport address: 10.204.14.100
@@ -871,8 +872,11 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
                     setdefault('ldp-interface', {})
                 ldp_interface_info_dict.update(
                     {'interface-name': group['interface_name']})
-                ldp_interface_info_dict.update(
-                    {'ldp-interface-local-address': group['local_address']})
+
+                if group['local_address']:
+                    ldp_interface_info_dict.update(
+                        {'ldp-interface-local-address': group['local_address']})
+                        
                 ldp_interface_info_dict.update(
                     {'ldp-label-space-id': group['space_id']})
                 ldp_interface_info_dict.update(

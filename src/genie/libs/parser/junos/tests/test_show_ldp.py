@@ -137,6 +137,28 @@ class TestShowLDPInterfaceDetail(unittest.TestCase):
         '''
     }
 
+    golden_output2 = {
+        'execute.return_value':'''
+        show ldp interface et-0/0/0.0 detail 
+        Interface            Label space ID        Nbr count   Next hello
+        et-0/0/0.0           1.1.14.240:0         1           3
+        Hello interval: 5, Hold time: 15, Transport address: 1.1.14.240
+        '''}
+
+    golden_parsed_output2 = {
+        "ldp-interface-information": {
+            "ldp-interface": {
+                "interface-name": "et-0/0/0.0",
+                "ldp-label-space-id": "1.1.14.240:0",
+                "ldp-neighbor-count": "1",
+                "ldp-next-hello": "3",
+                "ldp-transport-address": "1.1.14.240:0",
+                "ldp-hello-interval": "5",
+                "ldp-holdtime": "15",
+            }
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowLDPInterfaceDetail(device=self.device)
@@ -148,6 +170,12 @@ class TestShowLDPInterfaceDetail(unittest.TestCase):
         obj = ShowLDPInterfaceDetail(device=self.device)
         parsed_output = obj.parse(interface='ge-0/0/0.0')
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.device = Mock(**self.golden_output2)
+        obj = ShowLDPInterfaceDetail(device=self.device)
+        parsed_output = obj.parse(interface='et-0/0/0.0')
+        self.assertEqual(parsed_output, self.golden_parsed_output2)        
 
 
 # =================================
