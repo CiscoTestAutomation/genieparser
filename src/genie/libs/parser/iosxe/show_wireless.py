@@ -1990,8 +1990,6 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command[0])
-        else:
-            out = self.device.execute(self.cli_command[0], output=output)
 
         # Number of APs: 61
 
