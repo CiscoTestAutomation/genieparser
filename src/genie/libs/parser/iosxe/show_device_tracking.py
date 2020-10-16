@@ -216,14 +216,18 @@ class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
         binding_table_capture = r"^Binding Table has (?P<entries>\d+) entries, (?P<dynamic>\d+) dynamic \(limit 100000\)$"
 
         # DH4 10.160.43.197                           94d4.690b.dbfa  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
-        tracking_database = r"^(?P<code>\S+)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+.*)$"
+        tracking_database_capture = r"^(?P<code>\S+)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+.*)$"
 
         # L   10.160.48.1                             0000.0c9f.f45f  Vl1024         1024  0100 42473mn REACHABLE
-        local_database = r"^(?P<code>L)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)$"
+        local_database_capture = r"^(?P<code>L)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)$"
 
         device_info_obj = {}
 
-        capture_list = [binding_table_capture, tracking_database, local_database]
+        capture_list = [
+            binding_table_capture,
+            tracking_database_capture,
+            local_database_capture,
+        ]
 
         for capture in capture_list:
             for line in output.splitlines():
@@ -232,9 +236,27 @@ class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
                 if re.search(capture, line):
                     search = re.search(capture, line)
                     group = search.groupdict()
-                    
-                    if search == local_database:
-                        new_group = {"binding_table" : group}
+
+                    if capture == binding_table_capture:
+                        new_group = {"binding_table": group}
                         device_info_obj.update(new_group)
+
+                    if (
+                        capture == tracking_database_capture
+                        or capture == local_database_capture
+                    ):
+
+                        # pull a key from dict to use as new_key
+                        new_key = "network_layer_address"
+                        new_group = {group[new_key]: {}}
+
+                        # update then pop new_key from the dict
+                        new_group[group[new_key]].update(group)
+                        new_group[group[new_key]].pop(new_key)
+
+                        if not device_info_obj.get(new_key):
+                            device_info_obj[new_key] = {}
+
+                        device_info_obj[new_key].update(new_group)
 
         return device_info_obj
