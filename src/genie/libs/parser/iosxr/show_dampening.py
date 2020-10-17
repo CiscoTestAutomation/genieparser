@@ -21,11 +21,12 @@ class ShowImDampeningSchema(MetaParser):
     schema = {
                 'interface': {
                     Any(): {
-                    'protocol': {
+                    'index': {
                         Any(): {
-                        'capsulation': str,
+                        Optional('capsulation'): str,
                         'penalty': int,
                         'suppressed': str,
+                        Optional('protocol'): str,
                         }
                     }
                 }
@@ -47,47 +48,52 @@ class ShowImDampening(ShowImDampeningSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-            
-        result_dict = {}
-        result_dict.setdefault('interface', {})
         
+           
+        result_dict = {}
+        index=0
+        interface=""       
         # GigabitEthernet0/0/0/1                                               2389 YES
         # POS0/2/0/0                  <base>             ppp                      0 NO 
-        p1 = re.compile(r'^(?P<interface>.{1,26}) +(?P<prot>.{1,20}) +(?P<cap>.{1,10}) +(?P<pen>\d+) +(?P<sup>YES|NO)')
+        p1 = re.compile(r'^(?P<interface>\S+) +(?P<prot>\S+)? +(?P<cap>\S+)? +(?P<pen>\d+) +(?P<sup>YES|NO)')
 
         for line in out.splitlines():
             if line:
                 line = line.strip()
             else:
                 continue
-            
+
+            # GigabitEthernet0/0/0/1                                               2389 YES
+            # POS0/2/0/0                  <base>             ppp                      0 NO             
+
             m = p1.match(line)
             
             if m:
                 group = m.groupdict()
-                interface=group['interface'].rstrip()
                 
-                # set "not_present" on any empty fields
-                for empty in group.keys():
-                    if group.get(empty).startswith(' '):
-                        group[empty]="not_present"
-                protocol=group['prot'].rstrip()
-                
-                if result_dict['interface'].get(interface)==None:
-                    result_dict['interface'][interface]={}
-                    result_dict['interface'][interface]['protocol']={}
-                result_dict['interface'][interface]['protocol'][protocol]={}
-                result_dict['interface'][interface]['protocol'][protocol].update({'capsulation': group['cap']})  
-                result_dict['interface'][interface]['protocol'][protocol].update({'penalty': int(group['pen'])})
-                result_dict['interface'][interface]['protocol'][protocol].update({'suppressed': group['sup'].lower()})                                     
+                if interface==group['interface']:
+                    interface=group['interface']
+                    index=index+1
+                else:
+                    interface=group['interface']
+                    index=1   
+                protocol_dict = result_dict.setdefault('interface', {}).setdefault(interface, {}).setdefault('index', {}).setdefault(index, {})
+                protocol_dict.update({'penalty': int(group['pen'])})
+                protocol_dict.update({'suppressed': group['sup']})
+                if group['cap']:
+                    protocol_dict.update({'capsulation': group['cap']})
+                if group['prot']:
+                    protocol_dict.update({'protocol': group['prot']})
                 continue
+   
         return result_dict
 
 class ShowImDampeningIntfSchema(MetaParser):
     schema = {
         'interface': {
             Any(): {
-            'dampening_status': str,    
+            'dampening_status': str,
+            Optional('interface_handler'): str,    
             Optional('currently_suppressed'): str,
             Optional('half_life'): int,
             Optional('max_supress_time'): int,
@@ -96,13 +102,14 @@ class ShowImDampeningIntfSchema(MetaParser):
             Optional('suppress'): int,
             Optional('suppressed_secs_remaining'): int,
             Optional('underlying_state'): str,
-            Optional('protocol'): 
+            Optional('index'): 
                      {Any():
-                        {Optional('protocol_capsulation'): str, 
-                        Optional('protocol_penalty'): int,
-                        Optional('protocol_suppression'): str,
-                        Optional('protocol_suppression_timer'): int,
-                        Optional('protocol_underlying_state'): str,
+                        {Optional('capsulation'): str, 
+                        Optional('penalty'): int,
+                        Optional('suppression'): str,
+                        Optional('suppression_timer'): int,
+                        Optional('underlying_state'): str,
+                        Optional('protocol'): str,
                       },
                    },
                 }
@@ -112,27 +119,24 @@ class ShowImDampeningIntfSchema(MetaParser):
 class ShowImDampeningIntf(ShowImDampeningIntfSchema):
     """ Parser for show im dampening interface {interface} """
     
-    cli_command = ['show im dampening interface {interface}']
+    cli_command = 'show im dampening interface {interface}'
     
-    def cli(self, interface=None, output=None):
+    def cli(self, interface, output=None):
         """parsing mechanism: cli
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
         """
         if output is None:
-            if interface:
-                out = self.device.execute(self.cli_command[1].format(
-                                          interface=interface))
+            out = self.device.execute(self.cli_command.format(interface=interface))
         else:
             out = output
         
         result_dict = {}
-        result_dict.setdefault('interface', {})
-        
+        index=0
         # TenGigE 0/1/0/0 (0x01180020)
         # GigabitEthernet0/2/0/0 (0x080002c0)
-        p1 = re.compile(r'^(?P<interface>[a-zA-Z].+[\/\d]+) \(')
+        p1 = re.compile(r'^(?P<interface>[a-zA-Z].+[\/\d]+) +\((?P<intf_hand>\S+)\)')
         
         # Dampening enabled: Penalty 1625, SUPPRESSED (42 secs remaining)
         p2 = re.compile(r'Dampening\s(?P<stat>\w+): +Penalty\s(?P<pen>\d+), +SUPPRESSED\s\((?P<sup>\d+)')
@@ -151,12 +155,13 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
         p6 = re.compile(r'suppress:\s+(?P<suppress>\d+) +max-suppress-time:\s(?P<max_suppress>\d+)')
         
         # ipv6           ipv6               1625  YES    42s  remaining        Down
-        p7 = re.compile(r'^(?P<prot>[a-z\d<>].{1,12}) +(?P<prot_cap>[a-z\d<>].{1,12})'
-                         ' +(?P<prot_pen>\d+) +(?P<prot_sup>YES|NO) +(?P<prot_sup_time>\d+).'
-                         ' +remaining\s+(?P<prot_state>\S+)')
-        
+        p7 = re.compile(r'^(?P<prot>\S+)? +(?P<prot_cap>\S+)? +(?P<prot_pen>\d+) +(?P<prot_sup>YES|NO)'
+                         ' +(?P<prot_sup_time>\d+). +remaining\s+(?P<prot_state>\S+)')
+            
         # Dampening not enabled
         p8 = re.compile(r'^(?P<stat>Dampening not enabled)')
+        
+
         
         for line in out.splitlines():
     
@@ -166,76 +171,87 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
             else:
                 continue
 
+            # TenGigE 0/1/0/0 (0x01180020)
+            # GigabitEthernet0/2/0/0 (0x080002c0)
+
             m = p1.match(line)
             
             if m:
                 group = m.groupdict()
+                result_dict.setdefault('interface', {})
                 interface=group['interface']
-                if result_dict['interface'].get(interface)==None:
-                    result_dict['interface'][interface]={}
-                    
-                    
+                interface_dict = result_dict.setdefault('interface', {}).setdefault(interface, {})
+                interface_dict.update({'interface_handler': group['intf_hand']})
+            
+            # Dampening enabled: Penalty 1625, SUPPRESSED (42 secs remaining)
+                                                    
             m = p2.match(line)
             
             if m:
                 group = m.groupdict()
-                result_dict['interface'][interface].update({'dampening_status': group['stat'].lower()})
+                result_dict['interface'][interface].update({'dampening_status': group['stat']})
                 result_dict['interface'][interface].update({'penalty': int(group['pen'])})
                 result_dict['interface'][interface].update({'suppressed_secs_remaining': int(group['sup'])})
                 result_dict['interface'][interface].update({'currently_suppressed': 'yes'})
+            
+            # Dampening enabled: Penalty 0, not suppressed
                 
             m = p3.match(line)
             
             if m:
                 group = m.groupdict()
-                result_dict['interface'][interface].update({'dampening_status': group['stat_ns'].lower()})
+                result_dict['interface'][interface].update({'dampening_status': group['stat_ns']})
                 result_dict['interface'][interface].update({'penalty': int(group['pen_ns'])})
                 result_dict['interface'][interface].update({'currently_suppressed': 'no'})
+            
+            # underlying-state:  Up
+            # Underlying state: Down
             
             m = p4.match(line)
 
             if m:
                 group = m.groupdict()
-                result_dict['interface'][interface].update({'underlying_state': group['und_stat'].lower()})
-
+                result_dict['interface'][interface].update({'underlying_state': group['und_stat']})
+            
+            #  half-life: 1        reuse:             1000 
             m = p5.match(line)
 
             if m:
                 group = m.groupdict()
                 result_dict['interface'][interface].update({'half_life': int(group['half_life'])})
                 result_dict['interface'][interface].update({'reuse': int(group['reuse'])})
-
+            
+            # suppress:  1500     max-suppress-time: 4 
             m = p6.match(line)
 
             if m:
                 group = m.groupdict()
                 result_dict['interface'][interface].update({'suppress': int(group['suppress'])})
                 result_dict['interface'][interface].update({'max_supress_time': int(group['max_suppress'])})
-                     
+             
+            # ipv6           ipv6               1625  YES    42s  remaining        Down        
             m = p7.match(line)
             
             if m:
                 group = m.groupdict()
-                if result_dict['interface'][interface].get('protocol')==None:
-                    result_dict['interface'][interface]['protocol']={}
-                protocol=group['prot'].rstrip()
-                if result_dict['interface'][interface]['protocol'].get(protocol)==None:
-                    result_dict['interface'][interface]['protocol'][protocol]={}
-                result_dict['interface'][interface]['protocol'][protocol].update({'protocol_capsulation': group['prot_cap'].rstrip()})
-                result_dict['interface'][interface]['protocol'][protocol].update({'protocol_penalty': int(group['prot_pen'])})
-                result_dict['interface'][interface]['protocol'][protocol].update({'protocol_suppression': group['prot_sup'].lower()})
-                result_dict['interface'][interface]['protocol'][protocol].update({'protocol_suppression_timer': int(group['prot_sup_time'])})                       
-                result_dict['interface'][interface]['protocol'][protocol].update({'protocol_underlying_state': group['prot_state'].lower()})
-            
+                index=index+1
+                protocol_dict = result_dict.setdefault('interface', {}).setdefault(interface, {}).setdefault('index', {}).setdefault(index, {})
+                protocol_dict.update({'penalty': int(group['prot_pen'])})
+                protocol_dict.update({'suppression': group['prot_sup']})
+                protocol_dict.update({'suppression_timer': int(group['prot_sup_time'])})                       
+                protocol_dict.update({'underlying_state': group['prot_state']})
+                if group['prot']:
+                    protocol_dict.update({'protocol': group['prot']})
+                if group['prot_cap']:
+                        protocol_dict.update({'capsulation': group['prot_cap']})
+                               
+            # Dampening not enabled
             m = p8.match(line)
             
             if m:
                 group = m.groupdict()
-                result_dict['interface'][interface]={}
-                result_dict['interface'][interface].update({'dampening_status': 'dampening_not_enabled'})
-                result_dict['interface'][interface].update({})
- 
-                
-            
+                result_dict.setdefault('interface', {}).setdefault(interface, {})
+                result_dict['interface'][interface].update({'dampening_status': 'dampening_not_enabled'})  
+        
         return result_dict    
                   
