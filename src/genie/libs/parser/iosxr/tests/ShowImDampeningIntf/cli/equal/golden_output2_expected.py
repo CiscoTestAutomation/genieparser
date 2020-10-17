@@ -4,28 +4,31 @@ expected_output = {
                             'currently_suppressed': 'yes',
                             'dampening_status': 'enabled',
                             'half_life': 1,
-                            'max_supress_time': 4,
-                            'penalty': 1625,
-                            'protocol': {
-                                'ipv4': {
-                                    'protocol_capsulation': 'ipv4',
-                                    'protocol_penalty': 1615,
-                                    'protocol_suppression': 'no',
-                                    'protocol_suppression_timer': 22,
-                                    'protocol_underlying_state': 'down'
+                            'index': {
+                                1: {
+                                    'capsulation': 'ipv6',
+                                    'penalty': 1625,
+                                    'protocol': 'ipv6',
+                                    'suppression': 'YES',
+                                    'suppression_timer': 42,
+                                    'underlying_state': 'Down'
                                 },
-                                'ipv6': {
-                                    'protocol_capsulation': 'ipv6',
-                                    'protocol_penalty': 1625,
-                                    'protocol_suppression': 'yes',
-                                    'protocol_suppression_timer': 42,
-                                    'protocol_underlying_state': 'down'
+                                2: {
+                                    'capsulation': 'ipv4',
+                                    'penalty': 1615,
+                                    'protocol': 'ipv4',
+                                    'suppression': 'NO',
+                                    'suppression_timer': 22,
+                                    'underlying_state': 'Down'
                                 }
                             },
+                            'interface_handler': '0x01180020',
+                            'max_supress_time': 4,
+                            'penalty': 1625,
                             'reuse': 1000,
                             'suppress': 1500,
                             'suppressed_secs_remaining': 42,
-                            'underlying_state': 'down'
+                            'underlying_state': 'Down'
                         }
                     }
                 }
