@@ -1,39 +1,38 @@
 expected_output = {
                     'interface': {
                         'GigabitEthernet0/0/0/0': {
-                            'protocol': {
-                                'not_present': {
-                                    'capsulation': 'not_present',
+                            'index': {
+                                1: {
                                     'penalty': 629,
-                                    'suppressed': 'no'
+                                    'suppressed': 'NO'
                                 }
                             }
                         },
                         'GigabitEthernet0/0/0/1': {
-                            'protocol': {
-                                'not_present': {
-                                    'capsulation': 'not_present',
+                            'index': {
+                                1: {
                                     'penalty': 2389,
-                                    'suppressed': 'yes'
+                                    'suppressed': 'YES'
                                 }
                             }
                         },
                         'POS0/2/0/0': {
-                            'protocol': {
-                                '<base>': {
-                                    'capsulation': 'ppp       ',
+                            'index': {
+                                1: {
                                     'penalty': 0,
-                                    'suppressed': 'no'
+                                    'suppressed': 'NO'
                                 },
-                                'ipv4': {
-                                    'capsulation': 'ipcp      ',
+                                2: {
+                                    'capsulation': 'ppp',
                                     'penalty': 0,
-                                    'suppressed': 'no'
+                                    'protocol': '<base>',
+                                    'suppressed': 'NO'
                                 },
-                                'not_present': {
-                                    'capsulation': 'not_present',
+                                3: {
+                                    'capsulation': 'ipcp',
                                     'penalty': 0,
-                                    'suppressed': 'no'
+                                    'protocol': 'ipv4',
+                                    'suppressed': 'NO'
                                 }
                             }
                         }
