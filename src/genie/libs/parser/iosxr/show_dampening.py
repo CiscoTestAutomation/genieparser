@@ -107,7 +107,7 @@ class ShowImDampeningIntfSchema(MetaParser):
                         {Optional('capsulation'): str, 
                         Optional('penalty'): int,
                         Optional('suppression'): str,
-                        Optional('suppression_timer'): int,
+                        Optional('suppression_remaining_sec'): int,
                         Optional('underlying_state'): str,
                         Optional('protocol'): str,
                       },
@@ -238,7 +238,7 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
                 protocol_dict = result_dict.setdefault('interface', {}).setdefault(interface, {}).setdefault('index', {}).setdefault(index, {})
                 protocol_dict.update({'penalty': int(group['prot_pen'])})
                 protocol_dict.update({'suppression': group['prot_sup']})
-                protocol_dict.update({'suppression_timer': int(group['prot_sup_time'])})                       
+                protocol_dict.update({'suppression_remaining_sec': int(group['prot_sup_time'])})                       
                 protocol_dict.update({'underlying_state': group['prot_state']})
                 if group['prot']:
                     protocol_dict.update({'protocol': group['prot']})
