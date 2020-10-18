@@ -10,7 +10,7 @@ expected_output = {
                                     'penalty': 1625,
                                     'protocol': 'ipv6',
                                     'suppression': 'YES',
-                                    'suppression_timer': 42,
+                                    'suppression_remaining_sec': 42,
                                     'underlying_state': 'Down'
                                 },
                                 2: {
@@ -18,7 +18,7 @@ expected_output = {
                                     'penalty': 1615,
                                     'protocol': 'ipv4',
                                     'suppression': 'NO',
-                                    'suppression_timer': 22,
+                                    'suppression_remaining_sec': 22,
                                     'underlying_state': 'Down'
                                 }
                             },
