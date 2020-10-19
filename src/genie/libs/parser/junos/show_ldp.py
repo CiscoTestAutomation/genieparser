@@ -395,7 +395,7 @@ class ShowLDPOverviewSchema(MetaParser):
                     "ldp-session-protect-timeout": int
                 },
                 "ldp-interface-address": {
-                    "interface-address": str
+                    "interface-address": list
                 },
                 Optional("ldp-job-overview"): {
                     "ldp-read-job-time-quantum": int,
@@ -809,14 +809,14 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
             if m12:
                 group = m12.groupdict()
                 interface_dict = overview_dict.setdefault(
-                    'ldp-interface-address', {})
-                interface_dict.update({'interface-address': group['ip']})
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        f = open("dict1016.txt","w")
-        f.write(json_data)
-        f.close()
-        import pdb;pdb.set_trace()
+                    'ldp-interface-address', {}).setdefault('interface-address',[])
+                interface_dict.append(group['ip'])
+        # import json
+        # json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
+        # f = open("dict1016.txt","w")
+        # f.write(json_data)
+        # f.close()
+        # import pdb;pdb.set_trace()
         return ret_dict
 
 
