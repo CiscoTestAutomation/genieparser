@@ -1344,25 +1344,6 @@ class TestShowLDPOverview(unittest.TestCase):
             Current number of labels allocated by all protocols: 0
     '''}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     golden_output_7 = {'execute.return_value': '''
         show ldp overview 
         Instance: master
