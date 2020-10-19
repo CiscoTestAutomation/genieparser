@@ -387,13 +387,13 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
         client_stats_capture = (
             r"^"
             #   Authenticating         : 7
-            r"\s+Authenticating\s+:\s+(?P<auth>\d+)\n+"
+            r"\s+Authenticating\s+:\s+(?P<authenticating>\d+)\n+"
             #   Mobility               : 0
             r"\s+Mobility\s+:\s+(?P<mobility>\d+)\n+"
             #   IP Learn               : 0
             r"\s+IP Learn\s+:\s+(?P<ip_learn>\d+)\n+"
             #   Webauth Pending        : 0
-            r"\s+Webauth Pending\s+:\s+(?P<webauth>\d+)\n+"
+            r"\s+Webauth Pending\s+:\s+(?P<webauth_pending>\d+)\n+"
             #   Run                    : 2
             r"\s+Run\s+:\s+(?P<run>\d+)\n+"
         )
@@ -434,19 +434,19 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # QoS failure                                                     : 0
             r"\s+QoS failure\s+:\s+(?P<qos_fail>\d+)\n+"
             # WPA key exchange timeout                                        : 13
-            r"\s+WPA key exchange timeout\s+:\s+(?P<wpa_key_timeout>\d+)\n+"
+            r"\s+WPA key exchange timeout\s+:\s+(?P<wpa_key_exchange_timeout>\d+)\n+"
             # WPA group key update timeout                                    : 101
-            r"\s+WPA group key update timeout\s+:\s+(?P<wpa_groupkey_timeout>\d+)\n+"
+            r"\s+WPA group key update timeout\s+:\s+(?P<wpa_group_key_update_timeout>\d+)\n+"
             # 802.11w MAX SA queries reached                                  : 0
             r"\s+802.11w MAX SA queries reached\s+:\s+(?P<dot11w_max_sa>\d+)\n+"
             # Client deleted during HA recovery                               : 0
-            r"\s+Client deleted during HA recovery\s+:\s+(?P<ha_recovery>\d+)\n+"
+            r"\s+Client deleted during HA recovery\s+:\s+(?P<client_deleted_during_ha_recovery>\d+)\n+"
             # Client blacklist                                                : 0
-            r"\s+Client blacklist\s+:\s+(?P<blacklist>\d+)\n+"
+            r"\s+Client blacklist\s+:\s+(?P<client_blacklist>\d+)\n+"
             # Inter instance roam failure                                     : 0
-            r"\s+Inter instance roam failure\s+:\s+(?P<roam_fail>\d+)\n+"
+            r"\s+Inter instance roam failure\s+:\s+(?P<inter_instance_roam_failure>\d+)\n+"
             # Due to mobility failure                                         : 0
-            r"\s+Due to mobility failure\s+:\s+(?P<mobility_fail>\d+)\n+"
+            r"\s+Due to mobility failure\s+:\s+(?P<due_to_mobility_failure>\d+)\n+"
             # Session timeout                                                 : 2
             r"\s+Session timeout\s+:\s+(?P<session_timeout>\d+)\n+"
             # Idle timeout                                                    : 0
@@ -456,7 +456,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # NAS error                                                       : 0
             r"\s+NAS error\s+:\s+(?P<nas_error>\d+)\n+"
             # Policy Manager internal error                                   : 0
-            r"\s+Policy Manager internal error\s+:\s+(?P<policy_manager_error>\d+)\n+"
+            r"\s+Policy Manager internal error\s+:\s+(?P<policy_manager_internal_error>\d+)\n+"
             # Mobility WLAN down                                              : 0
             r"\s+Mobility WLAN down\s+:\s+(?P<mobility_wlan_down>\d+)\n+"
             # Mobility tunnel down                                            : 0
@@ -470,7 +470,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # DOT11r pre-authentication failure                               : 0
             r"\s+DOT11r pre-authentication failure\s+:\s+(?P<dot11v_preauth_fail>\d+)\n+"
             # SAE authentication failure                                      : 0
-            r"\s+SAE authentication failure\s+:\s+(?P<dot11_sae_auth_fail>\d+)\n+"
+            r"\s+SAE authentication failure\s+:\s+(?P<sae_auth_fail>\d+)\n+"
             # DOT11 failure                                                   : 0
             r"\s+DOT11 failure \s+:\s+(?P<dot11_fail>\d+)\n+"
             # DOT11 SAE invalid message                                       : 0
@@ -512,7 +512,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # DOT11 invalid QoS parameter                                     : 0
             r"\s+DOT11 invalid QoS parameter\s+:\s+(?P<dot11_invalid_qos_parameter>\d+)\n+"
             # Client not allowed by assisted roaming                          : 0
-            r"\s+Client not allowed by assisted roaming\s+:\s+(?P<not_allowed_roaming>\d+)\n+"
+            r"\s+Client not allowed by assisted roaming\s+:\s+(?P<client_not_allowed_by_assisted_roaming>\d+)\n+"
             # IAPP disassociation for wired client                            : 0
             r"\s+IAPP disassociation for wired client\s+:\s+(?P<iapp_disassociate_wired>\d+)\n+"
             # Wired WGB change                                                : 0
@@ -556,7 +556,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # Client DOT1x timeout                                            : 0
             r"\s+Client DOT1x timeout\s+:\s+(?P<client_dot1x_timeout>\d+)\n+"
             # Malformed EAP key frame                                         : 0
-            r"\s+Malformed EAP key frame\s+:\s+(?P<eap_bad_keyframe>\d+)\n+"
+            r"\s+Malformed EAP key frame\s+:\s+(?P<eap_malformed_eap_key_frame>\d+)\n+"
             # EAP key install bit is not expected                             : 0
             r"\s+EAP key install bit is not expected\s+:\s+(?P<eap_key_install_unexpected>\d+)\n+"
             # EAP key error bit is not expected                               : 0
@@ -564,21 +564,21 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # EAP key ACK bit is not expected                                 : 0
             r"\s+EAP key ACK bit is not expected\s+:\s+(?P<eap_key_ack_unexpected>\d+)\n+"
             # Invalid key type                                                : 0
-            r"\s+Invalid key type\s+:\s+(?P<eap_invalid_key_type>\d+)\n+"
+            r"\s+Invalid key type\s+:\s+(?P<invalid_key_type>\d+)\n+"
             # EAP key secure bit is not expected                              : 0
             r"\s+EAP key secure bit is not expected\s+:\s+(?P<eap_key_secure_unexected>\d+)\n+"
             # key description version mismatch                                : 0
-            r"\s+key description version mismatch\s+:\s+(?P<eap_key_version_mismatch>\d+)\n+"
+            r"\s+key description version mismatch\s+:\s+(?P<key_description_version_mismatch>\d+)\n+"
             # wrong replay counter                                            : 1
             r"\s+wrong replay counter\s+:\s+(?P<wrong_replay_counter>\d+)\n+"
             # EAP key MIC bit expected                                        : 0
             r"\s+EAP key MIC bit expected\s+:\s+(?P<eap_key_mic_expected>\d+)\n+"
             # MIC validation failed                                           : 7
-            r"\s+MIC validation failed\s+:\s+(?P<eap_mic_validation_failed>\d+)\n+"
+            r"\s+MIC validation failed\s+:\s+(?P<mic_validation_failed>\d+)\n+"
             # Error while PTK computation                                     : 0
-            r"\s+Error while PTK computation\s+:\s+(?P<ptk_error>\d+)\n+"
+            r"\s+Error while PTK computation\s+:\s+(?P<error_while_ptk_computation>\d+)\n+"
             # Incorrect credentials                                           : 16
-            r"\s+Incorrect credentials\s+:\s+(?P<bad_credentials>\d+)\n+"
+            r"\s+Incorrect credentials\s+:\s+(?P<incorrect_credentials>\d+)\n+"
             # Client connection lost                                          : 0
             r"\s+Client connection lost\s+:\s+(?P<client_connection_lost>\d+)\n+"
             # Reauthentication failure                                        : 0
@@ -600,11 +600,11 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # DB error                                                        : 0
             r"\s+DB error\s+:\s+(?P<db_error>\d+)\n+"
             # Wired client cleanup due to WGB roaming                         : 0
-            r"\s+Wired client cleanup due to WGB roaming\s+:\s+(?P<cleanup_wgb_roam>\d+)\n+"
+            r"\s+Wired client cleanup due to WGB roaming\s+:\s+(?P<wired_client_cleanup_due_to_wgb_roaming>\d+)\n+"
             # Manually excluded                                               : 0
             r"\s+Manually excluded\s+:\s+(?P<manually_excluded>\d+)\n+"
             # 802.11 association failure                                      : 0
-            r"\s+802.11 association failure\s+:\s+(?P<dot11_assocation_fail>\d+)\n+"
+            r"\s+802.11 association failure\s+:\s+(?P<dot11_association_denied>\d+)\n+"
             # 802.11 authentication failure                                   : 0
             r"\s+802.11 authentication failure\s+:\s+(?P<dot11_auth_fail>\d+)\n+"
             # 802.1X authentication timeout                                   : 0
@@ -650,7 +650,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # Invalid group id for FQDN filter valid range  1..16             : 0
             r"\s+Invalid group id for FQDN filter valid range  1..16\s+:\s+(?P<fqdn_invalid_group_id>\d+)\n+" #HEY
             # Policy parameter mismatch                                       : 0
-            r"\s+Policy parameter mismatch\s+:\s+(?P<policy_manager_mismatch>\d+)\n+"
+            r"\s+Policy parameter mismatch\s+:\s+(?P<policy_parameter_mismatch>\d+)\n+"
             # Reauth failure                                                  : 0
             r"\s+Reauth failure\s+:\s+(?P<reauth_fail>\d+)\n+"
             # Wrong PSK                                                       : 0
@@ -658,63 +658,63 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # Policy failure                                                  : 0
             r"\s+Policy failure\s+:\s+(?P<policy_fail>\d+)\n+"
             # AP initiated delete for idle timeout                            : 164
-            r"\s+AP initiated delete for idle timeout\s+:\s+(?P<apinit_idle_timeout>\d+)\n+"
+            r"\s+AP initiated delete for idle timeout\s+:\s+(?P<ap_initiated_delete_idle_timeout>\d+)\n+"
             # AP initiated delete for client ACL mismatch                     : 0
-            r"\s+AP initiated delete for client ACL mismatch\s+:\s+(?P<apinit_acl_mismatch>\d+)\n+"
+            r"\s+AP initiated delete for client ACL mismatch\s+:\s+(?P<ap_initiated_delete_client_acl_mismatch>\d+)\n+"
             # AP initiated delete for AP auth stop                            : 0
-            r"\s+AP initiated delete for AP auth stop\s+:\s+(?P<apinit_auth_stop>\d+)\n+"
+            r"\s+AP initiated delete for AP auth stop\s+:\s+(?P<ap_initiated_delete_ap_auth_stop>\d+)\n+"
             # AP initiated delete for association expired at AP               : 0
-            r"\s+AP initiated delete for association expired at AP\s+:\s+(?P<apinit_association_expired>\d+)\n+"
+            r"\s+AP initiated delete for association expired at AP\s+:\s+(?P<ap_initiated_delete_association_expired>\d+)\n+"
             # AP initiated delete for 4-way handshake failed                  : 0
-            r"\s+AP initiated delete for 4-way handshake failed\s+:\s+(?P<apinit_4way_fail>\d+)\n+"
+            r"\s+AP initiated delete for 4-way handshake failed\s+:\s+(?P<ap_initiated_delete_4way_fail>\d+)\n+"
             # AP initiated delete for DHCP timeout                            : 0
-            r"\s+AP initiated delete for DHCP timeout\s+:\s+(?P<apinit_dhcp_timeout>\d+)\n+"
+            r"\s+AP initiated delete for DHCP timeout\s+:\s+(?P<ap_initiated_delete_dhcp_timeout>\d+)\n+"
             # AP initiated delete for reassociation timeout                   : 0
-            r"\s+AP initiated delete for reassociation timeout\s+:\s+(?P<apinit_reassocation_timeout>\d+)\n+"
+            r"\s+AP initiated delete for reassociation timeout\s+:\s+(?P<ap_initiated_delete_reassocation_timeout>\d+)\n+"
             # AP initiated delete for SA query timeout                        : 0
-            r"\s+AP initiated delete for SA query timeout\s+:\s+(?P<apinit_sa_timeout>\d+)\n+"
+            r"\s+AP initiated delete for SA query timeout\s+:\s+(?P<ap_initiated_delete_sa_timeout>\d+)\n+"
             # AP initiated delete for channel switch at AP                    : 0
-            r"\s+AP initiated delete for channel switch at AP\s+:\s+(?P<apinit_channel_switch>\d+)\n+"
+            r"\s+AP initiated delete for channel switch at AP\s+:\s+(?P<ap_initiated_delete_channel_switch>\d+)\n+"
             # AP initiated delete for bad AID                                 : 0
-            r"\s+AP initiated delete for bad AID\s+:\s+(?P<apinit_bad_aid>\d+)\n+"
+            r"\s+AP initiated delete for bad AID\s+:\s+(?P<ap_initiated_delete_bad_aid>\d+)\n+"
             # AP initiated delete for request                                 : 0
-            r"\s+AP initiated delete for request\s+:\s+(?P<apinit_request>\d+)\n+"
+            r"\s+AP initiated delete for request\s+:\s+(?P<ap_initiated_delete_request>\d+)\n+"
             # AP initiated delete for interface reset                         : 0
-            r"\s+AP initiated delete for interface reset\s+:\s+(?P<apinit_interface_reset>\d+)\n+"
+            r"\s+AP initiated delete for interface reset\s+:\s+(?P<ap_initiated_delete_interface_reset>\d+)\n+"
             # AP initiated delete for all on slot                             : 0
-            r"\s+AP initiated delete for all on slot\s+:\s+(?P<apinit_all_slot>\d+)\n+"
+            r"\s+AP initiated delete for all on slot\s+:\s+(?P<ap_initiated_delete_all_slot>\d+)\n+"
             # AP initiated delete for reaper radio                            : 0
-            r"\s+AP initiated delete for reaper radio\s+:\s+(?P<apinit_reaper_radio>\d+)\n+"
+            r"\s+AP initiated delete for reaper radio\s+:\s+(?P<ap_initiated_delete_reaper_radio>\d+)\n+"
             # AP initiated delete for slot disable                            : 0
-            r"\s+AP initiated delete for slot disable\s+:\s+(?P<apinit_slot_disable>\d+)\n+"
+            r"\s+AP initiated delete for slot disable\s+:\s+(?P<ap_initiated_delete_slot_disable>\d+)\n+"
             # AP initiated delete for MIC failure                             : 0
-            r"\s+AP initiated delete for MIC failure\s+:\s+(?P<apinit_mic_fail>\d+)\n+"
+            r"\s+AP initiated delete for MIC failure\s+:\s+(?P<ap_initiated_delete_mic_fail>\d+)\n+"
             # AP initiated delete for VLAN delete                             : 0
-            r"\s+AP initiated delete for VLAN delete\s+:\s+(?P<apinit_vlan_delete>\d+)\n+"
+            r"\s+AP initiated delete for VLAN delete\s+:\s+(?P<ap_initiated_delete_vlan_delete>\d+)\n+"
             # AP initiated delete for channel change                          : 0
-            r"\s+AP initiated delete for channel change\s+:\s+(?P<apinit_channel_change>\d+)\n+"
+            r"\s+AP initiated delete for channel change\s+:\s+(?P<ap_initiated_delete_channel_change>\d+)\n+"
             # AP initiated delete for stop reassociation                      : 0
-            r"\s+AP initiated delete for stop reassociation\s+:\s+(?P<apinit_stop_reassociation>\d+)\n+"
+            r"\s+AP initiated delete for stop reassociation\s+:\s+(?P<ap_initiated_delete_stop_reassociation>\d+)\n+"
             # AP initiated delete for packet max retry                        : 0
-            r"\s+AP initiated delete for packet max retry\s+:\s+(?P<apinit_max_retry>\d+)\n+"
+            r"\s+AP initiated delete for packet max retry\s+:\s+(?P<ap_initiated_delete_max_retry>\d+)\n+"
             # AP initiated delete for transmission deauth                     : 0
-            r"\s+AP initiated delete for transmission deauth\s+:\s+(?P<apinit_transmission_deauth>\d+)\n+"
+            r"\s+AP initiated delete for transmission deauth\s+:\s+(?P<ap_initiated_delete_transmission_deauth>\d+)\n+"
             # AP initiated delete for sensor station timeout                  : 0
-            r"\s+AP initiated delete for sensor station timeout\s+:\s+(?P<apinit_sensor_station_timeout>\d+)\n+"
+            r"\s+AP initiated delete for sensor station timeout\s+:\s+(?P<ap_initiated_delete_sensor_station_timeout>\d+)\n+"
             # AP initiated delete for age timeout                             : 0
-            r"\s+AP initiated delete for age timeout\s+:\s+(?P<apinit_age_timeout>\d+)\n+"
+            r"\s+AP initiated delete for age timeout\s+:\s+(?P<ap_initiated_delete_age_timeout>\d+)\n+"
             # AP initiated delete for transmission fail threshold             : 0
-            r"\s+AP initiated delete for transmission fail threshold\s+:\s+(?P<apinit_transmission_fail_threshold>\d+)\n+"
+            r"\s+AP initiated delete for transmission fail threshold\s+:\s+(?P<ap_initiated_delete_transmission_fail_threshold>\d+)\n+"
             # AP initiated delete for uplink receive timeout                  : 0
-            r"\s+AP initiated delete for uplink receive timeout\s+:\s+(?P<apinit_uplink_recieve_timeout>\d+)\n+"
+            r"\s+AP initiated delete for uplink receive timeout\s+:\s+(?P<ap_initiated_delete_uplink_recieve_timeout>\d+)\n+"
             # AP initiated delete for sensor scan next radio                  : 0
-            r"\s+AP initiated delete for sensor scan next radio\s+:\s+(?P<apinit_scan_next_radio>\d+)\n+"
+            r"\s+AP initiated delete for sensor scan next radio\s+:\s+(?P<ap_initiated_delete_scan_next_radio>\d+)\n+"
             # AP initiated delete for sensor scan other BSSID                 : 0
-            r"\s+AP initiated delete for sensor scan other BSSID\s+:\s+(?P<apinit_scan_other_bssid>\d+)\n+"
+            r"\s+AP initiated delete for sensor scan other BSSID\s+:\s+(?P<ap_initiated_delete_scan_other_bssid>\d+)\n+"
             # AAA server unavailable                                          : 0
-            r"\s+AAA server unavailable\s+:\s+(?P<aaa_unavailable>\d+)\n+"
+            r"\s+AAA server unavailable\s+:\s+(?P<aaa_server_unavailable>\d+)\n+"
             # AAA server not ready                                            : 0
-            r"\s+AAA server not ready\s+:\s+(?P<aaa_not_ready>\d+)\n+"
+            r"\s+AAA server not ready\s+:\s+(?P<aaa_server_not_ready>\d+)\n+"
             # No dot1x method configuration                                   : 0
             r"\s+No dot1x method configuration\s+:\s+(?P<dot1x_no_config>\d+)\n+"
             # Client Abort                                                    : 0
@@ -764,7 +764,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             # EoGRE AAA Override error                                        : 0
             r"\s+EoGRE AAA Override error\s+:\s+(?P<eogre_aaa_override_error>\d+)\n+"
             # EoGRE client onboarding error                                   : 0
-            r"\s+EoGRE client onboarding error\s+:\s+(?P<eogre_onboarding_error>\d+)\n+"
+            r"\s+EoGRE client onboarding error\s+:\s+(?P<eogre_client_onboarding_error>\d+)\n+"
             # EoGRE Mobility Handoff error                                    : 0
             r"\s+EoGRE Mobility Handoff error\s+:\s+(?P<eogre_mobility_handoff_error>\d+)\n+"
             # IP Update timeout                                               : 0
@@ -811,8 +811,9 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             new_group = {"client_delete": group}
 
             key_list = [
+                "aaa",
                 "anchor",
-                "apinit",
+                "ap_initiated_delete",
                 "client",
                 "connection_timeout",
                 "dot11",
@@ -822,8 +823,10 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
                 "fqdn",
                 "mac",
                 "mobility",
+                "nack",
                 "policy",
                 "qos",
+                "wpa",
                 "wired",
             ]
 
@@ -832,7 +835,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
 
                 for item in new_group["client_delete"].copy():
                     # if the key from key_list is found in item
-                    if re.search(f"^{key}_", item):
+                    if re.search("^{key}_", item).format(key=key):
                         # replace the key and update with new_dict
                         new_key = re.sub(f"^{key}_", "", item)
                         new_dict = {new_key: new_group["client_delete"][item]}
