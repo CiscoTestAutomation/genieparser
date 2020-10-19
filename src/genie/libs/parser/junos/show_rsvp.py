@@ -124,11 +124,11 @@ class ShowRSVPNeighborDetailSchema(MetaParser):
                     "hellos-received": str,
                     "rsvp-neighbor-remote-instance": str,
                     "rsvp-neighbor-local-instance": str,
-                    "rsvp-refresh-reduct-status": str,
-                    "rsvp-refresh-reduct-remote-status": str,
-                    "rsvp-refresh-reduct-ack-status": str,
-                    "rsvp-nbr-enh-local-protection": {
-                        "rsvp-nbr-enh-lp-status": str,
+                    Optional("rsvp-refresh-reduct-status"): str,
+                    Optional("rsvp-refresh-reduct-remote-status"): str,
+                    Optional("rsvp-refresh-reduct-ack-status"): str,
+                    Optional("rsvp-nbr-enh-local-protection"): {
+                        Optional("rsvp-nbr-enh-lp-status"): str,
                         Optional("rsvp-nbr-enh-lp-total-lsp-count"): str,
                         Optional("rsvp-nbr-enh-lp-phop-lsp-count"): str,
                         Optional("rsvp-nbr-enh-lp-pphop-lsp-count"): str,
