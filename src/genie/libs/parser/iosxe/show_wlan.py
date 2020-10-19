@@ -834,8 +834,9 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
                 new_key_group = {key: {}}
 
                 for item in new_group["client_delete"].copy():
+                    format_key = "^{key}_".format(key=key)
                     # if the key from key_list is found in item
-                    if re.search("^{key}_", item).format(key=key):
+                    if re.search(format_key, item):
                         # replace the key and update with new_dict
                         new_key = re.sub(f"^{key}_", "", item)
                         new_dict = {new_key: new_group["client_delete"][item]}
