@@ -837,7 +837,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
                     # if the key from key_list is found in item
                     if re.search(format_key, item):
                         # replace the key and update with new_dict
-                        new_key = re.sub(f"^{key}_", "", item)
+                        new_key = re.sub(format_key, "", item)
                         new_dict = {new_key: new_group["client_delete"][item]}
 
                         new_key_group[key].update(new_dict)
