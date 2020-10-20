@@ -55,10 +55,11 @@ class PingSchema(MetaParser):
         ping_result_schema = Schema({
                     'bytes': int,
                     'from': str,
-                    'icmp-seq': int,
+                    Optional('icmp-seq'): int,
                     Optional('hlim'): int,
                     Optional('ttl'): int,
-                    'time': str,
+                    Optional('time'): str,
+                    Optional('message'): str,
                 })
         # Validate each dictionary in list
         for item in value:
@@ -140,6 +141,11 @@ class Ping(PingSchema):
                 r'(:|,)\s+icmp_seq=(?P<icmp_seq>\d+)\s+'
                 r'(ttl=(?P<ttl>\d+)|hlim=(?P<hlim>\d+)) +'
                 r'time=(?P<time>\S+) +ms$')
+        
+        # 36 bytes from 34.0.0.1: frag needed and DF set (MTU 1186)
+        # 1240 bytes from 2001:34::1: Packet too big mtu = 1386
+        p2_2 = re.compile(r'^(?P<bytes>\d+)\s+bytes\s+from\s+(?P<from>\S+)'
+                          r':\s+(?P<message>[\s\w]+)(\s+mtu.*|\(MTU.*)?$')
 
         # 5 packets transmitted, 5 packets received, 0% packet loss
         # 5 packets transmitted, 0 packets received, 100% packet loss
@@ -174,7 +180,10 @@ class Ping(PingSchema):
                 continue
             
             # 64 bytes from 10.189.5.94: icmp_seq=0 ttl=62 time=2.261 ms
-            m = p2.match(line)
+
+            # 36 bytes from 34.0.0.1: frag needed and DF set (MTU 1186)
+            # 1240 bytes from 2001:34::1: Packet too big mtu = 1386
+            m = p2.match(line) or p2_2.match(line)
             if m:
                 group = m.groupdict()
                 result_list = ping_dict.setdefault('result', [])
@@ -183,7 +192,7 @@ class Ping(PingSchema):
                     if v.isdigit() else v) for k, v in group.items() if v is not None})
                 result_list.append(result_dict)
                 continue
-            
+         
             # 5 packets transmitted, 5 packets received, 0% packet loss
             m = p3.match(line)
             if m:
