@@ -1059,7 +1059,7 @@ class ShowLdpSessionIpaddressDetail(ShowLdpSessionIpaddressDetailSchema):
             r'Helper +mode: +(?P<ldp_local_helper_mode>\S+)$'
         )
 
-        # Remote - Restart: disabled, Helper mode: enabled, 
+        # Remote - Restart: disabled, Helper mode: enabled
         # Remote - Restart: enabled, Helper mode: enabled, Reconnect time: 60000
         p14 = re.compile(
             r'^Remote +- +Restart: +(?P<ldp_graceful_restart_remote>\S+), '
