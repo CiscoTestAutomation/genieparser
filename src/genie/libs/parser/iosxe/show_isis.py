@@ -21,8 +21,21 @@ class ShowIsisNeighborsSchema(MetaParser):
     """Schema for show isis neighbors"""
     schema = {
         'isis': {
-            Any(): {
-                Optional('neighbors'): {
+            Optional('neighbors'): {
+                Any(): {
+                    'type': {
+                        Any(): {
+                            'circuit_id': str,
+                            'holdtime': str,
+                            'interface': str,
+                            'ip_address': str,
+                            'state': str,
+                        }
+                    }
+                }
+            },
+            Optional(Any()): {
+                'neighbors': {
                     Any(): {
                         'type': {
                             Any(): {
@@ -34,7 +47,7 @@ class ShowIsisNeighborsSchema(MetaParser):
                             }
                         }
                     }
-                }
+                },
             }
         }
     }
@@ -64,6 +77,8 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
                 isis_name = m.groupdict()['isis_name']
                 isis_dict = ret_dict.setdefault('isis', {}).setdefault(isis_name, {})
                 continue
+            elif not ret_dict:
+                isis_dict = ret_dict.setdefault('isis', {})
 
             # LAB-9001-2      L1   Te0/0/26      10.239.7.29     UP    27       00
             p2 = re.compile(r'^(?P<system_id>\S+)\s+(?P<type>\S+)\s+(?P<interface>\S+)\s+'
@@ -85,7 +100,6 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
                 continue
 
         return ret_dict
-
 
 class ShowIsisHostnameSchema(MetaParser):
     """Schema for show isis hostname"""
