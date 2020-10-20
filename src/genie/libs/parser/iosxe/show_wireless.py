@@ -151,7 +151,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
             output = self.device.execute(self.cli_command)
         else:
             output=output
- 
+
         # Policy Profile Name                 : lizzard_Fabric_F_90c67354
         # Description                         : lizzard_Fabric_F_90c67354
         # Status                              : ENABLED
@@ -195,8 +195,8 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
         # Anchor                            : DISABLED
         # AVC VISIBILITY                      : Enabled
         # IPv4 Flow Monitors
-        # Ingress             
-        # Egress               
+        # Ingress
+        # Egress
         # IPv6 Flow Monitors
         # Ingress
         # Egress
@@ -263,7 +263,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
         # 2.4Ghz ATF Policy                 : default-atf-policy
         # 5Ghz ATF Policy                   : default-atf-policy
         # Policy Profile Name                 : default-policy-profile
-        
+
         p_policy_profile_name = re.compile(r"^Policy\s+Profile\s+Name\s+:\s+(?P<name>\S+)$")
         # Description                         : default policy profile
         p_description = re.compile(r"^Description\s+:\s+(?P<value>.*)$")
@@ -273,7 +273,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
         p_vlan = re.compile(r"^VLAN\s+:\s+(?P<value>\S+)$")
         # Multicast VLAN                      : 0
         p_multi_vlan = re.compile(r"^Multicast\s+VLAN\s+:\s+(?P<value>\S+)$")
-        # OSEN client VLAN                    : 
+        # OSEN client VLAN                    :
         p_osen = re.compile(r"^OSEN\s+client\s+VLAN\s+:\s+(?P<value>.*)$")
         # Wireless management interface VLAN  : 10
         p_wireless_mgmt = re.compile(r"^Wireless\s+management\s+interface\s+VLAN\s+:\s+(?P<value>\S+)$")
@@ -522,7 +522,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
               show_wireless_profile_policy_dict.update({ "wireless_mgmt_interface_vlan" : match.group("value") })
               continue
             elif p_osen.match(line):
-              # OSEN client VLAN                    : 
+              # OSEN client VLAN                    :
               match = p_osen.match(line)
               show_wireless_profile_policy_dict.update({ "osen_client_vlan" : match.group("value") })
               continue
@@ -918,7 +918,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
               # Exclusionlist Params
               if not show_wireless_profile_policy_dict.get("exclusionlist_params"):
                 show_wireless_profile_policy_dict.update({ "exclusionlist_params": {} })
-              continue 
+              continue
             elif p_exclusionlist.match(line):
               # Exclusionlist                     : ENABLED
               match = p_exclusionlist.match(line)
@@ -1034,10 +1034,10 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
               match = p_airtime_5.match(line)
               show_wireless_profile_policy_dict["airtime_fairness_profile"].update({ "5ghz_atf_policy": match.group("value") })
               continue
-            
+
         return show_wireless_profile_policy_dict
 
-      
+
 # ==============================
 # Schema for:
 #  * 'show wireless cts summary'
@@ -1062,7 +1062,7 @@ class ShowWirelessCtsSummarySchema(MetaParser):
                     Optional("inline_tagging"): str
                 }
             }
-        } 
+        }
     }
 
 
@@ -1081,25 +1081,25 @@ class ShowWirelessCtsSummary(ShowWirelessCtsSummarySchema):
             output=output
 
         # Local Mode CTS Configuration
-        # 
-        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt      
+        #
+        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt
         # ----------------------------------------------------------------------------------------
-        # default-policy-profile            DISABLED              DISABLED         0                
-        # lizzard_Fabric_F_dee07a54        DISABLED              DISABLED         0                
-        # internet_Fabric_F_ed7a6bda        DISABLED              DISABLED         0                
-        # lizzard_l_Fabric_F_90c6dccd      DISABLED              DISABLED         0                
-        # 
-        # 
+        # default-policy-profile            DISABLED              DISABLED         0
+        # lizzard_Fabric_F_dee07a54        DISABLED              DISABLED         0
+        # internet_Fabric_F_ed7a6bda        DISABLED              DISABLED         0
+        # lizzard_l_Fabric_F_90c6dccd      DISABLED              DISABLED         0
+        #
+        #
         # Flex Mode CTS Configuration
-        # 
-        # Flex Profile Name                 SGACL Enforcement     Inline-Tagging   
+        #
+        # Flex Profile Name                 SGACL Enforcement     Inline-Tagging
         # -----------------------------------------------------------------------
-        # default-flex-profile              DISABLED              DISABLED    
+        # default-flex-profile              DISABLED              DISABLED
 
         # Local Mode CTS Configuration
         p_local = re.compile(r"Local\s+Mode\s+CTS\s+Configuration$")
 
-        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt 
+        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt
         p_local_header = re.compile(r"^Policy\s+Profile\s+Name\s+SGACL\s+Enforcement\s+Inline-Tagging\s+Default-Sgt$")
 
         # ----------------------------------------------------------------------------------------
@@ -1142,7 +1142,7 @@ class ShowWirelessCtsSummary(ShowWirelessCtsSummarySchema):
                 wireless_cts_summary_dict["local_mode_cts_configuration"]["policy_profile_name"].update({ group["name"] : {} })
                 wireless_cts_summary_dict["local_mode_cts_configuration"]["policy_profile_name"][group["name"]].update({ "sgacl_enforcement": group["sgacl"],
                                                                                                                         "inline_tagging": group["tag"],
-                                                                                                                        "default_sgt": int(group["sgt"]) 
+                                                                                                                        "default_sgt": int(group["sgt"])
                                                                                                                         })
                 continue
             # Flex Mode CTS Configuration
@@ -1186,7 +1186,7 @@ class ShowWirelessFabricClientSummarySchema(MetaParser):
             }
         }
     }
-              
+
 # ========================================
 # Parser for:
 #  * 'show wireless fabric client summary'
@@ -1195,30 +1195,30 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
     """Parser for show wireless fabric client summary"""
 
     cli_command = 'show wireless fabric client summary'
-    
+
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
         else:
             output=output
-              
+
         show_wireless_fabric_client_summary_dict = {}
 
 
         # Number of Fabric Clients : 8
 
-        # MAC Address    AP Name                          WLAN State              Protocol Method     
+        # MAC Address    AP Name                          WLAN State              Protocol Method
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x     
-        # 58bf.ea73.39b4 a2-11-cap50                   19   IP Learn           11n(2.4) MAB       
-        # 58bf.ea47.1c4c a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x
+        # 58bf.ea73.39b4 a2-11-cap50                   19   IP Learn           11n(2.4) MAB
+        # 58bf.ea47.1c4c a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea47.1c59 a2-11-cap46                   17   Run                11ac     Dot1x     
-        # 58bf.ea41.eac4 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB       
-        # 58bf.eaef.9769 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.ea47.1c59 a2-11-cap46                   17   Run                11ac     Dot1x
+        # 58bf.ea41.eac4 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB
+        # 58bf.eaef.9769 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea02.5c2a a2-12-cap17                   19   Webauth Pending    11ac     MAB       
-        # 58bf.ea09.f357 a2-12-cap17                   19   Webauth Pending    11ac     MAB   
+        # 58bf.ea02.5c2a a2-12-cap17                   19   Webauth Pending    11ac     MAB
+        # 58bf.ea09.f357 a2-12-cap17                   19   Webauth Pending    11ac     MAB
 
         # Number of Fabric Clients : 8
         p_clients = re.compile(r"^Number\s+of\s+Fabric\s+Clients\s+:\s+(?P<clients>\S+)$")
@@ -1269,7 +1269,7 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
 
         return show_wireless_fabric_client_summary_dict
 
-      
+
 # =================================
 # Schema for:
 #  * 'show wireless fabric summary'
@@ -1300,8 +1300,8 @@ class ShowWirelessFabricSummarySchema(MetaParser):
             }
         }
     }
-    
-    
+
+
 # =================================
 # Parser for:
 #  * 'show wireless fabric summary'
@@ -1310,13 +1310,13 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
     """Parser for show wireless fabric summary"""
 
     cli_command = 'show wireless fabric summary'
-    
+
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
         else:
             output=output
-            
+
         # Fabric Status      : Enabled
         #
         #
@@ -1330,8 +1330,8 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
         # Fabric VNID Mapping:
         # Name               L2-VNID        L3-VNID        IP Address             Subnet        Control plane name
         # ----------------------------------------------------------------------------------------------------------------------
-        # Data                8192           0                                  0.0.0.0            default-control-plane 
-        # Guest               8189           0                                  0.0.0.0            default-control-plane 
+        # Data                8192           0                                  0.0.0.0            default-control-plane
+        # Guest               8189           0                                  0.0.0.0            default-control-plane
         # Voice               8191           0                                  0.0.0.0            default-control-plane
         # Fabric_B_INFRA_VN     8188           4097           10.10.40.0          255.255.254.0      default-control-plane
         # Physical_Security     8190           0                                  0.0.0.0            default-control-plane
@@ -1416,7 +1416,7 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
             elif p_vnid_mappings.match(line):
                 match = p_vnid_mappings.match(line)
                 groups = match.groupdict()
-                show_wireless_fabric_summary_dict["fabric_vnid_mapping"]["l2_vnid"].update({ int(groups["vnid_l2"]) : { "name": groups["vnid_name"], "l3_vnid": int(groups["vnid_l3"]), "ip_address": groups["vnid_ip_address"], 
+                show_wireless_fabric_summary_dict["fabric_vnid_mapping"]["l2_vnid"].update({ int(groups["vnid_l2"]) : { "name": groups["vnid_name"], "l3_vnid": int(groups["vnid_l3"]), "ip_address": groups["vnid_ip_address"],
                                                                                 "subnet": groups["vnid_subnet"], "control_plane_name": groups["vnid_cp_name"]}})
                 continue
             # Voice               8191           0                                  0.0.0.0            default-control-plane
@@ -1425,10 +1425,10 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
                 groups = match.groupdict()
                 show_wireless_fabric_summary_dict["fabric_vnid_mapping"]["l2_vnid"].update({ int(groups["vnid_l2"]) : { "name": groups["vnid_name"], "l3_vnid": int(groups["vnid_l3"]), "control_plane_name": groups["vnid_name"] }})
                 continue
-        
+
         return show_wireless_fabric_summary_dict
-      
-      
+
+
 # =================================
 # Schema for:
 #  * 'show wireless client summary'
@@ -1466,7 +1466,7 @@ class ShowWirelessClientSummarySchema(MetaParser):
             }
         }
     }
-    
+
 # =================================
 # Parser for:
 #  * 'show wireless client summary'
@@ -1678,7 +1678,7 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
     """Parser for show wireless mobility ap-list"""
 
     cli_command = "show wireless mobility ap-list"
-    
+
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
@@ -1898,27 +1898,27 @@ class ShowWirelessProfilePolicySummary(ShowWirelessProfilePolicySummarySchema):
 
         # Number of Policy Profiles: 31
 
-        # Policy Profile Name               Description                             Status           
+        # Policy Profile Name               Description                             Status
         # -----------------------------------------------------------------------------------------
-        # wip-b60                        b60-voice                             ENABLED          
-        # wip-b70                        b70-voice                             ENABLED          
-        # wip-b80                        b80-voice                             ENABLED          
-        # lizzard_b60                    b60-lizzard/legacy                   ENABLED          
-        # lizzard_b70                    b70-lizzard/legacy                   ENABLED          
-        # lizzard_b80                    b80-lizzard/legacy                   ENABLED          
-        # internet-b60                    b60-guest                             ENABLED          
-        # internet-b70                    b70-guest                             ENABLED          
-        # internet-b80                    b80-guest                             ENABLED          
-        # lizzard_b70_1                  Not required                            ENABLED          
+        # wip-b60                        b60-voice                             ENABLED
+        # wip-b70                        b70-voice                             ENABLED
+        # wip-b80                        b80-voice                             ENABLED
+        # lizzard_b60                    b60-lizzard/legacy                   ENABLED
+        # lizzard_b70                    b70-lizzard/legacy                   ENABLED
+        # lizzard_b80                    b80-lizzard/legacy                   ENABLED
+        # internet-b60                    b60-guest                             ENABLED
+        # internet-b70                    b70-guest                             ENABLED
+        # internet-b80                    b80-guest                             ENABLED
+        # lizzard_b70_1                  Not required                            ENABLED
 
         # Number of Policy Profiles: 31
         policy_count_capture = re.compile(r"^Number of Policy Profiles:\s+(?P<policy_count>\d+)$")
 
-        # wip-b60                        b60-voice                             ENABLED          
+        # wip-b60                        b60-voice                             ENABLED
         policy_info_capture = re.compile(
             # wip-b60
             r"^(?P<policy_name>\S+)\s+"
-            # b60-voice 
+            # b60-voice
             r"(?P<description>Not required|default policy profile|\S+)\s+"
             # ENABLED
             r"(?P<status>ENABLED|DISABLED)$"
@@ -1955,8 +1955,8 @@ class ShowWirelessProfilePolicySummary(ShowWirelessProfilePolicySummarySchema):
                 policy_info_obj["policy_name"].update(policy_info_dict)
 
         return policy_info_obj
-          
-          
+
+
 # ===================================
 # Schema for:
 #  * 'show wireless stats ap join summary'
@@ -1986,7 +1986,7 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
     """Parser for show wireless stats ap join summary"""
 
     cli_command = ["show wireless stats ap join summary"]
-          
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command[0])
@@ -2053,3 +2053,326 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
                 wireless_info_obj["base_mac"].update(ap_info_dict)
 
         return wireless_info_obj
+
+
+# ==============================================
+# Schema for:
+#  * 'show wireless stats client delete reasons'
+# ==============================================
+class ShowWirelessStatsClientDeleteReasonsSchema(MetaParser):
+    """Schema for show wireless stats client delete reasons."""
+
+    schema = {
+            "total_client_delete_reasons": {
+                "controller_deletes": {
+                    "no_operation": int,
+                    "unknown": int,
+                    "session_manager": int,
+                    "connection_timeout": int,
+                    "datapath_plumb": int,
+                    "wpa_key_exchange_timeout": int,
+                    "802.11w_max_sa_queries_reached": int,
+                    "client_deleted_during_ha_recovery": int,
+                    "inter_instance_roam_failure": int,
+                    "inter_instance_roam_success": int,
+                    "inter_controller_roam_success": int,
+                    "due_to_mobility_failure": int,
+                    "nas_error": int,
+                    "policy_manager_internal_error": int,
+                    "80211v_smart_roam_failed": int,
+                    "dot11v_association_failed": int,
+                    "dot11r_pre_authentication_failure": int,
+                    "sae_authentication_failure": int,
+                    "dot11_failure": int,
+                    "dot11_sae_invalid_message": int,
+                    "dot11_denied_data_rates": int,
+                    "802.11v_client_rssi_lower_than_the_association_rssi_threshold": int,
+                    "invalid_qos_parameter": int,
+                    "dot11_ie_validation_failed": int,
+                    "dot11_group_cipher_in_ie_validation_failed": int,
+                    "dot11_invalid_pairwise_cipher": int,
+                    "dot11_invalid_akm": int,
+                    "dot11_unsupported_rsn_version": int,
+                    "dot11_invalid_rsnie_capabilities": int,
+                    "dot11_received_invalid_pmkid_in_the_received_rsn_ie": int,
+                    "dot11_received_invalid_pmk_length": int,
+                    "dot11_invalid_mdie": int,
+                    "dot11_invalid_ft_ie": int,
+                    "dot11_aid_allocation_conflicts": int,
+                    "avc_client_re_anchored_at_the_foreign_controller": int,
+                    "client_eap_id_timeout": int,
+                    "client_dot1x_timeout": int,
+                    "malformed_eap_key_frame": int,
+                    "eap_key_install_bit_is_not_expected": int,
+                    "eap_key_error_bit_is_not_expected": int,
+                    "eap_key_ack_bit_is_not_expected": int,
+                    "invalid_key_type": int,
+                    "eap_key_secure_bit_is_not_expected": int,
+                    "key_description_version_mismatch": int,
+                    "wrong_replay_counter": 8,
+                    "eap_key_mic_bit_expected": int,
+                    "mic_validation_failed": int,
+                    "mac_theft": int,
+                    "ip_theft": int,
+                    "policy_bind_failure": int,
+                    "web_authentication_failure": int,
+                    "802.1x_authentication_credential_failure": int,
+                    "802.1x_authentication_timeout": int,
+                    "802.11_authentication_failure": int,
+                    "802.11_association_failure": int,
+                    "manually_excluded": int,
+                    "db_error": int,
+                    "anchor_creation_failure": int,
+                    "anchor_invalid_mobility_bssid": int,
+                    "anchor_no_memory": int,
+                    "call_admission_controller_at_anchor_node": int,
+                    "supplicant_restart": int,
+                    "port_admin_disabled": int,
+                    "reauthentication_failure": int,
+                    "client_connection_lost": int,
+                    "error_while_ptk_computation": int,
+                    "mac_and_ip_theft": int,
+                    "qos_policy_failure": int,
+                    "qos_policy_send_to_ap_failure": int,
+                    "qos_policy_bind_on_ap_failure": int,
+                    "qos_policy_unbind_on_ap_failure": int,
+                    "static_ip_anchor_discovery_failure": int,
+                    "vlan_failure": int,
+                    "acl_failure": int,
+                    "redirect_acl_failure": int,
+                    "accounting_failure": int,
+                    "security_group_tag_failure": int,
+                    "fqdn_filter_definition_does_not_exist": int,
+                    "wrong_filter_type,_expected_postauth_fqdn_filter": int,
+                    "wrong_filter_type,_expected_preauth_fqdn_filter": int,
+                    "invalid_group_id_for_fqdn_filter_valid_range__1_16": int,
+                    "policy_parameter_mismatch": int,
+                    "reauth_failure": int,
+                    "wrong_psk": int,
+                    "policy_failure": int,
+                    "aaa_server_unavailable": int,
+                    "aaa_server_not_ready": int,
+                    "no_dot1x_method_configuration": int,
+                    "association_connection_timeout": int,
+                    "mac_auth_connection_timeout": int,
+                    "l2_auth_connection_timeout": int,
+                    "l3_auth_connection_timeout": int,
+                    "mobility_connection_timeout": int,
+                    "static_ip_connection_timeout": int,
+                    "sm_session_creation_timeout": int,
+                    "ip_learn_connection_timeout": int,
+                    "nack_ifid_exists": int,
+                    "guest_lan_invalid_mbssid": int,
+                    "guest_lan_no_memory": int,
+                    "guest_lan_ceate_request_failed": int,
+                    "eogre_reset": int,
+                    "eogre_generic_join_failure": int,
+                    "eogre_ha_reconciliation": int,
+                    "wired_idle_timeout": int,
+                    "ip_update_timeout": int,
+                    "sae_commit_received_in_associated_state": int,
+                    "nack_ifid_mismatch": int,
+                    "eogre_invalid_vlan": int,
+                    "eogre_empty_domain": int,
+                    "eogre_invalid_domain": int,
+                    "eogre_domain_shut": int,
+                    "eogre_invalid_gateway": int,
+                    "eogre_all_gateways_down": int,
+                    "eogre_flex___no_active_gateway": int,
+                    "eogre_rule_matching_error": int,
+                    "eogre_aaa_override_error": int,
+                    "eogre_client_onboarding_error": int,
+                    "eogre_mobility_handoff_error": int,
+                    "l3_vlan_override_connection_timeout": int,
+                    "delete_received_from_ap": int,
+                    "qos_failure": int,
+                    "wpa_group_key_update_timeout": int,
+                    "client_blacklist": int,
+                    "dot11_unsupported_client_capabilities": int,
+                    "dot11_association_denied_unspecified": int,
+                    "dot11_ap_have_insufficient_bandwidth": int,
+                    "dot11_invalid_qos_parameter": int,
+                    "client_not_allowed_by_assisted_roaming": int,
+                    "wired_client_deleted_due_to_wgb_delete": int,
+                    "client_abort": int,
+                    "mobility_peer_delete": int,
+                    "no_ip": int,
+                    "bssid_down": 1,
+                    "dot11_qos_policy": int,
+                    "roam_across_policy_profile_deny": int,
+                    "4way_handshake_failure___m1_issue": int,
+                    "4way_handshake_failure___m3_issue": int,
+                    "exclusion_policy_template_fail": int,
+                    "dot11_cipher_suite_rejected": int
+                },
+                "informational_delete_reason": {
+                    "mobility_wlan_down": int,
+                    "ap_upgrade": int,
+                    "l3_authentication_failure": int,
+                    "ap_down/disjoin": 2,
+                    "mac_authentication_failure": int,
+                    "due_to_ssid_change": int,
+                    "due_to_vlan_change": int,
+                    "admin_deauthentication": int,
+                    "session_timeout": int,
+                    "idle_timeout": int,
+                    "supplicant_request": int,
+                    "mobility_tunnel_down": int,
+                    "dot11v_timer_timeout": int,
+                    "dot11_max_sta": int,
+                    "iapp_disassociation_for_wired_client": int,
+                    "wired_wgb_change": int,
+                    "wired_vlan_change": int,
+                    "wgb_wired_client_joins_as_a_direct_wireless_client": int,
+                    "incorrect_credentials": int,
+                    "wired_client_cleanup_due_to_wgb_roaming": int,
+                    "radio_down": int,
+                    "mobility_failure_on_fast_roam": 54,
+                    "due_to_ip_zone_change": int
+                },
+                "client_initiate_delete": {
+                    "deauthentication_or_disassociation_request": int,
+                    "client_dhcp": int,
+                    "client_eap_timeout": int,
+                    "client_8021x_failure": int,
+                    "client_device_idle": int,
+                    "client_captive_portal_security_failure": int,
+                    "client_decryption_failure": int,
+                    "client_interface_disabled": int,
+                    "client_user_triggered_disassociation": int,
+                    "client_miscellaneous_reason": int,
+                    "unknown": int,
+                    "client_peer_triggered": int,
+                    "client_beacon_loss": int
+                },
+                "ap_deletes": {
+                    "ap_initiated_delete_when_client_is_sending_disassociation": int,
+                    "ap_initiated_delete_for_idle_timeout": int,
+                    "ap_initiated_delete_for_client_acl_mismatch": int,
+                    "ap_initiated_delete_for_ap_auth_stop": int,
+                    "ap_initiated_delete_for_association_expired_at_ap": int,
+                    "ap_initiated_delete_for_4_way_handshake_failed": int,
+                    "ap_initiated_delete_for_dhcp_timeout": int,
+                    "ap_initiated_delete_for_reassociation_timeout": int,
+                    "ap_initiated_delete_for_sa_query_timeout": int,
+                    "ap_initiated_delete_for_intra_ap_roam": int,
+                    "ap_initiated_delete_for_channel_switch_at_ap": int,
+                    "ap_initiated_delete_for_bad_aid": int,
+                    "ap_initiated_delete_for_request": int,
+                    "ap_initiated_delete_for_interface_reset": int,
+                    "ap_initiated_delete_for_all_on_slot": int,
+                    "ap_initiated_delete_for_reaper_radio": int,
+                    "ap_initiated_delete_for_slot_disable": int,
+                    "ap_initiated_delete_for_mic_failure": int,
+                    "ap_initiated_delete_for_vlan_delete": int,
+                    "ap_initiated_delete_for_channel_change": 5,
+                    "ap_initiated_delete_for_stop_reassociation": int,
+                    "ap_initiated_delete_for_packet_max_retry": int,
+                    "ap_initiated_delete_for_transmission_deauth": int,
+                    "ap_initiated_delete_for_sensor_station_timeout": int,
+                    "ap_initiated_delete_for_age_timeout": int,
+                    "ap_initiated_delete_for_transmission_fail_threshold": int,
+                    "ap_initiated_delete_for_uplink_receive_timeout": int,
+                    "ap_initiated_delete_for_sensor_scan_next_radio": int,
+                    "ap_initiated_delete_for_sensor_scan_other_bssid": int,
+                    "ap_initiated_delete_for_auth_timeout_and_web_auth_timeout": int,
+                    "ap_initiated_delete_for_sending_deauth_pak_to_client": int
+                }
+            }
+        }
+
+
+
+# ==============================================
+# Parser for:
+#  * 'show wireless stats client delete reasons'
+# ==============================================
+class ShowWirelessStatsClientDeleteReasons(ShowWirelessStatsClientDeleteReasonsSchema):
+    """Parser for show wireless stats client delete reasons"""
+
+    cli_command = 'show wireless stats client delete reasons'
+
+    def change_data_type(self, value):
+        if value.isdigit():
+            value = value.strip()
+            value = int(value)
+        else:
+            try:
+                # Change strings to float if possible
+                value = float(value)
+            except ValueError:
+                # if the value is not an int or float, leave it as a string.
+                pass
+        return value
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+          output = output
+
+        section_tracker = []
+        client_delete_dict = {}
+
+        # Total client delete reasons
+        p_total_client_delete_reasons = re.compile(r"^Total\s+client\s+delete\s+reasons$")
+
+        # Controller deletes
+        p_controller_deletes = re.compile(r"^Controller\s+deletes$")
+
+        # Informational Delete Reason
+        p_informational_delete = re.compile(r"^Informational\s+Delete\s+Reason$")
+
+        # Client initiate delete
+        p_client_initiate_delete = re.compile(r"^Client\s+initiate\s+delete$")
+
+        # AP Deletes
+        p_ap_deletes = re.compile(r"^AP\s+Deletes$")
+
+        # [key] : [value]
+        p_colon_split = re.compile(r"^(?P<key>[\S\s]+\S)\s*: +(?P<value>\d+)$")
+
+
+
+        for line in output.splitlines():
+            line = line.strip()
+            if p_total_client_delete_reasons.match(line):
+                # Total client delete reasons
+                client_delete_dict.update({ "total_client_delete_reasons": {} })
+                section_tracker.append("total_client_delete_reasons")
+                continue
+            elif p_controller_deletes.match(line):
+                # Controller deletes
+                client_delete_dict["total_client_delete_reasons"].update({ "controller_deletes": {} })
+                section_tracker.append("controller_deletes")
+                continue
+            elif p_informational_delete.match(line):
+                # Informational Delete Reason
+                section_tracker.pop()
+                client_delete_dict["total_client_delete_reasons"].update({ "informational_delete_reason": {} })
+                section_tracker.append("informational_delete_reason")
+                continue
+            elif p_client_initiate_delete.match(line):
+                # Client initiate delete
+                section_tracker.pop()
+                client_delete_dict["total_client_delete_reasons"].update({ "client_initiate_delete": {} })
+                section_tracker.append("client_initiate_delete")
+                continue
+            elif p_ap_deletes.match(line):
+                # AP Deletes
+                section_tracker.pop()
+                client_delete_dict["total_client_delete_reasons"].update({ "ap_deletes": {} })
+                section_tracker.append("ap_deletes")
+                continue
+            elif p_colon_split.match(line):
+                # [key] : [value]
+                match = p_colon_split.match(line)
+                group = match.groupdict()
+                group["key"] = group["key"].replace(" ", "_").replace("-", "_").replace("..", "_").lower()
+                group["value"] = self.change_data_type(group["value"])
+                if len(section_tracker) == 1:
+                    client_delete_dict[section_tracker[-1]].update({ group["key"]: group["value"] })
+                elif len(section_tracker) == 2:
+                    client_delete_dict[section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
+
+        return client_delete_dict
