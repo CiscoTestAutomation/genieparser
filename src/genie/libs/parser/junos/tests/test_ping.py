@@ -22,6 +22,7 @@ class TestPing(unittest.TestCase):
     maxDiff = None
     empty_output = {'execute.return_value': ''}
 
+    # ping {addr} count {count}
     golden_output = {'execute.return_value': '''
         ping 10.189.5.94 count 5
         PING 10.189.5.94 (10.189.5.94): 56 data bytes
@@ -92,6 +93,7 @@ class TestPing(unittest.TestCase):
         }
     }
 
+    # ping {addr} count {count}
     golden_output_2 = {'execute.return_value': '''
         ping 2001:db8:223c:2c16::2 count 10
         PING6(56=40+8+8 bytes) 2001:db8:223c:2c16::1 --> 2001:db8:223c:2c16::2
@@ -202,6 +204,7 @@ class TestPing(unittest.TestCase):
         }
     }
 
+    # ping {addr} ttl {ttl} count {count} wait {wait}
     golden_output_3 = {'execute.return_value': '''
             ping 10.135.0.2 ttl 5 count 10 wait 1
             PING 10.135.0.2 (10.135.0.2): 56 data bytes
@@ -312,6 +315,62 @@ class TestPing(unittest.TestCase):
         }
     }
 
+    # ping {addr} source {source} size {size} do-not-fragment
+    golden_output_4 = {'execute.return_value': '''
+        genie@P1> ping 1.1.1.1 source 1.1.1.2 size 1400 do-not-fragment
+        PING 1.1.1.1 (1.1.1.1): 1400 data bytes
+        1408 bytes from 1.1.1.1: icmp_seq=0 ttl=64 time=2.246 ms
+        1408 bytes from 1.1.1.1: icmp_seq=1 ttl=64 time=1.251 ms
+        1408 bytes from 1.1.1.1: icmp_seq=2 ttl=64 time=22.375 ms
+        1408 bytes from 1.1.1.1: icmp_seq=3 ttl=64 time=1.078 ms
+        1408 bytes from 1.1.1.1: icmp_seq=4 ttl=64 time=1.167 ms
+        ^C
+        --- 1.1.1.1 ping statistics ---
+        5 packets transmitted, 5 packets received, 0% packet loss
+        round-trip min/avg/max/stddev = 1.078/5.623/22.375/8.386 ms
+    '''}
+
+    golden_parsed_output_4 = {
+        'ping': 
+            {'address': '1.1.1.1',
+                'data-bytes': 1400,
+                'result': [
+                    {'bytes': 1408,
+                    'from': '1.1.1.1',
+                    'icmp-seq': 0,
+                    'time': '2.246',
+                    'ttl': 64},
+                    {'bytes': 1408,
+                    'from': '1.1.1.1',
+                    'icmp-seq': 1,
+                    'time': '1.251',
+                    'ttl': 64},
+                    {'bytes': 1408,
+                    'from': '1.1.1.1',
+                    'icmp-seq': 2,
+                    'time': '22.375',
+                    'ttl': 64},
+                    {'bytes': 1408,
+                    'from': '1.1.1.1',
+                    'icmp-seq': 3,
+                    'time': '1.078',
+                    'ttl': 64},
+                    {'bytes': 1408,
+                    'from': '1.1.1.1',
+                    'icmp-seq': 4,
+                    'time': '1.167',
+                    'ttl': 64}],
+                'source': '1.1.1.1',
+                'statistics': {
+                    'loss-rate': 0,
+                    'received': 5,
+                    'round-trip': {
+                        'avg': '5.623',
+                        'max': '22.375',
+                        'min': '1.078',
+                        'stddev': '8.386'},
+                    'send': 5}}} 
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = Ping(device=self.device)
@@ -335,6 +394,17 @@ class TestPing(unittest.TestCase):
         obj = Ping(device=self.device)
         parsed_output = obj.parse(addr='10.135.0.2', count='10', ttl=5, wait=1)
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    # ping {addr} source {source} size {size} do-not-fragment
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = Ping(device=self.device)
+        parsed_output = obj.parse(
+            addr='1.1.1.1',
+            source='1.1.1.2',
+            size=1400
+        )
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)        
 
 
 class TestPingMplsRsvp(unittest.TestCase):
