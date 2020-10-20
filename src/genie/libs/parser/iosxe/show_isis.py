@@ -77,6 +77,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
                 isis_name = m.groupdict()['isis_name']
                 isis_dict = ret_dict.setdefault('isis', {}).setdefault(isis_name, {})
                 continue
+            # In case no Tag is in the output
             elif not ret_dict:
                 isis_dict = ret_dict.setdefault('isis', {})
 
