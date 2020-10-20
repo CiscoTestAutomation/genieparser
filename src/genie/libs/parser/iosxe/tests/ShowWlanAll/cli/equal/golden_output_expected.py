@@ -64,15 +64,16 @@ expected_output = {
                     "suiteb_1x": "Disabled",
                     "suiteb192_1x": "Disabled"
                 },
+                "cckm_tsf_tolerance_msecs": 1000,
                 "owe_transition_mode": "Disabled",
                 "osen": "Disabled",
-                "ft_support": "Enabled",
-                "ft_support_attributes": {
+                "ft_support": {
+                    "ft_support_status": "Enabled",
                     "ft_reassociation_timer_secs": 20,
                     "ft_over_the_ds_mode": "Disabled"
                 },
-                "pmf_support": "Disabled",
-                "pmf_support_attributes": {
+                "pmf_support": {
+                    "pmf_support_status": "Disabled",
                     "pmf_association_comeback_timeout_secs": 1,
                     "pmf_sa_query_time_msecs": 200
                 },
@@ -87,6 +88,7 @@ expected_output = {
             "band_select": "Disabled",
             "load_balancing": "Disabled",
             "multicast_buffer": "Disabled",
+            "multicast_buffer_size": 0,
             "ip_source_guard": "Disabled",
             "assisted_roaming": {
                 "neighbbor_list": "Enabled",
@@ -95,16 +97,20 @@ expected_output = {
             },
             "ieee_dot11v_parameters": {
                 "directed_multicast_service": "Enabled",
-                "bss_max_idle": "Enabled",
-                "bss_max_idle_attributes": {
+                "bss_max_idle": {
+                    "bss_max_idle_status": "Enabled",
                     "protected_mode": "Disabled"
                 },
                 "traffic_filtering_servce": "Disabled",
-                "bss_transition": "Enabled",
-                "bss_transition_attributes": {
-                    "disassocitation_imminent": "Disabled"
+                "bss_transition": {
+                    "bss_transition_status": "Enabled",
+                    "disassociation_imminent": {
+                        "disassociation_imminent_status": "Disabled",
+                        "optimised_roaming_timer": 40,
+                        "timer": 200
+                    }
                 },
-                "wmn": "Disabled"
+                "wmn_sleep_mode": "Disabled"
             },
             "dot11ac_mu_mimo": "Enabled",
             "dot11ax_parameters": {
@@ -158,13 +164,13 @@ expected_output = {
                 "wifi_protected_access_wpa1_wpa2_wpa3": "Disabled",
                 "owe_transition_mode": "Disabled",
                 "osen": "Disabled",
-                "ft_support": "Disabled",
-                "ft_support_attributes": {
+                "ft_support": {
+                    "ft_support_status": "Disabled",
                     "ft_reassociation_timer_secs": 20,
                     "ft_over_the_ds_mode": "Disabled"
                 },
-                "pmf_support": "Disabled",
-                "pmf_support_attributes": {
+                "pmf_support": {
+                    "pmf_support_status": "Disabled",
                     "pmf_association_comeback_timeout_secs": 1,
                     "pmf_sa_query_time_msecs": 200
                 },
@@ -179,6 +185,7 @@ expected_output = {
             "band_select": "Disabled",
             "load_balancing": "Disabled",
             "multicast_buffer": "Disabled",
+            "multicast_buffer_size": 0,
             "ip_source_guard": "Disabled",
             "assisted_roaming": {
                 "neighbbor_list": "Enabled",
@@ -187,16 +194,21 @@ expected_output = {
             },
             "ieee_dot11v_parameters": {
                 "directed_multicast_service": "Enabled",
-                "bss_max_idle": "Enabled",
-                "bss_max_idle_attributes": {
+                "bss_max_idle": {
+                    "bss_max_idle_status": "Enabled",
                     "protected_mode": "Disabled"
                 },
                 "traffic_filtering_servce": "Disabled",
                 "bss_transition": "Enabled",
-                "bss_transition_attributes": {
-                    "disassocitation_imminent": "Disabled"
+                "bss_transition": {
+                    "bss_transition_status": "Enabled",
+                    "disassociation_imminent": {
+                        "disassociation_imminent_status": "Disabled",
+                        "optimised_roaming_timer": 40,
+                        "timer": 200
+                    }
                 },
-                "wmn": "Disabled"
+                "wmn_sleep_mode": "Disabled"
             },
             "dot11ac_mu_mimo": "Enabled",
             "dot11ax_parameters": {
@@ -278,15 +290,16 @@ expected_output = {
                     "suiteb_1x": "Disabled",
                     "suiteb192_1x": "Disabled"
                 },
+                "cckm_tsf_tolerance_msecs": 1000,
                 "owe_transition_mode": "Disabled",
                 "osen": "Disabled",
-                "ft_support": "Adaptive",
-                "ft_support_attributes": {
+                "ft_support": {
+                    "ft_support_status": "Adaptive",
                     "ft_reassociation_timer_secs": 20,
                     "ft_over_the_ds_mode": "Disabled"
                 },
-                "pmf_support": "Disabled",
-                "pmf_support_attributes": {
+                "pmf_support": {
+                    "pmf_support_status": "Disabled",
                     "pmf_association_comeback_timeout_secs": 1,
                     "pmf_sa_query_time_msecs": 200
                 },
@@ -301,6 +314,7 @@ expected_output = {
             "band_select": "Disabled",
             "load_balancing": "Disabled",
             "multicast_buffer": "Disabled",
+            "multicast_buffer_size": 0,
             "ip_source_guard": "Disabled",
             "assisted_roaming": {
                 "neighbbor_list": "Enabled",
@@ -309,16 +323,20 @@ expected_output = {
             },
             "ieee_dot11v_parameters": {
                 "directed_multicast_service": "Enabled",
-                "bss_max_idle": "Enabled",
-                "bss_max_idle_attributes": {
+                "bss_max_idle": {
+                    "bss_max_idle_status": "Enabled",
                     "protected_mode": "Disabled"
                 },
                 "traffic_filtering_servce": "Disabled",
-                "bss_transition": "Enabled",
-                "bss_transition_attributes": {
-                    "disassocitation_imminent": "Disabled"
+                "bss_transition": {
+                    "bss_transition_status": "Enabled",
+                    "disassociation_imminent": {
+                        "disassociation_imminent_status": "Disabled",
+                        "optimised_roaming_timer": 40,
+                        "timer": 200
+                    }
                 },
-                "wmn": "Disabled"
+                "wmn_sleep_mode": "Disabled"
             },
             "dot11ac_mu_mimo": "Enabled",
             "dot11ax_parameters": {

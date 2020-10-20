@@ -179,15 +179,17 @@ class ShowWlanAllSchema(MetaParser):
                         Optional("suiteb_1x"): str,
                         Optional("suiteb192_1x"): str
                     },
+                    Optional("cckm_tsf_tolerance_msecs"): int,
                     "owe_transition_mode": str,
                     "osen": str,
                     "ft_support": str,
-                    "ft_support_attributes": {
+                    "ft_support": {
+                        "ft_support_status": str,
                         "ft_reassociation_timer_secs": int,
                         "ft_over_the_ds_mode": str
                     },
-                    "pmf_support": str,
-                    "pmf_support_attributes": {
+                    "pmf_support": {
+                        "pmf_support_status": str,
                         "pmf_association_comeback_timeout_secs": int,
                         "pmf_sa_query_time_msecs": int
                     },
@@ -202,6 +204,7 @@ class ShowWlanAllSchema(MetaParser):
                 "band_select": str,
                 "load_balancing": str,
                 "multicast_buffer": str,
+                "multicast_buffer_size": int,
                 "ip_source_guard": str,
                 "assisted_roaming": {
                     "neighbbor_list": str,
@@ -210,16 +213,21 @@ class ShowWlanAllSchema(MetaParser):
                 },
                 "ieee_dot11v_parameters": {
                     "directed_multicast_service": str,
-                    "bss_max_idle": str,
-                    "bss_max_idle_attributes": {
+                    "bss_max_idle": {
+                        "bss_max_idle_status": str,
                         "protected_mode": str
                     },
                     "traffic_filtering_servce": str,
-                    "bss_transition": str,
-                    "bss_transition_attributes": {
-                        "disassocitation_imminent": str
-                    },
-                    "wmn": str
+                    "bss_transition": {
+                        "bss_transition_status": str,
+                        "disassociation_imminent": {
+                            "disassociation_imminent_status": str,
+                            "optimised_roaming_timer": int,
+                            "timer": int,
+                        }
+
+                },
+                    "wmn_sleep_mode": str
                 },
                 "dot11ac_mu_mimo": str,
                 "dot11ax_parameters": {
@@ -238,7 +246,7 @@ class ShowWlanAllSchema(MetaParser):
                 },
                 Optional("wifi_to_cellular_steering"): str
             }
-        }    
+        }
     }
 
 
@@ -260,7 +268,7 @@ class ShowWlanAll(ShowWlanAllSchema):
         # WLAN Profile Name     : lizzard_Fabric_F_cf6efda4
         # ================================================
         # Identifier                                     : 17
-        # Description                                    : 
+        # Description                                    :
         # Network Name (SSID)                            : lizzard
         # Status                                         : Enabled
         # Broadcast SSID                                 : Enabled
@@ -281,12 +289,12 @@ class ShowWlanAll(ShowWlanAllSchema):
         # CCX - AironetIe Support                        : Disabled
         # Peer-to-Peer Blocking Action                   : Disabled
         # Radio Policy                                   : 802.11a only
-        # DTIM period for 802.11a radio                  : 
-        # DTIM period for 802.11b radio                  : 
+        # DTIM period for 802.11a radio                  :
+        # DTIM period for 802.11b radio                  :
         # Local EAP Authentication                       : Disabled
         # Mac Filter Authorization list name             : Disabled
         # Mac Filter Override Authorization list name    : Disabled
-        # Accounting list name                           : 
+        # Accounting list name                           :
         # 802.1x authentication list name                : dnac-list
         # 802.1x authorization list name                 : Disabled
         # Security
@@ -436,10 +444,10 @@ class ShowWlanAll(ShowWlanAllSchema):
         # Radio Policy                                   : 802.11a only
         p_radio_policy = re.compile(r"^Radio\s+Policy\s+:\s+(?P<value>.*)$")
 
-        # DTIM period for 802.11a radio                  : 
+        # DTIM period for 802.11a radio                  :
         p_dtim_a = re.compile(r"^DTIM\s+period\s+for\s+802.11a\s+radio\s+:\s+(?P<value>.*)$")
 
-        # DTIM period for 802.11b radio                  : 
+        # DTIM period for 802.11b radio                  :
         p_dtim_b = re.compile(r"^DTIM\s+period\s+for\s+802.11b\s+radio\s+:\s+(?P<value>.*)$")
 
         # Local EAP Authentication                       : Disabled
@@ -451,7 +459,7 @@ class ShowWlanAll(ShowWlanAllSchema):
         # Mac Filter Override Authorization list name    : Disabled
         p_mac_filter_override = re.compile(r"^Mac\s+Filter\s+Override\s+Authorization\s+list\s+name\s+:\s+(?P<value>\S+)$")
 
-        # Accounting list name                           : 
+        # Accounting list name                           :
         p_accounting_list = re.compile(r"^Accounting\s+list\s+name\s+:\s+(?P<value>.*)$")
 
         # 802.1x authentication list name                : default
@@ -536,7 +544,10 @@ class ShowWlanAll(ShowWlanAllSchema):
         p_key_suiteb192 = re.compile(r"^SUITEB192-1X\s+:\s+(?P<value>\S+)$")
 
         # CCKM TSF Tolerance (msecs)                 : 1000
-        p_cckm_tsf = re.compile(r"^CCKM\s+TSF\s+Tolerance\s+\(msecs\)\s+:\s+(?P<value>\d+)$")
+        p_cckm_tsf_msec = re.compile(r"^CCKM\s+TSF\s+Tolerance\s+\(msecs\)\s+:\s+(?P<value>\d+)$")
+
+        # CCKM TSF Tolerance                 : 1000
+        p_cckm_tsf = re.compile(r"^CCKM\s+TSF\s+Tolerance\s+:\s+(?P<value>\d+)$")
 
         # OWE Transition Mode                        : Disabled
         p_owe_transition = re.compile(r"^OWE\s+Transition\s+Mode\s+:\s+(?P<value>\S+)$")
@@ -604,6 +615,9 @@ class ShowWlanAll(ShowWlanAllSchema):
         # Multicast Buffers (frames)                     : 0
         p_multi_buffer_frames = re.compile(r"^Multicast\s+Buffer\s+\(frames\)\s+:\s+(?P<value>\d+)$")
 
+        # Multicast Buffer Size                          : 0
+        p_multi_buffer_size = re.compile(r"^Multicast\s+Buffer\s+Size\s+:\s+(?P<value>\d+)$")
+
         # IP Source Guard                                : Disabled
         p_ip_sourceguard = re.compile(r"^IP\s+Source\s+Guard\s+:\s+(?P<value>\S+)$")
 
@@ -645,6 +659,18 @@ class ShowWlanAll(ShowWlanAllSchema):
 
         # Timer (TBTTS)                      : 200
         p_11v_bss_trans_disassoc_timer = re.compile(r"^Timer\s+\(TBTTS\)\s+:\s+(?P<value>\d+)$")
+
+        # Optimised Roaming Timer (TBTTS)    : 40
+        p_11v_bss_trans_disassoc_tbtts_extra = re.compile(r"^Optimised\s+Roaming\s+Timer\s+\(TBTTS\)\s+:\s+(?P<value>\d+)$")
+
+        # Timer (TBTTS)                      : 200
+        p_11v_bss_trans_disassoc_timer_extra = re.compile(r"^Timer\s+\(TBTTS\)\s+:\s+(?P<value>\d+)$")
+
+        # Optimised Roaming Timer    : 40
+        p_11v_bss_trans_disassoc_tbtts = re.compile(r"^Optimised\s+Roaming\s+Timer\s+:\s+(?P<value>\d+)$")
+
+        # Timer                       : 200
+        p_11v_bss_trans_disassoc_timer = re.compile(r"^Timer\s+:\s+(?P<value>\d+)$")
 
         # Dual Neighbor List                     : Disabled
         p_11v_dual_neighbor = re.compile(r"^Dual\s+Neighbor\s+List\s+:\s+(?P<value>\S+)$")
@@ -837,12 +863,12 @@ class ShowWlanAll(ShowWlanAllSchema):
                 wlan_dict["wlan_names"][current_wlan].update({ "radio_policy": match.group("value") })
                 continue
             elif p_dtim_a.match(line):
-                # DTIM period for 802.11a radio                  : 
+                # DTIM period for 802.11a radio                  :
                 match = p_dtim_a.match(line)
                 wlan_dict["wlan_names"][current_wlan].update({ "dtim_period_dot11a": match.group("value") })
                 continue
             elif p_dtim_b.match(line):
-                # DTIM period for 802.11b radio                  : 
+                # DTIM period for 802.11b radio                  :
                 match = p_dtim_b.match(line)
                 wlan_dict["wlan_names"][current_wlan].update({ "dtim_period_dot11b": match.group("value") })
                 continue
@@ -862,7 +888,7 @@ class ShowWlanAll(ShowWlanAllSchema):
                 wlan_dict["wlan_names"][current_wlan].update({ "mac_filter_override_authorization_list_name": match.group("value") })
                 continue
             elif p_accounting_list.match(line):
-                # Accounting list name                           : 
+                # Accounting list name                           :
                 match = p_accounting_list.match(line)
                 wlan_dict["wlan_names"][current_wlan].update({ "accounting_list_name": match.group("value") })
                 continue
@@ -1010,8 +1036,13 @@ class ShowWlanAll(ShowWlanAllSchema):
                 wlan_dict["wlan_names"][current_wlan]["security"]["auth_key_mgmt"].update({ "suiteb192_1x": match.group("value")})
                 continue
             elif p_cckm_tsf.match(line):
-                # CCKM TSF Tolerance (msecs)                 : 1000
+                # CCKM TSF Tolerance                 : 1000
                 match = p_cckm_tsf.match(line)
+                wlan_dict["wlan_names"][current_wlan]["security"].update({ "cckm_tsf_tolerance_msecs": int(match.group("value")) })
+                continue
+            elif p_cckm_tsf_msec.match(line):
+                # CCKM TSF Tolerance (msecs)                 : 1000
+                match = p_cckm_tsf_msec.match(line)
                 wlan_dict["wlan_names"][current_wlan]["security"].update({ "cckm_tsf_tolerance_msecs": int(match.group("value")) })
                 continue
             elif p_owe_transition.match(line):
@@ -1027,53 +1058,50 @@ class ShowWlanAll(ShowWlanAllSchema):
             elif p_ftsupport.match(line):
                 # FT Support                                 : Adaptive
                 match = p_ftsupport.match(line)
-                wlan_dict["wlan_names"][current_wlan]["security"].update({ "ft_support": match.group("value") })
-                if not wlan_dict["wlan_names"][current_wlan]["security"].get("ft_support_attributes"):
-                    wlan_dict["wlan_names"][current_wlan]["security"].update({ "ft_support_attributes": {} })
-                continue
+                if not wlan_dict["wlan_names"][current_wlan]["security"].get("ft_support"):
+                    wlan_dict["wlan_names"][current_wlan]["security"].update({ "ft_support": {} })
+                wlan_dict["wlan_names"][current_wlan]["security"]["ft_support"].update({ "ft_support_status": match.group("value")})
             elif p_ft_re_timeout_secs.match(line):
                 # FT Reassociation Timeout (secs)        : 20
                 match = p_ft_re_timeout_secs.match(line)
-                wlan_dict["wlan_names"][current_wlan]["security"]["ft_support_attributes"].update({ "ft_reassociation_timer_secs": int(match.group("value")) })
+                wlan_dict["wlan_names"][current_wlan]["security"]["ft_support"].update({ "ft_reassociation_timer_secs": int(match.group("value")) })
                 continue
             elif p_ft_re_timeout.match(line):
                 # FT Reassociation Timeout (secs)        : 20
                 match = p_ft_re_timeout.match(line)
-                wlan_dict["wlan_names"][current_wlan]["security"]["ft_support_attributes"].update({ "ft_reassociation_timer_secs": int(match.group("value")) })
+                wlan_dict["wlan_names"][current_wlan]["security"]["ft_support"].update({ "ft_reassociation_timer_secs": int(match.group("value")) })
                 continue
             elif p_ft_dst.match(line):
                 # FT Over-The-DS mode                    : Disabled
                 match = p_ft_dst.match(line)
-                wlan_dict["wlan_names"][current_wlan]["security"]["ft_support_attributes"].update({ "ft_over_the_ds_mode": match.group("value") })
+                wlan_dict["wlan_names"][current_wlan]["security"]["ft_support"].update({ "ft_over_the_ds_mode": match.group("value") })
                 continue
             elif p_pmf.match(line):
                 # PMF Support                                : Disabled
                 match = p_pmf.match(line)
-                wlan_dict["wlan_names"][current_wlan]["security"].update({ "pmf_support": match.group("value") })
+                if not wlan_dict["wlan_names"][current_wlan]["security"].get("pmf_support"):
+                    wlan_dict["wlan_names"][current_wlan]["security"].update({ "pmf_support": {} })
+                wlan_dict["wlan_names"][current_wlan]["security"]["pmf_support"].update({ "pmf_support_status": match.group("value") })
                 continue
             elif p_association_comeback_secs.match(line):
                 # PMF Association Comeback Timeout (secs): 1
                 match = p_association_comeback_secs.match(line)
-                if not wlan_dict["wlan_names"][current_wlan]["security"].get("pmf_support_attributes"):
-                    wlan_dict["wlan_names"][current_wlan]["security"].update({ "pmf_support_attributes": {} })
-                wlan_dict["wlan_names"][current_wlan]["security"]["pmf_support_attributes"].update({ "pmf_association_comeback_timeout_secs": int(match.group("value")) })
+                wlan_dict["wlan_names"][current_wlan]["security"]["pmf_support"].update({ "pmf_association_comeback_timeout_secs": int(match.group("value")) })
                 continue
             elif p_association_comeback.match(line):
-                # PMF Association Comeback Timeout (secs): 1
                 match = p_association_comeback.match(line)
-                if not wlan_dict["wlan_names"][current_wlan]["security"].get("pmf_support_attributes"):
-                    wlan_dict["wlan_names"][current_wlan]["security"].update({ "pmf_support_attributes": {} })
-                wlan_dict["wlan_names"][current_wlan]["security"]["pmf_support_attributes"].update({ "pmf_association_comeback_timeout_secs": int(match.group("value")) })
+                # PMF Association Comeback Timeout (secs): 1
+                wlan_dict["wlan_names"][current_wlan]["security"]["pmf_support"].update({ "pmf_association_comeback_timeout_secs": int(match.group("value")) })
                 continue
             elif p_pmf_sa_msecs.match(line):
                 # PMF SA Query Time (msecs)              : 200
                 match = p_pmf_sa_msecs.match(line)
-                wlan_dict["wlan_names"][current_wlan]["security"]["pmf_support_attributes"].update({ "pmf_sa_query_time_msecs": int(match.group("value")) })
+                wlan_dict["wlan_names"][current_wlan]["security"]["pmf_support"].update({ "pmf_sa_query_time_msecs": int(match.group("value")) })
                 continue
             elif p_pmf_sa.match(line):
                 # PMF SA Query Time (msecs)              : 200
                 match = p_pmf_sa.match(line)
-                wlan_dict["wlan_names"][current_wlan]["security"]["pmf_support_attributes"].update({ "pmf_sa_query_time_msecs": int(match.group("value")) })
+                wlan_dict["wlan_names"][current_wlan]["security"]["pmf_support"].update({ "pmf_sa_query_time_msecs": int(match.group("value")) })
                 continue
             elif p_web_authen.match(line):
                 # Web Based Authentication                   : Disabled
@@ -1130,6 +1158,11 @@ class ShowWlanAll(ShowWlanAllSchema):
                 match = p_multi_buffer_frames.match(line)
                 wlan_dict["wlan_names"][current_wlan].update({ "multicast_buffer_frames": int(match.group("value")) })
                 continue
+            elif p_multi_buffer_size.match(line):
+                # Multicast Buffer Size                          : 0
+                match = p_multi_buffer_size.match(line)
+                wlan_dict["wlan_names"][current_wlan].update({ "multicast_buffer_size": int(match.group("value")) })
+                continue
             elif p_ip_sourceguard.match(line):
                 # IP Source Guard                                : Disabled
                 match = p_ip_sourceguard.match(line)
@@ -1168,14 +1201,13 @@ class ShowWlanAll(ShowWlanAllSchema):
             elif p_11v_bss.match(line):
                 # BSS Max Idle                               : Enabled
                 match = p_11v_bss.match(line)
-                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"].update({ "bss_max_idle": match.group("value") })
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"].update({ "bss_max_idle": {} })
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_max_idle"].update({ "bss_max_idle_status": match.group("value") })
                 continue
             elif p_11v_bss_protected.match(line):
                 # Protected Mode                         : Disabled
                 match = p_11v_bss_protected.match(line)
-                if not wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"].get("bss_max_idle_attributes"):
-                    wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"].update({ "bss_max_idle_attributes": {} })
-                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_max_idle_attributes"].update({ "protected_mode": match.group("value") })
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_max_idle"].update({ "protected_mode": match.group("value") })
                 continue
             elif p_11v_filtering.match(line):
                 # Traffic Filtering Service                  : Disabled
@@ -1185,36 +1217,45 @@ class ShowWlanAll(ShowWlanAllSchema):
             elif p_11v_bss_trans.match(line):
                 # BSS Transition                             : Enabled
                 match = p_11v_bss_trans.match(line)
-                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"].update({ "bss_transition": match.group("value") })
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"].update({ "bss_transition": {}})
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition"].update({ "bss_transition_status": match.group("value") })
                 continue
             elif p_11v_bss_trans_disassoc.match(line):
                 # Disassociation Imminent                : Disabled
                 match = p_11v_bss_trans_disassoc.match(line)
-                if not wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"].get("bss_transition_attributes"):
-                    wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"].update({ "bss_transition_attributes": {} })
-                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition_attributes"].update({ "disassocitation_imminent": match.group("value") })
+                if not wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition"].get("disassociation_imminent"):
+                    wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition"].update({ "disassociation_imminent": {} })
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition"]["disassociation_imminent"].update({ "disassociation_imminent_status": match.group("value") })
+                continue
+            elif p_11v_bss_trans_disassoc_tbtts_extra.match(line):
+                # Optimised Roaming Timer (TBTTS)    : 40
+                match = p_11v_bss_trans_disassoc_tbtts_extra.match(line)
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition"]["disassociation_imminent"].update({ "optimised_roaming_timer": int(match.group("value")) })
+                continue
+            elif p_11v_bss_trans_disassoc_timer_extra.match(line):
+                # Timer (TBTTS)                      : 200
+                match = p_11v_bss_trans_disassoc_timer_extra.match(line)
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition"]["disassociation_imminent"].update({ "timer": int(match.group("value")) })
                 continue
             elif p_11v_bss_trans_disassoc_tbtts.match(line):
                 # Optimised Roaming Timer (TBTTS)    : 40
                 match = p_11v_bss_trans_disassoc_tbtts.match(line)
-                if not wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition_attributes"].get("bss_transition_disassociation_attributes"):
-                    wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition_attributes"].update({ "bss_transition_disassociation_attributes": {} })
-                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition_attributes"]["bss_transition_disassociation_attributes"].update({ "optimised_roaming_timer": int(match.group("value")) })
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition"]["disassociation_imminent"].update({ "optimised_roaming_timer": int(match.group("value")) })
                 continue
             elif p_11v_bss_trans_disassoc_timer.match(line):
                 # Timer (TBTTS)                      : 200
                 match = p_11v_bss_trans_disassoc_timer.match(line)
-                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition_attributes"]["bss_transition_disassociation_attributes"].update({ "timer": int(match.group("value")) })
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition"]["disassociation_imminent"].update({ "timer": int(match.group("value")) })
                 continue
             elif p_11v_dual_neighbor.match(line):
                # Dual Neighbor List                     : Disabled
                 match = p_11v_dual_neighbor.match(line)
-                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition_attributes"].update({ "dual_neighbor_list": match.group("value") })
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"]["bss_transition"].update({ "dual_neighbor_list": match.group("value") })
                 continue
             elif p_11v_wnm.match(line):
                 # BSS Max Idle                               : Enabled
                 match = p_11v_wnm.match(line)
-                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"].update({ "wmn": match.group("value") })
+                wlan_dict["wlan_names"][current_wlan]["ieee_dot11v_parameters"].update({ "wmn_sleep_mode": match.group("value") })
                 continue
             elif p_11ac_mimo.match(line):
                 # 802.11ac MU-MIMO                               : Enabled
