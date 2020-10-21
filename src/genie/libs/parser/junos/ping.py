@@ -60,6 +60,7 @@ class PingSchema(MetaParser):
                     Optional('ttl'): int,
                     Optional('time'): str,
                     Optional('message'): str,
+                    Optional('mtu'): str,
                 })
         # Validate each dictionary in list
         for item in value:
@@ -145,7 +146,7 @@ class Ping(PingSchema):
         # 36 bytes from 34.0.0.1: frag needed and DF set (MTU 1186)
         # 1240 bytes from 2001:34::1: Packet too big mtu = 1386
         p2_2 = re.compile(r'^(?P<bytes>\d+)\s+bytes\s+from\s+(?P<from>\S+)'
-                          r':\s+(?P<message>[\s\w]+)(\s+mtu.*|\(MTU.*)?$')
+                          r':\s+(?P<message>[\s\w]+)(\(MTU\s|mtu\s=\s)(?P<mtu>\d+)(\))?$')
 
         # 5 packets transmitted, 5 packets received, 0% packet loss
         # 5 packets transmitted, 0 packets received, 100% packet loss
