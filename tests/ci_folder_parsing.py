@@ -119,12 +119,10 @@ CLASS_SKIP = {
         "ShowRebootHistory_viptela": True,
         "ShowOmpSummary_viptela": True,
         "ShowSystemStatus_viptela": True,
-        "ShowTcpProxyStatistics": True, # PR submitted
-        "ShowTcpproxyStatus": True, # PR submitted
-        "ShowPlatformTcamUtilization": True, # PR submitted
-        "ShowLicense": True, # PR submitted
-        "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
         "ShowSoftwaretab": True, # PR submitted
+        "ShowOmpPeers_viptela": True,
+        "ShowOmpTlocPath_viptela": True,
+        "ShowOmpTlocs_viptela": True,
     },
     "ios": {
         "ShowPimNeighbor": True,
@@ -283,7 +281,6 @@ class FileBasedTest(aetest.Testcase):
                             continue_=True,
                         ) as golden_steps:
                             self.test_golden(
-                                golden_steps, local_class, operating_system, token
                                 golden_steps, local_class, operating_system, token, _number
                             )
                         with class_step.start(
