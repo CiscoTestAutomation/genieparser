@@ -263,8 +263,11 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                 token_is_regular = _is_regular_token(token)
 
             if token_is_regular: 
-               # Special case for `:\|Swap:`
+                # Special case for `:\|Swap:`
                 token = token.replace(r'\|', '|')
+                
+                # Special case for command `vim-cmd vmsvc/snapshot.get {vmid}`
+                token = token.replace(r'\.', '.')
 
         if token_is_regular:
             # Current token might be command or argument
