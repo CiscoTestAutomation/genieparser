@@ -14,7 +14,7 @@ class ShowRunningConfigWlanSchema(MetaParser):
     schema = {
         "profile_name": {
             Any(): {
-                "config": Any(),
+                "config": list,
                 "ssid": str,
                 "wlan_id": int,
             },
