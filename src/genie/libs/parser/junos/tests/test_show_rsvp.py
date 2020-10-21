@@ -11,6 +11,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_rsvp import (ShowRSVPNeighbor,
                                                ShowRSVPNeighborDetail,
                                                ShowRSVPSession,
+                                               ShowRSVPSessionTransit
                                                )
 
 
@@ -636,6 +637,54 @@ class TestShowRSVPSession(unittest.TestCase):
         obj = ShowRSVPSession(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
-        
+
+class TestShowRSVPSessionTransit(unittest.TestCase):
+    device = Device(name='aName')
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': """
+        show rsvp session transit
+        Transit RSVP: 1 sessions
+        To              From            State   Rt Style Labelin Labelout LSPname
+        4.4.4.4         2.2.2.2         Up       0  1 FF      22       22 test_lsp_01
+        Total 1 displayed, Up 1, Down 0"""}
+    
+    golden_parsed_output_1 = {
+        "rsvp-session-information": {
+            "rsvp-session-data": [{
+                "count": "1",
+                "display-count": "1",
+                "down-count": "0",
+                 "session-type": "Transit",
+                "up-count": "1",
+                "rsvp-session": [{
+                    "destination-address": "4.4.4.4",
+                    "label-in": "22",
+                    "label-out": "22",
+                    "lsp-state": "Up",
+                    "name": "test_lsp_01",
+                    "resv-style": "FF",
+                    "route-count": "0",
+                    "rsb-count": "1",
+                    "source-address": "2.2.2.2"
+                }],
+            }]
+        }
+    }
+    
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowRSVPSessionTransit(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden_1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowRSVPSessionTransit(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 if __name__ == '__main__':
     unittest.main()

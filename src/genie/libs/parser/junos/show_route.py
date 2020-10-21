@@ -54,6 +54,7 @@ class ShowRouteTableSchema(MetaParser):
                             Optional('preference2'): str,
                             'age': str,
                             Optional('metric'): str,
+                            Optional('rt-tag'): str,
                             'next_hop': {
                                 'next_hop_list': {
                                     Any(): {
@@ -111,8 +112,8 @@ class ShowRouteTable(ShowRouteTableSchema):
         # 10.64.4.4/32   *[L-OSPF/9/5] 1d 02:16:51, metric 110
         # 118420             *[VPN/170] 31w3d 20:13:54
         r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?'
-                        r'\[(?P<protocol_name>[\w\-]+)/(?P<preference>\d+)/?(?P<preference2>\d+)?\]'
-                        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?$')
+                        r'\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)\/?(?P<preference2>\d+)?\]'
+                        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
@@ -146,13 +147,15 @@ class ShowRouteTable(ShowRouteTableSchema):
             result = r2.match(line)
             if result:
                 group = result.groupdict()
-
+                rt_tag = group.pop('rt_tag', None)
                 rt_destination = group.pop('rt_destination', None)
 
                 route_dict = table_dict.setdefault('routes', {})\
                                        .setdefault(rt_destination, {})
 
                 route_dict.update({k: v for k, v in group.items() if v})
+                if rt_tag:
+                    route_dict.update({'rt-tag': rt_tag})
                 continue
 
             # > to 192.168.220.6 via ge-0/0/1.0

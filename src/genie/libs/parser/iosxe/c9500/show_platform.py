@@ -15,9 +15,6 @@ import logging
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 
-# import parser utils
-from genie.libs.parser.utils.common import Common
-
 
 # ==========================
 #  Schema for 'show version'

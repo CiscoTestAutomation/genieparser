@@ -1023,7 +1023,7 @@ class ShowSystemUptimeSchema(MetaParser):
                     Optional("@junos:seconds"): str
                 }
             },
-            "time-source": str,
+            Optional("time-source"): str,
             "uptime-information": {
                 "active-user-count": {
                     "#text": str,

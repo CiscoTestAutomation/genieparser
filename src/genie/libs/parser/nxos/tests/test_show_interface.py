@@ -1125,6 +1125,7 @@ class TestShowInterface(unittest.TestCase):
                          'ethertype': '0x8100',
                          'flow_control': {'receive': False, 'send': False},
                          'interface_reset': 16,
+                         'last_link_flapped': '82week(s) 6day(s)',
                          'link_state': 'down',
                          'mac_address': '80e0.1dff.6cc3',
                          'media_type': '10G',
