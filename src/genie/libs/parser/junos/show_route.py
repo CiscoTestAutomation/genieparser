@@ -1955,7 +1955,7 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
 
         # *                         Self                 2       100        I
         p4 = re.compile(r'^((?P<active_tag>\*) +)?(?P<to>\S+)( +(?P<med>\d+)? +(?P<local_preference>\d+))? +(?P<as_path>(\(([\S\s]+\)) +\w+)|((\d\s)?\w))$')
-
+        
         for line in out.splitlines():
             line = line.strip()
 
@@ -1977,7 +1977,7 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
                 rt_dict = {'rt-destination': group['rt_destination']}
                 rt_entry_dict = rt_dict.setdefault('rt-entry', {})
                 keys = ['active_tag', 'as_path', 'local_preference', 'med']
-
+                
                 for key in keys:
                     if group[key]:
                         rt_entry_dict.update({key.replace('_', '-'): group[key]})
