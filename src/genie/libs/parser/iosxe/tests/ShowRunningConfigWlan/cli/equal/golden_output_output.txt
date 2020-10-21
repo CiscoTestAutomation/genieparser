@@ -1,0 +1,23 @@
+wlan lizzard_Fabric_F_90c76354 17 lizzard
+ radio dot11a
+ security ft
+ security wpa akm ft dot1x
+ security dot1x authentication-list dnac-cts-list
+ no shutdown
+wlan internet_Fabric_F_522662da 19 internet
+ mac-filtering default
+ no security ft adaptive
+ no security wpa
+ no security wpa wpa2 ciphers aes
+ no security wpa akm dot1x
+ no shutdown
+wlan lizzard_l_Fabric_F_0e98c2cd 18 lizzard_2
+ no broadcast-ssid
+ radio dot11bg
+ security dot1x authentication-list dnac-cts-list
+ no shutdown
+wlan alfa_Global_F_953d5d2b 17 alfa
+ radio dot11a
+ security ft over-the-ds
+ security dot1x authentication-list dnac-cts-list
+ no shutdown
