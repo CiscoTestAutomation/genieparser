@@ -549,7 +549,9 @@ class ShowSpanningTreeMstDetailSchema(MetaParser):
                 'bridge_address': str,
                 'bridge_priority': int,
                 'sysid': int,
-                'root': str,
+                Optional('root'): str,
+                Optional('root_address'): str,
+                Optional('root_priority'): int,
                 Optional('operational'): {
                     'hello_time': int,
                     'forward_delay': int,
@@ -610,55 +612,60 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^\#+ +MST(?P<inst>\d+) +'
-                         'vlans +mapped: +(?P<vlan>[\d\-\,\s]+)$')
+                        r'vlans +mapped: +(?P<vlan>[\d\-\,\s]+)$')
 
         p2 = re.compile(r'^Bridge +address +(?P<bridge_address>[\w\.]+) +'
-                         'priority +(?P<bridge_priority>\d+) +'
-                         '\((\d+) +sysid +(?P<sysid>\d+)\)$')
+                        r'priority +(?P<bridge_priority>\d+) +'
+                        r'\((\d+) +sysid +(?P<sysid>\d+)\)$')
         
         p3 = re.compile(r'^Root +this +switch +for +(the +)?(?P<root>[\w\.\s]+)$')
+
+        # Root          address 58ac.78b5.0e40  priority      8198  (8192 sysid 6)
+        p3_1 = re.compile(r'^Root +address +(?P<root_address>[\w\.]+) +'
+                          r'priority +(?P<root_priority>\d+) +'
+                          r'\((\d+) +sysid +(?P<sysid>\d+)\)$')
         
         p4 = re.compile(r'^Operational +hello +time +(?P<hello_time>\d+), +'
-                         'forward +delay +(?P<forward_delay>\d+), +'
-                         'max +age +(?P<max_age>\d+), +'
-                         'txholdcount +(?P<tx_hold_count>\d+)$')
+                        r'forward +delay +(?P<forward_delay>\d+), +'
+                        r'max +age +(?P<max_age>\d+), +'
+                        r'txholdcount +(?P<tx_hold_count>\d+)$')
         
         p5 = re.compile(r'^Configured +hello +time +(?P<hello_time>\d+), +'
-                         'forward +delay +(?P<forward_delay>\d+), +'
-                         'max +age +(?P<max_age>\d+), +'
-                         'max +hops +(?P<max_hops>\d+)$')
+                        r'forward +delay +(?P<forward_delay>\d+), +'
+                        r'max +age +(?P<max_age>\d+), +'
+                        r'max +hops +(?P<max_hops>\d+)$')
         
         p6 = re.compile(r'^(?P<name>[\w\-\.\/]+) +of +'
-                         'MST(\d+) +is +(?P<status>[\w\s]+)'
-                         '( +\((?P<broken_reason>.*)\))?$')
+                        r'MST(\d+) +is +(?P<status>[\w\s]+)'
+                        r'( +\((?P<broken_reason>.*)\))?$')
         
         p7 = re.compile(r'^Port +info +port +id +'
-                         '(?P<port_id>[\d\.]+) +'
-                         'priority +(?P<port_priority>\d+) +'
-                         'cost +(?P<cost>\d+)$')
+                        r'(?P<port_id>[\d\.]+) +'
+                        r'priority +(?P<port_priority>\d+) +'
+                        r'cost +(?P<cost>\d+)$')
         
         p8 = re.compile(r'^Designated +root +address +'
-                         '(?P<designated_root_address>[\w\.]+) +'
-                         'priority +(?P<designated_root_priority>\d+) +'
-                         'cost +(?P<designated_root_cost>\d+)$')
+                        r'(?P<designated_root_address>[\w\.]+) +'
+                        r'priority +(?P<designated_root_priority>\d+) +'
+                        r'cost +(?P<designated_root_cost>\d+)$')
         
         p9 = re.compile(r'^Design\. +regional +root +address +'
-                         '(?P<designated_regional_root_address>[\w\.]+) +'
-                         'priority +(?P<designated_regional_root_priority>\d+) +'
-                         'cost +(?P<designated_regional_root_cost>\d+)$')
+                        r'(?P<designated_regional_root_address>[\w\.]+) +'
+                        r'priority +(?P<designated_regional_root_priority>\d+) +'
+                        r'cost +(?P<designated_regional_root_cost>\d+)$')
         
         p10 = re.compile(r'^Designated +bridge +address +'
-                         '(?P<designated_bridge_address>[\w\.]+) +'
-                         'priority +(?P<designated_bridge_priority>\d+) +'
-                         'port +id +(?P<designated_bridge_port_id>[\d\.]+)$')
+                         r'(?P<designated_bridge_address>[\w\.]+) +'
+                         r'priority +(?P<designated_bridge_priority>\d+) +'
+                         r'port +id +(?P<designated_bridge_port_id>[\d\.]+)$')
         
         p11 = re.compile(r'^Timers: +message +expires +in +(?P<message_expires>\d+) +sec, +'
-                          'forward +delay +(?P<forward_delay>\d+), '
-                          'forward +transitions +(?P<forward_transitions>\d+)$')
+                         r'forward +delay +(?P<forward_delay>\d+), '
+                         r'forward +transitions +(?P<forward_transitions>\d+)$')
         
         p12 = re.compile(r'^Bpdus +(\(\w+\) *)?'
-                          'sent +(?P<bpdu_sent>\d+), +'
-                          'received +(?P<bpdu_received>\d+)')
+                         r'sent +(?P<bpdu_sent>\d+), +'
+                         r'received +(?P<bpdu_received>\d+)')
 
 
         for line in out.splitlines():
@@ -686,6 +693,14 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
             m = p3.match(line)
             if m:
                 inst_dict['root'] = m.groupdict()['root']
+                continue
+
+            # Root          address 58ac.78b5.0e40  priority      8198  (8192 sysid 6)
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                inst_dict['root_address'] = group.pop('root_address')
+                inst_dict.update({k:int(v) for k, v in group.items()})
                 continue
             
             # Operational   hello time 10, forward delay 30, max age 40, txholdcount 20
