@@ -1716,6 +1716,77 @@ class TestShowLDPSessionIpaddressDetail(unittest.TestCase):
             '''
     }
 
+    golden_parsed_output3 = {
+        "ldp-session-information": {
+            "ldp-session": {
+                "ldp-connection-state": "Closed",
+                "ldp-graceful-restart-local": "disabled",
+                "ldp-graceful-restart-remote": "disabled",
+                "ldp-holdtime": "30",
+                "ldp-keepalive-interval": "10",
+                "ldp-local-helper-mode": "enabled",
+                "ldp-local-label-adv-mode": "Downstream unsolicited",
+                "ldp-local-maximum-reconnect": "120000",
+                "ldp-local-maximum-recovery": "240000",
+                "ldp-mtu-discovery": "disabled",
+                "ldp-neg-label-adv-mode": "Downstream unsolicited",
+                "ldp-neighbor-address": "106.187.14.240",
+                "ldp-neighbor-count": "1",
+                "ldp-neighbor-types": {
+                    "ldp-neighbor-type": "discovered"
+                },
+                "ldp-remaining-time": "0",
+                "ldp-remote-helper-mode": "enabled",
+                "ldp-remote-label-adv-mode": "Downstream unsolicited",
+                "ldp-retry-interval": "1",
+                "ldp-session-capabilities-advertised": {
+                    "ldp-capability": "none"
+                },
+                "ldp-session-capabilities-received": {
+                    "ldp-capability": "none"
+                },
+                "ldp-session-flags": {
+                    "ldp-session-flag": "none"
+                },
+                "ldp-session-id": "59.128.2.250:0--106.187.14.240:0",
+                "ldp-session-max-pdu": "4096",
+                "ldp-session-nsr-state": "Not in sync",
+                "ldp-session-protection": {
+                    "ldp-session-protection-state": "disabled"
+                },
+                "ldp-session-role": "Passive",
+                "ldp-session-state": "Nonexistent"
+            }
+        }
+    }
+
+    golden_output3 = {
+        'execute.return_value':
+        '''
+        show ldp session 106.187.14.240 detail 
+          Address: 106.187.14.240, State: Nonexistent, Connection: Closed, Hold time: 0
+            Session ID: 59.128.2.250:0--106.187.14.240:0
+            Passive, Maximum PDU: 4096, Hold time: 30, Neighbor count: 1
+            Neighbor types: discovered
+            Keepalive interval: 10, Connect retry interval: 1
+            Last down 00:00:01 ago; Reason: received notification from peer
+            Number of session flaps: 1
+            Capabilities advertised: none
+            Capabilities received: none
+            Protection: disabled
+            Session flags: none
+            Local - Restart: disabled, Helper mode: enabled
+            Remote - Restart: disabled, Helper mode: enabled
+            Local maximum neighbor reconnect time: 120000 msec
+            Local maximum neighbor recovery time: 240000 msec
+            Local Label Advertisement mode: Downstream unsolicited
+            Remote Label Advertisement mode: Downstream unsolicited
+            Negotiated Label Advertisement mode: Downstream unsolicited
+            MTU discovery: disabled
+            Nonstop routing state: Not in sync
+            '''
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowLdpSessionIpaddressDetail(device=self.device)
@@ -1733,6 +1804,12 @@ class TestShowLDPSessionIpaddressDetail(unittest.TestCase):
         obj = ShowLdpSessionIpaddressDetail(device=self.device)
         parsed_output = obj.parse(ipaddress='10.169.14.240')
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowLdpSessionIpaddressDetail(device=self.device)
+        parsed_output = obj.parse(ipaddress='106.187.14.240')
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 if __name__ == '__main__':
     unittest.main()
