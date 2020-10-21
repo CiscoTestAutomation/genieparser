@@ -1,7 +1,6 @@
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
 import re
-#import pdb; pdb.set_trace()
 
 # =======================================
 # Schema for 'show boot-partition' introduced in vEdge version 14.1
@@ -30,6 +29,7 @@ class ShowBootPartition(ShowBootPartitionSchema):
             out = output
 
         result_dict = {}
+        
         # 1          X       14.2.4   2014-11-11T18:16:49+00:00
         # 2          -       14.2.3   2014-11-11T18:35:14+00:00
         p1 = re.compile(r'^(?P<partition>\d+) +(?P<active>\S+) +(?P<version>\S+) +(?P<timestamp>\S+)')
@@ -39,6 +39,7 @@ class ShowBootPartition(ShowBootPartitionSchema):
                 line = line.strip()
             else:
                 continue
+            
             # 1          X       14.2.4   2014-11-11T18:16:49+00:00
             # 2          -       14.2.3   2014-11-11T18:35:14+00:00
             m = p1.match(line)
@@ -50,4 +51,5 @@ class ShowBootPartition(ShowBootPartitionSchema):
                 partition_dict.update({'version': group['version']})
                 partition_dict.update({'timestamp': group['timestamp']})
                 continue
+        
         return result_dict
