@@ -151,7 +151,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
             output = self.device.execute(self.cli_command)
         else:
             output=output
- 
+
         # Policy Profile Name                 : lizzard_Fabric_F_90c67354
         # Description                         : lizzard_Fabric_F_90c67354
         # Status                              : ENABLED
@@ -195,8 +195,8 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
         # Anchor                            : DISABLED
         # AVC VISIBILITY                      : Enabled
         # IPv4 Flow Monitors
-        # Ingress             
-        # Egress               
+        # Ingress
+        # Egress
         # IPv6 Flow Monitors
         # Ingress
         # Egress
@@ -263,7 +263,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
         # 2.4Ghz ATF Policy                 : default-atf-policy
         # 5Ghz ATF Policy                   : default-atf-policy
         # Policy Profile Name                 : default-policy-profile
-        
+
         p_policy_profile_name = re.compile(r"^Policy\s+Profile\s+Name\s+:\s+(?P<name>\S+)$")
         # Description                         : default policy profile
         p_description = re.compile(r"^Description\s+:\s+(?P<value>.*)$")
@@ -273,7 +273,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
         p_vlan = re.compile(r"^VLAN\s+:\s+(?P<value>\S+)$")
         # Multicast VLAN                      : 0
         p_multi_vlan = re.compile(r"^Multicast\s+VLAN\s+:\s+(?P<value>\S+)$")
-        # OSEN client VLAN                    : 
+        # OSEN client VLAN                    :
         p_osen = re.compile(r"^OSEN\s+client\s+VLAN\s+:\s+(?P<value>.*)$")
         # Wireless management interface VLAN  : 10
         p_wireless_mgmt = re.compile(r"^Wireless\s+management\s+interface\s+VLAN\s+:\s+(?P<value>\S+)$")
@@ -522,7 +522,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
               show_wireless_profile_policy_dict.update({ "wireless_mgmt_interface_vlan" : match.group("value") })
               continue
             elif p_osen.match(line):
-              # OSEN client VLAN                    : 
+              # OSEN client VLAN                    :
               match = p_osen.match(line)
               show_wireless_profile_policy_dict.update({ "osen_client_vlan" : match.group("value") })
               continue
@@ -918,7 +918,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
               # Exclusionlist Params
               if not show_wireless_profile_policy_dict.get("exclusionlist_params"):
                 show_wireless_profile_policy_dict.update({ "exclusionlist_params": {} })
-              continue 
+              continue
             elif p_exclusionlist.match(line):
               # Exclusionlist                     : ENABLED
               match = p_exclusionlist.match(line)
@@ -1034,10 +1034,10 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
               match = p_airtime_5.match(line)
               show_wireless_profile_policy_dict["airtime_fairness_profile"].update({ "5ghz_atf_policy": match.group("value") })
               continue
-            
+
         return show_wireless_profile_policy_dict
 
-      
+
 # ==============================
 # Schema for:
 #  * 'show wireless cts summary'
@@ -1062,7 +1062,7 @@ class ShowWirelessCtsSummarySchema(MetaParser):
                     Optional("inline_tagging"): str
                 }
             }
-        } 
+        }
     }
 
 
@@ -1081,25 +1081,25 @@ class ShowWirelessCtsSummary(ShowWirelessCtsSummarySchema):
             output=output
 
         # Local Mode CTS Configuration
-        # 
-        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt      
+        #
+        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt
         # ----------------------------------------------------------------------------------------
-        # default-policy-profile            DISABLED              DISABLED         0                
-        # lizzard_Fabric_F_dee07a54        DISABLED              DISABLED         0                
-        # internet_Fabric_F_ed7a6bda        DISABLED              DISABLED         0                
-        # lizzard_l_Fabric_F_90c6dccd      DISABLED              DISABLED         0                
-        # 
-        # 
+        # default-policy-profile            DISABLED              DISABLED         0
+        # lizzard_Fabric_F_dee07a54        DISABLED              DISABLED         0
+        # internet_Fabric_F_ed7a6bda        DISABLED              DISABLED         0
+        # lizzard_l_Fabric_F_90c6dccd      DISABLED              DISABLED         0
+        #
+        #
         # Flex Mode CTS Configuration
-        # 
-        # Flex Profile Name                 SGACL Enforcement     Inline-Tagging   
+        #
+        # Flex Profile Name                 SGACL Enforcement     Inline-Tagging
         # -----------------------------------------------------------------------
-        # default-flex-profile              DISABLED              DISABLED    
+        # default-flex-profile              DISABLED              DISABLED
 
         # Local Mode CTS Configuration
         p_local = re.compile(r"Local\s+Mode\s+CTS\s+Configuration$")
 
-        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt 
+        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt
         p_local_header = re.compile(r"^Policy\s+Profile\s+Name\s+SGACL\s+Enforcement\s+Inline-Tagging\s+Default-Sgt$")
 
         # ----------------------------------------------------------------------------------------
@@ -1142,7 +1142,7 @@ class ShowWirelessCtsSummary(ShowWirelessCtsSummarySchema):
                 wireless_cts_summary_dict["local_mode_cts_configuration"]["policy_profile_name"].update({ group["name"] : {} })
                 wireless_cts_summary_dict["local_mode_cts_configuration"]["policy_profile_name"][group["name"]].update({ "sgacl_enforcement": group["sgacl"],
                                                                                                                         "inline_tagging": group["tag"],
-                                                                                                                        "default_sgt": int(group["sgt"]) 
+                                                                                                                        "default_sgt": int(group["sgt"])
                                                                                                                         })
                 continue
             # Flex Mode CTS Configuration
@@ -1186,7 +1186,7 @@ class ShowWirelessFabricClientSummarySchema(MetaParser):
             }
         }
     }
-              
+
 # ========================================
 # Parser for:
 #  * 'show wireless fabric client summary'
@@ -1195,30 +1195,30 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
     """Parser for show wireless fabric client summary"""
 
     cli_command = 'show wireless fabric client summary'
-    
+
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
         else:
             output=output
-              
+
         show_wireless_fabric_client_summary_dict = {}
 
 
         # Number of Fabric Clients : 8
 
-        # MAC Address    AP Name                          WLAN State              Protocol Method     
+        # MAC Address    AP Name                          WLAN State              Protocol Method
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x     
-        # 58bf.ea73.39b4 a2-11-cap50                   19   IP Learn           11n(2.4) MAB       
-        # 58bf.ea47.1c4c a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x
+        # 58bf.ea73.39b4 a2-11-cap50                   19   IP Learn           11n(2.4) MAB
+        # 58bf.ea47.1c4c a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea47.1c59 a2-11-cap46                   17   Run                11ac     Dot1x     
-        # 58bf.ea41.eac4 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB       
-        # 58bf.eaef.9769 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.ea47.1c59 a2-11-cap46                   17   Run                11ac     Dot1x
+        # 58bf.ea41.eac4 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB
+        # 58bf.eaef.9769 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea02.5c2a a2-12-cap17                   19   Webauth Pending    11ac     MAB       
-        # 58bf.ea09.f357 a2-12-cap17                   19   Webauth Pending    11ac     MAB   
+        # 58bf.ea02.5c2a a2-12-cap17                   19   Webauth Pending    11ac     MAB
+        # 58bf.ea09.f357 a2-12-cap17                   19   Webauth Pending    11ac     MAB
 
         # Number of Fabric Clients : 8
         p_clients = re.compile(r"^Number\s+of\s+Fabric\s+Clients\s+:\s+(?P<clients>\S+)$")
@@ -1269,7 +1269,7 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
 
         return show_wireless_fabric_client_summary_dict
 
-      
+
 # =================================
 # Schema for:
 #  * 'show wireless fabric summary'
@@ -1300,8 +1300,8 @@ class ShowWirelessFabricSummarySchema(MetaParser):
             }
         }
     }
-    
-    
+
+
 # =================================
 # Parser for:
 #  * 'show wireless fabric summary'
@@ -1310,13 +1310,13 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
     """Parser for show wireless fabric summary"""
 
     cli_command = 'show wireless fabric summary'
-    
+
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
         else:
             output=output
-            
+
         # Fabric Status      : Enabled
         #
         #
@@ -1330,8 +1330,8 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
         # Fabric VNID Mapping:
         # Name               L2-VNID        L3-VNID        IP Address             Subnet        Control plane name
         # ----------------------------------------------------------------------------------------------------------------------
-        # Data                8192           0                                  0.0.0.0            default-control-plane 
-        # Guest               8189           0                                  0.0.0.0            default-control-plane 
+        # Data                8192           0                                  0.0.0.0            default-control-plane
+        # Guest               8189           0                                  0.0.0.0            default-control-plane
         # Voice               8191           0                                  0.0.0.0            default-control-plane
         # Fabric_B_INFRA_VN     8188           4097           10.10.40.0          255.255.254.0      default-control-plane
         # Physical_Security     8190           0                                  0.0.0.0            default-control-plane
@@ -1416,7 +1416,7 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
             elif p_vnid_mappings.match(line):
                 match = p_vnid_mappings.match(line)
                 groups = match.groupdict()
-                show_wireless_fabric_summary_dict["fabric_vnid_mapping"]["l2_vnid"].update({ int(groups["vnid_l2"]) : { "name": groups["vnid_name"], "l3_vnid": int(groups["vnid_l3"]), "ip_address": groups["vnid_ip_address"], 
+                show_wireless_fabric_summary_dict["fabric_vnid_mapping"]["l2_vnid"].update({ int(groups["vnid_l2"]) : { "name": groups["vnid_name"], "l3_vnid": int(groups["vnid_l3"]), "ip_address": groups["vnid_ip_address"],
                                                                                 "subnet": groups["vnid_subnet"], "control_plane_name": groups["vnid_cp_name"]}})
                 continue
             # Voice               8191           0                                  0.0.0.0            default-control-plane
@@ -1425,10 +1425,10 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
                 groups = match.groupdict()
                 show_wireless_fabric_summary_dict["fabric_vnid_mapping"]["l2_vnid"].update({ int(groups["vnid_l2"]) : { "name": groups["vnid_name"], "l3_vnid": int(groups["vnid_l3"]), "control_plane_name": groups["vnid_name"] }})
                 continue
-        
+
         return show_wireless_fabric_summary_dict
-      
-      
+
+
 # =================================
 # Schema for:
 #  * 'show wireless client summary'
@@ -1466,7 +1466,7 @@ class ShowWirelessClientSummarySchema(MetaParser):
             }
         }
     }
-    
+
 # =================================
 # Parser for:
 #  * 'show wireless client summary'
@@ -1678,7 +1678,7 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
     """Parser for show wireless mobility ap-list"""
 
     cli_command = "show wireless mobility ap-list"
-    
+
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
@@ -1898,27 +1898,27 @@ class ShowWirelessProfilePolicySummary(ShowWirelessProfilePolicySummarySchema):
 
         # Number of Policy Profiles: 31
 
-        # Policy Profile Name               Description                             Status           
+        # Policy Profile Name               Description                             Status
         # -----------------------------------------------------------------------------------------
-        # wip-b60                        b60-voice                             ENABLED          
-        # wip-b70                        b70-voice                             ENABLED          
-        # wip-b80                        b80-voice                             ENABLED          
-        # lizzard_b60                    b60-lizzard/legacy                   ENABLED          
-        # lizzard_b70                    b70-lizzard/legacy                   ENABLED          
-        # lizzard_b80                    b80-lizzard/legacy                   ENABLED          
-        # internet-b60                    b60-guest                             ENABLED          
-        # internet-b70                    b70-guest                             ENABLED          
-        # internet-b80                    b80-guest                             ENABLED          
-        # lizzard_b70_1                  Not required                            ENABLED          
+        # wip-b60                        b60-voice                             ENABLED
+        # wip-b70                        b70-voice                             ENABLED
+        # wip-b80                        b80-voice                             ENABLED
+        # lizzard_b60                    b60-lizzard/legacy                   ENABLED
+        # lizzard_b70                    b70-lizzard/legacy                   ENABLED
+        # lizzard_b80                    b80-lizzard/legacy                   ENABLED
+        # internet-b60                    b60-guest                             ENABLED
+        # internet-b70                    b70-guest                             ENABLED
+        # internet-b80                    b80-guest                             ENABLED
+        # lizzard_b70_1                  Not required                            ENABLED
 
         # Number of Policy Profiles: 31
         policy_count_capture = re.compile(r"^Number of Policy Profiles:\s+(?P<policy_count>\d+)$")
 
-        # wip-b60                        b60-voice                             ENABLED          
+        # wip-b60                        b60-voice                             ENABLED
         policy_info_capture = re.compile(
             # wip-b60
             r"^(?P<policy_name>\S+)\s+"
-            # b60-voice 
+            # b60-voice
             r"(?P<description>Not required|default policy profile|\S+)\s+"
             # ENABLED
             r"(?P<status>ENABLED|DISABLED)$"
@@ -1955,8 +1955,8 @@ class ShowWirelessProfilePolicySummary(ShowWirelessProfilePolicySummarySchema):
                 policy_info_obj["policy_name"].update(policy_info_dict)
 
         return policy_info_obj
-          
-          
+
+
 # ===================================
 # Schema for:
 #  * 'show wireless stats ap join summary'
@@ -1986,7 +1986,7 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
     """Parser for show wireless stats ap join summary"""
 
     cli_command = ["show wireless stats ap join summary"]
-          
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command[0])
@@ -2053,3 +2053,100 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
                 wireless_info_obj["base_mac"].update(ap_info_dict)
 
         return wireless_info_obj
+
+
+# ======================================
+# Schema for:
+#  * 'show wireless fabric vnid mapping'
+# ======================================
+class ShowWirelessFabricVnidMappingSchema(MetaParser):
+    """Schema for show wireless fabric vnid mapping."""
+
+    schema = {
+      Optional("fabric_vnid_mapping") : {
+        Optional("name"): {
+          Optional(str) : {
+            Optional("l2_vnid"): int,
+            Optional("l3_vnid"): int,
+            Optional("ip_address"): str,
+            Optional("subnet"): str,
+            Optional("control_plane_name"): str
+          }
+        }
+      }
+    }
+
+
+# ======================================
+# Parser for:
+#  * 'show wireless fabric vnid mapping'
+# ======================================
+class ShowWirelessFabricVnidMapping(ShowWirelessFabricVnidMappingSchema):
+    """Parser for show wireless fabric vnid mapping"""
+
+    cli_command = 'show wireless fabric vnid mapping'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+          output = output
+
+        # Fabric VNID Mapping:
+        #   Name               L2-VNID        L3-VNID        IP Address             Subnet       Control plane name
+        # ----------------------------------------------------------------------------------------------------------------------
+        #   Data                8190           0                                  0.0.0.0            default-control-plane
+        #   Guest               8189           0                                  0.0.0.0            default-control-plane
+        #   Voice               8191           0                                  0.0.0.0            default-control-plane
+        #   Fabric_A_INF_VN     8188           4097           10.8.132.0          255.255.254.0      default-control-plane
+        #   Physical_Security     8192           0                                  0.0.0.0            default-control-plane
+
+        # Fabric VNID Mapping:
+        p_fabric_mapping = re.compile(r"^Fabric\s+VNID\s+Mapping:")
+
+        # Name               L2-VNID        L3-VNID        IP Address             Subnet       Control plane name
+        p_fabric_header = re.compile(r"^Name\s+L2-VNID\s+L3-VNID\s+IP\s+Address\s+Subnet\s+Control\s+plane\s+name$")
+
+        # ----------------------------------------------------------------------------------------------------------------------
+        p_fabric_delmimter = re.compile(r"^----------------------------------------------------------------------------------------------------------------------$")
+
+        # Data                8190           0                                  0.0.0.0            default-control-plane
+        p_fabric_row_4 = re.compile(r"^(?P<name>\S+)\s+(?P<l2_vnid>\d+)\s+(?P<l3_vnid>\d+)\s+(?P<subnet>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<control_name>\S+)$")
+
+        # Fabric_A_INF_VN     8188           4097           10.8.132.0          255.255.254.0      default-control-plane
+        p_fabric_row_5 = re.compile(r"^(?P<name>\S+)\s+(?P<l2_vnid>\d+)\s+(?P<l3_vnid>\d+)\s+(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<subnet>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<control_name>\S+)")
+
+
+        fabric_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            if p_fabric_mapping.match(line):
+                # Fabric VNID Mapping:
+                fabric_dict.update({ "fabric_vnid_mapping": {} })
+                continue
+            elif p_fabric_header.match(line):
+                # Name               L2-VNID        L3-VNID        IP Address             Subnet       Control plane name
+                continue
+            elif p_fabric_delmimter.match(line):
+                # ----------------------------------------------------------------------------------------------------------------------
+                continue
+            elif p_fabric_row_5.match(line):
+                match = p_fabric_row_5.match(line)
+                group = match.groupdict()
+                if not fabric_dict["fabric_vnid_mapping"].get("name"):
+                    fabric_dict["fabric_vnid_mapping"].update({ "name": {} })
+                fabric_dict["fabric_vnid_mapping"]["name"].update({ group["name"]: { "l2_vnid": int(group["l2_vnid"]), "l3_vnid": int(group["l3_vnid"]),
+                                                                                     "ip_address": group["ip"], "subnet": group["subnet"],
+                                                                                     "control_plane_name": group["control_name"]} })
+                continue
+            elif p_fabric_row_4.match(line):
+                match = p_fabric_row_4.match(line)
+                group = match.groupdict()
+                if not fabric_dict["fabric_vnid_mapping"].get("name"):
+                    fabric_dict["fabric_vnid_mapping"].update({ "name": {} })
+                fabric_dict["fabric_vnid_mapping"]["name"].update({ group["name"]: { "l2_vnid": int(group["l2_vnid"]), "l3_vnid": int(group["l3_vnid"]),
+                                                                                     "subnet": group["subnet"], "control_plane_name": group["control_name"]} })
+                continue
+
+        return fabric_dict
