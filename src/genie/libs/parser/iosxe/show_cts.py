@@ -568,7 +568,7 @@ class ShowCtsSchema(MetaParser):
             Optional("number_untrusted_links"): int
         }
     }
-    
+
 
 # =============
 # Parser for:
@@ -582,16 +582,16 @@ class ShowCts(ShowCtsSchema):
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
-        else: 
+        else:
             output=output
 
         # CTS device identity: "SJC-ab-gw1"
         # CTS global sgt-caching: Disabled
         # CTS Ingress sgt-caching: Disabled
         # CTS sg-epg translation status: Disabled
-        # 
+        #
         # Number of CTS interfaces in MANUAL mode: 0
-        # 
+        #
         # Number of CTS interfaces in corresponding IFC state
         # INIT            state:  0
         # AUTHENTICATING  state:  0
@@ -601,7 +601,7 @@ class ShowCts(ShowCtsSchema):
         # HELD            state:  0
         # DISCONNECTING   state:  0
         # INVALID         state:  0
-        # 
+        #
         # CTS events statistics:
         # authentication success: 0
         # authentication reject : 0
@@ -613,7 +613,7 @@ class ShowCts(ShowCtsSchema):
         # sap success           : 0
         # sap failure           : 0
         # port auth failure     : 0
-        # 
+        #
         # Installed list: CTSServerList1-0089, 7 server(s):
         # *Server: 10.100.123.1, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
         #         Status = ALIVE
@@ -641,15 +641,15 @@ class ShowCts(ShowCtsSchema):
         # =====================
         # PAC-Info:
         #     PAC Valid Until: 19:56:32 PDT Sep 6 2020
-        # 
-        # 
+        #
+        #
         # ============================
         # CTS Environment-Data Summary
         # ============================
-        # 
+        #
         # Environment Data Last Received: 20:04:41 PDT Mon Jul 13 2020
-        # 
-        # Environment Data Valid Until: 0:09:35:43 (dd:hr:mm:sec)  
+        #
+        # Environment Data Valid Until: 0:09:35:43 (dd:hr:mm:sec)
         #
         # ===================================
         # SXP Connections Summary
@@ -665,7 +665,7 @@ class ShowCts(ShowCtsSchema):
         # Retry open timer is not running
         # Peer-Sequence traverse limit for export: Not Set
         # Peer-Sequence traverse limit for import: Not Set
-        # 
+        #
         # ----------------------------------------------------------------------------------------------------------------------------------
         # Peer_IP          Source_IP        Conn Status                                          Duration
         # ----------------------------------------------------------------------------------------------------------------------------------
@@ -685,35 +685,35 @@ class ShowCts(ShowCtsSchema):
         # 10.100.123.14    192.168.2.24   On                                                   45:08:24:42 (dd:hr:mm:sec)
         # 10.100.123.15    192.168.2.24   On                                                   36:11:31:13 (dd:hr:mm:sec)
         # 10.100.123.16    192.168.2.24   On                                                   36:12:13:54 (dd:hr:mm:sec)
-        # 
+        #
         # Total num of SXP Connections = 16
         # ===================
-        # 
+        #
         # ======================================
         # Summary of IPv4 & IPv6 IP-SGT bindings
         # ======================================
-        # 
-        # 
+        #
+        #
         #             -IPv4-
-        #   
+        #
         # IP-SGT Active Bindings Summary
         # ============================================
         # Total number of SXP      bindings = 3284
         # Total number of active   bindings = 3284
-        # 
-        # 
+        #
+        #
         #             -IPv6-
-        # 
+        #
         # IP-SGT Active Bindings Summary
         # ============================================
         # Total number of SXP      bindings = 111
         # Total number of active   bindings = 111
-        #   
-        # 
+        #
+        #
         # CTS Role Based Enforcement: Enabled
         # CTS Role Based VLAN Enforcement:Enabled
-        # 
-        # 
+        #
+        #
         # =================================
         # Trusted/Un-Trusted Links
         # ==================================
@@ -936,7 +936,7 @@ class ShowCts(ShowCtsSchema):
             if len(active_bindings) == 2:
                 cts_dict["ip_sgt_bindings"]["ipv4"].update({ "total_sxp_bindings": int(active_bindings[0]) })
                 cts_dict["ip_sgt_bindings"]["ipv6"].update({ "total_sxp_bindings": int(active_bindings[1]) })
-            else:       
+            else:
                 # Update IPv4 binding count
                 cts_dict["ip_sgt_bindings"]["ipv4"].update({ "total_sxp_bindings": int(active_bindings[0]) })
                 cts_dict["ip_sgt_bindings"]["ipv4"].update({ "total_active_bindings": int(active_bindings[1]) })
@@ -1319,7 +1319,7 @@ class ShowCts(ShowCtsSchema):
             cts_dict = update_bindings(active_bindings, cts_dict)
             return cts_dict
 
-          
+
 # ==============================
 # Schema for:
 #  * 'show cts environment-data'
@@ -1366,8 +1366,8 @@ class ShowCtsEnvironmentDataSchema(MetaParser):
           Optional("cache_data_status"): str
         }
     }
-    
-    
+
+
 # ==============================
 # Parser for:
 #  * 'show cts environment-data'
@@ -1945,3 +1945,79 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
                 continue
 
         return cts_rb_permissions_dict
+
+
+# =========================
+# Schema for:
+#  * 'show cts ap sgt info {ap_name}'
+# =========================
+class ShowCtsApSgtInfoSchema(MetaParser):
+    """Schema for show cts ap sgt info {ap_name}."""
+
+    schema = {
+        "number_of_sgts_referred_by_the_ap": int,
+        Optional("sgts") : {
+            Optional(str) : {
+                Optional("policy_pushed_to_ap"): str,
+                Optional("no_of_clients"): int
+            }
+        }
+    }
+
+
+# =========================
+# Parser for:
+#  * 'show cts ap sgt info {ap_name}'
+# =========================
+class ShowCtsApSgtInfo(ShowCtsApSgtInfoSchema):
+    """Parser for show cts ap sgt info {ap_name}"""
+
+    cli_command = 'show cts ap sgt info {ap_name}'
+
+    def cli(self, ap_name="", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(ap_name=ap_name))
+        else:
+            output = output
+
+        # Number of SGTs referred by the AP...............: 2
+        #
+        # SGT               PolicyPushedToAP       No.of Clients
+        # ------------------------------------------------------------
+        # UNKNOWN(0)        NO                     0
+        # DEFAULT(65535)    NO                     0
+
+        # Number of SGTs referred by the AP...............: 0
+        p_number_sgts = re.compile(r"^Number\s+of\s+SGTs\s+referred\s+by\s+the\s+AP...............:\s+(?P<value>\d+)$")
+
+        # SGT               PolicyPushedToAP       No.of Clients
+        p_sgt_header = re.compile(r"^SGT\s+PolicyPushedToAP\s+No.of\s+Clients$")
+
+        # ------------------------------------------------------------
+        p_sgt_delimiter = re.compile(r"^------------------------------------------------------------$")
+
+        # 10                NO                     1
+        p_sgt_row = re.compile(r"^(?P<sgt>\S+)\s+(?P<policy>\S+)\s+(?P<clients>\d+)$")
+
+        cts_ap_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            if p_number_sgts.match(line):
+                match = p_number_sgts.match(line)
+                cts_ap_dict.update({ "number_of_sgts_referred_by_the_ap": int(match.group("value")) })
+                continue
+            elif p_sgt_header.match(line):
+                continue
+            elif p_sgt_delimiter.match(line):
+                continue
+            elif p_sgt_row.match(line):
+                match = p_sgt_row.match(line)
+                group = match.groupdict()
+                if not cts_ap_dict.get("sgts"):
+                    cts_ap_dict.update({ "sgts": {} })
+                cts_ap_dict["sgts"].update({ group["sgt"]: { "policy_pushed_to_ap": group["policy"].lower(), "no_of_clients": int(group["clients"]) }})
+                continue
+
+        return cts_ap_dict
+
