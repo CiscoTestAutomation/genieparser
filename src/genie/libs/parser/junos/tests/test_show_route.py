@@ -61800,6 +61800,37 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
     }
     }
 
+    golden_output_4 = {'execute.return_value':'''
+        show route advertising-protocol bgp 30.0.0.2 123.123.123.0/32
+
+        inet.0: 1200008 destinations, 1200008 routes (1200008 active, 0 holddown, 0 hidden)
+        Prefix                  Nexthop              MED     Lclpref    AS path
+        * 123.123.123.0/32        Self                                    67890 [1] I
+    '''}
+
+    golden_parsed_output_4 = {
+        'route-information': 
+            {'route-table': {
+                'active-route-count': 
+                    '1200008',
+                    'destination-count': '1200008',
+                    'hidden-route-count': '0',
+                    'holddown-route-count': '0',
+                    'rt': [
+                        {
+                            'rt-destination': '123.123.123.0/32',
+                            'rt-entry': 
+                            {
+                                'active-tag': '*',
+                                'as-path': '67890 '
+                                            '[1] I',
+                                'bgp-metric-flags': 'Nexthop '
+                                                    'Change',
+                                'nh': {'to': 'Self'},
+                                'protocol-name': 'BGP'}}],
+                            'table-name': 'inet.0',
+                            'total-route-count': '1200008'}}}
+
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -61824,6 +61855,16 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
         obj = ShowRouteAdvertisingProtocol(device=self.device)
         parsed_output = obj.parse(protocol='bgp', neighbor='2001:db8:7fc5:ca45::1')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowRouteAdvertisingProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp', 
+            neighbor='30.0.0.2', 
+            route='123.123.123.0/32')
+        
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)        
 
 
 '''
