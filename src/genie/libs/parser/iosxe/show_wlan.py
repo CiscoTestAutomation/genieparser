@@ -104,8 +104,7 @@ class ShowWlanSummary(ShowWlanSummarySchema):
 
         return wlan_summary_dict
 
-
-    
+   
 # ==================
 # Schema for:
 #  * 'show wlan all'
