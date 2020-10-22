@@ -1645,8 +1645,6 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
                 format_key = re.sub(r"\s+", "_", group["key"]).replace(".", "").replace(",", "").replace("-", "_").replace("___", "_").strip("__1..16").lower()
                 format_value =  int(group["value"])
 
-                print(format_key)
-
                 header_group.update({format_key: format_value})
 
         return wlan_info_obj
