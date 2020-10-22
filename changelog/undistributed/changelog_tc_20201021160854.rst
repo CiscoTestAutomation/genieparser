@@ -1,0 +1,6 @@
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* JUNOS
+    * Modified ShowRouteAdvertisingProtocol:
+      * Update regex pattern p2 to support more outputs

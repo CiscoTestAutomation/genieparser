@@ -924,8 +924,8 @@ class ShowLdpSessionIpaddressDetailSchema(MetaParser):
             Optional("ldp-graceful-restart-remote"): str,
             "ldp-holdtime": str,
             "ldp-keepalive-interval": str,
-            "ldp-keepalive-time": str,
-            "ldp-local-address": str,
+            Optional("ldp-keepalive-time"): str,
+            Optional("ldp-local-address"): str,
             "ldp-local-helper-mode": str,
             "ldp-local-label-adv-mode": str,
             "ldp-local-maximum-reconnect": str,
@@ -938,12 +938,12 @@ class ShowLdpSessionIpaddressDetailSchema(MetaParser):
                 "ldp-neighbor-type": str
             },
             "ldp-remaining-time": str,
-            "ldp-remote-address": str,
+            Optional("ldp-remote-address"): str,
             Optional("ldp-remote-helper-mode"): str,
             Optional("ldp-remote-label-adv-mode"): str,
             Optional("ldp-remote-reconnect-time"): str,
             "ldp-retry-interval": str,
-            "ldp-session-address": {
+            Optional("ldp-session-address"): {
                 "interface-address": list
             },
             Optional("ldp-session-adv-mode"): str,
