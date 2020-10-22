@@ -2672,7 +2672,17 @@ class ShowApTagSummarySchema(MetaParser):
     """Schema for show ap tag summary."""
 
     schema = {
-        
+        "ap_name": {
+            Any(): {
+                "ap_mac": str,
+                "site_tag_name": str,
+                "policy_tag_name": str,
+                "rf_tag_name": str,
+                "misconfigured": bool,
+                "tag_source": str,
+            },
+        },
+        "number_of_aps": int,
     }
 
 
@@ -2683,8 +2693,72 @@ class ShowApTagSummarySchema(MetaParser):
 class ShowApTagSummary(ShowApTagSummarySchema):
     """Parser for show ap tag summary"""
 
-    cli_command = ['show ap tag summary']
+    cli_command = 'show ap tag summary'
 
     def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command[0])
+            out = self.device.execute(self.cli_command)
+
+        else:
+            out = output
+
+
+        # Number of APs: 20
+
+        # AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+        # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # b25a-13-cap10         3c41.0fee.5094   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+        # b25b-12-cap01         3c41.0fee.5884   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+        # b25b-11-cap01         3c41.0fee.5d90   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+        # b25a-12-cap07         3c41.0fee.5de8   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+        # b25a-11-cap05         3c41.0fee.5df0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+        # b25a-11-cap04         3c41.0fee.5e5c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+        # b25a-12-cap08         3c41.0fee.5e74   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static      
+        # ...OUTPUT OMITTED..
+
+        # Number of APs: 20
+        ap_number_capture = re.compile(r"^Number of APs: (?P<number_of_aps>\d+)$")
+
+        # b25a-13-cap10         3c41.0fee.5094   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static 
+        ap_info_capture = re.compile(
+            r"^(?P<ap_name>\S+)\s+(?P<ap_mac>\S{4}\.\S{4}\.\S{4})\s+(?P<site_tag_name>\S+)\s+(?P<policy_tag_name>\S+)\s+(?P<rf_tag_name>\S+)\s+(?P<misconfigured>\S+)\s+(?P<tag_source>\S+)$"
+        )
+
+        ap_info_obj = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            if ap_number_capture.match(line):
+                match = ap_number_capture.match(line)
+                group = match.groupdict()
+                
+                # format str to int
+                group["number_of_aps"] = int(group["number_of_aps"])
+
+                ap_info_obj.update(group)
+
+            if ap_info_capture.match(line):
+                match = ap_info_capture.match(line)
+                group = match.groupdict()
+
+                # format str to bool
+                boolean_values = {"No": False, "Yes": True}
+                group["misconfigured"] = boolean_values.get(group["misconfigured"])
+
+                # pull a key from group to use as new_key
+                new_key = "ap_name"
+                new_group = {group[new_key]: {}}
+
+                # update and pop new_key
+                new_group[group[new_key]].update(group)
+                new_group[group[new_key]].pop(new_key)
+
+                if not ap_info_obj.get(new_key):
+                    ap_info_obj = {new_key: {}}
+
+                ap_info_obj[new_key].update(new_group)
+
+
+        return ap_info_obj
+        
