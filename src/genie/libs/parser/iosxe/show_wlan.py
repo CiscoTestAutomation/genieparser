@@ -308,7 +308,7 @@ class ShowWlanIdClientStatsSchema(MetaParser):
             "wrong_psk": int,
             "wrong_replay_counter": int,
         },
-        "wlan_info": {"id": int, "profile_name": "alfa"},
+        "wlan_info": {"id": int, "profile_name": str},
     }
 
 
