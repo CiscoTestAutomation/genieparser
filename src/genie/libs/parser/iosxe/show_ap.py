@@ -984,6 +984,127 @@ class ShowApLedBrightnessLevelSummary(ShowApLedBrightnessLevelSummarySchema):
 
         return ap_led_brightness_level_summary_dict
 
+
+
+# =========================================
+# Schema for:
+#  * 'show ap cdp neighbor'
+# =========================================
+class ShowApCdpNeighborSchema(MetaParser):
+    """Schema for show ap cdp neighbor."""
+
+    schema = {
+        "ap_cdp_neighbor_count": int,
+        "ap_name": {
+            Optional(str): {
+                Optional("ap_ip"): str,
+                Optional("neighbor_name"): str,
+                Optional("neighbor_port"): str,
+                Optional("neighbor_ip_count"): int,
+                Optional("neighbor_ip_addresses"): list
+            }
+        }
+    }
+    
+# =========================
+# Parser for:
+#  * 'show ap cdp neighbor'
+# =========================
+class ShowApCdpNeighbor(ShowApCdpNeighborSchema):
+    """Parser for show ap cdp neighbor"""
+
+    cli_command = 'show ap cdp neighbor'
+    
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+            
+        ap_cdp_neighbor_dict = {}
+        # Number of neighbors: 149
+        #
+        # AP Name                          AP IP                                     Neighbor Name      Neighbor Port
+        # -------------------------------------------------------------------------------------------------------------
+        # 0221-cap22                   10.8.33.106                              a02-21-sd-sw1.cisco.com TenGigabitEthernet3/0/47
+        #
+        # Neighbor IP Count: 1
+        # 10.8.32.1
+        # 0232-cap15                   10.8.32.46                              a02-32-sd-sw1.cisco.com TenGigabitEthernet9/0/47
+        #
+        # Neighbor IP Count: 1
+        # 10.8.32.1
+        #
+        # 0211-cap27                   10.8.32.188                              a02-11-sd-sw1.cisco.com TenGigabitEthernet4/0/46
+        #
+        # Neighbor IP Count: 1
+        # 10.8.32.1
+        #
+        # 0212-cap11                   10.8.33.160                              a02-12-sd-sw2.cisco.com TenGigabitEthernet1/0/40
+        #
+        # Neighbor IP Count: 1
+        # 10.8.32.1
+        #
+        # 0212-cap10                   10.8.33.102                              a02-12-sd-sw1.cisco.com TenGigabitEthernet1/0/43
+        #
+
+
+        neighbor_count_capture = re.compile(r"^Number\s+of\s+neighbors:\s+(?P<neighbor_count>\d+)$")
+        # 0221-cap22                   10.8.33.106                              a02-21-sd-sw1.cisco.com TenGigabitEthernet3/0/47
+        neighbor_info_capture = re.compile(
+            r"^(?P<ap_name>\S+)\s+(?P<ap_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<neighbor_name>\S+)\s+(?P<neighbor_port>\S+)$")
+        # Neighbor IP Count: 1
+        neighbor_ip_count_capture = re.compile(r"^Neighbor\s+IP\s+Count:\s+(?P<neighbor_ip_count>\d+)$")
+        # 10.8.32.1
+        neighbor_ip_capture = re.compile(r"^(?P<neighbor_ip>\d+\.\d+\.\d+\.\d+)$")
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Number of neighbors: 149
+            if neighbor_count_capture.match(line):
+                neighbor_count_capture_match = neighbor_count_capture.match(line)
+                groups = neighbor_count_capture_match.groupdict()
+                neighbor_count = int(groups['neighbor_count'])
+                ap_cdp_neighbor_dict['ap_cdp_neighbor_count'] = neighbor_count
+                continue
+            # AP Name                          AP IP                                     Neighbor Name      Neighbor Port
+            elif line.startswith('AP Name'):
+                continue
+            #   -------------------------------------------------------------------------------------------------------------
+            elif line.startswith('-----'):
+                continue
+            # 0221-cap22                   10.8.33.106                              a02-21-sd-sw1.cisco.com TenGigabitEthernet3/0/47
+            elif neighbor_info_capture.match(line):
+                neighbor_info_capture_match = neighbor_info_capture.match(line)
+                groups = neighbor_info_capture_match.groupdict()
+                ap_name = groups['ap_name']
+                ap_ip = groups['ap_ip']
+                neighbor_name = groups['neighbor_name']
+                neighbor_port = groups['neighbor_port']
+                if not ap_cdp_neighbor_dict.get('ap_name', {}):
+                    ap_cdp_neighbor_dict['ap_name'] = {}
+                ap_cdp_neighbor_dict['ap_name'][ap_name] = {}
+                ap_cdp_neighbor_dict['ap_name'][ap_name]['ap_ip'] = ap_ip
+                ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_name'] = neighbor_name
+                ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_port'] = neighbor_port
+            # Neighbor IP Count: 1
+            elif neighbor_ip_count_capture.match(line):
+                neighbor_ip_count_match = neighbor_ip_count_capture.match(line)
+                groups = neighbor_ip_count_match.groupdict()
+                neighbor_ip_count = int(groups['neighbor_ip_count'])
+                ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_ip_count'] = neighbor_ip_count
+            # 10.8.32.1
+            elif neighbor_ip_capture.match(line):
+                neighbor_ip_match = neighbor_ip_capture.match(line)
+                groups = neighbor_ip_match.groupdict()
+                neighbor_ip = groups['neighbor_ip']
+                if not ap_cdp_neighbor_dict['ap_name'][ap_name].get('neighbor_ip_addresses', {}):
+                    ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_ip_addresses'] = []
+                ap_cdp_neighbor_dict['ap_name'][ap_name]['neighbor_ip_addresses'].append(neighbor_ip)
+                continue
+
+        return ap_cdp_neighbor_dict
+
 # =============================
 # Schema for:
 #  * 'show ap config general'
@@ -1128,7 +1249,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-
+            
         ap_config_general_dict = {}
 
         #         Cisco AP Name   : bg-1-cap1
@@ -1248,266 +1369,378 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
         # Local DHCP Server                               : Disabled
         # Traffic Distribution Statistics Capability      : Enabled
         # Dual DFS Statistics                             : Disabled
-        #
 
-        #
+     
 
         # Cisco AP Name   : bg-1-cap1
         cisco_ap_name_capture = re.compile(r"^Cisco\s+AP\s+Name\s+:\s+(?P<cisco_ap_name>.*)$")
+        
         # Cisco AP Identifier                             : 70b3.d278.e03e
         cisco_ap_identifier_capture = re.compile(r"^Cisco\s+AP\s+Identifier\s+:\s+(?P<cisco_ap_identifier>.*)$")
+        
         # Country Code                                    : IN
         country_code_capture = re.compile(r"^Country\s+Code\s+:\s+(?P<country_code>.*)$")
+        
         # Regulatory Domain Allowed by Country            : 802.11bg:-A   802.11a:-DN
         regulatory_domain_allowed_by_country_capture = re.compile(
             r"^Regulatory\s+Domain\s+Allowed\s+by\s+Country\s+:\s+(?P<regulatory_domain_allowed_by_country>.*)$")
+        
         # AP Country Code                                 : IN  - India
         ap_country_code_capture = re.compile(r"^AP\s+Country\s+Code\s+:\s+(?P<ap_country_code>.*)$")
+        
         # Slot 0                                        : -A
         slot_0_capture = re.compile(r"^Slot\s+0\s+:\s+(?P<slot_0>.*)$")
+        
         # Slot 1                                        : -D
         slot_1_capture = re.compile(r"^Slot\s+1\s+:\s+(?P<slot_1>.*)$")
+        
         # MAC Address                                     : 70b3.1711.acbb
         mac_address_capture = re.compile(r"^MAC\s+Address\s+:\s+(?P<mac_address>.*)$")
+        
         # IP Address Configuration                        : DHCP
         ip_address_configuration_capture = re.compile(
             r"^IP\s+Address\s+Configuration\s+:\s+(?P<ip_address_configuration>.*)$")
+        
         # IP Address                                      : 10.10.5.14
         ip_address_capture = re.compile(r"^IP\s+Address\s+:\s+(?P<ip_address>.*)$")
+        
         # IP Netmask                                      : 255.255.254.0
         ip_netmask_capture = re.compile(r"^IP\s+Netmask\s+:\s+(?P<ip_netmask>.*)$")
+        
         # Gateway IP Address                              : 10.10.5.1
         gateway_ip_address_capture = re.compile(r"^Gateway\s+IP\s+Address\s+:\s+(?P<gateway_ip_address>.*)$")
+        
         # Fallback IP Address Being Used                  :
         fallback_ip_address_being_used_capture = re.compile(
             r"^Fallback\s+IP\s+Address\s+Being\s+Used\s+:\s+(?P<fallback_ip_address_being_used>.*)$")
+        
         # Domain                                          :
         domain_capture = re.compile(r"^Domain\s+:\s+(?P<domain>.*)$")
+        
         # Name Server                                     :
         name_server_capture = re.compile(r"^Name\s+Server\s+:\s+(?P<name_server>.*)$")
+        
         # CAPWAP Path MTU                                 : 1485
         capwap_path_mtu_capture = re.compile(r"^CAPWAP\s+Path\s+MTU\s+:\s+(?P<capwap_path_mtu>.*)$")
+        
         # Capwap Active Window Size                       : 1
         capwap_active_window_size_capture = re.compile(
             r"^Capwap\s+Active\s+Window\s+Size\s+:\s+(?P<capwap_active_window_size>.*)$")
+        
         # Telnet State                                    : Disabled
         telnet_state_capture = re.compile(r"^Telnet\s+State\s+:\s+(?P<telnet_state>.*)$")
+        
         # CPU Type                                        :  ARMv7 Processor rev 1 (v7l)
         cpu_type_capture = re.compile(r"^CPU\s+Type\s+:\s+(?P<cpu_type>.*)$")
+        
         # Memory Type                                     : DDR3
         memory_type_capture = re.compile(r"^Memory\s+Type\s+:\s+(?P<memory_type>.*)$")
+        
         # Memory Size                                     : 1028096 KB
         memory_size_capture = re.compile(r"^Memory\s+Size\s+:\s+(?P<memory_size>\d+)\s+KB$")
+        
         # SSH State                                       : Enabled
         ssh_state_capture = re.compile(r"^SSH\s+State\s+:\s+(?P<ssh_state>.*)$")
+        
         # Cisco AP Location                               : default location
         cisco_ap_location_capture = re.compile(r"^Cisco\s+AP\s+Location\s+:\s+(?P<cisco_ap_location>.*)$")
+        
         # Site Tag Name                                   : b8
         site_tag_name_capture = re.compile(r"^Site\s+Tag\s+Name\s+:\s+(?P<site_tag_name>.*)$")
+        
         # RF Tag Name                                     : Custom-RF
         rf_tag_name_capture = re.compile(r"^RF\s+Tag\s+Name\s+:\s+(?P<rf_tag_name>.*)$")
+        
         # Policy Tag Name                                 : b1_policy_tag
         policy_tag_name_capture = re.compile(r"^Policy\s+Tag\s+Name\s+:\s+(?P<policy_tag_name>.*)$")
+        
         # AP join Profile                                 : APG_b18
         ap_join_profile_capture = re.compile(r"^AP\s+join\s+Profile\s+:\s+(?P<ap_join_profile>.*)$")
+        
         # Flex Profile                                    : default-flex-profile
         flex_profile_capture = re.compile(r"^Flex\s+Profile\s+:\s+(?P<flex_profile>.*)$")
+        
         # AP Filter name                                  : b8
         ap_filter_name_capture = re.compile(r"^AP\s+Filter\s+name\s+:\s+(?P<ap_filter_name>.*)$")
+        
         # Primary Cisco Controller Name                   : b7-wl-ewlc1
         primary_cisco_controller_name_capture = re.compile(
             r"^Primary\s+Cisco\s+Controller\s+Name\s+:\s+(?P<primary_cisco_controller_name>.*)$")
+        
         # Primary Cisco Controller IP Address             : 10.6.4.17
         primary_cisco_controller_ip_address_capture = re.compile(
             r"^Primary\s+Cisco\s+Controller\s+IP\s+Address\s+:\s+(?P<primary_cisco_controller_ip_address>.*)$")
+        
         # Secondary Cisco Controller Name                 : b8-wl-wlc3
         secondary_cisco_controller_name_capture = re.compile(
             r"^Secondary\s+Cisco\s+Controller\s+Name\s+:\s+(?P<secondary_cisco_controller_name>.*)$")
+        
         # Secondary Cisco Controller IP Address           : 10.6.7.16
         secondary_cisco_controller_ip_address_capture = re.compile(
             r"^Secondary\s+Cisco\s+Controller\s+IP\s+Address\s+:\s+(?P<secondary_cisco_controller_ip_address>.*)$")
+        
         # Tertiary Cisco Controller Name                  : b3-wl-wlc3
         tertiary_cisco_controller_name_capture = re.compile(
             r"^Tertiary\s+Cisco\s+Controller\s+Name\s+:\s+(?P<tertiary_cisco_controller_name>.*)$")
+        
         # Tertiary Cisco Controller IP Address            : 10.6.4.17
         tertiary_cisco_controller_ip_address_capture = re.compile(
             r"^Tertiary\s+Cisco\s+Controller\s+IP\s+Address\s+:\s+(?P<tertiary_cisco_controller_ip_address>.*)$")
+        
         # Administrative State                            : Enabled
         administrative_state_capture = re.compile(r"^Administrative\s+State\s+:\s+(?P<administrative_state>.*)$")
+        
         # Operation State                                 : Registered
         operation_state_capture = re.compile(r"^Operation\s+State\s+:\s+(?P<operation_state>.*)$")
+        
         # NAT External IP Address                         : 10.10.5.12
         nat_external_ip_address_capture = re.compile(
             r"^NAT\s+External\s+IP\s+Address\s+:\s+(?P<nat_external_ip_address>.*)$")
+        
         # AP Certificate type                             : Manufacturer Installed Certificate
         ap_certificate_type_capture = re.compile(r"^AP\s+Certificate\s+type\s+:\s+(?P<ap_certificate_type>.*)$")
+        
         # AP Mode                                         : Local
         ap_mode_capture = re.compile(r"^AP\s+Mode\s+:\s+(?P<ap_mode>.*)$")
+        
         # AP VLAN tagging state                           : Disabled
         ap_vlan_tagging_state_capture = re.compile(r"^AP\s+VLAN\s+tagging\s+state\s+:\s+(?P<ap_vlan_tagging_state>.*)$")
+        
         # AP VLAN tag                                     : 0
         ap_vlan_tag_capture = re.compile(r"^AP\s+VLAN\s+tag\s+:\s+(?P<ap_vlan_tag>.*)$")
+        
         # CAPWAP Preferred mode                           : IPv4
         capwap_preferred_mode_capture = re.compile(r"^CAPWAP\s+Preferred\s+mode\s+:\s+(?P<capwap_preferred_mode>.*)$")
+        
         # CAPWAP UDP-Lite                                 : Not Configured
         capwap_udp_lite_capture = re.compile(r"^CAPWAP\s+UDP-Lite\s+:\s+(?P<capwap_udp_lite>.*)$")
+        
         # AP Submode                                      : Not Configured
         ap_submode_capture = re.compile(r"^AP\s+Submode\s+:\s+(?P<ap_submode>.*)$")
+        
         # Office Extend Mode                              : Disabled
         office_extend_mode_capture = re.compile(r"^Office\s+Extend\s+Mode\s+:\s+(?P<office_extend_mode>.*)$")
+        
         # Dhcp Server                                     : Disabled
         dhcp_server_capture = re.compile(r"^Dhcp\s+Server\s+:\s+(?P<dhcp_server>.*)$")
+        
         # Remote AP Debug                                 : Disabled
         remote_ap_debug_capture = re.compile(r"^Remote\s+AP\s+Debug\s+:\s+(?P<remote_ap_debug>.*)$")
+        
         # Logging Trap Severity Level                     : information
         logging_trap_severity_level_capture = re.compile(
             r"^Logging\s+Trap\s+Severity\s+Level\s+:\s+(?P<logging_trap_severity_level>.*)$")
+        
         # Logging Syslog facility                         : kern
         logging_syslog_facility_capture = re.compile(
             r"^Logging\s+Syslog\s+facility\s+:\s+(?P<logging_syslog_facility>.*)$")
+        
         # Software Version                                : 17.3.1.9
         software_version_capture = re.compile(r"^Software\s+Version\s+:\s+(?P<software_version>.*)$")
+        
         # Boot Version                                    : 1.1.2.4
         boot_version_capture = re.compile(r"^Boot\s+Version\s+:\s+(?P<boot_version>.*)$")
+        
         # Mini IOS Version                                : 0.0.0.0
         mini_ios_version_capture = re.compile(r"^Mini\s+IOS\s+Version\s+:\s+(?P<mini_ios_version>.*)$")
+        
         # Stats Reporting Period                          : 0
         stats_reporting_period_capture = re.compile(
             r"^Stats\s+Reporting\s+Period\s+:\s+(?P<stats_reporting_period>.*)$")
+        
         # LED State                                       : Enabled
         led_state_capture = re.compile(r"^LED\s+State\s+:\s+(?P<led_state>.*)$")
+        
         # LED Flash State                                 : Enabled
         led_flash_state_capture = re.compile(r"^LED\s+Flash\s+State\s+:\s+(?P<led_flash_state>.*)$")
+        
         # LED Flash Timer                                 : 0
         led_flash_timer_capture = re.compile(r"^LED\s+Flash\s+Timer\s+:\s+(?P<led_flash_timer>.*)$")
+        
         # MDNS Group Id                                   : 0
         mdns_group_id_capture = re.compile(r"^MDNS\s+Group\s+Id\s+:\s+(?P<mdns_group_id>.*)$")
+        
         # MDNS Rule Name                                  :
         mdns_rule_name_capture = re.compile(r"^MDNS\s+Rule\s+Name\s+:\s+(?P<mdns_rule_name>.*)$")
+        
         # PoE Pre-Standard Switch                         : Disabled
         poe_pre_standard_switch_capture = re.compile(
             r"^PoE\s+Pre-Standard\s+Switch\s+:\s+(?P<poe_pre_standard_switch>.*)$")
+        
         # PoE Power Injector MAC Address                  : Disabled
         poe_power_injector_mac_address_capture = re.compile(
             r"^PoE\s+Power\s+Injector\s+MAC\s+Address\s+:\s+(?P<poe_power_injector_mac_address>.*)$")
+        
         # Power Type/Mode                                 : PoE/Full Power
         power_type_mode_capture = re.compile(r"^Power\s+Type/Mode\s+:\s+(?P<power_type_mode>.*)$")
+        
         # Number of Slots                                 : 3
         number_of_slots_capture = re.compile(r"^Number\s+of\s+Slots\s+:\s+(?P<number_of_slots>.*)$")
+        
         # AP Model                                        : AIR-AP4800-D-K9
         ap_model_capture = re.compile(r"^AP\s+Model\s+:\s+(?P<ap_model>.*)$")
+        
         # IOS Version                                     : 17.3.1.9
         ios_version_capture = re.compile(r"^IOS\s+Version\s+:\s+(?P<ios_version>.*)$")
+        
         # Reset Button                                    : Disabled
         reset_button_capture = re.compile(r"^Reset\s+Button\s+:\s+(?P<reset_button>.*)$")
+        
         # AP Serial Number                                : FGL2102AZZZ
         ap_serial_number_capture = re.compile(r"^AP\s+Serial\s+Number\s+:\s+(?P<ap_serial_number>.*)$")
+        
         # Management Frame Validation                     : Capable
         management_frame_validation_capture = re.compile(
             r"^Management\s+Frame\s+Validation\s+:\s+(?P<management_frame_validation>.*)$")
+        
         # Management Frame Protection                     : Capable
         management_frame_protection_capture = re.compile(
             r"^Management\s+Frame\s+Protection\s+:\s+(?P<management_frame_protection>.*)$")
+        
         # AP User Name                                    : admin
         ap_user_name_capture = re.compile(r"^AP\s+User\s+Name\s+:\s+(?P<ap_user_name>.*)$")
+        
         # AP 802.1X User Mode                             : Global
         ap_802_1x_user_mode_capture = re.compile(r"^AP\s+802.1X\s+User\s+Mode\s+:\s+(?P<ap_802_1x_user_mode>.*)$")
+        
         # AP 802.1X User Name                             : Not Configured
         ap_802_1x_user_name_capture = re.compile(r"^AP\s+802.1X\s+User\s+Name\s+:\s+(?P<ap_802_1x_user_name>.*)$")
+        
         # Cisco AP System Logging Host                    : 10.16.19.6
         cisco_ap_system_logging_host_capture = re.compile(
             r"^Cisco\s+AP\s+System\s+Logging\s+Host\s+:\s+(?P<cisco_ap_system_logging_host>.*)$")
+        
         # Cisco AP Secured Logging TLS mode               : Disabled
         cisco_ap_secured_logging_tls_mode_capture = re.compile(
             r"^Cisco\s+AP\s+Secured\s+Logging\s+TLS\s+mode\s+:\s+(?P<cisco_ap_secured_logging_tls_mode>.*)$")
+        
         # AP Up Time                                      : 3 days 9 hours 44 minutes 18 seconds
         ap_up_time_capture = re.compile(r"^AP\s+Up\s+Time\s+:\s+(?P<ap_up_time>.*)$")
+        
         # AP CAPWAP Up Time                               : 3 days 9 hours 37 minutes 20 seconds
         ap_capwap_up_time_capture = re.compile(r"^AP\s+CAPWAP\s+Up\s+Time\s+:\s+(?P<ap_capwap_up_time>.*)$")
+        
         # Join Date and Time                              : 08/14/2020 19:48:09
         join_date_and_time_capture = re.compile(r"^Join\s+Date\s+and\s+Time\s+:\s+(?P<join_date_and_time>.*)$")
+        
         # Join Taken Time                                 : 6 minutes 57 seconds
         join_taken_time_capture = re.compile(r"^Join\s+Taken\s+Time\s+:\s+(?P<join_taken_time>.*)$")
+        
         # Join Priority                                   : 1
         join_priority_capture = re.compile(r"^Join\s+Priority\s+:\s+(?P<join_priority>.*)$")
+        
         # AP Link Latency                                 : Disable
         ap_link_latency_capture = re.compile(r"^AP\s+Link\s+Latency\s+:\s+(?P<ap_link_latency>.*)$")
+        
         # AP Lag Configuration Status                     : Disabled
         ap_lag_configuration_status_capture = re.compile(
             r"^AP\s+Lag\s+Configuration\s+Status\s+:\s+(?P<ap_lag_configuration_status>.*)$")
+        
         # Lag Support for AP                              : Yes
         lag_support_for_ap_capture = re.compile(r"^Lag\s+Support\s+for\s+AP\s+:\s+(?P<lag_support_for_ap>.*)$")
+        
         # Rogue Detection                                 : Enabled
         rogue_detection_capture = re.compile(r"^Rogue\s+Detection\s+:\s+(?P<rogue_detection>.*)$")
+        
         # Rogue Containment auto-rate                     : Disabled
         rogue_containment_auto_rate_capture = re.compile(
             r"^Rogue\s+Containment\s+auto-rate\s+:\s+(?P<rogue_containment_auto_rate>.*)$")
+        
         # Rogue Containment of standalone flexconnect APs : Disabled
         rogue_containment_of_standalone_flexconnect_aps_capture = re.compile(
             r"^Rogue\s+Containment\s+of\s+standalone\s+flexconnect\s+APs\s+:\s+(?P<rogue_containment_of_standalone_flexconnect_aps>.*)$")
+        
         # Rogue Detection Report Interval                 : 10
         rogue_detection_report_interval_capture = re.compile(
             r"^Rogue\s+Detection\s+Report\s+Interval\s+:\s+(?P<rogue_detection_report_interval>.*)$")
+        
         # Rogue AP minimum RSSI                           : -70
         rogue_ap_minimum_rssi_capture = re.compile(r"^Rogue\s+AP\s+minimum\s+RSSI\s+:\s+(?P<rogue_ap_minimum_rssi>.*)$")
+        
         # Rogue AP minimum transient time                 : 0
         rogue_ap_minimum_transient_time_capture = re.compile(
             r"^Rogue\s+AP\s+minimum\s+transient\s+time\s+:\s+(?P<rogue_ap_minimum_transient_time>.*)$")
+        
         # AP TCP MSS Adjust                               : Enabled
         ap_tcp_mss_adjust_capture = re.compile(r"^AP\s+TCP\s+MSS\s+Adjust\s+:\s+(?P<ap_tcp_mss_adjust>.*)$")
+        
         # AP TCP MSS Size                                 : 1250
         ap_tcp_mss_size_capture = re.compile(r"^AP\s+TCP\s+MSS\s+Size\s+:\s+(?P<ap_tcp_mss_size>.*)$")
+        
         # AP IPv6 TCP MSS Adjust                          : Enabled
         ap_ipv6_tcp_mss_adjust_capture = re.compile(
             r"^AP\s+IPv6\s+TCP\s+MSS\s+Adjust\s+:\s+(?P<ap_ipv6_tcp_mss_adjust>.*)$")
+        
         # AP IPv6 TCP MSS Size                            : 1250
         ap_ipv6_tcp_mss_size_capture = re.compile(r"^AP\s+IPv6\s+TCP\s+MSS\s+Size\s+:\s+(?P<ap_ipv6_tcp_mss_size>.*)$")
+        
         # Hyperlocation Admin Status                      : Disabled
         hyperlocation_admin_status_capture = re.compile(
             r"^Hyperlocation\s+Admin\s+Status\s+:\s+(?P<hyperlocation_admin_status>.*)$")
+        
         # Retransmit count                                : 5
         retransmit_count_capture = re.compile(r"^Retransmit\s+count\s+:\s+(?P<retransmit_count>.*)$")
+        
         # Retransmit interval                             : 3
         retransmit_interval_capture = re.compile(r"^Retransmit\s+interval\s+:\s+(?P<retransmit_interval>.*)$")
+        
         # Fabric status                                   : Disabled
         fabric_status_capture = re.compile(r"^Fabric\s+status\s+:\s+(?P<fabric_status>.*)$")
+        
         # FIPS status                                     : Disabled
         fips_status_capture = re.compile(r"^FIPS\s+status\s+:\s+(?P<fips_status>.*)$")
+        
         # WLANCC status                                   : Disabled
         wlancc_status_capture = re.compile(r"^WLANCC\s+status\s+:\s+(?P<wlancc_status>.*)$")
+        
         # USB Module Type                                 : USB Module
         usb_module_type_capture = re.compile(r"^USB\s+Module\s+Type\s+:\s+(?P<usb_module_type>.*)$")
+        
         # USB Module State                                : Enabled
         usb_module_state_capture = re.compile(r"^USB\s+Module\s+State\s+:\s+(?P<usb_module_state>.*)$")
+        
         # USB Operational State                           : Disabled
         usb_operational_state_capture = re.compile(r"^USB\s+Operational\s+State\s+:\s+(?P<usb_operational_state>.*)$")
+        
         # USB Override                                    : Disabled
         usb_override_capture = re.compile(r"^USB\s+Override\s+:\s+(?P<usb_override>.*)$")
+        
         # GAS rate limit Admin status                     : Disabled
         gas_rate_limit_admin_status_capture = re.compile(
             r"^GAS\s+rate\s+limit\s+Admin\s+status\s+:\s+(?P<gas_rate_limit_admin_status>.*)$")
+        
         # WPA3 Capability                                 : Enabled
         wpa3_capability_capture = re.compile(r"^WPA3\s+Capability\s+:\s+(?P<wpa3_capability>.*)$")
+        
         # EWC-AP Capability                               : Disabled
         ewc_ap_capability_capture = re.compile(r"^EWC-AP\s+Capability\s+:\s+(?P<ewc_ap_capability>.*)$")
+        
         # AWIPS Capability                                : Enabled
         awips_capability_capture = re.compile(r"^AWIPS\s+Capability\s+:\s+(?P<awips_capability>.*)$")
+        
         # Proxy Hostname                                  : Not Configured
         proxy_hostname_capture = re.compile(r"^Proxy\s+Hostname\s+:\s+(?P<proxy_hostname>.*)$")
+        
         # Proxy Port                                      : Not Configured
         proxy_port_capture = re.compile(r"^Proxy\s+Port\s+:\s+(?P<proxy_port>.*)$")
+        
         # Proxy NO_PROXY list                             : Not Configured
         proxy_no_proxy_list_capture = re.compile(r"^Proxy\s+NO_PROXY\s+list\s+:\s+(?P<proxy_no_proxy_list>.*)$")
+        
         # GRPC server status                              : Disabled
         grpc_server_status_capture = re.compile(r"^GRPC\s+server\s+status\s+:\s+(?P<grpc_server_status>.*)$")
+        
         # Unencrypted Data Keep Alive                     : Enabled
         unencrypted_data_keep_alive_capture = re.compile(
             r"^Unencrypted\s+Data\s+Keep\s+Alive\s+:\s+(?P<unencrypted_data_keep_alive>.*)$")
+        
         # Local DHCP Server                               : Disabled
         local_dhcp_server_capture = re.compile(r"^Local\s+DHCP\s+Server\s+:\s+(?P<local_dhcp_server>.*)$")
+        
         # Traffic Distribution Statistics Capability      : Enabled
         traffic_distribution_statistics_capability_capture = re.compile(
             r"^Traffic\s+Distribution\s+Statistics\s+Capability\s+:\s+(?P<traffic_distribution_statistics_capability>.*)$")
+        
         # Dual DFS Statistics                             : Disabled
         dual_dfs_statistics_capture = re.compile(r"^Dual\s+DFS\s+Statistics\s+:\s+(?P<dual_dfs_statistics>.*)$")
 
