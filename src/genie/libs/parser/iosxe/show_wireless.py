@@ -2145,7 +2145,7 @@ class ShowWirelessStatsClientDeleteReasonsSchema(MetaParser):
                     "fqdn_filter_definition_does_not_exist": int,
                     "wrong_filter_type,_expected_postauth_fqdn_filter": int,
                     "wrong_filter_type,_expected_preauth_fqdn_filter": int,
-                    "invalid_group_id_for_fqdn_filter_valid_range__1_16": int,
+                    "invalid_group_id_for_fqdn_filter_valid_range_1_16": int,
                     "policy_parameter_mismatch": int,
                     "reauth_failure": int,
                     "wrong_psk": int,
@@ -2178,7 +2178,7 @@ class ShowWirelessStatsClientDeleteReasonsSchema(MetaParser):
                     "eogre_domain_shut": int,
                     "eogre_invalid_gateway": int,
                     "eogre_all_gateways_down": int,
-                    "eogre_flex___no_active_gateway": int,
+                    "eogre_flex_no_active_gateway": int,
                     "eogre_rule_matching_error": int,
                     "eogre_aaa_override_error": int,
                     "eogre_client_onboarding_error": int,
@@ -2200,8 +2200,8 @@ class ShowWirelessStatsClientDeleteReasonsSchema(MetaParser):
                     "bssid_down": 1,
                     "dot11_qos_policy": int,
                     "roam_across_policy_profile_deny": int,
-                    "4way_handshake_failure___m1_issue": int,
-                    "4way_handshake_failure___m3_issue": int,
+                    "4way_handshake_failure_m1_issue": int,
+                    "4way_handshake_failure_m3_issue": int,
                     "exclusion_policy_template_fail": int,
                     "dot11_cipher_suite_rejected": int
                 },
@@ -2209,7 +2209,7 @@ class ShowWirelessStatsClientDeleteReasonsSchema(MetaParser):
                     "mobility_wlan_down": int,
                     "ap_upgrade": int,
                     "l3_authentication_failure": int,
-                    "ap_down/disjoin": 2,
+                    "ap_down_disjoin": 2,
                     "mac_authentication_failure": int,
                     "due_to_ssid_change": int,
                     "due_to_vlan_change": int,
@@ -2368,7 +2368,7 @@ class ShowWirelessStatsClientDeleteReasons(ShowWirelessStatsClientDeleteReasonsS
                 # [key] : [value]
                 match = p_colon_split.match(line)
                 group = match.groupdict()
-                group["key"] = group["key"].replace(" ", "_").replace("-", "_").replace("..", "_").lower()
+                group["key"] = group["key"].replace(" ", "_").replace("-", "_").replace("..", "_").replace("/", "_").replace("___", "_").replace("__", "_").lower()
                 group["value"] = self.change_data_type(group["value"])
                 if len(section_tracker) == 1:
                     client_delete_dict[section_tracker[-1]].update({ group["key"]: group["value"] })
