@@ -1642,7 +1642,8 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
                 match = key_value_capture.match(line)
                 group = match.groupdict()
 
-                format_key = re.sub(r"\s+", "_", group["key"]).replace(".", "").replace(",", "").replace("-", "_").replace("___", "_").strip("__1..16").lower()
+                space_format_key = re.sub(r" - |\s+|-", "_", group["key"])
+                format_key = re.sub(r"\.|,", "", space_format_key).strip("_116").lower()
                 format_value =  int(group["value"])
 
                 header_group.update({format_key: format_value})
