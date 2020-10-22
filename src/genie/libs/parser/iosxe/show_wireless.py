@@ -2172,8 +2172,166 @@ class ShowWirelessStatsMobilitySchema(MetaParser):
 class ShowWirelessStatsMobility(ShowWirelessStatsMobilitySchema):
     """Parser for show wireless stats mobility"""
 
-    cli_command = ['show wireless stats mobility']
+    cli_command = 'show wireless stats mobility'
 
     def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command[0])
+            output = self.device.execute(self.cli_command)
+
+        else:
+          out = output
+
+        # Mobility event statistics:
+        #     Joined as
+        #         Local                         : 60431           
+        #         Foreign                       : 0               
+        #         Export foreign                : 0               
+        #         Export anchor                 : 0               
+        #     Delete
+        #         Local                         : 60316           
+        #         Remote                        : 0                
+        # ...OUTPUT OMITTED...           
+
+
+        # MM mobility event statistics:
+        #     Event data allocs                 : 120747          
+        #     Event data frees                  : 120747          
+        #     FSM set allocs                    : 60427           
+        #     FSM set frees                     : 60316           
+        #     Timer allocs                      : 0               
+        # ...OUTPUT OMITTED...             
+
+
+        # MMIF mobility event statistics:
+        #     Event data allocs                 : 354187          
+        #     Event data frees                  : 354187          
+        #     Invalid events                    : 13              
+        #     Event schedule errors             : 0               
+        #     MMIF internal errors:
+    #       IPC failure                     : 0               
+    # ...OUTPUT OMITTED...    
+            
+        # Mobility event statistics:
+        mobility_event_statistics_capture = re.compile(r"^Mobility event statistics:$")
+
+        # Joined as
+        joined_as_capture = re.compile(r"^Joined as$")
+
+        # Delete
+        delete_capture = re.compile(r"^Delete$")
+
+        # Role changes
+        role_changes_capture = re.compile(r"^Role changes$")
+
+        # Roam stats
+        roam_stats_capture = re.compile(r"^Roam stats$")
+
+        # Anchor Request
+        anchor_request_capture = re.compile(r"^Anchor Request$")
+
+        # Handoff Status Received
+        handoff_status_received_capture = re.compile(r"^Handoff Status Received$")
+
+        # Handoff Status Sent
+        handoff_status_sent_capture = re.compile(r"^Handoff Status Sent$")
+
+        # Export Anchor
+        export_anchor_capture = re.compile(r"^Export Anchor$")
+
+        # Response Received             :
+        export_anchor_response_received_capture = re.compile(r"Response Received\s+:")
+
+        # Response Sent             :
+        export_anchor_response_sent_capture = re.compile(r"Response Sent\s+:")
+
+        # MM mobility event statistics:
+        mm_mobility_event_statistics_capture = re.compile(
+            r"^MM mobility event statistics:$"
+        )
+
+        # MMIF mobility event statistics:
+        mmif_mobility_event_statistics_capture = re.compile(
+            r"^MMIF mobility event statistics:$"
+        )
+
+        # MMIF internal errors:
+        mmif_internal_errors_capture = re.compile(r"^MMIF internal errors:$")
+
+        # key : value
+        key_value_capture = re.compile(r"^(?P<key>[\S\s]+\S)\s*:\s+(?P<value>\d+)$")
+
+        wireless_info_obj = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            header_capture_list = [
+                mobility_event_statistics_capture,
+                mm_mobility_event_statistics_capture,
+                mmif_mobility_event_statistics_capture,
+            ]
+
+            for capture in header_capture_list:
+                if capture.match(line):
+                    line_format = line.replace(" ", "_").lower().strip(":")
+                    wireless_info_obj.update({line_format: {}})
+
+                    header_tracking = "header"
+                    header_group = wireless_info_obj[line_format]
+
+            subheader_capture_list = [
+                joined_as_capture,
+                delete_capture,
+                role_changes_capture,
+                roam_stats_capture,
+                anchor_request_capture,
+                handoff_status_received_capture,
+                handoff_status_sent_capture,
+                export_anchor_capture,
+                mmif_internal_errors_capture,
+            ]
+
+            for capture in subheader_capture_list:
+                if capture.match(line):
+                    line_format = line.replace(" ", "_").lower().strip(":")
+                    header_group.update({line_format: {}})
+
+                    header_tracking = "subheader"
+                    subheader_group = header_group[line_format]
+
+            sub_subheader_capture_list = [export_anchor_response_received_capture, export_anchor_response_sent_capture]
+            
+            for capture in sub_subheader_capture_list:
+                if capture.match(line):
+                    line_format = line.strip(":").strip().replace(" ", "_").lower()
+                    subheader_group.update({line_format: {}})
+
+                    header_tracking = "sub_subheader"
+                    sub_subheader_group = subheader_group[line_format]
+
+            if key_value_capture.match(line):
+                match = key_value_capture.match(line)
+                group = match.groupdict()
+
+                # format the keys and values
+                format_key = group["key"].replace("-", "_").replace(" ", "_").lower()
+                format_value = int(group["value"])
+
+                # special case for the Deny key formatting
+                if re.match(r"^Deny\s+", group["key"]):
+                    format_key = group["key"].replace("-", "").replace(" ", "_").replace("__", "_").lower()
+
+                if header_tracking == "header":
+                    # update current header group
+                    header_group.update({format_key: format_value})
+
+                if header_tracking == "subheader":
+                    # update current subheader group
+                    subheader_group.update({format_key: format_value})
+
+                if header_tracking == "sub_subheader":
+                    # update current sub subheader group
+                    sub_subheader_group.update({format_key: format_value})
+
+
+        return wireless_info_obj
