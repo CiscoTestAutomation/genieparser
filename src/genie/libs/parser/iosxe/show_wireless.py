@@ -2176,7 +2176,7 @@ class ShowWirelessStatsMobility(ShowWirelessStatsMobilitySchema):
 
     def cli(self, output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command)
 
         else:
           out = output
