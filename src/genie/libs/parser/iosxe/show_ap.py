@@ -2662,3 +2662,29 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'dual_dfs_statistics': dual_dfs_statistics})
         return ap_config_general_dict
+
+
+# ========================
+# Schema for:
+#  * 'show ap tag summary'
+# ========================
+class ShowApTagSummarySchema(MetaParser):
+    """Schema for show ap tag summary."""
+
+    schema = {
+        
+    }
+
+
+# ========================
+# Parser for:
+#  * 'show ap tag summary'
+# ========================
+class ShowApTagSummary(ShowApTagSummarySchema):
+    """Parser for show ap tag summary"""
+
+    cli_command = ['show ap tag summary']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
