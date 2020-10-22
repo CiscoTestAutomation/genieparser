@@ -2053,3 +2053,29 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
                 wireless_info_obj["base_mac"].update(ap_info_dict)
 
         return wireless_info_obj
+
+
+# =================================
+# Schema for:
+#  * 'show wireless stats mobility'
+# =================================
+class ShowWirelessStatsMobilitySchema(MetaParser):
+    """Schema for show wireless stats mobility."""
+
+    schema = {
+        
+    }
+
+
+# =================================
+# Parser for:
+#  * 'show wireless stats mobility'
+# =================================
+class ShowWirelessStatsMobility(ShowWirelessStatsMobilitySchema):
+    """Parser for show wireless stats mobility"""
+
+    cli_command = ['show wireless stats mobility']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
