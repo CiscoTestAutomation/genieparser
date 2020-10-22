@@ -2702,24 +2702,23 @@ class ShowApTagSummary(ShowApTagSummarySchema):
         else:
             out = output
 
-
         # Number of APs: 20
 
-        # AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+        # AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        # b25a-13-cap10         3c41.0fee.5094   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
-        # b25b-12-cap01         3c41.0fee.5884   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
-        # b25b-11-cap01         3c41.0fee.5d90   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
-        # b25a-12-cap07         3c41.0fee.5de8   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
-        # b25a-11-cap05         3c41.0fee.5df0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
-        # b25a-11-cap04         3c41.0fee.5e5c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
-        # b25a-12-cap08         3c41.0fee.5e74   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static      
+        # b25a-13-cap10         3c41.0fee.5094   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25b-12-cap01         3c41.0fee.5884   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25b-11-cap01         3c41.0fee.5d90   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25a-12-cap07         3c41.0fee.5de8   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25a-11-cap05         3c41.0fee.5df0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25a-11-cap04         3c41.0fee.5e5c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25a-12-cap08         3c41.0fee.5e74   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
         # ...OUTPUT OMITTED..
 
         # Number of APs: 20
         ap_number_capture = re.compile(r"^Number of APs: (?P<number_of_aps>\d+)$")
 
-        # b25a-13-cap10         3c41.0fee.5094   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static 
+        # b25a-13-cap10         3c41.0fee.5094   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
         ap_info_capture = re.compile(
             r"^(?P<ap_name>\S+)\s+(?P<ap_mac>\S{4}\.\S{4}\.\S{4})\s+(?P<site_tag_name>\S+)\s+(?P<policy_tag_name>\S+)\s+(?P<rf_tag_name>\S+)\s+(?P<misconfigured>\S+)\s+(?P<tag_source>\S+)$"
         )
@@ -2732,7 +2731,7 @@ class ShowApTagSummary(ShowApTagSummarySchema):
             if ap_number_capture.match(line):
                 match = ap_number_capture.match(line)
                 group = match.groupdict()
-                
+
                 # format str to int
                 group["number_of_aps"] = int(group["number_of_aps"])
 
@@ -2759,6 +2758,5 @@ class ShowApTagSummary(ShowApTagSummarySchema):
 
                 ap_info_obj[new_key].update(new_group)
 
-
-        return ap_info_obj
+        return ap_info_obj    
         
