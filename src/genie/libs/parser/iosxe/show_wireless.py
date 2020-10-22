@@ -2064,15 +2064,15 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
 
     schema = {
     "total_clients": int,
-    "protocol_statistics": {
-        "802.11b": int,
-        "802.11g": int,
-        "802.11a": int,
-        "802.11n-2.4ghz": int,
-        "802.11n-5_ghz": int,
-        "802.11ac": int,
-        "802.11ax-5_ghz": int,
-        "802.11ax-2.4_ghz": int
+    "protocol_statistics_client_count": {
+        "802_11b": int,
+        "802_11g": int,
+        "802_11a": int,
+        "802_11n_2_4ghz": int,
+        "802_11n_5_ghz": int,
+        "802_11ac": int,
+        "802_11ax_5_ghz": int,
+        "802_11ax_2_4_ghz": int
     },
     "current_client_state_statistics": {
         "authenticating": int,
@@ -2080,7 +2080,7 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
         "ip_learn": int,
         "webauth_pending": int,
         "run": int,
-        "delete-in-progress": int
+        "delete_in_progress": int
     },
     "client_summary": {
         "current_clients": int,
@@ -2094,7 +2094,7 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
     "client_global_statistics": {
         "total_association_requests_received": int,
         "total_association_attempts": int,
-        "total_ft/localauth_requests": int,
+        "total_ft_localauth_requests": int,
         "total_association_failures": int,
         "total_association_response_accepts": int,
         "total_association_response_rejects": int,
@@ -2119,8 +2119,8 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
         "total_11r_ft_action_requests_received": int,
         "total_11r_ft_action_response_success": int,
         "total_11r_ft_action_response_failure": int,
-        "total_11r_pmkr0-name_mismatch": int,
-        "total_11r_pmkr1-name_mismatch": int,
+        "total_11r_pmkr0_name_mismatch": int,
+        "total_11r_pmkr1_name_mismatch": int,
         "total_11r_mdid_mismatch": int,
         "total_aid_allocation_failures": int,
         "total_aid_free_failures": int,
@@ -2217,10 +2217,10 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
         "total_data_path_client_unknown_nack": int,
         "total_dms_requests_received_in_action_frame": int,
         "total_dms_responses_sent_in_action_frame": int,
-        "total_dms_requests_received_in_re-assoc_request": int,
+        "total_dms_requests_received_in_re_assoc_request": int,
         "total_l3_vlan_override_vlan_change_received": int,
         "total_l3_vlan_override_disassociations_sent": int,
-        "total_l3_vlan_override_re-associations_received": int,
+        "total_l3_vlan_override_re_associations_received": int,
         "total_l3_vlan_override_successful_vlan_change": int,
         "total_ppsk_key_generation_cache_hit": int,
         "total_ppsk_key_generation_cache_miss": int
@@ -2236,11 +2236,11 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
         "average_run_state_latency_ms": int,
         "average_run_state_latency_without_user_delay_ms": int,
         "latency_distribution_ms": {
-            "1_-_100": int,
-            "100_-_200": int,
-            "200_-_300": int,
-            "300_-_600": int,
-            "600_-_1000": int,
+            "1_100": int,
+            "100_200": int,
+            "200_300": int,
+            "300_600": int,
+            "600_1000": int,
             "1000+": int
         }
     },
@@ -2313,7 +2313,7 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
         "http_404_not_found": int,
         "http_405_method_not_allowed": int,
         "http_406_none_acceptable": int,
-        "http_407_proxy-auth_required": int,
+        "http_407_proxy_auth_required": int,
         "http_408_request_timeout": int,
         "http_409_conflict": int,
         "http_410_gone": int,
@@ -2354,7 +2354,7 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
             "connection_timeout": int,
             "datapath_plumb": int,
             "wpa_key_exchange_timeout": int,
-            "802.11w_max_sa_queries_reached": int,
+            "802_11w_max_sa_queries_reached": int,
             "client_deleted_during_ha_recovery": int,
             "inter_instance_roam_failure": int,
             "inter_instance_roam_success": int,
@@ -2364,12 +2364,12 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
             "policy_manager_internal_error": int,
             "80211v_smart_roam_failed": int,
             "dot11v_association_failed": int,
-            "dot11r_pre-authentication_failure": int,
+            "dot11r_pre_authentication_failure": int,
             "sae_authentication_failure": int,
             "dot11_failure": int,
             "dot11_sae_invalid_message": int,
             "dot11_denied_data_rates": int,
-            "802.11v_client_rssi_lower_than_the_association_rssi_threshold": int,
+            "802_11v_client_rssi_lower_than_the_association_rssi_threshold": int,
             "invalid_qos_parameter": int,
             "dot11_ie_validation_failed": int,
             "dot11_group_cipher_in_ie_validation_failed": int,
@@ -2382,7 +2382,7 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
             "dot11_invalid_mdie": int,
             "dot11_invalid_ft_ie": int,
             "dot11_aid_allocation_conflicts": int,
-            "avc_client_re-anchored_at_the_foreign_controller": int,
+            "avc_client_re_anchored_at_the_foreign_controller": int,
             "client_eap_id_timeout": int,
             "client_dot1x_timeout": int,
             "malformed_eap_key_frame": int,
@@ -2399,10 +2399,10 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
             "ip_theft": int,
             "policy_bind_failure": int,
             "web_authentication_failure": int,
-            "802.1x_authentication_credential_failure": int,
-            "802.1x_authentication_timeout": int,
-            "802.11_authentication_failure": int,
-            "802.11_association_failure": int,
+            "802_1x_authentication_credential_failure": int,
+            "802_1x_authentication_timeout": int,
+            "802_11_authentication_failure": int,
+            "802_11_association_failure": int,
             "manually_excluded": int,
             "db_error": int,
             "anchor_creation_failure": int,
@@ -2428,7 +2428,7 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
             "fqdn_filter_definition_does_not_exist": int,
             "wrong_filter_type,_expected_postauth_fqdn_filter": int,
             "wrong_filter_type,_expected_preauth_fqdn_filter": int,
-            "invalid_group_id_for_fqdn_filter_valid_range__1..16": int,
+            "invalid_group_id_for_fqdn_filter_valid_range_1_16": int,
             "policy_parameter_mismatch": int,
             "reauth_failure": int,
             "wrong_psk": int,
@@ -2437,20 +2437,20 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
             "aaa_server_not_ready": int,
             "no_dot1x_method_configuration": int,
             "association_connection_timeout": int,
-            "mac-auth_connection_timeout": int,
-            "l2-auth_connection_timeout": int,
-            "l3-auth_connection_timeout": int,
+            "mac_auth_connection_timeout": int,
+            "l2_auth_connection_timeout": int,
+            "l3_auth_connection_timeout": int,
             "mobility_connection_timeout": int,
             "static_ip_connection_timeout": int,
             "sm_session_creation_timeout": int,
-            "ip-learn_connection_timeout": int,
+            "ip_learn_connection_timeout": int,
             "nack_ifid_exists": int,
-            "guest-lan_invalid_mbssid": int,
-            "guest-lan_no_memory": int,
-            "guest-lan_ceate_request_failed": int,
+            "guest_lan_invalid_mbssid": int,
+            "guest_lan_no_memory": int,
+            "guest_lan_ceate_request_failed": int,
             "eogre_reset": int,
             "eogre_generic_join_failure": int,
-            "eogre_ha-reconciliation": int,
+            "eogre_ha_reconciliation": int,
             "wired_idle_timeout": int,
             "ip_update_timeout": int,
             "sae_commit_received_in_associated_state":int,
@@ -2461,7 +2461,7 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
             "eogre_domain_shut":int,
             "eogre_invalid_gateway":int,
             "eogre_all_gateways_down": int,
-            "eogre_flex_-_no_active_gateway": int,
+            "eogre_flex_no_active_gateway": int,
             "eogre_rule_matching_error": int,
             "eogre_aaa_override_error": int,
             "eogre_client_onboarding_error": int,
@@ -2483,8 +2483,8 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
             "bssid_down": int,
             "dot11_qos_policy": int,
             "roam_across_policy_profile_deny": int,
-            "4way_handshake_failure_-_m1_issue": int,
-            "4way_handshake_failure_-_m3_issue": int,
+            "4way_handshake_failure_m1_issue": int,
+            "4way_handshake_failure_m3_issue": int,
             "exclusion_policy_template_fail": int,
             "dot11_cipher_suite_rejected": int
         },
@@ -2492,7 +2492,7 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
             "mobility_wlan_down": int,
             "ap_upgrade": int,
             "l3_authentication_failure": int,
-            "ap_down/disjoin": int,
+            "ap_down_disjoin": int,
             "mac_authentication_failure": int,
             "due_to_ssid_change": int,
             "due_to_vlan_change": int,
@@ -2534,7 +2534,7 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
             "ap_initiated_delete_for_client_acl_mismatch": int,
             "ap_initiated_delete_for_ap_auth_stop": int,
             "ap_initiated_delete_for_association_expired_at_ap": int,
-            "ap_initiated_delete_for_4-way_handshake_failed": int,
+            "ap_initiated_delete_for_4_way_handshake_failed": int,
             "ap_initiated_delete_for_dhcp_timeout": int,
             "ap_initiated_delete_for_reassociation_timeout": int,
             "ap_initiated_delete_for_sa_query_timeout": int,
@@ -2558,7 +2558,7 @@ class ShowWirelessStatsClientDetailSchema(MetaParser):
             "ap_initiated_delete_for_uplink_receive_timeout": int,
             "ap_initiated_delete_for_sensor_scan_next_radio": int,
             "ap_initiated_delete_for_sensor_scan_other_bssid": int,
-            "ap_initiated_delete_for_auth-timeout_and_web-auth_timeout": int,
+            "ap_initiated_delete_for_auth_timeout_and_web_auth_timeout": int,
             "ap_initiated_delete_for_sending_deauth_pak_to_client": int
         }
     }
@@ -2712,8 +2712,8 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
               continue
           elif p_protocol_stats_section.match(line):
               # Protocol Statistics
-              client_detail_dict.update({ "protocol_statistics": {} })
-              section_tracker.append("protocol_statistics")
+              client_detail_dict.update({ "protocol_statistics_client_count": {} })
+              section_tracker.append("protocol_statistics_client_count")
               continue
           elif p_current_client_stats_section.match(line):
               # Current client state statistics:
@@ -2976,7 +2976,8 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
               # [key] : [value]
               match = p_colon_split.match(line)
               group = match.groupdict()
-              group["key"] = group["key"].replace(" ", "_").lower()
+              group["key"] = group["key"].replace(" ", "_").replace(".", "_").replace("-", "_").replace("___", "_").replace("__", "_").replace("/", "_").lower()
+              print(group["key"])
               group["value"] = int(group["value"])
               if len(section_tracker) == 1:
                   client_detail_dict[section_tracker[-1]].update({ group["key"]: group["value"] })
