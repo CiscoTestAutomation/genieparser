@@ -2104,17 +2104,16 @@ class ShowWirelessFabricVnidMapping(ShowWirelessFabricVnidMappingSchema):
         # Fabric VNID Mapping:
         p_fabric_mapping = re.compile(r"^Fabric\s+VNID\s+Mapping:")
 
-        # Name               L2-VNID        L3-VNID        IP Address             Subnet       Control plane name
-        p_fabric_header = re.compile(r"^Name\s+L2-VNID\s+L3-VNID\s+IP\s+Address\s+Subnet\s+Control\s+plane\s+name$")
-
-        # ----------------------------------------------------------------------------------------------------------------------
-        p_fabric_delmimter = re.compile(r"^----------------------------------------------------------------------------------------------------------------------$")
-
         # Data                8190           0                                  0.0.0.0            default-control-plane
-        p_fabric_row_4 = re.compile(r"^(?P<name>\S+)\s+(?P<l2_vnid>\d+)\s+(?P<l3_vnid>\d+)\s+(?P<subnet>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<control_name>\S+)$")
+        p_fabric_row_4 = re.compile(r"^(?P<name>\S+)\s+(?P<l2_vnid>\d+)\s+(?P<l3_vnid>\d+)"
+                                    r"\s+(?P<subnet>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+                                    r"\s+(?P<control_name>\S+)$")
 
         # Fabric_A_INF_VN     8188           4097           10.8.132.0          255.255.254.0      default-control-plane
-        p_fabric_row_5 = re.compile(r"^(?P<name>\S+)\s+(?P<l2_vnid>\d+)\s+(?P<l3_vnid>\d+)\s+(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<subnet>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<control_name>\S+)")
+        p_fabric_row_5 = re.compile(r"^(?P<name>\S+)\s+(?P<l2_vnid>\d+)\s+(?P<l3_vnid>\d+)\s+"
+                                    r"(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+                                    r"(?P<subnet>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+                                    r"(?P<control_name>\S+)")
 
 
         fabric_dict = {}
@@ -2125,28 +2124,24 @@ class ShowWirelessFabricVnidMapping(ShowWirelessFabricVnidMappingSchema):
                 # Fabric VNID Mapping:
                 fabric_dict.update({ "fabric_vnid_mapping": {} })
                 continue
-            elif p_fabric_header.match(line):
-                # Name               L2-VNID        L3-VNID        IP Address             Subnet       Control plane name
-                continue
-            elif p_fabric_delmimter.match(line):
-                # ----------------------------------------------------------------------------------------------------------------------
-                continue
             elif p_fabric_row_5.match(line):
                 match = p_fabric_row_5.match(line)
                 group = match.groupdict()
                 if not fabric_dict["fabric_vnid_mapping"].get("name"):
                     fabric_dict["fabric_vnid_mapping"].update({ "name": {} })
-                fabric_dict["fabric_vnid_mapping"]["name"].update({ group["name"]: { "l2_vnid": int(group["l2_vnid"]), "l3_vnid": int(group["l3_vnid"]),
-                                                                                     "ip_address": group["ip"], "subnet": group["subnet"],
-                                                                                     "control_plane_name": group["control_name"]} })
+                fabric_dict["fabric_vnid_mapping"]["name"].update({ group["name"] : {} })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "l2_vnid": int(group["l2_vnid"]), "l3_vnid": int(group["l3_vnid"]) })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "ip_address": group["ip"], "subnet": group["subnet"] })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "control_plane_name": group["control_name"] })
                 continue
             elif p_fabric_row_4.match(line):
                 match = p_fabric_row_4.match(line)
                 group = match.groupdict()
                 if not fabric_dict["fabric_vnid_mapping"].get("name"):
                     fabric_dict["fabric_vnid_mapping"].update({ "name": {} })
-                fabric_dict["fabric_vnid_mapping"]["name"].update({ group["name"]: { "l2_vnid": int(group["l2_vnid"]), "l3_vnid": int(group["l3_vnid"]),
-                                                                                     "subnet": group["subnet"], "control_plane_name": group["control_name"]} })
+                fabric_dict["fabric_vnid_mapping"]["name"].update({ group["name"] : {} })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "l2_vnid": int(group["l2_vnid"]), "l3_vnid": int(group["l3_vnid"]) })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "subnet": group["subnet"], "control_plane_name": group["control_name"] })
                 continue
 
         return fabric_dict
