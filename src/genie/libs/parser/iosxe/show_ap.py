@@ -2728,8 +2728,8 @@ class ShowApTagSummary(ShowApTagSummarySchema):
         for line in out.splitlines():
             line = line.strip()
 
-            if ap_number_capture.match(line):
-                match = ap_number_capture.match(line)
+            match = ap_number_capture.match(line)
+            if match:
                 group = match.groupdict()
 
                 # format str to int
@@ -2739,8 +2739,8 @@ class ShowApTagSummary(ShowApTagSummarySchema):
 
                 continue
 
-            if ap_info_capture.match(line):
-                match = ap_info_capture.match(line)
+            match = ap_info_capture.match(line)
+            if match:
                 group = match.groupdict()
 
                 # format str to bool
