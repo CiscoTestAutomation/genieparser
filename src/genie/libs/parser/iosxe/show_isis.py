@@ -22,7 +22,7 @@ class ShowIsisNeighborsSchema(MetaParser):
     schema = {
         'isis': {
             Any(): {
-                'neighbors': {
+                Optional('neighbors'): {
                     Any(): {
                         'type': {
                             Any(): {
