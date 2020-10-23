@@ -2182,36 +2182,6 @@ class ShowWirelessStatsMobility(ShowWirelessStatsMobilitySchema):
           out = output
 
         # Mobility event statistics:
-        #     Joined as
-        #         Local                         : 60431           
-        #         Foreign                       : 0               
-        #         Export foreign                : 0               
-        #         Export anchor                 : 0               
-        #     Delete
-        #         Local                         : 60316           
-        #         Remote                        : 0                
-        # ...OUTPUT OMITTED...           
-
-
-        # MM mobility event statistics:
-        #     Event data allocs                 : 120747          
-        #     Event data frees                  : 120747          
-        #     FSM set allocs                    : 60427           
-        #     FSM set frees                     : 60316           
-        #     Timer allocs                      : 0               
-        # ...OUTPUT OMITTED...             
-
-
-        # MMIF mobility event statistics:
-        #     Event data allocs                 : 354187          
-        #     Event data frees                  : 354187          
-        #     Invalid events                    : 13              
-        #     Event schedule errors             : 0               
-        #     MMIF internal errors:
-    #       IPC failure                     : 0               
-    # ...OUTPUT OMITTED...    
-            
-        # Mobility event statistics:
         mobility_event_statistics_capture = re.compile(r"^Mobility event statistics:$")
 
         # Joined as
@@ -2274,10 +2244,9 @@ class ShowWirelessStatsMobility(ShowWirelessStatsMobilitySchema):
             for capture in header_capture_list:
                 if capture.match(line):
                     line_format = line.replace(" ", "_").lower().strip(":")
-                    wireless_info_obj.update({line_format: {}})
 
+                    header_group = wireless_info_obj.setdefault(line_format, {})
                     header_tracking = "header"
-                    header_group = wireless_info_obj[line_format]
 
             subheader_capture_list = [
                 joined_as_capture,
@@ -2294,20 +2263,18 @@ class ShowWirelessStatsMobility(ShowWirelessStatsMobilitySchema):
             for capture in subheader_capture_list:
                 if capture.match(line):
                     line_format = line.replace(" ", "_").lower().strip(":")
-                    header_group.update({line_format: {}})
 
+                    subheader_group = header_group.setdefault(line_format, {})
                     header_tracking = "subheader"
-                    subheader_group = header_group[line_format]
 
             sub_subheader_capture_list = [export_anchor_response_received_capture, export_anchor_response_sent_capture]
             
             for capture in sub_subheader_capture_list:
                 if capture.match(line):
                     line_format = line.strip(":").strip().replace(" ", "_").lower()
-                    subheader_group.update({line_format: {}})
 
+                    sub_subheader_group = subheader_group.setdefault(line_format, {})
                     header_tracking = "sub_subheader"
-                    sub_subheader_group = subheader_group[line_format]
 
             if key_value_capture.match(line):
                 match = key_value_capture.match(line)
