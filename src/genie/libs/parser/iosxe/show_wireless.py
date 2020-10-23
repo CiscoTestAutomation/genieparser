@@ -2053,3 +2053,252 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
                 wireless_info_obj["base_mac"].update(ap_info_dict)
 
         return wireless_info_obj
+
+
+# =================================
+# Schema for:
+#  * 'show wireless stats mobility'
+# =================================
+class ShowWirelessStatsMobilitySchema(MetaParser):
+    """Schema for show wireless stats mobility."""
+
+    schema = {
+      "mobility_event_statistics": {
+          "joined_as": {
+              "local": int,
+              "foreign": int,
+              "export_foreign": int,
+              "export_anchor": int,
+          },
+          "delete": {"local": int, "remote": int},
+          "role_changes": {"local_to_anchor": int, "anchor_to_local": int},
+          "roam_stats": {
+              "l2_roam_count": int,
+              "l3_roam_count": int,
+              "flex_client_roam_count": int,
+              "inter_wncd_roam_count": int,
+              "intra_wncd_roam_count": int,
+              "remote_inter_cntrl_roam_count": int,
+              "remote_webauth_pending_roams": int,
+          },
+          "anchor_request": {
+              "sent": int,
+              "grant_received": int,
+              "deny_received": int,
+              "received": int,
+              "grant_sent": int,
+              "deny_sent": int,
+          },
+          "handoff_status_received": {
+              "success": int,
+              "group_mismatch": int,
+              "client_unknown": int,
+              "client_blacklisted": int,
+              "ssid_mismatch": int,
+              "denied": int,
+              "l3_vlan_override": int,
+              "unknown_peer": int,
+          },
+          "handoff_status_sent": {
+              "success": int,
+              "group_mismatch": int,
+              "client_unknown": int,
+              "client_blacklisted": int,
+              "ssid_mismatch": int,
+              "denied": int,
+              "l3_vlan_override": int,
+          },
+          "export_anchor": {
+              "request_sent": int,
+              "response_received": {
+                  "ok": int,
+                  "deny_generic": int,
+                  "client_blacklisted": int,
+                  "client_limit_reached": int,
+                  "profile_mismatch": int,
+                  "deny_unknown_reason": int,
+                  "request_received": int,
+              },
+              "response_sent": {
+                  "ok": int,
+                  "deny_generic": int,
+                  "client_blacklisted": int,
+                  "client_limit_reached": int,
+                  "profile_mismatch": int,
+              },
+          },
+      },
+      "mm_mobility_event_statistics": {
+          "event_data_allocs": int,
+          "event_data_frees": int,
+          "fsm_set_allocs": int,
+          "fsm_set_frees": int,
+          "timer_allocs": int,
+          "timer_frees": int,
+          "timer_starts": int,
+          "timer_stops": int,
+          "invalid_events": int,
+          "internal_errors": int,
+          "delete_internal_errors": int,
+          "roam_internal_errors": int,
+      },
+      "mmif_mobility_event_statistics": {
+          "event_data_allocs": int,
+          "event_data_frees": int,
+          "invalid_events": int,
+          "event_schedule_errors": int,
+          "mmif_internal_errors": {
+              "ipc_failure": int,
+              "database_failure": int,
+              "invalid_parameters": int,
+              "mobility_message_decode_failure": int,
+              "fsm_failure": int,
+              "client_handoff_success": int,
+              "client_handoff_failure": int,
+              "anchor_deny": int,
+              "remote_delete": int,
+              "tunnel_down_delete": int,
+              "mbssid_down": int,
+              "unknown_failure": int,
+          },
+      },
+    }
+
+
+# =================================
+# Parser for:
+#  * 'show wireless stats mobility'
+# =================================
+class ShowWirelessStatsMobility(ShowWirelessStatsMobilitySchema):
+    """Parser for show wireless stats mobility"""
+
+    cli_command = 'show wireless stats mobility'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+
+        else:
+          out = output
+
+        # Mobility event statistics:
+        mobility_event_statistics_capture = re.compile(r"^Mobility event statistics:$")
+
+        # Joined as
+        joined_as_capture = re.compile(r"^Joined as$")
+
+        # Delete
+        delete_capture = re.compile(r"^Delete$")
+
+        # Role changes
+        role_changes_capture = re.compile(r"^Role changes$")
+
+        # Roam stats
+        roam_stats_capture = re.compile(r"^Roam stats$")
+
+        # Anchor Request
+        anchor_request_capture = re.compile(r"^Anchor Request$")
+
+        # Handoff Status Received
+        handoff_status_received_capture = re.compile(r"^Handoff Status Received$")
+
+        # Handoff Status Sent
+        handoff_status_sent_capture = re.compile(r"^Handoff Status Sent$")
+
+        # Export Anchor
+        export_anchor_capture = re.compile(r"^Export Anchor$")
+
+        # Response Received             :
+        export_anchor_response_received_capture = re.compile(r"Response Received\s+:")
+
+        # Response Sent             :
+        export_anchor_response_sent_capture = re.compile(r"Response Sent\s+:")
+
+        # MM mobility event statistics:
+        mm_mobility_event_statistics_capture = re.compile(
+            r"^MM mobility event statistics:$"
+        )
+
+        # MMIF mobility event statistics:
+        mmif_mobility_event_statistics_capture = re.compile(
+            r"^MMIF mobility event statistics:$"
+        )
+
+        # MMIF internal errors:
+        mmif_internal_errors_capture = re.compile(r"^MMIF internal errors:$")
+
+        # key : value
+        key_value_capture = re.compile(r"^(?P<key>[\S\s]+\S)\s*:\s+(?P<value>\d+)$")
+
+        wireless_info_obj = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            header_capture_list = [
+                mobility_event_statistics_capture,
+                mm_mobility_event_statistics_capture,
+                mmif_mobility_event_statistics_capture,
+            ]
+
+            for capture in header_capture_list:
+                if capture.match(line):
+                    line_format = line.replace(" ", "_").lower().strip(":")
+
+                    header_group = wireless_info_obj.setdefault(line_format, {})
+                    header_tracking = "header"
+
+            subheader_capture_list = [
+                joined_as_capture,
+                delete_capture,
+                role_changes_capture,
+                roam_stats_capture,
+                anchor_request_capture,
+                handoff_status_received_capture,
+                handoff_status_sent_capture,
+                export_anchor_capture,
+                mmif_internal_errors_capture,
+            ]
+
+            for capture in subheader_capture_list:
+                if capture.match(line):
+                    line_format = line.replace(" ", "_").lower().strip(":")
+
+                    subheader_group = header_group.setdefault(line_format, {})
+                    header_tracking = "subheader"
+
+            sub_subheader_capture_list = [export_anchor_response_received_capture, export_anchor_response_sent_capture]
+            
+            for capture in sub_subheader_capture_list:
+                if capture.match(line):
+                    line_format = line.strip(":").strip().replace(" ", "_").lower()
+
+                    sub_subheader_group = subheader_group.setdefault(line_format, {})
+                    header_tracking = "sub_subheader"
+
+            if key_value_capture.match(line):
+                match = key_value_capture.match(line)
+                group = match.groupdict()
+
+                # format the keys and values
+                format_key = group["key"].replace("-", "_").replace(" ", "_").lower()
+                format_value = int(group["value"])
+
+                # special case for the Deny key formatting
+                if re.match(r"^Deny\s+", group["key"]):
+                    format_key = group["key"].replace("-", "").replace(" ", "_").replace("__", "_").lower()
+
+                if header_tracking == "header":
+                    # update current header group
+                    header_group.update({format_key: format_value})
+
+                if header_tracking == "subheader":
+                    # update current subheader group
+                    subheader_group.update({format_key: format_value})
+
+                if header_tracking == "sub_subheader":
+                    # update current sub subheader group
+                    sub_subheader_group.update({format_key: format_value})
+
+
+        return wireless_info_obj
