@@ -2737,6 +2737,8 @@ class ShowApTagSummary(ShowApTagSummarySchema):
 
                 ap_info_obj.update(group)
 
+                continue
+
             if ap_info_capture.match(line):
                 match = ap_info_capture.match(line)
                 group = match.groupdict()
@@ -2757,6 +2759,8 @@ class ShowApTagSummary(ShowApTagSummarySchema):
                     ap_info_obj = {new_key: {}}
 
                 ap_info_obj[new_key].update(new_group)
+
+                continue
 
         return ap_info_obj    
         
