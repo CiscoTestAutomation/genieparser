@@ -2678,7 +2678,7 @@ class ShowApTagSummarySchema(MetaParser):
                 "site_tag_name": str,
                 "policy_tag_name": str,
                 "rf_tag_name": str,
-                "misconfigured": bool,
+                "misconfigured": str,
                 "tag_source": str,
             },
         },
@@ -2742,10 +2742,6 @@ class ShowApTagSummary(ShowApTagSummarySchema):
             match = ap_info_capture.match(line)
             if match:
                 group = match.groupdict()
-
-                # format str to bool
-                boolean_values = {"No": False, "Yes": True}
-                group["misconfigured"] = boolean_values.get(group["misconfigured"])
 
                 # pull a key from group to use as new_key
                 new_key = "ap_name"

@@ -5,7 +5,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25b-12-cap01": {
@@ -13,7 +13,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25b-11-cap01": {
@@ -21,7 +21,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-12-cap07": {
@@ -29,7 +29,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-11-cap05": {
@@ -37,7 +37,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-11-cap04": {
@@ -45,7 +45,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-12-cap08": {
@@ -53,7 +53,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-11-cap01": {
@@ -61,7 +61,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-11-cap08": {
@@ -69,7 +69,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-11-cap02": {
@@ -77,7 +77,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-11-cap07": {
@@ -85,7 +85,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-12-cap02": {
@@ -93,7 +93,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25b-11-cap06": {
@@ -101,7 +101,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25b-11-cap08": {
@@ -109,7 +109,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25b-11-cap07": {
@@ -117,7 +117,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-12-cap11": {
@@ -125,7 +125,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25b-12-cap02": {
@@ -133,7 +133,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-13-cap09": {
@@ -141,7 +141,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25b-12-cap03": {
@@ -149,7 +149,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
         "b25a-12-cap10": {
@@ -157,7 +157,7 @@ expected_output = {
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
-            "misconfigured": False,
+            "misconfigured": "No",
             "tag_source": "Static",
         },
     },
