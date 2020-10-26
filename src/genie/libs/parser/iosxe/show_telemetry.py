@@ -12,17 +12,22 @@ class ShowTelemetryInternalConnectionSchema(MetaParser):
     """Schema for show telemetry internal connection."""
 
     schema = {
+        Optional("peer_address"): str,
+        Optional("port"): int,
+        Optional("profile"): str,
+        Optional("source_address"): str,
+        Optional("state"): str,
+        Optional("transport"): str,
+        Optional("vrf"): int,
         Optional("index"): {
-            Optional(int): {
+            int: {
                 "peer_address": str,
                 "port": int,
-                Optional("profile"): str,
                 "source_address": str,
                 "state": str,
-                Optional("transport"): str,
                 "vrf": int,
             },
-        }
+        },
     }
 
 
