@@ -2707,8 +2707,8 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
           line = line.strip()
           if p_total_client.match(line):
               # Total Number of Clients : 16
-              match = p_total_client.match(line)
-              client_detail_dict.update({ "total_clients": int(match.group("value")) })
+              m_total_client = p_total_client.match(line)
+              client_detail_dict.update({ "total_clients": int(m_total_client.group("value")) })
               continue
           elif p_protocol_stats_section.match(line):
               # Protocol Statistics
@@ -2735,9 +2735,9 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
               continue
           elif p_client_global_s2.match(line):
               # Total roam attempts                              : 4200
-              match = p_client_global_s2.match(line)
+              m_client_global_s2 = p_client_global_s2.match(line)
               client_detail_dict["client_global_statistics"].update({ "roam_attempts": {} })
-              client_detail_dict["client_global_statistics"]["roam_attempts"].update( {"total_roam_attempts": int(match.group("total_roam")) })
+              client_detail_dict["client_global_statistics"]["roam_attempts"].update( {"total_roam_attempts": int(m_client_global_s2.group("total_roam")) })
               section_tracker.append("roam_attempts")
               continue
           elif p_client_global_s3.match(line):
@@ -2748,17 +2748,17 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
               continue
           elif p_client_global_s4.match(line):
               # Total WPA3 SAE attempts                          : 0
-              match = p_client_global_s4.match(line)
+              m_client_global_s4 = p_client_global_s4.match(line)
               client_detail_dict["client_global_statistics"].update({ "wpa3_sae": {} })
-              client_detail_dict["client_global_statistics"]["wpa3_sae"].update({ "total_wpa3_sae_attempts": int(match.group("wpa3_sae")) })
+              client_detail_dict["client_global_statistics"]["wpa3_sae"].update({ "total_wpa3_sae_attempts": int(m_client_global_s4.group("wpa3_sae")) })
               section_tracker.append("wpa3_sae")
               continue
           elif p_client_global_s5.match(line):
               # Total Flexconnect local-auth roam attempts       : 0
               section_tracker.pop()
-              match = p_client_global_s5.match(line)
+              m_client_global_s5 = p_client_global_s5.match(line)
               client_detail_dict["client_global_statistics"].update({ "flexconnect_local_auth_roam": {} })
-              client_detail_dict["client_global_statistics"]["flexconnect_local_auth_roam"].update({ "total_flexconnect_local_auth_roam_attempts": int(match.group("flex_roam")) })
+              client_detail_dict["client_global_statistics"]["flexconnect_local_auth_roam"].update({ "total_flexconnect_local_auth_roam_attempts": int(m_client_global_s5.group("flex_roam")) })
               section_tracker.append("flexconnect_local_auth_roam")
               continue
           elif p_client_global_s6.match(line):
@@ -2770,7 +2770,6 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
           elif p_total_clients_recovered_idle.match(line):
               # Total clients recovered from idle state:
               section_tracker.pop()
-              match = p_total_clients_recovered_idle.match(line)
               client_detail_dict.update({ "total_clients_recovered_from_idle_state": {}})
               section_tracker.append("total_clients_recovered_from_idle_state")
               continue
@@ -2787,13 +2786,13 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
               continue
           elif p_average_run_latency.match(line):
               # Average Run State Latency (ms) : 5
-              match = p_average_run_latency.match(line)
-              client_detail_dict["client_state_statistics"].update({"average_run_state_latency_ms": int(match.group("run_latency")) })
+              m_average_run_latency = p_average_run_latency.match(line)
+              client_detail_dict["client_state_statistics"].update({"average_run_state_latency_ms": int(m_average_run_latency.group("run_latency")) })
               continue
           elif p_average_run_latency_user.match(line):
               # Average Run State Latency without user delay (ms) : 1
-              match = p_average_run_latency_user.match(line)
-              client_detail_dict["client_state_statistics"].update({"average_run_state_latency_without_user_delay_ms": int(match.group("run_latency_user")) })
+              m_average_run_latency_user = p_average_run_latency_user.match(line)
+              client_detail_dict["client_state_statistics"].update({"average_run_state_latency_without_user_delay_ms": int(m_average_run_latency_user.group("run_latency_user")) })
               continue
           elif p_latency_distribution.match(line):
               # Latency Distribution (ms)
@@ -2813,73 +2812,63 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
               continue
           elif p_time_spent_io_read.match(line):
               # IO Reading state          4654682      58788          0     294534
-              match = p_time_spent_io_read.match(line)
-              group = match.groupdict()
+              m_time_spent_io_read = p_time_spent_io_read.match(line)
+              group_m_time_spent_io_read = m_time_spent_io_read.groupdict()
               client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "io_reading_state": {} })
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"total": int(group["total"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"max": int(group["max"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"min": int(group["min"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"samples": int(group["samples"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"total": int(group_m_time_spent_io_read["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"max": int(group_m_time_spent_io_read["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"min": int(group_m_time_spent_io_read["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"samples": int(group_m_time_spent_io_read["samples"])})
               continue
           elif p_time_spent_io_write.match(line):
               # IO Writing state          4654682      58788          0     294534
-              match = p_time_spent_io_write.match(line)
-              group = match.groupdict()
+              m_time_spent_io_write = p_time_spent_io_write.match(line)
+              group_m_time_spent_io_write = m_time_spent_io_write.groupdict()
               client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "io_writing_state": {} })
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"total": int(group["total"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"max": int(group["max"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"min": int(group["min"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"samples": int(group["samples"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"total": int(group_m_time_spent_io_write["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"max": int(group_m_time_spent_io_write["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"min": int(group_m_time_spent_io_write["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"samples": int(group_m_time_spent_io_write["samples"])})
               continue
           elif p_time_spent_io_aaa.match(line):
               # IO AAA state                    0          0          0          0
-              match = p_time_spent_io_aaa.match(line)
-              group = match.groupdict()
+              m_time_spent_io_aaa = p_time_spent_io_aaa.match(line)
+              group_m_time_spent_io_aaa = m_time_spent_io_aaa.groupdict()
               client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "io_aaa_state": {} })
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"total": int(group["total"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"max": int(group["max"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"min": int(group["min"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"samples": int(group["samples"])})
-              continue
-          elif p_time_spent_io_aaa.match(line):
-              # IO AAA state                    0          0          0          0
-              match = p_time_spent_io_aaa.match(line)
-              group = match.groupdict()
-              client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "io_aaa_state": {} })
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"total": int(group["total"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"max": int(group["max"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"min": int(group["min"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"samples": int(group["samples"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"total": int(group_m_time_spent_io_aaa["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"max": int(group_m_time_spent_io_aaa["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"min": int(group_m_time_spent_io_aaa["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"samples": int(group_m_time_spent_io_aaa["samples"])})
               continue
           elif p_time_spent_method_read.match(line):
               # Method after reading         9865          1          0     294534
-              match = p_time_spent_method_read.match(line)
-              group = match.groupdict()
+              m_time_spent_method_read = p_time_spent_method_read.match(line)
+              group_m_time_spent_method_read = m_time_spent_method_read.groupdict()
               client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "method_after_reading": {} })
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"total": int(group["total"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"max": int(group["max"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"min": int(group["min"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"samples": int(group["samples"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"total": int(group_m_time_spent_method_read["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"max": int(group_m_time_spent_method_read["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"min": int(group_m_time_spent_method_read["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"samples": int(group_m_time_spent_method_read["samples"])})
               continue
           elif p_time_spent_method_writing.match(line):
               # Method after writing           31          1          0     293834
-              match = p_time_spent_method_writing.match(line)
-              group = match.groupdict()
+              m_time_spent_method_writing = p_time_spent_method_writing.match(line)
+              group_m_time_spent_method_writing = m_time_spent_method_writing.groupdict()
               client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "method_after_writing": {} })
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"total": int(group["total"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"max": int(group["max"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"min": int(group["min"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"samples": int(group["samples"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"total": int(group_m_time_spent_method_writing["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"max": int(group_m_time_spent_method_writing["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"min": int(group_m_time_spent_method_writing["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"samples": int(group_m_time_spent_method_writing["samples"])})
               continue
           elif p_time_spent_method_aaa.match(line):
               # Method after AAA                0          0          0          0
-              match = p_time_spent_method_aaa.match(line)
-              group = match.groupdict()
+              m_time_spent_method_aaa = p_time_spent_method_aaa.match(line)
+              group_m_time_spent_method_aaa = m_time_spent_method_aaa.groupdict()
               client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "method_after_aaa": {} })
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"total": int(group["total"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"max": int(group["max"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"min": int(group["min"])})
-              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"samples": int(group["samples"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"total": int(group_m_time_spent_method_aaa["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"max": int(group_m_time_spent_method_aaa["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"min": int(group_m_time_spent_method_aaa["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"samples": int(group_m_time_spent_method_aaa["samples"])})
               continue
           elif p_webauth_http_status_counts.match(line):
               # Webauth HTTP status counts
@@ -2899,49 +2888,49 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
               continue
           elif p_dot1x_rxstart.match(line):
               # RxStart = 6657 RxLogoff = 18  RxResp = 104310 RxRespID = 15453
-              match = p_dot1x_rxstart.match(line)
-              group = match.groupdict()
-              client_detail_dict["dot1x_global_statistics"].update({ "rx_start": int(group["start"]) })
-              client_detail_dict["dot1x_global_statistics"].update({ "rx_logoff": int(group["logoff"]) })
-              client_detail_dict["dot1x_global_statistics"].update({ "rx_resp": int(group["resp"]) })
-              client_detail_dict["dot1x_global_statistics"].update({ "rx_resp_id": int(group["respid"]) })
+              m_dot1x_rxstart = p_dot1x_rxstart.match(line)
+              group_m_dot1x_rxstart = m_dot1x_rxstart.groupdict()
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_start": int(group_m_dot1x_rxstart["start"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_logoff": int(group_m_dot1x_rxstart["logoff"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_resp": int(group_m_dot1x_rxstart["resp"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_resp_id": int(group_m_dot1x_rxstart["respid"]) })
               continue
           elif p_dot1x_req.match(line):
               # RxReq = 0 RxInvalid = 0  RxLenErr = 0
-              match = p_dot1x_req.match(line)
-              group = match.groupdict()
-              client_detail_dict["dot1x_global_statistics"].update({ "rx_req": int(group["req"]) })
-              client_detail_dict["dot1x_global_statistics"].update({ "rx_invalid": int(group["invalid"]) })
-              client_detail_dict["dot1x_global_statistics"].update({ "rx_len_error": int(group["lenerror"]) })
+              m_dot1x_req = p_dot1x_req.match(line)
+              group_m_dot1x_req = m_dot1x_req.groupdict()
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_req": int(group_m_dot1x_req["req"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_invalid": int(group_m_dot1x_req["invalid"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_len_error": int(group_m_dot1x_req["lenerror"]) })
               continue
           elif p_dot1x_rx_total.match(line):
               # RxTotal = 126939
-              match = p_dot1x_rx_total.match(line)
-              client_detail_dict["dot1x_global_statistics"].update({ "rx_total": int(match.group("total")) })
+              m_dot1x_rx_total = p_dot1x_rx_total.match(line)
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_total": int(m_dot1x_rx_total.group("total")) })
               continue
           elif p_dot1x_txstart.match(line):
               # TxStart = 0 TxLogoff = 0  TxResp = 0
-              match = p_dot1x_txstart.match(line)
-              group = match.groupdict()
-              client_detail_dict["dot1x_global_statistics"].update({ "tx_start": int(group["start"]) })
-              client_detail_dict["dot1x_global_statistics"].update({ "tx_logoff": int(group["logoff"]) })
-              client_detail_dict["dot1x_global_statistics"].update({ "tx_resp": int(group["resp"]) })
+              m_dot1x_txstart = p_dot1x_txstart.match(line)
+              group_m_dot1x_txstart = m_dot1x_txstart.groupdict()
+              client_detail_dict["dot1x_global_statistics"].update({ "tx_start": int(group_m_dot1x_txstart["start"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "tx_logoff": int(group_m_dot1x_txstart["logoff"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "tx_resp": int(group_m_dot1x_txstart["resp"]) })
               continue
           elif p_dot1_tx_req.match(line):
               # TxReq = 117345 ReTxReq = 3909  ReTxReqFail = 11528
-              match = p_dot1_tx_req.match(line)
-              group = match.groupdict()
-              client_detail_dict["dot1x_global_statistics"].update({ "tx_req": int(group["req"]) })
-              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req": int(group["rereq"]) })
-              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req_fail": int(group["txfail"]) })
+              m_dot1_tx_req = p_dot1_tx_req.match(line)
+              group_m_dot1_tx_req = m_dot1_tx_req.groupdict()
+              client_detail_dict["dot1x_global_statistics"].update({ "tx_req": int(group_m_dot1_tx_req["req"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req": int(group_m_dot1_tx_req["rereq"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req_fail": int(group_m_dot1_tx_req["txfail"]) })
               continue
           elif p_dot1_tx_reqid.match(line):
               # TxReqID = 67670 ReTxReqID = 29908  ReTxReqIDFail = 1310
-              match = p_dot1_tx_reqid.match(line)
-              group = match.groupdict()
-              client_detail_dict["dot1x_global_statistics"].update({ "tx_req_id": int(group["reqid"]) })
-              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req_id": int(group["rereqid"]) })
-              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req_fail": int(group["reqidfail"]) })
+              m_dot1_tx_reqid = p_dot1_tx_reqid.match(line)
+              group_m_dot1_tx_reqid = m_dot1_tx_reqid.groupdict()
+              client_detail_dict["dot1x_global_statistics"].update({ "tx_req_id": int(group_m_dot1_tx_reqid["reqid"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req_id": int(group_m_dot1_tx_reqid["rereqid"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req_fail": int(group_m_dot1_tx_reqid["reqidfail"]) })
               continue
           elif p_total_client_delete_reasons.match(line):
               # Total client delete reasons
