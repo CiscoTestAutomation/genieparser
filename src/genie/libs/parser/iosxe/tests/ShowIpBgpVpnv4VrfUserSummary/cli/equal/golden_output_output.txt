@@ -1,0 +1,17 @@
+BGP router identifier 10.19.228.213, local AS number 64106
+BGP table version is 4571, main routing table version 4571
+69 network entries using 17664 bytes of memory
+80 path entries using 10880 bytes of memory
+11 multipath network entries and 22 multipath paths
+33/22 BGP path/bestpath attribute entries using 9768 bytes of memory
+2 BGP AS-PATH entries using 64 bytes of memory
+5 BGP extended community entries using 120 bytes of memory
+0 BGP route-map cache entries using 0 bytes of memory
+0 BGP filter-list cache entries using 0 bytes of memory
+BGP using 38496 total bytes of memory
+BGP activity 854/668 prefixes, 2572/2305 paths, scan interval 60 secs
+
+Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+10.199.228.201  4        65001  202074  202468     4571    0    0 18w1d          10
+10.199.228.209  4        65001  499437  638231     4571    0    0 5w2d           58
+10.199.228.217  4        65001  496306  634769     4571    0    0 5w2d           10

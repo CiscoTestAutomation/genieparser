@@ -1,0 +1,60 @@
+expected_output = {
+    "rid": "10.19.228.213",
+    "local_as": 64106,
+    "table_version": 4571,
+    "main_routing_table_version": 4571,
+    "network_entries": 69,
+    "network_entries_memory_usage_bytes": 17664,
+    "multipath_network_entries": 11,
+    "multipath_paths": 22,
+    "path_attribute_entries": 33,
+    "best_path_attribute_entries": 22,
+    "as_path_entries": 2,
+    "as_path_entries_memory_usage_bytes": 64,
+    "extended_community_entries": 5,
+    "extended_community_entries_memory_usage_bytes": 120,
+    "route_map_cache_entries": 0,
+    "route_map_cache_entries_memory_usage_bytes": 0,
+    "filter_list_cache_entries": 0,
+    "filter_list_cache_entries_memory_usage_bytes": 0,
+    "total_memory_usage_bytes": 38496,
+    "prefix_memory_allocation_count": 854,
+    "prefix_memory_release_count": 668,
+    "path_memory_allocation_count": 2572,
+    "path_memory_release_count": 2305,
+    "neighbor_ips": {
+        "10.199.228.201": {
+            "version": 4,
+            "as": 65001,
+            "messages_received": 202074,
+            "messages_sent": 202468,
+            "table_version": 4571,
+            "in_queue": 0,
+            "out_queue": 0,
+            "up_down": "18w1d",
+            "state": 10
+        },
+        "10.199.228.209": {
+            "version": 4,
+            "as": 65001,
+            "messages_received": 499437,
+            "messages_sent": 638231,
+            "table_version": 4571,
+            "in_queue": 0,
+            "out_queue": 0,
+            "up_down": "5w2d",
+            "state": 58
+        },
+        "10.199.228.217": {
+            "version": 4,
+            "as": 65001,
+            "messages_received": 496306,
+            "messages_sent": 634769,
+            "table_version": 4571,
+            "in_queue": 0,
+            "out_queue": 0,
+            "up_down": "5w2d",
+            "state": 10
+        }
+    }
+}
