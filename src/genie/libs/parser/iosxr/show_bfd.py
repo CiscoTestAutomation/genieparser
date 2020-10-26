@@ -101,7 +101,6 @@ class ShowBfdSession(ShowBfdSessionSchema):
                 bfd_dict.update({'state': group['state']})
                 if group['damp']:
                     bfd_dict.update({'dampening': group['damp']})
-                #import ipdb;ipdb.set_trace()
 
             #BE300               172.16.253.53   n/a              n/a              UP
             m = p3.match(line)
@@ -116,7 +115,6 @@ class ShowBfdSession(ShowBfdSessionSchema):
                 bfd_dict.update({'state': group['state']})
                 if group['damp']:
                     bfd_dict.update({'dampening': group['damp']})
-                #import ipdb;ipdb.set_trace()
 
             #                                                             No    n/a
             m = p4.match(line)
@@ -125,7 +123,6 @@ class ShowBfdSession(ShowBfdSessionSchema):
                 group = m.groupdict()
                 bfd_dict.update({'hardware': group['hw']})
                 bfd_dict.update({'npu': group['npu']})
-                #import ipdb;ipdb.set_trace()
                 continue
 
         return result_dict
