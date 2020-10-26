@@ -3446,11 +3446,12 @@ class ShowLispInstanceIdEthernetServerSchema(MetaParser):
 class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
     """Parser for show lisp instance-id ethernet server"""
 
-    cli_command = 'show lisp instance-id ethernet server'
+    cli_command = 'show lisp instance-id {instance_id} ethernet server'
 
-    def cli(self, output=None):
+    def cli(self, instance_id, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            cmd = self.cli_command.format(instance_id=instance_id)
+            out = self.device.execute(cmd)
 
         else:
             out = output
