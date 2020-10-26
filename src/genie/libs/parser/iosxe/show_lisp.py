@@ -3412,3 +3412,29 @@ class ShowLispSite(ShowLispSiteSchema):
         return lisp_site_dict
 
 
+
+
+# ==========================================
+# Schema for:
+#  * 'show lisp instance-id ethernet server'
+# ==========================================
+class ShowLispInstanceIdEthernetServerSchema(MetaParser):
+    """Schema for show lisp instance-id ethernet server."""
+
+    schema = {
+        
+    }
+
+
+# ==========================================
+# Parser for:
+#  * 'show lisp instance-id ethernet server'
+# ==========================================
+class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
+    """Parser for show lisp instance-id ethernet server"""
+
+    cli_command = ['show lisp instance-id ethernet server']
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
