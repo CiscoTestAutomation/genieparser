@@ -14,12 +14,14 @@ expected_output = {
   "logging": {
     "console": { "status": "disabled" },
     "monitor": {
+      "status": "enabled",
       "level": "debugging",
       "messages_logged": 0,
       "xml": "disabled",
       "filtering": "disabled"
     },
     "buffer": {
+      "status": "enabled",
       "level": "debugging",
       "messages_logged": 2213,
       "xml": "disabled",

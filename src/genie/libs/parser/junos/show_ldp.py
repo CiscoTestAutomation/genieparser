@@ -811,12 +811,7 @@ class ShowLDPOverview(ShowLDPOverviewSchema):
                 interface_dict = overview_dict.setdefault(
                     'ldp-interface-address', {}).setdefault('interface-address',[])
                 interface_dict.append(group['ip'])
-        # import json
-        # json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        # f = open("dict1016.txt","w")
-        # f.write(json_data)
-        # f.close()
-        # import pdb;pdb.set_trace()
+                
         return ret_dict
 
 
@@ -929,8 +924,8 @@ class ShowLdpSessionIpaddressDetailSchema(MetaParser):
             Optional("ldp-graceful-restart-remote"): str,
             "ldp-holdtime": str,
             "ldp-keepalive-interval": str,
-            "ldp-keepalive-time": str,
-            "ldp-local-address": str,
+            Optional("ldp-keepalive-time"): str,
+            Optional("ldp-local-address"): str,
             "ldp-local-helper-mode": str,
             "ldp-local-label-adv-mode": str,
             "ldp-local-maximum-reconnect": str,
@@ -943,12 +938,13 @@ class ShowLdpSessionIpaddressDetailSchema(MetaParser):
                 "ldp-neighbor-type": str
             },
             "ldp-remaining-time": str,
-            "ldp-remote-address": str,
+            Optional("ldp-remote-address"): str,
             Optional("ldp-remote-helper-mode"): str,
             Optional("ldp-remote-label-adv-mode"): str,
+            Optional("ldp-remote-reconnect-time"): str,
             "ldp-retry-interval": str,
-            "ldp-session-address": {
-                "interface-address": str
+            Optional("ldp-session-address"): {
+                "interface-address": list
             },
             Optional("ldp-session-adv-mode"): str,
             "ldp-session-capabilities-advertised": {
@@ -968,7 +964,7 @@ class ShowLdpSessionIpaddressDetailSchema(MetaParser):
             },
             "ldp-session-role": str,
             "ldp-session-state": str,
-            "ldp-up-time": str
+            Optional("ldp-up-time"): str
         }
     }
 }
@@ -1064,9 +1060,11 @@ class ShowLdpSessionIpaddressDetail(ShowLdpSessionIpaddressDetailSchema):
         )
 
         # Remote - Restart: disabled, Helper mode: enabled
+        # Remote - Restart: enabled, Helper mode: enabled, Reconnect time: 60000
         p14 = re.compile(
             r'^Remote +- +Restart: +(?P<ldp_graceful_restart_remote>\S+), '
-            r'Helper +mode: +(?P<ldp_remote_helper_mode>\S+)$'
+            r'Helper +mode: +(?P<ldp_remote_helper_mode>\w+)(, +Reconnect +time: '
+            r'+(?P<ldp_remote_reconnect_time>\S+))?$'
         )
 
         # Local maximum neighbor reconnect time: 120000 msec
@@ -1235,12 +1233,14 @@ class ShowLdpSessionIpaddressDetail(ShowLdpSessionIpaddressDetailSchema):
                 continue
 
             # Remote - Restart: disabled, Helper mode: enabled
+            # Remote - Restart: enabled, Helper mode: enabled, Reconnect time: 60000
             m = p14.match(line)
             if m:
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_', '-')
-                    ldp_session_dict[entry_key] = group_value
+                    if group_value != None:
+                            entry_key = group_key.replace('_', '-')
+                            ldp_session_dict[entry_key] = group_value
                 continue
 
             # Local maximum neighbor reconnect time: 120000 msec
@@ -1312,6 +1312,12 @@ class ShowLdpSessionIpaddressDetail(ShowLdpSessionIpaddressDetailSchema):
                 group = m.groupdict()
                 if group['next_hop_flag']:
                     next_hop_flag = True
+                    ldp_interface_address_list = []
+                    ldp_inner_dict = {}
+                    ldp_inner_list_dict = {}
+                    ldp_inner_list_dict = ldp_interface_address_list
+                    ldp_inner_dict['interface-address'] = ldp_inner_list_dict
+                    ldp_session_dict['ldp-session-address'] = ldp_inner_dict
                 continue
 
             # 10.169.14.157
@@ -1319,10 +1325,7 @@ class ShowLdpSessionIpaddressDetail(ShowLdpSessionIpaddressDetailSchema):
             if m:
                 group = m.groupdict()
                 if next_hop_flag:
-                    ldp_session_address_dict = {}
-                    ldp_session_address_dict['interface-address'] = group['interface_address']
-                    ldp_session_dict['ldp-session-address'] = ldp_session_address_dict
-                next_hop_flag = False
+                    ldp_interface_address_list.append(group['interface_address'])
                 continue
 
         return ret_dict

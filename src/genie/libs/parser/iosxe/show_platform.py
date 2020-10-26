@@ -1414,7 +1414,7 @@ class ShowRedundancySchema(MetaParser):
                 Optional('boot'): str,
                 Optional('config_file'): str,
                 Optional('bootldr'): str,
-                'config_register': str,
+                Optional('config_register'): str,
             }
         }
     }
