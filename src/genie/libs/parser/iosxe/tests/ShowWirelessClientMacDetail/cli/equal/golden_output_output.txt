@@ -1,0 +1,149 @@
+Client MAC Address : 0aba.dd93.ac36
+Client MAC Type : Locally Administered Address
+Client IPv4 Address : 10.22.4.19
+Client IPv6 Addresses : fe80::8ba:ddff:fe93:ac36
+Client Username : aking
+AP MAC Address : 70b3.1875.7f00
+AP Name: b1-11-cap9
+AP slot : 0
+Client State : Associated
+Policy Profile : lizzard_b1
+Flex Profile : N/A
+Wireless LAN Id: 20
+WLAN Profile Name: lizzard-l_Global
+Wireless LAN Network Name (SSID): lizzard-legacy
+BSSID : 70b3.1875.7f03
+Connected For : 3233 seconds
+Protocol : 802.11n - 2.4 GHz
+Channel : 6
+Client IIF-ID : 0xa0000012
+Association Id : 1
+Authentication Algorithm : Open System
+Idle state timeout : N/A
+Re-Authentication Timeout : 36000 sec (Remaining time: 32768 sec)
+Session Warning Time : Timer not running
+Input Policy Name  : client-default
+Input Policy State : Installed
+Input Policy Source : QOS Internal Policy
+Output Policy Name  : client-default
+Output Policy State : Installed
+Output Policy Source : QOS Internal Policy
+WMM Support : Enabled
+U-APSD Support : Enabled
+  U-APSD value : 0
+  APSD ACs    : BK, BE, VI, VO
+Fastlane Support : Disabled
+Client Active State : In-Active
+Power Save : ON
+Current Rate : 6.0
+Supported Rates : 24.0,36.0,48.0,54.0
+Mobility:
+  Move Count                  : 0
+  Mobility Role               : Local
+  Mobility Roam Type          : None
+  Mobility Complete Timestamp : 10/22/2020 08:07:55 IST
+Client Join Time:
+  Join Time Of Client : 10/22/2020 08:46:54 IST
+Client State Servers : None
+Client ACLs : None
+Policy Manager State: Run
+Last Policy Manager State : IP Learn Complete
+Client Entry Create Time : 5572 seconds
+Policy Type : WPA2
+Encryption Cipher : CCMP (AES)
+Authentication Key Management : 802.1x
+User Defined (Private) Network : Disabled
+User Defined (Private) Network Drop Unicast : Disabled
+Encrypted Traffic Analytics : No
+Protected Management Frame - 802.11w : No
+EAP Type : PEAP
+VLAN Override after Webauth : No
+VLAN : b1-vg-data
+Multicast VLAN : 0
+WiFi Direct Capabilities:
+  WiFi Direct Capable           : No
+Central NAT : DISABLED
+Session Manager:
+  Point of Attachment : capwap_90000cc1
+  IIF ID             : 0x90000CC1
+  Authorized         : TRUE
+  Session timeout    : 36000
+  Common Session ID: B12F400A0002770E4E2B7E5A
+  Acct Session ID  : 0x00005912
+  Last Tried Aaa Server Details:
+  	Server IP : 10.19.10.150
+  Auth Method Status List
+  	Method : Dot1x
+  		SM State         : AUTHENTICATED
+  		SM Bend State    : IDLE
+  Local Policies:
+  	Service Template : wlan_svc_lizzard_b1_local (priority 254)
+  		Vlan Group       : b1-vg-data
+  		Absolute-Timer   : 36000
+  Server Policies:
+  		Output SGT       : 000a-09
+  Resultant Policies:
+  		Output SGT       : 000a-09
+  		VLAN Name        : b1-data-1
+  		Vlan Group       : b1-vg-data
+  		VLAN             : 224
+  		Absolute-Timer   : 36000
+DNS Snooped IPv4 Addresses : None
+DNS Snooped IPv6 Addresses : None
+Client Capabilities
+  CF Pollable : Not implemented
+  CF Poll Request : Not implemented
+  Short Preamble : Not implemented
+  PBCC : Not implemented
+  Channel Agility : Not implemented
+  Listen Interval : 0
+Fast BSS Transition Details :
+  Reassociation Timeout : 0
+11v BSS Transition : Implemented
+11v DMS Capable : No
+QoS Map Capable : No
+FlexConnect Data Switching : N/A
+FlexConnect Dhcp Status : N/A
+FlexConnect Authentication : N/A
+FlexConnect Central Association : N/A
+Client Statistics:
+  Number of Bytes Received : 3083748
+  Number of Bytes Sent : 2063114
+  Number of Packets Received : 9048
+  Number of Packets Sent : 3686
+  Number of Policy Errors : 0
+  Radio Signal Strength Indicator : -84 dBm
+  Signal to Noise Ratio : 10 dB
+Fabric status : Disabled
+Radio Measurement Enabled Capabilities
+  Capabilities: Link Measurement, Neighbor Report, Repeated Measurements, Passive Beacon Measurement, Active Beacon Measurement, Table Beacon Measurement, RM MIB
+Client Scan Report Time : Timer not running
+Client Scan Reports
+Assisted Roaming Neighbor List
+Nearby AP Statistics:
+EoGRE : Pending Classification
+Device Type      : Android
+Device Name      : android-dhcp-10
+Protocol Map     : 0x000029  (OUI, DHCP, HTTP)
+Device OS        : Linux; U; Android 10; RMX1825 Build/QP1A.190711.020
+Protocol         : DHCP
+Type             : 12   12
+Data             : 0c
+00000000  00 0c 00 08 72 65 61 6c  6d 65 2d 33               |....realme-3    |
+Type             : 60   19
+Data             : 13
+00000000  00 3c 00 0f 61 6e 64 72  6f 69 64 2d 64 68 63 70  |.<..android-dhcp|
+00000010  2d 31 30                                          |-10             |
+Type             : 55   14
+Data             : 0e
+00000000  00 37 00 0a 01 03 06 0f  1a 1c 33 3a 3b 2b         |.7........3:;+  |
+Protocol         : HTTP
+Type             : 1    70
+Data             : 46
+00000000  00 01 00 42 44 61 6c 76  69 6b 2f 32 2e 31 2e 30  |...BDalvik/2.1.0|
+00000010  20 28 4c 69 6e 75 78 3b  20 55 3b 20 41 6e 64 72  | (Linux; U; Andr|
+00000020  6f 69 64 20 31 30 3b 20  52 4d 58 31 38 32 35 20  |oid 10; RMX1825 |
+00000030  42 75 69 6c 64 2f 51 50  31 41 2e 31 39 30 37 31  |Build/QP1A.19071|
+00000040  31 2e 30 32 30 29                                 |1.020)          |
+Max Client Protocol Capability: 802.11n
+Cellular Capability : N/A
