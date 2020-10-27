@@ -335,8 +335,9 @@ class ShowInterface(ShowInterfaceSchema):
                          r' *(?P<efficient_ethernet>[A-Za-z\/]+)$')
 
         #Last link flapped 00:07:28
+        #Last link flapped 15week(s) 5day(s)
         p18 = re.compile(r'^Last *link *flapped'
-                         r' *(?P<last_link_flapped>[a-z0-9\:]+)$')
+                         r' *(?P<last_link_flapped>[\S ]+)$')
 
         # Last clearing of "show interface" counters never
         p19 = re.compile(r'^Last *clearing *of *\"show *interface\"'
