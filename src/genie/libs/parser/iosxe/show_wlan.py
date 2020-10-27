@@ -1643,7 +1643,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
                 continue
 
             match = key_value_capture.match(line)
-            if key_value_capture.match(line):
+            if match:
                 group = match.groupdict()
 
                 space_format_key = re.sub(r" - |\s+|-", "_", group["key"])
