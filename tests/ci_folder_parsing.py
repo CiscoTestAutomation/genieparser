@@ -39,7 +39,10 @@ my_parser.add_argument('-n', "--number",
                        type=int,
                        help="The specific unittest we want to run, such as '25'",
                        default=None)
+<<<<<<< HEAD
 
+=======
+>>>>>>> external/master
 args = my_parser.parse_args()
 
 _os = args.operating_system
@@ -119,6 +122,11 @@ CLASS_SKIP = {
         "ShowRebootHistory_viptela": True,
         "ShowOmpSummary_viptela": True,
         "ShowSystemStatus_viptela": True,
+        "ShowTcpProxyStatistics": True, # PR submitted
+        "ShowTcpproxyStatus": True, # PR submitted
+        "ShowPlatformTcamUtilization": True, # PR submitted
+        "ShowLicense": True, # PR submitted
+        "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
         "ShowSoftwaretab": True, # PR submitted
         "ShowOmpPeers_viptela": True,
         "ShowOmpTlocPath_viptela": True,
