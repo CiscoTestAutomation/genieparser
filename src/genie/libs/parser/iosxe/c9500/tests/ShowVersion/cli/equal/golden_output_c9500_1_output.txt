@@ -69,7 +69,7 @@ Processor board ID CAT2136L3NG
 1638400K bytes of Crash Files at crashinfo:.
 234430023K bytes of SATA hard disk at disk0:.
 
-Base Ethernet MAC Address          : 00:a7:42:d6:e8:60
+Base Ethernet MAC Address          : 00:a7:42:ff:bf:37
 Motherboard Assembly Number        : 4874
 Motherboard Serial Number          : CAT2136L3NG
 Model Revision Number              : V02

@@ -1,5 +1,5 @@
 FastEthernet1 is down, line protocol is down
-  Hardware is RP management port, address is fc99.4769.2e42 (bia fc99.4769.2e42)
+  Hardware is RP management port, address is fc99.47ff.97ab (bia fc99.47ff.97ab)
   MTU 1500 bytes, BW 10000 Kbit/sec, DLY 1000 usec,
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set

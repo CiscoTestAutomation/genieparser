@@ -7,7 +7,7 @@ expected_output = {
         'xpath': '/if:interfaces-state/interface/oper-status'
       },
       'legacy_receivers': {
-        '5.28.35.35': {
+        '10.69.35.35': {
           'port': 45128,
           'protocol': 'netconf'
         }

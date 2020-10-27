@@ -9,7 +9,7 @@ expected_output = {
         'auto_discovered': 'No',
         'sn_belongs_to_sng': 'SNG-APPQOE',
         'current_status_of_sn': 'Alive',
-        'system_ip': '100.100.100.45',
+        'system_ip': '10.220.100.45',
         'site_id': 45,
         'time_current_status_was_reached': 'Sat Sep 12 23:26:53 2020',
         'cluster_protocol_vpath_version': '1 (Bitmap recvd: 1)',

@@ -346,7 +346,7 @@ class ShowServiceInsertionTypeAppqoeServiceNodeGroup(
         # Auto discovered                     : No
         # SN belongs to SNG                   : SNG-APPQOE
         # Current status of SN                : Alive
-        # System IP                           : 100.100.100.6
+        # System IP                           : 10.220.100.6
         # Site ID                             : 30
         # Time current status was reached               : Tue Sep 15 18:22:11 2020
         # Cluster protocol VPATH version                : 1 (Bitmap recvd: 1)
@@ -390,7 +390,7 @@ class ShowServiceInsertionTypeAppqoeServiceNodeGroup(
             # Auto discovered                     : No
             # SN belongs to SNG                   : SNG-APPQOE
             # Current status of SN                : Alive
-            # System IP                           : 100.100.100.6
+            # System IP                           : 10.220.100.6
             # Site ID                             : 30
             # Time current status was reached               : Tue Sep 15 18:22:11 2020
             # Cluster protocol VPATH version                : 1 (Bitmap recvd: 1)
