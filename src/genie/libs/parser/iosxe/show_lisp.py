@@ -3416,12 +3416,13 @@ class ShowLispSite(ShowLispSiteSchema):
 
 # ================================================
 # Schema for:
-#  * 'show lisp eid-table vrf User ipv4 map-cache'
+#  * 'show lisp eid-table vrf {vrf} ipv4 map-cache'
 # ================================================
 class ShowLispEidTableVrfUserIpv4MapCacheSchema(MetaParser):
-    """Schema for show lisp eid-table vrf User ipv4 map-cache."""
+    """Schema for show lisp eid-table vrf {vrf} ipv4 map-cache."""
 
     schema = {
+        "vrf": str,
         "iid": int,
         "number_of_entries": int,
         "eid": {
@@ -3450,13 +3451,13 @@ class ShowLispEidTableVrfUserIpv4MapCacheSchema(MetaParser):
 #  * 'show lisp eid-table vrf User ipv4 map-cache'
 # ================================================
 class ShowLispEidTableVrfUserIpv4MapCache(ShowLispEidTableVrfUserIpv4MapCacheSchema):
-    """Parser for show lisp eid-table vrf User ipv4 map-cache"""
+    """Parser for show lisp eid-table vrf {vrf} ipv4 map-cache"""
 
-    cli_command = 'show lisp eid-table vrf User ipv4 map-cache'
+    cli_command = 'show lisp eid-table vrf {vrf} ipv4 map-cache'
 
-    def cli(self, output=None):
+    def cli(self, vrf="", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(self.cli_command.format(vrf=vrf))
         else:
             output = output
 
@@ -3502,11 +3503,11 @@ class ShowLispEidTableVrfUserIpv4MapCache(ShowLispEidTableVrfUserIpv4MapCacheSch
         #   10.8.129.138  1w6d      up          10/10        -
 
         # LISP IPv4 Mapping Cache for EID-table vrf User (IID 4100), 2186 entries
-        p_lisp_header = re.compile(r"^LISP\s+IPv4\s+Mapping\s+Cache\s+for\s+EID-table\s+vrf\s+User\s+"
+        p_lisp_header = re.compile(r"^LISP\s+IPv4\s+Mapping\s+Cache\s+for\s+EID-table\s+vrf\s+(?P<vrf>\S+)\s+"
                                    r"\(IID\s+(?P<iid>\d+)\),\s+(?P<entries>\d+)\s+entries$")
 
         # 0.0.0.0/0, uptime: 1w6d, expires: never, via static-send-map-request
-        p_list_entry_1 = re.compile(r"(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}.\d{1,3}\/\d+),"
+        p_list_entry_1 = re.compile(r"(?P<ip>\S+),"
                                     r"\s+uptime:\s+(?P<uptime>[^,]+),"
                                     r"\s+expires:\s+(?P<expire>[^,]+),"
                                     r"\s+via\s+(?P<source>.*)")
@@ -3519,7 +3520,7 @@ class ShowLispEidTableVrfUserIpv4MapCache(ShowLispEidTableVrfUserIpv4MapCacheSch
         p_list_encapsulating = re.compile(r"^Encapsulating\s+to\s+proxy\s+ETR$")
 
         # 10.8.129.124  1w6d      up          10/10        -
-        p_list_rloc = re.compile(r"(?P<locator>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<uptime>\S+)\s+(?P<state>\S+)\s+(?P<pri>\d+)\/(?P<wgt>\d+)\s+(?P<encap>.*)")
+        p_list_rloc = re.compile(r"(?P<locator>\S+)\s+(?P<uptime>\S+)\s+(?P<state>\S+)\s+(?P<pri>\d+)\/(?P<wgt>\d+)\s+(?P<encap>.*)")
 
         lisp_dict = {}
         current_entry = ""
@@ -3530,6 +3531,7 @@ class ShowLispEidTableVrfUserIpv4MapCache(ShowLispEidTableVrfUserIpv4MapCacheSch
             if p_lisp_header.match(line):
                 # LISP IPv4 Mapping Cache for EID-table vrf User (IID 4100), 2186 entries
                 match = p_lisp_header.match(line)
+                lisp_dict.update({ "vrf": match.group("vrf") })
                 lisp_dict.update({ "iid": int(match.group("iid"))})
                 lisp_dict.update({ "number_of_entries": int(match.group("entries")) })
                 continue

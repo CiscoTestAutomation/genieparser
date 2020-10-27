@@ -1,4 +1,5 @@
 expected_output = {
+    "vrf": "User",
     "iid": 4100,
     "number_of_entries": 2186,
     "eid": {
