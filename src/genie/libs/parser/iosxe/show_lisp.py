@@ -3517,6 +3517,8 @@ class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
                 tele_info_obj[new_key].update(new_group)
 
                 current_group = tele_info_obj[new_key][group[new_key]]
+                  
+                continue
 
             match = site_name_capture.match(line)
             if match:
