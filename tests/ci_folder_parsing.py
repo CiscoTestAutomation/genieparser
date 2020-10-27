@@ -39,10 +39,6 @@ my_parser.add_argument('-n', "--number",
                        type=int,
                        help="The specific unittest we want to run, such as '25'",
                        default=None)
-<<<<<<< HEAD
-
-=======
->>>>>>> external/master
 args = my_parser.parse_args()
 
 _os = args.operating_system
