@@ -5,6 +5,7 @@ IOSXR parsers for the following show commands:
     * show mfib route summary location {location}
     * show mfib vrf {vrf} route summary
     * show mfib vrf {vrf} route summary location {location}
+    * show mfib platform evpn bucket location {location}
 """
 
 # Python
@@ -121,6 +122,107 @@ class ShowMfibRouteSummary(ShowMfibRouteSummarySchema):
             if m3:
                 group = m3.groupdict()
                 vrf_dict['no_sg_routes'] = int(group['no_sg_routes'])
+                continue
+
+        return parsed_dict
+
+
+# ==========================================================================
+# Schema for 'show mfib platform evpn bucket location'
+# ==========================================================================
+class ShowMfibPlatformEvpnBucketLocationSchema(MetaParser):
+    """ Schema for show mfib platform evpn bucket location <location>. """
+
+    schema = {
+        'bucket_id':
+            {Any():
+                 {'esi_interface': str,
+                  'handle': str,
+                  'stale': bool,
+                  'state': str
+                  },
+             },
+    }
+
+
+# ==========================================================================
+# Parser for 'show mfib platform evpn bucket location'
+# ==========================================================================
+class ShowMfibPlatformEvpnBucketLocation(ShowMfibPlatformEvpnBucketLocationSchema):
+    """
+    Parser for show mfib platform evpn bucket location <location>.
+
+    Parameters
+    ----------
+    device : Router
+        Device to be parsed.
+    location : str
+        Hardware location.
+
+    Returns
+    -------
+    parsed_dict : dict
+        Contains the CLI output parsed into a dictionary.
+
+    Examples
+    --------
+    >>> device.parse("show mfib platform evpn bucket location 0/0/CPU0")
+
+    {'bucket_id':
+        {0:
+            {'esi_interface': 'Bundle-Ether1',
+             'handle': '0x4000660',
+             'stale': 'F',
+             'state': 'DF'}
+            },
+        1:
+            {'esi_interface': 'Bundle-Ether1',
+             'handle': '0x4000660',
+             'stale': 'F',
+             'state': 'NDF'}
+            },
+        2: ...
+        }
+    }
+
+    """
+
+    cli_command = "show mfib platform evpn bucket location {location}"
+
+    def cli(self, location='', output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(location=location)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        parsed_dict = {}
+
+        # ESI Interface     Handle     Bucket ID   State   Stale
+        p1 = re.compile(r"ESI Interface +Handle +Bucket ID +State +Stale")
+
+        # Bundle-Ether1        0x4000660          0       DF     F
+        p2 = re.compile(r"(?P<esi_interface>\S+) +(?P<handle>0x[a-fA-F\d]+) +"
+                        r"(?P<bucket_id>\d+) +(?P<state>\S+) +(?P<stale>\S+)")
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m1 = p1.match(line)
+            if m1:
+                parsed_dict.setdefault('bucket_id', {})
+                continue
+
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                bucket_id = int(group['bucket_id'])
+                bucket_dict = parsed_dict['bucket_id'].setdefault(bucket_id, {})
+                bucket_dict['esi_interface'] = group['esi_interface']
+                bucket_dict['handle'] = group['handle']
+                bucket_dict['stale'] = group['stale'] == 'T'
+                bucket_dict['state'] = group['state']
                 continue
 
         return parsed_dict
