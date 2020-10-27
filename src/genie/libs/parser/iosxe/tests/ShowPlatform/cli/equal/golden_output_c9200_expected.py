@@ -1,7 +1,7 @@
 expected_output = {
     'main': {
         'mac_persistency_wait_time': 'indefinite',
-        'switch_mac_address': 'dc8c.3721.8c00',
+        'switch_mac_address': 'dc8c.37ff.ad21',
         'swstack': True,
     },
     'slot': {
@@ -9,7 +9,7 @@ expected_output = {
             'rp': {
                 'C9200-24P': {
                     'hw_ver': 'V01',
-                    'mac_address': 'dc8c.3721.8c00',
+                    'mac_address': 'dc8c.37ff.ad21',
                     'name': 'C9200-24P',
                     'ports': '32',
                     'slot': '1',

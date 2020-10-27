@@ -143,7 +143,7 @@ class Ping(PingSchema):
                 r'(ttl=(?P<ttl>\d+)|hlim=(?P<hlim>\d+)) +'
                 r'time=(?P<time>\S+) +ms$')
         
-        # 36 bytes from 34.0.0.1: frag needed and DF set (MTU 1186)
+        # 36 bytes from 10.136.0.1: frag needed and DF set (MTU 1186)
         # 1240 bytes from 2001:34::1: Packet too big mtu = 1386
         p2_2 = re.compile(r'^(?P<bytes>\d+)\s+bytes\s+from\s+(?P<from>\S+)'
                           r':\s+(?P<message>[\s\w]+)(\(MTU\s|mtu\s=\s)(?P<mtu>\d+)(\))?$')
@@ -182,7 +182,7 @@ class Ping(PingSchema):
             
             # 64 bytes from 10.189.5.94: icmp_seq=0 ttl=62 time=2.261 ms
 
-            # 36 bytes from 34.0.0.1: frag needed and DF set (MTU 1186)
+            # 36 bytes from 10.136.0.1: frag needed and DF set (MTU 1186)
             # 1240 bytes from 2001:34::1: Packet too big mtu = 1386
             m = p2.match(line) or p2_2.match(line)
             if m:

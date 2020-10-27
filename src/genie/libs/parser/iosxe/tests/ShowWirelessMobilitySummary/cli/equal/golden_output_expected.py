@@ -2,7 +2,7 @@ expected_output = {
     "controller_config": {
         "group_name": "b80-mobility",
         "ipv4": "10.10.7.177",
-        "mac_address": "58bf.ea35.b60b",
+        "mac_address": "58bf.eaff.eb40",
         "multicast_ipv4": "0.0.0.0",
         "multicast_ipv6": "::",
         "pmtu": "N/A",
@@ -14,7 +14,7 @@ expected_output = {
         "dscp_value": "48",
         "group_name": "b80-mobility",
         "keepalive": "10/3",
-        "mac_addr": "58bf.ea35.b60b",
+        "mac_addr": "58bf.eaff.eb40",
         "mgmt_ipv4": "10.10.7.177",
         "mgmt_ipv6": "",
         "mgmt_vlan": "299",

@@ -2,88 +2,88 @@ Number of APs: 61
 
 Base MAC        visitors MAC    AP Name                           IP Address                                Status      Last Failure Phase    Last Disconnect Reason
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-706d.0598.6fc0  706d.0598.0320  AP706d.0598.0320                  10.10.116.22                             Not Joined  Join                  Ap auth pending                      
-706d.0544.d2c0  706d.0544.1bf0  visitors-hydra                    10.10.78.156                              Not Joined  Join                  Ap auth pending                      
-706d.0544.d580  706d.0544.1ca0  visitors-hydra                    10.10.82.200                             Not Joined  Join                  Ap auth pending                      
-0042.5a0a.1fb0  006b.f116.0ff0  visitors-1815i                     10.10.139.90                             Joined      Join                  Ap auth pending                      
-706d.0593.aac0  706d.0592.5148  visitors-hydra2                   10.10.36.138                               Not Joined  Join                  Ap auth pending                      
-706d.0593.ae20  706d.0592.5220  visitors-hydra5                   10.10.36.138                               Not Joined  Join                  Ap auth pending                      
-00be.7506.42c0  706d.0568.44d0  visitors-1815t                      10.10.236.197                            Joined      Join                  Ap auth pending                      
-706d.05be.6890  706d.053e.e3f0  visitors-1815i                    10.10.152.239                            Joined      Join                  Ap auth pending                      
-706d.05be.adc0  706d.053e.f540  visitors-mallorca                  10.10.40.15                              Not Joined  Join                  Ap auth pending                      
-706d.05be.bc20  706d.053e.f8d8  visitors-mallorca                  10.10.7.234                              Not Joined  Join                  Ap auth pending                      
+706d.05ff.0859  706d.05ff.9bb8  AP706d.05ff.9bb8                  10.10.116.22                             Not Joined  Join                  Ap auth pending                      
+706d.05ff.1705  706d.05ff.5f35  visitors-hydra                    10.10.78.156                              Not Joined  Join                  Ap auth pending                      
+706d.05ff.1ac4  706d.05ff.60e4  visitors-hydra                    10.10.82.200                             Not Joined  Join                  Ap auth pending                      
+0042.5aff.29ba  006b.f1ff.2507  visitors-1815i                     10.10.139.90                             Joined      Join                  Ap auth pending                      
+706d.05ff.3e54  706d.05ff.e3da  visitors-hydra2                   10.10.36.138                               Not Joined  Join                  Ap auth pending                      
+706d.05ff.42b3  706d.05ff.e4b2  visitors-hydra5                   10.10.36.138                               Not Joined  Join                  Ap auth pending                      
+00be.75ff.48c6  706d.05ff.ac39  visitors-1815t                      10.10.236.197                            Joined      Join                  Ap auth pending                      
+706d.05ff.274f  706d.05ff.222f  visitors-1815i                    10.10.152.239                            Joined      Join                  Ap auth pending                      
+706d.05ff.6c7f  706d.05ff.347e  visitors-mallorca                  10.10.40.15                              Not Joined  Join                  Ap auth pending                      
+706d.05ff.7bde  706d.05ff.3717  visitors-mallorca                  10.10.7.234                              Not Joined  Join                  Ap auth pending                      
 Number of APs: 61
 
 Base MAC        visitors MAC    AP Name                           IP Address                                Status      Last Failure Phase    Last Disconnect Reason
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-706d.0527.bfd0  cc46.d6ff.b950  visitors-homeap2                  10.10.216.231                            Not Joined  Join                  Ap auth pending                      
-706d.052e.06a0  706d.052d.dd68  visitors-hydra                    10.10.179.53                            Not Joined  Join                  Ap auth pending                      
-0c75.bd0d.5720  0c75.bd0d.4088  visitors-farallon                  10.10.7.79                               Not Joined  Join                  Ap auth pending                      
-38ed.18cd.df40  38ed.18cc.5e30  visitors-1852i                       10.10.158.77                             Joined      Join                  Ap auth pending                      
-706d.053a.3760  706d.05ec.e0ec  visitors-9105w                    10.10.58.181                               Joined      Join                  Ap auth pending                      
-706d.053a.a320  706d.05ec.ee64  visitors-9105w                      10.10.151.70                               Joined      Join                  Ap auth pending                      
-706d.053a.a8a0  706d.05ec.ef14  visitors-9105w                      10.10.103.177                           Joined      Join                  Ap auth pending                      
-706d.053a.c500  706d.05ec.f2a0  visitors-9105i                     10.10.171.95                              Joined      Join                  Ap auth pending                      
-706d.053a.d2a0  706d.05ec.f454  visitors-9105i                     10.10.0.165                              Joined      Join                  Ap auth pending                      
-706d.053a.e720  706d.05ec.f6e4  visitors-9105w                        10.10.36.57                               Joined      Join                  Ap auth pending                      
+706d.05ff.e6f7  cc46.d6ff.b950  visitors-homeap2                  10.10.216.231                            Not Joined  Join                  Ap auth pending                      
+706d.05ff.34ce  706d.05ff.0b95  visitors-hydra                    10.10.179.53                            Not Joined  Join                  Ap auth pending                      
+0c75.bdff.642d  0c75.bdff.4d95  visitors-farallon                  10.10.7.79                               Not Joined  Join                  Ap auth pending                      
+38ed.18ff.ad0e  38ed.18ff.2bfc  visitors-1852i                       10.10.158.77                             Joined      Join                  Ap auth pending                      
+706d.05ff.719a  706d.05ff.cdd9  visitors-9105w                    10.10.58.181                               Joined      Join                  Ap auth pending                      
+706d.05ff.dd5a  706d.05ff.db51  visitors-9105w                      10.10.151.70                               Joined      Join                  Ap auth pending                      
+706d.05ff.e2da  706d.05ff.dc01  visitors-9105w                      10.10.103.177                           Joined      Join                  Ap auth pending                      
+706d.05ff.003a  706d.05ff.df8d  visitors-9105i                     10.10.171.95                              Joined      Join                  Ap auth pending                      
+706d.05ff.0dda  706d.05ff.e141  visitors-9105i                     10.10.0.165                              Joined      Join                  Ap auth pending                      
+706d.05ff.225a  706d.05ff.e3d1  visitors-9105w                        10.10.36.57                               Joined      Join                  Ap auth pending                      
 Number of APs: 61
 
 Base MAC        visitors MAC    AP Name                           IP Address                                Status      Last Failure Phase    Last Disconnect Reason
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-706d.053a.e7a0  706d.05ec.f6f4  visitors-9105w                    10.10.76.103                             Joined      Join                  Ap auth pending                      
-706d.053a.e7e0  706d.05ec.f6fc  visitors-9105w                    10.10.224.136                             Joined      Join                  Ap auth pending                      
-706d.053a.e9c0  706d.05ec.f738  visitors-9105w                    10.10.20.10                               Joined      Join                  Ap auth pending                      
-706d.053a.ea00  706d.05ec.f740  visitors-9105w-LivingRM           10.10.126.254                              Joined      Join                  Ap auth pending                      
-706d.053a.ec80  706d.05ec.f790  visitors-9105w                    10.10.207.95                             Joined      Join                  Ap auth pending                      
-706d.053a.eee0  706d.05ec.f7dc  visitors-9105w                       10.10.250.152                            Joined      Join                  Ap auth pending                      
-706d.053a.f0a0  706d.05ec.f814  visitors-9105w                       10.10.238.57                              Joined      Join                  Ap auth pending                      
-706d.053a.f0c0  706d.05ec.f818  visitors-9105w                    10.10.176.163                            Joined      Join                  Ap auth pending                      
-706d.053a.f2e0  706d.05ec.f85c  visitors-9105w                    10.10.172.168                            Joined      Join                  Ap auth pending                      
-706d.053a.f3a0  706d.05ec.f874  visitors-9105w                       10.10.223.162                              Joined      Join                  Ap auth pending                      
+706d.05ff.22da  706d.05ff.e3e1  visitors-9105w                    10.10.76.103                             Joined      Join                  Ap auth pending                      
+706d.05ff.221b  706d.05ff.e3e9  visitors-9105w                    10.10.224.136                             Joined      Join                  Ap auth pending                      
+706d.05ff.24fa  706d.05ff.e425  visitors-9105w                    10.10.20.10                               Joined      Join                  Ap auth pending                      
+706d.05ff.253a  706d.05ff.e42d  visitors-9105w-LivingRM           10.10.126.254                              Joined      Join                  Ap auth pending                      
+706d.05ff.27ba  706d.05ff.e47d  visitors-9105w                    10.10.207.95                             Joined      Join                  Ap auth pending                      
+706d.05ff.291b  706d.05ff.e4c9  visitors-9105w                       10.10.250.152                            Joined      Join                  Ap auth pending                      
+706d.05ff.2bda  706d.05ff.e501  visitors-9105w                       10.10.238.57                              Joined      Join                  Ap auth pending                      
+706d.05ff.2bfa  706d.05ff.e505  visitors-9105w                    10.10.176.163                            Joined      Join                  Ap auth pending                      
+706d.05ff.2d1b  706d.05ff.e549  visitors-9105w                    10.10.172.168                            Joined      Join                  Ap auth pending                      
+706d.05ff.2eda  706d.05ff.e561  visitors-9105w                       10.10.223.162                              Joined      Join                  Ap auth pending                      
 Number of APs: 61
 
 Base MAC        visitors MAC    AP Name                           IP Address                                Status      Last Failure Phase    Last Disconnect Reason
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-706d.053a.f480  706d.05ec.f890  visitors-9105w-GuestBD            10.10.126.254                              Joined      Join                  Ap auth pending                      
-706d.053a.f8c0  706d.05ec.f918  visitors-9105w                    10.10.208.150                            Joined      Join                  Ap auth pending                      
-706d.053a.f900  706d.05ec.f920  visitors-9105w                     10.10.124.162                            Joined      Join                  Ap auth pending                      
-706d.053a.f920  706d.05ec.f924  visitors-9105w                     10.10.150.239                           Joined      Join                  Ap auth pending                      
-706d.053a.f9c0  706d.05ec.f938  visitors-9105w                    10.10.198.166                            Joined      Join                  Ap auth pending                      
-706d.053a.fa40  706d.05ec.f948  visitors-9105w                    10.10.108.120                            Joined      Join                  Ap auth pending                      
-706d.053a.fcc0  706d.05ec.f998  visitors-c9105                    10.10.40.223                             Joined      Join                  Ap auth pending                      
-706d.053a.fda0  706d.05ec.f9b4  visitors-9105w                    10.10.71.91                             Joined      Join                  Ap auth pending                      
-706d.053b.0180  706d.05ec.fa30  visitors-9105w                    10.10.100.242                           Joined      Join                  Ap auth pending                      
-706d.053b.04e0  706d.05ec.fa9c  visitors-9105w                    10.10.23.46                                Joined      Join                  Ap auth pending                      
+706d.05ff.2fba  706d.05ff.e57d  visitors-9105w-GuestBD            10.10.126.254                              Joined      Join                  Ap auth pending                      
+706d.05ff.33fa  706d.05ff.e605  visitors-9105w                    10.10.208.150                            Joined      Join                  Ap auth pending                      
+706d.05ff.343a  706d.05ff.e60d  visitors-9105w                     10.10.124.162                            Joined      Join                  Ap auth pending                      
+706d.05ff.345a  706d.05ff.e611  visitors-9105w                     10.10.150.239                           Joined      Join                  Ap auth pending                      
+706d.05ff.34fa  706d.05ff.e625  visitors-9105w                    10.10.198.166                            Joined      Join                  Ap auth pending                      
+706d.05ff.357a  706d.05ff.e635  visitors-9105w                    10.10.108.120                            Joined      Join                  Ap auth pending                      
+706d.05ff.37fa  706d.05ff.e685  visitors-c9105                    10.10.40.223                             Joined      Join                  Ap auth pending                      
+706d.05ff.38da  706d.05ff.e6a1  visitors-9105w                    10.10.71.91                             Joined      Join                  Ap auth pending                      
+706d.05ff.3cbb  706d.05ff.e71d  visitors-9105w                    10.10.100.242                           Joined      Join                  Ap auth pending                      
+706d.05ff.3f1c  706d.05ff.e789  visitors-9105w                    10.10.23.46                                Joined      Join                  Ap auth pending                      
 Number of APs: 61
 
 Base MAC        visitors MAC    AP Name                           IP Address                                Status      Last Failure Phase    Last Disconnect Reason
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-706d.053b.0720  706d.05ec.fae4  visitors-9105w                    10.10.105.129                              Joined      Join                  Ap auth pending                      
-706d.053b.0b00  706d.05ec.fb60  visitors-9105w                       10.10.194.10                              Joined      Join                  Ap auth pending                      
-706d.053b.0d20  706d.05ec.fba4  visitors-9105w                    10.108.195.48                             Not Joined  Image-Download        Max Retransmission to AP             
-706d.053b.0f00  706d.05ec.fbe0  visitors-9105w                    10.10.12.253                             Not Joined  Image-Download        DTLS close alert from peer           
-706d.053b.0f20  706d.05ec.fbe4  visitors-9105w-MB                 10.10.126.254                              Joined      Join                  Ap auth pending                      
-706d.053b.1040  706d.05ec.fc08  visitors-9105w                      10.10.88.6                               Joined      Join                  Ap auth pending                      
-706d.053b.12a0  706d.05ec.fc54  visitors-9105w                    10.10.138.94                              Joined      Join                  Ap auth pending                      
-706d.053b.36a0  706d.05ed.00d4  visitors-9105w                       10.10.187.149                            Joined      Join                  Ap auth pending                      
-706d.053b.3d40  706d.05ed.01a8  visitors-9105i                    10.10.238.103                             Joined      Join                  Ap auth pending                      
-706d.053b.3de0  706d.05ed.01bc  visitors-9105i                    10.10.108.120                            Joined      Join                  Ap auth pending                      
+706d.05ff.425b  706d.05ff.e7d1  visitors-9105w                    10.10.105.129                              Joined      Join                  Ap auth pending                      
+706d.05ff.463b  706d.05ff.e84d  visitors-9105w                       10.10.194.10                              Joined      Join                  Ap auth pending                      
+706d.05ff.485b  706d.05ff.e891  visitors-9105w                    10.108.195.48                             Not Joined  Image-Download        Max Retransmission to AP             
+706d.05ff.4a3b  706d.05ff.e8cd  visitors-9105w                    10.10.12.253                             Not Joined  Image-Download        DTLS close alert from peer           
+706d.05ff.4a5b  706d.05ff.e8d1  visitors-9105w-MB                 10.10.126.254                              Joined      Join                  Ap auth pending                      
+706d.05ff.4b7b  706d.05ff.e9f4  visitors-9105w                      10.10.88.6                               Joined      Join                  Ap auth pending                      
+706d.05ff.4ddb  706d.05ff.e941  visitors-9105w                    10.10.138.94                              Joined      Join                  Ap auth pending                      
+706d.05ff.71db  706d.05ff.edc2  visitors-9105w                       10.10.187.149                            Joined      Join                  Ap auth pending                      
+706d.05ff.787b  706d.05ff.ee96  visitors-9105i                    10.10.238.103                             Joined      Join                  Ap auth pending                      
+706d.05ff.781c  706d.05ff.eeaa  visitors-9105i                    10.10.108.120                            Joined      Join                  Ap auth pending                      
 Number of APs: 61
 
 Base MAC        visitors MAC    AP Name                           IP Address                                Status      Last Failure Phase    Last Disconnect Reason
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-706d.053b.3ee0  706d.05ed.01dc  visitors-9105i                    10.10.223.201                              Joined      Join                  Ap auth pending                      
-706d.053b.4060  706d.05ed.020c  visitors-9105i                    10.10.102.15                            Joined      Join                  Ap auth pending                      
-706d.053b.40c0  706d.05ed.0218  visitors-9105i                    10.10.126.254                              Joined      Join                  Ap auth pending                      
-706d.05c4.7980  706d.05e9.d9a8  visitors-1815t                      10.10.239.55                              Joined      Join                  Ap auth pending                      
-706d.05c4.9a40  706d.05e9.e1d8  visitors-1815t                    10.10.42.87                              Joined      Join                  Ap auth pending                      
-706d.05c4.b3c0  706d.05e9.e838  visitors-1815t                       10.10.112.32                              Joined      Join                  Ap auth pending                      
-5087.89a3.ad30  5087.8991.dc14  visitors-homeap                   10.10.20.42                             Not Joined  Join                  Ap auth pending                      
-5087.89fc.3910  5087.89be.5c1c  visitors-homeap                     10.10.67.248                             Not Joined  Join                  Ap auth pending                      
-7079.b3a8.4760  7079.b36b.2768  visitors-1815t                    10.10.198.198                           Joined      Join                  Ap auth pending                      
-b4a4.e3cb.7cd0  1cdf.0fcb.1dbe  visitors-homeap                   10.10.135.61                             Not Joined  Join                  Ap auth pending                      
+706d.05ff.791c  706d.05ff.eeca  visitors-9105i                    10.10.223.201                              Joined      Join                  Ap auth pending                      
+706d.05ff.7b9b  706d.05ff.eff9  visitors-9105i                    10.10.102.15                            Joined      Join                  Ap auth pending                      
+706d.05ff.7bfb  706d.05ff.ef06  visitors-9105i                    10.10.126.254                              Joined      Join                  Ap auth pending                      
+706d.05ff.3e45  706d.05ff.c392  visitors-1815t                      10.10.239.55                              Joined      Join                  Ap auth pending                      
+706d.05ff.5f05  706d.05ff.cbc2  visitors-1815t                    10.10.42.87                              Joined      Join                  Ap auth pending                      
+706d.05ff.7885  706d.05ff.d222  visitors-1815t                       10.10.112.32                              Joined      Join                  Ap auth pending                      
+5087.89ff.51d3  5087.89ff.6ea5  visitors-homeap                   10.10.20.42                             Not Joined  Join                  Ap auth pending                      
+5087.89ff.360d  5087.89ff.1bda  visitors-homeap                     10.10.67.248                             Not Joined  Join                  Ap auth pending                      
+7079.b3ff.ef09  7079.b3ff.92d3  visitors-1815t                    10.10.198.198                           Joined      Join                  Ap auth pending                      
+b4a4.e3ff.489c  1cdf.0fff.e88a  visitors-homeap                   10.10.135.61                             Not Joined  Join                  Ap auth pending                      
 Number of APs: 61
 
 Base MAC        visitors MAC    AP Name                           IP Address                                Status      Last Failure Phase    Last Disconnect Reason
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-f07f.06b2.77b0  f07f.06a0.d470  visitors-CAP3702i                    10.10.27.77                              Joined      Join                  Ap auth pending                      
+f07f.06ff.2a63  f07f.06ff.7511  visitors-CAP3702i                    10.10.27.77                              Joined      Join                  Ap auth pending                      

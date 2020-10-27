@@ -18,7 +18,7 @@ Telemetry subscription detail:
   Legacy Receivers:
     Address                                    Port     Protocol         Protocol Profile
     -----------------------------------------------------------------------------------------
-    5.28.35.35                                 45128    netconf
+    10.69.35.35                                 45128    netconf
 
   Subscription ID: 4294967295
   Type: Permanent

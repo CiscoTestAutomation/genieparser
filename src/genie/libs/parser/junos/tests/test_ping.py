@@ -317,50 +317,50 @@ class TestPing(unittest.TestCase):
 
     # ping {addr} source {source} size {size} do-not-fragment
     golden_output_4 = {'execute.return_value': '''
-        genie@P1> ping 1.1.1.1 source 1.1.1.2 size 1400 do-not-fragment
-        PING 1.1.1.1 (1.1.1.1): 1400 data bytes
-        1408 bytes from 1.1.1.1: icmp_seq=0 ttl=64 time=2.246 ms
-        1408 bytes from 1.1.1.1: icmp_seq=1 ttl=64 time=1.251 ms
-        1408 bytes from 1.1.1.1: icmp_seq=2 ttl=64 time=22.375 ms
-        1408 bytes from 1.1.1.1: icmp_seq=3 ttl=64 time=1.078 ms
-        1408 bytes from 1.1.1.1: icmp_seq=4 ttl=64 time=1.167 ms
+        genie@P1> ping 10.4.1.1 source 10.4.1.2 size 1400 do-not-fragment
+        PING 10.4.1.1 (10.4.1.1): 1400 data bytes
+        1408 bytes from 10.4.1.1: icmp_seq=0 ttl=64 time=2.246 ms
+        1408 bytes from 10.4.1.1: icmp_seq=1 ttl=64 time=1.251 ms
+        1408 bytes from 10.4.1.1: icmp_seq=2 ttl=64 time=22.375 ms
+        1408 bytes from 10.4.1.1: icmp_seq=3 ttl=64 time=1.078 ms
+        1408 bytes from 10.4.1.1: icmp_seq=4 ttl=64 time=1.167 ms
         ^C
-        --- 1.1.1.1 ping statistics ---
+        --- 10.4.1.1 ping statistics ---
         5 packets transmitted, 5 packets received, 0% packet loss
         round-trip min/avg/max/stddev = 1.078/5.623/22.375/8.386 ms
     '''}
 
     golden_parsed_output_4 = {
         'ping': 
-            {'address': '1.1.1.1',
+            {'address': '10.4.1.1',
                 'data-bytes': 1400,
                 'result': [
                     {'bytes': 1408,
-                    'from': '1.1.1.1',
+                    'from': '10.4.1.1',
                     'icmp-seq': 0,
                     'time': '2.246',
                     'ttl': 64},
                     {'bytes': 1408,
-                    'from': '1.1.1.1',
+                    'from': '10.4.1.1',
                     'icmp-seq': 1,
                     'time': '1.251',
                     'ttl': 64},
                     {'bytes': 1408,
-                    'from': '1.1.1.1',
+                    'from': '10.4.1.1',
                     'icmp-seq': 2,
                     'time': '22.375',
                     'ttl': 64},
                     {'bytes': 1408,
-                    'from': '1.1.1.1',
+                    'from': '10.4.1.1',
                     'icmp-seq': 3,
                     'time': '1.078',
                     'ttl': 64},
                     {'bytes': 1408,
-                    'from': '1.1.1.1',
+                    'from': '10.4.1.1',
                     'icmp-seq': 4,
                     'time': '1.167',
                     'ttl': 64}],
-                'source': '1.1.1.1',
+                'source': '10.4.1.1',
                 'statistics': {
                     'loss-rate': 0,
                     'received': 5,
@@ -400,8 +400,8 @@ class TestPing(unittest.TestCase):
         self.device = Mock(**self.golden_output_4)
         obj = Ping(device=self.device)
         parsed_output = obj.parse(
-            addr='1.1.1.1',
-            source='1.1.1.2',
+            addr='10.4.1.1',
+            source='10.4.1.2',
             size=1400
         )
         self.assertEqual(parsed_output, self.golden_parsed_output_4)        

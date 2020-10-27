@@ -6,7 +6,7 @@ Service Node (SN)                   : 192.168.2.2
 Auto discovered                     : No
 SN belongs to SNG                   : SNG-APPQOE
 Current status of SN                : Alive
-System IP                           : 100.100.100.45
+System IP                           : 10.220.100.45
 Site ID                             : 45
 Time current status was reached               : Sat Sep 12 23:26:53 2020
 

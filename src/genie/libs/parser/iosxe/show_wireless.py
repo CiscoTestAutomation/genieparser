@@ -1209,16 +1209,16 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
 
         # MAC Address    AP Name                          WLAN State              Protocol Method     
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x     
-        # 58bf.ea73.39b4 a2-11-cap50                   19   IP Learn           11n(2.4) MAB       
-        # 58bf.ea47.1c4c a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x     
+        # 58bf.eaff.ac28 a2-11-cap50                   19   IP Learn           11n(2.4) MAB       
+        # 58bf.eaff.6393 a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB       
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea47.1c59 a2-11-cap46                   17   Run                11ac     Dot1x     
-        # 58bf.ea41.eac4 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB       
-        # 58bf.eaef.9769 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.eaff.63a0 a2-11-cap46                   17   Run                11ac     Dot1x     
+        # 58bf.eaff.2c06 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.eaff.8759 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB       
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea02.5c2a a2-12-cap17                   19   Webauth Pending    11ac     MAB       
-        # 58bf.ea09.f357 a2-12-cap17                   19   Webauth Pending    11ac     MAB   
+        # 58bf.eaff.5e2c a2-12-cap17                   19   Webauth Pending    11ac     MAB       
+        # 58bf.eaff.fc60 a2-12-cap17                   19   Webauth Pending    11ac     MAB   
 
         # Number of Fabric Clients : 8
         p_clients = re.compile(r"^Number\s+of\s+Fabric\s+Clients\s+:\s+(?P<clients>\S+)$")
@@ -1230,7 +1230,7 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
         p_delimiter = re.compile(
             r"^-------------------------------------------------------------------------------------------------------------------------$")
 
-        # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x
+        # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
         p_client_info = re.compile(r"^(?P<mac>\S{4}\.\S{4}\.\S{4})\s+(?P<name>\S+)\s+(?P<wlan>\S+)\s+(?P<state>.*)\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB))$")
 
 
@@ -1253,7 +1253,7 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
             elif p_delimiter.match(line):
                 match = p_delimiter.match(line)
                 continue
-            # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x
+            # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
             elif p_client_info.match(line):
                 match = p_client_info.match(line)
                 groups = match.groupdict()
@@ -1542,26 +1542,26 @@ class ShowWirelessClientSummary(ShowWirelessClientSummarySchema):
         #
         # MAC Address    AP Name                                        Type ID   State             Protocol Method     Role
         # -------------------------------------------------------------------------------------------------------------------------
-        # 58bf.ea58.b399 b80-72-cap16                                 WLAN 17   Run               11ac     Dot1x      Local
-        # 58bf.ea58.b463 b80-82-cap16                                 WLAN 17   Run               11ac     Dot1x      Local
-        # 58bf.ea58.b4ae b80-12-cap17                                 WLAN 17   Run               11ac     Dot1x      Local
-        # 58bf.ea58.b4b1 b80-32-cap13                                 WLAN 17   Run               11ac     Dot1x      Local
-        # 58bf.ea58.b4b6 b80-42-cap13                                 WLAN 17   Run               11ac     Dot1x      Local
-        # 58bf.ea30.90cc b80-22-cap14                                 WLAN 17   Run               11ac     Dot1x      Local
-        # 58bf.eaa4.c601 b80-32-cap4                                  WLAN 19   IP Learn          11n(2.4) MAB        Local
-        # 58bf.eae8.9e46 b80-51-cap7                                  WLAN 17   Authenticating    11ac     Dot1x      Unknown
-        # 58bf.ea28.dbba b80-61-cap4                                  WLAN 17   Authenticating    11ac     Dot1x      Unknown
-        # 58bf.ea32.c516 b80-62-cap1                                  WLAN 19   IP Learn          11n(5)   MAB        Local
-        # 58bf.eaf0.3746 b80-12-cap14                                 WLAN 17   Run               11ac     Dot1x      Local
-        # 58bf.eab2.9354 b80-51-cap6                                  WLAN 17   Run               11n(5)   Dot1x      Local
-        # 58bf.ea15.f311 b80-61-cap4                                  WLAN 19   Webauth Pending   11n(2.4) MAB        Local
+        # 58bf.eaff.0cf1 b80-72-cap16                                 WLAN 17   Run               11ac     Dot1x      Local
+        # 58bf.eaff.0dbb b80-82-cap16                                 WLAN 17   Run               11ac     Dot1x      Local
+        # 58bf.eaff.0d07 b80-12-cap17                                 WLAN 17   Run               11ac     Dot1x      Local
+        # 58bf.eaff.0d0a b80-32-cap13                                 WLAN 17   Run               11ac     Dot1x      Local
+        # 58bf.eaff.0d0f b80-42-cap13                                 WLAN 17   Run               11ac     Dot1x      Local
+        # 58bf.eaff.c0fc b80-22-cap14                                 WLAN 17   Run               11ac     Dot1x      Local
+        # 58bf.eaff.6ba5 b80-32-cap4                                  WLAN 19   IP Learn          11n(2.4) MAB        Local
+        # 58bf.eaff.872f b80-51-cap7                                  WLAN 17   Authenticating    11ac     Dot1x      Unknown
+        # 58bf.eaff.04e2 b80-61-cap4                                  WLAN 17   Authenticating    11ac     Dot1x      Unknown
+        # 58bf.eaff.f748 b80-62-cap1                                  WLAN 19   IP Learn          11n(5)   MAB        Local
+        # 58bf.eaff.2837 b80-12-cap14                                 WLAN 17   Run               11ac     Dot1x      Local
+        # 58bf.eaff.4607 b80-51-cap6                                  WLAN 17   Run               11n(5)   Dot1x      Local
+        # 58bf.eaff.0926 b80-61-cap4                                  WLAN 19   Webauth Pending   11n(2.4) MAB        Local
         #
         # Number of Excluded Clients: 2
         #
         # MAC Address    AP Name                          Type ID   State              Protocol Method
         # ------------------------------------------------------------------------------------------------
-        # 58bf.ea8a.20e6 b80-61-cap20                   WLAN 17   Excluded           11ac     Dot1x
-        # 58bf.ea37.4442 b80-62-cap14                   WLAN 17   Excluded           11ac     Dot1x
+        # 58bf.eaff.aa71 b80-61-cap20                   WLAN 17   Excluded           11ac     Dot1x
+        # 58bf.eaff.7b79 b80-62-cap14                   WLAN 17   Excluded           11ac     Dot1x
 
         # Number of Clients: 13
         wireless_client_count_capture = re.compile(r"^Number\s+of\s+Clients:\s+(?P<wireless_client_count>\d+)$")
@@ -1571,7 +1571,7 @@ class ShowWirelessClientSummary(ShowWirelessClientSummarySchema):
         # -------------------------------------------------------------------------------------------------------------------------
         delimiter_capture = re.compile(
             r"^-------------------------------------------------------------------------------------------------------------------------$")
-        # 58bf.ea58.b399 b80-72-cap16                                 WLAN 17   Run               11ac     Dot1x      Local
+        # 58bf.eaff.0cf1 b80-72-cap16                                 WLAN 17   Run               11ac     Dot1x      Local
         wireless_client_info_capture = re.compile(
             r"^(?P<mac_address>\S+)\s+(?P<ap_name>\S+)\s+(?P<type>\S+)\s+(?P<id>\d+)\s+(?P<state>.*)\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB))\s+(?P<role>\S+)$")
         # Number of Excluded Clients: 2
@@ -1583,7 +1583,7 @@ class ShowWirelessClientSummary(ShowWirelessClientSummarySchema):
         # ------------------------------------------------------------------------------------------------
         delimiter_2_capture = re.compile(
             r"^------------------------------------------------------------------------------------------------$")
-        # 58bf.ea8a.20e6 b80-61-cap20                   WLAN 17   Excluded           11ac     Dot1x
+        # 58bf.eaff.aa71 b80-61-cap20                   WLAN 17   Excluded           11ac     Dot1x
         wireless_excluded_clients_info_capture = re.compile(
             r"^(?P<mac_address>\S+)\s+(?P<ap_name>\S+)\s+(?P<type>\S+)\s+(?P<id>\d+)\s+(?P<state>\S+)\s+(?P<protocol>\S+)\s+(?P<method>\S+)$")
 
@@ -1612,7 +1612,7 @@ class ShowWirelessClientSummary(ShowWirelessClientSummarySchema):
                 delimiter_capture_match = delimiter_capture.match(line)
                 groups = delimiter_capture_match.groupdict()
                 continue
-            # 58bf.ea58.b399 b80-72-cap16                                 WLAN 17   Run               11ac     Dot1x      Local
+            # 58bf.eaff.0cf1 b80-72-cap16                                 WLAN 17   Run               11ac     Dot1x      Local
             elif wireless_client_info_capture.match(line):
                 wireless_client_info_capture_match = wireless_client_info_capture.match(line)
                 groups = wireless_client_info_capture_match.groupdict()
@@ -1667,7 +1667,7 @@ class ShowWirelessClientSummary(ShowWirelessClientSummarySchema):
                 delimiter_2_capture_match = delimiter_2_capture.match(line)
                 groups = delimiter_2_capture_match.groupdict()
                 continue
-            # 58bf.ea8a.20e6 b80-61-cap20                   WLAN 17   Excluded           11ac     Dot1x
+            # 58bf.eaff.aa71 b80-61-cap20                   WLAN 17   Excluded           11ac     Dot1x
             elif wireless_excluded_clients_info_capture.match(line):
                 wireless_excluded_clients_info_capture_match = wireless_excluded_clients_info_capture.match(line)
                 groups = wireless_excluded_clients_info_capture_match.groupdict()
@@ -1741,16 +1741,16 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
 
         # AP name                           AP radio MAC      Controller IP     Learnt from
         # --------------------------------------------------------------------------------------
-        # b80-72-cap30                    58bf.eab3.1420    10.10.7.177      Self
-        # b80-81-cap4                     58bf.ea13.62a0    10.10.7.177      Self
-        # b80-52-cap6                     58bf.ea13.75e0    10.10.7.177      Self
+        # b80-72-cap30                    58bf.eaff.c7d3    10.10.7.177      Self
+        # b80-81-cap4                     58bf.eaff.75b3    10.10.7.177      Self
+        # b80-52-cap6                     58bf.eaff.88f3    10.10.7.177      Self
 
         # AP name                           AP radio MAC      Controller IP     Learnt from
         ap_header_capture = re.compile(
             r"^AP\s+name\s+AP\s+radio\s+MAC\s+Controller\s+IP\s+Learnt\s+from$"
         )
 
-        # b80-72-cap30                    58bf.eab3.1420    10.10.7.177      Self
+        # b80-72-cap30                    58bf.eaff.c7d3    10.10.7.177      Self
         ap_info_capture = re.compile(
             r"^(?P<ap_name>\S+)\s+(?P<ap_radio_mac>\S{4}\.\S{4}\.\S{4})\s+(?P<controller_ip>\d+\.\d+\.\d+\.\d+)\s+(?P<learnt_from>\S+)$"
         )
@@ -1774,7 +1774,7 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
                 ap_name_dict = {
                     # ap_name: b80-72-cap30
                     groups["ap_name"]: {
-                        # radio_mac: 58bf.eab3.1420
+                        # radio_mac: 58bf.eaff.c7d3
                         "ap_radio_mac": groups["ap_radio_mac"],
                         # controller_ip: 10.10.7.177
                         "controller_ip": groups["controller_ip"],
@@ -1808,16 +1808,16 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
 
         # MAC Address    AP Name                          WLAN State              Protocol Method     
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x     
-        # 58bf.ea73.39b4 a2-11-cap50                   19   IP Learn           11n(2.4) MAB       
-        # 58bf.ea47.1c4c a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x     
+        # 58bf.eaff.ac28 a2-11-cap50                   19   IP Learn           11n(2.4) MAB       
+        # 58bf.eaff.6393 a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB       
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea47.1c59 a2-11-cap46                   17   Run                11ac     Dot1x     
-        # 58bf.ea41.eac4 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB       
-        # 58bf.eaef.9769 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.eaff.63a0 a2-11-cap46                   17   Run                11ac     Dot1x     
+        # 58bf.eaff.2c06 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.eaff.8759 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB       
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea02.5c2a a2-12-cap17                   19   Webauth Pending    11ac     MAB       
-        # 58bf.ea09.f357 a2-12-cap17                   19   Webauth Pending    11ac     MAB   
+        # 58bf.eaff.5e2c a2-12-cap17                   19   Webauth Pending    11ac     MAB       
+        # 58bf.eaff.fc60 a2-12-cap17                   19   Webauth Pending    11ac     MAB   
 
         # Number of Fabric Clients : 8
         p_clients = re.compile(r"^Number\s+of\s+Fabric\s+Clients\s+:\s+(?P<clients>\S+)$")
@@ -1829,7 +1829,7 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
         p_delimiter = re.compile(
             r"^-------------------------------------------------------------------------------------------------------------------------$")
 
-        # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x
+        # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
         p_client_info = re.compile(r"^(?P<mac>\S{4}\.\S{4}\.\S{4})\s+(?P<name>\S+)\s+(?P<wlan>\S+)\s+(?P<state>.*)\s+(?P<protocol>\S+)\s+(?P<method>(Dot1x|MAB))$")
 
 
@@ -1852,7 +1852,7 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
             elif p_delimiter.match(line):
                 match = p_delimiter.match(line)
                 continue
-            # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x
+            # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
             elif p_client_info.match(line):
                 match = p_client_info.match(line)
                 groups = match.groupdict()
@@ -1928,14 +1928,14 @@ class ShowWirelessMobilitySummary(ShowWirelessMobilitySummarySchema):
         # Mobility Group Name: b80-mobility
         # Mobility Multicast Ipv4 address: 0.0.0.0
         # Mobility Multicast Ipv6 address: ::
-        # Mobility MAC Address: 58bf.ea35.b60b
+        # Mobility MAC Address: 58bf.eaff.eb40
         # Mobility Domain Identifier: 0x61b3
 
         # Controllers configured in the Mobility Domain:
 
         # IP                                        Public Ip                                  MAC Address         Group Name                       Multicast IPv4    Multicast IPv6                              Status                       PMTU
         # --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        # 10.10.7.177                               N/A                                        58bf.ea35.b60b      b80-mobility                0.0.0.0           ::                                          N/A                          N/A
+        # 10.10.7.177                               N/A                                        58bf.eaff.eb40      b80-mobility                0.0.0.0           ::                                          N/A                          N/A
 
         # Mobility Summary
         mobility_summary_capture = (
@@ -1956,7 +1956,7 @@ class ShowWirelessMobilitySummary(ShowWirelessMobilitySummarySchema):
             r"Mobility Multicast Ipv4 address:\s+(?P<multi_ipv4>\d+\.\d+\.\d+\.\d+)\n+"
             # Mobility Multicast Ipv6 address: ::
             r"Mobility Multicast Ipv6 address:\s+(?P<multi_ipv6>\S+)\n+"
-            # Mobility MAC Address: 58bf.ea35.b60b
+            # Mobility MAC Address: 58bf.eaff.eb40
             r"Mobility MAC Address:\s+(?P<mac_addr>\S{4}\.\S{4}\.\S{4})\n+"
             # Mobility Domain Identifier: 0x61b3
             r"Mobility Domain Identifier:\s+(?P<domain_id>\S+)"
@@ -1969,7 +1969,7 @@ class ShowWirelessMobilitySummary(ShowWirelessMobilitySummarySchema):
             r"(?P<ipv4>\d+\.\d+\.\d+\.\d+)\s+"
             # N/A
             r"(?P<public_ip>\S+)\s+"
-            # 58bf.ea35.b60b
+            # 58bf.eaff.eb40
             r"(?P<mac_address>\S{4}\.\S{4}\.\S{4})\s+"
             # b80-mobility
             r"(?P<group_name>\S+)\s+"
@@ -2132,27 +2132,27 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
 
         # Base MAC        visitors MAC    AP Name                           IP Address                                Status      Last Failure Phase    Last Disconnect Reason
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------
-        # 706d.0598.6fc0  706d.0598.0320  AP706d.0598.0320                  10.10.116.22                             Not Joined  Join                  Ap auth pending
-        # 706d.0544.d2c0  706d.0544.1bf0  visitors-hydra                    10.10.78.156                              Not Joined  Join                  Ap auth pending
-        # 706d.0544.d580  706d.0544.1ca0  visitors-hydra                    10.10.82.200                             Not Joined  Join                  Ap auth pending
-        # 0042.5a0a.1fb0  006b.f116.0ff0  visitors-1815i                     10.10.139.90                             Joined      Join                  Ap auth pending
-        # 706d.0593.aac0  706d.0592.5148  visitors-hydra2                   10.10.36.138                               Not Joined  Join                  Ap auth pending
-        # 706d.0593.ae20  706d.0592.5220  visitors-hydra5                   10.10.36.138                               Not Joined  Join                  Ap auth pending
-        # 00be.7506.42c0  706d.0568.44d0  visitors-1815t                      10.10.236.197                            Joined      Join                  Ap auth pending
-        # 706d.05be.6890  706d.053e.e3f0  visitors-1815i                    10.10.152.239                            Joined      Join                  Ap auth pending
-        # 706d.05be.adc0  706d.053e.f540  visitors-mallorca                  10.10.40.15                              Not Joined  Join                  Ap auth pending
-        # 706d.05be.bc20  706d.053e.f8d8  visitors-mallorca                  10.10.7.234                              Not Joined  Join                  Ap auth pending
+        # 706d.05ff.0859  706d.05ff.9bb8  AP706d.05ff.9bb8                  10.10.116.22                             Not Joined  Join                  Ap auth pending
+        # 706d.05ff.1705  706d.05ff.5f35  visitors-hydra                    10.10.78.156                              Not Joined  Join                  Ap auth pending
+        # 706d.05ff.1ac4  706d.05ff.60e4  visitors-hydra                    10.10.82.200                             Not Joined  Join                  Ap auth pending
+        # 0042.5aff.29ba  006b.f1ff.2507  visitors-1815i                     10.10.139.90                             Joined      Join                  Ap auth pending
+        # 706d.05ff.3e54  706d.05ff.e3da  visitors-hydra2                   10.10.36.138                               Not Joined  Join                  Ap auth pending
+        # 706d.05ff.42b3  706d.05ff.e4b2  visitors-hydra5                   10.10.36.138                               Not Joined  Join                  Ap auth pending
+        # 00be.75ff.48c6  706d.05ff.ac39  visitors-1815t                      10.10.236.197                            Joined      Join                  Ap auth pending
+        # 706d.05ff.274f  706d.05ff.222f  visitors-1815i                    10.10.152.239                            Joined      Join                  Ap auth pending
+        # 706d.05ff.6c7f  706d.05ff.347e  visitors-mallorca                  10.10.40.15                              Not Joined  Join                  Ap auth pending
+        # 706d.05ff.7bde  706d.05ff.3717  visitors-mallorca                  10.10.7.234                              Not Joined  Join                  Ap auth pending
 
         # Number of APs: 61
         ap_count_capture = re.compile(r"^Number of APs:\s+(?P<ap_count>\d+)$")
 
-        # 706d.0598.6fc0  706d.0598.0320  AP706d.0598.0320                  10.10.116.22                             Not Joined  Join                  Ap auth pending
+        # 706d.05ff.0859  706d.05ff.9bb8  AP706d.05ff.9bb8                  10.10.116.22                             Not Joined  Join                  Ap auth pending
         ap_join_capture = re.compile(
-            # 706d.0598.6fc0
+            # 706d.05ff.0859
             r"^(?P<base_mac>[a-f0-9]{4}\.[a-f0-9]{4}\.[a-f0-9]{4})\s+"
-            # 706d.0598.0320
+            # 706d.05ff.9bb8
             r"(?P<visitors_mac>[a-f0-9]{4}\.[a-f0-9]{4}\.[a-f0-9]{4})\s+"
-            # AP706d.0598.0320
+            # AP706d.05ff.9bb8
             r"(?P<ap_name>\S+)\s+"
             # 10.10.116.22
             r"(?P<ip_address>[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})\s+"

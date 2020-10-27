@@ -154,7 +154,7 @@ class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
         # Notes:
         p11 = re.compile(r'^Notes: +(?P<notes>\S+)$')
 
-        #     5.28.35.35                                 45128    netconf
+        #     10.69.35.35                                 45128    netconf
         p12 = re.compile(r'^(?P<address>\S+) +(?P<port>\d+) +(?P<protocol>\S+)( +(?P<protocol_profile>\S+))?$')
 
 
@@ -261,7 +261,7 @@ class ShowTelemetryIETFSubscriptionDetail(ShowTelemetryIETFSubscriptionSchema):
                 subscription['notes'] = group['notes']
                 continue
 
-            #     5.28.35.35                                 45128    netconf
+            #     10.69.35.35                                 45128    netconf
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -324,7 +324,7 @@ class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceive
         # Subscription ID: 2147483659
         p1 = re.compile(r'^Subscription +ID: +(?P<id>\d+)$')
 
-        # Address: 5.28.35.35
+        # Address: 10.69.35.35
         p2 = re.compile(r'^Address: +(?P<address>\S+)$')
 
         # Port: 45128
@@ -359,7 +359,7 @@ class ShowTelemetryIETFSubscriptionReceiver(ShowTelemetryIETFSubscriptionReceive
                 subscription = sub.setdefault(int(group['id']), {})
                 continue
 
-            # Address: 5.28.35.35
+            # Address: 10.69.35.35
             m = p2.match(line)
             if m:
                 group = m.groupdict()

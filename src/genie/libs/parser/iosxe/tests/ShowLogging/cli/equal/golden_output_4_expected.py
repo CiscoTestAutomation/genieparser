@@ -34,7 +34,7 @@ expected_output = {
   },
   "log_buffer_bytes": 4096,
   "logs": [
-    "User 'developer' authenticated successfully from 174.99.98.146:0 and was authorized for rest over http. External groups: PRIV15"
+    "User 'developer' authenticated successfully from 172.16.196.146:0 and was authorized for rest over http. External groups: PRIV15"
   ]
 }
 
