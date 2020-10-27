@@ -4,7 +4,8 @@ from unittest.mock import Mock
 from pyats.topology import loader, Device
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.junos.show_firewall import ShowFirewall,\
-                                                  ShowFirewallCounterFilter
+                                                  ShowFirewallCounterFilter,\
+                                                  ShowFirewallLog
 
 class TestShowFirewall(unittest.TestCase):
     """ Unit tests for:
@@ -200,6 +201,126 @@ class TestShowFirewall(unittest.TestCase):
         
     }
 
+    golden_output_2 = {'execute.return_value': 
+    """
+        show firewall
+
+        Filter: __default_bpdu_filter__
+
+        Filter: ICMP_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_ACK-flood_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_SYN-flood_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: UDP_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: ICMP_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_ACK-flood_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_SYN-flood_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: UDP_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0"""
+        }
+
+    golden_parsed_output_2 = {
+        'firewall-information': {
+            'filter-information': [{
+                'filter-name': '__default_bpdu_filter__'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'ICMP_ACL_filter'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'TCP_ACK-flood_ACL_filter'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'TCP_SYN-flood_ACL_filter'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'UDP_ACL_filter'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'ICMP_ACL_filter_IPv6'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'TCP_ACK-flood_ACL_filter_IPv6'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'TCP_SYN-flood_ACL_filter_IPv6'
+            },
+            {
+                'counter': [{
+                'byte-count': '0',
+                'counter-name': 'block',
+                'packet-count': '0'
+                }],
+                'filter-name': 'UDP_ACL_filter_IPv6'
+            }
+            ]
+        }
+        }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowFirewall(device=self.device)
@@ -211,6 +332,12 @@ class TestShowFirewall(unittest.TestCase):
         obj = ShowFirewall(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowFirewall(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 class TestShowFirewallCounterFilter(unittest.TestCase):
     """ Unit tests for:
@@ -249,11 +376,78 @@ class TestShowFirewallCounterFilter(unittest.TestCase):
         self.device = Mock(**self.empty_output)
         obj = ShowFirewallCounterFilter(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()
+            obj.parse(filter='v6_local-access-control', counter_name='v6_last_policer')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowFirewallCounterFilter(device=self.device)
+        parsed_output = obj.parse(filter='v6_local-access-control', counter_name='v6_last_policer')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowFirewallLog(unittest.TestCase):
+    """ Unit tests for:
+            * show firewall log
+    """
+
+    maxDiff = None
+
+    device = Device(name='test-device')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        show firewall log
+        Log :
+        Time      Filter    Action Interface     Protocol        Src Addr                         Dest Addr
+        10:28:22  pfe       D      ge-0/0/0.0    TCP             10.70.0.2                         10.70.0.1
+        10:15:22  pfe       D      ge-0/0/0.0    TCP             10.70.0.2                         10.70.0.1
+        10:15:19  pfe       D      ge-0/0/0.0    TCP             10.70.0.2                         10.70.0.1
+    '''}
+
+    golden_parsed_output = {
+        "firewall-log-information": {
+            "log-information": [
+                {
+                    "action-name": "D",
+                    "destination-address": "10.70.0.1",
+                    "filter-name": "pfe",
+                    "interface-name": "ge-0/0/0.0",
+                    "protocol-name": "TCP",
+                    "source-address": "10.70.0.2",
+                    "time": "10:28:22"
+                },
+                {
+                    "action-name": "D",
+                    "destination-address": "10.70.0.1",
+                    "filter-name": "pfe",
+                    "interface-name": "ge-0/0/0.0",
+                    "protocol-name": "TCP",
+                    "source-address": "10.70.0.2",
+                    "time": "10:15:22"
+                },
+                {
+                    "action-name": "D",
+                    "destination-address": "10.70.0.1",
+                    "filter-name": "pfe",
+                    "interface-name": "ge-0/0/0.0",
+                    "protocol-name": "TCP",
+                    "source-address": "10.70.0.2",
+                    "time": "10:15:19"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowFirewallLog(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowFirewallLog(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 

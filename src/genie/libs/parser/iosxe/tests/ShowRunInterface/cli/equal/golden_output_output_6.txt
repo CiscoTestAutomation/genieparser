@@ -3,5 +3,5 @@
          carrier-delay up 60
          carrier-delay down 60
          negotiation auto
-         ipv6 address 1::1/112
+         ipv6 address 2001:db8:1::1/112
         end

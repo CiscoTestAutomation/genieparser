@@ -4,8 +4,7 @@ expected_output = {
             "class": {
                 "class-default": {
                     "police": {
-                        "cir_bps": 445500,
-                        "cir_bc_bytes": 83619,
+                        "rate_percent": 10,
                         "conform_action": ["transmit"],
                         "exceed_action": ["drop"],
                     }

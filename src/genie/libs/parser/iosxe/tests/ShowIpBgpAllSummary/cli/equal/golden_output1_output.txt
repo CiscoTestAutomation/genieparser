@@ -1,32 +1,32 @@
 
-Router#show ip bgp all summary
-Load for five secs: 2%/0%; one minute: 10%; five minutes: 9%
-Time source is NTP, 20:34:39.724 EST Wed Jun 2 2016
-For address family: VPNv4 Unicast
-BGP router identifier 10.169.197.254, local AS number 5918
-BGP table version is 9370482, main routing table version 9370482
-2022099 network entries using 517657344 bytes of memory
-4023998 path entries using 482879760 bytes of memory
-5098/4898 BGP path/bestpath attribute entries using 1345872 bytes of memory
-502 BGP rrinfo entries using 20080 bytes of memory
-201 BGP AS-PATH entries using 4824 bytes of memory
-2301 BGP extended community entries using 60056 bytes of memory
-0 BGP route-map cache entries using 0 bytes of memory
-0 BGP filter-list cache entries using 0 bytes of memory
-BGP using 1001967936 total bytes of memory
-BGP activity 2722567/700066 prefixes, 5564772/1540171 paths, scan interval 60 secs
+        Router#show ip bgp all summary
+        Load for five secs: 2%/0%; one minute: 10%; five minutes: 9%
+        Time source is NTP, 20:34:39.724 EST Wed Jun 2 2016
+        For address family: VPNv4 Unicast
+        BGP router identifier 10.169.197.254, local AS number 5918
+        BGP table version is 9370482, main routing table version 9370482
+        2022099 network entries using 517657344 bytes of memory
+        4023998 path entries using 482879760 bytes of memory
+        5098/4898 BGP path/bestpath attribute entries using 1345872 bytes of memory
+        502 BGP rrinfo entries using 20080 bytes of memory
+        201 BGP AS-PATH entries using 4824 bytes of memory
+        2301 BGP extended community entries using 60056 bytes of memory
+        0 BGP route-map cache entries using 0 bytes of memory
+        0 BGP filter-list cache entries using 0 bytes of memory
+        BGP using 1001967936 total bytes of memory
+        BGP activity 2722567/700066 prefixes, 5564772/1540171 paths, scan interval 60 secs
 
-Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
-192.168.10.253  4        65555     299     332  9370482    0    0 02:27:39      100
-192.168.10.253  4        60001     299     333  9370482    0    0 02:27:46      100
-192.168.10.253  4        60002     299     333  9370482    0    0 02:27:45      100
-192.168.10.253  4        60003     299     331  9370482    0    0 02:27:40      100
-192.168.10.253  4        60004     299     334  9370482    0    0 02:27:39      100
-192.168.10.253  4        60005     299     334  9370482    0    0 02:27:41      100
-192.168.10.253  4        60006     299     333  9370482    0    0 02:27:43      100
-192.168.10.253  4        60007     299     332  9370482    0    0 02:27:41      100
-192.168.10.253  4        60100       0       0        1    0    0 never    Idle
-192.168.10.253  4        60101       0       0        1    0    0 never    Idle
-192.168.10.253  4        60102       0       0        1    0    0 never    Idle
-192.168.10.253  4        60103       0       0        1    0    0 never    Idle
+        Neighbor        V           AS MsgRcvd MsgSent   TblVer  InQ OutQ Up/Down  State/PfxRcd
+        192.168.10.253  4        65555     299     332  9370482    0    0 02:27:39      100
+        192.168.10.253  4        60001     299     333  9370482    0    0 02:27:46      100
+        192.168.10.253  4        60002     299     333  9370482    0    0 02:27:45      100
+        192.168.10.253  4        60003     299     331  9370482    0    0 02:27:40      100
+        192.168.10.253  4        60004     299     334  9370482    0    0 02:27:39      100
+        192.168.10.253  4        60005     299     334  9370482    0    0 02:27:41      100
+        192.168.10.253  4        60006     299     333  9370482    0    0 02:27:43      100
+        192.168.10.253  4        60007     299     332  9370482    0    0 02:27:41      100
+        192.168.10.253  4        60100       0       0        1    0    0 never    Idle
+        192.168.10.253  4        60101       0       0        1    0    0 never    Idle
+        192.168.10.253  4        60102       0       0        1    0    0 never    Idle
+        192.168.10.253  4        60103       0       0        1    0    0 never    Idle
         

@@ -1,0 +1,11 @@
+RP/0/RP0/CPU0:R7#sh rib table
+Fri Oct  2 07:24:47.259 UTC
+
+Codes: N - Prefix Limit Notified, F - Forward Referenced 
+       D - Table Deleted, C - Table Reached Convergence 
+
+VRF/Table              SAFI  Table ID     PrfxLmt   PrfxCnt TblVersion  N F D C
+default/default        uni   0xe0000000  10000000        12         13  N N N Y
+bob:by/default         uni   0xe0000001  10000000         0          0  N N N Y
+DC-LAN/default         uni   0xe0000002  10000000         2          3  N N N Y
+default/default        multi 0xe0100000  10000000         0          0  N N N Y
