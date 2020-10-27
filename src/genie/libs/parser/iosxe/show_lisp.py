@@ -3412,3 +3412,124 @@ class ShowLispSite(ShowLispSiteSchema):
         return lisp_site_dict
 
 
+
+
+# ==========================================
+# Schema for:
+#  * 'show lisp eid-table vrf {vrf} ipv4 database'
+# ==========================================
+class ShowLispEidTableVrfIpv4DatabaseSchema(MetaParser):
+    """Schema for show lisp eid-table vrf {vrf} ipv4 database."""
+
+    schema = {
+        "vrf": str,
+        "iid": int,
+        "lsb": str,
+        "total_entries": int,
+        "no_route": int,
+        "inactive": int,
+        "eid" : {
+            str: {
+                "subnet": str,
+                "locator_set": list,
+                "rlocs": {
+                    str: {
+                        "priority": int,
+                        "weight": int,
+                        "source": str,
+                        "state": list
+                    }
+                }
+            }
+        }
+
+    }
+
+
+# ==========================================
+# Parser for:
+#  * 'show lisp eid-table vrf ipv4 database'
+# ==========================================
+class ShowLispEidTableVrfIpv4Database(ShowLispEidTableVrfIpv4DatabaseSchema):
+    """Parser for show lisp eid-table vrf {vrf} ipv4 database"""
+
+    cli_command = 'show lisp eid-table vrf {vrf} ipv4 database'
+
+    def cli(self, vrf="", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf=vrf))
+        else:
+            output = output
+
+        # LISP ETR IPv4 Mapping Database for EID-table vrf User (IID 4100), LSBs: 0x3
+        # Entries total 3, no-route 0, inactive 0
+        #
+        # 10.16.0.0/19, locator-set rloc_5823c743-d29b-40d4-a063-8a29881a59b2, auto-discover-rlocs, proxy
+        #   Locator      Pri/Wgt  Source     State
+        #   10.8.190.11   10/10   cfg-intf   site-self, reachable
+        #   10.8.190.17   10/10   auto-disc  site-other, report-reachable
+        # 10.16.32.0/20, locator-set rloc_5823c743-d29b-40d4-a063-8a29881a59b2, auto-discover-rlocs, proxy
+        #   Locator      Pri/Wgt  Source     State
+        #   10.8.190.11   10/10   cfg-intf   site-self, reachable
+        #   10.8.190.17   10/10   auto-disc  site-other, report-reachable
+        # 10.16.48.0/24, locator-set rloc_5823c743-d29b-40d4-a063-8a29881a59b2, auto-discover-rlocs, proxy
+        #   Locator      Pri/Wgt  Source     State
+        #   10.8.190.11   10/10   cfg-intf   site-self, reachable
+        #   10.8.190.17   10/10   auto-disc  site-other, report-reachable
+
+        # LISP ETR IPv4 Mapping Database for EID-table vrf User (IID 4100), LSBs: 0x3
+        p_lisp_header = re.compile(r"^LISP\s+ETR\s+IPv4\s+Mapping\s+Database\s+for\s+EID-table\s+vrf\s+(?P<vrf>\S+)"
+                                   r"\s+\(IID\s+(?P<iid>\d+)\),\s+LSBs:\s+(?P<lsb>\S+)$")
+
+        # Entries total 3, no-route 0, inactive 0
+        p_lisp_header_2 = re.compile(r"^Entries\s+total\s+(?P<total>\d+),\s+no-route\s+(?P<no_route>\d+),\s+inactive\s+(?P<inactive>\d+)$")
+
+        # 10.16.0.0/19, locator-set rloc_5823c743-d29b-40d4-a063-8a29881a59b2, auto-discover-rlocs, proxy
+        p_lisp_entry = re.compile(r"^(?P<ip>\S+\/\d+),\s+locator-set\s+(?P<loc_set>.*)$")
+
+        # 10.8.190.11   10/10   cfg-intf   site-self, reachable
+        p_lisp_subentry = re.compile(r"(?P<locator>\S+)\s+(?P<pri>\d+)\/(?P<wgt>\d+)\s+(?P<source>\S+)\s+(?P<state>.*)$")
+
+
+        lisp_dict = {}
+        current_entry = ""
+        locator_set_list = []
+        state_list = []
+
+        for line in output.splitlines():
+            line = line.strip()
+            if p_lisp_header.match(line):
+              # LISP ETR IPv4 Mapping Database for EID-table vrf User (IID 4100), LSBs: 0x3
+              m_lisp_header = p_lisp_header.match(line)
+              lisp_dict.update({ "vrf": m_lisp_header.group("vrf") })
+              lisp_dict.update({ "iid": int(m_lisp_header.group("iid")) })
+              lisp_dict.update({ "lsb": m_lisp_header.group("lsb") })
+              continue
+            elif p_lisp_header_2.match(line):
+              # Entries total 3, no-route 0, inactive 0
+              m_lisp_header_2 = p_lisp_header_2.match(line)
+              lisp_dict.update({ "total_entries": int(m_lisp_header_2.group("total")) })
+              lisp_dict.update({ "no_route": int(m_lisp_header_2.group("no_route")) })
+              lisp_dict.update({ "inactive": int(m_lisp_header_2.group("inactive")) })
+              continue
+            elif p_lisp_entry.match(line):
+              # 10.16.0.0/19, locator-set rloc_5823c743-d29b-40d4-a063-8a29881a59b2, auto-discover-rlocs, proxy
+              m_lisp_entry = p_lisp_entry.match(line)
+              locator_set_list = [x.strip() for x in m_lisp_entry.group("loc_set").split(',')]
+              (current_entry, subnet) = m_lisp_entry["ip"].split("/")
+              lisp_dict.setdefault("eid", {} ).setdefault(current_entry, {}).setdefault("subnet", "/"+subnet)
+              lisp_dict["eid"][current_entry].update({ "locator_set": locator_set_list} )
+              continue
+            elif p_lisp_subentry.match(line):
+              # 10.8.190.11   10/10   cfg-intf   site-self, reachable
+              m_lisp_subentry = p_lisp_subentry.match(line)
+              state_list = [x.strip() for x in m_lisp_subentry.group("state").split(',') ]
+              lisp_dict["eid"][current_entry].setdefault("rlocs", {}).setdefault(m_lisp_subentry.group("locator"), {})
+              lisp_dict["eid"][current_entry]["rlocs"][m_lisp_subentry.group("locator")].update({ "priority": int(m_lisp_subentry.group("pri")) })
+              lisp_dict["eid"][current_entry]["rlocs"][m_lisp_subentry.group("locator")].update({ "weight": int(m_lisp_subentry.group("wgt")) })
+              lisp_dict["eid"][current_entry]["rlocs"][m_lisp_subentry.group("locator")].update({ "source": m_lisp_subentry.group("source") })
+              lisp_dict["eid"][current_entry]["rlocs"][m_lisp_subentry.group("locator")].update({ "state": state_list })
+
+
+        return lisp_dict
+
