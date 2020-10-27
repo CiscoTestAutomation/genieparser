@@ -1,0 +1,69 @@
+show spanning-tree mst detail
+
+##### MST6    vlans mapped:   500-501,504-505,507-554,556-599
+Bridge        address 5897.bdff.3b3a  priority      20486 (20480 sysid 6)
+Root          address 58ac.78ff.c3f5  priority      8198  (8192 sysid 6)
+            port    Po2             cost      2000                 rem hops 19
+
+GigabitEthernet1/7 of MST6 is designated forwarding
+Port info             port id          128.7  priority    128  cost       20000
+Designated root       address 58ac.78ff.c3f5  priority   8198  cost        2000
+Designated bridge     address 5897.bdff.3b3a  priority  20486  port id    128.7
+Timers: message expires in 0 sec, forward delay 0, forward transitions 1
+Bpdus (MRecords) sent 836828, received 0
+
+TenGigabitEthernet2/3 of MST6 is designated forwarding
+Port info             port id        128.131  priority    128  cost        2000
+Designated root       address 58ac.78ff.c3f5  priority   8198  cost        2000
+Designated bridge     address 5897.bdff.3b3a  priority  20486  port id  128.131
+Timers: message expires in 0 sec, forward delay 0, forward transitions 2
+Bpdus (MRecords) sent 1285495, received 0
+
+TenGigabitEthernet2/4 of MST6 is designated forwarding
+Port info             port id        128.132  priority    128  cost        2000
+Designated root       address 58ac.78ff.c3f5  priority   8198  cost        2000
+Designated bridge     address 5897.bdff.3b3a  priority  20486  port id  128.132
+Timers: message expires in 0 sec, forward delay 0, forward transitions 2
+Bpdus (MRecords) sent 1285500, received 0
+
+TenGigabitEthernet2/5 of MST6 is designated forwarding
+Port info             port id        128.133  priority    128  cost        2000
+Designated root       address 58ac.78ff.c3f5  priority   8198  cost        2000
+Designated bridge     address 5897.bdff.3b3a  priority  20486  port id  128.133
+Timers: message expires in 0 sec, forward delay 0, forward transitions 2
+Bpdus (MRecords) sent 1285475, received 0
+
+TenGigabitEthernet2/6 of MST6 is designated forwarding
+Port info             port id        128.134  priority    128  cost        2000
+Designated root       address 58ac.78ff.c3f5  priority   8198  cost        2000
+Designated bridge     address 5897.bdff.3b3a  priority  20486  port id  128.134
+Timers: message expires in 0 sec, forward delay 0, forward transitions 2
+Bpdus (MRecords) sent 1285487, received 0
+
+TenGigabitEthernet2/7 of MST6 is designated forwarding
+Port info             port id        128.135  priority    128  cost        2000
+Designated root       address 58ac.78ff.c3f5  priority   8198  cost        2000
+Designated bridge     address 5897.bdff.3b3a  priority  20486  port id  128.135
+Timers: message expires in 0 sec, forward delay 0, forward transitions 2
+Bpdus (MRecords) sent 1285497, received 0
+
+TenGigabitEthernet2/8 of MST6 is designated forwarding
+Port info             port id        128.136  priority    128  cost        2000
+Designated root       address 58ac.78ff.c3f5  priority   8198  cost        2000
+Designated bridge     address 5897.bdff.3b3a  priority  20486  port id  128.136
+Timers: message expires in 0 sec, forward delay 0, forward transitions 2
+Bpdus (MRecords) sent 1285497, received 0
+
+TenGigabitEthernet2/9 of MST6 is designated forwarding
+Port info             port id        128.137  priority    128  cost        2000
+Designated root       address 58ac.78ff.c3f5  priority   8198  cost        2000
+Designated bridge     address 5897.bdff.3b3a  priority  20486  port id  128.137
+Timers: message expires in 0 sec, forward delay 0, forward transitions 2
+Bpdus (MRecords) sent 1285494, received 0
+
+TenGigabitEthernet2/10 of MST6 is designated forwarding
+Port info             port id        128.138  priority    128  cost        2000
+Designated root       address 58ac.78ff.c3f5  priority   8198  cost        2000
+Designated bridge     address 5897.bdff.3b3a  priority  20486  port id  128.138
+Timers: message expires in 0 sec, forward delay 0, forward transitions 2
+Bpdus (MRecords) sent 1285480, received 0

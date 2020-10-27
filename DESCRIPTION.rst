@@ -31,7 +31,7 @@ datastructure.
 Requirements
 ------------
 
-Genie currently supports Python 3.4+ on Linux & Mac systems. Windows platforms
+Genie currently supports Python 3.6+ on Linux & Mac systems. Windows platforms
 are not yet supported.
 
 Quick Start
@@ -40,7 +40,7 @@ Quick Start
 .. code-block:: console
 
     # install genie as a whole
-    $ pip install genie.metaparser
+    $ pip install genie
 
     # to upgrade this package manually
     $ pip install --upgrade genie.libs.parser
