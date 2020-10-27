@@ -1977,8 +1977,7 @@ class ShowCtsApSgtInfo(ShowCtsApSgtInfoSchema):
     def cli(self, ap_name="", output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(ap_name=ap_name))
-        else:
-            output = output
+
 
         # Number of SGTs referred by the AP...............: 2
         #
@@ -1988,13 +1987,13 @@ class ShowCtsApSgtInfo(ShowCtsApSgtInfoSchema):
         # DEFAULT(65535)    NO                     0
 
         # Number of SGTs referred by the AP...............: 0
-        p_number_sgts = re.compile(r"^Number\s+of\s+SGTs\s+referred\s+by\s+the\s+AP...............:\s+(?P<value>\d+)$")
+        p_number_sgts = re.compile(r"^Number\s+of\s+SGTs\s+referred\s+by\s+the\s+AP\.+:\s+(?P<value>\d+)$")
 
         # SGT               PolicyPushedToAP       No.of Clients
         p_sgt_header = re.compile(r"^SGT\s+PolicyPushedToAP\s+No.of\s+Clients$")
 
         # ------------------------------------------------------------
-        p_sgt_delimiter = re.compile(r"^------------------------------------------------------------$")
+        p_sgt_delimiter = re.compile(r"^-+$")
 
         # 10                NO                     1
         p_sgt_row = re.compile(r"^(?P<sgt>\S+)\s+(?P<policy>\S+)\s+(?P<clients>\d+)$")
@@ -2003,20 +2002,30 @@ class ShowCtsApSgtInfo(ShowCtsApSgtInfoSchema):
 
         for line in output.splitlines():
             line = line.strip()
-            if p_number_sgts.match(line):
-                match = p_number_sgts.match(line)
-                cts_ap_dict.update({ "number_of_sgts_referred_by_the_ap": int(match.group("value")) })
+            m_number_sgts = p_number_sgts.match(line)
+            if m_number_sgts:
+                cts_ap_dict.update({ "number_of_sgts_referred_by_the_ap": int(m_number_sgts.group("value")) })
                 continue
-            elif p_sgt_header.match(line):
+
+            m_sgt_header = p_sgt_header.match(line)
+            if m_sgt_header:
                 continue
-            elif p_sgt_delimiter.match(line):
+
+            m_sgt_delimiter = p_sgt_delimiter.match(line)
+            if m_sgt_delimiter:
                 continue
-            elif p_sgt_row.match(line):
-                match = p_sgt_row.match(line)
-                group = match.groupdict()
-                if not cts_ap_dict.get("sgts"):
-                    cts_ap_dict.update({ "sgts": {} })
-                cts_ap_dict["sgts"].update({ group["sgt"]: { "policy_pushed_to_ap": group["policy"].lower(), "no_of_clients": int(group["clients"]) }})
+            m_sgt_row = p_sgt_row.match(line)
+            if m_sgt_row:
+                group = m_sgt_row.groupdict()
+                sgts_dict = cts_ap_dict.setdefault("sgts", {})
+                sgts_dict.update(
+                            {
+                                group["sgt"]: {
+                                    "policy_pushed_to_ap": group["policy"].lower(),
+                                    "no_of_clients": int(group["clients"])
+                                }
+                            }
+                        )
                 continue
 
         return cts_ap_dict
