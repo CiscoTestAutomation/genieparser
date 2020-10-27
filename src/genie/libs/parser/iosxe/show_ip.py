@@ -116,10 +116,10 @@ class ShowIPAliasDefaultVrf(ShowIPAlias):
 
 # =======================================
 # Schema for:
-#  * 'show ip bgp vpnv4 vrf user summary'
+#  * 'show ip bgp vpnv4 vrf {vrf} summary'
 # =======================================
 class ShowIpBgpVpnv4VrfUserSummarySchema(MetaParser):
-    """Schema for show ip bgp vpnv4 vrf user summary."""
+    """Schema for show ip bgp vpnv4 vrf {vrf} summary."""
 
     schema = {
             "rid": str,
@@ -185,16 +185,16 @@ class ShowIpBgpVpnv4VrfUserSummarySchema(MetaParser):
 
 # =======================================
 # Parser for:
-#  * 'show ip bgp vpnv4 vrf user summary'
+#  * 'show ip bgp vpnv4 vrf {vrf} summary'
 # =======================================
 class ShowIpBgpVpnv4VrfUserSummary(ShowIpBgpVpnv4VrfUserSummarySchema):
-    """Parser for show ip bgp vpnv4 vrf user summary"""
+    """Parser for show ip bgp vpnv4 vrf {vrf} summary"""
 
-    cli_command = 'show ip bgp vpnv4 vrf user summary'
+    cli_command = 'show ip bgp vpnv4 vrf {vrf} summary'
 
-    def cli(self, output=None):
+    def cli(self, vrf="", output=None):
         if output is None:
-            output = self.device.execute(self.cli_command)
+            output = self.device.execute(self.cli_command.format(vrf=vrf))
         else:
             output = output
 
@@ -217,7 +217,7 @@ class ShowIpBgpVpnv4VrfUserSummary(ShowIpBgpVpnv4VrfUserSummarySchema):
         # 10.199.228.217  4        65001  496306  634769     4571    0    0 5w2d           10
 
         # BGP router identifier 10.19.228.213, local AS number 64106
-        p_bgp_router = re.compile(r"^BGP\s+router\s+identifier\s+(?P<rid>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}),\s+local\s+AS\s+number\s+(?P<as>\d+)$")
+        p_bgp_router = re.compile(r"^BGP\s+router\s+identifier\s+(?P<rid>\S+),\s+local\s+AS\s+number\s+(?P<as>\d+)$")
 
         # BGP table version is 4571, main routing table version 4571
         p_bgp_table = re.compile(r"^BGP\s+table\s+version\s+is\s+(?P<tv>\d+),\s+main\s+routing\s+table\s+version\s+(?P<mtv>\d+)$")
@@ -256,7 +256,7 @@ class ShowIpBgpVpnv4VrfUserSummary(ShowIpBgpVpnv4VrfUserSummarySchema):
         p_bgp_peaked = re.compile(r"^(?P<networks>\d+)\s+networks\s+peaked\s+at\s+(?P<date>[^(]+)\((?P<ago>\S+)\s+ago\)$")
 
         # 10.199.228.201  4        65001  202074  202468     4571    0    0 18w1d          10
-        p_bgp_neighbor = re.compile(r"^(?P<neighbor>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<v>\d+)\s+(?P<as>\d+)\s+(?P<msgr>\d+)\s+(?P<msgs>\d+)\s+(?P<tblv>\d+)\s+(?P<inq>\d+)\s+(?P<outq>\d+)\s+(?P<ud>\S+)\s+(?P<state>\d+)$")
+        p_bgp_neighbor = re.compile(r"^(?P<neighbor>\S+)\s+(?P<v>\d+)\s+(?P<as>\d+)\s+(?P<msgr>\d+)\s+(?P<msgs>\d+)\s+(?P<tblv>\d+)\s+(?P<inq>\d+)\s+(?P<outq>\d+)\s+(?P<ud>\S+)\s+(?P<state>\d+)$")
 
         bgp_dict = {}
 
@@ -344,18 +344,16 @@ class ShowIpBgpVpnv4VrfUserSummary(ShowIpBgpVpnv4VrfUserSummarySchema):
             elif p_bgp_neighbor.match(line):
                 # 10.199.228.201  4        65001  202074  202468     4571    0    0 18w1d          10
                 m_bgp_neighbor = p_bgp_neighbor.match(line)
-                if not bgp_dict.get("neighbor_ips"):
-                    bgp_dict.update({ "neighbor_ips": {} })
-                bgp_dict["neighbor_ips"].update({ m_bgp_neighbor.group("neighbor"): {} })
-                bgp_dict["neighbor_ips"][m_bgp_neighbor.group("neighbor")].update({ "version": int(m_bgp_neighbor.group("v")) })
-                bgp_dict["neighbor_ips"][m_bgp_neighbor.group("neighbor")].update({ "as": int(m_bgp_neighbor.group("as")) })
-                bgp_dict["neighbor_ips"][m_bgp_neighbor.group("neighbor")].update({ "messages_received": int(m_bgp_neighbor.group("msgr")) })
-                bgp_dict["neighbor_ips"][m_bgp_neighbor.group("neighbor")].update({ "messages_sent": int(m_bgp_neighbor.group("msgs")) })
-                bgp_dict["neighbor_ips"][m_bgp_neighbor.group("neighbor")].update({ "table_version": int(m_bgp_neighbor.group("tblv")) })
-                bgp_dict["neighbor_ips"][m_bgp_neighbor.group("neighbor")].update({ "in_queue": int(m_bgp_neighbor.group("inq")) })
-                bgp_dict["neighbor_ips"][m_bgp_neighbor.group("neighbor")].update({ "out_queue": int(m_bgp_neighbor.group("outq")) })
-                bgp_dict["neighbor_ips"][m_bgp_neighbor.group("neighbor")].update({ "up_down": m_bgp_neighbor.group("ud") })
-                bgp_dict["neighbor_ips"][m_bgp_neighbor.group("neighbor")].update({ "state": int(m_bgp_neighbor.group("state")) })
+                neighbor_dict = bgp_dict.setdefault("neighbor_ips", {}).setdefault(m_bgp_neighbor.group("neighbor"), {} )
+                neighbor_dict.update({ "version": int(m_bgp_neighbor.group("v")) })
+                neighbor_dict.update({ "as": int(m_bgp_neighbor.group("as")) })
+                neighbor_dict.update({ "messages_received": int(m_bgp_neighbor.group("msgr")) })
+                neighbor_dict.update({ "messages_sent": int(m_bgp_neighbor.group("msgs")) })
+                neighbor_dict.update({ "table_version": int(m_bgp_neighbor.group("tblv")) })
+                neighbor_dict.update({ "in_queue": int(m_bgp_neighbor.group("inq")) })
+                neighbor_dict.update({ "out_queue": int(m_bgp_neighbor.group("outq")) })
+                neighbor_dict.update({ "up_down": m_bgp_neighbor.group("ud") })
+                neighbor_dict.update({ "state": int(m_bgp_neighbor.group("state")) })
                 continue
 
         return bgp_dict
