@@ -1624,13 +1624,15 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            if wlan_info_capture.match(line):
-                match = wlan_info_capture.match(line)
+            match = wlan_info_capture.match(line)
+            if match:
                 group = match.groupdict()
 
                 group["id"] = int(group["id"])
 
                 wlan_info_obj.update({"wlan_info": group})
+
+                continue
 
             if client_stats_capture.match(line) or client_delete_capture.match(line):
                 line_format = line.replace(" ", "_").replace(":", "").lower()
@@ -1638,8 +1640,10 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
 
                 header_group = wlan_info_obj[line_format]
 
+                continue
+
+            match = key_value_capture.match(line)
             if key_value_capture.match(line):
-                match = key_value_capture.match(line)
                 group = match.groupdict()
 
                 space_format_key = re.sub(r" - |\s+|-", "_", group["key"])
@@ -1647,6 +1651,8 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
                 format_value =  int(group["value"])
 
                 header_group.update({format_key: format_value})
+
+                continue
 
         return wlan_info_obj
 
