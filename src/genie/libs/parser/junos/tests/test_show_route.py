@@ -341,6 +341,46 @@ class test_show_route_table(unittest.TestCase):
         }
     }
 
+    golden_output_7 = {'execute.return_value':
+        '''
+            mpls.0: 11 destinations, 11 routes (11 active, 0 holddown, 0 hidden)
+            + = Active Route, - = Last Active, * = Both
+            592383             *[LDP/9] 00:02:52, metric 2, tag 0
+                                > to 10.169.14.158 via et-0/0/0.0, Swap 517890
+        '''}
+
+    parsed_output_7 = {
+        'table_name': {
+            'mpls.0': {
+                'active_route_count': 11,
+                'destination_count': 11,
+                'hidden_route_count': 0,
+                'holddown_route_count': 0,
+                'routes': {
+                    '592383': {
+                        'active_tag': '*',
+                        'age': '00:02:52',
+                        'metric': '2',
+                        'next_hop': {
+                            'next_hop_list': {
+                                1: {
+                                    'best_route': '>',
+                                    'mpls_label': 'Swap 517890',
+                                    'to': '10.169.14.158',
+                                    'via': 'et-0/0/0.0',
+                                },
+                            },
+                        },
+                        'preference': '9',
+                        'protocol_name': 'LDP',
+                        'rt-tag': '0',
+                    },
+                },
+                'total_route_count': 11,
+            },
+        },
+    }
+
     def test_show_route_table_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
@@ -393,6 +433,15 @@ class test_show_route_table(unittest.TestCase):
                                   prefix='label',
                                   destination='118420')
         self.assertEqual(parsed_output, self.parsed_output_6)
+    
+    def test_show_route_table_7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_7)
+        obj = ShowRouteTable(device=self.device)
+        parsed_output = obj.parse(table='mpls.0',
+                                  prefix='label',
+                                  destination='592383')
+        self.assertEqual(parsed_output, self.parsed_output_7)
 
 
 '''
@@ -61751,6 +61800,37 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
     }
     }
 
+    golden_output_4 = {'execute.return_value':'''
+        show route advertising-protocol bgp 10.135.0.2 10.81.123.0/32
+
+        inet.0: 1200008 destinations, 1200008 routes (1200008 active, 0 holddown, 0 hidden)
+        Prefix                  Nexthop              MED     Lclpref    AS path
+        * 10.81.123.0/32        Self                                    67890 [1] I
+    '''}
+
+    golden_parsed_output_4 = {
+        'route-information': 
+            {'route-table': {
+                'active-route-count': 
+                    '1200008',
+                    'destination-count': '1200008',
+                    'hidden-route-count': '0',
+                    'holddown-route-count': '0',
+                    'rt': [
+                        {
+                            'rt-destination': '10.81.123.0/32',
+                            'rt-entry': 
+                            {
+                                'active-tag': '*',
+                                'as-path': '67890 '
+                                            '[1] I',
+                                'bgp-metric-flags': 'Nexthop '
+                                                    'Change',
+                                'nh': {'to': 'Self'},
+                                'protocol-name': 'BGP'}}],
+                            'table-name': 'inet.0',
+                            'total-route-count': '1200008'}}}
+
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -61775,6 +61855,16 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
         obj = ShowRouteAdvertisingProtocol(device=self.device)
         parsed_output = obj.parse(protocol='bgp', neighbor='2001:db8:7fc5:ca45::1')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowRouteAdvertisingProtocol(device=self.device)
+        parsed_output = obj.parse(
+            protocol='bgp', 
+            neighbor='10.135.0.2', 
+            route='10.81.123.0/32')
+        
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)        
 
 
 '''

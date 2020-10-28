@@ -22,15 +22,17 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         for command, expected_source in parser_data.items(): 
             arguments = re.findall('{(.*?)}', command)
             search = re.escape(re.sub('{.*?}', 'argument', command))
-            expected_kwargs = {argument:'argument' for argument in arguments}
+            expected_kwargs = {argument:'argument' for argument in arguments}            
             results = _fuzzy_search_command(search, True)
             is_found = False
+            
             for result in results:
                 found_command, source, kwargs = result
                 if source == expected_source and command == found_command:
                     is_found = True
                     self.assertDictEqual(kwargs, expected_kwargs, search)
                     break
+                
             self.assertTrue(is_found, search)
 
     def test_special_command(self):

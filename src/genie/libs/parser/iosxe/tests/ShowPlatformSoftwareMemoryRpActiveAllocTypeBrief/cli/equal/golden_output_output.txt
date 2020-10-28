@@ -1,0 +1,25 @@
+show platform software memory mdt-pubd RP active alloc type data brief
+  Type                    Allocated     Requested     Allocations   Frees
+  ------------------------------------------------------------------------------
+  BYTE                    4509864       4030448       150674        142113
+  BYTE*                   30999         29151         50            17
+  Summary                 4989407       4501983       150939        142235
+  _btrace_ctx_            4153          4097          1             0
+  _btrace_ctx_global_     4847          4511          6             0
+  bipc_channel_           85080         84800         14            9
+  bipc_rx_stream_         287080        286800        14            9
+  brand_context_s         0             0             2             2
+  brand_iter_s            0             0             2             2
+  chasfs_ctx_int_         8384          8272          4             2
+  evContext_p             12640         12584         1             0
+  file_alloc_handle_s     144           32            2             0
+  file_info               4208          4096          2             0
+  hash_table_s            208           96            2             0
+  hashtable               5472          2280          100           43
+  interceptor_reg_ctx_s   0             0             1             1
+  mqipc_ctl_              1392          1056          6             0
+  section_data_s          0             0             2             2
+  tdl_epoch_s             304           192           2             0
+  tdldb_info_             448           336           2             0
+  tdlhandle_s             18408         17680         48            35
+  vista_context_          15776         15552         4             0
