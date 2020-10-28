@@ -60,7 +60,7 @@ class ShowTelemetryInternalConnection(ShowTelemetryInternalConnectionSchema):
 
         # 6 10.10.76.186              20830   0 10.64.47.177               Active
         index_capture = re.compile(
-            r"(?P<index>\d+)\s+(?P<peer_address>\d+\.\d+\.\d+\.\d+)\s+(?P<port>\d+)\s+(?P<vrf>\d+)\s+(?P<source_address>\d+\.\d+\.\d+\.\d+)\s+(?P<state>\S+)"
+            r"(?P<index>\d+)\s+(?P<peer_address>[\d.]+)\s+(?P<port>\d+)\s+(?P<vrf>\d+)\s+(?P<source_address>\d+\.\d+\.\d+\.\d+)\s+(?P<state>\S+)"
         )
 
         tele_info_obj = {}
