@@ -1,0 +1,3069 @@
+---------------------------------------------------
+omp route entries for vpn 2 route 100.2.0.0/16
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3621
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.26
+     type             installed
+     tloc             5.0.0.6, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          506
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3622
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.26
+     type             installed
+     tloc             5.0.0.6, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          506
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.26
+path-id         75
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.26
+     type             installed
+     tloc             5.0.0.6, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          506
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.26
+path-id         77
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.26
+     type             installed
+     tloc             5.0.0.6, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          506
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 2 route 103.2.0.0/16
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3479
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3480
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3481
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3482
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 2 route 104.1.2.0/24
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         2885
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.12
+     type             installed
+     tloc             5.0.0.4, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          504
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         2886
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.12
+     type             installed
+     tloc             5.0.0.4, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          504
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         2888
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.12
+     type             installed
+     tloc             5.0.0.4, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          504
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3559
+label           1002
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.12
+     type             installed
+     tloc             5.0.0.4, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          504
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 3 route 1.1.1.1/32
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3486
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3487
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3488
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3585
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.10
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 3 route 1.1.1.2/32
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3483
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3484
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3485
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3584
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.10
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     static
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 3 route 2.2.2.0/30
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3492
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3493
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3494
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3587
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.10
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 3 route 2.2.3.2/32
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3489
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3490
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3491
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3586
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.10
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     proto-invalid
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 3 route 100.3.0.0/16
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3619
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.26
+     type             installed
+     tloc             5.0.0.6, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          506
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3620
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.26
+     type             installed
+     tloc             5.0.0.6, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          506
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.26
+path-id         75
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.26
+     type             installed
+     tloc             5.0.0.6, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          506
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.26
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.26
+     type             installed
+     tloc             5.0.0.6, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          506
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 3 route 101.1.3.0/24
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3583
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.10
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 3 route 103.3.0.0/16
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3475
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3476
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3477
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3478
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 3 route 103.30.0.0/16
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3471
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3472
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3473
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3474
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 3 route 103.31.0.0/16
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3467
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3468
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3469
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3470
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 3 route 103.32.0.0/16
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3463
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3464
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3465
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3466
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 3 route 103.33.0.0/16
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3459
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3460
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3461
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3462
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1003
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 4 route 101.1.4.0/24
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3569
+label           1004
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.10
+path-id         77
+label           1004
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 5 route 103.0.5.0/24
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3455
+label           1004
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3456
+label           1004
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3457
+label           1004
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3458
+label           1004
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1004
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1004
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1004
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1004
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 1002 route 101.100.2.0/24
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3582
+label           1006
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.10
+path-id         77
+label           1006
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.10
+     type             installed
+     tloc             5.0.0.1, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          501
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 1002 route 103.100.2.0/24
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3451
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3452
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3453
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3454
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 1002 route 103.101.2.0/24
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3447
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3448
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3449
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3450
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         68
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         74
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         75
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.11
+path-id         77
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.11
+     type             installed
+     tloc             5.0.0.3, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          503
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+
+---------------------------------------------------
+omp route entries for vpn 1002 route 104.100.2.0/24
+---------------------------------------------------
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         2889
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.12
+     type             installed
+     tloc             5.0.0.4, biz-internet, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          504
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         2890
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.12
+     type             installed
+     tloc             5.0.0.4, blue, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          504
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         2892
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.12
+     type             installed
+     tloc             5.0.0.4, bronze, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          504
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set
+            RECEIVED FROM:
+peer            169.254.10.7
+path-id         3558
+label           1005
+status          C,R
+loss-reason     not set
+lost-to-peer    not set
+lost-to-path-id not set
+    Attributes:
+     originator       169.254.10.12
+     type             installed
+     tloc             5.0.0.4, gold, ipsec
+     ultimate-tloc    not set
+     domain-id        not set
+     overlay-id        1
+     site-id          504
+     preference       not set
+     tag              not set
+     origin-proto     connected
+     origin-metric    0
+     as-path          not set
+     community        not set
+     unknown-attr-len not set

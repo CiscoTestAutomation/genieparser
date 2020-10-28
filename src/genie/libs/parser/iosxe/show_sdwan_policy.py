@@ -7,10 +7,10 @@
 
 # Python
 import re
-
 # Genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+
 
 
 class ShowSdwanPolicyIpv6AccessListAssociationsSchema(MetaParser):
@@ -23,10 +23,8 @@ class ShowSdwanPolicyIpv6AccessListAssociationsSchema(MetaParser):
                     'interface_name': str,
                     },
                 },
-            }
+            },
         }
-    }
-
 
 
 class ShowSdwanPolicyIpv6AccessListAssociations(ShowSdwanPolicyIpv6AccessListAssociationsSchema):
@@ -43,26 +41,27 @@ class ShowSdwanPolicyIpv6AccessListAssociations(ShowSdwanPolicyIpv6AccessListAss
 
         return_dict={}
         parsed_dict={}
-        outlist=out.splitlines()
-        #acl-v6-apple  TenGigabitEthernet0/0/0.1002  in
-        p1=re.compile(r'^(?P<name>[\w\-\s]+) + (?P<interface_name>[\d\w/\.\-]+) + (?P<direction>[\w]+)$')
-        for line in outlist:
-            m1=p1.match(line)
-            if m1:
-                groups=m1.groupdict()
-                local_dict={}
-                local_dict['interface_name'] = groups['interface_name']
-                local_dict['direction'] = groups['direction']
-                if groups['name'].replace(' ','') !='':
-                    key=groups['name'].replace(' ','')
-                    entry=1
-                    return_dict[key]={}
-                    return_dict[key][entry] = {}
-                    return_dict[key][entry] = local_dict
-                else:
-                    entry=entry+1
-                    return_dict[key][entry]=local_dict
-        parsed_dict['name'] = return_dict
+        if out:
+            outlist=out.splitlines()
+            #acl-v6-apple  TenGigabitEthernet0/0/0.1002  in
+            p1=re.compile(r'^(?P<name>[\w\-\s]+) + (?P<interface_name>[\d\w/\.\-]+) + (?P<interface_direction>[\w\s]+)$')
+            for line in outlist:
+                m1=p1.match(line.rstrip())
+                if m1:
+                    groups=m1.groupdict()
+                    local_dict={}
+                    local_dict['interface_name'] = groups['interface_name']
+                    local_dict['interface_direction'] = groups['interface_direction'].strip()
+                    if groups['name'].replace(' ','') !='':
+                        key=groups['name'].replace(' ','')
+                        entry=1
+                        return_dict[key]={}
+                        return_dict[key][entry] = {}
+                        return_dict[key][entry] = local_dict
+                    else:
+                        entry=entry+1
+                        return_dict[key][entry]=local_dict
+            parsed_dict['name'] = return_dict
         return parsed_dict
 
 class ShowSdwanPolicyAccessListAssociations(ShowSdwanPolicyIpv6AccessListAssociationsSchema):
@@ -79,27 +78,29 @@ class ShowSdwanPolicyAccessListAssociations(ShowSdwanPolicyIpv6AccessListAssocia
 
         return_dict={}
         parsed_dict={}
-        outlist=out.splitlines()
-        #acl-v6-apple  TenGigabitEthernet0/0/0.1002  in
-        p1=re.compile(r'^(?P<name>[\w\-\s]+) + (?P<interface_name>[\d\w/\.\-]+) + (?P<direction>[\w]+)$')
-        for line in outlist:
-            m1=p1.match(line)
-            if m1:
-                groups=m1.groupdict()
-                local_dict={}
-                local_dict['interface_name'] = groups['interface_name']
-                local_dict['direction'] = groups['direction']
-                if groups['name'].replace(' ','') !='':
-                    key=groups['name'].replace(' ','')
-                    entry=1
-                    return_dict[key]={}
-                    return_dict[key][entry] = {}
-                    return_dict[key][entry] = local_dict
-                else:
-                    entry=entry+1
-                    return_dict[key][entry]=local_dict
-        parsed_dict['name'] = return_dict
+        if out:
+            outlist=out.splitlines()
+            #acl-v6-apple  TenGigabitEthernet0/0/0.1002  in
+            p1=re.compile(r'^(?P<name>[\w\-\s]+) + (?P<interface_name>[\d\w/\.\-]+) + (?P<interface_direction>[\w\s]+)$')
+            for line in outlist:
+                m1=p1.match(line.rstrip())
+                if m1:
+                    groups=m1.groupdict()
+                    local_dict={}
+                    local_dict['interface_name'] = groups['interface_name']
+                    local_dict['interface_direction'] = groups['interface_direction'].strip()
+                    if groups['name'].replace(' ','') !='':
+                        key=groups['name'].replace(' ','')
+                        entry=1
+                        return_dict[key]={}
+                        return_dict[key][entry] = {}
+                        return_dict[key][entry] = local_dict
+                    else:
+                        entry=entry+1
+                        return_dict[key][entry]=local_dict
+            parsed_dict['name'] = return_dict
         return parsed_dict
+
 
 class ShowSdwanPolicyAccessListCountersSchema(MetaParser):
     ''' Schema for show sdwan policy access-list-counters'''
@@ -112,9 +113,8 @@ class ShowSdwanPolicyAccessListCountersSchema(MetaParser):
                     'packets':str,
                     },
                 },
-            }
+            },
         }
-    }
 
 
 class ShowSdwanPolicyAccessListCounters(ShowSdwanPolicyAccessListCountersSchema):
@@ -133,32 +133,32 @@ class ShowSdwanPolicyAccessListCounters(ShowSdwanPolicyAccessListCountersSchema)
 
         return_dict={}
         final_dict={}
-        outlist=out.splitlines()
-        for lines in range(len(outlist)):
-            if len(outlist[lines]) < 24:
-                local_list=outlist[lines-1].split()
-                local_list[0] = local_list[0]+ outlist[lines]
-                outlist[lines-1] = "  ".join(local_list)
-        p1=re.compile(r'^(?P<name>[\w\-\s]+) + (?P<counter_name>[\d\w/\.\-]+) + (?P<packets>[\d]+) +(?P<bytes>[\d]+)$')
-        for line in outlist:
-            m1=p1.match(line)
-            if m1:
-                groups=m1.groupdict()
-                local_dict={}
-                local_dict['counter_name'] = groups['counter_name']
-                local_dict['packets'] = groups['packets']
-                local_dict['bytes'] = groups['bytes']
-                if groups['name'].replace(' ','') !='':
-                    key=groups['name'].replace(' ','')
-                    entry=1
-                    return_dict[key]={}
-                    return_dict[key][entry] = {}
-                    return_dict[key][entry] = local_dict
-                else:
-                    entry=entry+1
-                    return_dict[key][entry]=local_dict
-        parsed_dict['name'] = return_dict
-        pprint.pprint(parsed_dict)
+        if out:
+            outlist=out.splitlines()
+            for lines in range(len(outlist)):
+                if len(outlist[lines].rstrip()) < 24:
+                    local_list=outlist[lines-1].split()
+                    local_list[0] = local_list[0]+ outlist[lines]
+                    outlist[lines-1] = "  ".join(local_list)
+            p1=re.compile(r'^(?P<name>[\w\-\s]+) + (?P<counter_name>[\d\w/\.\-]+) + (?P<packets>[\d]+) +(?P<bytes>[\d]+)$')
+            for line in outlist:
+                m1=p1.match(line.rstrip())
+                if m1:
+                    groups=m1.groupdict()
+                    local_dict={}
+                    local_dict['counter_name'] = groups['counter_name']
+                    local_dict['packets'] = groups['packets']
+                    local_dict['bytes'] = groups['bytes']
+                    if groups['name'].replace(' ','') !='':
+                        key=groups['name'].replace(' ','')
+                        entry=1
+                        return_dict[key]={}
+                        return_dict[key][entry] = {}
+                        return_dict[key][entry] = local_dict
+                    else:
+                        entry=entry+1
+                        return_dict[key][entry]=local_dict
+            parsed_dict['name'] = return_dict
         return parsed_dict
 
 class ShowSdwanPolicyIpv6AccessListCounters(ShowSdwanPolicyAccessListCountersSchema):
@@ -177,30 +177,30 @@ class ShowSdwanPolicyIpv6AccessListCounters(ShowSdwanPolicyAccessListCountersSch
 
         return_dict={}
         final_dict={}
-        outlist=out.splitlines()
-        for lines in range(len(outlist)):
-            if len(outlist[lines]) < 24:
-                local_list=outlist[lines-1].split()
-                local_list[0] = local_list[0]+ outlist[lines]
-                outlist[lines-1] = "  ".join(local_list)
-        p1=re.compile(r'^(?P<name>[\w\-\s]+) + (?P<counter_name>[\d\w/\.\-]+) + (?P<packets>[\d]+) +(?P<bytes>[\d]+)$')
-        for line in outlist:
-            m1=p1.match(line)
-            if m1:
-                groups=m1.groupdict()
-                local_dict={}
-                local_dict['counter_name'] = groups['counter_name']
-                local_dict['packets'] = groups['packets']
-                local_dict['bytes'] = groups['bytes']
-                if groups['name'].replace(' ','') !='':
-                    key=groups['name'].replace(' ','')
-                    entry=1
-                    return_dict[key]={}
-                    return_dict[key][entry] = {}
-                    return_dict[key][entry] = local_dict
-                else:
-                    entry=entry+1
-                    return_dict[key][entry]=local_dict
-        parsed_dict['name'] = return_dict
-        pprint.pprint(parsed_dict)
+        if out:
+            outlist=out.splitlines()
+            for lines in range(len(outlist)):
+                if len(outlist[lines].rstrip()) < 24:
+                    local_list=outlist[lines-1].split()
+                    local_list[0] = local_list[0]+ outlist[lines]
+                    outlist[lines-1] = "  ".join(local_list)
+            p1=re.compile(r'^(?P<name>[\w\-\s]+) +(?P<counter_name>[\d\w/\.\-]+) +(?P<packets>[\d]+) +(?P<bytes>[\d]+)$')
+            for line in outlist:
+                m1=p1.match(line.rstrip())
+                if m1:
+                    groups=m1.groupdict()
+                    local_dict={}
+                    local_dict['counter_name'] = groups['counter_name']
+                    local_dict['packets'] = groups['packets']
+                    local_dict['bytes'] = groups['bytes'].strip()
+                    if groups['name'].replace(' ','') !='':
+                        key=groups['name'].replace(' ','')
+                        entry=1
+                        return_dict[key]={}
+                        return_dict[key][entry] = {}
+                        return_dict[key][entry] = local_dict
+                    else:
+                        entry=entry+1
+                        return_dict[key][entry]=local_dict
+            parsed_dict['name'] = return_dict
         return parsed_dict
