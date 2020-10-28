@@ -55,12 +55,12 @@ class ShowTelemetryInternalConnection(ShowTelemetryInternalConnectionSchema):
 
         # 10.37.174.7    25103   0 10.8.138.4      tls-native Active        sdn-network-101-wan
         no_index_capture = re.compile(
-            r"^(?P<peer_address>\d+\.\d+\.\d+\.\d+)\s+(?P<port>\d+)\s+(?P<vrf>\d+)\s+(?P<source_address>\d+\.\d+\.\d+\.\d+)\s+(?P<transport>\S+)\s+(?P<state>\S+)\s+(?P<profile>\S+)$"
+            r"^(?P<peer_address>[\d.]+)\s+(?P<port>\d+)\s+(?P<vrf>\d+)\s+(?P<source_address>[\d.]+)\s+(?P<transport>\S+)\s+(?P<state>\S+)\s+(?P<profile>\S+)$"
         )
 
         # 6 10.10.76.186              20830   0 10.64.47.177               Active
         index_capture = re.compile(
-            r"(?P<index>\d+)\s+(?P<peer_address>[\d.]+)\s+(?P<port>\d+)\s+(?P<vrf>\d+)\s+(?P<source_address>\d+\.\d+\.\d+\.\d+)\s+(?P<state>\S+)"
+            r"(?P<index>\d+)\s+(?P<peer_address>[\d.]+)\s+(?P<port>\d+)\s+(?P<vrf>\d+)\s+(?P<source_address>[\d.]+)\s+(?P<state>\S+)"
         )
 
         tele_info_obj = {}
