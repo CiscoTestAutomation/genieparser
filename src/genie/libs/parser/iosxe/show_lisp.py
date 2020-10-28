@@ -3455,7 +3455,7 @@ class ShowLispEidTableVrfIpv4Database(ShowLispEidTableVrfIpv4DatabaseSchema):
 
     cli_command = 'show lisp eid-table vrf {vrf} ipv4 database'
 
-    def cli(self, vrf="", output=None):
+    def cli(self, vrf, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(vrf=vrf))
         else:
