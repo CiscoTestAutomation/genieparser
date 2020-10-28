@@ -15,7 +15,7 @@ expected_output = {
       'zp_name': 'ZP_LAN_ZONE_vpn20_LAN__968352866',
       'classmap_name': 'ZBFW-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 2429226758,
       'tot_resp_bytes': 2429224221,
       'app_type': '/unknown'
@@ -35,7 +35,7 @@ expected_output = {
       'zp_name': 'ZP_LAN_ZONE_vpn20_LAN__968352866',
       'classmap_name': 'ZBFW-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 2431679243,
       'tot_resp_bytes': 2431677173,
       'app_type': '/statistical-p2p'
@@ -55,7 +55,7 @@ expected_output = {
       'zp_name': 'ZP_LAN_ZONE_vpn20_LAN__968352866',
       'classmap_name': 'ZBFW-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 2430723994,
       'tot_resp_bytes': 2430722132,
       'app_type': '/unknown'
@@ -75,7 +75,7 @@ expected_output = {
       'zp_name': 'ZP_LAN_ZONE_vpn20_LAN__968352866',
       'classmap_name': 'ZBFW-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 2430311067,
       'tot_resp_bytes': 2430308180,
       'app_type': '/unknown'
@@ -95,7 +95,7 @@ expected_output = {
       'zp_name': 'ZP_LAN_ZONE_vpn20_LAN__968352866',
       'classmap_name': 'ZBFW-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 2435061651,
       'tot_resp_bytes': 2435062756,
       'app_type': '/statistical-p2p'

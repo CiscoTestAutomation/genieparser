@@ -59,7 +59,7 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
 
         ret_dict = {}
         sess_num = 0
-        for line in pure_cli1.splitlines():
+        for line in out.splitlines():
             line = line.strip()
             print(line)
             
@@ -83,7 +83,7 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
                 feature_dict.update(({'zp_name': (groups['zp_name'])}))
                 feature_dict.update(({'classmap_name': (groups['classmap_name'])}))
                 feature_dict.update(({'nat_flags': (groups['nat_flags'])}))
-                feature_dict.update(({'internal_flags': (groups['internal_flags'])}))
+                feature_dict.update(({'internal_flags': int(groups['internal_flags'])}))
                 feature_dict.update(({'tot_init_bytes': int(groups['tot_init_bytes'])}))
                 feature_dict.update(({'tot_resp_bytes': int(groups['tot_resp_bytes'])}))
                 sess_num = sess_num + 1 
@@ -96,7 +96,7 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
                 groups = m.groupdict()
                 sess_dict = ret_dict.setdefault('sess_db', {})
                 feature_dict = sess_dict.setdefault(sess_num, {})
-                ffeature_dict.update(({'sess_id': int(groups['sess_id'])}))
+                feature_dict.update(({'sess_id': int(groups['sess_id'])}))
                 feature_dict.update(({'state': (groups['state'])}))
                 feature_dict.update(({'src_ip': (groups['src_ip'])}))
                 feature_dict.update(({'dst_ip': (groups['dst_ip'])}))
@@ -110,7 +110,7 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
                 feature_dict.update(({'zp_name': (groups['zp_name'])}))
                 feature_dict.update(({'classmap_name': (groups['classmap_name'])}))
                 feature_dict.update(({'nat_flags': (groups['nat_flags'])}))
-                feature_dict.update(({'internal_flags': (groups['internal_flags'])}))
+                feature_dict.update(({'internal_flags': int(groups['internal_flags'])}))
                 feature_dict.update(({'tot_init_bytes': int(groups['tot_init_bytes'])}))
                 feature_dict.update(({'tot_resp_bytes': int(groups['tot_resp_bytes'])}))
                 feature_dict.update(({'app_type': (groups['app_type'])}))
