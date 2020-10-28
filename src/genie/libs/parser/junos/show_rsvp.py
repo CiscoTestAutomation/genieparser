@@ -4,6 +4,7 @@ JUNOS parsers for the following commands:
     * show rsvp neighbor
     * show rsvp neighbor detail
     * show rsvp session
+    * show rsvp session transit
 """
 import re
 
@@ -123,11 +124,11 @@ class ShowRSVPNeighborDetailSchema(MetaParser):
                     "hellos-received": str,
                     "rsvp-neighbor-remote-instance": str,
                     "rsvp-neighbor-local-instance": str,
-                    "rsvp-refresh-reduct-status": str,
-                    "rsvp-refresh-reduct-remote-status": str,
-                    "rsvp-refresh-reduct-ack-status": str,
-                    "rsvp-nbr-enh-local-protection": {
-                        "rsvp-nbr-enh-lp-status": str,
+                    Optional("rsvp-refresh-reduct-status"): str,
+                    Optional("rsvp-refresh-reduct-remote-status"): str,
+                    Optional("rsvp-refresh-reduct-ack-status"): str,
+                    Optional("rsvp-nbr-enh-local-protection"): {
+                        Optional("rsvp-nbr-enh-lp-status"): str,
                         Optional("rsvp-nbr-enh-lp-total-lsp-count"): str,
                         Optional("rsvp-nbr-enh-lp-phop-lsp-count"): str,
                         Optional("rsvp-nbr-enh-lp-pphop-lsp-count"): str,
@@ -307,6 +308,7 @@ class ShowRSVPNeighborDetail(ShowRSVPNeighborDetailSchema):
 class ShowRSVPSessionSchema(MetaParser):
     """ Schema for:
         * show rsvp session
+        * show rsvp session transit
     """
 
     def validate_session_data_list(value):
@@ -422,3 +424,17 @@ class ShowRSVPSession(ShowRSVPSessionSchema):
                 continue
 
         return ret_dict
+    
+class ShowRSVPSessionTransit(ShowRSVPSession):
+    """ Parser for:
+            * show rsvp session transit
+    """
+    cli_command = 'show rsvp session transit'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+		
+        return super().cli(output=out)

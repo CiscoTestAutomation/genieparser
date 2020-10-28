@@ -1,0 +1,67 @@
+show platform software memory mdt-pubd RP active alloc type data
+Type: chasfs_ctx_int_
+  Allocated: 8384, Requested: 8272, Overhead: 112
+  Allocations: 4, Null Allocations: 0, Frees: 2
+Type: file_info
+  Allocated: 4208, Requested: 4096, Overhead: 112
+  Allocations: 2, Null Allocations: 0, Frees: 0
+Type: evContext_p
+  Allocated: 12640, Requested: 12584, Overhead: 56
+  Allocations: 1, Null Allocations: 0, Frees: 0
+Type: BYTE
+  Allocated: 4509858, Requested: 4030442, Overhead: 479416
+  Allocations: 150636, Null Allocations: 0, Frees: 142075
+Type: file_alloc_handle_s
+  Allocated: 144, Requested: 32, Overhead: 112
+  Allocations: 2, Null Allocations: 0, Frees: 0
+Type: BYTE*
+  Allocated: 30999, Requested: 29151, Overhead: 1848
+  Allocations: 50, Null Allocations: 0, Frees: 17
+Type: tdl_epoch_s
+  Allocated: 304, Requested: 192, Overhead: 112
+  Allocations: 2, Null Allocations: 0, Frees: 0
+Type: _btrace_ctx_global_
+  Allocated: 4847, Requested: 4511, Overhead: 336
+  Allocations: 6, Null Allocations: 0, Frees: 0
+Type: interceptor_reg_ctx_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 1, Null Allocations: 0, Frees: 1
+Type: bipc_rx_stream_
+  Allocated: 287080, Requested: 286800, Overhead: 280
+  Allocations: 13, Null Allocations: 0, Frees: 8
+Type: hash_table_s
+  Allocated: 208, Requested: 96, Overhead: 112
+  Allocations: 2, Null Allocations: 0, Frees: 0
+Type: bipc_channel_
+  Allocated: 85080, Requested: 84800, Overhead: 280
+  Allocations: 13, Null Allocations: 0, Frees: 8
+Type: mqipc_ctl_
+  Allocated: 1392, Requested: 1056, Overhead: 336
+  Allocations: 6, Null Allocations: 0, Frees: 0
+Type: tdldb_info_
+  Allocated: 448, Requested: 336, Overhead: 112
+  Allocations: 2, Null Allocations: 0, Frees: 0
+Type: vista_context_
+  Allocated: 15776, Requested: 15552, Overhead: 224
+  Allocations: 4, Null Allocations: 0, Frees: 0
+Type: hashtable
+  Allocated: 5472, Requested: 2280, Overhead: 3192
+  Allocations: 100, Null Allocations: 0, Frees: 43
+Type: brand_iter_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 2, Null Allocations: 0, Frees: 2
+Type: section_data_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 2, Null Allocations: 0, Frees: 2
+Type: tdlhandle_s
+  Allocated: 18408, Requested: 17680, Overhead: 728
+  Allocations: 45, Null Allocations: 0, Frees: 32
+Type: _btrace_ctx_
+  Allocated: 4153, Requested: 4097, Overhead: 56
+  Allocations: 1, Null Allocations: 0, Frees: 0
+Type: brand_context_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 2, Null Allocations: 0, Frees: 2
+Type: Summary
+  Allocated: 4989401, Requested: 4501977, Overhead: 487424
+  Allocations: 150896, Null Allocations: 0, Frees: 142192
