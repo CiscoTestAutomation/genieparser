@@ -192,7 +192,7 @@ class ShowIpBgpVpnv4VrfUserSummary(ShowIpBgpVpnv4VrfUserSummarySchema):
 
     cli_command = 'show ip bgp vpnv4 vrf {vrf} summary'
 
-    def cli(self, vrf="", output=None):
+    def cli(self, vrf, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(vrf=vrf))
         else:
