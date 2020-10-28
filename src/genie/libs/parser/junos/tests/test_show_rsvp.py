@@ -648,7 +648,7 @@ class TestShowRSVPSessionTransit(unittest.TestCase):
         show rsvp session transit
         Transit RSVP: 1 sessions
         To              From            State   Rt Style Labelin Labelout LSPname
-        4.4.4.4         2.2.2.2         Up       0  1 FF      22       22 test_lsp_01
+        10.64.4.4         10.16.2.2         Up       0  1 FF      22       22 test_lsp_01
         Total 1 displayed, Up 1, Down 0"""}
     
     golden_parsed_output_1 = {
@@ -660,7 +660,7 @@ class TestShowRSVPSessionTransit(unittest.TestCase):
                  "session-type": "Transit",
                 "up-count": "1",
                 "rsvp-session": [{
-                    "destination-address": "4.4.4.4",
+                    "destination-address": "10.64.4.4",
                     "label-in": "22",
                     "label-out": "22",
                     "lsp-state": "Up",
@@ -668,7 +668,7 @@ class TestShowRSVPSessionTransit(unittest.TestCase):
                     "resv-style": "FF",
                     "route-count": "0",
                     "rsb-count": "1",
-                    "source-address": "2.2.2.2"
+                    "source-address": "10.16.2.2"
                 }],
             }]
         }

@@ -1,0 +1,15 @@
+Local Mode CTS Configuration
+
+Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt      
+----------------------------------------------------------------------------------------
+default-policy-profile            DISABLED              DISABLED         0                
+lizzard_Fabric_F_dee07a54        DISABLED              DISABLED         0                
+internet_Fabric_F_ed7a6bda        DISABLED              DISABLED         0                
+lizzard_l_Fabric_F_90c6dccd      DISABLED              DISABLED         0                
+
+
+Flex Mode CTS Configuration
+
+Flex Profile Name                 SGACL Enforcement     Inline-Tagging   
+-----------------------------------------------------------------------
+default-flex-profile              DISABLED              DISABLED

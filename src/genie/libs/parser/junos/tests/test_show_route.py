@@ -346,7 +346,7 @@ class test_show_route_table(unittest.TestCase):
             mpls.0: 11 destinations, 11 routes (11 active, 0 holddown, 0 hidden)
             + = Active Route, - = Last Active, * = Both
             592383             *[LDP/9] 00:02:52, metric 2, tag 0
-                                > to 106.187.14.158 via et-0/0/0.0, Swap 517890
+                                > to 10.169.14.158 via et-0/0/0.0, Swap 517890
         '''}
 
     parsed_output_7 = {
@@ -366,7 +366,7 @@ class test_show_route_table(unittest.TestCase):
                                 1: {
                                     'best_route': '>',
                                     'mpls_label': 'Swap 517890',
-                                    'to': '106.187.14.158',
+                                    'to': '10.169.14.158',
                                     'via': 'et-0/0/0.0',
                                 },
                             },
@@ -61801,11 +61801,11 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
     }
 
     golden_output_4 = {'execute.return_value':'''
-        show route advertising-protocol bgp 30.0.0.2 123.123.123.0/32
+        show route advertising-protocol bgp 10.135.0.2 10.81.123.0/32
 
         inet.0: 1200008 destinations, 1200008 routes (1200008 active, 0 holddown, 0 hidden)
         Prefix                  Nexthop              MED     Lclpref    AS path
-        * 123.123.123.0/32        Self                                    67890 [1] I
+        * 10.81.123.0/32        Self                                    67890 [1] I
     '''}
 
     golden_parsed_output_4 = {
@@ -61818,7 +61818,7 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
                     'holddown-route-count': '0',
                     'rt': [
                         {
-                            'rt-destination': '123.123.123.0/32',
+                            'rt-destination': '10.81.123.0/32',
                             'rt-entry': 
                             {
                                 'active-tag': '*',
@@ -61861,8 +61861,8 @@ class TestShowRouteAdvertisingProtocol(unittest.TestCase):
         obj = ShowRouteAdvertisingProtocol(device=self.device)
         parsed_output = obj.parse(
             protocol='bgp', 
-            neighbor='30.0.0.2', 
-            route='123.123.123.0/32')
+            neighbor='10.135.0.2', 
+            route='10.81.123.0/32')
         
         self.assertEqual(parsed_output, self.golden_parsed_output_4)        
 

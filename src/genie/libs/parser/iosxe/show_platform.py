@@ -2259,7 +2259,7 @@ class ShowPlatform(ShowPlatformSchema):
         # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
         # ------  -----   ---------             -----------  --------------  -------       --------
         #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
-        #  1       32     C9200-24P             JAD2310213C  dc8c.3721.8c00  V01           17.05.01
+        #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
         p3 = re.compile(r'^(?P<switch>\d+) +(?P<ports>\d+) +'
                         '(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
                         '(?P<mac_address>[\w\.\:]+) +'

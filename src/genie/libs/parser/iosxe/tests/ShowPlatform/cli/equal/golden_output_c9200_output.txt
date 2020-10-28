@@ -4,9 +4,9 @@ Switch  Ports    Model                Serial No.   MAC address     Hw Ver.      
 
 ------  -----   ---------             -----------  --------------  -------       --------
 
- 1       32     C9200-24P             JAD2310213C  dc8c.3721.8c00  V01           17.05.01      
+ 1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01      
 
-Switch/Stack Mac Address : dc8c.3721.8c00 - Local Mac Address
+Switch/Stack Mac Address : dc8c.37ff.ad21 - Local Mac Address
 
 Mac persistency wait time: Indefinite
 

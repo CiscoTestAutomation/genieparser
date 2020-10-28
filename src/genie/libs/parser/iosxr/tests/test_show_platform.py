@@ -2418,7 +2418,7 @@ class TestShowProcessesMemory(unittest.TestCase):
                              'process': 'accounting_ma',
                              'stack': 136,
                              'text': 264}}},
-         180: {'index': {1: {'data': 199960,
+         180: {'index': {1: {'data': 1651090,
                              'dynamic': 242,
                              'jid': 180,
                              'process': 'aipc_cleaner',
@@ -2724,7 +2724,7 @@ class TestShowProcessesMemory(unittest.TestCase):
                              'process': 'bundlemgr_adj',
                              'stack': 136,
                              'text': 156}}},
-         258: {'index': {1: {'data': 199960,
+         258: {'index': {1: {'data': 1651090,
                              'dynamic': 244,
                              'jid': 258,
                              'process': 'file_paltx',
@@ -4429,8 +4429,8 @@ class TestShowProcessesMemory(unittest.TestCase):
         141            20     200648        136         246 linux_nto_misc_showd
         427            16     200120        136         245 media_server
         384            12     200636        136         244 showd_server
-        258            16     199960        136         244 file_paltx
-        180             8     199960        136         242 aipc_cleaner
+        258            16     1651090        136         244 file_paltx
+        180             8     1651090        136         242 aipc_cleaner
         177             8     200112        136         241 meminfo_svr
         80797          12     133916        136         204 sh_proc_memory
         336            12     199440        136         204 pam_manager

@@ -17,7 +17,7 @@ expected_output = {
         'image_id': 'CAT9K_IOSXE',
         'last_reload_reason': 'SMU Install',
         'license_level': 'AIR DNA Advantage',
-        'mac_address': '00:a7:42:d6:e8:60',
+        'mac_address': '00:a7:42:ff:bf:37',
         'main_mem': '2905019',
         'mb_assembly_num': '4874',
         'mb_rev_num': '1',

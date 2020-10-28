@@ -620,7 +620,7 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
         
         p3 = re.compile(r'^Root +this +switch +for +(the +)?(?P<root>[\w\.\s]+)$')
 
-        # Root          address 58ac.78b5.0e40  priority      8198  (8192 sysid 6)
+        # Root          address 58ac.78ff.c3f5  priority      8198  (8192 sysid 6)
         p3_1 = re.compile(r'^Root +address +(?P<root_address>[\w\.]+) +'
                           r'priority +(?P<root_priority>\d+) +'
                           r'\((\d+) +sysid +(?P<sysid>\d+)\)$')
@@ -695,7 +695,7 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
                 inst_dict['root'] = m.groupdict()['root']
                 continue
 
-            # Root          address 58ac.78b5.0e40  priority      8198  (8192 sysid 6)
+            # Root          address 58ac.78ff.c3f5  priority      8198  (8192 sysid 6)
             m = p3_1.match(line)
             if m:
                 group = m.groupdict()

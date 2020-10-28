@@ -1,0 +1,8 @@
+RP/0/RSP0/CPU0:onu-eg-01#show im dampening int gigabitEthernet 0/2/0/0
+Sun Oct 11 12:47:16.746 BST
+GigabitEthernet0/2/0/0 (0x080002c0)
+Dampening enabled: Penalty 0, not suppressed
+  underlying-state:  Up
+  half-life:         1        reuse:             750
+  suppress:          2000     max-suppress-time: 4
+  restart-penalty:   0

@@ -141,18 +141,18 @@ class TestShowLDPInterfaceDetail(unittest.TestCase):
         'execute.return_value':'''
         show ldp interface et-0/0/0.0 detail 
         Interface            Label space ID        Nbr count   Next hello
-        et-0/0/0.0           1.1.14.240:0         1           3
-        Hello interval: 5, Hold time: 15, Transport address: 1.1.14.240
+        et-0/0/0.0           10.4.14.240:0         1           3
+        Hello interval: 5, Hold time: 15, Transport address: 10.4.14.240
         '''}
 
     golden_parsed_output2 = {
         "ldp-interface-information": {
             "ldp-interface": {
                 "interface-name": "et-0/0/0.0",
-                "ldp-label-space-id": "1.1.14.240:0",
+                "ldp-label-space-id": "10.4.14.240:0",
                 "ldp-neighbor-count": "1",
                 "ldp-next-hello": "3",
-                "ldp-transport-address": "1.1.14.240",
+                "ldp-transport-address": "10.4.14.240",
                 "ldp-hello-interval": "5",
                 "ldp-holdtime": "15",
             }
@@ -1348,7 +1348,7 @@ class TestShowLDPOverview(unittest.TestCase):
         show ldp overview 
         Instance: master
         Reference count: 3
-        Router ID: 106.187.14.240
+        Router ID: 10.169.14.240
         Message id: 10
         Configuration sequence: 2
         Deaggregate: disabled
@@ -1393,8 +1393,8 @@ class TestShowLDPOverview(unittest.TestCase):
             Session protection: disabled
             Session protecton timeout: 0
         Interface addresses advertising:
-            106.187.14.121
-            106.187.14.157
+            10.169.14.121
+            10.169.14.157
         LDP Job:
             Read job time quantum: 1000, Write job time quantum: 1000
             Read job loop quantum: 100, Write job loop quantum: 100
@@ -1433,8 +1433,8 @@ class TestShowLDPOverview(unittest.TestCase):
                 "ldp-instance-name": "master",
                 "ldp-interface-address": {
                     "interface-address": [
-                        "106.187.14.121",
-                        "106.187.14.157"
+                        "10.169.14.121",
+                        "10.169.14.157"
                     ]
                 },
                 "ldp-ipv6-tunneling": "disabled",
@@ -1456,7 +1456,7 @@ class TestShowLDPOverview(unittest.TestCase):
                 "ldp-retention-mode": "liberal",
                 "ldp-route-acknowledgement": "enabled",
                 "ldp-route-preference": 9,
-                "ldp-router-id": "106.187.14.240",
+                "ldp-router-id": "10.169.14.240",
                 "ldp-session-count": {
                     "ldp-control-mode": "ordered",
                     "ldp-retention-mode": "liberal",
@@ -1639,28 +1639,28 @@ class TestShowLDPSessionIpaddressDetail(unittest.TestCase):
                 "ldp-holdtime": "30",
                 "ldp-keepalive-interval": "10",
                 "ldp-keepalive-time": "8",
-                "ldp-local-address": "59.128.2.250",
+                "ldp-local-address": "10.34.2.250",
                 "ldp-local-helper-mode": "enabled",
                 "ldp-local-label-adv-mode": "Downstream unsolicited",
                 "ldp-local-maximum-reconnect": "120000",
                 "ldp-local-maximum-recovery": "240000",
                 "ldp-mtu-discovery": "disabled",
                 "ldp-neg-label-adv-mode": "Downstream unsolicited",
-                "ldp-neighbor-address": "106.187.14.240",
+                "ldp-neighbor-address": "10.169.14.240",
                 "ldp-neighbor-count": "1",
                 "ldp-neighbor-types": {
                     "ldp-neighbor-type": "discovered"
                 },
                 "ldp-remaining-time": "27",
-                "ldp-remote-address": "106.187.14.240",
+                "ldp-remote-address": "10.169.14.240",
                 "ldp-remote-helper-mode": "enabled",
                 "ldp-remote-label-adv-mode": "Downstream unsolicited",
                 "ldp-remote-reconnect-time": "60000",
                 "ldp-retry-interval": "1",
                 "ldp-session-address": {
                     "interface-address": [
-                        "106.187.14.121",
-                        "106.187.14.157"
+                        "10.169.14.121",
+                        "10.169.14.157"
                     ]
                 },
                 "ldp-session-capabilities-advertised": {
@@ -1672,7 +1672,7 @@ class TestShowLDPSessionIpaddressDetail(unittest.TestCase):
                 "ldp-session-flags": {
                     "ldp-session-flag": "none"
                 },
-                "ldp-session-id": "59.128.2.250:0--106.187.14.240:0",
+                "ldp-session-id": "10.34.2.250:0--10.169.14.240:0",
                 "ldp-session-max-pdu": "4096",
                 "ldp-session-nsr-state": "Not in sync",
                 "ldp-session-protection": {
@@ -1688,14 +1688,14 @@ class TestShowLDPSessionIpaddressDetail(unittest.TestCase):
     golden_output2 = {
         'execute.return_value':
         '''
-        show ldp session 106.187.14.240 detail
-          Address: 106.187.14.240, State: Operational, Connection: Open, Hold time: 27
-            Session ID: 59.128.2.250:0--106.187.14.240:0
+        show ldp session 10.169.14.240 detail
+          Address: 10.169.14.240, State: Operational, Connection: Open, Hold time: 27
+            Session ID: 10.34.2.250:0--10.169.14.240:0
             Next keepalive in 8 seconds
             Passive, Maximum PDU: 4096, Hold time: 30, Neighbor count: 1
             Neighbor types: discovered
             Keepalive interval: 10, Connect retry interval: 1
-            Local address: 59.128.2.250, Remote address: 106.187.14.240
+            Local address: 10.34.2.250, Remote address: 10.169.14.240
             Up for 00:01:26
             Capabilities advertised: none
             Capabilities received: none
@@ -1711,8 +1711,8 @@ class TestShowLDPSessionIpaddressDetail(unittest.TestCase):
             MTU discovery: disabled
             Nonstop routing state: Not in sync
             Next-hop addresses received:
-                106.187.14.121
-                106.187.14.157
+                10.169.14.121
+                10.169.14.157
             '''
     }
 
@@ -1730,7 +1730,7 @@ class TestShowLDPSessionIpaddressDetail(unittest.TestCase):
                 "ldp-local-maximum-recovery": "240000",
                 "ldp-mtu-discovery": "disabled",
                 "ldp-neg-label-adv-mode": "Downstream unsolicited",
-                "ldp-neighbor-address": "106.187.14.240",
+                "ldp-neighbor-address": "10.169.14.240",
                 "ldp-neighbor-count": "1",
                 "ldp-neighbor-types": {
                     "ldp-neighbor-type": "discovered"
@@ -1748,7 +1748,7 @@ class TestShowLDPSessionIpaddressDetail(unittest.TestCase):
                 "ldp-session-flags": {
                     "ldp-session-flag": "none"
                 },
-                "ldp-session-id": "59.128.2.250:0--106.187.14.240:0",
+                "ldp-session-id": "10.34.2.250:0--10.169.14.240:0",
                 "ldp-session-max-pdu": "4096",
                 "ldp-session-nsr-state": "Not in sync",
                 "ldp-session-protection": {
@@ -1763,9 +1763,9 @@ class TestShowLDPSessionIpaddressDetail(unittest.TestCase):
     golden_output3 = {
         'execute.return_value':
         '''
-        show ldp session 106.187.14.240 detail 
-          Address: 106.187.14.240, State: Nonexistent, Connection: Closed, Hold time: 0
-            Session ID: 59.128.2.250:0--106.187.14.240:0
+        show ldp session 10.169.14.240 detail 
+          Address: 10.169.14.240, State: Nonexistent, Connection: Closed, Hold time: 0
+            Session ID: 10.34.2.250:0--10.169.14.240:0
             Passive, Maximum PDU: 4096, Hold time: 30, Neighbor count: 1
             Neighbor types: discovered
             Keepalive interval: 10, Connect retry interval: 1
@@ -1808,7 +1808,7 @@ class TestShowLDPSessionIpaddressDetail(unittest.TestCase):
     def test_golden3(self):
         self.device = Mock(**self.golden_output3)
         obj = ShowLdpSessionIpaddressDetail(device=self.device)
-        parsed_output = obj.parse(ipaddress='106.187.14.240')
+        parsed_output = obj.parse(ipaddress='10.169.14.240')
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 if __name__ == '__main__':
