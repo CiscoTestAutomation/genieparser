@@ -1,0 +1,134 @@
+CTS device identity: "SJC-ab-gw1"
+CTS global sgt-caching: Disabled
+CTS Ingress sgt-caching: Disabled
+CTS sg-epg translation status: Disabled
+
+Number of CTS interfaces in MANUAL mode: 0
+
+Number of CTS interfaces in corresponding IFC state
+  INIT            state:  0
+  AUTHENTICATING  state:  0
+  AUTHORIZING     state:  0
+  SAP_NEGOTIATING state:  0
+  OPEN            state:  0
+  HELD            state:  0
+  DISCONNECTING   state:  0
+  INVALID         state:  0
+
+CTS events statistics:
+  authentication success: 0
+  authentication reject : 0
+  authentication failure: 0
+  authentication logoff : 0
+  authentication no resp: 0
+  authorization success : 0
+  authorization failure : 0
+  sap success           : 0
+  sap failure           : 0
+  port auth failure     : 0
+
+Installed list: CTSServerList1-0089, 7 server(s):
+ *Server: 10.100.123.1, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+          Status = ALIVE
+          auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+ *Server: 10.100.123.2, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+          Status = ALIVE
+          auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+ *Server: 10.100.123.3, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+          Status = ALIVE
+          auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+ *Server: 10.100.123.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+          Status = ALIVE
+          auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+ *Server: 10.100.123.5, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+          Status = ALIVE
+          auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+ *Server: 10.100.123.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+          Status = ALIVE
+          auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+ *Server: 10.100.123.7, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+          Status = ALIVE
+          auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+===================
+CTS PAC Summary
+=====================
+  PAC-Info:
+    PAC Valid Until: 19:56:32 PDT Sep 6 2020
+
+
+============================
+CTS Environment-Data Summary
+============================
+
+Environment Data Last Received: 20:04:41 PDT Mon Jul 13 2020
+
+Environment Data Valid Until: 0:09:35:43 (dd:hr:mm:sec)
+
+===================================
+SXP Connections Summary
+===================================
+ SXP              : Enabled
+ Highest Version Supported: 4
+ Default Password : Set
+ Default Key-Chain: Not Set
+ Default Key-Chain Name: Not Applicable
+ Default Source IP: 192.168.2.24
+Connection retry open period: 120 secs
+Reconcile period: 120 secs
+Retry open timer is not running
+Peer-Sequence traverse limit for export: Not Set
+Peer-Sequence traverse limit for import: Not Set
+
+----------------------------------------------------------------------------------------------------------------------------------
+Peer_IP          Source_IP        Conn Status                                          Duration
+----------------------------------------------------------------------------------------------------------------------------------
+10.100.123.1     192.168.2.24   On                                                   44:19:54:57 (dd:hr:mm:sec)
+10.100.123.2     192.168.2.24   On                                                   44:19:54:57 (dd:hr:mm:sec)
+10.100.123.3     192.168.2.24   On                                                   44:19:54:57 (dd:hr:mm:sec)
+10.100.123.4     192.168.2.24   On                                                   44:19:54:57 (dd:hr:mm:sec)
+10.100.123.5     192.168.2.24   On                                                   44:18:58:51 (dd:hr:mm:sec)
+10.100.123.6     192.168.2.24   On                                                   20:12:53:44 (dd:hr:mm:sec)
+10.100.123.7     192.168.2.24   On                                                   44:18:58:51 (dd:hr:mm:sec)
+10.100.123.8     192.168.2.24   On                                                   20:12:40:45 (dd:hr:mm:sec)
+10.100.123.9     192.168.2.24   On                                                   44:18:58:51 (dd:hr:mm:sec)
+10.100.123.10    192.168.2.24   On                                                   44:18:58:51 (dd:hr:mm:sec)
+10.100.123.11    192.168.2.24   On                                                   44:22:21:14 (dd:hr:mm:sec)
+10.100.123.12    192.168.2.24   On                                                   44:18:58:51 (dd:hr:mm:sec)
+10.100.123.13    192.168.2.24   On                                                   45:08:24:42 (dd:hr:mm:sec)
+10.100.123.14    192.168.2.24   On                                                   45:08:24:42 (dd:hr:mm:sec)
+10.100.123.15    192.168.2.24   On                                                   36:11:31:13 (dd:hr:mm:sec)
+10.100.123.16    192.168.2.24   On                                                   36:12:13:54 (dd:hr:mm:sec)
+
+Total num of SXP Connections = 16
+===================
+
+======================================
+Summary of IPv4 & IPv6 IP-SGT bindings
+======================================
+
+
+            -IPv4-
+
+IP-SGT Active Bindings Summary
+============================================
+Total number of SXP      bindings = 3284
+Total number of active   bindings = 3284
+
+
+            -IPv6-
+
+IP-SGT Active Bindings Summary
+============================================
+Total number of SXP      bindings = 111
+Total number of active   bindings = 111
+
+
+CTS Role Based Enforcement: Enabled
+CTS Role Based VLAN Enforcement:Enabled
+
+
+=================================
+Trusted/Un-Trusted Links
+==================================
+Number of Trusted interfaces = 0
+Number of Un-Trusted interfaces = 0

@@ -732,7 +732,7 @@ class TestShowInterface(unittest.TestCase):
                  'txload': '1/255',
                  'types': '100/1000/10000 Ethernet'}}
     golden_output_custom = {'execute.return_value': '''
-      Ethernet2/1 is up
+      Ethernet2/1 is up (XCVR not inserted)
             admin state is up, Dedicated Interface
               Hardware: 10/100/1000 Ethernet, address: aaaa.bbff.8888 (bia 5254.00ff.8506)
               Description: desc-1
@@ -1125,6 +1125,7 @@ class TestShowInterface(unittest.TestCase):
                          'ethertype': '0x8100',
                          'flow_control': {'receive': False, 'send': False},
                          'interface_reset': 16,
+                         'last_link_flapped': '82week(s) 6day(s)',
                          'link_state': 'down',
                          'mac_address': '80e0.1dff.6cc3',
                          'media_type': '10G',

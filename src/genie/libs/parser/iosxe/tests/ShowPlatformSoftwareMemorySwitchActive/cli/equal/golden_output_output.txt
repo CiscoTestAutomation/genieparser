@@ -1,0 +1,51 @@
+show platform software memory mdt-pubd switch active R0
+Module: error-wrong-component
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 574, failed: 0, frees: 574
+Module: process
+  allocated: 16863, requested: 16783, overhead: 80
+  Allocations: 47, failed: 0, frees: 42
+Module: cdllib
+  allocated: 1688, requested: 1672, overhead: 16
+  Allocations: 389, failed: 0, frees: 388
+Module: eventutil
+  allocated: 120685, requested: 119757, overhead: 928
+  Allocations: 782, failed: 0, frees: 724
+Module: uipeer
+  allocated: 27264, requested: 27184, overhead: 80
+  Allocations: 1076, failed: 0, frees: 1071
+Module: chunk
+  allocated: 3065, requested: 2953, overhead: 112
+  Allocations: 11, failed: 0, frees: 4
+Module: dbal-root
+  allocated: 28, requested: 12, overhead: 16
+  Allocations: 1, failed: 0, frees: 0
+Module: dbal-intf-mgr
+  allocated: 439, requested: 247, overhead: 192
+  Allocations: 12, failed: 0, frees: 0
+Module: dbal-exec-mgr
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 59, failed: 0, frees: 59
+Module: dbal-batch-mgr
+  allocated: 5182, requested: 5134, overhead: 48
+  Allocations: 9, failed: 0, frees: 6
+Module: dbal-tunnel-mgr
+  allocated: 5279, requested: 5167, overhead: 112
+  Allocations: 55, failed: 0, frees: 48
+Module: dbal-scn-mgr
+  allocated: 3160, requested: 3096, overhead: 64
+  Allocations: 4, failed: 0, frees: 0
+Module: dbal-channel-mgr
+  allocated: 3264, requested: 3168, overhead: 96
+  Allocations: 12, failed: 0, frees: 6
+Module: dbal-mqipc
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 8, failed: 0, frees: 8
+Module: dbal-bipc
+  allocated: 4657, requested: 4577, overhead: 80
+  Allocations: 26, failed: 0, frees: 21
+Module: dbal-conn
+  allocated: 1024, requested: 896, overhead: 128
+  Allocations: 61, failed: 0, frees: 53
+Module: eiapi-name
+  allocated: 0, requested: 0, overhead: 0

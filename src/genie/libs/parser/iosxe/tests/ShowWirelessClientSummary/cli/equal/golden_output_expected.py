@@ -4,7 +4,7 @@ expected_output = {
         "included_clients": {
             1: {
                 "id": 17,
-                "mac_address": "58bf.ea58.b399",
+                "mac_address": "58bf.eaff.0cf1",
                 "ap_name": "b80-72-cap16",
                 "type": "WLAN",
                 "state": "Run",
@@ -14,7 +14,7 @@ expected_output = {
             },
             2: {
                 "id": 17,
-                "mac_address": "58bf.ea58.b463",
+                "mac_address": "58bf.eaff.0dbb",
                 "ap_name": "b80-82-cap16",
                 "type": "WLAN",
                 "state": "Run",
@@ -24,7 +24,7 @@ expected_output = {
             },
             3: {
                 "id": 17,
-                "mac_address": "58bf.ea58.b4ae",
+                "mac_address": "58bf.eaff.0d07",
                 "ap_name": "b80-12-cap17",
                 "type": "WLAN",
                 "state": "Run",
@@ -34,7 +34,7 @@ expected_output = {
             },
             4: {
                 "id": 17,
-                "mac_address": "58bf.ea58.b4b1",
+                "mac_address": "58bf.eaff.0d0a",
                 "ap_name": "b80-32-cap13",
                 "type": "WLAN",
                 "state": "Run",
@@ -44,7 +44,7 @@ expected_output = {
             },
             5: {
                 "id": 17,
-                "mac_address": "58bf.ea58.b4b6",
+                "mac_address": "58bf.eaff.0d0f",
                 "ap_name": "b80-42-cap13",
                 "type": "WLAN",
                 "state": "Run",
@@ -54,7 +54,7 @@ expected_output = {
             },
             6: {
                 "id": 17,
-                "mac_address": "58bf.ea30.90cc",
+                "mac_address": "58bf.eaff.c0fc",
                 "ap_name": "b80-22-cap14",
                 "type": "WLAN",
                 "state": "Run",
@@ -64,7 +64,7 @@ expected_output = {
             },
             7: {
                 "id": 19,
-                "mac_address": "58bf.eaa4.c601",
+                "mac_address": "58bf.eaff.6ba5",
                 "ap_name": "b80-32-cap4",
                 "type": "WLAN",
                 "state": "IP Learn",
@@ -74,7 +74,7 @@ expected_output = {
             },
             8: {
                 "id": 17,
-                "mac_address": "58bf.eae8.9e46",
+                "mac_address": "58bf.eaff.872f",
                 "ap_name": "b80-51-cap7",
                 "type": "WLAN",
                 "state": "Authenticating",
@@ -84,7 +84,7 @@ expected_output = {
             },
             9: {
                 "id": 17,
-                "mac_address": "58bf.ea28.dbba",
+                "mac_address": "58bf.eaff.04e2",
                 "ap_name": "b80-61-cap4",
                 "type": "WLAN",
                 "state": "Authenticating",
@@ -94,7 +94,7 @@ expected_output = {
             },
             10: {
                 "id": 19,
-                "mac_address": "58bf.ea32.c516",
+                "mac_address": "58bf.eaff.f748",
                 "ap_name": "b80-62-cap1",
                 "type": "WLAN",
                 "state": "IP Learn",
@@ -104,7 +104,7 @@ expected_output = {
             },
             11: {
                 "id": 17,
-                "mac_address": "58bf.eaf0.3746",
+                "mac_address": "58bf.eaff.2837",
                 "ap_name": "b80-12-cap14",
                 "type": "WLAN",
                 "state": "Run",
@@ -114,7 +114,7 @@ expected_output = {
             },
             12: {
                 "id": 17,
-                "mac_address": "58bf.eab2.9354",
+                "mac_address": "58bf.eaff.4607",
                 "ap_name": "b80-51-cap6",
                 "type": "WLAN",
                 "state": "Run",
@@ -124,7 +124,7 @@ expected_output = {
             },
             13: {
                 "id": 19,
-                "mac_address": "58bf.ea15.f311",
+                "mac_address": "58bf.eaff.0926",
                 "ap_name": "b80-61-cap4",
                 "type": "WLAN",
                 "state": "Webauth Pending",
@@ -137,7 +137,7 @@ expected_output = {
         "excluded_clients": {
             1: {
                 "id": 17,
-                "mac_address": "58bf.ea8a.20e6",
+                "mac_address": "58bf.eaff.aa71",
                 "ap_name": "b80-61-cap20",
                 "type": "WLAN",
                 "state": "Excluded",
@@ -147,7 +147,7 @@ expected_output = {
             },
             2: {
                 "id": 17,
-                "mac_address": "58bf.ea37.4442",
+                "mac_address": "58bf.eaff.7b79",
                 "ap_name": "b80-62-cap14",
                 "type": "WLAN",
                 "state": "Excluded",

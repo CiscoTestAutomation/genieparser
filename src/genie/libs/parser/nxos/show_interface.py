@@ -204,6 +204,7 @@ class ShowInterface(ShowInterfaceSchema):
         # Ethernet2/2 is up
         # Ethernet1/10 is down (Link not connected)
         # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
+        # Ethernet1/3 is down (XCVR not inserted)
         # Ethernet1/2 is down (SFP validation failed)
         # Ethernet1/4 is down (SFP not inserted)
         p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*(?P<link_state>(down|up))?'
@@ -217,6 +218,7 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(\(SFP\s+not\s+inserted\))?'
                         r'(\(suspended\(.*\)\))?'
                         r'(\(\S+ErrDisabled\))?'
+                        r'(\(XCVR\s+not\s+inserted\))?'
                         r'(\(.*ACK.*\))?$')
 
         # admin state is up
@@ -333,8 +335,9 @@ class ShowInterface(ShowInterfaceSchema):
                          r' *(?P<efficient_ethernet>[A-Za-z\/]+)$')
 
         #Last link flapped 00:07:28
+        #Last link flapped 15week(s) 5day(s)
         p18 = re.compile(r'^Last *link *flapped'
-                         r' *(?P<last_link_flapped>[a-z0-9\:]+)$')
+                         r' *(?P<last_link_flapped>[\S ]+)$')
 
         # Last clearing of "show interface" counters never
         p19 = re.compile(r'^Last *clearing *of *\"show *interface\"'
@@ -467,6 +470,7 @@ class ShowInterface(ShowInterfaceSchema):
             # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
             # Ethernet2/2 is up
             # Ethernet1/10 is down (Link not connected)
+            # Ethernet1/3 is down (XCVR not inserted)
             # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
             m = p1.match(line)
             if m:
