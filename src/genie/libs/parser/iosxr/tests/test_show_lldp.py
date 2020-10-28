@@ -1172,7 +1172,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
 
         ------------------------------------------------
         Local Interface: TenGigE0/0/0/28/0
-        Chassis id: 6464.9b31.3d00
+        Chassis id: 6464.9bff.6e31
         Port id: xe-0/1/2
         Port Description: port description
         System Name: switch1
@@ -1185,7 +1185,7 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
         System Capabilities: B,R
         Enabled Capabilities: B,R
         Management Addresses - not advertised
-        Peer MAC Address: 64:64:9b:31:3d:35
+        Peer MAC Address: 64:64:9b:ff:6e:66
 
 
         Total entries displayed: 1
@@ -1207,10 +1207,10 @@ class TestShowLldpNeighborDetail(unittest.TestCase):
                                         'system': True,
                                     },
                                 },
-                                'chassis_id': '6464.9b31.3d00',
+                                'chassis_id': '6464.9bff.6e31',
                                 'hold_time': 120,
                                 'neighbor_id': 'switch1',
-                                'peer_mac': '64:64:9b:31:3d:35',
+                                'peer_mac': '64:64:9b:ff:6e:66',
                                 'port_description': 'port description',
                                 'system_description': '',
                                 'system_name': 'switch1',

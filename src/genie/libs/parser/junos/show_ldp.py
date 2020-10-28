@@ -852,7 +852,7 @@ class ShowLDPInterface(ShowLDPInterfaceSchema):
             out = output
 
         # ge-0/0/0.0         10.1.2.2                   10.204.14.100:0  1      3
-        # et-0/0/0.0           1.1.14.240:0         1           3
+        # et-0/0/0.0           10.4.14.240:0         1           3
         p1 = re.compile(r'^(?P<interface_name>\S+)( +(?P<local_address>\S+))? +'
                         r'(?P<space_id>\S+) +(?P<neighbor_count>\d+) +(?P<next_hello>\d+)$')
 

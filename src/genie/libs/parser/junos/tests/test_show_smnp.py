@@ -101,38 +101,38 @@ class TestShowSnmpConfiguration(unittest.TestCase):
                         "authorization": "read-only",
                         "clients": [
                             {
-                                "name": "106.187.5.0/25"
+                                "name": "10.169.5.0/25"
                             },
                             {
-                                "name": "124.211.32.0/24"
+                                "name": "10.25.32.0/24"
                             },
                             {
-                                "name": "210.132.90.128/27"
+                                "name": "192.168.219.128/27"
                             },
                             {
-                                "name": "210.132.91.0/24"
+                                "name": "192.168.64.0/24"
                             },
                             {
-                                "name": "210.224.143.0/24"
+                                "name": "192.168.154.0/24"
                             },
                             {
                                 "name": "0.0.0.0/0",
                                 "restrict": True
                             },
                             {
-                                "name": "2001:268:fd06:1::/64"
+                                "name": "2001:db8:d38a:cf16::/64"
                             },
                             {
-                                "name": "2001:268:fd06:2::/64"
+                                "name": "2001:db8:d38a:d3e9::/64"
                             },
                             {
-                                "name": "27.85.164.48/28"
+                                "name": "10.49.164.48/28"
                             },
                             {
-                                "name": "210.234.255.0/24"
+                                "name": "192.168.21.0/24"
                             },
                             {
-                                "name": "125.53.97.0/24"
+                                "name": "10.64.97.0/24"
                             }
                         ]
                     },
@@ -141,7 +141,7 @@ class TestShowSnmpConfiguration(unittest.TestCase):
                         "authorization": "read-only",
                         "clients": [
                             {
-                                "name": "125.53.99.0/26"
+                                "name": "10.64.99.0/26"
                             }
                         ]
                     },
@@ -150,7 +150,7 @@ class TestShowSnmpConfiguration(unittest.TestCase):
                         "authorization": "read-only",
                         "clients": [
                             {
-                                "name": "203.141.183.0/24"
+                                "name": "192.168.34.0/24"
                             }
                         ]
                     }
@@ -174,10 +174,10 @@ class TestShowSnmpConfiguration(unittest.TestCase):
                     ],
                     "targets": [
                         {
-                            "name": "125.53.99.32"
+                            "name": "10.64.99.32"
                         },
                         {
-                            "name": "106.162.249.67"
+                            "name": "10.169.249.67"
                         }
                     ]
                 }
@@ -193,29 +193,29 @@ class TestShowSnmpConfiguration(unittest.TestCase):
         community safaripub {
             authorization read-only;
             clients {
-                106.187.5.0/25;
-                124.211.32.0/24;
-                210.132.90.128/27;
-                210.132.91.0/24;
-                210.224.143.0/24;
+                10.169.5.0/25;
+                10.25.32.0/24;
+                192.168.219.128/27;
+                192.168.64.0/24;
+                192.168.154.0/24;
                 0.0.0.0/0 restrict;
-                2001:268:fd06:1::/64;
-                2001:268:fd06:2::/64;
-                27.85.164.48/28;
-                210.234.255.0/24;
-                125.53.97.0/24;
+                2001:db8:d38a:cf16::/64;
+                2001:db8:d38a:d3e9::/64;
+                10.49.164.48/28;
+                192.168.21.0/24;
+                10.64.97.0/24;
             }
         }
         community SpiderSDC {
             authorization read-only;
             clients {
-                125.53.99.0/26;
+                10.64.99.0/26;
             }
         }
         community kitsune {
             authorization read-only;
             clients {
-                203.141.183.0/24;
+                192.168.34.0/24;
             }
         }
         trap-options {
@@ -229,8 +229,8 @@ class TestShowSnmpConfiguration(unittest.TestCase):
                 routing;
             }
             targets {
-                125.53.99.32;                   
-                106.162.249.67;
+                10.64.99.32;                   
+                10.169.249.67;
             }
         }
     """

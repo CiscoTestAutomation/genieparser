@@ -56,16 +56,16 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         #
         #
         #     Network Layer Address                   Link Layer Address Interface  vlan  prlvl age    state     Time left
-        # L   10.22.66.10                            7081.0535.b60b     Vl230      230   0100  10194mn REACHABLE
-        # L   10.22.28.10                            7081.0535.b60b     Vl238      238   0100  10255mn REACHABLE
-        # L   10.22.24.10                            7081.0535.b60b     Vl236      236   0100  10330mn REACHABLE
-        # L   10.22.20.10                            7081.0535.b60b     Vl234      234   0100  10329mn REACHABLE
-        # L   10.22.16.10                            7081.0535.b60b     Vl232      232   0100  10330mn REACHABLE
-        # L   10.22.12.10                            7081.0535.b60b     Vl228      228   0100  10330mn REACHABLE
-        # L   10.22.8.10                             7081.0535.b60b     Vl226      226   0100  10329mn REACHABLE
-        # L   10.22.4.10                             7081.0535.b60b     Vl224      224   0100  10329mn REACHABLE
-        # L   10.22.0.10                             7081.0535.b60b     Vl222      222   0100  10329mn REACHABLE
-        # L   10.10.68.10                            7081.0535.b60b     Vl243      243   0100  10330mn REACHABLE
+        # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
+        # L   10.22.28.10                            7081.05ff.eb40     Vl238      238   0100  10255mn REACHABLE
+        # L   10.22.24.10                            7081.05ff.eb40     Vl236      236   0100  10330mn REACHABLE
+        # L   10.22.20.10                            7081.05ff.eb40     Vl234      234   0100  10329mn REACHABLE
+        # L   10.22.16.10                            7081.05ff.eb40     Vl232      232   0100  10330mn REACHABLE
+        # L   10.22.12.10                            7081.05ff.eb40     Vl228      228   0100  10330mn REACHABLE
+        # L   10.22.8.10                             7081.05ff.eb40     Vl226      226   0100  10329mn REACHABLE
+        # L   10.22.4.10                             7081.05ff.eb40     Vl224      224   0100  10329mn REACHABLE
+        # L   10.22.0.10                             7081.05ff.eb40     Vl222      222   0100  10329mn REACHABLE
+        # L   10.10.68.10                            7081.05ff.eb40     Vl243      243   0100  10330mn REACHABLE
 
         # Binding Table has 10 entries, 0 dynamic (limit 200000)
         binding_table_capture = re.compile(
@@ -85,7 +85,7 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         #     Network Layer Address                   Link Layer Address Interface  vlan  prlvl age    state     Time left
         device_info_header_capture = re.compile(
             r"^Network\s+Layer\s+Address\s+Link\s+Layer\s+Address\s+Interface\s+vlan\s+prlvl\s+age\s+state\s+Time\s+left$")
-        # L   10.22.66.10                            7081.0535.b60b     Vl230      230   0100  10194mn REACHABLE
+        # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
         device_info_capture = re.compile(
             r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)$")
 
@@ -134,7 +134,7 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
                 device_info_header_capture_match = device_info_header_capture.match(line)
                 groups = device_info_header_capture_match.groupdict()
                 continue
-            # L   10.22.66.10                            7081.0535.b60b     Vl230      230   0100  10194mn REACHABLE
+            # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
             elif device_info_capture.match(line):
                 device_index = device_index + 1
                 device_info_capture_match = device_info_capture.match(line)
