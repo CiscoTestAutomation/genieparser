@@ -1955,11 +1955,15 @@ class ShowCtsApSgtInfoSchema(MetaParser):
     """Schema for show cts ap sgt info {ap_name}."""
 
     schema = {
-        "number_of_sgts_referred_by_the_ap": int,
-        Optional("sgts") : {
-            Optional(str) : {
-                Optional("policy_pushed_to_ap"): str,
-                Optional("no_of_clients"): int
+        "ap": {
+            Any(): {
+                "number_of_sgts_referred_by_the_ap": int,
+                Optional("sgts") : {
+                    Optional(str) : {
+                        Optional("policy_pushed_to_ap"): str,
+                        Optional("no_of_clients"): int
+                    }
+                }
             }
         }
     }
@@ -2004,29 +2008,29 @@ class ShowCtsApSgtInfo(ShowCtsApSgtInfoSchema):
             line = line.strip()
             m_number_sgts = p_number_sgts.match(line)
             if m_number_sgts:
-                cts_ap_dict.update({ "number_of_sgts_referred_by_the_ap": int(m_number_sgts.group("value")) })
+                cts_ap_dict.setdefault("ap", {} ).setdefault(ap_name, {})
+                cts_ap_dict["ap"][ap_name].update({ "number_of_sgts_referred_by_the_ap": int(m_number_sgts.group("value")) })
                 continue
-
             m_sgt_header = p_sgt_header.match(line)
             if m_sgt_header:
                 continue
-
             m_sgt_delimiter = p_sgt_delimiter.match(line)
             if m_sgt_delimiter:
                 continue
             m_sgt_row = p_sgt_row.match(line)
             if m_sgt_row:
                 group = m_sgt_row.groupdict()
-                sgts_dict = cts_ap_dict.setdefault("sgts", {})
+                sgts_dict = cts_ap_dict["ap"][ap_name].setdefault("sgts", {})
                 sgts_dict.update(
                             {
                                 group["sgt"]: {
-                                    "policy_pushed_to_ap": group["policy"].lower(),
+                                    "policy_pushed_to_ap": group["policy"],
                                     "no_of_clients": int(group["clients"])
                                 }
                             }
                         )
                 continue
+
 
         return cts_ap_dict
 
