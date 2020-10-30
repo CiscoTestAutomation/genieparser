@@ -201,10 +201,10 @@ class ShowSnmpConfiguration(ShowSnmpConfigurationSchema):
         # community safaripub {
         #     authorization read-only;
         #     clients {
-        #         106.187.5.0/25;
+        #         10.169.5.0/25;
         #         0.0.0.0/0 restrict;
-        #         2001:268:fd06:1::/64;
-        #         2001:268:fd06:2::/64;
+        #         2001:db8:d38a:cf16::/64;
+        #         2001:db8:d38a:d3e9::/64;
         #     }
         # }
         p3 = re.compile(r'^(community +(?P<name>.+) +\{)$')
@@ -224,8 +224,8 @@ class ShowSnmpConfiguration(ShowSnmpConfigurationSchema):
         #         routing;
         #     }
         #     targets {
-        #         125.53.99.32;
-        #         106.162.249.67;
+        #         10.64.99.32;
+        #         10.169.249.67;
         #     }
         # }
         p7 = re.compile(r'^trap-group +(?P<name>.+) +\{$')
@@ -262,10 +262,10 @@ class ShowSnmpConfiguration(ShowSnmpConfigurationSchema):
             # community safaripub {
             #     authorization read-only;
             #     clients {
-            #         106.187.5.0/25;
+            #         10.169.5.0/25;
             #         0.0.0.0/0 restrict;
-            #         2001:268:fd06:1::/64;
-            #         2001:268:fd06:2::/64;
+            #         2001:db8:d38a:cf16::/64;
+            #         2001:db8:d38a:d3e9::/64;
             #     }
             # }
             m = p3.match(line)
@@ -324,8 +324,8 @@ class ShowSnmpConfiguration(ShowSnmpConfigurationSchema):
             #         routing;
             #     }
             #     targets {
-            #         125.53.99.32;
-            #         106.162.249.67;
+            #         10.64.99.32;
+            #         10.169.249.67;
             #     }
             # }
             m = p7.match(line)

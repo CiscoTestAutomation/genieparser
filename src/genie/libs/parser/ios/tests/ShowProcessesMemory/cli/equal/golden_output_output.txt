@@ -169,7 +169,7 @@ Processor Pool Total:  563180224 Used:   71304104 Free:  491876120
  162   0          0          0      25096          0          0 Routing Topology
  163   0   43241616   42826064     294848          0          0 IP RIB Update
  164   0       5736       5184      17648          0          0 IP Background
- 165   0      99968       6048     111016          0          0 IP Connected Rou
+ 165   0      651098       6048     111016          0          0 IP Connected Rou
  166   0        232        360      13096          0          0 Flow Exporter Ti
  167   0          0          0      13096          0          0 XC RIB MGR
  168   0        232      23720      13096          0          0 Inter Chassis Pr

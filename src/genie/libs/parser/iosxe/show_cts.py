@@ -1,14 +1,14 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Optional
+from genie.metaparser.util.schemaengine import Optional, Any
 
 # ===================================
 # Schema for:
-#  * 'show_cts_sxp_connections_brief'
+#  * 'show cts sxp connections brief'
 # ===================================
 class ShowCtsSxpConnectionsBriefSchema(MetaParser):
-    """Schema for show_cts_sxp_connections_brief."""
+    """Schema for show cts sxp connections brief."""
 
     schema = {
         "sxp_connections": {
@@ -221,6 +221,7 @@ class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
         else:
             return {}
 
+
 # ==================
 # Schema for:
 #  * 'show cts pacs'
@@ -238,7 +239,7 @@ class ShowCtsPacsSchema(MetaParser):
             "credential_lifetime": str,
         },
         "pac_opaque": str,
-        "refresh_timer": str
+        "refresh_timer": str,
     }
 
 
@@ -364,8 +365,8 @@ class ShowCtsPacs(ShowCtsPacsSchema):
                 refresh_timer = groups['refresh_timer']
                 cts_pacs_dict['refresh_timer'] = refresh_timer
                 continue
-        return cts_pacs_dict
 
+        return cts_pacs_dict
 
 
 # =================================
@@ -457,3 +458,1490 @@ class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
                 continue
 
         return cts_rb_count_dict
+
+
+
+# =============
+# Schema for:
+#  * 'show cts'
+# =============
+class ShowCtsSchema(MetaParser):
+    """Schema for show cts."""
+
+    schema = {
+        Optional("dot1x_feature"): str,
+        "cts_device_identity": str,
+        Optional("cts_sgt_caching"): str,
+        Optional("cts_caching_support"): str,
+        Optional("cts_ingress_sgt_caching"): str,
+        Optional("cts_sg_epg_translation"): str,
+        Optional("interfaces_in_dot1x_mode"): int,
+        "interfaces_in_manual_mode": int,
+        Optional("interfaces_in_l3_trustsec_mode"): int,
+        "interfaces_in_ifc_states": {
+            "init": int,
+            "authenticating": int,
+            "authorizing": int,
+            "sap_negotiating": int,
+            "open": int,
+            "held": int,
+            "disconnecting": int,
+            "invalid": int
+        },
+        "cts_events_statistics": {
+            "authentication_success": int,
+            "authentication_reject": int,
+            "authentication_failure": int,
+            "authentication_logoff": int,
+            "authentication_no_resp": int,
+            "authorization_success": int,
+            "authorization_failure": int,
+            "sap_success": int,
+            "sap_failure": int,
+            "port_auth_fail": int
+        },
+        Optional("installed_list"): {
+            Optional("name"): str,
+            Optional("count"): int,
+            Optional("server_ip"): {
+                Optional(Any()) : {
+                    Optional("port"): int,
+                    Optional("a_id"): str,
+                    Optional("status"): str,
+                    Optional("auto_test"): str,
+                    Optional("keywrap_enable"): str,
+                    Optional("idle_time_mins"): int,
+                    Optional("deadtime_secs"): int
+                }
+            }
+        },
+        Optional("pac_summary") : {
+            Optional("pac_info"): {
+                Optional("pac_valid_until"): str,
+            }
+        },
+        Optional("environment_data_summary"): {
+            Optional("data_last_recieved"): str,
+            Optional("data_valid_until"): {
+                Optional("value"): str,
+                Optional("value_format"): str
+            }
+        },
+        Optional("sxp_connections_summary"): {
+            Optional("status"): str,
+            Optional("highest_supported_version"): int,
+            Optional("default_password"): str,
+            Optional("default_key_chain"): str,
+            Optional("default_key_chain_name"): str,
+            Optional("default_source_ip"): str,
+            Optional("retry_open_period_secs"): int,
+            Optional("reconcile_period_secs"): int,
+            Optional("retry_open_timer"): str,
+            Optional("peer_sequence_limit_export"): str,
+            Optional("peer_sequence_limit_import"): str,
+            Optional("peer_ip"): {
+                Optional(Any()): {
+                    Optional("source_ip"): str,
+                    Optional("conn_status"): str,
+                    Optional("duration"): {
+                        Optional("value"): str,
+                        Optional("value_format"): str
+                    }
+                }
+            },
+            Optional("total_connections"): int
+        },
+        Optional("ip_sgt_bindings"): {
+            Optional("ipv4"): {
+                Optional("total_sxp_bindings"): int,
+                Optional("total_active_bindings"): int
+            },
+            Optional("ipv6"): {
+                Optional("total_sxp_bindings"): int,
+                Optional("total_active_bindings"): int
+            },
+            Optional("cts_role_based_enforcement"): str,
+            Optional("cts_role_based_vlan_enforcement"): str
+        },
+        Optional("trusted_untrusted_links"): {
+            Optional("number_trusted_links"): int,
+            Optional("number_untrusted_links"): int
+        }
+    }
+    
+
+# =============
+# Parser for:
+#  * 'show cts'
+# =============
+class ShowCts(ShowCtsSchema):
+    """Parser for show cts"""
+
+    cli_command = 'show cts'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else: 
+            output=output
+
+        # CTS device identity: "SJC-ab-gw1"
+        # CTS global sgt-caching: Disabled
+        # CTS Ingress sgt-caching: Disabled
+        # CTS sg-epg translation status: Disabled
+        # 
+        # Number of CTS interfaces in MANUAL mode: 0
+        # 
+        # Number of CTS interfaces in corresponding IFC state
+        # INIT            state:  0
+        # AUTHENTICATING  state:  0
+        # AUTHORIZING     state:  0
+        # SAP_NEGOTIATING state:  0
+        # OPEN            state:  0
+        # HELD            state:  0
+        # DISCONNECTING   state:  0
+        # INVALID         state:  0
+        # 
+        # CTS events statistics:
+        # authentication success: 0
+        # authentication reject : 0
+        # authentication failure: 0
+        # authentication logoff : 0
+        # authentication no resp: 0
+        # authorization success : 0
+        # authorization failure : 0
+        # sap success           : 0
+        # sap failure           : 0
+        # port auth failure     : 0
+        # 
+        # Installed list: CTSServerList1-0089, 7 server(s):
+        # *Server: 10.100.123.1, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #         Status = ALIVE
+        #         auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        # *Server: 10.100.123.2, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #         Status = ALIVE
+        #         auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        # *Server: 10.100.123.3, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #         Status = ALIVE
+        #         auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        # *Server: 10.100.123.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #         Status = ALIVE
+        #         auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        # *Server: 10.100.123.5, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #         Status = ALIVE
+        #         auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        # *Server: 10.100.123.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #         Status = ALIVE
+        #         auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        # *Server: 10.100.123.7, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #         Status = ALIVE
+        #         auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        # ===================
+        # CTS PAC Summary
+        # =====================
+        # PAC-Info:
+        #     PAC Valid Until: 19:56:32 PDT Sep 6 2020
+        # 
+        # 
+        # ============================
+        # CTS Environment-Data Summary
+        # ============================
+        # 
+        # Environment Data Last Received: 20:04:41 PDT Mon Jul 13 2020
+        # 
+        # Environment Data Valid Until: 0:09:35:43 (dd:hr:mm:sec)  
+        #
+        # ===================================
+        # SXP Connections Summary
+        # ===================================
+        # SXP              : Enabled
+        # Highest Version Supported: 4
+        # Default Password : Set
+        # Default Key-Chain: Not Set
+        # Default Key-Chain Name: Not Applicable
+        # Default Source IP: 192.168.2.24
+        # Connection retry open period: 120 secs
+        # Reconcile period: 120 secs
+        # Retry open timer is not running
+        # Peer-Sequence traverse limit for export: Not Set
+        # Peer-Sequence traverse limit for import: Not Set
+        # 
+        # ----------------------------------------------------------------------------------------------------------------------------------
+        # Peer_IP          Source_IP        Conn Status                                          Duration
+        # ----------------------------------------------------------------------------------------------------------------------------------
+        # 10.100.123.1     192.168.2.24   On                                                   44:19:54:57 (dd:hr:mm:sec)
+        # 10.100.123.2     192.168.2.24   On                                                   44:19:54:57 (dd:hr:mm:sec)
+        # 10.100.123.3     192.168.2.24   On                                                   44:19:54:57 (dd:hr:mm:sec)
+        # 10.100.123.4     192.168.2.24   On                                                   44:19:54:57 (dd:hr:mm:sec)
+        # 10.100.123.5     192.168.2.24   On                                                   44:18:58:51 (dd:hr:mm:sec)
+        # 10.100.123.6     192.168.2.24   On                                                   20:12:53:44 (dd:hr:mm:sec)
+        # 10.100.123.7     192.168.2.24   On                                                   44:18:58:51 (dd:hr:mm:sec)
+        # 10.100.123.8     192.168.2.24   On                                                   20:12:40:45 (dd:hr:mm:sec)
+        # 10.100.123.9     192.168.2.24   On                                                   44:18:58:51 (dd:hr:mm:sec)
+        # 10.100.123.10    192.168.2.24   On                                                   44:18:58:51 (dd:hr:mm:sec)
+        # 10.100.123.11    192.168.2.24   On                                                   44:22:21:14 (dd:hr:mm:sec)
+        # 10.100.123.12    192.168.2.24   On                                                   44:18:58:51 (dd:hr:mm:sec)
+        # 10.100.123.13    192.168.2.24   On                                                   45:08:24:42 (dd:hr:mm:sec)
+        # 10.100.123.14    192.168.2.24   On                                                   45:08:24:42 (dd:hr:mm:sec)
+        # 10.100.123.15    192.168.2.24   On                                                   36:11:31:13 (dd:hr:mm:sec)
+        # 10.100.123.16    192.168.2.24   On                                                   36:12:13:54 (dd:hr:mm:sec)
+        # 
+        # Total num of SXP Connections = 16
+        # ===================
+        # 
+        # ======================================
+        # Summary of IPv4 & IPv6 IP-SGT bindings
+        # ======================================
+        # 
+        # 
+        #             -IPv4-
+        #   
+        # IP-SGT Active Bindings Summary
+        # ============================================
+        # Total number of SXP      bindings = 3284
+        # Total number of active   bindings = 3284
+        # 
+        # 
+        #             -IPv6-
+        # 
+        # IP-SGT Active Bindings Summary
+        # ============================================
+        # Total number of SXP      bindings = 111
+        # Total number of active   bindings = 111
+        #   
+        # 
+        # CTS Role Based Enforcement: Enabled
+        # CTS Role Based VLAN Enforcement:Enabled
+        # 
+        # 
+        # =================================
+        # Trusted/Un-Trusted Links
+        # ==================================
+        # Number of Trusted interfaces = 0
+        # Number of Un-Trusted interfaces = 0
+
+        # Global Dot1x feature: Disabled
+        p_dot1x = re.compile(r"^Global\s+Dot1x\s+feature:\s+(?P<dot1x>Enabled|Disabled)$")
+
+        # CTS device identity: "AAA2220Q2DP"
+        p_cts_device = re.compile(r"CTS\s+device\s+identity:\s+\"(?P<cts_identity>\S+)\"$")
+
+        # CTS caching support: disabled
+        p_cts_cache = re.compile(r"^CTS\s+caching\s+support:\s+(?P<cts_cache>enabled|disabled)$")
+
+        # CTS sgt-caching global: Disabled
+        p_cts_sgt = re.compile(r"^CTS\s+sgt-caching\s+global:\s+(?P<cts_sgt>Enabled|Disabled)$")
+
+        # CTS global sgt-caching: Disabled
+        p_cts_2_sgt = re.compile(r"^CTS\s+global\s+sgt-caching:\s+(?P<cts_2_sgt>Enabled|Disabled)$")
+
+        # CTS Ingress sgt-caching: Disabled
+        p_cts_ingress = re.compile(r"^CTS\s+Ingress\s+sgt-caching:\s+(?P<cts_ingress>Enabled|Disabled)")
+
+        # CTS sg-epg translation status: Disabled
+        p_cts_translation = re.compile(r"^CTS\s+sg-epg\s+translation\s+status:\s+(?P<cts_trans>Enabled|Disabled)")
+
+        # Number of CTS interfaces in MANUAL mode: 0
+        p_man_mode = re.compile(r"^Number\s+of\s+CTS\s+interfaces\s+in\s+MANUAL\s+mode:\s+(?P<man_mode>\d+)$")
+
+        # Number of CTS interfaces in DOT1X mode:  0,    MANUAL mode: 0
+        p_dot1x_man_mode = re.compile(
+        r"^Number\s+of\s+CTS\s+interfaces\s+in\s+DOT1X\s+mode:\s+(?P<dot1x_mode>\d+),\s+MANUAL\s+mode:\s+(?P<man_mode>\d+)$")
+
+        # Number of CTS interfaces in LAYER3 TrustSec mode: 0
+        p_l3_mode = re.compile(r"^Number\s+of\s+CTS\s+interfaces\s+in\s+LAYER3\s+TrustSec\s+mode:\s+(?P<l3_mode>\d+)$")
+
+        # Number of CTS interfaces in corresponding IFC state
+        p_ifc_state = re.compile(r"^Number\s+of\s+CTS\s+interfaces\s+in\s+corresponding\s+IFC\s+state$")
+
+        # INIT            state:  0
+        p_init = re.compile(r"^INIT\s+state:\s+(?P<init>\d+)$")
+
+        # AUTHENTICATING            state:  0
+        p_authenticating = re.compile(r"^AUTHENTICATING\s+state:\s+(?P<auth>\d+)$")
+
+        # AUTHORIZING            state:  0
+        p_authorizing = re.compile(r"^AUTHORIZING\s+state:\s+(?P<authorizing>\d+)$")
+
+        # SAP_NEGOTIATING            state:  0
+        p_sap = re.compile(r"^SAP_NEGOTIATING\s+state:\s+(?P<sap>\d+)$")
+
+        # OPEN            state:  0
+        p_open = re.compile(r"^OPEN\s+state:\s+(?P<open>\d+)$")
+
+        # HELD            state:  0
+        p_held = re.compile(r"^HELD\s+state:\s+(?P<held>\d+)$")
+
+        # DISCONNECTING            state:  0
+        p_disconnect = re.compile(r"^DISCONNECTING\s+state:\s+(?P<disconnect>\d+)$")
+
+        # INVALID            state:  0
+        p_invalid = re.compile(r"^INVALID\s+state:\s+(?P<invalid>\d+)$")
+
+        # CTS events statistics:
+        p_cts_event = re.compile(r"^CTS\s+events\s+statistics:$")
+
+        # authentication success: 0
+        p_stat_authentication = re.compile(r"^authentication\s+success:\s+(?P<cts_authentication>\d+)$")
+
+        # authentication reject: 0
+        p_stat_reject = re.compile(r"^authentication\s+reject\s+:\s+(?P<cts_reject>\d+)$")
+
+        # authentication failure: 0
+        p_stat_failure = re.compile(r"^authentication\s+failure:\s+(?P<cts_failure>\d+)$")
+
+        # authentication logoff: 0
+        p_stat_logoff = re.compile(r"^authentication\s+logoff\s+:\s+(?P<cts_logoff>\d+)$")
+
+        # authentication no resp: 0
+        p_stat_noresp = re.compile(r"^authentication\s+no\s+resp:\s+(?P<cts_noresp>\d+)$")
+
+        # authorization success: 0
+        p_stat_authorization = re.compile(r"^authorization\s+success\s+:\s+(?P<cts_authorization>\d+)$")
+
+        # authorization failure: 0
+        p_stat_authorization_fail = re.compile(r"^authorization\s+failure\s+:\s+(?P<cts_authorization_fail>\d+)$")
+
+        # sap success: 0
+        p_stat_sap = re.compile(r"^sap\s+success\s+:\s+(?P<cts_sap>\d+)$")
+
+        # sap failure: 0
+        p_stat_sap_failure = re.compile(r"^sap\s+failure\s+:\s+(?P<cts_sap_failure>\d+)$")
+
+        # port auth failure: 0
+        p_port_fail = re.compile(r"^port\s+auth\s+failure\s+:\s+(?P<port_fail>\d+)$")
+
+        # Installed list: CTSServerList1-0085, 1 server(s):
+        p_installed_list = re.compile(r"^Installed\s+list:\s+(?P<serv_list_name>\S+),\s+(?P<serv_count>\d+)\s+server\(s\):$")
+
+        # *Server: 10.100.123.1, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        p_server_ast = re.compile(r"^\*Server:\s+(?P<serv_ip>[^,]+),\s+port\s+(?P<serv_port>\d+),\s+A-ID\s+(?P<serv_id>\S+)$")
+
+        # Server: 10.100.123.1, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        p_server = re.compile(r"^Server:\s+(?P<serv_ip>[^,]+),\s+port\s+(?P<serv_port>\d+),\s+A-ID\s+(?P<serv_id>\S+)$")
+
+        # Status = ALIVE
+        p_server_status = re.compile(r"^Status\s+=\s+(?P<serv_status>\S+)")
+
+        # auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        p_server_attributes = re.compile(
+        r"^auto-test\s+=\s+(?P<test>[^,]+),\s+keywrap-enable\s+=\s+(?P<keywrap>[^,]+),\s+idle-time\s+=\s+(?P<idle>\d+)\s+mins,\s+deadtime\s+=\s+(?P<dead>\d+)\s+secs$")
+
+        # ===================
+        p_equal_header = re.compile(r"^=+")
+
+        # CTS PAC Summary
+        p_header_1 = re.compile(r"^CTS\s+PAc\s+Summary$")
+
+        # PAC-Info:
+        p_pac_header = re.compile(r"^PAC-Info:$")
+
+        # PAC Valid Until: 09:24:04 UTC Oct 10 2020
+        p_pac_valid = re.compile(r"^PAC\s+Valid\s+Until:\s+(?P<valid>.*)")
+
+        # CTS Environment-Data Summary
+        p_environment_header = re.compile(r"^CTS\s+Environment-Data\s+Summary$")
+
+        # Environment Data Last Received: 09:26:17 UTC Tue Jul 14 2020
+        p_env_last = re.compile(r"^Environment\s+Data\s+Last\s+Received:\s+(?P<last>.*)$")
+
+        # Environment Data Valid Until: 0:16:13:37 (dd:hr:mm:sec)
+        p_env_valid = re.compile(r"^Environment\s+Data\s+Valid\s+Until:\s+(?P<value>\S+)\s+\((?P<format>[^)]+)\)$")
+
+        # SXP Connections Summary
+        p_sxp_summary = re.compile(r"^SXP\s+Connections\s+Summary$")
+
+        # SXP              : Enabled
+        p_sxp_enabled = re.compile(r"SXP\s+:\s+(?P<status>Enabled|Disabled)$")
+
+        # Highest Version Supported: 4
+        p_sxp_version = re.compile(r"^Highest\s+Version\s+Supported:\s+(?P<version>\d+)")
+
+        # Default Password : Set
+        p_sxp_password = re.compile(r"^Default\s+Password\s+:\s+(?P<pass>.*)$")
+
+        # Default Key-Chain: Not Set
+        p_sxp_key_chain = re.compile(r"^Default\s+Key-Chain:\s+(?P<key>.*)$")
+
+        # Default Key-Chain Name: Not Applicable
+        p_sxp_key_chain_name = re.compile(r"^Default\s+Key-Chain\s+Name:\s+(?P<name>.*)$")
+
+        # Default Source IP: Not Set
+        p_sxp_source = re.compile(r"Default\s+Source\s+IP:\s+(?P<ip>.*)$")
+
+        # Connection retry open period: 120 secs
+        p_sxp_retry = re.compile(r"^Connection\s+retry\s+open\s+period:\s+(?P<time>\d+)\s+secs$")
+
+        # Reconcile period: 120 secs
+        p_reconcile = re.compile(r"^Reconcile\s+period:\s+(?P<period>\d+)\s+secs$")
+
+        # Retry open timer is not running
+        p_open_timer = re.compile(r"^Retry\s+open\s+timer\s+is\s+not\s+running$")
+
+        # Peer-Sequence traverse limit for export: Not Set
+        p_limit_export = re.compile(r"^Peer-Sequence\s+traverse\s+limit\s+for\s+export:\s+(?P<export>.*)$")
+
+        # Peer-Sequence traverse limit for import: Not Set
+        p_limit_import = re.compile(r"^Peer-Sequence\s+traverse\s+limit\s+for\s+import:\s+(?P<import>.*)$")
+
+        # There are no SXP Connections.
+        p_sxp_no_conn = re.compile(r"^There\s+are\s+no\s+SXP\s+Connections.$")
+
+        # ----------------------------------------------------------------------------------------------------------------------------------
+        p_hyphen_header = re.compile(r"^-+$")
+
+        # Peer_IP          Source_IP        Conn Status                                          Duration
+        p_sxp_conn_header = re.compile(r"^Peer_IP\s+Source_IP\s+\s+Conn\s+Status\s+Duration$")
+
+        # 10.100.123.1     192.168.2.24   On                                                   44:19:54:57 (dd:hr:mm:sec)
+        p_sxp_conn = re.compile(r"^(?P<peer_ip>\S+)\s+(?P<source_ip>\S+)\s+(?P<conn_status>\S+)\s+(?P<dur_val>\S+)\s+\((?P<dur_format>[^)]+)\)$")
+
+        # Total num of SXP Connections = 16
+        p_sxp_total = re.compile(r"^Total\s+num\s+of\s+SXP\s+Connections\s+=\s+(?P<total>\d+)$")
+
+        # Summary of IPv4 & IPv6 IP-SGT bindings
+        p_sum_ip_sgt = re.compile(r"^Summary\s+of\s+IPv4\s+&\s+IPv6\s+IP-SGT\s+bindings$")
+
+        # -IPv4-
+        p_ipv4_header = re.compile(r"^-IPv4-$")
+
+        # IP-SGT Active Bindings Summary
+        p_ip_sgt_active_header = re.compile(r"^IP-SGT\s+Active\s+Bindings\s+Summary$")
+
+        # Total number of SXP      bindings = 3284
+        p_total_sxp = re.compile(r"^Total\s+number\s+of\s+SXP\s+bindings\s+=\s+(?P<total>\d+)$")
+
+        # Total number of active   bindings = 3284
+        p_total_active_sxp = re.compile(r"^Total\s+number\s+of\s+active\s+bindings\s+=\s+(?P<active>\d+)$")
+
+        # -IPv6-
+        p_ipv6_header = re.compile(r"^-IPv6-$")
+
+        # CTS Role Based Enforcement: Enabled
+        p_role_based = re.compile(r"^CTS\s+Role\s+Based\s+Enforcement:\s+(?P<value>Enabled|Disabled)$")
+
+        # CTS Role Based VLAN Enforcement:Enabled
+        p_role_based_vlan = re.compile(r"^CTS\s+Role\s+Based\s+VLAN\s+Enforcement:(?P<value>Enabled|Disabled)$")
+
+        # Trusted/Un-Trusted Links
+        p_links_header = re.compile(r"^Trusted\/Un-Trusted\s+Links$")
+
+        # Number of Trusted interfaces = 0
+        p_trusted_links = re.compile(r"^Number\s+of\s+Trusted\s+interfaces\s+=\s+(?P<count>\d+)$")
+
+        # Number of Un-Trusted interfaces = 0
+        p_untrusted_links = re.compile(r"^Number\s+of\s+Un-Trusted\s+interfaces\s+=\s+(?P<count>\d+)$")
+
+        def update_bindings(active_bindings, cts_dict):
+            if len(active_bindings) == 2:
+                cts_dict["ip_sgt_bindings"]["ipv4"].update({ "total_sxp_bindings": int(active_bindings[0]) })
+                cts_dict["ip_sgt_bindings"]["ipv6"].update({ "total_sxp_bindings": int(active_bindings[1]) })
+            else:       
+                # Update IPv4 binding count
+                cts_dict["ip_sgt_bindings"]["ipv4"].update({ "total_sxp_bindings": int(active_bindings[0]) })
+                cts_dict["ip_sgt_bindings"]["ipv4"].update({ "total_active_bindings": int(active_bindings[1]) })
+                # Update IPv6 binding count
+                cts_dict["ip_sgt_bindings"]["ipv6"].update({ "total_sxp_bindings": int(active_bindings[2]) })
+                cts_dict["ip_sgt_bindings"]["ipv6"].update({ "total_active_bindings": int(active_bindings[3]) })
+
+            return cts_dict
+
+
+        cts_dict = {}
+        active_bindings = []
+
+        for line in output.splitlines():
+            line = line.strip()
+            # Global Dot1x feature: Disabled
+            if p_dot1x.match(line):
+                match = p_dot1x.match(line)
+                cts_dict.update({ "dot1x_feature": match.group("dot1x") })
+                continue
+            # CTS device identity: "AAA2220Q2DP"
+            elif p_cts_device.match(line):
+                match = p_cts_device.match(line)
+                cts_dict.update({ "cts_device_identity": match.group("cts_identity")})
+                continue
+            # CTS caching support: disabled
+            elif p_cts_cache.match(line):
+                match = p_cts_cache.match(line)
+                cts_dict.update({ "cts_caching_support": match.group("cts_cache")})
+                continue
+            # CTS sgt-caching global: Disabled
+            elif p_cts_sgt.match(line):
+                match = p_cts_sgt.match(line)
+                cts_dict.update({ "cts_sgt_caching": match.group("cts_sgt")})
+                continue
+            # CTS global sgt-caching: Disabled
+            elif p_cts_2_sgt.match(line):
+                match = p_cts_2_sgt.match(line)
+                cts_dict.update({ "cts_sgt_caching": match.group("cts_2_sgt")})
+                continue
+            # CTS Ingress sgt-caching: Disabled
+            elif p_cts_ingress.match(line):
+                match = p_cts_ingress.match(line)
+                cts_dict.update({ "cts_ingress_sgt_caching": match.group("cts_ingress") })
+            # CTS sg-epg translation status: Disabled
+            elif p_cts_translation.match(line):
+                match = p_cts_translation.match(line)
+                cts_dict.update({ "cts_sg_epg_translation": match.group("cts_trans") })
+            # Number of CTS interfaces in DOT1X mode:  0,    MANUAL mode: 0
+            elif p_dot1x_man_mode.match(line):
+                match = p_dot1x_man_mode.match(line)
+                cts_dict.update({ "interfaces_in_dot1x_mode": int(match.group("dot1x_mode")), "interfaces_in_manual_mode": int(match.group("man_mode")) })
+                continue
+            # Number of CTS interfaces in MANUAL mode: 0
+            elif p_man_mode.match(line):
+                match = p_man_mode.match(line)
+                cts_dict.update({ "interfaces_in_manual_mode": int(match.group("man_mode")) })
+                continue
+            # Number of CTS interfaces in LAYER3 TrustSec mode: 0
+            elif p_l3_mode.match(line):
+                match = p_l3_mode.match(line)
+                cts_dict.update({ "interfaces_in_l3_trustsec_mode": match.group("l3_mode")})
+                continue
+            # Number of CTS interfaces in corresponding IFC state
+            elif p_ifc_state.match(line):
+                if not cts_dict.get("interfaces_in_ifc_states"):
+                    cts_dict.update({ "interfaces_in_ifc_states": {} })
+                    continue
+            # INIT            state:  0
+            elif p_init.match(line):
+                match = p_init.match(line)
+                cts_dict["interfaces_in_ifc_states"].update({ "init" : int(match.group("init")) })
+                continue
+            # AUTHENTICATING           state:  0
+            elif p_authenticating.match(line):
+                match = p_authenticating.match(line)
+                cts_dict["interfaces_in_ifc_states"].update({ "authenticating" : int(match.group("auth")) })
+                continue
+            # AUTHORIZING            state:  0
+            elif p_authorizing.match(line):
+                match = p_authorizing.match(line)
+                cts_dict["interfaces_in_ifc_states"].update({ "authorizing" : int(match.group("authorizing")) })
+                continue
+            # SAP_NEGOTIATING            state:  0
+            elif p_sap.match(line):
+                match = p_sap.match(line)
+                cts_dict["interfaces_in_ifc_states"].update({ "sap_negotiating" : int(match.group("sap")) })
+                continue
+            # OPEN            state:  0
+            elif p_open.match(line):
+                match = p_open.match(line)
+                cts_dict["interfaces_in_ifc_states"].update({ "open" : int(match.group("open")) })
+                continue
+            # HELD            state:  0
+            elif p_held.match(line):
+                match = p_held.match(line)
+                cts_dict["interfaces_in_ifc_states"].update({ "held" : int(match.group("held")) })
+                continue
+            # DISCONNECTING            state:  0
+            elif p_disconnect.match(line):
+                match = p_disconnect.match(line)
+                cts_dict["interfaces_in_ifc_states"].update({ "disconnecting" : int(match.group("disconnect")) })
+                continue
+            # INVALID            state:  0
+            elif p_invalid.match(line):
+                match = p_invalid.match(line)
+                cts_dict["interfaces_in_ifc_states"].update({ "invalid" : int(match.group("invalid")) })
+                continue
+            # CTS events statistics
+            elif p_cts_event.match(line):
+                if not cts_dict.get("cts_events_statistics"):
+                    cts_dict.update({ "cts_events_statistics": {} })
+                continue
+            # authentication success: 0
+            elif p_stat_authentication.match(line):
+                match = p_stat_authentication.match(line)
+                cts_dict["cts_events_statistics"].update({ "authentication_success": int(match.group("cts_authentication")) })
+                continue
+            # authentication reject: 0
+            elif p_stat_reject.match(line):
+                match = p_stat_reject.match(line)
+                cts_dict["cts_events_statistics"].update({ "authentication_reject": int(match.group("cts_reject")) })
+                continue
+            # authentication failure: 0
+            elif p_stat_failure.match(line):
+                match = p_stat_failure.match(line)
+                cts_dict["cts_events_statistics"].update({ "authentication_failure": int(match.group("cts_failure")) })
+                continue
+            # authentication logoff: 0
+            elif p_stat_logoff.match(line):
+                match = p_stat_logoff.match(line)
+                cts_dict["cts_events_statistics"].update({ "authentication_logoff": int(match.group("cts_logoff")) })
+                continue
+            # authentication no resp: 0
+            elif p_stat_noresp.match(line):
+                match = p_stat_noresp.match(line)
+                cts_dict["cts_events_statistics"].update({ "authentication_no_resp": int(match.group("cts_noresp")) })
+                continue
+            # authorization success: 0
+            elif p_stat_authorization.match(line):
+                match = p_stat_authorization.match(line)
+                cts_dict["cts_events_statistics"].update({ "authorization_success": int(match.group("cts_authorization")) })
+                continue
+            # authorization failure: 0
+            elif p_stat_authorization_fail.match(line):
+                match = p_stat_authorization_fail.match(line)
+                cts_dict["cts_events_statistics"].update({ "authorization_failure": int(match.group("cts_authorization_fail")) })
+                continue
+            # sap success: 0
+            elif p_stat_sap.match(line):
+                match = p_stat_sap.match(line)
+                cts_dict["cts_events_statistics"].update({ "sap_success": int(match.group("cts_sap")) })
+                continue
+            # sap failure: 0
+            elif p_stat_sap_failure.match(line):
+                match = p_stat_sap_failure.match(line)
+                cts_dict["cts_events_statistics"].update({ "sap_failure": int(match.group("cts_sap_failure")) })
+                continue
+            elif p_port_fail.match(line):
+                match = p_port_fail.match(line)
+                cts_dict["cts_events_statistics"].update({ "port_auth_fail": int(match.group("port_fail")) })
+                continue
+            # Installed list: CTSServerList1-0089, 7 server(s):
+            elif p_installed_list.match(line):
+                match = p_installed_list.match(line)
+                group = match.groupdict()
+                if not cts_dict.get("installed_list"):
+                    cts_dict.update({ "installed_list" : {} })
+                cts_dict["installed_list"].update({ "name" : group["serv_list_name"], "count": int(group["serv_count"]) })
+                continue
+            # *Server: 10.100.123.1, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+            elif p_server_ast.match(line):
+                match = p_server_ast.match(line)
+                group = match.groupdict()
+                serv_ip = group["serv_ip"]
+                if not cts_dict["installed_list"].get("server_ip"):
+                    cts_dict["installed_list"].update({ "server_ip": {} })
+                cts_dict["installed_list"]["server_ip"].update({ serv_ip: {} })
+                cts_dict["installed_list"]["server_ip"][serv_ip].update({ "port": int(group["serv_port"]), "a_id": group["serv_id"]})
+                continue
+            # Server: 10.100.123.1, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+            elif p_server.match(line):
+                match = p_server.match(line)
+                group = match.groupdict()
+                serv_ip = group["serv_ip"]
+                if not cts_dict["installed_list"].get("server_ip"):
+                    cts_dict["installed_list"].update({ "server_ip": {} })
+                cts_dict["installed_list"]["server_ip"].update({ serv_ip: {} })
+                cts_dict["installed_list"]["server_ip"][serv_ip].update({ "port": int(group["serv_port"]), "a_id": group["serv_id"]})
+                continue
+            # Status = ALIVE
+            elif p_server_status.match(line):
+                match = p_server_status.match(line)
+                cts_dict["installed_list"]["server_ip"][serv_ip].update({ "status": match.group("serv_status") })
+                continue
+            # auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+            elif p_server_attributes.match(line):
+                match = p_server_attributes.match(line)
+                group = match.groupdict()
+                cts_dict["installed_list"]["server_ip"][serv_ip].update({ "auto_test": group["test"], "keywrap_enable": group["keywrap"],
+                                                                        "idle_time_mins": int(group["idle"]), "deadtime_secs": int(group["dead"]) })
+                continue
+            # Any number of '=' ex: "======" or "================================"
+            elif p_equal_header.match(line):
+                continue
+            # CTS PAC Summary
+            elif p_header_1.match(line):
+                continue
+            # PAC-info
+            elif p_pac_header.match(line):
+                continue
+            # PAC Valid Until: 09:24:04 UTC Oct 10 2020
+            elif p_pac_valid.match(line):
+                match = p_pac_valid.match(line)
+                cts_dict.update({ "pac_summary": { "pac_info": {} }})
+                cts_dict["pac_summary"]["pac_info"].update({ "pac_valid_until": match.group("valid")})
+                continue
+            # CTS Environment-Data Summary
+            elif p_environment_header.match(line):
+                if not cts_dict.get("environemtn_data_summary"):
+                    cts_dict.update({ "environment_data_summary": {} })
+                continue
+            # Environment Data Last Received: 09:26:17 UTC Tue Jul 14 2020
+            elif p_env_last.match(line):
+                match = p_env_last.match(line)
+                cts_dict["environment_data_summary"].update({ "data_last_recieved": match.group("last") })
+                continue
+            # Environment Data Valid Until: 0:16:13:37 (dd:hr:mm:sec)
+            elif p_env_valid.match(line):
+                match = p_env_valid.match(line)
+                group = match.groupdict()
+                cts_dict["environment_data_summary"].update({ "data_valid_until": {} })
+                cts_dict["environment_data_summary"]["data_valid_until"].update({ "value" : group["value"], "value_format": group["format"] })
+                continue
+            # SXP Connections Summary
+            elif p_sxp_summary.match(line):
+                if not cts_dict.get("sxp_connections_summary"):
+                    cts_dict.update({ "sxp_connections_summary": {} })
+                continue
+            # SXP              : Enabled
+            elif p_sxp_enabled.match(line):
+                match = p_sxp_enabled.match(line)
+                cts_dict["sxp_connections_summary"].update({ "status": match.group("status") })
+                continue
+            # Highest Version Supported: 4
+            elif p_sxp_version.match(line):
+                match = p_sxp_version.match(line)
+                cts_dict["sxp_connections_summary"].update({ "highest_supported_version": int(match.group("version")) })
+                continue
+            # Default Password : Set
+            elif p_sxp_password.match(line):
+                match = p_sxp_password.match(line)
+                cts_dict["sxp_connections_summary"].update({ "default_password": match.group("pass") })
+                continue
+            # Default Key-Chain: Not Set
+            elif p_sxp_key_chain.match(line):
+                match = p_sxp_key_chain.match(line)
+                cts_dict["sxp_connections_summary"].update({ "default_key_chain": match.group("key") })
+                continue
+            # Default Key-Chain Name: Not Applicable
+            elif p_sxp_key_chain_name.match(line):
+                match = p_sxp_key_chain_name.match(line)
+                cts_dict["sxp_connections_summary"].update({ "default_key_chain_name": match.group("name") })
+                continue
+            # Default Source IP: Not Set
+            elif p_sxp_source.match(line):
+                match = p_sxp_source.match(line)
+                cts_dict["sxp_connections_summary"].update({ "default_source_ip": match.group("ip") })
+                continue
+            # Connection retry open period: 120 secs
+            elif p_sxp_retry.match(line):
+                match = p_sxp_retry.match(line)
+                cts_dict["sxp_connections_summary"].update({ "retry_open_period_secs": int(match.group("time")) })
+                continue
+            # Reconcile period: 120 secs
+            elif p_reconcile.match(line):
+                match = p_reconcile.match(line)
+                cts_dict["sxp_connections_summary"].update({ "reconcile_period_secs": int(match.group("period")) })
+                continue
+            # Retry open timer is not running
+            elif p_open_timer.match(line):
+                match = p_open_timer.match(line)
+                cts_dict["sxp_connections_summary"].update({ "retry_open_timer": "disabled" })
+                continue
+            # Peer-Sequence traverse limit for export: Not Set
+            elif p_limit_export.match(line):
+                match = p_limit_export.match(line)
+                cts_dict["sxp_connections_summary"].update({ "peer_sequence_limit_export": match.group("export")  })
+                continue
+            # Peer-Sequence traverse limit for import: Not Set
+            elif p_limit_import.match(line):
+                match = p_limit_import.match(line)
+                cts_dict["sxp_connections_summary"].update({ "peer_sequence_limit_import": match.group("import")  })
+                continue
+            # There are no SXP Connections.
+            elif p_sxp_no_conn.match(line):
+                continue
+            # ----------------------------------------------------------------------------------------------------------------------------------
+            elif p_hyphen_header.match(line):
+                continue
+            # Peer_IP          Source_IP        Conn Status                                          Duration
+            elif p_sxp_conn_header.match(line):
+                continue
+            # Total num of SXP Connections = 16
+            elif p_sxp_total.match(line):
+                match = p_sxp_total.match(line)
+                cts_dict["sxp_connections_summary"].update({ "total_connections": int(match.group("total")) })
+                continue
+            # 10.100.123.1     192.168.2.24   On                                                   44:19:54:57 (dd:hr:mm:sec)
+            elif p_sxp_conn.match(line):
+                match = p_sxp_conn.match(line)
+                group = match.groupdict()
+                peer_ip = group["peer_ip"]
+                if not cts_dict["sxp_connections_summary"].get("peer_ip"):
+                    cts_dict["sxp_connections_summary"].update({ "peer_ip": {} })
+                cts_dict["sxp_connections_summary"]["peer_ip"].update({ peer_ip: {} })
+                cts_dict["sxp_connections_summary"]["peer_ip"][peer_ip].update({ "source_ip": group["source_ip"], "conn_status": group["conn_status"],
+                                                                                "duration": {} })
+                cts_dict["sxp_connections_summary"]["peer_ip"][peer_ip]["duration"].update({ "value": group["dur_val"], "value_format": group["dur_format"] })
+                continue
+            # Summary of IPv4 & IPv6 IP-SGT bindings
+            elif p_sum_ip_sgt.match(line):
+                if not cts_dict.get("ip_sgt_bindings"):
+                    cts_dict.update({ "ip_sgt_bindings": {} })
+                continue
+            # -IPv4-
+            elif p_ipv4_header.match(line):
+                if not cts_dict["ip_sgt_bindings"].get("ipv4"):
+                    cts_dict["ip_sgt_bindings"].update({ "ipv4": {} })
+                continue
+            # IP-SGT Active Bindings Summary
+            elif p_ip_sgt_active_header.match(line):
+                continue
+            # Total number of SXP      bindings = 3284
+            elif p_total_sxp.match(line):
+                match = p_total_sxp.match(line)
+                active_bindings.append(match.group("total"))
+                # cts_dict["ip_sgt_bindings"]["ipv4"].update({ "total_sxp_bindings": match.group("total") })
+                continue
+            # Total number of active   bindings = 3284
+            elif p_total_active_sxp.match(line):
+                match = p_total_active_sxp.match(line)
+                active_bindings.append(match.group("active"))
+                # cts_dict["ip_sgt_bindings"]["ipv4"].update({ "total_active_bindings": match.group("active") })
+                continue
+            # -IPv6-
+            elif p_ipv6_header.match(line):
+                if not cts_dict["ip_sgt_bindings"].get("ipv6"):
+                    cts_dict["ip_sgt_bindings"].update({ "ipv6": {} })
+                continue
+            # CTS Role Based Enforcement: Enabled
+            elif p_role_based.match(line):
+                match = p_role_based.match(line)
+                cts_dict["ip_sgt_bindings"].update({ "cts_role_based_enforcement": match.group("value") })
+                continue
+            # CTS Role Based VLAN Enforcement: Enabled
+            elif p_role_based_vlan.match(line):
+                match = p_role_based_vlan.match(line)
+                cts_dict["ip_sgt_bindings"].update({ "cts_role_based_vlan_enforcement": match.group("value") })
+                continue
+            # Trusted/Un-Trusted Links
+            elif p_links_header.match(line):
+                if not cts_dict.get("trusted_untrusted_links"):
+                    cts_dict.update({ "trusted_untrusted_links" : {} })
+                continue
+            # Number of Trusted interfaces = 0
+            elif p_trusted_links.match(line):
+                match = p_trusted_links.match(line)
+                cts_dict["trusted_untrusted_links"].update({ "number_trusted_links": int(match.group("count")) })
+            # Number of Un-Trusted interfaces = 0
+            elif p_untrusted_links.match(line):
+                match = p_untrusted_links.match(line)
+                cts_dict["trusted_untrusted_links"].update({ "number_untrusted_links": int(match.group("count")) })
+                continue
+
+
+        if not active_bindings:
+            return cts_dict
+        else:
+            cts_dict = update_bindings(active_bindings, cts_dict)
+            return cts_dict
+
+          
+# ==============================
+# Schema for:
+#  * 'show cts environment-data'
+# ==============================
+class ShowCtsEnvironmentDataSchema(MetaParser):
+    """Schema for show cts environment-data."""
+
+    schema = {
+        "cts_env": {
+            "current_state": str,
+            "last_status": str,
+            Optional("sgt_tags"): str,
+            Optional("tag_status"): str,
+            Optional("server_list_name"): str,
+            Optional("server_count"): int,
+            Optional("servers"): {
+                Optional(int): {
+                    Optional("server_ip"): str,
+                    Optional("port"): int,
+                    Optional("aid"): str,
+                    Optional("server_status"): str,
+                    Optional("auto_test"): str,
+                    Optional("keywrap_enable"): str,
+                    Optional("idle_time_mins"): int,
+                    Optional("dead_time_secs"): int
+                }
+          },
+            Optional("security_groups"): {
+                Optional(int): {
+                    Optional("sec_group"): str,
+                    Optional("sec_group_name"): str
+              }
+          },
+          Optional("env_data_lifetime_secs"): int,
+          Optional("last_update"): {
+                Optional("date"): str,
+                Optional("time"): str,
+                Optional("time_zone"): str
+          },
+          Optional("expiration"): str,
+          Optional("refresh"): str,
+          "state_machine_status": str,
+          Optional("retry_timer_status"): str,
+          Optional("cache_data_status"): str
+        }
+    }
+    
+    
+# ==============================
+# Parser for:
+#  * 'show cts environment-data'
+# ==============================
+class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
+    """Parser for show cts environment-data"""
+
+    cli_command = 'show cts environment-data'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        cts_env_dict = {}
+        # CTS Environment Data
+        # ====================
+        # Current state = COMPLETE
+        # Last status = Successful
+        # Local Device SGT:
+        #   SGT tag = 0-16:Unknown
+        # Server List Info:
+        # Installed list: CTSServerList1-0089, 4 server(s):
+        #  *Server: 10.1.100.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        #  *Server: 10.1.100.5, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        #  *Server: 10.1.100.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        #  *Server: 10.1.100.6, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        #           Status = ALIVE
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        # Security Group Name Table:
+        #     0-15:Unit0
+        #     2-12:Unit1
+        #     3-10:Unit2
+        #     4-11:Device11
+        #     3215-08:K2
+        #     9999-06:Q1
+        #     68-10:North
+        #     5016-00:Quarantine
+        #     8000-00:TEST_8000
+        # Environment Data Lifetime = 86400 secs
+        # Last update time = 20:04:42 PDT Tue Jul 21 2020
+        # Env-data expires in   0:00:46:51 (dd:hr:mm:sec)
+        # Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
+        # Cache data applied           = NONE
+        # State Machine is running
+
+        # Current state = COMPLETE
+        current_state_capture = re.compile(r"^Current\s+state\s+=\s+(?P<state>.*$)")
+        # Last status = Successful
+        last_status_capture = re.compile(r"^Last\s+status\s+=\s+(?P<last_status>.*$)")
+        #   SGT tag = 0-16:Unknown
+        tags_capture = re.compile(r"^SGT\s+tag\s+=\s+(?P<sgt_tags>\d+-\d+):(?P<tag_status>\w+)")
+        # Installed list: CTSServerList1-0089, 4 server(s):
+        server_list_capture = re.compile(
+            r"^Installed\s+list:\s+(?P<server_list_name>\S+),\s+(?P<server_count>\d+)\s+server\(s\):", re.MULTILINE)
+        #  *Server: 10.1.100.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+        servers_capture = re.compile(
+            r"^(\*|)Server:\s+(?P<server_ip>\d+\.\d+\.\d+\.\d+),\s+port\s+(?P<port>\d+),\s+A-ID\s+(?P<aid>\S+)")
+        #           Status = ALIVE
+        server_status_capture = re.compile(r"^Status\s+=\s+(?P<server_status>\S+)")
+        #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+        keywrap_capture = re.compile(
+            r"^auto-test\s+=\s+(?P<auto_test>(TRUE|FALSE)),\s+keywrap-enable\s+=\s+(?P<keywrap_enable>(TRUE|FALSE)),\s+idle-time\s+=\s+(?P<idle_time_mins>\d+)\s+mins,\s+deadtime\s+=\s+(?P<dead_time_secs>\d+)\s+secs")
+        #     0-15:Unit0
+        sec_group_capture = re.compile(r"^(?P<sec_group>\S+):(?P<sec_group_name>\S+)")
+        # Environment Data Lifetime = 86400 secs
+        env_data_capture = re.compile(r"^Environment\s+Data\s+Lifetime\s+=\s+(?P<env_data_lifetime_secs>\d+)\s+secs")
+        # Last update time = 20:04:42 PDT Tue Jul 21 2020
+        last_update_capture = re.compile(
+            r"^Last\s+update\s+time\s+=\s+(?P<time>\d+:\d+:\d+)\s+(?P<time_zone>\w+)\s+(?P<day>\S+)\s+(?P<month>\S+)\s+(?P<date>\d+)\s+(?P<year>\d+)")
+        # Env-data expires in   0:00:46:51 (dd:hr:mm:sec)
+        expiration_capture = re.compile(r"^Env-data\s+expires\s+in\s+(?P<expiration>\d+:\d+:\d+:\d+)\s+\S+")
+        # Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
+        refresh_capture = re.compile(r"^Env-data\s+refreshes\s+in\s+(?P<refresh>\d+:\d+:\d+:\d+)\s+\S+")
+        # Cache data applied           = NONE
+        cache_data_capture = re.compile(r"^Cache\s+data\s+applied\s+=\s+(?P<cache_data_status>\S+)")
+        # State Machine is running
+        state_machine_capture = re.compile(r"^State\s+Machine\s+is\s+(?P<state_machine_status>\S+)")
+        # Retry_timer (60 secs) is not running
+        retry_capture = re.compile(
+            r"^Retry_timer\s+\((?P<retry_timer_secs>\d+)\s+secs\)\s+is\s+(?P<retry_timer_status>.*$)")
+
+        remove_lines = (
+        'CTS Environment Data', '=========', 'Local Device SGT:', 'Server List Info:', 'Security Group Name Table:')
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # print(clean_line)
+                # Remove lines unwanted lines from list of "remove_lines"
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+
+        server_data = {}
+        security_groups = {}
+        keywrap_index = 1
+        sec_group_index = 1
+        for line in out:
+            # Current state = COMPLETE
+            current_state_match = current_state_capture.match(line)
+            if current_state_match:
+                groups = current_state_match.groupdict()
+                current_state = groups['state']
+                if not cts_env_dict.get('cts_env', {}):
+                    cts_env_dict['cts_env'] = {}
+                cts_env_dict['cts_env']['current_state'] = current_state
+                continue
+            # Last status = Successful
+            last_status_match = last_status_capture.match(line)
+            if last_status_match:
+                groups = last_status_match.groupdict()
+                last_status = groups['last_status']
+                cts_env_dict['cts_env']['last_status'] = last_status
+                continue
+            #   SGT tag = 0-16:Unknown
+            tags_match = tags_capture.match(line)
+            if tags_match:
+                groups = tags_match.groupdict()
+                sgt_tags = groups['sgt_tags']
+                tag_status = groups['tag_status']
+                cts_env_dict['cts_env']['sgt_tags'] = sgt_tags
+                cts_env_dict['cts_env']['tag_status'] = tag_status
+                continue
+            # Installed list: CTSServerList1-0089, 4 server(s):
+            server_list_match = server_list_capture.match(line)
+            if server_list_match:
+                groups = server_list_match.groupdict()
+                server_list_name = groups['server_list_name']
+                server_count = int(groups['server_count'])
+                cts_env_dict['cts_env']['server_list_name'] = server_list_name
+                cts_env_dict['cts_env']['server_count'] = server_count
+                continue
+            #  *Server: 10.1.100.4, port 1812, A-ID A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A1A
+            servers_match = servers_capture.match(line)
+            if servers_match:
+                groups = servers_match.groupdict()
+                server_ip = groups['server_ip']
+                port = int(groups['port'])
+                aid = groups['aid']
+                server_data = {'server_ip': server_ip, 'port': port, 'aid': aid}
+                continue
+            #           Status = ALIVE
+            server_status_match = server_status_capture.match(line)
+            if server_status_match:
+                groups = server_status_match.groupdict()
+                server_status = groups['server_status']
+                server_data.update({'server_status': server_status})
+                if not cts_env_dict['cts_env'].get('servers', {}):
+                    cts_env_dict['cts_env']['servers'] = []
+                continue
+            #           auto-test = FALSE, keywrap-enable = FALSE, idle-time = 60 mins, deadtime = 20 secs
+            keywrap_match = keywrap_capture.match(line)
+            if keywrap_match:
+                groups = keywrap_match.groupdict()
+                auto_test = groups['auto_test']
+                keywrap_enable = groups['keywrap_enable']
+                idle_time_mins = int(groups['idle_time_mins'])
+                dead_time_secs = int(groups['dead_time_secs'])
+                server_data.update(
+                    {'auto_test': auto_test, 'keywrap_enable': keywrap_enable, 'idle_time_mins': idle_time_mins,
+                     'dead_time_secs': dead_time_secs})
+                if not cts_env_dict['cts_env'].get('servers', {}):
+                    cts_env_dict['cts_env']['servers'] = {}
+                if not cts_env_dict['cts_env']['servers'].get(keywrap_index, {}):
+                    cts_env_dict['cts_env']['servers'][keywrap_index] = server_data
+                keywrap_index = keywrap_index + 1
+                continue
+            #     0-15:Unit0
+            sec_group_match = sec_group_capture.match(line)
+            if sec_group_match:
+                groups = sec_group_match.groupdict()
+                sec_group = groups['sec_group']
+                sec_group_name = groups['sec_group_name']
+                sec_groups_data = {'sec_group': sec_group, 'sec_group_name': sec_group_name}
+                if not cts_env_dict['cts_env'].get('security_groups', {}):
+                    cts_env_dict['cts_env']['security_groups'] = {}
+                if not cts_env_dict['cts_env']['security_groups'].get(sec_group_index, {}):
+                    cts_env_dict['cts_env']['security_groups'][sec_group_index] = sec_groups_data
+                sec_group_index = sec_group_index + 1
+                continue
+            # Environment Data Lifetime = 86400 secs
+            env_data_match = env_data_capture.match(line)
+            if env_data_match:
+                groups = env_data_match.groupdict()
+                if groups.get('env_empty', {}):
+                    env_data = groups['env_empty']
+                    cts_env_dict['cts_env']['env_data'] = env_data
+                else:
+                    env_data_lifetime_secs = groups['env_data_lifetime_secs']
+                    cts_env_dict['cts_env']['env_data_lifetime_secs'] = int(env_data_lifetime_secs)
+                continue
+            # Last update time = 20:04:42 PDT Tue Jul 21 2020
+            last_update_match = last_update_capture.match(line)
+            if last_update_match:
+                groups = last_update_match.groupdict()
+                time = groups['time']
+                time_zone = groups['time_zone']
+                day = groups['day']
+                month = groups['month']
+                date = groups['date']
+                year = groups['year']
+                full_date = f"{day}, {month}/{date}/{year}"
+                cts_env_dict['cts_env'].update(
+                    {'last_update': {'date': full_date, 'time': time, 'time_zone': time_zone}})
+                continue
+            # Env-data expires in   0:00:46:51 (dd:hr:mm:sec)
+            expiration_match = expiration_capture.match(line)
+            if expiration_match:
+                groups = expiration_match.groupdict()
+                expiration = groups['expiration']
+                cts_env_dict['cts_env']['expiration'] = expiration
+                continue
+            # Env-data refreshes in 0:00:46:51 (dd:hr:mm:sec)
+            refresh_match = refresh_capture.match(line)
+            if refresh_match:
+                groups = refresh_match.groupdict()
+                refresh = groups['refresh']
+                cts_env_dict['cts_env']['refresh'] = refresh
+                continue
+            # Cache data applied           = NONE
+            cache_data_match = cache_data_capture.match(line)
+            if cache_data_match:
+                groups = cache_data_match.groupdict()
+                cache_data_status = groups['cache_data_status']
+                cts_env_dict['cts_env']['cache_data_status'] = cache_data_status
+                continue
+            # State Machine is running
+            state_machine_match = state_machine_capture.match(line)
+            if state_machine_match:
+                groups = state_machine_match.groupdict()
+                state_machine_status = groups['state_machine_status']
+                cts_env_dict['cts_env']['state_machine_status'] = state_machine_status
+                continue
+            # Retry_timer (60 secs) is not running
+            retry_match = retry_capture.match(line)
+            if retry_match:
+                groups = retry_match.groupdict()
+                retry_timer_secs = int(groups['retry_timer_secs'])
+                retry_timer_status = groups['retry_timer_status']
+                cts_env_dict['cts_env']['state_machine_status'] = state_machine_status
+                cts_env_dict['cts_env']['retry_timer_status'] = retry_timer_status
+                continue
+
+        return cts_env_dict
+
+# ======================
+# Schema for:
+#  * 'show cts rbacl'
+# ======================
+class ShowCtsRbaclSchema(MetaParser):
+    """Schema for show cts rbacl."""
+
+    schema = {
+        "cts_rbacl": {
+            "ip_ver_support": str,
+            "name": {
+                str: {
+                    "ip_protocol_version": str,
+                    "refcnt": int,
+                    "flag": str,
+                    "stale": bool,
+                    "aces": {
+                        Optional(int): {
+                            Optional("action"): str,
+                            Optional("protocol"): str,
+                            Optional("direction"): str,
+                            Optional("port"): int
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ======================
+# Parser for:
+#  * 'show cts rbacl'
+# ======================
+class ShowCtsRbacl(ShowCtsRbaclSchema):
+    """Parser for show cts rbacl"""
+
+    cli_command = 'show cts rbacl'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        cts_rbacl_dict = {}
+        # CTS RBACL Policy
+        # ================
+        # RBACL IP Version Supported: IPv4 & IPv6
+        #   name   = TCP_51005-01
+        #   IP protocol version = IPV4
+        #   refcnt = 2
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51005
+        #
+        #   name   = TCP_51060-02
+        #   IP protocol version = IPV4
+        #   refcnt = 4
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51060
+        #
+        #   name   = TCP_51144-01
+        #   IP protocol version = IPV4
+        #   refcnt = 10
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51144
+        #
+        #   name   = TCP_51009-01
+        #   IP protocol version = IPV4
+        #   refcnt = 2
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        #   RBACL ACEs:
+        #     permit tcp dst eq 51009
+
+
+
+        # RBACL IP Version Supported: IPv4 & IPv6
+        ip_ver_capture = re.compile(r"^RBACL\s+IP\s+Version\s+Supported:\s(?P<ip_ver_support>.*$)")
+        #   name   = TCP_13131-01
+        #   IP protocol version = IPV4
+        #   refcnt = 2
+        #   flag   = 0x41000000
+        #   stale  = FALSE
+        rbacl_capture = re.compile(r"^(?P<rbacl_key>.*)(?==)=\s+(?P<rbacl_value>.*$)")
+        #     permit tcp dst eq 13131
+        rbacl_ace_capture = re.compile(
+            r"^(?P<action>(permit|deny))\s+(?P<protocol>\S+)(\s+(?P<direction>dst|src)\s+((?P<port_condition>)\S+)\s+(?P<port>\d+)|)")
+
+        remove_lines = ('CTS RBACL Policy', '================', 'RBACL ACEs:')
+
+                # Remove unwanted lines from raw text
+        def filter_lines(raw_output, remove_lines):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                if not clean_line_strip.startswith(remove_lines):
+                    rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out, remove_lines=remove_lines)
+        rbacl_name = ''
+        rbacl_ace_index = 1
+        for line in out:
+            # RBACL IP Version Supported: IPv4 & IPv6
+            ip_ver_match = ip_ver_capture.match(line)
+            if ip_ver_match:
+                groups = ip_ver_match.groupdict()
+                ip_ver_support = groups['ip_ver_support']
+                if not cts_rbacl_dict.get('cts_rbacl', {}):
+                    cts_rbacl_dict['cts_rbacl'] = {}
+                    cts_rbacl_dict['cts_rbacl']['name'] = {}
+                cts_rbacl_dict['cts_rbacl']['ip_ver_support'] = ip_ver_support
+                continue
+            #   name   = TCP_13131-01
+            #   IP protocol version = IPV4
+            #   refcnt = 2
+            #   flag   = 0x41000000
+            #   stale  = FALSE
+            elif rbacl_capture.match(line):
+                groups = rbacl_capture.match(line).groupdict()
+                rbacl_key = groups['rbacl_key'].strip().lower().replace(' ', '_')
+                rbacl_value = groups['rbacl_value']
+                if rbacl_value.isdigit():
+                    rbacl_value = int(rbacl_value)
+                if rbacl_value == "TRUE" or rbacl_value == "FALSE":
+                    if rbacl_value == "TRUE":
+                        rbacl_value = True
+                    else:
+                        rbacl_value = False
+                if not cts_rbacl_dict.get('cts_rbacl', {}):
+                    cts_rbacl_dict['cts_rbacl'] = {}
+                if rbacl_key == 'name':
+                    rbacl_name = rbacl_value
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name] = {}
+                    rbacl_ace_index = 1
+                else:
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name].update({rbacl_key: rbacl_value})
+                continue
+            #     permit tcp dst eq 13131
+            elif rbacl_ace_capture.match(line):
+                groups = rbacl_ace_capture.match(line).groupdict()
+                ace_group_dict = {}
+                cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'] = {}
+                if groups['action']:
+                    ace_group_dict.update({'action': groups['action']})
+                if groups['protocol']:
+                    ace_group_dict.update({'protocol': groups['protocol']})
+                if groups['direction']:
+                    ace_group_dict.update({'direction': groups['direction']})
+                if groups['port_condition']:
+                    ace_group_dict.update({'port_condition': groups['port_condition']})
+                if groups['port']:
+                    ace_group_dict.update({'port': int(groups['port'])})
+                if not cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'].get(rbacl_ace_index, {}):
+                    cts_rbacl_dict['cts_rbacl']['name'][rbacl_name]['aces'][rbacl_ace_index] = ace_group_dict
+                rbacl_ace_index = rbacl_ace_index + 1
+                continue
+        return cts_rbacl_dict
+
+
+# ====================================
+# Schema for:
+#  * 'show cts role-based permissions'
+# ====================================
+class ShowCtsRoleBasedPermissionsSchema(MetaParser):
+    """Schema for show cts role-based permissions."""
+
+    schema = {
+        "indexes": {
+            int: {
+                Optional("policy_name"): str,
+                "action_policy": str,
+                "action_policy_group": str,
+                Optional("src_grp_id"): int,
+                Optional("src_grp_name"): str,
+                Optional("unknown_group"): str,
+                Optional("dst_group_id"): int,
+                Optional("dst_group_name"): str,
+                Optional("policy_groups"): list
+            },
+            "monitor_dynamic": bool,
+            "monitor_configured": bool
+        }
+    }
+
+
+
+# ====================================
+# Parser for:
+#  * 'show cts role-based permissions'
+# ====================================
+class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
+    """Parser for show cts role-based permissions"""
+
+    cli_command = 'show cts role-based permissions'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        cts_rb_permissions_dict = {}
+
+        # IPv4 Role-based permissions default:
+        rb_default_capture = re.compile(r"^IPv4\s+Role-based\s+permissions\s+(?P<default_group>default)")
+        # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
+        rb_permissions_capture = re.compile(
+            r"^IPv4\s+Role-based\s+permissions\s+from\s+group\s+(?P<src_grp_id>\d+):(?P<src_grp_name>\S+)\s+to\s+group\s((?P<unknown_group>Unknown)|(?P<dst_group_id>\d+):(?P<dst_group_name>\S+)):")
+        #         Deny IP-00
+        policy_action_capture = re.compile(r"^(?P<action_policy>(Permit|Deny))\s+(?P<action_policy_group>\S+)")
+        # ACCESS-01
+        policy_group_capture = re.compile(r"^(?P<policy_group>\w+-\d+)")
+        # RBACL Monitor All for Dynamic Policies : FALSE
+        monitor_dynamic_capture = re.compile(
+            r"^RBACL\s+Monitor\s+All\s+for\s+Dynamic\s+Policies\s+:\s+(?P<monitor_dynamic>(TRUE|FALSE))")
+        #RBACL Monitor All for Configured Policies : FALSE
+        monitor_configured_capture = re.compile(
+            r"^RBACL\s+Monitor\s+All\s+for\s+Configured\s+Policies\s+:\s+(?P<monitor_configured>(TRUE|FALSE))")
+
+        # Remove unwanted lines from raw text
+        def filter_lines(raw_output):
+            # Remove empty lines
+            clean_lines = list(filter(None, raw_output.splitlines()))
+            rendered_lines = []
+            for clean_line in clean_lines:
+                clean_line_strip = clean_line.strip()
+                # print(clean_line)
+                rendered_lines.append(clean_line_strip)
+            return rendered_lines
+
+        out = filter_lines(raw_output=out)
+
+        # Index value for each policy which will increment as it matches a new policy
+        policy_index = 1
+        # Index value for each policy group which will increment as it matches a new policy group
+        policy_group_index = 1
+        # Used to populate data for each policy and the policy index will be used as the key.
+        policy_data = {}
+
+        for line in out:
+            # IPv4 Role-based permissions default:
+            if rb_default_capture.match(line):
+                policy_group_index = 1
+                rb_default_match = rb_default_capture.match(line)
+                groups = rb_default_match.groupdict()
+                default_group = groups['default_group']
+                policy_data = {'policy_name': default_group}
+                if not cts_rb_permissions_dict.get('indexes', {}):
+                    cts_rb_permissions_dict['indexes'] = {}
+                continue
+            # IPv4 Role-based permissions from group 42:Untrusted to group Unknown:
+            elif rb_permissions_capture.match(line):
+                policy_group_index = 1
+                rb_permissions_match = rb_permissions_capture.match(line)
+                groups = rb_permissions_match.groupdict()
+                policy_data = {}
+                if not cts_rb_permissions_dict.get('indexes', {}):
+                    cts_rb_permissions_dict['indexes'] = {}
+                for k, v in groups.items():
+                    if v:
+                        if v.isdigit():
+                            v = int(v)
+                        policy_data.update({k: v})
+                continue
+            # ACCESS-01
+            elif policy_group_capture.match(line):
+                policy_group_match = policy_group_capture.match(line)
+                groups = policy_group_match.groupdict()
+                policy_group = groups['policy_group']
+                if not policy_data.get('policy_groups', []):
+                    policy_data['policy_groups'] = []
+                policy_data['policy_groups'].append(policy_group)
+                continue
+            #         Deny IP-00
+            elif policy_action_capture.match(line):
+                policy_action_match = policy_action_capture.match(line)
+                groups = policy_action_match.groupdict()
+                action_policy = groups['action_policy']
+                action_policy_group = groups['action_policy_group']
+                for k, v in groups.items():
+                    policy_data.update({k: v})
+                cts_rb_permissions_dict['indexes'][policy_index] = policy_data
+                policy_index = policy_index + 1
+                continue
+            # RBACL Monitor All for Dynamic Policies : FALSE
+            elif monitor_dynamic_capture.match(line):
+                monitor_dynamic_match = monitor_dynamic_capture.match(line)
+                groups = monitor_dynamic_match.groupdict()
+                monitor_dynamic = groups['monitor_dynamic']
+                if monitor_dynamic == 'FALSE':
+                    monitor_dynamic = False
+                else:
+                    monitor_dynamic = True
+                cts_rb_permissions_dict['indexes']['monitor_dynamic'] = monitor_dynamic
+                continue
+            # RBACL Monitor All for Configured Policies : FALSE
+            elif monitor_configured_capture.match(line):
+                monitor_configured_match = monitor_configured_capture.match(line)
+                groups = monitor_configured_match.groupdict()
+                monitor_configured = groups['monitor_configured']
+                if monitor_configured == 'FALSE':
+                    monitor_configured = False
+                else:
+                    monitor_configured = True
+                cts_rb_permissions_dict['indexes']['monitor_configured'] = monitor_configured
+                continue
+
+        return cts_rb_permissions_dict

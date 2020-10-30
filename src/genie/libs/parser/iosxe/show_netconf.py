@@ -97,7 +97,7 @@ class ShowNetconfYangSessions(ShowNetconfYangSessionsSchema):
         # Number of sessions : 1
         p1 = re.compile(r'^Number +of +sessions *: +(?P<session_count>\d+)$')
 
-        # 24          netconf-ssh  admin                5.28.35.35             None
+        # 24          netconf-ssh  admin                10.69.35.35             None
         p2 = re.compile(r'^(?P<session_id>\d+) +(?P<transport>\S+) +(?P<username>\S+) +'
                         r'(?P<source_host>\S+) +(?P<global_lock>\S+)$')
 
@@ -114,7 +114,7 @@ class ShowNetconfYangSessions(ShowNetconfYangSessionsSchema):
                 ret_dict['session_count'] = int(group.get('session_count'))
                 continue
 
-            # 24          netconf-ssh  admin                5.28.35.35             None
+            # 24          netconf-ssh  admin                10.69.35.35             None
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -152,7 +152,7 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
 
         # transport : netconf-ssh
         # username : admin
-        # source-host : 5.28.35.35
+        # source-host : 10.69.35.35
         # login-time : 2020-09-29T15:19:54+00:00
         # in-rpcs : 1
         # in-bad-rpcs : 0
@@ -184,7 +184,7 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
 
             # transport : netconf-ssh
             # username : admin
-            # source-host : 5.28.35.35
+            # source-host : 10.69.35.35
             # login-time : 2020-09-29T15:19:54+00:00
             # in-rpcs : 1
             # in-bad-rpcs : 0
@@ -223,7 +223,7 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
 
         # transport : netconf-ssh
         # username : admin
-        # source-host : 5.28.35.35
+        # source-host : 10.69.35.35
         # login-time : 2020-09-29T15:19:54+00:00
         # in-rpcs : 1
         # in-bad-rpcs : 0
@@ -255,7 +255,7 @@ class ShowNetconfYangSessionsDetail(ShowNetconfYangSessionsSchema):
 
             # transport : netconf-ssh
             # username : admin
-            # source-host : 5.28.35.35
+            # source-host : 10.69.35.35
             # login-time : 2020-09-29T15:19:54+00:00
             # in-rpcs : 1
             # in-bad-rpcs : 0

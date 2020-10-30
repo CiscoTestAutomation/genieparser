@@ -1,7 +1,7 @@
 Telemetry subscription receivers detail:
 
   Subscription ID: 2147483659
-  Address: 5.28.35.35
+  Address: 10.69.35.35
   Port: 45128
   Protocol: netconf
   Profile:
