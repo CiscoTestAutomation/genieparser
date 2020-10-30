@@ -129,66 +129,66 @@ class test_show_mfib_platform_evpn_bucket_location(unittest.TestCase):
             {0:
                 {'esi_interface': 'Bundle-Ether1',
                  'handle': '0x4000660',
-                 'stale': False,
+                 'stale': 'F',
                  'state': 'DF'
                  },
              1:
                 {'esi_interface': 'Bundle-Ether1',
                  'handle': '0x4000660',
-                 'stale': False,
+                 'stale': 'F',
                  'state': 'NDF'
                  },
              2:
                 {'esi_interface': 'Bundle-Ether1',
                  'handle': '0x4000660',
-                 'stale': False,
+                 'stale': 'F',
                  'state': 'DF'
                  },
              3:
                 {'esi_interface': 'Bundle-Ether1',
                  'handle': '0x4000660',
-                 'stale': False,
+                 'stale': 'F',
                  'state': 'NDF'
                  },
              4:
                 {'esi_interface': 'Bundle-Ether1',
                  'handle': '0x4000660',
-                 'stale': False,
+                 'stale': 'F',
                  'state': 'DF'
                  },
              5: {'esi_interface': 'Bundle-Ether1',
                  'handle': '0x4000660',
-                 'stale': False,
+                 'stale': 'F',
                  'state': 'NDF'
                  },
              6: {'esi_interface': 'Bundle-Ether1',
                  'handle': '0x4000660',
-                 'stale': False,
+                 'stale': 'F',
                  'state': 'DF'
                  },
              7: {'esi_interface': 'Bundle-Ether1',
                  'handle': '0x4000660',
-                 'stale': False,
+                 'stale': 'F',
                  'state': 'NDF'
                  },
              8: {'esi_interface': 'Bundle-Ether1',
                  'handle': '0x4000660',
-                 'stale': False,
+                 'stale': 'F',
                  'state': 'DF'
                  },
              9: {'esi_interface': 'Bundle-Ether1',
                  'handle': '0x4000660',
-                 'stale': False,
+                 'stale': 'F',
                  'state': 'NDF'
                  },
              10: {'esi_interface': 'Bundle-Ether1',
                   'handle': '0x4000660',
-                  'stale': False,
+                  'stale': 'F',
                   'state': 'DF'
                   },
              11: {'esi_interface': 'Bundle-Ether1',
                   'handle': '0x4000660',
-                  'stale': False,
+                  'stale': 'F',
                   'state': 'NDF'
                   }
              }
@@ -207,6 +207,7 @@ class test_show_mfib_platform_evpn_bucket_location(unittest.TestCase):
         obj = ShowMfibPlatformEvpnBucketLocation(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 
 if __name__ == '__main__':
     unittest.main()
