@@ -2,5 +2,5 @@
                                 New
 --------------------------------------------------------------------------------
 * IOSXE
-  * Added ShowDeviceTrackingDatabaseInt:
-      * show device-tracking database int {interface}
+  * Added ShowDeviceTrackingDatabaseInterface:
+      * show device-tracking database interface {interface}
