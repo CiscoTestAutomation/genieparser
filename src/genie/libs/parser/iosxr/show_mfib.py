@@ -138,7 +138,11 @@ class ShowMfibPlatformEvpnBucketLocationSchema(MetaParser):
             {Any():
                  {'esi_interface': str,
                   'handle': str,
+<<<<<<< HEAD
                   'stale': str,
+=======
+                  'stale': bool,
+>>>>>>> master
                   'state': str
                   },
              },
@@ -221,7 +225,11 @@ class ShowMfibPlatformEvpnBucketLocation(ShowMfibPlatformEvpnBucketLocationSchem
                 bucket_dict = parsed_dict['bucket_id'].setdefault(bucket_id, {})
                 bucket_dict['esi_interface'] = group['esi_interface']
                 bucket_dict['handle'] = group['handle']
+<<<<<<< HEAD
                 bucket_dict['stale'] = group['stale']
+=======
+                bucket_dict['stale'] = group['stale'] == 'T'
+>>>>>>> master
                 bucket_dict['state'] = group['state']
                 continue
 
