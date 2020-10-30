@@ -25,7 +25,7 @@ expected_output = {
                 "anchor_creation_failure": 0,
                 "anchor_invalid_mobility_bssid": 0,
                 "anchor_no_memory": 0,
-                "ap_down/disjoin": 136,
+                "ap_down_disjoin": 136,
                 "ap_initiated_delete_for_4_way_handshake_failed": 0,
                 "ap_initiated_delete_for_age_timeout": 0,
                 "ap_initiated_delete_for_all_on_slot": 0,

@@ -1373,7 +1373,7 @@ class ShowWlanIdClientStatsSchema(MetaParser):
                     "l3_authentication_failure": int,
                     "delete_received_from_ap": int,
                     "bssid_down": int,
-                    "ap_down/disjoin": int,
+                    "ap_down_disjoin": int,
                     "connection_timeout": int,
                     "mac_authentication_failure": int,
                     "datapath_plumb": int,
@@ -1663,7 +1663,7 @@ class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
             if match:
                 group = match.groupdict()
 
-                space_format_key = re.sub(r" - |\s+|-", "_", group["key"])
+                space_format_key = re.sub(r" - |\s+|-|/", "_", group["key"])
                 format_key = re.sub(r"\.|,", "", space_format_key).strip("_116").lower()
                 format_value =  int(group["value"])
 

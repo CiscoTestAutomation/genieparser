@@ -17,7 +17,7 @@ expected_output = {
                 "l3_authentication_failure": 0,
                 "delete_received_from_ap": 0,
                 "bssid_down": 1,
-                "ap_down/disjoin": 2,
+                "ap_down_disjoin": 2,
                 "connection_timeout": 0,
                 "mac_authentication_failure": 0,
                 "datapath_plumb": 0,
