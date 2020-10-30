@@ -1,13 +1,13 @@
 expected_output = {
-  'sess_db': {
+  'session_db': {
     0: {
-      'sess_id': 18005146,
+      'session_id': 18005146,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '104.16.149.64',
       'src_port': 58328,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -16,17 +16,17 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 2722,
-      'tot_resp_bytes': 1391
+      'total_initiator_bytes': 2722,
+      'total_responder_bytes': 1391
     },
     1: {
-      'sess_id': 18005251,
+      'session_id': 18005251,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '104.244.42.195',
       'src_port': 49933,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -35,17 +35,17 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 3509,
-      'tot_resp_bytes': 982
+      'total_initiator_bytes': 3509,
+      'total_responder_bytes': 982
     },
     2: {
-      'sess_id': 18005140,
+      'session_id': 18005140,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '199.232.253.67',
       'src_port': 58322,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -54,17 +54,17 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 8850,
-      'tot_resp_bytes': 2403
+      'total_initiator_bytes': 8850,
+      'total_responder_bytes': 2403
     },
     3: {
-      'sess_id': 18005250,
+      'session_id': 18005250,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '142.250.67.34',
       'src_port': 49932,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -73,17 +73,17 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 3105,
-      'tot_resp_bytes': 7913
+      'total_initiator_bytes': 3105,
+      'total_responder_bytes': 7913
     },
     4: {
-      'sess_id': 18005137,
+      'session_id': 18005137,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '142.250.67.66',
       'src_port': 58319,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -92,17 +92,17 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 2845,
-      'tot_resp_bytes': 1637
+      'total_initiator_bytes': 2845,
+      'total_responder_bytes': 1637
     },
     5: {
-      'sess_id': 18005153,
+      'session_id': 18005153,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '104.16.149.64',
       'src_port': 58335,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -111,17 +111,17 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 2789,
-      'tot_resp_bytes': 1345
+      'total_initiator_bytes': 2789,
+      'total_responder_bytes': 1345
     },
     6: {
-      'sess_id': 18005142,
+      'session_id': 18005142,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '23.35.6.70',
       'src_port': 58324,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -130,17 +130,17 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 4614,
-      'tot_resp_bytes': 476
+      'total_initiator_bytes': 4614,
+      'total_responder_bytes': 476
     },
     7: {
-      'sess_id': 18004919,
+      'session_id': 18004919,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '142.250.76.34',
       'src_port': 52671,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -149,17 +149,17 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 24460,
-      'tot_resp_bytes': 18659
+      'total_initiator_bytes': 24460,
+      'total_responder_bytes': 18659
     },
     8: {
-      'sess_id': 18005262,
+      'session_id': 18005262,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '182.79.238.140',
       'src_port': 49944,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -168,17 +168,17 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 34953,
-      'tot_resp_bytes': 6463480
+      'total_initiator_bytes': 34953,
+      'total_responder_bytes': 6463480
     },
     9: {
-      'sess_id': 18005143,
+      'session_id': 18005143,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '172.217.167.130',
       'src_port': 58325,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -187,17 +187,17 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 2885,
-      'tot_resp_bytes': 1082
+      'total_initiator_bytes': 2885,
+      'total_responder_bytes': 1082
     },
     10: {
-      'sess_id': 18004645,
+      'session_id': 18004645,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '216.58.200.131',
       'src_port': 54733,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -206,17 +206,17 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 49832,
-      'tot_resp_bytes': 67236
+      'total_initiator_bytes': 49832,
+      'total_responder_bytes': 67236
     },
     11: {
-      'sess_id': 18005202,
+      'session_id': 18005202,
       'state': 'open',
       'src_ip': '123.1.0.7',
       'dst_ip': '184.31.214.50',
       'src_port': 49873,
       'dst_port': 443,
-      'proto': 'PROTO_L7_HTTPS',
+      'protocol': 'PROTO_L7_HTTPS',
       'src_vrf': 2,
       'dst_vrf': 2,
       'src_vpn_id': 1,
@@ -225,8 +225,8 @@ expected_output = {
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 3684,
-      'tot_resp_bytes': 67394
+      'total_initiator_bytes': 3684,
+      'total_responder_bytes': 67394
     }
   }
 }

@@ -12,15 +12,15 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
 
 class ShowSdwanZonebfwdpSessionsSchema(MetaParser):
     schema = {
-        'sess_db': {
+        'session_db': {
             Any(): {
-                'sess_id': int,
+                'session_id': int,
                 'state': str,
                 'src_ip': str,
                 'dst_ip': str,
                 'src_port': int,
                 'dst_port': int,
-                'proto': str,
+                'protocol': str,
                 'src_vrf': int,
                 'dst_vrf': int,
                 'src_vpn_id': int,
@@ -29,9 +29,9 @@ class ShowSdwanZonebfwdpSessionsSchema(MetaParser):
                 'classmap_name': str,
                 'nat_flags': str,
                 'internal_flags': int,
-                'tot_init_bytes': int,
-                'tot_resp_bytes': int,
-                Optional('app_type'): str
+                'total_initiator_bytes': int,
+                'total_responder_bytes': int,
+                Optional('application_type'): str
                 }
          }
     }
@@ -67,15 +67,15 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
             m = p1.match(line)      
             if m:
                 groups = m.groupdict()
-                sess_dict = ret_dict.setdefault('sess_db', {})
+                sess_dict = ret_dict.setdefault('session_db', {})
                 feature_dict = sess_dict.setdefault(sess_num, {})
-                feature_dict.update(({'sess_id': int(groups['sess_id'])}))
+                feature_dict.update(({'session_id': int(groups['sess_id'])}))
                 feature_dict.update(({'state': (groups['state'])}))
                 feature_dict.update(({'src_ip': (groups['src_ip'])}))
                 feature_dict.update(({'dst_ip': (groups['dst_ip'])}))
                 feature_dict.update(({'src_port': int(groups['src_port'])}))
                 feature_dict.update(({'dst_port': int(groups['dst_port'])}))
-                feature_dict.update(({'proto': (groups['proto'])}))
+                feature_dict.update(({'protocol': (groups['proto'])}))
                 feature_dict.update(({'src_vrf': int(groups['src_vrf'])}))
                 feature_dict.update(({'dst_vrf': int(groups['dst_vrf'])}))
                 feature_dict.update(({'src_vpn_id': int(groups['src_vpn_id'])}))
@@ -84,8 +84,8 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
                 feature_dict.update(({'classmap_name': (groups['classmap_name'])}))
                 feature_dict.update(({'nat_flags': (groups['nat_flags'])}))
                 feature_dict.update(({'internal_flags': int(groups['internal_flags'])}))
-                feature_dict.update(({'tot_init_bytes': int(groups['tot_init_bytes'])}))
-                feature_dict.update(({'tot_resp_bytes': int(groups['tot_resp_bytes'])}))
+                feature_dict.update(({'total_initiator_bytes': int(groups['tot_init_bytes'])}))
+                feature_dict.update(({'total_responder_bytes': int(groups['tot_resp_bytes'])}))
                 sess_num = sess_num + 1 
                 last_dict_ptr = feature_dict
                 continue
@@ -94,15 +94,15 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
             m = p2.match(line)      
             if m:
                 groups = m.groupdict()
-                sess_dict = ret_dict.setdefault('sess_db', {})
+                sess_dict = ret_dict.setdefault('session_db', {})
                 feature_dict = sess_dict.setdefault(sess_num, {})
-                feature_dict.update(({'sess_id': int(groups['sess_id'])}))
+                feature_dict.update(({'session_id': int(groups['sess_id'])}))
                 feature_dict.update(({'state': (groups['state'])}))
                 feature_dict.update(({'src_ip': (groups['src_ip'])}))
                 feature_dict.update(({'dst_ip': (groups['dst_ip'])}))
                 feature_dict.update(({'src_port': int(groups['src_port'])}))
                 feature_dict.update(({'dst_port': int(groups['dst_port'])}))
-                feature_dict.update(({'proto': (groups['proto'])}))
+                feature_dict.update(({'protocol': (groups['proto'])}))
                 feature_dict.update(({'src_vrf': int(groups['src_vrf'])}))
                 feature_dict.update(({'dst_vrf': int(groups['dst_vrf'])}))
                 feature_dict.update(({'src_vpn_id': int(groups['src_vpn_id'])}))
@@ -111,9 +111,9 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
                 feature_dict.update(({'classmap_name': (groups['classmap_name'])}))
                 feature_dict.update(({'nat_flags': (groups['nat_flags'])}))
                 feature_dict.update(({'internal_flags': int(groups['internal_flags'])}))
-                feature_dict.update(({'tot_init_bytes': int(groups['tot_init_bytes'])}))
-                feature_dict.update(({'tot_resp_bytes': int(groups['tot_resp_bytes'])}))
-                feature_dict.update(({'app_type': (groups['app_type'])}))
+                feature_dict.update(({'total_initiator_bytes': int(groups['tot_init_bytes'])}))
+                feature_dict.update(({'total_responder_bytes': int(groups['tot_resp_bytes'])}))
+                feature_dict.update(({'application_type': (groups['app_type'])}))
                 sess_num = sess_num + 1 
                 last_dict_ptr = feature_dict
                 continue
