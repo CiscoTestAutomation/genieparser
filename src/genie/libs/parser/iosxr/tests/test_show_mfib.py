@@ -10,7 +10,7 @@ from pyats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_mfib
-from genie.libs.parser.iosxr.show_mfib import ShowMfibRouteSummary
+from genie.libs.parser.iosxr.show_mfib import ShowMfibRouteSummary, ShowMfibPlatformEvpnBucketLocation
 
 
 # ==========================================================================
@@ -94,6 +94,119 @@ class test_show_mfib_route_summary(unittest.TestCase):
         obj = ShowMfibRouteSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+
+# ==========================================================================
+# Unittest for 'show mfib platform evpn bucket location'
+# ==========================================================================
+class test_show_mfib_platform_evpn_bucket_location(unittest.TestCase):
+    """ Unit test for show mfib platform evpn bucket location <location>. """
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': """
+        Sun May 17 07:47:31.422 UTC
+        LC Type: A9K-4X100GE-TR
+        ------------------------------------------------------
+        ESI Interface        Handle     Bucket ID State Stale 
+        ------------------------------------------------------
+        Bundle-Ether1        0x4000660          0       DF     F 
+        Bundle-Ether1        0x4000660          1      NDF     F 
+        Bundle-Ether1        0x4000660          2       DF     F 
+        Bundle-Ether1        0x4000660          3      NDF     F 
+        Bundle-Ether1        0x4000660          4       DF     F 
+        Bundle-Ether1        0x4000660          5      NDF     F 
+        Bundle-Ether1        0x4000660          6       DF     F 
+        Bundle-Ether1        0x4000660          7      NDF     F 
+        Bundle-Ether1        0x4000660          8       DF     F 
+        Bundle-Ether1        0x4000660          9      NDF     F 
+        Bundle-Ether1        0x4000660         10       DF     F 
+        Bundle-Ether1        0x4000660         11      NDF     F 
+        ------------------------------------------------------"""}
+
+    golden_parsed_output_1 = {
+        'bucket_id':
+            {0:
+                {'esi_interface': 'Bundle-Ether1',
+                 'handle': '0x4000660',
+                 'stale': 'F',
+                 'state': 'DF'
+                 },
+             1:
+                {'esi_interface': 'Bundle-Ether1',
+                 'handle': '0x4000660',
+                 'stale': 'F',
+                 'state': 'NDF'
+                 },
+             2:
+                {'esi_interface': 'Bundle-Ether1',
+                 'handle': '0x4000660',
+                 'stale': 'F',
+                 'state': 'DF'
+                 },
+             3:
+                {'esi_interface': 'Bundle-Ether1',
+                 'handle': '0x4000660',
+                 'stale': 'F',
+                 'state': 'NDF'
+                 },
+             4:
+                {'esi_interface': 'Bundle-Ether1',
+                 'handle': '0x4000660',
+                 'stale': 'F',
+                 'state': 'DF'
+                 },
+             5: {'esi_interface': 'Bundle-Ether1',
+                 'handle': '0x4000660',
+                 'stale': 'F',
+                 'state': 'NDF'
+                 },
+             6: {'esi_interface': 'Bundle-Ether1',
+                 'handle': '0x4000660',
+                 'stale': 'F',
+                 'state': 'DF'
+                 },
+             7: {'esi_interface': 'Bundle-Ether1',
+                 'handle': '0x4000660',
+                 'stale': 'F',
+                 'state': 'NDF'
+                 },
+             8: {'esi_interface': 'Bundle-Ether1',
+                 'handle': '0x4000660',
+                 'stale': 'F',
+                 'state': 'DF'
+                 },
+             9: {'esi_interface': 'Bundle-Ether1',
+                 'handle': '0x4000660',
+                 'stale': 'F',
+                 'state': 'NDF'
+                 },
+             10: {'esi_interface': 'Bundle-Ether1',
+                  'handle': '0x4000660',
+                  'stale': 'F',
+                  'state': 'DF'
+                  },
+             11: {'esi_interface': 'Bundle-Ether1',
+                  'handle': '0x4000660',
+                  'stale': 'F',
+                  'state': 'NDF'
+                  }
+             }
+    }
+
+    def test_show_mfib_platform_evpn_bucket_location_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowMfibPlatformEvpnBucketLocation(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_mfib_platform_evpn_bucket_location_full(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowMfibPlatformEvpnBucketLocation(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
 
 if __name__ == '__main__':
