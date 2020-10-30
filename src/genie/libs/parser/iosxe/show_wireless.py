@@ -2063,14 +2063,14 @@ class ShowWirelessFabricVnidMappingSchema(MetaParser):
     """Schema for show wireless fabric vnid mapping."""
 
     schema = {
-      Optional("fabric_vnid_mapping") : {
-        Optional("name"): {
-          Optional(str) : {
-            Optional("l2_vnid"): int,
-            Optional("l3_vnid"): int,
+      "fabric_vnid_mapping" : {
+        "name": {
+          str : {
+            "l2_vnid": int,
+            "l3_vnid": int,
             Optional("ip_address"): str,
-            Optional("subnet"): str,
-            Optional("control_plane_name"): str
+            "subnet": str,
+            "control_plane_name": str
           }
         }
       }
