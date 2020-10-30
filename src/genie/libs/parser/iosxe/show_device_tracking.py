@@ -171,7 +171,7 @@ class ShowDeviceTrackingDatabaseIntSchema(MetaParser):
     """Schema for show device-tracking database int."""
 
     schema = {
-        "binding_table": {"dynamic": int, "entries": int},
+        "binding_table": {"dynamic": int, "entries": int, "limit": int},
         "network_layer_address": {
             Any(): {
                 "age": str,
@@ -223,7 +223,7 @@ class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
         # L   2001:420:307::1                         0000.0c9f.f45d  Vl1022         1022  0100 42473mn REACHABLE
 
         # Binding Table has 87 entries, 75 dynamic (limit 100000)
-        binding_table_capture = r"^Binding Table has (?P<entries>\d+) entries, (?P<dynamic>\d+) dynamic \(limit 100000\)$"
+        binding_table_capture = r"^Binding Table has (?P<entries>\d+) entries, (?P<dynamic>\d+) dynamic \(limit (?P<limit>\d+))\)$"
 
         # DH4 10.160.43.197                           94d4.690b.dbfa  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
         tracking_database_capture = r"^(?P<code>\S+)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+.*)$"

@@ -1,5 +1,5 @@
 expected_output = {
-    "binding_table": {"entries": 87, "dynamic": 75},
+    "binding_table": {"entries": 87, "dynamic": 75, "limit": 100000},
     "network_layer_address": {
         "10.160.43.197": {
             "code": "DH4",
