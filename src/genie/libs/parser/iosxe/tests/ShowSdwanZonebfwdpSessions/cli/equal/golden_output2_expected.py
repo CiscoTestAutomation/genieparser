@@ -1,13 +1,13 @@
 expected_output = {
-  'sess_db': {
+  'session_db': {
     0: {
-      'sess_id': 48380,
+      'session_id': 48380,
       'state': 'open',
       'src_ip': '15.0.32.228',
       'dst_ip': '14.0.32.228',
       'src_port': 1024,
       'dst_port': 1024,
-      'proto': 'PROTO_L4_UDP',
+      'protocol': 'PROTO_L4_UDP',
       'src_vrf': 3,
       'dst_vrf': 3,
       'src_vpn_id': 20,
@@ -16,18 +16,18 @@ expected_output = {
       'classmap_name': 'ZBFW-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 2429226758,
-      'tot_resp_bytes': 2429224221,
-      'app_type': '/unknown'
+      'total_initiator_bytes': 2429226758,
+      'total_responder_bytes': 2429224221,
+      'application_type': '/unknown'
     },
     1: {
-      'sess_id': 48089,
+      'session_id': 48089,
       'state': 'open',
       'src_ip': '15.0.31.116',
       'dst_ip': '14.0.31.116',
       'src_port': 1024,
       'dst_port': 1024,
-      'proto': 'PROTO_L4_UDP',
+      'protocol': 'PROTO_L4_UDP',
       'src_vrf': 3,
       'dst_vrf': 3,
       'src_vpn_id': 20,
@@ -36,18 +36,18 @@ expected_output = {
       'classmap_name': 'ZBFW-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 2431679243,
-      'tot_resp_bytes': 2431677173,
-      'app_type': '/statistical-p2p'
+      'total_initiator_bytes': 2431679243,
+      'total_responder_bytes': 2431677173,
+      'application_type': '/statistical-p2p'
     },
     2: {
-      'sess_id': 49645,
+      'session_id': 49645,
       'state': 'open',
       'src_ip': '15.0.37.186',
       'dst_ip': '14.0.37.186',
       'src_port': 1024,
       'dst_port': 1024,
-      'proto': 'PROTO_L4_UDP',
+      'protocol': 'PROTO_L4_UDP',
       'src_vrf': 3,
       'dst_vrf': 3,
       'src_vpn_id': 20,
@@ -56,18 +56,18 @@ expected_output = {
       'classmap_name': 'ZBFW-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 2430723994,
-      'tot_resp_bytes': 2430722132,
-      'app_type': '/unknown'
+      'total_initiator_bytes': 2430723994,
+      'total_responder_bytes': 2430722132,
+      'application_type': '/unknown'
     },
     3: {
-      'sess_id': 46845,
+      'session_id': 46845,
       'state': 'open',
       'src_ip': '15.0.26.42',
       'dst_ip': '14.0.26.42',
       'src_port': 1024,
       'dst_port': 1024,
-      'proto': 'PROTO_L4_UDP',
+      'protocol': 'PROTO_L4_UDP',
       'src_vrf': 3,
       'dst_vrf': 3,
       'src_vpn_id': 20,
@@ -76,18 +76,18 @@ expected_output = {
       'classmap_name': 'ZBFW-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 2430311067,
-      'tot_resp_bytes': 2430308180,
-      'app_type': '/unknown'
+      'total_initiator_bytes': 2430311067,
+      'total_responder_bytes': 2430308180,
+      'application_type': '/unknown'
     },
     4: {
-      'sess_id': 44583,
+      'session_id': 44583,
       'state': 'open',
       'src_ip': '15.0.18.63',
       'dst_ip': '14.0.18.63',
       'src_port': 1024,
       'dst_port': 1024,
-      'proto': 'PROTO_L4_UDP',
+      'protocol': 'PROTO_L4_UDP',
       'src_vrf': 3,
       'dst_vrf': 3,
       'src_vpn_id': 20,
@@ -96,9 +96,9 @@ expected_output = {
       'classmap_name': 'ZBFW-seq-1-cm_',
       'nat_flags': '-',
       'internal_flags': 0,
-      'tot_init_bytes': 2435061651,
-      'tot_resp_bytes': 2435062756,
-      'app_type': '/statistical-p2p'
+      'total_initiator_bytes': 2435061651,
+      'total_responder_bytes': 2435062756,
+      'application_type': '/statistical-p2p'
     }
   }
 }
