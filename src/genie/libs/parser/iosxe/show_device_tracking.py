@@ -167,7 +167,7 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
 # Schema for:
 #  * 'show device-tracking database interface {interface}'
 # ======================================
-class ShowDeviceTrackingDatabaseIntSchema(MetaParser):
+class ShowDeviceTrackingDatabaseInterfaceSchema(MetaParser):
     """Schema for show device-tracking database interface {interface}."""
 
     schema = {
@@ -191,7 +191,7 @@ class ShowDeviceTrackingDatabaseIntSchema(MetaParser):
 # Parser for:
 #  * show device-tracking database interface {interface}'
 # ======================================
-class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
+class ShowDeviceTrackingDatabaseInterface(ShowDeviceTrackingDatabaseInterfaceSchema):
     """Parser for show device-tracking database interface {interface}"""
 
     cli_command = 'show device-tracking database interface {interface}'
