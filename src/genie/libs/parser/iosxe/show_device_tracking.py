@@ -165,10 +165,10 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
 
 # ======================================
 # Schema for:
-#  * 'show device-tracking database int'
+#  * 'show device-tracking database int {interface}'
 # ======================================
 class ShowDeviceTrackingDatabaseIntSchema(MetaParser):
-    """Schema for show device-tracking database int."""
+    """Schema for show device-tracking database int {interface}."""
 
     schema = {
         "binding_table": {"dynamic": int, "entries": int, "limit": int},
@@ -189,10 +189,10 @@ class ShowDeviceTrackingDatabaseIntSchema(MetaParser):
 
 # ======================================
 # Parser for:
-#  * 'show device-tracking database int'
+#  * 'show device-tracking database int {interface}'
 # ======================================
 class ShowDeviceTrackingDatabaseInt(ShowDeviceTrackingDatabaseIntSchema):
-    """Parser for show device-tracking database int <interface>"""
+    """Parser for show device-tracking database int {interface}"""
 
     cli_command = 'show device-tracking database int {interface}'
 
