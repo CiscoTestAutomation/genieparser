@@ -1,0 +1,29 @@
+Number of APs: 20
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b25a-13-cap10         3c41.0fee.5094   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-12-cap01         3c41.0fee.5884   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap01         3c41.0fee.5d90   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap07         3c41.0fee.5de8   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap05         3c41.0fee.5df0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap04         3c41.0fee.5e5c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap08         3c41.0fee.5e74   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap01         3c41.0fee.5eac   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap08         3c41.0fee.5ef8   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap02         3c41.0fee.5f94   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+
+Number of APs: 20
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b25a-11-cap07         3c41.0fee.5fbc   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap02         2c57.4518.16ac   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap06         2c57.4518.2df0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap08         2c57.4518.41b0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap07         2c57.4518.432c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap11         2c57.4518.4330   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-12-cap02         3c41.0fee.4394   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-13-cap09         2c57.4518.564c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-12-cap03         2c57.4518.5b40   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap10         2c57.4518.5b48   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        

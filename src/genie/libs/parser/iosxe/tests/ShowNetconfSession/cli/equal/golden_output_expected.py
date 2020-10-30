@@ -1,0 +1,1 @@
+expected_output = {'open': 0, 'maximum': 4}

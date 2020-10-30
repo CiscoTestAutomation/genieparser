@@ -1,0 +1,95 @@
+Mobility event statistics:
+    Joined as
+        Local                         : 60431           
+        Foreign                       : 0               
+        Export foreign                : 0               
+        Export anchor                 : 0               
+    Delete
+        Local                         : 60316           
+        Remote                        : 0               
+    Role changes
+        Local to anchor               : 0               
+        Anchor to local               : 0               
+    Roam stats
+        L2 roam count                 : 0               
+        L3 roam count                 : 0               
+        Flex client roam count        : 0               
+        Inter-WNCd roam count         : 0               
+        Intra-WNCd roam count         : 154227          
+        Remote inter-cntrl roam count : 0               
+        Remote WebAuth pending roams  : 0               
+    Anchor Request
+        Sent                          : 0               
+          Grant received              : 0               
+          Deny received               : 0               
+        Received                      : 0               
+          Grant sent                  : 0               
+          Deny  sent                  : 0               
+    Handoff Status Received
+        Success                       : 0               
+        Group mismatch                : 0               
+        Client unknown                : 0               
+        Client blacklisted            : 0
+        SSID mismatch                 : 0               
+        Denied                        : 0               
+        L3 Vlan Override              : 0               
+        Unknown peer                  : 0               
+    Handoff Status Sent
+        Success                       : 0               
+        Group mismatch                : 0               
+        Client unknown                : 0               
+        Client blacklisted            : 0
+        SSID mismatch                 : 0               
+        Denied                        : 0               
+        L3 Vlan Override              : 0               
+    Export Anchor
+        Request Sent                  : 0               
+        Response Received             :      
+            Ok                        : 0               
+            Deny - generic            : 0               
+            Client blacklisted        : 0               
+            Client limit reached      : 0               
+            Profile mismatch          : 0               
+            Deny - unknown reason     : 0               
+        Request Received              : 0               
+        Response Sent                 :      
+            Ok                        : 0               
+            Deny - generic            : 0               
+            Client blacklisted        : 0               
+            Client limit reached      : 0               
+            Profile mismatch          : 0               
+
+
+MM mobility event statistics:
+    Event data allocs                 : 120747          
+    Event data frees                  : 120747          
+    FSM set allocs                    : 60427           
+    FSM set frees                     : 60316           
+    Timer allocs                      : 0               
+    Timer frees                       : 0               
+    Timer starts                      : 0               
+    Timer stops                       : 0               
+    Invalid events                    : 0               
+    Internal errors                   : 0               
+    Delete internal errors            : 0               
+    Roam internal errors              : 0               
+
+
+MMIF mobility event statistics:
+    Event data allocs                 : 354187          
+    Event data frees                  : 354187          
+    Invalid events                    : 13              
+    Event schedule errors             : 0               
+    MMIF internal errors:
+      IPC failure                     : 0               
+      Database failure                : 0               
+      Invalid parameters              : 0               
+      Mobility message decode failure : 0               
+      FSM failure                     : 0               
+      Client handoff success          : 0               
+      Client handoff failure          : 0               
+      Anchor Deny                     : 0               
+      Remote delete                   : 0               
+      Tunnel down delete              : 0               
+      MBSSID down                     : 0               
+      Unknown failure                 : 0       

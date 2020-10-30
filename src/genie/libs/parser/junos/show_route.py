@@ -54,6 +54,7 @@ class ShowRouteTableSchema(MetaParser):
                             Optional('preference2'): str,
                             'age': str,
                             Optional('metric'): str,
+                            Optional('rt-tag'): str,
                             'next_hop': {
                                 'next_hop_list': {
                                     Any(): {
@@ -111,8 +112,8 @@ class ShowRouteTable(ShowRouteTableSchema):
         # 10.64.4.4/32   *[L-OSPF/9/5] 1d 02:16:51, metric 110
         # 118420             *[VPN/170] 31w3d 20:13:54
         r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?'
-                        r'\[(?P<protocol_name>[\w\-]+)/(?P<preference>\d+)/?(?P<preference2>\d+)?\]'
-                        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?$')
+                        r'\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)\/?(?P<preference2>\d+)?\]'
+                        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
@@ -146,13 +147,15 @@ class ShowRouteTable(ShowRouteTableSchema):
             result = r2.match(line)
             if result:
                 group = result.groupdict()
-
+                rt_tag = group.pop('rt_tag', None)
                 rt_destination = group.pop('rt_destination', None)
 
                 route_dict = table_dict.setdefault('routes', {})\
                                        .setdefault(rt_destination, {})
 
                 route_dict.update({k: v for k, v in group.items() if v})
+                if rt_tag:
+                    route_dict.update({'rt-tag': rt_tag})
                 continue
 
             # > to 192.168.220.6 via ge-0/0/1.0
@@ -1945,16 +1948,17 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
         # * 10.220.0.0/16           Self                 12003   120        (65151 65000) I
         # * 10.4.1.1/32              Self                                    I
         # * 10.36.3.3/32              Self                                    2 I
+        # * 10.81.123.0/32        Self                                    67890 [1] I
         p2 = re.compile(r'((?P<active_tag>\*) +)?(?P<rt_destination>[\d\.\:\/]+)'
                         r' +(?P<to>\S+)( +(?P<med>\d+) +(?P<local_preference>\d+))? '
-                        r'+(?P<as_path>(\(([\S\s]+\)) +\w+)|((\d\s)?\w))')
+                        r'+(?P<as_path>[\s\S]+)')
         
         # 2001:db8:7fc5:ca45::1
         p3 = re.compile(r'^(?P<rt_destination>[\d\:\w\/]+)$')
 
         # *                         Self                 2       100        I
         p4 = re.compile(r'^((?P<active_tag>\*) +)?(?P<to>\S+)( +(?P<med>\d+)? +(?P<local_preference>\d+))? +(?P<as_path>(\(([\S\s]+\)) +\w+)|((\d\s)?\w))$')
-
+        
         for line in out.splitlines():
             line = line.strip()
 
@@ -1976,7 +1980,7 @@ class ShowRouteAdvertisingProtocol(ShowRouteAdvertisingProtocolSchema):
                 rt_dict = {'rt-destination': group['rt_destination']}
                 rt_entry_dict = rt_dict.setdefault('rt-entry', {})
                 keys = ['active_tag', 'as_path', 'local_preference', 'med']
-
+                
                 for key in keys:
                     if group[key]:
                         rt_entry_dict.update({key.replace('_', '-'): group[key]})

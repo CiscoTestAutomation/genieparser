@@ -1,87 +1,87 @@
 expected_output = {
     "ap_count": 61,
     "base_mac": {
-        "706d.0598.6fc0": {
-            "visitors_mac": "706d.0598.0320",
-            "ap_name": "AP706d.0598.0320",
+        "706d.05ff.0859": {
+            "visitors_mac": "706d.05ff.9bb8",
+            "ap_name": "AP706d.05ff.9bb8",
             "ip_address": "10.10.116.22",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.0544.d2c0": {
-            "visitors_mac": "706d.0544.1bf0",
+        "706d.05ff.1705": {
+            "visitors_mac": "706d.05ff.5f35",
             "ap_name": "visitors-hydra",
             "ip_address": "10.10.78.156",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.0544.d580": {
-            "visitors_mac": "706d.0544.1ca0",
+        "706d.05ff.1ac4": {
+            "visitors_mac": "706d.05ff.60e4",
             "ap_name": "visitors-hydra",
             "ip_address": "10.10.82.200",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "0042.5a0a.1fb0": {
-            "visitors_mac": "006b.f116.0ff0",
+        "0042.5aff.29ba": {
+            "visitors_mac": "006b.f1ff.2507",
             "ap_name": "visitors-1815i",
             "ip_address": "10.10.139.90",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.0593.aac0": {
-            "visitors_mac": "706d.0592.5148",
+        "706d.05ff.3e54": {
+            "visitors_mac": "706d.05ff.e3da",
             "ap_name": "visitors-hydra2",
             "ip_address": "10.10.36.138",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.0593.ae20": {
-            "visitors_mac": "706d.0592.5220",
+        "706d.05ff.42b3": {
+            "visitors_mac": "706d.05ff.e4b2",
             "ap_name": "visitors-hydra5",
             "ip_address": "10.10.36.138",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "00be.7506.42c0": {
-            "visitors_mac": "706d.0568.44d0",
+        "00be.75ff.48c6": {
+            "visitors_mac": "706d.05ff.ac39",
             "ap_name": "visitors-1815t",
             "ip_address": "10.10.236.197",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.05be.6890": {
-            "visitors_mac": "706d.053e.e3f0",
+        "706d.05ff.274f": {
+            "visitors_mac": "706d.05ff.222f",
             "ap_name": "visitors-1815i",
             "ip_address": "10.10.152.239",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.05be.adc0": {
-            "visitors_mac": "706d.053e.f540",
+        "706d.05ff.6c7f": {
+            "visitors_mac": "706d.05ff.347e",
             "ap_name": "visitors-mallorca",
             "ip_address": "10.10.40.15",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.05be.bc20": {
-            "visitors_mac": "706d.053e.f8d8",
+        "706d.05ff.7bde": {
+            "visitors_mac": "706d.05ff.3717",
             "ap_name": "visitors-mallorca",
             "ip_address": "10.10.7.234",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.0527.bfd0": {
+        "706d.05ff.e6f7": {
             "visitors_mac": "cc46.d6ff.b950",
             "ap_name": "visitors-homeap2",
             "ip_address": "10.10.216.231",
@@ -89,400 +89,400 @@ expected_output = {
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.052e.06a0": {
-            "visitors_mac": "706d.052d.dd68",
+        "706d.05ff.34ce": {
+            "visitors_mac": "706d.05ff.0b95",
             "ap_name": "visitors-hydra",
             "ip_address": "10.10.179.53",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "0c75.bd0d.5720": {
-            "visitors_mac": "0c75.bd0d.4088",
+        "0c75.bdff.642d": {
+            "visitors_mac": "0c75.bdff.4d95",
             "ap_name": "visitors-farallon",
             "ip_address": "10.10.7.79",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "38ed.18cd.df40": {
-            "visitors_mac": "38ed.18cc.5e30",
+        "38ed.18ff.ad0e": {
+            "visitors_mac": "38ed.18ff.2bfc",
             "ap_name": "visitors-1852i",
             "ip_address": "10.10.158.77",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.3760": {
-            "visitors_mac": "706d.05ec.e0ec",
+        "706d.05ff.719a": {
+            "visitors_mac": "706d.05ff.cdd9",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.58.181",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.a320": {
-            "visitors_mac": "706d.05ec.ee64",
+        "706d.05ff.dd5a": {
+            "visitors_mac": "706d.05ff.db51",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.151.70",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.a8a0": {
-            "visitors_mac": "706d.05ec.ef14",
+        "706d.05ff.e2da": {
+            "visitors_mac": "706d.05ff.dc01",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.103.177",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.c500": {
-            "visitors_mac": "706d.05ec.f2a0",
+        "706d.05ff.003a": {
+            "visitors_mac": "706d.05ff.df8d",
             "ap_name": "visitors-9105i",
             "ip_address": "10.10.171.95",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.d2a0": {
-            "visitors_mac": "706d.05ec.f454",
+        "706d.05ff.0dda": {
+            "visitors_mac": "706d.05ff.e141",
             "ap_name": "visitors-9105i",
             "ip_address": "10.10.0.165",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.e720": {
-            "visitors_mac": "706d.05ec.f6e4",
+        "706d.05ff.225a": {
+            "visitors_mac": "706d.05ff.e3d1",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.36.57",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.e7a0": {
-            "visitors_mac": "706d.05ec.f6f4",
+        "706d.05ff.22da": {
+            "visitors_mac": "706d.05ff.e3e1",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.76.103",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.e7e0": {
-            "visitors_mac": "706d.05ec.f6fc",
+        "706d.05ff.221b": {
+            "visitors_mac": "706d.05ff.e3e9",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.224.136",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.e9c0": {
-            "visitors_mac": "706d.05ec.f738",
+        "706d.05ff.24fa": {
+            "visitors_mac": "706d.05ff.e425",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.20.10",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.ea00": {
-            "visitors_mac": "706d.05ec.f740",
+        "706d.05ff.253a": {
+            "visitors_mac": "706d.05ff.e42d",
             "ap_name": "visitors-9105w-LivingRM",
             "ip_address": "10.10.126.254",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.ec80": {
-            "visitors_mac": "706d.05ec.f790",
+        "706d.05ff.27ba": {
+            "visitors_mac": "706d.05ff.e47d",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.207.95",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.eee0": {
-            "visitors_mac": "706d.05ec.f7dc",
+        "706d.05ff.291b": {
+            "visitors_mac": "706d.05ff.e4c9",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.250.152",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.f0a0": {
-            "visitors_mac": "706d.05ec.f814",
+        "706d.05ff.2bda": {
+            "visitors_mac": "706d.05ff.e501",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.238.57",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.f0c0": {
-            "visitors_mac": "706d.05ec.f818",
+        "706d.05ff.2bfa": {
+            "visitors_mac": "706d.05ff.e505",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.176.163",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.f2e0": {
-            "visitors_mac": "706d.05ec.f85c",
+        "706d.05ff.2d1b": {
+            "visitors_mac": "706d.05ff.e549",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.172.168",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.f3a0": {
-            "visitors_mac": "706d.05ec.f874",
+        "706d.05ff.2eda": {
+            "visitors_mac": "706d.05ff.e561",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.223.162",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.f480": {
-            "visitors_mac": "706d.05ec.f890",
+        "706d.05ff.2fba": {
+            "visitors_mac": "706d.05ff.e57d",
             "ap_name": "visitors-9105w-GuestBD",
             "ip_address": "10.10.126.254",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.f8c0": {
-            "visitors_mac": "706d.05ec.f918",
+        "706d.05ff.33fa": {
+            "visitors_mac": "706d.05ff.e605",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.208.150",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.f900": {
-            "visitors_mac": "706d.05ec.f920",
+        "706d.05ff.343a": {
+            "visitors_mac": "706d.05ff.e60d",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.124.162",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.f920": {
-            "visitors_mac": "706d.05ec.f924",
+        "706d.05ff.345a": {
+            "visitors_mac": "706d.05ff.e611",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.150.239",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.f9c0": {
-            "visitors_mac": "706d.05ec.f938",
+        "706d.05ff.34fa": {
+            "visitors_mac": "706d.05ff.e625",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.198.166",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.fa40": {
-            "visitors_mac": "706d.05ec.f948",
+        "706d.05ff.357a": {
+            "visitors_mac": "706d.05ff.e635",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.108.120",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.fcc0": {
-            "visitors_mac": "706d.05ec.f998",
+        "706d.05ff.37fa": {
+            "visitors_mac": "706d.05ff.e685",
             "ap_name": "visitors-c9105",
             "ip_address": "10.10.40.223",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053a.fda0": {
-            "visitors_mac": "706d.05ec.f9b4",
+        "706d.05ff.38da": {
+            "visitors_mac": "706d.05ff.e6a1",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.71.91",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.0180": {
-            "visitors_mac": "706d.05ec.fa30",
+        "706d.05ff.3cbb": {
+            "visitors_mac": "706d.05ff.e71d",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.100.242",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.04e0": {
-            "visitors_mac": "706d.05ec.fa9c",
+        "706d.05ff.3f1c": {
+            "visitors_mac": "706d.05ff.e789",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.23.46",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.0720": {
-            "visitors_mac": "706d.05ec.fae4",
+        "706d.05ff.425b": {
+            "visitors_mac": "706d.05ff.e7d1",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.105.129",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.0b00": {
-            "visitors_mac": "706d.05ec.fb60",
+        "706d.05ff.463b": {
+            "visitors_mac": "706d.05ff.e84d",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.194.10",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.0d20": {
-            "visitors_mac": "706d.05ec.fba4",
+        "706d.05ff.485b": {
+            "visitors_mac": "706d.05ff.e891",
             "ap_name": "visitors-9105w",
             "ip_address": "10.108.195.48",
             "status": "Not Joined",
             "failure_phase": "Image-Download",
             "disconnect_reason": "Max Retransmission to AP",
         },
-        "706d.053b.0f00": {
-            "visitors_mac": "706d.05ec.fbe0",
+        "706d.05ff.4a3b": {
+            "visitors_mac": "706d.05ff.e8cd",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.12.253",
             "status": "Not Joined",
             "failure_phase": "Image-Download",
             "disconnect_reason": "DTLS close alert from peer",
         },
-        "706d.053b.0f20": {
-            "visitors_mac": "706d.05ec.fbe4",
+        "706d.05ff.4a5b": {
+            "visitors_mac": "706d.05ff.e8d1",
             "ap_name": "visitors-9105w-MB",
             "ip_address": "10.10.126.254",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.1040": {
-            "visitors_mac": "706d.05ec.fc08",
+        "706d.05ff.4b7b": {
+            "visitors_mac": "706d.05ff.e9f4",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.88.6",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.12a0": {
-            "visitors_mac": "706d.05ec.fc54",
+        "706d.05ff.4ddb": {
+            "visitors_mac": "706d.05ff.e941",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.138.94",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.36a0": {
-            "visitors_mac": "706d.05ed.00d4",
+        "706d.05ff.71db": {
+            "visitors_mac": "706d.05ff.edc2",
             "ap_name": "visitors-9105w",
             "ip_address": "10.10.187.149",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.3d40": {
-            "visitors_mac": "706d.05ed.01a8",
+        "706d.05ff.787b": {
+            "visitors_mac": "706d.05ff.ee96",
             "ap_name": "visitors-9105i",
             "ip_address": "10.10.238.103",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.3de0": {
-            "visitors_mac": "706d.05ed.01bc",
+        "706d.05ff.781c": {
+            "visitors_mac": "706d.05ff.eeaa",
             "ap_name": "visitors-9105i",
             "ip_address": "10.10.108.120",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.3ee0": {
-            "visitors_mac": "706d.05ed.01dc",
+        "706d.05ff.791c": {
+            "visitors_mac": "706d.05ff.eeca",
             "ap_name": "visitors-9105i",
             "ip_address": "10.10.223.201",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.4060": {
-            "visitors_mac": "706d.05ed.020c",
+        "706d.05ff.7b9b": {
+            "visitors_mac": "706d.05ff.eff9",
             "ap_name": "visitors-9105i",
             "ip_address": "10.10.102.15",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.053b.40c0": {
-            "visitors_mac": "706d.05ed.0218",
+        "706d.05ff.7bfb": {
+            "visitors_mac": "706d.05ff.ef06",
             "ap_name": "visitors-9105i",
             "ip_address": "10.10.126.254",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.05c4.7980": {
-            "visitors_mac": "706d.05e9.d9a8",
+        "706d.05ff.3e45": {
+            "visitors_mac": "706d.05ff.c392",
             "ap_name": "visitors-1815t",
             "ip_address": "10.10.239.55",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.05c4.9a40": {
-            "visitors_mac": "706d.05e9.e1d8",
+        "706d.05ff.5f05": {
+            "visitors_mac": "706d.05ff.cbc2",
             "ap_name": "visitors-1815t",
             "ip_address": "10.10.42.87",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "706d.05c4.b3c0": {
-            "visitors_mac": "706d.05e9.e838",
+        "706d.05ff.7885": {
+            "visitors_mac": "706d.05ff.d222",
             "ap_name": "visitors-1815t",
             "ip_address": "10.10.112.32",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "5087.89a3.ad30": {
-            "visitors_mac": "5087.8991.dc14",
+        "5087.89ff.51d3": {
+            "visitors_mac": "5087.89ff.6ea5",
             "ap_name": "visitors-homeap",
             "ip_address": "10.10.20.42",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "5087.89fc.3910": {
-            "visitors_mac": "5087.89be.5c1c",
+        "5087.89ff.360d": {
+            "visitors_mac": "5087.89ff.1bda",
             "ap_name": "visitors-homeap",
             "ip_address": "10.10.67.248",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "7079.b3a8.4760": {
-            "visitors_mac": "7079.b36b.2768",
+        "7079.b3ff.ef09": {
+            "visitors_mac": "7079.b3ff.92d3",
             "ap_name": "visitors-1815t",
             "ip_address": "10.10.198.198",
             "status": "Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "b4a4.e3cb.7cd0": {
-            "visitors_mac": "1cdf.0fcb.1dbe",
+        "b4a4.e3ff.489c": {
+            "visitors_mac": "1cdf.0fff.e88a",
             "ap_name": "visitors-homeap",
             "ip_address": "10.10.135.61",
             "status": "Not Joined",
             "failure_phase": "Join",
             "disconnect_reason": "Ap auth pending",
         },
-        "f07f.06b2.77b0": {
-            "visitors_mac": "f07f.06a0.d470",
+        "f07f.06ff.2a63": {
+            "visitors_mac": "f07f.06ff.7511",
             "ap_name": "visitors-CAP3702i",
             "ip_address": "10.10.27.77",
             "status": "Joined",

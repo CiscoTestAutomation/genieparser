@@ -259,6 +259,7 @@ class FileBasedTest(aetest.Testcase):
                 # Same as previous, but in cases without tokens (which is the majority.)
                 elif not token and CLASS_SKIP.get(operating_system, {}).get(name):
                     continue
+
                 # This is used in conjunction with the arguments that are run at command line, to skip over all tests you are
                 # not concerned with. Basically, it allows a user to not have to wait for 100s of tests to run, to run their
                 # one test.

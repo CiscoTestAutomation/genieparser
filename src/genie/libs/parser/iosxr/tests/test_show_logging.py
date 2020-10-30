@@ -57,10 +57,10 @@ class TestShowLogging(unittest.TestCase):
             "RP/0/RP0/CPU0:Sep 25 23:24:28.929 UTC: spp[113]: Initialized punt classification node",
             "RP/0/RP0/CPU0:Sep 25 23:24:28.929 UTC: spp[113]: Initialized client inject node",
             "RP/0/RP0/CPU0:Sep 25 23:24:28.930 UTC: spp[113]: Registered XRv9k SPP plugin",
-            "RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.0.0.1:9920 (Punt/Inject crucial)",
-            "RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.0.0.1:9921 (Punt/Inject high)",
-            "RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.0.0.1:9922 (Punt/Inject medium)",
-            "RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.0.0.1:9923 (Punt/Inject low)",
+            "RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.16.4.1:9920 (Punt/Inject crucial)",
+            "RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.16.4.1:9921 (Punt/Inject high)",
+            "RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.16.4.1:9922 (Punt/Inject medium)",
+            "RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.16.4.1:9923 (Punt/Inject low)",
             "RP/0/RP0/CPU0:Sep 25 23:24:28.939 UTC: spp[113]: Opened raw socket on eth0 (Management)",
             "RP/0/RP0/CPU0:Sep 25 23:24:28.939 UTC: spp[113]: Successfully initialized socket devices",
             "RP/0/RP0/CPU0:Sep 25 23:24:29.114 UTC: syslogd[342]: %SECURITY-XR_SSL-6-INFO : XR SSL info: Setting fips register",
@@ -185,10 +185,10 @@ class TestShowLogging(unittest.TestCase):
         RP/0/RP0/CPU0:Sep 25 23:24:28.929 UTC: spp[113]: Initialized punt classification node
         RP/0/RP0/CPU0:Sep 25 23:24:28.929 UTC: spp[113]: Initialized client inject node
         RP/0/RP0/CPU0:Sep 25 23:24:28.930 UTC: spp[113]: Registered XRv9k SPP plugin
-        RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.0.0.1:9920 (Punt/Inject crucial)
-        RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.0.0.1:9921 (Punt/Inject high)
-        RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.0.0.1:9922 (Punt/Inject medium)
-        RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.0.0.1:9923 (Punt/Inject low)
+        RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.16.4.1:9920 (Punt/Inject crucial)
+        RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.16.4.1:9921 (Punt/Inject high)
+        RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.16.4.1:9922 (Punt/Inject medium)
+        RP/0/RP0/CPU0:Sep 25 23:24:28.932 UTC: spp[113]: Opened UDP socket at 172.16.4.1:9923 (Punt/Inject low)
         RP/0/RP0/CPU0:Sep 25 23:24:28.939 UTC: spp[113]: Opened raw socket on eth0 (Management)
         RP/0/RP0/CPU0:Sep 25 23:24:28.939 UTC: spp[113]: Successfully initialized socket devices
         RP/0/RP0/CPU0:Sep 25 23:24:29.114 UTC: syslogd[342]: %SECURITY-XR_SSL-6-INFO : XR SSL info: Setting fips register

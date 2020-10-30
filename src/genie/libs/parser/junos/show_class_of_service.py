@@ -34,9 +34,9 @@ class ShowClassOfServiceSchema(MetaParser):
                     "i-logical-name": str
                 },
                 "interface-congestion-notification-map": str,
-                "interface-exclude-queue-overhead-bytes": str,
+                Optional("interface-exclude-queue-overhead-bytes"): str,
                 "interface-index": str,
-                "interface-logical-interface-aggregate-statistics": str,
+                Optional("interface-logical-interface-aggregate-statistics"): str,
                 "interface-name": str,
                 "interface-queues-in-use": str,
                 "interface-queues-supported": str,
@@ -68,7 +68,8 @@ class ShowClassOfService(ShowClassOfServiceSchema):
             r'Index: +(?P<interface_index>\d+)$')
 
         # Maximum usable queues: 8, Queues in use: 4
-        p2 = re.compile(r'^Maximum +usable +queues: +(?P<interface_queues_supported>\d+), +'
+        # Queues supported: 8, Queues in use: 4
+        p2 = re.compile(r'^(Maximum +usable +queues|Queues +supported): +(?P<interface_queues_supported>\d+), +'
             r'Queues +in +use: +(?P<interface_queues_in_use>\d+)$')
 
         # Exclude aggregate overhead bytes: disabled
