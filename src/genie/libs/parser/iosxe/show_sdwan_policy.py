@@ -19,11 +19,11 @@ class ShowSdwanPolicyIpv6AccessListAssociationsSchema(MetaParser):
         'name': {
             Any(): {
                 Any(): {
-                    'direction': str,
+                    'interface_direction': str,
                     'interface_name': str,
                     },
                 },
-            },
+            }
         }
 
 
@@ -113,7 +113,7 @@ class ShowSdwanPolicyAccessListCountersSchema(MetaParser):
                     'packets':str,
                     },
                 },
-            },
+            }
         }
 
 
