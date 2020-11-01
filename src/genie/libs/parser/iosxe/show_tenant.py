@@ -218,11 +218,10 @@ class ShowTenantOmpRoutesAdvertised(ShowTenantOmpRoutesAdvertisedSchema):
         
         if output is None:
             # Build command
-            if tenant_name:
-                if vpnid :
-                    cmd = self.cli_command[1].format(tenant_name=tenant_name, vpnid=vpnid)
-                else:
-                    cmd = self.cli_command[0].format(tenant_name=tenant_name)
+            if tenant_name and vpnid:
+                cmd = self.cli_command[1].format(tenant_name=tenant_name, vpnid=vpnid)
+            elif tenant_name:
+                cmd = self.cli_command[0].format(tenant_name=tenant_name)
             out = self.device.execute(cmd)
         else:
             out = output
