@@ -2705,7 +2705,7 @@ class ShowOspf3NeighborInstanceAllSchema(MetaParser):
                 "ospf3-instance-name": str,
                 "ospf3-realm-neighbor": {
                     "ospf3-realm-name": str,
-                    "ospf3-neighbor": Use(validate_ospf3_neighbor_list)
+                    Optional("ospf3-neighbor"): Use(validate_ospf3_neighbor_list)
                 }
             }
         }
