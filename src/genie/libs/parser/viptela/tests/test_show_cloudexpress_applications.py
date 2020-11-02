@@ -10,14 +10,14 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError,\
                                              SchemaMissingKeyError
 
 # Parser
-from genie.libs.parser.viptela.show_cloudexpress_applications import ShowCloudexpressApplications
+from genie.libs.parser.viptela.show_cloudexpress_applications import ShowCloudexpressApplication
 
 
 # ============================================
 # Parser for the following commands
 #   * 'show cloudexpress applications'
 # ============================================
-class TestShowCloudexpressApplications(unittest.TestCase):
+class TestShowCloudexpressApplication(unittest.TestCase):
     device = Device(name='aDevice')
     maxDiff = None
     empty_output = {'execute.return_value' : ''}
