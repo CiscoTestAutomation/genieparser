@@ -47,26 +47,18 @@ expected_output = {
     "power_save": "ON",
     "current_rate": 6.0,
     "supported_rates": [
-        "24.0",
-        "36.0",
-        "48.0",
-        "54.0"
+        24.0,
+        36.0,
+        48.0,
+        54.0
     ],
     "mobility": {
         "move_count": 0,
         "mobility_role": "Local",
         "mobility_roam_type": "None",
-        "mobility_complete_timestamp": {
-            "date": "10/22/2020",
-            "time": "08:07:55",
-            "timezone": "IST"
-        }
+        "mobility_complete_timestamp": "10/22/2020 08:07:55 IST"
     },
-    "client_join_time": {
-        "date": "10/22/2020",
-        "time": "08:46:54",
-        "timezone": "IST"
-    },
+    "client_join_time": "10/22/2020 08:46:54 IST",
     "client_state_servers": "None",
     "client_acls": "None",
     "policy_manager_state": "Run",
@@ -86,7 +78,7 @@ expected_output = {
     "wifi_direct_capabilities": {
         "wifi_direct_capable": "No"
     },
-    "central_nat": "No",
+    "central_nat": "DISABLED",
     "session_manager": {
         "point_of_attachment": "capwap_90000cc1",
         "iif_id": "0x90000CC1",
@@ -98,14 +90,20 @@ expected_output = {
             "server_ip": "10.19.10.150"
         },
         "auth_method_status_list": {
-            "method": "Dot1x",
-            "sm_state": "AUTHENTICATED",
-            "sm_bend_state": "IDLE"
+            "method": {
+                "Dot1x": {
+                    "sm_state": "AUTHENTICATED",
+                    "sm_bend_state": "IDLE"
+                }
+            }
         },
         "local_policies": {
-            "service_template": "wlan_svc_lizzard_b1_local (priority 254)",
-            "vlan_group": "b1-vg-data",
-            "absolute_timer": 36000
+            "service_template": {
+                "wlan_svc_lizzard_b1_local (priority 254)" : {
+                        "vlan_group": "b1-vg-data",
+                        "absolute_timer": 36000
+                }
+            }
         },
         "server_policies": {
             "output_sgt": "000a-09"
@@ -144,7 +142,7 @@ expected_output = {
         "number_of_packets_received": 9048,
         "number_of_packets_sent": 3686,
         "number_of_policy_errors": 0,
-        "radio_signal_strength_indicator_dbm": "-84",
+        "radio_signal_strength_indicator_dbm": -84,
         "signal_to_noise_ration_db": 10
     },
     "fabric_status": "Disabled",
@@ -159,9 +157,22 @@ expected_output = {
             "RM MIB"
         ]
     },
-    "client_scan_report": "Timer not running",
+    "client_scan_report_time": "Timer not running",
     "nearby_ap_statistics": {
-        "ap_names": {}
+        "ap_names": {
+            "prateekk_cos_1 (slot 1)" : {
+                "antenna": {
+                    "antenna 0": {
+                        "seconds_ago": 13,
+                        "dbm": -25
+                    },
+                    "antenna 1": {
+                        "seconds_ago": 13,
+                        "dbm": -25
+                    },
+                }
+            }
+        }
     },
     "eogre": "Pending Classification",
     "device_info": {
@@ -169,10 +180,45 @@ expected_output = {
         "device_name": "android-dhcp-10",
         "protocol_map": "0x000029  (OUI, DHCP, HTTP)",
         "device_os": "Linux; U; Android 10; RMX1825 Build/QP1A.190711.020",
-        "protocols": [
-            "DHCP",
-            "HTTP"
-        ]
+        "protocols": {
+            "DHCP" : {
+                1:{
+                    "type":"12   12",
+                    "data_size":"0c",
+                    "data":[
+                        "00000000  00 0c 00 08 72 65 61 6c  6d 65 2d 33               |....realme-3    |"
+                    ]
+                },
+                2:{
+                   "type":"60   19",
+                   "data_size":"13",
+                   "data":[
+                      "00000000  00 3c 00 0f 61 6e 64 72  6f 69 64 2d 64 68 63 70  |.<..android-dhcp|",
+                      "00000010  2d 31 30                                          |-10             |"
+                   ]
+                },
+                3:{
+                   "type":"55   14",
+                   "data_size":"0e",
+                   "data":[
+                      "00000000  00 37 00 0a 01 03 06 0f  1a 1c 33 3a 3b 2b         |.7........3:;+  |"
+                   ]
+                }
+            },
+            "HTTP": {
+                1:{
+                   "type":"1    70",
+                   "data_size":"46",
+                   "data":[
+                      "00000000  00 01 00 42 44 61 6c 76  69 6b 2f 32 2e 31 2e 30  |...BDalvik/2.1.0|",
+                      "00000010  20 28 4c 69 6e 75 78 3b  20 55 3b 20 41 6e 64 72  | (Linux; U; Andr|",
+                      "00000020  6f 69 64 20 31 30 3b 20  52 4d 58 31 38 32 35 20  |oid 10; RMX1825 |",
+                      "00000030  42 75 69 6c 64 2f 51 50  31 41 2e 31 39 30 37 31  |Build/QP1A.19071|",
+                      "00000040  31 2e 30 32 30 29                                 |1.020)          |"
+                   ]
+                }
+            }
+        }
     },
     "max_client_protocol_capability": "802.11n",
     "cellular_capability": "N/A"

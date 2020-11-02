@@ -121,6 +121,9 @@ Client Scan Report Time : Timer not running
 Client Scan Reports
 Assisted Roaming Neighbor List
 Nearby AP Statistics:
+  prateekk_cos_1 (slot 1)
+  	antenna 0: 13 s ago	........ -25  dBm
+  	antenna 1: 13 s ago	........ -25  dBm
 EoGRE : Pending Classification
 Device Type      : Android
 Device Name      : android-dhcp-10

@@ -1567,7 +1567,6 @@ class ShowWirelessClientSummary(ShowWirelessClientSummarySchema):
                 type = groups['type']
                 id = int(groups['id'])
                 state = groups['state'].strip()
-                print(state)
                 protocol = groups['protocol']
                 method = groups['method']
                 role = groups['role']
@@ -2110,17 +2109,9 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
               "move_count": int,
               "mobility_role": str,
               "mobility_roam_type": str,
-              Optional("mobility_complete_timestamp"): {
-                  Optional("date"): str,
-                  Optional("time"): str,
-                  Optional("timezone"): str
-              }
+              Optional("mobility_complete_timestamp"): str
           },
-          "client_join_time": {
-              "date": str,
-              "time": str,
-              "timezone": str
-          },
+          "client_join_time": str,
           "client_state_servers": str,
           "client_acls": str,
           "policy_manager_state": str,
@@ -2152,14 +2143,20 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
                   "server_ip": str
               },
               "auth_method_status_list": {
-                  "method": str,
-                  "sm_state": str,
-                  "sm_bend_state": str
+                  "method": {
+                    str: {
+                        "sm_state": str,
+                        "sm_bend_state": str
+                    }
+                  }
               },
               "local_policies": {
-                  "service_template": str,
-                  "vlan_group": str,
-                  "absolute_timer": int
+                  "service_template": {
+                    str : {
+                        "vlan_group": str,
+                        "absolute_timer": int
+                    }
+                  }
               },
               "server_policies": {
                   "output_sgt": str
@@ -2198,16 +2195,25 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
               "number_of_packets_received": int,
               "number_of_packets_sent": int,
               "number_of_policy_errors": int,
-              "radio_signal_strength_indicator_dbm": str,
+              "radio_signal_strength_indicator_dbm": int,
               "signal_to_noise_ration_db": int
           },
           "fabric_status": "Disabled",
           "radio_measurement_enabled_capabilities": {
               "capabilities": list
           },
-          "client_scan_report": str,
+          "client_scan_report_time": str,
           "nearby_ap_statistics": {
-              "ap_names": dict
+              "ap_names": {
+                Optional(str): {
+                  Optional("antenna"): {
+                    Optional(str): {
+                      Optional("seconds_ago"): int,
+                      Optional("dbm"): int
+                    }
+                  }
+                }
+              }
           },
           "eogre": str,
           "device_info": {
@@ -2215,7 +2221,15 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
               "device_name": str,
               "protocol_map": str,
               "device_os": str,
-              "protocols": list
+              "protocols": {
+                str: {
+                  int: {
+                  "type": str,
+                  "data_size": str,
+                  "data": list
+                  }
+                }
+              }
           },
           "max_client_protocol_capability": str,
           "cellular_capability": str
@@ -2290,9 +2304,11 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
 
         nearby_ap = ""
         section_tracker = []
-        device_protocols = []
+        current_protocol = ""
         client_mac_dict = {}
         device_section = False
+        data_counter = 0
+        data_list = []
 
         # U-APSD Support : Enabled
         p_uapsd = re.compile(r"^U-APSD\s+Support\s+:\s+(?P<status>\S+)$")
@@ -2328,7 +2344,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
         p_mobility = re.compile(r"^Mobility:$")
 
         # Mobility Complete Timestamp : 10/22/2020 08:07:55 IST
-        p_mobility_timestamp = re.compile(r"^Mobility\s+Complete\s+Timestamp\s+:\s+(?P<date>\S+)\s+(?P<time>\S+)\s+(?P<timezone>\S+)$")
+        p_mobility_timestamp = re.compile(r"^Mobility\s+Complete\s+Timestamp\s+:\s+(?P<date>.*)$")
 
         # Mobility Roam Type          : Unknown
         p_mobility_roam = re.compile(r"^Mobility\s+Roam\s+Type\s+:\s+(?P<value>\S+)$")
@@ -2340,7 +2356,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
         p_client_join = re.compile(r"^Client\s+Join\s+Time:$")
 
         # Join Time Of Client : 10/22/2020 08:46:54 IST
-        p_client_join_time = re.compile(r"^Join\s+Time\s+Of\s+Client\s+:\s+(?P<date>\S+)\s+(?P<time>\S+)\s+(?P<timezone>\S+)$")
+        p_client_join_time = re.compile(r"^Join\s+Time\s+Of\s+Client\s+:\s+(?P<date>.*)$")
 
         # Last Policy Manager State : IP Learn Complete
         p_last_policy = re.compile(r"^Last\s+Policy\s+Manager\s+State\s+:\s+(?P<value>.*)$")
@@ -2368,6 +2384,9 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
 
         # Auth Method Status List
         p_auth_method = re.compile(r"^Auth\s+Method\s+Status\s+List$")
+
+        # Method : Dot1x
+        p_auth_method_check = re.compile(r"^Method\s+:\s+(?P<value>\S+)$")
 
         # Local Policies:
         p_local_policies = re.compile(r"^Local\s+Policies:$")
@@ -2441,18 +2460,23 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
         # Device OS        : Linux; U; Android 10; RMX1825 Build/QP1A.190711.020
         p_device_os = re.compile(r"^Device\s+OS\s+:\s+(?P<value>.*)$")
 
+        # Type             : 12   12
+        p_device_type_data = re.compile(r"^Type\s+:\s+(?P<value>\d+\s+\d+)")
+
+        # Data             : 0c
+        p_device_data_size = re.compile(r"^Data\s+:\s+(?P<value>\S{2})$")
+
+        # 00000000  00 0c 00 08 72 65 61 6c  6d 65 2d 33               |....realme-3    |
+        p_device_data = re.compile(r"^(?P<value>0000.*)$")
+
         # Nearby AP Statistics:
         p_nearby_ap = re.compile(r"^Nearby\s+AP\s+Statistics:$")
 
         # b1-72-cap16 (slot 0)
-        p_ap = re.compile(r"^(?P<name>.*)\(slot\s+(?P<value>\d+)\)$")
+        p_ap = re.compile(r"^(?P<name>.*)\s+\((?P<slot>slot\s+\d+)\)$")
 
         # antenna 0: 0 s ago	........ -62  dBm
-        p_ant_0 = re.compile(r"^antenna\s+0:\s+(?P<sec>\d+)\s+s\s+ago\s+........\s+(?P<value>\S+)\s+dBm$")
-
-        # antenna 1: 0 s ago	........ -62  dBm
-        p_ant_1 = re.compile(r"^antenna\s+1:\s+(?P<sec>\d+)\s+s\s+ago\s+........\s+(?P<value>\S+)\s+dBm$")
-
+        p_ant_0 = re.compile(r"^(?P<ant>\S+\s+\d+):\s+(?P<sec>\d+)\s+s\s+ago\s+........\s+(?P<value>\S+)\s+dBm$")
 
         # EoGRE : Pending Classification
         p_eogre = re.compile(r"^EoGRE\s+:\s+(?P<value>.*)$")
@@ -2527,7 +2551,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
             elif p_supported_rates.match(line):
                 # Supported Rates : 24.0,36.0,48.0,54.0
                 match = p_supported_rates.match(line)
-                rates_list = [x.strip() for x in match.group("value").split(',')]
+                rates_list = [float(x.strip()) for x in match.group("value").split(',')]
                 client_mac_dict.update({ "supported_rates": rates_list })
             elif p_uapsd_ac.match(line):
                 # APSD ACs    : BK, BE, VI, VO
@@ -2550,10 +2574,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
                 # Join Time Of Client : 10/22/2020 08:46:54 IST
                 section_tracker.pop()
                 match = p_client_join_time.match(line)
-                group = match.groupdict()
-                client_mac_dict["client_join_time"].update({ "date": group["date"] })
-                client_mac_dict["client_join_time"].update({ "time": group["time"] })
-                client_mac_dict["client_join_time"].update({ "timezone": group["timezone"] })
+                client_mac_dict["client_join_time"] = match.group("date")
                 continue
             elif p_eap_type.match(line):
                 # EAP Type : Not Applicable
@@ -2563,11 +2584,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
             elif p_mobility_timestamp.match(line):
                 # Mobility Complete Timestamp : 10/22/2020 08:07:55 IST
                 match = p_mobility_timestamp.match(line)
-                group = match.groupdict()
-                client_mac_dict["mobility"].update({ "mobility_complete_timestamp": {}})
-                client_mac_dict["mobility"]["mobility_complete_timestamp"].update({ "date": group["date"] })
-                client_mac_dict["mobility"]["mobility_complete_timestamp"].update({ "time": group["time"] })
-                client_mac_dict["mobility"]["mobility_complete_timestamp"].update({ "timezone": group["timezone"] })
+                client_mac_dict["mobility"].update({ "mobility_complete_timestamp": match.group("date") })
                 continue
             elif p_mobility_roam.match(line):
                 # Mobility Roam Type          : Unknown
@@ -2597,6 +2614,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
                 continue
             elif p_central_nat.match(line):
                 # Central NAT : DISABLED
+                match = p_central_nat.match(line)
                 client_mac_dict.update({ "central_nat": match.group("value") })
                 continue
             elif p_session.match(line):
@@ -2623,22 +2641,37 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
             elif p_auth_method.match(line):
                 # Auth Method Status List
                 section_tracker.pop()
-                client_mac_dict["session_manager"].update({ "auth_method_status_list": {} })
+                client_mac_dict["session_manager"].update({ "auth_method_status_list": {"method": {} }})
                 section_tracker.append("auth_method_status_list")
+                section_tracker.append("method")
+                continue
+            elif p_auth_method_check.match(line):
+                # Method : Dot1x
+                match = p_auth_method_check.match(line)
+                auth_method = match.group("value")
+                client_mac_dict["session_manager"]["auth_method_status_list"]["method"].update({ auth_method: {} })
+                section_tracker.append(auth_method)
                 continue
             elif p_local_policies.match(line):
                 # Local Policies:
                 section_tracker.pop()
-                client_mac_dict["session_manager"].update({ "local_policies": {} })
+                section_tracker.pop()
+                section_tracker.pop()
+                client_mac_dict["session_manager"].update({ "local_policies": {"service_template": {} } })
                 section_tracker.append("local_policies")
+                section_tracker.append("service_template")
                 continue
             elif p_service_template.match(line):
                 # Service Template : wlan_svc_lizzard_b1_local (priority 254)
                 match = p_service_template.match(line)
-                client_mac_dict["session_manager"]["local_policies"].update({ "service_template": match.group("template") })
+                template = match.group("template")
+                client_mac_dict["session_manager"]["local_policies"]["service_template"].update({ template: {} })
+                section_tracker.append(template)
                 continue
             elif p_server_policies.match(line):
                 # Server Policies:
+                section_tracker.pop()
+                section_tracker.pop()
                 section_tracker.pop()
                 client_mac_dict["session_manager"].update({ "server_policies": {} })
                 section_tracker.append("server_policies")
@@ -2696,6 +2729,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
                 section_tracker.append("client_statistics")
                 continue
             elif p_fabric_status.match(line):
+                # Fabric status : Disabled
                 match = p_fabric_status.match(line)
                 client_mac_dict.update({ "fabric_status": match.group("value") })
                 continue
@@ -2711,9 +2745,9 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
                 client_mac_dict["radio_measurement_enabled_capabilities"].update({ "capabilities": cap_list })
                 continue
             elif p_radio_strength.match(line):
-                # Radio Signal Strength Indicator : -64 dBm
+                # Radio Signal Strength Indicator : -84 dBm
                 match = p_radio_strength.match(line)
-                client_mac_dict["client_statistics"].update({ "radio_signal_strength_indicator_dbm": match.group("value") })
+                client_mac_dict["client_statistics"].update({ "radio_signal_strength_indicator_dbm": int(match.group("value")) })
                 continue
             elif p_s2n.match(line):
                 # Signal to Noise Ratio : 30 dB
@@ -2727,23 +2761,17 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
             elif p_ap.match(line):
                 # b1-72-cap16 (slot 0)
                 match = p_ap.match(line)
-                nearby_ap = match.group("name")
+                nearby_ap = match.group("name") + " (" + match.group("slot") + ")"
                 client_mac_dict["nearby_ap_statistics"]["ap_names"].update({ nearby_ap: {} })
-                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap].update({ "slot": match.group("value") })
+                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap].update({ "antenna": {} })
                 continue
             elif p_ant_0.match(line):
                 # antenna 0: 0 s ago	........ -62  dBm
                 match = p_ant_0.match(line)
-                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap].update({ "antenna_0": {} })
-                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna_0"].update({ "seconds_ago": match.group("sec") })
-                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna_0"].update({ "dbm": match.group("value") })
-                continue
-            elif p_ant_1.match(line):
-                # antenna 1: 0 s ago	........ -62  dBm
-                match = p_ant_1.match(line)
-                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap].update({ "antenna_1": {} })
-                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna_1"].update({ "seconds_ago": match.group("sec") })
-                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna_1"].update({ "dbm": match.group("value") })
+                antenna = match.group("ant")
+                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna"].update({ antenna: {} })
+                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna"][antenna].update({ "seconds_ago": int(match.group("sec")) })
+                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna"][antenna].update({ "dbm": int(match.group("value")) })
                 continue
             elif p_eogre.match(line):
                 # EoGRE : Pending Classification
@@ -2753,7 +2781,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
             elif p_device_type.match(line):
                 # Device Type      : Android
                 match = p_device_type.match(line)
-                client_mac_dict.update({ "device_info": {} })
+                client_mac_dict.setdefault("device_info", {} )
                 client_mac_dict["device_info"].update({ "device_type": match.group("value") })
                 continue
             elif p_device_name.match(line):
@@ -2764,7 +2792,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
             elif p_client_scan_report_no.match(line):
                 # Client Scan Report Time : Timer not running
                 match = p_client_scan_report_no.match(line)
-                client_mac_dict.update({ "client_scan_report": match.group("value") })
+                client_mac_dict.update({ "client_scan_report_time": match.group("value") })
                 continue
             elif p_protocol_map.match(line):
                 # Protocol Map     : 0x000029  (OUI, DHCP, HTTP)
@@ -2772,16 +2800,37 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
                 client_mac_dict["device_info"].update({ "protocol_map": match.group("value") })
                 continue
             elif p_device_os.match(line):
-                # Device OS        : Linux; U; Android 10; RMX1825 Build/QP1A.190711.020
+                # Device OS        : Linux; U; Android 10; RMX1825 Build/QP1A.190711.020`
                 match = p_device_os.match(line)
                 client_mac_dict["device_info"].update({ "device_os" : match.group("value") })
                 continue
             elif p_protocol.match(line) and device_section == True:
                 # Protocol         : DHCP
+                data_counter = 0
                 match = p_protocol.match(line)
-                device_protocols.append(match.group("value") )
-                client_mac_dict["device_info"].update({ "protocols": device_protocols })
+                current_protocol = match.group("value")
+                client_mac_dict["device_info"].setdefault("protocols", {} )
+                client_mac_dict["device_info"]["protocols"].update({ current_protocol: {} })
                 device_section = True
+                continue
+            elif p_device_type_data.match(line):
+                # Type             : 12   12
+                data_counter += 1
+                data_list = []
+                match = p_device_type_data.match(line)
+                client_mac_dict["device_info"]["protocols"][current_protocol].update({ data_counter: {} })
+                client_mac_dict["device_info"]["protocols"][current_protocol][data_counter].update({ "type": match.group("value") })
+                continue
+            elif p_device_data_size.match(line):
+                # Data             : 0c
+                match = p_device_data_size.match(line)
+                client_mac_dict["device_info"]["protocols"][current_protocol][data_counter].update({ "data_size": match.group("value") })
+                continue
+            elif p_device_data.match(line):
+                # 00000000  00 0c 00 08 72 65 61 6c  6d 65 2d 33               |....realme-3    |
+                match = p_device_data.match(line)
+                data_list.append(match.group("value"))
+                client_mac_dict["device_info"]["protocols"][current_protocol][data_counter].update({ "data": data_list })
                 continue
             elif p_max_client_protocol_capability.match(line):
                 # Max Client Protocol Capability: 802.11ac Wave 2
@@ -2808,6 +2857,9 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
                     client_mac_dict[section_tracker[-1]].update({ group["key"]: group["value"] })
                 elif len(section_tracker) == 2:
                     client_mac_dict[section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
-
+                elif len(section_tracker) == 3:
+                    client_mac_dict[section_tracker[-3]][section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
+                elif len(section_tracker) == 4:
+                    client_mac_dict[section_tracker[-4]][section_tracker[-3]][section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
 
         return client_mac_dict
