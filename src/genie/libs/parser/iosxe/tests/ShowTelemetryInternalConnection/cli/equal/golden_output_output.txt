@@ -1,0 +1,5 @@
+Telemetry connection
+
+Peer Address    Port  VRF Source Address  Transport  State         Profile
+--------------- ----- --- --------------- ---------- ------------- -------------
+10.37.174.7    25103   0 10.8.138.4      tls-native Active        sdn-network-101-wan

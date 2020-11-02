@@ -43,7 +43,7 @@ class ShowChassis(ShowChassisSchema):
         else:
             output=output
 
-        # Chassis/Stack Mac Address : 58bf.ea9b.23c0 - Local Mac Address
+        # Chassis/Stack Mac Address : 58bf.eaff.be5c - Local Mac Address
         # Mac persistency wait time: Indefinite
         # Local Redundancy Port Type: Twisted Pair
         #                                             H/W   Current
@@ -52,7 +52,8 @@ class ShowChassis(ShowChassisSchema):
         # 1       Standby  58bf.ea9b.23c0     2      V02     Ready                169.254.168.52
         # *2       Active   58bf.ea3c.4b20     1      V02     Ready                169.254.168.54
 
-        # Chassis/Stack Mac Address : 58bf.eacc.0c00 - Local Mac Address
+
+        # Chassis/Stack Mac Address : 58bf.eaff.d8cc - Local Mac Address
         p_chassis_mac = re.compile(r"^Chassis/Stack\s+Mac\s+Address\s+:\s+(?P<chassis_mac>\S+)\s+-\s+Local\s+Mac\s+Address$")
 
         # Mac persistency wait time: Indefinite
@@ -70,7 +71,7 @@ class ShowChassis(ShowChassisSchema):
         # -------------------------------------------------------------------------------------
         p_delimiter = re.compile(r"^-------------------------------------------------------------------------------------$")
 
-        # *1       Active   58bf.eacc.0c00     2      V02     Ready                169.254.130.6
+        # *1       Active   58bf.eaff.d8cc     2      V02     Ready                169.254.130.6
         p_chassis_count = re.compile(
         r"^(?P<slot>\S+)\s+(?P<role>\S+)\s+(?P<mac>\S+)\s+(?P<priority>\d+)\s+(?P<hw_version>\S+)\s+(?P<state>\S+)\s+(?P<ip>\S+)$")
 
@@ -78,7 +79,7 @@ class ShowChassis(ShowChassisSchema):
 
         for line in output.splitlines():
             line = line.strip()
-            # Chassis/Stack Mac Address : 58bf.eacc.0c00 - Local Mac Address
+            # Chassis/Stack Mac Address : 58bf.eaff.d8cc - Local Mac Address
             if p_chassis_mac.match(line):
                 match = p_chassis_mac.match(line)
                 chassis_obj["chassis_mac_address"] = match.group("chassis_mac")
@@ -104,7 +105,7 @@ class ShowChassis(ShowChassisSchema):
             elif p_delimiter.match(line):
                 match = p_delimiter.match(line)
                 continue
-            # *1       Active   58bf.eacc.0c00     2      V02     Ready                169.254.130.6
+            # *1       Active   58bf.eaff.d8cc     2      V02     Ready                169.254.130.6
             elif p_chassis_count.match(line):
                 match = p_chassis_count.match(line)
                 if not chassis_obj.get("chassis_index"):

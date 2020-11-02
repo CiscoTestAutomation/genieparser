@@ -1,13 +1,13 @@
 Cisco AP Name   : bg-1-cap1
 =================================================
-Cisco AP Identifier                             : 70b3.d278.e03e
+Cisco AP Identifier                             : 70b3.d2ff.59b6
 Country Code                                    : IN
 Regulatory Domain Allowed by Country            : 802.11bg:-A   802.11a:-DN
 AP Country Code                                 : IN  - India
 AP Regulatory Domain
   Slot 0                                        : -A
   Slot 1                                        : -D
-MAC Address                                     : 70b3.1711.acbb
+MAC Address                                     : 70b3.17ff.bdcc
 IP Address Configuration                        : DHCP
 IP Address                                      : 10.10.5.14
 IP Netmask                                      : 255.255.254.0
@@ -50,8 +50,8 @@ Dhcp Server                                     : Disabled
 Remote AP Debug                                 : Disabled
 Logging Trap Severity Level                     : information
 Logging Syslog facility                         : kern
-Software Version                                : 17.3.1.9
-Boot Version                                    : 1.1.2.4
+Software Version                                : 10.145.1.9
+Boot Version                                    : 10.4.2.4
 Mini IOS Version                                : 0.0.0.0
 Stats Reporting Period                          : 0
 LED State                                       : Enabled
@@ -64,7 +64,7 @@ PoE Power Injector MAC Address                  : Disabled
 Power Type/Mode                                 : PoE/Full Power
 Number of Slots                                 : 3
 AP Model                                        : AIR-AP4800-D-K9
-IOS Version                                     : 17.3.1.9
+IOS Version                                     : 10.145.1.9
 Reset Button                                    : Disabled
 AP Serial Number                                : FGL2102AZZZ
 Management Frame Validation                     : Capable

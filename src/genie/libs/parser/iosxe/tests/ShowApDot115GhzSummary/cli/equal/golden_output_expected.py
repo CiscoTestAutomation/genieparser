@@ -1,7 +1,7 @@
 expected_output = {
     "ap_name": {
         "ab-1-test-4800": {
-            "mac_address": "5c50.1501.40e0",
+            "mac_address": "5c50.15ff.41e1",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Down",
@@ -10,7 +10,7 @@ expected_output = {
             "channel": "(36)*",
         },
         "ab21-cap40": {
-            "mac_address": "5c50.15f5.e5c0",
+            "mac_address": "5c50.15ff.dbb6",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -19,7 +19,7 @@ expected_output = {
             "channel": "(100)*",
         },
         "ab12-cap2": {
-            "mac_address": "5c50.1504.7b20",
+            "mac_address": "5c50.15ff.7f24",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -28,7 +28,7 @@ expected_output = {
             "channel": "(116)*",
         },
         "ab21-cap36": {
-            "mac_address": "5c50.1504.87e0",
+            "mac_address": "5c50.15ff.8be4",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -37,7 +37,7 @@ expected_output = {
             "channel": "(100)*",
         },
         "ab21-cap28": {
-            "mac_address": "5c50.1504.8920",
+            "mac_address": "5c50.15ff.8d24",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -46,7 +46,7 @@ expected_output = {
             "channel": "(120)*",
         },
         "ab31-cap26": {
-            "mac_address": "5c50.1504.8940",
+            "mac_address": "5c50.15ff.8d44",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -55,7 +55,7 @@ expected_output = {
             "channel": "(128)*",
         },
         "ab22-cap16": {
-            "mac_address": "5c50.1504.89a0",
+            "mac_address": "5c50.15ff.8da4",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -64,7 +64,7 @@ expected_output = {
             "channel": "(48)*",
         },
         "ab22-cap24": {
-            "mac_address": "5c50.1504.89e0",
+            "mac_address": "5c50.15ff.8de4",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -73,7 +73,7 @@ expected_output = {
             "channel": "(36)*",
         },
         "ab22-cap18": {
-            "mac_address": "5c50.1504.8ac0",
+            "mac_address": "5c50.15ff.8ec4",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -82,7 +82,7 @@ expected_output = {
             "channel": "(124)*",
         },
         "ab32-cap13": {
-            "mac_address": "5c50.1504.8bc0",
+            "mac_address": "5c50.15ff.8fc4",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -91,7 +91,7 @@ expected_output = {
             "channel": "(124)*",
         },
         "ab22-cap10": {
-            "mac_address": "5c50.1504.8be0",
+            "mac_address": "5c50.15ff.8fe4",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -100,7 +100,7 @@ expected_output = {
             "channel": "(132)*",
         },
         "ab11-cap18": {
-            "mac_address": "5c50.1504.8c20",
+            "mac_address": "5c50.15ff.9024",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -109,7 +109,7 @@ expected_output = {
             "channel": "(48)*",
         },
         "ab22-cap8": {
-            "mac_address": "5c50.1504.8c40",
+            "mac_address": "5c50.15ff.9044",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -118,7 +118,7 @@ expected_output = {
             "channel": "(149)*",
         },
         "ab22-cap22": {
-            "mac_address": "5c50.1504.8ce0",
+            "mac_address": "5c50.15ff.90e4",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -127,7 +127,7 @@ expected_output = {
             "channel": "(40)*",
         },
         "ab22-cap6": {
-            "mac_address": "5c50.1504.8d80",
+            "mac_address": "5c50.15ff.9184",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -136,7 +136,7 @@ expected_output = {
             "channel": "(100)*",
         },
         "ab31-cap29": {
-            "mac_address": "5c50.1504.8dc0",
+            "mac_address": "5c50.15ff.91c4",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -145,7 +145,7 @@ expected_output = {
             "channel": "(52)*",
         },
         "ab21-cap33": {
-            "mac_address": "5c50.1504.8de0",
+            "mac_address": "5c50.15ff.91e4",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -154,7 +154,7 @@ expected_output = {
             "channel": "(36)*",
         },
         "ab31-cap21": {
-            "mac_address": "5c50.1504.8f20",
+            "mac_address": "5c50.15ff.9324",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -163,7 +163,7 @@ expected_output = {
             "channel": "(116)*",
         },
         "ab21-cap27": {
-            "mac_address": "5c50.1504.8f60",
+            "mac_address": "5c50.15ff.9364",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -172,7 +172,7 @@ expected_output = {
             "channel": "(132)*",
         },
         "ab21-cap35": {
-            "mac_address": "5c50.1504.aca0",
+            "mac_address": "5c50.15ff.b0a4",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
