@@ -2189,6 +2189,96 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
 
         return wireless_info_obj
 
+# ======================================
+# Schema for:
+#  * 'show wireless fabric vnid mapping'
+# ======================================
+class ShowWirelessFabricVnidMappingSchema(MetaParser):
+    """Schema for show wireless fabric vnid mapping."""
+
+    schema = {
+      "fabric_vnid_mapping" : {
+        "name": {
+          str : {
+            "l2_vnid": int,
+            "l3_vnid": int,
+            Optional("ip_address"): str,
+            "subnet": str,
+            "control_plane_name": str
+          }
+        }
+      }
+    }
+    
+# ======================================    
+# Parser for:
+#  * 'show wireless fabric vnid mapping'
+# ======================================
+class ShowWirelessFabricVnidMapping(ShowWirelessFabricVnidMappingSchema):
+    """Parser for show wireless fabric vnid mapping"""
+
+    cli_command = 'show wireless fabric vnid mapping'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+          output = output
+
+        # Fabric VNID Mapping:
+        #   Name               L2-VNID        L3-VNID        IP Address             Subnet       Control plane name
+        # ----------------------------------------------------------------------------------------------------------------------
+        #   Data                8190           0                                  0.0.0.0            default-control-plane
+        #   Guest               8189           0                                  0.0.0.0            default-control-plane
+        #   Voice               8191           0                                  0.0.0.0            default-control-plane
+        #   Fabric_A_INF_VN     8188           4097           10.8.132.0          255.255.254.0      default-control-plane
+        #   Physical_Security     8192           0                                  0.0.0.0            default-control-plane
+
+        # Fabric VNID Mapping:
+        p_fabric_mapping = re.compile(r"^Fabric\s+VNID\s+Mapping:")
+
+        # Data                8190           0                                  0.0.0.0            default-control-plane
+        p_fabric_row_4 = re.compile(r"^(?P<name>\S+)\s+(?P<l2_vnid>\d+)\s+(?P<l3_vnid>\d+)"
+                                    r"\s+(?P<subnet>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+                                    r"\s+(?P<control_name>\S+)$")
+
+        # Fabric_A_INF_VN     8188           4097           10.8.132.0          255.255.254.0      default-control-plane
+        p_fabric_row_5 = re.compile(r"^(?P<name>\S+)\s+(?P<l2_vnid>\d+)\s+(?P<l3_vnid>\d+)\s+"
+                                    r"(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+                                    r"(?P<subnet>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+                                    r"(?P<control_name>\S+)")
+
+
+        fabric_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            if p_fabric_mapping.match(line):
+                # Fabric VNID Mapping:
+                fabric_dict.update({ "fabric_vnid_mapping": {} })
+                continue
+            elif p_fabric_row_5.match(line):
+                match = p_fabric_row_5.match(line)
+                group = match.groupdict()
+                if not fabric_dict["fabric_vnid_mapping"].get("name"):
+                    fabric_dict["fabric_vnid_mapping"].update({ "name": {} })
+                fabric_dict["fabric_vnid_mapping"]["name"].update({ group["name"] : {} })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "l2_vnid": int(group["l2_vnid"]), "l3_vnid": int(group["l3_vnid"]) })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "ip_address": group["ip"], "subnet": group["subnet"] })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "control_plane_name": group["control_name"] })
+                continue
+            elif p_fabric_row_4.match(line):
+                match = p_fabric_row_4.match(line)
+                group = match.groupdict()
+                if not fabric_dict["fabric_vnid_mapping"].get("name"):
+                    fabric_dict["fabric_vnid_mapping"].update({ "name": {} })
+                fabric_dict["fabric_vnid_mapping"]["name"].update({ group["name"] : {} })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "l2_vnid": int(group["l2_vnid"]), "l3_vnid": int(group["l3_vnid"]) })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "subnet": group["subnet"], "control_plane_name": group["control_name"] })
+                continue
+
+        return fabric_dict
+      
 
 # ==============================================
 # Schema for:
@@ -3034,7 +3124,7 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
         else:
-            output = output
+          output = output
             
         # Total Number of Clients : 16
         p_total_client = re.compile(r"^Total\s+Number\s+of\s+Clients\s+:\s+(?P<value>\d+)$")
