@@ -4879,7 +4879,8 @@ class ShowBgpInstanceAllAllSchema(MetaParser):
                                     {Any():
                                         {Optional('index'): 
                                             {Any(): 
-                                                {'next_hop': str,
+                                                {
+                                                Optional('next_hop'): str,
                                                 Optional('status_codes'): str,
                                                 Optional('metric'): str,
                                                 Optional('locprf'): str,
