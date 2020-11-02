@@ -1,0 +1,13 @@
+RP/0/0/CPU0:router# show im dampening interface TenGigaE 0/1/0/0
+
+TenGigE 0/1/0/0 (0x01180020)
+Dampening enabled: Penalty 1625, SUPPRESSED (42 secs remaining)
+  Underlying state: Down
+  half-life: 1        reuse:             1000     
+  suppress:  1500     max-suppress-time: 4 
+
+Protocol       Capsulation        Pen   Suppression              U-L State  
+-------------- ------------------ ----- --------------------- -------------
+ ipv6           ipv6               1625  YES    42s  remaining        Down
+ ipv4           ipv4               1615  NO     22s  remaining        Down
+ 

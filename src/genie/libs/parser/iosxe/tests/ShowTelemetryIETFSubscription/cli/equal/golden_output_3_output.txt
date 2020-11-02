@@ -1,0 +1,6 @@
+Telemetry subscription brief
+
+ID               Type        State       Filter type
+--------------------------------------------------------
+2147483659       Dynamic     Valid       xpath
+4294967295       Permanent   Invalid     xpath

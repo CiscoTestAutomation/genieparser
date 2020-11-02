@@ -1,0 +1,29 @@
+show redundancy
+Redundant System Information :
+------------------------------
+       Available system uptime = 1 day, 3 hours, 43 minutes
+Switchovers system experienced = 0
+              Standby failures = 0
+        Last switchover reason = none
+
+                 Hardware Mode = Simplex
+    Configured Redundancy Mode = Non-redundant
+     Operating Redundancy Mode = Non-redundant
+              Maintenance Mode = Disabled
+                Communications = Down      Reason: Failure
+
+Current Processor Information :
+-------------------------------
+               Active Location = slot 1
+        Current Software state = ACTIVE
+       Uptime in current state = 1 day, 3 hours, 43 minutes
+                 Image Version = Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Version 17.3.1, RELEASE SOFTWARE (fc5)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2020 by Cisco Systems, Inc.
+Compiled Fri 07-Aug-20 21:32 by mcpre
+                          BOOT = bootflash:cat9k_iosxe.17.03.01.SPA.bin;
+                   CONFIG_FILE = 
+
+Peer (slot: 1) information is not available because it is in 'DISABLED' state
+
+Switch#
