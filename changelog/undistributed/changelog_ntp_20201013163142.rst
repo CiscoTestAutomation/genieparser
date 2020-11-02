@@ -2,5 +2,5 @@
                                 New
 --------------------------------------------------------------------------------
 * JUNOS
-    *  Added ShowConfigurationSystemNtpSchema:
+    *  Added ShowConfigurationSystemNtp:
       * show configuration system ntp

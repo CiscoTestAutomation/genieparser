@@ -435,6 +435,7 @@ class ShowConfigurationSystemNtp(ShowConfigurationSystemNtpSchema):
             if not line:
                 continue
 
+            # server 1.0.0.1;
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -444,6 +445,7 @@ class ShowConfigurationSystemNtp(ShowConfigurationSystemNtpSchema):
                 servers = ntp_dict.setdefault('server', [])
                 servers.append({'name': groups['server_name']})
 
+            # source-address 1.0.0.184;
             m = p2.match(line)
             if m:
                 groups = m.groupdict()

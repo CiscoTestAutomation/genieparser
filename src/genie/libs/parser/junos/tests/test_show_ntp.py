@@ -257,6 +257,7 @@ class TestShowConfigurationSystemNtp(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
+        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowConfigurationSystemNtp(device=self.device)
         parsed_output = obj.parse()
