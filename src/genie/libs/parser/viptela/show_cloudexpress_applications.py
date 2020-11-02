@@ -3,7 +3,7 @@ from genie.metaparser.util.schemaengine import Any, Or, Optional
 import re
 
 # =======================================
-# Schema for 'show cloudexpress application'
+# Schema for 'show cloudexpress applications'
 # =======================================
 
 class ShowCloudexpressApplicationSchema(MetaParser):
@@ -56,7 +56,6 @@ class ShowCloudexpressApplication(ShowCloudexpressApplicationSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                #vpn = group['vpn']
                 vpn_dict = result_dict.setdefault('index', {}).setdefault(index, {})
                 vpn_dict.update({'vpn': group['vpn']})
                 vpn_dict.update({'application': group['application']})
