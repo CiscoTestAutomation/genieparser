@@ -66,7 +66,7 @@ class ShowCloudexpressApplication(ShowCloudexpressApplicationSchema):
                 vpn_dict.update({'loss': group['loss']})
                 vpn_dict.update({'local_color': group['local_color']})
                 vpn_dict.update({'remote_color': group['remote_color']})
-                index = index + 1
+                index += 1
                 continue
 
         return result_dict
