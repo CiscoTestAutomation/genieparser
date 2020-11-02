@@ -542,6 +542,21 @@ class ShowRoute(ShowRouteSchema):
                 continue
         return ret_dict
 
+class ShowRouteLogicalSystem(ShowRoute):
+    """ Parser for:
+            * show route logical-system {logical_name}
+    """
+    cli_command = 'show route logical-system {logical_name}'
+    def cli(self, logical_name, output=None):
+        if not output:
+            cmd = self.cli_command.format(
+                    logical_name=logical_name)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        return super().cli(output=out) 
+
 class ShowRouteProtocolNoMore(ShowRoute):
     """ Parser for:
             * show route protocol {protocol} {ip_address} | no-more
