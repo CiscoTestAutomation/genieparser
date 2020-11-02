@@ -226,6 +226,7 @@ class test_show_configuration_system_ntp_display_set(unittest.TestCase):
 class TestShowConfigurationSystemNtp(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
 
     golden_parsed_output = {
         "configuration": {
@@ -257,7 +258,6 @@ class TestShowConfigurationSystemNtp(unittest.TestCase):
             parsed_output = obj.parse()
 
     def test_golden(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowConfigurationSystemNtp(device=self.device)
         parsed_output = obj.parse()
