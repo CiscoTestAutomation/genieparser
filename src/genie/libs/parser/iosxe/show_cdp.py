@@ -31,7 +31,7 @@ class ShowCdpNeighborsSchema(MetaParser):
                      'hold_time': int,
                      Optional('capability'): str,
                      Optional('platform'): str,
-                     'port_id': str, }, }, },
+                     Optional('port_id'): str, }, }, },
     }
 
 
@@ -59,10 +59,10 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         # RX-SWV.cisco.com Fas 0/1            167         T S       WS-C3524-XFas 0/13
         # C2950-1          Fas 0/0            148         S I       WS-C2950T-Fas 0/15
         p1 = re.compile(r'^(?P<device_id>\S+) +'
-                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
-                         '(?P<platform>\S+)'
-                         '(?P<port_id>(Fa|Gi|GE).\s*\d*\/*\d*)$')
+                        r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSsHIrPDCM\s]+)( +'
+                        r'(?P<platform>\S+))?'
+                        r'(\s+(?P<port_id>(Fa|Gi|GE).\s*\d*\/*\d*))?$')
 
         # No platform
         # R5.cisco.com Gig 0/0 125 R B Gig 0/0
@@ -70,23 +70,27 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         p2 = re.compile(r'^(?P<device_id>\S+) +'
                         r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         r'(?P<hold_time>\d+) +'
-                        r'(?P<capability>[RTBSHIrPDCM\s]+)'
-                        r'(?: +(?P<platform>[\w\-]+ (\d+)?))? +'
-                        r'(?P<port_id>[a-zA-Z0-9\/]+( [a-zA-Z0-9\/\s]+)?)$')
+                        r'(?P<capability>[RTBSsHIrPDCM\s]+)'
+                        r'(?: +(?P<platform>[\w\-]+ (\d+)?))?( +'
+                        r'(?P<port_id>[a-zA-Z0-9\/]+( [a-zA-Z0-9\/\s]+)?))?$')
 
         # device6 Gig 0 157 R S I C887VA-W-W Gi 0
         # SEP08000FA9B170  Gig 1/0/9         158              H P   Mitel 532 Port 1
         p3 = re.compile(r'^(?P<device_id>\S+) +'
                         r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
-                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
-                        r'(?P<platform>\S+(?: \d+)?) '
-                        r'(?P<port_id>[a-zA-Z0-9\/\s]+)$')
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSsHIrPDCM\s]+)( +'
+                        r'(?P<platform>\S+(?: \d+)?))?( '
+                        r'(?P<port_id>[a-zA-Z0-9\/\s]+))?$')
 
         # p4 and p5 for two-line output, where device id is on a separate line
+        # bgp-n93-d(FDO24140U7J)
+        #                     Eth1/37/2      161    R S s     N9K-C93240YC- Eth1/6 
+        # ott-bgp-laas(JAF1429BAKA)
+        #                     Eth1/39/1      159    R S I s
         p4 = re.compile(r'^(?P<device_id>\S+)$')
         p5 = re.compile(r'(?P<local_interface>[a-zA-Z]+[\s]*[\d/.]+) +'
-                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSHIrPDCM\s]+) +'
-                        r'(?P<platform>\S+) (?P<port_id>[\.a-zA-Z0-9/\s]+)$')
+                        r'(?P<hold_time>\d+) +(?P<capability>[RTBSsHIrPDCM\s]+)( +'
+                        r'(?P<platform>\S+))?( (?P<port_id>[\.a-zA-Z0-9/\s]+))?$')
 
         device_id_index = 0
         parsed_dict = {}
@@ -146,11 +150,10 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 device_dict['capability'] = group['capability'].strip()
                 if group['platform']:
                     device_dict['platform'] = group['platform'].strip()
-                elif not group['platform']:
-                    device_dict['platform'] = ''
 
-                device_dict['port_id'] = Common \
-                    .convert_intf_name(intf=group['port_id'].strip())
+                if group['port_id']:
+                    device_dict['port_id'] = Common \
+                        .convert_intf_name(intf=group['port_id'].strip())
                 continue
 
         return parsed_dict
