@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-* <iosxe>
-    * Added new class ShowSdwanZonebfwdpSessions:
+* IOSXE
+    * Added ShowSdwanZonebfwdpSessions:
       * show sdwan zonebfwdp sessions
