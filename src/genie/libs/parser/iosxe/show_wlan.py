@@ -104,8 +104,7 @@ class ShowWlanSummary(ShowWlanSummarySchema):
 
         return wlan_summary_dict
 
-
-
+   
 # ==================
 # Schema for:
 #  * 'show wlan all'
@@ -1344,3 +1343,333 @@ class ShowWlanAll(ShowWlanAllSchema):
                 continue
 
         return wlan_dict
+
+     
+
+      
+# ==============================
+# Schema for:
+#  * 'show wlan id client stats'
+# ==============================
+class ShowWlanIdClientStatsSchema(MetaParser):
+    """Schema for show wlan id client stats."""
+
+    schema = {
+        "wlan_id": {
+            int: {
+                "profile_name": str,
+                "current_client_state_statistics": {
+                    "authenticating": int,
+                    "mobility": int,
+                    "ip_learn": int,
+                    "webauth_pending": int,
+                    "run": int,
+                },
+                "total_client_delete_reasons": {
+                    "no_operation": int,
+                    "internal_error": int,
+                    "deauthentication_or_disassociation_request": int,
+                    "session_manager": int,
+                    "l3_authentication_failure": int,
+                    "delete_received_from_ap": int,
+                    "bssid_down": int,
+                    "ap_down_disjoin": int,
+                    "connection_timeout": int,
+                    "mac_authentication_failure": int,
+                    "datapath_plumb": int,
+                    "due_to_ssid_change": int,
+                    "due_to_vlan_change": int,
+                    "due_to_ip_zone_change": int,
+                    "admin_deauthentication": int,
+                    "qos_failure": int,
+                    "wpa_key_exchange_timeout": int,
+                    "wpa_group_key_update_timeout": int,
+                    "80211w_max_sa_queries_reached": int,
+                    "client_deleted_during_ha_recovery": int,
+                    "client_blacklist": int,
+                    "inter_instance_roam_failure": int,
+                    "due_to_mobility_failure": int,
+                    "session_timeout": int,
+                    "idle_timeout": int,
+                    "supplicant_request": int,
+                    "nas_error": int,
+                    "policy_manager_internal_error": int,
+                    "mobility_wlan_down": int,
+                    "mobility_tunnel_down": int,
+                    "80211v_smart_roam_failed": int,
+                    "dot11v_timer_timeout": int,
+                    "dot11v_association_failed": int,
+                    "dot11r_pre_authentication_failure": int,
+                    "sae_authentication_failure": int,
+                    "dot11_failure": int,
+                    "dot11_sae_invalid_message": int,
+                    "dot11_unsupported_client_capabilities": int,
+                    "dot11_association_denied_unspecified": int,
+                    "dot11_max_sta": int,
+                    "dot11_denied_data_rates": int,
+                    "80211v_client_rssi_lower_than_the_association_rssi_threshold": int,
+                    "invalid_qos_parameter": int,
+                    "dot11_ie_validation_failed": int,
+                    "dot11_group_cipher_in_ie_validation_failed": int,
+                    "dot11_invalid_pairwise_cipher": int,
+                    "dot11_invalid_akm": int,
+                    "dot11_unsupported_rsn_version": int,
+                    "dot11_invalid_rsnie_capabilities": int,
+                    "dot11_received_invalid_pmkid_in_the_received_rsn_ie": int,
+                    "dot11_invalid_mdie": int,
+                    "dot11_invalid_ft_ie": int,
+                    "dot11_qos_policy": int,
+                    "dot11_ap_have_insufficient_bandwidth": int,
+                    "dot11_invalid_qos_parameter": int,
+                    "client_not_allowed_by_assisted_roaming": int,
+                    "iapp_disassociation_for_wired_client": int,
+                    "wired_wgb_change": int,
+                    "wired_vlan_change": int,
+                    "wired_client_deleted_due_to_wgb_delete": int,
+                    "avc_client_re_anchored_at_the_foreign_controller": int,
+                    "wgb_wired_client_joins_as_a_direct_wireless_client": int,
+                    "ap_upgrade": int,
+                    "client_dhcp": int,
+                    "client_eap_timeout": int,
+                    "client_8021x_failure": int,
+                    "client_device_idle": int,
+                    "client_captive_portal_security_failure": int,
+                    "client_decryption_failure": int,
+                    "client_interface_disabled": int,
+                    "client_user_triggered_disassociation": int,
+                    "client_miscellaneous_reason": int,
+                    "unknown": int,
+                    "client_peer_triggered": int,
+                    "client_beacon_loss": int,
+                    "client_eap_id_timeout": int,
+                    "client_dot1x_timeout": int,
+                    "malformed_eap_key_frame": int,
+                    "eap_key_install_bit_is_not_expected": int,
+                    "eap_key_error_bit_is_not_expected": int,
+                    "eap_key_ack_bit_is_not_expected": int,
+                    "invalid_key_type": int,
+                    "eap_key_secure_bit_is_not_expected": int,
+                    "key_description_version_mismatch": int,
+                    "wrong_replay_counter": int,
+                    "eap_key_mic_bit_expected": int,
+                    "mic_validation_failed": int,
+                    "error_while_ptk_computation": int,
+                    "incorrect_credentials": int,
+                    "client_connection_lost": int,
+                    "reauthentication_failure": int,
+                    "port_admin_disabled": int,
+                    "supplicant_restart": int,
+                    "no_ip": int,
+                    "call_admission_controller_at_anchor_node": int,
+                    "anchor_no_memory": int,
+                    "anchor_invalid_mobility_bssid": int,
+                    "anchor_creation_failure": int,
+                    "db_error": int,
+                    "wired_client_cleanup_due_to_wgb_roaming": int,
+                    "manually_excluded": int,
+                    "80211_association_failure": int,
+                    "80211_authentication_failure": int,
+                    "8021x_authentication_timeout": int,
+                    "8021x_authentication_credential_failure": int,
+                    "web_authentication_failure": int,
+                    "policy_bind_failure": int,
+                    "ip_theft": int,
+                    "mac_theft": int,
+                    "mac_and_ip_theft": int,
+                    "qos_policy_failure": int,
+                    "qos_policy_send_to_ap_failure": int,
+                    "qos_policy_bind_on_ap_failure": int,
+                    "qos_policy_unbind_on_ap_failure": int,
+                    "static_ip_anchor_discovery_failure": int,
+                    "vlan_failure": int,
+                    "acl_failure": int,
+                    "redirect_acl_failure": int,
+                    "accounting_failure": int,
+                    "security_group_tag_failure": int,
+                    "fqdn_filter_definition_does_not_exist": int,
+                    "wrong_filter_type_expected_postauth_fqdn_filter": int,
+                    "wrong_filter_type_expected_preauth_fqdn_filter": int,
+                    "invalid_group_id_for_fqdn_filter_valid_range": int,
+                    "policy_parameter_mismatch": int,
+                    "reauth_failure": int,
+                    "wrong_psk": int,
+                    "policy_failure": int,
+                    "ap_initiated_delete_for_idle_timeout": int,
+                    "ap_initiated_delete_for_client_acl_mismatch": int,
+                    "ap_initiated_delete_for_ap_auth_stop": int,
+                    "ap_initiated_delete_for_association_expired_at_ap": int,
+                    "ap_initiated_delete_for_4_way_handshake_failed": int,
+                    "ap_initiated_delete_for_dhcp_timeout": int,
+                    "ap_initiated_delete_for_reassociation_timeout": int,
+                    "ap_initiated_delete_for_sa_query_timeout": int,
+                    "ap_initiated_delete_for_channel_switch_at_ap": int,
+                    "ap_initiated_delete_for_bad_aid": int,
+                    "ap_initiated_delete_for_request": int,
+                    "ap_initiated_delete_for_interface_reset": int,
+                    "ap_initiated_delete_for_all_on_slot": int,
+                    "ap_initiated_delete_for_reaper_radio": int,
+                    "ap_initiated_delete_for_slot_disable": int,
+                    "ap_initiated_delete_for_mic_failure": int,
+                    "ap_initiated_delete_for_vlan_delete": int,
+                    "ap_initiated_delete_for_channel_change": int,
+                    "ap_initiated_delete_for_stop_reassociation": int,
+                    "ap_initiated_delete_for_packet_max_retry": int,
+                    "ap_initiated_delete_for_transmission_deauth": int,
+                    "ap_initiated_delete_for_sensor_station_timeout": int,
+                    "ap_initiated_delete_for_age_timeout": int,
+                    "ap_initiated_delete_for_transmission_fail_threshold": int,
+                    "ap_initiated_delete_for_uplink_receive_timeout": int,
+                    "ap_initiated_delete_for_sensor_scan_next_radio": int,
+                    "ap_initiated_delete_for_sensor_scan_other_bssid": int,
+                    "aaa_server_unavailable": int,
+                    "aaa_server_not_ready": int,
+                    "no_dot1x_method_configuration": int,
+                    "client_abort": int,
+                    "association_connection_timeout": int,
+                    "mac_auth_connection_timeout": int,
+                    "l2_auth_connection_timeout": int,
+                    "l3_auth_connection_timeout": int,
+                    "mobility_connection_timeout": int,
+                    "static_ip_connection_timeout": int,
+                    "sm_session_creation_timeout": int,
+                    "ip_learn_connection_timeout": int,
+                    "nack_ifid_exists": int,
+                    "radio_down": int,
+                    "eogre_reset": int,
+                    "eogre_generic_join_failure": int,
+                    "eogre_ha_reconciliation": int,
+                    "eogre_invalid_vlan": int,
+                    "eogre_invalid_domain": int,
+                    "eogre_empty_domain": int,
+                    "eogre_domain_shut": int,
+                    "eogre_invalid_gateway": int,
+                    "eogre_all_gateways_down": int,
+                    "eogre_flex_no_active_gateway": int,
+                    "eogre_rule_matching_error": int,
+                    "eogre_aaa_override_error": int,
+                    "eogre_client_onboarding_error": int,
+                    "eogre_mobility_handoff_error": int,
+                    "ip_update_timeout": int,
+                    "l3_vlan_override_connection_timeout": int,
+                    "mobility_peer_delete": int,
+                    "nack_ifid_mismatch": int,
+                },
+            }
+        }
+    }
+
+
+
+# ==============================
+# Parser for:
+#  * 'show wlan id client stats'
+# ==============================
+class ShowWlanIdClientStats(ShowWlanIdClientStatsSchema):
+    """Parser for show wlan id client stats"""
+
+    cli_command = "show wlan id {id_number} client stats"
+
+    def cli(self, id_number, output=None):
+        if output is None:
+            cmd = self.cli_command.format(id_number=id_number)
+            out = self.device.execute(cmd)
+
+        else:
+            out = output
+
+        # Wlan Profile Name: lizzard_Global, Wlan Id: 17
+        # Current client state statistics:
+        # -----------------------------------------------------------------------------
+        # Authenticating         : 7
+        # Mobility               : 0
+        # IP Learn               : 0
+        # Webauth Pending        : 0
+        # Run                    : 2
+
+        # Total client delete reasons
+        # ---------------------------
+        #     No Operation                                                    : 0
+        #     Internal error                                                  : 0
+        #     Deauthentication or disassociation request                      : 0
+        #     Session Manager                                                 : 0
+        #     L3 authentication failure                                       : 0
+        #     Delete received from AP                                         : 0
+        #     BSSID down                                                      : 1
+        #     AP down/disjoin                                                 : 2
+        #     Connection timeout                                              : 0
+        #     MAC authentication failure                                      : 0
+        #     Datapath plumb                                                  : 0
+        #     Due to SSID change                                              : 163
+        #
+        # ...OUTPUT OMITTED...
+        #
+        #     L3 VLAN Override connection timeout                         : 0
+        #     Mobility peer delete                                            : 0
+        #     NACK IFID mismatch                                              : 0
+
+        wlan_info_capture = re.compile(
+            # Wlan Profile Name: lizzard_Global, Wlan Id: 17
+            r"^Wlan Profile Name:\s+(?P<profile_name>\S+), Wlan Id: (?P<wlan_id>\d+)$"
+        )
+
+        # Current client state statistics:
+        client_stats_capture = re.compile(r"^Current client state statistics:$")
+
+        # Total client delete reasons
+        client_delete_capture = re.compile(r"^Total client delete reasons$")
+
+        # key : value
+        key_value_capture = re.compile(r"^(?P<key>[\S\s]+\S)\s*:\s+(?P<value>\d+)$")
+        
+        header_group = {}
+
+        wlan_info_obj = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            match = wlan_info_capture.match(line)
+            if match:
+                group = match.groupdict()
+
+                group["wlan_id"] = int(group["wlan_id"])
+
+                # pull a key from group to use as new_key
+                new_key = "wlan_id"
+                new_group = {group[new_key]: {}}
+
+                # update and pop new_key
+                new_group[group[new_key]].update(group)
+                new_group[group[new_key]].pop(new_key)
+
+                if not wlan_info_obj.get(new_key):
+                    wlan_info_obj[new_key] = {}
+
+                wlan_info_obj[new_key].update(new_group)
+
+                current_group = wlan_info_obj[new_key][group[new_key]]
+
+                continue
+
+            if client_stats_capture.match(line) or client_delete_capture.match(line):
+                line_format = line.replace(" ", "_").replace(":", "").lower()
+                current_group.update({line_format: {}})
+
+                header_group = current_group[line_format]
+
+                continue
+
+            match = key_value_capture.match(line)
+            if match:
+                group = match.groupdict()
+
+                space_format_key = re.sub(r" - |\s+|-|/", "_", group["key"])
+                format_key = re.sub(r"\.|,", "", space_format_key).strip("_116").lower()
+                format_value =  int(group["value"])
+
+                header_group.update({format_key: format_value})
+
+                continue
+
+        return wlan_info_obj
+

@@ -1,0 +1,415 @@
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b25a-13-cap10         3c41.0fee.5094   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-12-cap01         3c41.0fee.5884   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap01         3c41.0fee.5d90   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap07         3c41.0fee.5de8   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap05         3c41.0fee.5df0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap04         3c41.0fee.5e5c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap08         3c41.0fee.5e74   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap01         3c41.0fee.5eac   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap08         3c41.0fee.5ef8   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap02         3c41.0fee.5f94   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b25a-11-cap07         3c41.0fee.5fbc   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap02         2c57.4518.16ac   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap06         2c57.4518.2df0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap08         2c57.4518.41b0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap07         2c57.4518.432c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap11         2c57.4518.4330   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-12-cap02         3c41.0fee.4394   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-13-cap09         2c57.4518.564c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-12-cap03         2c57.4518.5b40   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap10         2c57.4518.5b48   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b25b-11-cap10         2c57.4518.5bec   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-13-cap11         a4b2.1902.3c60   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap06         a4b2.1902.4100   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-13-cap05         a4b2.1902.533c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-13-cap04         a4b2.4908.130c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap12         a4b2.4908.1424   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-13-cap06         a4b2.4908.142c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-13-cap02         a4b2.4908.14ac   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap03         a4b2.4908.14e4   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap05         a4b2.4908.14e8   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b25a-13-cap04         a4b2.4908.150c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-13-cap05         a4b2.4908.1510   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-13-cap01         a4b2.4908.1520   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap03         a4b2.4908.154c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-13-cap06         a4b2.4908.1558   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-12-cap05         a4b2.4908.159c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap02         a4b2.4908.15b0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap05         a4b2.4908.15e8   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap13         a4b2.4908.15f4   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-13-cap07         a4b2.4908.1604   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b25b-12-cap04         a4b2.4908.1608   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-13-cap08         a4b2.4908.17dc   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap11         a4b2.4908.1e38   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-13-cap01         a4b2.4908.1e50   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap01         a4b2.4908.1e54   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap09         a4b2.4908.1e8c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-13-cap03         a4b2.4908.1eac   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-11-cap06         a4b2.4908.1ec0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25b-11-cap03         a4b2.4908.1ecc   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-13-cap02         a4b2.4908.1f00   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b25b-11-cap04         a4b2.4908.4078   default-site-tag                  default-policy-tag                default-rf-tag                    No               Default       
+b25b-13-cap03         a4b2.4908.409c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap09         a4b2.4908.42f0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b25a-12-cap04         a4b2.4908.4330   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static        
+b23-1-test-4800       4c71.0ff0.1598   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-21-cap40          0c75.bbd0.1cb8   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-32-cap30          6c71.0fd4.0558   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-12-cap2           6c71.ede6.1c58   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-32-cap29          6c71.ede6.1d94   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-11-cap4           6c71.ede6.1d98   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b23-22-cap28          6c71.ede6.1de4   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-12-cap36          6c71.ede6.1de8   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-21-cap36          6c71.ede6.1df0   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-21-cap28          6c71.ede6.1e18   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-31-cap26          6c71.ede6.1e1c   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-31-cap12          6c71.ede6.1e24   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-22-cap16          6c71.ede6.1e28   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-21-cap3           6c71.ede6.1e2c   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-22-cap24          6c71.ede6.1e30   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-31-cap13          6c71.ede6.1e40   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-22-cap18          6c71.ede6.1e4c   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-31-cap10          6c71.ede6.1e50   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-32-cap13          6c71.ede6.1e6c   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-22-cap10          6c71.ede6.1e70   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-31-cap16          6c71.ede6.1e74   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-11-cap18          6c71.ede6.1e78   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-22-cap8           6c71.ede6.1e7c   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-11-cap1           6c71.ede6.1e80   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-22-cap22          6c71.ede6.1e90   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-22-cap36          6c71.ede6.1e94   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b23-32-cap26          6c71.ede6.1e98   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-31-cap14          6c71.ede6.1e9c   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-31-cap15          6c71.ede6.1ea0   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-22-cap6           6c71.ede6.1ea4   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-31-cap11          6c71.ede6.1ea8   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-31-cap29          6c71.ede6.1eac   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-21-cap33          6c71.ede6.1eb0   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-32-cap23          6c71.ede6.1ec0   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-21-cap19          6c71.ede6.1ed0   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-22-cap29          6c71.ede6.1ed4   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-31-cap21          6c71.ede6.1ed8   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-21-cap27          6c71.ede6.1ee0   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-21-cap35          6c71.ede6.2288   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-2-test-9130       6c71.ede6.22c0   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-22-cap20          6c71.ede6.22d4   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-22-cap9           6c71.ede6.22d8   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-22-cap17          6c71.ede6.22e4   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-22-cap12          6c71.ede6.22e8   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-11-cap24          6c71.ede6.22f4   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-21-cap31          6c71.ede6.22fc   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-21-cap30          6c71.ede6.2360   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-22-cap37          6c71.ede6.2580   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-22-cap35          6c71.ede6.25cc   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-32-cap37          6c71.ede6.2798   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-32-cap12          6c71.ede6.27a0   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-32-cap1           6c71.ede6.27c0   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-11-cap3           6c71.ede6.27d8   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-32-cap35          6c71.ede6.27dc   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-31-cap1           6c71.ede6.27e0   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-21-cap7           6c71.ede6.27e8   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b23-31-cap18          6c71.ede6.27f4   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-21-cap4           6c71.ede6.2800   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-32-cap7           6c71.ede6.2808   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-31-cap3           6c71.ede6.2810   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-22-cap39          6c71.ede6.281c   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-32-cap25          6c71.ede6.2820   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-11-cap8           6c71.ede6.2824   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-11-cap6           6c71.ede6.2828   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-31-cap27          6c71.ede6.304c   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-11-cap9           6c71.ede6.32d8   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-11-cap22          6c71.ede6.32f0   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-22-cap25          6c71.ede6.33b4   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-31-cap5           6c71.ede6.3550   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-31-cap19          6c71.ede6.36b8   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-21-cap1           6c71.ede6.36c8   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-21-cap9           6c71.ede6.36d0   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-32-cap17          6c71.ede6.36fc   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-22-cap23          6c71.ede6.3704   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-22-cap24          6c71.ede6.3714   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-32-cap24          6c71.ede6.3718   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b23-11-cap11          6c71.ede6.371c   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-22-cap27          6c71.ede6.3720   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-22-cap2           6c71.ede6.3724   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-31-cap20          6c71.ede6.372c   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-22-cap32          6c71.ede6.3734   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-22-cap38          6c71.ede6.3738   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-22-cap26          6c71.ede6.3740   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-21-cap11          6c71.ede6.3744   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-32-cap2           6c71.ede6.3748   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-12-cap24          6c71.ede6.374c   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b23-12-cap21          6c71.ede6.3750   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-11-cap26          6c71.ede6.3754   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-12-cap34          6c71.ede6.3758   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-12-cap30          6c71.ede6.3760   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-32-cap10          6c71.ede6.3764   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-11-cap12          6c71.ede6.376c   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-11-cap2           6c71.ede6.3774   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-31-cap19          6c71.ede6.377c   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-11-cap30          6c71.ede6.3784   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-31-cap28          6c71.ede6.378c   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-11-cap32          6c71.ede6.3790   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-31-cap30          6c71.ede6.3798   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-12-cap11          6c71.ede6.37a0   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-21-cap10          6c71.ede6.37ac   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-22-cap33          6c71.ede6.37b0   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-32-cap14          6c71.ede6.37bc   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-32-cap4           6c71.ede6.37c0   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-22-cap21          6c71.ede6.37c4   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-11-cap29          6c71.ede6.37cc   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-12-cap29          6c71.ede6.37d0   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-11-cap27          6c71.ede6.37d4   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-21-cap5           6c71.ede6.37d8   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-31-cap23          6c71.ede6.37e0   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-31-cap8           6c71.ede6.37e4   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-12-cap3           6c71.ede6.37ec   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-22-cap15          6c71.ede6.37f0   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-12-cap32          6c71.ede6.37f4   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-12-cap1           6c71.ede6.37f8   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-32-cap22          6c71.ede6.37fc   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-11-cap19          6c71.ede6.3800   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b23-32-cap33          6c71.ede6.380c   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-31-cap25          6c71.ede6.3810   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-32-cap3           6c71.ede6.3824   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-32-cap32          6c71.ede6.3838   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-21-cap42          6c71.ede6.3854   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-31-cap34          6c71.ede6.3860   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-11-cap23          6c71.ede6.3870   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-31-cap22          6c71.ede6.3874   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-32-cap6           6c71.ede6.3878   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-21-cap15          6c71.ede6.387c   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-31-cap32          6c71.ede6.3880   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-22-cap23          6c71.ede6.3884   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-12-cap31          6c71.ede6.388c   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-22-cap1           6c71.ede6.3890   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-21-cap6           6c71.ede6.3894   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-12-cap35          6c71.ede6.3898   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-22-cap25          6c71.ede6.389c   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-32-cap9           6c71.ede6.38a0   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-31-cap24          6c71.ede6.38bc   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-11-cap5           6c71.ede6.38c4   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-21-cap39          6c71.ede6.38d8   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-11-cap20          6c71.ede6.38dc   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-12-cap17          6c71.ede6.3c68   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-32-cap5           6c71.ede6.3e5c   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-31-cap2           6c71.ede6.3eb8   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-12-cap26          6c71.ede6.52b0   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-22-cap11          6c71.ede6.52c8   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-21-cap14          6c71.ede6.52e0   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-21-cap45          6c71.ede6.52e8   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-21-cap18          6c71.ede6.5308   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-11-cap25          6c71.ede6.530c   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-11-cap19          6c71.ede6.532c   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-11-cap7           6c71.ede6.5338   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-21-cap29          6c71.ede6.5340   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-11-cap21          6c71.ede6.5344   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-31-cap9           6c71.ede6.534c   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-22-cap30          6c71.ede6.5368   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-32-cap16          6c71.ede6.5398   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-11-cap18          6c71.ede6.53a0   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-22-cap3           6c71.ede6.53ac   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b23-12-cap25          6c71.ede6.54f8   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-31-cap20          6c71.ede6.553c   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-31-cap6           6c71.ede6.5544   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-31-cap4           6c71.ede6.5550   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-12-cap14          6c71.ede6.5554   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-12-cap12          6c71.ede6.555c   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-12-cap28          6c71.ede6.5560   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-32-cap11          6c71.ede6.5564   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-32-cap8           6c71.ede6.5570   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b24-12-cap10          6c71.ede6.5574   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b23-12-cap27          6c71.ede6.5578   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-12-cap5           6c71.ede6.557c   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-12-cap9           6c71.ede6.5588   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-32-cap31          6c71.ede6.5594   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-31-cap17          6c71.ede6.5598   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-12-cap33          6c71.ede6.55a4   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-11-cap31          6c71.ede6.55b0   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-12-cap13          6c71.ede6.56f4   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-11-cap16          6c71.ede6.5764   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-32-cap18          6c71.ede6.580c   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b23-31-cap21          6c71.ede6.59dc   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b24-12-cap4           6c71.ede6.5a10   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-12-cap23          6c71.ede6.5a3c   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-11-cap15          6c71.ede6.5a44   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-31-cap31          6c71.ede6.5a4c   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-21-cap8           6c71.ede6.5c54   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-12-cap22          6c71.ede6.5c64   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-22-cap22          6c71.ede6.5c78   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-31-cap33          6c71.ede6.5c84   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-21-cap20          6c71.ede6.5c90   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-21-cap41          6c71.ede6.5c94   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-12-cap20          6c71.ede6.5c9c   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-11-cap10          6c71.ede6.5cd0   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-21-cap2           6c71.ede6.5cd8   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-31-cap7           6c71.ede6.5ce4   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+b23-11-cap14          6c71.ede6.5cf4   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-11-cap13          6c71.ede6.5cf8   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b23-21-cap13          6c71.0fd4.0a8c   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-22-cap21          6c71.0fd4.0aa0   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-32-cap27          6c71.0fd4.0ac4   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-21-cap46          6c71.0fd4.0ae0   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-21-cap37          6c71.0fd4.1168   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-22-cap19          6c71.0fd4.119c   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-12-cap15          6c71.0fd4.19e8   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-22-cap14          6c71.0fd4.19fc   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-22-cap4           6c71.0fd4.1a24   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-12-cap16          6c71.0fd4.1cd8   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-21-cap32          6c71.0fd4.1d70   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-22-cap34          6c71.0fd4.1de4   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b23-32-cap28          6c71.0fd4.1e60   default-site-tag-fabric           PT_Fabri_B23_B23-3_f4142      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-12-cap6           6c71.0fd4.1e7c   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-21-cap17          6c71.0fd4.1f38   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-21-cap26          6c71.0fd4.1f5c   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-21-cap38          6c71.0fd4.1f60   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b23-12-cap37          6c71.0fd4.1f80   default-site-tag-fabric           PT_Fabri_B23_B23-1_603d5      Standard                          No               Static        
+b24-21-cap43          6c71.0fd4.1f9c   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-21-cap34          6c71.0fd4.1fac   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-11-cap28          6c71.0fd4.1fb4   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-12-cap7           6c71.0fd4.1fc0   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b24-22-cap5           6c71.0fd4.1fd4   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+
+Number of APs: 276
+
+AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source    
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+b24-21-cap44          6c71.0fd4.2018   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
+b24-12-cap8           6c71.0fd4.201c   default-site-tag-fabric           PT_Fabri_B24_B24-1_87d8f      Standard                          No               Static        
+b23-22-cap31          6c71.0fd4.2020   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-32-cap15          6c71.0fd4.2028   default-site-tag-fabric           PT_Fabri_B24_B24-3_fed6b      Standard                          No               Static        
+b23-21-cap12          6c71.0fd4.2034   default-site-tag-fabric           PT_Fabri_B23_B23-2_6dd65      Standard                          No               Static        
+b24-22-cap13          6c71.0fd4.2040   default-site-tag-fabric           PT_Fabri_B24_B24-2_88bd2      Standard                          No               Static        
