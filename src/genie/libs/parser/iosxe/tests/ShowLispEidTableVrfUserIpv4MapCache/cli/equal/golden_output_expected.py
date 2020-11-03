@@ -23,7 +23,7 @@ expected_output = {
                         "forward-native"
                     ],
                     "rloc": {
-                        "status": "encapsulating_to_proxy_etr"
+                        "status": "Encapsulating to proxy ETR"
                     }
                 },
                 "8.0.0.0/7": {
@@ -34,7 +34,7 @@ expected_output = {
                         "forward-native"
                     ],
                     "rloc": {
-                        "status": "encapsulating_to_proxy_etr"
+                        "status": "Encapsulating to proxy ETR"
                     }
                 },
                 "10.0.0.0/9": {
@@ -45,7 +45,7 @@ expected_output = {
                         "forward-native"
                     ],
                     "rloc": {
-                        "status": "encapsulating_to_proxy_etr"
+                        "status": "Encapsulating to proxy ETR"
                     }
                 },
                 "10.128.0.0/11": {
@@ -56,7 +56,7 @@ expected_output = {
                         "forward-native"
                     ],
                     "rloc": {
-                        "status": "encapsulating_to_proxy_etr"
+                        "status": "Encapsulating to proxy ETR"
                     }
                 },
                 "10.16.0.17/32": {

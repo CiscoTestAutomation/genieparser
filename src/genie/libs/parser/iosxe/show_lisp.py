@@ -3559,7 +3559,7 @@ class ShowLispEidTableVrfUserIpv4MapCache(ShowLispEidTableVrfUserIpv4MapCacheSch
                 continue
             elif p_list_encapsulating.match(line):
                 # Encapsulating to proxy ETR
-                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "rloc": { "status": "encapsulating_to_proxy_etr"}})
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "rloc": { "status": "Encapsulating to proxy ETR"}})
                 continue
             elif p_list_rloc.match(line):
                 # 10.8.129.124  1w6d      up          10/10        -
