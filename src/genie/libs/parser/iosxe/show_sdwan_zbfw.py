@@ -61,7 +61,6 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
         sess_num = 0
         for line in out.splitlines():
             line = line.strip()
-            print(line)
             
             ##18005202  open    123.1.0.7  184.31.214.50    49873  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         3684       67394                   
             m = p1.match(line)      
