@@ -1,0 +1,7 @@
+Status: DISCONNECTED
+
+Device ID: 
+Device segment name: global (default)
+Device address: 0.0.0.0
+
+Controller address isn't configured
