@@ -15,7 +15,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 2722,
       'tot_resp_bytes': 1391
     },
@@ -34,7 +34,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 3509,
       'tot_resp_bytes': 982
     },
@@ -53,7 +53,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 8850,
       'tot_resp_bytes': 2403
     },
@@ -72,7 +72,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 3105,
       'tot_resp_bytes': 7913
     },
@@ -91,7 +91,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 2845,
       'tot_resp_bytes': 1637
     },
@@ -110,7 +110,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 2789,
       'tot_resp_bytes': 1345
     },
@@ -129,7 +129,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 4614,
       'tot_resp_bytes': 476
     },
@@ -148,7 +148,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 24460,
       'tot_resp_bytes': 18659
     },
@@ -167,7 +167,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 34953,
       'tot_resp_bytes': 6463480
     },
@@ -186,7 +186,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 2885,
       'tot_resp_bytes': 1082
     },
@@ -205,7 +205,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 49832,
       'tot_resp_bytes': 67236
     },
@@ -224,7 +224,7 @@ expected_output = {
       'zp_name': 'ZP_lanZone_wanZone_I_-1639760094',
       'classmap_name': 'Isn4451ZbfPolicy-seq-1-cm_',
       'nat_flags': '-',
-      'internal_flags': '0',
+      'internal_flags': 0,
       'tot_init_bytes': 3684,
       'tot_resp_bytes': 67394
     }
