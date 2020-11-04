@@ -3416,24 +3416,25 @@ class ShowLispSite(ShowLispSiteSchema):
 
 # ==========================================
 # Schema for:
-#  * 'show lisp instance-id ethernet server'
+#  * 'show lisp instance-id {instance_id} ethernet server'
 # ==========================================
 class ShowLispInstanceIdEthernetServerSchema(MetaParser):
-    """Schema for show lisp instance-id ethernet server."""
+    """Schema for show lisp instance-id {instance_id} ethernet server."""
 
     schema = {
         "instance_id": {
             int: {
                 "lisp": int,
-                Optional("site_name"): str,
-                Optional("eid_prefix"): {
+                "site_name": {
                     str: {
-                        "inst_id": int,
-                        "last_register": str,
-                        "up": str,
-                        "who_last_registered": str,
-                    },
-                }
+                        str: {
+                            "last_register": str,
+                            "up": str,
+                            "who_last_registered": str,
+                            "inst_id": int,
+                        }
+                    }
+                },
             }
         }
     }
@@ -3441,10 +3442,10 @@ class ShowLispInstanceIdEthernetServerSchema(MetaParser):
 
 # ==========================================
 # Parser for:
-#  * 'show lisp instance-id ethernet server'
+#  * 'show lisp instance-id {instance_id} ethernet server'
 # ==========================================
 class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
-    """Parser for show lisp instance-id ethernet server"""
+    """Parser for show lisp instance-id {instance_id} ethernet server"""
 
     cli_command = 'show lisp instance-id {instance_id} ethernet server'
 
@@ -3481,12 +3482,12 @@ class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
 
         # site_uci       never     no     --                   8188     any-mac
         site_name_capture = re.compile(
-            r"^(?P<site_name>\S+)\s+never\s+no\s+\-\-\s+\d+\s+any-mac$"
+            r"^(?P<site_name>\S+)\s+(?P<last_register>\S+)\s+(?P<up>\S+)\s+(?P<who_last_registered>\-\-|\d+\.\d+\.\d+\.\d+\:\d+)\s+(?P<inst_id>\d+)\s+(?P<eid_prefix>any\-mac|\S+\.\S+\.\S+\d+)$"
         )
 
         #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c100/48
         lisp_info_capture = re.compile(
-            r"^(?P<last_register>\S+)\s+(?P<up>\S+)\s+(?P<who_last_registered>\d+\.\d+\.\d+\.\d+\:\d+)\s+(?P<inst_id>\d+)\s+(?P<eid_prefix>\S+\.\S+\.\S+/\d+)$"
+            r"^(?P<last_register>\S+)\s+(?P<up>\S+)\s+(?P<who_last_registered>\d+\.\d+\.\d+\.\d+\:\d+)\s+(?P<inst_id>\d+)\s+(?P<eid_prefix>\S+\.\S+\.\S+\d+)$"
         )
 
         tele_info_obj = {}
@@ -3516,13 +3517,45 @@ class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
 
                 tele_info_obj[new_key].update(new_group)
 
-                current_group = tele_info_obj[new_key][group[new_key]]
+                instance_group = tele_info_obj[new_key][group[new_key]]
+
+                continue
 
             match = site_name_capture.match(line)
             if match:
-                group = match.groupdict()
+                group = match.groupdict()            
+                
+                # convert str to int
+                group["inst_id"] = int(group["inst_id"])
 
-                current_group.update(group)
+                # pull a key from group to use as new_key
+                new_key = "site_name"
+                new_group = {group[new_key]: {}}
+
+                temp_site_group = new_group[group[new_key]]
+
+                # update and pop new_key
+                temp_site_group.update(group)
+                temp_site_group.pop(new_key)
+
+                if not instance_group.get(new_key):
+                    instance_group[new_key] = {}
+
+                instance_group[new_key].update({group[new_key]: {}})
+
+                site_group = instance_group[new_key][group[new_key]]
+
+                # pull a key from group to use as new_key
+                new_key = "eid_prefix"
+                new_group = {temp_site_group[new_key]: {}}
+
+                eid_group = new_group[temp_site_group[new_key]]
+
+                # update and pop new_key
+                eid_group.update(temp_site_group)
+                eid_group.pop(new_key)
+
+                site_group.update(new_group)
 
                 continue
 
@@ -3537,14 +3570,13 @@ class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
                 new_key = "eid_prefix"
                 new_group = {group[new_key]: {}}
 
+                eid_group = new_group[group[new_key]]
+
                 # update and pop new_key
-                new_group[group[new_key]].update(group)
-                new_group[group[new_key]].pop(new_key)
+                eid_group.update(group)
+                eid_group.pop(new_key)
 
-                if not current_group.get(new_key):
-                    current_group[new_key] = {}
-
-                current_group[new_key].update(new_group)
+                site_group.update(new_group)
 
                 continue
 
