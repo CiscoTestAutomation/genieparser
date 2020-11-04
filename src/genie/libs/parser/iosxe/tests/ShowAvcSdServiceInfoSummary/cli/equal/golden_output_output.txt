@@ -1,0 +1,11 @@
+Status: CONNECTED
+
+Device ID: sd-sw2.lab.com
+Device segment name: core-pop 
+Device address: 10.18.29.33
+
+Active controller:
+   Type  : Primary
+   IP    : 10.11.236.21
+   Status: Connected
+   Last connection: 18:42:02.000 UTC Fri Oct 2 2020

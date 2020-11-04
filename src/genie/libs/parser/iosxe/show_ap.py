@@ -718,29 +718,29 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
         ap_dot11_5ghz_summ = {}
         # AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
         # ---------------------------------------------------------------------------------------------------------------------------------
-        # ab-1-test-4800                 5c50.1501.40e0  1       Enabled        Down          20     *1/8 (23 dBm)   (36)*
-        # ab21-cap40                    5c50.15f5.e5c0  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
-        # ab12-cap2                     5c50.1504.7b20  1       Enabled        Up            20     *7/8 (6 dBm)    (116)*
-        # ab21-cap36                    5c50.1504.87e0  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
-        # ab21-cap28                    5c50.1504.8920  1       Enabled        Up            20     *7/8 (6 dBm)    (120)*
-        # ab31-cap26                    5c50.1504.8940  1       Enabled        Up            20     *6/8 (9 dBm)    (128)*
-        # ab22-cap16                    5c50.1504.89a0  1       Enabled        Up            20     *7/8 (8 dBm)    (48)*
-        # ab22-cap24                    5c50.1504.89e0  1       Enabled        Up            20     *7/8 (8 dBm)    (36)*
-        # ab22-cap18                    5c50.1504.8ac0  1       Enabled        Up            20     *7/8 (6 dBm)    (124)*
-        # ab32-cap13                    5c50.1504.8bc0  1       Enabled        Up            20     *6/8 (9 dBm)    (124)*
+        # ab-1-test-4800                 5c50.15ff.41e1  1       Enabled        Down          20     *1/8 (23 dBm)   (36)*
+        # ab21-cap40                    5c50.15ff.dbb6  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
+        # ab12-cap2                     5c50.15ff.7f24  1       Enabled        Up            20     *7/8 (6 dBm)    (116)*
+        # ab21-cap36                    5c50.15ff.8be4  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
+        # ab21-cap28                    5c50.15ff.8d24  1       Enabled        Up            20     *7/8 (6 dBm)    (120)*
+        # ab31-cap26                    5c50.15ff.8d44  1       Enabled        Up            20     *6/8 (9 dBm)    (128)*
+        # ab22-cap16                    5c50.15ff.8da4  1       Enabled        Up            20     *7/8 (8 dBm)    (48)*
+        # ab22-cap24                    5c50.15ff.8de4  1       Enabled        Up            20     *7/8 (8 dBm)    (36)*
+        # ab22-cap18                    5c50.15ff.8ec4  1       Enabled        Up            20     *7/8 (6 dBm)    (124)*
+        # ab32-cap13                    5c50.15ff.8fc4  1       Enabled        Up            20     *6/8 (9 dBm)    (124)*
         #
         # AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
         # ---------------------------------------------------------------------------------------------------------------------------------
-        # ab22-cap10                    5c50.1504.8be0  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
-        # ab11-cap18                    5c50.1504.8c20  1       Enabled        Up            20     *7/8 (8 dBm)    (48)*
-        # ab22-cap8                     5c50.1504.8c40  1       Enabled        Up            20     *7/8 (8 dBm)    (149)*
-        # ab22-cap22                    5c50.1504.8ce0  1       Enabled        Up            20     *8/8 (5 dBm)    (40)*
-        # ab22-cap6                     5c50.1504.8d80  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
-        # ab31-cap29                    5c50.1504.8dc0  1       Enabled        Up            20     *5/8 (12 dBm)   (52)*
-        # ab21-cap33                    5c50.1504.8de0  1       Enabled        Up            20     *7/8 (8 dBm)    (36)*
-        # ab31-cap21                    5c50.1504.8f20  1       Enabled        Up            20     *7/8 (6 dBm)    (116)*
-        # ab21-cap27                    5c50.1504.8f60  1       Enabled        Up            20     *7/8 (6 dBm)    (132)*
-        # ab21-cap35                    5c50.1504.aca0  1       Enabled        Up            20     *7/8 (6 dBm)    (140)*
+        # ab22-cap10                    5c50.15ff.8fe4  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
+        # ab11-cap18                    5c50.15ff.9024  1       Enabled        Up            20     *7/8 (8 dBm)    (48)*
+        # ab22-cap8                     5c50.15ff.9044  1       Enabled        Up            20     *7/8 (8 dBm)    (149)*
+        # ab22-cap22                    5c50.15ff.90e4  1       Enabled        Up            20     *8/8 (5 dBm)    (40)*
+        # ab22-cap6                     5c50.15ff.9184  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
+        # ab31-cap29                    5c50.15ff.91c4  1       Enabled        Up            20     *5/8 (12 dBm)   (52)*
+        # ab21-cap33                    5c50.15ff.91e4  1       Enabled        Up            20     *7/8 (8 dBm)    (36)*
+        # ab31-cap21                    5c50.15ff.9324  1       Enabled        Up            20     *7/8 (6 dBm)    (116)*
+        # ab21-cap27                    5c50.15ff.9364  1       Enabled        Up            20     *7/8 (6 dBm)    (132)*
+        # ab21-cap35                    5c50.15ff.b0a4  1       Enabled        Up            20     *7/8 (6 dBm)    (140)*
 
         # AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
         ap_header_capture = re.compile(
@@ -748,7 +748,7 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
         # ---------------------------------------------------------------------------------------------------------------------------------
         delimiter_capture = re.compile(
             r"^---------------------------------------------------------------------------------------------------------------------------------$")
-        # ab22-cap10                    5c50.1504.8be0  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
+        # ab22-cap10                    5c50.15ff.8fe4  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
         ap_info_capture = re.compile(
             r"^(?P<ap_name>\S+)\s+(?P<mac_address>\S+)\s+(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled))"
                         r"\s+(?P<oper_state>\S+)\s+(?P<width>\d+)\s+(?P<tx_pwr>\*.*dBm\))\s+(?P<channel>\S+)$")
@@ -761,7 +761,7 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
             # ---------------------------------------------------------------------------------------------------------------------------------
             elif delimiter_capture.match(line):
                 continue
-            # ab22-cap10                    5c50.1504.8be0  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
+            # ab22-cap10                    5c50.15ff.8fe4  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
             elif ap_info_capture.match(line):
                 if not ap_dot11_5ghz_summ.get('ap_name'):
                     ap_dot11_5ghz_summ['ap_name'] = {}
@@ -1255,14 +1255,14 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
         #         Cisco AP Name   : bg-1-cap1
         # =================================================
         #
-        # Cisco AP Identifier                             : 70b3.d278.e03e
+        # Cisco AP Identifier                             : 70b3.d2ff.59b6
         # Country Code                                    : IN
         # Regulatory Domain Allowed by Country            : 802.11bg:-A   802.11a:-DN
         # AP Country Code                                 : IN  - India
         # AP Regulatory Domain
         #   Slot 0                                        : -A
         #   Slot 1                                        : -D
-        # MAC Address                                     : 70b3.1711.acbb
+        # MAC Address                                     : 70b3.17ff.bdcc
         # IP Address Configuration                        : DHCP
         # IP Address                                      : 10.10.5.14
         # IP Netmask                                      : 255.255.254.0
@@ -1305,8 +1305,8 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
         # Remote AP Debug                                 : Disabled
         # Logging Trap Severity Level                     : information
         # Logging Syslog facility                         : kern
-        # Software Version                                : 17.3.1.9
-        # Boot Version                                    : 1.1.2.4
+        # Software Version                                : 10.145.1.9
+        # Boot Version                                    : 10.4.2.4
         # Mini IOS Version                                : 0.0.0.0
         # Stats Reporting Period                          : 0
         # LED State                                       : Enabled
@@ -1319,7 +1319,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
         # Power Type/Mode                                 : PoE/Full Power
         # Number of Slots                                 : 3
         # AP Model                                        : AIR-AP4800-D-K9
-        # IOS Version                                     : 17.3.1.9
+        # IOS Version                                     : 10.145.1.9
         # Reset Button                                    : Disabled
         # AP Serial Number                                : FGL2102AZZZ
         # Management Frame Validation                     : Capable
@@ -1375,7 +1375,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
         # Cisco AP Name   : bg-1-cap1
         cisco_ap_name_capture = re.compile(r"^Cisco\s+AP\s+Name\s+:\s+(?P<cisco_ap_name>.*)$")
         
-        # Cisco AP Identifier                             : 70b3.d278.e03e
+        # Cisco AP Identifier                             : 70b3.d2ff.59b6
         cisco_ap_identifier_capture = re.compile(r"^Cisco\s+AP\s+Identifier\s+:\s+(?P<cisco_ap_identifier>.*)$")
         
         # Country Code                                    : IN
@@ -1394,7 +1394,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
         # Slot 1                                        : -D
         slot_1_capture = re.compile(r"^Slot\s+1\s+:\s+(?P<slot_1>.*)$")
         
-        # MAC Address                                     : 70b3.1711.acbb
+        # MAC Address                                     : 70b3.17ff.bdcc
         mac_address_capture = re.compile(r"^MAC\s+Address\s+:\s+(?P<mac_address>.*)$")
         
         # IP Address Configuration                        : DHCP
@@ -1535,10 +1535,10 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
         logging_syslog_facility_capture = re.compile(
             r"^Logging\s+Syslog\s+facility\s+:\s+(?P<logging_syslog_facility>.*)$")
         
-        # Software Version                                : 17.3.1.9
+        # Software Version                                : 10.145.1.9
         software_version_capture = re.compile(r"^Software\s+Version\s+:\s+(?P<software_version>.*)$")
         
-        # Boot Version                                    : 1.1.2.4
+        # Boot Version                                    : 10.4.2.4
         boot_version_capture = re.compile(r"^Boot\s+Version\s+:\s+(?P<boot_version>.*)$")
         
         # Mini IOS Version                                : 0.0.0.0
@@ -1580,7 +1580,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
         # AP Model                                        : AIR-AP4800-D-K9
         ap_model_capture = re.compile(r"^AP\s+Model\s+:\s+(?P<ap_model>.*)$")
         
-        # IOS Version                                     : 17.3.1.9
+        # IOS Version                                     : 10.145.1.9
         ios_version_capture = re.compile(r"^IOS\s+Version\s+:\s+(?P<ios_version>.*)$")
         
         # Reset Button                                    : Disabled
@@ -1785,7 +1785,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 if not ap_config_general_dict.get('ap_name', {}):
                     ap_config_general_dict['ap_name'] = {}
                 ap_config_general_dict['ap_name'].update({ap_name_key: {}})
-            # Cisco AP Identifier                             : 70b3.d278.e03e
+            # Cisco AP Identifier                             : 70b3.d2ff.59b6
             elif cisco_ap_identifier_capture.match(line):
                 cisco_ap_identifier_match = cisco_ap_identifier_capture.match(line)
                 groups = cisco_ap_identifier_match.groupdict()
@@ -1834,7 +1834,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 slot_1 = groups['slot_1']
                 slot_1 = change_data_type(value=slot_1)
                 ap_config_general_dict['ap_name'][ap_name_key]["ap_regulatory_domain"].update({'slot_1': slot_1})
-            # MAC Address                                     : 70b3.1711.acbb
+            # MAC Address                                     : 70b3.17ff.bdcc
             elif mac_address_capture.match(line):
                 mac_address_match = mac_address_capture.match(line)
                 groups = mac_address_match.groupdict()
@@ -2160,7 +2160,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 logging_syslog_facility = change_data_type(value=logging_syslog_facility)
                 ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'logging_syslog_facility': logging_syslog_facility})
-            # Software Version                                : 17.3.1.9
+            # Software Version                                : 10.145.1.9
             elif software_version_capture.match(line):
                 software_version_match = software_version_capture.match(line)
                 groups = software_version_match.groupdict()
@@ -2168,7 +2168,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 software_version = change_data_type(value=software_version)
                 ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'software_version': software_version})
-            # Boot Version                                    : 1.1.2.4
+            # Boot Version                                    : 10.4.2.4
             elif boot_version_capture.match(line):
                 boot_version_match = boot_version_capture.match(line)
                 groups = boot_version_match.groupdict()
@@ -2267,7 +2267,7 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 ap_model = groups['ap_model']
                 ap_model = change_data_type(value=ap_model)
                 ap_config_general_dict['ap_name'][ap_name_key].update({'ap_model': ap_model})
-            # IOS Version                                     : 17.3.1.9
+            # IOS Version                                     : 10.145.1.9
             elif ios_version_capture.match(line):
                 ios_version_match = ios_version_capture.match(line)
                 groups = ios_version_match.groupdict()
@@ -2662,3 +2662,101 @@ class ShowApConfigGeneral(ShowApConfigGeneralSchema):
                 ap_config_general_dict['ap_name'][ap_name_key].update(
                     {'dual_dfs_statistics': dual_dfs_statistics})
         return ap_config_general_dict
+
+
+# ========================
+# Schema for:
+#  * 'show ap tag summary'
+# ========================
+class ShowApTagSummarySchema(MetaParser):
+    """Schema for show ap tag summary."""
+
+    schema = {
+        "ap_name": {
+            Any(): {
+                "ap_mac": str,
+                "site_tag_name": str,
+                "policy_tag_name": str,
+                "rf_tag_name": str,
+                "misconfigured": str,
+                "tag_source": str,
+            },
+        },
+        "number_of_aps": int,
+    }
+
+
+# ========================
+# Parser for:
+#  * 'show ap tag summary'
+# ========================
+class ShowApTagSummary(ShowApTagSummarySchema):
+    """Parser for show ap tag summary"""
+
+    cli_command = 'show ap tag summary'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+
+        else:
+            out = output
+
+        # Number of APs: 20
+
+        # AP Name                 AP Mac           Site Tag Name                     Policy Tag Name                   RF Tag Name                       Misconfigured    Tag Source
+        # ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+        # b25a-13-cap10         3c41.0fee.5094   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25b-12-cap01         3c41.0fee.5884   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25b-11-cap01         3c41.0fee.5d90   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25a-12-cap07         3c41.0fee.5de8   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25a-11-cap05         3c41.0fee.5df0   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25a-11-cap04         3c41.0fee.5e5c   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # b25a-12-cap08         3c41.0fee.5e74   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        # ...OUTPUT OMITTED..
+
+        # Number of APs: 20
+        ap_number_capture = re.compile(r"^Number of APs: (?P<number_of_aps>\d+)$")
+
+        # b25a-13-cap10         3c41.0fee.5094   default-site-tag-fabric           PT_Fabri_B25_B25-1_fe778      Standard                          No               Static
+        ap_info_capture = re.compile(
+            r"^(?P<ap_name>\S+)\s+(?P<ap_mac>\S{4}\.\S{4}\.\S{4})\s+(?P<site_tag_name>\S+)\s+(?P<policy_tag_name>\S+)\s+(?P<rf_tag_name>\S+)\s+(?P<misconfigured>\S+)\s+(?P<tag_source>\S+)$"
+        )
+
+        ap_info_obj = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            match = ap_number_capture.match(line)
+            if match:
+                group = match.groupdict()
+
+                # format str to int
+                group["number_of_aps"] = int(group["number_of_aps"])
+
+                ap_info_obj.update(group)
+
+                continue
+
+            match = ap_info_capture.match(line)
+            if match:
+                group = match.groupdict()
+
+                # pull a key from group to use as new_key
+                new_key = "ap_name"
+                new_group = {group[new_key]: {}}
+
+                # update and pop new_key
+                new_group[group[new_key]].update(group)
+                new_group[group[new_key]].pop(new_key)
+
+                if not ap_info_obj.get(new_key):
+                    ap_info_obj = {new_key: {}}
+
+                ap_info_obj[new_key].update(new_group)
+
+                continue
+
+        return ap_info_obj    
+        

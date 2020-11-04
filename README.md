@@ -69,4 +69,4 @@ Please take it as a reference, and avoid to create vague logs, such as 'Updated 
 '20200807212611'
 ```
 
-> Copyright (c) 2018 Cisco Systems, Inc. and/or its affiliates
+> Copyright (c) 2020 Cisco Systems, Inc. and/or its affiliates

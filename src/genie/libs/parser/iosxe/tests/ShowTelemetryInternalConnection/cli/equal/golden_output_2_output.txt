@@ -1,0 +1,6 @@
+Telemetry connections
+
+Index Peer Address               Port  VRF Source Address             State
+----- -------------------------- ----- --- -------------------------- ----------
+    6 10.10.76.186              20830   0 10.64.47.177               Active    
+    7 10.10.76.158              25103   0 10.64.47.177               Active  

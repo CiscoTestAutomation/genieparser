@@ -804,6 +804,8 @@ class AdminShowDiagChassisSchema(MetaParser):
         Optional('device_series'): str,
         Optional('num_line_cards'): int,
         Optional('chassis_feature'): str,
+        Optional('controller_family'): str,
+        Optional('controller_type'): str,
         'rack_num': int,
         Optional('sn'): str,
         'pid': str,
@@ -826,6 +828,7 @@ class AdminShowDiagChassisSchema(MetaParser):
             Optional('serial_number'): str,
             'part_number': str,
             Optional('part_revision'): str,
+            Optional('revision'): str,
             Optional('mfg_deviation'): str,
             Optional('hw_version'): str,
             Optional('mfg_bits'): str,
@@ -869,7 +872,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 # Cisco CRS Series
                 # CRS
                 device_group = m.group(2)
-                split_device_group = re.split('\s', device_group)
+                split_device_group = re.split(r'\s', device_group)
                 if len(split_device_group)>1:
                     admin_show_diag_dict['device_family'] = \
                         split_device_group[0]
@@ -900,7 +903,8 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
             # S/N:   FOX1810G8LR
             # Serial Number   : FOC23158L99
             # Chassis Serial Number    : FOC23158L99
-            p3 = re.compile(r'^(S\/N|(?:Chassis +)?Serial +Number)(\s+)?(\:)? +(?P<serial_number>\S+)$')
+            # PCB Serial Number        : CAT2311B0AK
+            p3 = re.compile(r'^(S\/N|((Chassis|PCB) +)?Serial +Number)(\s+)?(\:)? +(?P<serial_number>\S+)$')
             m = p3.match(line)
             if m:
                 serial_num = str(m.groupdict()['serial_number'])
@@ -934,7 +938,8 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 continue
 
             # Desc:  ASR 9006 4 Line Card Slot Chassis with V2 AC PEM
-            p6 = re.compile(r'Desc\: *(?P<desc>[a-zA-Z0-9\-\s]+)$')
+            # UDI Description          : Network Convergence System 1004 4 line card slots
+            p6 = re.compile(r'^(Desc\:|UDI Description\s+:) *(?P<desc>[\S\s]+)$')
             m = p6.match(line)
             if m:
                 admin_show_diag_dict['desc'] = \
@@ -952,7 +957,7 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
 
             # Top Assy. Number:   68-4235-02
             p8 = re.compile(r'Top +Assy. +Number\:'
-                             ' *(?P<top_assy_num>[a-zA-Z0-9\-\s]+)$')
+                            r' *(?P<top_assy_num>[a-zA-Z0-9\-\s]+)$')
             m = p8.match(line)
             if m:
                 admin_show_diag_dict['top_assy_num'] = \
@@ -1004,8 +1009,8 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
 
             # 0 Rack 0-IDPROM Info
             # Rack 0-IDPROM Info
-            p15 = re.compile(r'(?:[0-9]+ +)?Rack +(?P<rack_num>[0-9]+)\-IDPROM +Info$')
-
+            # Rack 0-Chassis IDPROM Info
+            p15 = re.compile(r'^(?:[0-9]+ +)?Rack +(?P<rack_num>[0-9]+)-(Chassis )?IDPROM +Info$')
             m15 = p15.match(line)
             if m15:
                 admin_show_diag_dict['rack_num'] = \
@@ -1041,6 +1046,14 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 top_assembly_dict = admin_show_diag_dict.setdefault('top_assembly_block', {})
                 top_assembly_dict.update({'part_number': part_num})
 
+            # Top Assy. Revision       : A0
+            p17_2 = re.compile(r'^Top +Assy\. +Revision\s+: *(?P<revision>[\S\s]+)$')
+            m = p17_2.match(line)
+            if m:
+                revision = m.groupdict()['revision']
+                top_assembly_dict = admin_show_diag_dict.setdefault('top_assembly_block', {})
+                top_assembly_dict.update({'revision': revision})
+                continue
 
             # Part Revision   : D0
             p18 = re.compile(r'^Part +(r|R)evision(\s+)?\: +(?P<part_revision>\S+)$')
@@ -1082,6 +1095,22 @@ class AdminShowDiagChassis(AdminShowDiagChassisSchema):
                 mfg_bit = str(m21.groupdict()['mfg_bits'])
                 top_assembly_dict['mfg_bits'] = mfg_bit
                 top_assembly_flag = False
+                continue
+
+            # Controller Family        : 0009
+            p22 = re.compile(r'^Controller\s+Family\s+:\s+(?P<controller_family>\S+)$')
+            m = p22.match(line)
+            if m:
+                controller_family = m.groupdict()['controller_family']
+                admin_show_diag_dict['controller_family'] = controller_family
+                continue
+
+            # Controller Type          : 09d2
+            p23 = re.compile(r'^Controller\s+Type\s+:\s+(?P<controller_type>\S+)$')
+            m = p23.match(line)
+            if m:
+                controller_type = m.groupdict()['controller_type']
+                admin_show_diag_dict['controller_type'] = controller_type
                 continue
 
         return admin_show_diag_dict

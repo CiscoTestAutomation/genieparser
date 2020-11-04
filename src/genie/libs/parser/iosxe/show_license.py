@@ -2,6 +2,7 @@
 
 IOSXE parsers for the following show commands:
     * show license
+    * show license udi
 '''
 
 # Python
@@ -121,3 +122,58 @@ class ShowLicense(ShowLicenseSchema):
             return {"licenses": license_dict}
         else:
             return {}
+# ----------------------
+class ShowLicenseUdiSchema(MetaParser):
+    """Schema for show license udi"""
+    schema = {
+            'slotid': str,
+            'pid': str,
+            'sn': str,
+            'udi': str
+            }
+
+class ShowLicenseUdi(ShowLicenseUdiSchema):
+    """Parser for show license udi"""
+    cli_command = 'show license udi'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # slotid pid sn udi
+        p1 = re.compile(r"(?P<slotid>\S+)\s+(?P<pid>\S+)\s+(?P<sn>\S+)\s+(?P<udi>\S+)")
+        # fixed length strings on third line
+        # slotid: 9
+        # pid   : 23
+        # sn    : 15
+        # udi   : 33
+        # total 80 chars
+        #SlotID   PID                    SN                      UDI
+        #--------------------------------------------------------------------------------
+        #*        ASR1001-X             JAF211403VH     ASR1001-X:JAF211403VH
+        ret_dict={}
+        for line in out.splitlines():
+            line=line.strip()
+
+            # udi line
+            m=p1.match(line)
+            if m:
+                group=m.groupdict()
+                ret_dict.update({k:str(v) for k, v in group.items()})
+                continue
+            '''
+            if line.startswith('SlotID') or line.startswith('------'):
+              continue
+            else:
+              ret_dict.update({'slotid':line[0:9].strip()})
+              ret_dict.update({'pid':line[9:30].strip()})
+              ret_dict.update({'sn':line[30:47].strip()})
+              ret_dict.update({'udi':line[47:].strip()})
+            ''' 
+
+        return ret_dict
