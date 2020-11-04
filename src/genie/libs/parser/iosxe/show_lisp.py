@@ -3411,9 +3411,6 @@ class ShowLispSite(ShowLispSiteSchema):
                 continue
         return lisp_site_dict
 
-
-
-
 # ==========================================
 # Schema for:
 #  * 'show lisp eid-table vrf {vrf} ipv4 database'
@@ -3447,21 +3444,22 @@ class ShowLispEidTableVrfIpv4DatabaseSchema(MetaParser):
     }
 
 
+
 # ==========================================
 # Parser for:
-#  * 'show lisp eid-table vrf ipv4 database'
+#  * 'show lisp eid-table vrf {vrf} ipv4 database'
 # ==========================================
 class ShowLispEidTableVrfIpv4Database(ShowLispEidTableVrfIpv4DatabaseSchema):
     """Parser for show lisp eid-table vrf {vrf} ipv4 database"""
 
     cli_command = 'show lisp eid-table vrf {vrf} ipv4 database'
-
+    
     def cli(self, vrf, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(vrf=vrf))
         else:
             output = output
-
+            
         # LISP ETR IPv4 Mapping Database for EID-table vrf User (IID 4100), LSBs: 0x3
         # Entries total 3, no-route 0, inactive 0
         #
@@ -3497,7 +3495,7 @@ class ShowLispEidTableVrfIpv4Database(ShowLispEidTableVrfIpv4DatabaseSchema):
         locator_set_list = []
         state_list = []
         vrf = ""
-
+        
         for line in output.splitlines():
             line = line.strip()
             if p_lisp_header.match(line):
@@ -3535,3 +3533,165 @@ class ShowLispEidTableVrfIpv4Database(ShowLispEidTableVrfIpv4DatabaseSchema):
 
         return lisp_dict
 
+      
+      
+# ================================================
+# Schema for:
+#  * 'show lisp eid-table vrf {vrf} ipv4 map-cache'
+# ================================================
+class ShowLispEidTableVrfUserIpv4MapCacheSchema(MetaParser):
+    """Schema for show lisp eid-table vrf {vrf} ipv4 map-cache."""
+
+    schema = {
+        "vrf": {
+            str: {
+                "iid": int,
+                "number_of_entries": int,
+                "eid": {
+                    str: {
+                        "uptime": str,
+                        "expire": str,
+                        "via": list,
+                        "rloc": {
+                            Optional("status"): str,
+                            Optional("action"): str,
+                            Optional("ip"): str,
+                            Optional("uptime"): str,
+                            Optional("state"): str,
+                            Optional("priority"): int,
+                            Optional("weight"): int,
+                            Optional("encap_iid"): str
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ================================================
+# Parser for:
+#  * 'show lisp eid-table vrf {vrf} ipv4 map-cache'
+# ================================================
+class ShowLispEidTableVrfUserIpv4MapCache(ShowLispEidTableVrfUserIpv4MapCacheSchema):
+    """Parser for show lisp eid-table vrf {vrf} ipv4 map-cache"""
+
+    def cli(self, vrf, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf=vrf))
+        else:
+            output = output
+
+        # 0.0.0.0/0, uptime: 1w6d, expires: never, via static-send-map-request
+        #   Negative cache entry, action: send-map-request
+        # 0.0.0.0/5, uptime: 4w6d, expires: 00:14:38, via map-reply, forward-native
+        #   Encapsulating to proxy ETR
+        # 8.0.0.0/7, uptime: 07:18:55, expires: 00:07:19, via map-reply, forward-native
+        #   Encapsulating to proxy ETR
+        # 10.0.0.0/9, uptime: 1w4d, expires: 00:00:13, via map-reply, forward-native
+        #   Encapsulating to proxy ETR
+        # 10.128.0.0/11, uptime: 4w6d, expires: 00:04:45, via map-reply, forward-native
+        #   Encapsulating to proxy ETR
+        # 10.16.0.17/32, uptime: 1w6d, expires: 13:36:24, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.94  1w6d      up          10/10        -
+        # 10.16.0.18/32, uptime: 1w6d, expires: 13:40:30, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.65  1w6d      up          10/10        -
+        # 10.16.0.21/32, uptime: 1w6d, expires: 12:55:06, via map-reply, self, complete
+        #   Locator       Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.124  1w6d      up          10/10        -
+        # 10.16.0.22/32, uptime: 1w6d, expires: 20:44:39, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.94  1w6d      up          10/10        -
+        # 10.16.0.24/32, uptime: 1w6d, expires: 20:44:39, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.94  1w6d      up          10/10        -
+        # 10.16.0.25/32, uptime: 1w6d, expires: 12:45:50, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.94  1w6d      up          10/10        -
+        # 10.16.0.26/32, uptime: 1w6d, expires: 12:52:40, via map-reply, self, complete
+        #   Locator       Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.124  1w6d      up          10/10        -
+        # 10.16.0.27/32, uptime: 00:54:02, expires: 23:06:55, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.65  00:54:02  up          10/10        -
+        # 10.16.0.28/32, uptime: 1w6d, expires: 20:44:39, via map-reply, self, complete
+        #   Locator       Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.112  1w6d      up          10/10        -
+        # 10.16.0.29/32, uptime: 1w6d, expires: 20:44:39, via map-reply, self, complete
+        #   Locator       Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.138  1w6d      up          10/10        -
+
+        # LISP IPv4 Mapping Cache for EID-table vrf User (IID 4100), 2186 entries
+        p_lisp_header = re.compile(r"^LISP\s+IPv4\s+Mapping\s+Cache\s+for\s+EID-table\s+vrf\s+(?P<vrf>\S+)\s+"
+                                   r"\(IID\s+(?P<iid>\d+)\),\s+(?P<entries>\d+)\s+entries$")
+
+        # 0.0.0.0/0, uptime: 1w6d, expires: never, via static-send-map-request
+        p_list_entry_1 = re.compile(r"(?P<ip>\S+),"
+                                    r"\s+uptime:\s+(?P<uptime>[^,]+),"
+                                    r"\s+expires:\s+(?P<expire>[^,]+),"
+                                    r"\s+via\s+(?P<source>.*)")
+
+        # Negative cache entry, action: send-map-request
+        p_list_entry_negative = re.compile(r"^Negative\s+cache\s+entry,\s+"
+                                           r"action:\s+(?P<action>.*)$")
+
+        # Encapsulating to proxy ETR
+        p_list_encapsulating = re.compile(r"^Encapsulating\s+to\s+proxy\s+ETR$")
+
+        # 10.8.129.124  1w6d      up          10/10        -
+        p_list_rloc = re.compile(r"(?P<locator>\S+)\s+(?P<uptime>\S+)\s+(?P<state>\S+)\s+(?P<pri>\d+)\/(?P<wgt>\d+)\s+(?P<encap>.*)")
+
+        lisp_dict = {}
+        current_entry = ""
+        current_vrf = ""
+        source_list = []
+
+        for line in output.splitlines():
+            line = line.strip()
+            if p_lisp_header.match(line):
+                # LISP IPv4 Mapping Cache for EID-table vrf User (IID 4100), 2186 entries
+                match = p_lisp_header.match(line)
+                current_vrf = match.group("vrf")
+                lisp_dict.update({ "vrf": { current_vrf: {} }})
+                lisp_dict["vrf"][current_vrf].update({ "iid": int(match.group("iid"))})
+                lisp_dict["vrf"][current_vrf].update({ "number_of_entries": int(match.group("entries")) })
+                continue
+            elif p_list_entry_1.match(line):
+                # 0.0.0.0/0, uptime: 1w6d, expires: never, via static-send-map-request
+                match = p_list_entry_1.match(line)
+                group = match.groupdict()
+                lisp_dict["vrf"][current_vrf].setdefault("eid", {} )
+                current_entry = match.group("ip")
+                source_list = [x.strip() for x in group["source"].split(",")]
+                lisp_dict["vrf"][current_vrf]["eid"].update({ current_entry: {} })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "uptime":  group["uptime"]} )
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "expire":  group["expire"]} )
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "via":  source_list} )
+                continue
+            elif p_list_entry_negative.match(line):
+                # Negative cache entry, action: send-map-request
+                match = p_list_entry_negative.match(line)
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "rloc": { "status" : "Negative cache entry"}})
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]['rloc'].update({ "action": match.group("action")})
+                continue
+            elif p_list_encapsulating.match(line):
+                # Encapsulating to proxy ETR
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "rloc": { "status": "Encapsulating to proxy ETR"}})
+                continue
+            elif p_list_rloc.match(line):
+                # 10.8.129.124  1w6d      up          10/10        -
+                match = p_list_rloc.match(line)
+                group = match.groupdict()
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "rloc": {} })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "ip": group["locator"] })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "uptime": group["uptime"] })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "state": group["state"] })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "priority": int(group["pri"]) })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "weight": int(group["wgt"]) })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "encap_iid": group["encap"] })
+                continue
+
+
+
+        return lisp_dict
