@@ -2027,6 +2027,7 @@ class ShowCtsWirelessProfilePolicy(ShowCtsWirelessProfilePolicySchema):
                 # Policy Profile Name         		: xyz-policy
                 current_policy = m_profile_name.group("value")
                 cts_ap_dict.setdefault("policy_name", {} ).update({ current_policy: {} })
+                continue
             m_cts_section = p_cts_section.match(line)
             if m_cts_section:
                 # CTS
