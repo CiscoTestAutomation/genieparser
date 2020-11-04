@@ -1,0 +1,9 @@
+RP/0/0/CPU0:router# show im dampening
+
+Interface                   Protocol           Capsulation          Pen   Sup
+--------------------------- ------------------ -------------------- ----- ---
+GigabitEthernet0/0/0/0                                                629 NO 
+GigabitEthernet0/0/0/1                                               2389 YES
+POS0/2/0/0                                                              0 NO 
+POS0/2/0/0                  <base>             ppp                      0 NO 
+POS0/2/0/0                  ipv4               ipcp                     0 NO 

@@ -56,16 +56,16 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         #
         #
         #     Network Layer Address                   Link Layer Address Interface  vlan  prlvl age    state     Time left
-        # L   10.22.66.10                            7081.0535.b60b     Vl230      230   0100  10194mn REACHABLE
-        # L   10.22.28.10                            7081.0535.b60b     Vl238      238   0100  10255mn REACHABLE
-        # L   10.22.24.10                            7081.0535.b60b     Vl236      236   0100  10330mn REACHABLE
-        # L   10.22.20.10                            7081.0535.b60b     Vl234      234   0100  10329mn REACHABLE
-        # L   10.22.16.10                            7081.0535.b60b     Vl232      232   0100  10330mn REACHABLE
-        # L   10.22.12.10                            7081.0535.b60b     Vl228      228   0100  10330mn REACHABLE
-        # L   10.22.8.10                             7081.0535.b60b     Vl226      226   0100  10329mn REACHABLE
-        # L   10.22.4.10                             7081.0535.b60b     Vl224      224   0100  10329mn REACHABLE
-        # L   10.22.0.10                             7081.0535.b60b     Vl222      222   0100  10329mn REACHABLE
-        # L   10.10.68.10                            7081.0535.b60b     Vl243      243   0100  10330mn REACHABLE
+        # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
+        # L   10.22.28.10                            7081.05ff.eb40     Vl238      238   0100  10255mn REACHABLE
+        # L   10.22.24.10                            7081.05ff.eb40     Vl236      236   0100  10330mn REACHABLE
+        # L   10.22.20.10                            7081.05ff.eb40     Vl234      234   0100  10329mn REACHABLE
+        # L   10.22.16.10                            7081.05ff.eb40     Vl232      232   0100  10330mn REACHABLE
+        # L   10.22.12.10                            7081.05ff.eb40     Vl228      228   0100  10330mn REACHABLE
+        # L   10.22.8.10                             7081.05ff.eb40     Vl226      226   0100  10329mn REACHABLE
+        # L   10.22.4.10                             7081.05ff.eb40     Vl224      224   0100  10329mn REACHABLE
+        # L   10.22.0.10                             7081.05ff.eb40     Vl222      222   0100  10329mn REACHABLE
+        # L   10.10.68.10                            7081.05ff.eb40     Vl243      243   0100  10330mn REACHABLE
 
         # Binding Table has 10 entries, 0 dynamic (limit 200000)
         binding_table_capture = re.compile(
@@ -85,7 +85,7 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         #     Network Layer Address                   Link Layer Address Interface  vlan  prlvl age    state     Time left
         device_info_header_capture = re.compile(
             r"^Network\s+Layer\s+Address\s+Link\s+Layer\s+Address\s+Interface\s+vlan\s+prlvl\s+age\s+state\s+Time\s+left$")
-        # L   10.22.66.10                            7081.0535.b60b     Vl230      230   0100  10194mn REACHABLE
+        # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
         device_info_capture = re.compile(
             r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)$")
 
@@ -134,7 +134,7 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
                 device_info_header_capture_match = device_info_header_capture.match(line)
                 groups = device_info_header_capture_match.groupdict()
                 continue
-            # L   10.22.66.10                            7081.0535.b60b     Vl230      230   0100  10194mn REACHABLE
+            # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
             elif device_info_capture.match(line):
                 device_index = device_index + 1
                 device_info_capture_match = device_info_capture.match(line)
@@ -163,4 +163,122 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         return device_tracking_database_dict
 
 
+# ======================================
+# Schema for:
+#  * 'show device-tracking database interface {interface}'
+# ======================================
+class ShowDeviceTrackingDatabaseInterfaceSchema(MetaParser):
+    """Schema for show device-tracking database interface {interface}."""
 
+    schema = {
+        "binding_table": {"dynamic": int, "entries": int, "limit": int},
+        "network_layer_address": {
+            Any(): {
+                "age": str,
+                "code": str,
+                "interface": str,
+                "link_layer_address": str,
+                "prlvl": str,
+                "state": str,
+                Optional("time_left"): str,
+                "vlan": int,
+            }
+        },
+    }
+
+
+# ======================================
+# Parser for:
+#  * show device-tracking database interface {interface}'
+# ======================================
+class ShowDeviceTrackingDatabaseInterface(ShowDeviceTrackingDatabaseInterfaceSchema):
+    """Parser for show device-tracking database interface {interface}"""
+
+    cli_command = 'show device-tracking database interface {interface}'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            out = self.device.execute(cmd)
+
+        else:
+            out = output
+
+        # Binding Table has 87 entries, 75 dynamic (limit 100000)
+        # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+        # Preflevel flags (prlvl):
+        # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
+        # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
+        # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
+
+        # Network Layer Address               Link Layer Address Interface        vlan prlvl  age   state     Time left
+        # L   10.160.48.1                             0000.0c9f.f45f  Vl1024         1024  0100 42473mn REACHABLE
+        # DH4 10.160.43.197                           94d4.690b.dbfa  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+        # DH4 10.160.42.157                           0896.ad77.1224  Gi7/0/11       1023  0025   33s  REACHABLE  271 s try 0(447985 s)
+        # DH4 10.160.42.124                           00b1.e3ba.0d62  Te2/0/39       1023  0025   30s  REACHABLE  272 s try 0(450251 s)
+        #
+        # ...OUTPUT OMMITTED...
+        #
+        # L   2001:420:307:2000::1                    0000.0c9f.f45e  Vl1023         1023  0100 42475mn REACHABLE
+        # L   2001:420:307::1                         0000.0c9f.f45d  Vl1022         1022  0100 42473mn REACHABLE
+
+        # Binding Table has 87 entries, 75 dynamic (limit 100000)
+        binding_table_capture = re.compile(
+            r"^Binding Table has (?P<entries>\d+) entries, (?P<dynamic>\d+) dynamic \(limit (?P<limit>\d+)\)$"
+            )
+
+        # DH4 10.160.43.197                           94d4.690b.dbfa  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+        tracking_database_capture = re.compile(
+            r"^(?P<code>\S+)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+.*)$"
+            )
+
+        # L   10.160.48.1                             0000.0c9f.f45f  Vl1024         1024  0100 42473mn REACHABLE
+        local_database_capture = re.compile(
+            r"^(?P<code>L)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)$"
+            )
+
+        device_info_obj = {}
+
+        capture_list = [
+            binding_table_capture,
+            tracking_database_capture,
+            local_database_capture,
+        ]
+
+        for capture in capture_list:
+            for line in out.splitlines():
+                line = line.strip()
+
+                match = capture.match(line)
+                if match:
+                    group = match.groupdict()
+
+                    if capture == binding_table_capture:
+                        # convert str to int
+                        for item in group:
+                            group[item] = int(group[item])
+
+                        new_group = {"binding_table": group}
+                        device_info_obj.update(new_group)
+
+                    if (
+                        capture == tracking_database_capture
+                        or capture == local_database_capture
+                    ):
+                        # convert str to int
+                        group["vlan"] = int(group["vlan"])
+
+                        # pull a key from dict to use as new_key
+                        new_key = "network_layer_address"
+                        new_group = {group[new_key]: {}}
+
+                        # update then pop new_key from the dict
+                        new_group[group[new_key]].update(group)
+                        new_group[group[new_key]].pop(new_key)
+
+                        if not device_info_obj.get(new_key):
+                            device_info_obj[new_key] = {}
+
+                        device_info_obj[new_key].update(new_group)
+
+        return device_info_obj

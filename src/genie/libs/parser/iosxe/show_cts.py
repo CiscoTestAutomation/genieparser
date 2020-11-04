@@ -1947,6 +1947,7 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
         return cts_rb_permissions_dict
 
 
+
 # =====================================
 # Schema for:
 #  * 'show cts wireless profile policy {policy} '
@@ -1967,7 +1968,7 @@ class ShowCtsWirelessProfilePolicySchema(MetaParser):
 
 # =====================================
 # Parser for:
-#  * 'show cts wireless profile policy {policy'
+#  * 'show cts wireless profile policy {policy}'
 # =====================================
 class ShowCtsWirelessProfilePolicy(ShowCtsWirelessProfilePolicySchema):
     """Parser for show cts wireless profile policy {policy} """
@@ -2046,5 +2047,93 @@ class ShowCtsWirelessProfilePolicy(ShowCtsWirelessProfilePolicySchema):
                 # Default SGT		         : NOT-DEFINED
                 cts_ap_dict["policy_name"][current_policy].update({ "default_sgt": m_sgt.group("value") })
                 continue
+
+        return cts_ap_dict
+
+
+# =========================
+# Schema for:
+#  * 'show cts ap sgt info {ap_name}'
+# =========================
+class ShowCtsApSgtInfoSchema(MetaParser):
+    """Schema for show cts ap sgt info {ap_name}."""
+
+    schema = {
+        "ap": {
+            Any(): {
+                "number_of_sgts_referred_by_the_ap": int,
+                Optional("sgts") : {
+                    Optional(str) : {
+                        Optional("policy_pushed_to_ap"): str,
+                        Optional("no_of_clients"): int
+                    }
+                }
+            }
+        }
+    }
+    
+    
+# =========================
+# Parser for:
+#  * 'show cts ap sgt info {ap_name}'
+# =========================
+class ShowCtsApSgtInfo(ShowCtsApSgtInfoSchema):
+    """Parser for show cts ap sgt info {ap_name}"""
+
+    cli_command = 'show cts ap sgt info {ap_name}'
+
+    def cli(self, ap_name="", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(ap_name=ap_name))
+
+
+        # Number of SGTs referred by the AP...............: 2
+        #
+        # SGT               PolicyPushedToAP       No.of Clients
+        # ------------------------------------------------------------
+        # UNKNOWN(0)        NO                     0
+        # DEFAULT(65535)    NO                     0
+
+        # Number of SGTs referred by the AP...............: 0
+        p_number_sgts = re.compile(r"^Number\s+of\s+SGTs\s+referred\s+by\s+the\s+AP\.+:\s+(?P<value>\d+)$")
+
+        # SGT               PolicyPushedToAP       No.of Clients
+        p_sgt_header = re.compile(r"^SGT\s+PolicyPushedToAP\s+No.of\s+Clients$")
+
+        # ------------------------------------------------------------
+        p_sgt_delimiter = re.compile(r"^-+$")
+
+        # 10                NO                     1
+        p_sgt_row = re.compile(r"^(?P<sgt>\S+)\s+(?P<policy>\S+)\s+(?P<clients>\d+)$")
+
+        cts_ap_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            m_number_sgts = p_number_sgts.match(line)
+            if m_number_sgts:
+                cts_ap_dict.setdefault("ap", {} ).setdefault(ap_name, {})
+                cts_ap_dict["ap"][ap_name].update({ "number_of_sgts_referred_by_the_ap": int(m_number_sgts.group("value")) })
+                continue
+            m_sgt_header = p_sgt_header.match(line)
+            if m_sgt_header:
+                continue
+            m_sgt_delimiter = p_sgt_delimiter.match(line)
+            if m_sgt_delimiter:
+                continue
+            m_sgt_row = p_sgt_row.match(line)
+            if m_sgt_row:
+                group = m_sgt_row.groupdict()
+                sgts_dict = cts_ap_dict["ap"][ap_name].setdefault("sgts", {})
+                sgts_dict.update(
+                            {
+                                group["sgt"]: {
+                                    "policy_pushed_to_ap": group["policy"],
+                                    "no_of_clients": int(group["clients"])
+                                }
+                            }
+                        )
+                continue
+
 
         return cts_ap_dict

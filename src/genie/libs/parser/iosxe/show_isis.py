@@ -34,7 +34,7 @@ class ShowIsisNeighborsSchema(MetaParser):
                             }
                         }
                     }
-                }
+                },
             }
         }
     }
@@ -53,7 +53,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
 
         # initial return dictionary
         ret_dict = {}
-
+        tag_null = True
         for line in out.splitlines():
             line = line.strip()
 
@@ -63,6 +63,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
             if m:
                 isis_name = m.groupdict()['isis_name']
                 isis_dict = ret_dict.setdefault('isis', {}).setdefault(isis_name, {})
+                tag_null = False
                 continue
 
             # LAB-9001-2      L1   Te0/0/26      10.239.7.29     UP    27       00
@@ -73,8 +74,13 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
             if m:
                 system_id = m.groupdict()['system_id']
                 isis_type = m.groupdict()['type']
+                
+                if tag_null:
+                    neighbour_dict = ret_dict.setdefault('isis', {}).setdefault('null', {}).\
+                                              setdefault('neighbors', {}).setdefault(system_id, {})
+                else:
+                    neighbour_dict = isis_dict.setdefault('neighbors', {}).setdefault(system_id, {})
 
-                neighbour_dict = isis_dict.setdefault('neighbors', {}).setdefault(system_id, {})
                 type_dict = neighbour_dict.setdefault('type', {}).setdefault(isis_type, {})
 
                 type_dict['interface'] = m.groupdict()['interface']
@@ -85,7 +91,6 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
                 continue
 
         return ret_dict
-
 
 class ShowIsisHostnameSchema(MetaParser):
     """Schema for show isis hostname"""
