@@ -3425,7 +3425,7 @@ class ShowLispInstanceIdEthernetServerSchema(MetaParser):
         "instance_id": {
             int: {
                 "lisp": int,
-                "site_name": {
+                Optional("site_name"): {
                     str: {
                         str: {
                             "last_register": str,
