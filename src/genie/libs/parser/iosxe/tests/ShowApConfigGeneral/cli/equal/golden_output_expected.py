@@ -1,7 +1,7 @@
 expected_output = {
     "ap_name": {
         "bg-1-cap1": {
-            "cisco_ap_identifier": "70b3.d278.e03e",
+            "cisco_ap_identifier": "70b3.d2ff.59b6",
             "country_code": "IN",
             "regulatory_domain_allowed_by_country": "802.11bg:-A   802.11a:-DN",
             "ap_country_code": "IN  - India",
@@ -9,7 +9,7 @@ expected_output = {
                 "slot_0": "-A",
                 "slot_1": "-D",
             },
-            "mac_address": "70b3.1711.acbb",
+            "mac_address": "70b3.17ff.bdcc",
             "ip_address_configuration": "DHCP",
             "ip_address": "10.10.5.14",
             "ip_netmask": "255.255.254.0",
@@ -49,8 +49,8 @@ expected_output = {
             "remote_ap_debug": "Disabled",
             "logging_trap_severity_level": "information",
             "logging_syslog_facility": "kern",
-            "software_version": "17.3.1.9",
-            "boot_version": "1.1.2.4",
+            "software_version": "10.145.1.9",
+            "boot_version": "10.4.2.4",
             "mini_ios_version": "0.0.0.0",
             "stats_reporting_period": 0,
             "led_state": "Enabled",
@@ -62,7 +62,7 @@ expected_output = {
             "power_type_mode": "PoE/Full Power",
             "number_of_slots": 3,
             "ap_model": "AIR-AP4800-D-K9",
-            "ios_version": "17.3.1.9",
+            "ios_version": "10.145.1.9",
             "reset_button": "Disabled",
             "ap_serial_number": "FGL2102AZZZ",
             "management_frame_validation": "Capable",

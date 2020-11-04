@@ -1,0 +1,21 @@
+  show platform software memory mdt-pubd RP active alloc callsite
+  callsite: 1355696130, thread_id: 24813
+  allocs: 138151, frees: 138141, alloc_bytes: 15466123, free_bytes: 15464846, call_diff: 10, byte_diff: 1277
+  callsite: 1085533190, thread_id: 24813
+  allocs: 4, frees: 0, alloc_bytes: 176, free_bytes: 0, call_diff: 4, byte_diff: 176
+  callsite: 1085533186, thread_id: 24813
+  allocs: 27, frees: 20, alloc_bytes: 75712, free_bytes: 47232, call_diff: 7, byte_diff: 28480
+  callsite: 1085533185, thread_id: 24813
+  allocs: 6, frees: 4, alloc_bytes: 286943, free_bytes: 229536, call_diff: 2, byte_diff: 57407
+  callsite: 1085484033, thread_id: 24813
+  allocs: 5, frees: 4, alloc_bytes: 84800, free_bytes: 67840, call_diff: 1, byte_diff: 16960
+  callsite: 1085490176, thread_id: 24813
+  allocs: 5, frees: 4, alloc_bytes: 286800, free_bytes: 229440, call_diff: 1, byte_diff: 57360
+  callsite: 1355696133, thread_id: 24813
+  allocs: 15, frees: 14, alloc_bytes: 20400, free_bytes: 19040, call_diff: 1, byte_diff: 1360
+  callsite: 1208054817, thread_id: 24813
+  allocs: 2, frees: 0, alloc_bytes: 29, free_bytes: 0, call_diff: 2, byte_diff: 29
+  callsite: 1355696128, thread_id: 24813
+  allocs: 53, frees: 0, alloc_bytes: 1268, free_bytes: 0, call_diff: 53, byte_diff: 1268
+  callsite: 1355696129, thread_id: 24813
+  allocs: 53, frees: 0, alloc_bytes: 848, free_bytes: 0, call_diff: 53, byte_diff: 848
