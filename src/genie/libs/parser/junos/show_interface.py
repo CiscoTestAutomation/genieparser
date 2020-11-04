@@ -511,14 +511,14 @@ class ShowInterfacesSchema(MetaParser):
                         "input-packets": str,
                         "input-pps": str,
                         Optional("ipv6-transit-statistics"): {
-                            "input-bps": str,
+                            Optional("input-bps"): str,
                             "input-bytes": str,
                             "input-packets": str,
-                            "input-pps": str,
-                            "output-bps": str,
+                            Optional("input-pps"): str,
+                            Optional("output-bps"): str,
                             "output-bytes": str,
                             "output-packets": str,
-                            "output-pps": str
+                            Optional("output-pps"): str
                         },
                         "output-bps": str,
                         "output-bytes": str,
@@ -727,14 +727,14 @@ class ShowInterfacesSchema(MetaParser):
                 "input-packets": str,
                 "input-pps": str,
                 Optional("ipv6-transit-statistics"): {
-                    "input-bps": str,
+                    Optional("input-bps"): str,
                     "input-bytes": str,
                     "input-packets": str,
-                    "input-pps": str,
-                    "output-bps": str,
+                    Optional("input-pps"): str,
+                    Optional("output-bps"): str,
                     "output-bytes": str,
                     "output-packets": str,
-                    "output-pps": str
+                    Optional("output-pps"): str
                 },
                 "output-bps": str,
                 "output-bytes": str,

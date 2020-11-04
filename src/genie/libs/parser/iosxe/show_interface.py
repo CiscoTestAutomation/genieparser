@@ -293,7 +293,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex\, '
                          r'+(?P<port_speed>[\w\s\/]+|[a|A]uto-[S|s]peed|Auto '
                          r'(S|s)peed)(?:(?:\, +link +type +is '
-                         r'+(?P<link_type>\S+))?(?:\, *media +type +is '
+                         r'+(?P<link_type>\S+))?(?:\, *(media +type +is| )'
                          r'*(?P<media_type>[\w\/\- ]+)?)(?: +media +type)?)?$')
 
         # input flow-control is off, output flow-control is unsupported

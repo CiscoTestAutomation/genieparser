@@ -43,7 +43,7 @@ class ShowVersionSchema(MetaParser):
                     'processor_type': str,
                     'main_mem': str,
                     'processor_board_id': str,
-                    'curr_config_register': str,
+                    Optional('curr_config_register'): str,
                     'compiled_date': str,
                     'compiled_by': str,
                     'mac_address': str,
@@ -481,7 +481,7 @@ class ShowRedundancySchema(MetaParser):
                         'uptime_in_curr_state': str,
                         'image_ver': str,
                         Optional('boot'): str,
-                        'config_register': str,
+                        Optional('config_register'): str,
                         'compiled_by': str,
                         'compiled_date': str,
                     }

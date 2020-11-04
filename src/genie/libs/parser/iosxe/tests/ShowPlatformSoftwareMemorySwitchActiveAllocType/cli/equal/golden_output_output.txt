@@ -1,0 +1,130 @@
+show platform software memory mdt-pubd switch active R0 alloc type data
+Type: s_yp_sensor_oc
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 3, Null Allocations: 0, Frees: 3
+Type: chasfs_ctx_int_
+  Allocated: 12576, Requested: 12408, Overhead: 168
+  Allocations: 6, Null Allocations: 0, Frees: 3
+Type: file_info
+  Allocated: 71536, Requested: 69632, Overhead: 1904
+  Allocations: 34, Null Allocations: 0, Frees: 0
+Type: evContext_p
+  Allocated: 12640, Requested: 12584, Overhead: 56
+  Allocations: 1, Null Allocations: 0, Frees: 0
+Type: tdldb_plat_data_s*
+  Allocated: 2432, Requested: 1536, Overhead: 896
+  Allocations: 16, Null Allocations: 0, Frees: 0
+Type: BYTE
+  Allocated: 7045116, Requested: 6877508, Overhead: 167608
+  Allocations: 737676, Null Allocations: 0, Frees: 734683
+Type: file_alloc_handle_s
+  Allocated: 1120, Requested: 336, Overhead: 784
+  Allocations: 14, Null Allocations: 0, Frees: 0
+Type: lru_id_mgr_handle_
+  Allocated: 372, Requested: 316, Overhead: 56
+  Allocations: 1, Null Allocations: 0, Frees: 0
+Type: netconf_write_buffer_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 10402, Null Allocations: 0, Frees: 10402
+Type: BYTE*
+  Allocated: 29128, Requested: 27112, Overhead: 2016
+  Allocations: 345, Null Allocations: 0, Frees: 309
+Type: confd_event_node
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 246, Null Allocations: 0, Frees: 246
+Type: _btrace_module_*
+  Allocated: 4389, Requested: 693, Overhead: 3696
+  Allocations: 66, Null Allocations: 0, Frees: 0
+Type: green_subscribe_tblcur_hdl_*
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 3, Null Allocations: 0, Frees: 3
+Type: tdl_epoch_s
+  Allocated: 152, Requested: 96, Overhead: 56
+  Allocations: 1, Null Allocations: 0, Frees: 0
+Type: filter_key_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 3, Null Allocations: 0, Frees: 3
+Type: _btrace_ctx_global_
+  Allocated: 7864, Requested: 6800, Overhead: 1064
+  Allocations: 26, Null Allocations: 0, Frees: 7
+Type: _dns_resolver_ctxt
+  Allocated: 128, Requested: 72, Overhead: 56
+  Allocations: 1, Null Allocations: 0, Frees: 0
+Type: PArray
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 180, Null Allocations: 0, Frees: 180
+Type: confd_hkeypath
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 129, Null Allocations: 0, Frees: 129
+Type: mdt_obj_mgr_t
+  Allocated: 88, Requested: 32, Overhead: 56
+  Allocations: 1, Null Allocations: 0, Frees: 0
+Type: bipc_rx_stream_
+  Allocated: 459328, Requested: 458880, Overhead: 448
+  Allocations: 411, Null Allocations: 0, Frees: 403
+Type: hash_table_s
+  Allocated: 1664, Requested: 768, Overhead: 896
+  Allocations: 16, Null Allocations: 0, Frees: 0
+Type: bipc_channel_
+  Allocated: 136128, Requested: 135680, Overhead: 448
+  Allocations: 411, Null Allocations: 0, Frees: 403
+Type: sensor_data_collection_ctx_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 10399, Null Allocations: 0, Frees: 10399
+Type: mqipc_ctl_
+  Allocated: 2480, Requested: 1920, Overhead: 560
+  Allocations: 79, Null Allocations: 0, Frees: 69
+Type: tdldb_info_
+  Allocated: 3136, Requested: 2352, Overhead: 784
+  Allocations: 14, Null Allocations: 0, Frees: 0
+Type: vista_context_
+  Allocated: 125888, Requested: 124208, Overhead: 1680
+  Allocations: 30, Null Allocations: 0, Frees: 0
+Type: tdlhandle_s*
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 29, Null Allocations: 0, Frees: 29
+Type: green_assist_be_defer_data_
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 3, Null Allocations: 0, Frees: 3
+Type: int32
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 1, Null Allocations: 0, Frees: 1
+Type: hashtable
+  Allocated: 96, Requested: 40, Overhead: 56
+  Allocations: 1, Null Allocations: 0, Frees: 0
+Type: s_mdt_filter_dc_choices
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 29, Null Allocations: 0, Frees: 29
+Type: service_dir_connect_access_s*
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 28, Null Allocations: 0, Frees: 28
+Type: section_data_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 3, Null Allocations: 0, Frees: 3
+Type: tdlhandle_s
+  Allocated: 53584, Requested: 51680, Overhead: 1904
+  Allocations: 1287, Null Allocations: 0, Frees: 1253
+Type: confd_cs_node**
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 84, Null Allocations: 0, Frees: 84
+Type: s_mdt_dc_filters_list
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 29, Null Allocations: 0, Frees: 29
+Type: brand_context_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 9, Null Allocations: 0, Frees: 9
+Type: tc_work_queue_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 5, Null Allocations: 0, Frees: 5
+Type: mdtpub_sensor_periodic_dc_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 26, Null Allocations: 0, Frees: 26
+Type: green_args_s
+  Allocated: 0, Requested: 0, Overhead: 0
+  Allocations: 284, Null Allocations: 0, Frees: 284
+Type: green_subscribe_toc_tbl_handle_
+  Allocated: 104, Requested: 48, Overhead: 56
+  Allocations: 1, Null Allocations: 0, Frees: 0
+Type: Summary
+  Allocated: 7969949, Requested: 7784701, Overhead: 185248
+  Allocations: 762333, Null Allocations: 0, Frees: 759025
