@@ -1,0 +1,53 @@
+Switch 1 FAN 1 is OK
+Switch 1 FAN 2 is OK
+Switch 1 FAN 3 is OK
+FAN PS-1 is OK
+FAN PS-2 is NOT PRESENT
+Switch 2 FAN 1 is OK
+Switch 2 FAN 2 is OK
+Switch 2 FAN 3 is OK
+FAN PS-1 is OK
+FAN PS-2 is NOT PRESENT
+Switch 3 FAN 1 is OK
+Switch 3 FAN 2 is OK
+Switch 3 FAN 3 is OK
+FAN PS-1 is OK
+FAN PS-2 is NOT PRESENT
+Switch 1: SYSTEM TEMPERATURE is OK
+Inlet Temperature Value: 34 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 46 Degree Celsius
+Red Threshold    : 56 Degree Celsius
+
+Hotspot Temperature Value: 45 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+Switch 2: SYSTEM TEMPERATURE is OK
+Inlet Temperature Value: 33 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 46 Degree Celsius
+Red Threshold    : 56 Degree Celsius
+
+Hotspot Temperature Value: 43 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+Switch 3: SYSTEM TEMPERATURE is OK
+Inlet Temperature Value: 33 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 46 Degree Celsius
+Red Threshold    : 56 Degree Celsius
+
+Hotspot Temperature Value: 43 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+1A  PWR-C1-715WAC       DCB1844G1ZY  OK              Good     Good     715
+1B  Not Present
+2A  PWR-C1-715WAC       DCB1844G1X0  OK              Good     Good     715
+2B  Not Present
+3A  PWR-C1-715WAC       DCB1844G1WW  OK              Good     Good     715
+3B  Not Present

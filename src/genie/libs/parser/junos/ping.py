@@ -5,6 +5,8 @@ JunOS parsers for the following show commands:
     * ping {addr} count {count} 
     * ping mpls rsvp {rsvp}
     * ping {addr} ttl {ttl} count {count} wait {wait}
+    * ping {addr} source {source} count {count}
+    * ping {addr} source {source} size {size} do-not-fragment
 """
 # Python
 import re
@@ -53,10 +55,12 @@ class PingSchema(MetaParser):
         ping_result_schema = Schema({
                     'bytes': int,
                     'from': str,
-                    'icmp-seq': int,
+                    Optional('icmp-seq'): int,
                     Optional('hlim'): int,
                     Optional('ttl'): int,
-                    'time': str,
+                    Optional('time'): str,
+                    Optional('message'): str,
+                    Optional('mtu'): str,
                 })
         # Validate each dictionary in list
         for item in value:
@@ -89,10 +93,14 @@ class Ping(PingSchema):
     cli_command = [
         'ping {addr}',
         'ping {addr} count {count}',
-        'ping {addr} ttl {ttl} count {count} wait {wait}'
+        'ping {addr} ttl {ttl} count {count} wait {wait}',
+        'ping {addr} source {source} count {count}',
+        'ping {addr} source {source} size {size} do-not-fragment'
     ]
 
-    def cli(self, addr, count=None, ttl=None, wait=None, output=None):
+    def cli(self, addr, count=None, ttl=None, 
+            wait=None, source=None, size=None, 
+            output=None):
 
         if not output:
             if count and ttl and wait:
@@ -101,8 +109,18 @@ class Ping(PingSchema):
                     count=count,
                     ttl=ttl,
                     wait=wait)
+            elif count and source:
+                cmd = self.cli_command[3].format(addr=addr, 
+                        source=source,
+                        count=count)
             elif count:
                 cmd = self.cli_command[1].format(addr=addr, count=count)
+            elif source and size:
+                cmd = self.cli_command[4].format(
+                    addr=addr,
+                    source=source,
+                    size=size
+                )
             else:
                 cmd = self.cli_command[0].format(addr=addr)
             out = self.device.execute(cmd)
@@ -124,6 +142,11 @@ class Ping(PingSchema):
                 r'(:|,)\s+icmp_seq=(?P<icmp_seq>\d+)\s+'
                 r'(ttl=(?P<ttl>\d+)|hlim=(?P<hlim>\d+)) +'
                 r'time=(?P<time>\S+) +ms$')
+        
+        # 36 bytes from 10.136.0.1: frag needed and DF set (MTU 1186)
+        # 1240 bytes from 2001:34::1: Packet too big mtu = 1386
+        p2_2 = re.compile(r'^(?P<bytes>\d+)\s+bytes\s+from\s+(?P<from>\S+)'
+                          r':\s+(?P<message>[\s\w]+)(\(MTU\s|mtu\s=\s)(?P<mtu>\d+)(\))?$')
 
         # 5 packets transmitted, 5 packets received, 0% packet loss
         # 5 packets transmitted, 0 packets received, 100% packet loss
@@ -158,7 +181,10 @@ class Ping(PingSchema):
                 continue
             
             # 64 bytes from 10.189.5.94: icmp_seq=0 ttl=62 time=2.261 ms
-            m = p2.match(line)
+
+            # 36 bytes from 10.136.0.1: frag needed and DF set (MTU 1186)
+            # 1240 bytes from 2001:34::1: Packet too big mtu = 1386
+            m = p2.match(line) or p2_2.match(line)
             if m:
                 group = m.groupdict()
                 result_list = ping_dict.setdefault('result', [])
@@ -167,7 +193,7 @@ class Ping(PingSchema):
                     if v.isdigit() else v) for k, v in group.items() if v is not None})
                 result_list.append(result_dict)
                 continue
-            
+         
             # 5 packets transmitted, 5 packets received, 0% packet loss
             m = p3.match(line)
             if m:

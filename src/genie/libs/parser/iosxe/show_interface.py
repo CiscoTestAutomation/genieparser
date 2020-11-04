@@ -295,7 +295,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex\, '
                          r'+(?P<port_speed>[\w\s\/]+|[a|A]uto-[S|s]peed|Auto '
                          r'(S|s)peed)(?:(?:\, +link +type +is '
-                         r'+(?P<link_type>\S+))?(?:\, *media +type +is '
+                         r'+(?P<link_type>\S+))?(?:\, *(media +type +is| )'
                          r'*(?P<media_type>[\w\/\- ]+)?)(?: +media +type)?)?$')
 
         # input flow-control is off, output flow-control is unsupported
@@ -1887,7 +1887,7 @@ class ShowIpInterfaceSchema(MetaParser):
                     },
                     Optional('mtu'): int,
                     Optional('address_determined_by'): str,
-                    Optional('helper_address'): list,
+                    Optional('helper_address'): Or(str, list),
                     Optional('directed_broadcast_forwarding'): bool,
                     Optional('out_common_access_list'): str,
                     Optional('out_access_list'): str,
@@ -2004,9 +2004,28 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                     ['secondary'] = False
                 continue
 
+            # Interface is unnumbered. Using address of GigabitEthernet0/0.101 (10.1.98.10)
+            p2_0 = re.compile(r'^Interface +is +unnumbered. +Using +address +of +(\S+)'
+                              r' +\((?P<ipv4>(?P<ip>[0-9\.]+))\)$')
+            m = p2_0.match(line)
+            if m:
+                ip = m.groupdict()['ip']
+                address = m.groupdict()['ipv4']
+
+                if 'ipv4' not in interface_dict[interface]:
+                    interface_dict[interface]['ipv4'] = {}
+                if address not in interface_dict[interface]['ipv4']:
+                    interface_dict[interface]['ipv4'][address] = {}
+
+                interface_dict[interface]['ipv4'][address]\
+                    ['ip'] = ip
+                interface_dict[interface]['ipv4'][address]\
+                    ['secondary'] = False
+                continue
+
             # Secondary address 10.2.2.2/24
             p2_1 = re.compile(r'^Secondary +address +(?P<ipv4>(?P<ip>[0-9\.]+)'
-                             r'\/(?P<prefix_length>[0-9]+))$')
+                              r'\/(?P<prefix_length>[0-9]+))$')
             m = p2_1.match(line)
             if m:
                 ip = m.groupdict()['ip']
@@ -2077,7 +2096,11 @@ class ShowIpInterface(ShowIpInterfaceSchema):
             m = p5_0.match(line)
             if m:
                 interface_dict[interface]['helper_address'] = \
+<<<<<<< HEAD
                     [m.groupdict()['address']]
+=======
+                    m.groupdict()['address']
+>>>>>>> upstream/master
                 continue
 
             # Helper addresses are 10.1.1.1

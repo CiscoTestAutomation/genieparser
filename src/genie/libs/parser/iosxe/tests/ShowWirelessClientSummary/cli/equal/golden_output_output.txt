@@ -1,0 +1,24 @@
+Number of Clients: 13
+
+MAC Address    AP Name                                        Type ID   State             Protocol Method     Role
+-------------------------------------------------------------------------------------------------------------------------
+58bf.eaff.0cf1 b80-72-cap16                                 WLAN 17   Run               11ac     Dot1x      Local             
+58bf.eaff.0dbb b80-82-cap16                                 WLAN 17   Run               11ac     Dot1x      Local             
+58bf.eaff.0d07 b80-12-cap17                                 WLAN 17   Run               11ac     Dot1x      Local             
+58bf.eaff.0d0a b80-32-cap13                                 WLAN 17   Run               11ac     Dot1x      Local             
+58bf.eaff.0d0f b80-42-cap13                                 WLAN 17   Run               11ac     Dot1x      Local             
+58bf.eaff.c0fc b80-22-cap14                                 WLAN 17   Run               11ac     Dot1x      Local             
+58bf.eaff.6ba5 b80-32-cap4                                  WLAN 19   IP Learn          11n(2.4) MAB        Local             
+58bf.eaff.872f b80-51-cap7                                  WLAN 17   Authenticating    11ac     Dot1x      Unknown           
+58bf.eaff.04e2 b80-61-cap4                                  WLAN 17   Authenticating    11ac     Dot1x      Unknown           
+58bf.eaff.f748 b80-62-cap1                                  WLAN 19   IP Learn          11n(5)   MAB        Local             
+58bf.eaff.2837 b80-12-cap14                                 WLAN 17   Run               11ac     Dot1x      Local             
+58bf.eaff.4607 b80-51-cap6                                  WLAN 17   Run               11n(5)   Dot1x      Local             
+58bf.eaff.0926 b80-61-cap4                                  WLAN 19   Webauth Pending   11n(2.4) MAB        Local             
+
+Number of Excluded Clients: 2
+
+MAC Address    AP Name                          Type ID   State              Protocol Method
+------------------------------------------------------------------------------------------------
+58bf.eaff.aa71 b80-61-cap20                   WLAN 17   Excluded           11ac     Dot1x     
+58bf.eaff.7b79 b80-62-cap14                   WLAN 17   Excluded           11ac     Dot1x     

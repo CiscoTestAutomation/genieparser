@@ -1,0 +1,5 @@
+Index  Previous  Current  Switchover             Switchover
+       active    active   reason                 time
+-----  --------  -------  ----------             ----------
+   1       1        2     Active lost GW         03:26:09 UTC Wed Sep 23 2020
+   2       2        1     user forced            05:40:13 UTC Thu Oct 1 2020

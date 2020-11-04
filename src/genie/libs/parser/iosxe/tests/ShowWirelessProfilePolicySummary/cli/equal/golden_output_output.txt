@@ -1,0 +1,53 @@
+Number of Policy Profiles: 31
+
+Policy Profile Name               Description                             Status           
+-----------------------------------------------------------------------------------------
+wip-b60                        b60-voice                             ENABLED          
+wip-b70                        b70-voice                             ENABLED          
+wip-b80                        b80-voice                             ENABLED          
+lizzard_b60                    b60-lizzard/legacy                   ENABLED          
+lizzard_b70                    b70-lizzard/legacy                   ENABLED          
+lizzard_b80                    b80-lizzard/legacy                   ENABLED          
+internet-b60                    b60-guest                             ENABLED          
+internet-b70                    b70-guest                             ENABLED          
+internet-b80                    b80-guest                             ENABLED          
+lizzard_b70_1                  Not required                            ENABLED          
+
+
+Number of Policy Profiles: 31
+
+Policy Profile Name               Description                             Status           
+-----------------------------------------------------------------------------------------
+lizzard_b70_6                  Not required                            ENABLED          
+lizzard_b70_8                  Not required                            ENABLED          
+lizzard_b80_0                  Not required                            ENABLED          
+lizzard_b80_1                  Not required                            ENABLED          
+lizzard_b80_2                  Not required                            ENABLED          
+lizzard_b80_3                  Not required                            ENABLED          
+lizzard_b80_4                  Not required                            ENABLED          
+lizzard_b80_5                  Not required                            ENABLED          
+lizzard_b80_6                  Not required                            ENABLED          
+lizzard_b80_7                  Not required                            ENABLED          
+
+
+Number of Policy Profiles: 31
+
+Policy Profile Name               Description                             Status           
+-----------------------------------------------------------------------------------------
+lizzard_b80_8                  Not required                            ENABLED          
+lizzard_b60_1_2                Not required                            ENABLED          
+lizzard_b70_3_4                Not required                            ENABLED          
+lizzard_b70_5_6                Not required                            ENABLED          
+lizzard_b70_7_8                Not required                            ENABLED          
+lizzard_b60_3_4_5              Not required                            ENABLED          
+default-policy-profile            default policy profile                  DISABLED         
+lizzard_b60_cafeteria          b60_cafeteria-lizzard/legacy         ENABLED          
+lizzard_b70_cafeteria          b70_cafeteria-lizzard/legacy         ENABLED          
+internet-b70-launchpad          b70-launchpad                         ENABLED          
+
+
+Number of Policy Profiles: 31
+
+Policy Profile Name               Description                             Status           
+-----------------------------------------------------------------------------------------
+lizzard_b70_eventcenter        b70_eventcenter-lizzard/legacy       ENABLED          
