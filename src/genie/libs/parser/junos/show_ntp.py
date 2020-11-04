@@ -98,7 +98,7 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
         # remote         refid           st t when poll reach   delay   offset  jitter
         # ===============================================================================
         # x10.2.2.2         172.16.229.65     2 -   84  128  271    1.470  -46.760  52.506
-        p1 = re.compile(r'^(?P<mode_code>[xo\*\-\+\=]+)? *(?P<remote>[\w\.\:]+) +'
+        p1 = re.compile(r'^(?P<mode_code>[xo\*\-\+\=]+)? *(?P<remote>[\w\.\:\-]+) +'
                          '(?P<refid>[\S]+) +(?P<stratum>\d+) +(?P<type>[blmu\-]+) +'
                          '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
                          '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
