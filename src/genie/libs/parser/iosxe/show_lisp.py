@@ -3575,6 +3575,8 @@ class ShowLispEidTableVrfUserIpv4MapCacheSchema(MetaParser):
 class ShowLispEidTableVrfUserIpv4MapCache(ShowLispEidTableVrfUserIpv4MapCacheSchema):
     """Parser for show lisp eid-table vrf {vrf} ipv4 map-cache"""
 
+    cli_command = "show lisp eid-table vrf {vrf} ipv4 map-cache"
+
     def cli(self, vrf, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(vrf=vrf))
