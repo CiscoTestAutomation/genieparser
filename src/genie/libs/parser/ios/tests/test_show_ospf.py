@@ -18,9 +18,9 @@ from genie.libs.parser.ios.show_ospf import ShowIpOspf,\
                                    ShowIpOspfVirtualLinks
 
 from genie.libs.parser.iosxe.tests.test_show_ospf import test_show_ip_ospf_interface as test_show_ip_ospf_interface_iosxe,\
-                                                        test_show_ip_ospf_neighbor_detail as test_show_ip_ospf_neighbor_detail_iosxe,\
-                                                        test_show_ip_ospf_sham_links as test_show_ip_ospf_sham_links_iosxe,\
-                                                        test_show_ip_ospf_virtual_links as test_show_ip_ospf_virtual_links_iosxe
+ test_show_ip_ospf_neighbor_detail as test_show_ip_ospf_neighbor_detail_iosxe,\
+ test_show_ip_ospf_sham_links as test_show_ip_ospf_sham_links_iosxe,\
+ test_show_ip_ospf_virtual_links as test_show_ip_ospf_virtual_links_iosxe
 
 
 # ======================================
