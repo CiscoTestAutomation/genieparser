@@ -1,0 +1,109 @@
+show platform software memory mdt-pubd RP active
+Module: process
+  allocated: 16695, requested: 16647, overhead: 48
+  Allocations: 3, failed: 0, frees: 0
+Module: cdllib
+  allocated: 1688, requested: 1672, overhead: 16
+  Allocations: 2, failed: 0, frees: 1
+Module: eventutil
+  allocated: 143725, requested: 138957, overhead: 4768
+  Allocations: 304, failed: 0, frees: 6
+Module: uipeer
+  allocated: 22624, requested: 22544, overhead: 80
+  Allocations: 8, failed: 0, frees: 3
+Module: chunk
+  allocated: 3065, requested: 2953, overhead: 112
+  Allocations: 11, failed: 0, frees: 4
+Module: trccfg
+  allocated: 512, requested: 496, overhead: 16
+  Allocations: 5, failed: 0, frees: 4
+Module: dbal-root
+  allocated: 28, requested: 12, overhead: 16
+  Allocations: 1, failed: 0, frees: 0
+Module: dbal-exec-mgr
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 1, failed: 0, frees: 1
+Module: dbal-batch-mgr
+  allocated: 1070, requested: 1038, overhead: 32
+  Allocations: 2, failed: 0, frees: 0
+Module: dbal-tunnel-mgr
+  allocated: 4807, requested: 4743, overhead: 64
+  Allocations: 4, failed: 0, frees: 0
+Module: dbal-scn-mgr
+  allocated: 1068, requested: 1036, overhead: 32
+  Allocations: 2, failed: 0, frees: 0
+Module: dbal-channel-mgr
+  allocated: 3144, requested: 3096, overhead: 48
+  Allocations: 3, failed: 0, frees: 0
+Module: dbal-mqipc
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 8, failed: 0, frees: 8
+Module: dbal-bipc
+  allocated: 161, requested: 129, overhead: 32
+  Allocations: 2, failed: 0, frees: 0
+Module: dbal-conn
+  allocated: 384, requested: 320, overhead: 64
+  Allocations: 8, failed: 0, frees: 4
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 10, failed: 0, frees: 10
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 10, failed: 0, frees: 10
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 11, failed: 0, frees: 11
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 10, failed: 0, frees: 10
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 41, failed: 0, frees: 41
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 11, failed: 0, frees: 11
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 10, failed: 0, frees: 10
+Module: eiapi
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 10, failed: 0, frees: 10
+Module: ndbutil
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 2, failed: 0, frees: 2
+Module: ndbutil-metadata
+  allocated: 3356, requested: 1884, overhead: 1472
+  Allocations: 93, failed: 0, frees: 1
+Module: ndbutil-md-util
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 9, failed: 0, frees: 9
+Module: ndbutil-md-str
+  allocated: 111669, requested: 63061, overhead: 48608
+  Allocations: 3074, failed: 0, frees: 36
+Module: ndbutil-md-str-struct
+  allocated: 78505, requested: 78201, overhead: 304
+  Allocations: 19, failed: 0, frees: 0
+Module: ndbutil-md-xfrm
+  allocated: 13267, requested: 13187, overhead: 80
+  Allocations: 5, failed: 0, frees: 0
+Module: ndbutil-md-xfrm-choice
+  allocated: 11586, requested: 11522, overhead: 64
+  Allocations: 4, failed: 0, frees: 0
+Module: ndbutil-md-json
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 4, failed: 0, frees: 4
+Module: ndbutil-md-nsmeta
+  allocated: 0, requested: 0, overhead: 0
+  Allocations: 4, failed: 0, frees: 4
+Module: bcrdu_avl
+  allocated: 72, requested: 56, overhead: 16
+  Allocations: 1, failed: 0, frees: 0
+Module: opssl-parser
+  allocated: 2102, requested: 2070, overhead: 32
+  Allocations: 2, failed: 0, frees: 0
+Module: libconfd
+  allocated: 608, requested: 512, overhead: 96
+  Allocations: 6, failed: 0, frees: 0
+Module: Summary
+  allocated: 420136, requested: 364136, overhead: 56000
+  Allocations: 3700, failed: 0, frees: 200

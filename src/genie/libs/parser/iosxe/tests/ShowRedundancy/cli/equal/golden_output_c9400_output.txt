@@ -1,0 +1,69 @@
+show redundancy
+
+Redundant System Information :
+
+------------------------------
+
+       Available system uptime = 1 week, 10 hours, 49 minutes
+
+Switchovers system experienced = 0
+
+              Standby failures = 0
+
+        Last switchover reason = none
+
+
+
+                 Hardware Mode = Duplex
+
+    Configured Redundancy Mode = sso
+
+     Operating Redundancy Mode = sso
+
+              Maintenance Mode = Disabled
+
+                Communications = Up
+
+
+
+Current Processor Information :
+
+-------------------------------
+
+               Active Location = slot 5
+
+        Current Software state = ACTIVE
+
+       Uptime in current state = 1 week, 10 hours, 49 minutes
+
+                 Image Version = Cisco IOS Software [Bengaluru], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.5.20201011:122025 [S2C-build-polaris_dev-123951-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20201011_120555 175]
+
+Copyright (c) 1986-2020 by Cisco Systems, Inc.
+
+Compiled Sun 11-Oct-20 14:33 by mcpre
+
+                          BOOT = bootflash:packages.conf;
+
+                   CONFIG_FILE = 
+
+
+
+Peer Processor Information :
+
+----------------------------
+
+              Standby Location = slot 6
+
+        Current Software state = STANDBY HOT 
+
+       Uptime in current state = 1 week, 10 hours, 47 minutes
+
+                 Image Version = Cisco IOS Software [Bengaluru], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.5.20201011:122025 [S2C-build-polaris_dev-123951-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20201011_120555 175]
+
+Copyright (c) 1986-2020 by Cisco Systems, Inc.
+
+Compiled Sun 11-Oct-20 14:33 by mcpre
+
+                          BOOT = bootflash:packages.conf;
+
+                   CONFIG_FILE =
