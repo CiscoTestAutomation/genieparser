@@ -2072,8 +2072,8 @@ class ShowCtsApSgtInfoSchema(MetaParser):
             }
         }
     }
-    
-    
+
+
 # =========================
 # Parser for:
 #  * 'show cts ap sgt info {ap_name}'
