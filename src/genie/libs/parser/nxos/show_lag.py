@@ -328,6 +328,7 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
             r'(?P<bundle_id>[\d]+)[\xa0 ]+(?P<name>[\w\-]+)\((?P<flags>[\w]+)\)?[\xa0 '
             r']+(?P<type>\w+)[\xa0 ]+(?P<protocol>[\w\-]+)?[\xa0 ]+(?P<ports>[\w\-/() '
             r'\xa0]+ *)?$')
+        #                                      Eth1/6(P)    Eth1/7(P)    Eth1/8(H)
         p2 = re.compile(
             r'^\s*(?P<space>\s{37})(?P<ports>[\w\-\/() \xa0]+)?')
         for line in out.splitlines():
