@@ -1,0 +1,17 @@
+show sdwan zonebfwdp sessions
+                                                                                     SRC  DST                                                                                 TOTAL      TOTAL                   
+SESSION                                       SRC    DST                   SRC  DST  VPN  VPN                                                                NAT    INTERNAL  INITIATOR  RESPONDER  APPLICATION  
+ID        STATE   SRC IP     DST IP           PORT   PORT  PROTOCOL        VRF  VRF  ID   ID   ZP NAME                           CLASSMAP NAME               FLAGS  FLAGS     BYTES      BYTES      TYPE         
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+18005146  open    123.1.0.7  104.16.149.64    58328  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         2722       1391                    
+18005251  open    123.1.0.7  104.244.42.195   49933  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         3509       982                     
+18005140  open    123.1.0.7  199.232.253.67   58322  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         8850       2403                    
+18005250  open    123.1.0.7  142.250.67.34    49932  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         3105       7913                    
+18005137  open    123.1.0.7  142.250.67.66    58319  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         2845       1637                    
+18005153  open    123.1.0.7  104.16.149.64    58335  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         2789       1345                    
+18005142  open    123.1.0.7  23.35.6.70       58324  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         4614       476                     
+18004919  open    123.1.0.7  142.250.76.34    52671  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         24460      18659                   
+18005262  open    123.1.0.7  182.79.238.140   49944  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         34953      6463480                 
+18005143  open    123.1.0.7  172.217.167.130  58325  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         2885       1082                    
+18004645  open    123.1.0.7  216.58.200.131   54733  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         49832      67236                   
+18005202  open    123.1.0.7  184.31.214.50    49873  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         3684       67394                   
