@@ -3,7 +3,7 @@ from genie.metaparser.util.schemaengine import Any, Or, Optional
 import re
 
 # =======================================
-# Schema for 'show cloudexpress applications'
+# Schema for 'show cloudexpress application'
 # =======================================
 
 class ShowCloudexpressApplicationSchema(MetaParser):
@@ -13,14 +13,14 @@ class ShowCloudexpressApplicationSchema(MetaParser):
     schema = {
         "index": {
             Any(): {
-                "vpn": str,
+                "vpn": int,
                 "application": str,
                 "exit_type": str,
                 "gw_sys_ip": str,
                 "interface": str,
-                "latency": str,
+                "latency": int,
                 "local_color": str,
-                "loss": str,
+                "loss": int,
                 "remote_color": str,
                 }
             }
@@ -56,14 +56,15 @@ class ShowCloudexpressApplication(ShowCloudexpressApplicationSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
+                #vpn = group['vpn']
                 vpn_dict = result_dict.setdefault('index', {}).setdefault(index, {})
-                vpn_dict.update({'vpn': group['vpn']})
+                vpn_dict.update({'vpn': int(group['vpn'])})
                 vpn_dict.update({'application': group['application']})
                 vpn_dict.update({'exit_type': group['exit_type']})
                 vpn_dict.update({'gw_sys_ip': group['gw_sys_ip']})
                 vpn_dict.update({'interface': group['interface']})
-                vpn_dict.update({'latency': group['latency']})
-                vpn_dict.update({'loss': group['loss']})
+                vpn_dict.update({'latency': int(group['latency'])})
+                vpn_dict.update({'loss': int(group['loss'])})
                 vpn_dict.update({'local_color': group['local_color']})
                 vpn_dict.update({'remote_color': group['remote_color']})
                 index += 1
