@@ -128,10 +128,10 @@ class ShowMfibRouteSummary(ShowMfibRouteSummarySchema):
 
 
 # ==========================================================================
-# Schema for 'show mfib platform evpn bucket location'
+# Schema for 'show mfib platform evpn bucket location {location}'
 # ==========================================================================
 class ShowMfibPlatformEvpnBucketLocationSchema(MetaParser):
-    """ Schema for show mfib platform evpn bucket location <location>. """
+    """ Schema for show mfib platform evpn bucket location {location}. """
 
     schema = {
         'bucket_id':
@@ -146,11 +146,11 @@ class ShowMfibPlatformEvpnBucketLocationSchema(MetaParser):
 
 
 # ==========================================================================
-# Parser for 'show mfib platform evpn bucket location'
+# Parser for 'show mfib platform evpn bucket location {location}'
 # ==========================================================================
 class ShowMfibPlatformEvpnBucketLocation(ShowMfibPlatformEvpnBucketLocationSchema):
     """
-    Parser for show mfib platform evpn bucket location <location>.
+    Parser for show mfib platform evpn bucket location {location}.
 
     Parameters
     ----------

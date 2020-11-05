@@ -97,10 +97,10 @@ class test_show_mfib_route_summary(unittest.TestCase):
 
 
 # ==========================================================================
-# Unittest for 'show mfib platform evpn bucket location'
+# Unittest for 'show mfib platform evpn bucket location {location}'
 # ==========================================================================
 class test_show_mfib_platform_evpn_bucket_location(unittest.TestCase):
-    """ Unit test for show mfib platform evpn bucket location <location>. """
+    """ Unit test for show mfib platform evpn bucket location {location}. """
 
     empty_output = {'execute.return_value': ''}
 
