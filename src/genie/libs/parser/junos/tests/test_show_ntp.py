@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 # Parser
 from genie.libs.parser.junos.show_ntp import ShowNtpAssociations, \
                                              ShowNtpStatus, \
-                                             ShowConfigurationSystemNtpSet
+                                             ShowConfigurationSystemNtpSet, \
+                                             ShowConfigurationSystemNtp
 
 #=========================================================
 # Unit test for show ntp associations
@@ -217,6 +218,50 @@ class test_show_configuration_system_ntp_display_set(unittest.TestCase):
         obj = ShowConfigurationSystemNtpSet(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+
+# ===========================================================
+# Unit test for 'show configuration system ntp'
+# ===========================================================
+class TestShowConfigurationSystemNtp(unittest.TestCase):
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    maxDiff = None
+
+    golden_parsed_output = {
+        "configuration": {
+            "system": {
+                "ntp": {
+                    "server": [{
+                        "name": "1.0.0.1"
+                    }],
+                    "source-address": {
+                        "name": "1.0.0.184"
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output = {
+        "execute.return_value": """
+            show configuration system ntp 
+            server 1.0.0.1;
+            source-address 1.0.0.184;
+            """
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowConfigurationSystemNtp(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowConfigurationSystemNtp(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':

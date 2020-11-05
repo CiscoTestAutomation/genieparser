@@ -1,0 +1,18 @@
+Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+                  S - Switch, H - Host, I - IGMP, r - Repeater,
+                  V - VoIP-Phone, D - Remotely-Managed-Device,
+                  s - Supports-STP-Dispute
+
+Device-ID          Local Intrfce  Hldtme Capability  Platform      Port ID
+nxos-cat3650-23-01
+                    mgmt0          178    S I       WS-C3650-24PD Gig1/0/4      
+bgp-n93-d(FDO24140U7J)
+                    Eth1/37/1      148    R S s     N9K-C93240YC- Eth1/3        
+bgp-n93-d(FDO24140U7J)
+                    Eth1/37/2      161    R S s     N9K-C93240YC- Eth1/6         
+ott-bgp-laas(JAF1429BAKA)
+                    Eth1/39/1      159    R S I s
+ott-bgp-laas(JAF1429BAKA)
+                    Eth1/39/2      159    R S I s   N7K-C7010     Eth9/30       
+ott-bgp-laas(JAF1429BAKA)
+                    Eth1/39/3      158    R S I s
