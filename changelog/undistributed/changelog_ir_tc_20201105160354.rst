@@ -3,12 +3,12 @@
 --------------------------------------------------------------------------------
 * JUNOS
     * Updated TracerouteNoResolve:
-      * Added command 'traceroute {ipaddress} source {ipaddress2} no-resolve'
+        * Added command 'traceroute {ipaddress} source {ipaddress2} no-resolve'
 
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
-	* Modified TracerouteNoResolve:
+	  * Modified TracerouteNoResolve:
         * Updated regex pattern <p1> to accommodate various outputs.
         
