@@ -1736,7 +1736,47 @@ class TestShowBgpSummary(unittest.TestCase):
         inet6.0: 0/0/0/0
     '''}
 
-    # golden_parsed_output_2 = 
+    golden_parsed_output_2 = {
+        'bgp-information': {
+            'bgp-peer': [
+                {'elapsed-time': {'#text': '9'},
+                                   'flap-count': '1',
+                                   'input-messages': '2',
+                                   'output-messages': '3',
+                                   'peer-address': '20.0.0.2',
+                                   'peer-as': '3',
+                                   'peer-state': 'Establ',
+                                   'route-queue-count': '0'},
+                                  {'bgp-rib': [{'accepted-prefix-count': '0',
+                                                'active-prefix-count': '0',
+                                                'name': 'inet6.0',
+                                                'received-prefix-count': '0',
+                                                'suppressed-prefix-count': '0'}],
+                                   'elapsed-time': {'#text': '5'},
+                                   'flap-count': '1',
+                                   'input-messages': '2',
+                                   'output-messages': '3',
+                                   'peer-address': '2001:20::2',
+                                   'peer-as': '3',
+                                   'peer-state': 'Establ',
+                                   'route-queue-count': '0'}],
+            'bgp-rib': [{'active-prefix-count': '0',
+                        'damped-prefix-count': '0',
+                        'history-prefix-count': '0',
+                        'name': 'inet.0',
+                        'pending-prefix-count': '0',
+                        'suppressed-prefix-count': '0',
+                        'total-prefix-count': '0'},
+                        {'active-prefix-count': '0',
+                        'damped-prefix-count': '0',
+                        'history-prefix-count': '0',
+                        'name': 'inet6.0',
+                        'pending-prefix-count': '0',
+                        'suppressed-prefix-count': '0',
+                        'total-prefix-count': '0'}],
+            'down-peer-count': '0',
+            'group-count': '2',
+            'peer-count': '2'}}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -1754,8 +1794,6 @@ class TestShowBgpSummary(unittest.TestCase):
         self.device = Mock(**self.golden_output_2)
         obj = ShowBgpSummary(device=self.device)
         parsed_output = obj.parse()
-        import pdb; pdb.set_trace()
-        import pprint; pprint.pprint(parsed_output)
         self.assertEqual(parsed_output, self.golden_parsed_output_2)        
 
 
