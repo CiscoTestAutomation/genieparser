@@ -71,6 +71,7 @@ class ShowLicense(ShowLicenseSchema):
         p5 = re.compile(r"\s+((?P<count_in_use>\d+)/(?P<count_violation>\d+)\s+\(In-use/Violation\)|(?P<count>\S+))")
         #         License Priority: None
         p6 = re.compile(r"\s+(?P<license_priority>\S+)")
+        #         License State: Active, Not in Use
         #         License State: Active, Not in Use, EULA not accepted
         p7 = re.compile(r"\s+(?P<license_state>(Active,\s+Not\s+in\s+Use,\s+EULA\s+not\s+accepted|Active,\s+In\s+Use|Active,\s+Not in\s+Use))")
 
