@@ -1722,6 +1722,22 @@ class TestShowBgpSummary(unittest.TestCase):
         },
     }
 
+    golden_output_2 = {'execute.return_value':'''
+        show bgp summary 
+        Groups: 2 Peers: 2 Down peers: 0
+        Table          Tot Paths  Act Paths Suppressed    History Damp State    Pending
+        inet.0               
+                            0          0          0          0          0          0
+        inet6.0              
+                            0          0          0          0          0          0
+        Peer                     AS      InPkt     OutPkt    OutQ   Flaps Last Up/Dwn State|#Active/Received/Accepted/Damped...
+        20.0.0.2                  3          2          3       0       1           9 0/0/0/0              0/0/0/0
+        2001:20::2                3          2          3       0       1           5 Establ
+        inet6.0: 0/0/0/0
+    '''}
+
+    # golden_parsed_output_2 = 
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowBgpSummary(device=self.device)
@@ -1733,6 +1749,14 @@ class TestShowBgpSummary(unittest.TestCase):
         obj = ShowBgpSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden_2(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpSummary(device=self.device)
+        parsed_output = obj.parse()
+        import pdb; pdb.set_trace()
+        import pprint; pprint.pprint(parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)        
 
 
 class TestShowBgpNeighbor(unittest.TestCase):
