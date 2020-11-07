@@ -1,0 +1,76 @@
+STATIC routemaps
+route-map RM-NAM-IBGP-OUT, permit, sequence 10
+  Match clauses:
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+    local-preference 700
+    community 1:1
+route-map RM-PBR_APPS_TO_MPLS, deny, sequence 5
+  Match clauses:
+    ip address (access-lists): PBR-EXCLUSION-SITE-SUBNET 
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-PBR_APPS_TO_MPLS, permit, sequence 10
+  Match clauses:
+    ip address (access-lists): ACL-APPLICATION-SAP-DC 
+  Set clauses:
+    ip next-hop 130.24.253.94 130.24.253.102
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-PBR_APPS_TO_MPLS, permit, sequence 20
+  Match clauses:
+    ip address (access-lists): ACL-APPLICATION-SAP_PLM-DC 
+  Set clauses:
+    ip next-hop 130.24.253.94 130.24.253.102
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-PBR_APPS_TO_MPLS, permit, sequence 30
+  Match clauses:
+    ip address (access-lists): ACL-APPLICATION-ABACUS_EUREKA-DC 
+  Set clauses:
+    ip next-hop 130.24.253.94 130.24.253.102
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-PBR_APPS_TO_MPLS, permit, sequence 40
+  Match clauses:
+    ip address (access-lists): ACL-APPLICATION-INTERSPEC-DC 
+  Set clauses:
+    ip next-hop 130.24.253.94 130.24.253.102
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-LATAM-IBGP-OUT, permit, sequence 10
+  Match clauses:
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+    local-preference 700
+    community 1:110
+route-map RM-BGP-SPOKES-OUT, permit, sequence 10
+  Match clauses:
+    community (community-list filter): CL-HUB-ORIGINATE 
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-FILTER-REDISTRIBUTED-DMVPN-ROUTES-IN, deny, sequence 10
+  Match clauses:
+     tag 65534 
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-FILTER-REDISTRIBUTED-DMVPN-ROUTES-IN, permit, sequence 20
+  Match clauses:
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+route-map RM-EU-IBGP-OUT, permit, sequence 10
+  Match clauses:
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+    local-preference 900
+    community 1:5
+route-map RM-APAC-IBGP-OUT, permit, sequence 10
+  Match clauses:
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+    local-preference 700
+    community 1:19
+route-map RM-AMET-IBGP-OUT, permit, sequence 10
+  Match clauses:
+  Set clauses:
+  Policy routing matches: 0 packets, 0 bytes
+    local-preference 900
+    community 1:27
+DYNAMIC routemaps
+Current active dynamic routemaps = 0
