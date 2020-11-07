@@ -233,10 +233,10 @@ class TestShowConfigurationSystemNtp(unittest.TestCase):
             "system": {
                 "ntp": {
                     "server": [{
-                        "name": "1.0.0.1"
+                        "name": "10.1.0.1"
                     }],
                     "source-address": {
-                        "name": "1.0.0.184"
+                        "name": "10.1.0.184"
                     }
                 }
             }
@@ -246,8 +246,8 @@ class TestShowConfigurationSystemNtp(unittest.TestCase):
     golden_output = {
         "execute.return_value": """
             show configuration system ntp 
-            server 1.0.0.1;
-            source-address 1.0.0.184;
+            server 10.1.0.1;
+            source-address 10.1.0.184;
             """
     }
 

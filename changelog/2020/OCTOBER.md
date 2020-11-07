@@ -69,7 +69,7 @@
     * Updated to inherit parser class from IOSXE
 * JUNOS:
     * ShowRSVPNeighborDetailSchema
-        * Made fields below optional (Fix for KDDI Lab):
+        * Made fields below optional
     * Updated ShowChassisFpc:
     * Added support for comment in output
     * Updated ShowLogFilename:

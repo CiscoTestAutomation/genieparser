@@ -24,7 +24,7 @@ expected_output = {
         "actions": {
           "set_next_hop_self": False,
           "route_disposition": "permit",
-          "set_next_hop": ["130.24.253.94", "130.24.253.102"]
+          "set_next_hop": ["172.16.154.94", "172.16.154.102"]
         },
         "conditions": {},
         "policy_routing_matches": { "packets": 0, "bytes": 0 }
@@ -33,7 +33,7 @@ expected_output = {
         "actions": {
           "set_next_hop_self": False,
           "route_disposition": "permit",
-          "set_next_hop": ["130.24.253.94", "130.24.253.102"]
+          "set_next_hop": ["172.16.154.94", "172.16.154.102"]
         },
         "conditions": {},
         "policy_routing_matches": { "packets": 0, "bytes": 0 }
@@ -42,7 +42,7 @@ expected_output = {
         "actions": {
           "set_next_hop_self": False,
           "route_disposition": "permit",
-          "set_next_hop": ["130.24.253.94", "130.24.253.102"]
+          "set_next_hop": ["172.16.154.94", "172.16.154.102"]
         },
         "conditions": {},
         "policy_routing_matches": { "packets": 0, "bytes": 0 }
@@ -51,7 +51,7 @@ expected_output = {
         "actions": {
           "set_next_hop_self": False,
           "route_disposition": "permit",
-          "set_next_hop": ["130.24.253.94", "130.24.253.102"]
+          "set_next_hop": ["172.16.154.94", "172.16.154.102"]
         },
         "conditions": {},
         "policy_routing_matches": { "packets": 0, "bytes": 0 }
