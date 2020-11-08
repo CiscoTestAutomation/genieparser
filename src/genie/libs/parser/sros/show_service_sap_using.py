@@ -1,5 +1,5 @@
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Or, Optional
+from genie.metaparser.util.schemaengine import Any
 import re
 
 # ======================================================
@@ -42,7 +42,7 @@ class ShowServiceSapUsing(ShowServiceSapUsingSchema):
         # 2/1/6:3101.*                    1121       4503  none    4503  none   Up   Up
         # lag-2:4000.*                    1122       1     none    1     none   Up   Up
         # lag-1:400.1                    1221       1     none    1     none   Up   Up
-        p1 = re.compile(r'(?P<sap>(((\d+\/\d+\/\d+)|(lag-\d*))(:\d+|[*])*([.]\d+|[.*])*))'
+        p1 = re.compile(r'(?P<sap>\S+)'
                         r' +(?P<service>\d+) +(?P<ing_qos>\d+) +(?P<ing_filter>\S+)'
                         r' +(?P<egr_qos>\d+) +(?P<egr_filter>\S+)' 
                         r' +(?P<admin>Up|Down)\s+(?P<oper>Up|Down)')
@@ -83,7 +83,6 @@ class ShowServiceSapUsing(ShowServiceSapUsingSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                total = int(group['total'])
-                result_dict['total']=total
+                result_dict['total'] = int(group['total'])
 
         return result_dict
