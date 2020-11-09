@@ -23,12 +23,11 @@ from genie.libs.parser.utils.common import Common
 class ShowBootflashSchema(MetaParser):
     """Schema for show bootflash:."""
     schema = {
-        'bytes_available': str,
-        'bytes_used': str,
+        'bytes_available': int,
+        'bytes_used': int,
         'files': {
             Any(): {
-                'file_index': str,
-                'file_length': str,
+                'file_length': int,
                 'file_date': str,
                 'file_name': str
                 }
@@ -65,7 +64,7 @@ class ShowBootflash(ShowBootflashSchema):
             m = p1.match(line_strip)
             if m:
                 group = m.groupdict()
-                ret_dict.update({k:str(v) for k, v in group.items()})
+                ret_dict.update({k:int(v) for k, v in group.items()})
                 continue
             #12         11 Oct 12 2020 07:27:04 +00:00 /bootflash/tracelogs/timestamp
             m = p2.match(line_strip)
@@ -76,8 +75,7 @@ class ShowBootflash(ShowBootflashSchema):
                     ret_dict['files']={}
                 if index not in ret_dict['files']:
                     ret_dict['files'][index]={}
-                ret_dict['files'][index]['file_index']=index
-                ret_dict['files'][index]['file_length']=group['file_length']
+                ret_dict['files'][index]['file_length']=int(group['file_length'])
                 ret_dict['files'][index]['file_date']=group['file_date']
                 ret_dict['files'][index]['file_name']=group['file_name']
 
