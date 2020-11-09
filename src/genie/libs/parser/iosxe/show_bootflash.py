@@ -24,7 +24,14 @@ class ShowBootflashSchema(MetaParser):
     """Schema for show bootflash:."""
     schema = {
         'available': str,
-        'used': str
+        'used': str,
+        'files': {
+            Any(): {
+                'index': str,
+                'date': str,
+                'filename': str
+                }
+            }
     }
 
 # =================
@@ -37,25 +44,40 @@ class ShowBootflash(ShowBootflashSchema):
     cli_command = 'show bootflash:'
 
     def cli(self, output=None):
+        #print("DEBUG: cli")
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
 
-        #         available used
+        # 13755338752 bytes available (489017344 bytes used)
         p1 = re.compile(r"(?P<available>\d+)\s+bytes available\s+\((?P<used>\d+)\s+bytes used\)")
-
+        #12         11 Oct 12 2020 07:27:04 +00:00 /bootflash/tracelogs/timestamp
+        p2 = re.compile(r"(?P<index>\d+)\s+(?P<date>\d+\s+[a-zA-Z]+\s+\d+\s+\d+\s+[0-9:.]+\s+[0-9+:]+)\s+(?P<filename>\S+)")
 
         # initial variables
         ret_dict = {}
 
         for line in out.splitlines():
             line_strip = line.strip()
+            # 13755338752 bytes available (489017344 bytes used)
             m = p1.match(line_strip)
             if m:
                 group = m.groupdict()
                 ret_dict.update({k:str(v) for k, v in group.items()})
                 continue
+            #12         11 Oct 12 2020 07:27:04 +00:00 /bootflash/tracelogs/timestamp
+            m = p2.match(line_strip)
+            if m:
+                group=m.groupdict()
+                index=group['index']
+                if 'files' not in ret_dict:
+                    ret_dict['files']={}
+                if index not in ret_dict['files']:
+                    ret_dict['files'][index]={}
+                ret_dict['files'][index]['index']=index
+                ret_dict['files'][index]['date']=group['date']
+                ret_dict['files'][index]['filename']=group['filename']
 
         return ret_dict
 # ----------------------
