@@ -1522,7 +1522,6 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 group = m.groupdict()
                 rt_entry_dict.update({'peer-id': group['peer_id']})
                 continue
-        
 
         return ret_dict
     
