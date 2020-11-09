@@ -23,13 +23,14 @@ from genie.libs.parser.utils.common import Common
 class ShowBootflashSchema(MetaParser):
     """Schema for show bootflash:."""
     schema = {
-        'available': str,
-        'used': str,
+        'bytes_available': str,
+        'bytes_used': str,
         'files': {
             Any(): {
-                'index': str,
-                'date': str,
-                'filename': str
+                'file_index': str,
+                'file_length': str,
+                'file_date': str,
+                'file_name': str
                 }
             }
     }
@@ -51,9 +52,9 @@ class ShowBootflash(ShowBootflashSchema):
             out = output
 
         # 13755338752 bytes available (489017344 bytes used)
-        p1 = re.compile(r"(?P<available>\d+)\s+bytes available\s+\((?P<used>\d+)\s+bytes used\)")
+        p1 = re.compile(r"(?P<bytes_available>\d+)\s+bytes available\s+\((?P<bytes_used>\d+)\s+bytes used\)")
         #12         11 Oct 12 2020 07:27:04 +00:00 /bootflash/tracelogs/timestamp
-        p2 = re.compile(r"(?P<index>\d+)\s+(?P<date>\d+\s+[a-zA-Z]+\s+\d+\s+\d+\s+[0-9:.]+\s+[0-9+:]+)\s+(?P<filename>\S+)")
+        p2 = re.compile(r"(?P<file_index>\d+)\s+(?P<file_length>\d+)\s+(?P<file_date>[a-zA-Z]+\s+\d+\s+\d+\s+[0-9:.]+\s+[0-9+:]+)\s+(?P<file_name>\S+)")
 
         # initial variables
         ret_dict = {}
@@ -70,14 +71,15 @@ class ShowBootflash(ShowBootflashSchema):
             m = p2.match(line_strip)
             if m:
                 group=m.groupdict()
-                index=group['index']
+                index=group['file_index']
                 if 'files' not in ret_dict:
                     ret_dict['files']={}
                 if index not in ret_dict['files']:
                     ret_dict['files'][index]={}
-                ret_dict['files'][index]['index']=index
-                ret_dict['files'][index]['date']=group['date']
-                ret_dict['files'][index]['filename']=group['filename']
+                ret_dict['files'][index]['file_index']=index
+                ret_dict['files'][index]['file_length']=group['file_length']
+                ret_dict['files'][index]['file_date']=group['file_date']
+                ret_dict['files'][index]['file_name']=group['file_name']
 
         return ret_dict
 # ----------------------
