@@ -982,6 +982,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # AS path: I 
         # AS path: 30000 4 103 104 105 106 107 108 109 I
+        # AS path: I (Originator) Cluster list:  0.0.0.1 0.0.0.2 0.0.0.4
         p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) '
                          r'+((?P<attr_value>[\S\s]+) +Cluster +list: '
                          r'(?P<cluster_list>[\d\.\s]+)|(?P<attr_value2>[\S\s]+))$')
@@ -1305,6 +1306,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 continue
 
             # AS path: I 
+            # AS path: I (Originator) Cluster list:  0.0.0.1 0.0.0.2 0.0.0.4
             m = p16.match(line)
             if m:
                 rt_entry_exist = rt_dict.get('rt-entry', None)
