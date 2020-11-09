@@ -69,7 +69,12 @@
     * Updated to inherit parser class from IOSXE
 * JUNOS:
     * ShowRSVPNeighborDetailSchema
-        * Made fields below optional (Fix for KDDI Lab):
+        * Made fields below optional
+            * rsvp-refresh-reduct-status
+            * rsvp-refresh-reduct-remote-status
+            * rsvp-refresh-reduct-ack-status
+            * rsvp-nbr-enh-local-protection 
+            * rsvp-nbr-enh-lp-status
     * Updated ShowChassisFpc:
     * Added support for comment in output
     * Updated ShowLogFilename:
