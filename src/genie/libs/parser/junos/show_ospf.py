@@ -545,7 +545,7 @@ class ShowOspfNeighborInstanceAllSchema(MetaParser):
         'ospf-neighbor-information-all': {
             'ospf-instance-neighbor': {
                 'ospf-instance-name': str,
-                'ospf-neighbor': Use(validate_neighbor_list)
+                Optional('ospf-neighbor'): Use(validate_neighbor_list)
             }
         }
     }
