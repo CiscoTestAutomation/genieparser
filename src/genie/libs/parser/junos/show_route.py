@@ -982,7 +982,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # AS path: I 
         # AS path: 30000 4 103 104 105 106 107 108 109 I
-        p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>([\S]+( +)?)+)$')
+        p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) '
+                         r'+((?P<attr_value>[\S\s]+) +Cluster +list: '
+                         r'(?P<cluster_list>[\d\.\s]+)|(?P<attr_value2>[\S\s]+))$')
 
         # Accepted Multipath
         p16_1 = re.compile(r'^Accepted +(?P<accepted>\S+)$')
@@ -1308,6 +1310,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 rt_entry_exist = rt_dict.get('rt-entry', None)
                 if rt_entry_exist:
                     group = m.groupdict()
+                    if rt_dict.get('rt-entry', None) and group['cluster_list']:
+                        rt_entry_dict.update({'cluster-list': group['cluster_list']})
+                    group['attr_value'] = group['attr_value2'] if group['attr_value2'] else group['attr_value']
                     attr_as_path_dict = rt_entry_dict.setdefault('bgp-path-attributes', {}). \
                         setdefault('attr-as-path-effective', {})
                     rt_entry_dict.update({'as-path': line})
