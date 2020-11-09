@@ -2769,7 +2769,7 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 
         # Init
         parsed_dict = {}
-
+        vlan_flag = False
         # Port   VRF          Status IP Address                              Speed    MTU
         p1 = re.compile(r'^Port +VRF +Status +IP Address +Speed +MTU$')
 
@@ -2903,13 +2903,14 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
             # Interface Secondary VLAN(Type)                    Status Reason
             m = p9.match(line)
             if m:
+                vlan_flag = True
                 vlan_dict = parsed_dict.setdefault('interface', {}).\
                                         setdefault('vlan', {})
                 continue
 
             # Vlan1     --                                      down   Administratively down
             m = p10.match(line)
-            if m:
+            if m and vlan_flag:
                 group = m.groupdict()
                 intf_dict = vlan_dict.\
                     setdefault(Common.convert_intf_name(group['interface']), {})

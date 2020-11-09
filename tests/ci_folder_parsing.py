@@ -61,6 +61,8 @@ CLASS_SKIP = {
         "c9300": {
             "ShowInventory": True,
         },
+        "ShowLicenseUdi": True,
+        "ShowDeviceTrackingDatabaseInterface": True,
         "ShowPimNeighbor": True,
         "ShowIpInterfaceBrief": True,
         "ShowIpInterfaceBriefPipeVlan": True,
