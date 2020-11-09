@@ -5336,31 +5336,6 @@ class test_show_interfaces(unittest.TestCase):
          0 carrier transitions
     '''}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     golden_interface_parsed_output2 = {
         "Bundle-Ether1": {
             "enabled": True,
