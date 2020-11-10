@@ -351,6 +351,43 @@ Group Port-       Type     Protocol  Member Ports
 1     Po1(RU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)
 2     Po2(SU)     Eth      LACP      Eth1/3(P)    Eth1/4(P)    Eth1/5(H)
 '''}
+    golden_parsed_output_1 = {
+        'interfaces': {
+            'Port-channel1': {'bundle_id': 1,
+                              'layer': 'switched',
+                              'members': {'Ethernet1/42': {'flags': 'D'},
+                                          'Ethernet1/43': {'flags': 'D'},
+                                          'Ethernet1/45': {'flags': 'P'},
+                                          'Ethernet1/46': {'flags': 'P'},
+                                          'Ethernet1/47': {'flags': 'D'},
+                                          'Ethernet1/48': {'flags': 'P'}},
+                              'oper_status': 'up',
+                              'protocol': 'lacp',
+                              'type': 'eth'},
+            'Port-channel2': {'bundle_id': 2,
+                              'layer': 'switched',
+                              'members': {'Ethernet1/50': {'flags': 'P'},
+                                          'Ethernet1/51': {'flags': 'P'}},
+                              'oper_status': 'up',
+                              'protocol': 'lacp',
+                              'type': 'eth'}}}
+
+    golden_output_1 = {'execute.return_value': '''
+Flags:  D - Down        P - Up in port-channel (members)
+        I - Individual  H - Hot-standby (LACP only)
+        s - Suspended   r - Module-removed
+        S - Switched    R - Routed
+        U - Up (port-channel)
+        M - Not in use. Min-links not met
+--------------------------------------------------------------------------------
+Group Port-       Type     Protocol  Member Ports
+      Channel
+--------------------------------------------------------------------------------
+1     Po1(SU)     Eth      LACP      Eth1/42(D)   Eth1/43(D)   Eth1/45(P)
+                                     Eth1/46(P)   Eth1/47(D)   Eth1/48(P)
+2     Po2(SU)     Eth      LACP      Eth1/50(P)   Eth1/51(P)
+
+'''}
 
 
 
@@ -365,7 +402,14 @@ Group Port-       Type     Protocol  Member Ports
         self.device = Mock(**self.golden_output)
         obj = ShowPortChannelSummary(device=self.device)
         parsed_output = obj.parse()
+
         self.assertDictEqual(parsed_output, self.golden_parsed_output)
+
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowPortChannelSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertDictEqual(parsed_output, self.golden_parsed_output_1)
+
 
 
 # =================================

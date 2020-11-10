@@ -60638,6 +60638,129 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         }
     }
 
+    golden_output_8 = {'execute.return_value': '''
+            show route 13.13.13.13/32 extensive 
+        inet.0: 18 destinations, 18 routes (18 active, 0 holddown, 0 hidden)
+        13.13.13.13/32 (1 entry, 1 announced)
+        TSI:
+        KRT in-kernel 13.13.13.13/32 -> {indirect(1048628)}
+                *BGP    Preference: 170/-101
+                        Next hop type: Indirect
+                        Address: 0x9079058
+                        Next-hop reference count: 3
+                        Source: 1.1.1.1
+                        Next hop type: Router, Next hop index: 1237
+                        Next hop: 60.0.0.1 via ge-0/0/1.0, selected
+                        Protocol next hop: 3.3.3.3
+                        Indirect next hop: 907a000 1048628
+                        State: <Active Int Ext>
+                        Local AS:     3 Peer AS:     3
+                        Age: 20 	Metric2: 4 
+                        Task: BGP_3.1.1.1.1+62441
+                        Announcement bits (2): 0-KRT 6-Resolve tree 2 
+                        AS path: I (Originator) Cluster list:  0.0.0.1 0.0.0.2 0.0.0.4
+                        AS path:  Originator ID: 3.3.3.3
+                        Accepted
+                        Localpref: 100
+                        Router ID: 1.1.1.1
+                        Indirect next hops: 1
+                                Protocol next hop: 3.3.3.3 Metric: 4
+                                Indirect next hop: 907a000 1048628
+                                Indirect path forwarding next hops: 1
+                                        Next hop type: Router
+                                        Next hop: 60.0.0.1 via ge-0/0/1.0
+                    3.3.3.3/32 Originating RIB: inet.0
+                    Metric: 4			  Node path count: 1
+                    Forwarding nexthops: 1
+                        Nexthop: 60.0.0.1 via ge-0/0/1.0
+    '''
+    }
+
+    golden_parsed_output_8 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "18",
+                    "destination-count": "18",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "13.13.13.13/32",
+                            "rt-entry": {
+                                "active-tag": "*",
+                                "age": {
+                                    "#text": "20"
+                                },
+                                "announce-bits": "2",
+                                "announce-tasks": "0-KRT 6-Resolve tree 2",
+                                "as-path": "AS path:  Originator ID: 3.3.3.3",
+                                "bgp-path-attributes": {
+                                    "attr-as-path-effective": {
+                                        "aspath-effective-string": "AS path:",
+                                        "attr-value": "Originator ID: 3.3.3.3"
+                                    }
+                                },
+                                "cluster-list": " 0.0.0.1 0.0.0.2 0.0.0.4",
+                                "gateway": "1.1.1.1",
+                                "local-as": "3",
+                                "metric2": "4",
+                                "nh": [
+                                    {
+                                        "nh-string": "Next hop",
+                                        "to": "60.0.0.1",
+                                        "via": "ge-0/0/1.0"
+                                    }
+                                ],
+                                "nh-address": "0x9079058",
+                                "nh-index": "1237",
+                                "nh-reference-count": "3",
+                                "nh-type": "Router",
+                                "peer-as": "3",
+                                "peer-id": "1.1.1.1",
+                                "preference": "170",
+                                "preference2": "101",
+                                "protocol-name": "BGP",
+                                "protocol-nh": [
+                                    {
+                                        "indirect-nh": "907a000 1048628",
+                                        "to": "3.3.3.3"
+                                    },
+                                    {
+                                        "forwarding-nh-count": "1",
+                                        "indirect-nh": "907a000 1048628",
+                                        "metric": "4",
+                                        "nh": [
+                                            {
+                                                "nh-string": "Next hop",
+                                                "to": "60.0.0.1",
+                                                "via": "ge-0/0/1.0"
+                                            }
+                                        ],
+                                        "output": "3.3.3.3/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 60.0.0.1 via ge-0/0/1.0\n",
+                                        "to": "3.3.3.3"
+                                    }
+                                ],
+                                "rt-entry-state": "Active Int Ext",
+                                "task-name": "BGP_3.1.1.1.1+62441"
+                            },
+                            "rt-entry-count": {
+                                "#text": "1",
+                                "@junos:format": "1 entry"
+                            },
+                            "tsi": {
+                                "#text": "KRT in-kernel 13.13.13.13/32 -> {indirect(1048628)}\nLocalpref: 100"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "18"
+                }
+            ]
+        }
+    }
+
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -60688,6 +60811,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         obj = ShowRouteProtocolExtensive(device=self.device)
         parsed_output = obj.parse(route='10.66.12.12/32')
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
+
+    def test_golden_8(self):
+        self.device = Mock(**self.golden_output_8)
+        obj = ShowRouteProtocolExtensive(device=self.device)
+        parsed_output = obj.parse(route='10.66.12.12/32')
+        self.assertEqual(parsed_output, self.golden_parsed_output_8)
 
 '''
 Unit test for:

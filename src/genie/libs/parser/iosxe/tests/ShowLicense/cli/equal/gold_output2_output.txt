@@ -1,0 +1,131 @@
+Index 1 Feature: adventerprise
+        Period left: Life time
+        License Type: Permanent
+        License State: Active, In Use
+        License Count: Non-Counted
+        License Priority: Medium
+Index 2 Feature: advipservices
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 3 Feature: ipbase
+Index 4 Feature: avc
+        Period left: Life time
+        License Type: Permanent
+        License State: Active, In Use
+        License Count: Non-Counted
+        License Priority: Medium
+Index 5 Feature: broadband
+Index 6 Feature: broadband_4k
+Index 7 Feature: cube_250
+Index 8 Feature: cube_250_red
+Index 9 Feature: cube_ent_100
+Index 10 Feature: cube_ent_100_red
+Index 11 Feature: cube_lab
+Index 12 Feature: cube_video_b2btp
+Index 13 Feature: cube_video_b2btp_red
+Index 14 Feature: firewall
+        Period left: Life time
+        License Type: Permanent
+        License State: Active, Not in Use
+        License Count: Non-Counted
+        License Priority: Medium
+Index 15 Feature: fpi
+Index 16 Feature: fwnat_red
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 17 Feature: gtp_addon_aic
+Index 18 Feature: internal_service
+Index 19 Feature: ipsec
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 20 Feature: lisp
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 21 Feature: nat64_stateful_2m
+Index 22 Feature: otv
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 23 Feature: sgt_fw
+Index 24 Feature: sw_redundancy
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 25 Feature: throughput_5g
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 26 Feature: throughput_5g_to_10g
+Index 27 Feature: throughput_5g_to_20g
+Index 28 Feature: throughput_10g
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 29 Feature: throughput_10g_to_20g
+Index 30 Feature: throughput_20g
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 31 Feature: vpls
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 32 Feature: interface_10g
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: 0/0  (In-use/Violation)
+        License Priority: None
+Index 33 Feature: FoundationSuiteK9
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 34 Feature: AdvUCSuiteK9
+        Period left: Not Activated
+        Period Used: 0  minute  0  second
+        License Type: EvalRightToUse
+        License State: Active, Not in Use, EULA not accepted
+        License Count: Non-Counted
+        License Priority: None
+Index 35 Feature: CUBE-Standard
+Index 36 Feature: CUBE-Redundant
+Index 37 Feature: interface_10g_x2
+

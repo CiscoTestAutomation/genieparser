@@ -915,7 +915,7 @@ class ShowBgpSummarySchema(MetaParser):
         "bgp-information": {
             "bgp-peer": Use(validate_bgp_peer_list),
             "bgp-rib": Use(validate_bgp_rib_list),
-            "bgp-thread-mode": str,
+            Optional("bgp-thread-mode"): str,
             "down-peer-count": str,
             "group-count": str,
             "peer-count": str,
@@ -975,11 +975,13 @@ class ShowBgpSummary(ShowBgpSummarySchema):
         # ------------------------------------------------------------
         # 10.49.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
         # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+        # 20.0.0.2                  3          2          3       0       1           9 0/0/0/0              0/0/0/0
         p5 = re.compile(
             r'^(?P<peer_address>[\d\w:.]+) +(?P<peer_as>\d+) +'
             r'(?P<input_messages>\d+) +(?P<output_messages>\d+) +'
             r'(?P<route_queue_count>\d+) +(?P<flap_count>\d+) +'
-            r'(?P<text>[\S\s]+) +(?P<peer_state>Active|Connect|Establ)$')
+            r'(?P<text>[\S\s]+) +(?P<peer_state>Active|Connect|Establ|'
+            r'(0/0/0/0 +0/0/0/0))$')
 
         # ------------------------------------------------------------
         # p6:
@@ -1092,16 +1094,23 @@ class ShowBgpSummary(ShowBgpSummarySchema):
 
             # 10.49.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
             # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+            # 20.0.0.2                  3          2          3       0       1           9 0/0/0/0              0/0/0/0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 bgp_peer_dict = {}
+
+                special_case_state = re.compile(r'0/0/0/0 +0/0/0/0')
 
                 for key, value in group.items():
                     if key == 'text':
                         bgp_peer_dict['elapsed-time'] = {'#text': value}
                         continue
                     key = key.replace('_', '-')
+                    
+                    if special_case_state.match(value):
+                        value = 'Establ' 
+                    
                     bgp_peer_dict[key] = value
 
                 bgp_info_dict['bgp-information']['bgp-peer'].append(
