@@ -1,7 +1,7 @@
 expected_output = {
     "ap_name": {
         "b25a-13-cap10": {
-            "ap_mac": "3c41.0fee.5094",
+            "ap_mac": "3c41.0fff.3f83",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -9,7 +9,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25b-12-cap01": {
-            "ap_mac": "3c41.0fee.5884",
+            "ap_mac": "3c41.0fff.4773",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -17,7 +17,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25b-11-cap01": {
-            "ap_mac": "3c41.0fee.5d90",
+            "ap_mac": "3c41.0fff.4c7f",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -25,7 +25,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-12-cap07": {
-            "ap_mac": "3c41.0fee.5de8",
+            "ap_mac": "3c41.0fff.4cd7",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -33,7 +33,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-11-cap05": {
-            "ap_mac": "3c41.0fee.5df0",
+            "ap_mac": "3c41.0fff.4cdf",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -41,7 +41,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-11-cap04": {
-            "ap_mac": "3c41.0fee.5e5c",
+            "ap_mac": "3c41.0fff.4d4b",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -49,7 +49,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-12-cap08": {
-            "ap_mac": "3c41.0fee.5e74",
+            "ap_mac": "3c41.0fff.4d63",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -57,7 +57,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-11-cap01": {
-            "ap_mac": "3c41.0fee.5eac",
+            "ap_mac": "3c41.0fff.4d9b",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -65,7 +65,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-11-cap08": {
-            "ap_mac": "3c41.0fee.5ef8",
+            "ap_mac": "3c41.0fff.4de7",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -73,7 +73,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-11-cap02": {
-            "ap_mac": "3c41.0fee.5f94",
+            "ap_mac": "3c41.0fff.4e83",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -81,7 +81,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-11-cap07": {
-            "ap_mac": "3c41.0fee.5fbc",
+            "ap_mac": "3c41.0fff.4eab",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -89,7 +89,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-12-cap02": {
-            "ap_mac": "2c57.4518.16ac",
+            "ap_mac": "2c57.45ff.2ec4",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -97,7 +97,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25b-11-cap06": {
-            "ap_mac": "2c57.4518.2df0",
+            "ap_mac": "2c57.45ff.4509",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -105,7 +105,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25b-11-cap08": {
-            "ap_mac": "2c57.4518.41b0",
+            "ap_mac": "2c57.45ff.59c8",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -113,7 +113,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25b-11-cap07": {
-            "ap_mac": "2c57.4518.432c",
+            "ap_mac": "2c57.45ff.5b44",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -121,7 +121,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-12-cap11": {
-            "ap_mac": "2c57.4518.4330",
+            "ap_mac": "2c57.45ff.5b48",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -129,7 +129,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25b-12-cap02": {
-            "ap_mac": "3c41.0fee.4394",
+            "ap_mac": "3c41.0fff.3283",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -137,7 +137,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-13-cap09": {
-            "ap_mac": "2c57.4518.564c",
+            "ap_mac": "2c57.45ff.6e64",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -145,7 +145,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25b-12-cap03": {
-            "ap_mac": "2c57.4518.5b40",
+            "ap_mac": "2c57.45ff.7358",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
@@ -153,7 +153,7 @@ expected_output = {
             "tag_source": "Static",
         },
         "b25a-12-cap10": {
-            "ap_mac": "2c57.4518.5b48",
+            "ap_mac": "2c57.45ff.7360",
             "site_tag_name": "default-site-tag-fabric",
             "policy_tag_name": "PT_Fabri_B25_B25-1_fe778",
             "rf_tag_name": "Standard",
