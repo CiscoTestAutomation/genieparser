@@ -2646,7 +2646,6 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
                 next_hop_dict = {'next-hop-name':{'interface-name':group['interface_name']}}
                 if group['interface_address']:
                     next_hop_dict['next-hop-address'] = {'interface-address':group['interface_address']} 
-                    #next_hop_dict = {'next-hop-address':{'interface-address':group['interface_address']}}
                 route_entry_dict['ospf-next-hop'] = next_hop_dict                
                 continue
 
