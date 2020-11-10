@@ -528,7 +528,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                         continue
 
             # Policy routing matches: 0 packets, 0 bytes
-            p26 = re.compile(r'^\s*Policy\s+routing\s+matches:\s+(?P<packets>\d+)\s+packets,\s+(?P<bytes>\d+)\s+bytes')
             m = p26.match(line)
             if m:
                 for k, v in m.groupdict().items():
