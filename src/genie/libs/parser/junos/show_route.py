@@ -2113,7 +2113,7 @@ class ShowRouteSummarySchema(MetaParser):
         Optional("@xmlns:junos"): str,
         "route-summary-information": {
             Optional("@xmlns"): str,
-            "as-number": str,
+            Optional("as-number"): str,
             "route-table": Use(validate_route_table_list),
             "router-id": str
         }
@@ -2164,6 +2164,7 @@ class ShowRouteSummary(ShowRouteSummarySchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                route_summary_information_dict = ret_dict.setdefault('route-summary-information', {})
                 route_summary_information_dict.update({k.replace('_', '-'):
                     v for k, v in group.items() if v is not None})
                 continue
