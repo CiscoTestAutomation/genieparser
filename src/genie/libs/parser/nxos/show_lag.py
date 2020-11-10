@@ -328,9 +328,12 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
             r'(?P<bundle_id>[\d]+)[\xa0 ]+(?P<name>[\w\-]+)\((?P<flags>[\w]+)\)?[\xa0 '
             r']+(?P<type>\w+)[\xa0 ]+(?P<protocol>[\w\-]+)?[\xa0 ]+(?P<ports>[\w\-/() '
             r'\xa0]+ *)?$')
+        #                                      Eth1/6(P)    Eth1/7(P)    Eth1/8(H)
+        p2 = re.compile(
+            r'^\s*(?P<space>\s{37})(?P<ports>[\w\-\/() \xa0]+)?')
         for line in out.splitlines():
             if line:
-                line = line.strip()
+                line = line.rstrip()
             else:
                 continue
             # 1     Po1(RU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)
@@ -346,6 +349,18 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
                 intf_dict.update({'layer': 'switched' if 's' in flags else 'routed'})
                 intf_dict.update({'oper_status': 'up' if 'u' in flags else 'down'})
                 port_dict = intf_dict.setdefault('members', {})
+                port_list = re.findall(r'([\w/]+)\((\w+)\)', group['ports'])
+                for port in port_list:
+                    intf = Common.convert_intf_name(port[0]).capitalize()
+                    port_sub_dict = port_dict.setdefault(intf, {})
+                    port_sub_dict.update({'flags': port[1]})
+
+                continue
+
+            #                               Eth1/46(P)   Eth1/47(D)   Eth1/48(P)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
                 port_list = re.findall(r'([\w/]+)\((\w+)\)', group['ports'])
                 for port in port_list:
                     intf = Common.convert_intf_name(port[0]).capitalize()
