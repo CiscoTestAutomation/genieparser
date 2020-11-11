@@ -163,4 +163,122 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         return device_tracking_database_dict
 
 
+# ======================================
+# Schema for:
+#  * 'show device-tracking database interface {interface}'
+# ======================================
+class ShowDeviceTrackingDatabaseInterfaceSchema(MetaParser):
+    """Schema for show device-tracking database interface {interface}."""
 
+    schema = {
+        "binding_table": {"dynamic": int, "entries": int, "limit": int},
+        "network_layer_address": {
+            Any(): {
+                "age": str,
+                "code": str,
+                "interface": str,
+                "link_layer_address": str,
+                "prlvl": str,
+                "state": str,
+                Optional("time_left"): str,
+                "vlan": int,
+            }
+        },
+    }
+
+
+# ======================================
+# Parser for:
+#  * show device-tracking database interface {interface}'
+# ======================================
+class ShowDeviceTrackingDatabaseInterface(ShowDeviceTrackingDatabaseInterfaceSchema):
+    """Parser for show device-tracking database interface {interface}"""
+
+    cli_command = 'show device-tracking database interface {interface}'
+
+    def cli(self, interface, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            out = self.device.execute(cmd)
+
+        else:
+            out = output
+
+        # Binding Table has 87 entries, 75 dynamic (limit 100000)
+        # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+        # Preflevel flags (prlvl):
+        # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
+        # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
+        # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
+
+        # Network Layer Address               Link Layer Address Interface        vlan prlvl  age   state     Time left
+        # L   10.160.48.1                             0000.0cff.94fe  Vl1024         1024  0100 42473mn REACHABLE
+        # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+        # DH4 10.160.42.157                           0896.adff.899b  Gi7/0/11       1023  0025   33s  REACHABLE  271 s try 0(447985 s)
+        # DH4 10.160.42.124                           00b1.e3ff.c71d  Te2/0/39       1023  0025   30s  REACHABLE  272 s try 0(450251 s)
+        #
+        # ...OUTPUT OMMITTED...
+        #
+        # L   2001:db8:350b:919::1                    0000.0cff.94fd  Vl1023         1023  0100 42475mn REACHABLE
+        # L   2001:db8:350b:411::1                         0000.0cff.94fc  Vl1022         1022  0100 42473mn REACHABLE
+
+        # Binding Table has 87 entries, 75 dynamic (limit 100000)
+        binding_table_capture = re.compile(
+            r"^Binding Table has (?P<entries>\d+) entries, (?P<dynamic>\d+) dynamic \(limit (?P<limit>\d+)\)$"
+            )
+
+        # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+        tracking_database_capture = re.compile(
+            r"^(?P<code>\S+)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+.*)$"
+            )
+
+        # L   10.160.48.1                             0000.0cff.94fe  Vl1024         1024  0100 42473mn REACHABLE
+        local_database_capture = re.compile(
+            r"^(?P<code>L)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)$"
+            )
+
+        device_info_obj = {}
+
+        capture_list = [
+            binding_table_capture,
+            tracking_database_capture,
+            local_database_capture,
+        ]
+
+        for capture in capture_list:
+            for line in out.splitlines():
+                line = line.strip()
+
+                match = capture.match(line)
+                if match:
+                    group = match.groupdict()
+
+                    if capture == binding_table_capture:
+                        # convert str to int
+                        for item in group:
+                            group[item] = int(group[item])
+
+                        new_group = {"binding_table": group}
+                        device_info_obj.update(new_group)
+
+                    if (
+                        capture == tracking_database_capture
+                        or capture == local_database_capture
+                    ):
+                        # convert str to int
+                        group["vlan"] = int(group["vlan"])
+
+                        # pull a key from dict to use as new_key
+                        new_key = "network_layer_address"
+                        new_group = {group[new_key]: {}}
+
+                        # update then pop new_key from the dict
+                        new_group[group[new_key]].update(group)
+                        new_group[group[new_key]].pop(new_key)
+
+                        if not device_info_obj.get(new_key):
+                            device_info_obj[new_key] = {}
+
+                        device_info_obj[new_key].update(new_group)
+
+        return device_info_obj

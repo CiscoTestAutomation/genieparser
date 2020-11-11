@@ -990,21 +990,24 @@ class ShowInterfaces(ShowInterfacesSchema):
         p42 = re.compile(r'^Output +errors:$')
 
         # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0,
+
         # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0, L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
-        p43_1 = re.compile(r'^Errors: +(?P<input_errors>\d+), +'
-            r'Drops: +(?P<input_drops>\d+), +Framing +errors: +(?P<framing_errors>\d+), +'
-            r'Runts: +(?P<input_runts>\d+), Policed +discards: +(?P<input_discards>\d+),'
-            r'( +L3 +incompletes: +(?P<input_l3_incompletes>\d+), +'
-            r'L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),)?'
-            r'( +L2 +mismatch +timeouts: +(?P<input_l2_mismatch_timeouts>\d+),?)?'
-            r'( +FIFO +errors: +(?P<input_fifo_errors>\d+),?)?'
-            r'( +Resource +errors: +(?P<input_resource_errors>\d+))?$')
-        
+
         # L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
-        p43_2 = re.compile(r'^L2 +mismatch +timeouts: +'
-            r'(?P<input_l2_mismatch_timeouts>\d+), +FIFO +errors: +'
-            r'(?P<input_fifo_errors>\d+), +Resource +errors: +'
-            r'(?P<input_resource_errors>\d+)')
+
+        # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0,
+        # L3 incompletes: 0, L2 channel errors: 0, L2 mismatch timeouts: 0,
+        # FIFO errors: 0, Resource errors: 0
+        p43 = re.compile(r'^(Errors: +(?P<input_errors>\d+),)?'
+                           r'( *Drops: +(?P<input_drops>\d+),)?'
+                           r'( *Framing +errors: +(?P<framing_errors>\d+),)?'
+                           r'( *Runts: +(?P<input_runts>\d+),)?'
+                           r'( *Policed +discards: +(?P<input_discards>\d+),)?'
+                           r'( *L3 +incompletes: +(?P<input_l3_incompletes>\d+),)?'
+                           r'( *L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),)?'
+                           r'( *L2 +mismatch +timeouts: +(?P<input_l2_mismatch_timeouts>\d+),?)?'
+                           r'( *FIFO +errors: +(?P<input_fifo_errors>\d+),?)?'
+                           r'( *Resource +errors: +(?P<input_resource_errors>\d+))?$')
 
         # Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
         # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0,
@@ -1020,7 +1023,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # MTU errors: 0, Resource errors: 0
         p44_2 = re.compile(r'^MTU +errors: +(?P<mtu_errors>\d+), +Resource +'
             r'errors: +(?P<output_resource_errors>\d+)$')
-        
+
         # Total octets                   21604601324      16828244544
         p45 = re.compile(r'^Total +octets +(?P<input_bytes>\d+) +'
             r'(?P<output_bytes>\d+)$')
@@ -1092,6 +1095,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         cnt = 0
         for line in out.splitlines():
             line = line.strip()
+            if not line:
+               continue
             cnt += 1
 
             # Physical interface: ge-0/0/0, Enabled, Physical link is Up
@@ -1591,15 +1596,15 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0,
-            m = p43_1.match(line)
-            if m:
-                group = m.groupdict()
-                input_error_list_dict.update({k.replace('_','-'):
-                    v for k, v in group.items() if v is not None})
-                continue
+
+            # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0, L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
 
             # L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
-            m = p43_2.match(line)
+
+            # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0,
+            # L3 incompletes: 0, L2 channel errors: 0, L2 mismatch timeouts: 0,
+            # FIFO errors: 0, Resource errors: 0
+            m = p43.match(line)
             if m:
                 group = m.groupdict()
                 input_error_list_dict.update({k.replace('_','-'):

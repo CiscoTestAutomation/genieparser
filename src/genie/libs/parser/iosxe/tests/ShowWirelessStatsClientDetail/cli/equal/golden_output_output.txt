@@ -1,0 +1,485 @@
+Total Number of Clients : 16
+
+Protocol Statistics
+
+-----------------------------------------------------------------------------
+Protcol            Client Count
+ 802.11b              : 0
+ 802.11g              : 0
+ 802.11a              : 0
+ 802.11n-2.4GHz       : 3
+ 802.11n-5 GHz        : 2
+ 802.11ac             : 11
+ 802.11ax-5 GHz       : 0
+ 802.11ax-2.4 GHz     : 0
+
+
+
+Current client state statistics:
+-----------------------------------------------------------------------------
+  Authenticating         : 2
+  Mobility               : 0
+  IP Learn               : 2
+  Webauth Pending        : 1
+  Run                    : 11
+  Delete-in-Progress     : 0
+
+
+Client Summary
+-----------------------------
+Current Clients : 16
+Excluded Clients: 0
+Disabled Clients: 0
+Foreign Clients : 0
+Anchor Clients  : 0
+Local Clients   : 14
+Idle Clients    : 0
+
+client global statistics:
+-----------------------------------------------------------------------------
+Total association requests received              : 40809
+Total association attempts                       : 38581
+Total FT/LocalAuth requests                      : 0
+Total association failures                       : 21
+Total association response accepts               : 38559
+Total association response rejects               : 21
+Total association response errors                : 21
+Total association failures due to blacklist      : 562
+Total association drops due to multicast mac     : 0
+Total association drops due to throttling        : 0
+Total association drops due to unknown bssid     : 8
+Total association drops due to parse failure     : 0
+Total association drops due to other reasons     : 0
+Total association requests wired clients         : 0
+Total association drops wired clients            : 0
+Total association success wired clients          : 0
+Total peer association requests wired clients    : 0
+Total peer association drops wired clients       : 0
+Total peer association success wired clients     : 0
+Total association success wifi direct clients    : 0
+Total association rejects wifi direct clients    : 0
+Total association response errors                : 21
+Total 11r ft authentication requests received    : 8173
+Total 11r ft authentication response success     : 8029
+Total 11r ft authentication response failure     : 144
+Total 11r ft action requests received            : 0
+Total 11r ft action response success             : 0
+Total 11r ft action response failure             : 0
+Total 11r PMKR0-Name mismatch                    : 86
+Total 11r PMKR1-Name mismatch                    : 9
+Total 11r MDID mismatch                          : 0
+Total AID allocation failures                    : 0
+Total AID free failures                          : 0
+Total Roam Across Policy Profiles                : 0
+Total roam attempts                              : 4200
+  Total CCKM roam attempts                       : 0
+  Total 11r roam attempts                        : 883
+  Total 11r slow roam attempts                   : 99
+  Total 11i fast roam attempts                   : 1319
+  Total 11i slow roam attempts                   : 1758
+  Total other roam type attempts                 : 141
+Total roam failures in dot11                     : 5
+Total 11r flex roam attempts                     : 0
+
+Total WPA3 SAE attempts                          : 0
+Total WPA3 SAE successful authentications        : 0
+Total WPA3 SAE authentication failures           : 0
+  Total incomplete protocol failures             : 0
+Total WPA3 SAE commit messages received          : 0
+Total WPA3 SAE commit messages rejected          : 0
+  Total unsupported group rejections             : 0
+Total WPA3 SAE commit messages sent              : 0
+Total WPA3 SAE confirm messages received         : 0
+Total WPA3 SAE confirm messages rejected         : 0
+  Total WPA3 SAE message confirm field mismatch  : 0
+  Total WPA3 SAE confirm message invalid length  : 0
+Total WPA3 SAE confirm messages sent             : 0
+Total WPA3 SAE Open Sessions                     : 0
+Total SAE Message drops due to throttling        : 0
+
+Total Flexconnect local-auth roam attempts       : 0
+  Total AP 11i fast roam attempts                : 0
+  Total AP 11i slow roam attempts                : 0
+
+Total client state starts                        : 41695
+Total client state associated                    : 38559
+Total client state l2auth success                : 23878
+Total client state l2auth failures               : 4376
+Total blacklisted clients on dot1xauth failure   : 4284
+Total client state mab attempts                  : 18231
+Total client state mab failed                    : 0
+Total client state ip learn attempts             : 23511
+Total client state ip learn failed               : 13582
+Total client state l3 auth attempts              : 3134
+Total client state l3 auth failed                : 0
+Total client state session push attempts         : 0
+Total client state session push failed           : 0
+Total client state run                           : 11480
+Total client idle state attempts                 : 227
+Total client deleted                             : 23500
+
+Total clients recovered from idle state:
+-----------------------------------------------------------------------------
+Total clients intra wncd idle to run             : 3
+Total clients inter wncd roam in idle state      : 0
+Total clients L2 roam in idle state              : 0
+Total clients L3 roam in idle state              : 0
+
+Total add mobiles sent                           : 45386
+Total delete mobiles sent                        : 27230
+Total client deferred delete mobiles             : 5297
+Total client deferred delete mobiles sent        : 5297
+Total client deferred delete mobile timeouts     : 255
+Total udn payloads sent                          : 0
+
+Total key exchange attempts                      : 4848
+Total broadcast key exchange attempts            : 486
+Total broadcast key exchange failures            : 0
+Total eapol key sent                             : 10583
+Total eapol key received                         : 10298
+Total m1 sent                                    : 4848
+Total m3 sent                                    : 4758
+Total m5 sent                                    : 437
+Total m2 received                                : 4781
+Total m4 received                                : 4968
+Total m6 received                                : 342
+Total m1 resent                                  : 262
+Total m3 resent                                  : 82
+Total m5 resent                                  : 196
+
+Total data path client create                    : 17122
+Total data path client create success            : 17122
+Total data path client create failed             : 0
+Total data path deplumb client create            : 0
+Total data path deplumb client create success    : 0
+Total data path deplumb client create fail       : 0
+Total data path client update                    : 16026
+Total data path client update success            : 16026
+Total data path client update failed             : 0
+Total data path client delete                    : 17108
+Total data path client delete success            : 17108
+Total data path client delete failed             : 0
+Total data path client nack                      : 0
+Total data path client delete nack               : 0
+Total data path client unknown nack              : 0
+Total DMS requests received in action frame      : 19
+Total DMS responses sent in action frame         : 19
+Total DMS requests received in Re-assoc Request  : 0
+Total L3 VLAN Override vlan change received      : 0
+Total L3 VLAN Override disassociations sent      : 0
+Total L3 VLAN Override re-associations received  : 0
+Total L3 VLAN Override successful VLAN change    : 0
+Total PPSK key generation cache hit              : 0
+Total PPSK key generation cache miss             : 0
+
+client state statistics:
+-----------------------------------------------------------------------------
+Average Time in Each State (ms)
+  Associated State    : 0
+  L2 State       : 0
+  Mobility State : 0
+  IP Learn State : 0
+  L3 Auth State   : 0
+
+Average Run State Latency (ms) : 5
+
+Average Run State Latency without user delay (ms) : 1
+
+Latency Distribution (ms)
+   1 - 100              : 2477
+   100 - 200            : 485
+   200 - 300            : 694
+   300 - 600            : 358
+   600 - 1000           : 582
+   1000+                : 593
+
+Webauth HTTP Statistics
+-----------------------
+  Intercepted HTTP requests   : 306834
+  IO Read events              : 552102
+  Received HTTP messages      : 294534
+  IO write events             : 293834
+  Sent HTTP replies           : 293834
+  IO AAA messages             : 0
+  SSL OK                      : 7812
+  SSL Read would block        : 30953
+  SSL write would block       : 0
+  Socket opens                : 306834
+  Socket closes               : 306834
+
+Time spent in each httpd states (in msecs)
+                             Total       Max        Min        Samples
+----------------------------------------------------------------------
+IO Reading state          4654682      58788          0     294534
+IO Writing state             6445          1          0     293834
+IO AAA state                    0          0          0          0
+Method after reading         9865          1          0     294534
+Method after writing           31          1          0     293834
+Method after AAA                0          0          0          0
+
+Webauth HTTP status counts
+--------------------------
+ HTTP 200 OK                    : 293834
+ HTTP 201 Created               : 0
+ HTTP 202 Accepted              : 0
+ HTTP 203 Provisional Info      : 0
+ HTTP 204 No Content            : 0
+ HTTP 300 Multiple Choices      : 0
+ HTTP 301 Moved Permanently     : 0
+ HTTP 302 Moved Temporarily     : 0
+ HTTP 303 Method                : 0
+ HTTP 304 Not Modified          : 0
+ HTTP 400 Bad Request           : 0
+ HTTP 401 Unauthorized          : 0
+ HTTP 402 Payment Required      : 0
+ HTTP 403 Forbidden             : 0
+ HTTP 404 Not Found             : 0
+ HTTP 405 Method Not Allowed    : 0
+ HTTP 406 None Acceptable       : 0
+ HTTP 407 Proxy-Auth Required   : 0
+ HTTP 408 Request Timeout       : 0
+ HTTP 409 Conflict              : 0
+ HTTP 410 Gone                  : 0
+ HTTP 500 Internal Server Error : 0
+ HTTP 501 Not Implemeneted      : 0
+ HTTP 502 Bad Gateway           : 0
+ HTTP 503 Service Unavailable   : 0
+ HTTP 504 Gateway Timeout       : 0
+
+Webauth backpressure queue counters
+-----------------------------------
+Pending SSL handshakes            : 0
+Pending HTTPS new requests        : 0
+Pending AAA replies               : 0
+
+Dot1x Global Statistics
+-----------------------
+RxStart = 6657 RxLogoff = 18  RxResp = 104310 RxRespID = 15453
+RxReq = 0 RxInvalid = 0  RxLenErr = 0
+RxTotal = 126939
+TxStart = 0 TxLogoff = 0  TxResp = 0
+TxReq = 117345 ReTxReq = 3909  ReTxReqFail = 11528
+TxReqID = 67670 ReTxReqID = 29908  ReTxReqIDFail = 1310
+TxTotal = 185057
+
+Total client delete reasons
+---------------------------
+Controller deletes
+---------------------------
+---------------------------
+No Operation                                                    : 0
+Unknown                                                         : 0
+Session Manager                                                 : 0
+Connection timeout                                              : 0
+Datapath plumb                                                  : 0
+WPA key exchange timeout                                        : 78
+802.11w MAX SA queries reached                                  : 0
+Client deleted during HA recovery                               : 0
+Inter instance roam failure                                     : 0
+Inter instance roam success                                     : 0
+Inter controller roam success                                   : 0
+Due to mobility failure                                         : 0
+NAS error                                                       : 0
+Policy Manager internal error                                   : 0
+80211v smart roam failed                                        : 0
+DOT11v association failed                                       : 0
+DOT11r pre-authentication failure                               : 55
+SAE authentication failure                                      : 0
+DOT11 failure                                                   : 0
+DOT11 SAE invalid message                                       : 0
+DOT11 denied data rates                                         : 0
+802.11v Client RSSI lower than the association RSSI threshold   : 0
+invalid QoS parameter                                           : 0
+DOT11 IE validation failed                                      : 0
+DOT11 group cipher in IE validation failed                      : 0
+DOT11 invalid pairwise cipher                                   : 0
+DOT11 invalid AKM                                               : 0
+DOT11 unsupported RSN version                                   : 0
+DOT11 invalid RSNIE capabilities                                : 0
+DOT11 received invalid PMKID in the received RSN IE             : 21
+DOT11 received invalid PMK length                               : 0
+DOT11 invalid MDIE                                              : 0
+DOT11 invalid FT IE                                             : 0
+DOT11 AID allocation conflicts                                  : 0
+AVC client re-anchored at the foreign controller                : 0
+Client EAP ID timeout                                           : 4270
+Client DOT1x timeout                                            : 0
+Malformed EAP key frame                                         : 0
+EAP key install bit is not expected                             : 0
+EAP key error bit is not expected                               : 0
+EAP key ACK bit is not expected                                 : 0
+Invalid key type                                                : 0
+EAP key secure bit is not expected                              : 0
+key description version mismatch                                : 0
+wrong replay counter                                            : 1
+EAP key MIC bit expected                                        : 0
+MIC validation failed                                           : 9
+MAC theft                                                       : 0
+IP theft                                                        : 14
+Policy bind failure                                             : 0
+Web authentication failure                                      : 0
+802.1X authentication credential failure                        : 0
+802.1X authentication timeout                                   : 0
+802.11 authentication failure                                   : 0
+802.11 association failure                                      : 0
+Manually excluded                                               : 0
+DB error                                                        : 0
+Anchor creation failure                                         : 0
+Anchor invalid Mobility BSSID                                   : 0
+Anchor no memory                                                : 0
+Call admission controller at anchor node                        : 0
+Supplicant restart                                              : 0
+Port admin disabled                                             : 0
+Reauthentication failure                                        : 0
+Client connection lost                                          : 0
+Error while PTK computation                                     : 0
+MAC and IP theft                                                : 0
+QoS policy failure                                              : 0
+QoS policy send to AP failure                                   : 0
+QoS policy bind on AP failure                                   : 0
+QoS policy unbind on AP failure                                 : 0
+Static IP anchor discovery failure                              : 0
+VLAN failure                                                    : 0
+ACL failure                                                     : 0
+Redirect ACL failure                                            : 6
+Accounting failure                                              : 0
+Security group tag failure                                      : 0
+FQDN filter definition does not exist                           : 0
+Wrong filter type, expected postauth FQDN filter                : 0
+Wrong filter type, expected preauth FQDN filter                 : 0
+Invalid group id for FQDN filter valid range  1..16             : 0
+Policy parameter mismatch                                       : 0
+Reauth failure                                                  : 0
+Wrong PSK                                                       : 0
+Policy failure                                                  : 0
+AAA server unavailable                                          : 0
+AAA server not ready                                            : 0
+No dot1x method configuration                                   : 0
+Association connection timeout                                  : 0
+MAC-AUTH connection timeout                                     : 0
+L2-AUTH connection timeout                                      : 570
+L3-AUTH connection timeout                                      : 2793
+Mobility connection timeout                                     : 0
+static IP connection timeout                                    : 0
+SM session creation timeout                                     : 0
+IP-LEARN connection timeout                                     : 13582
+NACK IFID exists                                                : 0
+Guest-LAN invalid MBSSID                                        : 0
+Guest-LAN no memory                                             : 0
+Guest-LAN ceate request failed                                  : 0
+EoGRE Reset                                                     : 0
+EoGRE Generic Join Failure                                      : 0
+EoGRE HA-Reconciliation                                         : 0
+Wired idle timeout                                              : 0
+IP Update timeout                                               : 0
+SAE Commit received in Associated State                         : 0
+NACK IFID mismatch                                              : 0
+EoGRE Invalid VLAN                                              : 0
+EoGRE Empty Domain                                              : 0
+EoGRE Invalid Domain                                            : 0
+EoGRE Domain Shut                                               : 0
+EoGRE Invalid Gateway                                           : 0
+EoGRE All Gateways down                                         : 0
+EoGRE Flex - no active gateway                                  : 0
+EoGRE Rule Matching error                                       : 0
+EoGRE AAA Override error                                        : 0
+EoGRE client onboarding error                                   : 0
+EoGRE Mobility Handoff error                                    : 0
+L3 VLAN Override connection timeout                             : 0
+Delete received from AP                                         : 0
+QoS failure                                                     : 0
+WPA group key update timeout                                    : 95
+Client blacklist                                                : 0
+DOT11 unsupported client capabilities                           : 0
+DOT11 association denied unspecified                            : 0
+DOT11 AP have insufficient bandwidth                            : 0
+DOT11 invalid QoS parameter                                     : 0
+Client not allowed by assisted roaming                          : 0
+Wired client deleted due to WGB delete                          : 0
+Client Abort                                                    : 0
+Mobility peer delete                                            : 0
+No IP                                                           : 126
+BSSID down                                                      : 1
+DOT11 QoS policy                                                : 0
+Roam across policy profile deny                                 : 0
+4WAY handshake failure - M1 issue                               : 0
+4WAY handshake failure - M3 issue                               : 0
+Exclusion policy template fail                                  : 0
+DOT11 Cipher Suite Rejected                                     : 0
+----------------------------
+Informational Delete Reason
+-----------------------------
+Mobility WLAN down                                              : 0
+AP upgrade                                                      : 0
+L3 authentication failure                                       : 0
+AP down/disjoin                                                 : 2
+MAC authentication failure                                      : 0
+Due to SSID change                                              : 1658
+Due to VLAN change                                              : 0
+Admin deauthentication                                          : 0
+Session timeout                                                 : 1
+Idle timeout                                                    : 0
+Supplicant request                                              : 18
+Mobility tunnel down                                            : 0
+DOT11v timer timeout                                            : 0
+DOT11 max STA                                                   : 0
+IAPP disassociation for wired client                            : 0
+Wired WGB change                                                : 0
+Wired VLAN change                                               : 0
+WGB Wired client joins as a direct wireless client              : 0
+Incorrect credentials                                           : 14
+Wired client cleanup due to WGB roaming                         : 0
+Radio Down                                                      : 0
+Mobility failure on fast roam                                   : 23
+Due to IP Zone change                                              : 0
+-----------------------------
+-----------------------------
+Client initiate delete
+-----------------------------
+Deauthentication or disassociation request                      : 0
+Client DHCP                                                     : 0
+Client EAP timeout                                              : 0
+Client 8021x failure                                            : 0
+Client device idle                                              : 0
+Client captive portal security failure                          : 0
+Client decryption failure                                       : 0
+Client interface disabled                                       : 0
+Client user triggered disassociation                            : 0
+Client miscellaneous reason                                     : 0
+Unknown                                                         : 0
+Client peer triggered                                           : 0
+Client beacon loss                                              : 0
+-----------------------------
+AP Deletes
+-----------------------------
+AP initiated delete when client is sending disassociation       : 0
+AP initiated delete for idle timeout                            : 158
+AP initiated delete for client ACL mismatch                     : 0
+AP initiated delete for AP auth stop                            : 0
+AP initiated delete for association expired at AP               : 0
+AP initiated delete for 4-way handshake failed                  : 0
+AP initiated delete for DHCP timeout                            : 0
+AP initiated delete for reassociation timeout                   : 0
+AP initiated delete for SA query timeout                        : 0
+AP initiated delete for intra AP roam                           : 0
+AP initiated delete for channel switch at AP                    : 0
+AP initiated delete for bad AID                                 : 0
+AP initiated delete for request                                 : 0
+AP initiated delete for interface reset                         : 0
+AP initiated delete for all on slot                             : 0
+AP initiated delete for reaper radio                            : 0
+AP initiated delete for slot disable                            : 0
+AP initiated delete for MIC failure                             : 0
+AP initiated delete for VLAN delete                             : 0
+AP initiated delete for channel change                          : 5
+AP initiated delete for stop reassociation                      : 0
+AP initiated delete for packet max retry                        : 0
+AP initiated delete for transmission deauth                     : 0
+AP initiated delete for sensor station timeout                  : 0
+AP initiated delete for age timeout                             : 0
+AP initiated delete for transmission fail threshold             : 0
+AP initiated delete for uplink receive timeout                  : 0
+AP initiated delete for sensor scan next radio                  : 0
+AP initiated delete for sensor scan other BSSID                 : 0
+AP initiated delete for AUTH-timeout and web-auth timeout       : 0
+AP initiated delete for sending deauth pak to client            : 0

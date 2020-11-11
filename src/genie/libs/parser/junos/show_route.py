@@ -982,7 +982,10 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # AS path: I 
         # AS path: 30000 4 103 104 105 106 107 108 109 I
-        p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>([\S]+( +)?)+)$')
+        # AS path: I (Originator) Cluster list:  0.0.0.1 0.0.0.2 0.0.0.4
+        p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) '
+                         r'+((?P<attr_value>[\S\s]+) +Cluster +list: '
+                         r'(?P<cluster_list>[\d\.\s]+)|(?P<attr_value2>[\S\s]+))$')
 
         # Accepted Multipath
         p16_1 = re.compile(r'^Accepted +(?P<accepted>\S+)$')
@@ -1303,11 +1306,15 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 continue
 
             # AS path: I 
+            # AS path: I (Originator) Cluster list:  0.0.0.1 0.0.0.2 0.0.0.4
             m = p16.match(line)
             if m:
                 rt_entry_exist = rt_dict.get('rt-entry', None)
                 if rt_entry_exist:
                     group = m.groupdict()
+                    if rt_dict.get('rt-entry', None) and group['cluster_list']:
+                        rt_entry_dict.update({'cluster-list': group['cluster_list']})
+                    group['attr_value'] = group['attr_value2'] if group['attr_value2'] else group['attr_value']
                     attr_as_path_dict = rt_entry_dict.setdefault('bgp-path-attributes', {}). \
                         setdefault('attr-as-path-effective', {})
                     rt_entry_dict.update({'as-path': line})
@@ -1517,7 +1524,6 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 group = m.groupdict()
                 rt_entry_dict.update({'peer-id': group['peer_id']})
                 continue
-        
 
         return ret_dict
     
@@ -3045,6 +3051,7 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
                 route_table_dict.update(
                     {k.replace('_', '-'):v for k, v in group.items() if v is not None}
                 )
+                rt_entry_dict = None
                 continue
 
             # 10.16.2.2/32 (1 entry, 1 announced)
@@ -3078,7 +3085,8 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict = {}
+                if rt_entry_dict == None:
+                    rt_entry_dict = {}
                 rt_entry_dict['active-tag'] = group['active_tag']
                 rt_entry_dict['preference'] = group['preference']
                 rt_entry_dict['preference2'] = group['preference2']
@@ -3152,6 +3160,8 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
             # State: <Active Ext>
             m = p11.match(line)
             if m:
+                if rt_entry_dict == None:
+                    rt_entry_dict = {}
                 group = m.groupdict()
                 for group_key, group_value in m.groupdict().items():
                     entry_key = group_key.replace('_', '-')
