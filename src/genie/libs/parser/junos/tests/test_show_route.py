@@ -60761,11 +60761,6 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         }
     }
 
-
-
-
-
-
     golden_output_9 = {'execute.return_value': '''
             show route 200.0.0.0/32 extensive 
         inet.0: 1200014 destinations, 1625014 routes (1200014 active, 0 holddown, 0 hidden)
