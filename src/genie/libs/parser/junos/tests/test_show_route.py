@@ -60762,6 +60762,179 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
     }
 
 
+
+
+
+
+    golden_output_9 = {'execute.return_value': '''
+            show route 200.0.0.0/32 extensive 
+        inet.0: 1200014 destinations, 1625014 routes (1200014 active, 0 holddown, 0 hidden)
+        200.0.0.0/32 (2 entries, 1 announced)
+        TSI:
+        KRT queued (pending) change
+        200.0.0.0/32 -> {10.0.0.2}=>{20.0.0.2, 10.0.0.2}
+        in-kernel 200.0.0.0/32 -> {10.0.0.2}
+        Page 0 idx 0, (group eBGP_TESTER type External) Type 1 val 0x4d28adf0 (adv_entry)
+        Advertised metrics:
+            Nexthop: Self
+            AS path: [1] 3 2 6 I
+            Communities:
+        Page 0 idx 2, (group eBGP_SUT-2 type External) Type 1 val 0x8247f70 (adv_entry)
+        Advertised metrics:
+            Nexthop: Self
+            AS path: [1] 3 2 6 I
+            Communities:
+        Path 200.0.0.0 from 10.0.0.2 Vector len 4.  Val: 0 2
+                *BGP    Preference: 170/-101
+                        Next hop type: Router, Next hop index: 1048656
+                        Address: 0x338419c
+                        Next-hop reference count: 492004
+                        Source: 10.0.0.2
+                        Next hop: 20.0.0.2 via xe-0/1/0.0
+                        Session Id: 0x30ca
+                        Next hop: 10.0.0.2 via xe-0/1/3.0, selected
+                        Session Id: 0x30c8
+                        State: <Active Ext>
+                        Local AS:     1 Peer AS:     3
+                        Age: 6:35 
+                        Validation State: unverified 
+                        Task: BGP_3.10.0.0.2+52948
+                        Announcement bits (2): 0-KRT 1-BGP_RT_Background 
+                        AS path: 3 2 6 I
+                        Accepted Multipath
+                        Localpref: 100
+                        Router ID: 3.3.3.3
+                BGP    Preference: 170/-101
+                        Next hop type: Router, Next hop index: 1077
+                        Address: 0x4595c01c
+                        Next-hop reference count: 425000
+                        Source: 20.0.0.2
+                        Next hop: 20.0.0.2 via xe-0/1/0.0, selected
+                        Session Id: 0x30ca
+                        State: <Ext>
+                        Inactive reason: Active preferred
+                        Local AS:     1 Peer AS:     4
+                        Age: 6:28 
+                        Validation State: unverified 
+                        Task: BGP_4.20.0.0.2+179
+                        AS path: 4 2 6 I
+                        Accepted MultipathContrib
+                        Localpref: 100
+                        Router ID: 4.4.4.4
+    '''
+    }
+
+    golden_parsed_output_9 = {
+        "route-information": {
+            "route-table": [
+                {
+                    "active-route-count": "1200014",
+                    "destination-count": "1200014",
+                    "hidden-route-count": "0",
+                    "holddown-route-count": "0",
+                    "rt": [
+                        {
+                            "rt-announced-count": "1",
+                            "rt-destination": "200.0.0.0/32",
+                            "rt-entry": [
+                                {
+                                    "accepted": "Multipath",
+                                    "active-tag": "*",
+                                    "age": {
+                                        "#text": "6:35"
+                                    },
+                                    "announce-bits": "2",
+                                    "announce-tasks": "0-KRT 1-BGP_RT_Background",
+                                    "as-path": "AS path: 3 2 6 I",
+                                    "bgp-path-attributes": {
+                                        "attr-as-path-effective": {
+                                            "aspath-effective-string": "AS path:",
+                                            "attr-value": "3 2 6 I"
+                                        }
+                                    },
+                                    "gateway": "10.0.0.2",
+                                    "local-as": "1",
+                                    "nh": [
+                                        {
+                                            "nh-string": "Next hop",
+                                            "session": "30ca",
+                                            "to": "20.0.0.2",
+                                            "via": "xe-0/1/0.0"
+                                        },
+                                        {
+                                            "nh-string": "Next hop",
+                                            "session": "30c8",
+                                            "to": "10.0.0.2",
+                                            "via": "xe-0/1/3.0"
+                                        }
+                                    ],
+                                    "nh-address": "0x338419c",
+                                    "nh-index": "1048656",
+                                    "nh-reference-count": "492004",
+                                    "nh-type": "Router",
+                                    "peer-as": "3",
+                                    "peer-id": "3.3.3.3",
+                                    "preference": "170",
+                                    "preference2": "101",
+                                    "protocol-name": "BGP",
+                                    "rt-entry-state": "Active Ext",
+                                    "task-name": "BGP_3.10.0.0.2+52948",
+                                    "validation-state": "unverified"
+                                },
+                                {
+                                    "accepted": "MultipathContrib",
+                                    "age": {
+                                        "#text": "6:28"
+                                    },
+                                    "as-path": "AS path: 4 2 6 I",
+                                    "bgp-path-attributes": {
+                                        "attr-as-path-effective": {
+                                            "aspath-effective-string": "AS path:",
+                                            "attr-value": "4 2 6 I"
+                                        }
+                                    },
+                                    "gateway": "20.0.0.2",
+                                    "inactive-reason": "Active preferred",
+                                    "local-as": "1",
+                                    "nh": [
+                                        {
+                                            "nh-string": "Next hop",
+                                            "session": "30ca",
+                                            "to": "20.0.0.2",
+                                            "via": "xe-0/1/0.0"
+                                        }
+                                    ],
+                                    "nh-address": "0x4595c01c",
+                                    "nh-index": "1077",
+                                    "nh-reference-count": "425000",
+                                    "nh-type": "Router",
+                                    "peer-as": "4",
+                                    "peer-id": "4.4.4.4",
+                                    "preference": "170",
+                                    "preference2": "101",
+                                    "protocol-name": "BGP",
+                                    "rt-entry-state": "Ext",
+                                    "task-name": "BGP_4.20.0.0.2+179",
+                                    "validation-state": "unverified"
+                                }
+                            ],
+                            "rt-entry-count": {
+                                "#text": "2",
+                                "@junos:format": "2 entries"
+                            },
+                            "tsi": {
+                                "#text": "\nPage 0 idx 0, (group eBGP_TESTER type External) Type 1 val 0x4d28adf0 (adv_entry)\nAdvertised metrics:\nNexthop: Self\nAS path: [1] 3 2 6 I\nCommunities:\nPage 0 idx 2, (group eBGP_SUT-2 type External) Type 1 val 0x8247f70 (adv_entry)\nAdvertised metrics:\nNexthop: Self\nAS path: [1] 3 2 6 I\nCommunities:\nPath 200.0.0.0 from 10.0.0.2 Vector len 4.  Val: 0 2\nLocalpref: 100\nLocalpref: 100"
+                            }
+                        }
+                    ],
+                    "table-name": "inet.0",
+                    "total-route-count": "1625014"
+                }
+            ]
+        }
+    }
+
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowRouteProtocolExtensive(device=self.device)
@@ -60817,6 +60990,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
         obj = ShowRouteProtocolExtensive(device=self.device)
         parsed_output = obj.parse(route='10.66.12.12/32')
         self.assertEqual(parsed_output, self.golden_parsed_output_8)
+
+    def test_golden_9(self):
+        self.device = Mock(**self.golden_output_9)
+        obj = ShowRouteProtocolExtensive(device=self.device)
+        parsed_output = obj.parse(route='200.0.0.0/32')
+        self.assertEqual(parsed_output, self.golden_parsed_output_9)
 
 '''
 Unit test for:
