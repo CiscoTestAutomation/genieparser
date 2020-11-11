@@ -2,5 +2,5 @@
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
-    * ShowRouteProtocolProtocolExtensiveIpaddress:
+    * ShowRouteProtocolExtensiveIpaddress:
         * Enhanced code to consider varied device output
