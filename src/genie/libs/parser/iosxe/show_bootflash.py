@@ -70,7 +70,7 @@ class ShowBootflash(ShowBootflashSchema):
             m = p2.match(line_strip)
             if m:
                 group=m.groupdict()
-                index=group['file_index']
+                index=int(group['file_index'])
                 if 'files' not in ret_dict:
                     ret_dict['files']={}
                 if index not in ret_dict['files']:
