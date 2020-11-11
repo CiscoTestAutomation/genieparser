@@ -1,7 +1,3 @@
-R -> routes received
-I -> routes installed
-S -> routes sent
-
                         DOMAIN    OVERLAY   SITE
 PEER             TYPE    ID        ID        ID        STATE    UPTIME           R/I/S
 ------------------------------------------------------------------------------------------

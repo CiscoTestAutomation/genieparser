@@ -1,17 +1,3 @@
-Code:
-C   -> chosen
-I   -> installed
-Red -> redistributed
-Rej -> rejected
-L   -> looped
-R   -> resolved
-S   -> stale
-Ext -> extranet
-Inv -> invalid
-Stg -> staged
-IA  -> On-demand inactive
-U   -> TLOC unresolved
-
 VPN    PREFIX
 ---------------------------
 1002   101.100.2.0/24
