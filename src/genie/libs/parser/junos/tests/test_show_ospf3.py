@@ -4348,28 +4348,28 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
                                                     Type  Type       Type
         2001::1/128                                  Intra Network    IP   0       
         NH-interface lo0.0
-        Area 0.0.0.0, Origin 1.1.1.1, Priority low
+        Area 0.0.0.0, Origin 10.4.1.1, Priority low
         2001::2/128                                  Intra Network    IP   1       
         NH-interface xe-0/1/0.0, NH-addr fe80::fe33:42ff:fef2:20e5
-        Area 0.0.0.0, Origin 2.2.2.2, Priority medium
+        Area 0.0.0.0, Origin 10.16.2.2, Priority medium
         2001::3/128                                  Intra Network    IP   2       
         NH-interface et-0/0/0.0, NH-addr fe80::96f7:adff:fe5a:4840
-        Area 0.0.0.0, Origin 3.3.3.3, Priority medium
+        Area 0.0.0.0, Origin 10.36.3.3, Priority medium
         2001::4/128                                  Intra Network    IP   1       
         NH-interface et-0/0/0.0, NH-addr fe80::96f7:adff:fe5a:4840
-        Area 0.0.0.0, Origin 4.4.4.4, Priority medium
+        Area 0.0.0.0, Origin 10.64.4.4, Priority medium
         2001:20::/64                                 Ext2  Network    IP   0       
         NH-interface et-0/0/0.0, NH-addr fe80::96f7:adff:fe5a:4840
-        Area 0.0.0.0, Origin 3.3.3.3, Fwd NZ, Priority medium
+        Area 0.0.0.0, Origin 10.36.3.3, Fwd NZ, Priority medium
         2001:30::/64                                 Intra Network    IP   1       
         NH-interface xe-0/1/0.0
-        Area 0.0.0.0, Origin 2.2.2.2, Priority low
+        Area 0.0.0.0, Origin 10.16.2.2, Priority low
         2001:40::/64                                 Intra Network    IP   1       
         NH-interface et-0/0/0.0
-        Area 0.0.0.0, Origin 4.4.4.4, Priority low
+        Area 0.0.0.0, Origin 10.64.4.4, Priority low
         2001:50::/64                                 Intra Network    IP   2       
         NH-interface et-0/0/0.0, NH-addr fe80::96f7:adff:fe5a:4840
-        Area 0.0.0.0, Origin 4.4.4.4, Priority medium
+        Area 0.0.0.0, Origin 10.64.4.4, Priority medium
     '''
     }
 
@@ -4388,7 +4388,7 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
                                     "interface-name": "lo0.0"
                                 }
                             },
-                            "route-origin": "1.1.1.1",
+                            "route-origin": "10.4.1.1",
                             "route-path-type": "Intra",
                             "route-priority": "low",
                             "route-type": "Network"
@@ -4408,7 +4408,7 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
                                     "interface-name": "xe-0/1/0.0"
                                 }
                             },
-                            "route-origin": "2.2.2.2",
+                            "route-origin": "10.16.2.2",
                             "route-path-type": "Intra",
                             "route-priority": "medium",
                             "route-type": "Network"
@@ -4428,7 +4428,7 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
                                     "interface-name": "et-0/0/0.0"
                                 }
                             },
-                            "route-origin": "3.3.3.3",
+                            "route-origin": "10.36.3.3",
                             "route-path-type": "Intra",
                             "route-priority": "medium",
                             "route-type": "Network"
@@ -4448,7 +4448,7 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
                                     "interface-name": "et-0/0/0.0"
                                 }
                             },
-                            "route-origin": "4.4.4.4",
+                            "route-origin": "10.64.4.4",
                             "route-path-type": "Intra",
                             "route-priority": "medium",
                             "route-type": "Network"
@@ -4469,7 +4469,7 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
                                     "interface-name": "et-0/0/0.0"
                                 }
                             },
-                            "route-origin": "3.3.3.3",
+                            "route-origin": "10.36.3.3",
                             "route-path-type": "Ext2",
                             "route-priority": "medium",
                             "route-type": "Network"
@@ -4486,7 +4486,7 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
                                     "interface-name": "xe-0/1/0.0"
                                 }
                             },
-                            "route-origin": "2.2.2.2",
+                            "route-origin": "10.16.2.2",
                             "route-path-type": "Intra",
                             "route-priority": "low",
                             "route-type": "Network"
@@ -4503,7 +4503,7 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
                                     "interface-name": "et-0/0/0.0"
                                 }
                             },
-                            "route-origin": "4.4.4.4",
+                            "route-origin": "10.64.4.4",
                             "route-path-type": "Intra",
                             "route-priority": "low",
                             "route-type": "Network"
@@ -4523,7 +4523,7 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
                                     "interface-name": "et-0/0/0.0"
                                 }
                             },
-                            "route-origin": "4.4.4.4",
+                            "route-origin": "10.64.4.4",
                             "route-path-type": "Intra",
                             "route-priority": "medium",
                             "route-type": "Network"

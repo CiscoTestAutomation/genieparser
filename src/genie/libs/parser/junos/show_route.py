@@ -1446,6 +1446,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             m = p29.match(line)
             if m:
                 group = m.groupdict()
+                tsi_dict = rt_dict.setdefault('tsi', {})
                 text = tsi_dict.get('#text', '')
                 tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
                 continue
@@ -1453,6 +1454,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             # Page 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)
             m = p30.match(line)
             if m:
+                tsi_dict = rt_dict.setdefault('tsi', {})
                 group = m.groupdict()
                 text = tsi_dict.get('#text', '')
                 tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
