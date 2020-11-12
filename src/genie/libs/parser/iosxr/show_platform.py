@@ -351,7 +351,7 @@ class ShowPlatform(ShowPlatformSchema):
             # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
             # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
             p1 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/]+)'
-                             ' +(?P<name>[a-zA-Z0-9\-]+)'
+                             ' +(?P<name>[\S]+)'
                              '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                              '(?: +(?P<plim>[a-zA-Z\/]+))?'
                              ' +(?P<state>(IOS XR RUN|OK|OPERATIONAL)+)'
@@ -381,7 +381,7 @@ class ShowPlatform(ShowPlatformSchema):
 
                 # Determine if slot is RP/LineCard/OtherCard
                 parse_rp = re.compile(r'.*(RSP|RP).*').match(slot)
-                parse_lc = re.compile(r'.*(0\/0).*').match(slot)
+                parse_lc = re.compile(r'.*(0\/)\d').match(slot)
                 parse_name = re.compile(r'.*(RSP|RP).*').match(name)
                 if parse_rp or parse_name:
                     slot_type = 'rp'
