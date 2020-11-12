@@ -1209,16 +1209,16 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
 
         # MAC Address    AP Name                          WLAN State              Protocol Method
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea72.1730 a2-11-cap43                   17   Run                11ac     Dot1x
-        # 58bf.ea73.39b4 a2-11-cap50                   19   IP Learn           11n(2.4) MAB
-        # 58bf.ea47.1c4c a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB
+        # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
+        # 58bf.eaff.ac28 a2-11-cap50                   19   IP Learn           11n(2.4) MAB
+        # 58bf.eaff.6393 a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea47.1c59 a2-11-cap46                   17   Run                11ac     Dot1x
-        # 58bf.ea41.eac4 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB
-        # 58bf.eaef.9769 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB
+        # 58bf.eaff.63a0 a2-11-cap46                   17   Run                11ac     Dot1x
+        # 58bf.eaff.2c06 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB
+        # 58bf.eaff.8759 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB
         # --------------------------------------------------------------------------------------------
-        # 58bf.ea02.5c2a a2-12-cap17                   19   Webauth Pending    11ac     MAB
-        # 58bf.ea09.f357 a2-12-cap17                   19   Webauth Pending    11ac     MAB
+        # 58bf.eaff.5e2c a2-12-cap17                   19   Webauth Pending    11ac     MAB
+        # 58bf.eaff.fc60 a2-12-cap17                   19   Webauth Pending    11ac     MAB
 
         # Number of Fabric Clients : 8
         p_clients = re.compile(r"^Number\s+of\s+Fabric\s+Clients\s+:\s+(?P<clients>\S+)$")

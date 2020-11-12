@@ -2557,10 +2557,14 @@ class ShowOspf3RouteNetworkExtensiveSchema(MetaParser):
         ospf3_route_schema = Schema({
             "ospf3-route-entry": {
                 "address-prefix": str,
+                Optional("forward"): str,
                 "interface-cost": str,
                 "next-hop-type": str,
                 "ospf-area": str,
                 Optional("ospf-next-hop"): {
+                    Optional("next-hop-address"): {
+                                "interface-address": str
+                    },
                     "next-hop-name": {
                         "interface-name": str
                     }
@@ -2608,12 +2612,12 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
                         r'+(?P<next_hop_type>\S+) +(?P<interface_cost>\d+)$')
 
         #NH-interface lo0.0
-        p2 = re.compile(r'^NH-interface +(?P<interface_name>\S+)$')
+        #NH-interface et-0/0/0.0, NH-addr fe80::96f7:adff:fe5a:4840
+        p2 = re.compile(r'^NH-interface +(?P<interface_name>[\w\d\-\/\.]+)(, +NH-addr +(?P<interface_address>\S+))?$')
 
         #Area 0.0.0.0, Origin 10.64.4.4, Priority low
-        p3 = re.compile(r'^Area +(?P<ospf_area>\S+),+ Origin '
-                        r'+(?P<route_origin>\S+), +Priority '
-                        r'+(?P<route_priority>\S+)$')
+        #Area 0.0.0.0, Origin 3.3.3.3, Fwd NZ, Priority medium
+        p3 = re.compile(r'^Area +(?P<ospf_area>\S+),+ Origin +(?P<route_origin>\S+),( +Fwd +(?P<forward>\S+),)? +Priority +(?P<route_priority>\S+)$')
 
 
         for line in out.splitlines():
@@ -2640,6 +2644,8 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
             if m:
                 group = m.groupdict()
                 next_hop_dict = {'next-hop-name':{'interface-name':group['interface_name']}}
+                if group['interface_address']:
+                    next_hop_dict['next-hop-address'] = {'interface-address':group['interface_address']} 
                 route_entry_dict['ospf-next-hop'] = next_hop_dict                
                 continue
 
@@ -2648,8 +2654,9 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
             if m:
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_', '-')
-                    route_entry_dict[entry_key] = group_value
+                    if group_value != None:
+                        entry_key = group_key.replace('_', '-')
+                        route_entry_dict[entry_key] = group_value
 
                 ospf3_parent_route_dict = {}
                 ospf3_parent_route_dict['ospf3-route-entry'] = route_entry_dict
@@ -2705,7 +2712,7 @@ class ShowOspf3NeighborInstanceAllSchema(MetaParser):
                 "ospf3-instance-name": str,
                 "ospf3-realm-neighbor": {
                     "ospf3-realm-name": str,
-                    "ospf3-neighbor": Use(validate_ospf3_neighbor_list)
+                    Optional("ospf3-neighbor"): Use(validate_ospf3_neighbor_list)
                 }
             }
         }

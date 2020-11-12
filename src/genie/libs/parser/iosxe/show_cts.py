@@ -1947,6 +1947,111 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
         return cts_rb_permissions_dict
 
 
+
+# =====================================
+# Schema for:
+#  * 'show cts wireless profile policy {policy} '
+# =====================================
+class ShowCtsWirelessProfilePolicySchema(MetaParser):
+    """Schema for show cts wireless profile policy {policy}."""
+
+    schema = {
+        "policy_name": {
+            str: {
+                "role_based_enforcement": str,
+                "inline_tagging": str,
+                "default_sgt": str
+            }
+        }
+    }
+
+
+# =====================================
+# Parser for:
+#  * 'show cts wireless profile policy {policy}'
+# =====================================
+class ShowCtsWirelessProfilePolicy(ShowCtsWirelessProfilePolicySchema):
+    """Parser for show cts wireless profile policy {policy} """
+
+    cli_command = 'show cts wireless profile policy {policy}'
+
+    def cli(self, policy, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(policy=policy))
+        else:
+            output = output
+
+
+        # Policy Profile Name         		: xyz-policy
+        # CTS
+        #   Role-based enforcement         : ENABLED
+        #   Inline-tagging                 : ENABLED
+        #   	Default SGT		 : 100
+        #
+        # Policy Profile Name          		: foo2
+        # CTS
+        #   Role-based enforcement         : DISABLED
+        #   Inline-tagging                 : ENABLED
+        #   Default SGT		         : NOT-DEFINED
+        #
+        # Policy Profile Name           	        : foo3
+        # CTS
+        #   Role-based enforcement         : DISABLED
+        #   Inline-tagging                 : DISABLED
+        #   Default SGT			 : 65001
+
+
+        # Policy Profile Name         		: xyz-policy
+        p_profile_name = re.compile(r"^Policy\s+Profile\s+Name\s+:\s+(?P<value>\S+)$")
+
+        # CTS
+        p_cts_section = re.compile(r"^CTS$")
+
+        # Role-based enforcement         : ENABLED
+        p_role_based = re.compile(r"^Role-based\s+enforcement\s+:\s+(?P<value>\S+)$")
+
+        # Inline-tagging                 : DISABLED
+        p_inline = re.compile(r"^Inline-tagging\s+:\s+(?P<value>\S+)$")
+
+        # Default SGT		         : NOT-DEFINED
+        p_sgt = re.compile(r"^Default\s+SGT\s+:\s+(?P<value>\S+)$")
+
+
+
+        cts_ap_dict = {}
+        current_policy = ""
+
+        for line in output.splitlines():
+            line = line.strip()
+            m_profile_name = p_profile_name.match(line)
+            if m_profile_name:
+                # Policy Profile Name         		: xyz-policy
+                current_policy = m_profile_name.group("value")
+                cts_ap_dict.setdefault("policy_name", {} ).update({ current_policy: {} })
+                continue
+            m_cts_section = p_cts_section.match(line)
+            if m_cts_section:
+                # CTS
+                continue
+            m_role_based = p_role_based.match(line)
+            if m_role_based:
+                # Role-based enforcement         : ENABLED
+                cts_ap_dict["policy_name"][current_policy].update({ "role_based_enforcement": m_role_based.group("value") })
+                continue
+            m_inline = p_inline.match(line)
+            if m_inline:
+                # Inline-tagging                 : DISABLED
+                cts_ap_dict["policy_name"][current_policy].update({ "inline_tagging": m_inline.group("value") })
+                continue
+            m_sgt = p_sgt.match(line)
+            if m_sgt:
+                # Default SGT		         : NOT-DEFINED
+                cts_ap_dict["policy_name"][current_policy].update({ "default_sgt": m_sgt.group("value") })
+                continue
+
+        return cts_ap_dict
+
+
 # =========================
 # Schema for:
 #  * 'show cts ap sgt info {ap_name}'
@@ -2033,4 +2138,3 @@ class ShowCtsApSgtInfo(ShowCtsApSgtInfoSchema):
 
 
         return cts_ap_dict
-

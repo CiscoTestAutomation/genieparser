@@ -6,7 +6,7 @@ JunOS parsers for the following show commands:
     * ping mpls rsvp {rsvp}
     * ping {addr} ttl {ttl} count {count} wait {wait}
     * ping {addr} source {source} count {count}
-    * ping {addr} source {source} size {size} do-not-fragment
+    * ping {addr} source {source} size {size} do-not-fragment count {count}
 """
 # Python
 import re
@@ -95,7 +95,7 @@ class Ping(PingSchema):
         'ping {addr} count {count}',
         'ping {addr} ttl {ttl} count {count} wait {wait}',
         'ping {addr} source {source} count {count}',
-        'ping {addr} source {source} size {size} do-not-fragment'
+        'ping {addr} source {source} size {size} do-not-fragment count {count}'
     ]
 
     def cli(self, addr, count=None, ttl=None, 
@@ -119,7 +119,8 @@ class Ping(PingSchema):
                 cmd = self.cli_command[4].format(
                     addr=addr,
                     source=source,
-                    size=size
+                    size=size,
+                    count=count,
                 )
             else:
                 cmd = self.cli_command[0].format(addr=addr)

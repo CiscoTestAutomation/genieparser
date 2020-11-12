@@ -3,8 +3,13 @@ expected_output = {
     0: {
       'session_id': 48380,
       'state': 'open',
+<<<<<<< HEAD
       'src_ip': '15.0.32.228',
       'dst_ip': '14.0.32.228',
+=======
+      'src_ip': '10.225.32.228',
+      'dst_ip': '10.196.32.228',
+>>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 1024,
       'dst_port': 1024,
       'protocol': 'PROTO_L4_UDP',
@@ -23,8 +28,13 @@ expected_output = {
     1: {
       'session_id': 48089,
       'state': 'open',
+<<<<<<< HEAD
       'src_ip': '15.0.31.116',
       'dst_ip': '14.0.31.116',
+=======
+      'src_ip': '10.225.31.116',
+      'dst_ip': '10.196.31.116',
+>>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 1024,
       'dst_port': 1024,
       'protocol': 'PROTO_L4_UDP',
@@ -43,8 +53,13 @@ expected_output = {
     2: {
       'session_id': 49645,
       'state': 'open',
+<<<<<<< HEAD
       'src_ip': '15.0.37.186',
       'dst_ip': '14.0.37.186',
+=======
+      'src_ip': '10.225.37.186',
+      'dst_ip': '10.196.37.186',
+>>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 1024,
       'dst_port': 1024,
       'protocol': 'PROTO_L4_UDP',
@@ -63,8 +78,13 @@ expected_output = {
     3: {
       'session_id': 46845,
       'state': 'open',
+<<<<<<< HEAD
       'src_ip': '15.0.26.42',
       'dst_ip': '14.0.26.42',
+=======
+      'src_ip': '10.225.26.42',
+      'dst_ip': '10.196.26.42',
+>>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 1024,
       'dst_port': 1024,
       'protocol': 'PROTO_L4_UDP',
@@ -83,8 +103,13 @@ expected_output = {
     4: {
       'session_id': 44583,
       'state': 'open',
+<<<<<<< HEAD
       'src_ip': '15.0.18.63',
       'dst_ip': '14.0.18.63',
+=======
+      'src_ip': '10.225.18.63',
+      'dst_ip': '10.196.18.63',
+>>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 1024,
       'dst_port': 1024,
       'protocol': 'PROTO_L4_UDP',

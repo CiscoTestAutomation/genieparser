@@ -743,11 +743,12 @@ class ShowNveMultisiteDciLinks(ShowNveMultisiteDciLinksSchema):
             out = output
 
         result_dict = {}
+
         # Interface      State
         # ---------      -----
         # Ethernet1/53   Up
-
-        p1 = re.compile(r'^\s*(?P<if_name>(?!Interface)[\w\/]+) +(?P<if_state>[\w]+)$')
+        # port-channel11 Up
+        p1 = re.compile(r'^\s*(?P<if_name>(?!Interface)[\S]+) +(?P<if_state>[\w]+)$')
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
@@ -804,8 +805,8 @@ class ShowNveMultisiteFabricLinks(ShowNveMultisiteFabricLinksSchema):
         # Interface      State
         # ---------      -----
         # Ethernet1/53   Up
-
-        p1 = re.compile(r'^\s*(?P<if_name>(?!Interface)[\w\/]+) +(?P<if_state>[\w]+)$')
+        # port-channel11 Up
+        p1 = re.compile(r'^\s*(?P<if_name>(?!Interface)[\S]+) +(?P<if_state>[\w]+)$')
 
         result_dict = {}
         for line in out.splitlines():
