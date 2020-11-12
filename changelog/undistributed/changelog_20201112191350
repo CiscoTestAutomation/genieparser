@@ -1,0 +1,6 @@
+--------------------------------------------------------------------------------
+                                New
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added ShowIpNbarClassificationSocket
+      * sh ip nbar classification socket-cache <number_of_entries>
