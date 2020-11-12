@@ -60656,7 +60656,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         State: <Active Int Ext>
                         Local AS:     3 Peer AS:     3
                         Age: 20 	Metric2: 4 
-                        Task: BGP_3.10.4.1.1+62441
+                        Task: BGP_10.169.4.1.1+62441
                         Announcement bits (2): 0-KRT 6-Resolve tree 2 
                         AS path: I (Originator) Cluster list:  0.0.0.1 0.0.0.2 0.0.0.4
                         AS path:  Originator ID: 10.36.3.3
@@ -60743,7 +60743,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     }
                                 ],
                                 "rt-entry-state": "Active Int Ext",
-                                "task-name": "BGP_3.10.4.1.1+62441"
+                                "task-name": "BGP_10.169.4.1.1+62441"
                             },
                             "rt-entry-count": {
                                 "#text": "1",
@@ -60811,7 +60811,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Local AS:     1 Peer AS:     4
                         Age: 6:28 
                         Validation State: unverified 
-                        Task: BGP_4.10.145.0.2+179
+                        Task: BGP_10.196.145.0.2+179
                         AS path: 4 2 6 I
                         Accepted MultipathContrib
                         Localpref: 100
@@ -60909,7 +60909,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "preference2": "101",
                                     "protocol-name": "BGP",
                                     "rt-entry-state": "Ext",
-                                    "task-name": "BGP_4.10.145.0.2+179",
+                                    "task-name": "BGP_10.196.145.0.2+179",
                                     "validation-state": "unverified"
                                 }
                             ],
@@ -63144,36 +63144,36 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
 
     golden_output_3= {'execute.return_value':
         '''
-            show route protocol bgp extensive 110.0.0.1 
+            show route protocol bgp extensive 10.115.0.1 
             
             inet.0: 1250014 destinations, 1250014 routes (1250014 active, 0 holddown, 0 hidden)
-            110.0.0.1/32 (1 entry, 1 announced)
+            10.115.0.1/32 (1 entry, 1 announced)
                     State: <Reinit>
             TSI:
-            KRT in-kernel 110.0.0.1/32 -> {60.0.0.2}
+            KRT in-kernel 10.115.0.1/32 -> {10.30.0.2}
             Page 0 idx 0, (group eBGP_SUT-2 type External) Type 1 val 0x321b91f0 (adv_entry)
             Advertised metrics:
                 Nexthop: Self
                 AS path: [1] 2 I
                 Communities:
-            Path 110.0.0.1 from 60.0.0.2 Vector len 4.  Val: 0
+            Path 10.115.0.1 from 10.30.0.2 Vector len 4.  Val: 0
                     *BGP    Preference: 170/-101
                             Next hop type: Router, Next hop index: 896
                             Address: 0x1e2c78c
                             Next-hop reference count: 800002
-                            Source: 60.0.0.2
-                            Next hop: 60.0.0.2 via xe-0/1/7.0, selected
+                            Source: 10.30.0.2
+                            Next hop: 10.30.0.2 via xe-0/1/7.0, selected
                             Session Id: 0x2fea
                             State: <Active Ext>
                             Local AS:     1 Peer AS:     2
                             Age: 4:03 
                             Validation State: unverified 
-                            Task: BGP_2.60.0.0.2+179
+                            Task: BGP_2.10.30.0.2+179
                             Announcement bits (2): 0-KRT 1-BGP_RT_Background 
                             AS path: 2 I
                             Accepted
                             Localpref: 100
-                            Router ID: 206.26.0.1
+                            Router ID: 192.168.19.1
                 '''
     }
 
@@ -63186,7 +63186,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                 "holddown-route-count": "0",
                 "rt": {
                     "rt-announced-count": "1",
-                    "rt-destination": "110.0.0.1",
+                    "rt-destination": "10.115.0.1",
                     "rt-entry": {
                         "active-tag": "*",
                         "age": {
@@ -63202,13 +63202,13 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                             }
                         },
                         "bgp-rt-flag": "Accepted",
-                        "gateway": "60.0.0.2",
+                        "gateway": "10.30.0.2",
                         "local-as": "1",
                         "local-preference": "100",
                         "nh": {
                             "nh-string": "Next hop",
                             "session": "0x2fea",
-                            "to": "60.0.0.2",
+                            "to": "10.30.0.2",
                             "via": "xe-0/1/7.0"
                         },
                         "nh-address": "0x1e2c78c",
@@ -63216,12 +63216,12 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                         "nh-reference-count": "800002",
                         "nh-type": "Router",
                         "peer-as": "2",
-                        "peer-id": "206.26.0.1",
+                        "peer-id": "192.168.19.1",
                         "preference": "170",
                         "preference2": "101",
                         "protocol-name": "BGP",
                         "rt-entry-state": "Active Ext",
-                        "task-name": "BGP_2.60.0.0.2+179",
+                        "task-name": "BGP_2.10.30.0.2+179",
                         "validation-state": "unverified"
                     },
                     "rt-entry-count": {
@@ -63229,7 +63229,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
                     },
                     "rt-prefix-length": "32",
                     "tsi": {
-                        "#text": "KRT in-kernel 110.0.0.1/32 -> {60.0.0.2}"
+                        "#text": "KRT in-kernel 10.115.0.1/32 -> {10.30.0.2}"
                     }
                 },
                 "table-name": "inet.0",
@@ -63260,7 +63260,7 @@ class TestShowRouteProtocolProtocolExtensiveIpaddress(unittest.TestCase):
     def test_golden_3(self):
         self.device = Mock(**self.golden_output_3)
         obj = ShowRouteProtocolProtocolExtensiveIpaddress(device=self.device)
-        parsed_output = obj.parse(protocol="bgp", ipaddress='110.0.0.1')
+        parsed_output = obj.parse(protocol="bgp", ipaddress='10.115.0.1')
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
 
