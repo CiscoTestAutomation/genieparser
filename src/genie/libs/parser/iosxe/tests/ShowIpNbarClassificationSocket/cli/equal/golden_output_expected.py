@@ -1,4 +1,4 @@
-expected_output = {
+expected_output ={
   'flow_cache': {
     0: {
       'server_ip': '13.229.188.209',
@@ -9,9 +9,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '633',
+      'expiry_time': 633,
       'entry_type': 'Infra',
-      'hit_count': '1'
+      'hit_count': 1
     },
     1: {
       'server_ip': '18.205.186.254',
@@ -22,9 +22,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '494',
+      'expiry_time': 494,
       'entry_type': 'Infra',
-      'hit_count': '1'
+      'hit_count': 1
     },
     2: {
       'server_ip': '216.58.196.161',
@@ -35,9 +35,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '1749',
+      'expiry_time': 1749,
       'entry_type': 'Infra',
-      'hit_count': '1'
+      'hit_count': 1
     },
     3: {
       'server_ip': '172.217.31.202',
@@ -48,9 +48,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '1491',
+      'expiry_time': 1491,
       'entry_type': 'Infra',
-      'hit_count': '1'
+      'hit_count': 1
     },
     4: {
       'server_ip': '40.126.17.130',
@@ -61,9 +61,9 @@ expected_output = {
       'is_valid': 'Yes',
       'is_black_list': 'No',
       'is_learn_ph': 'No',
-      'expiry_time': '965',
+      'expiry_time': 965,
       'entry_type': 'Infra',
-      'hit_count': '4'
+      'hit_count': 4
     },
     5: {
       'server_ip': '35.166.202.43',
@@ -74,9 +74,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '1026',
+      'expiry_time': 1026,
       'entry_type': 'Infra',
-      'hit_count': '1'
+      'hit_count': 1
     },
     6: {
       'server_ip': '52.59.18.254',
@@ -87,9 +87,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '640',
+      'expiry_time': 640,
       'entry_type': 'Infra',
-      'hit_count': '2'
+      'hit_count': 2
     },
     7: {
       'server_ip': '13.249.220.101',
@@ -100,9 +100,9 @@ expected_output = {
       'is_valid': 'Yes',
       'is_black_list': 'No',
       'is_learn_ph': 'No',
-      'expiry_time': '1206',
+      'expiry_time': 1206,
       'entry_type': 'Infra',
-      'hit_count': '6'
+      'hit_count': 6
     },
     8: {
       'server_ip': '34.225.100.243',
@@ -113,9 +113,9 @@ expected_output = {
       'is_valid': 'Yes',
       'is_black_list': 'No',
       'is_learn_ph': 'No',
-      'expiry_time': '739',
+      'expiry_time': 739,
       'entry_type': 'Infra',
-      'hit_count': '3'
+      'hit_count': 3
     },
     9: {
       'server_ip': '35.227.229.34',
@@ -126,9 +126,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '614',
+      'expiry_time': 614,
       'entry_type': 'Infra',
-      'hit_count': '2'
+      'hit_count': 2
     },
     10: {
       'server_ip': '199.232.252.176',
@@ -139,9 +139,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '155',
+      'expiry_time': 155,
       'entry_type': 'Infra',
-      'hit_count': '1'
+      'hit_count': 1
     },
     11: {
       'server_ip': '13.250.212.174',
@@ -152,9 +152,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '1049',
+      'expiry_time': 1049,
       'entry_type': 'Infra',
-      'hit_count': '1'
+      'hit_count': 1
     },
     12: {
       'server_ip': '199.232.253.140',
@@ -165,9 +165,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '1158',
+      'expiry_time': 1158,
       'entry_type': 'Infra',
-      'hit_count': '2'
+      'hit_count': 2
     },
     13: {
       'server_ip': '44.238.171.221',
@@ -178,9 +178,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '147',
+      'expiry_time': 147,
       'entry_type': 'Infra',
-      'hit_count': '1'
+      'hit_count': 1
     },
     14: {
       'server_ip': '43.250.0.199',
@@ -191,9 +191,9 @@ expected_output = {
       'is_valid': 'Yes',
       'is_black_list': 'No',
       'is_learn_ph': 'No',
-      'expiry_time': '1036',
+      'expiry_time': 1036,
       'entry_type': 'Infra',
-      'hit_count': '3'
+      'hit_count': 3
     },
     15: {
       'server_ip': '103.43.90.179',
@@ -204,9 +204,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '1019',
+      'expiry_time': 1019,
       'entry_type': 'Infra',
-      'hit_count': '1'
+      'hit_count': 1
     },
     16: {
       'server_ip': '182.79.143.19',
@@ -217,9 +217,9 @@ expected_output = {
       'is_valid': 'Yes',
       'is_black_list': 'No',
       'is_learn_ph': 'No',
-      'expiry_time': '604',
+      'expiry_time': 604,
       'entry_type': 'Infra',
-      'hit_count': '2'
+      'hit_count': 2
     },
     17: {
       'server_ip': '13.33.93.84',
@@ -230,9 +230,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '1152',
+      'expiry_time': 1152,
       'entry_type': 'Infra',
-      'hit_count': '1'
+      'hit_count': 1
     },
     18: {
       'server_ip': '142.250.76.66',
@@ -243,9 +243,9 @@ expected_output = {
       'is_valid': 'No',
       'is_black_list': 'No',
       'is_learn_ph': 'Yes',
-      'expiry_time': '624',
+      'expiry_time': 624,
       'entry_type': 'Infra',
-      'hit_count': '1'
+      'hit_count': 1
     },
     19: {
       'server_ip': '40.119.249.228',
@@ -256,9 +256,9 @@ expected_output = {
       'is_valid': 'Yes',
       'is_black_list': 'No',
       'is_learn_ph': 'No',
-      'expiry_time': '475',
+      'expiry_time': 475,
       'entry_type': 'Infra',
-      'hit_count': '4'
+      'hit_count': 4
     },
     20: {
       'server_ip': '40.119.249.228',
@@ -269,9 +269,9 @@ expected_output = {
       'is_valid': 'Yes',
       'is_black_list': 'No',
       'is_learn_ph': 'No',
-      'expiry_time': '475',
+      'expiry_time': 475,
       'entry_type': 'Infra',
-      'hit_count': '4'
+      'hit_count': 4
     }
   }
 }
