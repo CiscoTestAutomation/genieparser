@@ -60639,40 +60639,40 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
     }
 
     golden_output_8 = {'execute.return_value': '''
-            show route 13.13.13.13/32 extensive 
+            show route 10.166.13.13/32 extensive 
         inet.0: 18 destinations, 18 routes (18 active, 0 holddown, 0 hidden)
-        13.13.13.13/32 (1 entry, 1 announced)
+        10.166.13.13/32 (1 entry, 1 announced)
         TSI:
-        KRT in-kernel 13.13.13.13/32 -> {indirect(1048628)}
+        KRT in-kernel 10.166.13.13/32 -> {indirect(1048628)}
                 *BGP    Preference: 170/-101
                         Next hop type: Indirect
                         Address: 0x9079058
                         Next-hop reference count: 3
-                        Source: 1.1.1.1
+                        Source: 10.4.1.1
                         Next hop type: Router, Next hop index: 1237
-                        Next hop: 60.0.0.1 via ge-0/0/1.0, selected
-                        Protocol next hop: 3.3.3.3
+                        Next hop: 10.30.0.1 via ge-0/0/1.0, selected
+                        Protocol next hop: 10.36.3.3
                         Indirect next hop: 907a000 1048628
                         State: <Active Int Ext>
                         Local AS:     3 Peer AS:     3
                         Age: 20 	Metric2: 4 
-                        Task: BGP_3.1.1.1.1+62441
+                        Task: BGP_3.10.4.1.1+62441
                         Announcement bits (2): 0-KRT 6-Resolve tree 2 
                         AS path: I (Originator) Cluster list:  0.0.0.1 0.0.0.2 0.0.0.4
-                        AS path:  Originator ID: 3.3.3.3
+                        AS path:  Originator ID: 10.36.3.3
                         Accepted
                         Localpref: 100
-                        Router ID: 1.1.1.1
+                        Router ID: 10.4.1.1
                         Indirect next hops: 1
-                                Protocol next hop: 3.3.3.3 Metric: 4
+                                Protocol next hop: 10.36.3.3 Metric: 4
                                 Indirect next hop: 907a000 1048628
                                 Indirect path forwarding next hops: 1
                                         Next hop type: Router
-                                        Next hop: 60.0.0.1 via ge-0/0/1.0
-                    3.3.3.3/32 Originating RIB: inet.0
+                                        Next hop: 10.30.0.1 via ge-0/0/1.0
+                    10.36.3.3/32 Originating RIB: inet.0
                     Metric: 4			  Node path count: 1
                     Forwarding nexthops: 1
-                        Nexthop: 60.0.0.1 via ge-0/0/1.0
+                        Nexthop: 10.30.0.1 via ge-0/0/1.0
     '''
     }
 
@@ -60687,7 +60687,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                     "rt": [
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "13.13.13.13/32",
+                            "rt-destination": "10.166.13.13/32",
                             "rt-entry": {
                                 "active-tag": "*",
                                 "age": {
@@ -60695,21 +60695,21 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 },
                                 "announce-bits": "2",
                                 "announce-tasks": "0-KRT 6-Resolve tree 2",
-                                "as-path": "AS path:  Originator ID: 3.3.3.3",
+                                "as-path": "AS path:  Originator ID: 10.36.3.3",
                                 "bgp-path-attributes": {
                                     "attr-as-path-effective": {
                                         "aspath-effective-string": "AS path:",
-                                        "attr-value": "Originator ID: 3.3.3.3"
+                                        "attr-value": "Originator ID: 10.36.3.3"
                                     }
                                 },
                                 "cluster-list": " 0.0.0.1 0.0.0.2 0.0.0.4",
-                                "gateway": "1.1.1.1",
+                                "gateway": "10.4.1.1",
                                 "local-as": "3",
                                 "metric2": "4",
                                 "nh": [
                                     {
                                         "nh-string": "Next hop",
-                                        "to": "60.0.0.1",
+                                        "to": "10.30.0.1",
                                         "via": "ge-0/0/1.0"
                                     }
                                 ],
@@ -60718,14 +60718,14 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 "nh-reference-count": "3",
                                 "nh-type": "Router",
                                 "peer-as": "3",
-                                "peer-id": "1.1.1.1",
+                                "peer-id": "10.4.1.1",
                                 "preference": "170",
                                 "preference2": "101",
                                 "protocol-name": "BGP",
                                 "protocol-nh": [
                                     {
                                         "indirect-nh": "907a000 1048628",
-                                        "to": "3.3.3.3"
+                                        "to": "10.36.3.3"
                                     },
                                     {
                                         "forwarding-nh-count": "1",
@@ -60734,23 +60734,23 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                         "nh": [
                                             {
                                                 "nh-string": "Next hop",
-                                                "to": "60.0.0.1",
+                                                "to": "10.30.0.1",
                                                 "via": "ge-0/0/1.0"
                                             }
                                         ],
-                                        "output": "3.3.3.3/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 60.0.0.1 via ge-0/0/1.0\n",
-                                        "to": "3.3.3.3"
+                                        "output": "10.36.3.3/32 Originating RIB: inet.0\nForwarding nexthops: 1\nNexthop: 10.30.0.1 via ge-0/0/1.0\n",
+                                        "to": "10.36.3.3"
                                     }
                                 ],
                                 "rt-entry-state": "Active Int Ext",
-                                "task-name": "BGP_3.1.1.1.1+62441"
+                                "task-name": "BGP_3.10.4.1.1+62441"
                             },
                             "rt-entry-count": {
                                 "#text": "1",
                                 "@junos:format": "1 entry"
                             },
                             "tsi": {
-                                "#text": "KRT in-kernel 13.13.13.13/32 -> {indirect(1048628)}\nLocalpref: 100"
+                                "#text": "KRT in-kernel 10.166.13.13/32 -> {indirect(1048628)}\nLocalpref: 100"
                             }
                         }
                     ],
@@ -60762,13 +60762,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
     }
 
     golden_output_9 = {'execute.return_value': '''
-            show route 200.0.0.0/32 extensive 
+            show route 192.168.220.0/32 extensive 
         inet.0: 1200014 destinations, 1625014 routes (1200014 active, 0 holddown, 0 hidden)
-        200.0.0.0/32 (2 entries, 1 announced)
+        192.168.220.0/32 (2 entries, 1 announced)
         TSI:
         KRT queued (pending) change
-        200.0.0.0/32 -> {10.0.0.2}=>{20.0.0.2, 10.0.0.2}
-        in-kernel 200.0.0.0/32 -> {10.0.0.2}
+        192.168.220.0/32 -> {10.0.0.2}=>{10.145.0.2, 10.0.0.2}
+        in-kernel 192.168.220.0/32 -> {10.0.0.2}
         Page 0 idx 0, (group eBGP_TESTER type External) Type 1 val 0x4d28adf0 (adv_entry)
         Advertised metrics:
             Nexthop: Self
@@ -60779,13 +60779,13 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
             Nexthop: Self
             AS path: [1] 3 2 6 I
             Communities:
-        Path 200.0.0.0 from 10.0.0.2 Vector len 4.  Val: 0 2
+        Path 192.168.220.0 from 10.0.0.2 Vector len 4.  Val: 0 2
                 *BGP    Preference: 170/-101
                         Next hop type: Router, Next hop index: 1048656
                         Address: 0x338419c
                         Next-hop reference count: 492004
                         Source: 10.0.0.2
-                        Next hop: 20.0.0.2 via xe-0/1/0.0
+                        Next hop: 10.145.0.2 via xe-0/1/0.0
                         Session Id: 0x30ca
                         Next hop: 10.0.0.2 via xe-0/1/3.0, selected
                         Session Id: 0x30c8
@@ -60793,29 +60793,29 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                         Local AS:     1 Peer AS:     3
                         Age: 6:35 
                         Validation State: unverified 
-                        Task: BGP_3.10.0.0.2+52948
+                        Task: BGP_10.169.0.0.2+52948
                         Announcement bits (2): 0-KRT 1-BGP_RT_Background 
                         AS path: 3 2 6 I
                         Accepted Multipath
                         Localpref: 100
-                        Router ID: 3.3.3.3
+                        Router ID: 10.36.3.3
                 BGP    Preference: 170/-101
                         Next hop type: Router, Next hop index: 1077
                         Address: 0x4595c01c
                         Next-hop reference count: 425000
-                        Source: 20.0.0.2
-                        Next hop: 20.0.0.2 via xe-0/1/0.0, selected
+                        Source: 10.145.0.2
+                        Next hop: 10.145.0.2 via xe-0/1/0.0, selected
                         Session Id: 0x30ca
                         State: <Ext>
                         Inactive reason: Active preferred
                         Local AS:     1 Peer AS:     4
                         Age: 6:28 
                         Validation State: unverified 
-                        Task: BGP_4.20.0.0.2+179
+                        Task: BGP_4.10.145.0.2+179
                         AS path: 4 2 6 I
                         Accepted MultipathContrib
                         Localpref: 100
-                        Router ID: 4.4.4.4
+                        Router ID: 10.64.4.4
     '''
     }
 
@@ -60830,7 +60830,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                     "rt": [
                         {
                             "rt-announced-count": "1",
-                            "rt-destination": "200.0.0.0/32",
+                            "rt-destination": "192.168.220.0/32",
                             "rt-entry": [
                                 {
                                     "accepted": "Multipath",
@@ -60853,7 +60853,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                         {
                                             "nh-string": "Next hop",
                                             "session": "30ca",
-                                            "to": "20.0.0.2",
+                                            "to": "10.145.0.2",
                                             "via": "xe-0/1/0.0"
                                         },
                                         {
@@ -60868,12 +60868,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "nh-reference-count": "492004",
                                     "nh-type": "Router",
                                     "peer-as": "3",
-                                    "peer-id": "3.3.3.3",
+                                    "peer-id": "10.36.3.3",
                                     "preference": "170",
                                     "preference2": "101",
                                     "protocol-name": "BGP",
                                     "rt-entry-state": "Active Ext",
-                                    "task-name": "BGP_3.10.0.0.2+52948",
+                                    "task-name": "BGP_10.169.0.0.2+52948",
                                     "validation-state": "unverified"
                                 },
                                 {
@@ -60888,14 +60888,14 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                             "attr-value": "4 2 6 I"
                                         }
                                     },
-                                    "gateway": "20.0.0.2",
+                                    "gateway": "10.145.0.2",
                                     "inactive-reason": "Active preferred",
                                     "local-as": "1",
                                     "nh": [
                                         {
                                             "nh-string": "Next hop",
                                             "session": "30ca",
-                                            "to": "20.0.0.2",
+                                            "to": "10.145.0.2",
                                             "via": "xe-0/1/0.0"
                                         }
                                     ],
@@ -60904,12 +60904,12 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                     "nh-reference-count": "425000",
                                     "nh-type": "Router",
                                     "peer-as": "4",
-                                    "peer-id": "4.4.4.4",
+                                    "peer-id": "10.64.4.4",
                                     "preference": "170",
                                     "preference2": "101",
                                     "protocol-name": "BGP",
                                     "rt-entry-state": "Ext",
-                                    "task-name": "BGP_4.20.0.0.2+179",
+                                    "task-name": "BGP_4.10.145.0.2+179",
                                     "validation-state": "unverified"
                                 }
                             ],
@@ -60918,7 +60918,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
                                 "@junos:format": "2 entries"
                             },
                             "tsi": {
-                                "#text": "\nPage 0 idx 0, (group eBGP_TESTER type External) Type 1 val 0x4d28adf0 (adv_entry)\nAdvertised metrics:\nNexthop: Self\nAS path: [1] 3 2 6 I\nCommunities:\nPage 0 idx 2, (group eBGP_SUT-2 type External) Type 1 val 0x8247f70 (adv_entry)\nAdvertised metrics:\nNexthop: Self\nAS path: [1] 3 2 6 I\nCommunities:\nPath 200.0.0.0 from 10.0.0.2 Vector len 4.  Val: 0 2\nLocalpref: 100\nLocalpref: 100"
+                                "#text": "\nPage 0 idx 0, (group eBGP_TESTER type External) Type 1 val 0x4d28adf0 (adv_entry)\nAdvertised metrics:\nNexthop: Self\nAS path: [1] 3 2 6 I\nCommunities:\nPage 0 idx 2, (group eBGP_SUT-2 type External) Type 1 val 0x8247f70 (adv_entry)\nAdvertised metrics:\nNexthop: Self\nAS path: [1] 3 2 6 I\nCommunities:\nPath 192.168.220.0 from 10.0.0.2 Vector len 4.  Val: 0 2\nLocalpref: 100\nLocalpref: 100"
                             }
                         }
                     ],
@@ -60989,7 +60989,7 @@ class TestShowRouteProtocolExtensive(unittest.TestCase):
     def test_golden_9(self):
         self.device = Mock(**self.golden_output_9)
         obj = ShowRouteProtocolExtensive(device=self.device)
-        parsed_output = obj.parse(route='200.0.0.0/32')
+        parsed_output = obj.parse(route='192.168.220.0/32')
         self.assertEqual(parsed_output, self.golden_parsed_output_9)
 
 '''
