@@ -6038,10 +6038,10 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
             if m:
                 router_id = str(m.groupdict()['router_id'])
                 instance = str(m.groupdict()['instance'])
-
+                vrf = 'default'
                 # Get VRF information using the ospf instance
                 cmd = 'show running-config | section router ospf {}'.format(instance)
-                out = self.device.execute(cmd)
+                out = self.device.execute(cmd) if output is None else ''
 
                 for line in out.splitlines():
                     line = line.rstrip()
@@ -6061,9 +6061,7 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                                 vrf = str(p.groupdict()['vrf'])
                                 break
                             else:
-                                vrf = 'default'
                                 break
-
                 # Create dict
                 if 'vrf' not in ret_dict:
                     ret_dict['vrf'] = {}
@@ -6261,7 +6259,6 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
                 continue
 
         return ret_dict
-
 
 # =============================
 # Schema for:
