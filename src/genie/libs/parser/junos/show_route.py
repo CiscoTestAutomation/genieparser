@@ -3053,6 +3053,7 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
                 route_table_dict.update(
                     {k.replace('_', '-'):v for k, v in group.items() if v is not None}
                 )
+                rt_entry_dict = None
                 continue
 
             # 10.16.2.2/32 (1 entry, 1 announced)
@@ -3086,7 +3087,8 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict = {}
+                if rt_entry_dict == None:
+                    rt_entry_dict = {}
                 rt_entry_dict['active-tag'] = group['active_tag']
                 rt_entry_dict['preference'] = group['preference']
                 rt_entry_dict['preference2'] = group['preference2']
@@ -3160,6 +3162,8 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
             # State: <Active Ext>
             m = p11.match(line)
             if m:
+                if rt_entry_dict == None:
+                    rt_entry_dict = {}
                 group = m.groupdict()
                 for group_key, group_value in m.groupdict().items():
                     entry_key = group_key.replace('_', '-')
