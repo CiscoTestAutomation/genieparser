@@ -227,6 +227,11 @@ class ShowTenantOmpPeers(ShowTenantOmpPeersSchema):
             parsed_dict['tenant_name'] = {}
             parsed_dict['tenant_name'][tenant_name] = {}
             return_dict['peer'] = {}
+            # 169.254.10.7     vsmart  1         1         26        up       0:21:24:40       114/0/114
+            # 169.254.10.10    vedge   1         1         501       up       0:06:53:57       11/0/108
+            # 169.254.10.11    vedge   1         1         503       up       0:21:39:37       84/0/33
+            # 169.254.10.12    vedge   1         1         504       up       0:21:39:38       16/0/30
+            # 169.254.10.26    vedge   1         1         506       up       0:21:39:37       8/0/70
             p1 = re.compile(r'^(?P<peer>[\d\.]+) +(?P<type>[0-9\w/\.]+) +(?P<domain_id>[\d]+) +(?P<overlay_id>[\d]+) +(?P<site_id>[\d]+) +(?P<state>[\w]+) +(?P<uptime>[\d\:]+) +(?P<ris>[\d/\.]+)$')
             outlist = out.splitlines()
             for lines in outlist:
@@ -264,7 +269,6 @@ class ShowTenantOmpRoutesAdvertisedSchema(MetaParser):
 class ShowTenantOmpRoutesAdvertised(ShowTenantOmpRoutesAdvertisedSchema):
     """ Parser for
     "show tenant {tenant_name} omp routes advertised"
-    "show tenant {tenant_name} omp routes vpn {vpnid} advertised"
     """
 
     cli_command = "show tenant {tenant_name} omp routes advertised"

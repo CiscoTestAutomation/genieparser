@@ -43,6 +43,10 @@ class ShowSdwanPolicyIpv6AccessListAssociations(ShowSdwanPolicyIpv6AccessListAss
         return_dict = {}
         if out:
             outlist = out.splitlines()
+            # acl-v6-apple  TenGigabitEthernet0/0/0.1002  in
+            #               TenGigabitEthernet0/0/0.1002  out
+            #               TenGigabitEthernet0/0/2.1002  in
+            #               TenGigabitEthernet0/0/2.1002  out
             p1 = re.compile(r'^(?P<name>[\w\-\s]+) + (?P<interface_name>[\d\w/\.\-]+) + (?P<interface_direction>[\w]+)$')
             for line in outlist:
                 m1 = p1.match(line)
@@ -85,6 +89,10 @@ class ShowSdwanPolicyAccessListAssociations(ShowSdwanPolicyIpv6AccessListAssocia
         return_dict = {}
         if out:
             outlist = out.splitlines()
+            # acl-v4        TenGigabitEthernet0/0/2.1002  in
+            #               TenGigabitEthernet0/0/2.1002  out
+            # acl-v4-apple  TenGigabitEthernet0/0/0.1002  in
+            #               TenGigabitEthernet0/0/0.1002  out
             p1 = re.compile(
                 r'^(?P<name>[\w\-\s]+) + (?P<interface_name>[\d\w/\.\-]+) + (?P<interface_direction>[\w]+)$')
             for line in outlist:
@@ -149,6 +157,37 @@ class ShowSdwanPolicyAccessListCounters(ShowSdwanPolicyAccessListCountersSchema)
                     local_list=outlist[lines-1].split()
                     local_list[0] = local_list[0]+ outlist[lines]
                     outlist[lines-1] = "  ".join(local_list)
+            # acl-v4  count_seq_1                       0             0
+            #         count_seq_2                       0             0
+            #         count_seq_3                       0             0
+            #         count_seq_4                       0             0
+            #         count_seq_5                       0             0
+            #         count_seq_7                       0             0
+            #         count_seq_8                       0             0
+            #         count_seq_9                       0             0
+            #         count_seq_10                      0             0
+            #         count_seq_11                      0             0
+            #         count_seq_12                      0             0
+            #         count_seq_13                      0             0
+            #         count_seq_14                      0             0
+            #         count_seq_15                      0             0
+            #         count_seq_16                      0             0
+            #         count_seq_17                      0             0
+            #         count_seq_18                      0             0
+            #         count_seq_19                      0             0
+            #         count_seq_20                      0             0
+            #         count_seq_21                      0             0
+            #         count_seq_22                      0             0
+            #         count_seq_23                      0             0
+            #         count_seq_24                      0             0
+            #         vpn1002-v4-traffic                9788308290    8520697223296
+            #         default_action_count              0             0
+            # acl-v4  acl_v4_40gig_counter              0             0
+            # -40gig
+            #         default_action_count              0             0
+            # acl-v4  seq1                              8726713375    7977499318508
+            # -apple
+            #         default_action_count              246601717     239371283918
             p1=re.compile(r'^(?P<name>[\w\-\s]+) + (?P<counter_name>[\d\w/\.\-]+) + (?P<packets>[\d]+) +(?P<bytes>[\d]+)$')
             for line in outlist:
                 m1=p1.match(line.rstrip())
@@ -189,6 +228,8 @@ class ShowSdwanPolicyIpv6AccessListCounters(ShowSdwanPolicyAccessListCountersSch
                     local_list = outlist[lines - 1].split()
                     local_list[0] = local_list[0] + outlist[lines]
                     outlist[lines - 1] = "  ".join(local_list)
+            # acl-v6-apple  vpn1002-v6-traffic    3999853226  3260866067656
+            #               default_action_count  248080      22356152
             p1 = re.compile(
                 r'^(?P<name>[\w\-\s]+) + (?P<counter_name>[\d\w/\.\-]+) + (?P<packets>[\d]+) +(?P<bytes>[\d]+)$')
             for line in outlist:
