@@ -11301,6 +11301,7 @@ class ShowBgpIpMvpnRouteTypeSchema(MetaParser):
                                                         Optional('typecode'): str,
                                                         'ipnexthop': str,
                                                         'weight': str,
+                                                        Optional('path'): str,
                                                         'origin': str,
                                                         'localpref': str,
                                                     }
@@ -11371,10 +11372,11 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
         # *>i                   10.196.7.7                           100          0 i
         #                       10.64.4.4                                        0 200 100 i
         #                       0.0.0.0                  0        100      32768 ?
+        #                       10.64.4.4              219        0 10 3277 32768 36640 {27016} e
         p6 = re.compile(
             r'^\s*(?P<statuscode>[s|S|x|d|h|>|s|*\s]+)?(?P<typecode>('
             r'i|e|c|l|a|r|I)+)?\s+(?P<ipnexthop>[\d\.]+)?(?P<space1>\s+)?(?P<metric>['
-            r'\d]+)?\s+(?P<localpref>[\d]+)\s+?(?P<weight>[\d]+) +(?P<origin>[i|e|c|l|a|I|?]+)$')
+            r'\d]+)?\s+(?P<localpref>[\d]+)\s+?(?P<weight>[\d]+)( +(?P<path>[0-9\{\}\s]+))? +(?P<origin>[i|e|c|l|a|I|?]+)$')
 
         for line in out.splitlines():
             if line:
@@ -11477,6 +11479,8 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
                 path_dict.update({'weight': group['weight']})
                 path_dict.update({'origin': group['origin']})
                 path_dict.update({'localpref': group['localpref'] })
+                if group['path']:
+                    path_dict.update({'path': group['path']})
                 continue
 
         if not len(list(Common.find_keys('rd', result_dict))) :
