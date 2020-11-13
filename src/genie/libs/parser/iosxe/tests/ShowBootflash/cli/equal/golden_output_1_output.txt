@@ -1,0 +1,21 @@
+Bootflash:  -#- --length-- ---------date/time--------- path
+  1       4096 Oct 12 2020 07:23:32 +00:00 /bootflash/
+  2      16384 Apr 20 2017 23:08:16 +00:00 /bootflash/lost+found
+  3       4096 Oct 25 2017 20:41:18 +00:00 /bootflash/.prst_sync
+  4  486645440 Apr 20 2017 23:18:43 +00:00 /bootflash/isr4300-universalk9.03.16.04b.S.155-3.S4b-ext.SPA.bin
+  5       4096 Apr 20 2017 23:09:42 +00:00 /bootflash/.installer
+  6       8192 Oct 09 2020 03:35:54 +00:00 /bootflash/tracelogs
+  7    1664940 Oct 12 2020 07:27:04 +00:00 /bootflash/tracelogs/boottime
+  8      43884 Oct 12 2020 07:27:04 +00:00 /bootflash/tracelogs/dmesg
+  9      50666 Oct 12 2020 07:27:04 +00:00 /bootflash/tracelogs/explode.log
+ 10      37855 Oct 12 2020 07:27:04 +00:00 /bootflash/tracelogs/linux_iosd_image_pmanlog_R0-0.log
+ 11       3532 Oct 12 2020 07:27:04 +00:00 /bootflash/tracelogs/btrace_rotate_sh_pmanlog_R0-0.log
+ 12         11 Oct 12 2020 07:27:04 +00:00 /bootflash/tracelogs/timestamp
+ 13       4096 Apr 20 2017 23:30:48 +00:00 /bootflash/tracelogs/modules
+ 14       4096 Apr 20 2017 23:31:44 +00:00 /bootflash/core
+ 15       4096 Apr 20 2017 23:30:48 +00:00 /bootflash/core/modules
+ 16          1 Oct 12 2020 07:24:10 +00:00 /bootflash/core/.callhome
+ 17       4096 Apr 20 2017 23:30:48 +00:00 /bootflash/.rollback_timer
+ 18         30 Oct 26 2017 06:06:43 +00:00 /bootflash/throughput_monitor_params
+
+13755338752 bytes available (489017344 bytes used)
