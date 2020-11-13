@@ -23,7 +23,7 @@ Packets currently in SNMP process input queue: 0
 SNMP global trap: enabled
 
 SNMP logging: enabled
-    Logging to 13.43.1.12.151, 0/10, 102045 sent, 3065 dropped.
-    Logging to 12.44.133.10.111, 0/10, 102045 sent, 3065 dropped.
-    Logging to 116.75.154.186.169, 0/10, 201075 sent, 11383 dropped.
-    Logging to 126.35.67.19.108, 0/10, 102045 sent, 3065 dropped.
+    Logging to 10.76.1.12.151, 0/10, 102045 sent, 3065 dropped.
+    Logging to 10.76.133.10.111, 0/10, 102045 sent, 3065 dropped.
+    Logging to 10.16.154.186.169, 0/10, 201075 sent, 11383 dropped.
+    Logging to 10.166.67.19.108, 0/10, 102045 sent, 3065 dropped.
