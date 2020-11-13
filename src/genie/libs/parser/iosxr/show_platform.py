@@ -351,7 +351,7 @@ class ShowPlatform(ShowPlatformSchema):
             # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
             # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
             p1 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/]+)'
-                             ' +(?P<name>[\S]+)'
+                             ' +(?P<name>\S+)'
                              '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                              '(?: +(?P<plim>[a-zA-Z\/]+))?'
                              ' +(?P<state>(IOS XR RUN|OK|OPERATIONAL)+)'
