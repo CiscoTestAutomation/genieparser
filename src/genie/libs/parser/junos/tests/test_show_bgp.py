@@ -1731,7 +1731,7 @@ class TestShowBgpSummary(unittest.TestCase):
         inet6.0              
                             0          0          0          0          0          0
         Peer                     AS      InPkt     OutPkt    OutQ   Flaps Last Up/Dwn State|#Active/Received/Accepted/Damped...
-        20.0.0.2                  3          2          3       0       1           9 0/0/0/0              0/0/0/0
+        10.145.0.2                  3          2          3       0       1           9 0/0/0/0              0/0/0/0
         2001:20::2                3          2          3       0       1           5 Establ
         inet6.0: 0/0/0/0
     '''}
@@ -1743,7 +1743,7 @@ class TestShowBgpSummary(unittest.TestCase):
                                    'flap-count': '1',
                                    'input-messages': '2',
                                    'output-messages': '3',
-                                   'peer-address': '20.0.0.2',
+                                   'peer-address': '10.145.0.2',
                                    'peer-as': '3',
                                    'peer-state': 'Establ',
                                    'route-queue-count': '0'},

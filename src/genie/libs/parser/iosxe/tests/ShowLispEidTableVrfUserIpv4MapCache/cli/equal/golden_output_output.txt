@@ -4,7 +4,7 @@ LISP IPv4 Mapping Cache for EID-table vrf User (IID 4100), 2186 entries
   Negative cache entry, action: send-map-request
 0.0.0.0/5, uptime: 4w6d, expires: 00:14:38, via map-reply, forward-native
   Encapsulating to proxy ETR
-8.0.0.0/7, uptime: 07:18:55, expires: 00:07:19, via map-reply, forward-native
+10.64.0.0/7, uptime: 07:18:55, expires: 00:07:19, via map-reply, forward-native
   Encapsulating to proxy ETR
 10.0.0.0/9, uptime: 1w4d, expires: 00:00:13, via map-reply, forward-native
   Encapsulating to proxy ETR

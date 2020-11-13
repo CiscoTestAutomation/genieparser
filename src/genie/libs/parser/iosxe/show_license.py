@@ -28,15 +28,15 @@ class ShowLicenseSchema(MetaParser):
         'licenses': {
             int: {
                 'feature': str,
-                'period_left': str,
+                Optional('period_left'): str,
                 Optional('period_minutes'): int,
                 Optional('period_seconds'): int,
-                'license_type': str,
-                'license_state': str,
+                Optional('license_type'): str,
+                Optional('license_state'): str,
                 Optional('count_in_use'): int,
                 Optional('count_violation'): int,
                 Optional('count'): str,
-                'license_priority': str
+                Optional('license_priority'): str
 
             }
         }
@@ -71,8 +71,9 @@ class ShowLicense(ShowLicenseSchema):
         p5 = re.compile(r"\s+((?P<count_in_use>\d+)/(?P<count_violation>\d+)\s+\(In-use/Violation\)|(?P<count>\S+))")
         #         License Priority: None
         p6 = re.compile(r"\s+(?P<license_priority>\S+)")
+        #         License State: Active, Not in Use
         #         License State: Active, Not in Use, EULA not accepted
-        p7 = re.compile(r"\s+(?P<license_state>(Active,\s+Not\s+in\s+Use,\s+EULA\s+not\s+accepted|Active,\s+In\s+Use))")
+        p7 = re.compile(r"\s+(?P<license_state>(Active,\s+Not\s+in\s+Use,\s+EULA\s+not\s+accepted|Active,\s+In\s+Use|Active,\s+Not in\s+Use))")
 
         regex_map = {
             "Period left": p2,

@@ -3,7 +3,7 @@ expected_output = {
     "network_layer_address": {
         "10.160.43.197": {
             "code": "DH4",
-            "link_layer_address": "94d4.690b.dbfa",
+            "link_layer_address": "94d4.69ff.e606",
             "interface": "Te8/0/37",
             "vlan": 1023,
             "prlvl": "0025",
@@ -13,7 +13,7 @@ expected_output = {
         },
         "10.160.42.157": {
             "code": "DH4",
-            "link_layer_address": "0896.ad77.1224",
+            "link_layer_address": "0896.adff.899b",
             "interface": "Gi7/0/11",
             "vlan": 1023,
             "prlvl": "0025",
@@ -23,7 +23,7 @@ expected_output = {
         },
         "10.160.42.124": {
             "code": "DH4",
-            "link_layer_address": "00b1.e3ba.0d62",
+            "link_layer_address": "00b1.e3ff.c71d",
             "interface": "Te2/0/39",
             "vlan": 1023,
             "prlvl": "0025",
@@ -33,7 +33,7 @@ expected_output = {
         },
         "10.160.42.118": {
             "code": "DH4",
-            "link_layer_address": "04eb.40b9.dd4e",
+            "link_layer_address": "04eb.40ff.9708",
             "interface": "Te2/0/40",
             "vlan": 1023,
             "prlvl": "0025",
@@ -43,7 +43,7 @@ expected_output = {
         },
         "10.160.42.108": {
             "code": "DH4",
-            "link_layer_address": "3c0e.236d.013d",
+            "link_layer_address": "3c0e.23ff.6eaa",
             "interface": "Te7/0/38",
             "vlan": 1023,
             "prlvl": "0025",
@@ -53,7 +53,7 @@ expected_output = {
         },
         "10.160.42.107": {
             "code": "DH4",
-            "link_layer_address": "2c01.b5e7.db38",
+            "link_layer_address": "2c01.b5ff.c320",
             "interface": "Gi1/0/8",
             "vlan": 1023,
             "prlvl": "0025",
@@ -63,7 +63,7 @@ expected_output = {
         },
         "10.160.42.95": {
             "code": "DH4",
-            "link_layer_address": "58ac.786a.1364",
+            "link_layer_address": "58ac.78ff.7dce",
             "interface": "Gi4/0/9",
             "vlan": 1023,
             "prlvl": "0025",
@@ -73,7 +73,7 @@ expected_output = {
         },
         "10.160.42.26": {
             "code": "DH4",
-            "link_layer_address": "e4c7.2268.1ad0",
+            "link_layer_address": "e4c7.22ff.8239",
             "interface": "Gi1/0/24",
             "vlan": 1023,
             "prlvl": "0025",
@@ -83,7 +83,7 @@ expected_output = {
         },
         "10.160.37.220": {
             "code": "DH4",
-            "link_layer_address": "f4ea.6748.cf80",
+            "link_layer_address": "f4ea.67ff.18c8",
             "interface": "Te3/0/37",
             "vlan": 1023,
             "prlvl": "0025",
@@ -93,7 +93,7 @@ expected_output = {
         },
         "10.160.36.195": {
             "code": "DH4",
-            "link_layer_address": "0057.d2c0.a0cf",
+            "link_layer_address": "0057.d2ff.6190",
             "interface": "Te2/0/33",
             "vlan": 1023,
             "prlvl": "0025",
@@ -103,7 +103,7 @@ expected_output = {
         },
         "10.160.36.163": {
             "code": "DH4",
-            "link_layer_address": "189c.5db7.6792",
+            "link_layer_address": "189c.5dff.1f4a",
             "interface": "Gi4/0/11",
             "vlan": 1023,
             "prlvl": "0025",
@@ -113,7 +113,7 @@ expected_output = {
         },
         "10.160.36.154": {
             "code": "DH4",
-            "link_layer_address": "189c.5db6.2c0b",
+            "link_layer_address": "189c.5dff.e2c1",
             "interface": "Te1/0/36",
             "vlan": 1023,
             "prlvl": "0025",
@@ -123,7 +123,7 @@ expected_output = {
         },
         "10.160.36.131": {
             "code": "DH4",
-            "link_layer_address": "682c.7b5c.f8a2",
+            "link_layer_address": "682c.7bff.55fe",
             "interface": "Gi1/0/17",
             "vlan": 1023,
             "prlvl": "0025",
@@ -133,7 +133,7 @@ expected_output = {
         },
         "10.160.36.114": {
             "code": "DH4",
-            "link_layer_address": "04eb.40b9.f167",
+            "link_layer_address": "04eb.40ff.ab21",
             "interface": "Te8/0/38",
             "vlan": 1023,
             "prlvl": "0025",
@@ -143,7 +143,7 @@ expected_output = {
         },
         "10.160.36.113": {
             "code": "DH4",
-            "link_layer_address": "a456.30ba.4964",
+            "link_layer_address": "a456.30ff.041f",
             "interface": "Gi3/0/6",
             "vlan": 1023,
             "prlvl": "0025",
@@ -153,7 +153,7 @@ expected_output = {
         },
         "10.160.36.81": {
             "code": "DH4",
-            "link_layer_address": "00fe.c85f.c35e",
+            "link_layer_address": "00fe.c8ff.23bd",
             "interface": "Gi3/0/20",
             "vlan": 1023,
             "prlvl": "0025",
@@ -163,7 +163,7 @@ expected_output = {
         },
         "10.160.36.80": {
             "code": "DH4",
-            "link_layer_address": "58ac.786a.0d13",
+            "link_layer_address": "58ac.78ff.777d",
             "interface": "Te1/0/31",
             "vlan": 1023,
             "prlvl": "0025",
@@ -173,7 +173,7 @@ expected_output = {
         },
         "10.160.36.62": {
             "code": "DH4",
-            "link_layer_address": "5c83.8f5e.6edb",
+            "link_layer_address": "5c83.8fff.cc3a",
             "interface": "Gi3/0/8",
             "vlan": 1023,
             "prlvl": "0025",
@@ -183,7 +183,7 @@ expected_output = {
         },
         "10.160.36.59": {
             "code": "DH4",
-            "link_layer_address": "f07f.0629.1bd0",
+            "link_layer_address": "f07f.06ff.44f9",
             "interface": "Te1/0/37",
             "vlan": 1023,
             "prlvl": "0025",
@@ -193,7 +193,7 @@ expected_output = {
         },
         "10.160.36.54": {
             "code": "DH4",
-            "link_layer_address": "e4c7.2267.ab88",
+            "link_layer_address": "e4c7.22ff.13ef",
             "interface": "Te1/0/33",
             "vlan": 1023,
             "prlvl": "0025",
@@ -203,7 +203,7 @@ expected_output = {
         },
         "10.160.36.5": {
             "code": "DH4",
-            "link_layer_address": "d0ec.35fe.9855",
+            "link_layer_address": "d0ec.35ff.9754",
             "interface": "Gi1/0/12",
             "vlan": 1023,
             "prlvl": "0025",
@@ -213,7 +213,7 @@ expected_output = {
         },
         "10.160.36.1": {
             "code": "DH4",
-            "link_layer_address": "c4b3.6aba.bc07",
+            "link_layer_address": "c4b3.6aff.77c1",
             "interface": "Te7/0/40",
             "vlan": 1023,
             "prlvl": "0025",
@@ -223,7 +223,7 @@ expected_output = {
         },
         "10.160.35.246": {
             "code": "DH4",
-            "link_layer_address": "bcf1.f2e8.3cca",
+            "link_layer_address": "bcf1.f2ff.25b3",
             "interface": "Gi1/0/6",
             "vlan": 1023,
             "prlvl": "0025",
@@ -233,7 +233,7 @@ expected_output = {
         },
         "10.160.35.170": {
             "code": "DH4",
-            "link_layer_address": "8875.5650.23f5",
+            "link_layer_address": "8875.56ff.7346",
             "interface": "Gi1/0/2",
             "vlan": 1023,
             "prlvl": "0025",
@@ -243,7 +243,7 @@ expected_output = {
         },
         "10.160.35.138": {
             "code": "DH4",
-            "link_layer_address": "04eb.40b9.4ebf",
+            "link_layer_address": "04eb.40ff.0879",
             "interface": "Te1/0/39",
             "vlan": 1023,
             "prlvl": "0025",
@@ -253,7 +253,7 @@ expected_output = {
         },
         "10.160.35.125": {
             "code": "DH4",
-            "link_layer_address": "0057.d2c1.6cc6",
+            "link_layer_address": "0057.d2ff.2e88",
             "interface": "Gi1/0/15",
             "vlan": 1023,
             "prlvl": "0025",
@@ -263,7 +263,7 @@ expected_output = {
         },
         "10.160.35.93": {
             "code": "DH4",
-            "link_layer_address": "04eb.40b9.e7da",
+            "link_layer_address": "04eb.40ff.a194",
             "interface": "Te3/0/29",
             "vlan": 1023,
             "prlvl": "0025",
@@ -273,7 +273,7 @@ expected_output = {
         },
         "10.160.35.63": {
             "code": "DH4",
-            "link_layer_address": "0057.d2c0.9eb3",
+            "link_layer_address": "0057.d2ff.5f74",
             "interface": "Te4/0/27",
             "vlan": 1023,
             "prlvl": "0025",
@@ -283,7 +283,7 @@ expected_output = {
         },
         "10.160.35.42": {
             "code": "DH4",
-            "link_layer_address": "0057.d2c0.a009",
+            "link_layer_address": "0057.d2ff.61c9",
             "interface": "Te7/0/26",
             "vlan": 1023,
             "prlvl": "0025",
@@ -293,7 +293,7 @@ expected_output = {
         },
         "10.160.34.78": {
             "code": "DH4",
-            "link_layer_address": "c4b3.6abb.1a45",
+            "link_layer_address": "c4b3.6aff.d501",
             "interface": "Gi1/0/5",
             "vlan": 1023,
             "prlvl": "0025",
@@ -303,7 +303,7 @@ expected_output = {
         },
         "10.160.33.232": {
             "code": "DH4",
-            "link_layer_address": "682c.7b5c.f881",
+            "link_layer_address": "682c.7bff.55dd",
             "interface": "Gi3/0/12",
             "vlan": 1023,
             "prlvl": "0025",
@@ -313,7 +313,7 @@ expected_output = {
         },
         "10.160.33.157": {
             "code": "DH4",
-            "link_layer_address": "0057.d2c1.f49a",
+            "link_layer_address": "0057.d2ff.b65c",
             "interface": "Te8/0/39",
             "vlan": 1023,
             "prlvl": "0025",
@@ -323,7 +323,7 @@ expected_output = {
         },
         "10.160.33.121": {
             "code": "DH4",
-            "link_layer_address": "dcf7.19f3.6d94",
+            "link_layer_address": "dcf7.19ff.6188",
             "interface": "Gi4/0/4",
             "vlan": 1023,
             "prlvl": "0025",
@@ -333,7 +333,7 @@ expected_output = {
         },
         "10.160.33.100": {
             "code": "DH4",
-            "link_layer_address": "04eb.40b9.e042",
+            "link_layer_address": "04eb.40ff.9afb",
             "interface": "Te1/0/38",
             "vlan": 1023,
             "prlvl": "0025",
@@ -343,7 +343,7 @@ expected_output = {
         },
         "10.160.1.19": {
             "code": "DH4",
-            "link_layer_address": "94e6.f707.c2bd",
+            "link_layer_address": "94e6.f7ff.c9c4",
             "interface": "Ac8",
             "vlan": 1022,
             "prlvl": "0025",
@@ -353,7 +353,7 @@ expected_output = {
         },
         "10.160.1.18": {
             "code": "DH4",
-            "link_layer_address": "f62c.c511.333d",
+            "link_layer_address": "f62c.c5ff.444e",
             "interface": "Ac8",
             "vlan": 1022,
             "prlvl": "0025",
@@ -363,7 +363,7 @@ expected_output = {
         },
         "10.160.1.10": {
             "code": "DH4",
-            "link_layer_address": "f018.98b3.3df4",
+            "link_layer_address": "f018.98ff.f0a8",
             "interface": "Ac7",
             "vlan": 1022,
             "prlvl": "0025",
@@ -373,7 +373,7 @@ expected_output = {
         },
         "10.160.1.1": {
             "code": "DH4",
-            "link_layer_address": "1ab2.4975.5a1c",
+            "link_layer_address": "1ab2.49ff.cf91",
             "interface": "Ac7",
             "vlan": 1022,
             "prlvl": "0025",
@@ -383,7 +383,7 @@ expected_output = {
         },
         "10.102.32.44": {
             "code": "DH4",
-            "link_layer_address": "1860.2477.5b46",
+            "link_layer_address": "1860.24ff.d2bd",
             "interface": "Gi1/0/11",
             "vlan": 1021,
             "prlvl": "0025",
@@ -393,7 +393,7 @@ expected_output = {
         },
         "10.8.132.245": {
             "code": "DH4",
-            "link_layer_address": "a4b2.3908.1b08",
+            "link_layer_address": "a4b2.39ff.2310",
             "interface": "Te2/0/47",
             "vlan": 2045,
             "prlvl": "0025",
@@ -403,7 +403,7 @@ expected_output = {
         },
         "10.8.132.240": {
             "code": "DH4",
-            "link_layer_address": "a4b2.3908.4a30",
+            "link_layer_address": "a4b2.39ff.5238",
             "interface": "Te1/0/48",
             "vlan": 2045,
             "prlvl": "0025",
@@ -413,7 +413,7 @@ expected_output = {
         },
         "10.8.132.226": {
             "code": "DH4",
-            "link_layer_address": "a4b2.3908.14d4",
+            "link_layer_address": "a4b2.39ff.1cdc",
             "interface": "Te4/0/48",
             "vlan": 2045,
             "prlvl": "0025",
@@ -423,7 +423,7 @@ expected_output = {
         },
         "10.8.132.212": {
             "code": "DH4",
-            "link_layer_address": "3c41.0efe.58c0",
+            "link_layer_address": "3c41.0eff.57bf",
             "interface": "Te1/0/47",
             "vlan": 2045,
             "prlvl": "0025",
@@ -433,7 +433,7 @@ expected_output = {
         },
         "10.8.132.205": {
             "code": "DH4",
-            "link_layer_address": "2c57.4158.5da4",
+            "link_layer_address": "2c57.41ff.b5fc",
             "interface": "Te2/0/48",
             "vlan": 2045,
             "prlvl": "0025",
@@ -443,7 +443,7 @@ expected_output = {
         },
         "10.8.132.117": {
             "code": "DH4",
-            "link_layer_address": "a4b2.3908.4088",
+            "link_layer_address": "a4b2.39ff.4890",
             "interface": "Te3/0/47",
             "vlan": 2045,
             "prlvl": "0025",
@@ -453,7 +453,7 @@ expected_output = {
         },
         "10.8.132.114": {
             "code": "DH4",
-            "link_layer_address": "a4b2.3908.406c",
+            "link_layer_address": "a4b2.39ff.4874",
             "interface": "Te8/0/47",
             "vlan": 2045,
             "prlvl": "0025",
@@ -463,7 +463,7 @@ expected_output = {
         },
         "10.8.132.100": {
             "code": "DH4",
-            "link_layer_address": "a4b2.3908.426c",
+            "link_layer_address": "a4b2.39ff.4a74",
             "interface": "Te9/0/47",
             "vlan": 2045,
             "prlvl": "0025",
@@ -473,7 +473,7 @@ expected_output = {
         },
         "10.8.132.96": {
             "code": "DH4",
-            "link_layer_address": "2c57.4158.4320",
+            "link_layer_address": "2c57.41ff.9b78",
             "interface": "Te7/0/47",
             "vlan": 2045,
             "prlvl": "0025",
@@ -483,7 +483,7 @@ expected_output = {
         },
         "10.8.132.82": {
             "code": "DH4",
-            "link_layer_address": "a4b2.3908.3ff8",
+            "link_layer_address": "a4b2.39ff.4701",
             "interface": "Te8/0/48",
             "vlan": 2045,
             "prlvl": "0025",
@@ -493,7 +493,7 @@ expected_output = {
         },
         "10.8.132.80": {
             "code": "DH4",
-            "link_layer_address": "a4b2.3908.4170",
+            "link_layer_address": "a4b2.39ff.4978",
             "interface": "Te9/0/48",
             "vlan": 2045,
             "prlvl": "0025",
@@ -503,7 +503,7 @@ expected_output = {
         },
         "10.8.132.70": {
             "code": "DH4",
-            "link_layer_address": "a4b2.3908.405c",
+            "link_layer_address": "a4b2.39ff.4864",
             "interface": "Te3/0/48",
             "vlan": 2045,
             "prlvl": "0025",
@@ -513,7 +513,7 @@ expected_output = {
         },
         "10.8.132.53": {
             "code": "DH4",
-            "link_layer_address": "2c57.4158.5bac",
+            "link_layer_address": "2c57.41ff.b305",
             "interface": "Te7/0/48",
             "vlan": 2045,
             "prlvl": "0025",
@@ -523,7 +523,7 @@ expected_output = {
         },
         "10.8.132.50": {
             "code": "DH4",
-            "link_layer_address": "a4b2.3908.43d4",
+            "link_layer_address": "a4b2.39ff.4bdc",
             "interface": "Te10/0/48",
             "vlan": 2045,
             "prlvl": "0025",
@@ -531,9 +531,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "248 s try 0(281634 s)",
         },
-        "FE80::E6C7:22FF:FE68:1AD0": {
+        "FE80::E6C7:22FF:FEFF:8239": {
             "code": "ND",
-            "link_layer_address": "e4c7.2268.1ad0",
+            "link_layer_address": "e4c7.22ff.8239",
             "interface": "Gi1/0/24",
             "vlan": 1023,
             "prlvl": "0005",
@@ -541,9 +541,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "268 s",
         },
-        "FE80::A6B2:39FF:FE08:4A30": {
+        "FE80::A6B2:39FF:FEFF:5238": {
             "code": "ND",
-            "link_layer_address": "a4b2.3908.4a30",
+            "link_layer_address": "a4b2.39ff.5238",
             "interface": "Te1/0/48",
             "vlan": 2045,
             "prlvl": "0005",
@@ -551,9 +551,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "159 s",
         },
-        "FE80::A6B2:39FF:FE08:43D4": {
+        "FE80::A6B2:39FF:FEFF:4BDC": {
             "code": "ND",
-            "link_layer_address": "a4b2.3908.43d4",
+            "link_layer_address": "a4b2.39ff.4bdc",
             "interface": "Te10/0/48",
             "vlan": 2045,
             "prlvl": "0005",
@@ -561,9 +561,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "152 s",
         },
-        "FE80::A6B2:39FF:FE08:426C": {
+        "FE80::A6B2:39FF:FEFF:4A74": {
             "code": "ND",
-            "link_layer_address": "a4b2.3908.426c",
+            "link_layer_address": "a4b2.39ff.4a74",
             "interface": "Te9/0/47",
             "vlan": 2045,
             "prlvl": "0005",
@@ -571,9 +571,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "281 s",
         },
-        "FE80::A6B2:39FF:FE08:4170": {
+        "FE80::A6B2:39FF:FEFF:4978": {
             "code": "ND",
-            "link_layer_address": "a4b2.3908.4170",
+            "link_layer_address": "a4b2.39ff.4978",
             "interface": "Te9/0/48",
             "vlan": 2045,
             "prlvl": "0005",
@@ -581,9 +581,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "240 s",
         },
-        "FE80::A6B2:39FF:FE08:4088": {
+        "FE80::A6B2:39FF:FEFF:4890": {
             "code": "ND",
-            "link_layer_address": "a4b2.3908.4088",
+            "link_layer_address": "a4b2.39ff.4890",
             "interface": "Te3/0/47",
             "vlan": 2045,
             "prlvl": "0005",
@@ -591,9 +591,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "150 s",
         },
-        "FE80::A6B2:39FF:FE08:406C": {
+        "FE80::A6B2:39FF:FEFF:4874": {
             "code": "ND",
-            "link_layer_address": "a4b2.3908.406c",
+            "link_layer_address": "a4b2.39ff.4874",
             "interface": "Te8/0/47",
             "vlan": 2045,
             "prlvl": "0005",
@@ -601,9 +601,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "282 s",
         },
-        "FE80::A6B2:39FF:FE08:405C": {
+        "FE80::A6B2:39FF:FEFF:4864": {
             "code": "ND",
-            "link_layer_address": "a4b2.3908.405c",
+            "link_layer_address": "a4b2.39ff.4864",
             "interface": "Te3/0/48",
             "vlan": 2045,
             "prlvl": "0005",
@@ -611,9 +611,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "237 s",
         },
-        "FE80::A6B2:39FF:FE08:3FF8": {
+        "FE80::A6B2:39FF:FEFF:4701": {
             "code": "ND",
-            "link_layer_address": "a4b2.3908.3ff8",
+            "link_layer_address": "a4b2.39ff.4701",
             "interface": "Te8/0/48",
             "vlan": 2045,
             "prlvl": "0005",
@@ -621,9 +621,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "289 s",
         },
-        "FE80::A6B2:39FF:FE08:1B08": {
+        "FE80::A6B2:39FF:FEFF:2310": {
             "code": "ND",
-            "link_layer_address": "a4b2.3908.1b08",
+            "link_layer_address": "a4b2.39ff.2310",
             "interface": "Te2/0/47",
             "vlan": 2045,
             "prlvl": "0005",
@@ -631,9 +631,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "193 s",
         },
-        "FE80::A6B2:39FF:FE08:14D4": {
+        "FE80::A6B2:39FF:FEFF:1CDC": {
             "code": "ND",
-            "link_layer_address": "a4b2.3908.14d4",
+            "link_layer_address": "a4b2.39ff.1cdc",
             "interface": "Te4/0/48",
             "vlan": 2045,
             "prlvl": "0005",
@@ -643,7 +643,7 @@ expected_output = {
         },
         "FE80::A453:DB3F:9A16:D9CF": {
             "code": "ND",
-            "link_layer_address": "1860.2477.5b46",
+            "link_layer_address": "1860.24ff.d2bd",
             "interface": "Gi1/0/11",
             "vlan": 1021,
             "prlvl": "0005",
@@ -653,7 +653,7 @@ expected_output = {
         },
         "FE80::8075:85F8:44B1:7DFF": {
             "code": "ND",
-            "link_layer_address": "94e6.f707.c2bd",
+            "link_layer_address": "94e6.f7ff.c9c4",
             "interface": "Ac8",
             "vlan": 1022,
             "prlvl": "0005",
@@ -661,9 +661,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "34 s try 0",
         },
-        "FE80::3E41:EFF:FEFE:58C0": {
+        "FE80::3E41:EFF:FEFF:57BF": {
             "code": "ND",
-            "link_layer_address": "3c41.0efe.58c0",
+            "link_layer_address": "3c41.0eff.57bf",
             "interface": "Te1/0/47",
             "vlan": 2045,
             "prlvl": "0005",
@@ -671,9 +671,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "149 s",
         },
-        "FE80::2E57:41FF:FE58:5DA4": {
+        "FE80::2E57:41FF:FEFF:B5FC": {
             "code": "ND",
-            "link_layer_address": "2c57.4158.5da4",
+            "link_layer_address": "2c57.41ff.b5fc",
             "interface": "Te2/0/48",
             "vlan": 2045,
             "prlvl": "0005",
@@ -681,9 +681,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "286 s",
         },
-        "FE80::2E57:41FF:FE58:5BAC": {
+        "FE80::2E57:41FF:FEFF:B305": {
             "code": "ND",
-            "link_layer_address": "2c57.4158.5bac",
+            "link_layer_address": "2c57.41ff.b305",
             "interface": "Te7/0/48",
             "vlan": 2045,
             "prlvl": "0005",
@@ -691,9 +691,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "265 s",
         },
-        "FE80::2E57:41FF:FE58:4320": {
+        "FE80::2E57:41FF:FEFF:9B78": {
             "code": "ND",
-            "link_layer_address": "2c57.4158.4320",
+            "link_layer_address": "2c57.41ff.9b78",
             "interface": "Te7/0/47",
             "vlan": 2045,
             "prlvl": "0005",
@@ -703,7 +703,7 @@ expected_output = {
         },
         "FE80::1C9B:154B:FC41:DD36": {
             "code": "ND",
-            "link_layer_address": "f018.98b3.3df4",
+            "link_layer_address": "f018.98ff.f0a8",
             "interface": "Ac7",
             "vlan": 1022,
             "prlvl": "0005",
@@ -713,7 +713,7 @@ expected_output = {
         },
         "FE80::18CA:6A8F:5D09:C745": {
             "code": "ND",
-            "link_layer_address": "1ab2.4975.5a1c",
+            "link_layer_address": "1ab2.49ff.cf91",
             "interface": "Ac7",
             "vlan": 1022,
             "prlvl": "0005",
@@ -723,7 +723,7 @@ expected_output = {
         },
         "FE80::1482:E983:F55:7131": {
             "code": "API",
-            "link_layer_address": "f62c.c511.333d",
+            "link_layer_address": "f62c.c5ff.444e",
             "interface": "Ac8",
             "vlan": 1022,
             "prlvl": "0005",
@@ -731,9 +731,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "16 s",
         },
-        "FE80::A96:ADFF:FE77:1224": {
+        "FE80::A96:ADFF:FEFF:899B": {
             "code": "ND",
-            "link_layer_address": "0896.ad77.1224",
+            "link_layer_address": "0896.adff.899b",
             "interface": "Gi7/0/11",
             "vlan": 1023,
             "prlvl": "0005",
@@ -741,9 +741,9 @@ expected_output = {
             "state": "REACHABLE",
             "time_left": "192 s try 0",
         },
-        "FE80::257:D2FF:FEC1:F49A": {
+        "FE80::257:D2FF:FEFF:B65C": {
             "code": "ND",
-            "link_layer_address": "0057.d2c1.f49a",
+            "link_layer_address": "0057.d2ff.b65c",
             "interface": "Te8/0/39",
             "vlan": 1023,
             "prlvl": "0005",
@@ -753,7 +753,7 @@ expected_output = {
         },
         "10.160.48.1": {
             "code": "L",
-            "link_layer_address": "0000.0c9f.f45f",
+            "link_layer_address": "0000.0cff.94fe",
             "interface": "Vl1024",
             "vlan": 1024,
             "prlvl": "0100",
@@ -762,7 +762,7 @@ expected_output = {
         },
         "10.160.32.1": {
             "code": "L",
-            "link_layer_address": "0000.0c9f.f45e",
+            "link_layer_address": "0000.0cff.94fd",
             "interface": "Vl1023",
             "vlan": 1023,
             "prlvl": "0100",
@@ -771,7 +771,7 @@ expected_output = {
         },
         "10.160.0.1": {
             "code": "L",
-            "link_layer_address": "0000.0c9f.f45d",
+            "link_layer_address": "0000.0cff.94fc",
             "interface": "Vl1022",
             "vlan": 1022,
             "prlvl": "0100",
@@ -780,7 +780,7 @@ expected_output = {
         },
         "10.102.32.1": {
             "code": "L",
-            "link_layer_address": "0000.0c9f.f45c",
+            "link_layer_address": "0000.0cff.94fb",
             "interface": "Vl1021",
             "vlan": 1021,
             "prlvl": "0100",
@@ -789,43 +789,43 @@ expected_output = {
         },
         "10.8.132.1": {
             "code": "L",
-            "link_layer_address": "0000.0c9f.f85c",
+            "link_layer_address": "0000.0cff.98fb",
             "interface": "Vl2045",
             "vlan": 2045,
             "prlvl": "0100",
             "age": "42474mn",
             "state": "REACHABLE",
         },
-        "FE80::200:CFF:FE9F:F45F": {
+        "FE80::200:CFF:FEFF:94FE": {
             "code": "L",
-            "link_layer_address": "0000.0c9f.f45f",
+            "link_layer_address": "0000.0cff.94fe",
             "interface": "Vl1024",
             "vlan": 1024,
             "prlvl": "0100",
             "age": "42473mn",
             "state": "REACHABLE",
         },
-        "FE80::200:CFF:FE9F:F45E": {
+        "FE80::200:CFF:FEFF:94FD": {
             "code": "L",
-            "link_layer_address": "0000.0c9f.f45e",
+            "link_layer_address": "0000.0cff.94fd",
             "interface": "Vl1023",
             "vlan": 1023,
             "prlvl": "0100",
             "age": "42475mn",
             "state": "REACHABLE",
         },
-        "FE80::200:CFF:FE9F:F45D": {
+        "FE80::200:CFF:FEFF:94FC": {
             "code": "L",
-            "link_layer_address": "0000.0c9f.f45d",
+            "link_layer_address": "0000.0cff.94fc",
             "interface": "Vl1022",
             "vlan": 1022,
             "prlvl": "0100",
             "age": "42473mn",
             "state": "REACHABLE",
         },
-        "FE80::200:CFF:FE9F:F45C": {
+        "FE80::200:CFF:FEFF:94FB": {
             "code": "L",
-            "link_layer_address": "0000.0c9f.f45c",
+            "link_layer_address": "0000.0cff.94fb",
             "interface": "Vl1021",
             "vlan": 1021,
             "prlvl": "0100",

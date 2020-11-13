@@ -6,6 +6,7 @@ JunOS parsers for the following show commands:
     * show interfaces terse {interface}
     * show interfaces {interface} terse
     * show interfaces descriptions
+    * show interfaces descriptions {interface}
     * show interfaces queue {interface}
     * show interfaces policers {interface}
 """
@@ -191,6 +192,7 @@ class ShowInterfacesTerseInterface(ShowInterfacesTerse):
 class ShowInterfacesDescriptionsSchema(MetaParser):
     """ Schema for:
             * show interfaces descriptions
+            * show interfaces descriptions {interface}
     """
     def validate_physical_interface_list(value):
         if not isinstance(value, list):
@@ -216,13 +218,18 @@ class ShowInterfacesDescriptionsSchema(MetaParser):
 class ShowInterfacesDescriptions(ShowInterfacesDescriptionsSchema):
     """ Parser for:
             * show interfaces descriptions
+            * show interfaces descriptions {interface}
     """
-    cli_command = 'show interfaces descriptions'
+    cli_command = ['show interfaces descriptions',
+                    'show interfaces descriptions {interface}']
 
 
-    def cli(self, output=None):
+    def cli(self, interface=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
