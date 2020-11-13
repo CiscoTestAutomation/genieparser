@@ -11,26 +11,34 @@ class ShowVrrpSchema(MetaParser):
     schema = {
         'interface': {
             Any(): {
-                'group_number': {
-                    Any(): {
+                'group': {
+                    int: {
                         Optional('auth_text'): str,
-                        'device_advertise_interval': float,
-                        'master_adv_int': float,
-                        'master_down_int': float,
-                        'master_ip_address': str,
+                        'advertise_interval_secs': float,
+                        'master_advertisement_interval_secs': float,
+                        'master_down_interval_secs': float,
+                        'master_router_ip': str,
                         Optional('master_router'): str,
                         'master_router_priority': int,
-                        'preemption_state': str,
+                        'preemption': str,
                         'priority': int,
-                        Optional('track_object_decrement_value'): int,
-                        Optional('track_object_number'): int,
-                        Optional('track_object_state'): str,
                         'virtual_ip_address': str,
                         'virtual_mac_address': str,
-                        Optional('vrrp_group_name'): str,
-                        'vrrp_state': str,
-                        Optional('vrrs_group_name'): str,
-                        Optional('vrrp_delay'): float
+                        Optional('description'): str,
+                        'state': str,
+                        Optional('vrrp_delay'): float,
+                        Optional('vrrs_group_name'): {
+                            str: {
+                                 Optional('track_object'): { 
+                                    int: {
+                                        Optional('track_object_decrement_value'): int,
+                                        Optional('track_object_state'): str,
+                                         }
+                                        
+                                                                  }
+                                }
+                                                    }
+               
 
                     }
                 }
@@ -57,7 +65,7 @@ class ShowVrrp(ShowVrrpSchema):
         # Defines the regex for the first line of device output, which is:
         # Ethernet1/0 - Group 1
         p1 = re.compile(
-            r'^(?P<interface>[\w,\/]+) - (?P<grp_number>[\w,\ ]+)$')
+            r'^(?P<interface>[\w,\/]+) - +Group (?P<grp_number>\d+)$')
 
         #State is Master
         p2 = re.compile(r'State is (?P<state>(Master|UP|Init))')
@@ -125,15 +133,15 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 interface = (group['interface'])
-                vrrp_grp = (group['grp_number'])
+                vrrp_grp = int(group['grp_number'])
                 vrrp_dict = result_dict.setdefault('interface', {}).setdefault(
-                    interface, {}).setdefault('group_number', {}).setdefault(vrrp_grp, {})
+                    interface, {}).setdefault('group', {}).setdefault(vrrp_grp, {})
                 continue
 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                vrrp_dict.update({'vrrp_state': str(group['state'])})
+                vrrp_dict.update({'state': str(group['state'])})
                 continue
 
             m = p3.match(line)
@@ -153,19 +161,19 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 vrrp_dict.update(
-                    {'device_advertise_interval': float(group['advrt_int'])})
+                    {'advertise_interval_secs': float(group['advrt_int'])})
                 continue
 
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                vrrp_dict.update({'preemption_state': str(group['state'])})
+                vrrp_dict.update({'preemption': str(group['state'])})
                 continue
 
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                vrrp_dict.update({'preemption_state': str(group['state'])})
+                vrrp_dict.update({'preemption': str(group['state'])})
                 continue
 
             m = p8.match(line)
@@ -189,21 +197,21 @@ class ShowVrrp(ShowVrrpSchema):
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                vrrp_dict.update(
-                    {'vrrs_group_name': str(group['vrrs_grp_name'])})
+                vrf_group_name = group['vrrs_grp_name']
+                vrf_dict = vrrp_dict.setdefault('vrrs_group_name',{}).setdefault(vrf_group_name,{})
                 continue
 
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                vrrp_dict.update(
-                    {'track_object_number': int(group['obj_name'])}),
-                vrrp_dict.update(
-                    {'track_object_state': str(group['obj_state'])}),
-                vrrp_dict.update(
-                    {'track_object_decrement_value': int(group['value'])})
+                track_object_number = int(group['obj_name'])
+                track_object_state = str(group['obj_state'])
+                track_object_decrement_value = int(group['value'])
+                vrp_obj_dict = vrf_dict.setdefault('track_object',{}).setdefault(track_object_number,{})
+                vrp_obj_dict['track_object_decrement_value']=track_object_decrement_value
+                vrp_obj_dict['track_object_state']=track_object_state
                 continue
-
+             
             m = p13.match(line)
             if m:
                 group = m.groupdict()
@@ -214,7 +222,7 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 vrrp_dict.update(
-                    {'master_ip_address': str(group['mast_ip_addr'])})
+                    {'master_router_ip': str(group['mast_ip_addr'])})
                 vrrp_dict.update({'master_router': str(group['server'])})
                 vrrp_dict.update(
                     {'master_router_priority': int(group['digit'])})
@@ -224,21 +232,21 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 vrrp_dict.update(
-                    {'master_adv_int': float(group['mast_adv_interval'])})
+                    {'master_advertisement_interval_secs': float(group['mast_adv_interval'])})
                 continue
 
             m = p16.match(line)
             if m:
                 group = m.groupdict()
                 vrrp_dict.update(
-                    {'master_down_int': float(group['mast_down_interval'])})
+                    {'master_down_interval_secs': float(group['mast_down_interval'])})
                 continue
 
             m = p17.match(line)
             if m:
                 group = m.groupdict()
                 vrrp_dict.update(
-                    {'master_ip_address': str(group['mast_ip_addr'])})
+                    {'master_router_ip': str(group['mast_ip_addr'])})
                 vrrp_dict.update(
                     {'master_router_priority': int(group['digit'])})
                 continue
@@ -247,7 +255,7 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 vrrp_dict.update(
-                    {'vrrp_group_name': str(group['vrrp_grp_name'])})
+                    {'description': str(group['vrrp_grp_name'])})
                 continue
 
         return result_dict
