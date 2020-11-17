@@ -308,6 +308,13 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                                     'metric': int,
                                 },
                             },
+                            Optional('ipv4_interarea_reachability'): {
+                                Any(): {
+                                    'ip_prefix': str,
+                                    'prefix_len': str,
+                                    'metric': int,
+                                },
+                            },
                             Optional('mt_ipv6_reachability'): {
                                 Any(): {
                                     'ip_prefix': str,
@@ -463,6 +470,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
             #  Metric: 10         IS R2.01
             #  Metric: 10         IP 10.229.7.0/24
+            #  Metric: 10         IP-Interarea 10.229.7.0/24
             #  Metric: 40         IS (MT-IPv6) R2.01
             #  Metric: 40         IS-Extended R2.01
             #  Metric: 10         IPv6 2001:DB8:2:2:2::2/128
@@ -488,6 +496,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 if mtype.startswith('IP'):
                     if mtype == 'IP':
                         is_dict = lsp_dict.setdefault('ipv4_internal_reachability', {}).setdefault(ip, {})
+                    elif mtype == 'IP-Interarea':
+                        is_dict = lsp_dict.setdefault('ipv4_interarea_reachability', {}).setdefault(ip, {})
                     elif mtype == 'IPv6' and mt_ipv6:
                         is_dict = lsp_dict.setdefault('mt_ipv6_reachability', {}).setdefault(ip, {})
                     elif mtype == 'IPv6':
@@ -498,6 +508,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                     is_dict.update({'ip_prefix': ip_prefix,
                                     'prefix_len': prefix_len,
                                     'metric': int(group['metric'])})
+    
                 continue
 
             #   IPv6 Address: 2001:DB8:66:66:66::66
