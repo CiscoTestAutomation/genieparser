@@ -1,11 +1,11 @@
 expected_output = {
-    "chassis_mac_address": "4ce1.7592.a700",
+    "chassis_mac_address": "4ce1.75ff.3a92",
     "mac_wait_time": "Indefinite",
     "redun_port_type": "FIBRE",
     "chassis_index": {
         1: {
             "role": "Active",
-            "mac_address": "4ce1.7592.a700",
+            "mac_address": "4ce1.75ff.3a92",
             "priority": 2,
             "hw_version": "V02",
             "current_state": "Ready",
@@ -14,7 +14,7 @@ expected_output = {
         },
         2: {
             "role": "Standby",
-            "mac_address": "4ce1.7592.9000",
+            "mac_address": "4ce1.75ff.2392",
             "priority": 1,
             "hw_version": "V02",
             "current_state": "Ready",

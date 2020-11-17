@@ -1546,8 +1546,8 @@ class ShowChassisFpc(ShowChassisFpcSchema):
         #0  Online           Testing   3         0        2      2      2    511        31          0
         p1 = re.compile(r'^(?P<slot>\d+) +(?P<state>\S+) '
                         r'+(?P<text>\S+) +(?P<cpu_total>\d+) '
-                        r'+(?P<cpu_interrupt>\d+) +(?P<cpu_1min>\d+) '
-                        r'+(?P<cpu_5min>\d+) +(?P<cpu_15min>\d+) +'
+                        r'+(?P<cpu_interrupt>\d+)( +(?P<cpu_1min>\d+) '
+                        r'+(?P<cpu_5min>\d+) +(?P<cpu_15min>\d+))? +'
                         r'(?P<dram>\d+) +(?P<heap>\d+) +(?P<buffer>\d+)$')
 
         #2  Empty
@@ -1580,9 +1580,12 @@ class ShowChassisFpc(ShowChassisFpcSchema):
                 fpc_entry_dict["cpu-total"] = group["cpu_total"]
                 fpc_entry_dict["cpu-interrupt"] = group["cpu_interrupt"]
 
-                fpc_entry_dict["cpu-1min-avg"] = group["cpu_1min"]
-                fpc_entry_dict["cpu-5min-avg"] = group["cpu_5min"]
-                fpc_entry_dict["cpu-15min-avg"] = group["cpu_15min"]
+                if group["cpu_1min"]:
+                    fpc_entry_dict["cpu-1min-avg"] = group["cpu_1min"]
+                if group["cpu_5min"]:
+                    fpc_entry_dict["cpu-5min-avg"] = group["cpu_5min"]
+                if group["cpu_15min"]:
+                    fpc_entry_dict["cpu-15min-avg"] = group["cpu_15min"]
 
                 fpc_entry_dict["memory-dram-size"] = group["dram"]
                 fpc_entry_dict["memory-heap-utilization"] = group["heap"]
