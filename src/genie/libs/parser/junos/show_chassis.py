@@ -2,8 +2,10 @@
 ''' show_chassis.py
 
 Parser for the following show commands:
+    * show chassis alarms
     * show chassis fpc detail
     * show chassis environment routing-engine
+    * show chassis environment 
     * show chassis firmware
     * show chassis firmware no-forwarding
     * show chassis fpc
@@ -2114,6 +2116,81 @@ class ShowChassisEnvironment(ShowChassisEnvironmentSchema):
                         environment_item['comment'] = text
 
                 environment_item_list.append(environment_item)
+
+        return res
+
+
+class ShowChassisAlarmsSchema(MetaParser):
+    """ Schema for show chassis alarms"""
+    schema = {
+        "alarm-information": {
+            "alarm-detail": {
+                "alarm-class": str,
+                "alarm-description": str,
+                "alarm-short-description": str,
+                "alarm-time": {
+                    "#text": str,
+                },
+                "alarm-type": str
+            },
+            "alarm-summary": {
+                "active-alarm-count": str
+            }
+        },
+    }
+
+class ShowChassisAlarms(ShowChassisAlarmsSchema):
+    """Parser for show chassis alarms"""
+    cli_command = 'show chassis alarms'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # 1 alarms currently active
+        p1 = re.compile(r'^(?P<active_alarms>\d+) +alarms +currently +active$')
+
+        # Alarm time               Class  Description
+        # 2020-07-16 13:38:21 JST  Major  PSM 15 Not OK 
+        p2 = re.compile(r'^(?P<text>\S+ +\d\d\:\d\d\:\d\d +\S+) '
+                        r'+(?P<alarm_class>\S+) +(?P<description>[\s\S]+)$')
+
+        res = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                res = {
+                    "alarm-information": {
+                        "alarm-summary": {
+                            "active-alarm-count": m.groupdict()['active_alarms']
+                        }
+                    }
+                }
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                text = group['text']
+                alarm_class = group['alarm_class']
+                description = group['description']
+
+                res['alarm-information']['alarm-detail'] = {
+                    'alarm-class':alarm_class,
+                    'alarm-description':description,
+                    'alarm-short-description':description,
+                    'alarm-time':{
+                        '#text':text
+                    },
+                    "alarm-type": "Chassis"
+                }
+                continue
 
         return res
 

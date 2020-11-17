@@ -15,7 +15,8 @@ from genie.libs.parser.junos.show_chassis import ShowChassisFpcDetail,\
                                                  ShowChassisHardwareDetailNoForwarding,\
                                                  ShowChassisHardwareExtensive,\
                                                  ShowChassisHardwareExtensiveNoForwarding,\
-                                                 ShowChassisEnvironment
+                                                 ShowChassisEnvironment,\
+                                                 ShowChassisAlarms
 
 class TestShowChassisFpcDetail(unittest.TestCase):
     """ Unit tests for:
@@ -3441,6 +3442,50 @@ class TestShowChassisEnvironment(unittest.TestCase):
         obj = ShowChassisEnvironment(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+class TestShowChassisAlarms(unittest.TestCase):
+    """Unit test for show chassis alarms"""
+    maxDiff = None
+
+    device = Device(name='test-device')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value':'''
+        1 alarms currently active
+        Alarm time               Class  Description
+        2020-07-16 13:38:21 JST  Major  PSM 15 Not OK    
+    '''}
+
+    golden_parsed_output =  {
+        "alarm-information": {
+            "alarm-detail": {
+                "alarm-class": "Major",
+                "alarm-description": "PSM 15 Not OK",
+                "alarm-short-description": "PSM 15 Not OK",
+                "alarm-time": {
+                    "#text": "2020-07-16 13:38:21 JST",
+                },
+                "alarm-type": "Chassis"
+            },
+            "alarm-summary": {
+                "active-alarm-count": "1"
+            }
+        },
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowChassisAlarms(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowChassisAlarms(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)    
 
 
 
