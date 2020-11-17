@@ -2010,3 +2010,112 @@ class ShowChassisRoutingEngineNoForwarding(ShowChassisRoutingEngine):
 
         return super().cli(output=out)
         
+class ShowChassisEnvironmentSchema(MetaParser):
+
+    def validate_environment_item_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('environment-item is not a list')        
+        
+        environment_item_schema = Schema({
+            Optional('class'): str,
+            Optional('comment'): str,
+            'name': str,
+            'status': str,
+            Optional('temperature'): {
+                '#text': str,
+                '@junos:celsius': str,
+            }
+        })
+
+        for item in value:
+            environment_item_schema.validate(item)
+        return value
+
+    schema = {
+        'environment-information': {
+            'environment-item': Use(validate_environment_item_list)
+        }
+    }
+
+class ShowChassisEnvironment(ShowChassisEnvironmentSchema):
+    """Parser for show chassis environment"""
+
+    cli_command = 'show chassis environment'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output    
+
+        #   Class Item                           Status     Measurement
+        #   Temp  PSM 0                          OK         25 degrees C / 77 degrees F
+        #   Fans  Fan Tray 0 Fan 1               OK         2760 RPM
+        #         PSM 1                          OK         24 degrees C / 75 degrees F
+        #         CB 0 IntakeA-Zone0             OK         39 degrees C / 102 degrees F     
+        #         PSM 4                          Check        
+        #         Fan Tray 2 Fan 2               OK         2640 RPM  
+        p1 = re.compile(r'^((?P<class>Temp|Fans) +)?(?P<name>[\s\S]+) '
+                        r'+(?P<status>OK|Check)( +(?P<measurement>[\s\S]+))?$')
+
+        # 24 degrees C / 75 degrees F
+        celsius_pattern = re.compile(r'(?P<celsius>\d+) degrees C / (?P<fahr>\d+) degrees F')
+        
+        res = {}
+        environment_item_list = []
+        class_flag = ''
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                res = {
+                    'environment-information': {
+                        'environment-item': environment_item_list
+                }}
+
+                group = m.groupdict()
+
+                # environment_item schema:
+                #         {
+                #             Optional('class'): str,
+                #             'name': str,
+                #             'status': str,
+                #             Optional('temperature'): {
+                #                 '#text': str,
+                #                 '@junos:celsius': str,
+                #             }
+                #         }
+                environment_item = {}
+
+                if group['class']:
+                    class_flag = group['class']
+                environment_item['class'] = class_flag
+                
+                environment_item['name'] = group['name'].strip()
+                environment_item['status'] = group['status'].strip()
+
+                text = group['measurement']
+
+                if text:
+                    #         CB 0 IntakeA-Zone0             OK         39 degrees C / 102 degrees F     
+                    if celsius_pattern.match(text):
+                        celsius_value = celsius_pattern.match(text).groupdict()['celsius']
+                    
+                        temperature_dict = {}
+                        temperature_dict['@junos:celsius'] = celsius_value
+                        temperature_dict['#text'] = text
+
+                        environment_item['temperature'] = temperature_dict
+                    
+                    # Fan Tray 2 Fan 2               OK         2640 RPM
+                    else:
+                        environment_item['comment'] = text
+
+                environment_item_list.append(environment_item)
+
+        return res
+
+
+                
