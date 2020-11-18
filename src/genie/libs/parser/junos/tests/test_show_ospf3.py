@@ -17,7 +17,7 @@ from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, \
                                                ShowOspf3DatabaseLinkAdvertisingRouter,\
                                                ShowOspf3RouteNetworkExtensive,\
                                                ShowOspf3NeighborInstanceAll,\
-                                               ShowOspf3RouteRoute
+                                               ShowOspf3RoutePrefix
 
 
 class TestShowOspf3Interface(unittest.TestCase):
@@ -4644,35 +4644,9 @@ class TestShowOspfNeighborInstanceAll(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class TestShowOspf3RouteRoute(unittest.TestCase):
+class TestShowOspf3RoutePrefix(unittest.TestCase):
     """ Unit tests for:
-            * show ospf3 route {route}
+            * show ospf3 route {prefix}
     """
 
     device = Device(name='aDevice')
@@ -4719,14 +4693,14 @@ class TestShowOspf3RouteRoute(unittest.TestCase):
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
-        obj = ShowOspf3RouteRoute(device=self.device)
+        obj = ShowOspf3RoutePrefix(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            obj.parse(route='2001:30::/64')
+            obj.parse(prefix='2001:30::/64')
 
     def test_golden(self):
         self.device = Mock(**self.golden_output)
-        obj = ShowOspf3RouteRoute(device=self.device)
-        parsed_output = obj.parse(route='2001:30::/64')
+        obj = ShowOspf3RoutePrefix(device=self.device)
+        parsed_output = obj.parse(prefix='2001:30::/64')
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':

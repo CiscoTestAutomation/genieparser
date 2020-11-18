@@ -32,6 +32,7 @@ from genie.libs.parser.junos.show_ospf import (
     ShowOspfRouteNetworkExtensive,
     ShowOspfDatabaseAdvertisingRouterExtensive,
     ShowOspfNeighborInstanceAll,
+    ShowOspfRoutePrefix,
 )
 
 class TestShowOspfDatabaseOpaqueArea(unittest.TestCase):
@@ -15260,5 +15261,63 @@ class TestShowOspfNeighborInstanceAll(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
+class TestShowOspfRouteNetworkExtensive(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf route network extensive
+    """
+
+    device = Device(name="aDevice")
+    maxDiff = None
+
+    empty_output = {"execute.return_value": ""}
+
+    golden_output = {
+        "execute.return_value": """
+            show ospf route 30.0.0.0/24 
+        Topology default Route Table:
+
+        Prefix             Path  Route      NH       Metric NextHop       Nexthop      
+                        Type  Type       Type            Interface     Address/LSP
+        30.0.0.0/24        Intra Network    IP            2 ge-0/0/4.0    10.0.0.2
+    """
+    }
+
+    golden_parsed_output = {
+        "ospf-route-information": {
+            "ospf-topology-route-table": {
+                "ospf-route": {
+                    "ospf-route-entry": {
+                        "address-prefix": "30.0.0.0/24",
+                        "interface-cost": "2",
+                        "next-hop-type": "IP",
+                        "ospf-next-hop": {
+                            "next-hop-address": {
+                                "interface-address": "10.0.0.2"
+                            },
+                            "next-hop-name": {
+                                "interface-name": "ge-0/0/4.0"
+                            }
+                        },
+                        "route-path-type": "Intra",
+                        "route-type": "Network"
+                    }
+                },
+                "ospf-topology-name": "default"
+            }
+    }
+        
+    }
+
+    def test_show_ospf_prefix_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspfRoutePrefix(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse(prefix='30.0.0.0/24')
+
+    def test_show_ospf_route_prefix(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfRoutePrefix(device=self.device)
+        parsed_output = obj.parse(prefix='30.0.0.0/24')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 if __name__ == "__main__":
     unittest.main()

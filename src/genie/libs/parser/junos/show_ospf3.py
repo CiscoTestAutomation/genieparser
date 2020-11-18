@@ -2826,13 +2826,13 @@ Parser for:
 '''
 
 
-class ShowOspf3RouteRoute(ShowOspf3RouteRouteSchema):
-    cli_command = 'show ospf3 route {route}'
+class ShowOspf3RoutePrefix(ShowOspf3RouteRouteSchema):
+    cli_command = 'show ospf3 route {prefix}'
 
-    def cli(self,route, output=None):
+    def cli(self ,prefix, output=None):
         if not output:
             out = self.device.execute(self.cli_command.format(
-                route=route
+                prefix=prefix
             ))
         else:
             out = output
