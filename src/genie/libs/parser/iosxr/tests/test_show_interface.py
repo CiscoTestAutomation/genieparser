@@ -5336,6 +5336,118 @@ class test_show_interfaces(unittest.TestCase):
          0 carrier transitions
     '''}
 
+    golden_interface_parsed_output2 = {
+        "Bundle-Ether1": {
+            "enabled": True,
+            "line_protocol": "up",
+            "oper_status": "up",
+            "interface_state_transitions": 9,
+            "description": "to-ML26-BE1",
+            "ipv4": {
+                "192.168.0.25/30": {
+                    "ip": "192.168.0.25",
+                    "prefix_length": "30"
+                }
+            },
+            "mtu": 1514,
+            "bandwidth": 100000000,
+            "bandwidth_max": 100000000,
+            "reliability": "255/255",
+            "txload": "0/255",
+            "rxload": "0/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            },
+            "duplex_mode": "full",
+            "port_speed": "100000Mb/s",
+            "loopback": "not set",
+            "last_link_flapped": "3w3d",
+            "arp_type": "arpa",
+            "arp_timeout": "04:00:00",
+            "port_channel": {
+                "member_count": 1,
+                "members": {
+                    "HundredGigE0/0/1/2/0": {
+                        "interface": "HundredGigE0/0/1/2/0",
+                        "duplex_mode": "Full-duplex",
+                        "speed": "100000Mb/s",
+                        "state": "Active"
+                    }
+                }
+            },
+            "last_input": "00:00:00",
+            "last_output": "00:00:00",
+            "counters": {
+                "last_clear": "never",
+                "rate": {
+                    "load_interval": 30,
+                    "in_rate": 1000,
+                    "in_rate_pkts": 0,
+                    "out_rate": 2000,
+                    "out_rate_pkts": 1
+                },
+                "in_pkts": 1716386544,
+                "in_octets": 751342403591,
+                "in_total_drops": 0,
+                "in_unknown_protos": 0,
+                "in_broadcast_pkts": 6,
+                "in_multicast_pkts": 642898,
+                "in_runts": 0,
+                "in_giants": 0,
+                "in_throttles": 0,
+                "in_parity": 0,
+                "in_errors": 0,
+                "in_crc_errors": 0,
+                "in_frame": 0,
+                "in_overrun": 0,
+                "in_ignored": 0,
+                "in_abort": 0,
+                "out_pkts": 1714349214,
+                "out_octets": 754526715390,
+                "out_total_drops": 0,
+                "out_broadcast_pkts": 12,
+                "out_multicast_pkts": 642896,
+                "out_errors": 0,
+                "out_underruns": 0,
+                "out_applique": 0,
+                "out_resets": 0,
+                "out_buffer_failure": 0,
+                "out_buffers_swapped": 0,
+                "carrier_transitions": 0
+            }
+        }
+    }
+
+    golden_interface_output2 = {'execute.return_value': '''
+      Bundle-Ether1 is up, line protocol is up 
+      Interface state transitions: 9
+      Description: to-ML26-BE1
+      Internet address is 192.168.0.25/30
+      MTU 1514 bytes, BW 100000000 Kbit (Max: 100000000 Kbit)
+         reliability 255/255, txload 0/255, rxload 0/255
+      Encapsulation ARPA,
+      Full-duplex, 100000Mb/s
+      loopback not set,
+      Last link flapped 3w3d
+      ARP type ARPA, ARP timeout 04:00:00
+        No. of members in this bundle: 1
+          HundredGigE0/0/1/2/0         Full-duplex  100000Mb/s   Active          
+      Last input 00:00:00, output 00:00:00
+      Last clearing of "show interface" counters never
+      30 second input rate 1000 bits/sec, 0 packets/sec
+      30 second output rate 2000 bits/sec, 1 packets/sec
+         1716386544 packets input, 751342403591 bytes, 0 total input drops
+         0 drops for unrecognized upper-level protocol
+         Received 6 broadcast packets, 642898 multicast packets
+                  0 runts, 0 giants, 0 throttles, 0 parity
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+         1714349214 packets output, 754526715390 bytes, 0 total output drops
+         Output 12 broadcast packets, 642896 multicast packets
+         0 output errors, 0 underruns, 0 applique, 0 resets
+         0 output buffer failures, 0 output buffers swapped out
+         0 carrier transitions
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowInterfaces(device=self.device)
@@ -5353,6 +5465,12 @@ class test_show_interfaces(unittest.TestCase):
         obj = ShowInterfaces(device=self.device)
         parsed_output = obj.parse(interface='Bundle-Ether1')
         self.assertEqual(parsed_output,self.golden_interface_parsed_output)
+
+    def test_golden_interface2(self):
+        self.device = Mock(**self.golden_interface_output2)
+        obj = ShowInterfaces(device=self.device)
+        parsed_output = obj.parse(interface='Bundle-Ether1')
+        self.assertEqual(parsed_output,self.golden_interface_parsed_output2)
         
 #############################################################################
 # unitest For show interfaces description

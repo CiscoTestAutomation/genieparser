@@ -425,10 +425,10 @@ class ShowConfigurationSystemNtp(ShowConfigurationSystemNtpSchema):
         # initial variables
         ret_dict = {}
 
-        # server 1.0.0.1;
+        # server 10.1.0.1;
         p1 = re.compile(r'^server +(?P<server_name>[\s\S]+);$')
 
-        # source-address 1.0.0.184;
+        # source-address 10.1.0.184;
         p2 = re.compile(r'^source-address +(?P<source_address>[\s\S]+);$')
 
         for line in out.splitlines():
@@ -436,7 +436,7 @@ class ShowConfigurationSystemNtp(ShowConfigurationSystemNtpSchema):
             if not line:
                 continue
 
-            # server 1.0.0.1;
+            # server 10.1.0.1;
             m = p1.match(line)
             if m:
                 groups = m.groupdict()
@@ -446,7 +446,7 @@ class ShowConfigurationSystemNtp(ShowConfigurationSystemNtpSchema):
                 servers = ntp_dict.setdefault('server', [])
                 servers.append({'name': groups['server_name']})
 
-            # source-address 1.0.0.184;
+            # source-address 10.1.0.184;
             m = p2.match(line)
             if m:
                 groups = m.groupdict()

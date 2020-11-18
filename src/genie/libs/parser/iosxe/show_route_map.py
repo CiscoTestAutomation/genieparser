@@ -1,64 +1,69 @@
-import re   
-from genie.metaparser import MetaParser   
-from genie.metaparser.util.schemaengine import Schema, Any, Optional 
+import re
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
 class ShowRouteMapAllSchema(MetaParser):
     """Schema for show route-map all"""
     schema = {
-        Any():
-            {Optional('description'): str,
-             'statements':
-                {Any():
-                    {'conditions':
-                        {Optional('match_med_eq'): int,
-                         Optional('match_local_pref_eq'): int,
-                         Optional('match_nexthop_in'): list,
-                         Optional('match_nexthop_in_v6'): list,
-                         Optional('match_level_eq'): str,
-                         Optional('match_route_type'): str,
-                         Optional('match_community_list'): str,
-                         Optional('match_ext_community_list'): str,
-                         Optional('match_as_path_list'): str,
-                         Optional('match_interface'): str,
-                         Optional('match_prefix_list'): str,
-                         Optional('match_as_number_list'): str,
-                         Optional('match_prefix_list_v6'): str,
-                         },
-                     'actions':
-                        {Optional('set_route_origin'): str,
-                         Optional('set_distance'): int, 
-                         Optional('set_local_pref'): int, 
-                         Optional('set_next_hop'): list, 
-                         Optional('set_next_hop_v6'): list, 
-                         Optional('set_next_hop_self'): bool, 
-                         Optional('set_as_path_prepend'): str,
-                         Optional('set_as_path_group'): list, 
-                         Optional('set_as_path_prepend_repeat_n'): int,
-                         Optional('set_community'): str,
-                         Optional('match_tag_list'): str,
-                         Optional('set_community_additive'): bool,
-                         Optional('set_community_no_advertise'): bool,
-                         Optional('set_community_no_export'): bool,
-                         Optional('set_community_delete'): str,
-                         Optional('set_ext_community_rt'): list,
-                         Optional('set_ext_community_soo'): str,
-                         Optional('set_ext_community_vpn'): str,
-                         Optional('set_ext_community_rt_additive'): bool,
-                         Optional('set_ext_community_delete'): str,
-                         Optional('set_level'): str,
-                         Optional('set_weight'): int,
-                         Optional('set_metric'): int,
-                         Optional('set_ospf_metric_type'): str,
-                         Optional('set_metric_type'): str,
-                         'route_disposition': str,
-                         Optional('set_tag'): str
-                        },
+        Any(): {
+            Optional('description'): str,
+            'statements': {
+                Any(): {
+                    'conditions': {
+                        Optional('match_med_eq'): int,
+                        Optional('match_local_pref_eq'): int,
+                        Optional('match_nexthop_in'): list,
+                        Optional('match_nexthop_in_v6'): list,
+                        Optional('match_level_eq'): str,
+                        Optional('match_route_type'): str,
+                        Optional('match_community_list'): str,
+                        Optional('match_ext_community_list'): str,
+                        Optional('match_as_path_list'): str,
+                        Optional('match_interface'): str,
+                        Optional('match_prefix_list'): str,
+                        Optional('match_as_number_list'): str,
+                        Optional('match_prefix_list_v6'): str,
+                        Optional('match_tag_list'): str,
                     },
+                    'actions': {
+                        Optional('set_route_origin'): str,
+                        Optional('set_distance'): int,
+                        Optional('set_local_pref'): int,
+                        Optional('set_next_hop'): list,
+                        Optional('set_next_hop_v6'): list,
+                        Optional('set_next_hop_self'): bool,
+                        Optional('set_as_path_prepend'): str,
+                        Optional('set_as_path_group'): list,
+                        Optional('set_as_path_prepend_repeat_n'): int,
+                        Optional('set_community'): str,
+                        Optional('set_community_additive'): bool,
+                        Optional('set_community_no_advertise'): bool,
+                        Optional('set_community_no_export'): bool,
+                        Optional('set_community_delete'): str,
+                        Optional('set_ext_community_rt'): list,
+                        Optional('set_ext_community_soo'): str,
+                        Optional('set_ext_community_vpn'): str,
+                        Optional('set_ext_community_rt_additive'): bool,
+                        Optional('set_ext_community_delete'): str,
+                        Optional('set_level'): str,
+                        Optional('set_weight'): int,
+                        Optional('set_metric'): int,
+                        Optional('set_ospf_metric_type'): str,
+                        Optional('set_metric_type'): str,
+                        'route_disposition': str,
+                        Optional('set_tag'): str
+                    },
+                    Optional('policy_routing_matches'): {
+                        'packets': int,
+                        'bytes': int,
+                    }
                 },
             },
-        }
-    
+        },
+    }
+
+
 class ShowRouteMapAll(ShowRouteMapAllSchema):
     """Parser for show route-map all"""
     cli_command = 'show route-map all'
@@ -73,13 +78,134 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
         route_map_dict = {}
         clause_type = ''
 
+        # route-map test, permit, sequence 10
+        p1 =  re.compile(r'^\s*route-map *(?P<name>\S+)\,'
+                         r' *(?P<route_disposition>[\w\W]+)\, *sequence'
+                         r' *(?P<statements>[0-9]+)$')
+
+        # Match clauses:
+        # Set clauses:
+        p1_2 = re.compile(r'^\s*(?P<clause_type>[a-zA-Z]+) +clauses:$')
+
+        # description <description>
+        p1_1 = re.compile(r'^\s*description +(?P<description>[a-zA-Z0-9]+)$')
+
+        # as-path (as-path filter): aspathlist1
+        p2 = re.compile(r'^\s*as-path *\(as-path *filter\):'
+                        r' *(?P<match_as_path_list>[a-z0-9]+)$')
+
+        # as-number (as-path-list filter): List1, List2
+        p2_1 = re.compile(r'^\s*as-number *\(as-path-list *filter\)\:'
+                          r' *(?P<match_as_number_list>[\w\W\,\s]+)$')
+
+        # ip address prefix-lists: test-test
+        p3 = re.compile(r'^\s*ip *address *prefix-lists:'
+                        r' *(?P<match_prefix_list>[a-zA-Z0-9\s]+)$')
+
+        #ip next-hop prefix-lists: test
+        #ip next-hop (access-lists): 1
+        p4 =  re.compile(r'^\s*ip *next-hop *(?P<match_type>[a-zA-Z0-9\S\(\)]+):'
+                         r' *(?P<match_nexthop_in>[a-zA-Z0-9\S]+)$')
+
+        # ipv6 address prefix-lists: test-test
+        p5 = re.compile(r'^\s*ipv6 *address *prefix-lists:'
+                        r' *(?P<match_prefix_list_v6>[a-zA-Z0-9\S]+)$')
+
+        # ipv6 next-hop prefix-lists: test2
+        p6 = re.compile(r'^\s*ipv6 *next-hop *prefix-lists:'
+                        r' *(?P<match_nexthop_in_v6>[a-zA-Z0-9\-\s]+)$')
+
+        #interface GigabitEthernet1
+        p7 = re.compile(r'^\s*interface *(?P<match_interface>[a-zA-Z0-9\/\s]+)$')
+
+        #metric 100
+        p8 = re.compile(r'^\s*metric *(?P<match_med_eq>[0-9\-]+)$')
+
+        #community  (community-list filter): test3
+        p10 = re.compile(r'^\s*community *\(community-list *filter\):'
+                         r' *(?P<match_community_list>[a-z0-9\-\s]+)$')
+
+        #route-type: level-1 level-2
+        p11 = re.compile(r'^\s*route-type *(?P<match_level_eq>[a-z0-9\-\s]+)$')
+
+        # extcommunity  (extcommunity-list filter): testing
+        p11_1 = re.compile(r'^\s*extcommunity *\(extcommunity-list *filter\):'
+                           r' *(?P<match_ext_community_list>[a-zA-Z]+)$')
+
+        # ip next-hop 10.64.4.4
+        # ip next-hop 10.4.1.1 10.16.2.2
+        p12 = re.compile(r'^\s*ip *next-hop *(?P<set_next_hop>[0-9\.\s]+)$')
+
+        # ip next-hop self
+        p12_1 = re.compile(r'^\s*ip *next-hop self$')
+
+        # ipv6 next-hop 2001:db8:1::1
+        # ipv6 next-hop 2001:DB8:1::1 2001:DB8:2::1
+        p13 = re.compile(r'^\s*ipv6 *next-hop *(?P<set_next_hop_v6>[a-zA-Z0-9\:\s]+)$')
+
+        #tag 30
+        p14 = re.compile(r'^\s*tag *(?P<set_tag>[0-9]+)$')
+
+        # weight 50
+        p14_1 = re.compile(r'^\s*weight *(?P<set_weight>[0-9]+)$')
+
+        #metric 20
+        p15 = re.compile(r'^\s*metric *(?P<set_med>[0-9]+)$')
+
+        #distance: 10
+        p15_1 = re.compile(r'^\s*distance: *(?P<set_distance>[0-9]+)$')
+
+        # metric-type external ---- > set_metric_type
+        # metric-type type-1   ---- > set_ospf_metric_type
+        p16 = re.compile(r'^\s*metric-type *(?P<set_ospf_metric_type>[0-9a-z\-]+)$')
+
+        #level level-1
+        p17 = re.compile(r'^\s*level *(?P<set_level>[a-z0-9\-]+)$')
+
+        #local-preference 111
+        p18 = re.compile(r'^\s*local-preference *(?P<match_local_pref_eq>[0-9]+)$')
+
+        #origin igp
+        p19 = re.compile(r'^\s*origin *(?P<set_route_origin>[a-z]+)$')
+
+        # comm-list test delete
+        p20 = re.compile(r'^\s*comm-list *(?P<set_community_delete>[a-z]+)'
+                         r' *delete$')
+
+        #community 100:1 no-export no-advertise additive
+        p20_1 = re.compile(r'^\s*community *(?P<set_community>[0-9\:]+)(?:'
+                           r' *(?P<set_community_no_export>(no-export)))?(?:'
+                           r' *(?P<set_community_no_advertise>(no-advertise)))?(?:'
+                           r' *(?P<set_community_additive>(additive)))?$')
+
+        #as-path prepend 10 10 10
+        p21 = re.compile(r'^\s*as-path *prepend'
+                         r' *(?P<set_as_path_prepend>[0-9\s]+)$')
+
+        #extcomm-list cisco delete
+        p22 = re.compile(r'^\s*extcomm-list'
+                         r' *(?P<set_ext_community_delete>[a-z]+) *delete$')
+
+        # extended community RT:100:10 RT:100:100 RT:200:200 additive
+        p23 = re.compile(r'^\s*extended community'
+                         r'(?P<set_ext_community_rt>( RT\:[0-9]+\:[0-9]+)*)(\s)?'
+                         r'((?P<set_ext_community_rt_additive>(additive))?)')
+
+        # extended community VD:100:100
+        p24 = re.compile(r'^\s*extended *community'
+                         r' *VD:(?P<set_ext_community_vpn>[0-9\:]+)$')
+
+        # extended community SoO:100:10
+        p25 = re.compile(r'^\s*extended *community'
+                         r' *SoO:(?P<set_ext_community_soo>[0-9\:]+)$')
+
+        # Policy routing matches: 0 packets, 0 bytes
+        p26 = re.compile(r'^\s*Policy\s+routing\s+matches:\s+(?P<packets>\d+)\spackets,\s+(?P<bytes>\d+)\s+bytes')
+
         for line in out.splitlines():
             line = line.rstrip()
 
-            # route-map test, permit, sequence 10 
-            p1 =  re.compile(r'^\s*route-map *(?P<name>\S+)\,'
-                              ' *(?P<route_disposition>[\w\W]+)\, *sequence'
-                              ' *(?P<statements>[0-9]+)$')
+            # route-map test, permit, sequence 10
             m = p1.match(line)
             if m:
                 name = str(m.groupdict()['name'])
@@ -101,9 +227,8 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_next_hop_self'] = False
                 continue
-                    
+
             # description <description>
-            p1_1 = re.compile(r'^\s*description +(?P<description>[a-zA-Z0-9]+)$')
             m = p1_1.match(line)
             if m:
                 description = str(m.groupdict()['description'])
@@ -111,7 +236,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
 
             # Match clauses:
             # Set clauses:
-            p1_2 = re.compile(r'^\s*(?P<clause_type>[a-zA-Z]+) +clauses:$')
             m = p1_2.match(line)
             if m:
                 clause_type = str(m.groupdict()['clause_type'])
@@ -119,18 +243,14 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 ['route_disposition'] = route_disposition
                 continue
 
-            # as-path (as-path filter): aspathlist1 
-            p2 = re.compile(r'^\s*as-path *\(as-path *filter\):'
-                             ' *(?P<match_as_path_list>[a-z0-9]+)$')
+            # as-path (as-path filter): aspathlist1
             m = p2.match(line)
-            if m:                
+            if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
                 ['match_as_path_list'] = str(m.groupdict()['match_as_path_list'])
                 continue
 
-            # as-number (as-path-list filter): List1, List2                 
-            p2_1 = re.compile(r'^\s*as-number *\(as-path-list *filter\)\:'
-                               ' *(?P<match_as_number_list>[\w\W\,\s]+)$')
+            # as-number (as-path-list filter): List1, List2
             m = p2_1.match(line)
             if m:
                 match_as_number_list = m.groupdict()['match_as_number_list']
@@ -141,9 +261,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 ['match_as_number_list'] = match_as_number_list
                 continue
 
-            # ip address prefix-lists: test-test 
-            p3 = re.compile(r'^\s*ip *address *prefix-lists:'
-                             ' *(?P<match_prefix_list>[a-zA-Z0-9\s]+)$')
+            # ip address prefix-lists: test-test
             m = p3.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -152,8 +270,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
 
             #ip next-hop prefix-lists: test
             #ip next-hop (access-lists): 1
-            p4 =  re.compile(r'^\s*ip *next-hop *(?P<match_type>[a-zA-Z0-9\S\(\)]+):'
-                              ' *(?P<match_nexthop_in>[a-zA-Z0-9\S]+)$')
             m = p4.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -161,8 +277,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             # ipv6 address prefix-lists: test-test
-            p5 = re.compile(r'^\s*ipv6 *address *prefix-lists:'
-                             ' *(?P<match_prefix_list_v6>[a-zA-Z0-9\S]+)$')
             m = p5.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -170,8 +284,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             # ipv6 next-hop prefix-lists: test2
-            p6 = re.compile(r'^\s*ipv6 *next-hop *prefix-lists:'
-                             ' *(?P<match_nexthop_in_v6>[a-zA-Z0-9\-\s]+)$')
             m = p6.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -179,15 +291,13 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             #interface GigabitEthernet1
-            p7 = re.compile(r'^\s*interface *(?P<match_interface>[a-zA-Z0-9\/\s]+)$')
             m = p7.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
                 ['match_interface'] = str(m.groupdict()['match_interface'])
                 continue
 
-            #metric 100 
-            p8 = re.compile(r'^\s*metric *(?P<match_med_eq>[0-9\-]+)$')
+            #metric 100
             m = p8.match(line)
             if m:
                 if clause_type == 'Match':
@@ -198,9 +308,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                     ['set_metric'] = int(m.groupdict()['match_med_eq'])
                 continue
 
-            #community  (community-list filter): test3 
-            p10 = re.compile(r'^\s*community *\(community-list *filter\):'
-                              ' *(?P<match_community_list>[a-z0-9\-\s]+)$')
+            #community  (community-list filter): test3
             m = p10.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -208,20 +316,17 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             #route-type: level-1 level-2
-            p11 = re.compile(r'^\s*route-type *(?P<match_level_eq>[a-z0-9\-\s]+)$')
             m = p11.match(line)
             if m:
                 if m.groupdict()['match_level_eq'] == 'level-1 level-2':
                     route_map_dict[name]['statements'][statements]['conditions']\
-                    ['match_level_eq'] = 'level-1-2'    
-                else:                
+                    ['match_level_eq'] = 'level-1-2'
+                else:
                     route_map_dict[name]['statements'][statements]['conditions']\
                     ['match_level_eq'] = str(m.groupdict()['match_level_eq'])
                 continue
 
             # extcommunity  (extcommunity-list filter): testing
-            p11_1 = re.compile(r'^\s*extcommunity *\(extcommunity-list *filter\):'
-                                ' *(?P<match_ext_community_list>[a-zA-Z]+)$')
             m = p11_1.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
@@ -231,7 +336,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
 
             # ip next-hop 10.64.4.4
             # ip next-hop 10.4.1.1 10.16.2.2
-            p12 = re.compile(r'^\s*ip *next-hop *(?P<set_next_hop>[0-9\.\s]+)$')
             m = p12.match(line)
             if m:
                 if clause_type == 'Match':
@@ -243,16 +347,14 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             # ip next-hop self
-            p12_1 = re.compile(r'^\s*ip *next-hop self$')
             m = p12_1.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_next_hop_self'] = True
                 continue
 
-            # ipv6 next-hop 2001:db8:1::1 
+            # ipv6 next-hop 2001:db8:1::1
             # ipv6 next-hop 2001:DB8:1::1 2001:DB8:2::1
-            p13 = re.compile(r'^\s*ipv6 *next-hop *(?P<set_next_hop_v6>[a-zA-Z0-9\:\s]+)$')
             m = p13.match(line)
             if m:
                 if clause_type == 'Match':
@@ -264,7 +366,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             #tag 30
-            p14 = re.compile(r'^\s*tag *(?P<set_tag>[0-9]+)$')
             m = p14.match(line)
             if m:
                 if clause_type == 'Match':
@@ -276,15 +377,13 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             # weight 50
-            p14_1 = re.compile(r'^\s*weight *(?P<set_weight>[0-9]+)$')
             m = p14_1.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_weight'] = int(m.groupdict()['set_weight'])
                 continue
 
-            #metric 20 
-            p15 = re.compile(r'^\s*metric *(?P<set_med>[0-9]+)$')
+            #metric 20
             m = p15.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
@@ -292,7 +391,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             #distance: 10
-            p15_1 = re.compile(r'^\s*distance: *(?P<set_distance>[0-9]+)$')
             m = p15_1.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
@@ -301,7 +399,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
 
             # metric-type external ---- > set_metric_type
             # metric-type type-1   ---- > set_ospf_metric_type
-            p16 = re.compile(r'^\s*metric-type *(?P<set_ospf_metric_type>[0-9a-z\-]+)$')
             m = p16.match(line)
             if m:
                 if m.groupdict()['set_ospf_metric_type'] == 'interanl' or\
@@ -313,8 +410,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                     ['set_ospf_metric_type'] = str(m.groupdict()['set_ospf_metric_type'])
                 continue
 
-            #level level-1 
-            p17 = re.compile(r'^\s*level *(?P<set_level>[a-z0-9\-]+)$')
+            #level level-1
             m = p17.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
@@ -322,7 +418,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             #local-preference 111
-            p18 = re.compile(r'^\s*local-preference *(?P<match_local_pref_eq>[0-9]+)$')
             m = p18.match(line)
             if m:
                 if clause_type == 'Match':
@@ -334,7 +429,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             #origin igp
-            p19 = re.compile(r'^\s*origin *(?P<set_route_origin>[a-z]+)$')
             m = p19.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
@@ -342,19 +436,13 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             # comm-list test delete
-            p20 = re.compile(r'^\s*comm-list *(?P<set_community_delete>[a-z]+)'
-                              ' *delete$')
             m = p20.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
                 ['set_community_delete'] = str(m.groupdict()['set_community_delete'])
                 continue
 
-            #community 100:1 no-export no-advertise additive 
-            p20_1 = re.compile(r'^\s*community *(?P<set_community>[0-9\:]+)(?:'
-                                ' *(?P<set_community_no_export>(no-export)))?(?:'
-                                ' *(?P<set_community_no_advertise>(no-advertise)))?(?:'
-                                ' *(?P<set_community_additive>(additive)))?$')
+            #community 100:1 no-export no-advertise additive
             m = p20_1.match(line)
             if m:
                 set_community = str(m.groupdict()['set_community'])
@@ -375,9 +463,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                     ['set_community_additive'] = True
                 continue
 
-            #as-path prepend 10 10 10 
-            p21 = re.compile(r'^\s*as-path *prepend'
-                              ' *(?P<set_as_path_prepend>[0-9\s]+)$')
+            #as-path prepend 10 10 10
             m = p21.match(line)
             if m:
                 set_as_path_prepend = str(m.groupdict()['set_as_path_prepend'])
@@ -399,8 +485,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             #extcomm-list cisco delete
-            p22 = re.compile(r'^\s*extcomm-list'
-                              ' *(?P<set_ext_community_delete>[a-z]+) *delete$')
             m = p22.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['actions']\
@@ -409,9 +493,6 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 continue
 
             # extended community RT:100:10 RT:100:100 RT:200:200 additive
-            p23 = re.compile(r'^\s*extended community'
-                '(?P<set_ext_community_rt>( RT\:[0-9]+\:[0-9]+)*)(\s)?'
-                '((?P<set_ext_community_rt_additive>(additive))?)')
             m = p23.match(line)
             if m:
                 if m.groupdict()['set_ext_community_rt']:
@@ -429,10 +510,8 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                     route_map_dict[name]['statements'][statements]['actions']\
                     ['route_disposition'] = route_disposition
                     continue
-                else:                    
+                else:
                     # extended community VD:100:100
-                    p24 = re.compile(r'^\s*extended *community'
-                                        ' *VD:(?P<set_ext_community_vpn>[0-9\:]+)$')
                     m = p24.match(line)
                     if m:
                         set_ext_community_vpn = str(m.groupdict()['set_ext_community_vpn'])
@@ -441,13 +520,18 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                         continue
 
                     # extended community SoO:100:10
-                    p25 = re.compile(r'^\s*extended *community'
-                                        ' *SoO:(?P<set_ext_community_soo>[0-9\:]+)$')
                     m = p25.match(line)
                     if m:
                         set_ext_community_soo = str(m.groupdict()['set_ext_community_soo'])
                         route_map_dict[name]['statements'][statements]['actions']\
                         ['set_ext_community_soo'] = set_ext_community_soo
                         continue
+
+            # Policy routing matches: 0 packets, 0 bytes
+            m = p26.match(line)
+            if m:
+                for k, v in m.groupdict().items():
+                    route_map_dict[name]['statements'][statements].setdefault('policy_routing_matches', {}).setdefault(k, int(v))
+                    continue
 
         return route_map_dict
