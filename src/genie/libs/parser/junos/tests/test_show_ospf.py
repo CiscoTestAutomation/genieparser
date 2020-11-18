@@ -15261,9 +15261,9 @@ class TestShowOspfNeighborInstanceAll(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-class TestShowOspfRouteNetworkExtensive(unittest.TestCase):
+class TestShowOspfRoutePrefix(unittest.TestCase):
     """ Unit tests for:
-            * show ospf route network extensive
+            * show ospf route {prefix}
     """
 
     device = Device(name="aDevice")
