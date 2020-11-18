@@ -1071,7 +1071,8 @@ class ShowL2vpnServiceAll(ShowL2vpnServiceAllSchema):
         # VPLS name: VPLS-2051, State: UP
         # XC name: serviceWire1, State: UP
         # VPWS name: Gi1/1/1-1001, State: UP
-        #   or       Gi1/1/1:1001
+        #   or
+        # VPWS name: Gi3-SI:2842, State: UP
         p1 = re.compile(r'^[\w]+ +name: +(?P<name>[\w\d\-\/:]+), +State: +(?P<state>\w+)$')
 
         #   pw100214           core_pw     1:2051(MPLS)                    0     UP  UP  
