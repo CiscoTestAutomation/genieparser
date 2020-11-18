@@ -80,7 +80,7 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                         r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         r'(?P<hold_time>\d+) +(?P<capability>[RTBSsHIrPDCM\s]+)( +'
                         r'(?P<platform>\S+(?: \d+)?))?( '
-                        r'(?P<port_id>[a-zA-Z0-9\/\.\s]+))?$')
+                        r'(?P<port_id>[\s\S]+))?$')
 
         # p4 and p5 for two-line output, where device id is on a separate line
         # bgp-n93-d(FDO24140U7J)

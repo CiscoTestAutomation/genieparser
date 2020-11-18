@@ -10,7 +10,7 @@ expected_output = {
             },
             1: {
                 "capability": "T B I",
-                "device_id": "njpap012",
+                "device_id": "xxx012",
                 "hold_time": 141,
                 "local_interface": "FastEthernet0/2",
                 "platform": "AIR-CAP27",
@@ -18,7 +18,7 @@ expected_output = {
             },
             2: {
                 "capability": "T B I",
-                "device_id": "njpap006.jp.festo.net",
+                "device_id": "xxx006.xx.xxx.xxx",
                 "hold_time": 159,
                 "local_interface": "FastEthernet0/3",
                 "platform": "AIR-CAP27",
@@ -26,14 +26,14 @@ expected_output = {
             },
             3: {
                 "capability": "S I",
-                "device_id": "njpex001.jp.festo.net",
+                "device_id": "xxx001.xx.xxx.xxx",
                 "hold_time": 125,
                 "local_interface": "GigabitEthernet0/1",
                 "platform": "WS-C2960X",
                 "port_id": "GigabitEthernet1/0/41"
             },
             4: {
-                "device_id": "njpex010"
+                "device_id": "xxx010"
             }
         }
     }
