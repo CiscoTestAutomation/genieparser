@@ -3641,139 +3641,69 @@ class ShowIpOspfNeighborDetail(ShowIpOspfNeighborDetailSchema):
 # Schema for:
 #   * 'show ip ospf neighbor detail'
 # =========================================
-class ShowIpOspfNeighborDetailUpdateSchema(MetaParser):
+class ShowIpOspfNeighborDetail2Schema(MetaParser):
 
     ''' Schema for:
         * 'show ip ospf neighbor detail'
     '''
 
     schema = {
-            'vrf':{
-                'default':{
-                    'address-family':{
-                        'ipv4':{
-                            'areas':{
+                'address-family':{
+                    'ipv4':{
+                        'areas':{
+                            Any():{
                                 Any():{
-                                    'interfaces':{
-                                        Any():{
-                                            'neighbors': {
-                                                Any(): {
-                                                    'neighbor_router_id': str,
-                                                    'address': str,
-                                                    'interface': str,
-                                                    'priority': int,
-                                                    'state': str,
-                                                    'dr_ip_addr': str,
-                                                    'bdr_ip_addr': str,
-                                                    Optional('bfd_state'): str,
-                                                    Optional('interface_id'): str,
-                                                    Optional('hello_options'): str,
-                                                    Optional('sr_adj_label'): str,
-                                                    Optional('dbd_options'): str,
-                                                    Optional('dead_timer'): str,
-                                                    Optional('uptime'): str,
-                                                    Optional('index'): str,
-                                                    Optional('first'): str,
-                                                    Optional('next'): str,
-                                                    Optional('ls_ack_list'): str,
-                                                    Optional('statistics'): {
-                                                        Optional('nbr_event_count'): int,
-                                                        Optional('nbr_retrans_qlen'): int,
-                                                        Optional('total_retransmission'): int,
-                                                        Optional('last_retrans_scan_length'): int,
-                                                        Optional('last_retrans_max_scan_length'): int,
-                                                        Optional('last_retrans_scan_time_msec'): int,
-                                                        Optional('last_retrans_max_scan_time_msec'): int
-                                                    },
-                                                },
-                                            },
-                                        },
-                                        Optional('sham_links'): {
-                                            Any():{ 
-                                                'neighbors': {
-                                                    Any(): {
-                                                        'neighbor_router_id': str,
-                                                        'address': str,
-                                                        'interface': str,
-                                                        'priority': int,
-                                                        'state': str,
-                                                        'dr_ip_addr': str,
-                                                        'bdr_ip_addr': str,
-                                                        Optional('interface_id'): str,
-                                                        Optional('hello_options'): str,
-                                                        Optional('dbd_options'): str,
-                                                        Optional('dead_timer'): str,
-                                                        Optional('uptime'): str,
-                                                        Optional('index'): str,
-                                                        Optional('first'): str,
-                                                        Optional('next'): str,
-                                                        Optional('ls_ack_list'): str,
-                                                        Optional('statistics'): {
-                                                            Optional('nbr_event_count'): int,
-                                                            Optional('nbr_retrans_qlen'): int,
-                                                            Optional('total_retransmission'): int,
-                                                            Optional('last_retrans_scan_length'): int,
-                                                            Optional('last_retrans_max_scan_length'): int,
-                                                            Optional('last_retrans_scan_time_msec'): int,
-                                                            Optional('last_retrans_max_scan_time_msec'): int
-                                                        },
-                                                    },
-                                                },
-                                            },
-                                        },
-                                        Optional('virtual_links'): {
+                                    Any():{
+                                        'neighbors': {
                                             Any(): {
-                                                'neighbors': {
-                                                    Any(): {
-                                                        'neighbor_router_id': str,
-                                                        'address': str,
-                                                        'interface': str,
-                                                        'priority': int,
-                                                        'state': str,
-                                                        'dr_ip_addr': str,
-                                                        'bdr_ip_addr': str,
-                                                        Optional('interface_id'): str,
-                                                        Optional('hello_options'): str,
-                                                        Optional('dbd_options'): str,
-                                                        Optional('dead_timer'): str,
-                                                        Optional('uptime'): str,
-                                                        Optional('index'): str,
-                                                        Optional('first'): str,
-                                                        Optional('next'): str,
-                                                        Optional('ls_ack_list'): str,
-                                                        Optional('statistics'): {
-                                                            Optional('nbr_event_count'): int,
-                                                            Optional('nbr_retrans_qlen'): int,
-                                                            Optional('total_retransmission'): int,
-                                                            Optional('last_retrans_scan_length'): int,
-                                                            Optional('last_retrans_max_scan_length'): int,
-                                                            Optional('last_retrans_scan_time_msec'): int,
-                                                            Optional('last_retrans_max_scan_time_msec'): int
-                                                        },
-                                                    },
+                                                'neighbor_router_id': str,
+                                                'address': str,
+                                                'interface': str,
+                                                'priority': int,
+                                                'state': str,
+                                                'dr_ip_addr': str,
+                                                'bdr_ip_addr': str,
+                                                Optional('bfd_state'): str,
+                                                Optional('interface_id'): str,
+                                                Optional('hello_options'): str,
+                                                Optional('sr_adj_label'): str,
+                                                Optional('dbd_options'): str,
+                                                Optional('dead_timer'): str,
+                                                Optional('uptime'): str,
+                                                Optional('index'): str,
+                                                Optional('first'): str,
+                                                Optional('next'): str,
+                                                Optional('ls_ack_list'): str,
+                                                Optional('statistics'): {
+                                                    Optional('nbr_event_count'): int,
+                                                    Optional('nbr_retrans_qlen'): int,
+                                                    Optional('total_retransmission'): int,
+                                                    Optional('last_retrans_scan_length'): int,
+                                                    Optional('last_retrans_max_scan_length'): int,
+                                                    Optional('last_retrans_scan_time_msec'): int,
+                                                    Optional('last_retrans_max_scan_time_msec'): int
                                                 },
                                             },
                                         },
                                     },
-                                }, 
-                            }
+                                },
+                            }, 
                         }
                     }
                 }
             }
-        }
 
 # ================================
 # Parser for:
 #   'show ip ospf neighbor detail'
 # ================================
-class ShowIpOspfNeighborDetailUpdate(ShowIpOspfNeighborDetailUpdateSchema):
+class ShowIpOspfNeighborDetail2(ShowIpOspfNeighborDetail2Schema):
 
     ''' Parser for:
-        * 'show ip ospf neighbor detail __'
+        * 'show ip ospf neighbor detail__'
     '''
 
-    cli_command = ['show ip ospf neighbor detail __']
+    cli_command = ['show ip ospf neighbor detail__']
 
     def cli(self, output=None):
 
@@ -3821,6 +3751,7 @@ class ShowIpOspfNeighborDetailUpdate(ShowIpOspfNeighborDetailUpdateSchema):
         
         p13 = re.compile(r'^SR +adj +label +(?P<sr_adj_label>\d+)$')
         
+        
         for line in output.splitlines():
             line = line.strip()
 
@@ -3854,8 +3785,7 @@ class ShowIpOspfNeighborDetailUpdate(ShowIpOspfNeighborDetailUpdateSchema):
                     intf_type = 'interfaces'
                 intf_name = interface
 
-                neighbor_dict = ret_dict.setdefault('vrf', {}).setdefault('default', {}).\
-                                         setdefault('address-family', {}).setdefault('ipv4', {}).\
+                neighbor_dict = ret_dict.setdefault('address-family', {}).setdefault(af, {}).\
                                          setdefault('areas', {}).setdefault(area, {}).\
                                          setdefault(intf_type, {}).setdefault(intf_name, {}).\
                                          setdefault('neighbors', {}).setdefault(neighbor, {})
