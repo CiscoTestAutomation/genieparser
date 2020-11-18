@@ -156,11 +156,6 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                         .convert_intf_name(intf=group['port_id'].strip())
                 continue
 
-        import json
-        json_data = json.dumps(parsed_dict, indent=4, sort_keys=True)
-        f = open("dict1117.txt","w")
-        f.write(json_data)
-        f.close()
         return parsed_dict
 
 
