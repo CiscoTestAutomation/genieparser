@@ -2793,3 +2793,87 @@ class ShowOspf3NeighborInstanceAll(ShowOspf3NeighborInstanceAllSchema):
                 continue
 
         return ret_dict
+
+class ShowOspf3RouteRouteSchema(MetaParser):
+
+    schema = {
+      "ospf3-route-information": {
+            "ospf-topology-route-table": {
+                "ospf3-route": {
+                    "ospf3-route-entry": {
+                        "address-prefix": str,
+                        "interface-cost": str,
+                        "next-hop-type": str,
+                        "ospf-next-hop": {
+                            "next-hop-address": {
+                                "interface-address": str
+                            },
+                            "next-hop-name": {
+                                "interface-name": str
+                            }
+                        },
+                        "route-path-type": str,
+                        "route-type": str
+                        }
+                    }
+                }
+            }
+        }
+
+'''
+Parser for:
+    * show ospf3 route {route}
+'''
+
+
+class ShowOspf3RouteRoute(ShowOspf3RouteRouteSchema):
+    cli_command = 'show ospf3 route {route}'
+
+    def cli(self,route, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                route=route
+            ))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #2001:30::/64                                 Intra Network    IP   2
+        p1 = re.compile(r'^(?P<address_prefix>[\d\:\/]+) '
+                        r'+(?P<route_path_type>\S+) +(?P<route_type>\S+) '
+                        r'+(?P<next_hop_type>\S+) +(?P<interface_cost>\d+)$')
+
+        #NH-interface ge-0/0/4.0, NH-addr fe80::250:56ff:fe8d:351d
+        p2 = re.compile(r'^NH-interface +(?P<interface_name>[\w\d\-\/\.]+)(, +NH-addr +(?P<interface_address>\S+))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #2001:30::/64                                 Intra Network    IP   2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf3_topology_route_table = ret_dict.setdefault(
+                    'ospf3-route-information', {}).setdefault('ospf-topology-route-table', {})
+
+                route_entry_dict = {}
+
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    route_entry_dict[entry_key] = group_value
+
+            #NH-interface ge-0/0/4.0, NH-addr fe80::250:56ff:fe8d:351d
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop_dict = {'next-hop-name':{'interface-name':group['interface_name']}}
+                if group['interface_address']:
+                    next_hop_dict['next-hop-address'] = {'interface-address':group['interface_address']} 
+                route_entry_dict['ospf-next-hop'] = next_hop_dict    
+                ospf3_parent_route_dict = {}
+                ospf3_parent_route_dict['ospf3-route-entry'] = route_entry_dict
+                ospf3_topology_route_table['ospf3-route'] = ospf3_parent_route_dict   
+                continue
+
+        return ret_dict
