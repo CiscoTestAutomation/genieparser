@@ -1208,6 +1208,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
         del interface # delete this to prevent use from below due to scope
         ip_interface_vrf_all_dict = {}
         temp_intf = []
+        save_addr_for_route_tag_next_line = None
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -1320,8 +1321,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                               r'*(?P<ip_subnet>[a-z0-9\.]+)\/(?P<prefix_length>[0-9\,]+)'
                               r'(\s*(?P<secondary>secondary)\s*)?(?: *route-preference: *'
                               r'(?P<route_preference>[0-9]+),)?'
-                              r'(?: *tag: *(?P<route_tag>[0-9]*))?$')
+                              r'(?: *tag: *(?P<route_tag>[0-9]+)?)?$')
             m = p3_1.match(line)
+            
             if m:
                 group = m.groupdict()
                 ip = group['ip']
@@ -1356,6 +1358,8 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     if route_tag:
                         ip_interface_vrf_all_dict[intf]['ipv4'][address]\
                         ['route_tag'] = route_tag
+                    else:
+                        save_addr_for_route_tag_next_line = address
                     if route_preference:
                         ip_interface_vrf_all_dict[intf]['ipv4'][address]\
                         ['route_preference'] = route_preference
@@ -1377,13 +1381,25 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 ip_interface_vrf_all_dict[interface]['ipv4'][address]\
                     ['ip'] = address
                 continue
-            
+
             #   0
-            p3_3 = re.compile(r'^(?P<route_tag>\d+)$')
+            p3_3 = re.compile(r'^\s*(?P<route_tag>\d+)$')
             m = p3_3.match(line)
             if m:
                 group = m.groupdict()
                 route_tag = group['route_tag']
+                if temp_intf:
+                    temp_intf.append(interface)
+                    intf_lst = temp_intf
+                else:
+                    intf_lst = [interface]
+
+                if save_addr_for_route_tag_next_line:
+                    for intf in intf_lst:
+                        address = save_addr_for_route_tag_next_line
+                        ip_interface_vrf_all_dict[intf]['ipv4'][address]\
+                            ['route_tag'] = route_tag
+                        save_addr_for_route_tag_next_line = None
                 continue
 
             #IP broadcast address: 255.255.255.255
