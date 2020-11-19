@@ -538,16 +538,38 @@ class ShowInterfacesSchema(MetaParser):
                 l_i_schema.validate(item)
             return value
 
+        def verify_cos_queue_configuration(value):
+            # Pass address-family list of dict in value
+            if not isinstance(value, list):
+                raise SchemaError('cos-queue-configuration is not a list')
+            
+            queue_schema = Schema({
+                "cos-queue-bandwidth": str,
+                "cos-queue-bandwidth-bps": str,
+                "cos-queue-buffer": str,
+                "cos-queue-buffer-bytes": str,
+                "cos-queue-forwarding-class": str,
+                "cos-queue-limit": str,
+                "cos-queue-number": str,
+                "cos-queue-priority": str,
+            })
+            # Validate each dictionary in list
+            for item in value:
+                queue_schema.validate(item)
+            return value
+
         def verify_queue_list(value):
             # Pass address-family list of dict in value
             if not isinstance(value, list):
                 raise SchemaError('queue is not a list')
             
             queue_schema = Schema({
+                Optional("forwarding-class-name"): str,
                 "queue-counters-queued-packets": str,
                 "queue-counters-total-drop-packets": str,
                 "queue-counters-trans-packets": str,
-                "queue-number": str
+                "queue-number": str,
+                Optional("forwarding-class-name"): str
             })
             # Validate each dictionary in list
             for item in value:
@@ -556,6 +578,9 @@ class ShowInterfacesSchema(MetaParser):
 
         # Create physical-interface Schema
         physical_interface_schema = Schema({
+            Optional("down-hold-time"): str,
+            Optional("up-hold-time"): str,
+            Optional("statistics-cleared"): str,
             Optional("active-alarms"): {
                 Optional("interface-alarms"): {
                     Optional("alarm-not-present"): bool,
@@ -715,6 +740,23 @@ class ShowInterfacesSchema(MetaParser):
                     Optional("output-total-errors"): str,
                     "output-unicasts": str
             },
+            Optional("ethernet-filter-statistics"): {
+                "input-packets": str,
+                "input-reject-count": str,
+                "input-reject-destination-address-count": str,
+                "input-reject-source-address-count": str,
+                "output-packet-error-count": str,
+                "output-packet-pad-count": str,
+                "output-packets": str,
+                "cam-destination-filter-count": str,
+                "cam-source-filter-count": str,
+            },
+            Optional("cos-information"): {
+                Optional("cos-stream-information"): {
+                    "cos-direction": str,
+                    "cos-queue-configuration": Use(verify_cos_queue_configuration)
+                }
+            },
             Optional("input-error-list"): {
                     Optional("framing-errors"): str,
                     Optional("input-discards"): str,
@@ -747,6 +789,10 @@ class ShowInterfacesSchema(MetaParser):
                 "output-bytes": str,
                 "output-packets": str,
                 "output-pps": str
+            },
+            Optional("pfe-information"): {
+                "destination-mask": str,
+                "destination-slot": str
             },
             Optional("queue-counters"): {
                 Optional("@junos:style"): str,
@@ -1086,7 +1132,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         p59 = re.compile(r'^Code +violations +(?P<input_code_violations>\d+)$')
 
         # Total errors                             0                0
-        p60 = re.compile(r'^Total +errors +(?P<input_total_errors>\d+)$')
+        p60 = re.compile(r'^Total +errors +(?P<input_total_errors>\d+) +(?P<output_total_errors>\d+)$')
 
         # Label-switched interface (LSI) traffic statistics:
         p61 = re.compile(r'^Label-switched +interface +\(LSI\) +traffic +statistics:$')
@@ -1098,6 +1144,54 @@ class ShowInterfaces(ShowInterfacesSchema):
         # 0                                0                    0                    0
         p63 = re.compile(r'^(?P<queue_number>\d+) +(?P<queue_counters_queued_packets>\d+) +'
             r'(?P<queue_counters_trans_packets>\d+) +(?P<drop_packets>\d+)$')
+
+        # Hold-times     : Up 0 ms, Down 0 ms
+        p64 = re.compile(r'^Hold-times +: +Up +(?P<up_hold_time>\d+) +ms, +Down +(?P<down_hold_time>\d+) +ms$')
+
+        # Statistics last cleared: 2020-10-14 13:18:51 JST (00:12:30 ago)
+        p65 = re.compile(r'^Statistics +last +cleared: +(?P<statistics_cleared>[\S\s]+)$')
+
+        # 0                   best-effort
+        # 1                   expedited-forwarding
+        # 2                   assured-forwarding
+        # 3                   network-control
+        p66 = re.compile(r'^(?P<queue_number>\d+) +(?P<forwarding_class_name>best-effort|expedited-forwarding|assured-forwarding|network-control)$')
+
+        # Filter statistics:
+        p67 = re.compile(r'^Filter +statistics:$')
+
+        # Input packet count                   38089
+        p68 = re.compile(r'^Input +packet +count +(?P<input_packets>\d+)$')
+
+        # Input packet rejects                    24
+        p69 = re.compile(r'^Input +packet +rejects +(?P<input_reject_count>\d+)$')
+
+        # Input DA rejects                         0
+        p70 = re.compile(r'^Input +DA +rejects +(?P<input_reject_da_count>\d+)$')
+
+        # Input SA rejects                         0
+        p71 = re.compile(r'^Input +SA +rejects +(?P<input_reject_sa_count>\d+)$')
+
+        # Output packet count                                    8798
+        p72 = re.compile(r'^Output +packet +count +(?P<output_packets>\d+)$')
+
+        # Output packet pad count                                   0
+        p73 = re.compile(r'^Output +packet +pad +count +(?P<output_packet_pad_count>\d+)$')
+
+        # Output packet error count                                 0
+        p74 = re.compile(r'^Output +packet +error +count +(?P<output_packet_error_count>\d+)$')
+
+        # CAM destination filters: 0, CAM source filters: 0
+        p75 = re.compile(r'^CAM +destination +filters: (?P<cam_destination_filter_count>\d+), +CAM +source +filters: (?P<cam_source_filter_count>\d+)$')
+
+        # Destination slot: 0 (0x00)
+        p76 = re.compile(r'^Destination +slot: +(?P<destination_slot>\d+) +(?P<destination_mask>\S+)$')
+
+        # 0 best-effort            95     9500000000    95              0      low    none
+        p77 = re.compile(r'^(?P<cos_queue_number>\d+) +(?P<cos_queue_forwarding_class>\S+) +(?P<cos_queue_bandwidth>\d+) +(?P<cos_queue_bandwidth_bps>\d+) +(?P<cos_queue_buffer>\d+) +(?P<cos_queue_buffer_bytes>\d+) +(?P<cos_queue_priority>\w+) +(?P<cos_queue_limit>\w+)$')
+
+        # Direction : Output
+        p78 = re.compile(r'^Direction : +(?P<cos_direction>\S+)$')
 
         cnt = 0
         for line in out.splitlines():
@@ -1788,6 +1882,140 @@ class ShowInterfaces(ShowInterfacesSchema):
                 queue_dict.update({'queue-counters-trans-packets': group['queue_counters_trans_packets']})
                 queue_dict.update({'queue-counters-total-drop-packets': group['drop_packets']})
                 queue_list.append(queue_dict)
+                continue
+            
+            # Hold-times     : Up 0 ms, Down 0 ms
+            m = p64.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+            
+            # Statistics last cleared: 2020-10-14 13:18:51 JST (00:12:30 ago)
+            m = p65.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+            
+            # 0                   best-effort
+            # 1                   expedited-forwarding
+            # 2                   assured-forwarding
+            # 3                   network-control
+            m = p66.match(line)
+            if m:
+                group = m.groupdict()
+                queue_number = int(group.pop('queue_number', 0))
+                queue_list = physical_interface_dict.setdefault('queue-counters', {}). \
+                    setdefault('queue', [])
+                queue_list[queue_number].update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Filter statistics:
+            m = p67.match(line)
+            if m:
+                ethernet_filter_statistics = physical_interface_dict.setdefault('ethernet-filter-statistics', {})
+                continue
+
+            # Input packet count                   38089
+            m = p68.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_filter_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Input packet rejects                    24
+            m = p69.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_filter_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Input DA rejects                         0
+            m = p70.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_filter_statistics.update(
+                    {'input-reject-destination-address-count': group['input_reject_da_count']})
+                # ethernet_filter_statistics.update({k.replace('_','-'):
+                #     v for k, v in group.items() if v is not None})
+                continue
+
+            # Input SA rejects                         0
+            m = p71.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_filter_statistics.update(
+                    {'input-reject-source-address-count': group['input_reject_sa_count']})
+                continue
+
+            # Output packet count                                    8798
+            m = p72.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_filter_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Output packet pad count                                   0
+            m = p73.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_filter_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Output packet error count                                 0
+            m = p74.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_filter_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+            
+            m = p75.match(line)
+            if m:
+                group = m.groupdict()
+                ethernet_filter_statistics.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            m = p76.match(line)
+            if m:
+                group = m.groupdict()
+                pfe_information = physical_interface_dict.setdefault('pfe-information', {})
+                pfe_information.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # 0 best-effort            95     9500000000    95              0      low    none
+            m = p77.match(line)
+            if m:
+                group = m.groupdict()
+                pfe_information = physical_interface_dict.setdefault('pfe-information', {})
+                cos_stream_information_dict = physical_interface_dict.setdefault("cos-information", {}). \
+                    setdefault("cos-stream-information", {})
+
+                cos_queue_configuration_list = cos_stream_information_dict.setdefault('cos-queue-configuration', [])
+                cos_queue_configuration_dict = {k.replace('_','-'):
+                    v for k, v in group.items() if v is not None}
+                cos_queue_configuration_list.append(cos_queue_configuration_dict)
+                continue
+            
+            # Direction : Output
+            m = p78.match(line)
+            if m:
+                group = m.groupdict()
+                pfe_information = physical_interface_dict.setdefault('pfe-information', {})
+                cos_stream_information_dict = physical_interface_dict.setdefault("cos-information", {}). \
+                    setdefault("cos-stream-information", {})
+                cos_stream_information_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
                 continue
 
         return ret_dict
