@@ -1320,7 +1320,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                               r'*(?P<ip_subnet>[a-z0-9\.]+)\/(?P<prefix_length>[0-9\,]+)'
                               r'(\s*(?P<secondary>secondary)\s*)?(?: *route-preference: *'
                               r'(?P<route_preference>[0-9]+),)?'
-                              r'(?: *tag: *(?P<route_tag>[0-9]+))?$')
+                              r'(?: *tag: *(?P<route_tag>[0-9]*))?$')
             m = p3_1.match(line)
             if m:
                 group = m.groupdict()
@@ -1376,6 +1376,14 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     ip_interface_vrf_all_dict[interface]['ipv4'][address] = {}
                 ip_interface_vrf_all_dict[interface]['ipv4'][address]\
                     ['ip'] = address
+                continue
+            
+            #   0
+            p3_3 = re.compile(r'^(?P<route_tag>\d+)$')
+            m = p3_3.match(line)
+            if m:
+                group = m.groupdict()
+                route_tag = group['route_tag']
                 continue
 
             #IP broadcast address: 255.255.255.255
