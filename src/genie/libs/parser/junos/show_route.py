@@ -1473,9 +1473,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             m = p31.match(line)
             if m:
                 group = m.groupdict()
-                if 'tsi' in rt_dict:
-                    text = tsi_dict.get('#text', '')
-                    tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
+                tsi_dict = rt_dict.setdefault('tsi', {})
+                text = tsi_dict.get('#text', '')
+                tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
                 continue
 
             # Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
