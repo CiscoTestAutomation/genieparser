@@ -434,6 +434,7 @@ class ShowInterfacesSchema(MetaParser):
                     interface_address_schema = Schema({
                         Optional("ifa-broadcast"): str,
                         Optional("ifa-destination"): str,
+                        Optional("generation"): str,
                         "ifa-flags": {
                             Optional("ifaf-current-preferred"): bool,
                             Optional("ifaf-current-primary"): bool,
@@ -468,7 +469,7 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifff-receive-options"): bool,
                         Optional("ifff-encapsulation"): str,
                     },
-                    "address-family-name": str,
+                    Optional("address-family-name"): str,
                     Optional("interface-address"): Use(verify_interface_address_list),
                     Optional("intf-curr-cnt"): str,
                     Optional("intf-dropcnt"): str,
@@ -477,8 +478,12 @@ class ShowInterfacesSchema(MetaParser):
                     Optional("route-table"): str,
                     Optional("max-local-cache"): str,
                     Optional("maximum-labels"): str,
-                    "mtu": str,
-                    Optional("new-hold-limit"): str
+                    Optional("mtu"): str,
+                    Optional("new-hold-limit"): str,
+                    Optional("policer-information"): {
+                        Optional("policer-input"): str,
+                        Optional("policer-output"): str,
+                    }
                 })
                 # Validate each dictionary in list
                 for item in value:
@@ -1011,7 +1016,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Destination: 10.189.5.92/30, Local: 10.189.5.93, Broadcast: 10.189.5.95
         p33 = re.compile(r'^Destination: +(?P<ifa_destination>\S+)'
             r', +Local: +(?P<ifa_local>\S+)'
-            r'(, +Broadcast: +(?P<ifa_broadcast>\S+))?$')
+            r'(, +Broadcast: +(?P<ifa_broadcast>\S+))?(, +Generation: +(?P<generation>\S+))?$')
 
         # Bandwidth: 0
         p34 = re.compile(r'^Bandwidth: +(?P<logical_interface_bandwidth>\S+)$')
@@ -1192,6 +1197,12 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Direction : Output
         p78 = re.compile(r'^Direction : +(?P<cos_direction>\S+)$')
+
+        # Generation: 9549, Route table: 0
+        p79 = re.compile(r'^Generation: +(?P<generation>\d+)(, +Route +table: +(?P<route_table>\d+))?$')
+
+        # Policer: Input: GE_1M-xe-0/1/7.0-log_int-i, Output: GE_1M-xe-0/1/7.0-log_int-o
+        p80 = re.compile(r'^Policer: +Input: +(?P<policer_input>\S+)(, +Output: +(?P<policer_output>\S+))?$')
 
         cnt = 0
         for line in out.splitlines():
@@ -2016,6 +2027,25 @@ class ShowInterfaces(ShowInterfacesSchema):
                     setdefault("cos-stream-information", {})
                 cos_stream_information_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
+                continue
+            
+            # Direction : Output
+            m = p79.match(line)
+            if m:
+                group = m.groupdict()
+                address_family_list = logical_interface_dict.setdefault('address-family', [])
+                address_family_dict = {k.replace('_','-'):
+                    v for k, v in group.items() if v is not None}
+                address_family_list.append(address_family_dict)
+                continue
+            
+            # Direction : Output
+            m = p80.match(line)
+            if m:
+                group = m.groupdict()
+                policer_information_dict = address_family_dict.setdefault('policer-information', {})
+                policer_information_dict = {k.replace('_','-'):
+                    v for k, v in group.items() if v is not None}
                 continue
 
         return ret_dict
