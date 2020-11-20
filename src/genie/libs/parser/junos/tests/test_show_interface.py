@@ -12998,9 +12998,9 @@ class TestShowInterfacesExtensive(unittest.TestCase):
         Link flags     : None
         CoS queues     : 8 supported, 8 maximum usable queues
         Hold-times     : Up 0 ms, Down 0 ms
-        Current address: 0c:86:10:22:41:39, Hardware address: 0c:86:10:22:41:39
-        Last flapped   : 2020-10-14 10:56:17 JST (02:35:04 ago)
-        Statistics last cleared: 2020-10-14 13:18:51 JST (00:12:30 ago)
+        Current address: 0c:86:10:ff:63:5b, Hardware address: 0c:86:10:ff:63:5b
+        Last flapped   : 2020-10-14 10:56:17 EST (02:35:04 ago)
+        Statistics last cleared: 2020-10-14 13:18:51 EST (00:12:30 ago)
         Traffic statistics:
         Input  bytes  :             30970903                    0 bps
         Output bytes  :              4560726                    0 bps
@@ -13091,14 +13091,14 @@ class TestShowInterfacesExtensive(unittest.TestCase):
             Flags: Sendbcast-pkt-to-re
             Policer: Input: GE_1M-xe-0/1/7.0-log_int-i, Output: GE_1M-xe-0/1/7.0-log_int-o
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 100.0.0/24, Local: 100.0.0.2, Broadcast: 100.0.0.255, Generation: 14010
+                Destination: 100.0.0/24, Local: 10.55.0.2, Broadcast: 10.55.0.255, Generation: 14010
             Protocol inet6, MTU: 1500, Generation: 9548, Route table: 0
             Policer: Input: GE_1M-xe-0/1/7.0-log_int-i, Output: GE_1M-xe-0/1/7.0-log_int-o
             Addresses, Flags: Is-Preferred Is-Primary
-                Destination: 2001:268:ff00:100::/64, Local: 2001:268:ff00:100::2
+                Destination: 2001:db8:7fc5:9a4b::/64, Local: 2001:db8:7fc5:9a4b::2
             Generation: 14012
             Addresses, Flags: Is-Preferred
-                Destination: fe80::/64, Local: fe80::e86:10ff:fe22:4139
+                Destination: fe80::/64, Local: fe80::e86:10ff:feff:635b
             Protocol multiservice, MTU: Unlimited, Generation: 14014
             Generation: 9549, Route table: 0
             Policer: Input: __default_arp_policer__
@@ -13149,7 +13149,7 @@ class TestShowInterfacesExtensive(unittest.TestCase):
                             ]
                         }
                     },
-                    "current-physical-address": "0c:86:10:22:41:39",
+                    "current-physical-address": "0c:86:10:ff:63:5b",
                     "down-hold-time": "0",
                     "ethernet-filter-statistics": {
                         "cam-destination-filter-count": "0",
@@ -13193,7 +13193,7 @@ class TestShowInterfacesExtensive(unittest.TestCase):
                         "bit-error-seconds": "0",
                         "errored-blocks-seconds": "0"
                     },
-                    "hardware-physical-address": "0c:86:10:22:41:39",
+                    "hardware-physical-address": "0c:86:10:ff:63:5b",
                     "if-config-flags": {
                         "iff-snmp-traps": True,
                         "internal-flags": "0x4000"
@@ -13218,7 +13218,7 @@ class TestShowInterfacesExtensive(unittest.TestCase):
                         "input-runts": "0"
                     },
                     "interface-flapped": {
-                        "#text": "2020-10-14 10:56:17 JST (02:35:04 ago)"
+                        "#text": "2020-10-14 10:56:17 EST (02:35:04 ago)"
                     },
                     "interface-transmit-statistics": "Disabled",
                     "local-index": "184",
@@ -13233,13 +13233,13 @@ class TestShowInterfacesExtensive(unittest.TestCase):
                                     "generation": "9547",
                                     "interface-address": {
                                         "generation": "14010",
-                                        "ifa-broadcast": "100.0.0.255",
+                                        "ifa-broadcast": "10.55.0.255",
                                         "ifa-destination": "100.0.0/24",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
                                             "ifaf-is-primary": True
                                         },
-                                        "ifa-local": "100.0.0.2"
+                                        "ifa-local": "10.55.0.2"
                                     },
                                     "mtu": "1500",
                                     "policer-information": {},
@@ -13249,12 +13249,12 @@ class TestShowInterfacesExtensive(unittest.TestCase):
                                     "address-family-name": "inet6",
                                     "generation": "9548",
                                     "interface-address": {
-                                        "ifa-destination": "2001:268:ff00:100::/64",
+                                        "ifa-destination": "2001:db8:7fc5:9a4b::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
                                             "ifaf-is-primary": True
                                         },
-                                        "ifa-local": "2001:268:ff00:100::2"
+                                        "ifa-local": "2001:db8:7fc5:9a4b::2"
                                     },
                                     "mtu": "1500",
                                     "policer-information": {},
@@ -13267,7 +13267,7 @@ class TestShowInterfacesExtensive(unittest.TestCase):
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True
                                         },
-                                        "ifa-local": "fe80::e86:10ff:fe22:4139"
+                                        "ifa-local": "fe80::e86:10ff:feff:635b"
                                     }
                                 },
                                 {
@@ -13362,7 +13362,7 @@ class TestShowInterfacesExtensive(unittest.TestCase):
                         ]
                     },
                     "snmp-index": "561",
-                    "statistics-cleared": "2020-10-14 13:18:51 JST (00:12:30 ago)",
+                    "statistics-cleared": "2020-10-14 13:18:51 EST (00:12:30 ago)",
                     "stp-traffic-statistics": {
                         "stp-input-bytes-dropped": "0",
                         "stp-input-packets-dropped": "0",
