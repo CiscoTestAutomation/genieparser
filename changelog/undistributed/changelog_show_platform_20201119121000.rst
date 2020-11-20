@@ -2,5 +2,5 @@
                                 FIX
 --------------------------------------------------------------------------------
 * IOSXE
-  * C8200
-    * Updated ShowPlatform to cover c8200 output patterns
+    * C8200
+        * Updated ShowPlatform to cover c8200 output patterns
