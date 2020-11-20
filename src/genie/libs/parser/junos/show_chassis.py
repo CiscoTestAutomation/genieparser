@@ -2153,7 +2153,7 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
         p1 = re.compile(r'^(?P<active_alarms>\d+) +alarms +currently +active$')
 
         # Alarm time               Class  Description
-        # 2020-07-16 13:38:21 JST  Major  PSM 15 Not OK 
+        # 2020-07-16 13:38:21 EST  Major  PSM 15 Not OK 
         p2 = re.compile(r'^(?P<text>\S+ +\d\d\:\d\d\:\d\d +\S+) '
                         r'+(?P<alarm_class>\S+) +(?P<description>[\s\S]+)$')
 
