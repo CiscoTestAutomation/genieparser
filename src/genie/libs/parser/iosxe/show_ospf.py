@@ -6260,6 +6260,268 @@ class ShowIpOspfMplsTrafficEngLink(ShowIpOspfMplsTrafficEngLinkSchema):
 
         return ret_dict
 
+
+# ========================================
+# Schema for:
+#   * 'show ip ospf mpls traffic-eng link__'
+# ========================================
+class ShowIpOspfMplsTrafficEngLink2Schema(MetaParser):
+
+    ''' Schema for:
+        * 'show ip ospf mpls traffic-eng link__'
+    '''
+
+    schema = {
+            'address_family': 
+                {Any(): 
+                    {'instance': 
+                        {Any(): 
+                            {'mpls': 
+                                {'te': 
+                                    {'router_id': str},
+                                },
+                            'areas': 
+                                {Any(): 
+                                    {'mpls': 
+                                        {'te': 
+                                            {'enable': bool,
+                                            Optional('total_links'): int,
+                                            Optional('area_instance'): int,
+                                            Optional('link_hash_bucket'):
+                                                {Any(): 
+                                                    {'link_fragments': 
+                                                        {Any(): 
+                                                            {'link_instance': int,
+                                                            'network_type': str,
+                                                            'link_id': str,
+                                                            'interface_address': str,
+                                                            'te_admin_metric': int,
+                                                            'igp_admin_metric': int,
+                                                            'max_bandwidth': int,
+                                                            'max_reservable_bandwidth': int,
+                                                            'affinity_bit': str,
+                                                            'total_priority': int,
+                                                            Optional('unreserved_bandwidths'): 
+                                                                {Any(): 
+                                                                    {'priority': int,
+                                                                    'unreserved_bandwidth': int
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            }
+
+# ========================================
+# Parser for:
+#   * 'show ip ospf mpls traffic-eng link__'
+# ========================================
+class ShowIpOspfMplsTrafficEngLink2(ShowIpOspfMplsTrafficEngLink2Schema):
+
+    ''' Parser for:
+        * 'show ip ospf mpls traffic-eng link'
+    '''
+
+    cli_command = 'show ip ospf mpls traffic-eng link__'
+
+    def cli(self, output):
+
+        # Init vars
+        ret_dict = {}
+        af = 'ipv4' # this is ospf - always ipv4
+
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)'
+                            ' +\(Process +ID +(?P<instance>(\S+))\)$')
+
+        p2 = re.compile(r'^Area +(?P<area>(\d+)) +has +(?P<links>(\d+))'
+                            ' +MPLS +TE +links. +Area +instance +is'
+                            ' +(?P<area_instance>(\d+))\.$')
+
+        p3 = re.compile(r'^Area +(?P<area>(\S+)) +MPLS +TE +not +initialized$')
+
+        p4 = re.compile(r'^Links +in +hash +bucket +(?P<hash>(\d+))\.$')
+
+        p5 = re.compile(r'^Link +is +associated +with +fragment'
+                            ' +(?P<fragment>(\d+))\. +Link +instance +is'
+                            ' +(?P<link_instance>(\d+))$')
+
+        p6 = re.compile(r'^Link +connected +to +(?P<type>([a-zA-Z\s]+))$')
+
+        p7 = re.compile(r'^Link +ID *: +(?P<link_id>(\S+))$')
+
+        p8 = re.compile(r'^Interface +Address *: +(?P<addr>(\S+))$')
+
+        p9 = re.compile(r'^Admin +Metric +te: +(?P<te>(\d+)) +igp:'
+                            ' +(?P<igp>(\d+))$')
+
+        p14 = re.compile(r'^Maximum +(B|b)andwidth *: +(?P<mband>(\d+))$')
+
+        p10 = re.compile(r'^Maximum +(R|r)eservable +(B|b)andwidth *:'
+                            ' +(?P<res_band>(\d+))$')
+
+        p11 = re.compile(r'^Affinity +Bit *: +(?P<admin_group>(\S+))$')
+
+        p12 = re.compile(r'^Number +of +Priority +: +(?P<priority>(\d+))$')
+
+        p13 = re.compile(r'^Priority +(?P<num1>(\d+)) *:'
+                            ' +(?P<band1>(\d+))(?: +Priority +(?P<num2>(\d+))'
+                            ' *: +(?P<band2>(\d+)))?$')
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.4.1.1) (Process ID 1)
+            m = p1.match(line)
+            if m:
+                router_id = str(m.groupdict()['router_id'])
+                instance = str(m.groupdict()['instance'])
+                # Create dict
+                instance_dict = ret_dict.setdefault('address_family',{}).\
+                                         setdefault(af,{}).\
+                                         setdefault('instance',{}).\
+                                         setdefault(instance,{})
+                                       
+                router_dict = instance_dict.setdefault('mpls',{}).\
+                                            setdefault('te',{})
+                
+                router_dict.update({'router_id': router_id})
+                continue
+
+            # Area 0 has 2 MPLS TE links. Area instance is 2.
+            m = p2.match(line)
+            if m:
+                area = str(IPAddress(str(m.groupdict()['area'])))
+                total_links = int(m.groupdict()['links'])
+                area_instance = int(m.groupdict()['area_instance'])
+                # Create dict
+                area_dict = instance_dict.setdefault('areas', {}).\
+                                          setdefault(area, {}).\
+                                          setdefault('mpls', {}).\
+                                          setdefault('te', {})
+
+                area_dict.update({'enable': True, 'total_links': total_links,
+                                  'area_instance': area_instance})
+                continue
+
+            # Area 1 MPLS TE not initialized
+            # Area 0.0.0.0 MPLS TE not initialized
+            m = p3.match(line)
+            if m:
+                try:
+                    int(m.groupdict()['area'])
+                    area = str(IPAddress(str(m.groupdict()['area'])))
+                except:
+                    area = m.groupdict()['area']
+                # Create dict
+                area_dict = instance_dict.setdefault('areas', {}).\
+                                          setdefault(area, {}).\
+                                          setdefault('mpls', {}).\
+                                          setdefault('te', {})
+                # Set values
+                area_dict.update({'enable': False})
+                continue
+
+            # Links in hash bucket 8.
+            m = p4.match(line)
+            if m:
+                link_hash_bucket = int(m.groupdict()['hash'])
+                link_dict = area_dict.setdefault('link_hash_bucket', {}).\
+                                                  setdefault(link_hash_bucket, {})
+                continue
+
+            # Link is associated with fragment 2. Link instance is 2
+            m = p5.match(line)
+            if m:
+                link_fragment = int(m.groupdict()['fragment'])
+                sub_dict = link_dict.setdefault('link_fragments', {}).\
+                                     setdefault(link_fragment, {})
+                sub_dict['link_instance'] = int(m.groupdict()['link_instance'])
+                continue
+
+            # Link connected to Broadcast network
+            m = p6.match(line)
+            if m:
+                sub_dict['network_type'] = str(m.groupdict()['type']).lower()
+                continue
+
+            # Link ID : 10.1.2.1
+            m = p7.match(line)
+            if m:
+                sub_dict['link_id'] = str(m.groupdict()['link_id'])
+                continue
+
+            # Interface Address : 10.1.2.1
+            m = p8.match(line)
+            if m:
+                sub_dict['interface_address'] = str(m.groupdict()['addr'])
+                continue
+
+            # Admin Metric te: 1 igp: 1
+            m = p9.match(line)
+            if m:
+                sub_dict['te_admin_metric'] = int(m.groupdict()['te'])
+                sub_dict['igp_admin_metric'] = int(m.groupdict()['igp'])
+                continue
+
+            # Maximum bandwidth : 125000000
+            m = p14.match(line) #Modified from p9 to p14
+            if m:
+                sub_dict['max_bandwidth'] = int(m.groupdict()['mband'])
+                continue
+
+            # Maximum reservable bandwidth : 93750000
+            m = p10.match(line)
+            if m:
+                sub_dict['max_reservable_bandwidth'] = \
+                    int(m.groupdict()['res_band'])
+                continue
+
+            # Affinity Bit : 0x0
+            m = p11.match(line)
+            if m:
+                sub_dict['affinity_bit'] = str(m.groupdict()['admin_group'])
+                continue
+
+            # Number of Priority : 8
+            m = p12.match(line)
+            if m:
+                sub_dict['total_priority'] = int(m.groupdict()['priority'])
+                continue
+
+            # Priority 0 : 93750000     Priority 1 : 93750000
+            m = p13.match(line)
+            if m:
+                value1 = '{} {}'.format(str(m.groupdict()['num1']), str(m.groupdict()['band1']))
+                value2 = '{} {}'.format(str(m.groupdict()['num2']), str(m.groupdict()['band2']))
+                if 'unreserved_bandwidths' not in sub_dict:
+                    sub_dict['unreserved_bandwidths'] = {}
+                if value1 not in sub_dict['unreserved_bandwidths']:
+                    sub_dict['unreserved_bandwidths'][value1] = {}
+                    sub_dict['unreserved_bandwidths'][value1]['priority'] =  \
+                        int(m.groupdict()['num1'])
+                    sub_dict['unreserved_bandwidths'][value1]\
+                        ['unreserved_bandwidth'] = int(m.groupdict()['band1'])
+                if value2 not in sub_dict['unreserved_bandwidths']:
+                    sub_dict['unreserved_bandwidths'][value2] = {}
+                    sub_dict['unreserved_bandwidths'][value2]['priority'] = \
+                        int(m.groupdict()['num2'])
+                    sub_dict['unreserved_bandwidths'][value2]\
+                        ['unreserved_bandwidth'] = int(m.groupdict()['band2'])
+
+                continue
+
+        return ret_dict
+
 # =============================
 # Schema for:
 #   * 'show ip ospf max-metric'

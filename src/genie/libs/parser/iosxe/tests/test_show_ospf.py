@@ -25,6 +25,7 @@ from genie.libs.parser.iosxe.show_ospf import (ShowIpOspf,
                                                ShowIpOspfDatabaseOpaqueArea,
                                                ShowIpOspfMplsLdpInterface,
                                                ShowIpOspfMplsTrafficEngLink,
+                                               ShowIpOspfMplsTrafficEngLink2,
                                                ShowIpOspfMaxMetric,
                                                ShowIpOspfTraffic,
                                                ShowIpOspfNeighbor,
@@ -3015,166 +3016,17 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
                                     {'te': 
                                         {'router_id': '10.4.1.1'}}}}}}}}}
     
-    golden_parsed_output2 = {
-       "vrf":{
-          "default":{
-             "address_family":{
-                "ipv4":{
-                   "instance":{
-                      "1":{
-                         "mpls":{
-                            "te":{
-                               "router_id":"10.4.1.1"
-                            }
-                         },
-                         "areas":{
-                            "0.0.0.0":{
-                               "mpls":{
-                                  "te":{
-                                     "enable":True,
-                                     "total_links":2,
-                                     "area_instance":2,
-                                     "link_hash_bucket":{
-                                        8:{
-                                           "link_fragments":{
-                                              2:{
-                                                 "link_instance":2,
-                                                 "network_type":"broadcast network",
-                                                 "link_id":"10.1.2.1",
-                                                 "interface_address":"10.1.2.1",
-                                                 "te_admin_metric":1,
-                                                 "igp_admin_metric":1,
-                                                 "max_bandwidth":125000000,
-                                                 "max_reservable_bandwidth":93750000,
-                                                 "total_priority":8,
-                                                 "unreserved_bandwidths":{
-                                                    "0 93750000":{
-                                                       "priority":0,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "1 93750000":{
-                                                       "priority":1,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "2 93750000":{
-                                                       "priority":2,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "3 93750000":{
-                                                       "priority":3,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "4 93750000":{
-                                                       "priority":4,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "5 93750000":{
-                                                       "priority":5,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "6 93750000":{
-                                                       "priority":6,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "7 93750000":{
-                                                       "priority":7,
-                                                       "unreserved_bandwidth":93750000
-                                                    }
-                                                 },
-                                                 "affinity_bit":"0x0"
-                                              }
-                                           }
-                                        },
-                                        9:{
-                                           "link_fragments":{
-                                              1:{
-                                                 "link_instance":2,
-                                                 "network_type":"broadcast network",
-                                                 "link_id":"10.1.4.4",
-                                                 "interface_address":"10.1.4.1",
-                                                 "te_admin_metric":1,
-                                                 "igp_admin_metric":1,
-                                                 "max_bandwidth":125000000,
-                                                 "max_reservable_bandwidth":93750000,
-                                                 "total_priority":8,
-                                                 "unreserved_bandwidths":{
-                                                    "0 93750000":{
-                                                       "priority":0,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "1 93750000":{
-                                                       "priority":1,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "2 93750000":{
-                                                       "priority":2,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "3 93750000":{
-                                                       "priority":3,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "4 93750000":{
-                                                       "priority":4,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "5 93750000":{
-                                                       "priority":5,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "6 93750000":{
-                                                       "priority":6,
-                                                       "unreserved_bandwidth":93750000
-                                                    },
-                                                    "7 93750000":{
-                                                       "priority":7,
-                                                       "unreserved_bandwidth":93750000
-                                                    }
-                                                 },
-                                                 "affinity_bit":"0x0"
-                                              }
-                                           }
-                                        }
-                                     }
-                                  }
-                               }
-                            }
-                         }
-                      },
-                      "2":{
-                         "mpls":{
-                            "te":{
-                               "router_id":"10.229.11.11"
-                            }
-                         },
-                         "areas":{
-                            "0.0.0.1":{
-                               "mpls":{
-                                  "te":{
-                                     "enable":False
-                                  }
-                               }
-                            }
-                         }
-                      }
-                   }
-                }
-             }
-          }
-       }
-    }
-
-    def test_show_ip_ospf_mpls_traffic_eng_link_offline_output(self):
+    def test_show_ip_ospf_mpls_traffic_eng_link_full1(self):
         
         self.maxDiff = None
+
+        def mapper(key):
+            return self.outputs[key]
         
         raw1 = '''\
             R1_ospf_xe#show ip ospf mpls traffic-eng link 
-
             OSPF Router with ID (10.4.1.1) (Process ID 1)
-
             Area 0 has 2 MPLS TE links. Area instance is 2.
-
             Links in hash bucket 8.
             Link is associated with fragment 2. Link instance is 2
               Link connected to Broadcast network
@@ -3189,7 +3041,6 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
               Priority 4 : 93750000     Priority 5 : 93750000   
               Priority 6 : 93750000     Priority 7 : 93750000   
               Affinity Bit : 0x0
-
             Links in hash bucket 9.
             Link is associated with fragment 1. Link instance is 2
               Link connected to Broadcast network
@@ -3204,15 +3055,27 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
               Priority 4 : 93750000     Priority 5 : 93750000   
               Priority 6 : 93750000     Priority 7 : 93750000   
               Affinity Bit : 0x0
-
                 OSPF Router with ID (10.229.11.11) (Process ID 2)
-
             Area 1 MPLS TE not initialized
             '''
+        raw2 = '''\
+            R1_ospf_xe#show running-config | section router ospf 1
+              router ospf 1
+            '''
+        raw3 = '''\
+            R1_ospf_xe#show running-config | section router ospf 2
+              router ospf 2 vrf VRF1
+            '''
 
+        self.outputs = {}
+        self.outputs['show ip ospf mpls traffic-eng link'] = raw1
+        self.outputs['show running-config | section router ospf 1'] = raw2
+        self.outputs['show running-config | section router ospf 2'] = raw3
+        self.device.execute = Mock()
+        self.device.execute.side_effect = mapper
         obj = ShowIpOspfMplsTrafficEngLink(device=self.device)
-        parsed_output = obj.parse(output=raw1)
-        self.assertEqual(parsed_output, self.golden_parsed_output2)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_ip_ospf_mpls_traffic_eng_link_empty(self):
         self.maxDiff = None
@@ -3221,6 +3084,207 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
+
+# ==================================================
+# Unit test for 'show ip ospf mpls traffic-eng link__'
+# ==================================================
+class test_show_ip_ospf_mpls_traffic_eng_link_2(unittest.TestCase):
+
+    '''Unit test for "show ip ospf mpls traffic-eng link__" '''
+
+    device = Device(name='aDevice')
+    
+    empty_output = ''
+
+    golden_parsed_output1 = {
+       "address_family":{
+          "ipv4":{
+             "instance":{
+                "1":{
+                   "mpls":{
+                      "te":{
+                         "router_id":"10.4.1.1"
+                      }
+                   },
+                   "areas":{
+                      "0.0.0.0":{
+                         "mpls":{
+                            "te":{
+                               "enable":True,
+                               "total_links":2,
+                               "area_instance":2,
+                               "link_hash_bucket":{
+                                  8:{
+                                     "link_fragments":{
+                                        2:{
+                                           "link_instance":2,
+                                           "network_type":"broadcast network",
+                                           "link_id":"10.1.2.1",
+                                           "interface_address":"10.1.2.1",
+                                           "te_admin_metric":1,
+                                           "igp_admin_metric":1,
+                                           "max_bandwidth":125000000,
+                                           "max_reservable_bandwidth":93750000,
+                                           "total_priority":8,
+                                           "unreserved_bandwidths":{
+                                              "0 93750000":{
+                                                 "priority":0,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "1 93750000":{
+                                                 "priority":1,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "2 93750000":{
+                                                 "priority":2,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "3 93750000":{
+                                                 "priority":3,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "4 93750000":{
+                                                 "priority":4,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "5 93750000":{
+                                                 "priority":5,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "6 93750000":{
+                                                 "priority":6,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "7 93750000":{
+                                                 "priority":7,
+                                                 "unreserved_bandwidth":93750000
+                                              }
+                                           },
+                                           "affinity_bit":"0x0"
+                                        }
+                                     }
+                                  },
+                                  9:{
+                                     "link_fragments":{
+                                        1:{
+                                           "link_instance":2,
+                                           "network_type":"broadcast network",
+                                           "link_id":"10.1.4.4",
+                                           "interface_address":"10.1.4.1",
+                                           "te_admin_metric":1,
+                                           "igp_admin_metric":1,
+                                           "max_bandwidth":125000000,
+                                           "max_reservable_bandwidth":93750000,
+                                           "total_priority":8,
+                                           "unreserved_bandwidths":{
+                                              "0 93750000":{
+                                                 "priority":0,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "1 93750000":{
+                                                 "priority":1,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "2 93750000":{
+                                                 "priority":2,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "3 93750000":{
+                                                 "priority":3,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "4 93750000":{
+                                                 "priority":4,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "5 93750000":{
+                                                 "priority":5,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "6 93750000":{
+                                                 "priority":6,
+                                                 "unreserved_bandwidth":93750000
+                                              },
+                                              "7 93750000":{
+                                                 "priority":7,
+                                                 "unreserved_bandwidth":93750000
+                                              }
+                                           },
+                                           "affinity_bit":"0x0"
+                                        }
+                                     }
+                                  }
+                               }
+                            }
+                         }
+                      }
+                   }
+                },
+                "2":{
+                   "mpls":{
+                      "te":{
+                         "router_id":"10.229.11.11"
+                      }
+                   },
+                   "areas":{
+                      "0.0.0.1":{
+                         "mpls":{
+                            "te":{
+                               "enable":False
+                            }
+                         }
+                      }
+                   }
+                }
+             }
+          }
+       }
+    }
+    
+    def test_show_ip_ospf_mpls_traffic_eng_link_2_full1(self):
+        
+        self.maxDiff = None
+        
+        raw1 = '''\
+            R1_ospf_xe#show ip ospf mpls traffic-eng link 
+            OSPF Router with ID (10.4.1.1) (Process ID 1)
+            Area 0 has 2 MPLS TE links. Area instance is 2.
+            Links in hash bucket 8.
+            Link is associated with fragment 2. Link instance is 2
+              Link connected to Broadcast network
+              Link ID : 10.1.2.1
+              Interface Address : 10.1.2.1
+              Admin Metric te: 1 igp: 1
+              Maximum bandwidth : 125000000
+              Maximum reservable bandwidth : 93750000
+              Number of Priority : 8
+              Priority 0 : 93750000     Priority 1 : 93750000   
+              Priority 2 : 93750000     Priority 3 : 93750000   
+              Priority 4 : 93750000     Priority 5 : 93750000   
+              Priority 6 : 93750000     Priority 7 : 93750000   
+              Affinity Bit : 0x0
+            Links in hash bucket 9.
+            Link is associated with fragment 1. Link instance is 2
+              Link connected to Broadcast network
+              Link ID : 10.1.4.4
+              Interface Address : 10.1.4.1
+              Admin Metric te: 1 igp: 1
+              Maximum bandwidth : 125000000
+              Maximum reservable bandwidth : 93750000
+              Number of Priority : 8
+              Priority 0 : 93750000     Priority 1 : 93750000   
+              Priority 2 : 93750000     Priority 3 : 93750000   
+              Priority 4 : 93750000     Priority 5 : 93750000   
+              Priority 6 : 93750000     Priority 7 : 93750000   
+              Affinity Bit : 0x0
+                OSPF Router with ID (10.229.11.11) (Process ID 2)
+            Area 1 MPLS TE not initialized
+            '''
+
+        obj = ShowIpOspfMplsTrafficEngLink2(device=self.device)
+        parsed_output = obj.parse(output=raw1)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 if __name__ == '__main__':
     unittest.main()
