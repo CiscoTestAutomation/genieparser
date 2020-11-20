@@ -21,6 +21,7 @@ R1_xe.00-00         * 0x0000011D   0x2165                 519/*         0/0/0
   Metric: 10         IPv6 (MT-IPv6) 2001:10:13:115::/64
 R1_xe.01-00         * 0x00000118   0x850F                1087/*         0/0/0
   Metric: 0          IS-Extended R1_xe.00
+  Metric: 10         IP-Interarea 10.100.100.0/24
   Metric: 0          IS-Extended R2_xr.00
 R1_xe.02-00         * 0x00000118   0x7EAE                 752/*         0/0/0
   Metric: 0          IS-Extended R1_xe.00
@@ -34,6 +35,8 @@ R2_xr.00-00           0x00000120   0xC84E                 754/1200      0/0/0
   Metric: 10         IP 10.16.2.2/32
   Metric: 10         IP 10.12.115.0/24
   Metric: 10         IP 10.23.115.0/24
+  Metric: 10         IP-Interarea 10.200.200.0/24
+  Metric: 10         IP-Interarea 10.220.220.0/24
   Hostname: R2_xr
   Metric: 10         IS (MT-IPv6) R1_xe.01
   Metric: 10         IS (MT-IPv6) R2_xr.03
@@ -86,6 +89,7 @@ R1_xe.00-00         * 0x0000011D   0x27D0                 521/*         0/0/0
   Metric: 20         IPv6 (MT-IPv6) 2001:10:23:115::/64
 R1_xe.01-00         * 0x00000118   0x9D7F                 930/*         0/0/0
   Metric: 0          IS-Extended R1_xe.00
+  Metric: 10         IP-Interarea 10.100.100.0/24
   Metric: 0          IS-Extended R2_xr.00
 R1_xe.02-00         * 0x0000011E   0x8A25                1098/*         0/0/0
   Metric: 0          IS-Extended R1_xe.00
@@ -101,6 +105,8 @@ R2_xr.00-00           0x00000120   0x1585                 662/1200      0/0/0
   Metric: 10         IP 10.23.115.0/24
   Metric: 11         IP 10.36.3.3/32
   Metric: 20         IP 10.13.115.0/24
+  Metric: 10         IP-Interarea 10.200.200.0/24
+  Metric: 10         IP-Interarea 10.220.220.0/24
   Hostname: R2_xr
   Metric: 10         IS (MT-IPv6) R1_xe.01
   Metric: 10         IS (MT-IPv6) R2_xr.03
