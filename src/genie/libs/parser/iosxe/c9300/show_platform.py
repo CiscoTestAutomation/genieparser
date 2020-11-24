@@ -193,11 +193,12 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         # SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
         # --  ------------------  ----------  ---------------  -------  -------  -----
         # 1A  PWR-C1-350WAC-P     DCC2337B0K5  OK              Good     n/a      350
+        # 1A  PWR-C4-950WAC-R     APS222700VU  No Input Power  Bad      n/a      950
         # 1B  Not Present
         p7 = re.compile(r'^(?P<sw>\d+)(?P<ps>\w+) *'
                         r'((?P<pid>[\w\-]+) +'
                         r'(?P<serial_number>\w+) +)?'
-                        r'(?P<status>(\w+|Not Present)) *'
+                        r'(?P<status>(\w+|Not Present|No Input Power)) *'
                         r'((?P<system_power>\w+) +'
                         r'(?P<poe_power>[\w\/]+) +'
                         r'(?P<watts>\w+))?$')
