@@ -1,0 +1,7 @@
+--------------------------------------------------------------------------------
+                                New
+--------------------------------------------------------------------------------
+* IOSXE
+    * Updated Show lldp neigh:
+      * show lldp neighbor
+        updated to allow Device ID with space and 20 characters
