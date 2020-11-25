@@ -3707,6 +3707,11 @@ class ShowIpOspfNeighborDetail2(ShowIpOspfNeighborDetail2Schema):
 
     def cli(self, output=None):
 
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
         # Init vars
         ret_dict = {}
         af = 'ipv4' # this is ospf - always ipv4
@@ -3752,7 +3757,7 @@ class ShowIpOspfNeighborDetail2(ShowIpOspfNeighborDetail2Schema):
         p13 = re.compile(r'^SR +adj +label +(?P<sr_adj_label>\d+)$')
         
         
-        for line in output.splitlines():
+        for line in out.splitlines():
             line = line.strip()
 
             # Neighbor 10.16.2.2, interface address 10.1.2.2
