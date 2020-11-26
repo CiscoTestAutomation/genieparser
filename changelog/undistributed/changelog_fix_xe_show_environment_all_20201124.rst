@@ -2,5 +2,5 @@
                                 Fix
 --------------------------------------------------------------------------------
 * IOSXE
-  * c9300
-    * Fixed ShowEnvironmentAll p7 to parse more output patterns
+    * c9300
+        * Fixed ShowEnvironmentAll p7 to parse more output patterns
