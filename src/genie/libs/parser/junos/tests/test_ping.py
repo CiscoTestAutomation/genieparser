@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import Mock
 
-# PyATS
+# pyATS
 from pyats.topology import Device
 
 # Metaparser

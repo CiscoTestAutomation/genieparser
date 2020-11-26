@@ -1677,7 +1677,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
         )
 
         # fe80::250:56ff:fe8d:a96c
-        p12 = re.compile(r"^(?P<linklocal_address>[\S\:]+)$")
+        p12 = re.compile(r"^(?P<linklocal_address>[a-fA-F\d\:]+)$")
 
         # Gen timer 00:49:49
         p13 = re.compile(r"^Gen +timer +(?P<generation_timer>\S+)$")
