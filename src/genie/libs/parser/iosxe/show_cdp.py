@@ -205,6 +205,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
             out = output
 
         # Device ID: R7(9QBDKB58F76)
+        # Device ID:
         deviceid_re = re.compile(r'Device\s+ID:\s*(?P<device_id>\S+)?')
 
         # Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
