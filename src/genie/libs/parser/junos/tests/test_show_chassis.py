@@ -3490,15 +3490,6 @@ class TestShowChassisAlarms(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)    
 
 
-
-
-
-
-
-
-
-
-
 class TestShowChassisFabricSummary(unittest.TestCase):
     """Unit test for show chassis Fabric Summary"""
     maxDiff = None
@@ -3578,16 +3569,6 @@ class TestShowChassisFabricSummary(unittest.TestCase):
         obj = ShowChassisFabricSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output) 
-
-
-
-
-
-
-
-
-
-
 
 
 class TestShowChassisFabricPlane(unittest.TestCase):

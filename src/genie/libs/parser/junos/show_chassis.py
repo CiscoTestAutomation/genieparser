@@ -2195,30 +2195,6 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
         return res
 
 
-                
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 class ShowChassisFabricSummarySchema(MetaParser):
 
     """
@@ -2233,10 +2209,6 @@ class ShowChassisFabricSummarySchema(MetaParser):
                 ]
             }
         }"""
-
-
-
-
 
     def validate_chassis_fm_state(value):
         # Pass fm-state-item
