@@ -1,0 +1,50 @@
+
+    show ted database extensive 10.4.1.1
+    TED database: 0 ISIS nodes 13 INET nodes
+    NodeID: 10.4.1.1
+      Type: Rtr, Age: 2048 secs, LinkIn: 6, LinkOut: 2
+      Protocol: OSPF(0.0.0.4)
+        To: 172.16.1.1, Local: 172.16.1.2, Remote: 172.16.1.3
+          Local interface index: 123, Remote interface index: 0
+          Color: 0 <none>
+          Metric: 4
+          Static BW: 500Mbps
+          Reservable BW: 500Mbps
+          Available BW [priority] bps:
+              [0] 500Mbps     [1] 500Mbps    [2] 500Mbps    [3] 500Mbps
+              [4] 500Mbps     [5] 500Mbps    [6] 500Mbps    [7] 500Mbps
+          Interface Switching Capability Descriptor(1):
+            Switching type: Packet
+            Encoding type: Packet
+            Maximum LSP BW [priority] bps:
+              [0] 500Mbps     [1] 500Mbps    [2] 500Mbps    [3] 500Mbps
+              [4] 500Mbps     [5] 500Mbps    [6] 500Mbps    [7] 500Mbps
+          P2P Adjacency-SID:
+            IPV4, SID: 8, Flags: 0x35, Weight: 0
+        To: 172.16.1.4, Local: 172.16.1.5, Remote: 172.16.1.6
+          Local interface index: 456, Remote interface index: 0
+          Color: 0x2 blue
+          Metric: 350
+          Static BW: 500Mbps
+          Reservable BW: 500Mbps
+          Available BW [priority] bps:
+              [0] 500Mbps     [1] 500Mbps    [2] 500Mbps    [3] 500Mbps
+              [4] 500Mbps     [5] 500Mbps    [6] 500Mbps    [7] 500Mbps
+          Interface Switching Capability Descriptor(1):
+            Switching type: Packet
+            Encoding type: Packet
+            Maximum LSP BW [priority] bps:
+              [0] 500Mbps     [1] 500Mbps    [2] 500Mbps    [3] 500Mbps
+              [4] 500Mbps     [5] 500Mbps    [6] 500Mbps    [7] 500Mbps
+          P2P Adjacency-SID:
+            IPV4, SID: 39, Flags: 0x40, Weight: 0
+       Prefixes:
+         192.168.0.1/32
+          Flags: 0x30
+          Prefix-SID:
+            SID: 42, Flags: 0x00, Algo: 0
+       SPRING-Capabilities:
+         SRGB block [Start: 8000, Range: 6000, Flags: 0x00]
+       SPRING-Algorithms:
+         Algo: 0
+    

@@ -1,0 +1,5 @@
+
+        11:31PM  up 2 days,  1:04, 1 user, load averages: 0.04, 0.03, 0.01
+        USER     TTY      FROM                              LOGIN@  IDLE WHAT
+        cisco     d0       -                                Mon10PM     - -cli (cli)
+        

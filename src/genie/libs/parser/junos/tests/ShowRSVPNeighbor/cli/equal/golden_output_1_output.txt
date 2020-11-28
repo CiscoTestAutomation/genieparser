@@ -1,0 +1,8 @@
+
+    show rsvp neighbor
+    RSVP neighbor: 4 learned
+    Address            Idle Up/Dn LastChange HelloInt HelloTx/Rx MsgRcvd
+    10.34.3.252      15:55  0/0       15:52        9   106/0    0
+    10.169.14.240    34:15  0/0       34:13        9   229/0    0
+    10.169.14.157        0  1/0       34:13        9   230/229  333
+    192.168.145.218       0  1/0       15:55        9   105/105  197

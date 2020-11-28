@@ -1,0 +1,5 @@
+
+        show chassis environment routing-engine
+        Routing Engine 0 status:
+        State                      Online Master
+    
