@@ -4342,7 +4342,7 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
 
-class TestShowOspfNeighborInstanceAll(unittest.TestCase):
+class TestShowOspf3NeighborInstanceAll(unittest.TestCase):
     """ Unit tests for:
             * show ospf neighbor instance all
     """

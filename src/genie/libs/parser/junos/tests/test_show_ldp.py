@@ -1542,7 +1542,7 @@ class TestShowLDPOverview(unittest.TestCase):
 # =================================
 # Unit test for 'show ldp session {ipaddress} detail'
 # =================================
-class TestShowLDPSessionIpaddressDetail(unittest.TestCase):
+class TestShowLdpSessionIpaddressDetail(unittest.TestCase):
     '''unit test for "show ldp session {ipaddress} detail'''
     device = Device(name='aDevice')
     maxDiff = None

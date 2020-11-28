@@ -18,7 +18,7 @@ Unit tests for:
     * 'show ted database extensive'
     * 'show ted database extensive {node_id}'
 '''
-class test_show_ted_database(unittest.TestCase):
+class TestShowTedDatabaseExtensive(unittest.TestCase):
     device = Device(name='aDevice')
     
     maxDiff = None

@@ -170,7 +170,7 @@ class test_show_ntp_status(unittest.TestCase):
 # ===========================================================
 # Unit test for 'show configuration system ntp | display set'
 # ===========================================================
-class test_show_configuration_system_ntp_display_set(unittest.TestCase):
+class TestShowConfigurationSystemNtpSet(unittest.TestCase):
     
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}

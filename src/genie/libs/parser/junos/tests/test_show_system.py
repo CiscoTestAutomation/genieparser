@@ -154,7 +154,7 @@ class TestShowSystemUsers(unittest.TestCase):
 
     empty_output = {"execute.return_value": ""}
 
-    golden_parsed_output_1 = {
+    golden_output_1 = {
         "execute.return_value":
         """
         show system users
@@ -166,7 +166,7 @@ class TestShowSystemUsers(unittest.TestCase):
         """
     }
 
-    golden_output_1 = {
+    golden_parsed_output_1 = {
         "system-users-information": {
             "uptime-information": {
                 "active-user-count": {
@@ -225,7 +225,7 @@ class TestShowSystemUsers(unittest.TestCase):
         }
     }
 
-    golden_parsed_output_2 = {
+    golden_output_2 = {
         "execute.return_value":
         """
         11:31PM  up 2 days,  1:04, 1 user, load averages: 0.04, 0.03, 0.01
@@ -234,7 +234,7 @@ class TestShowSystemUsers(unittest.TestCase):
         """
     }
 
-    golden_output_2 = {
+    golden_parsed_output_2 = {
         "system-users-information": {
             "uptime-information": {
                 "active-user-count": {
@@ -267,7 +267,7 @@ class TestShowSystemUsers(unittest.TestCase):
         }
     }
 
-    golden_parsed_output_3 = {
+    golden_output_3 = {
         "execute.return_value":
         """
         11:36PM  up 2 days,  5 hrs, 2 users, load averages: 0.00, 0.00, 0.00
@@ -277,7 +277,7 @@ class TestShowSystemUsers(unittest.TestCase):
         """
     }
 
-    golden_output_3 = {
+    golden_parsed_output_3  = {
         "system-users-information": {
             "uptime-information": {
                 "active-user-count": {
@@ -2096,7 +2096,7 @@ class TestShowSystemStorageNoForwarding(unittest.TestCase):
 # =========================================================
 # Unit test for show system buffers no-forwarding
 # =========================================================
-class TestShowSystemBufferNoForwarding(unittest.TestCase):
+class TestShowSystemBuffersNoForwarding(unittest.TestCase):
 
     device = Device(name="aDevice")
 
@@ -2478,7 +2478,7 @@ class TestShowSystemUptime(unittest.TestCase):
 
     empty_output = {"execute.return_value": ""}
 
-    golden_parsed_output_1 = {
+    golden_output_1 = {
         "execute.return_value":
         """
         show system uptime
@@ -2491,7 +2491,7 @@ class TestShowSystemUptime(unittest.TestCase):
     """
     }
 
-    golden_output_1 = {
+    golden_parsed_output_1 = {
         "system-uptime-information": {
             "current-time": {
                 "date-time": {
@@ -2631,7 +2631,7 @@ class TestShowSystemUptimeNoForwarding(unittest.TestCase):
 
     empty_output = {"execute.return_value": ""}
 
-    golden_parsed_output_1 = {
+    golden_output_1 = {
         "execute.return_value":
         """
         show system uptime no-forwarding
@@ -2644,7 +2644,7 @@ class TestShowSystemUptimeNoForwarding(unittest.TestCase):
     """
     }
 
-    golden_output_1 = {
+    golden_parsed_output_1 = {
         "system-uptime-information": {
             "current-time": {
                 "date-time": {
@@ -6210,7 +6210,7 @@ class TestShowSystemConnections(unittest.TestCase):
 
     empty_output = {"execute.return_value": ""}
 
-    golden_parsed_output_1 = {
+    golden_output_1 = {
         "execute.return_value":
         """
         show system connections
@@ -6223,7 +6223,7 @@ class TestShowSystemConnections(unittest.TestCase):
         """
     }
 
-    golden_output_1 = {
+    golden_parsed_output_1 = {
        "output": {
           "connections-table": [
              {

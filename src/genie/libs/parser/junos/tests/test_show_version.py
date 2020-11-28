@@ -1714,7 +1714,7 @@ class TestShowVersionDetail(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
-class TestShowVersionDetailNoForwarding(unittest.TestCase):
+class TestShowVersionInvokeOnAllRoutingEngines(unittest.TestCase):
     """ Unit tests for:
             * show version detail no-forwarding
     """

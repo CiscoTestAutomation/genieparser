@@ -51,7 +51,7 @@ class test_show_route_table(unittest.TestCase):
     '''
     }
 
-    parsed_output_1 = {
+    golden_parsed_output_1 = {
         'table_name': {
             'inet.3': {
                 'active_route_count': 3,
@@ -95,7 +95,7 @@ class test_show_route_table(unittest.TestCase):
     '''
     }
 
-    parsed_output_2 = {
+    golden_parsed_output_2 = {
         'table_name': {
             'inet.3': {
                 'active_route_count': 3,
@@ -143,7 +143,7 @@ class test_show_route_table(unittest.TestCase):
     '''
     }
 
-    parsed_output_3 = {
+    golden_parsed_output_3 = {
         'table_name': {
             'inet.3': {
                 'active_route_count': 3,
@@ -221,7 +221,7 @@ class test_show_route_table(unittest.TestCase):
     '''
     }
 
-    parsed_output_4 = {
+    golden_parsed_output_4 = {
         'table_name': {
             'inet.3': {
                 'active_route_count': 5,
@@ -268,7 +268,7 @@ class test_show_route_table(unittest.TestCase):
     '''
     }
 
-    parsed_output_5 = {
+    golden_parsed_output_5 = {
         "table_name": {
             "mpls.0": {
                 "destination_count": 54,
@@ -311,7 +311,7 @@ class test_show_route_table(unittest.TestCase):
     '''
     }
 
-    parsed_output_6 = {
+    golden_parsed_output_6 = {
         "table_name": {
             "mpls.0": {
                 "destination_count": 54,
@@ -349,7 +349,7 @@ class test_show_route_table(unittest.TestCase):
                                 > to 10.169.14.158 via et-0/0/0.0, Swap 517890
         '''}
 
-    parsed_output_7 = {
+    golden_parsed_output_7 = {
         'table_name': {
             'mpls.0': {
                 'active_route_count': 11,

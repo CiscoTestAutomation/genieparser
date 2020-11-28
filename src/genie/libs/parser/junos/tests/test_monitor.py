@@ -20,7 +20,7 @@ class TestMonitorInterfaceTraffic(unittest.TestCase):
     device = Device(name='aDevice')
     maxDiff = None
 
-    golden_output = '''
+    golden_output = {'execute.return_value': '''
         genieDevice                      Seconds: 44                  
         Interface    Link  Input packets        (pps)     Output packets        (pps)
         ge-0/0/0      Up        5641273          (0)          3945678          (0)
@@ -48,7 +48,7 @@ class TestMonitorInterfaceTraffic(unittest.TestCase):
         fti6          Up              0                             0
         fti7          Up              0                             0
         Bytes=b, Clear=c, Delta=d, Packets=p, Quit=q or ESC, Rate=r, Up=^U, Down=^D Time: 03:13:30
-    '''
+    '''}
     
     golden_parsed_output = {
         'monitor-time': {
