@@ -106,3 +106,117 @@ class ShowDdosProtectionStatistics(ShowDdosProtectionStatisticsSchema):
                 continue
 
         return res
+
+# Python
+import re
+
+# Metaparser
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import (Any, Optional, Use,
+                                                SchemaTypeError, Schema)
+
+
+class ShowDDosProtectionProtocolSchema(MetaParser):
+    """ Schema for:
+            * show ddos-protection protocols {protocol}  
+    """
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "ddos-protocols-information": {
+            Optional("@junos:style"): str,
+            Optional("@xmlns"): str,
+            "ddos-protocol-group": {
+                "ddos-protocol": {
+                    "ddos-basic-parameters": {
+                        Optional("@junos:style"): str,
+                        "policer-bandwidth": str,
+                        "policer-burst": str,
+                        "policer-enable": str,
+                        "policer-time-recover": str
+                    },
+                    "ddos-flow-detection": {
+                        Optional("@junos:style"): str,
+                        "detect-time": str,
+                        "detection-mode": str,
+                        "flow-aggregation-level-states": {
+                            "ifd-bandwidth": str,
+                            "ifd-control-mode": str,
+                            "ifd-detection-mode": str,
+                            "ifl-bandwidth": str,
+                            "ifl-control-mode": str,
+                            "ifl-detection-mode": str,
+                            "sub-bandwidth": str,
+                            "sub-control-mode": str,
+                            "sub-detection-mode": str
+                        },
+                        "log-flows": str,
+                        "recover-time": str,
+                        "timeout-active-flows": str,
+                        "timeout-time": str
+                    },
+                    "ddos-instance": [{
+                        Optional("@junos:style"): str,
+                        "ddos-instance-parameters": {
+                            Optional("@junos:style"): str,
+                            "hostbound-queue": str,
+                            "policer-bandwidth": str,
+                            "policer-bandwidth-scale": str,
+                            "policer-burst": str,
+                            "policer-burst-scale": str,
+                            "policer-enable": str
+                        },
+                        "ddos-instance-statistics": {
+                            Optional("@junos:style"): str,
+                            "packet-arrival-rate": str,
+                            "packet-arrival-rate-max": str,
+                            "packet-dropped": str,
+                            "packet-dropped-flows": str,
+                            "packet-dropped-others": str,
+                            "packet-received": str
+                        },
+                        "protocol-states-locale": str
+                    }],
+                    "ddos-system-statistics": {
+                        Optional("@junos:style"): str,
+                        "packet-arrival-rate": str,
+                        "packet-arrival-rate-max": str,
+                        "packet-dropped": str,
+                        "packet-received": str
+                    },
+                    "packet-type":
+                    str,
+                    "packet-type-description":
+                    str
+                },
+                "group-name": str
+            },
+            "flows-cumulative": str,
+            "flows-current": str,
+            "mod-packet-types": str,
+            "packet-types-in-violation": str,
+            "packet-types-rcvd-packets": str,
+            "total-packet-types": str
+        }
+    }
+
+
+class ShowDDosProtectionProtocol(ShowDDosProtectionProtocolSchema):
+    """ Parser for:
+            * show ddos-protection protocols {protocol}  
+    """
+    cli_command = 'show ddos-protection protocols {protocol}'
+
+    def cli(self, protocol, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                protocol=protocol
+            ))
+        else:
+            out = output
+
+    ret_dict = {}
+
+    for line in out.splitlines():
+        line = line.strip()
+
+    return ret_dict
