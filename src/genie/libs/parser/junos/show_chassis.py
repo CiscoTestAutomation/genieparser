@@ -2270,8 +2270,6 @@ class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
         return ret_dict
 
 
-
-
 class ShowChassisFabricPlaneSchema(MetaParser):
 
     """
