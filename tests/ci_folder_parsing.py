@@ -270,8 +270,17 @@ class FileBasedTest(aetest.Testcase):
                     raise AssertionError("Device output and expected output do not match")
                 else:
                     # If tests pass, display the device output in debug mode
-                    logging.debug(banner(msg))
-                    logging.debug("\nThe following is the device output for the passed parser:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
+                    # But first check if the screen handler is removed, if it is
+                    # put it back into the root otherwise just display to stdout
+                    if self.temporary_screen_handler not in log.root.handlers:
+                        self.add_logger()
+                        logging.debug(banner(msg))
+                        logging.debug("\nThe following is the device output for the passed parser:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
+                        self.remove_logger()
+                    else:
+                        logging.debug(banner(msg))
+                        logging.debug("\nThe following is the device output for the passed parser:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
+
 
     @screen_log_handling
     def test_empty(self, steps, local_class, operating_system, EMPTY_SKIP, token=None):
