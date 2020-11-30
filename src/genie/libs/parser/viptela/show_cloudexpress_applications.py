@@ -44,7 +44,6 @@ class ShowCloudexpressApplication(ShowCloudexpressApplicationSchema):
 
         for line in out.splitlines():
             line = line.strip()
-
             #1    salesforce               gateway  172.16.255.14  -          103      1     lte    lte
             #1    google_apps              gateway  172.16.255.14  -          47       0     lte    lte
             m = p1.match(line)
