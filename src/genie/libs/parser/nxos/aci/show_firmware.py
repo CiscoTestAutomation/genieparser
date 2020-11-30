@@ -17,7 +17,6 @@ class ShowFirmwareUpgradeStatusSchema(MetaParser):
         'node': {
             Any(): {
                 'pod': int,
-                'node': int,
                 'current_firmware': str,
                 Optional('target_firmware'): str,
                 'status': str,
@@ -68,7 +67,6 @@ class ShowFirmwareUpgradeStatus(ShowFirmwareUpgradeStatusSchema):
 
                 node_dict = ret_dict.setdefault('node', {}).setdefault(int(groups['node']), {})
                 node_dict.update({'pod': int(groups['pod'])})
-                node_dict.update({'node': int(groups['node'])})
                 node_dict.update({'current_firmware': groups['current_firmware']})
                 node_dict.update({'status': groups['status']})
 
@@ -115,9 +113,7 @@ class ShowFirmwareRepositorySchema(MetaParser):
             Any(): {
                 'version': {
                     Any(): {
-                        'name': str,
                         'type': str,
-                        'version': str,
                         'size': float
                     }
                 }
@@ -155,9 +151,7 @@ class ShowFirmwareRepository(ShowFirmwareRepositorySchema):
                     setdefault(groups['name'], {}).setdefault('version', {}).\
                     setdefault(groups['version'], {})
 
-                version_dict.update({'name': groups['name']})
                 version_dict.update({'type': groups['type']})
-                version_dict.update({'version': groups['version']})
                 version_dict.update({'size': float(groups['size'])})
 
         return ret_dict

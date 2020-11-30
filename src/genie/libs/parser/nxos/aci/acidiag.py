@@ -11,7 +11,6 @@ class AcidiagFnvreadSchema(MetaParser):
     schema = {
         'id': {
             Any(): {
-                'id': int,
                 'pod_id': int,
                 'name': str,
                 'serial_number': str,
@@ -46,7 +45,6 @@ class AcidiagFnvread(AcidiagFnvreadSchema):
                 groups = m.groupdict()
 
                 id_dict = ret_dict.setdefault('id', {}).setdefault(int(groups['id']), {})
-                id_dict.update({'id': int(groups['id'])})
                 id_dict.update({'pod_id': int(groups['pod_id'])})
                 id_dict.update({'name': groups['name']})
                 id_dict.update({'serial_number': groups['serial_number']})

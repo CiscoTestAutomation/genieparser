@@ -23,7 +23,6 @@ class TestAcidiagFnvread(unittest.TestCase):
     golden_parsed_output = {
         'id': {
             101: {
-                'id': 101,
                 'ip_address': '10.0.152.66/32',
                 'last_upd_msg_id': 0,
                 'name': 'hw_leaf1_II23',
@@ -33,7 +32,6 @@ class TestAcidiagFnvread(unittest.TestCase):
                 'state': 'active'
             },
             102: {
-                'id': 102,
                 'ip_address': '10.0.152.64/32',
                 'last_upd_msg_id': 0,
                 'name': 'hw_leaf2_II23',
@@ -43,7 +41,6 @@ class TestAcidiagFnvread(unittest.TestCase):
                 'state': 'active'
             },
             201: {
-                'id': 201,
                 'ip_address': '10.0.152.65/32',
                 'last_upd_msg_id': 0,
                 'name': 'hw_spine1_II23',

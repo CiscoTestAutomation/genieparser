@@ -27,28 +27,24 @@ class TestShowFirmwareUpgradeStatus(unittest.TestCase):
         'node': {
             1: {
                 'pod': 1,
-                'node': 1,
                 'current_firmware': 'apic-4.2(4o)',
                 'status': 'success',
                 'upgrade_progress_percentage': 100
             },
             101: {
                 'pod': 1,
-                'node': 101,
                 'current_firmware': 'unknown',
                 'target_firmware': 'unknown',
                 'status': 'node unreachable'
             },
             102: {
                 'pod': 1,
-                'node': 102,
                 'current_firmware': 'n9000-14.2(4q)',
                 'status': 'not scheduled',
                 'upgrade_progress_percentage': 0
             },
             201: {
                 'pod': 1,
-                'node': 201,
                 'current_firmware': 'unknown',
                 'target_firmware': 'unknown',
                 'status': 'node unreachable'
@@ -89,7 +85,6 @@ class TestShowFirmwareUpgradeStatusSwitchGroup(unittest.TestCase):
         'node': {
             101: {
                 'pod': 1,
-                'node': 101,
                 'current_firmware': 'n9000-15.0(0.138)',
                 'status': 'upgrade in progress',
                 'target_firmware': 'n9000-15.0(0.144)',
@@ -99,7 +94,6 @@ class TestShowFirmwareUpgradeStatusSwitchGroup(unittest.TestCase):
             },
             107: {
                 'pod': 1,
-                'node': 107,
                 'current_firmware': 'n9000-15.0(0.138)',
                 'status': 'waiting in queue',
                 'target_firmware': 'n9000-15.0(0.144)',
@@ -109,7 +103,6 @@ class TestShowFirmwareUpgradeStatusSwitchGroup(unittest.TestCase):
             },
             108: {
                 'pod': 1,
-                'node': 108,
                 'current_firmware': 'n9000-15.0(0.138)',
                 'status': 'upgrade in progress',
                 'target_firmware': 'n9000-15.0(0.144)',
@@ -119,7 +112,6 @@ class TestShowFirmwareUpgradeStatusSwitchGroup(unittest.TestCase):
             },
             112: {
                 'pod': 1,
-                'node': 112,
                 'current_firmware': 'n9000-15.0(0.138)',
                 'status': 'upgrade in progress',
                 'target_firmware': 'n9000-15.0(0.144)',
@@ -129,7 +121,6 @@ class TestShowFirmwareUpgradeStatusSwitchGroup(unittest.TestCase):
             },
             113: {
                 'pod': 1,
-                'node': 113,
                 'current_firmware': 'n9000-15.0(0.138)',
                 'status': 'upgrade in progress',
                 'target_firmware': 'n9000-15.0(0.144)',
@@ -168,7 +159,6 @@ class TestShowFirmwareUpgradeStatusControllerGroup(unittest.TestCase):
         'node': {
             1: {
                 'pod': 1,
-                'node': 1,
                 'current_firmware': 'apic-5.0(1k)',
                 'status': 'success',
                 'target_firmware': 'apic-5.0(1k)',
@@ -209,9 +199,7 @@ class TestShowFirmwareUpgradeStatusSwitchGroup(unittest.TestCase):
             'aci-catalog-dk9.70.8.2.bin': {
                 'version': {
                     '70.8(2)': {
-                        'name': 'aci-catalog-dk9.70.8.2.bin',
                         'type': 'catalog',
-                        'version': '70.8(2)',
                         'size': 0.129
                     }
                 }
@@ -219,9 +207,7 @@ class TestShowFirmwareUpgradeStatusSwitchGroup(unittest.TestCase):
             'aci-apic-dk9.5.0.1k.bin': {
                 'version': {
                     '5.0(1k)': {
-                        'name': 'aci-apic-dk9.5.0.1k.bin',
                         'type': 'controller',
-                        'version': '5.0(1k)',
                         'size': 6266.102
                     }
                 }
@@ -229,9 +215,7 @@ class TestShowFirmwareUpgradeStatusSwitchGroup(unittest.TestCase):
             'aci-catalog-dk9.70.7.4.bin': {
                 'version': {
                     '70.7(4)': {
-                        'name': 'aci-catalog-dk9.70.7.4.bin',
                         'type': 'catalog',
-                        'version': '70.7(4)',
                         'size': 0.128
                     }
                 }
