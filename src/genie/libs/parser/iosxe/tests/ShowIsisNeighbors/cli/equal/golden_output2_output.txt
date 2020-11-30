@@ -1,0 +1,22 @@
+ios_xe#show isis neighbors
+
+Tag test_0:
+System Id       Type Interface     IP Address      State Holdtime Circuit Id
+R1_xe           L2   Gi1           172.16.10.1     UP      21       C_ID.00
+R1_xe           L2   Gi2           172.16.20.1     DOWN    25       C_ID.01
+R1_xe           L2   Gi3           172.16.30.1     INIT    21       C_ID.02
+R2_xr           L1   Gi4           172.16.40.1     NONE    25       C_ID.03
+
+Tag test_1:
+System Id       Type Interface     IP Address      State Holdtime Circuit Id
+R3_xe           L1   Gi6           172.16.50.1     NONE    21       C_ID.05
+R3_xe           L1   Gi5           172.16.60.1     UP      25       C_ID.07
+R4_xr           L2   Gi8           172.16.70.1     INIT    21       C_ID.06
+R4_xr           L2   Gi7           172.16.80.1     DOWN    25       C_ID.04
+
+Tag test_2:
+System Id       Type Interface     IP Address      State Holdtime Circuit Id
+R7_xe           L1   Gi10.104      172.17.10.1     NONE    21       C_ID.10
+R8_xe           L1   Gi10.103      172.17.20.1     UP      25       C_ID.08
+R9_xr           L2   Gi13.102      172.17.30.1     INIT    21       C_ID.11
+R9_xr           L2   Gi13.101      172.17.40.1     DOWN    25       C_ID.13

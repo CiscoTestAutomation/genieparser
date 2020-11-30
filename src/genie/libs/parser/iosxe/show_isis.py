@@ -15,6 +15,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.libs.parser.utils.common import Common
 
 
 class ShowIsisNeighborsSchema(MetaParser):
@@ -26,11 +27,14 @@ class ShowIsisNeighborsSchema(MetaParser):
                     Any(): {
                         'type': {
                             Any(): {
-                                'circuit_id': str,
-                                'holdtime': str,
-                                'interface': str,
-                                'ip_address': str,
-                                'state': str,
+                                'interfaces': {
+                                    Any(): {
+                                        'circuit_id': str,
+                                        'holdtime': str,
+                                        'ip_address': str,
+                                        'state': str,
+                                    }
+                                }
                             }
                         }
                     }
@@ -82,12 +86,13 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
                     neighbour_dict = isis_dict.setdefault('neighbors', {}).setdefault(system_id, {})
 
                 type_dict = neighbour_dict.setdefault('type', {}).setdefault(isis_type, {})
-
-                type_dict['interface'] = m.groupdict()['interface']
-                type_dict['ip_address'] = m.groupdict()['ip_address']
-                type_dict['state'] = m.groupdict()['state']
-                type_dict['holdtime'] = m.groupdict()['holdtime']
-                type_dict['circuit_id'] = m.groupdict()['circuit_id']
+                  
+                interface_name = Common.convert_intf_name(m.groupdict()['interface'])
+                interfaces_dict = type_dict.setdefault('interfaces', {}).setdefault(interface_name, {})
+                interfaces_dict['ip_address'] = m.groupdict()['ip_address']
+                interfaces_dict['state'] = m.groupdict()['state']
+                interfaces_dict['holdtime'] = m.groupdict()['holdtime']
+                interfaces_dict['circuit_id'] = m.groupdict()['circuit_id']
                 continue
 
         return ret_dict
