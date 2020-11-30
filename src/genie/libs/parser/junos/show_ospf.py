@@ -4632,7 +4632,6 @@ class ShowOspfRoutePrefix(ShowOspfRoutePrefixSchema):
                 group = m.groupdict()
                 ospf_topology_route_table = ret_dict.setdefault(
                     'ospf-route-information', {}).setdefault('ospf-topology-route-table', {})
-                #ospf_route = ospf_topology_route_table.setdefault('ospf-route', [])
 
                 ospf_topology_route_table['ospf-topology-name'] = group['ospf_topology_name']
 
