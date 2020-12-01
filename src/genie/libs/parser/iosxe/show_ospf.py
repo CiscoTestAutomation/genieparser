@@ -3703,7 +3703,7 @@ class ShowIpOspfNeighborDetail2(ShowIpOspfNeighborDetail2Schema):
         * 'show ip ospf neighbor detail__'
     '''
 
-    cli_command = ['show ip ospf neighbor detail__']
+    cli_command = 'show ip ospf neighbor detail__'
 
     def cli(self, output=None):
 
