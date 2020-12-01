@@ -2,6 +2,7 @@
 
 IOSXE parsers for the following show commands:
 	* 'show run policy-map {name}'
+	* 'show running-config interface {interface}'
 '''
 
 # Python
@@ -289,7 +290,8 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 		p2 = re.compile(r'^description +(?P<description>[\S\s]+)$')
 
 		# vrf forwarding Mgmt-intf
-		p3 = re.compile(r'^vrf +forwarding +(?P<vrf>[\S\s]+)$')
+		# ip vrf forwarding oam
+		p3 = re.compile(r'^(ip )?vrf +forwarding +(?P<vrf>[\S\s]+)$')
 
 		# ip address 10.1.21.249 255.255.255.0
 		p4 = re.compile(r'^ip +address +(?P<ip>[\S]+) +(?P<netmask>[\S]+)$')
