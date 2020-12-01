@@ -1,0 +1,33 @@
+    R1_ospf_xe#show ip ospf mpls traffic-eng link 
+    OSPF Router with ID (10.4.1.1) (Process ID 1)
+    Area 0 has 2 MPLS TE links. Area instance is 2.
+    Links in hash bucket 8.
+    Link is associated with fragment 2. Link instance is 2
+      Link connected to Broadcast network
+      Link ID : 10.1.2.1
+      Interface Address : 10.1.2.1
+      Admin Metric te: 1 igp: 1
+      Maximum bandwidth : 125000000
+      Maximum reservable bandwidth : 93750000
+      Number of Priority : 8
+      Priority 0 : 93750000     Priority 1 : 93750000   
+      Priority 2 : 93750000     Priority 3 : 93750000   
+      Priority 4 : 93750000     Priority 5 : 93750000   
+      Priority 6 : 93750000     Priority 7 : 93750000   
+      Affinity Bit : 0x0
+    Links in hash bucket 9.
+    Link is associated with fragment 1. Link instance is 2
+      Link connected to Broadcast network
+      Link ID : 10.1.4.4
+      Interface Address : 10.1.4.1
+      Admin Metric te: 1 igp: 1
+      Maximum bandwidth : 125000000
+      Maximum reservable bandwidth : 93750000
+      Number of Priority : 8
+      Priority 0 : 93750000     Priority 1 : 93750000   
+      Priority 2 : 93750000     Priority 3 : 93750000   
+      Priority 4 : 93750000     Priority 5 : 93750000   
+      Priority 6 : 93750000     Priority 7 : 93750000   
+      Affinity Bit : 0x0
+        OSPF Router with ID (10.229.11.11) (Process ID 2)
+    Area 1 MPLS TE not initialized

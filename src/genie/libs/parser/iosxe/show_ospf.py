@@ -6328,12 +6328,18 @@ class ShowIpOspfMplsTrafficEngLink2Schema(MetaParser):
 class ShowIpOspfMplsTrafficEngLink2(ShowIpOspfMplsTrafficEngLink2Schema):
 
     ''' Parser for:
-        * 'show ip ospf mpls traffic-eng link'
+        * 'show ip ospf mpls traffic-eng link__'
     '''
 
     cli_command = 'show ip ospf mpls traffic-eng link__'
 
-    def cli(self, output):
+    def cli(self, output=None):
+
+        if output is None:
+            # Execute command on device
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}
@@ -6377,7 +6383,7 @@ class ShowIpOspfMplsTrafficEngLink2(ShowIpOspfMplsTrafficEngLink2Schema):
                             ' *: +(?P<band2>(\d+)))?$')
 
 
-        for line in output.splitlines():
+        for line in out.splitlines():
             line = line.strip()
 
             # OSPF Router with ID (10.4.1.1) (Process ID 1)
