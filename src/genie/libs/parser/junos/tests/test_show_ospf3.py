@@ -16,7 +16,8 @@ from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, \
                                                ShowOspf3DatabaseNetworkDetail,\
                                                ShowOspf3DatabaseLinkAdvertisingRouter,\
                                                ShowOspf3RouteNetworkExtensive,\
-                                               ShowOspf3NeighborInstanceAll
+                                               ShowOspf3NeighborInstanceAll,\
+                                               ShowOspf3RoutePrefix
 
 
 class TestShowOspf3Interface(unittest.TestCase):
@@ -4642,6 +4643,65 @@ class TestShowOspfNeighborInstanceAll(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+class TestShowOspf3RoutePrefix(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf3 route {prefix}
+    """
+
+    device = Device(name='aDevice')
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {
+        'execute.return_value':
+        '''
+        show ospf3 route 2001:30::/64   
+        Prefix                                       Path  Route      NH   Metric
+                                                     Type  Type       Type
+        2001:30::/64                                 Intra Network    IP   2       
+        NH-interface ge-0/0/4.0, NH-addr fe80::250:56ff:fe8d:351d
+    '''
+    }
+
+    golden_parsed_output = {
+        "ospf3-route-information": {
+            "ospf-topology-route-table": {
+                "ospf3-route": {
+                    "ospf3-route-entry": {
+                        "address-prefix": "2001:30::/64",
+                        "interface-cost": "2",
+                        "next-hop-type": "IP",
+                        "ospf-next-hop": {
+                            "next-hop-address": {
+                                "interface-address": "fe80::250:56ff:fe8d:351d"
+                            },
+                            "next-hop-name": {
+                                "interface-name": "ge-0/0/4.0"
+                            }
+                        },
+                        "route-path-type": "Intra",
+                        "route-type": "Network"
+                    }
+                }
+            }
+        }
+    }
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspf3RoutePrefix(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse(prefix='2001:30::/64')
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspf3RoutePrefix(device=self.device)
+        parsed_output = obj.parse(prefix='2001:30::/64')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()
