@@ -2,8 +2,10 @@
 ''' show_chassis.py
 
 Parser for the following show commands:
+    * show chassis alarms
     * show chassis fpc detail
     * show chassis environment routing-engine
+    * show chassis environment 
     * show chassis firmware
     * show chassis firmware no-forwarding
     * show chassis fpc
@@ -2010,3 +2012,380 @@ class ShowChassisRoutingEngineNoForwarding(ShowChassisRoutingEngine):
 
         return super().cli(output=out)
         
+class ShowChassisEnvironmentSchema(MetaParser):
+
+    def validate_environment_item_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('environment-item is not a list')        
+        
+        environment_item_schema = Schema({
+            Optional('class'): str,
+            Optional('comment'): str,
+            'name': str,
+            'status': str,
+            Optional('temperature'): {
+                '#text': str,
+                '@junos:celsius': str,
+            }
+        })
+
+        for item in value:
+            environment_item_schema.validate(item)
+        return value
+
+    schema = {
+        'environment-information': {
+            'environment-item': Use(validate_environment_item_list)
+        }
+    }
+
+class ShowChassisEnvironment(ShowChassisEnvironmentSchema):
+    """Parser for show chassis environment"""
+
+    cli_command = 'show chassis environment'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output    
+
+        #   Class Item                           Status     Measurement
+        #   Temp  PSM 0                          OK         25 degrees C / 77 degrees F
+        #   Fans  Fan Tray 0 Fan 1               OK         2760 RPM
+        #         PSM 1                          OK         24 degrees C / 75 degrees F
+        #         CB 0 IntakeA-Zone0             OK         39 degrees C / 102 degrees F     
+        #         PSM 4                          Check        
+        #         Fan Tray 2 Fan 2               OK         2640 RPM  
+        p1 = re.compile(r'^((?P<class>Temp|Fans) +)?(?P<name>[\s\S]+) '
+                        r'+(?P<status>OK|Check)( +(?P<measurement>[\s\S]+))?$')
+
+        # 24 degrees C / 75 degrees F
+        celsius_pattern = re.compile(r'(?P<celsius>\d+) degrees C / (?P<fahr>\d+) degrees F')
+        
+        res = {}
+        environment_item_list = []
+        class_flag = ''
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                res = {
+                    'environment-information': {
+                        'environment-item': environment_item_list
+                }}
+
+                group = m.groupdict()
+
+                # environment_item schema:
+                #         {
+                #             Optional('class'): str,
+                #             'name': str,
+                #             'status': str,
+                #             Optional('temperature'): {
+                #                 '#text': str,
+                #                 '@junos:celsius': str,
+                #             }
+                #         }
+                environment_item = {}
+
+                if group['class']:
+                    class_flag = group['class']
+                environment_item['class'] = class_flag
+                
+                environment_item['name'] = group['name'].strip()
+                environment_item['status'] = group['status'].strip()
+
+                text = group['measurement']
+
+                if text:
+                    #         CB 0 IntakeA-Zone0             OK         39 degrees C / 102 degrees F     
+                    if celsius_pattern.match(text):
+                        celsius_value = celsius_pattern.match(text).groupdict()['celsius']
+                    
+                        temperature_dict = {}
+                        temperature_dict['@junos:celsius'] = celsius_value
+                        temperature_dict['#text'] = text
+
+                        environment_item['temperature'] = temperature_dict
+                    
+                    # Fan Tray 2 Fan 2               OK         2640 RPM
+                    else:
+                        environment_item['comment'] = text
+
+                environment_item_list.append(environment_item)
+
+        return res
+
+
+class ShowChassisAlarmsSchema(MetaParser):
+    """ Schema for show chassis alarms"""
+    schema = {
+        "alarm-information": {
+            "alarm-detail": {
+                "alarm-class": str,
+                "alarm-description": str,
+                "alarm-short-description": str,
+                "alarm-time": {
+                    "#text": str,
+                },
+                "alarm-type": str
+            },
+            "alarm-summary": {
+                "active-alarm-count": str
+            }
+        },
+    }
+
+class ShowChassisAlarms(ShowChassisAlarmsSchema):
+    """Parser for show chassis alarms"""
+    cli_command = 'show chassis alarms'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # 1 alarms currently active
+        p1 = re.compile(r'^(?P<active_alarms>\d+) +alarms +currently +active$')
+
+        # Alarm time               Class  Description
+        # 2020-07-16 13:38:21 EST  Major  PSM 15 Not OK 
+        p2 = re.compile(r'^(?P<text>\S+ +\d\d\:\d\d\:\d\d +\S+) '
+                        r'+(?P<alarm_class>\S+) +(?P<description>[\s\S]+)$')
+
+        res = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                res = {
+                    "alarm-information": {
+                        "alarm-summary": {
+                            "active-alarm-count": m.groupdict()['active_alarms']
+                        }
+                    }
+                }
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                text = group['text']
+                alarm_class = group['alarm_class']
+                description = group['description']
+
+                res['alarm-information']['alarm-detail'] = {
+                    'alarm-class':alarm_class,
+                    'alarm-description':description,
+                    'alarm-short-description':description,
+                    'alarm-time':{
+                        '#text':text
+                    },
+                    "alarm-type": "Chassis"
+                }
+                continue
+
+        return res
+
+
+class ShowChassisFabricSummarySchema(MetaParser):
+
+    """
+        schema = {
+        "fm-state-information": {
+            "fm-state-item": [
+                {
+                    "plane-slot": str,
+                    "state": str,
+                    "up-time": str
+                }
+                ]
+            }
+        }"""
+
+    def validate_chassis_fm_state(value):
+        # Pass fm-state-item
+        if not isinstance(value, list):
+            raise SchemaError('fm-state-item is not a list')
+        chassis_routing_schema = Schema({
+                "plane-slot": str,
+                "state": str,
+                "up-time": str
+            })
+        # Validate each dictionary in list
+        for item in value:
+            chassis_routing_schema.validate(item)
+        return value
+
+    schema = {
+    "fm-state-information": {
+        "fm-state-item": Use(validate_chassis_fm_state)
+        }
+    }
+
+class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
+    """ Parser for:
+    * show chassis Fabric Summary
+    """
+
+    cli_command = 'show chassis Fabric Summary'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # 0      Online   34 days, 18 hours, 43 minutes, 48 seconds
+        p1 = re.compile(r'^(?P<plane_slot>\d+) +(?P<state>\S+) +(?P<up_time>[\S\s]+)$')
+
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 0      Online   34 days, 18 hours, 43 minutes, 48 seconds
+            m = p1.match(line)
+            if m:
+                fm_state_information = ret_dict.setdefault("fm-state-information", {})\
+                    .setdefault("fm-state-item", [])
+                group = m.groupdict()
+
+                fm_state_dict = {}
+                for key, value in m.groupdict().items():
+                    key = key.replace('_', '-')
+                    fm_state_dict[key] = value
+
+                fm_state_information.append(fm_state_dict)
+                continue
+        
+        return ret_dict
+
+
+class ShowChassisFabricPlaneSchema(MetaParser):
+
+    """
+        schema = {
+        "fm-plane-state-information": {
+            "fmp-plane": [
+                {
+                    "fru-name": "list",
+                    "fru-slot": "list",
+                    "pfe-link-status": "list",
+                    "pfe-slot": "list",
+                    "slot": str,
+                    "state": str
+                }
+            ]
+        }
+    }"""
+
+    def validate_chassis_fm_state(value):
+        # Pass fm-state-item
+        if not isinstance(value, list):
+            raise SchemaError('routing engine is not a list')
+        chassis_routing_schema = Schema({
+                "fru-name": list,
+                "fru-slot": list,
+                "pfe-link-status": list,
+                "pfe-slot": list,
+                "slot": str,
+                "state": str
+            })
+        # Validate each dictionary in list
+        for item in value:
+            chassis_routing_schema.validate(item)
+        return value
+
+    schema = {
+    "fm-plane-state-information": {
+        "fmp-plane": Use(validate_chassis_fm_state)
+        }
+    }
+
+class ShowChassisFabricPlane(ShowChassisFabricPlaneSchema):
+    """ Parser for:
+    * show chassis Fabric Plane
+    """
+
+    cli_command = 'show chassis Fabric Plane'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Plane 0
+        p1 = re.compile(r'^Plane +(?P<slot>\d+)$')
+
+        # Plane state: ACTIVE
+        p2 = re.compile(r'^Plane +state: +(?P<state>\S+)$')
+
+        # FPC 0
+        p3 = re.compile(r'^(?P<fpc_name>\S+) +(?P<fpc_slot>\d+)$')
+
+        # PFE 1 :Links ok
+        p4 = re.compile(r'^PFE +(?P<pfe>\d+) +:+(?P<links>[\S\s]+)$')
+
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Plane 0
+            m = p1.match(line)
+            if m:
+                fm_plane_state_information = ret_dict.setdefault("fm-plane-state-information", {})\
+                    .setdefault("fmp-plane", [])
+                group = m.groupdict()
+
+                fm_state_dict = {}
+
+                fru_name = fm_state_dict.setdefault("fru-name",[])
+                fru_slot = fm_state_dict.setdefault("fru-slot",[])
+                pfe_link_status = fm_state_dict.setdefault("pfe-link-status",[])
+                pfe_slot = fm_state_dict.setdefault("pfe-slot",[])
+
+                fm_plane_state_information.append(fm_state_dict)
+
+                fm_state_dict.update({'slot' : group['slot']})
+
+                continue
+
+            # Plane state: ACTIVE
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                
+                fm_state_dict.update({'state' : group['state']})
+                continue
+            
+            # FPC 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                fru_name.append(group['fpc_name'])
+                fru_slot.append(group['fpc_slot'])
+
+                continue
+            
+            # PFE 1 :Links ok
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pfe_link_status.append(group['links'])
+                pfe_slot.append(group['pfe'])
+
+                continue
+        
+        return ret_dict

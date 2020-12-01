@@ -1073,7 +1073,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+), +'
             r'Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +'
             r'Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +'
-            r'(?P<aged_packets>\d+),( +FIFO +errors: +(?P<output_fifo_errors>\d+), +'
+            r'(?P<aged_packets>\d+),(( +FIFO +errors: +(?P<output_fifo_errors>\d+),)? +'
             r'HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?'
             r'( +MTU +errors: +(?P<mtu_errors>\d+),?)?'
             r'( +Resource +errors: +(?P<output_resource_errors>\d+))?$')
@@ -1081,6 +1081,12 @@ class ShowInterfaces(ShowInterfacesSchema):
         # MTU errors: 0, Resource errors: 0
         p44_2 = re.compile(r'^MTU +errors: +(?P<mtu_errors>\d+), +Resource +'
             r'errors: +(?P<output_resource_errors>\d+)$')
+
+        # FIFO errors: 0, HS link CRC errors: 0, MTU errors: 0, Resource errors: 0
+        p44_3 = re.compile(r'^FIFO +errors: +(?P<output_fifo_errors>\d+), +'
+                           r'(HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?'
+                           r'( +MTU +errors: +(?P<mtu_errors>\d+),?)?'
+                           r'( +Resource +errors: +(?P<output_resource_errors>\d+))?')
 
         # Total octets                   21604601324      16828244544
         p45 = re.compile(r'^Total +octets +(?P<input_bytes>\d+) +'
@@ -1733,6 +1739,14 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # MTU errors: 0, Resource errors: 0
             m = p44_2.match(line)
+            if m:
+                group = m.groupdict()
+                output_error_list_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # FIFO errors: 0, HS link CRC errors: 0, MTU errors: 0, Resource errors: 0
+            m = p44_3.match(line)
             if m:
                 group = m.groupdict()
                 output_error_list_dict.update({k.replace('_','-'):

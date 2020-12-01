@@ -3443,8 +3443,7 @@ class ShowLispEidTableVrfIpv4DatabaseSchema(MetaParser):
         }
     }
 
-
-
+    
 # ==========================================
 # Parser for:
 #  * 'show lisp eid-table vrf {vrf} ipv4 database'
@@ -3567,6 +3566,7 @@ class ShowLispEidTableVrfUserIpv4MapCacheSchema(MetaParser):
             }
         }
     }
+
 
 # ================================================
 # Parser for:
@@ -3697,3 +3697,173 @@ class ShowLispEidTableVrfUserIpv4MapCache(ShowLispEidTableVrfUserIpv4MapCacheSch
 
 
         return lisp_dict
+
+
+# ==========================================
+# Schema for:
+#  * 'show lisp instance-id {instance_id} ethernet server'
+# ==========================================
+class ShowLispInstanceIdEthernetServerSchema(MetaParser):
+    """Schema for show lisp instance-id {instance_id} ethernet server."""
+
+    schema = {
+        "instance_id": {
+            int: {
+                "lisp": int,
+                Optional("site_name"): {
+                    str: {
+                        str: {
+                            "last_register": str,
+                            "up": str,
+                            "who_last_registered": str,
+                            "inst_id": int,
+                        }
+                    }
+                },
+            }
+        }
+    }
+
+    
+# ==========================================
+# Parser for:
+#  * 'show lisp instance-id {instance_id} ethernet server'
+# ==========================================
+class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
+    """Parser for show lisp instance-id {instance_id} ethernet server"""
+
+    cli_command = 'show lisp instance-id {instance_id} ethernet server'
+
+    def cli(self, instance_id, output=None):
+        if output is None:
+            cmd = self.cli_command.format(instance_id=instance_id)
+            out = self.device.execute(cmd)
+
+        else:
+            out = output
+
+        # =================================================
+        # Output for router lisp 0 instance-id 8188
+        # =================================================
+        # LISP Site Registration Information
+        # * = Some locators are down or unreachable
+        # # = Some registrations are sourced by reliable transport
+
+        # Site Name      Last      Up     Who Last             Inst     EID Prefix
+        #             Register         Registered           ID
+        # site_uci       never     no     --                   8188     any-mac
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c100/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c2c0/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c300/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c3a0/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.ea00/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.eac0/48
+        # ...OUTPUT OMITTED...
+
+        # Output for router lisp 0 instance-id 8188
+        instant_id_capture = re.compile(
+            r"^Output for router lisp (?P<lisp>\d+) instance-id (?P<instance_id>\d+)$"
+        )
+
+        # site_uci       never     no     --                   8188     any-mac
+        site_name_capture = re.compile(
+            r"^(?P<site_name>\S+)\s+(?P<last_register>\S+)\s+(?P<up>\S+)\s+(?P<who_last_registered>\-\-|\d+\.\d+\.\d+\.\d+\:\d+)\s+(?P<inst_id>\d+)\s+(?P<eid_prefix>any\-mac|\S+\.\S+\.\S+\d+)$"
+        )
+
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c100/48
+        lisp_info_capture = re.compile(
+            r"^(?P<last_register>\S+)\s+(?P<up>\S+)\s+(?P<who_last_registered>\d+\.\d+\.\d+\.\d+\:\d+)\s+(?P<inst_id>\d+)\s+(?P<eid_prefix>\S+\.\S+\.\S+\d+)$"
+        )
+
+        tele_info_obj = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            match = instant_id_capture.match(line)
+            if match:
+                group = match.groupdict()
+
+                # convert str to int
+                covert_list = ["lisp", "instance_id"]
+                for item in covert_list:
+                    group[item] = int(group[item])
+
+                # pull a key from group to use as new_key
+                new_key = "instance_id"
+                new_group = {group[new_key]: {}}
+
+                # update and pop new_key
+                new_group[group[new_key]].update(group)
+                new_group[group[new_key]].pop(new_key)
+
+                if not tele_info_obj.get(new_key):
+                    tele_info_obj[new_key] = {}
+
+                tele_info_obj[new_key].update(new_group)
+
+                instance_group = tele_info_obj[new_key][group[new_key]]
+
+                continue
+
+            match = site_name_capture.match(line)
+            if match:
+                group = match.groupdict()            
+                
+                # convert str to int
+                group["inst_id"] = int(group["inst_id"])
+
+                # pull a key from group to use as new_key
+                new_key = "site_name"
+                new_group = {group[new_key]: {}}
+
+                temp_site_group = new_group[group[new_key]]
+
+                # update and pop new_key
+                temp_site_group.update(group)
+                temp_site_group.pop(new_key)
+
+                if not instance_group.get(new_key):
+                    instance_group[new_key] = {}
+
+                instance_group[new_key].update({group[new_key]: {}})
+
+                site_group = instance_group[new_key][group[new_key]]
+
+                # pull a key from group to use as new_key
+                new_key = "eid_prefix"
+                new_group = {temp_site_group[new_key]: {}}
+
+                eid_group = new_group[temp_site_group[new_key]]
+
+                # update and pop new_key
+                eid_group.update(temp_site_group)
+                eid_group.pop(new_key)
+
+                site_group.update(new_group)
+
+                continue
+
+            match = lisp_info_capture.match(line)
+            if match:
+                group = match.groupdict()
+
+                # # convert str to int
+                group["inst_id"] = int(group["inst_id"])
+
+                # pull a key from group to use as new_key
+                new_key = "eid_prefix"
+                new_group = {group[new_key]: {}}
+
+                eid_group = new_group[group[new_key]]
+
+                # update and pop new_key
+                eid_group.update(group)
+                eid_group.pop(new_key)
+
+                site_group.update(new_group)
+
+                continue
+
+        return tele_info_obj
+              
