@@ -2195,4 +2195,197 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
         return res
 
 
+class ShowChassisFabricSummarySchema(MetaParser):
+
+    """
+        schema = {
+        "fm-state-information": {
+            "fm-state-item": [
+                {
+                    "plane-slot": str,
+                    "state": str,
+                    "up-time": str
+                }
+                ]
+            }
+        }"""
+
+    def validate_chassis_fm_state(value):
+        # Pass fm-state-item
+        if not isinstance(value, list):
+            raise SchemaError('fm-state-item is not a list')
+        chassis_routing_schema = Schema({
+                "plane-slot": str,
+                "state": str,
+                "up-time": str
+            })
+        # Validate each dictionary in list
+        for item in value:
+            chassis_routing_schema.validate(item)
+        return value
+
+    schema = {
+    "fm-state-information": {
+        "fm-state-item": Use(validate_chassis_fm_state)
+        }
+    }
+
+class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
+    """ Parser for:
+    * show chassis Fabric Summary
+    """
+
+    cli_command = 'show chassis Fabric Summary'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # 0      Online   34 days, 18 hours, 43 minutes, 48 seconds
+        p1 = re.compile(r'^(?P<plane_slot>\d+) +(?P<state>\S+) +(?P<up_time>[\S\s]+)$')
+
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 0      Online   34 days, 18 hours, 43 minutes, 48 seconds
+            m = p1.match(line)
+            if m:
+                fm_state_information = ret_dict.setdefault("fm-state-information", {})\
+                    .setdefault("fm-state-item", [])
+                group = m.groupdict()
+
+                fm_state_dict = {}
+                for key, value in m.groupdict().items():
+                    key = key.replace('_', '-')
+                    fm_state_dict[key] = value
+
+                fm_state_information.append(fm_state_dict)
+                continue
+        
+        return ret_dict
+
+
+class ShowChassisFabricPlaneSchema(MetaParser):
+
+    """
+        schema = {
+        "fm-plane-state-information": {
+            "fmp-plane": [
+                {
+                    "fru-name": "list",
+                    "fru-slot": "list",
+                    "pfe-link-status": "list",
+                    "pfe-slot": "list",
+                    "slot": str,
+                    "state": str
+                }
+            ]
+        }
+    }"""
+
+    def validate_chassis_fm_state(value):
+        # Pass fm-state-item
+        if not isinstance(value, list):
+            raise SchemaError('routing engine is not a list')
+        chassis_routing_schema = Schema({
+                "fru-name": list,
+                "fru-slot": list,
+                "pfe-link-status": list,
+                "pfe-slot": list,
+                "slot": str,
+                "state": str
+            })
+        # Validate each dictionary in list
+        for item in value:
+            chassis_routing_schema.validate(item)
+        return value
+
+    schema = {
+    "fm-plane-state-information": {
+        "fmp-plane": Use(validate_chassis_fm_state)
+        }
+    }
+
+class ShowChassisFabricPlane(ShowChassisFabricPlaneSchema):
+    """ Parser for:
+    * show chassis Fabric Plane
+    """
+
+    cli_command = 'show chassis Fabric Plane'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Plane 0
+        p1 = re.compile(r'^Plane +(?P<slot>\d+)$')
+
+        # Plane state: ACTIVE
+        p2 = re.compile(r'^Plane +state: +(?P<state>\S+)$')
+
+        # FPC 0
+        p3 = re.compile(r'^(?P<fpc_name>\S+) +(?P<fpc_slot>\d+)$')
+
+        # PFE 1 :Links ok
+        p4 = re.compile(r'^PFE +(?P<pfe>\d+) +:+(?P<links>[\S\s]+)$')
+
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Plane 0
+            m = p1.match(line)
+            if m:
+                fm_plane_state_information = ret_dict.setdefault("fm-plane-state-information", {})\
+                    .setdefault("fmp-plane", [])
+                group = m.groupdict()
+
+                fm_state_dict = {}
+
+                fru_name = fm_state_dict.setdefault("fru-name",[])
+                fru_slot = fm_state_dict.setdefault("fru-slot",[])
+                pfe_link_status = fm_state_dict.setdefault("pfe-link-status",[])
+                pfe_slot = fm_state_dict.setdefault("pfe-slot",[])
+
+                fm_plane_state_information.append(fm_state_dict)
+
+                fm_state_dict.update({'slot' : group['slot']})
+
+                continue
+
+            # Plane state: ACTIVE
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
                 
+                fm_state_dict.update({'state' : group['state']})
+                continue
+            
+            # FPC 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                fru_name.append(group['fpc_name'])
+                fru_slot.append(group['fpc_slot'])
+
+                continue
+            
+            # PFE 1 :Links ok
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                pfe_link_status.append(group['links'])
+                pfe_slot.append(group['pfe'])
+
+                continue
+        
+        return ret_dict
