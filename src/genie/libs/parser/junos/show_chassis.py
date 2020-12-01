@@ -982,6 +982,7 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
                     module_dict[k] = v
                 
                 chassis_modules_list.append(module_dict)
+                continue
                 
 
             # -------------------------------------------------------------------------------------
@@ -991,12 +992,117 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
             # ad1   28496 MB  StorFly - VSFA18PI032G- P1T12003591504100303 Disk 1                
             m = p_re_disk.match(line)
             if m:
-                re_disk_module_dict = {
-                    "chassis-re-disk-module": []
-                }
+                module_dict["chassis-re-disk-module"] = []
 
-                re_disk_module_list = re_disk_module_dict["chassis-re-disk-module"]
-        
+                re_disk_module_list = module_dict["chassis-re-disk-module"]
+
+                re_disk_module_item = {}
+
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    re_disk_module_item[k] = v
+
+                re_disk_module_list.append(re_disk_module_item)
+                continue
+
+
+            # -------------------------------------------------------------------------------------
+            # For chassis-re-usb-module, for example:
+            # -------------------------------------------------------------------------------------
+            # usb0 (addr 1)  EHCI root hub 0       Intel             uhub0
+            # usb0 (addr 2)  product 0x0020 32     vendor 0x8087     uhub1
+            m = p_re_usb.match(line)
+            if m:
+                module_dict["chassis-re-usb-module"] = []
+
+                re_usb_module_list = module_dict["chassis-re-usb-module"]
+
+                re_usb_module_item = {}
+
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    re_usb_module_item[k] = v
+
+                re_usb_module_list.append(re_usb_module_item)
+                continue
+
+            # -------------------------------------------------------------------------------------
+            # For chassis-re-dimm-module, for example:
+            # -------------------------------------------------------------------------------------
+            # DIMM 0         VL33B1G63F-K9SQ-KC DIE REV-0 PCB REV-0  MFR ID-ce80        
+            m = p_re_dimm.match(line)
+            if m:
+                module_dict["chassis-re-dimm-module"] = []
+
+                re_usb_dimm_list = module_dict["chassis-re-dimm-module"]
+
+                re_usb_dimm_item = {}
+
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    re_usb_dimm_item[k] = v
+
+                re_usb_dimm_list.append(re_usb_dimm_item)
+                continue
+
+            # -------------------------------------------------------------------------------------
+            # For chassis-sub-module, for example:
+            # -------------------------------------------------------------------------------------
+            # CPU            REV 12   711-045719   ABDF7304          RMPC PMB
+            # MIC 0          REV 19   750-049457   ABDJ2346          2X100GE CFP2 OTN 
+            # XLM 0          REV 14   711-046638   ABDF2862          MPC6E XL
+            m = p_sub_module.match(line)
+            if m:
+                module_dict["chassis-sub-module"] = []
+
+                re_sub_module_list = module_dict["chassis-sub-module"]
+
+                re_sub_module_item = {}
+
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    re_sub_module_item[k] = v
+                
+                re_sub_module_list.append(re_sub_module_item)
+                continue
+
+            # -------------------------------------------------------------------------------------
+            # For chassis-sub-sub-module, for example:
+            # -------------------------------------------------------------------------------------
+            # PIC 0                 BUILTIN      BUILTIN           2X100GE CFP2 OTN
+            m = p_sub_sub_module.match(line)
+            if m:
+                re_sub_module_item["chassis-sub-sub-module"] = {}
+
+                re_sub_sub_module_item = re_sub_module_item["chassis-sub-sub-module"] 
+                
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    re_sub_sub_module_item[k] = v
+                
+                re_sub_module_list.append(re_sub_sub_module_item)
+                continue
+                
+
+            # -------------------------------------------------------------------------------------
+            # For chassis-sub-sub-sub-module, for example:
+            # -------------------------------------------------------------------------------------
+            # Xcvr 0     REV 01   740-052504   UW811XC           CFP2-100G-LR4
+            m = p_sub_sub_sub_module.match(line)
+            if m:
+
+                re_sub_sub_module_item["chassis-sub-sub-sub-module"] = []
+
+                re_sub_sub_sub_module_list = re_sub_sub_module_item["chassis-sub-sub-sub-module"]
+
+                re_sub_sub_sub_module_item = {}
+
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    re_sub_sub_sub_module_item[k] = v
+                
+                re_sub_sub_sub_module_list.append(re_sub_sub_sub_module_item)
+                continue
         return res
 
                 

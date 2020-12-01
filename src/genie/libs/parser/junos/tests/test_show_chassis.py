@@ -531,7 +531,6 @@ class TestShowChassisHardwareDetail(unittest.TestCase):
                         },
                         {
                             "description": "Lower Power Midplane",
-                            "model-number": null,
                             "name": "PMP 0",
                             "part-number": "711-051406",
                             "serial-number": "ACAJ5165",
