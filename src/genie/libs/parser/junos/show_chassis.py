@@ -613,59 +613,169 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
 
 
 class ShowChassisHardwareDetailSchema(MetaParser):
-        
-    """schema = {
-    Optional("@xmlns:junos"): str,
-    "chassis-inventory": {
-        Optional("@xmlns"): str,
-        "chassis": {
-            Optional("@junos:style"): str,
-            "chassis-module": [
-                {
-                    "chassis-re-disk-module": {
+
+    ''' 
+    Schema for 'show chassis hardware detail'
+    schema = {
+        "chassis-inventory": {
+            "chassis": {
+                "chassis-module": [
+                    {
+                        Optional("chassis-re-dimm-module"): [
+                            {
+                                "die-rev": str,
+                                "mfr-id": str,
+                                "name": str,
+                                "part-number": str,
+                                "pcb-rev": str,
+                            }
+                        ],
+                        Optional("chassis-re-disk-module"): [
+                            {
+                            "description": str,
+                            "disk-size": str,
+                            "model": str,
+                            "name": str,
+                            "serial-number": str
+                            },
+                        ],
+                        Optional("chassis-re-usb-module"): [
+                            {
+                            "description": str,
+                            "name": str,
+                            "product": str,
+                            "product-number": str,
+                            "vendor": str,
+                            },
+                        ],
+                        Optional("chassis-sub-module"): [
+                            {
+                                "chassis-sub-sub-module": {
+                                    "description": str,
+                                    "name": str,
+                                    "part-number": str,
+                                    "serial-number": str,
+                                    Optional("chassis-sub-sub-sub-module"): [
+                                        "description": str,
+                                        "name": str,
+                                        "part-number": str,
+                                        "serial-number": str,
+                                        Optional("version"): str
+                                    ]
+                                },
+                                Optional("description"): str,
+                                "name": str,
+                                "part-number": str,
+                                "serial-number": str,
+                                "version": str
+                            }
+                        ],
                         "description": str,
-                        "disk-size": str,
-                        "model": str,
                         "name": str,
-                        "serial-number": str
-                    },
-                    "chassis-sub-module": [
-                        {
-                            "chassis-sub-sub-module": {
+                        Optional("part-number"): str,
+                        Optional("serial-number"): str,
+                        Optional("version"): str,
+                    }
+                ],
+                "description": str,
+                "name": str,
+                "serial-number": str
+            }
+        }
+    }
+    '''
+    
+    # Optional("chassis-re-dimm-module")
+    def validate_chassis_re_dimm_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('chassis re dimm is not a list')
+
+        chassis_re_dimm_schema = Schema(
+           {"die-rev": str,
+            "mfr-id": str,
+            "name": str,
+            "part-number": str,
+            "pcb-rev": str,}
+        )
+
+        # Validate each dictionary in list
+        for item in value:
+            chassis_re_dimm_schema.validate(item)
+        return value
+
+    # Optional("chassis-re-disk-module")
+    def validate_chassis_re_disk_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('chassis re disk is not a list')
+
+        chassis_re_disk_schema = Schema(
+            {"description": str,
+            "disk-size": str,
+            "model": str,
+            "name": str,
+            "serial-number": str}
+        )
+
+        # Validate each dictionary in list
+        for item in value:
+            chassis_re_disk_schema.validate(item)
+        return value        
+
+    # Optional("chassis-re-usb-module")
+    def validate_chassis_re_usb_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('chassis re usb is not a list')
+
+        chassis_re_usb_schema = Schema(
+            {"description": str,
+            "name": str,
+            "product": str,
+            "product-number": str,
+            "vendor": str,}
+        )
+
+        # Validate each dictionary in list
+        for item in value:
+            chassis_re_usb_schema.validate(item)
+        return value         
+
+    # Optional("chassis-sub-module")
+    def validate_chassis_sub_module_list(value):
+        
+        # ------------------------------------------------------
+        # Optional("chassis-sub-sub-sub-module")
+        def validate_chassis_sub_sub_sub_module_list(value):
+            # Pass list as value
+            if not isinstance(value, list):
+                raise SchemaError('inner chassis sub sub sub module is not a list')
+
+            chassis_sub_sub_sub_module_schema = Schema(
+                            {
                                 "description": str,
                                 "name": str,
                                 "part-number": str,
-                                "serial-number": str
-                            },
-                            "description": str,
-                            "name": str,
-                            "part-number": str,
-                            "serial-number": str,
-                            "version": str
-                        }
-                    ],
-                    "description": str,
-                    "name": str
-                }
-            ],
-            "description": str,
-            "name": str,
-            "serial-number": str
-        }
-    }
-}"""
+                                "serial-number": str,
+                                Optional("version"): str
+                            }
+                        )
+            # Validate each dictionary in list
+            for item in value:
+                chassis_sub_sub_sub_module_schema.validate(item)
+            return value
+        # ------------------------------------------------------
 
-    def validate_inner_chassis_hardware_detail_list(value):
-        # Pass firmware list as value
+        # Pass list as value
         if not isinstance(value, list):
-            raise SchemaError('inner chassis module is not a list')
-        chassis_inner_hardware_schema = Schema(
+            raise SchemaError('inner chassis sub module is not a list')
+
+        chassis_sub_module_schema = Schema(
                         {
                             Optional("chassis-sub-sub-module"): {
                                 "description": str,
                                 "name": str,
                                 "part-number": str,
-                                "serial-number": str
+                                "serial-number": str,
+                                Optional("chassis-sub-sub-sub-module"): Use(validate_chassis_sub_sub_sub_module_list)
                             },
                             Optional("description"): str,
                             "name": str,
@@ -677,7 +787,7 @@ class ShowChassisHardwareDetailSchema(MetaParser):
         )
         # Validate each dictionary in list
         for item in value:
-            chassis_inner_hardware_schema.validate(item)
+            chassis_sub_module_schema.validate(item)
         return value
 
 
@@ -686,17 +796,15 @@ class ShowChassisHardwareDetailSchema(MetaParser):
         if not isinstance(value, list):
             raise SchemaError('chassis module is not a list')
         chassis_hardware_detail_schema = Schema({
-            Optional("chassis-re-disk-module"): {
-                        "description": str,
-                        "disk-size": str,
-                        "model": str,
-                        "name": str,
-                        "serial-number": str
-                    },
-            Optional("chassis-sub-module"): Use(ShowChassisHardwareDetail.validate_inner_chassis_hardware_detail_list),
-            Optional("description"): str,
+            Optional("chassis-re-dimm-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_dimm_list),
+            Optional("chassis-re-disk-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_disk_list),
+            Optional("chassis-re-usb-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_usb_list),
+            Optional("chassis-sub-module"): Use(ShowChassisHardwareDetail.validate_chassis_sub_module_list),
+            "description": str,
             "name": str,
-            Optional("serial-number"): str
+            Optional("part-number"): str,
+            Optional("serial-number"): str,
+            Optional("version"): str,
         })
         # Validate each dictionary in list
         for item in value:
@@ -730,40 +838,95 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
         else:
             out = output
 
-        #Hardware inventory:
+        # Hardware inventory:
         p1 = re.compile(r'^Hardware +(?P<style>\S+):$')
 
-        #FPC 0                                                    Virtual FPC
-        p2 = re.compile(r'^(?P<name>(\S+\s\d+)) +(?P<description>\S+\s\S+)$')
+        # Chassis                                VM5D4C6B3599      VMX
+        p_chassis = re.compile(r'^(?P<name>Chassis) +(?P<serial_number>[A-Z\d]+)'
+                               r' +(?P<description>\S+)$')
 
-        #Routing Engine 0                                         RE-VMX
-        p3 = re.compile(r'^(?P<name>\S+\s+\S+\s+\d+) +(?P<description>\S+)$')
+        # -------------------------------------------------------------------------------------
+        # For general chassis modules, for example:
+        # -------------------------------------------------------------------------------------
+        # Midplane         REV 64   750-040240   ABAC9716          Lower Backplane
+        # Midplane 1       REV 06   711-032386   ABAC9742          Upper Backplane
+        p_module0 = re.compile(r'(?P<name>\w+( \d+)?) +(?P<version>\w+ \d+)'
+                               r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+) '
+                               r'+(?P<description>[\s\S]+)$')
+        
+        # Routing Engine 0 REV 01   740-052100   9009237267        RE-S-1800x4
+        # Routing Engine 0                                         RE-VMX
+        # CB 0                                                     VMX SCB
+        # FPC 0                                                    Virtual FPC
+        # SPMB 0           REV 04   711-041855   ABDC5673          PMB Board
+        # SFB 0            REV 06   711-044466   ABCY8621          Switch Fabric Board
+        # ADC 9            REV 21   750-043596   ABDC2129          Adapter Card
+        # Fan Tray 0       REV 01   760-052467   ACAY4748          172mm FanTray - 6 Fans
+        p_module1 = re.compile(r'^(?P<name>(Routing Engine|CB|FPC|SPMB|SFB|ADC|Fan Tray) \d+)( +(?P<version>\w+ \d+)'
+                               r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+))? '
+                               r'+(?P<description>[\s\S]+)$')
 
-        #cd0   27649 MB  VMware Virtual IDE Har 00000000000000000001 Hard Disk
-        p4 = re.compile(r'^(?P<name>\S+) +(?P<disk_size>\d+) '
-                         r'+MB +(?P<model>\S+\s+\S+\s+\S+\s+\S+) '
-                         r'+(?P<serial_number>\d+) +(?P<description>'
-                         r'\S+\s+\S+)$')
+        # Midplane
+        p_module2 = re.compile(r'^(?P<name>Midplane)$')
+        
 
-        #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-        p5 = re.compile(r'^(?P<name>\S+) +(?P<version>[\S\.\d]+ [\S\.\d]+) '
-                        r'+(?P<part_number>[\S\-]+) +(?P<serial_number>\S+)$')
+        # -------------------------------------------------------------------------------------
+        # For chassis-re-disk-module, for example:
+        # -------------------------------------------------------------------------------------
+        # ad0    3919 MB  604784               000060095234B000018D Compact Flash
+        # ad1   28496 MB  StorFly - VSFA18PI032G- P1T12003591504100303 Disk 1
+        p_re_disk = re.compile(r'^(?P<name>\w+) +(?P<disk_size>\d+) +MB +(?P<model>[\s\S]+) '
+                               r'+(?P<serial_number>[A-Z\d]{20}) +(?P<description>[\s\S]+)$')
 
-        #MIC 0                                                  Virtual
-        p6 = re.compile(r'^(?P<name>\S+ \d+) +(?P<description>\S+)$')
 
-        #PIC 0                 BUILTIN      BUILTIN           Virtual
-        p7 = re.compile(r'^(?P<name>\S+ \d+) +(?P<part_number>\S+) '
-                        r'+(?P<serial_number>\S+) +(?P<description>\S+)$')
+        # -------------------------------------------------------------------------------------
+        # For chassis-re-usb-module, for example:
+        # -------------------------------------------------------------------------------------
+        # usb0 (addr 1)  EHCI root hub 0       Intel             uhub0
+        # usb0 (addr 2)  product 0x0020 32     vendor 0x8087     uhub1
+        p_re_usb = re.compile(r'^(?P<name>usb\d +\(addr +\d\)) +(?P<product>[\s\S]+) '
+                              r'+(?P<product_number>\d+) +(?P<vendor>[\s\S]+) '
+                              r'+(?P<description>[a-z0-9]+)$')
 
-        #Chassis                                VM5D4C6B3599      VMX
-        p8 = re.compile(r'^(?P<name>\S+) +(?P<serial_number>\S+) '
-                        r'+(?P<description>\S+)$')
 
-        #Midplane
-        p9 = re.compile(r'^(?P<name>\S+)$')
+        # -------------------------------------------------------------------------------------
+        # For chassis-re-dimm-module, for example:
+        # -------------------------------------------------------------------------------------
+        # DIMM 0         VL33B1G63F-K9SQ-KC DIE REV-0 PCB REV-0  MFR ID-ce80
+        p_re_dimm = re.compile(r'^(?P<name>[A-Z\s\d]+) +(?P<part_number>[A-Z\d\-]+) '
+                               r'+(?P<die_rev>DIE REV-\d+) +(?P<pcb_rev>PCB REV-\d+) '
+                               r'+(?P<mfr_id>MFR ID\-\w+)$')
 
-        ret_dict = {}
+
+        # -------------------------------------------------------------------------------------
+        # For chassis-sub-module, for example:
+        # -------------------------------------------------------------------------------------
+        # CPU            REV 12   711-045719   ABDF7304          RMPC PMB
+        # MIC 0          REV 19   750-049457   ABDJ2346          2X100GE CFP2 OTN 
+        # XLM 0          REV 14   711-046638   ABDF2862          MPC6E XL
+        p_sub_module = re.compile(r'^(?P<name>CPU|(MIC|XLM)\s\d+)( +(?P<version>\w+ \d+)'
+                                  r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+))? '
+                                  r'+(?P<description>[\s\S]+)$')
+
+
+        # -------------------------------------------------------------------------------------
+        # For chassis-sub-sub-module, for example:
+        # -------------------------------------------------------------------------------------
+        # PIC 0                 BUILTIN      BUILTIN           2X100GE CFP2 OTN
+        p_sub_sub_module = re.compile(r'^(?P<name>PIC\s\d+)( +(?P<version>\w+ \d+)'
+                                      r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+))? '
+                                      r'+(?P<description>[\s\S]+)$')
+
+
+        # -------------------------------------------------------------------------------------
+        # For chassis-sub-sub-sub-module, for example:
+        # -------------------------------------------------------------------------------------
+        # Xcvr 0     REV 01   740-052504   UW811XC           CFP2-100G-LR4
+        p_sub_sub_sub_module = re.compile(r'^(?P<name>Xcvr\s\d+)( +(?P<version>\w+ \d+)'
+                                          r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+))? '
+                                          r'+(?P<description>[\s\S]+)$')                                      
+
+        res = {}
 
         for line in out.splitlines()[1:]:
             line = line.strip()
@@ -772,117 +935,71 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                chassis_inventory_dict = ret_dict.setdefault("chassis-inventory", {})\
-                                                            .setdefault("chassis", {})
+                res = {
+                    "chassis-inventory":{
+                        "chassis":{
+
+                        }
+                    }
+                }
+                chassis_inventory_dict = res["chassis-inventory"]["chassis"]
+
                 chassis_inventory_dict["@junos:style"] = group["style"]
+                chassis_inventory_dict["chassis-module"] = []
                 
-                chassis_entry_list = chassis_inventory_dict.setdefault("chassis-module", [])
+                chassis_modules_list = chassis_inventory_dict["chassis-module"] 
 
                 continue
 
-            #FPC 0                                                    Virtual FPC
-            m = p2.match(line)
+            # Chassis                                VM5D4C6B3599      VMX
+            m = p_chassis.match(line)
             if m:
-                group = m.groupdict()
-                if(group["name"] == "CB 0"):
-                    entry_dict = {}
-                    entry_dict["description"] = group["description"]
-                    entry_dict["name"] = group["name"]
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    chassis_inventory_dict[k] = v
 
-                    chassis_entry_list.append(entry_dict)
-                else:
-                    chassis_inner_dict1 = {}
-                    chassis_inner_dict1["description"] = group["description"]
-                    chassis_inner_dict1["name"] = group["name"]
-                continue
-
-            #Routing Engine 0                                         RE-VMX
-            m = p3.match(line)
+            # -------------------------------------------------------------------------------------
+            # For general chassis modules, for example:
+            # -------------------------------------------------------------------------------------
+            # Midplane         REV 64   750-040240   ABAC9716          Lower Backplane
+            # Midplane 1       REV 06   711-032386   ABAC9742          Upper Backplane
+            
+            # Routing Engine 0 REV 01   740-052100   9009237267        RE-S-1800x4
+            # Routing Engine 0                                         RE-VMX
+            # CB 0                                                     VMX SCB
+            # FPC 0                                                    Virtual FPC
+            # SPMB 0           REV 04   711-041855   ABDC5673          PMB Board
+            # SFB 0            REV 06   711-044466   ABCY8621          Switch Fabric Board
+            # ADC 9            REV 21   750-043596   ABDC2129          Adapter Card
+            # Fan Tray 0       REV 01   760-052467   ACAY4748          172mm FanTray - 6 Fans            
+        
+            # Midplane
+            m = p_module0.match(line) or p_module1.match(line) or p_module2.match(line)
             if m:
-                group = m.groupdict()
-                entry_dict = {}
-                entry_dict["description"] = group["description"]
-                entry_dict["name"] = group["name"]
+                module_dict = {}
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    module_dict[k] = v
+                
+                chassis_modules_list.append(module_dict)
+                
+
+            # -------------------------------------------------------------------------------------
+            # For chassis-re-disk-module, for example:
+            # -------------------------------------------------------------------------------------
+            # ad0    3919 MB  604784               000060095234B000018D Compact Flash
+            # ad1   28496 MB  StorFly - VSFA18PI032G- P1T12003591504100303 Disk 1                
+            m = p_re_disk.match(line)
+            if m:
+                re_disk_module_dict = {
+                    "chassis-re-disk-module": []
+                }
+
+                re_disk_module_list = re_disk_module_dict["chassis-re-disk-module"]
+        
+        return res
 
                 
-                continue
-
-            #cd0   27649 MB  VMware Virtual IDE Har 00000000000000000001 Hard Disk
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                re_disk_entry_dict = {}
-                re_disk_entry_dict["description"] = group["description"]
-                re_disk_entry_dict["disk-size"] = group["disk_size"]
-                re_disk_entry_dict["model"] = group["model"]
-                re_disk_entry_dict["name"] = group["name"]
-                re_disk_entry_dict["serial-number"] = group["serial_number"]
-
-                entry_dict["chassis-re-disk-module"] = re_disk_entry_dict
-                chassis_entry_list.append(entry_dict)
-                continue
-
-            #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-            m = p5.match(line)
-            if m:
-                group = m.groupdict()
-                chassis_inner_list = []
-                chassis_inner_dict = {}
-                chassis_inner_dict["name"] = group["name"]
-                chassis_inner_dict["part-number"] = group["part_number"]
-                chassis_inner_dict["serial-number"] = group["serial_number"]
-                chassis_inner_dict["version"] = group["version"]
-
-                chassis_inner_list.append(chassis_inner_dict)
-                continue
-
-            #MIC 0                                                  Virtual
-            m = p6.match(line)
-            if m:
-                group = m.groupdict()
-                chassis_inner_dict2 = {}
-                chassis_inner_dict2["description"] = group["description"]
-                chassis_inner_dict2["name"] = group["name"]
-                continue
-
-            #PIC 0                 BUILTIN      BUILTIN           Virtual
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                chassis_inner_inner_dict = {}
-                chassis_inner_inner_dict["description"] = group["description"]
-                chassis_inner_inner_dict["name"] = group["name"]
-                chassis_inner_inner_dict["part-number"] = group["part_number"]
-                chassis_inner_inner_dict["serial-number"] = group["serial_number"]
-
-                chassis_inner_dict2["chassis-sub-sub-module"] = chassis_inner_inner_dict
-                chassis_inner_list.append(chassis_inner_dict2)
-
-                chassis_inner_dict1["chassis-sub-module"] = chassis_inner_list
-
-                chassis_entry_list.append(chassis_inner_dict1)
-                continue
-
-            #Chassis                                VM5D4C6B3599      VMX
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                chassis_inventory_dict["description"] = group["description"]
-                chassis_inventory_dict["name"] = group["name"]
-                chassis_inventory_dict["serial-number"] = group["serial_number"]
-                continue
-
-            #Midplane
-            m = p9.match(line)
-            if m:
-                group = m.groupdict()
-                entry_dict = {}
-                entry_dict["name"] = group["name"]
-                chassis_entry_list.append(entry_dict)
-                continue
-
-        return ret_dict
-
 
 class ShowChassisHardwareDetailNoForwarding(ShowChassisHardwareDetail):
     """ Parser for:
