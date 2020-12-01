@@ -1303,7 +1303,7 @@ class DirSchema(MetaParser):
         'dir': {
             'dir': str,
             Any(): {
-                'files': {
+                Optional('files'): {
                     Any(): {
                         Optional('index'): str,
                         Optional('permissions'): str,
