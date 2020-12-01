@@ -129,7 +129,13 @@ class Ping(PingSchema):
                     source=source,
                     size=size,
                     count=count,
-                )
+                )                    
+            elif count and source:
+                cmd = self.cli_command[3].format(addr=addr, 
+                        source=source,
+                        count=count)
+            elif count:
+                cmd = self.cli_command[1].format(addr=addr, count=count)
             else:
                 cmd = self.cli_command[0].format(addr=addr)
             out = self.device.execute(cmd)

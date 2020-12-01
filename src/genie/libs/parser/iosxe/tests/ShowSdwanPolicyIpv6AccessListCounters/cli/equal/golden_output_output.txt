@@ -1,0 +1,4 @@
+NAME          COUNTER NAME          PACKETS     BYTES
+---------------------------------------------------------------
+acl-v6-apple  vpn1002-v6-traffic    3999853226  3260866067656
+              default_action_count  248080      22356152
