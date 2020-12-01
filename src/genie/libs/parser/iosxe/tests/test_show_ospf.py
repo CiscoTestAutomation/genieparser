@@ -39,8 +39,8 @@ from genie.libs.parser.iosxe.show_ospf import (ShowIpOspf,
                                                ShowIpOspfSegmentRoutingProtectedAdjacencies,
                                                ShowIpOspfSegmentRoutingSidDatabase,
                                                ShowIpOspfDatabaseOpaqueAreaAdvRouter,
-                                               ShowIpOspfVirtualLinksUpdate,
-                                               ShowIpOspfShamLinksUpdate)
+                                               ShowIpOspfVirtualLinks2,
+                                               ShowIpOspfShamLinks2)
 
 
 class test_show_ip_ospf_interface_brief(unittest.TestCase):
@@ -1270,10 +1270,6 @@ class test_show_ip_ospf_interface(unittest.TestCase):
         obj = ShowIpOspfInterface(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-
-        parsed_output_with_output = obj.parse(output=raw1)
-        self.assertEqual(parsed_output_with_output, self.golden_parsed_output5)
-
 
     def test_show_ip_ospf_interface_full2(self):
         
@@ -3339,7 +3335,7 @@ class test_show_ip_ospf_virtual_links(unittest.TestCase):
 # ===============================================
 # Unit test for 'show ip ospf virtual-links __'
 # ===============================================
-class test_show_ip_ospf_virtual_links_update(unittest.TestCase):
+class test_show_ip_ospf_virtual_links_2(unittest.TestCase):
 
     '''Unit test for "show ip ospf virtual-links"'''
 
@@ -3348,9 +3344,7 @@ class test_show_ip_ospf_virtual_links_update(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = \
-    {
-       "vrf":{
-          "default":{
+            {
              "address_family":{
                 "ipv4":{
                    "areas":{
@@ -3397,10 +3391,9 @@ class test_show_ip_ospf_virtual_links_update(unittest.TestCase):
                 }
              }
           }
-       }
-    }
 
-    def test_show_ip_ospf_virtual_links_update_full1(self):
+
+    def test_show_ip_ospf_virtual_links_2_full1(self):
         
         self.maxDiff = None
 
@@ -3422,14 +3415,14 @@ class test_show_ip_ospf_virtual_links_update(unittest.TestCase):
                 Last retransmission scan time is 0 msec, maximum is 0 msec
             '''
         
-        obj = ShowIpOspfVirtualLinksUpdate(device=self.device)
+        obj = ShowIpOspfVirtualLinks2(device=self.device)
         parsed_output = obj.parse(output=raw1)
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
-    def test_show_ip_ospf_virtual_links_update_empty(self):
+    def test_show_ip_ospf_virtual_links_2_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
-        obj = ShowIpOspfVirtualLinksUpdate(device=self.device)
+        obj = ShowIpOspfVirtualLinks2(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(output='')
 
@@ -3438,7 +3431,7 @@ class test_show_ip_ospf_virtual_links_update(unittest.TestCase):
 # ===============================================
 # Unit test for 'show ip ospf virtual-links __'
 # ===============================================
-class test_show_ip_ospf_sham_links_update(unittest.TestCase):
+class test_show_ip_ospf_sham_links_2(unittest.TestCase):
 
     '''Unit test for "show ip ospf virtual-links"'''
 
@@ -3447,8 +3440,6 @@ class test_show_ip_ospf_sham_links_update(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-       "vrf":{
-          "default":{
              "address_family":{
                 "ipv4":{
                    "areas":{
@@ -3490,8 +3481,6 @@ class test_show_ip_ospf_sham_links_update(unittest.TestCase):
                 }
              }
           }
-       }
-    }
 
     def test_show_ip_ospf_sham_links_full1(self):
         
@@ -3513,14 +3502,14 @@ class test_show_ip_ospf_sham_links_update(unittest.TestCase):
                 Last retransmission scan time is 0 msec, maximum is 0 msec
             '''
 
-        obj = ShowIpOspfShamLinksUpdate(device=self.device)
+        obj = ShowIpOspfShamLinks2(device=self.device)
         parsed_output = obj.parse(output=raw1)
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_ip_ospf_sham_links_empty(self):
         self.maxDiff = None
         self.device = Mock(**self.empty_output)
-        obj = ShowIpOspfShamLinks(device=self.device)
+        obj = ShowIpOspfShamLinks2(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse(output='')
 

@@ -1991,7 +1991,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                     # Execute command to get virtual-link address
                     cmd = 'show ip ospf virtual-links | i {interface}'.format(interface=interface)
-                    out = self.device.execute(cmd) if output is None else ''
+                    out = self.device.execute(cmd)
 
                     for line in out.splitlines():
                         line = line.rstrip()
@@ -2032,7 +2032,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                     # Execute command to get sham-link remote_id
                     cmd = 'show ip ospf sham-links | i {interface}'.format(interface=interface)
-                    out = self.device.execute(cmd) if output is None else ''
+                    out = self.device.execute(cmd)
 
                     for line in out.splitlines():
                         line = line.rstrip()
@@ -2070,8 +2070,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
                 # Get VRF information based on OSPF instance
                 cmd = 'show running-config | section router ospf {}'.format(instance)
-                out = self.device.execute(cmd) if output is None else ''
-                vrf = 'default'
+                out = self.device.execute(cmd)
 
                 for line in out.splitlines():
                     line = line.rstrip()
@@ -2091,6 +2090,7 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
                                 vrf = str(p.groupdict()['vrf'])
                                 break
                             else:
+                                vrf = 'default'
                                 break
 
                 # Build dictionary
@@ -2539,6 +2539,979 @@ class ShowIpOspfInterface(ShowIpOspfInterfaceSchema):
 
         return ret_dict
 
+
+
+# ============================
+# Schema for:
+#   * 'show ip ospf interface'
+#   * 'show ip ospf interface {interface}''
+# ============================
+class ShowIpOspfInterface2Schema(MetaParser):
+
+    ''' Schema for:
+        * 'show ip ospf interface__'
+    '''
+    schema ={
+                'address_family': 
+                    {Any(): 
+                        {'instance': 
+                            {Any(): 
+                                {'areas': 
+                                    {Any(): 
+                                        {Optional('interfaces'): 
+                                            {Any(): 
+                                                {'name': str,
+                                                'enable': bool,
+                                                'line_protocol': bool,
+                                                'ip_address': str,
+                                                Optional('interface_id'): int,
+                                                Optional('attached'): str,
+                                                'demand_circuit': bool,
+                                                'router_id': str,
+                                                'interface_type': str,
+                                                'bfd': 
+                                                    {'enable': bool},
+                                                Optional('if_cfg'): bool,
+                                                Optional('cost'): int,
+                                                Optional('transmit_delay'): int,
+                                                Optional('state'): str,
+                                                Optional('priority'): int,
+                                                Optional('dr_router_id'): str,
+                                                Optional('dr_ip_addr'): str,
+                                                Optional('bdr_router_id'): str,
+                                                Optional('bdr_ip_addr'): str,
+                                                Optional('hello_interval'): int,
+                                                Optional('dead_interval'): int,
+                                                Optional('wait_interval'): int,
+                                                Optional('retransmit_interval'): int,
+                                                Optional('passive'): bool,
+                                                Optional('oob_resync_timeout'): int,
+                                                Optional('hello_timer'): str,
+                                                Optional('index'): str,
+                                                Optional('flood_queue_length'): int,
+                                                Optional('next'): str,
+                                                Optional('lls'): bool,
+                                                Optional('last_flood_scan_length'): int,
+                                                Optional('max_flood_scan_length'): int,
+                                                Optional('last_flood_scan_time_msec'): int,
+                                                Optional('max_flood_scan_time_msec'): int,
+                                                Optional('total_dcbitless_lsa'): int,
+                                                Optional('donotage_lsa'): bool,
+                                                Optional('ti_lfa_protected'): bool,
+                                                Optional('ipfrr_candidate'): bool,
+                                                Optional('ipfrr_protected'): bool,
+                                                Optional('stub_host'): bool,
+                                                Optional('prefix_suppression'): bool,
+                                                Optional('ttl_security'): 
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
+                                                Optional('graceful_restart'): 
+                                                    {Any(): 
+                                                        {'type': str,
+                                                        'helper': bool}},
+                                                Optional('topology'): 
+                                                    {Any(): 
+                                                        {'cost': int,
+                                                        'disabled': bool,
+                                                        'shutdown': bool,
+                                                        'name': str}},
+                                                Optional('statistics'): 
+                                                    {Optional('adj_nbr_count'): int,
+                                                    Optional('nbr_count'): int,
+                                                    Optional('num_nbrs_suppress_hello'): int,
+                                                    },
+                                                Optional('neighbors'): 
+                                                    {Any(): 
+                                                        {Optional('dr_router_id'): str,
+                                                        Optional('bdr_router_id'): str,
+                                                        },
+                                                    },
+                                                Optional('authentication'): 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': str,
+                                                        Optional('youngest_key_id'): int,
+                                                        },
+                                                    },
+                                                Optional('teapp'): {
+                                                    Optional('topology_id'): str,
+                                                    Any(): {
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                    },
+                                                },
+                                                Optional('sr_policy_manager'): {
+                                                    'te_opaque_lsa': str,
+                                                },
+                                                Optional('sr_mpls_enabled'): bool,
+                                            },
+                                        },
+                                        Optional('virtual_links'): 
+                                            {Any(): 
+                                                {'name': str,
+                                                'enable': bool,
+                                                'line_protocol': bool,
+                                                'ip_address': str,
+                                                Optional('interface_id'): int,
+                                                Optional('attached'): str,
+                                                'demand_circuit': bool,
+                                                'router_id': str,
+                                                'interface_type': str,
+                                                'bfd': 
+                                                    {'enable': bool},
+                                                Optional('if_cfg'): bool,
+                                                Optional('cost'): int,
+                                                Optional('transmit_delay'): int,
+                                                Optional('state'): str,
+                                                Optional('priority'): int,
+                                                Optional('dr_router_id'): str,
+                                                Optional('dr_ip_addr'): str,
+                                                Optional('bdr_router_id'): str,
+                                                Optional('bdr_ip_addr'): str,
+                                                Optional('hello_interval'): int,
+                                                Optional('dead_interval'): int,
+                                                Optional('wait_interval'): int,
+                                                Optional('retransmit_interval'): int,
+                                                Optional('passive'): bool,
+                                                Optional('oob_resync_timeout'): int,
+                                                Optional('hello_timer'): str,
+                                                Optional('index'): str,
+                                                Optional('flood_queue_length'): int,
+                                                Optional('next'): str,
+                                                Optional('lls'): bool,
+                                                Optional('last_flood_scan_length'): int,
+                                                Optional('max_flood_scan_length'): int,
+                                                Optional('last_flood_scan_time_msec'): int,
+                                                Optional('max_flood_scan_time_msec'): int,
+                                                Optional('total_dcbitless_lsa'): int,
+                                                Optional('donotage_lsa'): bool,
+                                                Optional('ti_lfa_protected'): bool,
+                                                Optional('ipfrr_candidate'): bool,
+                                                Optional('ipfrr_protected'): bool,
+                                                Optional('stub_host'): bool,
+                                                Optional('prefix_suppression'): bool,
+                                                Optional('ttl_security'): 
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
+                                                Optional('graceful_restart'): 
+                                                    {Any(): 
+                                                        {'type': str,
+                                                        'helper': bool}},
+                                                Optional('topology'): 
+                                                    {Any(): 
+                                                        {'cost': int,
+                                                        'disabled': bool,
+                                                        'shutdown': bool,
+                                                        'name': str}},
+                                                Optional('statistics'): 
+                                                    {Optional('adj_nbr_count'): int,
+                                                    Optional('nbr_count'): int,
+                                                    Optional('num_nbrs_suppress_hello'): int,
+                                                    },
+                                                Optional('neighbors'): 
+                                                    {Any(): 
+                                                        {Optional('dr_router_id'): str,
+                                                        Optional('bdr_router_id'): str,
+                                                        },
+                                                    },
+                                                Optional('authentication'): 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': str,
+                                                        Optional('youngest_key_id'): int,
+                                                        },
+                                                    },
+                                                Optional('teapp'): {
+                                                    Optional('topology_id'): str,
+                                                    Any(): {
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                    },
+                                                },
+                                                Optional('sr_policy_manager'): {
+                                                    'te_opaque_lsa': str,
+                                                },
+                                                Optional('sr_mpls_enabled'): bool,
+                                            },
+                                        },
+                                        Optional('sham_links'): 
+                                            {Any(): 
+                                                {'name': str,
+                                                'enable': bool,
+                                                'line_protocol': bool,
+                                                'ip_address': str,
+                                                Optional('interface_id'): int,
+                                                Optional('attached'): str,
+                                                'demand_circuit': bool,
+                                                'router_id': str,
+                                                'interface_type': str,
+                                                'bfd': 
+                                                    {'enable': bool},
+                                                Optional('if_cfg'): bool,
+                                                Optional('cost'): int,
+                                                Optional('transmit_delay'): int,
+                                                Optional('state'): str,
+                                                Optional('priority'): int,
+                                                Optional('dr_router_id'): str,
+                                                Optional('dr_ip_addr'): str,
+                                                Optional('bdr_router_id'): str,
+                                                Optional('bdr_ip_addr'): str,
+                                                Optional('hello_interval'): int,
+                                                Optional('dead_interval'): int,
+                                                Optional('wait_interval'): int,
+                                                Optional('retransmit_interval'): int,
+                                                Optional('passive'): bool,
+                                                Optional('oob_resync_timeout'): int,
+                                                Optional('hello_timer'): str,
+                                                Optional('index'): str,
+                                                Optional('flood_queue_length'): int,
+                                                Optional('next'): str,
+                                                Optional('lls'): bool,
+                                                Optional('last_flood_scan_length'): int,
+                                                Optional('max_flood_scan_length'): int,
+                                                Optional('last_flood_scan_time_msec'): int,
+                                                Optional('max_flood_scan_time_msec'): int,
+                                                Optional('total_dcbitless_lsa'): int,
+                                                Optional('donotage_lsa'): bool,
+                                                Optional('ti_lfa_protected'): bool,
+                                                Optional('ipfrr_candidate'): bool,
+                                                Optional('ipfrr_protected'): bool,
+                                                Optional('stub_host'): bool,
+                                                Optional('prefix_suppression'): bool,
+                                                Optional('ttl_security'): 
+                                                    {'enable': bool,
+                                                    Optional('hops'): int},
+                                                Optional('graceful_restart'): 
+                                                    {Any(): 
+                                                        {'type': str,
+                                                        'helper': bool}},
+                                                Optional('topology'): 
+                                                    {Any(): 
+                                                        {'cost': int,
+                                                        'disabled': bool,
+                                                        'shutdown': bool,
+                                                        'name': str}},
+                                                Optional('statistics'): 
+                                                    {Optional('adj_nbr_count'): int,
+                                                    Optional('nbr_count'): int,
+                                                    Optional('num_nbrs_suppress_hello'): int},
+                                                Optional('neighbors'): 
+                                                    {Any(): 
+                                                        {Optional('dr_router_id'): str,
+                                                        Optional('bdr_router_id'): str,
+                                                        },
+                                                    },
+                                                Optional('authentication'): 
+                                                    {'auth_trailer_key': 
+                                                        {'crypto_algorithm': str,
+                                                        Optional('youngest_key_id'): int,
+                                                        },
+                                                    },
+                                                Optional('teapp'): {
+                                                    Optional('topology_id'): str,
+                                                    Any(): {
+                                                        Optional('affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                        Optional('extended_affinity'): {
+                                                            'length': int,
+                                                            'bits': str,
+                                                        },
+                                                    },
+                                                },
+                                                Optional('sr_policy_manager'): {
+                                                    'te_opaque_lsa': str,
+                                                },
+                                                Optional('sr_mpls_enabled'): bool,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            }
+
+# ===========================================
+# Parser for:
+#   * 'show ospf vrf all-inclusive interface'
+# ===========================================
+class ShowIpOspfInterface2(ShowIpOspfInterface2Schema):
+
+    ''' Parser for:
+        * 'show ip ospf interface__'
+    '''
+
+    cmd = 'show ip ospf interface__'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cmd)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        af = 'ipv4' # this is ospf - always ipv4
+
+        # Mapping dict
+        bool_dict = {'up': True, 'down': False, 'unknown': False}
+
+        
+        p1 = re.compile(r'^(?P<interface>(\S+)) +is( +administratively)?'
+                            ' +(?P<enable>(unknown|up|down)), +line +protocol'
+                            ' +is +(?P<line_protocol>(up|down))'
+                            '(?: +\(\S+\))?$')
+ 
+        p2 = re.compile(r'^Internet +Address +(?P<address>(\S+)),'
+                            '(?: +Interface +ID +(?P<intf_id>(\d+)),)?'
+                            ' +Area +(?P<area>(\S+))(?:, +Attached +via'
+                            ' +(?P<attach>(.*)))?$')
+ 
+        p2_1 = re.compile(r'^Attached +via +(?P<attached>([a-zA-Z0-9\s]+))$')
+ 
+        p3 = re.compile(r'^Process +ID +(?P<pid>(\S+)),'
+                            '(?: +VRF +(?P<vrf>(\S+)))?'
+                            ' +Router +ID +(?P<router_id>(\S+)),'
+                            ' +Network +Type +(?P<interface_type>(\S+)),'
+                            ' +Cost: +(?P<cost>(\d+))$')
+
+        p5 = re.compile(r'^Configured as demand circuit$')
+ 
+        p6 = re.compile(r'^Run as demand circuit$')
+ 
+        p7 = re.compile(r'^DoNotAge +LSA +not +allowed +\(Number +of'
+                            ' +DCbitless +LSA +is +(?P<num>(\d+))\)\.$')
+ 
+        p8 = re.compile(r'^Enabled +by +interface +config, +including'
+                            ' +secondary +ip +addresses$')
+ 
+        p9 = re.compile(r'^Transmit +Delay is +(?P<delay>(\d+)) +sec,'
+                            ' +State +(?P<state>(\S+))'
+                            '(?:, +Priority +(?P<priority>(\d+)))?'
+                            '(?:, +BFD +(?P<bfd>(enabled|disabled)))?$')
+ 
+        p10 = re.compile(r'^Designated +(R|r)outer +\(ID\)'
+                            ' +(?P<dr_router_id>(\S+)), +(I|i)nterface'
+                            ' +(A|a)ddress +(?P<dr_ip_addr>(\S+))$')
+ 
+        p11 = re.compile(r'^Backup +(D|d)esignated +(R|r)outer +\(ID\)'
+                            ' +(?P<bdr_router_id>(\S+)), +(I|i)nterface'
+                            ' +(A|a)ddress +(?P<bdr_ip_addr>(\S+))$')
+ 
+        p12 = re.compile(r'^Timer +intervals +configured,'
+                            ' +Hello +(?P<hello>(\d+)),'
+                            ' +Dead +(?P<dead>(\d+)),'
+                            ' +Wait +(?P<wait>(\d+)),'
+                            ' +Retransmit +(?P<retransmit>(\d+))$')
+ 
+        p12_1 = re.compile(r'^oob-resync +timeout +(?P<oob>(\d+))$')
+ 
+        p12_2 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
+ 
+        p13 = re.compile(r'^Supports +Link-local +Signaling +\(LLS\)$')
+ 
+        p14 = re.compile(r'^(?P<gr_type>(Cisco|IETF)) +NSF +helper +support'
+                            ' +(?P<helper>(enabled|disabled))$')
+ 
+        p15 = re.compile(r'^Index +(?P<index>(\S+)),'
+                            ' +flood +queue +length +(?P<length>(\d+))$')
+ 
+        p16 = re.compile(r'^Next +(?P<next>(\S+))$')
+ 
+        p17 = re.compile(r'^Last +flood +scan +length +is +(?P<num>(\d+)),'
+                            ' +maximum +is +(?P<max>(\d+))$')
+ 
+        p18 = re.compile(r'^Last +flood +scan +time +is +(?P<time1>(\d+))'
+                            ' +msec, +maximum +is +(?P<time2>(\d+)) +msec$')
+ 
+        p19 = re.compile(r'^Neighbor +Count +is +(?P<nbr_count>(\d+)),'
+                            ' +Adjacent +neighbor +count +is'
+                            ' +(?P<adj_nbr_count>(\d+))$')
+ 
+        p20_1 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
+                            ' +\((B|b)ackup +(D|d)esignated +(R|r)outer\)$')
+ 
+        p20_2 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
+                            ' +\((D|d)esignated +(R|r)outer\)$')
+ 
+        p20_3 = re.compile(r'^Adjacent +with +neighbor +(?P<nbr>(\S+))'
+                            ' +\(Hello suppressed\)$')
+ 
+        p21 = re.compile(r'^Suppress +hello +for +(?P<sup>(\d+))'
+                            ' +neighbor\(s\)$')
+ 
+        p22 = re.compile(r'^Loopback +interface +is +treated +as +a +stub'
+                            ' +Host$')
+ 
+        p23 = re.compile(r'^Can +be +protected +by per-+prefix +Loop-Free'
+                            ' +FastReroute$')
+ 
+        p24 = re.compile(r'^Can +be +used +for +per-prefix +Loop-Free'
+                            ' +FastReroute +repair +paths$')
+ 
+        p25 = re.compile(r'^Not +Protected +by +per-prefix +TI-LFA$')
+ 
+        p26 = re.compile(r'^Prefix-suppression +is +(?P<ps>(enabled|disabled))$')
+ 
+        p27 = re.compile(r'^Strict +TTL +checking'
+                            ' +(?P<strict_ttl>(enabled|disabled))'
+                            '(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
+ 
+        p28_1 = re.compile(r'^Simple +password +authentication +enabled$')
+ 
+        p28_2 = re.compile(r'^Cryptographic +authentication +enabled$')
+ 
+        p28_3 = re.compile(r'^Youngest +key +id +is +(?P<id>(\d+))$')
+ 
+        p28_4 = re.compile(r'^Rollover +in +progress, +(?P<num>(\d+))'
+                            ' +neighbor(s) +using +the +old +key(s):$')
+ 
+        p28_5 = re.compile(r'^key +id +1 +algorithm +MD5$')
+
+        # Segment Routing enabled for MPLS forwarding
+        p29 = re.compile(r'^Segment +Routing +enabled +for +MPLS +forwarding$')
+
+        # TEAPP:
+        p30 = re.compile(r'^TEAPP:$')
+
+        # Topology Id:0x0
+        p30_1 = re.compile(r'^Topology +Id: *(?P<topology_id>[\w]+)$')
+
+        # TEAPP:SRTE
+        p30_2 = re.compile(r'^TEAPP: *(?P<teapp>[\w]+)$')
+
+        # Affinity: length 32, bits 0x00000010
+        p30_3 = re.compile(r'^Affinity: *length +(?P<length>\d+), +bits +(?P<bits>\w+)$')
+
+        # Extended affinity: length 32, bits 0x00000010
+        p30_4 = re.compile(r'^Extended +affinity: *length +(?P<length>\d+), +bits +(?P<bits>\w+)$')
+
+        # SR Policy Manager:
+        p31 = re.compile(r'^SR +Policy +Manager:$')
+
+        # TE Opaque LSA: Source of link information OSPF
+        p31_1 = re.compile(r'^TE +Opaque +LSA: +(?P<te_opaque_lsa>[\S\s]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Loopback0 is up, line protocol is up 
+            # GigabitEthernet2 is up, line protocol is up
+            # Port-channel2.100 is administratively down, line protocol is down
+            # OSPF_SL1 is up, line protocol is up 
+            # OSPF_VL3 is up, line protocol is up 
+            # TenGigabitEthernet3/0/1 is up, line protocol is up (connected)
+            # TenGigabitEthernet1/8 is down, line protocol is down (notconnect)
+            # TenGigabitEthernet2/6.3052 is administratively down, line protocol is down (disabled)
+            # TenGigabitEthernet1/15 is down, line protocol is down (err-disabled)
+            m = p1.match(line)
+            if m:
+                interface = str(m.groupdict()['interface'])
+                enable = str(m.groupdict()['enable'])
+                line_protocol = str(m.groupdict()['line_protocol'])
+
+                # Determine if 'interface' or 'sham_link' or 'virtual_link'
+                if re.search('SL', interface):
+                    x = re.match('(?P<ignore>\S+)_SL(?P<num>(\d+))', interface)
+                    if x:
+                        intf_type = 'sham_links'
+                        name = 'SL' + str(x.groupdict()['num'])
+                elif re.search('VL', interface):
+                    x = re.match('(?P<ignore>\S+)_VL(?P<num>(\d+))', interface)
+                    if x:
+                        intf_type = 'virtual_links'
+                        name = 'VL' + str(x.groupdict()['num'])
+                else:
+                    intf_type = 'interfaces'
+                    name = interface
+                continue
+
+            # Internet Address 10.4.1.1/32, Interface ID 11, Area 0
+            # Internet Address 0.0.0.0/0, Area 0, Attached via Not Attached
+            # Internet Address 10.229.4.4/24, Area 1, Attached via Interface Enable
+            m = p2.match(line)
+            if m:
+                ip_address = str(m.groupdict()['address'])
+                area = str(IPAddress(str(m.groupdict()['area'])))
+                if m.groupdict()['intf_id']:
+                    intf_id = int(m.groupdict()['intf_id'])
+                if m.groupdict()['attach']:
+                    attached = str(m.groupdict()['attach']).lower()
+                continue
+
+            # Attached via Interface Enable
+            m = p2_1.match(line)
+            if m:
+                attached = str(m.groupdict()['attached']).lower()
+                continue
+
+            # Process ID 1, Router ID 10.64.4.4, Network Type VIRTUAL_LINK, Cost: 1
+            # Process ID 2, Router ID 10.229.11.11, Network Type SHAM_LINK, Cost: 111
+            # Process ID 1, Router ID 10.4.1.1, Network Type BROADCAST, Cost: 1
+            m = p3.match(line)
+            if m:
+                instance = str(m.groupdict()['pid'])
+                router_id = str(m.groupdict()['router_id'])
+                interface_type = str(m.groupdict()['interface_type']).lower()
+                interface_type = interface_type.replace("_", "-")
+
+                # Get interface values
+                intf_name = interface
+
+                # Build dictionary
+                if 'address_family' not in ret_dict:
+                    ret_dict['address_family'] = {}
+                if af not in ret_dict['address_family']:
+                    ret_dict['address_family'][af] = {}
+                if 'instance' not in ret_dict['address_family'][af]:
+                    ret_dict['address_family'][af]['instance'] = {}
+                if instance not in ret_dict['address_family'][af]\
+                        ['instance']:
+                    ret_dict['address_family'][af]['instance']\
+                        [instance] = {}
+                if 'areas' not in ret_dict['address_family']\
+                        [af]['instance'][instance]:
+                    ret_dict['address_family'][af]['instance']\
+                        [instance]['areas'] = {}
+                if area not in ret_dict['address_family'][af]\
+                        ['instance'][instance]['areas']:
+                    ret_dict['address_family'][af]['instance']\
+                        [instance]['areas'][area] = {}
+                if intf_type not in ret_dict['address_family']\
+                        [af]['instance'][instance]['areas'][area]:
+                    ret_dict['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type] = {}
+                if intf_name not in ret_dict['address_family'][af]\
+                        ['instance'][instance]['areas'][area][intf_type]:
+                    ret_dict['address_family'][af]['instance']\
+                        [instance]['areas'][area][intf_type][intf_name] = {}
+                
+                # Set sub_dict
+                sub_dict = ret_dict['address_family'][af]\
+                            ['instance'][instance]['areas'][area]\
+                            [intf_type][intf_name]
+                # Delete variables to avoid overwrite issues for next intf
+                del area
+                del intf_name
+                
+                # Set values found in this regex
+                sub_dict['router_id'] = router_id
+                sub_dict['interface_type'] = interface_type
+                if m.groupdict()['cost']:
+                    sub_dict['cost'] = int(m.groupdict()['cost'])
+
+                # Set default keys
+                sub_dict['demand_circuit'] = False
+                if 'bfd' not in sub_dict:
+                    sub_dict['bfd'] = {}
+                sub_dict['bfd']['enable'] = False
+
+                # Set previously parsed keys
+                try:
+                    sub_dict['name'] = name
+                    del name
+                except Exception:
+                    pass
+                try:
+                    sub_dict['ip_address'] = ip_address
+                    del ip_address
+                except Exception:
+                    pass
+                try:
+                    sub_dict['interface_id'] = intf_id
+                    del intf_id
+                except Exception:
+                    pass
+                try:
+                    sub_dict['attached'] = attached
+                    del attached
+                except Exception:
+                    pass
+                try:
+                    sub_dict['enable'] = bool_dict[enable]
+                except Exception:
+                    pass
+                try:
+                    sub_dict['line_protocol'] = bool_dict[line_protocol]
+                except Exception:
+                    pass
+                continue
+
+            # Topology-MTID    Cost    Disabled    Shutdown      Topology Name
+            #             0       1          no          no               Base
+            p4 = re.compile(r'^(?P<mtid>(\d+)) +(?P<topo_cost>(\d+))'
+                             ' +(?P<disabled>(yes|no)) +(?P<shutdown>(yes|no))'
+                             ' +(?P<topo_name>(\S+))$')
+            m = p4.match(line)
+            if m:
+                mtid = int(m.groupdict()['mtid'])
+                if 'topology' not in sub_dict:
+                    sub_dict['topology'] = {}
+                if mtid not in sub_dict['topology']:
+                    sub_dict['topology'][mtid] = {}
+                sub_dict['topology'][mtid]['cost'] = int(m.groupdict()['topo_cost'])
+                sub_dict['topology'][mtid]['name'] = str(m.groupdict()['topo_name'])
+                if 'yes' in m.groupdict()['disabled']:
+                    sub_dict['topology'][mtid]['disabled'] = True
+                else:
+                    sub_dict['topology'][mtid]['disabled'] = False
+                if 'yes' in m.groupdict()['shutdown']:
+                    sub_dict['topology'][mtid]['shutdown'] = True
+                else:
+                    sub_dict['topology'][mtid]['shutdown'] = False
+                    continue
+
+            # Configured as demand circuit
+            m = p5.match(line)
+            if m:
+                sub_dict['demand_circuit'] = True
+                continue
+
+            # Run as demand circuit
+            m = p6.match(line)
+            if m:
+                sub_dict['demand_circuit'] = True
+                continue
+
+            # DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
+            m = p7.match(line)
+            if m:
+                sub_dict['donotage_lsa'] = False
+                sub_dict['total_dcbitless_lsa'] = int(m.groupdict()['num'])
+                continue
+
+            # Enabled by interface config, including secondary ip addresses
+            m = p8.match(line)
+            if m:
+                sub_dict['if_cfg'] = True
+                continue
+
+            # Transmit Delay is 1 sec, State POINT_TO_POINT
+            # Transmit Delay is 1 sec, State DR, Priority 1
+            # Transmit Delay is 1 sec, State DR, Priority 111, BFD enabled
+            m = p9.match(line)
+            if m:
+                sub_dict['transmit_delay'] = int(m.groupdict()['delay'])
+                state = str(m.groupdict()['state']).lower()
+                state = state.replace("_", "-")
+                sub_dict['state'] = state
+                if m.groupdict()['priority']:
+                    sub_dict['priority'] = int(m.groupdict()['priority'])
+                if m.groupdict()['bfd']:
+                    if 'bfd' not in sub_dict:
+                        sub_dict['bfd'] = {}
+                    if 'enabled' in m.groupdict()['bfd']:
+                        sub_dict['bfd']['enable'] = True
+                    else:
+                        sub_dict['bfd']['enable'] = False
+                        continue
+
+            # Designated Router (ID) 10.36.3.3, Interface address 10.2.3.3
+            m = p10.match(line)
+            if m:
+                sub_dict['dr_router_id'] = str(m.groupdict()['dr_router_id'])
+                sub_dict['dr_ip_addr'] = str(m.groupdict()['dr_ip_addr'])
+                continue
+
+            # Backup Designated router (ID) 10.16.2.2, Interface address 10.2.3.2
+            m = p11.match(line)
+            if m:
+                sub_dict['bdr_router_id'] = str(m.groupdict()['bdr_router_id'])
+                sub_dict['bdr_ip_addr'] = str(m.groupdict()['bdr_ip_addr'])
+                continue
+
+            # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+            m = p12.match(line)
+            if m:
+                sub_dict['hello_interval'] = int(m.groupdict()['hello'])
+                sub_dict['dead_interval'] = int(m.groupdict()['dead'])
+                sub_dict['wait_interval'] = int(m.groupdict()['wait'])
+                sub_dict['retransmit_interval'] = int(m.groupdict()['retransmit'])
+                continue
+
+            #  oob-resync timeout 40
+            m = p12_1.match(line)
+            if m:
+                sub_dict['oob_resync_timeout'] = int(m.groupdict()['oob'])
+                continue
+            
+            # Hello due in 00:00:00
+            m = p12_2.match(line)
+            if m:
+                sub_dict['passive'] = False
+                sub_dict['hello_timer'] = str(m.groupdict()['hello_timer'])
+                continue
+
+            # Supports Link-local Signaling (LLS)
+            m = p13.match(line)
+            if m:
+                sub_dict['lls'] = True
+                continue
+            
+            # Cisco NSF helper support enabled
+            # IETF NSF helper support enabled
+            m = p14.match(line)
+            if m:
+                gr_type = str(m.groupdict()['gr_type']).lower()
+                if 'graceful_restart' not in sub_dict:
+                    sub_dict['graceful_restart'] = {}
+                if gr_type not in sub_dict['graceful_restart']:
+                    sub_dict['graceful_restart'][gr_type] = {}
+                sub_dict['graceful_restart'][gr_type]['type'] = gr_type
+                if 'enabled' in m.groupdict()['helper']:
+                    sub_dict['graceful_restart'][gr_type]['helper'] = True
+                else:
+                    sub_dict['graceful_restart'][gr_type]['helper'] = False
+                continue
+
+            # Index 2/2, flood queue length 0
+            m = p15.match(line)
+            if m:
+                sub_dict['index'] = str(m.groupdict()['index'])
+                sub_dict['flood_queue_length'] = int(m.groupdict()['length'])
+                continue
+
+            # Next 0(0)/0(0)
+            m = p16.match(line)
+            if m:
+                sub_dict['next'] = str(m.groupdict()['next'])
+                continue
+
+            # Last flood scan length is 0, maximum is 11
+            m = p17.match(line)
+            if m:
+                sub_dict['last_flood_scan_length'] = int(m.groupdict()['num'])
+                sub_dict['max_flood_scan_length'] = int(m.groupdict()['max'])
+                continue
+
+            # Last flood scan time is 0 msec, maximum is 1 msec
+            m = p18.match(line)
+            if m:
+                sub_dict['last_flood_scan_time_msec'] = \
+                    int(m.groupdict()['time1'])
+                sub_dict['max_flood_scan_time_msec'] = \
+                    int(m.groupdict()['time2'])
+                continue
+
+            # Neighbor Count is 1, Adjacent neighbor count is 1
+            m = p19.match(line)
+            if m:
+                if 'statistics' not in sub_dict:
+                    sub_dict['statistics'] = {}
+                sub_dict['statistics']['nbr_count'] = \
+                    int(m.groupdict()['nbr_count'])
+                sub_dict['statistics']['adj_nbr_count'] = \
+                    int(m.groupdict()['adj_nbr_count'])
+                continue
+
+            # Adjacent with neighbor 10.16.2.2 (Backup Designated Router)
+            m = p20_1.match(line)
+            if m:
+                neighbor = str(m.groupdict()['nbr'])
+                if 'neighbors' not in sub_dict:
+                    sub_dict['neighbors'] = {}
+                if neighbor not in sub_dict['neighbors']:
+                    sub_dict['neighbors'][neighbor] = {}
+                sub_dict['neighbors'][neighbor]['bdr_router_id'] = neighbor
+                continue
+
+            # Adjacent with neighbor 10.36.3.3 (Designated Router)
+            m = p20_2.match(line)
+            if m:
+                neighbor = str(m.groupdict()['nbr'])
+                if 'neighbors' not in sub_dict:
+                    sub_dict['neighbors'] = {}
+                if neighbor not in sub_dict['neighbors']:
+                    sub_dict['neighbors'][neighbor] = {}
+                sub_dict['neighbors'][neighbor]['dr_router_id'] = neighbor
+                continue
+
+            # Adjacent with neighbor 10.64.4.4 (Hello suppressed)
+            m = p20_3.match(line)
+            if m:
+                neighbor = str(m.groupdict()['nbr'])
+                if 'neighbors' not in sub_dict:
+                    sub_dict['neighbors'] = {}
+                if neighbor not in sub_dict['neighbors']:
+                    sub_dict['neighbors'][neighbor] = {}
+                continue
+
+            # Suppress hello for 0 neighbor(s)
+            m = p21.match(line)
+            if m:
+                if 'statistics' not in sub_dict:
+                    sub_dict['statistics'] = {}
+                sub_dict['statistics']['num_nbrs_suppress_hello'] = \
+                    int(m.groupdict()['sup'])
+                continue
+
+            # Loopback interface is treated as a stub Host
+            m = p22.match(line)
+            if m:
+                sub_dict['stub_host'] = True
+                continue
+
+            # Can be protected by per-prefix Loop-Free FastReroute
+            m = p23.match(line)
+            if m:
+                sub_dict['ipfrr_protected'] = True
+                continue
+
+            # Can be used for per-prefix Loop-Free FastReroute repair paths
+            m = p24.match(line)
+            if m:
+                sub_dict['ipfrr_candidate'] = True
+                continue
+
+            # Not Protected by per-prefix TI-LFA
+            m = p25.match(line)
+            if m:
+                sub_dict['ti_lfa_protected'] = False
+                continue
+
+            # Prefix-suppression is enabled
+            m = p26.match(line)
+            if m:
+                if 'enabled' in m.groupdict()['ps']:
+                    sub_dict['prefix_suppression'] = True
+                else:
+                    sub_dict['prefix_suppression'] = False
+
+            # Strict TTL checking enabled, up to 3 hops allowed
+            m = p27.match(line)
+            if m:
+                if 'ttl_security' not in sub_dict:
+                    sub_dict['ttl_security'] = {}
+                if 'enabled' in m.groupdict()['strict_ttl']:
+                    sub_dict['ttl_security']['enable'] = True
+                else:
+                    sub_dict['ttl_security']['enable'] = False
+                if m.groupdict()['hops']:
+                    sub_dict['ttl_security']['hops'] = int(m.groupdict()['hops'])
+                    continue
+
+            # Simple password authentication enabled
+            m = p28_1.match(line)
+            if m:
+                if 'authentication' not in sub_dict:
+                    sub_dict['authentication'] = {}
+                if 'auth_trailer_key' not in sub_dict['authentication']:
+                    sub_dict['authentication']['auth_trailer_key'] = {}
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['crypto_algorithm'] = 'simple'
+                continue
+
+            # Cryptographic authentication enabled
+            m = p28_2.match(line)
+            if m:
+                if 'authentication' not in sub_dict:
+                    sub_dict['authentication'] = {}
+                if 'auth_trailer_key' not in sub_dict['authentication']:
+                    sub_dict['authentication']['auth_trailer_key'] = {}
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['crypto_algorithm'] = 'md5'
+                continue
+
+            # Youngest key id is 2
+            m = p28_3.match(line)
+            if m:
+                if 'authentication' not in sub_dict:
+                    sub_dict['authentication'] = {}
+                if 'auth_trailer_key' not in sub_dict['authentication']:
+                    sub_dict['authentication']['auth_trailer_key'] = {}
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['youngest_key_id'] = int(m.groupdict()['id'])
+                continue
+            
+            # Rollover in progress, 1 neighbor(s) using the old key(s):
+            m = p28_4.match(line)
+            if m:
+                continue
+
+            # key id 1 algorithm MD5
+            m = p28_5.match(line)
+            if m:
+                if 'authentication' not in sub_dict:
+                    sub_dict['authentication'] = {}
+                if 'auth_trailer_key' not in sub_dict['authentication']:
+                    sub_dict['authentication']['auth_trailer_key'] = {}
+                sub_dict['authentication']['auth_trailer_key']\
+                    ['crypto_algorithm'] = 'md5'
+                continue
+
+            # Segment Routing enabled for MPLS forwarding
+            m = p29.match(line)
+            if m:
+                sub_dict.update({'sr_mpls_enabled': True})
+                continue
+
+            # TEAPP:
+            m = p30.match(line)
+            if m:
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                continue
+
+            # Topology Id:0x0
+            m = p30_1.match(line)
+            if m:
+                topology_id = m.groupdict()['topology_id']
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                teapp_dict.update({'topology_id': topology_id})
+                continue
+
+            # TEAPP:SRTE
+            m = p30_2.match(line)
+            if m:
+                teapp = m.groupdict()['teapp']
+                teapp_dict = sub_dict.setdefault('teapp', {})
+                item_dict = teapp_dict.setdefault(teapp, {})
+                continue
+
+            # Affinity: length 32, bits 0x00000010
+            m = p30_3.match(line)
+            if m:
+                length = int(m.groupdict()['length'])
+                bits = m.groupdict()['bits']
+                aff_dict = item_dict.setdefault('affinity', {})
+                aff_dict.update({'length': length})
+                aff_dict.update({'bits': bits})
+                continue
+
+            # Extended affinity: length 32, bits 0x00000010
+            m = p30_4.match(line)
+            if m:
+                length = int(m.groupdict()['length'])
+                bits = m.groupdict()['bits']
+                exa_dict = item_dict.setdefault('extended_affinity', {})
+                exa_dict.update({'length': length})
+                exa_dict.update({'bits': bits})
+                continue
+            
+            # SR Policy Manager:
+            m = p31.match(line)
+            if m:
+                mgn_dict = sub_dict.setdefault('sr_policy_manager', {})
+                continue
+
+            # TE Opaque LSA: Source of link information OSPF
+            m = p31_1.match(line)
+            if m:
+                mgn_dict.update({'te_opaque_lsa': m.groupdict()['te_opaque_lsa']})
+
+        return ret_dict
 
 # ================================
 # Super parser for:
@@ -8214,7 +9187,7 @@ class ShowIpOspfSegmentRouting(ShowIpOspfSegmentRoutingSchema):
 #   * 'show ip ospf virtual-links'
 #   * 'show ip ospf sham-links'
 # ================================
-class ShowIpOspfLinksParserUpdate(MetaParser):
+class ShowIpOspfLinksParser2(MetaParser):
 
     ''' Parser for:
         * 'show ip ospf virtual-links __'
@@ -8300,7 +9273,6 @@ class ShowIpOspfLinksParserUpdate(MetaParser):
                 sl_remote_id = vl_router_id = address
                 interface = str(m.groupdict()['interface'])
                 link_state = str(m.groupdict()['link_state'])
-                vrf = 'default'
 
                 n = re.match('(?P<ignore>\S+)_(?P<name>(S|V)L(\d+))', interface)
                 if n:
@@ -8309,14 +9281,10 @@ class ShowIpOspfLinksParserUpdate(MetaParser):
                     real_link_name = interface
 
                 # Build dict
-                if 'vrf' not in ret_dict:
-                    ret_dict['vrf'] = {}
-                if vrf not in ret_dict['vrf']:
-                    ret_dict['vrf'][vrf] = {}
-                if 'address_family' not in ret_dict['vrf'][vrf]:
-                    ret_dict['vrf'][vrf]['address_family'] = {}
-                if af not in ret_dict['vrf'][vrf]['address_family']:
-                    ret_dict['vrf'][vrf]['address_family'][af] = {}
+                if 'address_family' not in ret_dict:
+                    ret_dict['address_family'] = {}
+                if af not in ret_dict['address_family']:
+                    ret_dict['address_family'][af] = {}
                 continue
 
             # Area 1, source address 10.21.33.33
@@ -8330,17 +9298,17 @@ class ShowIpOspfLinksParserUpdate(MetaParser):
                 link_name = '{} {}'.format(source_address, sl_remote_id)
 
                 # Build dict
-                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['areas'] = {}
-                if area not in ret_dict['vrf'][vrf]['address_family'][af]['areas']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['areas'][area] = {}
-                if link_type not in  ret_dict['vrf'][vrf]['address_family'][af]['areas'][area]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['areas'][area][link_type] = {}
-                if link_name not in ret_dict['vrf'][vrf]['address_family'][af]['areas'][area][link_type]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['areas'][area][link_type][link_name] = {}
+                if 'areas' not in ret_dict['address_family'][af]:
+                    ret_dict['address_family'][af]['areas'] = {}
+                if area not in ret_dict['address_family'][af]['areas']:
+                    ret_dict['address_family'][af]['areas'][area] = {}
+                if link_type not in  ret_dict['address_family'][af]['areas'][area]:
+                    ret_dict['address_family'][af]['areas'][area][link_type] = {}
+                if link_name not in ret_dict['address_family'][af]['areas'][area][link_type]:
+                    ret_dict['address_family'][af]['areas'][area][link_type][link_name] = {}
 
                 # Set sub_dict
-                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]['areas'][area]\
+                sub_dict = ret_dict['address_family'][af]['areas'][area]\
                             [link_type][link_name]
 
                 # Set values
@@ -8397,17 +9365,17 @@ class ShowIpOspfLinksParserUpdate(MetaParser):
                 link_name = '{} {}'.format(area, vl_router_id)
 
                 # Create dict
-                if 'areas' not in ret_dict['vrf'][vrf]['address_family'][af]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['areas'] = {}
-                if area not in ret_dict['vrf'][vrf]['address_family'][af]['areas']:
-                    ret_dict['vrf'][vrf]['address_family'][af]['areas'][area] = {}
-                if link_type not in  ret_dict['vrf'][vrf]['address_family'][af]['areas'][area]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['areas'][area][link_type] = {}
-                if link_name not in ret_dict['vrf'][vrf]['address_family'][af]['areas'][area][link_type]:
-                    ret_dict['vrf'][vrf]['address_family'][af]['areas'][area][link_type][link_name] = {}
+                if 'areas' not in ret_dict['address_family'][af]:
+                    ret_dict['address_family'][af]['areas'] = {}
+                if area not in ret_dict['address_family'][af]['areas']:
+                    ret_dict['address_family'][af]['areas'][area] = {}
+                if link_type not in  ret_dict['address_family'][af]['areas'][area]:
+                    ret_dict['address_family'][af]['areas'][area][link_type] = {}
+                if link_name not in ret_dict['address_family'][af]['areas'][area][link_type]:
+                    ret_dict['address_family'][af]['areas'][area][link_type][link_name] = {}
 
                 # Set sub_dict
-                sub_dict = ret_dict['vrf'][vrf]['address_family'][af]['areas'][area]\
+                sub_dict = ret_dict['address_family'][af]['areas'][area]\
                             [link_type][link_name]
 
                 # Set values
@@ -8553,16 +9521,13 @@ class ShowIpOspfLinksParserUpdate(MetaParser):
 # Schema for:
 #   * 'show ip ospf sham-links'
 # =============================
-class ShowIpOspfShamLinksUpdateSchema(MetaParser):
+class ShowIpOspfShamLinks2Schema(MetaParser):
 
     ''' Schema for:
         * 'show ip ospf sham-links __'
     '''
 
-    schema = {
-        'vrf':
-            {Any():
-                {'address_family':
+    schema =   {'address_family':
                     {Any():
                         {'areas':
                             {Any():
@@ -8611,16 +9576,14 @@ class ShowIpOspfShamLinksUpdateSchema(MetaParser):
                                 },
                             },
                         },
-                    },
-                },
-            }
+                    }
 
 
 # =============================
 # Parser for:
 #   * 'show ip ospf sham-links'
 # =============================
-class ShowIpOspfShamLinksUpdate(ShowIpOspfShamLinksUpdateSchema, ShowIpOspfLinksParserUpdate):
+class ShowIpOspfShamLinks2(ShowIpOspfShamLinks2Schema, ShowIpOspfLinksParser2):
 
     ''' Parser for:
         * 'show ip ospf sham-links __'
@@ -8628,7 +9591,7 @@ class ShowIpOspfShamLinksUpdate(ShowIpOspfShamLinksUpdateSchema, ShowIpOspfLinks
 
     cli_command = 'show ip ospf sham-links __'
 
-    def cli(self, output):
+    def cli(self, output=None):
 
         return super().cli(cmd=self.cli_command, link_type='sham_links',output=output)
 
@@ -8637,16 +9600,14 @@ class ShowIpOspfShamLinksUpdate(ShowIpOspfShamLinksUpdateSchema, ShowIpOspfLinks
 # Schema for:
 #   * 'show ip ospf virtual-links'
 # ================================
-class ShowIpOspfVirtualLinksUpdateSchema(MetaParser):
+class ShowIpOspfVirtualLinks2Schema(MetaParser):
 
     ''' Schema for:
         * 'show ip ospf virtual-links __'
     '''
 
-    schema = {
-        'vrf':
-            {Any():
-                {'address_family':
+    schema = {  
+                'address_family':
                     {Any():
                         {'areas':
                             {Any():
@@ -8695,16 +9656,13 @@ class ShowIpOspfVirtualLinksUpdateSchema(MetaParser):
                                 },
                             },
                         },
-                    },
-                },
-            }
-
+                    }
 
 # ================================
 # Parser for:
 #   * 'show ip ospf virtual-links'
 # ================================
-class ShowIpOspfVirtualLinksUpdate(ShowIpOspfVirtualLinksUpdateSchema, ShowIpOspfLinksParserUpdate):
+class ShowIpOspfVirtualLinks2(ShowIpOspfVirtualLinks2Schema, ShowIpOspfLinksParser2):
 
     ''' Parser for:
         * 'show ip ospf virtual-links __'
@@ -8712,7 +9670,7 @@ class ShowIpOspfVirtualLinksUpdate(ShowIpOspfVirtualLinksUpdateSchema, ShowIpOsp
 
     cli_command = 'show ip ospf virtual-links __'
 
-    def cli(self, output):
+    def cli(self, output=None):
 
         return super().cli(cmd=self.cli_command, link_type='virtual_links', output=output)
 
