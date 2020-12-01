@@ -1967,7 +1967,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 group = m.groupdict()
                 ethernet_filter_statistics.update(
                     {'input-reject-destination-address-count': group['input_reject_da_count']})
-                # ethernet_filter_statistics.update({k.replace('_','-'):
                 #     v for k, v in group.items() if v is not None})
                 continue
 
