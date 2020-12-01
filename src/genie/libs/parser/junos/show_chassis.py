@@ -2243,7 +2243,7 @@ class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
         else:
             out = output
 
-        #Routing Engine 0 status:
+        # 0      Online   34 days, 18 hours, 43 minutes, 48 seconds
         p1 = re.compile(r'^(?P<plane_slot>\d+) +(?P<state>\S+) +(?P<up_time>[\S\s]+)$')
 
 
@@ -2252,7 +2252,7 @@ class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
         for line in out.splitlines():
             line = line.strip()
 
-            #Routing Engine 0 status:
+            # 0      Online   34 days, 18 hours, 43 minutes, 48 seconds
             m = p1.match(line)
             if m:
                 fm_state_information = ret_dict.setdefault("fm-state-information", {})\
