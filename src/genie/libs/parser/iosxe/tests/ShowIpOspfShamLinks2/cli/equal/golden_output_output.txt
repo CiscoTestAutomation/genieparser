@@ -1,4 +1,3 @@
-R1_ospf_xe#show ip ospf sham-links 
 Sham Link OSPF_SL0 to address 10.151.22.22 is up
 Area 1 source address 10.229.11.11
   Run as demand circuit

@@ -1,4 +1,3 @@
-R4_ospf_iosv#show ip ospf virtual-links 
 Virtual Link OSPF_VL0 to router 10.36.3.3 is up
   Run as demand circuit
   DoNotAge LSA not allowed (Number of DCbitless LSA is 7).

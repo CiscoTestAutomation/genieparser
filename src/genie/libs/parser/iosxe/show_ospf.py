@@ -9210,54 +9210,75 @@ class ShowIpOspfLinksParser2(MetaParser):
         # crypo_algorithm dict
         crypto_dict = {'cryptographic': 'md5', 'simple password': 'simple'}
 
-
+        # Sham Link OSPF_SL0 to address 10.151.22.22 is up
+        # Virtual Link OSPF_VL0 to router 10.64.4.4 is up
         p1 = re.compile(r'^(Virtual|Sham) +Link +(?P<interface>(\S+)) +to'
                             ' +(address|router) +(?P<address>(\S+)) +is'
                             ' +(?P<link_state>(up|down))$')
 
+        # Area 1, source address 10.21.33.33
+        # Area 1 source address 10.229.11.11
         p2 = re.compile(r'^Area +(?P<area>(\S+)),? +source +address'
                             ' +(?P<source_address>(\S+))$')
-
+        
+        # Run as demand circuit
         p3 = re.compile(r'^Run +as +demand +circuit$')
 
+        # DoNotAge LSA not allowed (Number of DCbitless LSA is 7).
+        # DoNotAge LSA not allowed (Number of DCbitless LSA is 1). Cost of using 111 State POINT_TO_POINT,
         p4 = re.compile(r'^DoNotAge +LSA +not +allowed'
                             ' +\(Number +of +DCbitless +LSA +is +(?P<dcbitless>(\d+))\).'
                             '(?: +Cost +of +using +(?P<cost>(\d+)))?'
                             '(?: State +(?P<state>(\S+)))?$')
 
+        # Transit area 1
+        # Transit area 1, via interface GigabitEthernet0/1
         p5 = re.compile(r'^Transit +area +(?P<area>(\S+)),'
                             '(?: +via +interface +(?P<intf>(\S+)))?$')
 
+        # Topology-MTID    Cost    Disabled     Shutdown      Topology Name
+        #             0       1          no           no               Base
         p6 = re.compile(r'^(?P<mtid>(\d+)) +(?P<topo_cost>(\d+))'
                             ' +(?P<disabled>(yes|no)) +(?P<shutdown>(yes|no))'
                             ' +(?P<topo_name>(\S+))$')
 
+        # Transmit Delay is 1 sec, State POINT_TO_POINT,
         p7 = re.compile(r'^Transmit +Delay +is +(?P<transmit_delay>(\d+))'
                             ' +sec, +State +(?P<state>(\S+)),?$')
 
+        # Timer intervals configured, Hello 3, Dead 13, Wait 13, Retransmit 5
+        # Timer intervals configured, Hello 4, Dead 16, Wait 16, Retransmit 44
+        # Timer intervals configured, Hello 10, Dead 40, Wait 40,
         p8 = re.compile(r'^Timer +intervals +configured,'
                             ' +Hello +(?P<hello>(\d+)),'
                             ' +Dead +(?P<dead>(\d+)),'
                             ' +Wait +(?P<wait>(\d+)),'
                             '(?: +Retransmit +(?P<retransmit>(\d+)))?$')
 
+        # Strict TTL checking enabled, up to 3 hops allowed
         p9 = re.compile(r'^Strict +TTL +checking'
                             ' +(?P<strict_ttl>(enabled|disabled))'
                             '(?:, +up +to +(?P<hops>(\d+)) +hops +allowed)?$')
 
+        # Hello due in 00:00:03:179
         p10 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
 
+        # Adjacency State FULL
         p11 = re.compile(r'^Adjacency +State +(?P<adj_state>(\S+))$')
 
+        # Index 1/2/2, retransmission queue length 0, number of retransmission 2
         p12 = re.compile(r'^Index +(?P<index>(\S+)), +retransmission +queue'
                             ' +length +(?P<length>(\d+)), +number +of'
                             ' +retransmission +(?P<retrans>(\d+))$')
-
+        
+        # First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
         p13 = re.compile(r'^First +(?P<first>(\S+)) +Next +(?P<next>(\S+))$')
 
+        # Last retransmission scan length is 1, maximum is 1
         p14 = re.compile(r'^Last +retransmission +scan +length +is'
                             ' +(?P<len>(\d+)), +maximum +is +(?P<max>(\d+))$')
 
+        # Last retransmission scan time is 0 msec, maximum is 0 msec
         p15 = re.compile(r'^Last +retransmission +scan +time +is'
                             ' +(?P<time>(\d+)) +msec, +maximum +is'
                             ' +(?P<max>(\d+)) +msec$')
