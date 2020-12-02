@@ -1,4 +1,3 @@
-    R1_ospf_xe#show ip ospf mpls traffic-eng link 
     OSPF Router with ID (10.4.1.1) (Process ID 1)
     Area 0 has 2 MPLS TE links. Area instance is 2.
     Links in hash bucket 8.
