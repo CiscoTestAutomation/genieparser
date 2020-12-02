@@ -1712,19 +1712,19 @@ class ShowChassisRoutingEngineSchema(MetaParser):
                 Optional("cpu-user-1min"): str,
                 Optional("cpu-user-5min"): str,
                 Optional("cpu-user-15min"): str,
-                "last-reboot-reason": str,
-                "load-average-fifteen": str,
-                "load-average-five": str,
-                "load-average-one": str,
-                "mastership-priority": str,
+                Optional("last-reboot-reason"): str,
+                Optional("load-average-fifteen"): str,
+                Optional("load-average-five"): str,
+                Optional("load-average-one"): str,
+                Optional("mastership-priority"): str,
                 "mastership-state": str,
-                "memory-buffer-utilization": str,
-                "memory-dram-size": str,
-                "memory-installed-size": str,
-                "model": str,
+                Optional("memory-buffer-utilization"): str,
+                Optional("memory-dram-size"): str,
+                Optional("memory-installed-size"): str,
+                Optional("model"): str,
                 Optional("serial-number"): str,
                 "slot": str,
-                "start-time": {
+                Optional("start-time"): {
                     "#text": str,
                     Optional("@junos:seconds"): str
                 },
@@ -1732,7 +1732,7 @@ class ShowChassisRoutingEngineSchema(MetaParser):
                 Optional("temperature"):{
                     "#text": str
                 },
-                "up-time": {
+                Optional("up-time"): {
                     "#text": str,
                     Optional("@junos:seconds"): str
                     }
