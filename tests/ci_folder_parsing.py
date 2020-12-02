@@ -487,7 +487,6 @@ if __name__ == "__main__":
     if _display_only_failed and log.root.handlers:
         temporary_screen_handler = log.root.handlers.pop(0)
     
-    OPERATING_SYSTEMS = get_operating_systems()
 
     aetest.main(
         _os=_os,
