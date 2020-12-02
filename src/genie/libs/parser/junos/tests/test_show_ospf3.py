@@ -16,7 +16,8 @@ from genie.libs.parser.junos.show_ospf3 import ShowOspf3Interface, \
                                                ShowOspf3DatabaseNetworkDetail,\
                                                ShowOspf3DatabaseLinkAdvertisingRouter,\
                                                ShowOspf3RouteNetworkExtensive,\
-                                               ShowOspf3NeighborInstanceAll
+                                               ShowOspf3NeighborInstanceAll,\
+                                               ShowOspf3RoutePrefix
 
 
 class TestShowOspf3Interface(unittest.TestCase):
@@ -4266,6 +4267,14 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
                         "interface-cost": "1",
                         "next-hop-type": "IP",
                         "ospf-area": "0.0.0.0",
+                        "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "fe80::250:56ff:fe8d:e8e8"
+                                },
+                                "next-hop-name": {
+                                    "interface-name": "ge-0/0/0.0"
+                                }
+                        },
                         "route-origin": "10.64.4.4",
                         "route-path-type": "Intra",
                         "route-priority": "medium",
@@ -4312,6 +4321,14 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
                         "interface-cost": "2",
                         "next-hop-type": "IP",
                         "ospf-area": "0.0.0.0",
+                        "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "fe80::250:56ff:fe8d:e8e8"
+                                },
+                                "next-hop-name": {
+                                    "interface-name": "ge-0/0/0.0"
+                                }
+                        },
                         "route-origin": "10.64.4.4",
                         "route-path-type": "Intra",
                         "route-priority": "medium",
@@ -4322,6 +4339,200 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
         }
     }
         
+    }
+
+    golden_output3 = {
+        'execute.return_value':
+        '''
+        show ospf3 route network extensive 
+        Prefix                                       Path  Route      NH   Metric
+                                                    Type  Type       Type
+        2001::1/128                                  Intra Network    IP   0       
+        NH-interface lo0.0
+        Area 0.0.0.0, Origin 10.4.1.1, Priority low
+        2001::2/128                                  Intra Network    IP   1       
+        NH-interface xe-0/1/0.0, NH-addr fe80::fe33:42ff:fef2:20e5
+        Area 0.0.0.0, Origin 10.16.2.2, Priority medium
+        2001::3/128                                  Intra Network    IP   2       
+        NH-interface et-0/0/0.0, NH-addr fe80::96f7:adff:fe5a:4840
+        Area 0.0.0.0, Origin 10.36.3.3, Priority medium
+        2001::4/128                                  Intra Network    IP   1       
+        NH-interface et-0/0/0.0, NH-addr fe80::96f7:adff:fe5a:4840
+        Area 0.0.0.0, Origin 10.64.4.4, Priority medium
+        2001:20::/64                                 Ext2  Network    IP   0       
+        NH-interface et-0/0/0.0, NH-addr fe80::96f7:adff:fe5a:4840
+        Area 0.0.0.0, Origin 10.36.3.3, Fwd NZ, Priority medium
+        2001:30::/64                                 Intra Network    IP   1       
+        NH-interface xe-0/1/0.0
+        Area 0.0.0.0, Origin 10.16.2.2, Priority low
+        2001:40::/64                                 Intra Network    IP   1       
+        NH-interface et-0/0/0.0
+        Area 0.0.0.0, Origin 10.64.4.4, Priority low
+        2001:50::/64                                 Intra Network    IP   2       
+        NH-interface et-0/0/0.0, NH-addr fe80::96f7:adff:fe5a:4840
+        Area 0.0.0.0, Origin 10.64.4.4, Priority medium
+    '''
+    }
+
+    golden_parsed_output3 = {
+        "ospf3-route-information": {
+            "ospf-topology-route-table": {
+                "ospf3-route": [
+                    {
+                        "ospf3-route-entry": {
+                            "address-prefix": "2001::1/128",
+                            "interface-cost": "0",
+                            "next-hop-type": "IP",
+                            "ospf-area": "0.0.0.0",
+                            "ospf-next-hop": {
+                                "next-hop-name": {
+                                    "interface-name": "lo0.0"
+                                }
+                            },
+                            "route-origin": "10.4.1.1",
+                            "route-path-type": "Intra",
+                            "route-priority": "low",
+                            "route-type": "Network"
+                        }
+                    },
+                    {
+                        "ospf3-route-entry": {
+                            "address-prefix": "2001::2/128",
+                            "interface-cost": "1",
+                            "next-hop-type": "IP",
+                            "ospf-area": "0.0.0.0",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "fe80::fe33:42ff:fef2:20e5"
+                                },
+                                "next-hop-name": {
+                                    "interface-name": "xe-0/1/0.0"
+                                }
+                            },
+                            "route-origin": "10.16.2.2",
+                            "route-path-type": "Intra",
+                            "route-priority": "medium",
+                            "route-type": "Network"
+                        }
+                    },
+                    {
+                        "ospf3-route-entry": {
+                            "address-prefix": "2001::3/128",
+                            "interface-cost": "2",
+                            "next-hop-type": "IP",
+                            "ospf-area": "0.0.0.0",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "fe80::96f7:adff:fe5a:4840"
+                                },
+                                "next-hop-name": {
+                                    "interface-name": "et-0/0/0.0"
+                                }
+                            },
+                            "route-origin": "10.36.3.3",
+                            "route-path-type": "Intra",
+                            "route-priority": "medium",
+                            "route-type": "Network"
+                        }
+                    },
+                    {
+                        "ospf3-route-entry": {
+                            "address-prefix": "2001::4/128",
+                            "interface-cost": "1",
+                            "next-hop-type": "IP",
+                            "ospf-area": "0.0.0.0",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "fe80::96f7:adff:fe5a:4840"
+                                },
+                                "next-hop-name": {
+                                    "interface-name": "et-0/0/0.0"
+                                }
+                            },
+                            "route-origin": "10.64.4.4",
+                            "route-path-type": "Intra",
+                            "route-priority": "medium",
+                            "route-type": "Network"
+                        }
+                    },
+                    {
+                        "ospf3-route-entry": {
+                            "address-prefix": "2001:20::/64",
+                            "forward": "NZ",
+                            "interface-cost": "0",
+                            "next-hop-type": "IP",
+                            "ospf-area": "0.0.0.0",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "fe80::96f7:adff:fe5a:4840"
+                                },
+                                "next-hop-name": {
+                                    "interface-name": "et-0/0/0.0"
+                                }
+                            },
+                            "route-origin": "10.36.3.3",
+                            "route-path-type": "Ext2",
+                            "route-priority": "medium",
+                            "route-type": "Network"
+                        }
+                    },
+                    {
+                        "ospf3-route-entry": {
+                            "address-prefix": "2001:30::/64",
+                            "interface-cost": "1",
+                            "next-hop-type": "IP",
+                            "ospf-area": "0.0.0.0",
+                            "ospf-next-hop": {
+                                "next-hop-name": {
+                                    "interface-name": "xe-0/1/0.0"
+                                }
+                            },
+                            "route-origin": "10.16.2.2",
+                            "route-path-type": "Intra",
+                            "route-priority": "low",
+                            "route-type": "Network"
+                        }
+                    },
+                    {
+                        "ospf3-route-entry": {
+                            "address-prefix": "2001:40::/64",
+                            "interface-cost": "1",
+                            "next-hop-type": "IP",
+                            "ospf-area": "0.0.0.0",
+                            "ospf-next-hop": {
+                                "next-hop-name": {
+                                    "interface-name": "et-0/0/0.0"
+                                }
+                            },
+                            "route-origin": "10.64.4.4",
+                            "route-path-type": "Intra",
+                            "route-priority": "low",
+                            "route-type": "Network"
+                        }
+                    },
+                    {
+                        "ospf3-route-entry": {
+                            "address-prefix": "2001:50::/64",
+                            "interface-cost": "2",
+                            "next-hop-type": "IP",
+                            "ospf-area": "0.0.0.0",
+                            "ospf-next-hop": {
+                                "next-hop-address": {
+                                    "interface-address": "fe80::96f7:adff:fe5a:4840"
+                                },
+                                "next-hop-name": {
+                                    "interface-name": "et-0/0/0.0"
+                                }
+                            },
+                            "route-origin": "10.64.4.4",
+                            "route-path-type": "Intra",
+                            "route-priority": "medium",
+                            "route-type": "Network"
+                        }
+                    }
+                ]
+            }
+        }
     }
 
     def test_empty(self):
@@ -4341,6 +4552,12 @@ class TestShowOspf3RouteNetworkExtensive(unittest.TestCase):
         obj = ShowOspf3RouteNetworkExtensive(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.device = Mock(**self.golden_output3)
+        obj = ShowOspf3RouteNetworkExtensive(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 class TestShowOspfNeighborInstanceAll(unittest.TestCase):
     """ Unit tests for:
@@ -4426,6 +4643,65 @@ class TestShowOspfNeighborInstanceAll(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+
+class TestShowOspf3RoutePrefix(unittest.TestCase):
+    """ Unit tests for:
+            * show ospf3 route {prefix}
+    """
+
+    device = Device(name='aDevice')
+
+    maxDiff = None
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {
+        'execute.return_value':
+        '''
+        show ospf3 route 2001:30::/64   
+        Prefix                                       Path  Route      NH   Metric
+                                                     Type  Type       Type
+        2001:30::/64                                 Intra Network    IP   2       
+        NH-interface ge-0/0/4.0, NH-addr fe80::250:56ff:fe8d:351d
+    '''
+    }
+
+    golden_parsed_output = {
+        "ospf3-route-information": {
+            "ospf-topology-route-table": {
+                "ospf3-route": {
+                    "ospf3-route-entry": {
+                        "address-prefix": "2001:30::/64",
+                        "interface-cost": "2",
+                        "next-hop-type": "IP",
+                        "ospf-next-hop": {
+                            "next-hop-address": {
+                                "interface-address": "fe80::250:56ff:fe8d:351d"
+                            },
+                            "next-hop-name": {
+                                "interface-name": "ge-0/0/4.0"
+                            }
+                        },
+                        "route-path-type": "Intra",
+                        "route-type": "Network"
+                    }
+                }
+            }
+        }
+    }
+
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowOspf3RoutePrefix(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse(prefix='2001:30::/64')
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspf3RoutePrefix(device=self.device)
+        parsed_output = obj.parse(prefix='2001:30::/64')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 if __name__ == '__main__':
     unittest.main()

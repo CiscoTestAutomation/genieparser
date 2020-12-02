@@ -2,7 +2,7 @@
 import unittest
 from unittest.mock import Mock
 
-# PyATS
+# pyATS
 from pyats.topology import Device
 
 # Metaparser
@@ -369,7 +369,37 @@ class TestPing(unittest.TestCase):
                         'max': '22.375',
                         'min': '1.078',
                         'stddev': '8.386'},
-                    'send': 5}}} 
+                    'send': 5}}}
+    
+
+    # ping {addr} source {source} size {size} count {count} tos {tos} rapid
+    golden_output_5 = {'execute.return_value': '''
+            ping 2.2.2.2 source 1.1.1.1 size 1452 count 5 tos 2 rapid
+            PING 2.2.2.2 (2.2.2.2): 1452 data bytes
+            !!!!!
+            --- 2.2.2.2 ping statistics ---
+            5 packets transmitted, 5 packets received, 0% packet loss
+            round-trip min/avg/max/stddev = 0.777/0.922/1.065/0.117 ms
+        '''}
+
+    golden_parsed_output_5 = {
+        "ping": {
+            "address": "2.2.2.2",
+            "data-bytes": 1452,
+            "source": "2.2.2.2",
+            "statistics": {
+                "loss-rate": 0,
+                "received": 5,
+                "round-trip": {
+                    "avg": "0.922",
+                    "max": "1.065",
+                    "min": "0.777",
+                    "stddev": "0.117"
+                },
+                "send": 5
+            }
+        }
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -404,7 +434,18 @@ class TestPing(unittest.TestCase):
             source='10.4.1.2',
             size=1400
         )
-        self.assertEqual(parsed_output, self.golden_parsed_output_4)        
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.device = Mock(**self.golden_output_5)
+        obj = Ping(device=self.device)
+        parsed_output = obj.parse(
+            addr='2.2.2.2', 
+            source='1.1.1.1', 
+            size='1452', 
+            count='5', 
+            tos=2)
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)     
 
 
 class TestPingMplsRsvp(unittest.TestCase):

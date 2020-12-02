@@ -6,7 +6,7 @@ JunOS parsers for the following show commands:
     * ping mpls rsvp {rsvp}
     * ping {addr} ttl {ttl} count {count} wait {wait}
     * ping {addr} source {source} count {count}
-    * ping {addr} source {source} size {size} do-not-fragment
+    * ping {addr} source {source} size {size} do-not-fragment count {count}
 """
 # Python
 import re
@@ -95,12 +95,13 @@ class Ping(PingSchema):
         'ping {addr} count {count}',
         'ping {addr} ttl {ttl} count {count} wait {wait}',
         'ping {addr} source {source} count {count}',
-        'ping {addr} source {source} size {size} do-not-fragment'
+        'ping {addr} source {source} size {size} do-not-fragment count {count}',
+        'ping {addr} source {source} size {size} count {count} tos {tos} rapid'
     ]
 
     def cli(self, addr, count=None, ttl=None, 
             wait=None, source=None, size=None, 
-            output=None):
+            tos=None, output=None):
 
         if not output:
             if count and ttl and wait:
@@ -109,6 +110,13 @@ class Ping(PingSchema):
                     count=count,
                     ttl=ttl,
                     wait=wait)
+            elif count and source and tos:
+                cmd = self.cli_command[5].format(
+                    addr=addr, 
+                    source=source, 
+                    size=size, 
+                    count=count, 
+                    tos=tos)
             elif count and source:
                 cmd = self.cli_command[3].format(addr=addr, 
                         source=source,
@@ -119,8 +127,15 @@ class Ping(PingSchema):
                 cmd = self.cli_command[4].format(
                     addr=addr,
                     source=source,
-                    size=size
-                )
+                    size=size,
+                    count=count,
+                )                    
+            elif count and source:
+                cmd = self.cli_command[3].format(addr=addr, 
+                        source=source,
+                        count=count)
+            elif count:
+                cmd = self.cli_command[1].format(addr=addr, count=count)
             else:
                 cmd = self.cli_command[0].format(addr=addr)
             out = self.device.execute(cmd)
@@ -210,6 +225,7 @@ class Ping(PingSchema):
                 round_trip_dict = ping_statistics_dict.setdefault('round-trip', {})
                 round_trip_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
+
         return ret_dict
 
 class PingMplsRsvpSchema(MetaParser):

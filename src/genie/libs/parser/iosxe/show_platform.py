@@ -1303,7 +1303,7 @@ class DirSchema(MetaParser):
         'dir': {
             'dir': str,
             Any(): {
-                'files': {
+                Optional('files'): {
                     Any(): {
                         Optional('index'): str,
                         Optional('permissions'): str,
@@ -2251,7 +2251,7 @@ class ShowPlatform(ShowPlatformSchema):
 
         # Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
         p1 = re.compile(r'^[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +'
-                        '(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
+                        r'(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
 
         # Mac persistency wait time: Indefinite
         p2 = re.compile(r'^[Mm]ac +persistency +wait +time\: +(?P<mac_persistency_wait_time>[\w\.\:]+)$')
@@ -2261,16 +2261,16 @@ class ShowPlatform(ShowPlatformSchema):
         #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
         #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
         p3 = re.compile(r'^(?P<switch>\d+) +(?P<ports>\d+) +'
-                        '(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
-                        '(?P<mac_address>[\w\.\:]+) +'
-                        '(?P<hw_ver>\w+) +(?P<sw_ver>[\w\.]+)$')
+                        r'(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
+                        r'(?P<mac_address>[\w\.\:]+) +'
+                        r'(?P<hw_ver>\w+) +(?P<sw_ver>[\w\.]+)$')
 
         #                                     Current
         # Switch#   Role        Priority      State
         # -------------------------------------------
         # *1       Active          3          Ready
         p4 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
-                        '(?P<priority>\d+) +(?P<state>[\w\s]+)$')
+                        r'(?P<priority>\d+) +(?P<state>[\w\s]+)$')
 
         # ----------      ASR1K    -------------
         # Chassis type: ASR1006
@@ -2281,21 +2281,22 @@ class ShowPlatform(ShowPlatformSchema):
         # 0         ASR1000-SIP40       ok                    00:33:53
         #  0/0      SPA-1XCHSTM1/OC3    ok                    2d00h
         p6 = re.compile(r'^(?P<slot>\w+)(\/(?P<subslot>\d+))? +(?P<name>\S+) +'
-                        '(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
+                        r'(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
 
         # 4                             unknown               2d00h
         p6_1 = re.compile(r'^(?P<slot>\w+) +(?P<state>\w+(\, \w+)?)'
-                          ' +(?P<insert_time>[\w\.\:]+)$')
+                          r' +(?P<insert_time>[\w\.\:]+)$')
 
         # Slot      CPLD Version        Firmware Version
         # --------- ------------------- ---------------------------------------
         # 0         00200800            16.2(1r)
         p7 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+|N\/A) +'
-                        '(?P<fireware_ver>[\w\.\(\)\/]+)$')
+                        r'(?P<fireware_ver>[\w\.\(\)\/]+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
+            # Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
             m = p1.match(line)
             if m:
                 if 'main' not in platform_dict:
@@ -2304,6 +2305,7 @@ class ShowPlatform(ShowPlatformSchema):
                 platform_dict['main']['swstack'] = True
                 continue
 
+            # Mac persistency wait time: Indefinite
             m = p2.match(line)
             if m:
                 if 'main' not in platform_dict:
@@ -2311,6 +2313,10 @@ class ShowPlatform(ShowPlatformSchema):
                 platform_dict['main']['mac_persistency_wait_time'] = m.groupdict()['mac_persistency_wait_time'].lower()
                 continue
 
+            # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
+            # ------  -----   ---------             -----------  --------------  -------       --------
+            #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
+            #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
             m = p3.match(line)
             if m:
                 slot = m.groupdict()['switch']
@@ -2337,6 +2343,10 @@ class ShowPlatform(ShowPlatformSchema):
                 platform_dict['slot'][slot][lc_type][model]['sw_ver'] = m.groupdict()['sw_ver']
                 continue
 
+            #                                     Current
+            # Switch#   Role        Priority      State
+            # -------------------------------------------
+            # *1       Active          3          Ready
             m = p4.match(line)
             if m:
                 slot = m.groupdict()['switch']
@@ -2352,6 +2362,7 @@ class ShowPlatform(ShowPlatformSchema):
                         last['state'] = m.groupdict()['state']
                 continue
 
+            # Chassis type: ASR1006
             m = p5.match(line)
             if m:
                 if 'main' not in platform_dict:
@@ -2359,6 +2370,11 @@ class ShowPlatform(ShowPlatformSchema):
                 platform_dict['main']['chassis'] = m.groupdict()['chassis']
                 continue
 
+            # Slot      Type                State                 Insert time (ago)
+            # --------- ------------------- --------------------- -----------------
+            # 0         ASR1000-SIP40       ok                    00:33:53
+            #  0/0      SPA-1XCHSTM1/OC3    ok                    2d00h
+            # 0         C8200-1N-4T         ok                    00:32:26    
             m = p6.match(line)
             if m:
                 slot = m.groupdict()['slot']
@@ -2389,7 +2405,7 @@ class ShowPlatform(ShowPlatformSchema):
                         platform_dict['slot'] = {}
                     if slot not in platform_dict['slot']:
                         platform_dict['slot'][slot] = {}
-                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name):
+                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
                         if 'R' in slot:
                             lc_type = 'rp'
                         elif re.match(r'^\d+', slot):
@@ -2419,6 +2435,9 @@ class ShowPlatform(ShowPlatformSchema):
                 sub_dict['insert_time'] = m.groupdict()['insert_time']
                 continue
 
+            # Slot      CPLD Version        Firmware Version
+            # --------- ------------------- ---------------------------------------
+            # 0         00200800            16.2(1r)
             m = p7.match(line)
             if m:
                 fw_ver = m.groupdict()['fireware_ver']
@@ -2435,6 +2454,7 @@ class ShowPlatform(ShowPlatformSchema):
                         last['fw_ver'] = m.groupdict()['fireware_ver']
                 continue
 
+            # 4                             unknown               2d00h
             m = p6_1.match(line)
             if m:
                 slot = m.groupdict()['slot']
