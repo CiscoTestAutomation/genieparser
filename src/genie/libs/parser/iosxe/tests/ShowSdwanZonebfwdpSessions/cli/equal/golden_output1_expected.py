@@ -3,13 +3,8 @@ expected_output = {
     0: {
       'session_id': 18005146,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '104.16.149.64',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '10.120.149.64',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 58328,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
@@ -27,13 +22,8 @@ expected_output = {
     1: {
       'session_id': 18005251,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '104.244.42.195',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '10.234.42.195',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 49933,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
@@ -51,13 +41,8 @@ expected_output = {
     2: {
       'session_id': 18005140,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '199.232.253.67',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '192.168.186.67',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 58322,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
@@ -75,13 +60,8 @@ expected_output = {
     3: {
       'session_id': 18005250,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '142.250.67.34',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '172.16.51.34',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 49932,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
@@ -99,13 +79,8 @@ expected_output = {
     4: {
       'session_id': 18005137,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '142.250.67.66',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '172.16.51.66',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 58319,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
@@ -123,13 +98,8 @@ expected_output = {
     5: {
       'session_id': 18005153,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '104.16.149.64',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '10.120.149.64',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 58335,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
@@ -147,13 +117,8 @@ expected_output = {
     6: {
       'session_id': 18005142,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '23.35.6.70',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '10.49.6.70',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 58324,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
@@ -171,13 +136,8 @@ expected_output = {
     7: {
       'session_id': 18004919,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '142.250.76.34',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '172.16.234.34',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 52671,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
@@ -195,13 +155,8 @@ expected_output = {
     8: {
       'session_id': 18005262,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '182.79.238.140',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '172.16.121.140',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 49944,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
@@ -219,13 +174,8 @@ expected_output = {
     9: {
       'session_id': 18005143,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '172.217.167.130',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '172.16.76.130',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 58325,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
@@ -243,13 +193,8 @@ expected_output = {
     10: {
       'session_id': 18004645,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '216.58.200.131',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '192.168.21.131',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 54733,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
@@ -267,13 +212,8 @@ expected_output = {
     11: {
       'session_id': 18005202,
       'state': 'open',
-<<<<<<< HEAD
-      'src_ip': '123.1.0.7',
-      'dst_ip': '184.31.214.50',
-=======
       'src_ip': '10.76.0.7',
       'dst_ip': '172.16.186.50',
->>>>>>> 799c9d937d73486cb4f57ca9ce89d08acb8c00fa
       'src_port': 49873,
       'dst_port': 443,
       'protocol': 'PROTO_L7_HTTPS',
