@@ -684,8 +684,9 @@ class ShowChassisHardwareDetailSchema(MetaParser):
         }
     }
     '''
-    
+    # ------------------------------------------------------
     # Optional("chassis-re-dimm-module")
+    # ------------------------------------------------------
     def validate_chassis_re_dimm_list(value):
         if not isinstance(value, list):
             raise SchemaError('chassis re dimm is not a list')
@@ -703,17 +704,21 @@ class ShowChassisHardwareDetailSchema(MetaParser):
             chassis_re_dimm_schema.validate(item)
         return value
 
+    # ------------------------------------------------------
     # Optional("chassis-re-disk-module")
+    # ------------------------------------------------------
     def validate_chassis_re_disk_list(value):
         if not isinstance(value, list):
             raise SchemaError('chassis re disk is not a list')
 
         chassis_re_disk_schema = Schema(
-            {"description": str,
-            "disk-size": str,
-            "model": str,
-            "name": str,
-            "serial-number": str}
+            {
+                "description": str,
+                "disk-size": str,
+                "model": str,
+                "name": str,
+                "serial-number": str
+            }
         )
 
         # Validate each dictionary in list
@@ -721,17 +726,21 @@ class ShowChassisHardwareDetailSchema(MetaParser):
             chassis_re_disk_schema.validate(item)
         return value        
 
+    # ------------------------------------------------------
     # Optional("chassis-re-usb-module")
+    # ------------------------------------------------------
     def validate_chassis_re_usb_list(value):
         if not isinstance(value, list):
             raise SchemaError('chassis re usb is not a list')
 
         chassis_re_usb_schema = Schema(
-            {"description": str,
-            "name": str,
-            "product": str,
-            "product-number": str,
-            "vendor": str,}
+            {
+                Optional("description"): str,
+                "name": str,
+                "product": str,
+                "product-number": str,
+                "vendor": str,
+            }
         )
 
         # Validate each dictionary in list
@@ -739,11 +748,14 @@ class ShowChassisHardwareDetailSchema(MetaParser):
             chassis_re_usb_schema.validate(item)
         return value         
 
+    # ------------------------------------------------------
     # Optional("chassis-sub-module")
+    # ------------------------------------------------------
     def validate_chassis_sub_module_list(value):
         
         # ------------------------------------------------------
         # Optional("chassis-sub-sub-sub-module")
+        # ------------------------------------------------------
         def validate_chassis_sub_sub_sub_module_list(value):
             # Pass list as value
             if not isinstance(value, list):
@@ -751,10 +763,10 @@ class ShowChassisHardwareDetailSchema(MetaParser):
 
             chassis_sub_sub_sub_module_schema = Schema(
                             {
-                                "description": str,
-                                "name": str,
-                                "part-number": str,
-                                "serial-number": str,
+                                Optional("description"): str,
+                                Optional("name"): str,
+                                Optional("part-number"): str,
+                                Optional("serial-number"): str,
                                 Optional("version"): str
                             }
                         )
@@ -762,23 +774,44 @@ class ShowChassisHardwareDetailSchema(MetaParser):
             for item in value:
                 chassis_sub_sub_sub_module_schema.validate(item)
             return value
-        # ------------------------------------------------------
+        
 
         # Pass list as value
         if not isinstance(value, list):
-            raise SchemaError('inner chassis sub module is not a list')
+            raise SchemaError('inner chassis sub sub sub module is not a list')
+
+        # ------------------------------------------------------
+        # Optional("chassis-sub-sub-module")
+        # ------------------------------------------------------
+        def validate_chassis_sub_sub_module_list(value):
+            # Pass list as value
+            if not isinstance(value, list):
+                raise SchemaError('inner chassis sub sub module is not a list')
+
+            chassis_sub_sub_module_schema = Schema(
+                            {
+                                Optional("description"): str,
+                                Optional("name"): str,
+                                Optional("part-number"): str,
+                                Optional("serial-number"): str,
+                                Optional("chassis-sub-sub-sub-module"): Use(validate_chassis_sub_sub_sub_module_list)
+                            },
+                        )
+            # Validate each dictionary in list
+            for item in value:
+                chassis_sub_sub_module_schema.validate(item)
+            return value
+        
+
+        # Pass list as value
+        if not isinstance(value, list):
+            raise SchemaError('inner chassis sub sub module is not a list')
 
         chassis_sub_module_schema = Schema(
                         {
-                            Optional("chassis-sub-sub-module"): {
-                                "description": str,
-                                "name": str,
-                                "part-number": str,
-                                "serial-number": str,
-                                Optional("chassis-sub-sub-sub-module"): Use(validate_chassis_sub_sub_sub_module_list)
-                            },
+                            Optional("chassis-sub-sub-module"): Use(validate_chassis_sub_sub_module_list),
                             Optional("description"): str,
-                            "name": str,
+                            Optional("name"): str,
                             Optional("part-number"): str,
                             Optional("serial-number"): str,
                             Optional("version"): str
@@ -800,8 +833,8 @@ class ShowChassisHardwareDetailSchema(MetaParser):
             Optional("chassis-re-disk-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_disk_list),
             Optional("chassis-re-usb-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_usb_list),
             Optional("chassis-sub-module"): Use(ShowChassisHardwareDetail.validate_chassis_sub_module_list),
-            "description": str,
-            "name": str,
+            Optional("description"): str,
+            Optional("name"): str,
             Optional("part-number"): str,
             Optional("serial-number"): str,
             Optional("version"): str,
@@ -817,10 +850,10 @@ class ShowChassisHardwareDetailSchema(MetaParser):
         Optional("@xmlns"): str,
         "chassis": {
             Optional("@junos:style"): str,
-            "chassis-module": Use(validate_chassis_hardware_detail_list),
-            "description": str,
-            "name": str,
-            "serial-number": str
+            Optional("chassis-module"): Use(validate_chassis_hardware_detail_list),
+            Optional("description"): str,
+            Optional("name"): str,
+            Optional("serial-number"): str
             }
         }
     }
@@ -850,7 +883,7 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
         # -------------------------------------------------------------------------------------
         # Midplane         REV 64   750-040240   ABAC9716          Lower Backplane
         # Midplane 1       REV 06   711-032386   ABAC9742          Upper Backplane
-        p_module0 = re.compile(r'(?P<name>\w+( \d+)?) +(?P<version>\w+ \d+)'
+        p_module0 = re.compile(r'(?P<name>Midplane( \d+)?) +(?P<version>\w+ \d+)'
                                r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+) '
                                r'+(?P<description>[\s\S]+)$')
         
@@ -862,7 +895,9 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
         # SFB 0            REV 06   711-044466   ABCY8621          Switch Fabric Board
         # ADC 9            REV 21   750-043596   ABDC2129          Adapter Card
         # Fan Tray 0       REV 01   760-052467   ACAY4748          172mm FanTray - 6 Fans
-        p_module1 = re.compile(r'^(?P<name>(Routing Engine|CB|FPC|SPMB|SFB|ADC|Fan Tray) \d+)( +(?P<version>\w+ \d+)'
+        # FPM Board        REV 13   760-040242   ABDD0194          Front Panel Display
+        # PDM 3            REV 01   740-050036   1EFD3390136       DC Power Dist Module
+        p_module1 = re.compile(r'^(?P<name>(Routing Engine|CB|FPC|SPMB|SFB|ADC|Fan Tray|FPM|PDM|PSM|PMP) (\d+|Board))( +(?P<version>\w+ \d+)'
                                r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+))? '
                                r'+(?P<description>[\s\S]+)$')
 
@@ -904,33 +939,42 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
         # CPU            REV 12   711-045719   ABDF7304          RMPC PMB
         # MIC 0          REV 19   750-049457   ABDJ2346          2X100GE CFP2 OTN 
         # XLM 0          REV 14   711-046638   ABDF2862          MPC6E XL
-        p_sub_module = re.compile(r'^(?P<name>CPU|(MIC|XLM)\s\d+)( +(?P<version>\w+ \d+)'
-                                  r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+))? '
+        p_sub_module = re.compile(r'^(?P<name>CPU|(MIC|XLM)\s\d+) +(?P<version>\w+ \d+)'
+                                  r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+) '
                                   r'+(?P<description>[\s\S]+)$')
+
+        # CPU            Rev. 1.0 RIOT-LITE    BUILTIN     
+        p_sub_module_2 = re.compile(r'(?P<name>CPU) +(?P<version>[\s\S]+) +(?P<part_number>[A-Z\-]+)'
+                                    r' +(?P<serial_number>[A-Z]+)')
+
+        # MIC 0                                                  Virtual     
+        p_sub_module_3 = re.compile(r'(?P<name>MIC\s\d+) +(?P<description>\S+)')
 
 
         # -------------------------------------------------------------------------------------
         # For chassis-sub-sub-module, for example:
         # -------------------------------------------------------------------------------------
         # PIC 0                 BUILTIN      BUILTIN           2X100GE CFP2 OTN
-        p_sub_sub_module = re.compile(r'^(?P<name>PIC\s\d+)( +(?P<version>\w+ \d+)'
-                                      r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+))? '
-                                      r'+(?P<description>[\s\S]+)$')
+        p_sub_sub_module = re.compile(r'^(?P<name>PIC\s\d+) +(?P<part_number>[A-Z]+) '
+                                      r'+(?P<serial_number>[A-Z]+) +(?P<description>[\s\S]+)$')
 
 
         # -------------------------------------------------------------------------------------
         # For chassis-sub-sub-sub-module, for example:
         # -------------------------------------------------------------------------------------
         # Xcvr 0     REV 01   740-052504   UW811XC           CFP2-100G-LR4
-        p_sub_sub_sub_module = re.compile(r'^(?P<name>Xcvr\s\d+)( +(?P<version>\w+ \d+)'
-                                          r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+))? '
-                                          r'+(?P<description>[\s\S]+)$')                                      
+        # Xcvr 5              NON-JNPR     AGM1049Q4E4       SFP-T
+        # Xcvr 8     l*       NON-JNPR     AGM17082139       SFP-T
+        # Xcvr 9     }        NON-JNPR     AGM1708212S       SFP-T
+        p_sub_sub_sub_module = re.compile(r'^(?P<name>Xcvr\s\d+)( +(?P<version>(\w+ \d+)|(\S+)))?'
+                                          r' +(?P<part_number>[\d\-]+|NON-JNPR) +(?P<serial_number>[A-Z\d]+)'
+                                          r' +(?P<description>[\s\S]+)$')                                      
 
         res = {}
 
         for line in out.splitlines()[1:]:
             line = line.strip()
-
+            
             #Hardware inventory:
             m = p1.match(line)
             if m:
@@ -956,7 +1000,9 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
             if m:
                 for k,v in m.groupdict().items():
                     k = k.replace('_', '-')
-                    chassis_inventory_dict[k] = v
+                    if v:
+                        chassis_inventory_dict[k] = v.strip()
+                continue
 
             # -------------------------------------------------------------------------------------
             # For general chassis modules, for example:
@@ -972,16 +1018,19 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
             # SFB 0            REV 06   711-044466   ABCY8621          Switch Fabric Board
             # ADC 9            REV 21   750-043596   ABDC2129          Adapter Card
             # Fan Tray 0       REV 01   760-052467   ACAY4748          172mm FanTray - 6 Fans            
-        
+            # FPM Board        REV 13   760-040242   ABDD0194          Front Panel Display
+
             # Midplane
             m = p_module0.match(line) or p_module1.match(line) or p_module2.match(line)
             if m:
                 module_dict = {}
                 for k,v in m.groupdict().items():
                     k = k.replace('_', '-')
-                    module_dict[k] = v
+                    if v:
+                        module_dict[k] = v.strip()
                 
                 chassis_modules_list.append(module_dict)
+                
                 continue
                 
 
@@ -992,7 +1041,8 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
             # ad1   28496 MB  StorFly - VSFA18PI032G- P1T12003591504100303 Disk 1                
             m = p_re_disk.match(line)
             if m:
-                module_dict["chassis-re-disk-module"] = []
+                if "chassis-re-disk-module" not in module_dict:
+                    module_dict["chassis-re-disk-module"] = []
 
                 re_disk_module_list = module_dict["chassis-re-disk-module"]
 
@@ -1000,7 +1050,8 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
 
                 for k,v in m.groupdict().items():
                     k = k.replace('_', '-')
-                    re_disk_module_item[k] = v
+                    if v:
+                        re_disk_module_item[k] = v.strip()
 
                 re_disk_module_list.append(re_disk_module_item)
                 continue
@@ -1013,7 +1064,8 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
             # usb0 (addr 2)  product 0x0020 32     vendor 0x8087     uhub1
             m = p_re_usb.match(line)
             if m:
-                module_dict["chassis-re-usb-module"] = []
+                if "chassis-re-usb-module" not in module_dict:
+                    module_dict["chassis-re-usb-module"] = []
 
                 re_usb_module_list = module_dict["chassis-re-usb-module"]
 
@@ -1021,7 +1073,8 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
 
                 for k,v in m.groupdict().items():
                     k = k.replace('_', '-')
-                    re_usb_module_item[k] = v
+                    if v:
+                        re_usb_module_item[k] = v.strip()
 
                 re_usb_module_list.append(re_usb_module_item)
                 continue
@@ -1032,7 +1085,8 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
             # DIMM 0         VL33B1G63F-K9SQ-KC DIE REV-0 PCB REV-0  MFR ID-ce80        
             m = p_re_dimm.match(line)
             if m:
-                module_dict["chassis-re-dimm-module"] = []
+                if "chassis-re-dimm-module" not in module_dict:
+                    module_dict["chassis-re-dimm-module"] = []
 
                 re_usb_dimm_list = module_dict["chassis-re-dimm-module"]
 
@@ -1040,7 +1094,8 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
 
                 for k,v in m.groupdict().items():
                     k = k.replace('_', '-')
-                    re_usb_dimm_item[k] = v
+                    if v:
+                        re_usb_dimm_item[k] = v.strip()
 
                 re_usb_dimm_list.append(re_usb_dimm_item)
                 continue
@@ -1051,19 +1106,22 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
             # CPU            REV 12   711-045719   ABDF7304          RMPC PMB
             # MIC 0          REV 19   750-049457   ABDJ2346          2X100GE CFP2 OTN 
             # XLM 0          REV 14   711-046638   ABDF2862          MPC6E XL
-            m = p_sub_module.match(line)
+            # MIC 0                                                  Virtual
+            # CPU            Rev. 1.0 RIOT-LITE    BUILTIN 
+            m = p_sub_module.match(line) or p_sub_module_2.match(line) or p_sub_module_3.match(line)
             if m:
-                module_dict["chassis-sub-module"] = []
+                if "chassis-sub-module" not in module_dict:
+                    module_dict["chassis-sub-module"] = []
 
                 re_sub_module_list = module_dict["chassis-sub-module"]
-
-                re_sub_module_item = {}
+                last_sub_sub_item = {}
 
                 for k,v in m.groupdict().items():
                     k = k.replace('_', '-')
-                    re_sub_module_item[k] = v
+                    if v:
+                        last_sub_sub_item[k] = v.strip()
                 
-                re_sub_module_list.append(re_sub_module_item)
+                re_sub_module_list.append(last_sub_sub_item)
                 continue
 
             # -------------------------------------------------------------------------------------
@@ -1072,15 +1130,22 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
             # PIC 0                 BUILTIN      BUILTIN           2X100GE CFP2 OTN
             m = p_sub_sub_module.match(line)
             if m:
-                re_sub_module_item["chassis-sub-sub-module"] = {}
+                # find the sub module
+                last_sub_item = module_dict["chassis-sub-module"][-1]
+                
+                if "chassis-sub-sub-module" not in last_sub_item:
+                    last_sub_item["chassis-sub-sub-module"] = []
+                    
+                re_sub_sub_module_item_list = last_sub_item["chassis-sub-sub-module"]
 
-                re_sub_sub_module_item = re_sub_module_item["chassis-sub-sub-module"] 
+                re_sub_sub_module_list_item = {}
                 
                 for k,v in m.groupdict().items():
                     k = k.replace('_', '-')
-                    re_sub_sub_module_item[k] = v
+                    if v:
+                        re_sub_sub_module_list_item[k] = v.strip()
+                re_sub_sub_module_item_list.append(re_sub_sub_module_list_item)
                 
-                re_sub_module_list.append(re_sub_sub_module_item)
                 continue
                 
 
@@ -1090,19 +1155,24 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
             # Xcvr 0     REV 01   740-052504   UW811XC           CFP2-100G-LR4
             m = p_sub_sub_sub_module.match(line)
             if m:
+                # the last appended item
+                last_sub_sub_item = module_dict["chassis-sub-module"][-1]["chassis-sub-sub-module"][-1]
+                
+                if "chassis-sub-sub-sub-module" not in last_sub_sub_item:
+                    last_sub_sub_item["chassis-sub-sub-sub-module"] = []
 
-                re_sub_sub_module_item["chassis-sub-sub-sub-module"] = []
-
-                re_sub_sub_sub_module_list = re_sub_sub_module_item["chassis-sub-sub-sub-module"]
+                re_sub_sub_sub_module_list = last_sub_sub_item["chassis-sub-sub-sub-module"]
 
                 re_sub_sub_sub_module_item = {}
 
                 for k,v in m.groupdict().items():
                     k = k.replace('_', '-')
-                    re_sub_sub_sub_module_item[k] = v
+                    if v:
+                        re_sub_sub_sub_module_item[k] = v.strip()
                 
                 re_sub_sub_sub_module_list.append(re_sub_sub_sub_module_item)
                 continue
+        
         return res
 
                 
