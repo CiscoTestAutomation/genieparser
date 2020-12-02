@@ -1,0 +1,13 @@
+
+        #show route table inet.3
+
+        inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        10.64.4.4/32         *[LDP/9/4] 02:30:55, metric 110
+                            > to 192.168.220.6 via ge-0/0/1.0
+        10.169.197.254/32 *[LDP/9] 02:14:05, metric 1001
+                            > to 10.49.0.1 via ge-0/0/2.0
+        192.168.36.220/32 *[LDP/9] 02:03:22, metric 1111
+                            > to 192.168.220.6 via ge-0/0/1.0, Push 307742
+    

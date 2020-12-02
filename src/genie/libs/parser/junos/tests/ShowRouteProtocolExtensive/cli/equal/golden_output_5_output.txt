@@ -1,0 +1,211 @@
+
+            show route extensive
+
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        0.0.0.0/0 (1 entry, 1 announced)
+                State: <FlashAll>
+        TSI:
+        KRT in-kernel 0.0.0.0/0 -> {10.169.14.121}
+                *OSPF   Preference: 150/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Active Int Ext>
+                        Local AS: 65171
+                        Age: 3w3d 3:19:36   Metric: 101
+                        Validation State: unverified
+                            Tag: 0
+                        Task: OSPF
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
+
+        10.1.0.0/24 (2 entries, 1 announced)
+                State: <FlashAll>
+                *Direct Preference: 0
+                        Next hop type: Interface, Next hop index: 0
+                        Address: 0xbb69254
+                        Next-hop reference count: 1
+                        Next hop: via fxp0.0, selected
+                        State: <Active Int>
+                        Local AS: 65171
+                        Age: 29w6d 21:42:46
+                        Validation State: unverified
+                        Task: IF
+                        Announcement bits (2): 5-LDP 7-Resolve tree 3
+                        AS path: I
+                OSPF   Preference: 150/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Int Ext>
+                        Inactive reason: Route Preference
+                        Local AS: 65171
+                        Age: 3w3d 3:19:36   Metric: 20
+                        Validation State: unverified
+                            Tag: 0
+                        Task: OSPF
+                        AS path: I
+
+        10.1.0.101/32 (1 entry, 1 announced)
+                State: <FlashAll>
+                *Local  Preference: 0
+                        Next hop type: Local, Next hop index: 0
+                        Address: 0xbb66c14
+                        Next-hop reference count: 14
+                        Next hop:
+                        Interface: fxp0.0
+                        State: <Active NoReadvrt Int>
+                        Local AS: 65171
+                        Age: 29w6d 21:42:46
+                        Validation State: unverified
+                        Task: IF
+                        Announcement bits (2): 5-LDP 7-Resolve tree 3
+                        AS path: I
+
+        10.36.3.3/32 (1 entry, 1 announced)
+                State: <FlashAll>
+        TSI:
+        KRT in-kernel 10.36.3.3/32 -> {10.169.14.121}
+                *OSPF   Preference: 10/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Active Int>
+                        Local AS: 65171
+                        Age: 1w0d 15:51:32  Metric: 1202
+                        Validation State: unverified
+                        Area: 0.0.0.8
+                        Task: OSPF
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
+
+        10.16.0.0/30 (1 entry, 1 announced)
+                State: <FlashAll>
+        TSI:
+        KRT in-kernel 10.16.0.0/30 -> {10.169.14.121}
+                *OSPF   Preference: 10/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Active Int>
+                        Local AS: 65171
+                        Age: 3w0d 4:46:27   Metric: 1200
+                        Validation State: unverified
+                        Area: 0.0.0.8
+                        Task: OSPF
+                        Announcement bits (3): 0-KRT 5-LDP 7-Resolve tree 3
+                        AS path: I
+
+        10.100.5.5/32 (1 entry, 1 announced)
+                State: <FlashAll>
+        TSI:
+        KRT in-kernel 10.100.5.5/32 -> {10.169.14.121}
+                *OSPF   Preference: 10/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Active Int>
+                        Local AS: 65171
+                        Age: 3w0d 4:46:27   Metric: 1201
+                        Validation State: unverified
+                        Area: 0.0.0.8
+                        Task: OSPF
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
+
+        10.220.0.0/16 (2 entries, 1 announced)
+        TSI:
+        KRT in-kernel 10.220.0.0/16 -> {indirect(1048574)}
+        Page 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)
+        Advertised metrics:
+            Flags: Nexthop Change
+            Nexthop: Self
+            MED: 12003
+            Localpref: 120
+            AS path: [65171] (65151 65000) I
+            Communities: 65001:10 65151:244
+        Path 10.220.0.0
+        from 10.169.14.240
+        Vector len 4.  Val: 1
+                *BGP    Preference: 170/-121
+                        Next hop type: Indirect, Next hop index: 0
+                        Address: 0xdbc5974
+                        Next-hop reference count: 1366
+                        Source: 10.169.14.240
+                        Next hop type: Router, Next hop index: 613
+                        Next hop: 10.169.14.121 via ge-0/0/1.0, selected
+                        Session Id: 0x141
+                        Protocol next hop: 10.169.14.240
+                        Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
+                        State: <Active Int Ext>
+                        Local AS: 65171 Peer AS: 65151
+                        Age: 3w3d 3:19:15   Metric: 12003   Metric2: 0
+                        Validation State: unverified
+                        Task: BGP_65172.16.15.14.240
+                        Announcement bits (3): 0-KRT 6-BGP_RT_Background 7-Resolve tree 3
+                        AS path: (65151 65000) I
+                        Communities: 65001:10 65151:244
+                        Accepted
+                        Localpref: 120
+                        Router ID: 10.169.14.240
+                        Indirect next hops: 1
+                                Protocol next hop: 10.169.14.240
+                                Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
+                                Indirect path forwarding next hops: 1
+                                        Next hop type: Router
+                                        Next hop: 10.169.14.121 via ge-0/0/1.0
+                                        Session Id: 0x141
+                        10.169.14.240/32 Originating RIB: inet.0
+                        Node path count: 1
+                        Forwarding nexthops: 1
+                            Nexthop: 10.169.14.121 via ge-0/0/1.0
+                            Session Id: 141
+                BGP    Preference: 170/-121
+                        Next hop type: Indirect, Next hop index: 0
+                        Address: 0xdfae654
+                        Next-hop reference count: 682
+                        Source: 10.189.5.253
+                        Next hop type: Router, Next hop index: 0
+                        Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1, selected
+                        Label element ptr: 0xc5cda38
+                        Label parent element ptr: 0x0
+                        Label element references: 14
+                        Label element child references: 10
+                        Label element lsp id: 0
+                        Session Id: 0x0
+                        Protocol next hop: 10.189.5.253
+                        Indirect next hop: 0xc285e84 - INH Session ID: 0x0
+                        State: <Int Ext Changed>
+                        Inactive reason: IGP metric
+                        Local AS: 65171 Peer AS: 65171
+                        Age: 3w1d 16:57:57  Metric: 12003   Metric2: 5
+                        Validation State: unverified
+                        Task: BGP_65172.16.220.5.253
+                        AS path: (65151 65000) I
+                        Communities: 65001:10 65151:244
+                        Accepted
+                        Localpref: 120
+                        Router ID: 10.189.5.253
+                        Indirect next hops: 1
+                                Protocol next hop: 10.189.5.253 Metric: 5
+                                Indirect next hop: 0xc285e84 - INH Session ID: 0x0
+                                Indirect path forwarding next hops: 1
+                                        Next hop type: Router
+                                        Next hop: 10.189.5.94 via ge-0/0/0.0 weight 0x1
+                                        Session Id: 0x0
+                        10.189.5.253/32 Originating RIB: inet.3
+                        Metric: 5 Node path count: 1
+                        Forwarding nexthops: 1
+                            Nexthop: 10.189.5.94 via ge-0/0/0.0
+                            Session Id: 0
+    

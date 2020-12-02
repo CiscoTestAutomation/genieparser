@@ -1,0 +1,34 @@
+
+        show ospf3 database advertising-router 10.16.2.2 extensive
+
+        OSPF3 database, Area 0.0.0.0
+            Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+            Router      0.0.0.0          10.16.2.2          0x80000002   491  0x549c  40
+            bits 0x0, Options 0x33
+            Type PointToPoint (1), Metric 1
+                Loc-If-Id 1, Nbr-If-Id 1, Nbr-Rtr-Id 10.4.1.1
+            Type: PointToPoint, Node ID: 10.4.1.1, Metric: 1, Bidirectional
+            Aging timer 00:51:48
+            Installed 00:08:08 ago, expires in 00:51:49, sent 00:08:06 ago
+            Last changed 00:08:37 ago, Change count: 1
+            IntraArPfx  0.0.0.1          10.16.2.2          0x80000003   491  0x991d  64
+            Ref-lsa-type Router, Ref-lsa-id 0.0.0.0, Ref-router-id 10.16.2.2
+            Prefix-count 2
+            Prefix 2001:20::/64
+                Prefix-options 0x0, Metric 1
+            Prefix 2001::2/128
+                Prefix-options 0x2, Metric 0
+            Aging timer 00:51:48
+            Installed 00:08:08 ago, expires in 00:51:49, sent 00:08:06 ago
+            Last changed 00:08:39 ago, Change count: 1
+
+                OSPF3 Link-Local database, interface ge-0/0/0.0 Area 0.0.0.0
+            Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+            Link        0.0.0.1          10.16.2.2          0x80000001   520  0x7045  56
+            fe80::250:56ff:fe8d:3f55
+            Options 0x33, Priority 128
+            Prefix-count 1
+            Prefix 2001:20::/64 Prefix-options 0x0
+            Aging timer 00:51:19
+            Installed 00:08:37 ago, expires in 00:51:20
+            Last changed 00:08:37 ago, Change count: 1

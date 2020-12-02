@@ -1,0 +1,32 @@
+
+        root@junos_vmx1> show interfaces terse
+        Interface               Admin Link Proto    Local                 Remote
+        ge-0/0/0                up    up
+        ge-0/0/0.0              up    up   inet     10.0.1.1/24
+                                           multiservice
+        lc-0/0/0                up    up
+        lc-0/0/0.32769          up    up   vpls
+        pfe-0/0/0               up    up
+        pfe-0/0/0.16383         up    up   inet
+                                           inet6
+        pfh-0/0/0               up    up
+        pfh-0/0/0.16383         up    up   inet
+        pfh-0/0/0.16384         up    up   inet
+        ge-0/0/1                up    up
+        ge-0/0/1.0              up    up   inet     10.0.2.1/24
+                                           multiservice
+        ge-0/0/2                up    down
+        em1                     up    up
+        em1.0                   up    up   inet     10.0.0.4/8
+                                                    172.16.64.1/2
+                                                    172.16.64.4/2
+                                           inet6    fe80::250:56ff:fe82:ba52/64
+                                                    2001:db8:8d82:0:a::4/64
+                                           tnp      0x4
+        fxp0                    up    up
+        fxp0.0                  up    up   inet     172.25.192.114/24
+        lo0.0                   up    up   inet     10.1.1.1            --> 0/0
+                                                    10.11.11.11         --> 0/0
+        lo0.16384               up    up   inet     127.0.0.1           --> 0/0
+        lo0.16385               up    up   inet
+    

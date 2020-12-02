@@ -1,0 +1,8 @@
+
+        show firewall counter filter v6_local-access-control v6_last_policer
+
+        Filter: v6_local-access-control                                
+        Counters:
+        Name                                                Bytes              Packets
+        v6_last_policer                                1061737740              7860915
+    

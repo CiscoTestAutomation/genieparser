@@ -1,0 +1,10 @@
+        root@junos_vmx1> show ntp status
+        status=0644 leap_none, sync_ntp, 4 events, event_peer/strat_chg,
+        version="ntpd 4.2.0-a Tue Dec 19 21:12:44  2017 (1)", processor="amd64",
+        system="FreeBSDJNPR-11.0-20171206.f4cad52_buil", leap=00, stratum=2,
+        precision=-23, rootdelay=1.434, rootdispersion=82.589, peer=22765,
+        refid=172.16.229.65,
+        reftime=df981acf.bfa97435  Thu, Nov 15 2018 11:18:23.748, poll=6,
+        clock=df981ae8.eb6e7ee8  Thu, Nov 15 2018 11:18:48.919, state=4,
+        offset=67.812, frequency=4.968, jitter=12.270, stability=0.890
+    

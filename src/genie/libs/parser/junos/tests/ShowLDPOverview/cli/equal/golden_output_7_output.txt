@@ -1,0 +1,57 @@
+
+        show ldp overview 
+        Instance: master
+        Reference count: 3
+        Router ID: 10.169.14.240
+        Message id: 10
+        Configuration sequence: 2
+        Deaggregate: disabled
+        Explicit null: disabled
+        IPv6 tunneling: disabled
+        Strict targeted hellos: disabled
+        Loopback if added: no
+        Route preference: 9
+        Unicast transit LSP chaining: disabled
+        P2MP transit LSP chaining: disabled
+        Transit LSP statistics based on route statistics: disabled
+        LDP route acknowledgement: enabled
+        LDP mtu discovery: disabled
+        Capabilities enabled: none
+        Egress FEC capabilities enabled: entropy-label-capability
+        Downstream unsolicited Sessions:
+            Nonexistent: 1
+            Retention: liberal
+            Control: ordered
+            Closing: 1
+            Retention: liberal
+            Control: ordered
+        Timers:
+            Keepalive interval: 10, Keepalive timeout: 30
+            Link hello interval: 5, Link hello hold time: 15
+            Targeted hello interval: 15, Targeted hello hold time: 45
+            Label withdraw delay: 60, Make before break timeout: 30
+            Make before break switchover delay: 3
+            Link protection timeout: 120
+        Graceful restart:
+            Restart: enabled, Helper: enabled, Restart in process: false
+            Reconnect time: 60000, Max neighbor reconnect time: 120000
+            Recovery time: 160000, Max neighbor recovery time: 240000
+        Traffic Engineering:
+            Bgp igp: disabled
+            Both ribs: disabled
+            Mpls forwarding: disabled
+        IGP:
+            Tracking igp metric: disabled
+            Sync session up delay: 10
+        Session protection:
+            Session protection: disabled
+            Session protecton timeout: 0
+        Interface addresses advertising:
+            10.169.14.121
+            10.169.14.157
+        LDP Job:
+            Read job time quantum: 1000, Write job time quantum: 1000
+            Read job loop quantum: 100, Write job loop quantum: 100
+            Backup inbound read job time quantum: 1000, Backup outbound read job time quantum: 1000
+            Backup inbound read job loop quantum: 100, Backup outbound read job loop quantum: 100
+    

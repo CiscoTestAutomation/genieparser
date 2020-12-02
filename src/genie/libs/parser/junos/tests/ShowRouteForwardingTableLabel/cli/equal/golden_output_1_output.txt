@@ -1,0 +1,14 @@
+
+        show route forwarding-table label 16
+        Routing table: default.mpls
+        MPLS:
+        Destination        Type RtRef Next hop           Type Index    NhRef Netif
+        16                 user     0 10.169.14.158    Pop        578     2 ge-0/0/0.0
+        16(S=0)            user     0 10.169.14.158    Pop        579     2 ge-0/0/0.0
+
+        Routing table: __mpls-oam__.mpls
+        MPLS:
+        Enabled protocols: Bridging, Single VLAN, Dual VLAN,
+        Destination        Type RtRef Next hop           Type Index    NhRef Netif
+        default            perm     0                    dscd      535     1
+    
