@@ -1,6 +1,6 @@
 """show_ip_nbar.py
     supported commands:
-        * sh ip nbar classification socket-cache <number_of_entries>
+        * show ip nbar classification socket-cache <number_of_sockets>
         
 """
 
@@ -25,7 +25,7 @@ from genie.libs.parser.utils.common import Common
 
 class ShowIpNbarClassificationSocketSchema(MetaParser):
     """ Schema for the commands:
-            * sh ip nbar classification socket-cache <number_of_entries>
+            * show ip nbar classification socket-cache <number_of_sockets>
     """
 
     schema = {
@@ -49,14 +49,14 @@ class ShowIpNbarClassificationSocketSchema(MetaParser):
 
 class ShowIpNbarClassificationSocket(ShowIpNbarClassificationSocketSchema):
     """
-        * sh ip nbar classification socket-cache <number_of_entries>
+        * show ip nbar classification socket-cache <number_of_sockets>
     """
 
-    cli_command = ['sh ip nbar classification socket-cache <number_of_entries>']
+    cli_command = ['show ip nbar classification socket-cache <number_of_sockets>']
                   
-    def cli(self, number_of_entries=None, output=None):
+    def cli(self, number_of_sockets=None, output=None):
         if output is None:
-            cmd = self.cli_command[0].format(number_of_entries=number_of_entries)
+            cmd = self.cli_command[0].format(number_of_sockets=number_of_sockets)
             out = self.device.execute(cmd)
         else:
             out = output
@@ -92,7 +92,7 @@ class ShowIpNbarClassificationSocket(ShowIpNbarClassificationSocketSchema):
                 feature_dict.update({'hit_count': int(groups['hit_count'])})
                 sess_num = sess_num + 1
 
-        print(ret_dict)
+        
         return(ret_dict)
 
 
