@@ -16,6 +16,7 @@ Parser for the following show commands:
     * show chassis hardware detail no-forwarding
     * show chassis hardware extensive
     * show chassis hardware extensive no-forwarding
+    * show chassis power
 '''
 # python
 import re
@@ -2386,6 +2387,211 @@ class ShowChassisFabricPlane(ShowChassisFabricPlaneSchema):
                 pfe_link_status.append(group['links'])
                 pfe_slot.append(group['pfe'])
 
+                continue
+        
+        return ret_dict
+
+""" Schema for:
+    * show chassis power
+"""
+class ShowChassisPowerSchema(MetaParser):
+    def validate_power_usage_item(value):
+        if not isinstance(value, list):
+            raise SchemaError('power-usage-item is not a list')        
+        
+        power_usage_item_schema = Schema({
+            "dc-input-detail2": {
+                Optional("dc-input-status"): str,
+                Optional("str-dc-actual-feed"): str,
+                Optional("str-dc-expect-feed"): str
+            },
+            "dc-output-detail2": {
+                "str-dc-current": str,
+                "str-dc-load": str,
+                "str-dc-power": str,
+                "str-dc-voltage": str,
+                "str-zone": str
+            },
+            "name": str,
+            "pem-capacity-detail": {
+                "capacity-actual": str,
+                "capacity-max": str
+            },
+            "state": str
+        })
+
+        for item in value:
+            power_usage_item_schema.validate(item)
+        return value
+    
+    def validate_power_usage_zone_information_item(value):
+        if not isinstance(value, list):
+            raise SchemaError('power-usage-zone-information is not a list')        
+        
+        power_usage_zone_information_schema = Schema({
+            "capacity-actual": str,
+            "capacity-actual-usage": str,
+            "capacity-allocated": str,
+            "capacity-max": str,
+            "capacity-remaining": str,
+            "str-zone": str
+        })
+
+        for item in value:
+            power_usage_zone_information_schema.validate(item)
+        return value
+
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "power-usage-information": {
+            "power-usage-item": Use(validate_power_usage_item),
+            "power-usage-system": {
+                "capacity-sys-actual": str,
+                "capacity-sys-max": str,
+                "capacity-sys-remaining": str,
+                "power-usage-zone-information": Use(validate_power_usage_zone_information_item)
+            }
+        }
+    }
+
+class ShowChassisPower(ShowChassisPowerSchema):
+    """ Parser for:
+    * show chassis power
+    """
+
+    cli_command = 'show chassis power'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # PSM 0:
+        p1 = re.compile(r'^(?P<name>\S+ +\d+):$')
+
+        # State                      Online Master
+        p2 = re.compile(r'^State: +(?P<state>[\S\s]+)$')
+
+        # DC input:  OK (INP0 feed expected, INP0 feed connected)
+        p3 = re.compile(r'^DC +input: +(?P<dc_input_status>[\S\s]+)( +\((?P<str_dc_expect_feed>\S+) +'
+            r'feed +expected, +(?P<str_dc_actual_feed>\S+) +feed +connected\))?$')
+        
+        # Capacity:  2100 W (maximum 2500 W)
+        p4 = re.compile(r'^Capacity: +(?P<capacity_actual>\d+) +\S+ +\(maximum +(?P<capacity_max>\d+) +\S+\)$')
+
+        # DC output: 489.25 W (Lower Zone, 9.50 A at 51.50 V, 23.30% of capacity)
+        p5 = re.compile(r'^DC +output: +(?P<str_dc_power>\S+) +\S+ +\((?P<str_zone>\S+) +'
+            r'Zone, +(?P<str_dc_current>\S+) +\S+ +at +(?P<str_dc_voltage>\S+) +\S+, +'
+            r'(?P<str_dc_load>\S+)\% +of +capacity\)$')
+        
+        # Total system capacity: 14700 W (maximum 17500 W)
+        p6 = re.compile(r'^Total +system +capacity: +(?P<capacity_sys_actual>\S+) +\S+ +'
+            r'\(maximum +(?P<capacity_sys_max>\S+) +\S+\)$')
+        
+        # Total remaining power: 5074 W
+        p7 = re.compile(r'^Total +remaining +power: +(?P<capacity_sys_remaining>\S+) +\S+$')
+
+        # Upper Zone:
+        # Lower Zone:
+        p8 = re.compile(r'^(?P<str_zone>\S+) +Zone:$')
+
+        # Allocated power:   3332 W (2968 W remaining)
+        p9 = re.compile(r'^Allocated +power: +(?P<capacity_allocated>\S+) +\S+ +\((?P<capacity_remaining>\S+) +\S+ +remaining\)$')
+
+        # Actual usage:      925.50 W
+        p10 = re.compile(r'^Actual +usage: +(?P<capacity_actual_usage>\S+) +\S+$')
+
+        ret_dict = {}
+        power_usage_system_found = False
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # PSM 0:
+            m = p1.match(line)
+            if m:
+                power_usage_information_list = ret_dict.setdefault("power-usage-information", {})\
+                    .setdefault("power-usage-item", [])
+                power_usage_item_dict = {}
+                group = m.groupdict()
+                power_usage_information_list.append(power_usage_item_dict)
+                power_usage_item_dict.update({'name' : group['name']})
+                continue
+
+            # State                      Online Master
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                power_usage_item_dict.update({'state' : group['state']})
+                continue
+            
+            # DC input:  OK (INP0 feed expected, INP0 feed connected)
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                dc_input_detail2_dict = power_usage_item_dict.setdefault('dc-input-detail2', {})
+                dc_input_detail2_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Capacity:  2100 W (maximum 2500 W)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                if power_usage_system_found:
+                    power_usage_zone_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                else:
+                    pem_capacity_detail_dict = power_usage_item_dict.setdefault('pem-capacity-detail', {})
+                    pem_capacity_detail_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # DC output: 489.25 W (Lower Zone, 9.50 A at 51.50 V, 23.30% of capacity)
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                dc_output_detail2_dict = power_usage_item_dict.setdefault('dc-output-detail2', {})
+                dc_output_detail2_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Total system capacity: 14700 W (maximum 17500 W)
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                power_usage_system_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+            
+            # Total remaining power: 5074 W
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                power_usage_system_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            # Upper Zone:
+            # Lower Zone:
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                power_usage_system_found = True
+                power_usage_system_dict = ret_dict.setdefault("power-usage-information", {})\
+                    .setdefault("power-usage-system", {})
+                power_usage_zone_information_list = power_usage_system_dict.setdefault("power-usage-zone-information", [])
+                power_usage_zone_information_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                power_usage_zone_information_list.append(power_usage_zone_information_dict)
+                continue
+            
+            # Allocated power:   3332 W (2968 W remaining)
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                power_usage_zone_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+            
+            # Actual usage:      925.50 W
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                power_usage_zone_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
         
         return ret_dict
