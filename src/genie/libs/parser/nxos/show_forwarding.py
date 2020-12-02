@@ -36,7 +36,7 @@ class ShowForwardingIpv4Schema(MetaParser):
                                             Any():{
                                                 'interface': str,                   
                                                 'is_best': bool,
-                                                'label': str,
+                                                Optional('label'): str,
                                             }
                                         }
                                     }        
@@ -74,7 +74,7 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
         #IPv4 routes for table default/base
         #IPv4 routes for table VRF_Flow1_1/base
         p2 = re.compile(r'^(?P<ip_version>\w+)'
-                         ' +routes for table (?P<route_table>(\w+\/+\w+)|(0x[0-5a-fA-F]+))')
+                         ' +routes +for +table +(?P<route_table>(\w+\/+\w+)|(0x[0-5a-fA-F]+))')
         
         #0.0.0.0/32           Drop                                      Null0
         #*3.3.3.2/32          10.2.1.2                                  Ethernet1/1
@@ -106,8 +106,8 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
                 slot_dict = result_dict.setdefault(key, {}).setdefault(value, {})
                 continue
              
-            #p2 = re.compile(r'^(?P<ip_version>\w+)'
-            #                 ' +routes for table (?P<route_table>(\w+\/+\w+)|(0x[0-5a-fA-F]+))')
+            #IPv4 routes for table default/base
+            #IPv4 routes for table VRF_Flow1_1/base
             m = p2.match(line)
             if m: 
                 group = m.groupdict()
@@ -121,12 +121,9 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
                 route_table_dict = ip_version_dict.setdefault('route_table', {}).setdefault(route_table, {})
                 continue
         
-#           p3 = re.compile(r'^(?P<is_best_next_hop>\*)?'
-#                             '(?P<prefix>[0-9\.]+\/[0-9]+)?'
-#                             ' +(?P<next_hop>[0-9A-Za-z.]+)'  
-#                             ' +(?P<interface>[\w\-\/\.]+)'                     
-#                             ' {0,8}(?P<label>[\w\:\ \w]+)?'
-#                             )
+            #0.0.0.0/32           Drop                                      Null0
+            #*3.3.3.2/32          10.2.1.2                                  Ethernet1/1
+            #3.3.3.2/32          10.2.1.2                                  Ethernet1/1       vni: 501003
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -142,22 +139,18 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
                 else:
                     is_best = True
                 
-                if label is None:
-                    label = 'none'
-                
                 prefix_dict = route_table_dict.setdefault('prefix', {}).setdefault(prefix, {}) 
                 
                 next_hop_dict = prefix_dict.setdefault('next_hop', {}).setdefault(next_hop, {})
                 
                 next_hop_dict['is_best'] = is_best
                 next_hop_dict['interface'] = interface
-                next_hop_dict['label'] = label
+                if label is not None: 
+                    next_hop_dict['label'] = label
                 continue
 
-#           p3_1 = re.compile(r'^(?P<next_hop>[0-9A-Za-z.]+)'  
-#                             ' +(?P<interface>[\w\-\/\.]+)'                     
-#                             ' {0,8}(?P<label>[\w\:\ \w]+)?'
-#                             )
+            #10.2.1.2                                  Ethernet1/1
+            #10.2.1.2                                  Ethernet1/1       vn: 501003
             m = p3_1.match(line)
             if m:
                 group = m.groupdict()
@@ -166,14 +159,12 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
                 interface = group['interface']
                 label = group['label']
 
-                if label is None:
-                    label = 'none'
-
                 next_hop_dict = prefix_dict.setdefault('next_hop', {}).setdefault(next_hop, {})
 
                 next_hop_dict['is_best'] = is_best              
                 next_hop_dict['interface'] = interface
-                next_hop_dict['label'] = label
+                if label is not None:
+                    next_hop_dict['label'] = label
                 continue
             
 
