@@ -26,9 +26,9 @@ class ShowCdpNeighborsSchema(MetaParser):
         'cdp':
             {Optional('index'):
                 {Any():
-                    {'device_id': str,
-                     'local_interface': str,
-                     'hold_time': int,
+                    {Optional('device_id'): str,
+                     Optional('local_interface'): str,
+                     Optional('hold_time'): int,
                      Optional('capability'): str,
                      Optional('platform'): str,
                      Optional('port_id'): str, }, }, },
@@ -80,7 +80,7 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                         r'(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         r'(?P<hold_time>\d+) +(?P<capability>[RTBSsHIrPDCM\s]+)( +'
                         r'(?P<platform>\S+(?: \d+)?))?( '
-                        r'(?P<port_id>[a-zA-Z0-9\/\s]+))?$')
+                        r'(?P<port_id>[\s\S]+))?$')
 
         # p4 and p5 for two-line output, where device id is on a separate line
         # bgp-n93-d(FDO24140U7J)
@@ -168,7 +168,7 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
         'total_entries_displayed': int,
         Optional('index'):
             {Any():
-                {'device_id': str,
+                {Optional('device_id'): str,
                  'platform': str,
                  Optional('capabilities'): str,
                  'local_interface': str,
@@ -205,7 +205,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
             out = output
 
         # Device ID: R7(9QBDKB58F76)
-        deviceid_re = re.compile(r'Device\s+ID:\s*(?P<device_id>\S+)')
+        # Device ID:
+        deviceid_re = re.compile(r'Device\s+ID:\s*(?P<device_id>\S+)?')
 
         # Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
         # Platform: N9K_9000v,  Capabilities: Router Switch Two-port phone port
@@ -287,8 +288,10 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                 parsed_dict['total_entries_displayed'] = index_device
                 devices_dict = parsed_dict.setdefault('index', {})\
                     .setdefault(index_device, {})
-                device_id = result.group('device_id')
-                devices_dict['device_id'] = device_id
+
+                if result.group('device_id'):
+                    device_id = result.group('device_id')
+                    devices_dict['device_id'] = device_id
                 management_address_flag = 0
 
                 # Init keys

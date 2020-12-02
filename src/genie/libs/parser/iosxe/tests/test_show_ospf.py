@@ -38,8 +38,8 @@ from genie.libs.parser.iosxe.show_ospf import (ShowIpOspf,
                                                ShowIpOspfDatabaseOpaqueAreaSelfOriginate,
                                                ShowIpOspfSegmentRoutingProtectedAdjacencies,
                                                ShowIpOspfSegmentRoutingSidDatabase,
-                                               ShowIpOspfDatabaseOpaqueAreaAdvRouter)
-
+                                               ShowIpOspfDatabaseOpaqueAreaAdvRouter,
+                                               ShowIpOspfNeighborDetail2)
 
 class test_show_ip_ospf_interface_brief(unittest.TestCase):
     '''Unit test for "show ip ospf interface brief" '''
@@ -1769,7 +1769,7 @@ class test_show_ip_ospf_neighbor_detail(unittest.TestCase):
 
         self.device.execute = Mock()
         self.device.execute.side_effect = mapper
-        
+
         obj = ShowIpOspfNeighborDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
@@ -3089,6 +3089,472 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+class test_show_ip_ospf_neighbor_detail_2(unittest.TestCase):
+
+
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+
+    golden_output1 = \
+        """
+            show ip ospf neighbor detail
+            Neighbor 10.16.2.2, interface address 192.168.154.2, interface-id 24
+                In the area 8 via interface GigabitEthernet0/1/2
+                Neighbor priority is 0, State is FULL, 6 state changes
+                DR is 0.0.0.0 BDR is 0.0.0.0
+                SR adj label 16
+                Options is 0x12 in Hello (E-bit, L-bit)
+                Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+                LLS Options is 0x1 (LR)
+                Dead timer due in 00:00:38
+                Neighbor is up for 3d16h
+                Index 1/3/3, retransmission queue length 0, number of retransmission 0
+                First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+                Last retransmission scan length is 0, maximum is 0
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            Neighbor 10.16.2.2, interface address 192.168.4.2, interface-id 23
+                In the area 8 via interface GigabitEthernet0/1/1
+                Neighbor priority is 0, State is FULL, 6 state changes
+                DR is 0.0.0.0 BDR is 0.0.0.0
+                SR adj label 17
+                Options is 0x12 in Hello (E-bit, L-bit)
+                Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+                LLS Options is 0x1 (LR)
+                Dead timer due in 00:00:35
+                Neighbor is up for 1w0d
+                Index 1/4/4, retransmission queue length 0, number of retransmission 2
+                First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+                Last retransmission scan length is 1, maximum is 1
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+        """
+    golden_parsed_output1 = \
+    {
+        "address-family":{
+            "ipv4":{
+               "areas":{
+                  "0.0.0.8":{
+                     "interfaces":{
+                        "GigabitEthernet0/1/2":{
+                           "neighbors":{
+                              "10.16.2.2":{
+                                 "neighbor_router_id":"10.16.2.2",
+                                 "interface":"GigabitEthernet0/1/2",
+                                 "address":"192.168.154.2",
+                                 "interface_id":"24",
+                                 "priority":0,
+                                 "state":"full",
+                                 "statistics":{
+                                    "nbr_event_count":6,
+                                    "nbr_retrans_qlen":0,
+                                    "total_retransmission":0,
+                                    "last_retrans_scan_length":0,
+                                    "last_retrans_max_scan_length":0,
+                                    "last_retrans_scan_time_msec":0,
+                                    "last_retrans_max_scan_time_msec":0
+                                 },
+                                 "dr_ip_addr":"0.0.0.0",
+                                 "bdr_ip_addr":"0.0.0.0",
+                                 "sr_adj_label":"16",
+                                 "dead_timer":"00:00:38",
+                                 "uptime":"3d16h",
+                                 "index":"1/3/3,",
+                                 "first":"0x0(0)/0x0(0)/0x0(0)",
+                                 "next":"0x0(0)/0x0(0)/0x0(0)"
+                              }
+                           }
+                        },
+                        "GigabitEthernet0/1/1":{
+                           "neighbors":{
+                              "10.16.2.2":{
+                                 "neighbor_router_id":"10.16.2.2",
+                                 "interface":"GigabitEthernet0/1/1",
+                                 "address":"192.168.4.2",
+                                 "interface_id":"23",
+                                 "priority":0,
+                                 "state":"full",
+                                 "statistics":{
+                                    "nbr_event_count":6,
+                                    "nbr_retrans_qlen":0,
+                                    "total_retransmission":2,
+                                    "last_retrans_scan_length":1,
+                                    "last_retrans_max_scan_length":1,
+                                    "last_retrans_scan_time_msec":0,
+                                    "last_retrans_max_scan_time_msec":0
+                                 },
+                                 "dr_ip_addr":"0.0.0.0",
+                                 "bdr_ip_addr":"0.0.0.0",
+                                 "sr_adj_label":"17",
+                                 "dead_timer":"00:00:35",
+                                 "uptime":"1w0d",
+                                 "index":"1/4/4,",
+                                 "first":"0x0(0)/0x0(0)/0x0(0)",
+                                 "next":"0x0(0)/0x0(0)/0x0(0)"
+                                }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }    
+
+    golden_output2 = '''\
+        R4_ospf_iosv#show ip ospf neighbor detail (including virtual-link)
+        Neighbor 10.36.3.3, interface address 10.229.3.3
+            In the area 0 via interface OSPF_VL1
+            Neighbor priority is 0, State is FULL, 12 state changes
+            DR is 0.0.0.0 BDR is 0.0.0.0
+            Options is 0x2 in Hello (E-bit)
+            Options is 0x42 in DBD (E-bit, O-bit)
+            Dead timer due in 00:00:41
+            Neighbor is up for 05:07:21
+            Index 1/3, retransmission queue length 0, number of retransmission 3
+            First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
+            Last retransmission scan length is 1, maximum is 1
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+        Neighbor 10.36.3.3, interface address 10.19.4.3
+            In the area 1 via interface GigabitEthernet0/1
+            Neighbor priority is 1, State is FULL, 6 state changes
+            DR is 10.19.4.4 BDR is 10.19.4.3
+            Options is 0x2 in Hello (E-bit)
+            Options is 0x42 in DBD (E-bit, O-bit)
+            Dead timer due in 00:00:33
+            Neighbor is up for 16:31:06
+            Index 2/2, retransmission queue length 0, number of retransmission 2
+            First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
+            Last retransmission scan length is 1, maximum is 1
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+        Neighbor 10.16.2.2, interface address 10.229.4.2
+            In the area 1 via interface GigabitEthernet0/0
+            Neighbor priority is 1, State is FULL, 6 state changes
+            DR is 10.229.4.4 BDR is 10.229.4.2
+            Options is 0x12 in Hello (E-bit, L-bit)
+            Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+            LLS Options is 0x1 (LR)
+            Dead timer due in 00:00:34
+            Neighbor is up for 05:07:40
+            Index 1/1, retransmission queue length 0, number of retransmission 1
+            First 0x0(0)/0x0(0) Next 0x0(0)/0x0(0)
+            Last retransmission scan length is 1, maximum is 1
+            Last retransmission scan time is 0 msec, maximum is 0 msec
+    #     '''
+    golden_parsed_output2 = \
+        {
+           "address-family":{
+              "ipv4":{
+                 "areas":{
+                    "0.0.0.0":{
+                       "virtual_links":{
+                          "OSPF_VL1":{
+                             "neighbors":{
+                                "10.36.3.3":{
+                                   "neighbor_router_id":"10.36.3.3",
+                                   "interface":"OSPF_VL1",
+                                   "address":"10.229.3.3",
+                                   "priority":0,
+                                   "state":"full",
+                                   "statistics":{
+                                      "nbr_event_count":12,
+                                      "nbr_retrans_qlen":0,
+                                      "total_retransmission":3,
+                                      "last_retrans_scan_length":1,
+                                      "last_retrans_max_scan_length":1,
+                                      "last_retrans_scan_time_msec":0,
+                                      "last_retrans_max_scan_time_msec":0
+                                   },
+                                   "dr_ip_addr":"0.0.0.0",
+                                   "bdr_ip_addr":"0.0.0.0",
+                                   "hello_options":"0x2",
+                                   "dbd_options":"0x42",
+                                   "dead_timer":"00:00:41",
+                                   "uptime":"05:07:21",
+                                   "index":"1/3,",
+                                   "first":"0x0(0)/0x0(0)",
+                                   "next":"0x0(0)/0x0(0)"
+                                }
+                             }
+                          }
+                       }
+                    },
+                    "0.0.0.1":{
+                       "interfaces":{
+                          "GigabitEthernet0/1":{
+                             "neighbors":{
+                                "10.36.3.3":{
+                                   "neighbor_router_id":"10.36.3.3",
+                                   "interface":"GigabitEthernet0/1",
+                                   "address":"10.19.4.3",
+                                   "priority":1,
+                                   "state":"full",
+                                   "statistics":{
+                                      "nbr_event_count":6,
+                                      "nbr_retrans_qlen":0,
+                                      "total_retransmission":2,
+                                      "last_retrans_scan_length":1,
+                                      "last_retrans_max_scan_length":1,
+                                      "last_retrans_scan_time_msec":0,
+                                      "last_retrans_max_scan_time_msec":0
+                                   },
+                                   "dr_ip_addr":"10.19.4.4",
+                                   "bdr_ip_addr":"10.19.4.3",
+                                   "hello_options":"0x2",
+                                   "dbd_options":"0x42",
+                                   "dead_timer":"00:00:33",
+                                   "uptime":"16:31:06",
+                                   "index":"2/2,",
+                                   "first":"0x0(0)/0x0(0)",
+                                   "next":"0x0(0)/0x0(0)"
+                                }
+                             }
+                          },
+                          "GigabitEthernet0/0":{
+                             "neighbors":{
+                                "10.16.2.2":{
+                                   "neighbor_router_id":"10.16.2.2",
+                                   "interface":"GigabitEthernet0/0",
+                                   "address":"10.229.4.2",
+                                   "priority":1,
+                                   "state":"full",
+                                   "statistics":{
+                                      "nbr_event_count":6,
+                                      "nbr_retrans_qlen":0,
+                                      "total_retransmission":1,
+                                      "last_retrans_scan_length":1,
+                                      "last_retrans_max_scan_length":1,
+                                      "last_retrans_scan_time_msec":0,
+                                      "last_retrans_max_scan_time_msec":0
+                                   },
+                                   "dr_ip_addr":"10.229.4.4",
+                                   "bdr_ip_addr":"10.229.4.2",
+                                   "dead_timer":"00:00:34",
+                                   "uptime":"05:07:40",
+                                   "index":"1/1,",
+                                   "first":"0x0(0)/0x0(0)",
+                                   "next":"0x0(0)/0x0(0)"
+                                }
+                             }
+                          }
+                       }
+                    }
+                 }
+              }
+           }
+        }
+    
+    golden_output3 = '''
+            R1_ospf_xe#show ip ospf neighbor detail 
+            Neighbor 10.16.2.2, interface address 10.1.2.2, interface-id unknown
+                In the area 0 via interface GigabitEthernet2
+                Neighbor priority is 1, State is FULL, 6 state changes
+                DR is 10.1.2.1 BDR is 10.1.2.2
+                Options is 0x2 in Hello (E-bit)
+                Options is 0x42 in DBD (E-bit, O-bit)
+                Dead timer due in 00:00:33
+                Neighbor is up for 08:04:20
+                Index 1/2/2, retransmission queue length 0, number of retransmission 0
+                First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+                Last retransmission scan length is 0, maximum is 0
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            Neighbor 10.64.4.4, interface address 10.1.4.4
+                In the area 0 via interface GigabitEthernet1
+                Neighbor priority is 1, State is FULL, 6 state changes
+                DR is 10.1.4.4 BDR is 10.1.4.1
+                Options is 0x12 in Hello (E-bit, L-bit)
+                Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+                LLS Options is 0x1 (LR)
+                Dead timer due in 00:00:35
+                Neighbor is up for 1d01h   
+                Index 1/1/1, retransmission queue length 0, number of retransmission 1
+                First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+                Last retransmission scan length is 0, maximum is 1
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            Neighbor 10.151.22.22, interface address 10.151.22.22
+                In the area 1 via interface OSPF_SL1
+                Neighbor priority is 0, State is FULL, 6 state changes
+                DR is 0.0.0.0 BDR is 0.0.0.0
+                Options is 0x2 in Hello (E-bit)
+                Options is 0x42 in DBD (E-bit, O-bit)
+                Dead timer due in 00:00:35
+                Neighbor is up for 07:41:59
+                Index 1/2/2, retransmission queue length 0, number of retransmission 2
+                First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+                Last retransmission scan length is 1, maximum is 1
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            Neighbor 10.115.55.55, interface address 10.186.5.5
+                In the area 1 via interface GigabitEthernet3
+                Neighbor priority is 1, State is FULL, 6 state changes
+                DR is 10.186.5.1 BDR is 10.186.5.5
+                Options is 0x12 in Hello (E-bit, L-bit)
+                Options is 0x52 in DBD (E-bit, L-bit, O-bit)
+                LLS Options is 0x1 (LR)
+                Dead timer due in 00:00:34
+                Neighbor is up for 15:47:14
+                Index 1/1/1, retransmission queue length 0, number of retransmission 6
+                First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+                Last retransmission scan length is 1, maximum is 6
+                Last retransmission scan time is 0 msec, maximum is 0 msec
+            '''
+
+    golden_parsed_output3 = {
+        "address-family":{
+           "ipv4":{
+              "areas":{
+                 "0.0.0.0":{
+                    "interfaces":{
+                       "GigabitEthernet2":{
+                          "neighbors":{
+                             "10.16.2.2":{
+                                "neighbor_router_id":"10.16.2.2",
+                                "interface":"GigabitEthernet2",
+                                "address":"10.1.2.2",
+                                "interface_id":"unknown",
+                                "priority":1,
+                                "state":"full",
+                                "statistics":{
+                                   "nbr_event_count":6,
+                                   "nbr_retrans_qlen":0,
+                                   "total_retransmission":0,
+                                   "last_retrans_scan_length":0,
+                                   "last_retrans_max_scan_length":0,
+                                   "last_retrans_scan_time_msec":0,
+                                   "last_retrans_max_scan_time_msec":0
+                                },
+                                "dr_ip_addr":"10.1.2.1",
+                                "bdr_ip_addr":"10.1.2.2",
+                                "hello_options":"0x2",
+                                "dbd_options":"0x42",
+                                "dead_timer":"00:00:33",
+                                "uptime":"08:04:20",
+                                "index":"1/2/2,",
+                                "first":"0x0(0)/0x0(0)/0x0(0)",
+                                "next":"0x0(0)/0x0(0)/0x0(0)"
+                             }
+                          }
+                       },
+                       "GigabitEthernet1":{
+                          "neighbors":{
+                             "10.64.4.4":{
+                                "neighbor_router_id":"10.64.4.4",
+                                "interface":"GigabitEthernet1",
+                                "address":"10.1.4.4",
+                                "priority":1,
+                                "state":"full",
+                                "statistics":{
+                                   "nbr_event_count":6,
+                                   "nbr_retrans_qlen":0,
+                                   "total_retransmission":1,
+                                   "last_retrans_scan_length":0,
+                                   "last_retrans_max_scan_length":1,
+                                   "last_retrans_scan_time_msec":0,
+                                   "last_retrans_max_scan_time_msec":0
+                                },
+                                "dr_ip_addr":"10.1.4.4",
+                                "bdr_ip_addr":"10.1.4.1",
+                                "dead_timer":"00:00:35",
+                                "uptime":"1d01h",
+                                "index":"1/1/1,",
+                                "first":"0x0(0)/0x0(0)/0x0(0)",
+                                "next":"0x0(0)/0x0(0)/0x0(0)"
+                             }
+                          }
+                       }
+                    }
+                 },
+                 "0.0.0.1":{
+                    "sham_links":{
+                       "OSPF_SL1":{
+                          "neighbors":{
+                             "10.151.22.22":{
+                                "neighbor_router_id":"10.151.22.22",
+                                "interface":"OSPF_SL1",
+                                "address":"10.151.22.22",
+                                "priority":0,
+                                "state":"full",
+                                "statistics":{
+                                   "nbr_event_count":6,
+                                   "nbr_retrans_qlen":0,
+                                   "total_retransmission":2,
+                                   "last_retrans_scan_length":1,
+                                   "last_retrans_max_scan_length":1,
+                                   "last_retrans_scan_time_msec":0,
+                                   "last_retrans_max_scan_time_msec":0
+                                },
+                                "dr_ip_addr":"0.0.0.0",
+                                "bdr_ip_addr":"0.0.0.0",
+                                "hello_options":"0x2",
+                                "dbd_options":"0x42",
+                                "dead_timer":"00:00:35",
+                                "uptime":"07:41:59",
+                                "index":"1/2/2,",
+                                "first":"0x0(0)/0x0(0)/0x0(0)",
+                                "next":"0x0(0)/0x0(0)/0x0(0)"
+                             }
+                          }
+                       }
+                    },
+                    "interfaces":{
+                       "GigabitEthernet3":{
+                          "neighbors":{
+                             "10.115.55.55":{
+                                "neighbor_router_id":"10.115.55.55",
+                                "interface":"GigabitEthernet3",
+                                "address":"10.186.5.5",
+                                "priority":1,
+                                "state":"full",
+                                "statistics":{
+                                   "nbr_event_count":6,
+                                   "nbr_retrans_qlen":0,
+                                   "total_retransmission":6,
+                                   "last_retrans_scan_length":1,
+                                   "last_retrans_max_scan_length":6,
+                                   "last_retrans_scan_time_msec":0,
+                                   "last_retrans_max_scan_time_msec":0
+                                },
+                                "dr_ip_addr":"10.186.5.1",
+                                "bdr_ip_addr":"10.186.5.5",
+                                "dead_timer":"00:00:34",
+                                "uptime":"15:47:14",
+                                "index":"1/1/1,",
+                                "first":"0x0(0)/0x0(0)/0x0(0)",
+                                "next":"0x0(0)/0x0(0)/0x0(0)"
+                             }
+                          }
+                       }
+                    }
+                 }
+              }
+           }
+        }
+    }       
+
+    def test_show_ip_ospf_neighbor_detail_2_empty_output(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpOspfNeighborDetail2(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(output='')
+
+    def test_show_ip_ospf_neighbor_detail_2_golden_1_output(self):
+
+        self.maxDiff = None
+        obj = ShowIpOspfNeighborDetail2(device=self.device)
+        parsed_output = obj.parse(output=self.golden_output1)
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+    def test_show_ip_ospf_neighbor_detail_2_golden_2_output(self):
+
+        self.maxDiff = None
+        obj = ShowIpOspfNeighborDetail2(device=self.device)
+        parsed_output = obj.parse(output=self.golden_output2)
+        self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_show_ip_ospf_neighbor_detail_2_golden_3_output(self):
+
+        self.maxDiff = None
+        obj = ShowIpOspfNeighborDetail2(device=self.device)
+        parsed_output = obj.parse(output=self.golden_output3)
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
 
 if __name__ == '__main__':
     unittest.main()

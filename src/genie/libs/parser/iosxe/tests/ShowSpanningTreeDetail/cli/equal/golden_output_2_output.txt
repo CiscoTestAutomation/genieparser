@@ -1,5 +1,5 @@
 MST0 is executing the mstp compatible Spanning Tree protocol 
-  Bridge Identifier has priority 8192, sysid 0, address 5897.bd79.c1c0 
+  Bridge Identifier has priority 8192, sysid 0, address 5897.bdff.3b3a 
   Configured hello time 2, max age 20, forward delay 15, transmit hold-count 6 
   We are the root of the spanning tree 
   Topology change flag not set, detected flag not set 
@@ -11,8 +11,8 @@ MST0 is executing the mstp compatible Spanning Tree protocol
 
  Port 2 (GigabitEthernet1/2) of MST0 is designated forwarding 
    Port path cost 20000, Port priority 128, Port Identifier 128.2. 
-   Designated root has priority 8192, address 5897.bd79.c1c0 
-   Designated bridge has priority 8192, address 5897.bd79.c1c0 
+   Designated root has priority 8192, address 5897.bdff.3b3a 
+   Designated bridge has priority 8192, address 5897.bdff.3b3a 
    Designated port id is 128.2, designated path cost 0 
    Timers: message age 0, forward delay 0, hold 0 
    Number of transitions to forwarding state: 0 
@@ -23,8 +23,8 @@ MST0 is executing the mstp compatible Spanning Tree protocol
 
  Port 4 (GigabitEthernet1/4) of MST0 is designated forwarding 
    Port path cost 20000, Port priority 128, Port Identifier 128.4. 
-   Designated root has priority 8192, address 5897.bd79.c1c0 
-   Designated bridge has priority 8192, address 5897.bd79.c1c0 
+   Designated root has priority 8192, address 5897.bdff.3b3a 
+   Designated bridge has priority 8192, address 5897.bdff.3b3a 
    Designated port id is 128.4, designated path cost 0 
    Timers: message age 0, forward delay 0, hold 0 
    Number of transitions to forwarding state: 0 
@@ -35,8 +35,8 @@ MST0 is executing the mstp compatible Spanning Tree protocol
 
  Port 133 (TenGigabitEthernet2/5) of MST0 is designated forwarding
    Port path cost 2000, Port priority 128, Port Identifier 128.133.
-   Designated root has priority 8192, address 5897.bd79.c1c0
-   Designated bridge has priority 8192, address 5897.bd79.c1c0
+   Designated root has priority 8192, address 5897.bdff.3b3a
+   Designated bridge has priority 8192, address 5897.bdff.3b3a
    Designated port id is 128.133, designated path cost 0
    Timers: message age 0, forward delay 0, hold 0
    Number of transitions to forwarding state: 1
