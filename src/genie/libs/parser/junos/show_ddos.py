@@ -216,7 +216,212 @@ class ShowDDosProtectionProtocol(ShowDDosProtectionProtocolSchema):
 
     ret_dict = {}
 
+    # Packet types: 1, Modified: 0, Received traffic: 0, Currently violated: 0
+    p1 = re.compile(r'^Packet +types: +(?P<total_packet_types>\d+), +'
+        r'Modified: +(?P<mod_packet_types>\d+), +Received +traffic: +(?P<packet_types_rcvd_packets>\d+), +'
+        r'Currently +violated: +(?P<packet_types_in_violation>\d+)$')
+    
+    # Currently tracked flows: 0, Total detected flows: 0
+    p2 = re.compile(r'^Currently +tracked +flows: +(?P<flows_current>\d+), +'
+        r'Total +detected +flows: +(?P<flows_cumulative>\d+)$')
+    
+    # Protocol Group: ARP
+    p3 = re.compile(r'^Protocol +Group: +(?P<group_name>\S+)$')
+
+    # Packet type: aggregate (Aggregate for all arp traffic)
+    p4 = re.compile(r'^Packet +type: +(?P<packet_type>\S+) +\((?P<packet_type_description>[\S\s]+)\)$')
+
+    # Bandwidth:        20000 pps
+    p5 = re.compile(r'^Bandwidth: +(?P<policer_bandwidth>\d+) +pps$')
+
+    # Burst:            20000 packets
+    p6 = re.compile(r'^Burst: +(?P<policer_burst>\d+) +packets$')
+
+    # Recover time:     300 seconds
+    p7 = re.compile(r'^Recover +time: +(?P<policer_time_recover>\d+) +seconds$')
+
+    # Enabled:          Yes
+    p8 = re.compile(r'^Enabled: +(?P<policer_enable>\S+)$')
+
+    # Detection mode: Automatic  Detect time:  3 seconds
+    p9 = re.compile(r'^Detection +mode: +(?P<detection_mode>\S+) +Detect +time: +(?P<detect_time>\d+) +seconds$')
+
+    # Log flows:      Yes        Recover time: 60 seconds
+    p10 = re.compile(r'^Log +flows: +(?P<log_flows>\S+) +Recover +time: +(?P<recover_time>\d+) +seconds$')
+
+    # Timeout flows:  No         Timeout time: 300 seconds
+    p11 = re.compile(r'^Timeout +flows: +(?P<timeout_active_flows>\S+) +Timeout +time: +(?P<timeout_time>\d+) +seconds$')
+
+    # Subscriber          Automatic       Drop          10 pps
+    p12 = re.compile(r'^Subscriber +(?P<sub_detection_mode>\S+) +(?P<sub_control_mode>\S+) +(?P<sub_bandwidth>\d+) +pps$')
+
+    # Logical interface   Automatic       Drop          10 pps
+    p13 = re.compile(r'^Logical +interface +(?P<ifl_detection_mode>\S+) +(?P<ifl_control_mode>\S+) +(?P<ifl_bandwidth>\d+) +pps$')
+
+    # Physical interface  Automatic       Drop          20000 pps
+    p14 = re.compile(r'^Physical +interface +(?<ifd_detection_mode>\S+) +(?P<ifd_control_mode>\S+) +(?P<ifd_bandwidth>\d+) +pps$')
+
+    # System-wide information:
+    p15 = re.compile(r'^System-wide +information:$')
+
+    # Received:  0                   Arrival rate:     0 pps
+    p16 = re.compile(r'^Received: +(?P<packet_received>\d+) +Arrival +rate: +(?P<packet_arrival_rate>\d+) +pps$')
+
+    # Dropped:   0                   Max arrival rate: 0 pps
+    p17 = re.compile(r'^Dropped: +(?P<packet_dropped>\d+) +Max +arrival +rate: +(?P<max_arrival_rate_max>\d+) +pps$')
+
+    # Routing Engine information:
+    p18 = re.compile(r'^Routing +Engine +information:$')
+
+    # Bandwidth: 20000 pps, Burst: 20000 packets, enabled
+    p19 = re.compile(r'^Bandwidth: +(?P<policer_bandwidth>\d+) +pps, +Burst: +(?P<policer_burst>\d+) +packets, +(?P<policer_enabled>\S+)$')
+
     for line in out.splitlines():
         line = line.strip()
+
+        # Packet types: 1, Modified: 0, Received traffic: 0, Currently violated: 0
+        p1 = re.compile(r'^Packet +types: +(?P<total_packet_types>\d+), +'
+            r'Modified: +(?P<mod_packet_types>\d+), +Received +traffic: +(?P<packet_types_rcvd_packets>\d+), +'
+            r'Currently +violated: +(?P<packet_types_in_violation>\d+)$')
+        
+        m = p1.match(line)
+        if m:
+            group = m.groupdict()
+            ddos_protocols_information_dict = ret_dict.setdefault('ddos-protocols-information', {})
+            ddos_protocols_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Currently tracked flows: 0, Total detected flows: 0
+        p2 = re.compile(r'^Currently +tracked +flows: +(?P<flows_current>\d+), +'
+            r'Total +detected +flows: +(?P<flows_cumulative>\d+)$')
+        
+        m = p2.match(line)
+        if m:
+            group = m.groupdict()
+            ddos_protocols_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+        
+        # Protocol Group: ARP
+        p3 = re.compile(r'^Protocol +Group: +(?P<group_name>\S+)$')
+        m = p3.match(line)
+        if m:
+            group = m.groupdict()
+            ddos_protocol_group_dict = ddos_protocols_information_dict.setdefault('ddos-protocol-group', {})
+            ddos_protocol_group_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Packet type: aggregate (Aggregate for all arp traffic)
+        p4 = re.compile(r'^Packet +type: +(?P<packet_type>\S+) +\((?P<packet_type_description>[\S\s]+)\)$')
+        m = p4.match(line)
+        if m:
+            group = m.groupdict()
+            ddos_protocol_dict = ddos_protocol_group_dict.setdefault('ddos-protocol', {})
+            ddos_protocol_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Bandwidth:        20000 pps
+        p5 = re.compile(r'^Bandwidth: +(?P<policer_bandwidth>\d+) +pps$')
+        m = p5.match(line)
+        if m:
+            group = m.groupdict()
+            ddos_basic_parameters_dict = ddos_protocol_dict.setdefault('ddos-basic-parameters', {})
+            ddos_basic_parameters_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Burst:            20000 packets
+        p6 = re.compile(r'^Burst: +(?P<policer_burst>\d+) +packets$')
+        m = p6.match(line)
+        if m:
+            group = m.groupdict()
+            ddos_basic_parameters_dict = ddos_protocol_dict.setdefault('ddos-basic-parameters', {})
+            ddos_basic_parameters_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Recover time:     300 seconds
+        p7 = re.compile(r'^Recover +time: +(?P<policer_time_recover>\d+) +seconds$')
+        m = p7.match(line)
+        if m:
+            group = m.groupdict()
+            ddos_basic_parameters_dict = ddos_protocol_dict.setdefault('ddos-basic-parameters', {})
+            ddos_basic_parameters_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Enabled:          Yes
+        p8 = re.compile(r'^Enabled: +(?P<policer_enable>\S+)$')
+        m = p8.match(line)
+        if m:
+            group = m.groupdict()
+            ddos_basic_parameters_dict = ddos_protocol_dict.setdefault('ddos-basic-parameters', {})
+            ddos_basic_parameters_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Detection mode: Automatic  Detect time:  3 seconds
+        p9 = re.compile(r'^Detection +mode: +(?P<detection_mode>\S+) +Detect +time: +(?P<detect_time>\d+) +seconds$')
+        m = p9.match(line)
+        if m:
+            group = m.groupdict()
+            ddos_flow_detection_dict = ddos_basic_parameters_dict.setdefault('ddos-flow-detection', {})
+            ddos_flow_detection_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Log flows:      Yes        Recover time: 60 seconds
+        p10 = re.compile(r'^Log +flows: +(?P<log_flows>\S+) +Recover +time: +(?P<recover_time>\d+) +seconds$')
+        m = p10.match(line)
+        if m:
+            group = m.groupdict()
+            ddos_flow_detection_dict = ddos_basic_parameters_dict.setdefault('ddos-flow-detection', {})
+            ddos_flow_detection_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Timeout flows:  No         Timeout time: 300 seconds
+        p11 = re.compile(r'^Timeout +flows: +(?P<timeout_active_flows>\S+) +Timeout +time: +(?P<timeout_time>\d+) +seconds$')
+        m = p11.match(line)
+        if m:
+            group = m.groupdict()
+            ddos_flow_detection_dict = ddos_basic_parameters_dict.setdefault('ddos-flow-detection', {})
+            ddos_flow_detection_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Subscriber          Automatic       Drop          10 pps
+        p12 = re.compile(r'^Subscriber +(?P<sub_detection_mode>\S+) +(?P<sub_control_mode>\S+) +(?P<sub_bandwidth>\d+) +pps$')
+        m = p12.match(line)
+        if m:
+            group = m.groupdict()
+            flow_aggregation_level_states_dict = ddos_flow_detection_dict.setdefault('flow-aggregation-level-states', {})
+            flow_aggregation_level_states_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Logical interface   Automatic       Drop          10 pps
+        p13 = re.compile(r'^Logical +interface +(?P<ifl_detection_mode>\S+) +(?P<ifl_control_mode>\S+) +(?P<ifl_bandwidth>\d+) +pps$')
+        m = p13.match(line)
+        if m:
+            group = m.groupdict()
+            flow_aggregation_level_states_dict = ddos_flow_detection_dict.setdefault('flow-aggregation-level-states', {})
+            flow_aggregation_level_states_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # Physical interface  Automatic       Drop          20000 pps
+        p14 = re.compile(r'^Physical +interface +(?<ifd_detection_mode>\S+) +(?P<ifd_control_mode>\S+) +(?P<ifd_bandwidth>\d+) +pps$')
+        m = p14.match(line)
+        if m:
+            group = m.groupdict()
+            flow_aggregation_level_states_dict = ddos_flow_detection_dict.setdefault('flow-aggregation-level-states', {})
+            flow_aggregation_level_states_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+            continue
+
+        # System-wide information:
+        p15 = re.compile(r'^System-wide +information:$')
+
+        # Received:  0                   Arrival rate:     0 pps
+        p16 = re.compile(r'^Received: +(?P<packet_received>\d+) +Arrival +rate: +(?P<packet_arrival_rate>\d+) +pps$')
+
+        # Dropped:   0                   Max arrival rate: 0 pps
+        p17 = re.compile(r'^Dropped: +(?P<packet_dropped>\d+) +Max +arrival +rate: +(?P<max_arrival_rate_max>\d+) +pps$')
+
+        # Routing Engine information:
+        p18 = re.compile(r'^Routing +Engine +information:$')
+
+        # Bandwidth: 20000 pps, Burst: 20000 packets, enabled
+        p19 = re.compile(r'^Bandwidth: +(?P<policer_bandwidth>\d+) +pps, +Burst: +(?P<policer_burst>\d+) +packets, +(?P<policer_enabled>\S+)$')
 
     return ret_dict
