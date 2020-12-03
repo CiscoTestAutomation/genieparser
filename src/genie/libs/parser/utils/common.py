@@ -12,6 +12,9 @@ import math
 
 from genie.libs import parser
 from genie.abstract import Lookup
+from genie.metaparser.util import merge_dict
+
+from .extension import ExtendParsers
 
 log = logging.getLogger(__name__)
 
@@ -31,6 +34,15 @@ def _load_parser_json():
         # Open all the parsers in json file
         with open(parsers) as f:
             parser_data = json.load(f)
+
+        # check if provided external parser packages
+        ext_parser_package = os.environ.get('EXT_GENIE_PARSER')
+        if ext_parser_package:
+            ext = ExtendParsers()
+            ext.extend(ext_parser_package)
+            ext.output.pop('tokens', None)
+            merge_dict(parser_data, ext.output, update=True)
+
     return parser_data
 
 # Parser within Genie
