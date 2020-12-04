@@ -21,19 +21,21 @@ class ShowVdcResourceDetailSchema(MetaParser):
     """
 
     schema = {
-        Any(): {
-            "total_used": int, 
-            "total_unused": int, 
-            "total_free": int, 
-            "total_avail": int, 
-            "total": int, 
-            "vdcs": {
-                Any(): {
-                    "min": int, 
-                    "max": int, 
-                    "used": int, 
-                    "unused": int, 
-                    "free": int, 
+        "resources": {
+            Any(): {
+                "total_used": int, 
+                "total_unused": int, 
+                "total_free": int, 
+                "total_avail": int, 
+                "total": int, 
+                "vdcs": {
+                    Any(): {
+                        "min": int, 
+                        "max": int, 
+                        "used": int, 
+                        "unused": int, 
+                        "free": int, 
+                    }
                 }
             }
         }
