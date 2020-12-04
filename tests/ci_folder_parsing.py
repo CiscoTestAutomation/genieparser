@@ -85,6 +85,7 @@ CLASS_SKIP = {
         "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate": True,
         "ShowIpOspfDatabaseTypeParser": True,
         "ShowIpOspfLinksParser": True,
+        "ShowIpOspfLinksParser2": True,
         "ShowIpRouteDistributor": True,
         "ShowIpv6RouteDistributor": True,
         "ShowControlLocalProperties_viptela": True,
