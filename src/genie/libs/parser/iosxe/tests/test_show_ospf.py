@@ -25,6 +25,7 @@ from genie.libs.parser.iosxe.show_ospf import (ShowIpOspf,
                                                ShowIpOspfDatabaseOpaqueArea,
                                                ShowIpOspfMplsLdpInterface,
                                                ShowIpOspfMplsTrafficEngLink,
+                                               ShowIpOspfMplsTrafficEngLink2,
                                                ShowIpOspfMaxMetric,
                                                ShowIpOspfTraffic,
                                                ShowIpOspfNeighbor,
@@ -3024,11 +3025,8 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
         
         raw1 = '''\
             R1_ospf_xe#show ip ospf mpls traffic-eng link 
-
             OSPF Router with ID (10.4.1.1) (Process ID 1)
-
             Area 0 has 2 MPLS TE links. Area instance is 2.
-
             Links in hash bucket 8.
             Link is associated with fragment 2. Link instance is 2
               Link connected to Broadcast network
@@ -3043,7 +3041,6 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
               Priority 4 : 93750000     Priority 5 : 93750000   
               Priority 6 : 93750000     Priority 7 : 93750000   
               Affinity Bit : 0x0
-
             Links in hash bucket 9.
             Link is associated with fragment 1. Link instance is 2
               Link connected to Broadcast network
@@ -3058,9 +3055,7 @@ class test_show_ip_ospf_mpls_traffic_eng_link(unittest.TestCase):
               Priority 4 : 93750000     Priority 5 : 93750000   
               Priority 6 : 93750000     Priority 7 : 93750000   
               Affinity Bit : 0x0
-
                 OSPF Router with ID (10.229.11.11) (Process ID 2)
-
             Area 1 MPLS TE not initialized
             '''
         raw2 = '''\
