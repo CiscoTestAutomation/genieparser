@@ -13,13 +13,14 @@ from genie.libs.parser.nxos.show_vdc import ShowVdcResourceDetail
 
 
 # =====================================
-#  Unit test for 'show ip ospf'
-#  Unit test for 'show ip ospf vrf all'
+#  Unit test for 'show vdc resource detail'
+#  Unit test for 'show vdc resource {resource} detail'
 # =====================================
-class TestShowIpOspf(unittest.TestCase):
-
-    '''Unit test for 'show ip ospf'
-       Unit test for 'show ip ospf vrf all' '''
+class TestShowVdcResourceDetail(unittest.TestCase):
+    '''unit test for
+        * show vdc resource detail
+        * show vdc resource {resource} detail
+    '''
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
