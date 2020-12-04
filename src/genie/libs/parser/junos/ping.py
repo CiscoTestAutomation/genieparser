@@ -60,7 +60,7 @@ class PingSchema(MetaParser):
                     Optional('ttl'): int,
                     Optional('time'): str,
                     Optional('message'): str,
-                    Optional('mtu'): str,
+                    Optional('mtu'): int,
                 })
         # Validate each dictionary in list
         for item in value:
@@ -121,19 +121,17 @@ class Ping(PingSchema):
                 cmd = self.cli_command[3].format(addr=addr, 
                         source=source,
                         count=count)
-            elif count:
-                cmd = self.cli_command[1].format(addr=addr, count=count)
             elif source and size:
                 cmd = self.cli_command[4].format(
                     addr=addr,
                     source=source,
                     size=size,
                     count=count,
-                )                    
+                )   
             elif count and source:
                 cmd = self.cli_command[3].format(addr=addr, 
                         source=source,
-                        count=count)
+                        count=count)                                        
             elif count:
                 cmd = self.cli_command[1].format(addr=addr, count=count)
             else:

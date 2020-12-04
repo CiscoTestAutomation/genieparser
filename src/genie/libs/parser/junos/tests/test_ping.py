@@ -401,6 +401,30 @@ class TestPing(unittest.TestCase):
         }
     }
 
+    # ping 200.0.0.2 source 100.0.0.2 size 2000 do-not-fragment count 5 
+    golden_output_6 = {'execute.return_value':'''
+        PING 200.0.0.2 (200.0.0.2): 2000 data bytes
+        36 bytes from 100.0.0.1: frag needed and DF set (MTU 1500)
+        Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src      Dst
+        4  5  00 07ec 59cb   2 0000  40  01 ad41 100.0.0.2  200.0.0.2 
+        --- 200.0.0.2 ping statistics ---
+        5 packets transmitted, 0 packets received, 100% packet loss    
+    '''}
+
+    golden_parsed_output_6 = {
+        'ping': 
+            {'address': '200.0.0.2',
+                'data-bytes': 2000,
+                'result': [{'bytes': 36,
+                            'from': '100.0.0.1',
+                            'message': 'frag needed and DF set ',
+                            'mtu': 1500}],
+                'source': '200.0.0.2',
+                'statistics': {
+                    'loss-rate': 100, 
+                    'received': 0, 
+                    'send': 5}}}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = Ping(device=self.device)
@@ -445,7 +469,19 @@ class TestPing(unittest.TestCase):
             size='1452', 
             count='5', 
             tos=2)
-        self.assertEqual(parsed_output, self.golden_parsed_output_5)     
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)  
+
+    # ping {addr} source {source} size {size} do-not-fragment count {count}
+    # ping 200.0.0.2 source 100.0.0.2 size 2000 do-not-fragment count 5 
+    def test_golden_6(self):
+        self.device = Mock(**self.golden_output_6)
+        obj = Ping(device=self.device)
+        parsed_output = obj.parse(
+            addr='200.0.0.2', 
+            source='100.0.0.2', 
+            size='2000', 
+            count='5')
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)             
 
 
 class TestPingMplsRsvp(unittest.TestCase):
