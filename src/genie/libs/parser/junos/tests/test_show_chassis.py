@@ -16,7 +16,9 @@ from genie.libs.parser.junos.show_chassis import ShowChassisFpcDetail,\
                                                  ShowChassisHardwareExtensive,\
                                                  ShowChassisHardwareExtensiveNoForwarding,\
                                                  ShowChassisEnvironment,\
-                                                 ShowChassisAlarms
+                                                 ShowChassisAlarms,\
+                                                 ShowChassisFabricSummary,\
+                                                 ShowChassisFabricPlane
 
 class TestShowChassisFpcDetail(unittest.TestCase):
     """ Unit tests for:
@@ -299,187 +301,8 @@ class TestShowChassisHardware(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         obj = ShowChassisHardware(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)     
 
-
-class TestShowChassisHardwareDetail(unittest.TestCase):
-
-    maxDiff = None
-
-    device = Device(name='test-device')
-
-    empty_output = {'execute.return_value': ''}
-
-    golden_output = {'execute.return_value': 
-    ''' show chassis hardware detail
-        Hardware inventory:
-        Item             Version  Part number  Serial number     Description
-        Chassis                                VM5D4C6B3599      VMX
-        Midplane        
-        Routing Engine 0                                         RE-VMX
-          cd0   27649 MB  VMware Virtual IDE Har 00000000000000000001 Hard Disk
-        CB 0                                                     VMX SCB
-        FPC 0                                                    Virtual FPC
-          CPU            Rev. 1.0 RIOT-LITE    BUILTIN          
-          MIC 0                                                  Virtual
-            PIC 0                 BUILTIN      BUILTIN           Virtual
-    '''}
-
-    golden_parsed_output = {
-        "chassis-inventory": {
-            "chassis": {
-                "@junos:style": "inventory",
-                "chassis-module": [
-                    {
-                        "name": "Midplane"
-                    },
-                    {
-                        "chassis-re-disk-module": {
-                            "description": "Hard Disk",
-                            "disk-size": "27649",
-                            "model": "VMware Virtual IDE Har",
-                            "name": "cd0",
-                            "serial-number": "00000000000000000001"
-                        },
-                        "description": "RE-VMX",
-                        "name": "Routing Engine 0"
-                    },
-                    {
-                        "description": "VMX SCB",
-                        "name": "CB 0"
-                    },
-                    {
-                        "chassis-sub-module": [
-                            {
-                                "name": "CPU",
-                                "part-number": "RIOT-LITE",
-                                "serial-number": "BUILTIN",
-                                "version": "Rev. 1.0"
-                            },
-                            {
-                                "chassis-sub-sub-module": {
-                                    "description": "Virtual",
-                                    "name": "PIC 0",
-                                    "part-number": "BUILTIN",
-                                    "serial-number": "BUILTIN"
-                                },
-                                "description": "Virtual",
-                                "name": "MIC 0"
-                            }
-                        ],
-                        "description": "Virtual FPC",
-                        "name": "FPC 0"
-                    }
-                ],
-                "description": "VMX",
-                "name": "Chassis",
-                "serial-number": "VM5D4C6B3599"
-            }
-        }
-        
-    }
-
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowChassisHardwareDetail(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowChassisHardwareDetail(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
-
-
-class TestShowChassisHardwareDetailNoForwarding(unittest.TestCase):
-
-    maxDiff = None
-
-    device = Device(name='test-device')
-
-    empty_output = {'execute.return_value': ''}
-
-    golden_output = {'execute.return_value': 
-    ''' show chassis hardware detail no-forwarding
-        Hardware inventory:
-        Item             Version  Part number  Serial number     Description
-        Chassis                                VM5D4C6B3599      VMX
-        Midplane        
-        Routing Engine 0                                         RE-VMX
-          cd0   27649 MB  VMware Virtual IDE Har 00000000000000000001 Hard Disk
-        CB 0                                                     VMX SCB
-        FPC 0                                                    Virtual FPC
-          CPU            Rev. 1.0 RIOT-LITE    BUILTIN          
-          MIC 0                                                  Virtual
-            PIC 0                 BUILTIN      BUILTIN           Virtual
-    '''}
-
-    golden_parsed_output = {
-        "chassis-inventory": {
-            "chassis": {
-                "@junos:style": "inventory",
-                "chassis-module": [
-                    {
-                        "name": "Midplane"
-                    },
-                    {
-                        "chassis-re-disk-module": {
-                            "description": "Hard Disk",
-                            "disk-size": "27649",
-                            "model": "VMware Virtual IDE Har",
-                            "name": "cd0",
-                            "serial-number": "00000000000000000001"
-                        },
-                        "description": "RE-VMX",
-                        "name": "Routing Engine 0"
-                    },
-                    {
-                        "description": "VMX SCB",
-                        "name": "CB 0"
-                    },
-                    {
-                        "chassis-sub-module": [
-                            {
-                                "name": "CPU",
-                                "part-number": "RIOT-LITE",
-                                "serial-number": "BUILTIN",
-                                "version": "Rev. 1.0"
-                            },
-                            {
-                                "chassis-sub-sub-module": {
-                                    "description": "Virtual",
-                                    "name": "PIC 0",
-                                    "part-number": "BUILTIN",
-                                    "serial-number": "BUILTIN"
-                                },
-                                "description": "Virtual",
-                                "name": "MIC 0"
-                            }
-                        ],
-                        "description": "Virtual FPC",
-                        "name": "FPC 0"
-                    }
-                ],
-                "description": "VMX",
-                "name": "Chassis",
-                "serial-number": "VM5D4C6B3599"
-            }
-        }
-        
-    }
-
-    def test_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowChassisHardwareDetailNoForwarding(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()
-
-    def test_golden(self):
-        self.device = Mock(**self.golden_output)
-        obj = ShowChassisHardwareDetailNoForwarding(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 class TestShowChassisHardwareExtensive(unittest.TestCase):
 
@@ -3486,6 +3309,376 @@ class TestShowChassisAlarms(unittest.TestCase):
         obj = ShowChassisAlarms(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)    
+
+
+class TestShowChassisFabricSummary(unittest.TestCase):
+    """Unit test for show chassis Fabric Summary"""
+    maxDiff = None
+
+    device = Device(name='test-device')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value':'''
+        show chassis fabric summary
+        Plane   State    Uptime
+        0      Online   34 days, 18 hours, 43 minutes, 48 seconds
+        1      Online   34 days, 18 hours, 43 minutes, 47 seconds
+        2      Online   34 days, 18 hours, 43 minutes, 48 seconds
+        3      Online   34 days, 18 hours, 43 minutes, 47 seconds
+        4      Spare    34 days, 18 hours, 43 minutes, 47 seconds
+        5      Spare    34 days, 18 hours, 43 minutes, 46 seconds
+        6      Spare    34 days, 18 hours, 43 minutes, 46 seconds
+        7      Spare    34 days, 18 hours, 43 minutes, 46 seconds   
+    '''}
+
+    golden_parsed_output =  {
+        "fm-state-information": {
+            "fm-state-item": [
+                {
+                    "plane-slot": "0",
+                    "state": "Online",
+                    "up-time": "34 days, 18 hours, 43 minutes, 48 seconds"
+                },
+                {
+                    "plane-slot": "1",
+                    "state": "Online",
+                    "up-time": "34 days, 18 hours, 43 minutes, 47 seconds"
+                },
+                {
+                    "plane-slot": "2",
+                    "state": "Online",
+                    "up-time": "34 days, 18 hours, 43 minutes, 48 seconds"
+                },
+                {
+                    "plane-slot": "3",
+                    "state": "Online",
+                    "up-time": "34 days, 18 hours, 43 minutes, 47 seconds"
+                },
+                {
+                    "plane-slot": "4",
+                    "state": "Spare",
+                    "up-time": "34 days, 18 hours, 43 minutes, 47 seconds"
+                },
+                {
+                    "plane-slot": "5",
+                    "state": "Spare",
+                    "up-time": "34 days, 18 hours, 43 minutes, 46 seconds"
+                },
+                {
+                    "plane-slot": "6",
+                    "state": "Spare",
+                    "up-time": "34 days, 18 hours, 43 minutes, 46 seconds"
+                },
+                {
+                    "plane-slot": "7",
+                    "state": "Spare",
+                    "up-time": "34 days, 18 hours, 43 minutes, 46 seconds"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowChassisFabricSummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowChassisFabricSummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output) 
+
+
+class TestShowChassisFabricPlane(unittest.TestCase):
+    """Unit test for show chassis Fabric Plane"""
+    maxDiff = None
+
+    device = Device(name='test-device')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value':'''
+        show chassis fabric plane
+        Fabric management PLANE state
+        Plane 0
+        Plane state: ACTIVE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 1
+        Plane state: ACTIVE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 2
+        Plane state: ACTIVE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 3
+        Plane state: ACTIVE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 4
+        Plane state: SPARE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 5
+        Plane state: SPARE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 6
+        Plane state: SPARE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 7
+        Plane state: SPARE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok  
+    '''}
+
+    golden_parsed_output =  {
+        "fm-plane-state-information": {
+            "fmp-plane": [
+                {
+                    "fru-name": [
+                        "FPC",
+                        "FPC"
+                    ],
+                    "fru-slot": [
+                        "0",
+                        "1"
+                    ],
+                    "pfe-link-status": [
+                        "Links ok",
+                        "Links ok",
+                        "Links ok",
+                        "Links ok"
+                    ],
+                    "pfe-slot": [
+                        "0",
+                        "1",
+                        "0",
+                        "1"
+                    ],
+                    "slot": "0",
+                    "state": "ACTIVE"
+                },
+                {
+                    "fru-name": [
+                        "FPC",
+                        "FPC"
+                    ],
+                    "fru-slot": [
+                        "0",
+                        "1"
+                    ],
+                    "pfe-link-status": [
+                        "Links ok",
+                        "Links ok",
+                        "Links ok",
+                        "Links ok"
+                    ],
+                    "pfe-slot": [
+                        "0",
+                        "1",
+                        "0",
+                        "1"
+                    ],
+                    "slot": "1",
+                    "state": "ACTIVE"
+                },
+                {
+                    "fru-name": [
+                        "FPC",
+                        "FPC"
+                    ],
+                    "fru-slot": [
+                        "0",
+                        "1"
+                    ],
+                    "pfe-link-status": [
+                        "Links ok",
+                        "Links ok",
+                        "Links ok",
+                        "Links ok"
+                    ],
+                    "pfe-slot": [
+                        "0",
+                        "1",
+                        "0",
+                        "1"
+                    ],
+                    "slot": "2",
+                    "state": "ACTIVE"
+                },
+                {
+                    "fru-name": [
+                        "FPC",
+                        "FPC"
+                    ],
+                    "fru-slot": [
+                        "0",
+                        "1"
+                    ],
+                    "pfe-link-status": [
+                        "Links ok",
+                        "Links ok",
+                        "Links ok",
+                        "Links ok"
+                    ],
+                    "pfe-slot": [
+                        "0",
+                        "1",
+                        "0",
+                        "1"
+                    ],
+                    "slot": "3",
+                    "state": "ACTIVE"
+                },
+                {
+                    "fru-name": [
+                        "FPC",
+                        "FPC"
+                    ],
+                    "fru-slot": [
+                        "0",
+                        "1"
+                    ],
+                    "pfe-link-status": [
+                        "Links ok",
+                        "Links ok",
+                        "Links ok",
+                        "Links ok"
+                    ],
+                    "pfe-slot": [
+                        "0",
+                        "1",
+                        "0",
+                        "1"
+                    ],
+                    "slot": "4",
+                    "state": "SPARE"
+                },
+                {
+                    "fru-name": [
+                        "FPC",
+                        "FPC"
+                    ],
+                    "fru-slot": [
+                        "0",
+                        "1"
+                    ],
+                    "pfe-link-status": [
+                        "Links ok",
+                        "Links ok",
+                        "Links ok",
+                        "Links ok"
+                    ],
+                    "pfe-slot": [
+                        "0",
+                        "1",
+                        "0",
+                        "1"
+                    ],
+                    "slot": "5",
+                    "state": "SPARE"
+                },
+                {
+                    "fru-name": [
+                        "FPC",
+                        "FPC"
+                    ],
+                    "fru-slot": [
+                        "0",
+                        "1"
+                    ],
+                    "pfe-link-status": [
+                        "Links ok",
+                        "Links ok",
+                        "Links ok",
+                        "Links ok"
+                    ],
+                    "pfe-slot": [
+                        "0",
+                        "1",
+                        "0",
+                        "1"
+                    ],
+                    "slot": "6",
+                    "state": "SPARE"
+                },
+                {
+                    "fru-name": [
+                        "FPC",
+                        "FPC"
+                    ],
+                    "fru-slot": [
+                        "0",
+                        "1"
+                    ],
+                    "pfe-link-status": [
+                        "Links ok",
+                        "Links ok",
+                        "Links ok",
+                        "Links ok"
+                    ],
+                    "pfe-slot": [
+                        "0",
+                        "1",
+                        "0",
+                        "1"
+                    ],
+                    "slot": "7",
+                    "state": "SPARE"
+                }
+            ]
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowChassisFabricPlane(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowChassisFabricPlane(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 
