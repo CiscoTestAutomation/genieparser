@@ -1,0 +1,14 @@
+show cdp neighbors
+Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone, 
+                  D - Remote, C - CVTA, M - Two-port Mac Relay 
+
+Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
+                 Fas 0/5           104             H P M  420HD_GBE esw0
+                 Fas 0/1           94              H P M  420HD_GBE esw0
+xxx012         Fas 0/2           141             T B I  AIR-CAP27 Gig 0.1
+xxx006.xx.xxx.xxx
+                 Fas 0/3           159             T B I  AIR-CAP27 Gig 0.1
+xxx001.xx.xxx.xxx
+                 Gig 0/1           125              S I   WS-C2960X Gig 1/0/41
+xxx010

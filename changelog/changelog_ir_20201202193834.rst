@@ -1,0 +1,7 @@
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* JUNOS
+    * Modified ShowChassisHardwareDetail:
+        * Updated schema and regex to support various outputs. 
+

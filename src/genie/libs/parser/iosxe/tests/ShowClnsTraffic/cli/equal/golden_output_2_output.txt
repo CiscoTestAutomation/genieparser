@@ -30,8 +30,11 @@ IS-IS: LSP Retransmissions: 0
 IS-IS: Level-1 CSNPs (sent/rcvd): 308588/149877
 IS-IS: Level-1 PSNPs (sent/rcvd): 0/0
 IS-IS: Level-1 DR Elections: 9
+IS-IS: Level-2 DR Elections: 7
 IS-IS: Level-1 SPF Calculations: 1565
+IS-IS: Level-2 SPF Calculations: 1324
 IS-IS: Level-1 Partial Route Calculations: 4
+IS-IS: Level-2 Partial Route Calculations: 6
 IS-IS: LSP checksum errors received: 0
 IS-IS: Update process queue depth: 0/200
 IS-IS: Update process packets dropped: 0

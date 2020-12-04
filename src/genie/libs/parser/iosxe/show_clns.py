@@ -974,15 +974,15 @@ class ShowClnsTrafficSchema(MetaParser):
                         },
                     },
                     'dr_election': {
-                        'level-1': int,
+                        Optional('level-1'): int,
                         Optional('level-2'): int,
                     },
                     'spf_calculation': {
-                        'level-1': int,
+                        Optional('level-1'): int,
                         Optional('level-2'): int,
                     },
                     'partial_route_calculation': {
-                        'level-1': int,
+                        Optional('level-1'): int,
                         Optional('level-2'): int,
                     },
                     'lsp_checksum_errors_received': int,

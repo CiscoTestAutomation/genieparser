@@ -1583,7 +1583,7 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
                 month = groups['month']
                 date = groups['date']
                 year = groups['year']
-                full_date = f"{day}, {month}/{date}/{year}"
+                full_date = "{0}, {1}/{2}/{3}".format(day, month, date, year)
                 cts_env_dict['cts_env'].update(
                     {'last_update': {'date': full_date, 'time': time, 'time_zone': time_zone}})
                 continue
