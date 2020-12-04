@@ -1,0 +1,21 @@
+RP/0/RSP0/CPU0:Router#show platform 
+Thu Dec  3 14:27:32.593 UTC
+Node            Type                      State            Config State
+-----------------------------------------------------------------------------
+0/RSP0/CPU0     A9K-RSP440-SE(Active)     IOS XR RUN       PWR,NSHUT,MON
+0/0/CPU0        A9K-MOD80-SE              IOS XR RUN       PWR,NSHUT,MON
+0/0/0           A9K-MPA-20X1GE            OK               PWR,NSHUT,MON
+0/0/1           A9K-MPA-4X10GE            OK               PWR,NSHUT,MON
+0/1/CPU0        A9K-24x10GE-TR            IOS XR RUN       PWR,NSHUT,MON
+0/2/CPU0        A9K-MOD80-SE              IOS XR RUN       PWR,NSHUT,MON
+0/2/0           A9K-MPA-20X1GE            OK               PWR,NSHUT,MON
+0/2/1           A9K-MPA-4X10GE            OK               PWR,NSHUT,MON
+0/3/CPU0        A9K-MOD80-TR              IOS XR RUN       PWR,NSHUT,MON
+0/3/0           A9K-MPA-4X10GE            OK               PWR,NSHUT,MON
+0/3/1           A9K-MPA-4X10GE            OK               PWR,NSHUT,MON
+0/4/CPU0        A9K-MOD80-TR              IOS XR RUN       PWR,NSHUT,MON
+0/4/0           A9K-MPA-4X10GE            OK               PWR,NSHUT,MON
+0/4/1           A9K-MPA-4X10GE            OK               PWR,NSHUT,MON
+0/5/CPU0        A9K-MOD80-TR              IOS XR RUN       PWR,NSHUT,MON
+0/5/0           A9K-MPA-4X10GE            OK               PWR,NSHUT,MON
+0/5/1           A9K-MPA-4X10GE            OK               PWR,NSHUT,MON
