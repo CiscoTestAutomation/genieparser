@@ -6,6 +6,7 @@ Parser for the following show commands:
     * show chassis fpc detail
     * show chassis environment routing-engine
     * show chassis environment 
+    * show chassis environment fpc
     * show chassis firmware
     * show chassis firmware no-forwarding
     * show chassis fpc
@@ -2410,6 +2411,228 @@ class ShowChassisEnvironment(ShowChassisEnvironmentSchema):
                         environment_item['comment'] = text
 
                 environment_item_list.append(environment_item)
+
+        return res
+
+
+class ShowChassisEnvironmentFpcSchema(MetaParser):
+    '''
+    Schema for show chassis environment fpc
+    schema = {
+        "environment-component-information": {
+            "environment-component-item": [
+                {
+                    "name": str,
+                    "power-information": {
+                        "power-title": {
+                            "power-type": str
+                        }
+                        "voltage": [
+                            {
+                                "actual-voltage": str,
+                                "reference-voltage": str,
+                            },
+                        ]
+                    },
+                    "slave-revision": str,
+                    "state": str,
+                    "temperature-reading": [
+                        {
+                            "temperature": {
+                                "#text": str,
+                                "@junos:celsius": str,
+                            },
+                            "temperature-name": str,
+                        },
+                    ]
+                }
+            ]
+        }
+    }
+    '''
+
+    def validate_environment_item_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('environment-item is not a list')        
+        
+        def validate_voltage_list(value):
+            if not isinstance(value, list):
+                raise SchemaError("voltage is not a list")
+
+            voltage_schema = Schema(
+                {
+                    "actual-voltage": str,
+                    "reference-voltage": str,
+                }
+            )
+
+            for item in value:
+                voltage_schema.validate(item)    
+            return value
+
+        def valivalidate_temp_reading_list(value):
+            if not isinstance(value, list):
+                raise SchemaError("temperature reading is not a list")
+
+            temp_reading_schema = Schema(
+                {
+                    "temperature": {
+                        "#text": str,
+                        "@junos:celsius": str,
+                    },
+                    "temperature-name": str,
+                }
+            )
+
+            for item in value:
+                temp_reading_schema.validate(item)    
+            return value
+
+        environment_item_schema = Schema({
+            "name": str,
+            "power-information": {
+                "power-title": {
+                    "power-type": str
+                },
+                "voltage": Use(validate_voltage_list),
+            },
+            "slave-revision": str,
+            "state": str,
+            "temperature-reading": Use(valivalidate_temp_reading_list),
+        })
+
+        for item in value:
+            environment_item_schema.validate(item)
+        return value
+
+    schema = {
+        'environment-component-information': {
+            'environment-component-item': Use(validate_environment_item_list)
+        }
+    }
+
+
+class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
+    '''Parser for show chassis environment fpc'''
+
+    cli_command = 'show chassis environment fpc'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Regex
+        # FPC 0 status:
+        p1 = re.compile(r'^(?P<name>.*) +status:$')
+
+        # State                      Online
+        p2 = re.compile(r'^State +(?P<state>\S+)$')
+
+        # Temperature Intake         27 degrees C / 80 degrees F
+        # Temperature I3 0 Chip      38 degrees C / 100 degrees F 
+        p_temp = re.compile(r'^(?P<temperature_name>[\s\S]+) '
+                            r'+(?P<text>(?P<celsius>\d+)\sdegrees\sC.*)')
+
+        # Power
+        p_power = re.compile(r'^Power$')
+
+        # 1.2 V PFE 0               1231 mV
+        # 1.5 V                     1498 mV
+        p_voltage = re.compile(r'(?P<reference_voltage>[\s\S]+) '
+                               r'+(?P<actual_voltage>\d+) +mV')
+
+        # I2C Slave Revision         42
+        p_slave_revision = re.compile(r'^.* +Slave +Revision +(?P<slave_revision>\S+)$')
+
+
+        # Read line from output and build parsed output
+        res = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # FPC 0 status:
+            m = p1.match(line)
+            if m:
+                if "environment-component-information" not in res:
+                    res = {
+                        "environment-component-information": {
+                            "environment-component-item": []
+                        }
+                    }
+
+                env_list = res["environment-component-information"]["environment-component-item"]
+
+                env_item = {
+                    "name": m.groupdict()["name"]
+                }
+                continue
+
+            # State                      Online
+            m = p2.match(line)
+            if m:
+                env_item["state"] = m.groupdict()["state"]
+                continue
+
+            # Temperature Intake         27 degrees C / 80 degrees F
+            # Temperature I3 0 Chip      38 degrees C / 100 degrees F 
+            m = p_temp.match(line)
+            if m:
+                group = m.groupdict()
+                
+                if "temperature-reading" not in env_item:
+                    env_item["temperature-reading"] = []
+                
+                temp_list = env_item["temperature-reading"]
+
+                temp_item = {
+                    "temperature": {
+                        "#text": group["text"].strip(),
+                        "@junos:celsius": group["celsius"]
+                    },
+                    "temperature-name": group["temperature_name"].strip()
+                }
+
+                temp_list.append(temp_item)
+
+                continue
+
+            # Power
+            m = p_power.match(line)
+            if m:
+                env_item["power-information"] = {
+                    "power-title": {
+                            "power-type": "Power"
+                        },
+                }
+                continue
+
+            # 1.2 V PFE 0               1231 mV
+            # 1.5 V                     1498 mV
+            m = p_voltage.match(line)
+            if m:
+                if "voltage" not in env_item["power-information"]:
+                    env_item["power-information"]["voltage"] = []
+                
+                voltage_list = env_item["power-information"]["voltage"]
+
+                voltage_item = {
+                    "actual-voltage": m.groupdict()["actual_voltage"].strip(),
+                    "reference-voltage": m.groupdict()["reference_voltage"].strip()
+                }
+
+                voltage_list.append(voltage_item)
+
+                continue
+
+            # I2C Slave Revision         42
+            m = p_slave_revision.match(line)
+            if m:
+                env_item["slave-revision"] = m.groupdict()["slave_revision"].strip()
+                env_list.append(env_item)
+                continue
 
         return res
 
