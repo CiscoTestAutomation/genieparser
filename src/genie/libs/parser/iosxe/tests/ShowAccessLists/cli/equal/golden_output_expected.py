@@ -83,12 +83,12 @@ expected_output = {
                         "ipv6": {
                             "destination_network": {
                                 "host 2001:1::2": {
-                                    "destination_network": "host " "2001:1::2"
+                                    "destination_network": "host 2001:1::2"
                                 }
                             },
                             "protocol": "ipv6",
                             "source_network": {
-                                "host 2001::1": {"source_network": "host " "2001::1"}
+                                "host 2001::1": {"source_network": "host 2001::1"}
                             },
                         }
                     },
@@ -103,7 +103,7 @@ expected_output = {
                         "ipv6": {
                             "destination_network": {
                                 "host 2001:2::2": {
-                                    "destination_network": "host " "2001:2::2"
+                                    "destination_network": "host 2001:2::2"
                                 }
                             },
                             "protocol": "tcp",
@@ -114,7 +114,7 @@ expected_output = {
                         "tcp": {
                             "established": False,
                             "source_port": {
-                                "operator": {"operator": "eq", "port": "www " "8443"}
+                                "operator": {"operator": "eq", "port": "www 8443"}
                             },
                         }
                     },
@@ -128,15 +128,13 @@ expected_output = {
                         "ipv6": {
                             "destination_network": {
                                 "2001:db8:1:1::1 2001:db8:24:24::6": {
-                                    "destination_network": "2001:db8:1:1::1 "
-                                    "2001:db8:24:24::6"
+                                    "destination_network": "2001:db8:1:1::1 2001:db8:24:24::6"
                                 }
                             },
                             "protocol": "ipv6",
                             "source_network": {
                                 "2001:db8:9:9::3 2001:db8:10:10::4": {
-                                    "source_network": "2001:db8:9:9::3 "
-                                    "2001:db8:10:10::4"
+                                    "source_network": "2001:db8:9:9::3 2001:db8:10:10::4"
                                 }
                             },
                         }
@@ -194,9 +192,9 @@ expected_output = {
                 "matches": {
                     "l2": {
                         "eth": {
-                            "destination_mac_address": "host " "0003.00ff.0306",
+                            "destination_mac_address": "host 0003.00ff.0306",
                             "lsap": "0x1 0xD8FE",
-                            "source_mac_address": "host " "0001.00ff.0235",
+                            "source_mac_address": "host 0001.00ff.0235",
                         }
                     }
                 },
@@ -314,7 +312,7 @@ expected_output = {
                             "protocol": "icmp",
                             "source_network": {
                                 "0.1.1.1 255.0.0.0": {
-                                    "source_network": "0.1.1.1 " "255.0.0.0"
+                                    "source_network": "0.1.1.1 255.0.0.0"
                                 }
                             },
                         }
@@ -336,13 +334,13 @@ expected_output = {
                         "ipv4": {
                             "destination_network": {
                                 "host 10.4.1.1": {
-                                    "destination_network": "host " "10.4.1.1"
+                                    "destination_network": "host 10.4.1.1"
                                 }
                             },
                             "protocol": "tcp",
                             "source_network": {
                                 "192.168.1.0 0.0.0.255": {
-                                    "source_network": "192.168.1.0 " "0.0.0.255"
+                                    "source_network": "192.168.1.0 0.0.0.255"
                                 }
                             },
                         }
@@ -363,7 +361,7 @@ expected_output = {
                             "protocol": "tcp",
                             "source_network": {
                                 "host 10.16.2.2": {
-                                    "source_network": "host " "10.16.2.2"
+                                    "source_network": "host 10.16.2.2"
                                 }
                             },
                             "ttl": 255,
@@ -376,7 +374,7 @@ expected_output = {
                             "source_port": {
                                 "operator": {
                                     "operator": "eq",
-                                    "port": "www " "telnet " "443",
+                                    "port": "www telnet 443",
                                 }
                             },
                         }
@@ -436,7 +434,7 @@ expected_output = {
                         "ipv4": {
                             "destination_network": {
                                 "10.120.194.64 0.0.0.63": {
-                                    "destination_network": "10.120.194.64 " "0.0.0.63"
+                                    "destination_network": "10.120.194.64 0.0.0.63"
                                 }
                             },
                             "protocol": "icmp",
@@ -454,7 +452,7 @@ expected_output = {
                         "ipv4": {
                             "destination_network": {
                                 "10.120.194.64 0.0.0.63": {
-                                    "destination_network": "10.120.194.64 " "0.0.0.63"
+                                    "destination_network": "10.120.194.64 0.0.0.63"
                                 }
                             },
                             "protocol": "tcp",
