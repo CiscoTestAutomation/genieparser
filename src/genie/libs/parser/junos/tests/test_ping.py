@@ -369,7 +369,61 @@ class TestPing(unittest.TestCase):
                         'max': '22.375',
                         'min': '1.078',
                         'stddev': '8.386'},
-                    'send': 5}}} 
+                    'send': 5}}}
+    
+
+    # ping {addr} source {source} size {size} count {count} tos {tos} rapid
+    golden_output_5 = {'execute.return_value': '''
+            ping 2.2.2.2 source 1.1.1.1 size 1452 count 5 tos 2 rapid
+            PING 2.2.2.2 (2.2.2.2): 1452 data bytes
+            !!!!!
+            --- 2.2.2.2 ping statistics ---
+            5 packets transmitted, 5 packets received, 0% packet loss
+            round-trip min/avg/max/stddev = 0.777/0.922/1.065/0.117 ms
+        '''}
+
+    golden_parsed_output_5 = {
+        "ping": {
+            "address": "2.2.2.2",
+            "data-bytes": 1452,
+            "source": "2.2.2.2",
+            "statistics": {
+                "loss-rate": 0,
+                "received": 5,
+                "round-trip": {
+                    "avg": "0.922",
+                    "max": "1.065",
+                    "min": "0.777",
+                    "stddev": "0.117"
+                },
+                "send": 5
+            }
+        }
+    }
+
+    # ping 200.0.0.2 source 100.0.0.2 size 2000 do-not-fragment count 5 
+    golden_output_6 = {'execute.return_value':'''
+        PING 200.0.0.2 (200.0.0.2): 2000 data bytes
+        36 bytes from 100.0.0.1: frag needed and DF set (MTU 1500)
+        Vr HL TOS  Len   ID Flg  off TTL Pro  cks      Src      Dst
+        4  5  00 07ec 59cb   2 0000  40  01 ad41 100.0.0.2  200.0.0.2 
+        --- 200.0.0.2 ping statistics ---
+        5 packets transmitted, 0 packets received, 100% packet loss    
+    '''}
+
+    golden_parsed_output_6 = {
+        'ping': 
+            {'address': '200.0.0.2',
+                'data-bytes': 2000,
+                'result': [{'bytes': 36,
+                            'from': '100.0.0.1',
+                            'message': 'frag needed and DF set ',
+                            'mtu': 1500}],
+                'source': '200.0.0.2',
+                'statistics': {
+                    'loss-rate': 100, 
+                    'received': 0, 
+                    'send': 5}}}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -404,7 +458,30 @@ class TestPing(unittest.TestCase):
             source='10.4.1.2',
             size=1400
         )
-        self.assertEqual(parsed_output, self.golden_parsed_output_4)        
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
+
+    def test_golden_5(self):
+        self.device = Mock(**self.golden_output_5)
+        obj = Ping(device=self.device)
+        parsed_output = obj.parse(
+            addr='2.2.2.2', 
+            source='1.1.1.1', 
+            size='1452', 
+            count='5', 
+            tos=2)
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)  
+
+    # ping {addr} source {source} size {size} do-not-fragment count {count}
+    # ping 200.0.0.2 source 100.0.0.2 size 2000 do-not-fragment count 5 
+    def test_golden_6(self):
+        self.device = Mock(**self.golden_output_6)
+        obj = Ping(device=self.device)
+        parsed_output = obj.parse(
+            addr='200.0.0.2', 
+            source='100.0.0.2', 
+            size='2000', 
+            count='5')
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)             
 
 
 class TestPingMplsRsvp(unittest.TestCase):

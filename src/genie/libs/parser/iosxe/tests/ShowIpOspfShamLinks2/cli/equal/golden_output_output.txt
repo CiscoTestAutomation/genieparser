@@ -1,0 +1,12 @@
+Sham Link OSPF_SL0 to address 10.151.22.22 is up
+Area 1 source address 10.229.11.11
+  Run as demand circuit
+  DoNotAge LSA not allowed (Number of DCbitless LSA is 1). Cost of using 111 State POINT_TO_POINT,
+  Timer intervals configured, Hello 10, Dead 40, Wait 40,
+  Strict TTL checking enabled, up to 3 hops allowed
+    Hello due in 00:00:00
+    Adjacency State FULL
+    Index 1/2/2, retransmission queue length 0, number of retransmission 2
+    First 0x0(0)/0x0(0)/0x0(0) Next 0x0(0)/0x0(0)/0x0(0)
+    Last retransmission scan length is 1, maximum is 1
+    Last retransmission scan time is 0 msec, maximum is 0 msec
