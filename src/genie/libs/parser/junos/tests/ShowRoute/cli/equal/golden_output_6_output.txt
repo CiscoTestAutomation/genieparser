@@ -1,0 +1,25 @@
+
+    show route 10.36.255.252/32
+
+    inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
+    + = Active Route, - = Last Active, * = Both
+
+    10.36.255.252/32  *[OSPF/10/10] 4w5d 22:51:00, metric 1111
+                        >  to 10.169.14.158 via ge-0/0/2.0
+                        [BGP/170] 27w6d 12:53:14, MED 16011, localpref 4294967285, from 10.34.2.250
+                        AS path: (65161) I, validation-state: unverified
+                        >  to 10.169.14.158 via ge-0/0/2.0
+
+    inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
+    + = Active Route, - = Last Active, * = Both
+
+    10.36.255.252/32  *[BGP/170] 4w5d 22:51:00, MED 16011, localpref 100, from 10.34.2.250
+                        AS path: (65161) I, validation-state: unverified
+                        >  to 10.169.14.158 via ge-0/0/2.0, Push 118420
+
+    GIPV.inet.0: 34 destinations, 34 routes (34 active, 0 holddown, 0 hidden)
+    + = Active Route, - = Last Active, * = Both
+
+    10.36.255.252/32  *[OSPF/10/10] 4w5d 22:51:00, metric 0, tag 65151500
+                        >  to 10.169.14.158 via ge-0/0/2.0
+    

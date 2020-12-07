@@ -1,0 +1,11 @@
+
+            show configuration protocols mpls path test_data
+            10.49.194.2 strict;
+            10.49.194.1 strict;
+            10.169.14.157 strict;
+            10.169.14.158 strict;
+            192.168.145.217 strict;
+            192.168.145.218 strict;
+            10.49.194.65 strict;
+            10.49.194.66 strict;
+    

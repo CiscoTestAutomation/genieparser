@@ -1,0 +1,13 @@
+
+        LLDP                      : Disabled
+        Advertisement interval    : 30 seconds
+        Transmit delay            : 0 seconds
+        Hold timer                : 120 seconds
+        Notification interval     : 5 Second(s)
+        Config Trap Interval      : 0 seconds
+        Connection Hold timer     : 300 seconds
+
+        LLDP MED                  : Disabled
+        Port ID TLV subtype       : locally-assigned
+        Port Description TLV type : interface-alias (ifAlias)
+        

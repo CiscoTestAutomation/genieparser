@@ -1,0 +1,9 @@
+
+        show system uptime no-forwarding
+        Current time: 2020-03-25 09:38:14 UTC
+        Time Source:  LOCAL CLOCK
+        System booted: 2019-08-29 09:02:22 UTC (29w6d 00:35 ago)
+        Protocols started: 2019-08-29 09:03:25 UTC (29w6d 00:34 ago)
+        Last configured: 2020-03-05 16:04:34 UTC (2w5d 17:33 ago) by cisco
+        9:38AM  up 209 days, 36 mins, 3 users, load averages: 0.29, 0.41, 0.38
+    

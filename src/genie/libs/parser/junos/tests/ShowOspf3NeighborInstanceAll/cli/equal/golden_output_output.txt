@@ -1,0 +1,14 @@
+
+        Instance: master
+
+        Realm: ipv6-unicast
+        ID               Interface              State     Pri   Dead
+        10.16.2.2          ge-0/0/0.0             Full      128     32
+          Neighbor-address fe80::250:56ff:fe8d:c305
+        10.36.3.3          ge-0/0/1.0             Full      128     32
+          Neighbor-address fe80::250:56ff:fe8d:fe22
+        10.16.2.2          ge-0/0/2.0             Full      128     35
+          Neighbor-address fe80::250:56ff:fe8d:54f2
+        172.16.81.1      ge-0/0/3.0             Full        0     38
+          Neighbor-address fe80::200:23ff:fed6:9656
+        

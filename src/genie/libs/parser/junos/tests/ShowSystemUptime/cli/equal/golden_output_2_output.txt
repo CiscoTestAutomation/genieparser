@@ -1,0 +1,9 @@
+
+        show system uptime 
+        Current time: 2020-08-13 14:08:16 UTC
+        Time Source:  LOCAL CLOCK 
+        System booted: 2020-08-13 03:05:11 UTC (11:03:05 ago)
+        Protocols started: 2020-08-13 13:37:06 UTC (00:31:10 ago)
+        Last configured: 2020-08-13 14:08:16 UTC (00:00:00 ago) by genie
+        2:08PM  up 11:03, 1 users, load averages: 0.31, 0.48, 0.50
+        

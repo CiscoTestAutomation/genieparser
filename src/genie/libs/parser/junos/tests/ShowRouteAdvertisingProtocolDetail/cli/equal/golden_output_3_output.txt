@@ -1,0 +1,13 @@
+
+    show route advertising-protocol bgp 10.145.0.3 10.36.3.3 detail 
+
+    inet.3: 1 destinations, 1 routes (1 active, 0 holddown, 0 hidden)
+    * 10.36.3.3/32 (1 entry, 1 announced)
+    BGP group eBGP_SUT-2 type External
+        Route Label: 17
+        Nexthop: Self
+        Flags: Nexthop Change
+        MED: 1
+        AS path: [1] I 
+        Entropy label capable
+    
