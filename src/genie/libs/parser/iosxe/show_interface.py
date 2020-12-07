@@ -215,7 +215,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 cmd = self.cli_command[1].format(interface=interface)
             else:
                 cmd = self.cli_command[0]
-            out = self.device.execute(cmd, timeout=180)
+            out = self.device.execute(cmd)
         else:
             out = output
 
