@@ -1840,12 +1840,13 @@ class ShowChassisFpc(ShowChassisFpcSchema):
         else:
             out = output
 
-        #0  Online           Testing   3         0        2      2      2    511        31          0
-        p1 = re.compile(r'^(?P<slot>\d+) +(?P<state>\S+) '
+        # 0  Online           Testing   3         0        2      2      2    511        31          0
+        # 0  Present          Testing
+        p1 = re.compile(r'^(?P<slot>\d+) +(?P<state>\S+)( '
                         r'+(?P<text>\S+) +(?P<cpu_total>\d+) '
                         r'+(?P<cpu_interrupt>\d+)( +(?P<cpu_1min>\d+) '
                         r'+(?P<cpu_5min>\d+) +(?P<cpu_15min>\d+))? +'
-                        r'(?P<dram>\d+) +(?P<heap>\d+) +(?P<buffer>\d+)$')
+                        r'(?P<dram>\d+) +(?P<heap>\d+) +(?P<buffer>\d+))?$')
 
         #2  Empty
         p2 = re.compile(r'^(?P<slot>\d+) +(?P<state>\S+)$')
