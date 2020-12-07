@@ -1,4 +1,4 @@
-expected_output = = {'environment-component-information': {'environment-component-item': [{'name': 'FPC '
+expected_output = {'environment-component-information': {'environment-component-item': [{'name': 'FPC '
                                                                                '0',
                                                                        'power-information': {'power-title': {'power-type': 'Power'},
                                                                                              'voltage': [{'actual-voltage': '1231',
