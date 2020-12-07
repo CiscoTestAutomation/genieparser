@@ -3,4 +3,5 @@
 --------------------------------------------------------------------------------
 * IOSXE
   * ShowIpOspfVirtualLinks2:
-      * show ip ospf virtual link__ added so it works offline
+      * show ip ospf virtual link
+        * added so it works offline

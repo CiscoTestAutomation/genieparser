@@ -3,4 +3,5 @@
 --------------------------------------------------------------------------------
 * IOSXE
   * ShowIpOspfInterface2:
-      * show ip ospf interface__ added so it works offline
+      * show ip ospf interface
+         * added so it works offline

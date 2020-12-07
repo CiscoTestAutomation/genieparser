@@ -3,4 +3,5 @@
 --------------------------------------------------------------------------------
 * IOSXE
   * ShowIpOspfShamLinks2:
-      * show ip ospf sham link__ added so it works offline
+      * show ip ospf sham link
+        * added so it works offline

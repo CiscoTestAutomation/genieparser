@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
-import os
+# Written by Thomas Ryan
+
 import re
 import pathlib
 import argparse
 
-from genie.utils import Dq
-
+# Linked list class to store our information
 class LList():
     def __init__(self, key, prev=None):
         self.prev = prev.set_next(self) if prev else None
@@ -24,7 +24,7 @@ class LList():
         self.next = obj
         return self
 
-
+# Function for building our file
 def build_file(llist, txt="", indent=-4):
     if isinstance(llist, LList):
         if not llist.prev:
@@ -32,7 +32,10 @@ def build_file(llist, txt="", indent=-4):
             txt += '{:^80}\n'.format(llist.key)
             txt += '-' * 80 + '\n'
         else:
-            txt += ' ' * indent + '* ' + llist.key + '\n'
+            if indent == 0:
+                txt += ' ' * indent + '\n* ' + llist.key.upper() + '\n'
+            else:
+                txt += ' ' * indent + '* ' + llist.key + '\n'
 
     if isinstance(llist.next, list):
         for sub_llist in llist.next:
@@ -86,11 +89,8 @@ if __name__ == "__main__":
 
     p3 = re.compile(r'^(?P<spaces>\s*)\* *(?P<data>.+):?$')
 
+    # Some variables for our use
     last_space = 0
-    last_key = None
-    last_dict = None
-    section = None
-    os_dict = dict()
     key_dict = dict()
     key = None
 
@@ -119,7 +119,7 @@ if __name__ == "__main__":
                 m = p3.match(line)
                 if m:
                     space_count = len(m.groupdict()['spaces'])
-                    data = m.groupdict()['data'].title()
+                    data = m.groupdict()['data'].replace(':','').title()
 
                     if space_count not in index_list:
                         index_list.append(space_count)
@@ -163,5 +163,5 @@ if __name__ == "__main__":
     with open(FINAL_PATH, 'w') as fil:
         txt = ""
         for llist in key_dict.values():
-            txt += build_file(llist)
+            txt += build_file(llist) + '\n\n'
         fil.write(txt)
