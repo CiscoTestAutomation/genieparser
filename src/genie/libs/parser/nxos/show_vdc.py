@@ -83,7 +83,8 @@ class ShowVdcResourceDetail(ShowVdcResourceDetailSchema):
             if m:
                 group = m.groupdict()
                 name = group.pop('name')
-                resource_dict = ret_dict.setdefault(name, {})
+                resources_dict = ret_dict.setdefault('resources', {})
+                resource_dict = resources_dict.setdefault(name, {})
                 resource_dict.update({key:int(val) for key,val in group.items()})
                 vdcs = resource_dict.setdefault('vdcs', {})                
                 continue
