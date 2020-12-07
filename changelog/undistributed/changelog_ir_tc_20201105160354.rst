@@ -9,6 +9,6 @@
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
-	  * Modified TracerouteNoResolve:
+	* Modified TracerouteNoResolve:
         * Updated regex pattern <p1> to accommodate various outputs.
         
