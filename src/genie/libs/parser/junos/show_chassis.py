@@ -2888,3 +2888,78 @@ class ShowChassisPower(ShowChassisPowerSchema):
                 continue
         
         return ret_dict
+
+# Python
+import re
+
+# Metaparser
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import (Any, Optional, Use,
+                                                SchemaTypeError, Schema)
+
+
+class ShowChassisEnvironmentComponentSchema(MetaParser):
+    """ Schema for:
+            * show 
+    """
+    def validate_environment_component_item_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaError('environment-component-item is not a list')
+        env_schema = Schema({
+                "name": str,
+                "state": str,
+            })
+        # Validate each dictionary in list
+        for item in value:
+            env_schema.validate(item)
+        return value
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "environment-component-information": {
+            Optional("@xmlns"):
+            str,
+            "environment-component-item": Use(validate_environment_component_item_list)
+        }
+    }
+
+
+class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
+    """ Parser for:
+            * show 
+    """
+    cli_command = 'show chassis environment {component}'
+
+    def cli(self, component, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                component=component
+            ))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        p1 = re.compile(r'^(?P<name>\S+ +\d+) +status:$')
+
+        p2 = re.compile(r'^State +(?P<state>[\S\s]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_list = ret_dict.setdefault('environment-component-information', {}). \
+                    setdefault('environment-component-item', [])
+                environment_component_item_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                environment_component_item_list.append(environment_component_item_dict)
+                continue
+            
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
