@@ -75,7 +75,9 @@ class FileList(FileListSchema):
         p2 = re.compile(r'^(?P<file>([a-zA-Z0-9\-\_\.\@]+))(?: +\-\> +(?P<path>(.*)))?$')
 
         # /root/filename999
+        # /root/filename999.cfg
         # /root/filename999: No such file or directory
+        # /root/filename999.cfg: No such file or directory
         p3 = re.compile(r'^\/(?P<dir>(\S+))\/(?P<file>([a-zA-Z0-9\-\_\/\.]+))'
                          '(?P<missing>(?:\: +No +such +file +or +directory)?)$')
 
