@@ -1043,6 +1043,7 @@ class ShowRouteAllSummarySchema(MetaParser):
 class ShowRouteAllSummary(ShowRouteAllSummarySchema):
     """Parser for :
        show route afi-all safi-all summary
+       show route vrf all afi-all safi-all summary
        show route vrf <vrf> afi-all safi-all summary"""
 
     cli_command = [
