@@ -11,8 +11,9 @@ from pyats.topology import loader
 from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
 
 # iosxr show_mrib
-from genie.libs.parser.iosxr.show_mrib import ShowMribVrfRoute,\
-                                              ShowMribVrfRouteSummary
+from genie.libs.parser.iosxr.show_mrib import (ShowMribVrfRoute,
+                                               ShowMribVrfRouteSummary,
+                                               ShowMribEvpnBucketDb)
 
 
 # ==================================================
@@ -817,6 +818,250 @@ class test_show_mrib_vrf_route_summary(unittest.TestCase):
         obj = ShowMribVrfRouteSummary(device=self.device)
         parsed_output = obj.parse(vrf='vrf_104', af='ipv4')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
+
+# ==========================================================================
+# Unittest for 'show mrib evpn bucket-db'
+# ==========================================================================
+class test_show_mrib_evpn_bucket_db(unittest.TestCase):
+    """ Unit test for show mrib evpn bucket-db. """
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': """
+                                                    EVPN Bucket Database
+                                            --------------------
+
+       IFName                      IFHandle      BucketID      State      Uptime       Delete In Progress
+    Bundle-Ether1                  0x400b920        0         Forward    01:56:04            N
+    Bundle-Ether1                  0x400b920        1         Blocked    01:56:04            N
+    Bundle-Ether1                  0x400b920        2         Forward    01:56:04            N
+    Bundle-Ether1                  0x400b920        3         Blocked    01:56:04            N
+    Bundle-Ether1                  0x400b920        4         Forward    01:56:04            N
+    Bundle-Ether1                  0x400b920        5         Blocked    01:56:04            N
+    Bundle-Ether1                  0x400b920        6         Forward    01:56:04            N
+    Bundle-Ether1                  0x400b920        7         Blocked    01:56:04            N
+    Bundle-Ether1                  0x400b920        8         Forward    01:56:04            N
+    Bundle-Ether1                  0x400b920        9         Blocked    01:56:04            N
+    Bundle-Ether1                  0x400b920        10        Forward    01:56:04            N
+    Bundle-Ether1                  0x400b920        11        Blocked    01:56:04            N
+    """}
+
+    golden_output_2 = {'execute.return_value': """
+                                            EVPN Bucket Database
+                                            --------------------
+
+       IFName                      IFHandle      BucketID      State      Uptime       Delete In Progress
+    Bundle-Ether1                  0x200b120        0         Blocked    01:53:10            N
+    Bundle-Ether1                  0x200b120        1         Forward    01:53:10            N
+    Bundle-Ether1                  0x200b120        2         Blocked    01:53:10            N
+    Bundle-Ether1                  0x200b120        3         Forward    01:53:10            N
+    Bundle-Ether1                  0x200b120        4         Blocked    01:53:10            N
+    Bundle-Ether1                  0x200b120        5         Forward    01:53:10            N
+    Bundle-Ether1                  0x200b120        6         Blocked    01:53:10            N
+    Bundle-Ether1                  0x200b120        7         Forward    01:53:10            N
+    Bundle-Ether1                  0x200b120        8         Blocked    01:53:10            N
+    Bundle-Ether1                  0x200b120        9         Forward    01:53:10            N
+    Bundle-Ether1                  0x200b120        10        Blocked    01:53:10            N
+    Bundle-Ether1                  0x200b120        11        Forward    01:53:10            N
+    """}
+
+    golden_parsed_output_1 = {
+        'bucket_id':
+            {0:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:56:04'
+                  },
+             1:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:56:04'
+                  },
+             2:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:56:04'
+                  },
+             3:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:56:04'
+                  },
+             4:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:56:04'
+                  },
+             5:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:56:04'
+                  },
+             6:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:56:04'
+                  },
+             7:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:56:04'
+                  },
+             8:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:56:04'
+                  },
+             9:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:56:04'},
+             10:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:56:04'},
+             11:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x400b920',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:56:04'
+                  }
+             }
+    }
+
+    golden_parsed_output_2 = {
+        'bucket_id':
+            {0:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:53:10'
+                  },
+             1:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:53:10'
+                  },
+             2:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:53:10'
+                  },
+             3:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:53:10'
+                  },
+             4:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:53:10'
+                  },
+             5:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:53:10'
+                  },
+             6:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:53:10'
+                  },
+             7:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:53:10'
+                  },
+             8:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:53:10'
+                  },
+             9:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:53:10'
+                  },
+             10:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Blocked',
+                  'uptime': '01:53:10'
+                  },
+             11:
+                 {'delete_in_progress': 'N',
+                  'if_handle': '0x200b120',
+                  'if_name': 'Bundle-Ether1',
+                  'state': 'Forward',
+                  'uptime': '01:53:10'
+                  }
+             }
+    }
+
+    def test_show_mrib_evpn_bucket_db_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowMribEvpnBucketDb(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_mrib_evpn_bucket_db_full_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowMribEvpnBucketDb(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_show_mrib_evpn_bucket_db_full_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowMribEvpnBucketDb(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':
