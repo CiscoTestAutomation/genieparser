@@ -1,0 +1,18 @@
+
+    show ospf database lsa-id 10.145.0.3 detail 
+
+        OSPF database, Area 0.0.0.0
+     Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len 
+    Network *10.145.0.3         10.36.3.3          0x80000002    64  0x22 0x9958  36
+      mask 255.255.255.0
+      attached router 10.36.3.3
+      attached router 10.64.4.4
+      attached router 10.4.1.1
+      Topology default (ID 0)
+        Type: Transit, Node ID: 10.4.1.1
+          Metric: 0, Bidirectional
+        Type: Transit, Node ID: 10.64.4.4
+          Metric: 0, Bidirectional
+        Type: Transit, Node ID: 10.36.3.3
+          Metric: 0, Bidirectional
+    

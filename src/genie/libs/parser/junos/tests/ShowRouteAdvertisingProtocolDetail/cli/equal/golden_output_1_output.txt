@@ -1,0 +1,26 @@
+
+        show route advertising-protocol bgp 10.169.14.240 10.36.255.252/32 detail
+
+        inet.0: 62 destinations, 67 routes (62 active, 0 holddown, 0 hidden)
+        * 10.36.255.252/32 (1 entry, 1 announced)
+        BGP group sjkGDS221-EC11 type External
+            Nexthop: Self
+            Flags: Nexthop Change
+            MED: 16011
+            Localpref: 4294967285
+            AS path: [65161] I
+            Communities: 65151:65109
+
+        inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
+
+        * 10.36.255.252/32 (1 entry, 1 announced)
+        BGP group sjkGDS221-EC11 type External
+            Route Label: 118420
+            Nexthop: Self
+            Flags: Nexthop Change
+            MED: 16011
+            Localpref: 100
+            AS path: [65161] I
+            Communities: 65151:65109
+            Entropy label capable
+    

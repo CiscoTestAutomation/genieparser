@@ -1,0 +1,102 @@
+
+                show ospf3 database external extensive | no-more
+            OSPF3 AS SCOPE link state database
+        Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+        Extern      0.0.0.1          10.34.2.250     0x8000178e  1412  0x3c81  28
+        Prefix ::/0
+        Prefix-options 0x0, Metric 1, Type 1,
+        Aging timer 00:36:27
+        Installed 00:23:26 ago, expires in 00:36:28, sent 00:23:24 ago
+        Last changed 29w5d 21:04:29 ago, Change count: 1
+        Extern      0.0.0.3          10.34.2.250     0x8000178e  1037  0x21bf  44
+        Prefix 2001:db8:eb18:ca45::2/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:42:42
+        Installed 00:17:11 ago, expires in 00:42:43, sent 00:17:09 ago
+        Last changed 29w5d 21:04:29 ago, Change count: 1
+        Extern      0.0.0.4          10.34.2.250     0x80000246  2913  0xcc71  44
+        Prefix 2001:db8:eb18:ca45::1/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:11:26
+        Installed 00:48:26 ago, expires in 00:11:27, sent 00:48:24 ago
+        Last changed 2w6d 04:51:00 ago, Change count: 1
+        Extern      0.0.0.1          10.34.2.251     0x80001789  1412  0x4081  28
+        Prefix ::/0
+        Prefix-options 0x0, Metric 1, Type 1,
+        Aging timer 00:36:27
+        Installed 00:23:23 ago, expires in 00:36:28, sent 00:23:21 ago
+        Last changed 29w5d 21:04:28 ago, Change count: 1
+        Extern      0.0.0.2          10.34.2.251     0x80001788  2912  0x17d0  44
+        Prefix 2001:db8:eb18:ca45::1/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:11:27
+        Installed 00:48:23 ago, expires in 00:11:28, sent 00:48:21 ago
+        Last changed 29w5d 21:04:28 ago, Change count: 1
+        Extern      0.0.0.3          10.34.2.251     0x80000246   287  0xea52  44
+        Prefix 2001:db8:eb18:ca45::2/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:55:12
+        Installed 00:04:38 ago, expires in 00:55:13, sent 00:04:36 ago
+        Last changed 2w6d 04:10:55 ago, Change count: 1
+        Extern      0.0.0.18         10.169.14.240   0x80000349  1722  0xbddb  28
+        Prefix ::/0
+        Prefix-options 0x0, Metric 1, Type 1,
+        Aging timer 00:31:17
+        Installed 00:28:39 ago, expires in 00:31:18, sent 00:28:37 ago
+        Last changed 4w1d 01:48:00 ago, Change count: 1
+        Extern      0.0.0.19         10.169.14.240   0x8000034d   904  0x3603  44
+        Prefix 2001:db8:6aa8:6a53::1001/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:44:55
+        Installed 00:15:01 ago, expires in 00:44:56, sent 00:14:59 ago
+        Last changed 3w3d 02:05:47 ago, Change count: 3
+        Extern      0.0.0.22         10.169.14.240   0x800002b9  2268  0xab95  44
+        Prefix 2001:db8:223c:ca45::b/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:22:11
+        Installed 00:37:45 ago, expires in 00:22:12, sent 00:37:43 ago
+        Last changed 3w0d 17:02:47 ago, Change count: 1
+        Extern      0.0.0.23         10.169.14.240   0x80000247   631  0x7049  44
+        Prefix 2001:db8:b0f8:ca45::14/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:49:28
+        Installed 00:10:28 ago, expires in 00:49:29, sent 00:10:26 ago
+        Last changed 2w6d 04:51:04 ago, Change count: 1
+        Extern      0.0.0.24         10.169.14.240   0x80000246  2540  0x4e6c  44
+        Prefix 2001:db8:b0f8:ca45::13/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:17:39
+        Installed 00:42:17 ago, expires in 00:17:40, sent 00:42:15 ago
+        Last changed 2w6d 04:50:58 ago, Change count: 1
+        Extern      0.0.0.9          10.169.14.241   0x800002f0  2723  0xd341  44
+        Prefix 2001:db8:223c:ca45::c/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:14:36
+        Installed 00:45:17 ago, expires in 00:14:37, sent 00:45:15 ago
+        Last changed 3w2d 03:24:20 ago, Change count: 11
+        Extern      0.0.0.10         10.169.14.241   0x80000246   723  0xd4f2  44
+        Prefix 2001:db8:b0f8:ca45::13/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:47:56
+        Installed 00:11:57 ago, expires in 00:47:57, sent 00:11:55 ago
+        Last changed 2w6d 04:10:59 ago, Change count: 1
+        Extern      0.0.0.11         10.169.14.241   0x80000246    56  0xe4e0  44
+        Prefix 2001:db8:b0f8:ca45::14/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:59:03
+        Installed 00:00:50 ago, expires in 00:59:04, sent 00:00:48 ago
+        Last changed 2w6d 04:10:53 ago, Change count: 1
+        Extern     *0.0.0.1          10.189.5.252     0x8000063f  2043  0x3ff4  44
+        Prefix 2001:db8:eb18:ca45::1/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Gen timer 00:15:56
+        Aging timer 00:25:56
+        Installed 00:34:03 ago, expires in 00:25:57, sent 00:34:01 ago
+        Last changed 3w0d 17:02:47 ago, Change count: 2, Ours
+        Extern      0.0.0.1          10.189.5.253     0x80000e1e  2045  0x7dcd  44
+        Prefix 2001:db8:eb18:ca45::2/128
+        Prefix-options 0x0, Metric 50, Type 1,
+        Aging timer 00:25:54
+        Installed 00:34:02 ago, expires in 00:25:55, sent 00:34:01 ago
+        Last changed 3w3d 00:31:46 ago, Change count: 15
+    

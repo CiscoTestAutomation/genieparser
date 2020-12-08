@@ -1,0 +1,44 @@
+
+        show ldp overview 
+        Instance: master
+        Router ID: 10.204.1.100
+        Message id: 4
+        Configuration sequence: 1
+        Deaggregate: disabled
+        Explicit null: disabled
+        IPv6 tunneling: disabled
+        Strict targeted hellos: disabled
+        Loopback if added: no
+        Route preference: 9
+        Unicast transit LSP chaining: disabled
+        P2MP transit LSP chaining: disabled
+        Transit LSP statistics based on route statistics: disabled
+        Capabilities enabled: none
+        Protocol modes:
+            Distribution: unsolicited
+            Retention: liberal
+            Control: ordered
+        Sessions:
+            Connecting: 1
+        Timers:
+            Keepalive interval: 10, Keepalive timeout: 30
+            Link hello interval: 5, Link hello hold time: 15
+            Targeted hello interval: 15, Targeted hello hold time: 45
+            Label withdraw delay: 60
+        Graceful restart:
+            Restart: enabled, Helper: enabled, Restart in process: false
+            Reconnect time: 60000, Max neighbor reconnect time: 120000
+            Recovery time: 160000, Max neighbor recovery time: 240000
+        Traffic Engineering:
+            Bgp igp: disabled
+            Both ribs: disabled
+            Mpls forwarding: disabled
+        IGP:
+            Tracking igp metric: disabled
+            Sync session up delay: 10
+        Session protection:
+            Session protection: disabled
+            Session protecton timeout: 0
+        Interface addresses advertising:
+            10.1.2.2
+    

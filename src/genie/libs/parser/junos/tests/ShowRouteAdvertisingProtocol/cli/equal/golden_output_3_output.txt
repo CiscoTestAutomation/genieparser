@@ -1,0 +1,32 @@
+
+    show route advertising-protocol bgp 2001:db8:7fc5:ca45::1
+
+    inet6.0: 21 destinations, 23 routes (21 active, 0 holddown, 0 hidden)
+    Prefix                  Nexthop              MED     Lclpref    AS path
+        2001:db8:7fc5:ca45::1/128
+    *                         Self                 2       100        I
+        2001:db8:7fc5:ca45::2/128
+    *                         Self                 1       100        I
+        2001:db8:7fc5:ca45::3/128
+    *                         Self                 1       100        I
+        2001:db8:7fc5:ca45::4/128
+    *                         Self                         100        I
+        2001:db8:7fc5:ca45::5/128
+    *                         Self                 3       100        I
+        2001:db8:7fc5:d3e9::/64
+    *                         Self                 2       100        I
+        2001:db8:7fc5:d8be::/64
+    *                         Self                 2       100        I
+        2001:db8:7fc5:dd95::/64
+    *                         Self                         100        I
+        2001:db8:7fc5:e26e::/64
+    *                         Self                         100        I
+        2001:db8:7fc5:e749::/64
+    *                         Self                 3       100        I
+        2001:db8:7fc5:9a4b::2/128
+    *                         2001:db8:7fc5:ca45::2             100        I
+        2001:db8:7fc5:9a4b::3/128
+    *                         2001:db8:7fc5:ca45::3             100        I
+        2001:db8:7fc5:9a4b::4/128
+    *                         Self                         100        I
+    

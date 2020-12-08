@@ -22,23 +22,37 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 
 # Create the parser
-my_parser = argparse.ArgumentParser(description="Optional arguments for 'nose'-like tests")
-my_parser.add_argument('-o', "--operating_system",
-                       type=str,
-                       help='The OS you wish to filter on',
-                       default=None)
-my_parser.add_argument('-c', "--class_name",
-                       type=str,
-                       help="The Class you wish to filter on, (not the Test File)",
-                       default=None)
-my_parser.add_argument('-t', "--token",
-                       type=str,
-                       help="The Token associated with the class, such as 'asr1k'",
-                       default=None)
-my_parser.add_argument('-n', "--number",
-                       type=int,
-                       help="The specific unittest we want to run, such as '25'",
-                       default=None)
+my_parser = argparse.ArgumentParser(
+    description="Optional arguments for 'nose'-like tests"
+)
+my_parser.add_argument(
+    "-o",
+    "--operating_system",
+    type=str,
+    help="The OS you wish to filter on",
+    default=None,
+)
+my_parser.add_argument(
+    "-c",
+    "--class_name",
+    type=str,
+    help="The Class you wish to filter on, (not the Test File)",
+    default=None,
+)
+my_parser.add_argument(
+    "-t",
+    "--token",
+    type=str,
+    help="The Token associated with the class, such as 'asr1k'",
+    default=None,
+)
+my_parser.add_argument(
+    "-n",
+    "--number",
+    type=int,
+    help="The specific unittest we want to run, such as '25'",
+    default=None,
+)
 args = my_parser.parse_args()
 
 _os = args.operating_system
@@ -47,16 +61,35 @@ _token = args.token
 _number = args.number
 
 if _number and (not _class or not _number):
-    sys.exit("Unittest number provided but missing supporting arguments:"
-             "\n* '-c' or '--class_name' for the parser class"
-             "\n* '-o' or '--operating_system' for operating system")
+    sys.exit(
+        "Unittest number provided but missing supporting arguments:"
+        "\n* '-c' or '--class_name' for the parser class"
+        "\n* '-o' or '--operating_system' for operating system"
+    )
 
 # This is the list of Classes that currently have no testing. It was found during the process
 # of converting to folder based testing strategy
 CLASS_SKIP = {
+    "junos": {
+        "MonitorInterfaceTraffic": True,
+        "ShowArpNoMore": True,
+        "ShowBgpGroupBriefNoMore": True,
+        "ShowBgpGroupDetailNoMore": True,
+        "ShowBgpGroupSummaryNoMore": True,
+        "ShowInterfacesExtensiveInterface": True,
+        "ShowInterfacesExtensiveNoForwarding": True,
+        "ShowInterfacesTerseInterface": True,
+        "ShowOspfDatabaseAdvertisingRouterExtensive": True,
+        "ShowOspfNeighborInstance": True,
+        "ShowOspf3NeighborInstance": True,
+        "ShowRouteProtocolNoMore": True,
+        "ShowTaskMemory": True,
+        "ShowTaskReplication": True,
+        "ShowVersionDetailNoForarding": True,
+    },
     "asa": {
         "ShowVpnSessiondbSuper": True,
-        },
+    },
     "iosxe": {
         "c9300": {
             "ShowInventory": True,
@@ -117,16 +150,16 @@ CLASS_SKIP = {
         "ShowBfdSummary_viptela": True,
         "ShowOmpTlocPath_viptela": True,
         "ShowOmpTlocs_viptela": True,
-        "ShowSoftwaretab_viptela": True, # PR submitted
+        "ShowSoftwaretab_viptela": True,  # PR submitted
         "ShowRebootHistory_viptela": True,
         "ShowOmpSummary_viptela": True,
         "ShowSystemStatus_viptela": True,
-        "ShowTcpProxyStatistics": True, # PR submitted
-        "ShowTcpproxyStatus": True, # PR submitted
-        "ShowPlatformTcamUtilization": True, # PR submitted
-        "ShowLicense": True, # PR submitted
-        "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
-        "ShowSoftwaretab": True, # PR submitted
+        "ShowTcpProxyStatistics": True,  # PR submitted
+        "ShowTcpproxyStatus": True,  # PR submitted
+        "ShowPlatformTcamUtilization": True,  # PR submitted
+        "ShowLicense": True,  # PR submitted
+        "Show_Stackwise_Virtual_Dual_Active_Detection": True,  # PR submitted
+        "ShowSoftwaretab": True,  # PR submitted
         "ShowOmpPeers_viptela": True,
         "ShowOmpTlocPath_viptela": True,
         "ShowOmpTlocs_viptela": True,
@@ -200,6 +233,7 @@ def get_operating_systems():
     #        operating_system.append(folder)
     # return operating_system
 
+
 # The get_tokens function dynamically finds tokens by leveraging globs. This
 # works based on the deterministic folder structure. Within a given OS root folder one can
 # determine that a sub folder is in fact a token, if there is a "tests" directory. Upon removing
@@ -207,7 +241,7 @@ def get_operating_systems():
 def get_tokens(folder):
     tokens = []
     for path in glob.glob(f"{folder}/*/tests"):
-        tokens.append(path.split('/')[-2])
+        tokens.append(path.split("/")[-2])
     return tokens
 
 
@@ -224,6 +258,7 @@ class FileBasedTest(aetest.Testcase):
     """Standard pyats testcase class."""
 
     OPERATING_SYSTEMS = get_operating_systems()
+
     @aetest.test
     @aetest.test.loop(operating_system=OPERATING_SYSTEMS)
     def check_os_folder(self, steps, operating_system, number=_number):
@@ -250,14 +285,18 @@ class FileBasedTest(aetest.Testcase):
                 module_name = f"{operating_system}_{token}_{module_name}"
             else:
                 module_name = f"{operating_system}_{module_name}"
-            _module = importlib.machinery.SourceFileLoader(module_name, parse_file).load_module()
+            _module = importlib.machinery.SourceFileLoader(
+                module_name, parse_file
+            ).load_module()
 
             for name, local_class in inspect.getmembers(_module):
                 # The following methods determin when a test is not warranted, further detail will be provided for each method.
 
                 # If there is a token and the "class" was found to be a known whitelist (mainly since there was not existing tests),
                 # skip. Whitelisted items should be cleaned up over time, and this removed to enforce testing always happens.
-                if token and CLASS_SKIP.get(operating_system, {}).get(token, {}).get(name):
+                if token and CLASS_SKIP.get(operating_system, {}).get(token, {}).get(
+                    name
+                ):
                     continue
                 # Same as previous, but in cases without tokens (which is the majority.)
                 elif not token and CLASS_SKIP.get(operating_system, {}).get(name):
@@ -274,9 +313,9 @@ class FileBasedTest(aetest.Testcase):
                 # Each "globals()" is checked to see if it has a cli attribute, if so, assumed to be a parser. The _osxe, is
                 # since the ios module often refers to the iosxe parser, leveraging this naming convention.
                 if hasattr(local_class, "cli") and not name.endswith("_iosxe"):
-                    #if name == 'SomeClassName':
+                    # if name == 'SomeClassName':
                     #    start = True
-                    #if not start:
+                    # if not start:
                     #    continue
                     if token:
                         msg = f"{operating_system} -> Token -> {token} -> {name}"
@@ -288,15 +327,23 @@ class FileBasedTest(aetest.Testcase):
                             continue_=True,
                         ) as golden_steps:
                             self.test_golden(
-                                golden_steps, local_class, operating_system, token, _number
+                                golden_steps,
+                                local_class,
+                                operating_system,
+                                token,
+                                _number,
                             )
                         with class_step.start(
                             f"Test Empty -> {operating_system} -> {name}",
                             continue_=True,
                         ) as empty_steps:
-                            self.test_empty(empty_steps, local_class, operating_system, token)
+                            self.test_empty(
+                                empty_steps, local_class, operating_system, token
+                            )
 
-    def test_golden(self, steps, local_class, operating_system, token=None, number=None):
+    def test_golden(
+        self, steps, local_class, operating_system, token=None, number=None
+    ):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/equal"
@@ -305,9 +352,12 @@ class FileBasedTest(aetest.Testcase):
 
         # Get list of output files to parse and sort
         convert = lambda text: int(text) if text.isdigit() else text
-        aph_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+        aph_key = lambda key: [convert(c) for c in re.split("([0-9]+)", key)]
         if number and not operating_system or not local_class:
-            output_glob = sorted(glob.glob(f"{folder_root}/golden_output{number}_output.txt"), key=aph_key)
+            output_glob = sorted(
+                glob.glob(f"{folder_root}/golden_output{number}_output.txt"),
+                key=aph_key,
+            )
         else:
             output_glob = sorted(glob.glob(f"{folder_root}/*_output.txt"), key=aph_key)
 
@@ -319,9 +369,13 @@ class FileBasedTest(aetest.Testcase):
         for user_defined in output_glob:
             user_test = os.path.basename(user_defined[: -len("_output.txt")])
             if token:
-                msg = f"Gold -> {operating_system} -> Token {token} -> {local_class.__name__} -> {user_test}",
+                msg = (
+                    f"Gold -> {operating_system} -> Token {token} -> {local_class.__name__} -> {user_test}",
+                )
             else:
-                msg = f"Gold -> {operating_system} -> {local_class.__name__} -> {user_test}",
+                msg = (
+                    f"Gold -> {operating_system} -> {local_class.__name__} -> {user_test}",
+                )
             with steps.start(msg, continue_=True):
                 golden_output_str = read_from_file(
                     f"{folder_root}/{user_test}_output.txt"
@@ -340,7 +394,12 @@ class FileBasedTest(aetest.Testcase):
                 device = Mock(**golden_output)
                 obj = local_class(device=device)
                 parsed_output = obj.parse(**arguments)
-                assert parsed_output == golden_parsed_output, "{parsed_output} \n!=\n{golden_parsed_output}".format(parsed_output=parsed_output, golden_parsed_output=golden_parsed_output)
+                assert (
+                    parsed_output == golden_parsed_output
+                ), "{parsed_output} \n!=\n{golden_parsed_output}".format(
+                    parsed_output=parsed_output,
+                    golden_parsed_output=golden_parsed_output,
+                )
 
     def test_empty(self, steps, local_class, operating_system, token=None):
         """Test step that looks for empty output."""
@@ -351,9 +410,8 @@ class FileBasedTest(aetest.Testcase):
             folder_root = f"{operating_system}/{local_class.__name__}/cli/empty"
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
 
-        if (
-            len(output_glob) == 0
-            and not EMPTY_SKIP.get(operating_system, {}).get(local_class.__name__)
+        if len(output_glob) == 0 and not EMPTY_SKIP.get(operating_system, {}).get(
+            local_class.__name__
         ):
             self.failed(
                 f"No files found in appropriate directory for {local_class} empty file"

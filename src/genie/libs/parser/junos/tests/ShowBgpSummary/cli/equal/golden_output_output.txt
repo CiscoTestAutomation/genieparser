@@ -1,0 +1,37 @@
+
+        Threading mode: BGP I/O
+        Groups: 14 Peers: 19 Down peers: 15
+        Table          Tot Paths  Act Paths Suppressed    History Damp State    Pending
+        inet.0
+                            1366        682          0          0          0          0
+        inet.3
+                               2          2          0          0          0          0
+        inet6.0
+                               0          0          0          0          0          0
+        Peer                     AS      InPkt     OutPkt    OutQ   Flaps Last Up/Dwn State|#Active/Received/Accepted/Damped...
+        10.49.216.179         65171          0          0       0       0 29w5d 22:42:36 Connect
+        10.169.14.240        65151     280414     221573       0     127 3w2d 4:19:15 Establ
+          inet.0: 682/684/684/0
+          inet.3: 2/2/2/0
+        10.169.14.249        65151          0          0       0       0 29w5d 22:42:36 Active
+        10.189.5.240          65171          0          0       0       0 29w5d 22:42:36 Connect
+        10.189.5.241          65171          0          0       0       0 29w5d 22:42:36 Connect
+        10.189.5.242          65171          0          0       0       0 29w5d 22:42:36 Active
+        10.189.5.243          65171          0          0       0       0 29w5d 22:42:36 Active
+        10.189.5.245          65171          0          0       0       0 29w5d 22:42:36 Active
+        10.189.5.253          65171     110832     172140       0      44 3w2d 4:18:45 Establ
+          inet.0: 0/682/682/0
+        10.189.6.250          65181          0          0       0       0 29w5d 22:42:36 Active
+        2001:db8:6be:89bb::1:140       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:db8:eb18:ca45::1       65151     218994     221571       0     133 3w2d 4:19:10 Establ
+          inet6.0: 0/0/0/0
+        2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
+        2001:db8:223c:ca45::7       65171          0          0       0       0 29w5d 22:42:36 Active
+        2001:db8:223c:ca45::8       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:db8:223c:ca45::9       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:db8:223c:ca45::a       65171          0          0       0       0 29w5d 22:42:36 Connect
+        2001:db8:223c:ca45::c       65171     110861     110862       0      55 3w2d 4:27:54 Establ
+          inet6.0: 0/0/0/0
+        2001:db8:5961:ca45::1       65181          0          0       0       0 29w5d 22:42:36 Connect
+
+    

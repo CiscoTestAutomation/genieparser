@@ -1,0 +1,19 @@
+
+        show ospf3 overview extensive
+        Instance: master
+          Router ID: 10.189.5.252
+          Route table index: 0
+          AS boundary router
+          LSA refresh time: 50 minutes
+          Post Convergence Backup: Disabled
+          Area: 0.0.0.8
+            Stub type: Not Stub
+            Area border routers: 0, AS boundary routers: 5
+            Neighbors
+              Up (in full state): 2
+          Topology: default (ID 0)
+            Prefix export count: 1
+            Full SPF runs: 1934
+            SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
+            Backup SPF: Not Needed
+    

@@ -1,0 +1,8 @@
+
+        file list /var/log/trace-static* detail 
+        -rw-r-----  1 root  wheel     525672 May 22 02:40 /var/log/trace-static
+
+        -rw-r-----  1 root  wheel     131497 May 22 02:40 /var/log/trace-static.0.gz
+
+        total files: 2
+    
