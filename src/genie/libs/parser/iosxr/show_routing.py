@@ -1008,6 +1008,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 class ShowRouteAllSummarySchema(MetaParser):
     """Schema for :
        show route afi-all safi-all summary
+       show route vrf all afi-all safi-all summary
        show route vrf all afi-all safi-all summary"""
 
     schema = {
