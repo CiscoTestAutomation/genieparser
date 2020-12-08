@@ -1,0 +1,103 @@
+
+            show route 10.66.12.12/32 extensive 
+
+        inet.0: 16 destinations, 16 routes (16 active, 0 holddown, 0 hidden)
+
+        10.66.12.12/32 (1 entry, 1 announced)
+
+        TSI:
+
+        KRT in-kernel 10.66.12.12/32 -> {indirect(1048578)}
+
+        Page 0 idx 1, (group ibgp-DUT type Internal) Type 1 val 0x134b0034 (adv_entry)
+
+        Advertised metrics:
+
+            Nexthop: 10.16.2.2
+
+            Localpref: 100
+
+            AS path: [3] I (Originator)
+
+            Cluster list:  0.0.0.4
+
+            Originator ID: 10.16.2.2
+
+            Communities:
+
+            Cluster ID: 0.0.0.1
+
+        Path 10.66.12.12
+
+        from 10.64.4.4
+
+        Vector len 4.  Val: 1
+
+                *BGP    Preference: 170/-101
+
+                        Next hop type: Indirect, Next hop index: 0
+
+                        Address: 0xbb7fff4
+
+                        Next-hop reference count: 3
+
+                        Source: 10.64.4.4
+
+                        Next hop type: Router, Next hop index: 614
+
+                        Next hop: 10.205.0.2 via ge-0/0/1.0, selected
+
+                        Session Id: 0x1304
+
+                        Protocol next hop: 10.16.2.2
+
+                        Indirect next hop: 0xc296984 1048578 INH Session ID: 0x130c
+
+                        State: <Active Int Ext>
+
+                        Local AS:     3 Peer AS:     3
+
+                        Age: 9 	Metric2: 2 
+
+                        Validation State: unverified 
+
+                        Task: BGP_10.169.64.4.4
+
+                        Announcement bits (3): 0-KRT 5-BGP_RT_Background 6-Resolve tree 1 
+
+                        AS path: I  (Originator)
+
+                        Cluster list:  0.0.0.4
+
+                        Originator ID: 10.16.2.2
+
+                        Accepted
+
+                        Localpref: 100
+
+                        Router ID: 10.64.4.4
+
+                        Indirect next hops: 1
+
+                                Protocol next hop: 10.16.2.2 Metric: 2
+
+                                Indirect next hop: 0xc296984 1048578 INH Session ID: 0x130c
+
+                                Indirect path forwarding next hops: 1
+
+                                        Next hop type: Router
+
+                                        Next hop: 10.205.0.2 via ge-0/0/1.0
+
+                                        Session Id: 0x1304
+
+                        10.16.2.2/32 Originating RIB: inet.0
+
+                        Metric: 2	Node path count: 1
+
+                        Forwarding nexthops: 1
+
+                            Nexthop: 10.205.0.2 via ge-0/0/1.0
+
+                            Session Id: 1304
+    

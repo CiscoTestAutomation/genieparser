@@ -1,0 +1,11 @@
+
+        show route protocol static 10.169.14.240/32
+
+        inet.0: 932 destinations, 1618 routes (932 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        10.169.14.240/32  *[Static/5] 5w2d 15:42:25
+                            >  to 10.169.14.121 via ge-0/0/1.0
+
+        inet.3: 12 destinations, 12 routes (12 active, 0 holddown, 0 hidden)
+    

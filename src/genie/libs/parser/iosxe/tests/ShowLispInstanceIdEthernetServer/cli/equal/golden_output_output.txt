@@ -1,0 +1,30 @@
+=================================================
+Output for router lisp 0 instance-id 4100
+=================================================
+LISP Site Registration Information
+
+
+=================================================
+Output for router lisp 0 instance-id 8188
+=================================================
+LISP Site Registration Information
+* = Some locators are down or unreachable
+# = Some registrations are sourced by reliable transport
+
+Site Name      Last      Up     Who Last             Inst     EID Prefix
+               Register         Registered           ID       
+site_uci       never     no     --                   8188     any-mac
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c100/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c2c0/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c300/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c3a0/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.ea00/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.eac0/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.eda0/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.fb00/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d29.e680/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d2b.d5c0/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d2b.efa0/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d2b.f860/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d2b.f920/48
+               2w1d      yes#   10.8.130.4:61275     8188     1416.9d2b.fa20/48

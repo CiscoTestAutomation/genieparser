@@ -3411,4 +3411,457 @@ class ShowLispSite(ShowLispSiteSchema):
                 continue
         return lisp_site_dict
 
+# ==========================================
+# Schema for:
+#  * 'show lisp eid-table vrf {vrf} ipv4 database'
+# ==========================================
+class ShowLispEidTableVrfIpv4DatabaseSchema(MetaParser):
+    """Schema for show lisp eid-table vrf {vrf} ipv4 database."""
 
+    schema = {
+        "vrf": {
+            "User": {
+                "iid": int,
+                "lsb": str,
+                "total_entries": int,
+                "no_route": int,
+                "inactive": int,
+                "eid" : {
+                    str: {
+                        "locator_set": list,
+                        "rlocs": {
+                            str: {
+                                "priority": int,
+                                "weight": int,
+                                "source": str,
+                                "state": list
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    
+# ==========================================
+# Parser for:
+#  * 'show lisp eid-table vrf {vrf} ipv4 database'
+# ==========================================
+class ShowLispEidTableVrfIpv4Database(ShowLispEidTableVrfIpv4DatabaseSchema):
+    """Parser for show lisp eid-table vrf {vrf} ipv4 database"""
+
+    cli_command = 'show lisp eid-table vrf {vrf} ipv4 database'
+    
+    def cli(self, vrf, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf=vrf))
+        else:
+            output = output
+            
+        # LISP ETR IPv4 Mapping Database for EID-table vrf User (IID 4100), LSBs: 0x3
+        # Entries total 3, no-route 0, inactive 0
+        #
+        # 10.16.0.0/19, locator-set rloc_5823c743-d29b-40d4-a063-8a29881a59b2, auto-discover-rlocs, proxy
+        #   Locator      Pri/Wgt  Source     State
+        #   10.8.190.11   10/10   cfg-intf   site-self, reachable
+        #   10.8.190.17   10/10   auto-disc  site-other, report-reachable
+        # 10.16.32.0/20, locator-set rloc_5823c743-d29b-40d4-a063-8a29881a59b2, auto-discover-rlocs, proxy
+        #   Locator      Pri/Wgt  Source     State
+        #   10.8.190.11   10/10   cfg-intf   site-self, reachable
+        #   10.8.190.17   10/10   auto-disc  site-other, report-reachable
+        # 10.16.48.0/24, locator-set rloc_5823c743-d29b-40d4-a063-8a29881a59b2, auto-discover-rlocs, proxy
+        #   Locator      Pri/Wgt  Source     State
+        #   10.8.190.11   10/10   cfg-intf   site-self, reachable
+        #   10.8.190.17   10/10   auto-disc  site-other, report-reachable
+
+        # LISP ETR IPv4 Mapping Database for EID-table vrf User (IID 4100), LSBs: 0x3
+        p_lisp_header = re.compile(r"^LISP\s+ETR\s+IPv4\s+Mapping\s+Database\s+for\s+EID-table\s+vrf\s+(?P<vrf>\S+)"
+                                   r"\s+\(IID\s+(?P<iid>\d+)\),\s+LSBs:\s+(?P<lsb>\S+)$")
+
+        # Entries total 3, no-route 0, inactive 0
+        p_lisp_header_2 = re.compile(r"^Entries\s+total\s+(?P<total>\d+),\s+no-route\s+(?P<no_route>\d+),\s+inactive\s+(?P<inactive>\d+)$")
+
+        # 10.16.0.0/19, locator-set rloc_5823c743-d29b-40d4-a063-8a29881a59b2, auto-discover-rlocs, proxy
+        p_lisp_entry = re.compile(r"^(?P<ip>\S+\/\d+),\s+locator-set\s+(?P<loc_set>.*)$")
+
+        # 10.8.190.11   10/10   cfg-intf   site-self, reachable
+        p_lisp_subentry = re.compile(r"(?P<locator>\S+)\s+(?P<pri>\d+)\/(?P<wgt>\d+)\s+(?P<source>\S+)\s+(?P<state>.*)$")
+
+
+        lisp_dict = {}
+        current_entry = ""
+        locator_set_list = []
+        state_list = []
+        vrf = ""
+        
+        for line in output.splitlines():
+            line = line.strip()
+            if p_lisp_header.match(line):
+              # LISP ETR IPv4 Mapping Database for EID-table vrf User (IID 4100), LSBs: 0x3
+              m_lisp_header = p_lisp_header.match(line)
+              vrf = m_lisp_header.group("vrf")
+              lisp_dict.update({ "vrf": { vrf: {} }})
+              lisp_dict["vrf"][vrf].update({ "iid": int(m_lisp_header.group("iid")) })
+              lisp_dict["vrf"][vrf].update({ "lsb": m_lisp_header.group("lsb") })
+              continue
+            elif p_lisp_header_2.match(line):
+              # Entries total 3, no-route 0, inactive 0
+              m_lisp_header_2 = p_lisp_header_2.match(line)
+              lisp_dict["vrf"][vrf].update({ "total_entries": int(m_lisp_header_2.group("total")) })
+              lisp_dict["vrf"][vrf].update({ "no_route": int(m_lisp_header_2.group("no_route")) })
+              lisp_dict["vrf"][vrf].update({ "inactive": int(m_lisp_header_2.group("inactive")) })
+              continue
+            elif p_lisp_entry.match(line):
+              # 10.16.0.0/19, locator-set rloc_5823c743-d29b-40d4-a063-8a29881a59b2, auto-discover-rlocs, proxy
+              m_lisp_entry = p_lisp_entry.match(line)
+              locator_set_list = [x.strip() for x in m_lisp_entry.group("loc_set").split(',')]
+              current_entry = m_lisp_entry["ip"]
+              lisp_dict["vrf"][vrf].setdefault("eid", {} ).setdefault(current_entry, {})
+              lisp_dict["vrf"][vrf]["eid"][current_entry].update({ "locator_set": locator_set_list} )
+              continue
+            elif p_lisp_subentry.match(line):
+              # 10.8.190.11   10/10   cfg-intf   site-self, reachable
+              m_lisp_subentry = p_lisp_subentry.match(line)
+              state_list = [x.strip() for x in m_lisp_subentry.group("state").split(',') ]
+              lisp_dict["vrf"][vrf]["eid"][current_entry].setdefault("rlocs", {}).setdefault(m_lisp_subentry.group("locator"), {})
+              lisp_dict["vrf"][vrf]["eid"][current_entry]["rlocs"][m_lisp_subentry.group("locator")].update({ "priority": int(m_lisp_subentry.group("pri")) })
+              lisp_dict["vrf"][vrf]["eid"][current_entry]["rlocs"][m_lisp_subentry.group("locator")].update({ "weight": int(m_lisp_subentry.group("wgt")) })
+              lisp_dict["vrf"][vrf]["eid"][current_entry]["rlocs"][m_lisp_subentry.group("locator")].update({ "source": m_lisp_subentry.group("source") })
+              lisp_dict["vrf"][vrf]["eid"][current_entry]["rlocs"][m_lisp_subentry.group("locator")].update({ "state": state_list })
+
+        return lisp_dict
+
+      
+      
+# ================================================
+# Schema for:
+#  * 'show lisp eid-table vrf {vrf} ipv4 map-cache'
+# ================================================
+class ShowLispEidTableVrfUserIpv4MapCacheSchema(MetaParser):
+    """Schema for show lisp eid-table vrf {vrf} ipv4 map-cache."""
+
+    schema = {
+        "vrf": {
+            str: {
+                "iid": int,
+                "number_of_entries": int,
+                "eid": {
+                    str: {
+                        "uptime": str,
+                        "expire": str,
+                        "via": list,
+                        "rloc": {
+                            Optional("status"): str,
+                            Optional("action"): str,
+                            Optional("ip"): str,
+                            Optional("uptime"): str,
+                            Optional("state"): str,
+                            Optional("priority"): int,
+                            Optional("weight"): int,
+                            Optional("encap_iid"): str
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ================================================
+# Parser for:
+#  * 'show lisp eid-table vrf {vrf} ipv4 map-cache'
+# ================================================
+class ShowLispEidTableVrfUserIpv4MapCache(ShowLispEidTableVrfUserIpv4MapCacheSchema):
+    """Parser for show lisp eid-table vrf {vrf} ipv4 map-cache"""
+
+    def cli(self, vrf, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(vrf=vrf))
+        else:
+            output = output
+
+        # 0.0.0.0/0, uptime: 1w6d, expires: never, via static-send-map-request
+        #   Negative cache entry, action: send-map-request
+        # 0.0.0.0/5, uptime: 4w6d, expires: 00:14:38, via map-reply, forward-native
+        #   Encapsulating to proxy ETR
+        # 8.0.0.0/7, uptime: 07:18:55, expires: 00:07:19, via map-reply, forward-native
+        #   Encapsulating to proxy ETR
+        # 10.0.0.0/9, uptime: 1w4d, expires: 00:00:13, via map-reply, forward-native
+        #   Encapsulating to proxy ETR
+        # 10.128.0.0/11, uptime: 4w6d, expires: 00:04:45, via map-reply, forward-native
+        #   Encapsulating to proxy ETR
+        # 10.16.0.17/32, uptime: 1w6d, expires: 13:36:24, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.94  1w6d      up          10/10        -
+        # 10.16.0.18/32, uptime: 1w6d, expires: 13:40:30, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.65  1w6d      up          10/10        -
+        # 10.16.0.21/32, uptime: 1w6d, expires: 12:55:06, via map-reply, self, complete
+        #   Locator       Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.124  1w6d      up          10/10        -
+        # 10.16.0.22/32, uptime: 1w6d, expires: 20:44:39, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.94  1w6d      up          10/10        -
+        # 10.16.0.24/32, uptime: 1w6d, expires: 20:44:39, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.94  1w6d      up          10/10        -
+        # 10.16.0.25/32, uptime: 1w6d, expires: 12:45:50, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.94  1w6d      up          10/10        -
+        # 10.16.0.26/32, uptime: 1w6d, expires: 12:52:40, via map-reply, self, complete
+        #   Locator       Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.124  1w6d      up          10/10        -
+        # 10.16.0.27/32, uptime: 00:54:02, expires: 23:06:55, via map-reply, self, complete
+        #   Locator      Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.65  00:54:02  up          10/10        -
+        # 10.16.0.28/32, uptime: 1w6d, expires: 20:44:39, via map-reply, self, complete
+        #   Locator       Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.112  1w6d      up          10/10        -
+        # 10.16.0.29/32, uptime: 1w6d, expires: 20:44:39, via map-reply, self, complete
+        #   Locator       Uptime    State      Pri/Wgt     Encap-IID
+        #   10.8.129.138  1w6d      up          10/10        -
+
+        # LISP IPv4 Mapping Cache for EID-table vrf User (IID 4100), 2186 entries
+        p_lisp_header = re.compile(r"^LISP\s+IPv4\s+Mapping\s+Cache\s+for\s+EID-table\s+vrf\s+(?P<vrf>\S+)\s+"
+                                   r"\(IID\s+(?P<iid>\d+)\),\s+(?P<entries>\d+)\s+entries$")
+
+        # 0.0.0.0/0, uptime: 1w6d, expires: never, via static-send-map-request
+        p_list_entry_1 = re.compile(r"(?P<ip>\S+),"
+                                    r"\s+uptime:\s+(?P<uptime>[^,]+),"
+                                    r"\s+expires:\s+(?P<expire>[^,]+),"
+                                    r"\s+via\s+(?P<source>.*)")
+
+        # Negative cache entry, action: send-map-request
+        p_list_entry_negative = re.compile(r"^Negative\s+cache\s+entry,\s+"
+                                           r"action:\s+(?P<action>.*)$")
+
+        # Encapsulating to proxy ETR
+        p_list_encapsulating = re.compile(r"^Encapsulating\s+to\s+proxy\s+ETR$")
+
+        # 10.8.129.124  1w6d      up          10/10        -
+        p_list_rloc = re.compile(r"(?P<locator>\S+)\s+(?P<uptime>\S+)\s+(?P<state>\S+)\s+(?P<pri>\d+)\/(?P<wgt>\d+)\s+(?P<encap>.*)")
+
+        lisp_dict = {}
+        current_entry = ""
+        current_vrf = ""
+        source_list = []
+
+        for line in output.splitlines():
+            line = line.strip()
+            if p_lisp_header.match(line):
+                # LISP IPv4 Mapping Cache for EID-table vrf User (IID 4100), 2186 entries
+                match = p_lisp_header.match(line)
+                current_vrf = match.group("vrf")
+                lisp_dict.update({ "vrf": { current_vrf: {} }})
+                lisp_dict["vrf"][current_vrf].update({ "iid": int(match.group("iid"))})
+                lisp_dict["vrf"][current_vrf].update({ "number_of_entries": int(match.group("entries")) })
+                continue
+            elif p_list_entry_1.match(line):
+                # 0.0.0.0/0, uptime: 1w6d, expires: never, via static-send-map-request
+                match = p_list_entry_1.match(line)
+                group = match.groupdict()
+                lisp_dict["vrf"][current_vrf].setdefault("eid", {} )
+                current_entry = match.group("ip")
+                source_list = [x.strip() for x in group["source"].split(",")]
+                lisp_dict["vrf"][current_vrf]["eid"].update({ current_entry: {} })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "uptime":  group["uptime"]} )
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "expire":  group["expire"]} )
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "via":  source_list} )
+                continue
+            elif p_list_entry_negative.match(line):
+                # Negative cache entry, action: send-map-request
+                match = p_list_entry_negative.match(line)
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "rloc": { "status" : "Negative cache entry"}})
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]['rloc'].update({ "action": match.group("action")})
+                continue
+            elif p_list_encapsulating.match(line):
+                # Encapsulating to proxy ETR
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "rloc": { "status": "Encapsulating to proxy ETR"}})
+                continue
+            elif p_list_rloc.match(line):
+                # 10.8.129.124  1w6d      up          10/10        -
+                match = p_list_rloc.match(line)
+                group = match.groupdict()
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry].update({ "rloc": {} })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "ip": group["locator"] })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "uptime": group["uptime"] })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "state": group["state"] })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "priority": int(group["pri"]) })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "weight": int(group["wgt"]) })
+                lisp_dict["vrf"][current_vrf]["eid"][current_entry]["rloc"].update({ "encap_iid": group["encap"] })
+                continue
+
+
+
+        return lisp_dict
+
+
+# ==========================================
+# Schema for:
+#  * 'show lisp instance-id {instance_id} ethernet server'
+# ==========================================
+class ShowLispInstanceIdEthernetServerSchema(MetaParser):
+    """Schema for show lisp instance-id {instance_id} ethernet server."""
+
+    schema = {
+        "instance_id": {
+            int: {
+                "lisp": int,
+                Optional("site_name"): {
+                    str: {
+                        str: {
+                            "last_register": str,
+                            "up": str,
+                            "who_last_registered": str,
+                            "inst_id": int,
+                        }
+                    }
+                },
+            }
+        }
+    }
+
+    
+# ==========================================
+# Parser for:
+#  * 'show lisp instance-id {instance_id} ethernet server'
+# ==========================================
+class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
+    """Parser for show lisp instance-id {instance_id} ethernet server"""
+
+    cli_command = 'show lisp instance-id {instance_id} ethernet server'
+
+    def cli(self, instance_id, output=None):
+        if output is None:
+            cmd = self.cli_command.format(instance_id=instance_id)
+            out = self.device.execute(cmd)
+
+        else:
+            out = output
+
+        # =================================================
+        # Output for router lisp 0 instance-id 8188
+        # =================================================
+        # LISP Site Registration Information
+        # * = Some locators are down or unreachable
+        # # = Some registrations are sourced by reliable transport
+
+        # Site Name      Last      Up     Who Last             Inst     EID Prefix
+        #             Register         Registered           ID
+        # site_uci       never     no     --                   8188     any-mac
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c100/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c2c0/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c300/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c3a0/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.ea00/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.eac0/48
+        # ...OUTPUT OMITTED...
+
+        # Output for router lisp 0 instance-id 8188
+        instant_id_capture = re.compile(
+            r"^Output for router lisp (?P<lisp>\d+) instance-id (?P<instance_id>\d+)$"
+        )
+
+        # site_uci       never     no     --                   8188     any-mac
+        site_name_capture = re.compile(
+            r"^(?P<site_name>\S+)\s+(?P<last_register>\S+)\s+(?P<up>\S+)\s+(?P<who_last_registered>\-\-|\d+\.\d+\.\d+\.\d+\:\d+)\s+(?P<inst_id>\d+)\s+(?P<eid_prefix>any\-mac|\S+\.\S+\.\S+\d+)$"
+        )
+
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c100/48
+        lisp_info_capture = re.compile(
+            r"^(?P<last_register>\S+)\s+(?P<up>\S+)\s+(?P<who_last_registered>\d+\.\d+\.\d+\.\d+\:\d+)\s+(?P<inst_id>\d+)\s+(?P<eid_prefix>\S+\.\S+\.\S+\d+)$"
+        )
+
+        tele_info_obj = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            match = instant_id_capture.match(line)
+            if match:
+                group = match.groupdict()
+
+                # convert str to int
+                covert_list = ["lisp", "instance_id"]
+                for item in covert_list:
+                    group[item] = int(group[item])
+
+                # pull a key from group to use as new_key
+                new_key = "instance_id"
+                new_group = {group[new_key]: {}}
+
+                # update and pop new_key
+                new_group[group[new_key]].update(group)
+                new_group[group[new_key]].pop(new_key)
+
+                if not tele_info_obj.get(new_key):
+                    tele_info_obj[new_key] = {}
+
+                tele_info_obj[new_key].update(new_group)
+
+                instance_group = tele_info_obj[new_key][group[new_key]]
+
+                continue
+
+            match = site_name_capture.match(line)
+            if match:
+                group = match.groupdict()            
+                
+                # convert str to int
+                group["inst_id"] = int(group["inst_id"])
+
+                # pull a key from group to use as new_key
+                new_key = "site_name"
+                new_group = {group[new_key]: {}}
+
+                temp_site_group = new_group[group[new_key]]
+
+                # update and pop new_key
+                temp_site_group.update(group)
+                temp_site_group.pop(new_key)
+
+                if not instance_group.get(new_key):
+                    instance_group[new_key] = {}
+
+                instance_group[new_key].update({group[new_key]: {}})
+
+                site_group = instance_group[new_key][group[new_key]]
+
+                # pull a key from group to use as new_key
+                new_key = "eid_prefix"
+                new_group = {temp_site_group[new_key]: {}}
+
+                eid_group = new_group[temp_site_group[new_key]]
+
+                # update and pop new_key
+                eid_group.update(temp_site_group)
+                eid_group.pop(new_key)
+
+                site_group.update(new_group)
+
+                continue
+
+            match = lisp_info_capture.match(line)
+            if match:
+                group = match.groupdict()
+
+                # # convert str to int
+                group["inst_id"] = int(group["inst_id"])
+
+                # pull a key from group to use as new_key
+                new_key = "eid_prefix"
+                new_group = {group[new_key]: {}}
+
+                eid_group = new_group[group[new_key]]
+
+                # update and pop new_key
+                eid_group.update(group)
+                eid_group.pop(new_key)
+
+                site_group.update(new_group)
+
+                continue
+
+        return tele_info_obj
+              

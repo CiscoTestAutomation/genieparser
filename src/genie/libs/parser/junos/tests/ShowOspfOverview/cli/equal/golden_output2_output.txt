@@ -1,0 +1,35 @@
+
+            show ospf overview
+
+            Instance: master
+
+            Router ID: 10.1.0.102
+
+            Route table index: 0
+
+            LSA refresh time: 50 minutes
+
+            Post Convergence Backup: Disabled
+
+            Area: 0.0.0.0
+
+                Stub type: Not Stub
+
+                Authentication Type: None
+
+                Area border routers: 0, AS boundary routers: 0
+
+                Neighbors
+
+                Up (in full state): 0
+
+            Topology: default (ID 0)
+
+                Prefix export count: 0
+
+                Full SPF runs: 2
+
+                SPF delay: 0.200000 sec, SPF holddown: 5 sec, SPF rapid runs: 3
+
+                Backup SPF: Not Needed
+        

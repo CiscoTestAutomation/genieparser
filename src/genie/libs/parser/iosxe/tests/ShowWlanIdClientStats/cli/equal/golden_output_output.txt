@@ -1,0 +1,199 @@
+Wlan Profile Name: lizzard_Global, Wlan Id: 17
+Current client state statistics:
+-----------------------------------------------------------------------------
+  Authenticating         : 7
+  Mobility               : 0
+  IP Learn               : 0
+  Webauth Pending        : 0
+  Run                    : 2
+
+  Total client delete reasons
+  ---------------------------
+    No Operation                                                    : 0
+    Internal error                                                  : 0
+    Deauthentication or disassociation request                      : 0
+    Session Manager                                                 : 0
+    L3 authentication failure                                       : 0
+    Delete received from AP                                         : 0
+    BSSID down                                                      : 1
+    AP down/disjoin                                                 : 2
+    Connection timeout                                              : 0
+    MAC authentication failure                                      : 0
+    Datapath plumb                                                  : 0
+    Due to SSID change                                              : 163
+    Due to VLAN change                                              : 0
+    Due to IP Zone change                                              : 0
+    Admin deauthentication                                          : 0
+    QoS failure                                                     : 0
+    WPA key exchange timeout                                        : 13
+    WPA group key update timeout                                    : 101
+    802.11w MAX SA queries reached                                  : 0
+    Client deleted during HA recovery                               : 0
+    Client blacklist                                                : 0
+    Inter instance roam failure                                     : 0
+    Due to mobility failure                                         : 0
+    Session timeout                                                 : 2
+    Idle timeout                                                    : 0
+    Supplicant request                                              : 25
+    NAS error                                                       : 0
+    Policy Manager internal error                                   : 0
+    Mobility WLAN down                                              : 0
+    Mobility tunnel down                                            : 0
+    80211v smart roam failed                                        : 0
+    DOT11v timer timeout                                            : 0
+    DOT11v association failed                                       : 0
+    DOT11r pre-authentication failure                               : 0
+    SAE authentication failure                                      : 0
+    DOT11 failure                                                   : 0
+    DOT11 SAE invalid message                                       : 0
+    DOT11 unsupported client capabilities                           : 0
+    DOT11 association denied unspecified                            : 0
+    DOT11 max STA                                                   : 0
+    DOT11 denied data rates                                         : 0
+    802.11v Client RSSI lower than the association RSSI threshold   : 0
+    invalid QoS parameter                                           : 0
+    DOT11 IE validation failed                                      : 0
+    DOT11 group cipher in IE validation failed                      : 0
+    DOT11 invalid pairwise cipher                                   : 0
+    DOT11 invalid AKM                                               : 0
+    DOT11 unsupported RSN version                                   : 0
+    DOT11 invalid RSNIE capabilities                                : 0
+    DOT11 received invalid PMKID in the received RSN IE             : 74
+    DOT11 invalid MDIE                                              : 0
+    DOT11 invalid FT IE                                             : 0
+    DOT11 QoS policy                                                : 0
+    DOT11 AP have insufficient bandwidth                            : 0
+    DOT11 invalid QoS parameter                                     : 0
+    Client not allowed by assisted roaming                          : 0
+    IAPP disassociation for wired client                            : 0
+    Wired WGB change                                                : 0
+    Wired VLAN change                                               : 0
+    Wired client deleted due to WGB delete                          : 0
+    AVC client re-anchored at the foreign controller                : 0
+    WGB Wired client joins as a direct wireless client              : 0
+    AP upgrade                                                      : 0
+    Client DHCP                                                     : 0
+    Client EAP timeout                                              : 0
+    Client 8021x failure                                            : 0
+    Client device idle                                              : 0
+    Client captive portal security failure                          : 0
+    Client decryption failure                                       : 0
+    Client interface disabled                                       : 0
+    Client user triggered disassociation                            : 0
+    Client miscellaneous reason                                     : 0
+    Unknown                                                         : 0
+    Client peer triggered                                           : 0
+    Client beacon loss                                              : 0
+    Client EAP ID timeout                                           : 10928
+    Client DOT1x timeout                                            : 0
+    Malformed EAP key frame                                         : 0
+    EAP key install bit is not expected                             : 0
+    EAP key error bit is not expected                               : 0
+    EAP key ACK bit is not expected                                 : 0
+    Invalid key type                                                : 0
+    EAP key secure bit is not expected                              : 0
+    key description version mismatch                                : 0
+    wrong replay counter                                            : 1
+    EAP key MIC bit expected                                        : 0
+    MIC validation failed                                           : 7
+    Error while PTK computation                                     : 0
+    Incorrect credentials                                           : 16
+    Client connection lost                                          : 0
+    Reauthentication failure                                        : 0
+    Port admin disabled                                             : 0
+    Supplicant restart                                              : 0
+    No IP                                                           : 93
+    Call admission controller at anchor node                        : 0
+    Anchor no memory                                                : 0
+    Anchor invalid Mobility BSSID                                   : 0
+    Anchor creation failure                                         : 0
+    DB error                                                        : 0
+    Wired client cleanup due to WGB roaming                         : 0
+    Manually excluded                                               : 0
+    802.11 association failure                                      : 0
+    802.11 authentication failure                                   : 0
+    802.1X authentication timeout                                   : 0
+    802.1X authentication credential failure                        : 0
+    Web authentication failure                                      : 0
+    Policy bind failure                                             : 0
+    IP theft                                                        : 0
+    MAC theft                                                       : 0
+    MAC and IP theft                                                : 0
+    QoS policy failure                                              : 0
+    QoS policy send to AP failure                                   : 0
+    QoS policy bind on AP failure                                   : 0
+    QoS policy unbind on AP failure                                 : 0
+    Static IP anchor discovery failure                              : 0
+    VLAN failure                                                    : 0
+    ACL failure                                                     : 0
+    Redirect ACL failure                                            : 2
+    Accounting failure                                              : 0
+    Security group tag failure                                      : 0
+    FQDN filter definition does not exist                           : 0
+    Wrong filter type, expected postauth FQDN filter                : 0
+    Wrong filter type, expected preauth FQDN filter                 : 0
+    Invalid group id for FQDN filter valid range  1..16             : 0
+    Policy parameter mismatch                                       : 0
+    Reauth failure                                                  : 0
+    Wrong PSK                                                       : 0
+    Policy failure                                                  : 0
+    AP initiated delete for idle timeout                            : 164
+    AP initiated delete for client ACL mismatch                     : 0
+    AP initiated delete for AP auth stop                            : 0
+    AP initiated delete for association expired at AP               : 0
+    AP initiated delete for 4-way handshake failed                  : 0
+    AP initiated delete for DHCP timeout                            : 0
+    AP initiated delete for reassociation timeout                   : 0
+    AP initiated delete for SA query timeout                        : 0
+    AP initiated delete for channel switch at AP                    : 0
+    AP initiated delete for bad AID                                 : 0
+    AP initiated delete for request                                 : 0
+    AP initiated delete for interface reset                         : 0
+    AP initiated delete for all on slot                             : 0
+    AP initiated delete for reaper radio                            : 0
+    AP initiated delete for slot disable                            : 0
+    AP initiated delete for MIC failure                             : 0
+    AP initiated delete for VLAN delete                             : 0
+    AP initiated delete for channel change                          : 0
+    AP initiated delete for stop reassociation                      : 0
+    AP initiated delete for packet max retry                        : 0
+    AP initiated delete for transmission deauth                     : 0
+    AP initiated delete for sensor station timeout                  : 0
+    AP initiated delete for age timeout                             : 0
+    AP initiated delete for transmission fail threshold             : 0
+    AP initiated delete for uplink receive timeout                  : 0
+    AP initiated delete for sensor scan next radio                  : 0
+    AP initiated delete for sensor scan other BSSID                 : 0
+    AAA server unavailable                                          : 0
+    AAA server not ready                                            : 0
+    No dot1x method configuration                                   : 0
+    Client Abort                                                    : 0
+    Association connection timeout                                  : 0
+    MAC-AUTH connection timeout                                     : 0
+    L2-AUTH connection timeout                                      : 882
+    L3-AUTH connection timeout                                      : 0
+    Mobility connection timeout                                     : 0
+    static IP connection timeout                                    : 0
+    SM session creation timeout                                     : 0
+    IP-LEARN connection timeout                                     : 25
+    NACK IFID exists                                                : 0
+    Radio Down                                                      : 0
+    EoGRE Reset                                                     : 0
+    EoGRE Generic Join Failure                                      : 0
+    EoGRE HA-Reconciliation                                         : 0
+    EoGRE Invalid VLAN                                              : 0
+    EoGRE Invalid Domain                                            : 0
+    EoGRE Empty Domain                                              : 0
+    EoGRE Domain Shut                                               : 0
+    EoGRE Invalid Gateway                                           : 0
+    EoGRE All Gateways down                                         : 0
+    EoGRE Flex - no active gateway                                  : 0
+    EoGRE Rule Matching error                                       : 0
+    EoGRE AAA Override error                                        : 0
+    EoGRE client onboarding error                                   : 0
+    EoGRE Mobility Handoff error                                    : 0
+    IP Update timeout                                               : 0
+    L3 VLAN Override connection timeout                         : 0
+    Mobility peer delete                                            : 0
+    NACK IFID mismatch                                              : 0
+    

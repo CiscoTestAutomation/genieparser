@@ -1,0 +1,5 @@
+
+    show ospf interface ge-0/0/4.0 brief
+    Interface           State   Area            DR ID           BDR ID          Nbrs
+    ge-0/0/4.0          PtToPt  0.0.0.1         10.16.2.1         10.64.2.4            1
+    

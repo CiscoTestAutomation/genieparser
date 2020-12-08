@@ -1,0 +1,9 @@
+confd            : Running
+nesd             : Running
+syncfd           : Running
+ncsshd           : Running
+dmiauthd         : Running
+nginx            : Running
+ndbmand          : Running
+pubd             : Running
+gnmib            : Not Running

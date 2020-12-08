@@ -256,8 +256,10 @@ class ShowInterfaces(ShowInterfacesSchema):
         # MTU 1500 bytes, BW 768 Kbit/sec, DLY 3330 usec,
         # MTU 1500 bytes, BW 10000 Kbit, DLY 1000 usec, 
         # MTU 1600 bytes, sub MTU 1600, BW 3584 Kbit/sec, DLY 410 usec,
+        # MTU 1500 bytes, BW 5200 Kbit/sec, RxBW 25000 Kbit/sec, DLY 100 usec, 
         p6 = re.compile(r'^MTU +(?P<mtu>\d+) +bytes(, +sub +MTU +'
-                        r'(?P<sub_mtu>\d+))?, +BW +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?, +'
+                        r'(?P<sub_mtu>\d+))?, +BW +(?P<bandwidth>[0-9]+) +Kbit(\/sec)?'
+                        r'(, +RxBW +[0-9]+ +Kbit(\/sec)?)?, +'
                         r'DLY +(?P<delay>[0-9]+) +usec,$')
 
         # reliability 255/255, txload 1/255, rxload 1/255
@@ -293,7 +295,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex\, '
                          r'+(?P<port_speed>[\w\s\/]+|[a|A]uto-[S|s]peed|Auto '
                          r'(S|s)peed)(?:(?:\, +link +type +is '
-                         r'+(?P<link_type>\S+))?(?:\, *media +type +is '
+                         r'+(?P<link_type>\S+))?(?:\, *(media +type +is| )'
                          r'*(?P<media_type>[\w\/\- ]+)?)(?: +media +type)?)?$')
 
         # input flow-control is off, output flow-control is unsupported
@@ -2094,7 +2096,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
             m = p5_0.match(line)
             if m:
                 interface_dict[interface]['helper_address'] = \
-                    m.groupdict()['address']
+                    [m.groupdict()['address']]
                 continue
 
             # Helper addresses are 10.1.1.1

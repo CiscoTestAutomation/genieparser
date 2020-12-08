@@ -1,0 +1,25 @@
+
+        show krt state
+        General state:
+                Install job is not running
+                Number of operations queued: 0
+                        Routing table adds: 0
+                        Interface routes: 0
+                        High pri multicast   Adds/Changes: 0
+                        Indirect Next Hop    Adds/Changes: 0       Deletes: 0
+                        MPLS        Adds: 0       Changes: 0
+                        High pri    Adds: 0       Changes: 0       Deletes: 0
+                        Normal pri Indirects: 0
+                        Normal pri  Adds: 0       Changes: 0       Deletes: 0
+                        GMP GENCFG Objects: 0
+                        Routing Table deletes: 0
+                Number of operations deferred: 0
+                Number of operations canceled: 0
+                Number of async queue entries: 0
+                Number of async non queue entries: 0
+                Time until next queue run: 0
+                Routes learned from kernel: 34
+
+Routing socket lossage:
+        Time until next scan: 58
+    

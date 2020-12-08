@@ -1,0 +1,25 @@
+
+            show route protocol bgp extensive 10.16.2.2
+
+            inet.0: 8 destinations, 8 routes (8 active, 0 holddown, 0 hidden)
+            10.16.2.2/32 (1 entry, 1 announced)
+            TSI:
+            KRT in-kernel 10.16.2.2/32 -> {10.145.0.3}
+                    *BGP    Preference: 170/-101
+                            Next hop type: Router, Next hop index: 604
+                            Address: 0xf991014
+                            Next-hop reference count: 2
+                            Source: 10.145.0.3
+                            Next hop: 10.145.0.3 via ge-0/0/0.0, selected
+                            Session Id: 0xe78
+                            State: <Active Ext>
+                            Local AS:     1 Peer AS: 30000
+                            Age: 7:14:16
+                            Validation State: unverified
+                            Task: BGP_30000.10.145.0.3
+                            Announcement bits (1): 0-KRT
+                            AS path: 30000 I
+                            Accepted
+                            Localpref: 100
+                            Router ID: 10.16.2.2
+    

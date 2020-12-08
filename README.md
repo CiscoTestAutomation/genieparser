@@ -45,6 +45,9 @@ Change logs can be found [here](changelog/CHANGELOG.md).
 [Guide]: https://pubhub.devnetcloud.com/media/pyats-development-guide/docs/writeparser/writeparser.html#
 
 
+YouTube Video: <How to write a Genie parser for Cisco!> https://youtube.com/watch?v=ibLNilSfdTc (Thank you! @Jmahaja1)
+
+
 Once you create a new parser, don't forget to check 1, 2, and 3;
 if you only update the parser class without modifying/creating the schema, please check 2 and 3. 
 - [ ] 1. `make json`
@@ -69,4 +72,4 @@ Please take it as a reference, and avoid to create vague logs, such as 'Updated 
 '20200807212611'
 ```
 
-> Copyright (c) 2018 Cisco Systems, Inc. and/or its affiliates
+> Copyright (c) 2020 Cisco Systems, Inc. and/or its affiliates

@@ -1,0 +1,17 @@
+Policy Profile Name         		: xyz-policy
+CTS
+  Role-based enforcement         : ENABLED
+  Inline-tagging                 : ENABLED
+  	Default SGT		 : 100
+
+Policy Profile Name          		: foo2
+CTS
+  Role-based enforcement         : DISABLED
+  Inline-tagging                 : ENABLED
+  Default SGT		         : NOT-DEFINED
+
+Policy Profile Name           	        : foo3
+CTS
+  Role-based enforcement         : DISABLED
+  Inline-tagging                 : DISABLED
+  Default SGT			 : 65001

@@ -1,0 +1,16 @@
+ show chassis fpc
+                     Temp  CPU Utilization (%)   CPU Utilization (%)  Memory    Utilization (%)
+        Slot State            (C)  Total  Interrupt      1min   5min   15min  DRAM (MB) Heap     Buffer
+        0  Online           Testing   3         0        2      2      2    511        31          0
+        1  Empty           
+        2  Empty           
+        3  Empty           
+        4  Empty           
+        5  Empty           
+        6  Empty           
+        7  Empty           
+        8  Empty           
+        9  Empty           
+        10  Empty           
+        11  Empty
+    

@@ -1,0 +1,14 @@
+
+    show bfd session address 10.34.2.250 detail
+                                                      Detect   Transmit
+    Address                  State     Interface      Time     Interval  Multiplier
+    10.34.2.250             Up                       1.500     0.500        3
+     Client LDP-OAM, TX interval 0.050, RX interval 0.050
+     Session up time 00:02:46
+     Local diagnostic None, remote diagnostic None
+     Remote state Up, version 1
+     Session type: Multi hop BFD
+    
+    1 sessions, 1 clients
+    Cumulative transmit rate 2.0 pps, cumulative receive rate 2.0 pps    
+    

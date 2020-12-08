@@ -1,0 +1,8 @@
+
+        show ospf3 neighbor
+        ID               Interface              State     Pri   Dead
+        10.189.5.253     ge-0/0/0.0             Full      128     35
+          Neighbor-address fe80::250:56ff:fe8d:53c0
+        10.169.14.240   ge-0/0/1.0             Full      128     33
+          Neighbor-address fe80::250:56ff:fe8d:72bd
+    

@@ -15,6 +15,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.libs.parser.utils.common import Common
 
 
 class ShowIsisNeighborsSchema(MetaParser):
@@ -26,15 +27,18 @@ class ShowIsisNeighborsSchema(MetaParser):
                     Any(): {
                         'type': {
                             Any(): {
-                                'circuit_id': str,
-                                'holdtime': str,
-                                'interface': str,
-                                'ip_address': str,
-                                'state': str,
+                                'interfaces': {
+                                    Any(): {
+                                        'circuit_id': str,
+                                        'holdtime': str,
+                                        'ip_address': str,
+                                        'state': str,
+                                    }
+                                }
                             }
                         }
                     }
-                }
+                },
             }
         }
     }
@@ -53,7 +57,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
 
         # initial return dictionary
         ret_dict = {}
-
+        tag_null = True
         for line in out.splitlines():
             line = line.strip()
 
@@ -63,6 +67,7 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
             if m:
                 isis_name = m.groupdict()['isis_name']
                 isis_dict = ret_dict.setdefault('isis', {}).setdefault(isis_name, {})
+                tag_null = False
                 continue
 
             # LAB-9001-2      L1   Te0/0/26      10.239.7.29     UP    27       00
@@ -73,19 +78,24 @@ class ShowIsisNeighbors(ShowIsisNeighborsSchema):
             if m:
                 system_id = m.groupdict()['system_id']
                 isis_type = m.groupdict()['type']
+                
+                if tag_null:
+                    neighbour_dict = ret_dict.setdefault('isis', {}).setdefault('null', {}).\
+                                              setdefault('neighbors', {}).setdefault(system_id, {})
+                else:
+                    neighbour_dict = isis_dict.setdefault('neighbors', {}).setdefault(system_id, {})
 
-                neighbour_dict = isis_dict.setdefault('neighbors', {}).setdefault(system_id, {})
                 type_dict = neighbour_dict.setdefault('type', {}).setdefault(isis_type, {})
-
-                type_dict['interface'] = m.groupdict()['interface']
-                type_dict['ip_address'] = m.groupdict()['ip_address']
-                type_dict['state'] = m.groupdict()['state']
-                type_dict['holdtime'] = m.groupdict()['holdtime']
-                type_dict['circuit_id'] = m.groupdict()['circuit_id']
+                  
+                interface_name = Common.convert_intf_name(m.groupdict()['interface'])
+                interfaces_dict = type_dict.setdefault('interfaces', {}).setdefault(interface_name, {})
+                interfaces_dict['ip_address'] = m.groupdict()['ip_address']
+                interfaces_dict['state'] = m.groupdict()['state']
+                interfaces_dict['holdtime'] = m.groupdict()['holdtime']
+                interfaces_dict['circuit_id'] = m.groupdict()['circuit_id']
                 continue
 
         return ret_dict
-
 
 class ShowIsisHostnameSchema(MetaParser):
     """Schema for show isis hostname"""
@@ -303,6 +313,13 @@ class ShowIsisDatabaseDetailSchema(MetaParser):
                                     'metric': int,
                                 },
                             },
+                            Optional('ipv4_interarea_reachability'): {
+                                Any(): {
+                                    'ip_prefix': str,
+                                    'prefix_len': str,
+                                    'metric': int,
+                                },
+                            },
                             Optional('mt_ipv6_reachability'): {
                                 Any(): {
                                     'ip_prefix': str,
@@ -458,6 +475,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
 
             #  Metric: 10         IS R2.01
             #  Metric: 10         IP 10.229.7.0/24
+            #  Metric: 10         IP-Interarea 10.229.7.0/24
             #  Metric: 40         IS (MT-IPv6) R2.01
             #  Metric: 40         IS-Extended R2.01
             #  Metric: 10         IPv6 2001:DB8:2:2:2::2/128
@@ -483,6 +501,8 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                 if mtype.startswith('IP'):
                     if mtype == 'IP':
                         is_dict = lsp_dict.setdefault('ipv4_internal_reachability', {}).setdefault(ip, {})
+                    elif mtype == 'IP-Interarea':
+                        is_dict = lsp_dict.setdefault('ipv4_interarea_reachability', {}).setdefault(ip, {})
                     elif mtype == 'IPv6' and mt_ipv6:
                         is_dict = lsp_dict.setdefault('mt_ipv6_reachability', {}).setdefault(ip, {})
                     elif mtype == 'IPv6':
@@ -493,6 +513,7 @@ class ShowIsisDatabaseDetail(ShowIsisDatabaseDetailSchema):
                     is_dict.update({'ip_prefix': ip_prefix,
                                     'prefix_len': prefix_len,
                                     'metric': int(group['metric'])})
+    
                 continue
 
             #   IPv6 Address: 2001:DB8:66:66:66::66

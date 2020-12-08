@@ -1,0 +1,13 @@
+
+        show chassis fpc detail
+        Slot 0 information:
+        State                               Online    
+        Temperature                      Testing
+        Total CPU DRAM                  511 MB
+        Total RLDRAM                     10 MB
+        Total DDR DRAM                    0 MB
+        FIPS Capable                        False 
+        FIPS Mode                           False 
+        Start time                          2019-08-29 09:09:16 UTC
+        Uptime                              208 days, 22 hours, 50 minutes, 26 seconds
+    
