@@ -1842,8 +1842,8 @@ class ShowChassisFpc(ShowChassisFpcSchema):
 
         # 0  Online           Testing   3         0        2      2      2    511        31          0
         # 0  Present          Testing
-        p1 = re.compile(r'^(?P<slot>\d+) +(?P<state>\S+)( '
-                        r'+(?P<text>\S+) +(?P<cpu_total>\d+) '
+        p1 = re.compile(r'^(?P<slot>\d+) +(?P<state>\S+) '
+                        r'+(?P<text>\S+)( +(?P<cpu_total>\d+) '
                         r'+(?P<cpu_interrupt>\d+)( +(?P<cpu_1min>\d+) '
                         r'+(?P<cpu_5min>\d+) +(?P<cpu_15min>\d+))? +'
                         r'(?P<dram>\d+) +(?P<heap>\d+) +(?P<buffer>\d+))?$')
@@ -1875,8 +1875,11 @@ class ShowChassisFpc(ShowChassisFpcSchema):
                 fpc_temp_dict["#text"] = group["text"]
                 fpc_entry_dict["temperature"] = fpc_temp_dict
 
-                fpc_entry_dict["cpu-total"] = group["cpu_total"]
-                fpc_entry_dict["cpu-interrupt"] = group["cpu_interrupt"]
+                if group["cpu_total"]:
+                    fpc_entry_dict["cpu-total"] = group["cpu_total"]
+
+                if group["cpu_interrupt"]:
+                    fpc_entry_dict["cpu-interrupt"] = group["cpu_interrupt"]
 
                 if group["cpu_1min"]:
                     fpc_entry_dict["cpu-1min-avg"] = group["cpu_1min"]
@@ -1885,9 +1888,14 @@ class ShowChassisFpc(ShowChassisFpcSchema):
                 if group["cpu_15min"]:
                     fpc_entry_dict["cpu-15min-avg"] = group["cpu_15min"]
 
-                fpc_entry_dict["memory-dram-size"] = group["dram"]
-                fpc_entry_dict["memory-heap-utilization"] = group["heap"]
-                fpc_entry_dict["memory-buffer-utilization"] = group["buffer"]
+                if group["dram"]:
+                    fpc_entry_dict["memory-dram-size"] = group["dram"]
+                
+                if group["heap"]:
+                    fpc_entry_dict["memory-heap-utilization"] = group["heap"]
+                
+                if group["buffer"]:
+                    fpc_entry_dict["memory-buffer-utilization"] = group["buffer"]
 
                 fpc_chassis_list.append(fpc_entry_dict)
                 continue
