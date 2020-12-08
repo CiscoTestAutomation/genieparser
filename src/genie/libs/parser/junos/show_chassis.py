@@ -4,6 +4,7 @@
 Parser for the following show commands:
     * show chassis alarms
     * show chassis fpc detail
+    * show chassis fpc pic-status
     * show chassis environment routing-engine
     * show chassis environment 
     * show chassis environment fpc
@@ -3120,3 +3121,142 @@ class ShowChassisPower(ShowChassisPowerSchema):
                 continue
         
         return ret_dict
+
+"""
+Schema for:
+    * show chassis fpc pic-status
+"""
+class ShowChassisFpcPicStatusSchema(MetaParser):
+    """
+    schema = {
+        "fpc-information": {
+            "fpc": [
+                {
+                    "description": str,
+                    "slot": str,
+                    "state": str,
+                    "pic": [
+                        {
+                            "pic-slot": str,
+                            "pic-state": str,
+                            "pic-type": str,
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+    """
+
+    # Validate fpc
+    def validate_fpc(value):
+
+        if not isinstance(value, list):
+            raise SchemaError('fpc is not a list')
+        
+        # Validate pic 
+        def validate_pic(value):
+            if not isinstance(value, list):
+                raise SchemaError('pic is not a list')
+
+            pic_schema = Schema({
+                "pic-slot": str,
+                "pic-state": str,
+                "pic-type": str,
+            })
+
+            for item in value:
+                pic_schema.validate(item)
+            return value
+
+        fpc_schema = Schema(
+            {
+                    "description": str,
+                    "slot": str,
+                    "state": str,
+                    "pic": Use(validate_pic)
+                }
+        )
+
+        for item in value:
+            fpc_schema.validate(item)
+        return value
+
+    schema = {
+        "fpc-information": {
+            "fpc": Use(validate_fpc)
+        }
+    }
+
+"""
+Parser for:
+    * show chassis fpc pic-status
+"""
+class ShowChassisFpcPicStatus(ShowChassisFpcPicStatusSchema):
+    cli_command = 'show chassis fpc pic-status'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Regex patterns
+        # Slot 0   Online       DPCE 2x 10GE R
+        p_fpc = re.compile(r'Slot +(?P<slot>\d+) +(?P<state>\S+)'
+                           r' +(?P<description>[\s\S]+)')
+
+        # PIC 0  Online       1x 10GE(LAN/WAN)
+        p_pic = re.compile(r'PIC +(?P<pic_slot>\d+) '
+                           r'+(?P<pic_state>\S+) +(?P<pic_type>[\s\S]+)')
+
+        # Build result dictionary
+        res = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Slot 0   Online       DPCE 2x 10GE R
+            m = p_fpc.match(line)
+            if m:
+                group = m.groupdict()
+
+                if "fpc-information" not in res:
+                    res = {
+                        "fpc-information": {
+                            "fpc": []
+                        }
+                    }
+
+                fpc_list = res["fpc-information"]["fpc"]
+
+                fpc_item = {}
+
+                for k, v in group.items():
+                    fpc_item[k] = v
+
+                fpc_list.append(fpc_item)
+                continue
+
+            # PIC 0  Online       1x 10GE(LAN/WAN)
+            m = p_pic.match(line)
+            if m:
+                group = m.groupdict()
+                
+                if "pic" not in fpc_item:
+                    fpc_item["pic"] = []
+
+                pic_list = fpc_item["pic"]
+
+                pic_item = {}
+
+                for k, v in group.items():
+                    k = k.replace('_' ,'-')
+
+                    pic_item[k] = v
+
+                pic_list.append(pic_item)
+                continue
+
+        return res
+
