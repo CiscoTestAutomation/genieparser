@@ -2379,14 +2379,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
 # ====================================
 class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
     """Parser for show wireless client mac {mac_address} detail"""
-
     cli_command = 'show wireless client mac detail'
-
-    def cli(self, mac_address="", output=None):
-        if output is None:
-            output = self.device.execute(self.cli_command.format(mac_address=mac_address))
-        else:
-          output = output
           
     def change_data_type(self, value):
         if value.isdigit():
@@ -2400,6 +2393,12 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
                 # if the value is not an int or float, leave it as a string.
                 pass
         return value
+
+    def cli(self, mac_address="", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(mac_address=mac_address))
+        else:
+          output = output
 
 
         # Client MAC Address : 0aba.dd93.ac36
@@ -2439,9 +2438,9 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
         # ...OUTPUT OMITTED...
 
 
-        nearby_ap = ""
+        nearby_ap = ''
         section_tracker = []
-        current_protocol = ""
+        current_protocol = ''
         client_mac_dict = {}
         device_section = False
         data_counter = 0
