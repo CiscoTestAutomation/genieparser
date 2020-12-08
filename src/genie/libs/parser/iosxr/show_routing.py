@@ -1000,3 +1000,121 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 continue
 
         return ret_dict
+
+
+# ====================================================
+#  schema for show route summary
+# ====================================================
+class ShowRouteAllSummarySchema(MetaParser):
+    """Schema for :
+       show route afi-all safi-all summary
+       show route vrf all afi-all safi-all summary"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'total_route_source': {
+                            'routes': int,
+                            'backup': int,
+                            'deleted': int,
+                            'memory_bytes': int,
+                        },
+                        'route_source': {
+                            Any(): {
+                                Any(): {
+                                    'routes': int,
+                                    'backup': int,
+                                    'deleted': int,
+                                    'memory_bytes': int,
+                                },
+                                Optional('routes'): int,
+                                Optional('backup'): int,
+                                Optional('deleted'): int,
+                                Optional('memory_bytes'): int,
+                            },
+                        }
+                    },
+                }
+            },
+        }
+    }
+
+
+# ====================================================
+#  parser for show route summary
+# ====================================================
+class ShowRouteAllSummary(ShowRouteAllSummarySchema):
+    """Parser for :
+       show route afi-all safi-all summary
+       show route vrf <vrf> afi-all safi-all summary"""
+
+    cli_command = [
+        'show route afi-all safi-all summary',
+        'show route vrf {vrf} afi-all safi-all summary'
+    ]
+
+    def cli(self, vrf=None, output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        # VRF: VRF_NAME
+        p1 = re.compile(r'^VRF: (?P<vrf>.*)')
+        # IPv4 Unicast:
+        p2 = re.compile(r'(?P<address_family>^IPv.*)+:')
+        # connected                        0          0          0           0
+        p3 = re.compile(
+            r'^(?P<protocol>[a-zA-Z0-9(\-|\_)]+) +(?P<instance>[a-zA-Z0-9(\-|\_)]+)* * +('
+            r'?P<routes>\d+) +(?P<backup>\d+) +(?P<deleted>\d+) +(?P<memory_bytes>\d+)')
+
+        ret_dict = {}
+
+        if vrf is None:
+            vrf = 'default'
+            vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
+        elif vrf != 'all':
+            vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            if vrf == 'all':
+                # VRF: VRF_NAME
+                m = p1.match(line)
+                if m:
+                    vrf_temp = m.groupdict()['vrf']
+                    vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf_temp, {})
+                    continue
+            # IPv4 Unicast:
+            m = p2.match(line)
+            if m:
+                addrs_fam = m.groupdict()['address_family'].replace(' ', '_')
+                addrs_fam = addrs_fam.lower()
+                addrs_fam_dict = vrf_dict.setdefault('address_family', {}).setdefault(addrs_fam, {})
+                vrf_rs_dict = addrs_fam_dict.setdefault('route_source', {})
+            # connected                        0          0          0           0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                protocol = group.pop('protocol')
+                instance = group.pop('instance')
+                if protocol == 'Total':
+                    protocol_dict = addrs_fam_dict.setdefault('total_route_source', {})
+                else:
+                    protocol_dict = vrf_rs_dict.setdefault(protocol, {})
+                if instance is not None:
+                    inst_dict = protocol_dict.setdefault(instance, {})
+                    inst_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                else:
+                    group = {k: int(v) for k, v in group.items() if v is not None}
+                    protocol_dict.update(group)
+                continue
+
+        return ret_dict
