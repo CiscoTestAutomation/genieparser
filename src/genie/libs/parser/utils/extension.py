@@ -13,8 +13,11 @@ class ExtendParsers(object):
     IGNORE_DIR = ['.git', '__pycache__', 'template', 'tests']
     IGNORE_FILE = ['__init__.py', 'base.py', 'utils.py']
 
-    def __init__(self):
+    def __init__(self, package):
         self.output = {'tokens': []}
+        self.package = package
+        # Figure out location of package so you can walk it
+        self.module_loc = importlib.import_module(package).__path__[0]
 
     @staticmethod
     def _find_parsers(mod):
@@ -88,10 +91,6 @@ class ExtendParsers(object):
                 # item is a python file. Find all parsers in file.
                 self._add_parsers(item, token)
 
-    def extend(self, package):
-        self.package = package
-        # Figure out location of package so you can walk it
-        self.module_loc = importlib.import_module(package).__path__[0]
-
+    def extend(self):
         # Walk all file in there and go through the parsers
         self._recursive_find(pathlib.Path(self.module_loc), [])

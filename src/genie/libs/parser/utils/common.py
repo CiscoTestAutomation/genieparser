@@ -38,8 +38,8 @@ def _load_parser_json():
         # check if provided external parser packages
         ext_parser_package = os.environ.get('EXT_GENIE_PARSER')
         if ext_parser_package:
-            ext = ExtendParsers()
-            ext.extend(ext_parser_package)
+            ext = ExtendParsers(ext_parser_package)
+            ext.extend()
             ext.output.pop('tokens', None)
             merge_dict(parser_data, ext.output, update=True)
 
