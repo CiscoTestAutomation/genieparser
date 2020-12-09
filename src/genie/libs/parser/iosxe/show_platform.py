@@ -2900,7 +2900,7 @@ class ShowSwitchSchema(MetaParser):
     schema = {
         'switch': {
             'mac_address': str,
-            'mac_persistency_wait_time': str,
+            Optional('mac_persistency_wait_time'): str,
             'stack': {
                 Any(): {
                     'role': str,
