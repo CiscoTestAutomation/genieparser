@@ -2936,7 +2936,7 @@ class ShowEnvironmentAllSchema(MetaParser):
                         'state': str,
                         Optional('pid'): str,
                         Optional('serial_number'): str,
-                        'status': str,
+                        Optional('status'): str,
                         Optional('system_power'): str,
                         Optional('poe_power'): str,
                         Optional('watts'): str
@@ -2956,6 +2956,12 @@ class ShowEnvironmentAllSchema(MetaParser):
                     'red_threshold': str
                 },
                 Optional('asic_temperature'): {
+                    'value': str,
+                    'state': str,
+                    'yellow_threshold': str,
+                    'red_threshold': str
+                },
+                Optional('outlet_temperature'): {
                     'value': str,
                     'state': str,
                     'yellow_threshold': str,
@@ -2988,6 +2994,8 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         p1_1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) '
                           '+direction +is +(?P<direction>[\w\s]+)$')
 
+        p1_2 = re.compile(r'^(?P<switch>\d+) +(?P<fan>\d+) +\d+ +(?P<state>.*)')
+
         p2 = re.compile(r'^FAN +PS\-(?P<ps>\d+) +is +(?P<state>[\w\s]+)$')
 
         p3 = re.compile(r'^Switch +(?P<switch>\d+): +SYSTEM +TEMPERATURE +is +(?P<state>[\w\s]+)$')
@@ -3001,7 +3009,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         p7 = re.compile(r'^(?P<sw>\d+)(?P<ps>\w+) *'
                         '((?P<pid>[\w\-]+) +'
                         '(?P<serial_number>\w+) +)?'
-                        '(?P<status>(\w+|Not Present)) *'
+                        '(?P<status>(\w+|Not Present|No +Input +Power)) *'
                         '((?P<system_power>\w+) +'
                         '(?P<poe_power>[\w\/]+) +'
                         '(?P<watts>\w+))?$')
@@ -3028,6 +3036,15 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 fan_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})\
                                    .setdefault('fan', {}).setdefault(fan, {})
                 fan_dict.update({'direction': group['direction'].lower()})
+                continue
+            
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                fan = group['fan']
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                root_dict.setdefault('fan', {}).setdefault(fan, {}).setdefault('state', group['state'].lower())
                 continue
 
             # FAN PS-1 is OK
@@ -3090,7 +3107,6 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                      if k in ['status', 'system_power', 'poe_power'] and v})
                 continue
         return ret_dict
-
 
 class ShowModuleSchema(MetaParser):
     """Schema for show module"""
