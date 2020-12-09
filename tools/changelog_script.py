@@ -119,7 +119,7 @@ if __name__ == "__main__":
                 m = p3.match(line)
                 if m:
                     space_count = len(m.groupdict()['spaces'])
-                    data = m.groupdict()['data'].replace(':','').title()
+                    data = m.groupdict()['data'].replace(':','').strip().title()
 
                     if space_count not in index_list:
                         index_list.append(space_count)
