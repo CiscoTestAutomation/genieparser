@@ -2,7 +2,7 @@ expected_output = {
    "vrf": {
       "VRF_Name_02": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "static": {
                      "routes": 50,
@@ -52,7 +52,7 @@ expected_output = {
                   "memory_bytes": 108800
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "local": {
                      "routes": 0,

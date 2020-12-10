@@ -2,7 +2,7 @@ expected_output = {
    "vrf": {
       "**VRF_Name_01": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "local": {
                      "routes": 2,
@@ -24,7 +24,7 @@ expected_output = {
                   "memory_bytes": 640
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "local": {
                      "routes": 0,
@@ -50,7 +50,7 @@ expected_output = {
       },
       "VRF_Name_02": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "static": {
                      "routes": 50,
@@ -100,7 +100,7 @@ expected_output = {
                   "memory_bytes": 108800
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "local": {
                      "routes": 0,
@@ -126,7 +126,7 @@ expected_output = {
       },
       "VRF_Name_04": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -170,7 +170,7 @@ expected_output = {
                   "memory_bytes": 12640
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "local": {
                      "routes": 0,
@@ -196,7 +196,7 @@ expected_output = {
       },
       "VRF_Name_05": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 2,
@@ -246,7 +246,7 @@ expected_output = {
                   "memory_bytes": 12800
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "local": {
                      "routes": 0,
@@ -272,7 +272,7 @@ expected_output = {
       },
       "VRF_Name_06": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -308,7 +308,7 @@ expected_output = {
                   "memory_bytes": 8320
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,
@@ -334,7 +334,7 @@ expected_output = {
       },
       "VRF_Name_07": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -370,7 +370,7 @@ expected_output = {
                   "memory_bytes": 2880
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,
@@ -396,7 +396,7 @@ expected_output = {
       },
       "VRF_Name_08": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -440,7 +440,7 @@ expected_output = {
                   "memory_bytes": 12640
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,
@@ -466,7 +466,7 @@ expected_output = {
       },
       "VRF_Name_09": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -502,7 +502,7 @@ expected_output = {
                   "memory_bytes": 8320
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,
@@ -528,7 +528,7 @@ expected_output = {
       },
       "VRF_Name_10": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -564,7 +564,7 @@ expected_output = {
                   "memory_bytes": 2880
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,
@@ -590,7 +590,7 @@ expected_output = {
       },
       "VRF_Name_11": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -626,7 +626,7 @@ expected_output = {
                   "memory_bytes": 8320
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,
@@ -652,7 +652,7 @@ expected_output = {
       },
       "VRF_Name_12": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -688,7 +688,7 @@ expected_output = {
                   "memory_bytes": 2880
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,
@@ -714,7 +714,7 @@ expected_output = {
       },
       "VRF_Name_13": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -750,7 +750,7 @@ expected_output = {
                   "memory_bytes": 8320
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,
@@ -776,7 +776,7 @@ expected_output = {
       },
       "VRF_Name_14": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -812,7 +812,7 @@ expected_output = {
                   "memory_bytes": 2880
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,
@@ -838,7 +838,7 @@ expected_output = {
       },
       "VRF_Name_15": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -874,7 +874,7 @@ expected_output = {
                   "memory_bytes": 8320
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,
@@ -900,7 +900,7 @@ expected_output = {
       },
       "VRF_Name_16": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 1,
@@ -936,7 +936,7 @@ expected_output = {
                   "memory_bytes": 2880
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,

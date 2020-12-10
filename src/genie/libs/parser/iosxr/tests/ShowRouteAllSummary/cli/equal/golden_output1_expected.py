@@ -2,7 +2,7 @@ expected_output = {
    "vrf": {
       "default": {
          "address_family": {
-            "ipv4_unicast": {
+            "IPv4 Unicast": {
                "route_source": {
                   "local": {
                      "routes": 24,
@@ -66,7 +66,7 @@ expected_output = {
                   "memory_bytes": 202089424
                }
             },
-            "ipv4_multicast": {
+            "IPv4 Multicast": {
                "route_source": {
                   "local": {
                      "routes": 0,
@@ -96,7 +96,7 @@ expected_output = {
                   "memory_bytes": 0
                }
             },
-            "ipv6_unicast": {
+            "IPv6 Unicast": {
                "route_source": {
                   "connected": {
                      "routes": 5,
@@ -154,7 +154,7 @@ expected_output = {
                   "memory_bytes": 26898168
                }
             },
-            "ipv6_multicast": {
+            "IPv6 Multicast": {
                "route_source": {
                   "connected": {
                      "routes": 0,
