@@ -122,7 +122,7 @@ class FileBasedTest(aetest.Testcase):
         aetest.loop.mark(self.test, operating_system=get_operating_systems(_os))
 
     @aetest.test
-    def test(self,operating_system, steps, _os, _class, _token, _number, _display_only_failed):
+    def test(self,operating_system, steps, _os, _class, _token, _number, _display_only_failed,testbed):
 
         """Loop through OS's and run appropriate tests."""
         base_folder = f"../src/genie/libs/parser/{operating_system}"
@@ -184,7 +184,7 @@ class FileBasedTest(aetest.Testcase):
                             continue_=True,
                         ) as golden_steps:
                             self.test_golden(
-                                golden_steps, local_class, operating_system, _display_only_failed, token, _number
+                                golden_steps, local_class, operating_system, testbed, _display_only_failed, token, _number
                             )
 
                         with class_step.start(
@@ -195,9 +195,9 @@ class FileBasedTest(aetest.Testcase):
 
 
     @screen_log_handling
-    def test_golden(self, steps, local_class, operating_system, _display_only_failed=None, token=None, number=None):
+    def test_golden(self, steps, local_class, operating_system, testbed,_display_only_failed=None, token=None, number=None):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
-
+        import pdb;pdb.set_trace()
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/equal"
         else:
@@ -247,6 +247,7 @@ class FileBasedTest(aetest.Testcase):
                 # what is expected and the parsed output
                 dd = Diff(parsed_output,golden_parsed_output)
                 dd.findDiff()
+                #import pdb;pdb.set_trace()
                 if parsed_output != golden_parsed_output:
                     # if -f flag provided, then add the screen handler back into
                     # the root.handlers to displayed failed tests. Decorator removes
@@ -272,7 +273,7 @@ class FileBasedTest(aetest.Testcase):
                     # If tests pass, display the device output in debug mode
                     # But first check if the screen handler is removed, if it is
                     # put it back into the root otherwise just display to stdout
-                    if self.temporary_screen_handler not in log.root.handlers:
+                    if self.temporary_screen_handler not in log.root.handlers and self.temporary_screen_handler != None:
                         self.add_logger()
                         logging.debug(banner(msg))
                         logging.debug("\nThe following is the device output for the passed parser:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
@@ -370,119 +371,6 @@ if __name__ == "__main__":
                 "\n* '-c' or '--class_name' for the parser class"
                 "\n* '-o' or '--operating_system' for operating system")
 
-    # This is the list of Classes that currently have no testing. It was found during the process
-    # of converting to folder based testing strategy
-    CLASS_SKIP = {
-        "asa": {
-            "ShowVpnSessiondbSuper": True,
-            },
-        "iosxe": {
-            "c9300": {
-                "ShowInventory": True,
-            },
-            "ShowPimNeighbor": True,
-            "ShowIpInterfaceBrief": True,
-            "ShowIpInterfaceBriefPipeVlan": True,
-            "ShowBfdSessions": True,
-            "ShowBfdSessions_viptela": True,
-            "ShowBfdSummary": True,
-            "ShowDot1x": True,
-            "ShowEnvironmentAll": True,
-            "ShowControlConnections_viptela": True,
-            "ShowControlConnections": True,
-            "ShowEigrpNeighborsSuperParser": True,
-            "ShowIpEigrpNeighborsDetailSuperParser": True,
-            "ShowIpOspfInterface": True,
-            "ShowIpOspfNeighborDetail": True,
-            "ShowIpOspfShamLinks": True,
-            "ShowIpOspfVirtualLinks": True,
-            "ShowIpOspfMplsTrafficEngLink": True,
-            "ShowIpOspfDatabaseOpaqueAreaTypeExtLink": True,
-            "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter": True,
-            "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate": True,
-            "ShowIpOspfDatabaseTypeParser": True,
-            "ShowIpOspfLinksParser": True,
-            "ShowIpRouteDistributor": True,
-            "ShowIpv6RouteDistributor": True,
-            "ShowControlLocalProperties_viptela": True,
-            "ShowControlLocalProperties": True,
-            "ShowVrfDetailSuperParser": True,
-            "ShowBgp": True,
-            "ShowBgpAllNeighborsRoutesSuperParser": True,
-            "ShowBgpDetailSuperParser": True,
-            "ShowBgpNeighborSuperParser": True,
-            "ShowBgpNeighborsAdvertisedRoutesSuperParser": True,
-            "ShowBgpNeighborsReceivedRoutes": True,
-            "ShowBgpNeighborsReceivedRoutesSuperParser": True,
-            "ShowBgpNeighborsRoutes": True,
-            "ShowBgpSummarySuperParser": True,
-            "ShowBgpSuperParser": True,
-            "ShowIpBgpAllNeighborsAdvertisedRoutes": True,
-            "ShowIpBgpAllNeighborsReceivedRoutes": True,
-            "ShowIpBgpNeighborsReceivedRoutes": True,
-            "ShowIpBgpNeighborsRoutes": True,
-            "ShowIpBgpRouteDistributer": True,
-            "ShowPolicyMapTypeSuperParser": True,
-            "ShowIpLocalPool": True,
-            "ShowInterfaceDetail": True,
-            "ShowInterfaceIpBrief": True,
-            "ShowInterfaceSummary": True,
-            "ShowAuthenticationSessionsInterface": True,
-            "ShowVersion_viptela": True,
-            "ShowOmpPeers_viptela": True,
-            "ShowBfdSummary_viptela": True,
-            "ShowOmpTlocPath_viptela": True,
-            "ShowOmpTlocs_viptela": True,
-            "ShowSoftwaretab_viptela": True, # PR submitted
-            "ShowRebootHistory_viptela": True,
-            "ShowOmpSummary_viptela": True,
-            "ShowSystemStatus_viptela": True,
-            "ShowTcpProxyStatistics": True, # PR submitted
-            "ShowTcpproxyStatus": True, # PR submitted
-            "ShowPlatformTcamUtilization": True, # PR submitted
-            "ShowLicense": True, # PR submitted
-            "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
-            "ShowSoftwaretab": True, # PR submitted
-            "ShowOmpPeers_viptela": True,
-            "ShowOmpTlocPath_viptela": True,
-            "ShowOmpTlocs_viptela": True,
-        },
-        "ios": {
-            "ShowPimNeighbor": True,
-            "ShowInterfacesTrunk": True,
-            "ShowIpInterfaceBrief": True,
-            "ShowIpInterfaceBriefPipeVlan": True,
-            "ShowDot1x": True,
-            "ShowBoot": True,
-            "ShowPagpNeighbor": True,
-            "ShowIpProtocols": True,
-            "ShowIpv6Rpf": True,
-            "ShowIpOspfDatabaseRouter": True,
-            "ShowIpOspfInterface": True,
-            "ShowIpOspfMplsTrafficEngLink": True,
-            "ShowIpOspfNeighborDetail": True,
-            "ShowIpOspfShamLinks": True,
-            "ShowIpOspfVirtualLinks": True,
-            "ShowIpv6Route": True,
-            "ShowIpBgp": True,
-            "ShowMplsLdpNeighbor": True,
-            "ShowInterfaceDetail": True,
-            "ShowInterfaceIpBrief": True,
-            "ShowInterfaceSummary": True,
-            "ShowInterfaceTransceiverDetail": True,
-            "ShowSdwanSystemStatus": True,
-            "ShowSdwanSoftware": True,
-        },
-    }
-
-    EMPTY_SKIP = {
-        "iosxe": {"ShowVersion": True},
-        "ios": {
-            "ShowVersion": True,
-            "ShowIpv6EigrpNeighbors": True,
-            "ShowIpv6EigrpNeighborsDetail": True,
-        },
-    }
 
     if _display_only_failed and log.root.handlers:
         temporary_screen_handler = log.root.handlers.pop(0)

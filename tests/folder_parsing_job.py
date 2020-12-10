@@ -3,7 +3,6 @@ import sys
 import argparse
 from ats.datastructures.logic import And, Not, Or
 
-from genie.harness.main import gRun
 from pyats.easypy import run
 
 
