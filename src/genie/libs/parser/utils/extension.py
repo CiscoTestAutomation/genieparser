@@ -3,7 +3,6 @@ import pathlib
 import inspect
 import itertools
 import importlib
-
 from genie.metaparser import MetaParser
 
 log = logging.getLogger(__name__)

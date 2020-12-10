@@ -7,10 +7,9 @@ class TestExtendParser(unittest.TestCase):
 
     def setUp(self):
         os.environ['PYTHONPATH'] += package_path + ':'
-        os.environ['EXT_GENIE_PARSER'] = 'dummy_parser'
 
     def test_extend_api(self):
-        ext = ExtendParsers(os.environ['EXT_GENIE_PARSER'])
+        ext = ExtendParsers('dummy_parser')
         ext.extend()
         self.assertEqual(ext.output, 
             {

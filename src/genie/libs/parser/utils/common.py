@@ -3,18 +3,21 @@
 # python
 import re
 import os
-import json
 import sys
-import warnings
-import logging
-import importlib
+import json
 import math
+import logging
+import warnings
+import importlib
 
 from genie.libs import parser
 from genie.abstract import Lookup
 from genie.metaparser.util import merge_dict
 
+from pyats import configuration as cfg
 from .extension import ExtendParsers
+
+PYATS_EXT_PARSER = 'genie.external_parser'
 
 log = logging.getLogger(__name__)
 
@@ -36,7 +39,7 @@ def _load_parser_json():
             parser_data = json.load(f)
 
         # check if provided external parser packages
-        ext_parser_package = os.environ.get('EXT_GENIE_PARSER')
+        ext_parser_package = cfg.get(PYATS_EXT_PARSER, None)
         if ext_parser_package:
             ext = ExtendParsers(ext_parser_package)
             ext.extend()
