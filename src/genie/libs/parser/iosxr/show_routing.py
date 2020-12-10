@@ -1009,7 +1009,7 @@ class ShowRouteAllSummarySchema(MetaParser):
     """Schema for :
        show route afi-all safi-all summary
        show route vrf all afi-all safi-all summary
-       show route vrf all afi-all safi-all summary"""
+       show route vrf <vrf> afi-all safi-all summary"""
 
     schema = {
         'vrf': {
@@ -1097,8 +1097,7 @@ class ShowRouteAllSummary(ShowRouteAllSummarySchema):
             # IPv4 Unicast:
             m = p2.match(line)
             if m:
-                addrs_fam = m.groupdict()['address_family'].replace(' ', '_')
-                addrs_fam = addrs_fam.lower()
+                addrs_fam = m.groupdict()['address_family']
                 addrs_fam_dict = vrf_dict.setdefault('address_family', {}).setdefault(addrs_fam, {})
                 vrf_rs_dict = addrs_fam_dict.setdefault('route_source', {})
             # connected                        0          0          0           0
