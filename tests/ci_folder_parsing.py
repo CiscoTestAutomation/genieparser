@@ -59,6 +59,7 @@ def get_operating_systems(_os):
     #        operating_system.append(folder)
     # return operating_system
 
+
 # The get_tokens function dynamically finds tokens by leveraging globs. This
 # works based on the deterministic folder structure. Within a given OS root folder one can
 # determine that a sub folder is in fact a token, if there is a "tests" directory. Upon removing
@@ -66,7 +67,7 @@ def get_operating_systems(_os):
 def get_tokens(folder):
     tokens = []
     for path in glob.glob(f"{folder}/*/tests"):
-        tokens.append(path.split('/')[-2])
+        tokens.append(path.split("/")[-2])
     return tokens
 
 
@@ -122,7 +123,7 @@ class FileBasedTest(aetest.Testcase):
         aetest.loop.mark(self.test, operating_system=get_operating_systems(_os))
 
     @aetest.test
-    def test(self,operating_system, steps, _os, _class, _token, _number, _display_only_failed,testbed):
+    def test(self,operating_system, steps, _os, _class, _token, _number, _display_only_failed):
 
         """Loop through OS's and run appropriate tests."""
         base_folder = f"../src/genie/libs/parser/{operating_system}"
@@ -146,14 +147,18 @@ class FileBasedTest(aetest.Testcase):
                 module_name = f"{operating_system}_{token}_{module_name}"
             else:
                 module_name = f"{operating_system}_{module_name}"
-            _module = importlib.machinery.SourceFileLoader(module_name, parse_file).load_module()
+            _module = importlib.machinery.SourceFileLoader(
+                module_name, parse_file
+            ).load_module()
 
             for name, local_class in inspect.getmembers(_module):
                 # The following methods determin when a test is not warranted, further detail will be provided for each method.
 
                 # If there is a token and the "class" was found to be a known whitelist (mainly since there was not existing tests),
                 # skip. Whitelisted items should be cleaned up over time, and this removed to enforce testing always happens.
-                if token and CLASS_SKIP.get(operating_system, {}).get(token, {}).get(name):
+                if token and CLASS_SKIP.get(operating_system, {}).get(token, {}).get(
+                    name
+                ):
                     continue
                 # Same as previous, but in cases without tokens (which is the majority.)
                 elif not token and CLASS_SKIP.get(operating_system, {}).get(name):
@@ -184,20 +189,21 @@ class FileBasedTest(aetest.Testcase):
                             continue_=True,
                         ) as golden_steps:
                             self.test_golden(
-                                golden_steps, local_class, operating_system, testbed, _display_only_failed, token, _number
+                                golden_steps, local_class, operating_system, _display_only_failed, token, _number
                             )
 
                         with class_step.start(
                             f"Test Empty -> {operating_system} -> {name}",
                             continue_=True,
                         ) as empty_steps:
-                            self.test_empty(empty_steps, local_class, operating_system, token)
+                            self.test_empty(
+                                empty_steps, local_class, operating_system, token
+                            )
 
 
     @screen_log_handling
-    def test_golden(self, steps, local_class, operating_system, testbed,_display_only_failed=None, token=None, number=None):
+    def test_golden(self, steps, local_class, operating_system,_display_only_failed=None, token=None, number=None):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
-        import pdb;pdb.set_trace()
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/equal"
         else:
@@ -205,9 +211,12 @@ class FileBasedTest(aetest.Testcase):
 
         # Get list of output files to parse and sort
         convert = lambda text: int(text) if text.isdigit() else text
-        aph_key = lambda key: [convert(c) for c in re.split('([0-9]+)', key)]
+        aph_key = lambda key: [convert(c) for c in re.split("([0-9]+)", key)]
         if number and not operating_system or not local_class:
-            output_glob = sorted(glob.glob(f"{folder_root}/golden_output{number}_output.txt"), key=aph_key)
+            output_glob = sorted(
+                glob.glob(f"{folder_root}/golden_output{number}_output.txt"),
+                key=aph_key,
+            )
         else:
             output_glob = sorted(glob.glob(f"{folder_root}/*_output.txt"), key=aph_key)
 
@@ -293,9 +302,8 @@ class FileBasedTest(aetest.Testcase):
             folder_root = f"{operating_system}/{local_class.__name__}/cli/empty"
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
 
-        if (
-            len(output_glob) == 0
-            and not EMPTY_SKIP.get(operating_system, {}).get(local_class.__name__)
+        if len(output_glob) == 0 and not EMPTY_SKIP.get(operating_system, {}).get(
+            local_class.__name__
         ):
             self.failed(
                 f"No files found in appropriate directory for {local_class} empty file"

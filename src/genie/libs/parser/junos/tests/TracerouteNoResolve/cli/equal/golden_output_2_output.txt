@@ -1,0 +1,14 @@
+
+        traceroute 10.121.0.1 no-resolve 
+        traceroute to 10.121.0.1 (10.121.0.1), 30 hops max, 52 byte packets
+        traceroute: sendto: No route to host
+        1 traceroute: wrote 10.121.0.1 52 chars, ret=-1
+        *traceroute: sendto: No route to host
+        traceroute: wrote 10.121.0.1 52 chars, ret=-1
+        *traceroute: sendto: No route to host
+        traceroute: wrote 10.121.0.1 52 chars, ret=-1
+        *
+        traceroute: sendto: No route to host
+        2 traceroute: wrote 10.121.0.1 52 chars, ret=-1
+        * 10.121.0.1  2.111 ms  1.642 ms
+        

@@ -1,0 +1,43 @@
+
+                show ospf interface extensive
+        Interface           State   Area            DR ID           BDR ID          Nbrs
+        ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+        Type: P2P, Address: 10.189.5.93, Mask: 255.255.255.252, MTU: 1500, Cost: 5
+        Adj count: 1
+        Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        Auth type: None
+        Protection type: Post Convergence
+        Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+        Topology default (ID 0) -> Cost: 5
+        ge-0/0/1.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+        Type: P2P, Address: 10.169.14.122, Mask: 255.255.255.252, MTU: 1500, Cost: 100
+        Adj count: 1
+        Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        Auth type: None
+        Protection type: Post Convergence
+        Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+        Topology default (ID 0) -> Cost: 100
+        ge-0/0/2.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+        Type: P2P, Address: 10.19.198.25, Mask: 255.255.255.252, MTU: 1500, Cost: 1000
+        Adj count: 1
+        Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        Auth type: None
+        Protection type: Post Convergence
+        Post convergence protection: Enabled, Fate sharing: No, SRLG: No, Node cost: 100
+        Topology default (ID 0) -> Cost: 1000
+        ge-0/0/3.0          DRother 0.0.0.8         0.0.0.0         0.0.0.0            0
+        Type: LAN, Address: 10.55.0.254, Mask: 255.255.255.0, MTU: 1500, Cost: 100
+        Adj count: 0, Passive
+        Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        Auth type: None
+        Protection type: None
+        Topology default (ID 0) -> Passive, Cost: 100
+        lo0.0               DR      0.0.0.8         10.189.5.252    0.0.0.0            0
+        Type: LAN, Address: 10.189.5.252, Mask: 255.255.255.255, MTU: 65535, Cost: 0
+        DR addr: 10.189.5.252, Priority: 128
+        Adj count: 0
+        Hello: 10, Dead: 40, ReXmit: 5, Not Stub
+        Auth type: None
+        Protection type: None
+        Topology default (ID 0) -> Cost: 0
+        
