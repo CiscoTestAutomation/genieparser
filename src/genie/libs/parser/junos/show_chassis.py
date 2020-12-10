@@ -2759,10 +2759,10 @@ class ShowChassisFabricSummarySchema(MetaParser):
 
 class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
     """ Parser for:
-    * show chassis Fabric Summary
+    * show chassis fabric summary
     """
 
-    cli_command = 'show chassis Fabric Summary'
+    cli_command = 'show chassis fabric summary'
 
     def cli(self, output=None):
         if not output:
@@ -2840,10 +2840,10 @@ class ShowChassisFabricPlaneSchema(MetaParser):
 
 class ShowChassisFabricPlane(ShowChassisFabricPlaneSchema):
     """ Parser for:
-    * show chassis Fabric Plane
+    * show chassis fabric plane
     """
 
-    cli_command = 'show chassis Fabric Plane'
+    cli_command = 'show chassis fabric plane'
 
     def cli(self, output=None):
         if not output:
