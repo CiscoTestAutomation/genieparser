@@ -2893,6 +2893,35 @@ class ShowChassisEnvironmentComponentSchema(MetaParser):
     """ Schema for:
             * show chassis environment {component}
     """
+    def validate_temperature_reading_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaError('environment-component-item is not a list')
+        env_schema = Schema({
+                        "temperature": {
+                            "#text": str,
+                            Optional("@junos:celsius"): str
+                        },
+                        "temperature-name": str
+                    })
+        # Validate each dictionary in list
+        for item in value:
+            env_schema.validate(item)
+        return value
+    
+    def validate_voltage_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaError('environment-component-item is not a list')
+        env_schema = Schema({
+                            "actual-voltage": str,
+                            "reference-voltage": str
+                        })
+        # Validate each dictionary in list
+        for item in value:
+            env_schema.validate(item)
+        return value
+    
     def validate_environment_component_item_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
@@ -2900,11 +2929,21 @@ class ShowChassisEnvironmentComponentSchema(MetaParser):
         env_schema = Schema({
                 "name": str,
                 "state": str,
+                "bus-revision": str,
+                "fpga-revision": str,
+                "power-information": {
+                    "power-title": {
+                        "power-type": str
+                    },
+                    "voltage": Use(ShowChassisEnvironmentComponentSchema.validate_voltage_list)
+                },
+                "temperature-reading": Use(ShowChassisEnvironmentComponentSchema.validate_temperature_reading_list)
             })
         # Validate each dictionary in list
         for item in value:
             env_schema.validate(item)
         return value
+    
     schema = {
         Optional("@xmlns:junos"): str,
         "environment-component-information": {
@@ -2935,6 +2974,16 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
 
         p2 = re.compile(r'^State +(?P<state>[\S\s]+)$')
 
+        p3 = re.compile(r'^\w+ +(?P<power_type>\d+)$')
+
+        p4 = re.compile(r'^(?P<temperature_name>.*) +(?P<text>\d+ +degrees +\w+ +\/ +\d+ +degrees +\w+)$')
+        
+        p5 = re.compile(r'^(?P<reference_voltage>[\d\.]+ +\w+( +\w+)?) +(?P<actual_voltage>\d+) +\w+$')
+
+        p6 = re.compile(r'^Bus +Revision +(?P<bus_revision>\d+)$')
+
+        p7 = re.compile(r'^FPGA +Revision +(?P<fpga_revision>\d+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -2952,5 +3001,48 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
                 group = m.groupdict()
                 environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
+            
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                power_info_dict = environment_component_item_dict.setdefault('power-information', {})
+                power_title_dict = power_info_dict.setdefault('power-title', {}). \
+                    setdefault('power-type', group['power_type'])
+                continue
+            
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                temperature_reading_list = environment_component_item_dict.setdefault('temperature-reading', [])
+                temperature_name = group['temperature_name']
+                text = group['text']
+                temperature_reading_dict = {'temperature-name': temperature_name,
+                    'temperature': {'#text': text}}
+                temperature_reading_list.append(temperature_reading_dict)
+                continue
 
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                voltage_list = power_info_dict.setdefault('voltage', [])
+                voltage_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                voltage_list.append(voltage_dict)
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+        
+        import json
+        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
+        json_data = json_data.replace(': true', ': True')
+        print(json_data)
         return ret_dict
