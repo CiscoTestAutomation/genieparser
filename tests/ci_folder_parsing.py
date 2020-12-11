@@ -6,6 +6,7 @@ import re
 import sys
 import glob
 import json
+import logging
 import inspect
 import argparse
 import importlib
@@ -13,10 +14,14 @@ from unittest.mock import Mock
 
 # pyATS
 from pyats import aetest
+from ats.easypy import runtime
 from pyats.topology import Device
+from pyats.log.utils import banner
 from pyats.aetest.steps import Steps
 
+
 # Genie
+from genie.utils.diff import Diff
 from genie.libs import parser as _parser
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
@@ -221,9 +226,9 @@ def read_python_file(file_path):
     return getattr(_module, "expected_output")
 
 
-def get_operating_systems():
+def get_operating_systems(_os):
     """Helper Script to get operating systems."""
-    # Update and fix as more OS's converted to folder baed tests
+    # Update and fix as more OS's converted to folder based tests
     if _os:
         return [_os]
     return ["asa", "ios", "iosxe", "junos"]
@@ -257,17 +262,53 @@ def get_files(folder, token=None):
 class FileBasedTest(aetest.Testcase):
     """Standard pyats testcase class."""
 
-    OPERATING_SYSTEMS = get_operating_systems()
+    # removes screenhandler from root, but tasklog handler
+    # is kept to allow all logs to be visible in the report
+    def remove_logger(self):
+        if log.root.handlers:
+            self.temporary_screen_handler = log.root.handlers.pop(0)
+    
+    # adds screenhandler back to root
+    def add_logger(self):
+        if self.temporary_screen_handler:
+            log.root.handlers.insert(0,self.temporary_screen_handler)
+
+    # Decorator function. Calls remove_logger if _display_only_failed flag if used
+    # and screenhandler is in log.root.handlers
+    def screen_log_handling(func):
+        def wrapper(self,*args, **kwargs):
+            func(self,*args, **kwargs)
+            if self.parameters['_display_only_failed'] and self.temporary_screen_handler in log.root.handlers:
+                self.remove_logger()
+        return wrapper
+
+    # constructor used to initialize the class attribute temporary_screen_handler
+    # which will point to the screenhandler log, which is used to display
+    # data on stdout
+    def __init__(self, *args, **kwargs):
+        # init parent
+        super().__init__(*args, **kwargs)
+        self.temporary_screen_handler = None
+
+    # setup portion used to define command line options
+    @aetest.setup
+    def setup(self, _os, _class, _token, _number, _display_only_failed):
+
+        # removes screenhandler from root if _display_only_failed 
+        # flag is passed
+        if _display_only_failed and log.root.handlers:
+            self.temporary_screen_handler = log.root.handlers.pop(0)
+
+        aetest.loop.mark(self.test, operating_system=get_operating_systems(_os))
 
     @aetest.test
-    @aetest.test.loop(operating_system=OPERATING_SYSTEMS)
-    def check_os_folder(self, steps, operating_system, number=_number):
+    def test(self,operating_system, steps, _os, _class, _token, _number, _display_only_failed):
+
         """Loop through OS's and run appropriate tests."""
         base_folder = f"../src/genie/libs/parser/{operating_system}"
         # Please refer to get_tokens comments for the how, the what is a genie token, such as
         # "asr1k" or "c3850" to provide namespaced parsing.
         tokens = get_tokens(base_folder)
-
         parse_files = []
         parse_files.extend(get_files(base_folder))
         for token in tokens:
@@ -327,12 +368,9 @@ class FileBasedTest(aetest.Testcase):
                             continue_=True,
                         ) as golden_steps:
                             self.test_golden(
-                                golden_steps,
-                                local_class,
-                                operating_system,
-                                token,
-                                _number,
+                                golden_steps, local_class, operating_system, _display_only_failed, token, _number
                             )
+
                         with class_step.start(
                             f"Test Empty -> {operating_system} -> {name}",
                             continue_=True,
@@ -341,9 +379,9 @@ class FileBasedTest(aetest.Testcase):
                                 empty_steps, local_class, operating_system, token
                             )
 
-    def test_golden(
-        self, steps, local_class, operating_system, token=None, number=None
-    ):
+
+    @screen_log_handling
+    def test_golden(self, steps, local_class, operating_system,_display_only_failed=None, token=None, number=None):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/equal"
@@ -366,16 +404,14 @@ class FileBasedTest(aetest.Testcase):
 
         # Look for any files ending with _output.txt, presume the user defined name from that (based
         # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
+        
         for user_defined in output_glob:
             user_test = os.path.basename(user_defined[: -len("_output.txt")])
             if token:
-                msg = (
-                    f"Gold -> {operating_system} -> Token {token} -> {local_class.__name__} -> {user_test}",
-                )
+                msg = f"Gold -> {operating_system} -> Token {token} -> {local_class.__name__} -> {user_test}"
             else:
-                msg = (
-                    f"Gold -> {operating_system} -> {local_class.__name__} -> {user_test}",
-                )
+                msg = f"Gold -> {operating_system} -> {local_class.__name__} -> {user_test}"
+
             with steps.start(msg, continue_=True):
                 golden_output_str = read_from_file(
                     f"{folder_root}/{user_test}_output.txt"
@@ -394,14 +430,49 @@ class FileBasedTest(aetest.Testcase):
                 device = Mock(**golden_output)
                 obj = local_class(device=device)
                 parsed_output = obj.parse(**arguments)
-                assert (
-                    parsed_output == golden_parsed_output
-                ), "{parsed_output} \n!=\n{golden_parsed_output}".format(
-                    parsed_output=parsed_output,
-                    golden_parsed_output=golden_parsed_output,
-                )
+                
+                # Use Diff method to get the difference between 
+                # what is expected and the parsed output
+                dd = Diff(parsed_output,golden_parsed_output)
+                dd.findDiff()
+                #import pdb;pdb.set_trace()
+                if parsed_output != golden_parsed_output:
+                    # if -f flag provided, then add the screen handler back into
+                    # the root.handlers to displayed failed tests. Decorator removes
+                    # screen handler from root.handlers after failed tests are displayed
+                    # to stdout
+                    if _display_only_failed:
+                        self.add_logger()
+                        log.info(banner(msg))
+                    # Format expected and parsed output in a nice format
+                    parsed_json_data = json.dumps(parsed_output, indent=4, sort_keys=True)
+                    golden_parsed_output_json_data = json.dumps(parsed_output, indent=4, sort_keys=True)
+                    
+                    # Display device output, parsed output, and golden_output of failed tests
+                    log.info("\nThe following is the device output before it is parsed:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
+                    log.info("The following is your device's parsed output:\n{}\n".format(parsed_json_data), extra = {'colour': 'yellow'})
+                    log.info("The following is your expected output:\n{}\n".format(golden_parsed_output_json_data), extra = {'colour': 'yellow'})
+                    log.info("The following is the difference between the two outputs:\n", extra = {'colour': 'yellow'})
 
-    def test_empty(self, steps, local_class, operating_system, token=None):
+                    # Display the diff between parsed output and golden_output
+                    log.info(str(dd), extra = {'colour': 'yellow'})
+                    raise AssertionError("Device output and expected output do not match")
+                else:
+                    # If tests pass, display the device output in debug mode
+                    # But first check if the screen handler is removed, if it is
+                    # put it back into the root otherwise just display to stdout
+                    if self.temporary_screen_handler not in log.root.handlers and self.temporary_screen_handler != None:
+                        self.add_logger()
+                        logging.debug(banner(msg))
+                        logging.debug("\nThe following is the device output for the passed parser:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
+                        self.remove_logger()
+                    else:
+                        logging.debug(banner(msg))
+                        logging.debug("\nThe following is the device output for the passed parser:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
+
+
+    @screen_log_handling
+    def test_empty(self, steps, local_class, operating_system, EMPTY_SKIP, token=None):
         """Test step that looks for empty output."""
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/empty"
@@ -433,11 +504,16 @@ class FileBasedTest(aetest.Testcase):
                     arguments = read_json_file(
                         f"{folder_root}/{user_test}_arguments.json"
                     )
-
                 device = Mock(**empty_output)
                 obj = local_class(device=device)
                 try:
                     obj.parse(**arguments)
+                    # if -f flag provided, then add the screen handler back into
+                    # the root.handlers to display failed tests. Decorator removes
+                    # screen handler from root.handlers after failed tests are displayed
+                    # to stdout
+                    if _display_only_failed:
+                        self.add_logger()
                     self.failed(f"File parsed, when expected not to for {local_class}")
                 except SchemaEmptyParserError:
                     return True
@@ -446,4 +522,167 @@ class FileBasedTest(aetest.Testcase):
 
 
 if __name__ == "__main__":
-    aetest.main()
+
+    # Create the parser
+    my_parser = argparse.ArgumentParser(description="Optional arguments for 'nose'-like tests")
+
+    my_parser.add_argument('-o', "--operating_system",
+                        type=str,
+                        help='The OS you wish to filter on',
+                        default=None)
+    my_parser.add_argument('-c', "--class_name",
+                        type=str,
+                        help="The Class you wish to filter on, (not the Test File)",
+                        default=None)
+    my_parser.add_argument('-t', "--token",
+                        type=str,
+                        help="The Token associated with the class, such as 'asr1k'",
+                        default=None)
+    my_parser.add_argument('-f', "--display_only_failed",
+                        help="Displaying only failed classes",
+                        action='store_true')
+    my_parser.add_argument('-n', "--number",
+                        type=int,
+                        help="The specific unittest we want to run, such as '25'",
+                        default=None)
+    args = my_parser.parse_args()
+
+    _os = args.operating_system
+    _class = args.class_name
+    _token = args.token
+    _display_only_failed = args.display_only_failed
+    _number = args.number
+
+    if _number and (not _class or not _number):
+        sys.exit("Unittest number provided but missing supporting arguments:"
+                "\n* '-c' or '--class_name' for the parser class"
+                "\n* '-o' or '--operating_system' for operating system")
+
+
+    if _display_only_failed and log.root.handlers:
+        temporary_screen_handler = log.root.handlers.pop(0)
+    
+
+    aetest.main(
+        _os=_os,
+        _class=_class,
+        _token=_token,
+        _display_only_failed=_display_only_failed,
+        _number=_number
+    )
+
+else:
+    
+    CLASS_SKIP = {
+        "asa": {
+            "ShowVpnSessiondbSuper": True,
+            },
+        "iosxe": {
+            "c9300": {
+                "ShowInventory": True,
+            },
+            "ShowPimNeighbor": True,
+            "ShowIpInterfaceBrief": True,
+            "ShowIpInterfaceBriefPipeVlan": True,
+            "ShowBfdSessions": True,
+            "ShowBfdSessions_viptela": True,
+            "ShowBfdSummary": True,
+            "ShowDot1x": True,
+            "ShowEnvironmentAll": True,
+            "ShowControlConnections_viptela": True,
+            "ShowControlConnections": True,
+            "ShowEigrpNeighborsSuperParser": True,
+            "ShowIpEigrpNeighborsDetailSuperParser": True,
+            "ShowIpOspfInterface": True,
+            "ShowIpOspfNeighborDetail": True,
+            "ShowIpOspfShamLinks": True,
+            "ShowIpOspfVirtualLinks": True,
+            "ShowIpOspfMplsTrafficEngLink": True,
+            "ShowIpOspfDatabaseOpaqueAreaTypeExtLink": True,
+            "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter": True,
+            "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate": True,
+            "ShowIpOspfDatabaseTypeParser": True,
+            "ShowIpOspfLinksParser": True,
+            "ShowIpRouteDistributor": True,
+            "ShowIpv6RouteDistributor": True,
+            "ShowControlLocalProperties_viptela": True,
+            "ShowControlLocalProperties": True,
+            "ShowVrfDetailSuperParser": True,
+            "ShowBgp": True,
+            "ShowBgpAllNeighborsRoutesSuperParser": True,
+            "ShowBgpDetailSuperParser": True,
+            "ShowBgpNeighborSuperParser": True,
+            "ShowBgpNeighborsAdvertisedRoutesSuperParser": True,
+            "ShowBgpNeighborsReceivedRoutes": True,
+            "ShowBgpNeighborsReceivedRoutesSuperParser": True,
+            "ShowBgpNeighborsRoutes": True,
+            "ShowBgpSummarySuperParser": True,
+            "ShowBgpSuperParser": True,
+            "ShowIpBgpAllNeighborsAdvertisedRoutes": True,
+            "ShowIpBgpAllNeighborsReceivedRoutes": True,
+            "ShowIpBgpNeighborsReceivedRoutes": True,
+            "ShowIpBgpNeighborsRoutes": True,
+            "ShowIpBgpRouteDistributer": True,
+            "ShowPolicyMapTypeSuperParser": True,
+            "ShowIpLocalPool": True,
+            "ShowInterfaceDetail": True,
+            "ShowInterfaceIpBrief": True,
+            "ShowInterfaceSummary": True,
+            "ShowAuthenticationSessionsInterface": True,
+            "ShowVersion_viptela": True,
+            "ShowOmpPeers_viptela": True,
+            "ShowBfdSummary_viptela": True,
+            "ShowOmpTlocPath_viptela": True,
+            "ShowOmpTlocs_viptela": True,
+            "ShowSoftwaretab_viptela": True, # PR submitted
+            "ShowRebootHistory_viptela": True,
+            "ShowOmpSummary_viptela": True,
+            "ShowSystemStatus_viptela": True,
+            "ShowTcpProxyStatistics": True, # PR submitted
+            "ShowTcpproxyStatus": True, # PR submitted
+            "ShowPlatformTcamUtilization": True, # PR submitted
+            "ShowLicense": True, # PR submitted
+            "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
+            "ShowSoftwaretab": True, # PR submitted
+            "ShowOmpPeers_viptela": True,
+            "ShowOmpTlocPath_viptela": True,
+            "ShowOmpTlocs_viptela": True,
+        },
+        "ios": {
+            "ShowPimNeighbor": True,
+            "ShowInterfacesTrunk": True,
+            "ShowIpInterfaceBrief": True,
+            "ShowIpInterfaceBriefPipeVlan": True,
+            "ShowDot1x": True,
+            "ShowBoot": True,
+            "ShowPagpNeighbor": True,
+            "ShowIpProtocols": True,
+            "ShowIpv6Rpf": True,
+            "ShowIpOspfDatabaseRouter": True,
+            "ShowIpOspfInterface": True,
+            "ShowIpOspfMplsTrafficEngLink": True,
+            "ShowIpOspfNeighborDetail": True,
+            "ShowIpOspfShamLinks": True,
+            "ShowIpOspfVirtualLinks": True,
+            "ShowIpv6Route": True,
+            "ShowIpBgp": True,
+            "ShowMplsLdpNeighbor": True,
+            "ShowInterfaceDetail": True,
+            "ShowInterfaceIpBrief": True,
+            "ShowInterfaceSummary": True,
+            "ShowInterfaceTransceiverDetail": True,
+            "ShowSdwanSystemStatus": True,
+            "ShowSdwanSoftware": True,
+        },
+    }
+
+    EMPTY_SKIP = {
+        "iosxe": {"ShowVersion": True},
+        "ios": {
+            "ShowVersion": True,
+            "ShowIpv6EigrpNeighbors": True,
+            "ShowIpv6EigrpNeighborsDetail": True,
+        },
+    }
+
+    aetest.main() 
