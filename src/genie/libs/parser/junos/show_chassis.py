@@ -2891,7 +2891,7 @@ class ShowChassisPower(ShowChassisPowerSchema):
 
 class ShowChassisEnvironmentComponentSchema(MetaParser):
     """ Schema for:
-            * show 
+            * show chassis environment {component}
     """
     def validate_environment_component_item_list(value):
         # Pass firmware list as value
@@ -2917,7 +2917,7 @@ class ShowChassisEnvironmentComponentSchema(MetaParser):
 
 class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
     """ Parser for:
-            * show 
+            * show chassis environment {component}
     """
     cli_command = 'show chassis environment {component}'
 
