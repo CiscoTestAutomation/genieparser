@@ -2889,15 +2889,6 @@ class ShowChassisPower(ShowChassisPowerSchema):
         
         return ret_dict
 
-# Python
-import re
-
-# Metaparser
-from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import (Any, Optional, Use,
-                                                SchemaTypeError, Schema)
-
-
 class ShowChassisEnvironmentComponentSchema(MetaParser):
     """ Schema for:
             * show 
