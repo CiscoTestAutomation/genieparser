@@ -2970,23 +2970,31 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
 
         ret_dict = {}
 
+        # CB 0 status:
         p1 = re.compile(r'^(?P<name>\S+ +\d+) +status:$')
 
+        # State                      Online Master
         p2 = re.compile(r'^State +(?P<state>[\S\s]+)$')
 
+        # Power 1
         p3 = re.compile(r'^\w+ +(?P<power_type>\d+)$')
 
+        # 1.0 V                     1005 mV
         p4 = re.compile(r'^(?P<temperature_name>.*) +(?P<text>\d+ +degrees +\w+ +\/ +\d+ +degrees +\w+)$')
         
+        # TCBC-Zone0 Temperature     45 degrees C / 113 degrees F
         p5 = re.compile(r'^(?P<reference_voltage>[\d\.]+ +\w+( +\w+)?) +(?P<actual_voltage>\d+) +\w+$')
 
+        # Bus Revision               100
         p6 = re.compile(r'^Bus +Revision +(?P<bus_revision>\d+)$')
 
+        # FPGA Revision              272
         p7 = re.compile(r'^FPGA +Revision +(?P<fpga_revision>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
+            # CB 0 status:
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -2996,12 +3004,14 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
                 environment_component_item_list.append(environment_component_item_dict)
                 continue
             
+            # State                      Online Master
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
             
+            # Power 1
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -3010,6 +3020,7 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
                     setdefault('power-type', group['power_type'])
                 continue
             
+            # IntakeC-Zone0 Temperature  51 degrees C / 123 degrees F
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -3020,7 +3031,8 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
                     'temperature': {'#text': text}}
                 temperature_reading_list.append(temperature_reading_dict)
                 continue
-
+            
+            # 1.0 V                     1005 mV
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -3028,21 +3040,19 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
                 voltage_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
                 voltage_list.append(voltage_dict)
                 continue
-
+            
+            # Bus Revision               100
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
-
+            
+            # FPGA Revision              272
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
         
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        json_data = json_data.replace(': true', ': True')
-        print(json_data)
         return ret_dict
