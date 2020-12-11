@@ -23,5 +23,5 @@ Yellow Threshold : 105 Degree Celsius
 Red Threshold    : 125 Degree Celsius
 SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
 --  ------------------  ----------  ---------------  -------  -------  -----
-1A  PWR-C4-950WAC-R     APS222700VU  No Input Power  Bad      n/a      950 
-1B  PWR-C4-950WAC-R     APS222700VT  OK              Good     n/a      950 
+1A  PWR-C4-950WAC-R     GEN222700VU  No Input Power  Bad      n/a      950 
+1B  PWR-C4-950WAC-R     GEN222700VT  OK              Good     n/a      950 

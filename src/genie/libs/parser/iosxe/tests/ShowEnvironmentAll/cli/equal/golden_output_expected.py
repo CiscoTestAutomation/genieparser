@@ -40,7 +40,7 @@ expected_output = {
                 '1': {
                     'pid': 'PWR-C4-950WAC-R',
                     'poe_power': 'n/a',
-                    'serial_number': 'APS222700VU',
+                    'serial_number': 'GEN222700VU',
                     'state': 'not present',
                     'status': 'no input power',
                     'system_power': 'bad',
@@ -49,7 +49,7 @@ expected_output = {
                 '2': {
                     'pid': 'PWR-C4-950WAC-R',
                     'poe_power': 'n/a',
-                    'serial_number': 'APS222700VT',
+                    'serial_number': 'GEN222700VT',
                     'state': 'ok',
                     'status': 'ok',
                     'system_power': 'good',
