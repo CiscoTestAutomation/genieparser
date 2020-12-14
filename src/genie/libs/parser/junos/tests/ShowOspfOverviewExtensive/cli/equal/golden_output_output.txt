@@ -1,0 +1,29 @@
+
+        show ospf overview extensive
+        Instance: master
+            Router ID: 10.189.5.252
+            Route table index: 0
+            AS boundary router
+            LSA refresh time: 50 minutes
+            Traffic engineering
+            SPRING: Enabled
+                SRGB Config Range :
+                SRGB Start-Label : 16000, SRGB Index-Range : 8000
+                SRGB Block Allocation: Success
+                SRGB Start Index : 16000, SRGB Size : 8000, Label-Range: [ 16000, 23999 ]
+                Node Segments: Enabled
+                Ipv4 Index : 71
+            Post Convergence Backup: Enabled
+                Max labels: 3, Max spf: 100, Max Ecmp Backup: 1
+            Area: 0.0.0.8
+                Stub type: Not Stub
+                Authentication Type: None
+                Area border routers: 0, AS boundary routers: 7
+                Neighbors
+                Up (in full state): 3
+            Topology: default (ID 0)
+                Prefix export count: 1
+                Full SPF runs: 173416
+                SPF delay: 0.200000 sec, SPF holddown: 2 sec, SPF rapid runs: 3
+                Backup SPF: Not Needed
+    

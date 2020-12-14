@@ -1,0 +1,10 @@
+
+        show route protocol static 2001:db8:eb18:ca45::1
+
+        inet6.0: 23 destinations, 24 routes (23 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        2001:db8:eb18:ca45::1/128
+                        *[Static/5] 3w5d 18:30:36
+                            >  to 2001:db8:eb18:6337::1 via ge-0/0/1.0
+    

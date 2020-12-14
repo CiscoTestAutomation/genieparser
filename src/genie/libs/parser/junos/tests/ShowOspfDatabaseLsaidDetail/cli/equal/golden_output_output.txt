@@ -1,0 +1,37 @@
+
+        show ospf database lsa-id 10.34.2.250 detail
+
+        OSPF database, Area 0.0.0.8
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Router   10.34.2.250     10.34.2.250     0x80000048  1598  0x22 0xed79 108
+        bits 0x2, link count 7
+        id 10.34.2.251, data 10.34.2.201, Type PointToPoint (1)
+            Topology count: 0, Default metric: 5
+        id 10.34.2.200, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 5
+        id 10.169.14.240, data 10.169.14.158, Type PointToPoint (1)
+            Topology count: 0, Default metric: 100
+        id 10.169.14.156, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 100
+        id 10.16.0.0, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1000
+        id 192.168.220.0, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1000
+        id 10.34.2.250, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Topology default (ID 0)
+            Type: PointToPoint, Node ID: 10.169.14.240
+            Metric: 100, Bidirectional
+            Type: PointToPoint, Node ID: 10.34.2.251
+            Metric: 5, Bidirectional
+            OSPF AS SCOPE link state database
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Extern   10.34.2.250     10.169.14.240   0x80000043  1075  0x22 0xd7f4  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Extern  *10.34.2.250     10.169.14.241   0x80000044   670  0x22 0xcffa  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        

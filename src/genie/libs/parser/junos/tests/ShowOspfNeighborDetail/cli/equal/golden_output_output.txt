@@ -1,0 +1,40 @@
+
+        show ospf neighbor detail
+        Address          Interface              State     ID               Pri  Dead
+        10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    39
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 3w0d 16:50:35, adjacent 3w0d 16:50:35
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            28985       BVL         Protected
+
+            28986       VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+        10.169.14.121   ge-0/0/1.0             Full      10.169.14.240   128    31
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 3w2d 03:12:20, adjacent 3w2d 03:12:15
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            2567        BVL         Protected
+
+            2568        VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+        10.19.198.26     ge-0/0/2.0             Full      10.19.198.239      1    39
+        Area 0.0.0.8, opt 0x52, DR 0.0.0.0, BDR 0.0.0.0
+        Up 1w5d 20:40:14, adjacent 1w5d 20:40:14
+        SPRING Adjacency Labels:
+
+            Label       Flags       Adj-Sid-Type
+
+            167966      BVL         Protected
+
+            167967      VL          UnProtected
+
+        Topology default (ID 0) -> Bidirectional
+    

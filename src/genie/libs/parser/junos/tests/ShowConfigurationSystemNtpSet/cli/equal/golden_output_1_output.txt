@@ -1,0 +1,6 @@
+        root@junos_vmx1> show configuration system ntp | display set 
+        set system ntp peer 10.2.2.2
+        set system ntp server 172.16.229.65 routing-instance mgmt_junos
+        set system ntp server 172.16.229.66 routing-instance mgmt_junos
+        set system ntp server 10.145.32.44 routing-instance mgmt_junos
+    

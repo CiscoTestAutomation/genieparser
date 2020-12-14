@@ -1,0 +1,6 @@
+
+        show rsvp session transit
+        Transit RSVP: 1 sessions
+        To              From            State   Rt Style Labelin Labelout LSPname
+        10.64.4.4         10.16.2.2         Up       0  1 FF      22       22 test_lsp_01
+        Total 1 displayed, Up 1, Down 0

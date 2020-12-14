@@ -1,0 +1,6 @@
+Slot 0   Online       DPCE 2x 10GE R
+  PIC 0  Online       1x 10GE(LAN/WAN)
+  PIC 1  Online       1x 10GE(LAN/WAN)
+Slot 1   Online       DPCE 2x 10GE R
+  PIC 0  Online       1x 10GE(LAN/WAN)
+  PIC 1  Online       1x 10GE(LAN/WAN)

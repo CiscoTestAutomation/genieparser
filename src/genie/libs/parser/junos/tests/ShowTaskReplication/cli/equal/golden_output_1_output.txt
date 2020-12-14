@@ -1,0 +1,6 @@
+
+show task memory
+Memory                 Size (kB)  Percentage  When
+Currently In Use:        26857          1%  now
+Maximum Ever Used:       27300          1%  20/10/01 01:27:19
+Available:             2078171        100%  now
