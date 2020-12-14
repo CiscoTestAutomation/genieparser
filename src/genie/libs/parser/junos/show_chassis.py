@@ -3260,3 +3260,171 @@ class ShowChassisFpcPicStatus(ShowChassisFpcPicStatusSchema):
 
         return res
 
+
+class ShowChassisEnvironmentComponentSchema(MetaParser):
+    """ Schema for:
+            * show chassis environment {component}
+    """
+    def validate_temperature_reading_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaError('environment-component-item is not a list')
+        env_schema = Schema({
+                        "temperature": {
+                            "#text": str,
+                            Optional("@junos:celsius"): str
+                        },
+                        "temperature-name": str
+                    })
+        # Validate each dictionary in list
+        for item in value:
+            env_schema.validate(item)
+        return value
+    
+    def validate_voltage_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaError('environment-component-item is not a list')
+        env_schema = Schema({
+                            "actual-voltage": str,
+                            "reference-voltage": str
+                        })
+        # Validate each dictionary in list
+        for item in value:
+            env_schema.validate(item)
+        return value
+    
+    def validate_environment_component_item_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaError('environment-component-item is not a list')
+        env_schema = Schema({
+                "name": str,
+                "state": str,
+                "bus-revision": str,
+                "fpga-revision": str,
+                "power-information": {
+                    "power-title": {
+                        "power-type": str
+                    },
+                    "voltage": Use(ShowChassisEnvironmentComponentSchema.validate_voltage_list)
+                },
+                "temperature-reading": Use(ShowChassisEnvironmentComponentSchema.validate_temperature_reading_list)
+            })
+        # Validate each dictionary in list
+        for item in value:
+            env_schema.validate(item)
+        return value
+    
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "environment-component-information": {
+            Optional("@xmlns"):
+            str,
+            "environment-component-item": Use(validate_environment_component_item_list)
+        }
+    }
+
+
+class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
+    """ Parser for:
+            * show chassis environment {component}
+    """
+    cli_command = 'show chassis environment {component}'
+
+    def cli(self, component, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                component=component
+            ))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # CB 0 status:
+        p1 = re.compile(r'^(?P<name>\S+ +\d+) +status:$')
+
+        # State                      Online Master
+        p2 = re.compile(r'^State +(?P<state>[\S\s]+)$')
+
+        # Power 1
+        p3 = re.compile(r'^\w+ +(?P<power_type>\d+)$')
+
+        # 1.0 V                     1005 mV
+        p4 = re.compile(r'^(?P<temperature_name>.*) +(?P<text>\d+ +degrees +\w+ +\/ +\d+ +degrees +\w+)$')
+        
+        # TCBC-Zone0 Temperature     45 degrees C / 113 degrees F
+        p5 = re.compile(r'^(?P<reference_voltage>[\d\.]+ +\w+( +\w+)?) +(?P<actual_voltage>\d+) +\w+$')
+
+        # Bus Revision               100
+        p6 = re.compile(r'^Bus +Revision +(?P<bus_revision>\d+)$')
+
+        # FPGA Revision              272
+        p7 = re.compile(r'^FPGA +Revision +(?P<fpga_revision>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # CB 0 status:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_list = ret_dict.setdefault('environment-component-information', {}). \
+                    setdefault('environment-component-item', [])
+                environment_component_item_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                environment_component_item_list.append(environment_component_item_dict)
+                continue
+            
+            # State                      Online Master
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+            
+            # Power 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                power_info_dict = environment_component_item_dict.setdefault('power-information', {})
+                power_title_dict = power_info_dict.setdefault('power-title', {}). \
+                    setdefault('power-type', group['power_type'])
+                continue
+            
+            # IntakeC-Zone0 Temperature  51 degrees C / 123 degrees F
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                temperature_reading_list = environment_component_item_dict.setdefault('temperature-reading', [])
+                temperature_name = group['temperature_name']
+                text = group['text']
+                temperature_reading_dict = {'temperature-name': temperature_name,
+                    'temperature': {'#text': text}}
+                temperature_reading_list.append(temperature_reading_dict)
+                continue
+            
+            # 1.0 V                     1005 mV
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                voltage_list = power_info_dict.setdefault('voltage', [])
+                voltage_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                voltage_list.append(voltage_dict)
+                continue
+            
+            # Bus Revision               100
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+            
+            # FPGA Revision              272
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+        
+        return ret_dict
