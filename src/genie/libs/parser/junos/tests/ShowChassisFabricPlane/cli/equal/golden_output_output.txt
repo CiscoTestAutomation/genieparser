@@ -1,0 +1,66 @@
+        show chassis fabric plane
+        Fabric management PLANE state
+        Plane 0
+        Plane state: ACTIVE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 1
+        Plane state: ACTIVE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 2
+        Plane state: ACTIVE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 3
+        Plane state: ACTIVE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 4
+        Plane state: SPARE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 5
+        Plane state: SPARE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 6
+        Plane state: SPARE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+        Plane 7
+        Plane state: SPARE
+            FPC 0
+                PFE 0 :Links ok
+                PFE 1 :Links ok
+            FPC 1
+                PFE 0 :Links ok
+                PFE 1 :Links ok  

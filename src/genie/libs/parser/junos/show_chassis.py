@@ -975,7 +975,7 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
 
         res = {}
 
-        for line in out.splitlines()[1:]:
+        for line in out.splitlines():
             line = line.strip()
             
             #Hardware inventory:
