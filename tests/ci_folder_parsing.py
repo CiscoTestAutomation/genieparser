@@ -340,6 +340,117 @@ class FileBasedTest(aetest.Testcase):
                 except AttributeError:
                     return True
 
+CLASS_SKIP = {
+    "asa": {
+        "ShowVpnSessiondbSuper": True,
+        },
+    "iosxe": {
+        "c9300": {
+            "ShowInventory": True,
+        },
+        "ShowPimNeighbor": True,
+        "ShowIpInterfaceBrief": True,
+        "ShowIpInterfaceBriefPipeVlan": True,
+        "ShowBfdSessions": True,
+        "ShowBfdSessions_viptela": True,
+        "ShowBfdSummary": True,
+        "ShowDot1x": True,
+        "ShowEnvironmentAll": True,
+        "ShowControlConnections_viptela": True,
+        "ShowControlConnections": True,
+        "ShowEigrpNeighborsSuperParser": True,
+        "ShowIpEigrpNeighborsDetailSuperParser": True,
+        "ShowIpOspfInterface": True,
+        "ShowIpOspfNeighborDetail": True,
+        "ShowIpOspfShamLinks": True,
+        "ShowIpOspfVirtualLinks": True,
+        "ShowIpOspfMplsTrafficEngLink": True,
+        "ShowIpOspfDatabaseOpaqueAreaTypeExtLink": True,
+        "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter": True,
+        "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate": True,
+        "ShowIpOspfDatabaseTypeParser": True,
+        "ShowIpOspfLinksParser": True,
+        "ShowIpRouteDistributor": True,
+        "ShowIpv6RouteDistributor": True,
+        "ShowControlLocalProperties_viptela": True,
+        "ShowControlLocalProperties": True,
+        "ShowVrfDetailSuperParser": True,
+        "ShowBgp": True,
+        "ShowBgpAllNeighborsRoutesSuperParser": True,
+        "ShowBgpDetailSuperParser": True,
+        "ShowBgpNeighborSuperParser": True,
+        "ShowBgpNeighborsAdvertisedRoutesSuperParser": True,
+        "ShowBgpNeighborsReceivedRoutes": True,
+        "ShowBgpNeighborsReceivedRoutesSuperParser": True,
+        "ShowBgpNeighborsRoutes": True,
+        "ShowBgpSummarySuperParser": True,
+        "ShowBgpSuperParser": True,
+        "ShowIpBgpAllNeighborsAdvertisedRoutes": True,
+        "ShowIpBgpAllNeighborsReceivedRoutes": True,
+        "ShowIpBgpNeighborsReceivedRoutes": True,
+        "ShowIpBgpNeighborsRoutes": True,
+        "ShowIpBgpRouteDistributer": True,
+        "ShowPolicyMapTypeSuperParser": True,
+        "ShowIpLocalPool": True,
+        "ShowInterfaceDetail": True,
+        "ShowInterfaceIpBrief": True,
+        "ShowInterfaceSummary": True,
+        "ShowAuthenticationSessionsInterface": True,
+        "ShowVersion_viptela": True,
+        "ShowOmpPeers_viptela": True,
+        "ShowBfdSummary_viptela": True,
+        "ShowOmpTlocPath_viptela": True,
+        "ShowOmpTlocs_viptela": True,
+        "ShowSoftwaretab_viptela": True, # PR submitted
+        "ShowRebootHistory_viptela": True,
+        "ShowOmpSummary_viptela": True,
+        "ShowSystemStatus_viptela": True,
+        "ShowTcpProxyStatistics": True, # PR submitted
+        "ShowTcpproxyStatus": True, # PR submitted
+        "ShowPlatformTcamUtilization": True, # PR submitted
+        "ShowLicense": True, # PR submitted
+        "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
+        "ShowSoftwaretab": True, # PR submitted
+        "ShowOmpPeers_viptela": True,
+        "ShowOmpTlocPath_viptela": True,
+        "ShowOmpTlocs_viptela": True,
+    },
+    "ios": {
+        "ShowPimNeighbor": True,
+        "ShowInterfacesTrunk": True,
+        "ShowIpInterfaceBrief": True,
+        "ShowIpInterfaceBriefPipeVlan": True,
+        "ShowDot1x": True,
+        "ShowBoot": True,
+        "ShowPagpNeighbor": True,
+        "ShowIpProtocols": True,
+        "ShowIpv6Rpf": True,
+        "ShowIpOspfDatabaseRouter": True,
+        "ShowIpOspfInterface": True,
+        "ShowIpOspfMplsTrafficEngLink": True,
+        "ShowIpOspfNeighborDetail": True,
+        "ShowIpOspfShamLinks": True,
+        "ShowIpOspfVirtualLinks": True,
+        "ShowIpv6Route": True,
+        "ShowIpBgp": True,
+        "ShowMplsLdpNeighbor": True,
+        "ShowInterfaceDetail": True,
+        "ShowInterfaceIpBrief": True,
+        "ShowInterfaceSummary": True,
+        "ShowInterfaceTransceiverDetail": True,
+        "ShowSdwanSystemStatus": True,
+        "ShowSdwanSoftware": True,
+    },
+}
+
+EMPTY_SKIP = {
+    "iosxe": {"ShowVersion": True},
+    "ios": {
+        "ShowVersion": True,
+        "ShowIpv6EigrpNeighbors": True,
+        "ShowIpv6EigrpNeighborsDetail": True,
+    },
+}
 
 if __name__ == "__main__":
 
@@ -392,117 +503,5 @@ if __name__ == "__main__":
     )
 
 else:
-    
-    CLASS_SKIP = {
-        "asa": {
-            "ShowVpnSessiondbSuper": True,
-            },
-        "iosxe": {
-            "c9300": {
-                "ShowInventory": True,
-            },
-            "ShowPimNeighbor": True,
-            "ShowIpInterfaceBrief": True,
-            "ShowIpInterfaceBriefPipeVlan": True,
-            "ShowBfdSessions": True,
-            "ShowBfdSessions_viptela": True,
-            "ShowBfdSummary": True,
-            "ShowDot1x": True,
-            "ShowEnvironmentAll": True,
-            "ShowControlConnections_viptela": True,
-            "ShowControlConnections": True,
-            "ShowEigrpNeighborsSuperParser": True,
-            "ShowIpEigrpNeighborsDetailSuperParser": True,
-            "ShowIpOspfInterface": True,
-            "ShowIpOspfNeighborDetail": True,
-            "ShowIpOspfShamLinks": True,
-            "ShowIpOspfVirtualLinks": True,
-            "ShowIpOspfMplsTrafficEngLink": True,
-            "ShowIpOspfDatabaseOpaqueAreaTypeExtLink": True,
-            "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter": True,
-            "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate": True,
-            "ShowIpOspfDatabaseTypeParser": True,
-            "ShowIpOspfLinksParser": True,
-            "ShowIpRouteDistributor": True,
-            "ShowIpv6RouteDistributor": True,
-            "ShowControlLocalProperties_viptela": True,
-            "ShowControlLocalProperties": True,
-            "ShowVrfDetailSuperParser": True,
-            "ShowBgp": True,
-            "ShowBgpAllNeighborsRoutesSuperParser": True,
-            "ShowBgpDetailSuperParser": True,
-            "ShowBgpNeighborSuperParser": True,
-            "ShowBgpNeighborsAdvertisedRoutesSuperParser": True,
-            "ShowBgpNeighborsReceivedRoutes": True,
-            "ShowBgpNeighborsReceivedRoutesSuperParser": True,
-            "ShowBgpNeighborsRoutes": True,
-            "ShowBgpSummarySuperParser": True,
-            "ShowBgpSuperParser": True,
-            "ShowIpBgpAllNeighborsAdvertisedRoutes": True,
-            "ShowIpBgpAllNeighborsReceivedRoutes": True,
-            "ShowIpBgpNeighborsReceivedRoutes": True,
-            "ShowIpBgpNeighborsRoutes": True,
-            "ShowIpBgpRouteDistributer": True,
-            "ShowPolicyMapTypeSuperParser": True,
-            "ShowIpLocalPool": True,
-            "ShowInterfaceDetail": True,
-            "ShowInterfaceIpBrief": True,
-            "ShowInterfaceSummary": True,
-            "ShowAuthenticationSessionsInterface": True,
-            "ShowVersion_viptela": True,
-            "ShowOmpPeers_viptela": True,
-            "ShowBfdSummary_viptela": True,
-            "ShowOmpTlocPath_viptela": True,
-            "ShowOmpTlocs_viptela": True,
-            "ShowSoftwaretab_viptela": True, # PR submitted
-            "ShowRebootHistory_viptela": True,
-            "ShowOmpSummary_viptela": True,
-            "ShowSystemStatus_viptela": True,
-            "ShowTcpProxyStatistics": True, # PR submitted
-            "ShowTcpproxyStatus": True, # PR submitted
-            "ShowPlatformTcamUtilization": True, # PR submitted
-            "ShowLicense": True, # PR submitted
-            "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
-            "ShowSoftwaretab": True, # PR submitted
-            "ShowOmpPeers_viptela": True,
-            "ShowOmpTlocPath_viptela": True,
-            "ShowOmpTlocs_viptela": True,
-        },
-        "ios": {
-            "ShowPimNeighbor": True,
-            "ShowInterfacesTrunk": True,
-            "ShowIpInterfaceBrief": True,
-            "ShowIpInterfaceBriefPipeVlan": True,
-            "ShowDot1x": True,
-            "ShowBoot": True,
-            "ShowPagpNeighbor": True,
-            "ShowIpProtocols": True,
-            "ShowIpv6Rpf": True,
-            "ShowIpOspfDatabaseRouter": True,
-            "ShowIpOspfInterface": True,
-            "ShowIpOspfMplsTrafficEngLink": True,
-            "ShowIpOspfNeighborDetail": True,
-            "ShowIpOspfShamLinks": True,
-            "ShowIpOspfVirtualLinks": True,
-            "ShowIpv6Route": True,
-            "ShowIpBgp": True,
-            "ShowMplsLdpNeighbor": True,
-            "ShowInterfaceDetail": True,
-            "ShowInterfaceIpBrief": True,
-            "ShowInterfaceSummary": True,
-            "ShowInterfaceTransceiverDetail": True,
-            "ShowSdwanSystemStatus": True,
-            "ShowSdwanSoftware": True,
-        },
-    }
-
-    EMPTY_SKIP = {
-        "iosxe": {"ShowVersion": True},
-        "ios": {
-            "ShowVersion": True,
-            "ShowIpv6EigrpNeighbors": True,
-            "ShowIpv6EigrpNeighborsDetail": True,
-        },
-    }
-
     aetest.main() 
+    
