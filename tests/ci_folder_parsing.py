@@ -415,6 +415,7 @@ CLASS_SKIP = {
         "ShowOmpPeers_viptela": True,
         "ShowOmpTlocPath_viptela": True,
         "ShowOmpTlocs_viptela": True,
+        "genie": True, # need to check
     },
     "ios": {
         "ShowPimNeighbor": True,
@@ -444,6 +445,25 @@ CLASS_SKIP = {
     },
     "junos": {
         "MonitorInterfaceTraffic": True, # issue with Mac
+        "ShowBgpGroupDetailNoMore": True, # need to check
+        "ShowBgpGroupBriefNoMore": True, # need to check
+        "ShowTaskMemory": True, # need to check
+        "ShowConfigurationSystemNtp": True, # need to check
+        "ShowDdosProtectionStatistics": True, # need to check
+        "ShowLDPSession": True, # need to check
+        "ShowOspfRoutePrefix": True, # need to check
+        "ShowOspfNeighborInstance": True, # need to check
+        "ShowOspfDatabaseAdvertisingRouterExtensive": True, # need to check
+        "ShowArpNoMore": True, # need to check
+        "ShowRouteProtocolNoMore": True, # need to check
+        "ShowRouteLogicalSystem": True, # need to check
+        "ShowInterfacesTerseInterface": True, # need to check
+        "ShowInterfacesExtensiveNoForwarding": True, # need to check
+        "ShowInterfacesExtensiveInterface": True, # need to check
+        "ShowInterfacesExtensive": True, # need to check
+        "ShowInterfaces": True, # need to check
+        "ShowOspf3NeighborInstance": True, # need to check
+        "ShowOspf3RoutePrefix": True, # need to check
     }
 }
 

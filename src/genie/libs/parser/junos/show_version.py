@@ -303,7 +303,7 @@ class ShowVersionDetail(ShowVersionDetailSchema):
         return ret_dict
 
 
-class ShowVersionDetailNoForarding(ShowVersionDetail):
+class ShowVersionDetailNoForwarding(ShowVersionDetail):
     """ Parser for:
             - show version detail no-forwarding
     """
