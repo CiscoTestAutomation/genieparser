@@ -30,8 +30,8 @@ log = logging.getLogger(__name__)
 
 def read_from_file(file_path):
     """Helper function to read from a file."""
-    f = open(file_path, "r")
-    return f.read()
+    with open(file_path, "r") as f:
+        return f.read()
 
 
 def read_json_file(file_path):
@@ -52,7 +52,7 @@ def get_operating_systems(_os):
     # Update and fix as more OS's converted to folder based tests
     if _os:
         return [_os]
-    return ["asa", "ios", "iosxe", "junos"]
+    return ["asa", "ios", "iosxe"]
     # operating_system = []
     # for folder in os.listdir("./"):
     #    if os.path.islink("./" + folder):
@@ -221,7 +221,7 @@ class FileBasedTest(aetest.Testcase):
             output_glob = sorted(glob.glob(f"{folder_root}/*_output.txt"), key=aph_key)
 
         if len(output_glob) == 0:
-            self.failed(f"No files found in appropriate directory for {local_class}")
+            steps.failed(f"No files found in appropriate directory for {local_class}")
 
         # Look for any files ending with _output.txt, presume the user defined name from that (based
         # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
@@ -256,7 +256,6 @@ class FileBasedTest(aetest.Testcase):
                 # what is expected and the parsed output
                 dd = Diff(parsed_output,golden_parsed_output)
                 dd.findDiff()
-                #import pdb;pdb.set_trace()
                 if parsed_output != golden_parsed_output:
                     # if -f flag provided, then add the screen handler back into
                     # the root.handlers to displayed failed tests. Decorator removes
@@ -293,7 +292,7 @@ class FileBasedTest(aetest.Testcase):
 
 
     @screen_log_handling
-    def test_empty(self, steps, local_class, operating_system, EMPTY_SKIP, token=None):
+    def test_empty(self, steps, local_class, operating_system, token=None):
         """Test step that looks for empty output."""
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/empty"
@@ -305,7 +304,7 @@ class FileBasedTest(aetest.Testcase):
         if len(output_glob) == 0 and not EMPTY_SKIP.get(operating_system, {}).get(
             local_class.__name__
         ):
-            self.failed(
+            steps.failed(
                 f"No files found in appropriate directory for {local_class} empty file"
             )
 
@@ -315,7 +314,7 @@ class FileBasedTest(aetest.Testcase):
                 msg = f"Empty -> {operating_system} -> {token} -> {local_class.__name__} -> {user_test}"
             else:
                 msg = f"Empty -> {operating_system} -> {local_class.__name__} -> {user_test}"
-            with steps.start(msg, continue_=True):
+            with steps.start(msg, continue_=True) as step_within:
                 empty_output_str = read_from_file(
                     f"{folder_root}/{user_test}_output.txt"
                 )
@@ -335,7 +334,7 @@ class FileBasedTest(aetest.Testcase):
                     # to stdout
                     if _display_only_failed:
                         self.add_logger()
-                    self.failed(f"File parsed, when expected not to for {local_class}")
+                    step_within.failed(f"File parsed, when expected not to for {local_class}")
                 except SchemaEmptyParserError:
                     return True
                 except AttributeError:
