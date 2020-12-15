@@ -183,7 +183,7 @@ class FileBasedTest(aetest.Testcase):
                         msg = f"{operating_system} -> Token -> {token} -> {name}"
                     else:
                         msg = f"{operating_system} -> {name}"
-                    with steps.start(msg) as class_step:
+                    with steps.start(msg, continue_=True) as class_step:
                         with class_step.start(
                             f"Test Golden -> {operating_system} -> {name}",
                             continue_=True,
