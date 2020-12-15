@@ -442,6 +442,9 @@ CLASS_SKIP = {
         "ShowSdwanSystemStatus": True,
         "ShowSdwanSoftware": True,
     },
+    "junos": {
+        "MonitorInterfaceTraffic": True, # issue with Mac
+    }
 }
 
 EMPTY_SKIP = {
