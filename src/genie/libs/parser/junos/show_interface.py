@@ -1159,7 +1159,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Hold-times     : Up 0 ms, Down 0 ms
         p64 = re.compile(r'^Hold-times +: +Up +(?P<up_hold_time>\d+) +ms, +Down +(?P<down_hold_time>\d+) +ms$')
 
-        # Statistics last cleared: 2020-10-14 13:18:51 JST (00:12:30 ago)
+        # Statistics last cleared: 2020-10-14 13:18:51 EST (00:12:30 ago)
         p65 = re.compile(r'^Statistics +last +cleared: +(?P<statistics_cleared>[\S\s]+)$')
 
         # 0                   best-effort
@@ -1917,7 +1917,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
             
-            # Statistics last cleared: 2020-10-14 13:18:51 JST (00:12:30 ago)
+            # Statistics last cleared: 2020-10-14 13:18:51 EST (00:12:30 ago)
             m = p65.match(line)
             if m:
                 group = m.groupdict()
