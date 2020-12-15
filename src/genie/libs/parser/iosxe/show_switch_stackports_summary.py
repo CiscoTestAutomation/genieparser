@@ -1,4 +1,4 @@
-''' show_switch_stackports_sum.py
+''' show_switch_stackports_summary.py
 
 
 '''
@@ -12,33 +12,18 @@ from genie.libs.parser.utils.common import Common
 
 class ShowSwitchStackPortsSummarySchema(MetaParser):
     """Schema for ShowSwitchStackPortsSummary"""
-    # schema = {
-    #     'index': {
-    #         Any(): {
-    #             'switch_port': str,
-    #             'port_status': str,
-    #             'neighbor': str,
-    #             'cable_length': str,
-    #             'link_ok': str,
-    #             'link_active': str,
-    #             'sync_ok': str,
-    #             'link_changes_count': str,
-    #             'in_loopback': str,
-    #         }
-    #     }
-    # } ]
 
     schema = {
         'stackports': {
             Any(): {
                 'stackport_id': str,
                 'port_status': str,
-                'neighbor': str,
+                'neighbor': int,
                 'cable_length': str,
                 'link_ok': str,
                 'link_active': str,
                 'sync_ok': str,
-                'link_changes_count': str,
+                'link_changes_count': int,
                 'in_loopback': str,
             }
         }
@@ -69,7 +54,7 @@ class ShowSwitchStackPortsSummary(ShowSwitchStackPortsSummarySchema):
 
         p1 = re.compile(r"^(?P<stackport_id>\S+)"
                         " +(?P<port_status>\w+)"
-                        " +(?P<neighbor>\d+)"
+                        " +(?P<neighbor>[\d+])"
                         " +(?P<cable_length>\w+)"
                         " +(?P<link_ok>\w+)"
                         " +(?P<link_active>\w+)"
@@ -88,23 +73,6 @@ class ShowSwitchStackPortsSummary(ShowSwitchStackPortsSummarySchema):
       
             m = p1.match(line)
             if m:
-            # Works with index
-                # group = m.groupdict()
-                # index += 1
-
-                # index_dict = ret_dict.setdefault('index', {}).setdefault(index, {})
-
-                # index_dict.update({'stackport_id': group['stackport_id']})
-                # index_dict.update({'port_status': group['port_status']})
-                # index_dict.update({'neighbor': group['neighbor']})
-                # index_dict.update({'cable_length': group['cable_length']})
-                # index_dict.update({'link_ok': group['link_ok']})
-                # index_dict.update({'link_active': group['link_active']})
-                # index_dict.update({'sync_ok': group['sync_ok']})
-                # index_dict.update({'link_changes_count': group['link_changes_count']})
-                # index_dict.update({'in_loopback': group['in_loopback']})
-
-            # try without index
                 stackport_id = m.groupdict()['stackport_id']
                 if 'stackports' not in ret_dict:
                     ret_dict['stackports'] = {}
@@ -114,12 +82,12 @@ class ShowSwitchStackPortsSummary(ShowSwitchStackPortsSummarySchema):
 
                 ret_dict['stackports'][stackport_id]['stackport_id'] = stackport_id
                 ret_dict['stackports'][stackport_id]['port_status'] = m.groupdict()['port_status']
-                ret_dict['stackports'][stackport_id]['neighbor'] = m.groupdict()['neighbor']
+                ret_dict['stackports'][stackport_id]['neighbor'] = int(m.groupdict()['neighbor'])
                 ret_dict['stackports'][stackport_id]['cable_length'] = m.groupdict()['cable_length']
                 ret_dict['stackports'][stackport_id]['link_ok'] = m.groupdict()['link_ok']
                 ret_dict['stackports'][stackport_id]['link_active'] = m.groupdict()['link_active']
                 ret_dict['stackports'][stackport_id]['sync_ok'] = m.groupdict()['sync_ok']
-                ret_dict['stackports'][stackport_id]['link_changes_count'] = m.groupdict()['link_changes_count']
+                ret_dict['stackports'][stackport_id]['link_changes_count'] = int(m.groupdict()['link_changes_count'])
                 ret_dict['stackports'][stackport_id]['in_loopback'] = m.groupdict()['in_loopback']
                                 
                 continue
