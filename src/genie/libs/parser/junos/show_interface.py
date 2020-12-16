@@ -2061,11 +2061,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None}
                 continue
         
-        import json
-        json_data = json.dumps(ret_dict, indent=4, sort_keys=True)
-        f = open("dict_interface_issue2.txt","w")
-        f.write(json_data)
-        f.close()
         return ret_dict
 
 class ShowInterfacesExtensive(ShowInterfaces):
