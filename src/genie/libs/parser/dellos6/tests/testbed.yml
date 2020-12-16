@@ -1,0 +1,14 @@
+devices:
+  10.10.21.70:
+    connections:
+      cli:
+        ip: 10.10.21.70
+        protocol: ssh
+    credentials:
+      default:
+        password: dell1111
+        username: knox
+      enable:
+        password: dell1111
+    os: iosxe
+    type: iosxe
