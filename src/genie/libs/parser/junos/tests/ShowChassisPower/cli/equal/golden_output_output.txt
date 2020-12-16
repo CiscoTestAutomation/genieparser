@@ -1,0 +1,120 @@
+
+PSM 0:
+  State:     Online
+  DC input:  OK (INP0 feed expected, INP0 feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 489.25 W (Lower Zone, 9.50 A at 51.50 V, 23.30% of capacity)
+
+PSM 1:
+  State:     Online
+  DC input:  OK (INP0 feed expected, INP0 feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 489.25 W (Lower Zone, 9.50 A at 51.50 V, 23.30% of capacity)
+
+PSM 2:
+  State:     Online
+  DC input:  OK (INP0 feed expected, INP0 feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 504.56 W (Lower Zone, 9.75 A at 51.75 V, 24.03% of capacity)
+
+PSM 3:
+  State:     Online
+  DC input:  OK (INP0 feed expected, INP0 feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 491.62 W (Lower Zone, 9.50 A at 51.75 V, 23.41% of capacity)
+
+PSM 4:
+  State:     Present
+  DC input:  Check (No feed expected, No feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 0.00 W (Lower Zone, 0.00 A at 0.00 V, 0.00% of capacity)
+
+PSM 5:
+  State:     Present
+  DC input:  Check (No feed expected, No feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 0.00 W (Lower Zone, 0.00 A at 0.00 V, 0.00% of capacity)
+
+PSM 6:
+  State:     Present
+  DC input:  Check (No feed expected, No feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 0.00 W (Lower Zone, 0.00 A at 0.00 V, 0.00% of capacity)
+
+PSM 7:
+  State:     Present
+  DC input:  Check (No feed expected, No feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 0.00 W (Lower Zone, 0.00 A at 0.00 V, 0.00% of capacity)
+
+PSM 8:
+  State:     Present
+  DC input:  Check (No feed expected, No feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 0.00 W (Lower Zone, 0.00 A at 0.00 V, 0.00% of capacity)
+
+PSM 9:
+  State:     Online
+  DC input:  OK (INP0 feed expected, INP0 feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 309.00 W (Upper Zone, 6.00 A at 51.50 V, 14.71% of capacity)
+
+PSM 10:
+  State:     Online
+  DC input:  OK (INP0 feed expected, INP0 feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 307.50 W (Upper Zone, 6.00 A at 51.25 V, 14.64% of capacity)
+
+PSM 11:
+  State:     Online
+  DC input:  OK (INP0 feed expected, INP0 feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 309.00 W (Upper Zone, 6.00 A at 51.50 V, 14.71% of capacity)
+
+PSM 12:
+  State:     Present
+  DC input:  Check (No feed expected, No feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 0.00 W (Upper Zone, 0.00 A at 0.00 V, 0.00% of capacity)
+
+PSM 13:
+  State:     Present
+  DC input:  Check (No feed expected, No feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 0.00 W (Upper Zone, 0.00 A at 0.00 V, 0.00% of capacity)
+
+PSM 14:
+  State:     Present
+  DC input:  Check (No feed expected, No feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 0.00 W (Upper Zone, 0.00 A at 0.00 V, 0.00% of capacity)
+
+PSM 15:
+  State:     Unknown
+  DC input:  Not ready
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 0.00 W (Upper Zone, 0.00 A at 0.00 V, 0.00% of capacity)
+
+PSM 16:
+  State:     Present
+  DC input:  Check (No feed expected, No feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 0.00 W (Upper Zone, 0.00 A at 0.00 V, 0.00% of capacity)
+
+PSM 17:
+  State:     Present
+  DC input:  Check (No feed expected, No feed connected)
+  Capacity:  2100 W (maximum 2500 W)
+  DC output: 0.00 W (Upper Zone, 0.00 A at 0.00 V, 0.00% of capacity)
+
+System:
+  Upper Zone:
+      Capacity:          6300 W (maximum 7500 W)
+      Allocated power:   3332 W (2968 W remaining)
+      Actual usage:      925.50 W
+  Lower Zone:
+      Capacity:          8400 W (maximum 10000 W)
+      Allocated power:   6294 W (2106 W remaining)
+      Actual usage:      1974.69 W
+  Total system capacity: 14700 W (maximum 17500 W)
+  Total remaining power: 5074 W
