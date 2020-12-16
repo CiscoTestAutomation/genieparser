@@ -460,8 +460,8 @@ CLASS_SKIP = {
         "ShowInterfacesTerseInterface": True, # need to check
         "ShowInterfacesExtensiveNoForwarding": True, # need to check
         "ShowInterfacesExtensiveInterface": True, # need to check
-        "ShowInterfacesExtensive": True, # need to check
-        "ShowInterfaces": True, # need to check
+        #"ShowInterfacesExtensive": True, # need to check
+        #"ShowInterfaces": True, # need to check
         "ShowOspf3NeighborInstance": True, # need to check
         "ShowOspf3RoutePrefix": True, # need to check
     }
