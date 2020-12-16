@@ -2060,7 +2060,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 policer_information_dict = {k.replace('_','-'):
                     v for k, v in group.items() if v is not None}
                 continue
-
+        
         return ret_dict
 
 class ShowInterfacesExtensive(ShowInterfaces):
