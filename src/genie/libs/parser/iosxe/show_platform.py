@@ -6260,7 +6260,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 boot_loader_dict = ret_dict.setdefault('boot', {}). \
                     setdefault('loader', {})
                 boot_loader_dict.update({'version': child.text})
-            elif child.tag.endswith('package-signature'):
+            elif child.tag.endswith('package-signature') or child.tag.endswith('package-integrity'):
                 for sub_child in child:
                     os_hashes = ret_dict.setdefault('os_hashes', {})
                     if sub_child.tag.endswith('name'):
