@@ -3430,9 +3430,9 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
         # Te2/1/21  VSL LINK1          disabled     1            full   auto No XCVR
         # Po10      VSL LINK2          connected    trunk      a-full  a-10G
 
-        p1 = re.compile(r'^(?P<interfaces>\S+)(?: +(?P<name>([\S ]+)))?'
-                        r' +(?P<status>(connected|notconnect|suspended|inactive|disabled|err-disabled|monitoring))'
-                        r' +(?P<vlan>\S+) +(?P<duplex_code>[\S\-]+) +(?P<port_speed>[\S\-]+)( +(?P<type>.+))?$')
+        p1 = re.compile(r'^(?P<interfaces>\S+)(?:\s+(?P<name>([\S\s]+)))?'
+                        r'\s+(?P<status>(connected|notconnect|suspended|inactive|disabled|err-disabled|monitoring))'
+                        r'\s+(?P<vlan>\S+)\s+(?P<duplex_code>[\S\-]+)\s+(?P<port_speed>[\S\-]+)(\s+(?P<type>.+))?$')
 
         for line in out.splitlines():
             line = line.strip()

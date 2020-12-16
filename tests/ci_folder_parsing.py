@@ -30,8 +30,8 @@ log = logging.getLogger(__name__)
 
 def read_from_file(file_path):
     """Helper function to read from a file."""
-    f = open(file_path, "r")
-    return f.read()
+    with open(file_path, "r") as f:
+        return f.read()
 
 
 def read_json_file(file_path):
@@ -52,7 +52,7 @@ def get_operating_systems(_os):
     # Update and fix as more OS's converted to folder based tests
     if _os:
         return [_os]
-    return ["asa", "ios", "iosxe"]
+    return ["asa", "ios", "iosxe", "junos"]
     # operating_system = []
     # for folder in os.listdir("./"):
     #    if os.path.islink("./" + folder):
@@ -183,7 +183,7 @@ class FileBasedTest(aetest.Testcase):
                         msg = f"{operating_system} -> Token -> {token} -> {name}"
                     else:
                         msg = f"{operating_system} -> {name}"
-                    with steps.start(msg) as class_step:
+                    with steps.start(msg, continue_=True) as class_step:
                         with class_step.start(
                             f"Test Golden -> {operating_system} -> {name}",
                             continue_=True,
@@ -221,7 +221,7 @@ class FileBasedTest(aetest.Testcase):
             output_glob = sorted(glob.glob(f"{folder_root}/*_output.txt"), key=aph_key)
 
         if len(output_glob) == 0:
-            self.failed(f"No files found in appropriate directory for {local_class}")
+            steps.failed(f"No files found in appropriate directory for {local_class}")
 
         # Look for any files ending with _output.txt, presume the user defined name from that (based
         # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
@@ -256,7 +256,6 @@ class FileBasedTest(aetest.Testcase):
                 # what is expected and the parsed output
                 dd = Diff(parsed_output,golden_parsed_output)
                 dd.findDiff()
-                #import pdb;pdb.set_trace()
                 if parsed_output != golden_parsed_output:
                     # if -f flag provided, then add the screen handler back into
                     # the root.handlers to displayed failed tests. Decorator removes
@@ -293,7 +292,7 @@ class FileBasedTest(aetest.Testcase):
 
 
     @screen_log_handling
-    def test_empty(self, steps, local_class, operating_system, EMPTY_SKIP, token=None):
+    def test_empty(self, steps, local_class, operating_system, token=None):
         """Test step that looks for empty output."""
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/empty"
@@ -305,7 +304,7 @@ class FileBasedTest(aetest.Testcase):
         if len(output_glob) == 0 and not EMPTY_SKIP.get(operating_system, {}).get(
             local_class.__name__
         ):
-            self.failed(
+            steps.failed(
                 f"No files found in appropriate directory for {local_class} empty file"
             )
 
@@ -315,7 +314,7 @@ class FileBasedTest(aetest.Testcase):
                 msg = f"Empty -> {operating_system} -> {token} -> {local_class.__name__} -> {user_test}"
             else:
                 msg = f"Empty -> {operating_system} -> {local_class.__name__} -> {user_test}"
-            with steps.start(msg, continue_=True):
+            with steps.start(msg, continue_=True) as step_within:
                 empty_output_str = read_from_file(
                     f"{folder_root}/{user_test}_output.txt"
                 )
@@ -335,12 +334,147 @@ class FileBasedTest(aetest.Testcase):
                     # to stdout
                     if _display_only_failed:
                         self.add_logger()
-                    self.failed(f"File parsed, when expected not to for {local_class}")
+                    step_within.failed(f"File parsed, when expected not to for {local_class}")
                 except SchemaEmptyParserError:
                     return True
                 except AttributeError:
                     return True
 
+CLASS_SKIP = {
+    "asa": {
+        "ShowVpnSessiondbSuper": True,
+        },
+    "iosxe": {
+        "c9300": {
+            "ShowInventory": True,
+        },
+        "ShowPimNeighbor": True,
+        "ShowIpInterfaceBrief": True,
+        "ShowIpInterfaceBriefPipeVlan": True,
+        "ShowBfdSessions": True,
+        "ShowBfdSessions_viptela": True,
+        "ShowBfdSummary": True,
+        "ShowDot1x": True,
+        "ShowEnvironmentAll": True,
+        "ShowControlConnections_viptela": True,
+        "ShowControlConnections": True,
+        "ShowEigrpNeighborsSuperParser": True,
+        "ShowIpEigrpNeighborsDetailSuperParser": True,
+        "ShowIpOspfInterface": True,
+        "ShowIpOspfNeighborDetail": True,
+        "ShowIpOspfShamLinks": True,
+        "ShowIpOspfVirtualLinks": True,
+        "ShowIpOspfMplsTrafficEngLink": True,
+        "ShowIpOspfDatabaseOpaqueAreaTypeExtLink": True,
+        "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter": True,
+        "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate": True,
+        "ShowIpOspfDatabaseTypeParser": True,
+        "ShowIpOspfLinksParser": True,  # super class
+        "ShowIpOspfLinksParser2": True, # super class
+        "ShowIpRouteDistributor": True,
+        "ShowIpv6RouteDistributor": True,
+        "ShowControlLocalProperties_viptela": True,
+        "ShowControlLocalProperties": True,
+        "ShowVrfDetailSuperParser": True,
+        "ShowBgp": True,
+        "ShowBgpAllNeighborsRoutesSuperParser": True,
+        "ShowBgpDetailSuperParser": True,
+        "ShowBgpNeighborSuperParser": True,
+        "ShowBgpNeighborsAdvertisedRoutesSuperParser": True,
+        "ShowBgpNeighborsReceivedRoutes": True,
+        "ShowBgpNeighborsReceivedRoutesSuperParser": True,
+        "ShowBgpNeighborsRoutes": True,
+        "ShowBgpSummarySuperParser": True,
+        "ShowBgpSuperParser": True,
+        "ShowIpBgpAllNeighborsAdvertisedRoutes": True,
+        "ShowIpBgpAllNeighborsReceivedRoutes": True,
+        "ShowIpBgpNeighborsReceivedRoutes": True,
+        "ShowIpBgpNeighborsRoutes": True,
+        "ShowIpBgpRouteDistributer": True,
+        "ShowPolicyMapTypeSuperParser": True,
+        "ShowIpLocalPool": True,
+        "ShowInterfaceDetail": True,
+        "ShowInterfaceIpBrief": True,
+        "ShowInterfaceSummary": True,
+        "ShowAuthenticationSessionsInterface": True,
+        "ShowVersion_viptela": True,
+        "ShowOmpPeers_viptela": True,
+        "ShowBfdSummary_viptela": True,
+        "ShowOmpTlocPath_viptela": True,
+        "ShowOmpTlocs_viptela": True,
+        "ShowSoftwaretab_viptela": True, # PR submitted
+        "ShowRebootHistory_viptela": True,
+        "ShowOmpSummary_viptela": True,
+        "ShowSystemStatus_viptela": True,
+        "ShowTcpProxyStatistics": True, # PR submitted
+        "ShowTcpproxyStatus": True, # PR submitted
+        "ShowPlatformTcamUtilization": True, # PR submitted
+        "ShowLicense": True, # PR submitted
+        "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
+        "ShowSoftwaretab": True, # PR submitted
+        "ShowOmpPeers_viptela": True,
+        "ShowOmpTlocPath_viptela": True,
+        "ShowOmpTlocs_viptela": True,
+        "genie": True, # need to check
+    },
+    "ios": {
+        "ShowPimNeighbor": True,
+        "ShowInterfacesTrunk": True,
+        "ShowIpInterfaceBrief": True,
+        "ShowIpInterfaceBriefPipeVlan": True,
+        "ShowDot1x": True,
+        "ShowBoot": True,
+        "ShowPagpNeighbor": True,
+        "ShowIpProtocols": True,
+        "ShowIpv6Rpf": True,
+        "ShowIpOspfDatabaseRouter": True,
+        "ShowIpOspfInterface": True,
+        "ShowIpOspfMplsTrafficEngLink": True,
+        "ShowIpOspfNeighborDetail": True,
+        "ShowIpOspfShamLinks": True,
+        "ShowIpOspfVirtualLinks": True,
+        "ShowIpv6Route": True,
+        "ShowIpBgp": True,
+        "ShowMplsLdpNeighbor": True,
+        "ShowInterfaceDetail": True,
+        "ShowInterfaceIpBrief": True,
+        "ShowInterfaceSummary": True,
+        "ShowInterfaceTransceiverDetail": True,
+        "ShowSdwanSystemStatus": True,
+        "ShowSdwanSoftware": True,
+    },
+    "junos": {
+        "MonitorInterfaceTraffic": True, # issue with Mac
+        "ShowBgpGroupDetailNoMore": True, # need to check
+        "ShowBgpGroupBriefNoMore": True, # need to check
+        "ShowTaskMemory": True, # need to check
+        "ShowConfigurationSystemNtp": True, # need to check
+        "ShowDdosProtectionStatistics": True, # need to check
+        "ShowLDPSession": True, # need to check
+        "ShowOspfRoutePrefix": True, # need to check
+        "ShowOspfNeighborInstance": True, # need to check
+        "ShowOspfDatabaseAdvertisingRouterExtensive": True, # need to check
+        "ShowArpNoMore": True, # need to check
+        "ShowRouteProtocolNoMore": True, # need to check
+        "ShowRouteLogicalSystem": True, # need to check
+        "ShowInterfacesTerseInterface": True, # need to check
+        "ShowInterfacesExtensiveNoForwarding": True, # need to check
+        "ShowInterfacesExtensiveInterface": True, # need to check
+        "ShowInterfacesExtensive": True, # need to check
+        "ShowInterfaces": True, # need to check
+        "ShowOspf3NeighborInstance": True, # need to check
+        "ShowOspf3RoutePrefix": True, # need to check
+    }
+}
+
+EMPTY_SKIP = {
+    "iosxe": {"ShowVersion": True},
+    "ios": {
+        "ShowVersion": True,
+        "ShowIpv6EigrpNeighbors": True,
+        "ShowIpv6EigrpNeighborsDetail": True,
+    },
+}
 
 if __name__ == "__main__":
 
@@ -393,117 +527,5 @@ if __name__ == "__main__":
     )
 
 else:
-    
-    CLASS_SKIP = {
-        "asa": {
-            "ShowVpnSessiondbSuper": True,
-            },
-        "iosxe": {
-            "c9300": {
-                "ShowInventory": True,
-            },
-            "ShowPimNeighbor": True,
-            "ShowIpInterfaceBrief": True,
-            "ShowIpInterfaceBriefPipeVlan": True,
-            "ShowBfdSessions": True,
-            "ShowBfdSessions_viptela": True,
-            "ShowBfdSummary": True,
-            "ShowDot1x": True,
-            "ShowEnvironmentAll": True,
-            "ShowControlConnections_viptela": True,
-            "ShowControlConnections": True,
-            "ShowEigrpNeighborsSuperParser": True,
-            "ShowIpEigrpNeighborsDetailSuperParser": True,
-            "ShowIpOspfInterface": True,
-            "ShowIpOspfNeighborDetail": True,
-            "ShowIpOspfShamLinks": True,
-            "ShowIpOspfVirtualLinks": True,
-            "ShowIpOspfMplsTrafficEngLink": True,
-            "ShowIpOspfDatabaseOpaqueAreaTypeExtLink": True,
-            "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter": True,
-            "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate": True,
-            "ShowIpOspfDatabaseTypeParser": True,
-            "ShowIpOspfLinksParser": True,
-            "ShowIpRouteDistributor": True,
-            "ShowIpv6RouteDistributor": True,
-            "ShowControlLocalProperties_viptela": True,
-            "ShowControlLocalProperties": True,
-            "ShowVrfDetailSuperParser": True,
-            "ShowBgp": True,
-            "ShowBgpAllNeighborsRoutesSuperParser": True,
-            "ShowBgpDetailSuperParser": True,
-            "ShowBgpNeighborSuperParser": True,
-            "ShowBgpNeighborsAdvertisedRoutesSuperParser": True,
-            "ShowBgpNeighborsReceivedRoutes": True,
-            "ShowBgpNeighborsReceivedRoutesSuperParser": True,
-            "ShowBgpNeighborsRoutes": True,
-            "ShowBgpSummarySuperParser": True,
-            "ShowBgpSuperParser": True,
-            "ShowIpBgpAllNeighborsAdvertisedRoutes": True,
-            "ShowIpBgpAllNeighborsReceivedRoutes": True,
-            "ShowIpBgpNeighborsReceivedRoutes": True,
-            "ShowIpBgpNeighborsRoutes": True,
-            "ShowIpBgpRouteDistributer": True,
-            "ShowPolicyMapTypeSuperParser": True,
-            "ShowIpLocalPool": True,
-            "ShowInterfaceDetail": True,
-            "ShowInterfaceIpBrief": True,
-            "ShowInterfaceSummary": True,
-            "ShowAuthenticationSessionsInterface": True,
-            "ShowVersion_viptela": True,
-            "ShowOmpPeers_viptela": True,
-            "ShowBfdSummary_viptela": True,
-            "ShowOmpTlocPath_viptela": True,
-            "ShowOmpTlocs_viptela": True,
-            "ShowSoftwaretab_viptela": True, # PR submitted
-            "ShowRebootHistory_viptela": True,
-            "ShowOmpSummary_viptela": True,
-            "ShowSystemStatus_viptela": True,
-            "ShowTcpProxyStatistics": True, # PR submitted
-            "ShowTcpproxyStatus": True, # PR submitted
-            "ShowPlatformTcamUtilization": True, # PR submitted
-            "ShowLicense": True, # PR submitted
-            "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
-            "ShowSoftwaretab": True, # PR submitted
-            "ShowOmpPeers_viptela": True,
-            "ShowOmpTlocPath_viptela": True,
-            "ShowOmpTlocs_viptela": True,
-        },
-        "ios": {
-            "ShowPimNeighbor": True,
-            "ShowInterfacesTrunk": True,
-            "ShowIpInterfaceBrief": True,
-            "ShowIpInterfaceBriefPipeVlan": True,
-            "ShowDot1x": True,
-            "ShowBoot": True,
-            "ShowPagpNeighbor": True,
-            "ShowIpProtocols": True,
-            "ShowIpv6Rpf": True,
-            "ShowIpOspfDatabaseRouter": True,
-            "ShowIpOspfInterface": True,
-            "ShowIpOspfMplsTrafficEngLink": True,
-            "ShowIpOspfNeighborDetail": True,
-            "ShowIpOspfShamLinks": True,
-            "ShowIpOspfVirtualLinks": True,
-            "ShowIpv6Route": True,
-            "ShowIpBgp": True,
-            "ShowMplsLdpNeighbor": True,
-            "ShowInterfaceDetail": True,
-            "ShowInterfaceIpBrief": True,
-            "ShowInterfaceSummary": True,
-            "ShowInterfaceTransceiverDetail": True,
-            "ShowSdwanSystemStatus": True,
-            "ShowSdwanSoftware": True,
-        },
-    }
-
-    EMPTY_SKIP = {
-        "iosxe": {"ShowVersion": True},
-        "ios": {
-            "ShowVersion": True,
-            "ShowIpv6EigrpNeighbors": True,
-            "ShowIpv6EigrpNeighborsDetail": True,
-        },
-    }
-
     aetest.main() 
+    
