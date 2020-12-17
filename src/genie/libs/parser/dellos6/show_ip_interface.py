@@ -7,7 +7,7 @@ import re
 # ======================================================
 
 
-class ShowIPBrSchema(MetaParser):
+class ShowIPInterfaceSchema(MetaParser):
     schema = {
         'ints': {
             'gateway': str,
@@ -22,11 +22,11 @@ class ShowIPBrSchema(MetaParser):
     }
 
 
-class ShowIPBr(ShowIPBrSchema):
-    """Parser for show ip brief on Dell PowerSwitch OS6 devices
+class ShowIPInterface(ShowIPInterfaceSchema):
+    """Parser for show ip interface on Dell PowerSwitch OS6 devices
     parser class - implements detail parsing mechanisms for cli output.
     """
-    cli_command = 'show ip brief'
+    cli_command = 'show ip interface'
 
     """
     Default Gateway................................ 192.168.1.100
@@ -50,9 +50,9 @@ class ShowIPBr(ShowIPBrSchema):
         result_dict = {}
 
         p0 = re.compile(
-            r'^Default+ Gateway+\.+ +(?P<gateway>\d+\.\d+\.\d+\.\d+)')
+            r'^Default+ Gateway+\.+\s(?P<gateway>\d+\.\d+\.\d+\.\d+)')
 
-        p1 = re.compile(r'^L3+ MAC+ Address+\.+ +(?P<l3_mac>....\.....\.....)')
+        p1 = re.compile(r'^L3+ MAC+ Address+\.+\s(?P<l3_mac>....\.....\.....)')
 
         p2 = re.compile(
             r'^(?P<int_name>[\w]+)+\s+(?P<state>\w+)+\s+(?P<ip_add>[\d+\.]+)+\s+(?P<mask>[\d+\.]+)+\s+(?P<method>\w+)')

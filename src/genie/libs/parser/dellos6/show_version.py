@@ -62,25 +62,25 @@ class ShowVersion(ShowVersionSchema):
         ver_dict = {}
         result_dict = {}
 
-        p0 = re.compile(r'^Machine +Description\.*+ +(?P<mach_desc>.+)$')
+        p0 = re.compile(r'^Machine +Description\.+\s(?P<mach_desc>.+)$')
 
-        p1 = re.compile(r'^System +Model +ID+\.*+ +(?P<sys_model_id>.+)$')
+        p1 = re.compile(r'^System +Model +ID+\.+\s(?P<sys_model_id>.+)$')
 
-        p2 = re.compile(r'^Machine+ Type+\.*+ +(?P<mach_type>.+)$')
+        p2 = re.compile(r'^Machine+ Type+\.+\s(?P<mach_type>.+)$')
 
-        p3 = re.compile(r'^Serial +Number+\.*+ +(?P<serial>.+)$')
+        p3 = re.compile(r'^Serial +Number+\.+\s(?P<serial>.+)$')
 
-        p4 = re.compile(r'^Manufacturer+\.*+ +(?P<manufacturer>.+)$')
+        p4 = re.compile(r'^Manufacturer+\.+\s(?P<manufacturer>.+)$')
 
-        p5 = re.compile(r'^Burned +In +MAC +Addres+\.*+ +(?P<bia>.+)$')
+        p5 = re.compile(r'^Burned +In +MAC +Addres+\.+\s(?P<bia>.+)$')
 
-        p6 = re.compile(r'^System +Object +ID+\.*+ +(?P<sys_obj_id>.+)$')
+        p6 = re.compile(r'^System +Object +ID+\.+\s(?P<sys_obj_id>.+)$')
 
-        p7 = re.compile(r'^SOC +Version+\.*+ +(?P<soc_ver>.+)$')
+        p7 = re.compile(r'^SOC +Version+\.+\s(?P<soc_ver>.+)$')
 
-        p8 = re.compile(r'^HW +Version+\.*+ +(?P<hw_ver>.+)$')
+        p8 = re.compile(r'^HW +Version+\.+\s(?P<hw_ver>.+)$')
 
-        p9 = re.compile(r'^CPLD +Version+\.*+ +(?P<cpld_ver>.+)$')
+        p9 = re.compile(r'^CPLD +Version+\.+\s(?P<cpld_ver>.+)$')
 
         p10 = re.compile(
             r'^(?P<unit>\d)+\s+(?P<active_ver>\d\.\d\.\d\.\d)+\s+(?P<backup_ver>\d\.\d\.\d\.\d)+\s+(?P<curr_act_ver>\d\.\d\.\d\.\d)+\s+(?P<next_act_ver>\d\.\d\.\d\.\d)')
