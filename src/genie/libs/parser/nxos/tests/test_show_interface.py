@@ -5303,6 +5303,43 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             'vrf': '',
         },
     }
+    golden_output_7 = {'execute.return_value': '''
+    Vlan300, Interface status: protocol-up/link-up/admin-up, iod: 7,
+      IP address: 10.115.65.2, IP subnet: 10.115.65.0/24 route-preference: 0, tag: 0
+      IP address: 10.115.69.2, IP subnet: 10.115.69.0/24 secondary route-preference: 0, tag: 0
+      IP address: 10.115.72.2, IP subnet: 10.115.72.0/24 secondary route-preference: 0, tag: 0
+      IP address: 10.115.77.2, IP subnet: 10.115.77.0/24 secondary route-preference: 0, tag: 0
+      IP broadcast address: 255.255.255.255
+      IP multicast groups locally joined:
+          224.0.0.102
+      IP MTU: 1500 bytes (using link MTU)
+      IP primary address route-preference: 0, tag: 
+        0
+      IP proxy ARP : disabled
+      IP Local Proxy ARP : disabled
+      IP multicast routing: disabled
+      IP icmp redirects: disabled
+      IP directed-broadcast: disabled
+      IP Forwarding: disabled
+      IP icmp unreachables (except port): disabled
+      IP icmp port-unreachable: enabled
+      IP unicast reverse path forwarding: none
+      IP load sharing: none
+      IP interface statistics last reset: never
+      IP interface software stats: (sent/received/forwarded/originated/consumed)
+        Unicast packets    : 9853/3233248/9422/441/9385858
+        Unicast bytes      : 1313118/192909900/1272720/41238/498894997
+        Multicast packets  : 0/10735961/0/0/21471922
+        Multicast bytes    : 0/858876880/0/0/858876880
+        Broadcast packets  : 0/0/0/0/0
+        Broadcast bytes    : 0/0/0/0/0
+        Labeled packets    : 0/0/0/0/0
+        Labeled bytes      : 0/0/0/0/0
+      WCCP Redirect outbound: disabled
+      WCCP Redirect inbound: disabled
+      WCCP Redirect exclude: disabled
+    '''}
+
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -5366,6 +5403,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
+    def test_golden_7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_7)
+        obj = ShowIpInterfaceVrfAll(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
 # #############################################################################
 # # Unittest For Show Vrf All Interface

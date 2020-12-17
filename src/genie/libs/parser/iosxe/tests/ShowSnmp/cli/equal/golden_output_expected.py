@@ -31,28 +31,28 @@ expected_output = {
     "snmp_logging": {
         "status": "enabled",
         "endpoints": {
-            "13.43.1.12": {
+            "10.76.1.12": {
                 "port": 151,
                 "queue": 0,
                 "queue_size": 10,
                 "sent": 102045,
                 "dropped": 3065
             },
-            "12.44.133.10": {
+            "10.76.133.10": {
                 "port": 111,
                 "queue": 0,
                 "queue_size": 10,
                 "sent": 102045,
                 "dropped": 3065
             },
-            "116.75.154.186": {
+            "10.16.154.186": {
                 "port": 169,
                 "queue": 0,
                 "queue_size": 10,
                 "sent": 201075,
                 "dropped": 11383
             },
-            "126.35.67.19": {
+            "10.166.67.19": {
                 "port": 108,
                 "queue": 0,
                 "queue_size": 10,

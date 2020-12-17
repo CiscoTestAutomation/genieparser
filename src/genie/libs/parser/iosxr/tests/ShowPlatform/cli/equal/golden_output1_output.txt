@@ -1,0 +1,67 @@
+RP/0/RP1/CPU0:Router#show platform 
+Thu Dec  3 17:30:57.372 CST
+Node              Type                       State             Config state
+--------------------------------------------------------------------------------
+0/0/CPU0          NC6-10X100G-M-K            IOS XR RUN        NSHUT
+0/0/NPU0          Slice                      UP                
+0/0/NPU1          Slice                      UP                
+0/0/NPU2          Slice                      UP                
+0/0/NPU3          Slice                      UP                
+0/0/NPU4          Slice                      UP                
+0/1/CPU0          NC6-10X100G-M-K            IOS XR RUN        NSHUT
+0/1/NPU0          Slice                      UP                
+0/1/NPU1          Slice                      UP                
+0/1/NPU2          Slice                      UP                
+0/1/NPU3          Slice                      UP                
+0/1/NPU4          Slice                      UP                
+0/2/CPU0          NC6-10X100G-M-K            IOS XR RUN        NSHUT
+0/2/NPU0          Slice                      UP                
+0/2/NPU1          Slice                      UP                
+0/2/NPU2          Slice                      UP                
+0/2/NPU3          Slice                      UP                
+0/2/NPU4          Slice                      UP                
+0/3/CPU0          NC6-10X100G-M-K            IOS XR RUN        NSHUT
+0/3/NPU0          Slice                      UP                
+0/3/NPU1          Slice                      UP                
+0/3/NPU2          Slice                      UP                
+0/3/NPU3          Slice                      UP                
+0/3/NPU4          Slice                      UP                
+0/4/CPU0          NC6-10X100G-M-K            IOS XR RUN        NSHUT
+0/4/NPU0          Slice                      UP                
+0/4/NPU1          Slice                      UP                
+0/4/NPU2          Slice                      UP                
+0/4/NPU3          Slice                      UP                
+0/4/NPU4          Slice                      UP                
+0/5/CPU0          NC6-10X100G-M-K            IOS XR RUN        NSHUT
+0/5/NPU0          Slice                      UP                
+0/5/NPU1          Slice                      UP                
+0/5/NPU2          Slice                      UP                
+0/5/NPU3          Slice                      UP                
+0/5/NPU4          Slice                      UP                
+0/6/CPU0          NC6-10X100G-M-K            IOS XR RUN        NSHUT
+0/6/NPU0          Slice                      UP                
+0/6/NPU1          Slice                      UP                
+0/6/NPU2          Slice                      UP                
+0/6/NPU3          Slice                      UP                
+0/6/NPU4          Slice                      UP                
+0/7/CPU0          NC6-10X100G-M-K            IOS XR RUN        NSHUT
+0/7/NPU0          Slice                      UP                
+0/7/NPU1          Slice                      UP                
+0/7/NPU2          Slice                      UP                
+0/7/NPU3          Slice                      UP                
+0/7/NPU4          Slice                      UP                
+0/RP0/CPU0        NC6-RP(Standby)            IOS XR RUN        NSHUT
+0/RP1/CPU0        NC6-RP(Active)             IOS XR RUN        NSHUT
+0/FC0             NC6-FC                     OPERATIONAL       NSHUT
+0/FC1             NC6-FC                     OPERATIONAL       NSHUT
+0/FC2             NC6-FC                     OPERATIONAL       NSHUT
+0/FC3             NC6-FC                     OPERATIONAL       NSHUT
+0/FC4             NC6-FC                     OPERATIONAL       NSHUT
+0/FC5             NC6-FC                     OPERATIONAL       NSHUT
+0/CI0             NCS-CRFT                   OPERATIONAL       NSHUT
+0/FT0             NC6-FANTRAY                OPERATIONAL       NSHUT
+0/FT1             NC6-FANTRAY                OPERATIONAL       NSHUT
+0/PT0             NCS-DC-PWRTRAY             OPERATIONAL       NSHUT
+0/PT1             NCS-DC-PWRTRAY             OPERATIONAL       NSHUT
+0/PT2             NCS-DC-PWRTRAY             OPERATIONAL       NSHUT
+0/PT3             NCS-DC-PWRTRAY             OPERATIONAL       NSHUT
