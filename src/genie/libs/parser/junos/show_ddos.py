@@ -22,18 +22,18 @@ class ShowDdosProtectionStatisticsSchema(MetaParser):
             "ddos-statistics-information": {
                 Optional("aggr-level-control-mode"): str,
                 Optional("aggr-level-detection-mode"): str,
-                Optional("ddos-flow-detection-enabled"): str,
-                Optional("ddos-logging-enabled"): str,
-                Optional("ddos-policing-fpc-enabled"): str,
-                Optional("ddos-policing-re-enabled"): str,
+                "ddos-flow-detection-enabled": str,
+                "ddos-logging-enabled": str,
+                "ddos-policing-fpc-enabled": str,
+                "ddos-policing-re-enabled": str,
                 Optional("detection-mode"): str,
-                Optional("flow-report-rate"): str,
-                Optional("flows-cumulative"): str,
-                Optional("flows-current"): str,
-                Optional("packet-types-in-violation"): str,
-                Optional("packet-types-seen-violation"): str,
-                Optional("total-violations"): str,
-                Optional("violation-report-rate"): str
+                "flow-report-rate": str,
+                "flows-cumulative": str,
+                "flows-current": str,
+                "packet-types-in-violation": str,
+                "packet-types-seen-violation": str,
+                "total-violations": str,
+                "violation-report-rate": str
             }
         }
 
