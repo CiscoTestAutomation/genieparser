@@ -449,7 +449,6 @@ CLASS_SKIP = {
         "ShowBgpGroupBriefNoMore": True, # need to check
         "ShowTaskMemory": True, # need to check
         "ShowConfigurationSystemNtp": True, # need to check
-        "ShowDdosProtectionStatistics": True, # need to check
         "ShowLDPSession": True, # need to check
         "ShowOspfRoutePrefix": True, # need to check
         "ShowOspfNeighborInstance": True, # need to check
