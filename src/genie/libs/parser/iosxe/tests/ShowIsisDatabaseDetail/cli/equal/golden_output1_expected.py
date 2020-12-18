@@ -129,7 +129,7 @@ expected_output = {
                                 "prefix_len": "24",
                                 "metric": 10,
                             }
-                        }
+                        },
                         "hostname": "R2_xr",
                         "mt_is_neighbor": {
                             "R1_xe.01": {"neighbor_id": "R1_xe.01", "metric": 10},

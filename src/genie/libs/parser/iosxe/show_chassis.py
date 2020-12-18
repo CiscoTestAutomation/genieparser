@@ -49,8 +49,8 @@ class ShowChassis(ShowChassisSchema):
         #                                             H/W   Current
         # Chassis#   Role    Mac Address     Priority Version  State                 IP
         # -------------------------------------------------------------------------------------
-        # 1       Standby  58bf.ea9b.23c0     2      V02     Ready                169.254.168.52
-        # *2       Active   58bf.ea3c.4b20     1      V02     Ready                169.254.168.54
+        # 1       Standby  58bf.eaff.be5c     2      V02     Ready                169.254.168.52
+        # *2       Active   58bf.eaff.875c     1      V02     Ready                169.254.168.54
 
 
         # Chassis/Stack Mac Address : 58bf.eaff.d8cc - Local Mac Address
@@ -166,17 +166,17 @@ class ShowChassisRmi(ShowChassisRmiSchema):
         if output is None:
             output = self.device.execute(self.cli_command)
 
-        # Chassis/Stack Mac Address : 4ce1.7592.a700 - Local Mac Address
+        # Chassis/Stack Mac Address : 4ce1.75ff.3a92 - Local Mac Address
         # Mac persistency wait time: Indefinite
         # Local Redundancy Port Type: FIBRE
         #                                             H/W   Current
         # Chassis#   Role    Mac Address     Priority Version  State                 IP                RMI-IP
         # --------------------------------------------------------------------------------------------------------
-        # *1       Active   4ce1.7592.a700     2      V02     Ready                169.254.138.6      10.8.138.6
-        # 2       Standby  4ce1.7592.9000     1      V02     Ready                169.254.138.7      10.8.138.7
+        # *1       Active   4ce1.75ff.3a92     2      V02     Ready                169.254.138.6      10.8.138.6
+        # 2       Standby  4ce1.75ff.2392     1      V02     Ready                169.254.138.7      10.8.138.7
 
 
-        # Chassis/Stack Mac Address : a453.0eb9.23c0 - Local Mac Address
+        # Chassis/Stack Mac Address : a453.0eff.dc7a - Local Mac Address
         p_chassis_mac = re.compile(r"^Chassis/Stack\s+Mac\s+Address\s+:\s+(?P<chassis_mac>\S+)\s+-\s+Local\s+Mac\s+Address$")
 
         # Mac persistency wait time: Indefinite
@@ -194,14 +194,14 @@ class ShowChassisRmi(ShowChassisRmiSchema):
         # -------------------------------------------------------------------------------------
         p_delimiter = re.compile(r"^-+$")
 
-        # *1       Active   4ce1.7592.a700     2      V02     Ready                169.254.138.6      10.8.138.6
+        # *1       Active   4ce1.75ff.3a92     2      V02     Ready                169.254.138.6      10.8.138.6
         p_chassis_count = re.compile(r"^(?P<slot>\S+)\s+(?P<role>\S+)\s+(?P<mac>\S+)\s+(?P<priority>\d+)\s+(?P<hw_version>\S+)\s+(?P<state>\S+)\s+(?P<ip>\S+)\s+(?P<rmi_ip>\S+)$")
 
         chassis_obj = {}
 
         for line in output.splitlines():
             line = line.strip()
-            # Chassis/Stack Mac Address : 58bf.eacc.0c00 - Local Mac Address
+            # Chassis/Stack Mac Address : 58bf.eaff.d8cc - Local Mac Address
             m_chassis_mac = p_chassis_mac.match(line)
             if m_chassis_mac:
                 chassis_obj["chassis_mac_address"] = m_chassis_mac.group("chassis_mac")
@@ -225,7 +225,7 @@ class ShowChassisRmi(ShowChassisRmiSchema):
             # -------------------------------------------------------------------------------------
             if p_delimiter.match(line):
                 continue
-            # *1       Active   a453.0eb9.23c0     2      V02     Ready                10.32.168.52       NA
+            # *1       Active   a453.0eff.dc7a     2      V02     Ready                10.32.168.52       NA
             m_chassis_count = p_chassis_count.match(line)
             if m_chassis_count:
                 group = m_chassis_count.groupdict()

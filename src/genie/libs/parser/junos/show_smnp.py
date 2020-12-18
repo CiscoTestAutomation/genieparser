@@ -102,7 +102,7 @@ class ShowSnmpConfigurationSchema(MetaParser):
                 Optional("trap-options"): {
                     "source-address": str
                 },
-                "trap-group": {
+                Optional("trap-group"): {
                     "trap-group-name": str,
                     Optional("version"): str,
                     Optional("categories"): [
@@ -431,7 +431,7 @@ class ShowSnmpStatisticsSchema(MetaParser):
                 "get-responses": str,
                 "traps": str
             },
-            "snmp-performance-statistics": {
+            Optional("snmp-performance-statistics"): {
                 "average-response-time": str,
                 "one-minute-request-throughput": str,
                 "five-minute-request-throughput": str,
@@ -534,7 +534,7 @@ class ShowSnmpStatisticsSchema(MetaParser):
                 "get-responses": str,
                 "traps": str
             },
-            "snmp-performance-statistics": {
+            Optional("snmp-performance-statistics"): {
                 "average-response-time": str,
                 "one-minute-request-throughput": str,
                 "five-minute-request-throughput": str,

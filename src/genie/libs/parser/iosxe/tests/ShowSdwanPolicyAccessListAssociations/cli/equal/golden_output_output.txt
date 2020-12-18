@@ -1,0 +1,7 @@
+                                            INTERFACE
+NAME          INTERFACE NAME                DIRECTION
+-------------------------------------------------------
+acl-v4        TenGigabitEthernet0/0/2.1002  in
+              TenGigabitEthernet0/0/2.1002  out
+acl-v4-apple  TenGigabitEthernet0/0/0.1002  in
+              TenGigabitEthernet0/0/0.1002  out
