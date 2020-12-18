@@ -542,6 +542,21 @@ class ShowRoute(ShowRouteSchema):
                 continue
         return ret_dict
 
+class ShowRouteLogicalSystem(ShowRoute):
+    """ Parser for:
+            * show route logical-system {logical_name}
+    """
+    cli_command = 'show route logical-system {logical_name}'
+    def cli(self, logical_name, output=None):
+        if not output:
+            cmd = self.cli_command.format(
+                    logical_name=logical_name)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        return super().cli(output=out) 
+
 class ShowRouteProtocolNoMore(ShowRoute):
     """ Parser for:
             * show route protocol {protocol} {ip_address} | no-more
@@ -967,7 +982,10 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
 
         # AS path: I 
         # AS path: 30000 4 103 104 105 106 107 108 109 I
-        p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) +(?P<attr_value>([\S]+( +)?)+)$')
+        # AS path: I (Originator) Cluster list:  0.0.0.1 0.0.0.2 0.0.0.4
+        p16 = re.compile(r'^(?P<aspath_effective_string>AS +path:) '
+                         r'+((?P<attr_value>[\S\s]+) +Cluster +list: '
+                         r'(?P<cluster_list>[\d\.\s]+)|(?P<attr_value2>[\S\s]+))$')
 
         # Accepted Multipath
         p16_1 = re.compile(r'^Accepted +(?P<accepted>\S+)$')
@@ -1288,11 +1306,15 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 continue
 
             # AS path: I 
+            # AS path: I (Originator) Cluster list:  0.0.0.1 0.0.0.2 0.0.0.4
             m = p16.match(line)
             if m:
                 rt_entry_exist = rt_dict.get('rt-entry', None)
                 if rt_entry_exist:
                     group = m.groupdict()
+                    if rt_dict.get('rt-entry', None) and group['cluster_list']:
+                        rt_entry_dict.update({'cluster-list': group['cluster_list']})
+                    group['attr_value'] = group['attr_value2'] if group['attr_value2'] else group['attr_value']
                     attr_as_path_dict = rt_entry_dict.setdefault('bgp-path-attributes', {}). \
                         setdefault('attr-as-path-effective', {})
                     rt_entry_dict.update({'as-path': line})
@@ -1424,6 +1446,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             m = p29.match(line)
             if m:
                 group = m.groupdict()
+                tsi_dict = rt_dict.setdefault('tsi', {})
                 text = tsi_dict.get('#text', '')
                 tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
                 continue
@@ -1431,6 +1454,7 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             # Page 0 idx 1, (group hktGCS002 type Internal) Type 1 val 0x10c0b9b0 (adv_entry)
             m = p30.match(line)
             if m:
+                tsi_dict = rt_dict.setdefault('tsi', {})
                 group = m.groupdict()
                 text = tsi_dict.get('#text', '')
                 tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
@@ -1449,9 +1473,9 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
             m = p31.match(line)
             if m:
                 group = m.groupdict()
-                if 'tsi' in rt_dict:
-                    text = tsi_dict.get('#text', '')
-                    tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
+                tsi_dict = rt_dict.setdefault('tsi', {})
+                text = tsi_dict.get('#text', '')
+                tsi_dict.update({'#text': '{}\n{}'.format(text, line)})
                 continue
 
             # Indirect next hop: 0xc285884 1048574 INH Session ID: 0x1ac
@@ -1502,7 +1526,6 @@ class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
                 group = m.groupdict()
                 rt_entry_dict.update({'peer-id': group['peer_id']})
                 continue
-        
 
         return ret_dict
     
@@ -2092,7 +2115,7 @@ class ShowRouteSummarySchema(MetaParser):
         Optional("@xmlns:junos"): str,
         "route-summary-information": {
             Optional("@xmlns"): str,
-            "as-number": str,
+            Optional("as-number"): str,
             "route-table": Use(validate_route_table_list),
             "router-id": str
         }
@@ -2143,6 +2166,7 @@ class ShowRouteSummary(ShowRouteSummarySchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                route_summary_information_dict = ret_dict.setdefault('route-summary-information', {})
                 route_summary_information_dict.update({k.replace('_', '-'):
                     v for k, v in group.items() if v is not None})
                 continue
@@ -3030,6 +3054,7 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
                 route_table_dict.update(
                     {k.replace('_', '-'):v for k, v in group.items() if v is not None}
                 )
+                rt_entry_dict = None
                 continue
 
             # 10.16.2.2/32 (1 entry, 1 announced)
@@ -3063,7 +3088,8 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                rt_entry_dict = {}
+                if rt_entry_dict == None:
+                    rt_entry_dict = {}
                 rt_entry_dict['active-tag'] = group['active_tag']
                 rt_entry_dict['preference'] = group['preference']
                 rt_entry_dict['preference2'] = group['preference2']
@@ -3137,6 +3163,8 @@ class ShowRouteProtocolProtocolExtensiveIpaddress(ShowRouteProtocolProtocolExten
             # State: <Active Ext>
             m = p11.match(line)
             if m:
+                if rt_entry_dict == None:
+                    rt_entry_dict = {}
                 group = m.groupdict()
                 for group_key, group_value in m.groupdict().items():
                     entry_key = group_key.replace('_', '-')

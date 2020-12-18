@@ -212,27 +212,27 @@ class ShowDeviceTrackingDatabaseInterface(ShowDeviceTrackingDatabaseInterfaceSch
         # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
 
         # Network Layer Address               Link Layer Address Interface        vlan prlvl  age   state     Time left
-        # L   10.160.48.1                             0000.0c9f.f45f  Vl1024         1024  0100 42473mn REACHABLE
-        # DH4 10.160.43.197                           94d4.690b.dbfa  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
-        # DH4 10.160.42.157                           0896.ad77.1224  Gi7/0/11       1023  0025   33s  REACHABLE  271 s try 0(447985 s)
-        # DH4 10.160.42.124                           00b1.e3ba.0d62  Te2/0/39       1023  0025   30s  REACHABLE  272 s try 0(450251 s)
+        # L   10.160.48.1                             0000.0cff.94fe  Vl1024         1024  0100 42473mn REACHABLE
+        # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+        # DH4 10.160.42.157                           0896.adff.899b  Gi7/0/11       1023  0025   33s  REACHABLE  271 s try 0(447985 s)
+        # DH4 10.160.42.124                           00b1.e3ff.c71d  Te2/0/39       1023  0025   30s  REACHABLE  272 s try 0(450251 s)
         #
         # ...OUTPUT OMMITTED...
         #
-        # L   2001:420:307:2000::1                    0000.0c9f.f45e  Vl1023         1023  0100 42475mn REACHABLE
-        # L   2001:420:307::1                         0000.0c9f.f45d  Vl1022         1022  0100 42473mn REACHABLE
+        # L   2001:db8:350b:919::1                    0000.0cff.94fd  Vl1023         1023  0100 42475mn REACHABLE
+        # L   2001:db8:350b:411::1                         0000.0cff.94fc  Vl1022         1022  0100 42473mn REACHABLE
 
         # Binding Table has 87 entries, 75 dynamic (limit 100000)
         binding_table_capture = re.compile(
             r"^Binding Table has (?P<entries>\d+) entries, (?P<dynamic>\d+) dynamic \(limit (?P<limit>\d+)\)$"
             )
 
-        # DH4 10.160.43.197                           94d4.690b.dbfa  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+        # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
         tracking_database_capture = re.compile(
             r"^(?P<code>\S+)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+.*)$"
             )
 
-        # L   10.160.48.1                             0000.0c9f.f45f  Vl1024         1024  0100 42473mn REACHABLE
+        # L   10.160.48.1                             0000.0cff.94fe  Vl1024         1024  0100 42473mn REACHABLE
         local_database_capture = re.compile(
             r"^(?P<code>L)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)$"
             )

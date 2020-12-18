@@ -176,10 +176,10 @@ class ShowSnmp(ShowSnmpSchema):
         # SNMP global trap: enabled
         #
         # SNMP logging: enabled
-        #     Logging to 13.43.1.12.151, 0/10, 102045 sent, 3065 dropped.
-        #     Logging to 12.44.133.10.111, 0/10, 102045 sent, 3065 dropped.
-        #     Logging to 116.75.154.186.169, 0/10, 201075 sent, 11383 dropped.
-        #     Logging to 126.35.67.19.108, 0/10, 102045 sent, 3065 dropped.
+        #     Logging to 10.76.1.12.151, 0/10, 102045 sent, 3065 dropped.
+        #     Logging to 10.76.133.10.111, 0/10, 102045 sent, 3065 dropped.
+        #     Logging to 10.16.154.186.169, 0/10, 201075 sent, 11383 dropped.
+        #     Logging to 10.166.67.19.108, 0/10, 102045 sent, 3065 dropped.
 
         # Chassis: FCE2310A48M
         p_chassis = re.compile(r"Chassis:\s+(?P<chassis>\S+)$")
@@ -254,7 +254,7 @@ class ShowSnmp(ShowSnmpSchema):
         # SNMP logging: enabled
         p_logging = re.compile(r"^SNMP\s+logging:\s+(?P<logging_status>enabled|disabled)$")
 
-        # Logging to 13.43.1.12.151, 0/10, 102045 sent, 3065 dropped.
+        # Logging to 10.76.1.12.151, 0/10, 102045 sent, 3065 dropped.
         p_logging_endpoint = re.compile(r"^Logging\s+to\s+(?P<endpoint_ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\.(?P<endpoint_port>\d+),\s+(?P<endpoint_queue>\d+)\/(?P<endpoint_queue_size>\d+),\s+(?P<endpoint_sent>\d+)\s+sent,\s+(?P<endpoint_dropped>\d+)\s+dropped.$")
 
         snmp_obj = {}
@@ -401,7 +401,7 @@ class ShowSnmp(ShowSnmpSchema):
                 else:
                     snmp_obj.setdefault("snmp_logging", {}).update({ "status": "enabled" })
                 continue
-            # Logging to 13.43.1.12.151, 0/10, 102045 sent, 3065 dropped.
+            # Logging to 10.76.1.12.151, 0/10, 102045 sent, 3065 dropped.
             elif p_logging_endpoint.match(line):
                 match = p_logging_endpoint.match(line)
                 if not snmp_obj["snmp_logging"].get("endpoints"):

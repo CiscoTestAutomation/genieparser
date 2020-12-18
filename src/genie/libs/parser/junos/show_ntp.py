@@ -13,7 +13,10 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
+
+# pyats
+from pyats.utils.exceptions import SchemaError
 
 
 # ==============================================
@@ -95,9 +98,10 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
         # remote         refid           st t when poll reach   delay   offset  jitter
         # ===============================================================================
         # x10.2.2.2         172.16.229.65     2 -   84  128  271    1.470  -46.760  52.506
-        p1 = re.compile(r'^(?P<mode_code>[xo\*\-\+\=]+)? *(?P<remote>[\w\.\:]+) +'
+        # *gnlab4.int-gw.k 192.168.137.1    3 -    5   64  177    0.192   -0.022   0.091
+        p1 = re.compile(r'^(?P<mode_code>[xo\*\-\+\=]+)? *(?P<remote>[\w\.\:\-]+) +'
                          '(?P<refid>[\S]+) +(?P<stratum>\d+) +(?P<type>[blmu\-]+) +'
-                         '(?P<receive_time>\d+) +(?P<poll>\d+) +'
+                         '(?P<receive_time>[\d\-]+) +(?P<poll>\d+) +'
                          '(?P<reach>\d+) +(?P<delay>[\d\.]+) +'
                          '(?P<offset>[\d\.\-]+) +(?P<jitter>[\d\.\-]+)$')
 
@@ -123,12 +127,13 @@ class ShowNtpAssociations(ShowNtpAssociationsSchema):
                                   'type': local_mode,
                                   'mode': mode,
                                   'stratum': int(groups['stratum']),
-                                  'receive_time': int(groups['receive_time']),
                                   'poll': int(groups['poll']),
                                   'reach': int(groups['reach']),
                                   'delay': float(groups['delay']),
                                   'offset': float(groups['offset']),
                                   'jitter': float(groups['jitter'])})
+                if '-' not in groups['receive_time']:
+                    peer_dict.update({'receive_time': int(groups['receive_time'])})
 
                 # ops clock_state structure
                 if 'sync' in mode:
@@ -370,5 +375,84 @@ class ShowConfigurationSystemNtpSet(ShowConfigurationSystemNtpSetSchema):
                 addr_dict.setdefault('isconfigured', {}).\
                     setdefault(str(isconfigured), {}).update({'address': address,
                                                               'isconfigured': isconfigured})
+
+        return ret_dict
+
+# =========================================================
+# Parser for 'show configuration system ntp'
+# =========================================================
+
+class ShowConfigurationSystemNtpSchema(MetaParser):
+    """Schema for: show configuration system ntp """
+
+    def validate_server_list(value):
+        # Pass server list of dict in value
+        if not isinstance(value, list):
+            raise SchemaError('server list is not a list')
+        # Create server list Schema
+        servers = Schema({
+            'name': str,
+        })
+        # Validate each dictionary in list
+        for item in value:
+            servers.validate(item)
+        return value
+
+    schema = {
+        "configuration": {
+            "system": {
+                "ntp": {
+                    Optional("server"): Use(validate_server_list),
+                    Optional("source-address"): {
+                        "name": str
+                    }
+                }
+            }
+        }
+    }
+
+class ShowConfigurationSystemNtp(ShowConfigurationSystemNtpSchema):
+    """Parser for: show configuration system ntp """
+
+    cli_command = 'show configuration system ntp'
+
+    def cli(self,output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial variables
+        ret_dict = {}
+
+        # server 10.1.0.1;
+        p1 = re.compile(r'^server +(?P<server_name>[\s\S]+);$')
+
+        # source-address 10.1.0.184;
+        p2 = re.compile(r'^source-address +(?P<source_address>[\s\S]+);$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # server 10.1.0.1;
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+
+                ntp_dict = ret_dict.setdefault('configuration', {}).setdefault('system', {})\
+                    .setdefault('ntp', {})
+                servers = ntp_dict.setdefault('server', [])
+                servers.append({'name': groups['server_name']})
+
+            # source-address 10.1.0.184;
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                ntp_dict = ret_dict.setdefault('configuration', {}).setdefault('system', {}) \
+                    .setdefault('ntp', {})
+                source_addr_dict = ntp_dict.setdefault('source-address', {})
+                source_addr_dict['name'] = groups['source_address']
 
         return ret_dict
