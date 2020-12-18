@@ -1,3 +1,9 @@
+'''
+Author: Knox Hutchinson
+Contact: https://dataknox.dev
+https://twitter.com/data_knox
+https://youtube.com/c/dataknox
+'''
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
 import re
