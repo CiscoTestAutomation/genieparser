@@ -1042,22 +1042,21 @@ class test_show_mrib_evpn_bucket_db(unittest.TestCase):
              }
     }
 
+    maxDiff = None
+
     def test_show_mrib_evpn_bucket_db_empty(self):
-        self.maxDiff = None
         self.device = Mock(**self.empty_output)
         obj = ShowMribEvpnBucketDb(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
     def test_show_mrib_evpn_bucket_db_full_1(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_1)
         obj = ShowMribEvpnBucketDb(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_show_mrib_evpn_bucket_db_full_2(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output_2)
         obj = ShowMribEvpnBucketDb(device=self.device)
         parsed_output = obj.parse()
