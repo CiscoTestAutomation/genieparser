@@ -35,7 +35,7 @@ class ShowIPInterface(ShowIPInterfaceSchema):
     cli_command = 'show ip interface'
 
     """
-    Default Gateway................................ 192.168.1.100
+    Default Gateway................................ 0.0.0.0
     L3 MAC Address................................. F8B1.5683.8734
 
     Routing Interfaces:
