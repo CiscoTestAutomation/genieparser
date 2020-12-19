@@ -27,8 +27,8 @@ class test_show_ip_interface(unittest.TestCase):
         'L3_MAC': 'F8B1.5683.8734',
         'Vl1': {
             'state': 'Down',
-            'ip_address': '0.0.0.0',
-            'mask': '0.0.0.0',
+            'ip_address': '10.10.10.216',
+            'mask': '255.255.255.0',
             'method': 'DHCP'
         },
         'Vl20': {
