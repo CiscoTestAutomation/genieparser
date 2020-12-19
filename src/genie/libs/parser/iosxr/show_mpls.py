@@ -71,6 +71,145 @@ class ShowMplsLabelRange(ShowMplsLabelRangeSchema):
             
         return mpls_dict
 
+# ==============================================
+# Parser for 'show mpls ldp discovery'
+# ==============================================
+class ShowMplsLdpDiscoverySchema(MetaParser):
+
+    """Schema for show mpls ldp discovery"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                Optional('local_ldp_identifier'): {
+                    Any(): {
+                        Optional('discovery_sources'): {
+                            'interfaces': {
+                                Any(): {
+                                    Optional('transport_ip_addr'): str,
+                                    Optional('xmit'): bool,
+                                    Optional('recv'): bool,
+                                    Any(): {
+                                        Any(): {
+                                            Optional('established_date'): str,
+                                            Optional('holdtime_sec'): int,
+                                            Optional('proposed_local'): int,
+                                            Optional('proposed_peer'): int,
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
+    
+    """Parser for show mpls ldp discovery"""
+
+    cli_command = ['show mpls ldp discovery']
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        if not vrf:
+            vrf = "default"
+        # initial return dictionary
+        result_dict = {}
+        discovery_flag = False
+
+        # Local LDP Identifier: 10.52.26.119:0 
+        p1 = re.compile(r'^(VRF +(?P<vrf>\S+):)? *Local +LDP +Identifier: ' 
+                        '(?P<local_ldp_identifier>[\d\.\:]+)$') 
+        
+        # Discovery Sources: 
+        p2 = re.compile(r'^Discovery +Sources:$') 
+        
+        # Bundle-Ether1 : xmit/recv 
+        p3 = re.compile(r'^((?P<interface>\S+) +): *(?P<xmit>xmit)?\/?(?P<recv>recv)?$') 
+        
+        # VRF: 'default' (0x60000000) 
+        p4 = re.compile(r'^VRF: \'(?P<vrf_name>\S+)\' +\(\d+x\d+\)$') 
+        
+        # LDP Id: 10.52.31.244:0, Transport address: 10.52.31.244 
+        p5 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:(?P<space>\s{1,2})?(?P<ldp_tdp_id>[\d\.\:]+),' 
+                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$') 
+        
+        # Hold time: 15 sec (local:15 sec, peer:15 sec) 
+        p6 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec ' 
+                        '\(local:(?P<proposed_local>\d+) +sec, ' 
+                        'peer:(?P<proposed_peer>\d+) +sec\)$') 
+        
+        # Established: Nov  6 14:39:26.164 (5w2d ago) 
+        p7 = re.compile(r'^Established: (?P<established_date>\S.*) \(\S* ago\)$') 
+
+
+        for line in out.splitlines(): 
+            line = line.strip()
+
+            # Local LDP Identifier: 10.52.26.119:0 
+            m = p1.match(line) 
+            if m:  
+                group = m.groupdict()
+                ldp_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}) 
+                local_ldp_identifier_dict = ldp_dict.setdefault('local_ldp_identifier', {}).setdefault(group['local_ldp_identifier'], {}) 
+                continue 
+
+            # Discovery Sources: 
+            m = p2.match(line) 
+            if m:  
+                discovery_flag = True 
+                continue 
+
+            # Bundle-Ether1 : xmit/recv 
+            m = p3.match(line) 
+            if m:  
+                group = m.groupdict() 
+                interface = group['interface'] if group['interface'] else "default" 
+                interface_dict = local_ldp_identifier_dict.setdefault('discovery_sources', {}).setdefault('interfaces', {}).setdefault(interface, {}) 
+                interface_dict.update({'xmit': True if group['xmit'] else False}) 
+                interface_dict.update({'recv': True if group['recv'] else False}) 
+                continue 
+
+            # VRF: 'default' (0x60000000) 
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                continue
+
+            # LDP Id: 10.52.31.244:0, Transport address: 10.52.31.244 
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_tdp = group['ldp_tdp'].lower()
+                if discovery_flag:
+                    ldp_dict = interface_dict.setdefault('{}_id'.format(ldp_tdp), {}).setdefault(
+                        group['ldp_tdp_id'], {})
+
+                interface_dict.update({'transport_ip_addr': group['transport_ip_addr']})
+                continue
+
+            # Hold time: 15 sec (local:15 sec, peer:15 sec) 
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({k: int(v) for k, v in group.items() if v})
+                continue
+
+            # Established: Nov  6 14:39:26.164 (5w2d ago) 
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({'established_date': group['established_date']})
+
+        return result_dict
+
 # ======================================================
 # Parser for 'show mpls ldp neighbor'
 # ======================================================
