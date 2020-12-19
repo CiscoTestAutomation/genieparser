@@ -118,8 +118,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
         else:
             out = output
 
-        if not vrf:
-            vrf = "default"
+        vrf = "default"
         # initial return dictionary
         result_dict = {}
         discovery_flag = False
