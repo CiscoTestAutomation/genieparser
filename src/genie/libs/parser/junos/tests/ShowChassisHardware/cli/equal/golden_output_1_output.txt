@@ -1,0 +1,110 @@
+Hardware inventory:
+Item             Version  Part number  Serial number     Description
+Chassis                                JN125D903AFJ      MX2020
+Midplane         REV 64   750-040240   ABAC9716          Lower Backplane
+Midplane 1       REV 06   711-032386   ABAC9742          Upper Backplane
+PMP 1            REV 01   711-051408   ACAJ5284          Upper Power Midplane
+PMP 0            REV 01   711-051406   ACAJ5165          Lower Power Midplane
+FPM Board        REV 13   760-040242   ABDD0194          Front Panel Display
+PSM 0            REV 04   740-050037   1EDB5270035       DC 52V Power Supply Module
+PSM 1            REV 04   740-050037   1EDB527003C       DC 52V Power Supply Module
+PSM 2            REV 04   740-050037   1EDB52202SM       DC 52V Power Supply Module
+PSM 3            REV 04   740-050037   1EDB527002J       DC 52V Power Supply Module
+PSM 4            REV 04   740-050037   1EDB527002L       DC 52V Power Supply Module
+PSM 5            REV 04   740-050037   1EDB52202PZ       DC 52V Power Supply Module
+PSM 6            REV 04   740-050037   1EDB52202ZD       DC 52V Power Supply Module
+PSM 7            REV 04   740-050037   1EDB527002N       DC 52V Power Supply Module
+PSM 8            REV 04   740-050037   1EDB527002S       DC 52V Power Supply Module
+PSM 9            REV 04   740-050037   1EDB5270010       DC 52V Power Supply Module
+PSM 10           REV 04   740-050037   1EDB52202XW       DC 52V Power Supply Module
+PSM 11           REV 04   740-050037   1EDB527002P       DC 52V Power Supply Module
+PSM 12           REV 04   740-050037   1EDB52202VJ       DC 52V Power Supply Module
+PSM 13           REV 04   740-050037   1EDB527001V       DC 52V Power Supply Module
+PSM 14           REV 04   740-050037   1EDB52202K3       DC 52V Power Supply Module
+PSM 15           REV 04   740-050037   1EDB527001L       DC 52V Power Supply Module
+PSM 16           REV 04   740-050037   1EDB527001P       DC 52V Power Supply Module
+PSM 17           REV 04   740-050037   1EDB52202PM       DC 52V Power Supply Module
+PDM 0            REV 01   740-050036   1EFD3390141       DC Power Dist Module
+PDM 1            REV 01   740-050036   1EFD3390149       DC Power Dist Module
+PDM 2            REV 01   740-050036   1EFD3390162       DC Power Dist Module
+PDM 3            REV 01   740-050036   1EFD3390136       DC Power Dist Module
+Routing Engine 0 REV 01   740-052100   9009237267        RE-S-1800x4
+Routing Engine 1 REV 01   740-052100   9009237474        RE-S-1800x4
+CB 0             REV 10   750-051985   CAFC0322          Control Board
+CB 1             REV 10   750-051985   CAFC0337          Control Board
+SPMB 0           REV 04   711-041855   ABDC5673          PMB Board
+SPMB 1           REV 04   711-041855   ABDA9007          PMB Board
+SFB 0            REV 06   711-044466   ABCY8621          Switch Fabric Board
+SFB 1            REV 07   711-044466   ABDB4626          Switch Fabric Board
+SFB 2            REV 06   711-044466   ABCZ9595          Switch Fabric Board
+SFB 3            REV 07   711-044466   ABDB4637          Switch Fabric Board
+SFB 4            REV 07   711-044466   ABDC6281          Switch Fabric Board
+SFB 5            REV 06   711-044466   ABCZ9386          Switch Fabric Board
+SFB 6            REV 07   711-044466   ABDC6286          Switch Fabric Board
+SFB 7            REV 07   711-044466   ABDC6495          Switch Fabric Board
+FPC 0            REV 72   750-044130   ABDF7568          MPC6E 3D
+  CPU            REV 12   711-045719   ABDF7304          RMPC PMB
+  MIC 0          REV 19   750-049457   ABDJ2346          2X100GE CFP2 OTN
+    PIC 0                 BUILTIN      BUILTIN           2X100GE CFP2 OTN
+      Xcvr 0     REV 01   740-052504   UW811XC           CFP2-100G-LR4
+      Xcvr 1     REV 01   740-052504   UW70304           CFP2-100G-LR4
+  MIC 1          REV 28   750-046532   ABDG0526          24X10GE SFPP
+    PIC 1                 BUILTIN      BUILTIN           24X10GE SFPP
+      Xcvr 0     REV 01   740-031981   F7G2011247        SFP+-10G-LR
+      Xcvr 1     REV 01   740-031981   F7J2018525        SFP+-10G-LR
+      Xcvr 2     REV 01   740-031981   F7G2011211        SFP+-10G-LR
+      Xcvr 3     REV 01   740-031981   F7J2018541        SFP+-10G-LR
+      Xcvr 4     REV 01   740-031981   F7G2011226        SFP+-10G-LR
+      Xcvr 5     REV 01   740-031981   F7G2011277        SFP+-10G-LR
+      Xcvr 6     REV 01   740-031981   F7G2011182        SFP+-10G-LR
+      Xcvr 7     REV 01   740-031981   F7J2018422        SFP+-10G-LR
+      Xcvr 8     REV 01   740-031981   F7J2018446        SFP+-10G-LR
+      Xcvr 9     REV 01   740-031981   F7J2018443        SFP+-10G-LR
+      Xcvr 10    REV 01   740-031981   F7G2011165        SFP+-10G-LR
+      Xcvr 11    REV 01   740-031981   F7G2011263        SFP+-10G-LR
+      Xcvr 12    REV 01   740-031981   F7G2011283        SFP+-10G-LR
+      Xcvr 13    REV 01   740-031981   F7J2018424        SFP+-10G-LR
+      Xcvr 14    REV 01   740-031981   F7G2011224        SFP+-10G-LR
+      Xcvr 15    REV 01   740-031981   F7J2018502        SFP+-10G-LR
+      Xcvr 16    REV 01   740-031981   F7G2011200        SFP+-10G-LR
+      Xcvr 17    REV 01   740-031981   F7J2018495        SFP+-10G-LR
+      Xcvr 18    REV 01   740-031981   F7J2018435        SFP+-10G-LR
+      Xcvr 19    REV 01   740-031981   F7J2018430        SFP+-10G-LR
+      Xcvr 20    REV 01   740-021309   XN74D671039       SFP+-10G-LR
+      Xcvr 21    REV 01   740-021309   XN74D671041       SFP+-10G-LR
+      Xcvr 22    REV 01   740-031983   UTQ1D19           SFP+-10G-ER
+      Xcvr 23    REV 01   740-031983   UTQ1D2P           SFP+-10G-ER
+  XLM 0          REV 14   711-046638   ABDF2862          MPC6E XL
+  XLM 1          REV 14   711-046638   ABDF2893          MPC6E XL
+FPC 9            REV 19   750-038491   CAFC4523          MPCE Type 2 3D
+  CPU            REV 06   711-038484   CAEY2214          MPCE PMB 2G
+  MIC 0          REV 19   750-043688   CAET3123          MS-MIC-16G
+    PIC 0                 BUILTIN      BUILTIN           MS-MIC-16G
+  MIC 1          REV 11   750-049846   CAFA6278          3D 20x 1GE(LAN)-E,SFP
+    PIC 2                 BUILTIN      BUILTIN           10x 1GE(LAN) -E  SFP
+      Xcvr 0     REV 01   740-031850   AC1522SA10E       SFP-LX10
+      Xcvr 1     REV 01   740-031850   AC1522SA10T       SFP-LX10
+      Xcvr 2     REV 01   740-031850   AC1522SA10P       SFP-LX10
+      Xcvr 3     REV 01   740-031850   AC1522SA10Q       SFP-LX10
+      Xcvr 4     REV 01   740-011783   P950PWN           SFP-LX10
+      Xcvr 5              NON-JNPR     AGM1049Q4E4       SFP-T
+      Xcvr 6     REV 01   740-031850   AC1522SA10J       SFP-LX10
+      Xcvr 7     REV 01   740-031850   AC1522SA10W       SFP-LX10
+      Xcvr 8              NON-JNPR     AGM1708211W       SFP-T
+      Xcvr 9     REV 01   740-031850   AC1522SA10H       SFP-LX10
+    PIC 3                 BUILTIN      BUILTIN           10x 1GE(LAN) -E  SFP
+      Xcvr 0     REV 01   740-031850   AC1522SA10G       SFP-LX10
+      Xcvr 1     REV 01   740-031850   AC1522SA10M       SFP-LX10
+      Xcvr 2              NON-JNPR     00000MTC101600GS  SFP-T
+      Xcvr 3     REV 02   740-013111   B133802           SFP-T
+      Xcvr 4     REV 01   740-031850   AC1522SA10U       SFP-LX10
+      Xcvr 5              NON-JNPR     AGM1120Q5E5       SFP-T
+      Xcvr 6     REV 01   740-031850   AC1522SA10Z       SFP-LX10
+      Xcvr 7     REV 01   740-031850   AC1522SA10K       SFP-LX10
+      Xcvr 8     l*       NON-JNPR     AGM17082139       SFP-T
+      Xcvr 9     }        NON-JNPR     AGM1708212S       SFP-T
+ADC 9            REV 21   750-043596   ABDC2129          Adapter Card
+Fan Tray 0       REV 01   760-052467   ACAY4748          172mm FanTray - 6 Fans
+Fan Tray 1       REV 01   760-052467   ACAY4731          172mm FanTray - 6 Fans
+Fan Tray 2       REV 01   760-052467   ACAY4747          172mm FanTray - 6 Fans
+Fan Tray 3       REV 01   760-052467   ACAY4754          172mm FanTray - 6 Fans

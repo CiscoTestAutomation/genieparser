@@ -414,20 +414,70 @@ class ShowChassisHardwareSchema(MetaParser):
     }
 }"""
 
-    def validate_inner_chassis_hardware_list(value):
-        # Pass firmware list as value
+    # ------------------------------------------------------
+    # Optional("chassis-sub-module")
+    # ------------------------------------------------------
+    def validate_chassis_sub_module_list(value):
+        
+        # ------------------------------------------------------
+        # Optional("chassis-sub-sub-sub-module")
+        # ------------------------------------------------------
+        def validate_chassis_sub_sub_sub_module_list(value):
+            # Pass list as value
+            if not isinstance(value, list):
+                raise SchemaError('inner chassis sub sub sub module is not a list')
+
+            chassis_sub_sub_sub_module_schema = Schema(
+                            {
+                                Optional("description"): str,
+                                Optional("name"): str,
+                                Optional("part-number"): str,
+                                Optional("serial-number"): str,
+                                Optional("version"): str
+                            }
+                        )
+            # Validate each dictionary in list
+            for item in value:
+                chassis_sub_sub_sub_module_schema.validate(item)
+            return value
+        
+
+        # Pass list as value
         if not isinstance(value, list):
-            raise SchemaError('inner chassis hardware is not a list')
-        chassis_inner_hardware_schema = Schema(
-                        {
-                            Optional("chassis-sub-sub-module"): {
-                                "description": str,
-                                "name": str,
-                                "part-number": str,
-                                "serial-number": str
+            raise SchemaError('inner chassis sub sub sub module is not a list')
+
+        # ------------------------------------------------------
+        # Optional("chassis-sub-sub-module")
+        # ------------------------------------------------------
+        def validate_chassis_sub_sub_module_list(value):
+            # Pass list as value
+            if not isinstance(value, list):
+                raise SchemaError('inner chassis sub sub module is not a list')
+
+            chassis_sub_sub_module_schema = Schema(
+                            {
+                                Optional("description"): str,
+                                Optional("name"): str,
+                                Optional("part-number"): str,
+                                Optional("serial-number"): str,
+                                Optional("chassis-sub-sub-sub-module"): Use(validate_chassis_sub_sub_sub_module_list)
                             },
+                        )
+            # Validate each dictionary in list
+            for item in value:
+                chassis_sub_sub_module_schema.validate(item)
+            return value
+        
+
+        # Pass list as value
+        if not isinstance(value, list):
+            raise SchemaError('inner chassis sub sub module is not a list')
+
+        chassis_sub_module_schema = Schema(
+                        {
+                            Optional("chassis-sub-sub-module"): Use(validate_chassis_sub_sub_module_list),
                             Optional("description"): str,
-                            "name": str,
+                            Optional("name"): str,
                             Optional("part-number"): str,
                             Optional("serial-number"): str,
                             Optional("version"): str
@@ -436,22 +486,28 @@ class ShowChassisHardwareSchema(MetaParser):
         )
         # Validate each dictionary in list
         for item in value:
-            chassis_inner_hardware_schema.validate(item)
+            chassis_sub_module_schema.validate(item)
         return value
 
 
-    def validate_chassis_hardware_list(value):
+    def validate_chassis_hardware_detail_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaError('chassis hardware is not a list')
-        chassis_hardware_schema = Schema({
-            Optional("chassis-sub-module"): Use(ShowChassisHardware.validate_inner_chassis_hardware_list),
+            raise SchemaError('chassis module is not a list')
+        chassis_hardware_detail_schema = Schema({
+            Optional("chassis-re-dimm-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_dimm_list),
+            Optional("chassis-re-disk-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_disk_list),
+            Optional("chassis-re-usb-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_usb_list),
+            Optional("chassis-sub-module"): Use(ShowChassisHardwareDetail.validate_chassis_sub_module_list),
             Optional("description"): str,
-            "name": str
+            Optional("name"): str,
+            Optional("part-number"): str,
+            Optional("serial-number"): str,
+            Optional("version"): str,
         })
         # Validate each dictionary in list
         for item in value:
-            chassis_hardware_schema.validate(item)
+            chassis_hardware_detail_schema.validate(item)
         return value
 
     schema = {
@@ -460,10 +516,10 @@ class ShowChassisHardwareSchema(MetaParser):
         Optional("@xmlns"): str,
         "chassis": {
             Optional("@junos:style"): str,
-            "chassis-module": Use(validate_chassis_hardware_list),
-            "description": str,
-            "name": str,
-            "serial-number": str
+            Optional("chassis-module"): Use(validate_chassis_hardware_detail_list),
+            Optional("description"): str,
+            Optional("name"): str,
+            Optional("serial-number"): str
             }
         }
     }
@@ -484,135 +540,207 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
         #Hardware inventory:
         p1 = re.compile(r'^Hardware +(?P<style>\S+):$')
 
-        #FPC 0                                                    Virtual FPC
-        p2 = re.compile(r'^(?P<name>(\S+\s\d+)) +(?P<description>\S+\s\S+)$')
+        # Chassis                                VM5D4C6B3599      VMX
+        p_chassis = re.compile(r'^(?P<name>Chassis) +(?P<serial_number>[A-Z\d]+)'
+                               r' +(?P<description>\S+)$')
 
-        #Routing Engine 0                                         RE-VMX
-        p3 = re.compile(r'^(?P<name>\S+\s+\S+\s+\d+) +(?P<description>\S+)$')
+        # -------------------------------------------------------------------------------------
+        # For general chassis modules, for example:
+        # -------------------------------------------------------------------------------------
+        # Midplane         REV 64   750-040240   ABAC9716          Lower Backplane
+        # Midplane 1       REV 06   711-032386   ABAC9742          Upper Backplane
+        p_module0 = re.compile(r'(?P<name>Midplane( \d+)?) +(?P<version>\w+ \d+)'
+                               r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+) '
+                               r'+(?P<description>[\s\S]+)$')        
 
-        #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-        p4 = re.compile(r'^(?P<name>\S+) +(?P<version>[\S\.\d]+ [\S\.\d]+) '
-                        r'+(?P<part_number>[\S\-]+) +(?P<serial_number>\S+)$')
+        # Routing Engine 0 REV 01   740-052100   9009237267        RE-S-1800x4
+        # CB 0             REV 10   750-051985   CAFC0322          Control Board
+        # FPC 0            REV 72   750-044130   ABDF7568          MPC6E 3D
+        # SPMB 0           REV 04   711-041855   ABDC5673          PMB Board
+        # SFB 0            REV 06   711-044466   ABCY8621          Switch Fabric Board
+        # ADC 9            REV 21   750-043596   ABDC2129          Adapter Card
+        # Fan Tray 0       REV 01   760-052467   ACAY4748          172mm FanTray - 6 Fans
+        # FPM Board        REV 13   760-040242   ABDD0194          Front Panel Display
+        # PDM 3            REV 01   740-050036   1EFD3390136       DC Power Dist Module
+        # PSM 11           REV 04   740-050037   1EDB527002P       DC 52V Power Supply Module
+        # PMP 1            REV 01   711-051408   ACAJ5284          Upper Power Midplane
+        p_module1 = re.compile(r'^(?P<name>(Routing Engine|CB|FPC|SPMB|SFB|ADC|Fan Tray|FPM|PDM|PSM|PMP) (\d+|Board))( +(?P<version>\w+ \d+)'
+                               r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+))? '
+                               r'+(?P<description>[\s\S]+)$')
 
-        #MIC 0                                                  Virtual
-        p5 = re.compile(r'^(?P<name>\S+ \d+) +(?P<description>\S+)$')
+        # Midplane   
+        p_module2 = re.compile(r'^(?P<name>\S+)$')
 
-        #PIC 0                 BUILTIN      BUILTIN           Virtual
-        p6 = re.compile(r'^(?P<name>\S+ \d+) +(?P<part_number>\S+) '
-                        r'+(?P<serial_number>\S+) +(?P<description>\S+)$')
+        # -------------------------------------------------------------------------------------
+        # For chassis-sub-module, for example:
+        # -------------------------------------------------------------------------------------
+        # CPU            REV 12   711-045719   ABDF7304          RMPC PMB
+        # MIC 0          REV 19   750-049457   ABDJ2346          2X100GE CFP2 OTN 
+        # XLM 0          REV 14   711-046638   ABDF2862          MPC6E XL
+        p_sub_module = re.compile(r'^(?P<name>CPU|(MIC|XLM)\s\d+) +(?P<version>\w+ \d+)'
+                                  r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+) '
+                                  r'+(?P<description>[\s\S]+)$')
 
-        #Chassis                                VM5D4C6B3599      VMX
-        p7 = re.compile(r'^(?P<name>\S+) +(?P<serial_number>\S+) '
-                        r'+(?P<description>\S+)$')
+        # CPU            Rev. 1.0 RIOT-LITE    BUILTIN     
+        p_sub_module_2 = re.compile(r'(?P<name>CPU) +(?P<version>[\s\S]+) +(?P<part_number>[A-Z\-]+)'
+                                    r' +(?P<serial_number>[A-Z]+)')
 
-        #Midplane
-        p8 = re.compile(r'^(?P<name>\S+)$')
+        # MIC 0                                                  Virtual     
+        p_sub_module_3 = re.compile(r'(?P<name>MIC\s\d+) +(?P<description>\S+)')
 
-        ret_dict = {}
+        # -------------------------------------------------------------------------------------
+        # For chassis-sub-sub-module, for example:
+        # -------------------------------------------------------------------------------------
+        # PIC 0                 BUILTIN      BUILTIN           2X100GE CFP2 OTN
+        p_sub_sub_module = re.compile(r'^(?P<name>PIC\s\d+) +(?P<part_number>[A-Z]+) '
+                                      r'+(?P<serial_number>[A-Z]+) +(?P<description>[\s\S]+)$')
 
-        for line in out.splitlines()[1:]:
+
+        # -------------------------------------------------------------------------------------
+        # For chassis-sub-sub-sub-module, for example:
+        # -------------------------------------------------------------------------------------
+        # Xcvr 0     REV 01   740-052504   UW811XC           CFP2-100G-LR4
+        p_sub_sub_sub_module = re.compile(r'^(?P<name>Xcvr\s\d+)( +(?P<version>(\w+ \d+)|(\S+)))?'
+                                          r' +(?P<part_number>[\d\-]+|NON-JNPR) +(?P<serial_number>[A-Z\d]+)'
+                                          r' +(?P<description>[\s\S]+)$')                                      
+
+        res = {}
+
+        for line in out.splitlines():
             line = line.strip()
-
+            
             #Hardware inventory:
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                chassis_inventory_dict = ret_dict.setdefault("chassis-inventory", {})\
-                                                            .setdefault("chassis", {})
+                res = {
+                    "chassis-inventory":{
+                        "chassis":{
+
+                        }
+                    }
+                }
+                chassis_inventory_dict = res["chassis-inventory"]["chassis"]
 
                 chassis_inventory_dict["@junos:style"] = group["style"]
+                chassis_inventory_dict["chassis-module"] = []
                 
-                chassis_entry_list = chassis_inventory_dict.setdefault("chassis-module", [])
+                chassis_modules_list = chassis_inventory_dict["chassis-module"] 
 
                 continue
 
-            #FPC 0                                                    Virtual FPC
-            m = p2.match(line)
+            # Chassis                                VM5D4C6B3599      VMX
+            m = p_chassis.match(line)
             if m:
-                group = m.groupdict()
-                if(group["name"] == "CB 0"):
-                    entry_dict = {}
-                    entry_dict["description"] = group["description"]
-                    entry_dict["name"] = group["name"]
-
-                    chassis_entry_list.append(entry_dict)
-                else:
-                    chassis_inner_dict1 = {}
-                    chassis_inner_dict1["description"] = group["description"]
-                    chassis_inner_dict1["name"] = group["name"]
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    if v:
+                        chassis_inventory_dict[k] = v.strip()
                 continue
 
-            #Routing Engine 0                                         RE-VMX
-            m = p3.match(line)
+            # -------------------------------------------------------------------------------------
+            # For general chassis modules, for example:
+            # -------------------------------------------------------------------------------------
+            # Midplane         REV 64   750-040240   ABAC9716          Lower Backplane
+            # Midplane 1       REV 06   711-032386   ABAC9742          Upper Backplane
+            
+            # Routing Engine 0 REV 01   740-052100   9009237267        RE-S-1800x4
+            # Routing Engine 0                                         RE-VMX
+            # CB 0                                                     VMX SCB
+            # FPC 0                                                    Virtual FPC
+            # SPMB 0           REV 04   711-041855   ABDC5673          PMB Board
+            # SFB 0            REV 06   711-044466   ABCY8621          Switch Fabric Board
+            # ADC 9            REV 21   750-043596   ABDC2129          Adapter Card
+            # Fan Tray 0       REV 01   760-052467   ACAY4748          172mm FanTray - 6 Fans            
+            # FPM Board        REV 13   760-040242   ABDD0194          Front Panel Display
+
+            # Midplane
+            m = p_module0.match(line) or p_module1.match(line) or p_module2.match(line)
             if m:
-                group = m.groupdict()
-                entry_dict = {}
-                entry_dict["description"] = group["description"]
-                entry_dict["name"] = group["name"]
-
-                chassis_entry_list.append(entry_dict)
+                module_dict = {}
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    if v:
+                        module_dict[k] = v.strip()
+                
+                chassis_modules_list.append(module_dict)
+                
                 continue
 
-            #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-            m = p4.match(line)
+            # -------------------------------------------------------------------------------------
+            # For chassis-sub-module, for example:
+            # -------------------------------------------------------------------------------------
+            # CPU            REV 12   711-045719   ABDF7304          RMPC PMB
+            # MIC 0          REV 19   750-049457   ABDJ2346          2X100GE CFP2 OTN 
+            # XLM 0          REV 14   711-046638   ABDF2862          MPC6E XL
+            # MIC 0                                                  Virtual
+            # CPU            Rev. 1.0 RIOT-LITE    BUILTIN 
+            m = p_sub_module.match(line) or p_sub_module_2.match(line) or p_sub_module_3.match(line)
             if m:
-                group = m.groupdict()
-                chassis_inner_list = []
-                chassis_inner_dict = {}
-                chassis_inner_dict["name"] = group["name"]
-                chassis_inner_dict["part-number"] = group["part_number"]
-                chassis_inner_dict["serial-number"] = group["serial_number"]
-                chassis_inner_dict["version"] = group["version"]
+                if "chassis-sub-module" not in module_dict:
+                    module_dict["chassis-sub-module"] = []
 
-                chassis_inner_list.append(chassis_inner_dict)
+                re_sub_module_list = module_dict["chassis-sub-module"]
+                last_sub_sub_item = {}
+
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    if v:
+                        last_sub_sub_item[k] = v.strip()
+                
+                re_sub_module_list.append(last_sub_sub_item)
                 continue
 
-            #MIC 0                                                  Virtual
-            m = p5.match(line)
+            # -------------------------------------------------------------------------------------
+            # For chassis-sub-sub-module, for example:
+            # -------------------------------------------------------------------------------------
+            # PIC 0                 BUILTIN      BUILTIN           2X100GE CFP2 OTN
+            m = p_sub_sub_module.match(line)
             if m:
-                group = m.groupdict()
-                chassis_inner_dict2 = {}
-                chassis_inner_dict2["description"] = group["description"]
-                chassis_inner_dict2["name"] = group["name"]
-                continue
+                # find the sub module
+                last_sub_item = module_dict["chassis-sub-module"][-1]
+                
+                if "chassis-sub-sub-module" not in last_sub_item:
+                    last_sub_item["chassis-sub-sub-module"] = []
+                    
+                re_sub_sub_module_item_list = last_sub_item["chassis-sub-sub-module"]
 
-            #PIC 0                 BUILTIN      BUILTIN           Virtual
-            m = p6.match(line)
+                re_sub_sub_module_list_item = {}
+                
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    if v:
+                        re_sub_sub_module_list_item[k] = v.strip()
+                re_sub_sub_module_item_list.append(re_sub_sub_module_list_item)
+                
+                continue
+                
+
+            # -------------------------------------------------------------------------------------
+            # For chassis-sub-sub-sub-module, for example:
+            # -------------------------------------------------------------------------------------
+            # Xcvr 0     REV 01   740-052504   UW811XC           CFP2-100G-LR4
+            m = p_sub_sub_sub_module.match(line)
             if m:
-                group = m.groupdict()
-                chassis_inner_inner_dict = {}
-                chassis_inner_inner_dict["description"] = group["description"]
-                chassis_inner_inner_dict["name"] = group["name"]
-                chassis_inner_inner_dict["part-number"] = group["part_number"]
-                chassis_inner_inner_dict["serial-number"] = group["serial_number"]
+                # the last appended item
+                last_sub_sub_item = module_dict["chassis-sub-module"][-1]["chassis-sub-sub-module"][-1]
+                
+                if "chassis-sub-sub-sub-module" not in last_sub_sub_item:
+                    last_sub_sub_item["chassis-sub-sub-sub-module"] = []
 
-                chassis_inner_dict2["chassis-sub-sub-module"] = chassis_inner_inner_dict
-                chassis_inner_list.append(chassis_inner_dict2)
+                re_sub_sub_sub_module_list = last_sub_sub_item["chassis-sub-sub-sub-module"]
 
-                chassis_inner_dict1["chassis-sub-module"] = chassis_inner_list
+                re_sub_sub_sub_module_item = {}
 
-                chassis_entry_list.append(chassis_inner_dict1)
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    if v:
+                        re_sub_sub_sub_module_item[k] = v.strip()
+                
+                re_sub_sub_sub_module_list.append(re_sub_sub_sub_module_item)
                 continue
 
-            #Chassis                                VM5D4C6B3599      VMX
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                chassis_inventory_dict["description"] = group["description"]
-                chassis_inventory_dict["name"] = group["name"]
-                chassis_inventory_dict["serial-number"] = group["serial_number"]
-                continue
-
-            #Midplane
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                entry_dict = {}
-                entry_dict["name"] = group["name"]
-                chassis_entry_list.append(entry_dict)
-                continue
-
-        return ret_dict
+        return res
 
 
 class ShowChassisHardwareDetailSchema(MetaParser):
