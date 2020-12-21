@@ -321,7 +321,7 @@ expected_output={
                                     "name": "PIC 0",
                                     "part-number": "BUILTIN",
                                     "serial-number": "BUILTIN"
-                                },]
+                                },],
                                 "description": "2X100GE CFP2 OTN",
                                 "name": "MIC 0",
                                 "part-number": "750-049457",
@@ -504,7 +504,7 @@ expected_output={
                                     "name": "PIC 1",
                                     "part-number": "BUILTIN",
                                     "serial-number": "BUILTIN"
-                                },]
+                                },],
                                 "description": "24X10GE SFPP",
                                 "name": "MIC 1",
                                 "part-number": "750-046532",
@@ -547,7 +547,7 @@ expected_output={
                                     "name": "PIC 0",
                                     "part-number": "BUILTIN",
                                     "serial-number": "BUILTIN"
-                                },]
+                                },],
                                 "description": "MS-MIC-16G",
                                 "name": "MIC 0",
                                 "part-number": "750-043688",
