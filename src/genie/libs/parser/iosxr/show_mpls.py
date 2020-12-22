@@ -85,38 +85,36 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
     """
 
     schema = {
-        'vrf': {
+        'local_ldp_identifier': {
             Any(): {
-                Optional('local_ldp_identifier'): {
-                    Any(): {
-                        Optional('discovery_sources'): {
-                            'interfaces': {
+                Optional('discovery_sources'): {
+                    'interfaces': {
+                        Any(): {
+                            Optional('vrf'): str,
+                            Optional('source_ip_addr'): str,
+                            Optional('transport_ip_addr'): str,
+                            Optional('xmit'): bool,
+                            Optional('recv'): bool,
+                            Optional('hello_interval'): int,
+                            Optional('hello_due_time'): str,
+                            Optional('quick_start'): str,
+                            Any(): {
                                 Any(): {
+                                    Optional('established_date'): str,
+                                    Optional('holdtime_sec'): int,
+                                    Optional('proposed_local'): int,
+                                    Optional('proposed_peer'): int,
                                     Optional('source_ip_addr'): str,
                                     Optional('transport_ip_addr'): str,
-                                    Optional('xmit'): bool,
-                                    Optional('recv'): bool,
-                                    Optional('hello_interval'): int,
-                                    Optional('hello_due_time'): str,
-                                    Optional('quick_start'): str,
-                                    Any(): {
-                                        Any(): {
-                                            Optional('established_date'): str,
-                                            Optional('holdtime_sec'): int,
-                                            Optional('proposed_local'): int,
-                                            Optional('proposed_peer'): int,
-                                            Optional('source_ip_addr'): str,
-                                            Optional('transport_ip_addr'): str,
-                                        },
-                                    },
                                 },
                             },
                         },
                     },
                 },
             },
-        },
+        }
     }
+
 
 class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
     
@@ -154,9 +152,6 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
             out = self.device.execute(cmd)
         else:
             out = output
-
-        if not vrf:
-            vrf = "default"
 
         # initial return dictionary
         result_dict = {}
@@ -208,8 +203,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
             m = p1.match(line) 
             if m:  
                 group = m.groupdict() 
-                vrf_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})
-                local_ldp_identifier_dict = vrf_dict.setdefault('local_ldp_identifier', {}).setdefault(group['local_ldp_identifier'], {}) 
+                local_ldp_identifier_dict = result_dict.setdefault('local_ldp_identifier', {}).setdefault(group['local_ldp_identifier'], {}) 
                 continue 
 
             # Discovery Sources: 
@@ -232,8 +226,9 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
+                interface_dict.update({'vrf': group['vrf'] if group['vrf'] else 'default'}) 
                 continue
-            
+
             # LDP Id: 10.52.31.244:0, Transport address: 10.52.31.244 
             m = p5.match(line)
             if m:
