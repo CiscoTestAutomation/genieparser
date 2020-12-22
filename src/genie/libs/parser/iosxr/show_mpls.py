@@ -76,7 +76,13 @@ class ShowMplsLabelRange(ShowMplsLabelRangeSchema):
 # ==============================================
 class ShowMplsLdpDiscoverySchema(MetaParser):
 
-    """Schema for show mpls ldp discovery"""
+    """Schema for show mpls ldp discovery
+                  show mpls ldp discovery detail
+                  show mpls ldp afi-all discovery
+                  show mpls ldp discovery <ldp>
+                  show mpls ldp vrf <vrf> discovery
+                  show mpls ldp vrf <vrf> discovery detail
+    """
 
     schema = {
         'vrf': {
@@ -86,15 +92,21 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
                         Optional('discovery_sources'): {
                             'interfaces': {
                                 Any(): {
+                                    Optional('source_ip_addr'): str,
                                     Optional('transport_ip_addr'): str,
                                     Optional('xmit'): bool,
                                     Optional('recv'): bool,
+                                    Optional('hello_interval'): int,
+                                    Optional('hello_due_time'): str,
+                                    Optional('quick_start'): str,
                                     Any(): {
                                         Any(): {
                                             Optional('established_date'): str,
                                             Optional('holdtime_sec'): int,
                                             Optional('proposed_local'): int,
                                             Optional('proposed_peer'): int,
+                                            Optional('source_ip_addr'): str,
+                                            Optional('transport_ip_addr'): str,
                                         },
                                     },
                                 },
@@ -108,56 +120,96 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
 
 class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
     
-    """Parser for show mpls ldp discovery"""
+    """Parser for show mpls ldp discovery
+                  show mpls ldp discovery detail
+                  show mpls ldp afi-all discovery
+                  show mpls ldp discovery <ldp>
+                  show mpls ldp vrf <vrf> discovery
+                  show mpls ldp vrf <vrf> discovery detail
+    """
 
-    cli_command = ['show mpls ldp discovery']
+    cli_command = ['show mpls ldp discovery',
+                   'show mpls ldp discovery detail',
+                   'show mpls ldp afi-all discovery',
+                   'show mpls ldp discovery {ldp}',
+                   'show mpls ldp vrf {vrf} discovery',
+                   'show mpls ldp vrf {vrf} discovery detail']
 
-    def cli(self, output=None):
+    def cli(self, all="", detail="", vrf="", ldp="", output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if vrf:
+                if detail:
+                    cmd = self.cli_command[5].format(vrf=vrf)
+                else:
+                    cmd = self.cli_command[4].format(vrf=vrf)
+            elif ldp:
+                cmd = self.cli_command[3].format(ldp=ldp)
+            elif all:
+                cmd = self.cli_command[2].format(ldp=ldp)
+            elif detail:
+                cmd = self.cli_command[1].format(ldp=ldp)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
         else:
             out = output
 
-        vrf = "default"
+        if not vrf:
+            vrf = "default"
+
         # initial return dictionary
         result_dict = {}
         discovery_flag = False
 
         # Local LDP Identifier: 10.52.26.119:0 
-        p1 = re.compile(r'^(VRF +(?P<vrf>\S+):)? *Local +LDP +Identifier: ' 
+        p1 = re.compile(r'^Local +LDP +Identifier: ' 
                         '(?P<local_ldp_identifier>[\d\.\:]+)$') 
-        
+
         # Discovery Sources: 
         p2 = re.compile(r'^Discovery +Sources:$') 
-        
+
         # Bundle-Ether1 : xmit/recv 
-        p3 = re.compile(r'^((?P<interface>\S+) +): *(?P<xmit>xmit)?\/?(?P<recv>recv)?$') 
-        
+        # TenGigE0/0/0/4.2096 (0x14c0) : xmit
+        # Bundle-Ether3 (0x8000260) : xmit/recv
+        p3 = re.compile(r'^((?P<interface>\S+) +)(\S.*|): *(?P<xmit>xmit)?\/?(?P<recv>recv)?$') 
+
         # VRF: 'default' (0x60000000) 
-        p4 = re.compile(r'^VRF: \'(?P<vrf_name>\S+)\' +\(\d+x\d+\)$') 
-        
+        p4 = re.compile(r'^VRF: \'(?P<vrf>\S+)\' +\(\d+x\d+\)$') 
+
+        # LDP Id: 10.12.31.251:0
         # LDP Id: 10.52.31.244:0, Transport address: 10.52.31.244 
-        p5 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:(?P<space>\s{1,2})?(?P<ldp_tdp_id>[\d\.\:]+),' 
-                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$') 
-        
+        p5 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:(?P<space>\s{1,2})?(?P<ldp_tdp_id>[\d\.\:]+)(,' 
+                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)|)$')
+
         # Hold time: 15 sec (local:15 sec, peer:15 sec) 
         p6 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec ' 
                         '\(local:(?P<proposed_local>\d+) +sec, ' 
                         'peer:(?P<proposed_peer>\d+) +sec\)$') 
-        
-        # Established: Nov  6 14:39:26.164 (5w2d ago) 
-        p7 = re.compile(r'^Established: (?P<established_date>\S.*) \(\S* ago\)$') 
 
+        # Established: Nov  6 14:39:26.164 (5w2d ago) 
+        p7 = re.compile(r'^Established: +(?P<established_date>\S.*) \(\S* ago\)$') 
+
+        # Source address: 10.166.0.57; Transport address: 10.52.31.247
+        p8 = re.compile(r'^Source +address: +(?P<source_ip_addr>[\d\.]+);'
+                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
+
+        # Hello interval: 5 sec (due in 2.3 sec)
+        p9 = re.compile(r'^Hello +interval: +(?P<hello_interval>\d+) +sec'
+                        ' +\(due +in +(?P<hello_due_time>\S+ \S+)\)$')
+
+        # Quick-start: Enabled
+        p10 = re.compile(r'^Quick-start: +(?P<quick_start>\S+)$')
 
         for line in out.splitlines(): 
             line = line.strip()
-
+            
             # Local LDP Identifier: 10.52.26.119:0 
             m = p1.match(line) 
             if m:  
-                group = m.groupdict()
-                ldp_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}) 
-                local_ldp_identifier_dict = ldp_dict.setdefault('local_ldp_identifier', {}).setdefault(group['local_ldp_identifier'], {}) 
+                group = m.groupdict() 
+                vrf_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                local_ldp_identifier_dict = vrf_dict.setdefault('local_ldp_identifier', {}).setdefault(group['local_ldp_identifier'], {}) 
                 continue 
 
             # Discovery Sources: 
@@ -169,7 +221,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
             # Bundle-Ether1 : xmit/recv 
             m = p3.match(line) 
             if m:  
-                group = m.groupdict() 
+                group = m.groupdict()
                 interface = group['interface'] if group['interface'] else "default" 
                 interface_dict = local_ldp_identifier_dict.setdefault('discovery_sources', {}).setdefault('interfaces', {}).setdefault(interface, {}) 
                 interface_dict.update({'xmit': True if group['xmit'] else False}) 
@@ -181,7 +233,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
             if m:
                 group = m.groupdict()
                 continue
-
+            
             # LDP Id: 10.52.31.244:0, Transport address: 10.52.31.244 
             m = p5.match(line)
             if m:
@@ -191,7 +243,8 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                     ldp_dict = interface_dict.setdefault('{}_id'.format(ldp_tdp), {}).setdefault(
                         group['ldp_tdp_id'], {})
 
-                interface_dict.update({'transport_ip_addr': group['transport_ip_addr']})
+                if group['transport_ip_addr']:
+                    interface_dict.update({'transport_ip_addr': group['transport_ip_addr']})
                 continue
 
             # Hold time: 15 sec (local:15 sec, peer:15 sec) 
@@ -206,6 +259,31 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
             if m:
                 group = m.groupdict()
                 ldp_dict.update({'established_date': group['established_date']})
+
+            # Source address: 10.166.0.57; Transport address: 10.52.31.247
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                if 'source_ip_addr' in interface_dict.keys():
+                    ldp_dict.update({k: v for k, v in group.items() if v})
+                else:
+                    interface_dict.update({k: v for k, v in group.items() if v})
+                continue
+
+            #  # Hello interval: 5 sec (due in 2.3 sec)
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'hello_interval': int(group['hello_interval'])})
+                interface_dict.update({'hello_due_time': group['hello_due_time']})
+                continue
+
+            # Quick-start: Enabled
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'quick_start': group['quick_start'].lower()})
+                continue
 
         return result_dict
 

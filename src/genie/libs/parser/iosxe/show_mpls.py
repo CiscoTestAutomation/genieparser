@@ -1212,8 +1212,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 if detail:
                     cmd = self.cli_command[5].format(vrf=vrf, detail=detail)
                 else:
-                    if detail:
-                        cmd = self.cli_command[4].format(vrf=vrf)
+                    cmd = self.cli_command[4].format(vrf=vrf)
             else:
                 if detail and all:
                     cmd = self.cli_command[3].format(all=all, detail=detail)
