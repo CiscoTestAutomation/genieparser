@@ -2751,8 +2751,7 @@ class ShowApTagSummary(ShowApTagSummarySchema):
                 new_group[group[new_key]].update(group)
                 new_group[group[new_key]].pop(new_key)
 
-                if not ap_info_obj.get(new_key):
-                    ap_info_obj = {new_key: {}}
+                ap_info_obj.setdefault(new_key, {})
 
                 ap_info_obj[new_key].update(new_group)
 

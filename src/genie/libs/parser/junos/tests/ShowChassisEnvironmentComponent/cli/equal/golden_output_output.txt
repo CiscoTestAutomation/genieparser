@@ -1,0 +1,41 @@
+show chassis environment cb
+CB 0 status:
+  State                      Online Master
+  IntakeA-Zone0 Temperature  39 degrees C / 102 degrees F
+  IntakeB-Zone1 Temperature  36 degrees C / 96 degrees F
+  IntakeC-Zone0 Temperature  51 degrees C / 123 degrees F
+  ExhaustA-Zone0 Temperature 40 degrees C / 104 degrees F
+  ExhaustB-Zone1 Temperature 35 degrees C / 95 degrees F
+  TCBC-Zone0 Temperature     45 degrees C / 113 degrees F
+  Power 1
+    1.0 V                     1005 mV
+    1.2 V                     1205 mV
+    1.8 V                     1778 mV
+    2.5 V                     2513 mV
+    3.3 V                     3293 mV
+    5.0 V                     5020 mV
+    5.0 V RE                  4969 mV
+    12.0 V                   12026 mV
+    12.0 V RE                11930 mV
+  Bus Revision               100
+  FPGA Revision              272
+CB 1 status:
+  State                      Online Standby
+  IntakeA-Zone0 Temperature  29 degrees C / 84 degrees F
+  IntakeB-Zone1 Temperature  32 degrees C / 89 degrees F
+  IntakeC-Zone0 Temperature  33 degrees C / 91 degrees F
+  ExhaustA-Zone0 Temperature 32 degrees C / 89 degrees F
+  ExhaustB-Zone1 Temperature 32 degrees C / 89 degrees F
+  TCBC-Zone0 Temperature     39 degrees C / 102 degrees F
+  Power 1
+    1.0 V                     1011 mV
+    1.2 V                     1208 mV
+    1.8 V                     1807 mV
+    2.5 V                     2552 mV
+    3.3 V                     3325 mV
+    5.0 V                     5059 mV
+    5.0 V RE                  5040 mV
+    12.0 V                   12065 mV
+    12.0 V RE                11988 mV
+  Bus Revision               100
+  FPGA Revision              0

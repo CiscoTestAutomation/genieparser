@@ -60,7 +60,7 @@ class PingSchema(MetaParser):
                     Optional('ttl'): int,
                     Optional('time'): str,
                     Optional('message'): str,
-                    Optional('mtu'): str,
+                    Optional('mtu'): int,
                 })
         # Validate each dictionary in list
         for item in value:
@@ -95,33 +95,45 @@ class Ping(PingSchema):
         'ping {addr} count {count}',
         'ping {addr} ttl {ttl} count {count} wait {wait}',
         'ping {addr} source {source} count {count}',
-        'ping {addr} source {source} size {size} do-not-fragment count {count}'
+        'ping {addr} source {source} size {size} do-not-fragment count {count}',
+        'ping {addr} source {source} size {size} count {count} tos {tos} rapid'
     ]
 
     def cli(self, addr, count=None, ttl=None, 
             wait=None, source=None, size=None, 
-            output=None):
+            tos=None, output=None):
 
         if not output:
-            if count and ttl and wait:
-                cmd = self.cli_command[2].format(
-                    addr=addr,
-                    count=count,
-                    ttl=ttl,
-                    wait=wait)
-            elif count and source:
-                cmd = self.cli_command[3].format(addr=addr, 
+            if addr and count:
+                if ttl and wait:
+                    cmd = self.cli_command[2].format(
+                        addr=addr,
+                        count=count,
+                        ttl=ttl,
+                        wait=wait)
+                elif source and size and tos:
+                    cmd = self.cli_command[5].format(
+                        addr=addr, 
+                        source=source, 
+                        size=size, 
+                        count=count, 
+                        tos=tos)
+                elif source and size:
+                    cmd = self.cli_command[4].format(
+                        addr=addr,
                         source=source,
+                        size=size,
+                        count=count,
+                    )   
+                elif source:
+                    cmd = self.cli_command[3].format(
+                        addr=addr, 
+                        source=source,
+                        count=count)                                        
+                else:
+                    cmd = self.cli_command[1].format(
+                        addr=addr, 
                         count=count)
-            elif count:
-                cmd = self.cli_command[1].format(addr=addr, count=count)
-            elif source and size:
-                cmd = self.cli_command[4].format(
-                    addr=addr,
-                    source=source,
-                    size=size,
-                    count=count,
-                )
             else:
                 cmd = self.cli_command[0].format(addr=addr)
             out = self.device.execute(cmd)
@@ -211,6 +223,7 @@ class Ping(PingSchema):
                 round_trip_dict = ping_statistics_dict.setdefault('round-trip', {})
                 round_trip_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
+
         return ret_dict
 
 class PingMplsRsvpSchema(MetaParser):

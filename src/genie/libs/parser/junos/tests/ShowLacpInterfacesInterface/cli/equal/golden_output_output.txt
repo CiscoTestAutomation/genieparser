@@ -1,0 +1,9 @@
+
+        show lacp interfaces ae4
+        Aggregated interface: ae4
+            LACP state:       Role   Exp   Def  Dist  Col  Syn  Aggr  Timeout  Activity
+            xe-3/0/1       Actor    No    No   Yes  Yes  Yes   Yes     Fast    Active
+            xe-3/0/1     Partner    No    No   Yes  Yes  Yes   Yes     Fast    Active
+            LACP protocol:        Receive State  Transmit State          Mux State
+            xe-3/0/1                  Current   Fast periodic Collecting distributing
+    

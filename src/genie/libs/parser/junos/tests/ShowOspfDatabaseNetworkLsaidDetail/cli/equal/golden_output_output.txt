@@ -1,0 +1,18 @@
+
+        show ospf database network lsa-id 10.69.197.1 detail
+
+        OSPF database, Area 192.168.76.0
+      Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+    Network *10.69.197.1    192.168.219.235   0x80000026  1730  0x22 0x1b56  36
+    mask 255.255.255.128
+    attached router 192.168.219.235
+    attached router 10.69.198.249
+    attached router 192.168.219.236
+    Topology default (ID 0)
+        Type: Transit, Node ID: 192.168.219.236
+          Metric: 0, Bidirectional
+        Type: Transit, Node ID: 10.69.198.249
+          Metric: 0, Bidirectional
+        Type: Transit, Node ID: 192.168.219.235
+          Metric: 0, Bidirectional
+    

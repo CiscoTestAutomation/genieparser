@@ -1,0 +1,38 @@
+ show chassis routing-engine no-forwarding
+        Routing Engine status:
+        Slot 0:
+            Current state                  Master
+            Election priority              Master (default)
+            DRAM                      2002 MB (2048 MB installed)
+            Memory utilization          19 percent
+            5 sec CPU utilization:
+            User                       0 percent
+            Background                 0 percent
+            Kernel                     1 percent
+            Interrupt                  0 percent
+            Idle                      99 percent
+            1 min CPU utilization:
+            User                       1 percent
+            Background                 0 percent
+            Kernel                     1 percent
+            Interrupt                  0 percent
+            Idle                      98 percent
+            5 min CPU utilization:
+            User                       1 percent
+            Background                 0 percent
+            Kernel                     1 percent
+            Interrupt                  0 percent
+            Idle                      98 percent
+            15 min CPU utilization:
+            User                       1 percent
+            Background                 0 percent
+            Kernel                     1 percent
+            Interrupt                  0 percent
+            Idle                      98 percent
+            Model                          RE-VMX
+            Start time                     2019-08-29 09:02:22 UTC
+            Uptime                         208 days, 23 hours, 15 minutes, 9 seconds
+            Last reboot reason             Router rebooted after a normal shutdown.
+            Load averages:                 1 minute   5 minute  15 minute
+                                            0.48       0.44       0.40
+    

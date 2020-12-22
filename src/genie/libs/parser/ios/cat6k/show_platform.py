@@ -162,12 +162,14 @@ class ShowVersion(ShowVersionSchema):
         p18 = re.compile(r'^(?P<software>TN3270 Emulation software.)$')
 
         # 1 Virtual Ethernet/IEEE 802.3 interface
+        # 1 Virtual Ethernet/IEEE 802.3 interface(s)
         p19 = re.compile(r'^(?P<interface>\d+) +Virtual '
-                         r'+Ethernet/IEEE 802.3 +interface$')
+                         r'+Ethernet/IEEE 802.3 +interface(s|\(s\))?$')
 
         # 50 Gigabit Ethernet/IEEE 802.3 interfaces
+        # 98 Gigabit Ethernet/IEEE 802.3 interface(s)
         p20 = re.compile(r'^(?P<interface>\d+) +Gigabit '
-                         r'+Ethernet/IEEE 802.3 +interfaces$')
+                         r'+Ethernet/IEEE 802.3 +interface(s|\(s\))?$')
 
         # 1917K bytes of non-volatile configuration memory.
         p21 = re.compile(r'^(?P<memory>\d+)K'
