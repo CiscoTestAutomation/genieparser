@@ -2490,8 +2490,9 @@ class ShowChassisEnvironment(ShowChassisEnvironmentSchema):
         #         CB 0 IntakeA-Zone0             OK         39 degrees C / 102 degrees F     
         #         PSM 4                          Check        
         #         Fan Tray 2 Fan 2               OK         2640 RPM  
+        #   FPC 0 Intake                   Testing
         p1 = re.compile(r'^((?P<class>Temp|Fans) +)?(?P<name>[\s\S]+) '
-                        r'+(?P<status>OK|Check)( +(?P<measurement>[\s\S]+))?$')
+                        r'+(?P<status>OK|Check|Testing)( +(?P<measurement>[\s\S]+))?$')
 
         # 24 degrees C / 75 degrees F
         celsius_pattern = re.compile(r'(?P<celsius>\d+) degrees C / (?P<fahr>\d+) degrees F')
