@@ -274,7 +274,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
             # RP         0/RSP0/CPU0   IOS XR RUN        Primary    0/RSP1/CPU0
             p8 = re.compile(r'\s*(?P<type>[a-zA-Z0-9\-]+)'
                              ' +(?P<node_name>[a-zA-Z0-9\/]+)'
-                             ' +(?P<node_status>[IOS XR RUN|OPERATIONAL]+)'
+                             ' +(?P<node_status>[IOS XR RUN|OPERATIONAL|POWERED_ON]+)'
                              ' +(?P<red_state>[a-zA-Z\/\-]+)?'
                              ' +(?P<partner_name>[a-zA-Z0-9\/]+)$')
             m = p8.match(line)
