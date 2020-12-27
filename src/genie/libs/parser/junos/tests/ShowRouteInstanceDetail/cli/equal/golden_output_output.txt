@@ -1,0 +1,44 @@
+
+        show route instance detail
+        master:
+        Router ID: 10.189.5.252
+        Type: forwarding        State: Active
+        Tables:
+            inet.0                 : 1615 routes (929 active, 0 holddown, 0 hidden)
+            inet.3                 : 11 routes (11 active, 0 holddown, 0 hidden)
+            mpls.0                 : 44 routes (44 active, 0 holddown, 0 hidden)
+            inet6.0                : 23 routes (22 active, 0 holddown, 0 hidden)
+
+        __juniper_private1__:
+        Router ID: 0.0.0.0
+        Type: forwarding        State: Active
+        Interfaces:
+            pfh-0/0/0.16383
+            pfe-0/0/0.16383
+            lo0.16385
+            em1.0
+        Tables:
+            __juniper_private1__.inet.0: 6 routes (5 active, 0 holddown, 0 hidden)
+            __juniper_private1__.inet6.0: 3 routes (3 active, 0 holddown, 0 hidden)
+
+        __juniper_private2__:
+        Router ID: 0.0.0.0
+        Type: forwarding        State: Active
+        Interfaces:
+            pfh-0/0/0.16384
+            lo0.16384
+        Tables:
+            __juniper_private2__.inet.0: 1 routes (0 active, 0 holddown, 1 hidden)
+
+        __juniper_private4__:
+        Router ID: 0.0.0.0
+        Type: forwarding        State: Active
+
+        __master.anon__:
+        Router ID: 0.0.0.0
+        Type: forwarding        State: Active
+
+        mgmt_junos:
+        Router ID: 0.0.0.0
+        Type: forwarding        State: Active
+    

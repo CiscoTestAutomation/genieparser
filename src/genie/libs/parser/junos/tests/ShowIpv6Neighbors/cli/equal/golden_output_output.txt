@@ -1,0 +1,8 @@
+
+        show ipv6 neighbors
+        IPv6 Address                  Linklayer Address  State       Exp   Rtr  Secure  Interface               
+        2001:db8:eb18:6337::1           00:50:56:ff:00:4b  reachable   28    yes  no      ge-0/0/1.0              
+        fe80::250:56ff:feff:e04e      00:50:56:ff:e0:4e  delay       4     yes  no      ge-0/0/0.0              
+        fe80::250:56ff:feff:4b      00:50:56:ff:00:4b  reachable   43    yes  no      ge-0/0/1.0              
+        Total entries: 3
+    

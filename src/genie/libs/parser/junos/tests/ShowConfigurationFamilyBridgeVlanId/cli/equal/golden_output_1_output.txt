@@ -1,0 +1,5 @@
+
+            show configuration interfaces ge-0/0/1 unit 0 family bridge vlan-id 
+
+            vlan-id 10;
+        

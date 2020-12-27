@@ -2267,7 +2267,7 @@ class ShowInterfacesSchema(MetaParser):
             Optional('line_protocol'): str,
             'enabled': bool,
             Optional('interface_state_transitions'): int,
-            'type': str,
+            Optional('type'): str,
             Optional('mac_address'): str,
             Optional('phys_address'): str,
             Optional('layer2'): bool,

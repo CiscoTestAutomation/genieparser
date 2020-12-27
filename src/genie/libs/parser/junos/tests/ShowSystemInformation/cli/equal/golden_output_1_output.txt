@@ -1,0 +1,7 @@
+
+        show system information
+        Model: vmx
+        Family: junos
+        Junos: 19.2R1.8
+        Hostname: P4
+        

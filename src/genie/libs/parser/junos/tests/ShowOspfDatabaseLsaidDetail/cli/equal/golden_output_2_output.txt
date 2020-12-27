@@ -1,0 +1,12 @@
+
+        OSPF AS SCOPE link state database
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Extern   10.34.2.250     10.169.14.240   0x80000043  1075  0x22 0xd7f4  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Extern  *10.34.2.250     10.169.14.241   0x80000044   670  0x22 0xcffa  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+    

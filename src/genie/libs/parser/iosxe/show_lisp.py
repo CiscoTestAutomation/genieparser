@@ -3575,6 +3575,8 @@ class ShowLispEidTableVrfUserIpv4MapCacheSchema(MetaParser):
 class ShowLispEidTableVrfUserIpv4MapCache(ShowLispEidTableVrfUserIpv4MapCacheSchema):
     """Parser for show lisp eid-table vrf {vrf} ipv4 map-cache"""
 
+    cli_command = "show lisp eid-table vrf {vrf} ipv4 map-cache"
+
     def cli(self, vrf, output=None):
         if output is None:
             output = self.device.execute(self.cli_command.format(vrf=vrf))
@@ -3585,7 +3587,7 @@ class ShowLispEidTableVrfUserIpv4MapCache(ShowLispEidTableVrfUserIpv4MapCacheSch
         #   Negative cache entry, action: send-map-request
         # 0.0.0.0/5, uptime: 4w6d, expires: 00:14:38, via map-reply, forward-native
         #   Encapsulating to proxy ETR
-        # 8.0.0.0/7, uptime: 07:18:55, expires: 00:07:19, via map-reply, forward-native
+        # 10.64.0.0/7, uptime: 07:18:55, expires: 00:07:19, via map-reply, forward-native
         #   Encapsulating to proxy ETR
         # 10.0.0.0/9, uptime: 1w4d, expires: 00:00:13, via map-reply, forward-native
         #   Encapsulating to proxy ETR

@@ -1,0 +1,23 @@
+RP/0/RP0/CPU0:Router#show platform 
+Thu Dec  3 14:23:10.123 CST
+Node              Type                       State             Config state
+--------------------------------------------------------------------------------
+0/RP0/CPU0        A99-RP3-TR(Active)         IOS XR RUN        NSHUT
+0/RP1/CPU0        A99-RP3-TR(Standby)        IOS XR RUN        NSHUT
+0/FT0             ASR-9912-FAN               OPERATIONAL       NSHUT
+0/FT1             ASR-9912-FAN               OPERATIONAL       NSHUT
+0/0/CPU0          A99-12X100GE               IOS XR RUN        NSHUT
+0/1/CPU0          A9K-48X10GE-1G-SE          IOS XR RUN        NSHUT
+0/2/CPU0          A99-48X10GE-1G-TR          IOS XR RUN        NSHUT
+0/8/CPU0          A99-12X100GE               IOS XR RUN        NSHUT
+0/9/CPU0          A99-12X100GE               IOS XR RUN        NSHUT
+0/FC0             A99-SFC3                   OPERATIONAL       NSHUT
+0/FC1             A99-SFC3                   OPERATIONAL       NSHUT
+0/FC2             A99-SFC3                   OPERATIONAL       NSHUT
+0/FC3             A99-SFC3                   OPERATIONAL       NSHUT
+0/FC4             A99-SFC3                   OPERATIONAL       NSHUT
+0/FC5             A99-SFC3                   OPERATIONAL       NSHUT
+0/FC6             A99-SFC3                   OPERATIONAL       NSHUT
+0/PT0             A9K-DC-PEM-V3              OPERATIONAL       NSHUT
+0/PT1             A9K-DC-PEM-V3              OPERATIONAL       NSHUT
+0/PT2             A9K-DC-PEM-V3              OPERATIONAL       NSHUT

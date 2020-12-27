@@ -1,0 +1,18 @@
+
+            ping 10.135.0.2 ttl 5 count 10 wait 1
+            PING 10.135.0.2 (10.135.0.2): 56 data bytes
+            64 bytes from 10.135.0.2: icmp_seq=0 ttl=64 time=1.013 ms
+            64 bytes from 10.135.0.2: icmp_seq=1 ttl=64 time=1.013 ms
+            64 bytes from 10.135.0.2: icmp_seq=2 ttl=64 time=1.117 ms
+            64 bytes from 10.135.0.2: icmp_seq=3 ttl=64 time=1.086 ms
+            64 bytes from 10.135.0.2: icmp_seq=4 ttl=64 time=0.904 ms
+            64 bytes from 10.135.0.2: icmp_seq=5 ttl=64 time=1.037 ms
+            64 bytes from 10.135.0.2: icmp_seq=6 ttl=64 time=0.913 ms
+            64 bytes from 10.135.0.2: icmp_seq=7 ttl=64 time=0.935 ms
+            64 bytes from 10.135.0.2: icmp_seq=8 ttl=64 time=0.946 ms
+            64 bytes from 10.135.0.2: icmp_seq=9 ttl=64 time=1.156 ms
+            
+            --- 10.135.0.2 ping statistics ---
+            10 packets transmitted, 10 packets received, 0% packet loss
+            round-trip min/avg/max/stddev = 0.904/1.012/1.156/0.083 ms
+        

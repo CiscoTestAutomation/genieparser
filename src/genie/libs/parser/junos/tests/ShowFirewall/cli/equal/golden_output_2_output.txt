@@ -1,0 +1,44 @@
+
+        show firewall
+
+        Filter: __default_bpdu_filter__
+
+        Filter: ICMP_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_ACK-flood_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_SYN-flood_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: UDP_ACL_filter
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: ICMP_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_ACK-flood_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: TCP_SYN-flood_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0
+
+        Filter: UDP_ACL_filter_IPv6
+        Counters:
+        Name                                                Bytes              Packets
+        block                                                   0                    0

@@ -1,0 +1,9 @@
+
+                show system storage no-forwarding
+        Filesystem              Size       Used      Avail  Capacity   Mounted on
+        /dev/gpt/junos           20G       1.2G        17G        7%  /.mount
+        /dev/gpt/config         793M        60K       730M        0%  /.mount/config
+        /dev/gpt/var            7.0G       117M       6.3G        2%  /.mount/var
+        tmpfs                   3.2G       196K       3.2G        0%  /.mount/tmp
+        tmpfs                   334M       748K       333M        0%  /.mount/mfs
+    

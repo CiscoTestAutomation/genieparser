@@ -1,0 +1,550 @@
+
+        show interfaces statistics
+        Physical interface: ge-0/0/0, Enabled, Physical link is Up
+        Interface index: 133, SNMP ifIndex: 506
+        Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
+        BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled,
+        Remote fault: Online
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 5e:00:40:ff:00:00, Hardware address: 5e:00:40:ff:00:00
+        Last flapped   : 2020-06-22 22:33:51 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 712 bps (1 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 1568, Output errors: 0
+        Active alarms  : None
+        Active defects : None
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/0.0 (Index 70) (SNMP ifIndex 507)
+            Flags: SNMP-Traps 0x4000 Encapsulation: ENET2
+            Input packets : 4685
+            Output packets: 144
+            Security: Zone: trust
+            Allowed host-inbound traffic : dhcp http https ssh telnet
+            Protocol inet, MTU: 1500
+            Flags: Sendbcast-pkt-to-re, Is-Primary
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 172.16.1/24, Local: 172.16.1.55, Broadcast: 172.16.1.255
+
+        Physical interface: gr-0/0/0, Enabled, Physical link is Up
+        Interface index: 143, SNMP ifIndex: 519
+        Type: GRE, Link-level type: GRE, MTU: Unlimited, Speed: 800mbps
+        Link flags     : Scheduler Keepalives DTE
+        Device flags   : Present Running
+        Interface flags: Point-To-Point
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+
+        Physical interface: ip-0/0/0, Enabled, Physical link is Up
+        Interface index: 144, SNMP ifIndex: 520
+        Type: IPIP, Link-level type: IP-over-IP, MTU: Unlimited, Speed: 800mbps
+        Link flags     : Scheduler Keepalives DTE
+        Device flags   : Present Running
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+
+        Physical interface: lsq-0/0/0, Enabled, Physical link is Up
+        Interface index: 145, SNMP ifIndex: 521
+        Link-level type: LinkService, MTU: 1504
+        Device flags   : Present Running
+        Interface flags: Point-To-Point SNMP-Traps Internal: 0x4000
+        Last flapped   : 2020-06-22 22:33:52 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+
+        Physical interface: lt-0/0/0, Enabled, Physical link is Up
+        Interface index: 147, SNMP ifIndex: 523
+        Type: Logical-tunnel, Link-level type: Logical-tunnel, MTU: Unlimited,
+        Speed: 800mbps
+        Device flags   : Present Running
+        Interface flags: Point-To-Point SNMP-Traps
+        Link flags     : None
+        Physical info  : 13
+        Current address: 02:96:14:ff:11:43, Hardware address: 02:96:14:ff:11:43
+        Last flapped   : Never
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 0, Output errors: 0
+
+        Physical interface: mt-0/0/0, Enabled, Physical link is Up
+        Interface index: 146, SNMP ifIndex: 522
+        Type: Multicast-GRE, Link-level type: GRE, MTU: Unlimited, Speed: 800mbps
+        Link flags     : Keepalives DTE
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+
+        Physical interface: sp-0/0/0, Enabled, Physical link is Up
+        Interface index: 142, SNMP ifIndex: 517
+        Type: Adaptive-Services, Link-level type: Adaptive-Services, MTU: 9192,
+        Speed: 800mbps
+        Device flags   : Present Running
+        Interface flags: Point-To-Point SNMP-Traps Internal: 0x4000
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : 2020-06-22 22:33:52 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 0, Output errors: 0
+
+        Logical interface sp-0/0/0.0 (Index 75) (SNMP ifIndex 518)
+            Flags: Point-To-Point SNMP-Traps Encapsulation: Adaptive-Services
+            Input packets : 0
+            Output packets: 0
+            Security: Zone: Null
+            Protocol inet, MTU: 9192
+            Flags: Receive-options, Receive-TTL-Exceeded
+            Protocol inet6, MTU: 9192
+            Flags: Primary, Is-Primary, Receive-options, Receive-TTL-Exceeded
+
+        Logical interface sp-0/0/0.16383 (Index 76) (SNMP ifIndex 524)
+            Flags: Point-To-Point SNMP-Traps Encapsulation: Adaptive-Services
+            Input packets : 0
+            Output packets: 0
+            Security: Zone: Null
+            Protocol inet, MTU: 9192
+            Flags: Is-Primary, Receive-options, Receive-TTL-Exceeded
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 10.0.0.16, Local: 10.0.0.1
+            Addresses
+                Local: 10.0.0.6
+            Addresses, Flags: Is-Preferred
+                Destination: 172.16.66.16, Local: 172.16.64.1
+            Addresses
+                Local: 172.16.64.6
+
+        Physical interface: ge-0/0/1, Enabled, Physical link is Up
+        Interface index: 134, SNMP ifIndex: 508
+        Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
+        BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled,
+        Remote fault: Online
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: fa:16:3e:ff:7f:fd, Hardware address: fa:16:3e:ff:7f:fd
+        Last flapped   : 2020-06-22 22:34:01 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 312 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 8, Output errors: 0
+        Active alarms  : None
+        Active defects : None
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/1.0 (Index 71) (SNMP ifIndex 516)
+            Flags: SNMP-Traps 0x4000 Encapsulation: ENET2
+            Input packets : 555
+            Output packets: 546
+            Security: Zone: trust
+            Allowed host-inbound traffic : bfd bgp dvmrp igmp ldp msdp nhrp ospf ospf3
+            pgm pim rip ripng router-discovery rsvp sap vrrp ping
+            Protocol inet, MTU: 1500
+            Flags: Sendbcast-pkt-to-re
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 40.0.0/24, Local: 10.70.0.4, Broadcast: 10.70.0.255
+            Protocol inet6, MTU: 1500
+            Flags: None
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 2001:40::/64, Local: 2001:40::4
+            Addresses, Flags: Is-Preferred
+                Destination: fe80::/64, Local: fe80::fa16:3eff:feff:7ffd
+
+        Physical interface: ge-0/0/2, Enabled, Physical link is Up
+        Interface index: 135, SNMP ifIndex: 509
+        Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
+        BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled,
+        Remote fault: Online
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: fa:16:3e:ff:0e:52, Hardware address: fa:16:3e:ff:0e:52
+        Last flapped   : 2020-06-22 22:34:01 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 528 bps (0 pps)
+        Input errors: 2, Output errors: 0
+        Active alarms  : None
+        Active defects : None
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/2.0 (Index 72) (SNMP ifIndex 525)
+            Flags: SNMP-Traps 0x4000 Encapsulation: ENET2
+            Input packets : 450
+            Output packets: 465
+            Security: Zone: trust
+            Allowed host-inbound traffic : bfd bgp dvmrp igmp ldp msdp nhrp ospf ospf3
+            pgm pim rip ripng router-discovery rsvp sap vrrp ping
+            Protocol inet, MTU: 1500
+            Flags: Sendbcast-pkt-to-re
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 50.0.0/24, Local: 10.205.0.4, Broadcast: 10.205.0.255
+            Protocol inet6, MTU: 1500
+            Flags: None
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 2001:50::/64, Local: 2001:50::4
+            Addresses, Flags: Is-Preferred
+                Destination: fe80::/64, Local: fe80::fa16:3eff:feff:e52
+
+        Physical interface: ge-0/0/3, Enabled, Physical link is Up
+        Interface index: 136, SNMP ifIndex: 510
+        Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
+        BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled,
+        Remote fault: Online
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: fa:16:3e:ff:12:8e, Hardware address: fa:16:3e:ff:12:8e
+        Last flapped   : 2020-06-22 22:34:01 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 0, Output errors: 0
+        Active alarms  : None
+        Active defects : None
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/3.0 (Index 73) (SNMP ifIndex 526)
+            Flags: SNMP-Traps 0x4000 Encapsulation: ENET2
+            Input packets : 0
+            Output packets: 0
+            Security: Zone: trust
+            Allowed host-inbound traffic : bfd bgp dvmrp igmp ldp msdp nhrp ospf ospf3
+            pgm pim rip ripng router-discovery rsvp sap vrrp ping
+            Protocol inet, MTU: 1500
+            Flags: Sendbcast-pkt-to-re
+            Protocol inet6, MTU: 1500
+            Flags: None
+            Addresses, Flags: Is-Preferred
+                Destination: fe80::/64, Local: fe80::fa16:3eff:feff:128e
+
+        Physical interface: ge-0/0/4, Enabled, Physical link is Up
+        Interface index: 137, SNMP ifIndex: 511
+        Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
+        BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled,
+        Remote fault: Online
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: fa:16:3e:ff:37:bd, Hardware address: fa:16:3e:ff:37:bd
+        Last flapped   : 2020-06-22 22:34:02 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 0, Output errors: 0
+        Active alarms  : None
+        Active defects : None
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/4.0 (Index 74) (SNMP ifIndex 527)
+            Flags: SNMP-Traps 0x4000 Encapsulation: ENET2
+            Input packets : 0
+            Output packets: 0
+            Security: Zone: trust
+            Allowed host-inbound traffic : bfd bgp dvmrp igmp ldp msdp nhrp ospf ospf3
+            pgm pim rip ripng router-discovery rsvp sap vrrp ping
+            Protocol inet, MTU: 1500
+            Flags: Sendbcast-pkt-to-re
+            Protocol inet6, MTU: 1500
+            Flags: None
+            Addresses, Flags: Is-Preferred
+                Destination: fe80::/64, Local: fe80::fa16:3eff:feff:37bd
+
+        Physical interface: ge-0/0/5, Enabled, Physical link is Up
+        Interface index: 138, SNMP ifIndex: 512
+        Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
+        BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled,
+        Remote fault: Online
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: fa:16:3e:ff:38:28, Hardware address: fa:16:3e:ff:38:28
+        Last flapped   : 2020-06-22 22:34:02 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 0, Output errors: 0
+        Active alarms  : None
+        Active defects : None
+        Interface transmit statistics: Disabled
+
+        Physical interface: ge-0/0/6, Enabled, Physical link is Up
+        Interface index: 139, SNMP ifIndex: 513
+        Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
+        BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled,
+        Remote fault: Online
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: fa:16:3e:ff:54:ea, Hardware address: fa:16:3e:ff:54:ea
+        Last flapped   : 2020-06-22 22:34:02 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 0, Output errors: 0
+        Active alarms  : None
+        Active defects : None
+        Interface transmit statistics: Disabled
+
+        Physical interface: ge-0/0/7, Enabled, Physical link is Up
+        Interface index: 140, SNMP ifIndex: 514
+        Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
+        BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled,
+        Remote fault: Online
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: fa:16:3e:ff:05:a1, Hardware address: fa:16:3e:ff:05:a1
+        Last flapped   : 2020-06-22 22:34:02 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 0, Output errors: 0
+        Active alarms  : None
+        Active defects : None
+        Interface transmit statistics: Disabled
+
+        Physical interface: ge-0/0/8, Enabled, Physical link is Up
+        Interface index: 141, SNMP ifIndex: 515
+        Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
+        BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled,
+        Remote fault: Online
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: fa:16:3e:ff:a2:b7, Hardware address: fa:16:3e:ff:a2:b7
+        Last flapped   : 2020-06-22 22:34:02 EST (1w1d 00:22 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 0, Output errors: 0
+        Active alarms  : None
+        Active defects : None
+        Interface transmit statistics: Disabled
+
+        Physical interface: dsc, Enabled, Physical link is Up
+        Interface index: 5, SNMP ifIndex: 5
+        Type: Software-Pseudo, MTU: Unlimited
+        Device flags   : Present Running
+        Interface flags: Point-To-Point SNMP-Traps
+        Link flags     : None
+        Last flapped   : Never
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+            Input packets : 0
+            Output packets: 0
+        Input errors: 0, Output errors: 0
+
+        Physical interface: gre, Enabled, Physical link is Up
+        Interface index: 10, SNMP ifIndex: 8
+        Type: GRE, Link-level type: GRE, MTU: Unlimited, Speed: Unlimited
+        Link flags     : Keepalives DTE
+        Device flags   : Present Running
+        Interface flags: Point-To-Point SNMP-Traps
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: ipip, Enabled, Physical link is Up
+        Interface index: 11, SNMP ifIndex: 9
+        Type: IPIP, Link-level type: IP-over-IP, MTU: Unlimited, Speed: Unlimited
+        Link flags     : Keepalives DTE
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: lo0, Enabled, Physical link is Up
+        Interface index: 6, SNMP ifIndex: 6
+        Type: Loopback, MTU: Unlimited
+        Device flags   : Present Running Loopback
+        Interface flags: SNMP-Traps
+        Link flags     : None
+        Last flapped   : Never
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+            Input packets : 787
+            Output packets: 787
+        Input errors: 0, Output errors: 0
+
+        Logical interface lo0.0 (Index 66) (SNMP ifIndex 16)
+            Flags: SNMP-Traps Encapsulation: Unspecified
+            Input packets : 7
+            Output packets: 7
+            Security: Zone: trust
+            Allowed host-inbound traffic : bfd bgp dvmrp igmp ldp msdp nhrp ospf ospf3
+            pgm pim rip ripng router-discovery rsvp sap vrrp ping
+            Protocol inet, MTU: Unlimited
+            Flags: Sendbcast-pkt-to-re
+            Addresses, Flags: Is-Default Is-Primary
+                Local: 10.64.4.4
+            Protocol inet6, MTU: Unlimited
+            Flags: None
+            Addresses, Flags: Is-Default Is-Primary
+                Local: 2001::4
+                Local: fe80::5e00:400f:fc00:0
+
+        Logical interface lo0.16384 (Index 65) (SNMP ifIndex 21)
+            Flags: SNMP-Traps Encapsulation: Unspecified
+            Input packets : 0
+            Output packets: 0
+            Security: Zone: Null
+            Protocol inet, MTU: Unlimited
+            Flags: None
+            Addresses
+                Local: 127.0.0.1
+
+        Logical interface lo0.16385 (Index 67) (SNMP ifIndex 22)
+            Flags: SNMP-Traps Encapsulation: Unspecified
+            Input packets : 780
+            Output packets: 780
+            Security: Zone: Null
+            Protocol inet, MTU: Unlimited
+            Flags: None
+            Addresses, Flags: Is-Default Is-Primary
+                Local: 10.0.0.1
+            Addresses
+                Local: 10.0.0.16
+            Addresses
+                Local: 172.16.64.1
+            Addresses
+                Local: 172.16.64.4
+            Addresses
+                Local: 172.16.66.16
+
+        Logical interface lo0.32768 (Index 64) (SNMP ifIndex 248)
+            Flags: Encapsulation: Unspecified
+            Input packets : 0
+            Output packets: 0
+            Security: Zone: Null
+
+        Physical interface: lsi, Enabled, Physical link is Up
+        Interface index: 4, SNMP ifIndex: 4
+        Type: Software-Pseudo, Link-level type: LSI, MTU: 1496, Speed: Unlimited
+        Device flags   : Present Running
+        Link flags     : None
+        Last flapped   : Never
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+            Input packets : 0
+            Output packets: 0
+        Input errors: 0, Output errors: 0
+
+        Physical interface: mtun, Enabled, Physical link is Up
+        Interface index: 64, SNMP ifIndex: 12
+        Type: Multicast-GRE, Link-level type: GRE, MTU: Unlimited, Speed: Unlimited
+        Link flags     : Keepalives DTE
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: pimd, Enabled, Physical link is Up
+        Interface index: 26, SNMP ifIndex: 11
+        Type: PIMD, Link-level type: PIM-Decapsulator, MTU: Unlimited,
+        Speed: Unlimited
+        Device flags   : Present Running
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: pime, Enabled, Physical link is Up
+        Interface index: 25, SNMP ifIndex: 10
+        Type: PIME, Link-level type: PIM-Encapsulator, MTU: Unlimited,
+        Speed: Unlimited
+        Device flags   : Present Running
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: pp0, Enabled, Physical link is Up
+        Interface index: 128, SNMP ifIndex: 501
+        Type: PPPoE, Link-level type: PPPoE, MTU: 1532
+        Device flags   : Present Running
+        Interface flags: Point-To-Point SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 0, Output errors: 0
+
+        Physical interface: ppd0, Enabled, Physical link is Up
+        Interface index: 130, SNMP ifIndex: 503
+        Type: PIMD, Link-level type: PIM-Decapsulator, MTU: Unlimited, Speed: 800mbps
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+
+        Physical interface: ppe0, Enabled, Physical link is Up
+        Interface index: 131, SNMP ifIndex: 504
+        Type: PIME, Link-level type: PIM-Encapsulator, MTU: Unlimited, Speed: 800mbps
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+
+        Physical interface: st0, Enabled, Physical link is Up
+        Interface index: 129, SNMP ifIndex: 502
+        Type: Secure-Tunnel, Link-level type: Secure-Tunnel, MTU: 9192
+        Device flags   : Present Running
+        Interface flags: Point-To-Point
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+
+        Physical interface: tap, Enabled, Physical link is Up
+        Interface index: 12, SNMP ifIndex: 7
+        Type: Software-Pseudo, Link-level type: Interface-Specific, MTU: Unlimited,
+        Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link flags     : None
+        Last flapped   : Never
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+            Input packets : 0
+            Output packets: 0
+        Input errors: 0, Output errors: 0
+
+        Physical interface: vlan, Enabled, Physical link is Down
+        Interface index: 132, SNMP ifIndex: 505
+        Type: VLAN, Link-level type: VLAN, MTU: 1518, Speed: 1000mbps
+        Device flags   : Present Running Down
+        Interface flags: Hardware-Down
+        Link type      : Full-Duplex
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: fa:16:3e:ff:a2:b7, Hardware address: fa:16:3e:ff:a2:b7
+        Last flapped   : 2020-06-22 22:29:08 EST (1w1d 00:26 ago)
+        Statistics last cleared: 2020-06-30 22:23:44 EST (00:32:21 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Input errors: 0, Output errors: 0
