@@ -49,10 +49,10 @@ class ShowMPLSLSP(ShowMPLSLSPSchema):
     Note: LSPs marked with * are taking a Secondary Path
                                                                       Admin Oper  Tunnel   Up/Dn Retry Active
     Name                                              To              State State Intf     Times No.   Path
-    mlx8.1_to_ces.2                                   203.62.187.148  UP    UP    tnl0     1     0     --   
-    mlx8.1_to_ces.1                                   203.62.187.87   UP    UP    tnl56    1     0     --   
-    mlx8.1_to_mlx8.2                                  203.62.187.38   UP    UP    tnl63    1     0     --   
-    mlx8.1_to_mlx8.3                                  203.62.187.22   DOWN  DOWN  --       0     0     --
+    mlx8.1_to_ces.2                                   1.1.1.1  UP    UP    tnl0     1     0     --   
+    mlx8.1_to_ces.1                                   2.2.2.2   UP    UP    tnl56    1     0     --   
+    mlx8.1_to_mlx8.2                                  3.3.3.3   UP    UP    tnl63    1     0     --   
+    mlx8.1_to_mlx8.3                                  4.4.4.4   DOWN  DOWN  --       0     0     --
     """
 
     def cli(self, output=None):
