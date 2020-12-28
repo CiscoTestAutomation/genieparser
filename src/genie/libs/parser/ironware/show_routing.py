@@ -7,6 +7,9 @@ Author:
 
 Description:
     Routing based parsers for IronWare devices
+
+Parsers:
+    * show ip route
 """
 
 from genie.metaparser import MetaParser
@@ -117,16 +120,12 @@ class ShowIPRoute(ShowIPRouteSchema):
             if m:
                 ip_dict['total_routes'] = int(m.groupdict()['total'])
 
+            # Will only even match on one as EOL provided in P2
             m = p1.match(line)
             n = p2.match(line)
+            m = m if m else n
 
-            # Will only even match on one as EOL provided in P2
-            if m or n:
-                if m:
-                    m = m
-                if n:
-                    m = n
-
+            if m:
                 network = m.groupdict()['network']
                 cidr = int(m.groupdict()['cidr'])
                 srcvrf = m.groupdict().get('vrf')
