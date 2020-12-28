@@ -1,0 +1,74 @@
+
+    A:admin@COTKON04XR2# show router  isis adjacency detail 
+    ===============================================================================
+    Rtr Base ISIS Instance 0 Adjacency (detail)
+    ===============================================================================
+    Hostname    : GENIE01R07
+    SystemID    : 0691.58ff.79a2                   SNPA        : 00:23:3e:ff:a6:27
+    Interface   : To-GENIE01R07-LAG-7             Up Time     : 58d 03:24:48
+    State       : Up                               Priority    : 0
+    Nbr Sys Typ : L2                               L. Circ Typ : L2
+    Hold Time   : 22                               Max Hold    : 30
+    Adj Level   : L2                               MT Enabled  : No
+    Topology    : Unicast
+    IPv6 Neighbor     : ::
+    IPv4 Neighbor     : 10.11.97.22
+    IPv4 Adj SID      : Label 524213
+    Restart Support   : Disabled
+    Restart Status    : Not currently being helped
+    Restart Supressed : Disabled
+    Number of Restarts: 0
+    Last Restart at   : Never
+    Hostname    : GENIE04XR1
+    SystemID    : 0670.70ff.b258                   SNPA        : 84:26:2b:ff:e9:9e
+    Interface   : To-GENIE04XR1-LAG-4             Up Time     : 36d 23:21:57
+    State       : Up                               Priority    : 0
+    Nbr Sys Typ : L2                               L. Circ Typ : L2
+    Hold Time   : 23                               Max Hold    : 30
+    Adj Level   : L2                               MT Enabled  : No
+    Topology    : Unicast
+    IPv6 Neighbor     : ::
+    IPv4 Neighbor     : 10.11.79.245
+    IPv4 Adj SID      : Label 524127
+    Restart Support   : Disabled
+    Restart Status    : Not currently being helped
+    Restart Supressed : Disabled
+    Number of Restarts: 0
+    Last Restart at   : Never
+    Hostname    : GENIE03R07
+    SystemID    : 0691.58ff.79aa                   SNPA        : 00:23:3e:ff:bc:27
+    Interface   : To-GENIE03R07-LAG-9             Up Time     : 58d 03:24:48
+    State       : Up                               Priority    : 0
+    Nbr Sys Typ : L2                               L. Circ Typ : L2
+    Hold Time   : 22                               Max Hold    : 30
+    Adj Level   : L2                               MT Enabled  : No
+    Topology    : Unicast
+    IPv6 Neighbor     : ::
+    IPv4 Neighbor     : 10.11.79.242
+    IPv4 Adj SID      : Label 524214
+    Restart Support   : Disabled
+    Restart Status    : Not currently being helped
+    Restart Supressed : Disabled
+    Number of Restarts: 0
+    Last Restart at   : Never
+    ===============================================================================
+    Rtr Base ISIS Instance 1 Adjacency (detail)
+    ===============================================================================
+    Hostname    : GENIE01R07
+    SystemID    : 0691.58ff.79a2                   SNPA        : 00:23:3e:ff:a6:27
+    Interface   : To-GENIE01R07-LAG-7             Up Time     : 58d 03:24:48
+    State       : Up                               Priority    : 0
+    Nbr Sys Typ : L2                               L. Circ Typ : L2
+    Hold Time   : 22                               Max Hold    : 30
+    Adj Level   : L2                               MT Enabled  : No
+    Topology    : Unicast
+    IPv6 Neighbor     : ::
+    IPv4 Neighbor     : 10.11.97.22
+    IPv4 Adj SID      : Label 524213
+    Restart Support   : Disabled
+    Restart Status    : Not currently being helped
+    Restart Supressed : Disabled
+    Number of Restarts: 0
+    Last Restart at   : Never
+    []
+    
