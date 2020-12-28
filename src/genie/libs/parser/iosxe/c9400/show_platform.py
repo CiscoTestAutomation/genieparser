@@ -73,12 +73,22 @@ class ShowEnvironment(ShowEnvironmentSchema):
         # initial return dictionary
         ret_dict = {}
 
+        # Number of Critical alarms:  0
         p1 = re.compile(r'^Number +of +Critical +alarms: +(?P<critic_alarms>\d+)$')
 
+        # Number of Major alarms:     0
         p2 = re.compile(r'^Number +of +Major +alarms: +(?P<maj_alarms>\d+)$')
 
+        # Number of Minor alarms:     0
         p3 = re.compile(r'^Number +of +Minor +alarms: +(?P<min_alarms>\d+)$')
 
+        # Slot        Sensor          Current State   Reading        Threshold(Minor,Major,Critical,Shutdown)
+        # ----------  --------------  --------------- ------------   ---------------------------------------
+        # R0          Temp: Coretemp  Normal          47   Celsius	(107,117,123,125)(Celsius)
+        # R0          V1: VX1         Normal          871  mV     	na
+        # R0          HotSwap: Volts  Normal          53   V DC   	na
+        # R0          Temp:   outlet  Normal          39   Celsius	(63 ,73 ,103,105)(Celsius)
+        # R0          Temp:    inlet  Normal          32   Celsius	(56 ,66 ,96 ,98 )(Celsius)
         p4 = re.compile(r'(?P<slot>\S+)\s+(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+(\s+)?),(?P<major>\d+(\s+)?),(?P<critical>\d+(\s+)?),(?P<shutdown>\d+(\s+)?)\)\((?P<unit>\S+)\))?')
 
         for line in out.splitlines():
@@ -207,10 +217,13 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         # initial return dictionary
         ret_dict = {}
 
+        # Number of Critical alarms:  0
         p1 = re.compile(r'^Number +of +Critical +alarms: +(?P<critic_alarms>\d+)$')
 
+        # Number of Major alarms:     0
         p2 = re.compile(r'^Number +of +Major +alarms: +(?P<maj_alarms>\d+)$')
 
+        # Number of Minor alarms:     0
         p3 = re.compile(r'^Number +of +Minor +alarms: +(?P<min_alarms>\d+)$')
 
         # Sensor List:  Environmental Monitoring
