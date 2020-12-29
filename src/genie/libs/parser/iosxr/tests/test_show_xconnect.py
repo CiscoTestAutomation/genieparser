@@ -11,6 +11,7 @@ from genie.libs.parser.iosxr.show_xconnect import (ShowL2vpnXconnect,
                                                    ShowL2VpnXconnectBrief,
                                                    ShowL2vpnXconnectMp2mpDetail)
 
+
 # ==========================================
 #  Unit test for 'show l2vpn xconnect brief'
 # ==========================================
@@ -21,44 +22,59 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'atom': 
-            {'like_to_like': 
-                {'efp': 
-                    {'down': 0,
+        'atom': {
+            'like_to_like': {
+                'efp': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 10},
-                'total': 
-                    {'down': 0,
+                    'up': 10
+                },
+                'total': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 10}},
-            'total':
-                {'down': 0,
+                    'up': 10
+                }
+            },
+            'total': {
+                'down': 0,
                 'unr': 0,
-                'up': 10}},
-        'locally_switching': 
-            {'like_to_like': 
-                {'efp': 
-                    {'down': 0,
+                'up': 10
+            }
+        },
+        'locally_switching': {
+            'like_to_like': {
+                'efp': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 3},
-                'efp_invalid_ac':
-                    {'down': 0,
+                    'up': 3
+                },
+                'efp_invalid_ac': {
+                    'down': 0,
                     'unr': 1,
-                    'up': 0},
-                'invalid_ac': 
-                    {'down': 0,
+                    'up': 0
+                },
+                'invalid_ac': {
+                    'down': 0,
                     'unr': 1,
-                    'up': 0},
-                'total': 
-                    {'down': 0,
+                    'up': 0
+                },
+                'total': {
+                    'down': 0,
                     'unr': 2,
-                    'up': 3}},
-            'total':
-                {'down': 0,
+                    'up': 3
+                }
+            },
+            'total': {
+                'down': 0,
                 'unr': 2,
-                'up': 3}}}
+                'up': 3
+            }
+        }
+    }
 
-    golden_output1 = {'execute.return_value': '''
+    golden_output1 = {
+        'execute.return_value':
+        '''
         RP/0/RP0/CPU0:ios# show l2vpn xconnect brief 
         Mon Sep 19 10:52:27.818 UTC
         Locally Switching
@@ -76,39 +92,53 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
             Total                             10          0          0
 
           Total                               10          0          0
-        '''}
+        '''
+    }
 
     golden_parsed_output2 = {
-        'atom': 
-            {'like_to_like': 
-                {'efp': 
-                    {'down': 0,
+        'atom': {
+            'like_to_like': {
+                'efp': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 32},
-                'total': 
-                    {'down': 0,
+                    'up': 32
+                },
+                'total': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 32}},
-            'total': 
-                {'down': 0,
+                    'up': 32
+                }
+            },
+            'total': {
+                'down': 0,
                 'unr': 0,
-                'up': 32}},
-        'locally_switching': 
-            {'like_to_like': 
-                {'ether': 
-                    {'down': 0,
+                'up': 32
+            }
+        },
+        'locally_switching': {
+            'like_to_like': {
+                'ether': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 1},
-                'total':
-                    {'down': 0,
+                    'up': 1
+                },
+                'total': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 1}},
-            'total':
-                {'down': 0,
+                    'up': 1
+                }
+            },
+            'total': {
+                'down': 0,
                 'unr': 0,
-                'up': 1}}}
+                'up': 1
+            }
+        }
+    }
 
-    golden_output2 = {'execute.return_value': '''
+    golden_output2 = {
+        'execute.return_value':
+        '''
         RP/0/RP0/CPU0:SIT-540#show l2vpn xconnect brief 
         Sat Aug  4 14:48:34.079 IST
         Locally Switching
@@ -124,20 +154,20 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
             Total                             32          0          0
 
           Total                               32          0          0
-        '''}
+        '''
+    }
 
-    golden_parsed_output3 = {
-        'total': 
-            {'down': 0,
-            'unr': 0,
-            'up': 0}}
+    golden_parsed_output3 = {'total': {'down': 0, 'unr': 0, 'up': 0}}
 
-    golden_output3 = {'execute.return_value': '''
+    golden_output3 = {
+        'execute.return_value':
+        '''
         [2019-10-08 09:30:35,071] +++ R2_xr: executing command 'show l2vpn xconnect brief' +++
         show l2vpn xconnect brief
         Tue Oct  8 16:30:05.044 UTC
         Total: 0 UP, 0 DOWN, 0 UNRESOLVED
-        '''}
+        '''
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -150,7 +180,7 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
         obj = ShowL2VpnXconnectBrief(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-    
+
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowL2VpnXconnectBrief(device=self.device)
@@ -348,7 +378,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
     ----------------------------------------------------------------------------------------
 
         '''}
-    
+
     golden_parsed_output4 = {
         'groups': {
             'genie_wqst': {
@@ -576,7 +606,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
-    
+
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
@@ -590,21 +620,21 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
-    
+
     def test_golden4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
-    
+
     def test_golden5(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output5)
-    
+
     def test_golden6(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output6)
@@ -1118,20 +1148,14 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         '''}
 
     golden_parsed_output3 = {
-        'group':
-        {
-            'CLIENT':
-            {
-                'xc':
-                {
-                    'C1':
-                    {
+        'group': {
+            'CLIENT': {
+                'xc': {
+                    'C1': {
                         'state': 'up',
                         'interworking': 'none',
-                        'ac':
-                        {
-                            'GigabitEthernet200/0/0/1.3109':
-                            {
+                        'ac': {
+                            'GigabitEthernet200/0/0/1.3109': {
                                 'state': 'up, active in RG-ID 10',
                                 'type': 'VLAN',
                                 'num_ranges': 1,
@@ -1140,36 +1164,27 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                 'mtu': 1500,
                                 'xc_id': '0x120000e',
                                 'interworking': 'none',
-                                'statistics':
-                                {
-                                    'packet_totals':
-                                    {
+                                'statistics': {
+                                    'packet_totals': {
                                         'receive': 3711214,
                                         'send': 3707556
                                     },
-                                    'byte_totals':
-                                    {
+                                    'byte_totals': {
                                         'receive': 566159136,
                                         'send': 793161693
                                     },
-                                    'drops':
-                                    {
+                                    'drops': {
                                         'illegal_vlan': 0,
                                         'illegal_length': 0
                                     }
                                 }
                             }
                         },
-                        'pw':
-                        {
-                            'neighbor':
-                            {
-                                '192.168.1.1':
-                                {
-                                    'id':
-                                    {
-                                        1384496:
-                                        {
+                        'pw': {
+                            'neighbor': {
+                                '192.168.1.1': {
+                                    'id': {
+                                        1384496: {
                                             'state': 'up ( established )',
                                             'pw_class': 'not set',
                                             'xc_id': '0xa0000003',
@@ -1183,47 +1198,38 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                             'sequencing': 'not set',
                                             'lsp': 'Up',
                                             'status_tlv': 'not set',
-                                            'mpls':
-                                            {
-                                                'label':
-                                                {
+                                            'mpls': {
+                                                'label': {
                                                     'local': '24047',
                                                     'remote': '1784'
                                                 },
-                                                'group_id':
-                                                {
+                                                'group_id': {
                                                     'local': '0x4002580',
                                                     'remote': '0x7'
                                                 },
-                                                'interface':
-                                                {
+                                                'interface': {
                                                     'local': 'GigabitEthernet200/0/0/1.3109',
                                                     'remote': 'C1'
                                                 },
-                                                'mtu':
-                                                {
+                                                'mtu': {
                                                     'local': '1500',
                                                     'remote': '1500'
                                                 },
-                                                'control_word':
-                                                {
+                                                'control_word': {
                                                     'local': 'disabled',
                                                     'remote': 'disabled'
                                                 },
-                                                'pw_type':
-                                                {
+                                                'pw_type': {
                                                     'local': 'Ethernet',
                                                     'remote': 'Ethernet'
                                                 },
-                                                'vccv_cv_type':
-                                                {
+                                                'vccv_cv_type': {
                                                     'local': '0x2',
                                                     'remote': '0x2',
                                                     'local_type': ['LSP ping verification'],
                                                     'remote_type': ['LSP ping verification']
                                                 },
-                                                'vccv_cc_type':
-                                                {
+                                                'vccv_cc_type': {
                                                     'local': '0x6',
                                                     'remote': '0x2',
                                                     'local_type': ['router alert label', 'TTL expiry'],
@@ -1232,15 +1238,12 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                             },
                                             'create_time': '08/12/2020 01:02:44 (2w0d ago)',
                                             'last_time_status_changed': '12/12/2020 14:05:44 (1w3d ago)',
-                                            'statistics':
-                                            {
-                                                'packet_totals':
-                                                {
+                                            'statistics': {
+                                                'packet_totals': {
                                                     'receive': 3707556,
                                                     'send': 3711214
                                                 },
-                                                'byte_totals':
-                                                {
+                                                'byte_totals': {
                                                     'receive': 793161693,
                                                     'send': 566159136
                                                 }
@@ -1251,14 +1254,11 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                             }
                         }
                     },
-                    'C2':
-                    {
+                    'C2': {
                         'state': 'up',
                         'interworking': 'none',
-                        'ac':
-                        {
-                            'GigabitEthernet100/0/0/5.3100':
-                            {
+                        'ac': {
+                            'GigabitEthernet100/0/0/5.3100': {
                                 'state': 'up, active in RG-ID 10',
                                 'type': 'VLAN',
                                 'num_ranges': 1,
@@ -1267,36 +1267,27 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                 'mtu': 9198,
                                 'xc_id': '0x1200008',
                                 'interworking': 'none',
-                                'statistics':
-                                {
-                                    'packet_totals':
-                                    {
+                                'statistics': {
+                                    'packet_totals': {
                                         'receive': 0,
                                         'send': 225798
                                     },
-                                    'byte_totals':
-                                    {
+                                    'byte_totals': {
                                         'receive': 0,
                                         'send': 13547880
                                     },
-                                    'drops':
-                                    {
+                                    'drops': {
                                         'illegal_vlan': 0,
                                         'illegal_length': 0
                                     }
                                 }
                             }
                         },
-                        'pw':
-                        {
-                            'neighbor':
-                            {
-                                '192.168.0.51':
-                                {
-                                    'id':
-                                    {
-                                        1542017:
-                                        {
+                        'pw': {
+                            'neighbor': {
+                                '192.168.0.51': {
+                                    'id': {
+                                        1542017: {
                                             'state': 'up ( established )',
                                             'pw_class': 'not set',
                                             'xc_id': '0xa0000005',
@@ -1310,47 +1301,38 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                             'sequencing': 'not set',
                                             'lsp': 'Up',
                                             'status_tlv': 'not set',
-                                            'mpls':
-                                            {
-                                                'label':
-                                                {
+                                            'mpls': {
+                                                'label': {
                                                     'local': '24043',
                                                     'remote': '26256'
                                                 },
-                                                'group_id':
-                                                {
+                                                'group_id': {
                                                     'local': '0x4001980',
                                                     'remote': '0x4002b40'
                                                 },
-                                                'monitor_interface':
-                                                {
+                                                'monitor_interface': {
                                                     'local': 'GigabitEthernet100/0/0/5.3100',
                                                     'remote': 'GigabitEthernet300/0/0/23.571'
                                                 },
-                                                'mtu':
-                                                {
+                                                'mtu': {
                                                     'local': '9198',
                                                     'remote': '9198'
                                                 },
-                                                'control_word':
-                                                {
+                                                'control_word': {
                                                     'local': 'disabled',
                                                     'remote': 'disabled'
                                                 },
-                                                'pw_type':
-                                                {
+                                                'pw_type': {
                                                     'local': 'Ethernet',
                                                     'remote': 'Ethernet'
                                                 },
-                                                'vccv_cv_type':
-                                                {
+                                                'vccv_cv_type': {
                                                     'local': '0x2',
                                                     'remote': '0x2',
                                                     'local_type': ['LSP ping verification'],
                                                     'remote_type': ['LSP ping verification']
                                                 },
-                                                'vccv_cc_type':
-                                                {
+                                                'vccv_cc_type': {
                                                     'local': '0x6',
                                                     'remote': '0x6',
                                                     'local_type': ['router alert label', 'TTL expiry'],
@@ -1359,15 +1341,12 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                             },
                                             'create_time': '08/12/2020 01:02:44 (2w0d ago)',
                                             'last_time_status_changed': '11/12/2020 12:45:30 (1w4d ago)',
-                                            'statistics':
-                                            {
-                                                'packet_totals':
-                                                {
+                                            'statistics': {
+                                                'packet_totals': {
                                                     'receive': 225798,
                                                     'send': 0
                                                 },
-                                                'byte_totals':
-                                                {
+                                                'byte_totals': {
                                                     'receive': 13547880,
                                                     'send': 0
                                                 }
@@ -1377,16 +1356,11 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                 }
                             }
                         },
-                        'backup_pw':
-                        {
-                            'neighbor':
-                            {
-                                '192.168.0.52':
-                                {
-                                    'id':
-                                    {
-                                        1542017:
-                                        {
+                        'backup_pw': {
+                            'neighbor': {
+                                '192.168.0.52': {
+                                    'id': {
+                                        1542017: {
                                             'state': 'standby ( all ready )',
                                             'pw_class': 'not set',
                                             'xc_id': '0xa0000007',
@@ -1399,47 +1373,38 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                             'sequencing': 'not set',
                                             'lsp': 'Up',
                                             'status_tlv': 'not set',
-                                            'mpls':
-                                            {
-                                                'label':
-                                                {
+                                            'mpls': {
+                                                'label': {
                                                     'local': '24044',
                                                     'remote': '25981'
                                                 },
-                                                'group_id':
-                                                {
+                                                'group_id': {
                                                     'local': '0x4001980',
                                                     'remote': '0x4002b00'
                                                 },
-                                                'interface':
-                                                {
+                                                'interface': {
                                                     'local': 'GigabitEthernet100/0/0/5.3100',
                                                     'remote': 'GigabitEthernet300/0/0/23.571'
                                                 },
-                                                'mtu':
-                                                {
+                                                'mtu': {
                                                     'local': '9198',
                                                     'remote': '9198'
                                                 },
-                                                'control_word':
-                                                {
+                                                'control_word': {
                                                     'local': 'disabled',
                                                     'remote': 'disabled'
                                                 },
-                                                'pw_type':
-                                                {
+                                                'pw_type': {
                                                     'local': 'Ethernet',
                                                     'remote': 'Ethernet'
                                                 },
-                                                'vccv_cv_type':
-                                                {
+                                                'vccv_cv_type': {
                                                     'local': '0x2',
                                                     'remote': '0x2',
                                                     'local_type': ['LSP ping verification'],
                                                     'remote_type': ['LSP ping verification']
                                                 },
-                                                'vccv_cc_type':
-                                                {
+                                                'vccv_cc_type': {
                                                     'local': '0x6',
                                                     'remote': '0x6',
                                                     'local_type': ['router alert label', 'TTL expiry'],
@@ -1454,14 +1419,11 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                             }
                         }
                     },
-                    'C3':
-                    {
+                    'C3': {
                         'state': 'up',
                         'interworking': 'none',
-                        'ac':
-                        {
-                            'GigabitEthernet100/0/0/6.3100':
-                            {
+                        'ac': {
+                            'GigabitEthernet100/0/0/6.3100': {
                                 'state': 'up, active in RG-ID 10',
                                 'type': 'VLAN',
                                 'num_ranges': 1,
@@ -1470,36 +1432,27 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                 'mtu': 9198,
                                 'xc_id': '0x120000a',
                                 'interworking': 'none',
-                                'statistics':
-                                {
-                                    'packet_totals':
-                                    {
+                                'statistics': {
+                                    'packet_totals': {
                                         'receive': 50709266,
                                         'send': 81925195
                                     },
-                                    'byte_totals':
-                                    {
+                                    'byte_totals': {
                                         'receive': 20472200681,
                                         'send': 29487822535
                                     },
-                                    'drops':
-                                    {
+                                    'drops': {
                                         'illegal_vlan': 0,
                                         'illegal_length': 0
                                     }
                                 }
                             }
                         },
-                        'pw':
-                        {
-                            'neighbor':
-                            {
-                                '192.168.0.51':
-                                {
-                                    'id':
-                                    {
-                                        1542550:
-                                        {
+                        'pw': {
+                            'neighbor': {
+                                '192.168.0.51': {
+                                    'id': {
+                                        1542550: {
                                             'state': 'up ( established )',
                                             'pw_class': 'not set',
                                             'xc_id': '0xa0000009',
@@ -1513,47 +1466,38 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                             'sequencing': 'not set',
                                             'lsp': 'Up',
                                             'status_tlv': 'not set',
-                                            'mpls':
-                                            {
-                                                'label':
-                                                {
+                                            'mpls': {
+                                                'label': {
                                                     'local': '24045',
                                                     'remote': '24029'
                                                 },
-                                                'group_id':
-                                                {
+                                                'group_id': {
                                                     'local': '0x4001940',
                                                     'remote': '0x4000180'
                                                 },
-                                                'monitor_interface':
-                                                {
+                                                'monitor_interface': {
                                                     'local': 'GigabitEthernet100/0/0/6.3100',
                                                     'remote': 'TenGigE0/0/0/3.214'
                                                 },
-                                                'mtu':
-                                                {
+                                                'mtu': {
                                                     'local': '9198',
                                                     'remote': '9198'
                                                 },
-                                                'control_word':
-                                                {
+                                                'control_word': {
                                                     'local': 'disabled',
                                                     'remote': 'disabled'
                                                 },
-                                                'pw_type':
-                                                {
+                                                'pw_type': {
                                                     'local': 'Ethernet',
                                                     'remote': 'Ethernet'
                                                 },
-                                                'vccv_cv_type':
-                                                {
+                                                'vccv_cv_type': {
                                                     'local': '0x2',
                                                     'remote': '0x2',
                                                     'local_type': ['LSP ping verification'],
                                                     'remote_type': ['LSP ping verification']
                                                 },
-                                                'vccv_cc_type':
-                                                {
+                                                'vccv_cc_type': {
                                                     'local': '0x6',
                                                     'remote': '0x6',
                                                     'local_type': ['router alert label', 'TTL expiry'],
@@ -1562,15 +1506,12 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
                                             },
                                             'create_time': '08/12/2020 01:02:44 (2w0d ago)',
                                             'last_time_status_changed': '08/12/2020 01:12:15 (2w0d ago)',
-                                            'statistics':
-                                            {
-                                                'packet_totals':
-                                                {
+                                            'statistics': {
+                                                'packet_totals': {
                                                     'receive': 81925195,
                                                     'send': 50709266
                                                 },
-                                                'byte_totals':
-                                                {
+                                                'byte_totals': {
                                                     'receive': 29487822535,
                                                     'send': 20472200681
                                                 }
@@ -1586,7 +1527,9 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         }
     }
 
-    golden_output3= {'execute.return_value': '''
+    golden_output3 = {
+        'execute.return_value':
+        '''
     show l2vpn xconnect detail
     Tue Dec 22 16:40:24.524 AST
 
@@ -1761,7 +1704,8 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         Statistics:
         packets: received 81925195, sent 50709266
         bytes: received 29487822535, sent 20472200681
-    '''}
+    '''
+    }
 
 
     def test_empty(self):
