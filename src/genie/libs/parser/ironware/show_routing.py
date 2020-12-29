@@ -16,6 +16,8 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
 import re
 
+__author__ = 'James Di Trapani <james@ditrapani.com.au>'
+
 # ======================================================
 # Schema for 'show ip route'
 # ======================================================
