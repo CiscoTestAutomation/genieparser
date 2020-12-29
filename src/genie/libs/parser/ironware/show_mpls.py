@@ -17,6 +17,8 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Or, Optional
 import re
 
+__author__ = 'James Di Trapani <james@ditrapani.com.au>'
+
 # ======================================================
 # Schema for 'show mpls lsp wide'
 # ======================================================
@@ -132,7 +134,7 @@ class ShowMPLSVLLSchema(MetaParser):
                     'remote_label': Or(int, str),
                     'local_group_id': Or(int, str),
                     'remote_group_id': Or(int, str),
-                    'tunnel_lsp': {
+                    Optional('tunnel_lsp'): {
                         'name': str,
                         Optional('tunnel_interface'): str
                     },
@@ -222,8 +224,9 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
         p10 = re.compile(r'(^Vll-Peer\s+:\s+(?P<ip>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$))')
 
         # State          : UP
+        # State          : DOWN - PW is Down (Reason:Wait for peer label)
         # For all states see page 550 in reference material
-        p11 = re.compile(r'(^State\s+:\s+(?P<state>UP|DOWN)(\s+[^\(]+\(Reason:(?P<reason>[^\)]+)\)$|$))')
+        p11 = re.compile(r'(^State\s+:\s+(?P<state>UP|DOWN)(\s-\s(?P<reason>\w.+$)|$))')
 
         # Remote VC type : tag               Remote VC MTU  : 9190
         p12 = re.compile(r'(^Remote VC type\s+:\s+(?P<vctype>tag|raw-pass-through|--)\s+Remote VC MTU\s+:\s+(?P<mtu>\d+$|--$))')
