@@ -11,6 +11,7 @@ Description:
 Parsers:
     * show mpls lsp
     * show mpls vll <vll>
+    * show mpls vll-local <vll>
 """
 
 from genie.metaparser import MetaParser
@@ -120,6 +121,8 @@ class ShowMPLSVLLSchema(MetaParser):
                     'type': str,
                     'interface': str,
                     Optional('vlan_id'): int,
+                    Optional('inner_vlan_id'): int,
+                    Optional('outer_vlan_id'): int,
                     'state': str,
                     Optional('mct_state'): str,
                     Optional('ifl_id'): str,
@@ -194,14 +197,24 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
 
         result_dict = {}
 
+        interface_def = {
+            'e': 'ethernet',
+            'ethernet': 'ethernet'
+        }
+
         # VLL VLL-TEST1, VC-ID 2456, VLL-INDEX 2
-        p0 = re.compile(r'(^VLL\s+(?P<name>[^,]+),+\s+VC-ID\s+(?P<vcid>[^,]+),'
+        p0 = re.compile(r'(^(VLL|vll|Vll)\s+(?P<name>[^,]+),+\s+VC-ID\s+'
+                        r'(?P<vcid>[^,]+),'
                         r'\s+VLL-INDEX\s+(?P<vllindex>\d+$))')
 
-        # End-point        : tagged  vlan 3043  e 2/5
-        p1 = re.compile(r'(^End-point\s+:\s+(?P<type>tagged|untagged)(\s+vlan'
-                        r'\s+(?P<vid>\d+)|)\s+e\s+'
-                        r'(?P<interface>\d{1,3}\/\d{1,3}))')
+        # End-point: tagged vlan 2501 e 2/10
+        # End-point: untagged e 2/2
+        # End-point: tagged vlan 100 inner-vlan 45 e 2/1
+        p1 = re.compile(r'(^End-point\s+:\s+'
+                        r'(?P<type>tagged|untagged|undefined)'
+                        r'(\s+vlan\s+(?P<vid>\d+)|)(\s+inner-vlan\s+'
+                        r'(?P<innerid>\d+)|)\s+(?P<interface_name>\w+)\s+'
+                        r'(?P<interface>\d+\/\d+$))')
 
         # End-Point state  : Up
         p2 = re.compile(r'(^End-Point state\s+:\s+(?P<state>Up|Down))')
@@ -279,14 +292,24 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
             if m:
                 tag_type = m.groupdict()['type']
 
+                interface_num = m.groupdict()['interface']
+                interface_name = m.groupdict()['interface_name']
+                expand_interface = interface_def.get(interface_name)
+
                 vll_dict['local'] = {
                     'type': tag_type,
-                    'interface': 'ethernet {0}'.format(
-                        m.groupdict()['interface'])
+                    'interface': expand_interface + interface_num
                 }
 
-                if tag_type == 'tagged':
-                    vll_dict['local']['vlan_id'] = int(m.groupdict()['vid'])
+                if tag_type.lower() == 'tagged':
+                    vlan_id = int(m.groupdict()['vid'])
+                    inner_vlan = m.groupdict().get('innerid')
+                    if inner_vlan is not None:
+                        vll_dict['local']['outer_vlan_id'] = vlan_id
+                        vll_dict['local']['inner_vlan_id'] = int(inner_vlan)
+                    else:
+                        vll_dict['local']['vlan_id'] = vlan_id
+
                 continue
 
             m = p2.match(line)
@@ -421,6 +444,182 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
             m = p16.match(line)
             if m:
                 vll_dict['peer']['lsps_assigned'] = m.groupdict()['lsps']
+                continue
+
+        return result_dict
+
+
+# ======================================================
+# Schema for 'show mpls vll-local {vll}'
+# ======================================================
+class ShowMPLSVLLLocalSchema(MetaParser):
+    """Schema for show mpls vll {vll}"""
+    schema = {
+        'vll': {
+            Any(): {
+                'vll_id': int,
+                'ifl_id': str,
+                'state': str,
+                Optional('reason'): str,
+                'endpoint_1': {
+                    'type': str,
+                    Optional('vlan_id'): int,
+                    'interface': str,
+                    Optional('outer_vlan_id'): int,
+                    Optional('inner_vlan_id'): int,
+                    'cos': Or(int, str)
+                },
+                'endpoint_2': {
+                    'type': str,
+                    Optional('vlan_id'): int,
+                    'interface': str,
+                    Optional('outer_vlan_id'): int,
+                    Optional('inner_vlan_id'): int,
+                    'cos': Or(int, str)
+                },
+                Optional('extended_counters'): bool,
+                Optional('counters'): bool
+            }
+        }
+    }
+
+
+# ====================================================
+#  parser for 'show mpls vll-local {vll}'
+# ====================================================
+class ShowMPLSVLLLocal(ShowMPLSVLLLocalSchema):
+    """
+    Parser for show mpls vll-local {vll} on Devices running IronWare
+
+    Reference Documenation -
+        * https://resources.ditrapani.com.au/#!index.md#Vendor_Documentation
+
+    """
+    cli_command = 'show mpls vll-local {vll}'
+
+    """
+    VLL test-1 VLL-ID 1 IFL-ID --
+        State: UP
+        End-point 1: untagged e 2/2
+        COS: --
+        End-point 2: untagged e 2/13
+        COS: --
+        Extended Counters: Enabled
+    """
+
+    def cli(self, vll, output=None):
+        if output is None:
+            command = self.cli_command.format(vll=vll)
+            out = self.device.execute(command)
+        else:
+            out = output
+
+        result_dict = {}
+
+        interface_def = {
+            'e': 'ethernet'
+        }
+
+        # Vll test-4 VLL-ID 4 IFL-ID 4096
+        p0 = re.compile(r'(^(VLL|vll|Vll)\s+(?P<name>[^\s]+)\s+VLL-ID\s+'
+                        r'(?P<vllid>\d+)\s+IFL-ID\s+(?P<iflid>--$|\d+$))')
+
+        # State: UP
+        p1 = re.compile(r'(^State:\s+(?P<state>UP|DOWN)(\s+-\s+'
+                        r'(?P<reason>configuration incomplete|'
+                        r'endpoint port is down)|$))')
+
+        # End-point 1: tagged vlan 2501 e 2/10
+        # End-point 1: untagged e 2/2
+        # End-point 1: tagged vlan 100 inner-vlan 45 e 2/1
+        p2 = re.compile(r'(^End-point (?P<endpoint>1|2):\s+'
+                        r'(?P<type>tagged|untagged|undefined)'
+                        r'(\s+vlan\s+(?P<vid>\d+)|)(\s+inner-vlan\s+'
+                        r'(?P<innerid>\d+)|)\s+(?P<interface_name>\w+)\s+'
+                        r'(?P<interface>\d+\/\d+$))')
+
+        # COS: 6
+        p3 = re.compile(r'(^COS:\s+(?P<cos>--$|\d+$))')
+
+        # Extended Counters: Enabled
+        p4 = re.compile(r'(^Extended Counters:\s+'
+                        r'(?P<extcounters>[e|E]nabled|[d|D]isabled)$)')
+
+        # Counter          : disabled
+        p5 = re.compile(r'(^Counter\s+:\s+'
+                        r'(?P<counter>[e|E]nabled|[d|D]isabled)$)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p0.match(line)
+            if m:
+                vll_dict = result_dict.setdefault('vll', {}).setdefault(vll, {
+                    'vll_id': int(m.groupdict()['vllid']),
+                    'ifl_id': m.groupdict()['iflid']
+                })
+                continue
+
+            m = p1.match(line)
+            if m:
+                state = m.groupdict()['state']
+                vll_dict['state'] = state
+
+                if state.lower() == 'down':
+                    vll_dict['reason'] = m.groupdict().get('reason') if \
+                            m.groupdict()['state'] is not None else 'Unknown'
+                continue
+
+            m = p2.match(line)
+            if m:
+                port_type = m.groupdict()['type']
+                endpoint_num = m.groupdict()['endpoint']
+
+                endpoint = {
+                    'type': port_type
+                }
+
+                if port_type.lower() == 'tagged':
+                    inner_vlan = m.groupdict().get('innerid')
+                    if inner_vlan is not None:
+                        endpoint['outer_vlan_id'] = int(m.groupdict()['vid'])
+                        endpoint['inner_vlan_id'] = int(inner_vlan)
+                    else:
+                        endpoint['vlan_id'] = int(m.groupdict()['vid'])
+
+                interface_num = m.groupdict()['interface']
+                interface_name = m.groupdict()['interface_name']
+                expand_interface = interface_def.get(interface_name)
+
+                endpoint['interface'] = expand_interface + interface_num
+
+                vll_dict['endpoint_{0}'.format(endpoint_num)] = endpoint
+                continue
+
+            m = p3.match(line)
+            if m:
+                cos = m.groupdict()['cos']
+                cos = int(cos) if cos != '--' else cos
+
+                # Check if COS exists in endpoint_1
+                if vll_dict['endpoint_1'].get('cos') is not None:
+                    vll_dict['endpoint_2']['cos'] = cos
+                else:
+                    vll_dict['endpoint_1']['cos'] = cos
+                continue
+
+            m = p4.match(line)
+            if m:
+                extcounters = m.groupdict()['extcounters']
+                vll_dict['extended_counters'] = True if \
+                    extcounters.lower() == 'enabled' else False
+                continue
+
+            m = p5.match(line)
+            if m:
+                counters = m.groupdict()['counter']
+                vll_dict['counters'] = True if \
+                    counters.lower() == 'enabled' else False
                 continue
 
         return result_dict
