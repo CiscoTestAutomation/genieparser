@@ -1,0 +1,16 @@
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* IOSXR
+    * pep8 formatting for show_evn.py
+    * ShowEvpnEviDetail
+      * fix output reference to 'out'
+    * ShowEvpnEthernetSegment
+     * update p1 pattern to avoid incorrect matches
+     * comment out p36
+     * added interface_dict initial value
+     * comment out p45 unused matches for nexthop and nexthopinfo
+     * add initial value for checkpoint_info_dict in p45 match
+     * add initial value for evpn_vpws_service_carving_results_dict in several match sections
+
+
