@@ -2867,7 +2867,6 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
     '''}
 
     golden_output3 = {'execute.return_value': '''
-        RP/0/RP0/CPU0:LISW21#show evpn ethernet-segment detail
         Mon Jan  4 10:56:40.197 JST
         Legend:
         B   - No Forwarders EVPN-enabled,
