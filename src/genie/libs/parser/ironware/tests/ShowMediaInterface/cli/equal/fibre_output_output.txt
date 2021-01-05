@@ -1,0 +1,3 @@
+Type  : SFP (LX-1310nm)
+Vendor:          FIBERSTORE      , Version:
+Part# :          SFP-1G31-10     , Serial#:     J05090123163

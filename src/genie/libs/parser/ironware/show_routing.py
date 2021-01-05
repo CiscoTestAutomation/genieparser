@@ -10,6 +10,7 @@ Description:
 
 Parsers:
     * show ip route
+    * show ip route summary
 """
 
 from genie.metaparser import MetaParser
@@ -139,6 +140,8 @@ STATIC Codes - d:DHCPv6
                 network = m.groupdict()['network']
                 cidr = int(m.groupdict()['cidr'])
                 srcvrf = m.groupdict().get('vrf')
+                if srcvrf is None:
+                    srcvrf = 'Unknown'
 
                 if 'routes' not in ip_dict:
                     result_dict = ip_dict.setdefault('routes', {})
@@ -152,7 +155,7 @@ STATIC Codes - d:DHCPv6
                           'cost': m.groupdict()['cost'],
                           'type': m.groupdict()['type'],
                           'uptime': m.groupdict()['uptime'],
-                          'src-vrf': srcvrf if srcvrf is not None else 'Unknown'
+                          'src-vrf': srcvrf
                       }
                   }
                 }
@@ -174,3 +177,131 @@ STATIC Codes - d:DHCPv6
                 continue
 
         return ip_dict
+
+
+# ======================================================
+# Schema for 'show ip route summary'
+# ======================================================
+class ShowIPRouteSummarySchema(MetaParser):
+    """Schema for show ip route summary"""
+    schema = {
+        'total': int,
+        'protocols': {
+            'connected': int,
+            'static': int,
+            'rip': int,
+            'ospf': int,
+            'bgp': int,
+            'isis': int
+        },
+        'cidrs': {
+            Optional(32): int,
+            Optional(31): int,
+            Optional(30): int,
+            Optional(29): int,
+            Optional(28): int,
+            Optional(27): int,
+            Optional(26): int,
+            Optional(25): int,
+            Optional(24): int,
+            Optional(23): int,
+            Optional(22): int,
+            Optional(21): int,
+            Optional(20): int,
+            Optional(19): int,
+            Optional(18): int,
+            Optional(17): int,
+            Optional(16): int,
+            Optional(15): int,
+            Optional(14): int,
+            Optional(13): int,
+            Optional(12): int,
+            Optional(11): int,
+            Optional(10): int,
+            Optional(9): int,
+            Optional(8): int,
+            Optional(7): int,
+            Optional(6): int,
+            Optional(5): int,
+            Optional(4): int,
+            Optional(3): int,
+            Optional(2): int,
+            Optional(1): int
+        }
+    }
+
+
+# ====================================================
+#  parser for 'show ip route summary'
+# ====================================================
+class ShowIPRouteSummary(ShowIPRouteSummarySchema):
+    """
+    Parser for Show IP Route Summary on Devices running IronWare
+    """
+    cli_command = 'show ip route summary'
+
+    """
+    IP Routing Table - 449 entries
+    3 connected, 0 static, 0 RIP, 446 OSPF, 0 BGP, 0 ISIS
+    Number of prefixes:
+    /24: 1 /26: 2 /27: 3 /28: 5 /29: 1 /30: 34 /31: 242 /32: 161
+    Nexthop Table Entry - 5 entries
+    """
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        route_dict = {}
+
+        result_dict = {}
+
+        p0 = re.compile(r'(^IP\s+Routing\s+Table\s+-\s+'
+                        r'(?P<entries>\S+)\s+entries)')
+
+        p1 = re.compile(r'(^(?P<connected>\S+)\s+connected,\s+'
+                        r'(?P<static>\S+)\s+static,\s+(?P<rip>\S+)\s+'
+                        r'RIP,\s+(?P<ospf>\S+)\s+OSPF,\s+(?P<bgp>\S+)\s+'
+                        r'BGP,\s+(?P<isis>\S+)\s+ISIS)')
+
+        p2 = re.compile(r'(\/\d{1,2}:\s+\d+)')
+
+        p3 = re.compile(r'(^\/(?P<key>\d{1,2}):\s+(?P<num>\d+))')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p0.match(line)
+            if m:
+                route_dict['total'] = int(m.groupdict()['entries'])
+                continue
+
+            m = p1.match(line)
+            if m:
+                protocols = route_dict.setdefault('protocols', {})
+                protocols['connected'] = int(m.groupdict()['connected'])
+                protocols['static'] = int(m.groupdict()['static'])
+                protocols['rip'] = int(m.groupdict()['rip'])
+                protocols['ospf'] = int(m.groupdict()['ospf'])
+                protocols['bgp'] = int(m.groupdict()['bgp'])
+                protocols['isis'] = int(m.groupdict()['isis'])
+                continue
+
+            m = p2.match(line)
+            if m:
+                cidrs = route_dict.setdefault('cidrs', {})
+
+                # Find all occurrences of a CIDR notation so we
+                # don't have to do each key individually
+                all_matches = p2.findall(line)
+
+                for match in all_matches:
+                    x = p3.match(match)
+                    if x:
+                        key = int(x.groupdict()['key'])
+                        cidrs[key] = int(x.groupdict()['num'])
+                continue
+
+        return route_dict

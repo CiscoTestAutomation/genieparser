@@ -1,0 +1,48 @@
+5/1   37.4375 C   -000.9479 dBm/ 803 uW  -002.0795 dBm/ 619 uW   40.380 mA
+       Normal           Normal                 Normal             Normal
+5/2   37.0937 C   -000.7499 dBm/ 841 uW  -005.0905 dBm/ 309 uW   38.634 mA
+       Normal           Normal                 Normal             Normal
+5/3   39.5039 C   -001.1702 dBm/ 763 uW  -004.0022 dBm/ 397 uW   37.562 mA
+       Normal           Normal                 Normal             Normal
+5/4   39.5234 C   -000.9199 dBm/ 809 uW  -002.3455 dBm/ 582 uW   40.650 mA
+       Normal           Normal                 Normal             Normal
+5/5   38.8203 C   -000.6625 dBm/ 858 uW  -002.9946 dBm/ 501 uW   43.470 mA
+       Normal           Normal                 Normal             Normal
+5/6   39.3007 C   -001.0946 dBm/ 777 uW  -007.4448 dBm/ 180 uW   33.396 mA
+       Normal           Normal                 Normal             Normal
+5/7   38.6875 C    001.9075 dBm/1551 uW  -004.0439 dBm/ 394 uW   38.490 mA
+       Normal           Normal                 Normal             Normal
+5/8   38.4218 C    002.4802 dBm/1770 uW  -004.6508 dBm/ 342 uW   42.450 mA
+       Normal           Normal                 Normal             Normal
+5/9   29.8593 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/10  30.1250 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/11  28.8789 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/12  29.9570 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/13  27.7968 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/14  28.8359 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/15  27.6953 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/16  28.7968 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/17  28.1562 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/18  28.7812 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/19  27.7851 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/20  28.0742 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/21  27.4648 C   -040.0000 dBm/   0 uW  -040.0000 dBm/   0 uW    0.000 mA
+       Normal           Low-Alarm              Low-Alarm          Low-Alarm
+5/22  35.2187 C   -002.0844 dBm/ 618 uW  -005.8737 dBm/ 258 uW   36.888 mA
+       Normal           Normal                 Normal             Normal
+5/23  34.9257 C   -004.5593 dBm/ 350 uW  -004.2689 dBm/ 374 uW   37.770 mA
+       Normal           Normal                 Normal             Normal
+5/24  35.8242 C   -001.0303 dBm/ 788 uW  -011.3018 dBm/  74 uW   33.090 mA
+       Normal           Normal                 Normal             Normal

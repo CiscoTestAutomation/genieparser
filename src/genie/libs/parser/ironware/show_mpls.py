@@ -12,6 +12,7 @@ Parsers:
     * show mpls lsp
     * show mpls vll <vll>
     * show mpls vll-local <vll>
+    * show mpls ldp neighbor
 """
 
 from genie.metaparser import MetaParser
@@ -622,4 +623,69 @@ class ShowMPLSVLLLocal(ShowMPLSVLLLocalSchema):
                     counters.lower() == 'enabled' else False
                 continue
 
+        return result_dict
+
+
+# ======================================================
+# Schema for 'show mpls ldp neighbor'
+# ======================================================
+class ShowMPLSLDPNeighborSchema(MetaParser):
+    """Schema for show mpls ldp neighbor"""
+    schema = {
+        'neighbors': {
+            Any(): {
+                'interface': str,
+                'ldp_id': str,
+                'max_hold': int,
+                'time_left': int
+            }
+        }
+    }
+
+
+# ====================================================
+#  parser for 'show mpls ldp neighbor'
+# ====================================================
+class ShowMPLSLDPNeighbor(ShowMPLSLDPNeighborSchema):
+    """
+    Parser for show mpls ldp neighbor on Devices running IronWare
+    """
+    cli_command = 'show mpls ldp neighbor'
+
+    """
+    Nbr Transport Interface  Nbr LDP ID  Max Hold Time Left
+    10.1.1.1      p4/1       10.1.1.1:0  15       14
+    10.5.5.5      p3/2       10.5.5.5:0  15       11
+    10.4.4.4      (targeted) 10.4.4.4:0  15       13
+    """
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        result_dict = {}
+
+        p0 = re.compile(r'(^(?P<neighbor>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\s+'
+                        r'(?P<int>\S+)\s+'
+                        r'(?P<ldpid>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}:\d+)\s+'
+                        r'(?P<hold>\d+)\s+(?P<time>\d+)$)')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p0.match(line)
+            if m:
+                if 'neighbors' not in result_dict:
+                    neighbors_dict = result_dict.setdefault('neighbors', {})
+
+                group = m.groupdict()
+                neighbors_dict.setdefault(group['neighbor'], {
+                    'interface': group['int'],
+                    'ldp_id': group['ldpid'],
+                    'max_hold': int(group['hold']),
+                    'time_left': int(group['time'])
+                })
+                continue
         return result_dict
