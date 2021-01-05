@@ -1005,9 +1005,6 @@ class ShowBgpSummary(ShowBgpSummarySchema):
 
         for line in out.splitlines():
             line = line.strip()
-
-            if '4.4.4.4' in line:
-                import pdb; pdb.set_trace()
                 
             # Threading mode: BGP I/O
             # Groups: 14 Peers: 19 Down peers: 15
