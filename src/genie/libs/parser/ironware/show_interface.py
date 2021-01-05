@@ -165,7 +165,7 @@ loopback 1   9.9.9.9  YES  NVRAM  up         up       default-vrf
 
         result_dict = {}
 
-        p0 = re.compile(r'((?P<int_name>^eth|mgmt|loopback|ve|tn|tunnel)\s+'
+        p0 = re.compile(r'(^(?P<int_name>eth|mgmt|loopback|ve|tn|tunnel)\s+'
                         r'(?P<int_num>\d+/\d+|\d+)\s+'
                         r'(?P<ip>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\s+'
                         r'(?P<ok>\w+)\s+'
