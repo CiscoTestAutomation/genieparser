@@ -977,11 +977,11 @@ class ShowBgpSummary(ShowBgpSummarySchema):
         # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
         # 20.0.0.2                  3          2          3       0       1           9 0/0/0/0              0/0/0/0
         p5 = re.compile(
-            r'^(?P<peer_address>[\d\w:.]+) +(?P<peer_as>\d+) +'
-            r'(?P<input_messages>\d+) +(?P<output_messages>\d+) +'
-            r'(?P<route_queue_count>\d+) +(?P<flap_count>\d+) +'
-            r'(?P<text>[\S\s]+) +(?P<peer_state>Active|Connect|Establ|'
-            r'(0/0/0/0 +0/0/0/0))$')
+            r'^(?P<peer_address>[\d\w:.]+)\s+(?P<peer_as>\d+)\s+'
+            r'(?P<input_messages>\d+)\s+(?P<output_messages>\d+)\s+'
+            r'(?P<route_queue_count>\d+)\s+(?P<flap_count>\d+)\s+'
+            r'(?P<text>[\S\s]+)\s+(?P<peer_state>Active|Connect|Establ|'
+            r'(\d\/\d\/\d\/\d\s+\d\/\d\/\d\/\d))$')
 
         # ------------------------------------------------------------
         # p6:
@@ -1006,6 +1006,9 @@ class ShowBgpSummary(ShowBgpSummarySchema):
         for line in out.splitlines():
             line = line.strip()
 
+            if '4.4.4.4' in line:
+                import pdb; pdb.set_trace()
+                
             # Threading mode: BGP I/O
             # Groups: 14 Peers: 19 Down peers: 15
             m = p1.match(line) or p2.match(line)
