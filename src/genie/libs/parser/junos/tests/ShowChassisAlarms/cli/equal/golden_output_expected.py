@@ -8,7 +8,7 @@ expected_output = {
                 "#text": "2020-07-16 13:38:21 EST",
             },
             "alarm-type": "Chassis"
-        },]
+        },],
         "alarm-summary": {
             "active-alarm-count": "1"
         }

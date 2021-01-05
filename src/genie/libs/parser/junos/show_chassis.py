@@ -2877,15 +2877,26 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
                     res['alarm-information']['alarm-detail'] = []
                     alarm_detail_list = res['alarm-information']['alarm-detail']
 
+                short_description_dict = {
+                    "SPMB 1 not online":"SPMB 1 offline",
+                    "Loss of communication with Backup RE":"Backup RE communica",
+                }
+
+
+
                 alarm_detail_item = {
                         'alarm-class':alarm_class,
                         'alarm-description':description,
-                        'alarm-short-description':description,
                         'alarm-time':{
                             '#text':text
                         },
                         "alarm-type": "Chassis"
                     }
+
+                if description in short_description_dict:
+                    alarm_detail_item['alarm-short-description'] = short_description_dict[description]
+                else:
+                    alarm_detail_item['alarm-short-description'] = description
                 
                 alarm_detail_list.append(alarm_detail_item)
 
