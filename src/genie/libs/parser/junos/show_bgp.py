@@ -981,7 +981,7 @@ class ShowBgpSummary(ShowBgpSummarySchema):
             r'(?P<input_messages>\d+)\s+(?P<output_messages>\d+)\s+'
             r'(?P<route_queue_count>\d+)\s+(?P<flap_count>\d+)\s+'
             r'(?P<text>[\S\s]+)\s+(?P<peer_state>Active|Connect|Establ|'
-            r'(\d\/\d\/\d\/\d\s+\d\/\d\/\d\/\d))$')
+            r'([\d\/]+\s+[\d\/]+))$')
 
         # ------------------------------------------------------------
         # p6:
