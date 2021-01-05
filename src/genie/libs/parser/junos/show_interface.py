@@ -502,6 +502,7 @@ class ShowInterfacesSchema(MetaParser):
                 "local-index": str,
                 Optional("logical-interface-bandwidth"): str,
                 "name": str,
+                Optional("description"): str,
                 Optional("policer-overhead"): str,
                 Optional("snmp-index"): str,
                 Optional("traffic-statistics"): {
@@ -823,12 +824,15 @@ class ShowInterfacesSchema(MetaParser):
     }
 
 class ShowInterfaces(ShowInterfacesSchema):
-    cli_command = ['show interfaces']
+    cli_command = ['show interfaces', 'show interfaces {interface}']
 
-    def cli(self, output=None):
+    def cli(self, interface=None, output=None):
 
         if not output:
-            out = self.device.execute(self.cli_command[0])
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
         
@@ -846,7 +850,8 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(, +Generation: +\S+)$')
 
         # Description: none/100G/in/hktGCS002_ge-0/0/0
-        p3 = re.compile(r'^Description: +(?P<description>\S+)$')
+        # Description: TEST-DESC:1|TEST#1234 DEV
+        p3 = re.compile(r'^Description: +(?P<description>.+)$')
 
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
         # Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
@@ -1159,7 +1164,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Hold-times     : Up 0 ms, Down 0 ms
         p64 = re.compile(r'^Hold-times +: +Up +(?P<up_hold_time>\d+) +ms, +Down +(?P<down_hold_time>\d+) +ms$')
 
-        # Statistics last cleared: 2020-10-14 13:18:51 JST (00:12:30 ago)
+        # Statistics last cleared: 2020-10-14 13:18:51 EST (00:12:30 ago)
         p65 = re.compile(r'^Statistics +last +cleared: +(?P<statistics_cleared>[\S\s]+)$')
 
         # 0                   best-effort
@@ -1244,8 +1249,12 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                physical_interface_dict.update({k.replace('_','-'):
-                    v for k, v in group.items() if v is not None})
+                if statistics_type == 'physical':
+                    physical_interface_dict.update({k.replace('_','-'):
+                        v for k, v in group.items() if v is not None})
+                elif statistics_type == 'logical':
+                    logical_interface_dict.update({k.replace('_','-'):
+                        v for k, v in group.items() if v is not None})
                 continue
 
             # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
@@ -1917,7 +1926,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
             
-            # Statistics last cleared: 2020-10-14 13:18:51 JST (00:12:30 ago)
+            # Statistics last cleared: 2020-10-14 13:18:51 EST (00:12:30 ago)
             m = p65.match(line)
             if m:
                 group = m.groupdict()
@@ -2060,7 +2069,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 policer_information_dict = {k.replace('_','-'):
                     v for k, v in group.items() if v is not None}
                 continue
-
+        
         return ret_dict
 
 class ShowInterfacesExtensive(ShowInterfaces):

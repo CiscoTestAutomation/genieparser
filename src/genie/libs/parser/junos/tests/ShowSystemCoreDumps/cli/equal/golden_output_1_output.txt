@@ -1,0 +1,16 @@
+
+                show system core-dumps
+                -rw-r--r--  1 root  wheel    1252383 Aug 8   2019 /var/crash/core.riot.mpc0.1565307741.1716.gz
+                -rw-r--r--  1 root  wheel    4576464 Aug 8   2019 /var/crash/core.vmxt.mpc0.1565307747.1791.gz
+                -rw-r--r--  1 root  wheel    1139316 Aug 15  2019 /var/crash/core.vmxt.mpc0.1565841060.1528.gz
+                -rw-r--r--  1 root  wheel    1139249 Aug 15  2019 /var/crash/core.vmxt.mpc0.1565841991.4312.gz
+                -rw-r--r--  1 root  wheel    1139299 Aug 15  2019 /var/crash/core.vmxt.mpc0.1565842608.6212.gz
+                -rw-r--r--  1 root  wheel    1139321 Aug 15  2019 /var/crash/core.vmxt.mpc0.1565892564.3392.gz
+                /var/tmp/*core*: No such file or directory
+                /var/tmp/pics/*core*: No such file or directory
+                /var/crash/kernel.*: No such file or directory
+                /var/jails/rest-api/tmp/*core*: No such file or directory
+                /tftpboot/corefiles/*core*: No such file or directory
+                total files: 6
+
+    

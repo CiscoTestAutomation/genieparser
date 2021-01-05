@@ -1,0 +1,139 @@
+
+        show ospf database external extensive
+            OSPF AS SCOPE link state database
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Extern   0.0.0.0          10.34.2.251     0x800019e3  2728  0x22 0x6715  36
+        mask 0.0.0.0
+        Topology default (ID 0)
+            Type: 1, Metric: 1, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:14:32
+        Installed 00:45:19 ago, expires in 00:14:32, sent 00:45:17 ago
+        Last changed 30w0d 01:34:30 ago, Change count: 1
+        Extern   0.0.0.0          10.169.14.240   0x8000039e  2396  0x22 0x9fcc  36
+        mask 0.0.0.0
+        Topology default (ID 0)
+            Type: 1, Metric: 1, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:20:03
+        Installed 00:39:53 ago, expires in 00:20:04, sent 00:39:51 ago
+        Last changed 4w2d 05:48:46 ago, Change count: 1
+        Extern   10.1.0.0          192.168.36.119  0x800019b0  1333  0x20 0x3bc3  36
+        mask 255.255.255.0
+        Topology default (ID 0)
+            Type: 2, Metric: 20, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:37:47
+        Installed 00:22:09 ago, expires in 00:37:47, sent 00:22:07 ago
+        Last changed 21w6d 00:06:09 ago, Change count: 1
+        Extern   10.1.0.0          192.168.36.120  0x800019b1   905  0x20 0x33c9  36
+        mask 255.255.255.0
+        Topology default (ID 0)
+            Type: 2, Metric: 20, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:44:55
+        Installed 00:15:01 ago, expires in 00:44:55, sent 00:14:59 ago
+        Last changed 21w6d 00:06:37 ago, Change count: 1
+        Extern   10.174.132.237    10.169.14.240   0x8000039e  2246  0x22 0xf161  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:22:34
+        Installed 00:37:23 ago, expires in 00:22:34, sent 00:37:21 ago
+        Last changed 4w2d 05:48:43 ago, Change count: 1
+        Extern   10.34.2.250     10.169.14.240   0x80000288  2848  0x22 0x473e  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Aging timer 00:12:32
+        Installed 00:47:25 ago, expires in 00:12:32, sent 00:47:23 ago
+        Last changed 3w0d 08:51:45 ago, Change count: 1
+        Extern   10.34.2.250     10.169.14.241   0x80000298  2751  0x22 0x2153  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Aging timer 00:14:09
+        Installed 00:45:45 ago, expires in 00:14:09, sent 00:45:43 ago
+        Last changed 3w0d 08:11:45 ago, Change count: 1
+        Extern   10.34.2.251     10.169.14.240   0x80000289   589  0x22 0x3b48  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Aging timer 00:50:11
+        Installed 00:09:46 ago, expires in 00:50:11, sent 00:09:44 ago
+        Last changed 3w0d 08:51:50 ago, Change count: 1
+        Extern   10.34.2.251     10.169.14.241   0x80000298  1581  0x22 0x175c  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Aging timer 00:33:38
+        Installed 00:26:15 ago, expires in 00:33:39, sent 00:26:13 ago
+        Last changed 3w0d 08:11:40 ago, Change count: 1
+        Extern   10.169.14.240   10.34.2.250     0x8000029a  1602  0x22 0xf88e  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:33:18
+        Installed 00:26:36 ago, expires in 00:33:18, sent 00:26:34 ago
+        Last changed 3w0d 08:51:43 ago, Change count: 1
+        Extern   10.169.14.240   10.34.2.251     0x800019e4  2289  0x22 0x190c  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:21:51
+        Installed 00:38:00 ago, expires in 00:21:51, sent 00:37:59 ago
+        Last changed 30w0d 01:34:30 ago, Change count: 1
+        Extern  *10.169.14.240   10.189.5.252     0x80001a3a  2548  0x22 0xc3fb  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Gen timer 00:02:55
+        Aging timer 00:17:31
+        Installed 00:42:28 ago, expires in 00:17:32, sent 00:42:26 ago
+        Last changed 3w3d 07:34:17 ago, Change count: 25, Ours
+        Extern   10.169.14.241   10.34.2.250     0x80001a14  2754  0x22 0xb341  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:14:05
+        Installed 00:45:48 ago, expires in 00:14:06, sent 00:45:46 ago
+        Last changed 30w0d 01:05:04 ago, Change count: 1
+        Extern   10.169.14.241   10.34.2.251     0x80000299   455  0x22 0xea9b  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:52:25
+        Installed 00:07:27 ago, expires in 00:52:25, sent 00:07:25 ago
+        Last changed 3w0d 08:11:38 ago, Change count: 1
+        Extern   10.169.14.241   10.189.5.253     0x80000fae   569  0x22 0xeb68  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
+        Aging timer 00:50:31
+        Installed 00:09:26 ago, expires in 00:50:31, sent 00:09:24 ago
+        Last changed 3w3d 07:33:47 ago, Change count: 31
+        Extern   10.189.5.252     10.169.14.240   0x800019b0  1944  0x22 0xc372  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Aging timer 00:27:35
+        Installed 00:32:21 ago, expires in 00:27:36, sent 00:32:19 ago
+        Last changed 3w3d 07:33:50 ago, Change count: 3
+        Extern   10.189.5.253     10.169.14.241   0x80001410   227  0x22 0x4d5   36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 10.166.34.12
+        Aging timer 00:56:12
+        Installed 00:03:41 ago, expires in 00:56:13, sent 00:03:39 ago
+        Last changed 3w3d 07:24:57 ago, Change count: 17
+        Extern   192.168.100.0    10.169.14.240   0x800002da  1191  0x22 0xfb51  36
+        mask 255.255.255.128
+        Topology default (ID 0)
+            Type: 1, Metric: 31900, Fwd addr: 0.0.0.0, Tag: 10.76.212.52
+        Aging timer 00:40:08
+        Installed 00:19:48 ago, expires in 00:40:09, sent 00:19:46 ago
+        Last changed 2w6d 19:00:07 ago, Change count: 75
+        Extern   192.168.100.252  10.169.14.240   0x800002d9  1041  0x22 0x19b8  36
+        mask 255.255.255.255
+        Topology default (ID 0)
+            Type: 1, Metric: 31900, Fwd addr: 0.0.0.0, Tag: 10.76.212.52
+        Aging timer 00:42:39
+        Installed 00:17:18 ago, expires in 00:42:39, sent 00:17:16 ago
+        Last changed 2w6d 19:00:07 ago, Change count: 75
+    

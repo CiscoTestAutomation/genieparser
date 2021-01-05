@@ -129,6 +129,31 @@ class test_show_ntp_peer_status(unittest.TestCase):
                                                  'vrf': 'default'}}}}
     }
 
+    golden_parsed_output_4 = {
+           "total_peers":4,
+           "vrf":{
+              "default":{
+                 "peer":{
+                    "8":{
+                       "mode":"unsynchronized",
+                       "remote":"8",
+                       "local":"16",
+                       "stratum":8,
+                       "poll":16,
+                       "reach":377,
+                       "delay":0.01311,
+                       "vrf":"default"
+                    }
+                 }
+              }
+           },
+           "clock_state":{
+              "system_status":{
+                 "clock_state":"unsynchronized"
+              }
+           }
+        }
+
     golden_output_1 = {'execute.return_value': '''
         Total peers : 4
         * - selected for sync, + -  peer mode(active), 
@@ -166,6 +191,17 @@ class test_show_ntp_peer_status(unittest.TestCase):
     '''
     }
 
+    golden_output_4 = {'execute.return_value': ''' 
+            Total peers : 4
+        * - selected for sync, + -  peer mode(active), 
+        - - peer mode(passive), = - polled in client mode 
+              remote                                 local                                   
+            st   poll   reach delay   vrf
+        -----------------------------------------------------------------------------------------------------------------------
+        =10.4.1.1                                  0.0.0.0
+        8   16     377   0.01311default
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowNtpPeerStatus(device=self.device)
@@ -193,6 +229,12 @@ class test_show_ntp_peer_status(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
+    def test_golden_4(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowNtpPeerStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 # ==============================================
 # Unit test for 'show ntp peers'

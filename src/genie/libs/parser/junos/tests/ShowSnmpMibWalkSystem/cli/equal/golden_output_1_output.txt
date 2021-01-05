@@ -1,0 +1,10 @@
+
+            show snmp mib walk system
+        sysDescr.0    = Juniper Networks, Inc. vmx internet router, kernel JUNOS 19.2R1.8, Build date: 2019-06-21 21:03:26 UTC Copyright (c) 1996-2019 Juniper Networks, Inc.
+        sysObjectID.0 = jnxProductNameVMX
+        sysUpTime.0   = 1805867174
+        sysContact.0  = KHK
+        sysName.0     = sr_hktGDS201
+        sysLocation.0 = TH-HK2/floor_1B-002/rack_KHK1104
+        sysServices.0 = 6
+    

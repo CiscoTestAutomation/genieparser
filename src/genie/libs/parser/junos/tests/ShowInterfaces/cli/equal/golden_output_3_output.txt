@@ -1,0 +1,48 @@
+show interfaces ge-0/0/0
+        Physical interface: ge-0/0/0, Enabled, Physical link is Up
+        Interface index: 148, SNMP ifIndex: 526
+        Description: none/100G/in/hktGCS002_ge-0/0/0
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 00:50:56:ff:56:b6, Hardware address: 00:50:56:ff:56:b6
+        Last flapped   : 2019-08-29 09:09:19 UTC (29w6d 18:56 ago)
+        Input rate     : 2952 bps (5 pps)
+        Output rate    : 3080 bps (3 pps)
+        Active alarms  : None
+        Active defects : None
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/0.0 (Index 333) (SNMP ifIndex 606)
+            Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+            Input packets : 133657033
+            Output packets: 129243982
+            Protocol inet, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: No-Redirects, Sendbcast-pkt-to-re
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 10.189.5.92/30, Local: 10.189.5.93, Broadcast: 10.189.5.95
+            Protocol inet6, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: Is-Primary
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 2001:db8:223c:2c16::/64, Local: 2001:db8:223c:2c16::1
+            Addresses, Flags: Is-Preferred
+                Destination: fe80::/64, Local: fe80::250:56ff:feff:56b6
+            Protocol mpls, MTU: 1488, Maximum labels: 3
+            Flags: Is-Primary
+            Protocol multiservice, MTU: Unlimited
+            Flags: Is-Primary

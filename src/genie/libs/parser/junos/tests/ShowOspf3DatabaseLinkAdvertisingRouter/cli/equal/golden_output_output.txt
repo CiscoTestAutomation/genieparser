@@ -1,0 +1,42 @@
+
+        show ospf3 database link advertising-router 192.168.219.235 detail
+
+        OSPF3 Link-Local database, interface ge-0/0/2.0 Area 0.0.0.0
+    Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+    Link       *0.0.0.9          192.168.219.235   0x80000b10  1379  0xd3b0  56
+    fe80::20c:2900:3367:243d
+    Options 0x33, Priority 20
+    Prefix-count 1
+    Prefix 2001:db8:dae9:cf16::/64 Prefix-options 0x0
+
+        OSPF3 Link-Local database, interface ge-0/0/2.1 Area 0.0.0.0
+    Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+    Link       *0.0.0.10         192.168.219.235   0x80000b0f  1979  0x974d  56
+    fe80::20c:2900:3467:243d
+    Options 0x33, Priority 128
+    Prefix-count 1
+    Prefix 2001:db8:dae9:c9df::/64 Prefix-options 0x0
+
+        OSPF3 Link-Local database, interface ge-0/0/3.0 Area 0.0.0.0
+    Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+    Link       *0.0.0.11         192.168.219.235   0x80000b0f  1829  0x94c2  56
+    fe80::20c:2900:3667:2465
+    Options 0x33, Priority 20
+    Prefix-count 1
+    Prefix 2001:db8:dae9:d3e9::/64 Prefix-options 0x0
+
+        OSPF3 Link-Local database, interface ge-0/0/3.1 Area 0.0.0.0
+    Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+    Link       *0.0.0.12         192.168.219.235   0x80000b0f  1679  0x5660  56
+    fe80::20c:2900:3767:2465
+    Options 0x33, Priority 128
+    Prefix-count 1
+    Prefix 2001:db8:dae9:cf16::/64 Prefix-options 0x0
+
+        OSPF3 Link-Local database, interface lo0.0 Area 0.0.0.0
+    Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+    Link       *0.0.0.7          192.168.219.235   0x80000f62  2729  0xd0a6  44
+    fe80::20c:290f:fc40:a033
+    Options 0x33, Priority 128
+    Prefix-count 0
+    

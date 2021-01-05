@@ -1,0 +1,16 @@
+
+        show system buffers no-forwarding
+        588/2142/2730 mbufs in use (current/cache/total)
+        516/714/1230/124756 mbuf clusters in use (current/cache/total/max)
+        513/499 mbuf+clusters out of packet secondary zone in use (current/cache)
+        0/3/3/62377 4k (page size) jumbo clusters in use (current/cache/total/max)
+        0/0/0/18482 9k (page size) jumbo clusters in use (current/cache/total/max)
+        0/0/0/10396 16k (page size) jumbo clusters in use (current/cache/total/max)
+        1179K/1975K/3154K bytes allocated to network (current/cache/total)
+        0/0/0 requests for mbufs denied (mbufs/clusters/mbuf+clusters)
+        0/0/0 requests for jumbo clusters denied (4k/9k/16k)
+        0 requests for sfbufs denied
+        0 requests for sfbufs delayed
+        0 requests for I/O initiated by sendfile
+
+    

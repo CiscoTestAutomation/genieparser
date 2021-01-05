@@ -1,0 +1,2 @@
+            Stateful Replication: Disabled
+            RE mode: Master

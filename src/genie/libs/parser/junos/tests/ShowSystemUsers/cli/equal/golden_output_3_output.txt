@@ -1,0 +1,6 @@
+
+        11:36PM  up 2 days,  5 hrs, 2 users, load averages: 0.00, 0.00, 0.00
+        USER     TTY      FROM                              LOGIN@  IDLE WHAT
+        cisco     d0       -                                Mon10PM 2days -cli (cli)
+        cisco     p0       255.255.255.255                     11:36PM     - -cli (cli)
+        

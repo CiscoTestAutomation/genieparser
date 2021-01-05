@@ -1,0 +1,51 @@
+
+        show firewall
+
+        Filter: catch_all                                              
+        Counters:
+        Name                                                Bytes              Packets
+        cflow_counter_v4                              28553344730            151730215
+
+        Filter: local-access-control                                   
+        Counters:
+        Name                                                Bytes              Packets
+        fragment-test                                           0                    0
+        fragment-test2                                          0                    0
+        last_policer                                   1069200810             19016081
+        ntp-deny-count                                          0                    0
+        telnet-deny-count                                    1316                   23
+        traceroute-udp-deny-count                         1385466                 8350
+        Policers:
+        Name                                                Bytes              Packets
+        MINIMUM-RATE-POLICER                              2508396                48164
+
+        Filter: v4_EXT_inbound                                         
+        Counters:
+        Name                                                Bytes              Packets
+        deny-dst-in                                             0                    0
+        deny-p-in                                               0                    0
+        deny-src-in                                             0                    0
+
+        Filter: v4_toIPVPN_inbound                                     
+        Counters:
+        Name                                                Bytes              Packets
+        cflow_counter_v4                                        0                    0
+        deny-dst-in                                             0                    0
+        deny-rsvp-in                                            0                    0
+
+        Filter: v6_catch_all                                           
+        Counters:
+        Name                                                Bytes              Packets
+        cflow_counter_v6                              12001013864            149192171
+
+        Filter: v6_local-access-control                                
+        Counters:
+        Name                                                Bytes              Packets
+        traceroute-udp-deny-count                               0                    0
+        v6_last_policer                                1061535120              7859252
+        Policers:
+        Name                                                Bytes              Packets
+        MINIMUM-RATE-POLICER                                    0                    0
+
+        Filter: __default_bpdu_filter__
+    

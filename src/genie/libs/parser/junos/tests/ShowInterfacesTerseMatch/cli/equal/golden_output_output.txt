@@ -1,0 +1,5 @@
+
+        root@junos_vmx1> show interfaces terse | match fxp0
+        fxp0                    up    up
+        fxp0.0                  up    up   inet     172.25.192.114/24
+    

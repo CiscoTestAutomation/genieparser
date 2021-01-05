@@ -20,13 +20,13 @@ class ShowDdosProtectionStatisticsSchema(MetaParser):
     
     schema = {
             "ddos-statistics-information": {
-                "aggr-level-control-mode": str,
-                "aggr-level-detection-mode": str,
+                Optional("aggr-level-control-mode"): str,
+                Optional("aggr-level-detection-mode"): str,
                 "ddos-flow-detection-enabled": str,
                 "ddos-logging-enabled": str,
                 "ddos-policing-fpc-enabled": str,
                 "ddos-policing-re-enabled": str,
-                "detection-mode": str,
+                Optional("detection-mode"): str,
                 "flow-report-rate": str,
                 "flows-cumulative": str,
                 "flows-current": str,
