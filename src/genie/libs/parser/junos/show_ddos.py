@@ -198,7 +198,6 @@ class ShowDDosProtectionProtocolSchema(MetaParser):
         }
     }
 
-
 class ShowDDosProtectionProtocol(ShowDDosProtectionProtocolSchema):
     """ Parser for:
             * show ddos-protection protocols {protocol}  
