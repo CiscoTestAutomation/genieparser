@@ -3544,7 +3544,8 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
         p2 = re.compile(r'^State +(?P<state>[\S\s]+)$')
 
         # Power 1
-        p3 = re.compile(r'^\w+ +(?P<power_type>\d+)$')
+        # Power
+        p3 = re.compile(r'^\w+( +(?P<power_type>\d+))?$')
 
         # 1.0 V                     1005 mV
         p4 = re.compile(r'^(?P<temperature_name>.*) +(?P<text>\d+ +degrees +\w+ +\/ +\d+ +degrees +\w+)$')
