@@ -2778,9 +2778,30 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
 
 class ShowChassisAlarmsSchema(MetaParser):
     """ Schema for show chassis alarms"""
-    schema = {
-        "alarm-information": {
-            "alarm-detail": {
+    # {
+    #     "alarm-information": {
+    #         Optional("alarm-detail"): [
+    #             {
+    #                 "alarm-class": "Major",
+    #                 "alarm-description": str,
+    #                 "alarm-short-description": str,
+    #                 "alarm-time": {
+    #                     "#text": str,
+    #                 },
+    #                 "alarm-type": str
+    #             },
+    #         ],
+    #         "alarm-summary": {
+    #             Optional("active-alarm-count"): str,
+    #             Optional("no-active-alarms"): bool
+    #         }
+    #     },
+    # }
+
+    def validate_alarm_detail(value):
+        if not isinstance(value, list):
+            raise SchemaError('alarm-detail is not a list')
+        alarm_detail_schema = Schema({
                 "alarm-class": str,
                 "alarm-description": str,
                 "alarm-short-description": str,
@@ -2788,9 +2809,18 @@ class ShowChassisAlarmsSchema(MetaParser):
                     "#text": str,
                 },
                 "alarm-type": str
-            },
+            })
+
+        for item in value:
+            alarm_detail_schema.validate(item)
+        return value
+
+    schema = {
+        "alarm-information": {
+            Optional("alarm-detail"): Use(validate_alarm_detail),
             "alarm-summary": {
-                "active-alarm-count": str
+                Optional("active-alarm-count"): str,
+                Optional("no-active-alarms"): bool
             }
         },
     }
@@ -2813,11 +2843,15 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
         p2 = re.compile(r'^(?P<text>\S+ +\d\d\:\d\d\:\d\d +\S+) '
                         r'+(?P<alarm_class>\S+) +(?P<description>[\s\S]+)$')
 
+        # No alarms currently active
+        p3 = re.compile(r'^No alarms currently active$')
+
         res = {}
 
         for line in out.splitlines():
             line = line.strip()
 
+            # 1 alarms currently active
             m = p1.match(line)
             if m:
                 res = {
@@ -2829,6 +2863,8 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
                 }
                 continue
 
+            # Alarm time               Class  Description
+            # 2020-07-16 13:38:21 EST  Major  PSM 15 Not OK 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -2837,16 +2873,46 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
                 alarm_class = group['alarm_class']
                 description = group['description']
 
-                res['alarm-information']['alarm-detail'] = {
-                    'alarm-class':alarm_class,
-                    'alarm-description':description,
-                    'alarm-short-description':description,
-                    'alarm-time':{
-                        '#text':text
-                    },
-                    "alarm-type": "Chassis"
+                if 'alarm-detail' not in res['alarm-information']:
+                    res['alarm-information']['alarm-detail'] = []
+                    alarm_detail_list = res['alarm-information']['alarm-detail']
+
+                short_description_dict = {
+                    "SPMB 1 not online":"SPMB 1 offline",
+                    "Loss of communication with Backup RE":"Backup RE communica",
                 }
+
+
+
+                alarm_detail_item = {
+                        'alarm-class':alarm_class,
+                        'alarm-description':description,
+                        'alarm-time':{
+                            '#text':text
+                        },
+                        "alarm-type": "Chassis"
+                    }
+
+                if description in short_description_dict:
+                    alarm_detail_item['alarm-short-description'] = short_description_dict[description]
+                else:
+                    alarm_detail_item['alarm-short-description'] = description
+                
+                alarm_detail_list.append(alarm_detail_item)
+
                 continue
+            
+            # No alarms currently active
+            m = p3.match(line)
+            if m:
+                res = {
+                    "alarm-information": {
+                        "alarm-summary": {
+                            "no-active-alarms": True
+                        }
+                    }
+                }
+                continue              
 
         return res
 
