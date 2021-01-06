@@ -1192,22 +1192,35 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
 
                 # 8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
                 if group["days"]:
-                    current_up_time_dict["#text"] = group[
-                        "days"] + " days," + " " + group["mins"] + " mins,"
-                    current_up_time_dict["@junos:seconds"] = str(
-                        (int(group['days']) * 86400) + \
-                        (int(group['mins'].split(':')[0]) * 3600) + \
-                        ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
-                    )
+                    if "min" in group["mins"]:
+                        current_up_time_dict["#text"] = group[
+                            "days"] + " days," + " " + group["mins"]
+                        current_up_time_dict["@junos:seconds"] = str(
+                            (int(group['days']) * 86400) +
+                            (int(group['mins'].split(' ')[0]) * 60)
+                            )
+                    else:
+                        current_up_time_dict["#text"] = group[
+                            "days"] + " days," + " " + group["mins"] + " mins,"
+                        current_up_time_dict["@junos:seconds"] = str(
+                            (int(group['days']) * 86400) + \
+                            (int(group['mins'].split(':')[0]) * 3600) + \
+                            ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
+                        )
 
                 # 2:08PM  up 11:03, 1 users, load averages: 0.31, 0.48, 0.50
                 else:
-                    current_up_time_dict["#text"] = group["mins"] + " mins,"
-
-                    current_up_time_dict["@junos:seconds"] = str(
-                        (int(group['mins'].split(':')[0]) * 3600) + \
-                        ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
-                    )
+                    if "min" in group["mins"]:
+                        current_up_time_dict["#text"] = group["mins"]
+                        current_up_time_dict["@junos:seconds"] = str(
+                            int(group['mins'].split(' ')[0]) * 60
+                            )
+                    else:
+                        current_up_time_dict["#text"] = group["mins"] + " mins,"
+                        current_up_time_dict["@junos:seconds"] = str(
+                            (int(group['mins'].split(':')[0]) * 3600) + \
+                            ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
+                        )
 
                 current_active_dict = {}
                 current_active_dict["#text"] = group["user_count"]
