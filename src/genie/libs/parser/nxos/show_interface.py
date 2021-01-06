@@ -207,7 +207,13 @@ class ShowInterface(ShowInterfaceSchema):
         # Ethernet1/3 is down (XCVR not inserted)
         # Ethernet1/2 is down (SFP validation failed)
         # Ethernet1/4 is down (SFP not inserted)
-        p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*(?P<link_state>(down|up))?'
+        # Ethernet1/11 is down (inactive)
+        # Ethernet1/12 is down (Transceiver validation failed)
+        # Ethernet1/13 is down (SFP validation failed)
+        # Ethernet1/13 is down (Channel admin down)
+        p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*(?P<link_state>(down|up|'
+                        r'inactive|Transceiver +validation +failed|'
+                        r'SFP +validation +failed|Channel +admin +down))?'
                         r'(administratively\s+(?P<admin_1>(down|up)))?\s*'
                         r'(\(Administratively\s*(?P<admin_2>(down|up))\))?'
                         r'(\(VLAN\/BD\s+is+\s+(down|up)\))?'
