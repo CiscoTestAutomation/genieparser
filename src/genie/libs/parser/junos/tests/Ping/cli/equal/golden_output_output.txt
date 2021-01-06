@@ -1,0 +1,13 @@
+
+        ping 10.189.5.94 count 5
+        PING 10.189.5.94 (10.189.5.94): 56 data bytes
+        64 bytes from 10.189.5.94: icmp_seq=0 ttl=62 time=2.261 ms
+        64 bytes from 10.189.5.94: icmp_seq=1 ttl=62 time=1.823 ms
+        64 bytes from 10.189.5.94: icmp_seq=2 ttl=62 time=2.399 ms
+        64 bytes from 10.189.5.94: icmp_seq=3 ttl=62 time=2.218 ms
+        64 bytes from 10.189.5.94: icmp_seq=4 ttl=62 time=2.173 ms
+
+        --- 10.189.5.94 ping statistics ---
+        5 packets transmitted, 5 packets received, 0% packet loss
+        round-trip min/avg/max/stddev = 1.823/2.175/2.399/0.191 ms
+    

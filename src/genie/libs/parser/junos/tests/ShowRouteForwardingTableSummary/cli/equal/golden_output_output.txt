@@ -1,0 +1,68 @@
+
+        show route forwarding-table summary
+        Routing table: default.inet
+        Internet:
+        Enabled protocols: Bridging,
+                user:         918 routes
+                perm:          5 routes
+                intf:         11 routes
+                dest:         21 routes
+
+        Routing table: __pfe_private__.inet
+        Internet:
+        Enabled protocols: Bridging,
+                perm:          5 routes
+
+        Routing table: __juniper_services__.inet
+        Internet:
+        Enabled protocols: Bridging,
+                perm:          5 routes
+                intf:          2 routes
+                dest:          3 routes
+
+        Routing table: __master.anon__.inet
+        Internet:
+        Enabled protocols: Bridging, Dual VLAN,
+                perm:          5 routes
+
+        Routing table: default.iso
+        ISO:
+        Enabled protocols: Bridging,
+                perm:          1 routes
+
+        Routing table: __master.anon__.iso
+        ISO:
+        Enabled protocols: Bridging, Dual VLAN,
+                perm:          1 routes
+
+        Routing table: default.inet6
+        Internet6:
+        Enabled protocols: Bridging,
+                user:         14 routes
+                perm:          6 routes
+                intf:         18 routes
+                dest:          7 routes
+
+        Routing table: __master.anon__.inet6
+        Internet6:
+        Enabled protocols: Bridging, Dual VLAN,
+                perm:          6 routes
+
+        Routing table: default.mpls
+        MPLS:
+                user:         44 routes
+                perm:          1 routes
+
+        Routing table: __mpls-oam__.mpls
+        MPLS:
+        Enabled protocols: Bridging, Single VLAN, Dual VLAN,
+                perm:          1 routes
+
+        Routing table: default-switch.bridge
+        VPLS:
+                perm:          1 routes
+
+        Routing table: default.dhcp-snooping
+        DHCP Snooping:
+                perm:          1 routes
+    

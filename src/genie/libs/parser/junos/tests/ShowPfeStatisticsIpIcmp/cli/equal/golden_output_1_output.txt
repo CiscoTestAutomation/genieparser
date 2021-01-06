@@ -1,0 +1,29 @@
+
+                show pfe statistics ip icmp
+            ICMP Statistics:
+                246259 requests
+                    311 network unreachables
+                245373 ttl expired
+                    0 ttl captured
+                    0 redirects
+                    0 mtu exceeded
+                    0 icmp/option handoffs
+
+            ICMP Errors:
+                    0 unknown unreachables
+                    0 unsupported ICMP type
+                    0 unprocessed redirects
+                    0 invalid ICMP type
+                    0 invalid protocol
+                    0 bad input interface
+                    575 throttled icmps
+                    0 runts
+
+            ICMP Discards:
+                    0 multicasts
+                    0 bad source addresses
+                    0 bad dest addresses
+                    0 IP fragments
+                    0 ICMP errors
+
+    

@@ -1,0 +1,33 @@
+
+            show route protocol bgp extensive 10.16.2.2
+            
+            inet.0: 1250009 destinations, 1250009 routes (1250009 active, 0 holddown, 0 hidden)
+            10.55.0.0/32 (1 entry, 1 announced)
+            TSI:
+            KRT in-kernel 10.55.0.0/32 -> {10.30.0.2}
+            Page 0 idx 0, (group eBGP_SUT-2 type External) Type 1 val 0x2b47ac54 (adv_entry)
+            Advertised metrics:
+                Nexthop: Self
+                AS path: [1] 2 I
+                Communities:
+            Path 10.55.0.0
+            from 10.30.0.2
+            Vector len 4.  Val: 0
+                    *BGP    Preference: 170/-101
+                            Next hop type: Router, Next hop index: 605
+                            Address: 0x17b226b4
+                            Next-hop reference count: 800002
+                            Source: 10.30.0.2
+                            Next hop: 10.30.0.2 via ge-0/0/2.0, selected
+                            Session Id: 0xf44
+                            State: <Active Ext>
+                            Local AS:     1 Peer AS:     2
+                            Age: 4:32 
+                            Validation State: unverified 
+                            Task: BGP_10.144.30.0.2
+                            Announcement bits (2): 0-KRT 1-BGP_RT_Background 
+                            AS path: 2 I 
+                            Accepted
+                            Localpref: 100
+                            Router ID: 192.168.19.1
+                

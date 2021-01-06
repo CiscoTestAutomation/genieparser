@@ -1,0 +1,31 @@
+
+        show route protocol static extensive
+
+        inet.0: 16 destinations, 16 routes (16 active, 0 holddown, 0 hidden)
+
+        10.16.2.2/32 (1 entry, 1 announced)
+
+        TSI:
+
+        KRT in-kernel 10.16.2.2/32 -> {10.145.0.2}
+
+            *Static Preference: 5
+
+                    Next hop type: Router, Next hop index: 590
+
+                    Address: 0x9348b50
+
+                    Next-hop reference count: 19
+
+                    Next hop: 10.145.0.2 via ge-0/0/1.0, selected
+
+                    State: <Active Int Ext>
+
+                    Age: 1:06       Tag: 100
+
+                    Task: RT
+
+                    Announcement bits (2): 0-KRT 1-Resolve tree 1
+
+                    AS path: I
+    

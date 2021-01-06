@@ -1,0 +1,9 @@
+
+        show route table mpls.0 label-switched-path test_lsp_01
+
+        mpls.0: 36 destinations, 36 routes (36 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        46                 *[RSVP/7/1] 00:10:22, metric 1
+                            >  to 192.168.145.218 via ge-0/0/1.1, label-switched-path test_lsp_01
+    

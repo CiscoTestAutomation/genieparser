@@ -4,8 +4,10 @@
 Parser for the following show commands:
     * show chassis alarms
     * show chassis fpc detail
+    * show chassis fpc pic-status
     * show chassis environment routing-engine
     * show chassis environment 
+    * show chassis environment fpc
     * show chassis firmware
     * show chassis firmware no-forwarding
     * show chassis fpc
@@ -412,20 +414,70 @@ class ShowChassisHardwareSchema(MetaParser):
     }
 }"""
 
-    def validate_inner_chassis_hardware_list(value):
-        # Pass firmware list as value
+    # ------------------------------------------------------
+    # Optional("chassis-sub-module")
+    # ------------------------------------------------------
+    def validate_chassis_sub_module_list(value):
+        
+        # ------------------------------------------------------
+        # Optional("chassis-sub-sub-sub-module")
+        # ------------------------------------------------------
+        def validate_chassis_sub_sub_sub_module_list(value):
+            # Pass list as value
+            if not isinstance(value, list):
+                raise SchemaError('inner chassis sub sub sub module is not a list')
+
+            chassis_sub_sub_sub_module_schema = Schema(
+                            {
+                                Optional("description"): str,
+                                Optional("name"): str,
+                                Optional("part-number"): str,
+                                Optional("serial-number"): str,
+                                Optional("version"): str
+                            }
+                        )
+            # Validate each dictionary in list
+            for item in value:
+                chassis_sub_sub_sub_module_schema.validate(item)
+            return value
+        
+
+        # Pass list as value
         if not isinstance(value, list):
-            raise SchemaError('inner chassis hardware is not a list')
-        chassis_inner_hardware_schema = Schema(
-                        {
-                            Optional("chassis-sub-sub-module"): {
-                                "description": str,
-                                "name": str,
-                                "part-number": str,
-                                "serial-number": str
+            raise SchemaError('inner chassis sub sub sub module is not a list')
+
+        # ------------------------------------------------------
+        # Optional("chassis-sub-sub-module")
+        # ------------------------------------------------------
+        def validate_chassis_sub_sub_module_list(value):
+            # Pass list as value
+            if not isinstance(value, list):
+                raise SchemaError('inner chassis sub sub module is not a list')
+
+            chassis_sub_sub_module_schema = Schema(
+                            {
+                                Optional("description"): str,
+                                Optional("name"): str,
+                                Optional("part-number"): str,
+                                Optional("serial-number"): str,
+                                Optional("chassis-sub-sub-sub-module"): Use(validate_chassis_sub_sub_sub_module_list)
                             },
+                        )
+            # Validate each dictionary in list
+            for item in value:
+                chassis_sub_sub_module_schema.validate(item)
+            return value
+        
+
+        # Pass list as value
+        if not isinstance(value, list):
+            raise SchemaError('inner chassis sub sub module is not a list')
+
+        chassis_sub_module_schema = Schema(
+                        {
+                            Optional("chassis-sub-sub-module"): Use(validate_chassis_sub_sub_module_list),
                             Optional("description"): str,
-                            "name": str,
+                            Optional("name"): str,
                             Optional("part-number"): str,
                             Optional("serial-number"): str,
                             Optional("version"): str
@@ -434,22 +486,28 @@ class ShowChassisHardwareSchema(MetaParser):
         )
         # Validate each dictionary in list
         for item in value:
-            chassis_inner_hardware_schema.validate(item)
+            chassis_sub_module_schema.validate(item)
         return value
 
 
-    def validate_chassis_hardware_list(value):
+    def validate_chassis_hardware_detail_list(value):
         # Pass firmware list as value
         if not isinstance(value, list):
-            raise SchemaError('chassis hardware is not a list')
-        chassis_hardware_schema = Schema({
-            Optional("chassis-sub-module"): Use(ShowChassisHardware.validate_inner_chassis_hardware_list),
+            raise SchemaError('chassis module is not a list')
+        chassis_hardware_detail_schema = Schema({
+            Optional("chassis-re-dimm-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_dimm_list),
+            Optional("chassis-re-disk-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_disk_list),
+            Optional("chassis-re-usb-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_usb_list),
+            Optional("chassis-sub-module"): Use(ShowChassisHardwareDetail.validate_chassis_sub_module_list),
             Optional("description"): str,
-            "name": str
+            Optional("name"): str,
+            Optional("part-number"): str,
+            Optional("serial-number"): str,
+            Optional("version"): str,
         })
         # Validate each dictionary in list
         for item in value:
-            chassis_hardware_schema.validate(item)
+            chassis_hardware_detail_schema.validate(item)
         return value
 
     schema = {
@@ -458,10 +516,10 @@ class ShowChassisHardwareSchema(MetaParser):
         Optional("@xmlns"): str,
         "chassis": {
             Optional("@junos:style"): str,
-            "chassis-module": Use(validate_chassis_hardware_list),
-            "description": str,
-            "name": str,
-            "serial-number": str
+            Optional("chassis-module"): Use(validate_chassis_hardware_detail_list),
+            Optional("description"): str,
+            Optional("name"): str,
+            Optional("serial-number"): str
             }
         }
     }
@@ -482,135 +540,207 @@ class ShowChassisHardware(ShowChassisHardwareSchema):
         #Hardware inventory:
         p1 = re.compile(r'^Hardware +(?P<style>\S+):$')
 
-        #FPC 0                                                    Virtual FPC
-        p2 = re.compile(r'^(?P<name>(\S+\s\d+)) +(?P<description>\S+\s\S+)$')
+        # Chassis                                VM5D4C6B3599      VMX
+        p_chassis = re.compile(r'^(?P<name>Chassis) +(?P<serial_number>[A-Z\d]+)'
+                               r' +(?P<description>\S+)$')
 
-        #Routing Engine 0                                         RE-VMX
-        p3 = re.compile(r'^(?P<name>\S+\s+\S+\s+\d+) +(?P<description>\S+)$')
+        # -------------------------------------------------------------------------------------
+        # For general chassis modules, for example:
+        # -------------------------------------------------------------------------------------
+        # Midplane         REV 64   750-040240   ABAC9716          Lower Backplane
+        # Midplane 1       REV 06   711-032386   ABAC9742          Upper Backplane
+        p_module0 = re.compile(r'(?P<name>Midplane( \d+)?) +(?P<version>\w+ \d+)'
+                               r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+) '
+                               r'+(?P<description>[\s\S]+)$')        
 
-        #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-        p4 = re.compile(r'^(?P<name>\S+) +(?P<version>[\S\.\d]+ [\S\.\d]+) '
-                        r'+(?P<part_number>[\S\-]+) +(?P<serial_number>\S+)$')
+        # Routing Engine 0 REV 01   740-052100   9009237267        RE-S-1800x4
+        # CB 0             REV 10   750-051985   CAFC0322          Control Board
+        # FPC 0            REV 72   750-044130   ABDF7568          MPC6E 3D
+        # SPMB 0           REV 04   711-041855   ABDC5673          PMB Board
+        # SFB 0            REV 06   711-044466   ABCY8621          Switch Fabric Board
+        # ADC 9            REV 21   750-043596   ABDC2129          Adapter Card
+        # Fan Tray 0       REV 01   760-052467   ACAY4748          172mm FanTray - 6 Fans
+        # FPM Board        REV 13   760-040242   ABDD0194          Front Panel Display
+        # PDM 3            REV 01   740-050036   1EFD3390136       DC Power Dist Module
+        # PSM 11           REV 04   740-050037   1EDB527002P       DC 52V Power Supply Module
+        # PMP 1            REV 01   711-051408   ACAJ5284          Upper Power Midplane
+        p_module1 = re.compile(r'^(?P<name>(Routing Engine|CB|FPC|SPMB|SFB|ADC|Fan Tray|FPM|PDM|PSM|PMP) (\d+|Board))( +(?P<version>\w+ \d+)'
+                               r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+))? '
+                               r'+(?P<description>[\s\S]+)$')
 
-        #MIC 0                                                  Virtual
-        p5 = re.compile(r'^(?P<name>\S+ \d+) +(?P<description>\S+)$')
+        # Midplane   
+        p_module2 = re.compile(r'^(?P<name>\S+)$')
 
-        #PIC 0                 BUILTIN      BUILTIN           Virtual
-        p6 = re.compile(r'^(?P<name>\S+ \d+) +(?P<part_number>\S+) '
-                        r'+(?P<serial_number>\S+) +(?P<description>\S+)$')
+        # -------------------------------------------------------------------------------------
+        # For chassis-sub-module, for example:
+        # -------------------------------------------------------------------------------------
+        # CPU            REV 12   711-045719   ABDF7304          RMPC PMB
+        # MIC 0          REV 19   750-049457   ABDJ2346          2X100GE CFP2 OTN 
+        # XLM 0          REV 14   711-046638   ABDF2862          MPC6E XL
+        p_sub_module = re.compile(r'^(?P<name>CPU|(MIC|XLM)\s\d+) +(?P<version>\w+ \d+)'
+                                  r' +(?P<part_number>[\d\-]+) +(?P<serial_number>[A-Z\d]+) '
+                                  r'+(?P<description>[\s\S]+)$')
 
-        #Chassis                                VM5D4C6B3599      VMX
-        p7 = re.compile(r'^(?P<name>\S+) +(?P<serial_number>\S+) '
-                        r'+(?P<description>\S+)$')
+        # CPU            Rev. 1.0 RIOT-LITE    BUILTIN     
+        p_sub_module_2 = re.compile(r'(?P<name>CPU) +(?P<version>[\s\S]+) +(?P<part_number>[A-Z\-]+)'
+                                    r' +(?P<serial_number>[A-Z]+)')
 
-        #Midplane
-        p8 = re.compile(r'^(?P<name>\S+)$')
+        # MIC 0                                                  Virtual     
+        p_sub_module_3 = re.compile(r'(?P<name>MIC\s\d+) +(?P<description>\S+)')
 
-        ret_dict = {}
+        # -------------------------------------------------------------------------------------
+        # For chassis-sub-sub-module, for example:
+        # -------------------------------------------------------------------------------------
+        # PIC 0                 BUILTIN      BUILTIN           2X100GE CFP2 OTN
+        p_sub_sub_module = re.compile(r'^(?P<name>PIC\s\d+) +(?P<part_number>[A-Z]+) '
+                                      r'+(?P<serial_number>[A-Z]+) +(?P<description>[\s\S]+)$')
 
-        for line in out.splitlines()[1:]:
+
+        # -------------------------------------------------------------------------------------
+        # For chassis-sub-sub-sub-module, for example:
+        # -------------------------------------------------------------------------------------
+        # Xcvr 0     REV 01   740-052504   UW811XC           CFP2-100G-LR4
+        p_sub_sub_sub_module = re.compile(r'^(?P<name>Xcvr\s\d+)( +(?P<version>(\w+ \d+)|(\S+)))?'
+                                          r' +(?P<part_number>[\d\-]+|NON-JNPR) +(?P<serial_number>[A-Z\d]+)'
+                                          r' +(?P<description>[\s\S]+)$')                                      
+
+        res = {}
+
+        for line in out.splitlines():
             line = line.strip()
-
+            
             #Hardware inventory:
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                chassis_inventory_dict = ret_dict.setdefault("chassis-inventory", {})\
-                                                            .setdefault("chassis", {})
+                res = {
+                    "chassis-inventory":{
+                        "chassis":{
+
+                        }
+                    }
+                }
+                chassis_inventory_dict = res["chassis-inventory"]["chassis"]
 
                 chassis_inventory_dict["@junos:style"] = group["style"]
+                chassis_inventory_dict["chassis-module"] = []
                 
-                chassis_entry_list = chassis_inventory_dict.setdefault("chassis-module", [])
+                chassis_modules_list = chassis_inventory_dict["chassis-module"] 
 
                 continue
 
-            #FPC 0                                                    Virtual FPC
-            m = p2.match(line)
+            # Chassis                                VM5D4C6B3599      VMX
+            m = p_chassis.match(line)
             if m:
-                group = m.groupdict()
-                if(group["name"] == "CB 0"):
-                    entry_dict = {}
-                    entry_dict["description"] = group["description"]
-                    entry_dict["name"] = group["name"]
-
-                    chassis_entry_list.append(entry_dict)
-                else:
-                    chassis_inner_dict1 = {}
-                    chassis_inner_dict1["description"] = group["description"]
-                    chassis_inner_dict1["name"] = group["name"]
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    if v:
+                        chassis_inventory_dict[k] = v.strip()
                 continue
 
-            #Routing Engine 0                                         RE-VMX
-            m = p3.match(line)
+            # -------------------------------------------------------------------------------------
+            # For general chassis modules, for example:
+            # -------------------------------------------------------------------------------------
+            # Midplane         REV 64   750-040240   ABAC9716          Lower Backplane
+            # Midplane 1       REV 06   711-032386   ABAC9742          Upper Backplane
+            
+            # Routing Engine 0 REV 01   740-052100   9009237267        RE-S-1800x4
+            # Routing Engine 0                                         RE-VMX
+            # CB 0                                                     VMX SCB
+            # FPC 0                                                    Virtual FPC
+            # SPMB 0           REV 04   711-041855   ABDC5673          PMB Board
+            # SFB 0            REV 06   711-044466   ABCY8621          Switch Fabric Board
+            # ADC 9            REV 21   750-043596   ABDC2129          Adapter Card
+            # Fan Tray 0       REV 01   760-052467   ACAY4748          172mm FanTray - 6 Fans            
+            # FPM Board        REV 13   760-040242   ABDD0194          Front Panel Display
+
+            # Midplane
+            m = p_module0.match(line) or p_module1.match(line) or p_module2.match(line)
             if m:
-                group = m.groupdict()
-                entry_dict = {}
-                entry_dict["description"] = group["description"]
-                entry_dict["name"] = group["name"]
-
-                chassis_entry_list.append(entry_dict)
+                module_dict = {}
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    if v:
+                        module_dict[k] = v.strip()
+                
+                chassis_modules_list.append(module_dict)
+                
                 continue
 
-            #CPU            Rev. 1.0 RIOT-LITE    BUILTIN
-            m = p4.match(line)
+            # -------------------------------------------------------------------------------------
+            # For chassis-sub-module, for example:
+            # -------------------------------------------------------------------------------------
+            # CPU            REV 12   711-045719   ABDF7304          RMPC PMB
+            # MIC 0          REV 19   750-049457   ABDJ2346          2X100GE CFP2 OTN 
+            # XLM 0          REV 14   711-046638   ABDF2862          MPC6E XL
+            # MIC 0                                                  Virtual
+            # CPU            Rev. 1.0 RIOT-LITE    BUILTIN 
+            m = p_sub_module.match(line) or p_sub_module_2.match(line) or p_sub_module_3.match(line)
             if m:
-                group = m.groupdict()
-                chassis_inner_list = []
-                chassis_inner_dict = {}
-                chassis_inner_dict["name"] = group["name"]
-                chassis_inner_dict["part-number"] = group["part_number"]
-                chassis_inner_dict["serial-number"] = group["serial_number"]
-                chassis_inner_dict["version"] = group["version"]
+                if "chassis-sub-module" not in module_dict:
+                    module_dict["chassis-sub-module"] = []
 
-                chassis_inner_list.append(chassis_inner_dict)
+                re_sub_module_list = module_dict["chassis-sub-module"]
+                last_sub_sub_item = {}
+
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    if v:
+                        last_sub_sub_item[k] = v.strip()
+                
+                re_sub_module_list.append(last_sub_sub_item)
                 continue
 
-            #MIC 0                                                  Virtual
-            m = p5.match(line)
+            # -------------------------------------------------------------------------------------
+            # For chassis-sub-sub-module, for example:
+            # -------------------------------------------------------------------------------------
+            # PIC 0                 BUILTIN      BUILTIN           2X100GE CFP2 OTN
+            m = p_sub_sub_module.match(line)
             if m:
-                group = m.groupdict()
-                chassis_inner_dict2 = {}
-                chassis_inner_dict2["description"] = group["description"]
-                chassis_inner_dict2["name"] = group["name"]
-                continue
+                # find the sub module
+                last_sub_item = module_dict["chassis-sub-module"][-1]
+                
+                if "chassis-sub-sub-module" not in last_sub_item:
+                    last_sub_item["chassis-sub-sub-module"] = []
+                    
+                re_sub_sub_module_item_list = last_sub_item["chassis-sub-sub-module"]
 
-            #PIC 0                 BUILTIN      BUILTIN           Virtual
-            m = p6.match(line)
+                re_sub_sub_module_list_item = {}
+                
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    if v:
+                        re_sub_sub_module_list_item[k] = v.strip()
+                re_sub_sub_module_item_list.append(re_sub_sub_module_list_item)
+                
+                continue
+                
+
+            # -------------------------------------------------------------------------------------
+            # For chassis-sub-sub-sub-module, for example:
+            # -------------------------------------------------------------------------------------
+            # Xcvr 0     REV 01   740-052504   UW811XC           CFP2-100G-LR4
+            m = p_sub_sub_sub_module.match(line)
             if m:
-                group = m.groupdict()
-                chassis_inner_inner_dict = {}
-                chassis_inner_inner_dict["description"] = group["description"]
-                chassis_inner_inner_dict["name"] = group["name"]
-                chassis_inner_inner_dict["part-number"] = group["part_number"]
-                chassis_inner_inner_dict["serial-number"] = group["serial_number"]
+                # the last appended item
+                last_sub_sub_item = module_dict["chassis-sub-module"][-1]["chassis-sub-sub-module"][-1]
+                
+                if "chassis-sub-sub-sub-module" not in last_sub_sub_item:
+                    last_sub_sub_item["chassis-sub-sub-sub-module"] = []
 
-                chassis_inner_dict2["chassis-sub-sub-module"] = chassis_inner_inner_dict
-                chassis_inner_list.append(chassis_inner_dict2)
+                re_sub_sub_sub_module_list = last_sub_sub_item["chassis-sub-sub-sub-module"]
 
-                chassis_inner_dict1["chassis-sub-module"] = chassis_inner_list
+                re_sub_sub_sub_module_item = {}
 
-                chassis_entry_list.append(chassis_inner_dict1)
+                for k,v in m.groupdict().items():
+                    k = k.replace('_', '-')
+                    if v:
+                        re_sub_sub_sub_module_item[k] = v.strip()
+                
+                re_sub_sub_sub_module_list.append(re_sub_sub_sub_module_item)
                 continue
 
-            #Chassis                                VM5D4C6B3599      VMX
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                chassis_inventory_dict["description"] = group["description"]
-                chassis_inventory_dict["name"] = group["name"]
-                chassis_inventory_dict["serial-number"] = group["serial_number"]
-                continue
-
-            #Midplane
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                entry_dict = {}
-                entry_dict["name"] = group["name"]
-                chassis_entry_list.append(entry_dict)
-                continue
-
-        return ret_dict
+        return res
 
 
 class ShowChassisHardwareDetailSchema(MetaParser):
@@ -973,7 +1103,7 @@ class ShowChassisHardwareDetail(ShowChassisHardwareDetailSchema):
 
         res = {}
 
-        for line in out.splitlines()[1:]:
+        for line in out.splitlines():
             line = line.strip()
             
             #Hardware inventory:
@@ -1839,12 +1969,13 @@ class ShowChassisFpc(ShowChassisFpcSchema):
         else:
             out = output
 
-        #0  Online           Testing   3         0        2      2      2    511        31          0
+        # 0  Online           Testing   3         0        2      2      2    511        31          0
+        # 0  Present          Testing
         p1 = re.compile(r'^(?P<slot>\d+) +(?P<state>\S+) '
-                        r'+(?P<text>\S+) +(?P<cpu_total>\d+) '
+                        r'+(?P<text>\S+)( +(?P<cpu_total>\d+) '
                         r'+(?P<cpu_interrupt>\d+)( +(?P<cpu_1min>\d+) '
                         r'+(?P<cpu_5min>\d+) +(?P<cpu_15min>\d+))? +'
-                        r'(?P<dram>\d+) +(?P<heap>\d+) +(?P<buffer>\d+)$')
+                        r'(?P<dram>\d+) +(?P<heap>\d+) +(?P<buffer>\d+))?$')
 
         #2  Empty
         p2 = re.compile(r'^(?P<slot>\d+) +(?P<state>\S+)$')
@@ -1873,8 +2004,11 @@ class ShowChassisFpc(ShowChassisFpcSchema):
                 fpc_temp_dict["#text"] = group["text"]
                 fpc_entry_dict["temperature"] = fpc_temp_dict
 
-                fpc_entry_dict["cpu-total"] = group["cpu_total"]
-                fpc_entry_dict["cpu-interrupt"] = group["cpu_interrupt"]
+                if group["cpu_total"]:
+                    fpc_entry_dict["cpu-total"] = group["cpu_total"]
+
+                if group["cpu_interrupt"]:
+                    fpc_entry_dict["cpu-interrupt"] = group["cpu_interrupt"]
 
                 if group["cpu_1min"]:
                     fpc_entry_dict["cpu-1min-avg"] = group["cpu_1min"]
@@ -1883,9 +2017,14 @@ class ShowChassisFpc(ShowChassisFpcSchema):
                 if group["cpu_15min"]:
                     fpc_entry_dict["cpu-15min-avg"] = group["cpu_15min"]
 
-                fpc_entry_dict["memory-dram-size"] = group["dram"]
-                fpc_entry_dict["memory-heap-utilization"] = group["heap"]
-                fpc_entry_dict["memory-buffer-utilization"] = group["buffer"]
+                if group["dram"]:
+                    fpc_entry_dict["memory-dram-size"] = group["dram"]
+                
+                if group["heap"]:
+                    fpc_entry_dict["memory-heap-utilization"] = group["heap"]
+                
+                if group["buffer"]:
+                    fpc_entry_dict["memory-buffer-utilization"] = group["buffer"]
 
                 fpc_chassis_list.append(fpc_entry_dict)
                 continue
@@ -2351,8 +2490,9 @@ class ShowChassisEnvironment(ShowChassisEnvironmentSchema):
         #         CB 0 IntakeA-Zone0             OK         39 degrees C / 102 degrees F     
         #         PSM 4                          Check        
         #         Fan Tray 2 Fan 2               OK         2640 RPM  
+        #   FPC 0 Intake                   Testing
         p1 = re.compile(r'^((?P<class>Temp|Fans) +)?(?P<name>[\s\S]+) '
-                        r'+(?P<status>OK|Check)( +(?P<measurement>[\s\S]+))?$')
+                        r'+(?P<status>OK|Check|Testing)( +(?P<measurement>[\s\S]+))?$')
 
         # 24 degrees C / 75 degrees F
         celsius_pattern = re.compile(r'(?P<celsius>\d+) degrees C / (?P<fahr>\d+) degrees F')
@@ -2414,11 +2554,254 @@ class ShowChassisEnvironment(ShowChassisEnvironmentSchema):
         return res
 
 
+class ShowChassisEnvironmentFpcSchema(MetaParser):
+    '''
+    Schema for show chassis environment fpc
+    schema = {
+        "environment-component-information": {
+            "environment-component-item": [
+                {
+                    "name": str,
+                    "power-information": {
+                        "power-title": {
+                            "power-type": str
+                        }
+                        "voltage": [
+                            {
+                                "actual-voltage": str,
+                                "reference-voltage": str,
+                            },
+                        ]
+                    },
+                    "slave-revision": str,
+                    "state": str,
+                    "temperature-reading": [
+                        {
+                            "temperature": {
+                                "#text": str,
+                                "@junos:celsius": str,
+                            },
+                            "temperature-name": str,
+                        },
+                    ]
+                }
+            ]
+        }
+    }
+    '''
+
+    def validate_environment_item_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('environment-item is not a list')        
+        
+        def validate_voltage_list(value):
+            if not isinstance(value, list):
+                raise SchemaError("voltage is not a list")
+
+            voltage_schema = Schema(
+                {
+                    "actual-voltage": str,
+                    "reference-voltage": str,
+                }
+            )
+
+            for item in value:
+                voltage_schema.validate(item)    
+            return value
+
+        def valivalidate_temp_reading_list(value):
+            if not isinstance(value, list):
+                raise SchemaError("temperature reading is not a list")
+
+            temp_reading_schema = Schema(
+                {
+                    "temperature": {
+                        "#text": str,
+                        "@junos:celsius": str,
+                    },
+                    "temperature-name": str,
+                }
+            )
+
+            for item in value:
+                temp_reading_schema.validate(item)    
+            return value
+
+        environment_item_schema = Schema({
+            "name": str,
+            "power-information": {
+                "power-title": {
+                    "power-type": str
+                },
+                "voltage": Use(validate_voltage_list),
+            },
+            "slave-revision": str,
+            "state": str,
+            "temperature-reading": Use(valivalidate_temp_reading_list),
+        })
+
+        for item in value:
+            environment_item_schema.validate(item)
+        return value
+
+    schema = {
+        'environment-component-information': {
+            'environment-component-item': Use(validate_environment_item_list)
+        }
+    }
+
+
+class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
+    '''Parser for show chassis environment fpc'''
+
+    cli_command = 'show chassis environment fpc'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Regex
+        # FPC 0 status:
+        p1 = re.compile(r'^(?P<name>.*) +status:$')
+
+        # State                      Online
+        p2 = re.compile(r'^State +(?P<state>\S+)$')
+
+        # Temperature Intake         27 degrees C / 80 degrees F
+        # Temperature I3 0 Chip      38 degrees C / 100 degrees F 
+        p_temp = re.compile(r'^(?P<temperature_name>[\s\S]+) '
+                            r'+(?P<text>(?P<celsius>\d+)\sdegrees\sC.*)')
+
+        # Power
+        p_power = re.compile(r'^Power$')
+
+        # 1.2 V PFE 0               1231 mV
+        # 1.5 V                     1498 mV
+        p_voltage = re.compile(r'(?P<reference_voltage>[\s\S]+) '
+                               r'+(?P<actual_voltage>\d+) +mV')
+
+        # I2C Slave Revision         42
+        p_slave_revision = re.compile(r'^.* +Slave +Revision +(?P<slave_revision>\S+)$')
+
+
+        # Read line from output and build parsed output
+        res = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # FPC 0 status:
+            m = p1.match(line)
+            if m:
+                if "environment-component-information" not in res:
+                    res = {
+                        "environment-component-information": {
+                            "environment-component-item": []
+                        }
+                    }
+
+                env_list = res["environment-component-information"]["environment-component-item"]
+
+                env_item = {
+                    "name": m.groupdict()["name"]
+                }
+                continue
+
+            # State                      Online
+            m = p2.match(line)
+            if m:
+                env_item["state"] = m.groupdict()["state"]
+                continue
+
+            # Temperature Intake         27 degrees C / 80 degrees F
+            # Temperature I3 0 Chip      38 degrees C / 100 degrees F 
+            m = p_temp.match(line)
+            if m:
+                group = m.groupdict()
+                
+                if "temperature-reading" not in env_item:
+                    env_item["temperature-reading"] = []
+                
+                temp_list = env_item["temperature-reading"]
+
+                temp_item = {
+                    "temperature": {
+                        "#text": group["text"].strip(),
+                        "@junos:celsius": group["celsius"]
+                    },
+                    "temperature-name": group["temperature_name"].strip()
+                }
+
+                temp_list.append(temp_item)
+
+                continue
+
+            # Power
+            m = p_power.match(line)
+            if m:
+                env_item["power-information"] = {
+                    "power-title": {
+                            "power-type": "Power"
+                        },
+                }
+                continue
+
+            # 1.2 V PFE 0               1231 mV
+            # 1.5 V                     1498 mV
+            m = p_voltage.match(line)
+            if m:
+                if "voltage" not in env_item["power-information"]:
+                    env_item["power-information"]["voltage"] = []
+                
+                voltage_list = env_item["power-information"]["voltage"]
+
+                voltage_item = {
+                    "actual-voltage": m.groupdict()["actual_voltage"].strip(),
+                    "reference-voltage": m.groupdict()["reference_voltage"].strip()
+                }
+
+                voltage_list.append(voltage_item)
+
+                continue
+
+            # I2C Slave Revision         42
+            m = p_slave_revision.match(line)
+            if m:
+                env_item["slave-revision"] = m.groupdict()["slave_revision"].strip()
+                env_list.append(env_item)
+                continue
+
+        return res
+
+
 class ShowChassisAlarmsSchema(MetaParser):
     """ Schema for show chassis alarms"""
-    schema = {
-        "alarm-information": {
-            "alarm-detail": {
+    # {
+    #     "alarm-information": {
+    #         Optional("alarm-detail"): [
+    #             {
+    #                 "alarm-class": "Major",
+    #                 "alarm-description": str,
+    #                 "alarm-short-description": str,
+    #                 "alarm-time": {
+    #                     "#text": str,
+    #                 },
+    #                 "alarm-type": str
+    #             },
+    #         ],
+    #         "alarm-summary": {
+    #             Optional("active-alarm-count"): str,
+    #             Optional("no-active-alarms"): bool
+    #         }
+    #     },
+    # }
+
+    def validate_alarm_detail(value):
+        if not isinstance(value, list):
+            raise SchemaError('alarm-detail is not a list')
+        alarm_detail_schema = Schema({
                 "alarm-class": str,
                 "alarm-description": str,
                 "alarm-short-description": str,
@@ -2426,9 +2809,18 @@ class ShowChassisAlarmsSchema(MetaParser):
                     "#text": str,
                 },
                 "alarm-type": str
-            },
+            })
+
+        for item in value:
+            alarm_detail_schema.validate(item)
+        return value
+
+    schema = {
+        "alarm-information": {
+            Optional("alarm-detail"): Use(validate_alarm_detail),
             "alarm-summary": {
-                "active-alarm-count": str
+                Optional("active-alarm-count"): str,
+                Optional("no-active-alarms"): bool
             }
         },
     }
@@ -2451,11 +2843,15 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
         p2 = re.compile(r'^(?P<text>\S+ +\d\d\:\d\d\:\d\d +\S+) '
                         r'+(?P<alarm_class>\S+) +(?P<description>[\s\S]+)$')
 
+        # No alarms currently active
+        p3 = re.compile(r'^No alarms currently active$')
+
         res = {}
 
         for line in out.splitlines():
             line = line.strip()
 
+            # 1 alarms currently active
             m = p1.match(line)
             if m:
                 res = {
@@ -2467,6 +2863,8 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
                 }
                 continue
 
+            # Alarm time               Class  Description
+            # 2020-07-16 13:38:21 EST  Major  PSM 15 Not OK 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -2475,16 +2873,46 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
                 alarm_class = group['alarm_class']
                 description = group['description']
 
-                res['alarm-information']['alarm-detail'] = {
-                    'alarm-class':alarm_class,
-                    'alarm-description':description,
-                    'alarm-short-description':description,
-                    'alarm-time':{
-                        '#text':text
-                    },
-                    "alarm-type": "Chassis"
+                if 'alarm-detail' not in res['alarm-information']:
+                    res['alarm-information']['alarm-detail'] = []
+                    alarm_detail_list = res['alarm-information']['alarm-detail']
+
+                short_description_dict = {
+                    "SPMB 1 not online":"SPMB 1 offline",
+                    "Loss of communication with Backup RE":"Backup RE communica",
                 }
+
+
+
+                alarm_detail_item = {
+                        'alarm-class':alarm_class,
+                        'alarm-description':description,
+                        'alarm-time':{
+                            '#text':text
+                        },
+                        "alarm-type": "Chassis"
+                    }
+
+                if description in short_description_dict:
+                    alarm_detail_item['alarm-short-description'] = short_description_dict[description]
+                else:
+                    alarm_detail_item['alarm-short-description'] = description
+                
+                alarm_detail_list.append(alarm_detail_item)
+
                 continue
+            
+            # No alarms currently active
+            m = p3.match(line)
+            if m:
+                res = {
+                    "alarm-information": {
+                        "alarm-summary": {
+                            "no-active-alarms": True
+                        }
+                    }
+                }
+                continue              
 
         return res
 
@@ -2526,10 +2954,10 @@ class ShowChassisFabricSummarySchema(MetaParser):
 
 class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
     """ Parser for:
-    * show chassis Fabric Summary
+    * show chassis fabric summary
     """
 
-    cli_command = 'show chassis Fabric Summary'
+    cli_command = 'show chassis fabric summary'
 
     def cli(self, output=None):
         if not output:
@@ -2607,10 +3035,10 @@ class ShowChassisFabricPlaneSchema(MetaParser):
 
 class ShowChassisFabricPlane(ShowChassisFabricPlaneSchema):
     """ Parser for:
-    * show chassis Fabric Plane
+    * show chassis fabric plane
     """
 
-    cli_command = 'show chassis Fabric Plane'
+    cli_command = 'show chassis fabric plane'
 
     def cli(self, output=None):
         if not output:
@@ -2885,6 +3313,313 @@ class ShowChassisPower(ShowChassisPowerSchema):
             if m:
                 group = m.groupdict()
                 power_usage_zone_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+        
+        return ret_dict
+
+"""
+Schema for:
+    * show chassis fpc pic-status
+"""
+class ShowChassisFpcPicStatusSchema(MetaParser):
+    """
+    schema = {
+        "fpc-information": {
+            "fpc": [
+                {
+                    "description": str,
+                    "slot": str,
+                    "state": str,
+                    "pic": [
+                        {
+                            "pic-slot": str,
+                            "pic-state": str,
+                            "pic-type": str,
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+    """
+
+    # Validate fpc
+    def validate_fpc(value):
+
+        if not isinstance(value, list):
+            raise SchemaError('fpc is not a list')
+        
+        # Validate pic 
+        def validate_pic(value):
+            if not isinstance(value, list):
+                raise SchemaError('pic is not a list')
+
+            pic_schema = Schema({
+                "pic-slot": str,
+                "pic-state": str,
+                "pic-type": str,
+            })
+
+            for item in value:
+                pic_schema.validate(item)
+            return value
+
+        fpc_schema = Schema(
+            {
+                    "description": str,
+                    "slot": str,
+                    "state": str,
+                    "pic": Use(validate_pic)
+                }
+        )
+
+        for item in value:
+            fpc_schema.validate(item)
+        return value
+
+    schema = {
+        "fpc-information": {
+            "fpc": Use(validate_fpc)
+        }
+    }
+
+"""
+Parser for:
+    * show chassis fpc pic-status
+"""
+class ShowChassisFpcPicStatus(ShowChassisFpcPicStatusSchema):
+    cli_command = 'show chassis fpc pic-status'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Regex patterns
+        # Slot 0   Online       DPCE 2x 10GE R
+        p_fpc = re.compile(r'Slot +(?P<slot>\d+) +(?P<state>\S+)'
+                           r' +(?P<description>[\s\S]+)')
+
+        # PIC 0  Online       1x 10GE(LAN/WAN)
+        p_pic = re.compile(r'PIC +(?P<pic_slot>\d+) '
+                           r'+(?P<pic_state>\S+) +(?P<pic_type>[\s\S]+)')
+
+        # Build result dictionary
+        res = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Slot 0   Online       DPCE 2x 10GE R
+            m = p_fpc.match(line)
+            if m:
+                group = m.groupdict()
+
+                if "fpc-information" not in res:
+                    res = {
+                        "fpc-information": {
+                            "fpc": []
+                        }
+                    }
+
+                fpc_list = res["fpc-information"]["fpc"]
+
+                fpc_item = {}
+
+                for k, v in group.items():
+                    fpc_item[k] = v
+
+                fpc_list.append(fpc_item)
+                continue
+
+            # PIC 0  Online       1x 10GE(LAN/WAN)
+            m = p_pic.match(line)
+            if m:
+                group = m.groupdict()
+                
+                if "pic" not in fpc_item:
+                    fpc_item["pic"] = []
+
+                pic_list = fpc_item["pic"]
+
+                pic_item = {}
+
+                for k, v in group.items():
+                    k = k.replace('_' ,'-')
+
+                    pic_item[k] = v
+
+                pic_list.append(pic_item)
+                continue
+
+        return res
+
+
+class ShowChassisEnvironmentComponentSchema(MetaParser):
+    """ Schema for:
+            * show chassis environment {component}
+    """
+    def validate_temperature_reading_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaError('environment-component-item is not a list')
+        env_schema = Schema({
+                        "temperature": {
+                            "#text": str,
+                            Optional("@junos:celsius"): str
+                        },
+                        "temperature-name": str
+                    })
+        # Validate each dictionary in list
+        for item in value:
+            env_schema.validate(item)
+        return value
+    
+    def validate_voltage_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaError('environment-component-item is not a list')
+        env_schema = Schema({
+                            "actual-voltage": str,
+                            "reference-voltage": str
+                        })
+        # Validate each dictionary in list
+        for item in value:
+            env_schema.validate(item)
+        return value
+    
+    def validate_environment_component_item_list(value):
+        # Pass firmware list as value
+        if not isinstance(value, list):
+            raise SchemaError('environment-component-item is not a list')
+        env_schema = Schema({
+                "name": str,
+                "state": str,
+                "bus-revision": str,
+                "fpga-revision": str,
+                "power-information": {
+                    "power-title": {
+                        "power-type": str
+                    },
+                    "voltage": Use(ShowChassisEnvironmentComponentSchema.validate_voltage_list)
+                },
+                "temperature-reading": Use(ShowChassisEnvironmentComponentSchema.validate_temperature_reading_list)
+            })
+        # Validate each dictionary in list
+        for item in value:
+            env_schema.validate(item)
+        return value
+    
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "environment-component-information": {
+            Optional("@xmlns"):
+            str,
+            "environment-component-item": Use(validate_environment_component_item_list)
+        }
+    }
+
+
+class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
+    """ Parser for:
+            * show chassis environment {component}
+    """
+    cli_command = 'show chassis environment {component}'
+
+    def cli(self, component, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                component=component
+            ))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # CB 0 status:
+        p1 = re.compile(r'^(?P<name>\S+ +\d+) +status:$')
+
+        # State                      Online Master
+        p2 = re.compile(r'^State +(?P<state>[\S\s]+)$')
+
+        # Power 1
+        p3 = re.compile(r'^\w+ +(?P<power_type>\d+)$')
+
+        # 1.0 V                     1005 mV
+        p4 = re.compile(r'^(?P<temperature_name>.*) +(?P<text>\d+ +degrees +\w+ +\/ +\d+ +degrees +\w+)$')
+        
+        # TCBC-Zone0 Temperature     45 degrees C / 113 degrees F
+        p5 = re.compile(r'^(?P<reference_voltage>[\d\.]+ +\w+( +\w+)?) +(?P<actual_voltage>\d+) +\w+$')
+
+        # Bus Revision               100
+        p6 = re.compile(r'^Bus +Revision +(?P<bus_revision>\d+)$')
+
+        # FPGA Revision              272
+        p7 = re.compile(r'^FPGA +Revision +(?P<fpga_revision>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # CB 0 status:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_list = ret_dict.setdefault('environment-component-information', {}). \
+                    setdefault('environment-component-item', [])
+                environment_component_item_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                environment_component_item_list.append(environment_component_item_dict)
+                continue
+            
+            # State                      Online Master
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+            
+            # Power 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                power_info_dict = environment_component_item_dict.setdefault('power-information', {})
+                power_title_dict = power_info_dict.setdefault('power-title', {}). \
+                    setdefault('power-type', group['power_type'])
+                continue
+            
+            # IntakeC-Zone0 Temperature  51 degrees C / 123 degrees F
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                temperature_reading_list = environment_component_item_dict.setdefault('temperature-reading', [])
+                temperature_name = group['temperature_name']
+                text = group['text']
+                temperature_reading_dict = {'temperature-name': temperature_name,
+                    'temperature': {'#text': text}}
+                temperature_reading_list.append(temperature_reading_dict)
+                continue
+            
+            # 1.0 V                     1005 mV
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                voltage_list = power_info_dict.setdefault('voltage', [])
+                voltage_dict = {k.replace('_', '-'):v for k, v in group.items() if v is not None}
+                voltage_list.append(voltage_dict)
+                continue
+            
+            # Bus Revision               100
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+            
+            # FPGA Revision              272
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
         
         return ret_dict

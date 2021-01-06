@@ -1,0 +1,23 @@
+
+        show route protocol ospf table inet.0 extensive 10.169.196.241
+
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        10.169.196.241/32 (1 entry, 1 announced)
+                State: <FlashAll>
+        TSI:
+        KRT in-kernel 10.169.196.241/32 -> {10.169.14.121}
+                *OSPF   Preference: 10/10
+                        Next hop type: Router, Next hop index: 613
+                        Address: 0xdfa7934
+                        Next-hop reference count: 458
+                        Next hop: 10.169.14.121 via ge-0/0/1.0 weight 0x1, selected
+                        Session Id: 0x141
+                        State: <Active Int>
+                        Local AS: 65171
+                        Age: 6d 17:23:01 	Metric: 1201
+                        Validation State: unverified
+                        Area: 0.0.0.8
+                        Task: OSPF
+                        Announcement bits (2): 0-KRT 7-Resolve tree 3
+                        AS path: I
+    

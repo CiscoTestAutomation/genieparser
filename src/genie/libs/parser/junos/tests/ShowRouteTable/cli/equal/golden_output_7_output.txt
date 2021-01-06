@@ -1,0 +1,6 @@
+
+            mpls.0: 11 destinations, 11 routes (11 active, 0 holddown, 0 hidden)
+            + = Active Route, - = Last Active, * = Both
+            592383             *[LDP/9] 00:02:52, metric 2, tag 0
+                                > to 10.169.14.158 via et-0/0/0.0, Swap 517890
+        

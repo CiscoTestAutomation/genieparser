@@ -1,0 +1,34 @@
+
+        show ospf3 database network detail
+
+        OSPF3 database, Area 0.0.0.0
+      Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+    Network    *0.0.0.9          192.168.219.235   0x8000001d   892  0xf99f  36
+      Options 0x33
+      Attached router 192.168.219.235
+      Attached router 10.69.198.249
+      Attached router 192.168.219.236
+      Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 10.69.198.249, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 192.168.219.235, Metric: 0, Bidirectional
+    Network     0.0.0.3          192.168.219.236   0x80000b14  2142  0x1983  36
+      Options 0x33
+      Attached router 192.168.219.236
+      Attached router 10.69.198.249
+      Attached router 192.168.219.235
+      Type: Transit, Node ID: 192.168.219.235, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 10.69.198.249, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
+    Network     0.0.0.4          192.168.219.236   0x80000b11  1092  0xa3d1  32
+      Options 0x33
+      Attached router 192.168.219.236
+      Attached router 192.168.219.235
+      Type: Transit, Node ID: 192.168.219.235, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
+    Network     0.0.0.6          192.168.219.236   0x80000b11  1692  0x8fe3  32
+      Options 0x33
+      Attached router 192.168.219.236
+      Attached router 192.168.219.235
+      Type: Transit, Node ID: 192.168.219.235, Metric: 0, Bidirectional
+      Type: Transit, Node ID: 192.168.219.236, Metric: 0, Bidirectional
+    

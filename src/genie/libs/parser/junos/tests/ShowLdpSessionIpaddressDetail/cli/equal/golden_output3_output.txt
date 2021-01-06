@@ -1,0 +1,23 @@
+
+        show ldp session 10.169.14.240 detail 
+          Address: 10.169.14.240, State: Nonexistent, Connection: Closed, Hold time: 0
+            Session ID: 10.34.2.250:0--10.169.14.240:0
+            Passive, Maximum PDU: 4096, Hold time: 30, Neighbor count: 1
+            Neighbor types: discovered
+            Keepalive interval: 10, Connect retry interval: 1
+            Last down 00:00:01 ago; Reason: received notification from peer
+            Number of session flaps: 1
+            Capabilities advertised: none
+            Capabilities received: none
+            Protection: disabled
+            Session flags: none
+            Local - Restart: disabled, Helper mode: enabled
+            Remote - Restart: disabled, Helper mode: enabled
+            Local maximum neighbor reconnect time: 120000 msec
+            Local maximum neighbor recovery time: 240000 msec
+            Local Label Advertisement mode: Downstream unsolicited
+            Remote Label Advertisement mode: Downstream unsolicited
+            Negotiated Label Advertisement mode: Downstream unsolicited
+            MTU discovery: disabled
+            Nonstop routing state: Not in sync
+            

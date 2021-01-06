@@ -1,0 +1,9 @@
+
+        show route table mpls.0 label 118420
+
+        mpls.0: 54 destinations, 54 routes (54 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        118420             *[VPN/170] 31w3d 20:13:54
+                            >  to 10.19.198.66 via ge-0/0/3.0, Swap 78
+    

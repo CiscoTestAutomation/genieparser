@@ -1,0 +1,14 @@
+
+          show ldp database 10.34.2.250 
+        Input label database, 10.169.14.240:0--10.34.2.250:0
+        Labels received: 2
+        Label     Prefix
+            3      10.34.2.250/32
+            16      10.169.14.240/32
+
+        Output label database, 10.169.14.240:0--10.34.2.250:0
+        Labels advertised: 2
+        Label     Prefix
+            16      10.34.2.250/32
+            3      10.169.14.240/32
+        

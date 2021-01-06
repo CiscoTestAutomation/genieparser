@@ -1,0 +1,141 @@
+
+        show interfaces extensive ge-0/0/0 
+        Physical interface: ge-0/0/0, Enabled, Physical link is Up
+        Interface index: 148, SNMP ifIndex: 526, Generation: 2988
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None,
+        Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Schedulers     : 0
+        Hold-times     : Up 0 ms, Down 0 ms
+        Damping        : half-life: 0 sec, max-suppress: 0 sec, reuse: 0, suppress: 0, state: unsuppressed
+        Current address: 00:50:56:ff:55:26, Hardware address: 00:50:56:ff:55:26
+        Last flapped   : 2020-08-05 02:58:37 UTC (03:17:16 ago)
+        Statistics last cleared: 2020-08-05 06:15:50 UTC (00:00:03 ago)
+        Traffic statistics:
+        Input  bytes  :                 1900                 3912 bps
+        Output bytes  :                  648                 1544 bps
+        Input  packets:                   26                    6 pps
+        Output packets:                    7                    2 pps
+        IPv6 transit statistics:
+        Input  bytes  :                  256
+        Output bytes  :                    0
+        Input  packets:                    4
+        Output packets:                    0
+        Dropped traffic statistics due to STP State:
+        Input  bytes  :                    0
+        Output bytes  :                    0
+        Input  packets:                    0
+        Output packets:                    0
+        Input errors:
+            Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0, L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
+        Output errors:
+            Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0, MTU errors: 0, Resource errors: 0
+        Egress queues: 8 supported, 4 in use
+        Queue counters:       Queued packets  Transmitted packets      Dropped packets
+            0                                0                    0                    0
+            1                                0                    0                    0
+            2                                0                    0                    0
+            3                                2                    2                    0
+        Queue number:         Mapped forwarding classes
+            0                   best-effort
+            1                   expedited-forwarding
+            2                   assured-forwarding
+            3                   network-control
+        Active alarms  : None
+        Active defects : None
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        MAC statistics:                      Receive         Transmit
+            Total octets                          2230              404
+            Total packets                           12                2
+            Unicast packets                         27                6
+            Broadcast packets                        0                0
+            Multicast packets                        0                0
+            CRC/Align errors                         0                0
+            FIFO errors                              0                0
+            MAC control frames                       0                0
+            MAC pause frames                         0                0
+            Oversized frames                         0
+            Jabber frames                            0
+            Fragment frames                          0
+            VLAN tagged frames                       0
+            Code violations                          0
+            Total errors                             0                0
+        Filter statistics:
+            Input packet count                      27
+            Input packet rejects                    22
+            Input DA rejects                         0
+            Input SA rejects                         0
+            Output packet count                                       6
+            Output packet pad count                                   0
+            Output packet error count                                 0
+            CAM destination filters: 0, CAM source filters: 0
+        Autonegotiation information:
+            Negotiation status: Incomplete
+        Packet Forwarding Engine configuration:
+            Destination slot: 0 (0x00)
+        CoS information:
+            Direction : Output
+            CoS transmit queue               Bandwidth               Buffer Priority   Limit
+                                    %%            bps     %%           usec
+            0 best-effort            95      950000000    95              0      low    none
+            3 network-control         5       50000000     5              0      low    none
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/0.0 (Index 332) (SNMP ifIndex 537) (Generation 30193)
+            Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+            Traffic statistics:
+            Input  bytes  :                 1900
+            Output bytes  :                  606
+            Input  packets:                   26
+            Output packets:                    7
+            IPv6 transit statistics:
+            Input  bytes  :                  256
+            Output bytes  :                    0
+            Input  packets:                    4
+            Output packets:                    0
+            Local statistics:
+            Input  bytes  :                    0
+            Output bytes  :                  606
+            Input  packets:                    0
+            Output packets:                    7
+            Transit statistics:
+            Input  bytes  :                 1900                 3912 bps
+            Output bytes  :                    0                    0 bps
+            Input  packets:                   26                    6 pps
+            Output packets:                    0                    0 pps
+            IPv6 transit statistics:
+            Input  bytes  :                 256                  504 bps
+            Output bytes  :                   0                    0 bps
+            Input  packets:                   4                    0 pps
+            Output packets:                   0                    0 pps
+            Protocol inet, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Generation: 82967, Route table: 0
+            Flags: Sendbcast-pkt-to-re
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 20.0.0/24, Local: 10.145.0.1, Broadcast: 10.145.0.255, Generation: 172354
+            Protocol inet6, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Generation: 82968, Route table: 0
+            Flags: Is-Primary
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 2001:20::/64, Local: 2001:20::1
+            Generation: 172356
+            Addresses, Flags: Is-Preferred
+                Destination: fe80::/64, Local: fe80::250:56ff:feff:5526
+            Protocol multiservice, MTU: Unlimited, Generation: 172358
+            Generation: 82969, Route table: 0
+            Flags: Is-Primary
+            Policer: Input: __default_arp_policer__
+            

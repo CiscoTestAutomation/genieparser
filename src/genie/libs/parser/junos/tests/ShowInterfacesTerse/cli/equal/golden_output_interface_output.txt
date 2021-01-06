@@ -1,0 +1,9 @@
+
+    root@junos_vmx1 > show interfaces em1.0 terse
+    em1.0                   up    up   inet     10.0.0.4/8
+                                                    172.16.64.1/2
+                                                    172.16.64.4/2
+                                           inet6    fe80::250:56ff:fe82:ba52/64
+                                                    2001:db8:8d82:0:a::4/64
+                                           tnp      0x4
+    

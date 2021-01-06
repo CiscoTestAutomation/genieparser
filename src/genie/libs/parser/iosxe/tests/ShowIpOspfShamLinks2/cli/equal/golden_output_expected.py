@@ -1,0 +1,42 @@
+expected_output = {
+             "address_family":{
+                "ipv4":{
+                   "areas":{
+                      "0.0.0.1":{
+                         "sham_links":{
+                            "10.229.11.11 10.151.22.22":{
+                               "transit_area_id":"0.0.0.1",
+                               "local_id":"10.229.11.11",
+                               "demand_circuit":True,
+                               "name":"SL0",
+                               "remote_id":"10.151.22.22",
+                               "link_state":"up",
+                               "dcbitless_lsa_count":1,
+                               "donotage_lsa":"not allowed",
+                               "cost":111,
+                               "state":"point_to_point,",
+                               "hello_interval":10,
+                               "dead_interval":40,
+                               "wait_interval":40,
+                               "ttl_security":{
+                                  "enable":True,
+                                  "hops":3
+                               },
+                               "hello_timer":"00:00:00",
+                               "adjacency_state":"full",
+                               "index":"1/2/2",
+                               "retrans_qlen":0,
+                               "total_retransmission":2,
+                               "first":"0x0(0)/0x0(0)/0x0(0)",
+                               "next":"0x0(0)/0x0(0)/0x0(0)",
+                               "last_retransmission_scan_length":1,
+                               "last_retransmission_max_length":1,
+                               "last_retransmission_scan_time":0,
+                               "last_retransmission_max_scan":0
+                            }
+                         }
+                      }
+                   }
+                }
+             }
+          }
