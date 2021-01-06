@@ -1,6 +1,6 @@
 """
 IOSXE C9200 parsers for the following show commands:
-    * show inventory
+    * show environment all
 """
 # Python
 import re
