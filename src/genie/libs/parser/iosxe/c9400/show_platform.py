@@ -55,14 +55,13 @@ class ShowEnvironment(ShowEnvironmentSchema):
                    'show environment | include {include}']
 
     def cli(self, include='', output=None):
-        if output is None:
+        if not output:
             if include:
                 cmd = self.cli_command[1].format(include=include)
             else:
                 cmd = self.cli_command[0]
-            out = self.device.execute(cmd)
-        else:
-            out = output
+
+            output = self.device.execute(cmd)
 
         # initial return dictionary
         ret_dict = {}
@@ -85,7 +84,7 @@ class ShowEnvironment(ShowEnvironmentSchema):
         # R0          Temp:    inlet  Normal          32   Celsius	(56 ,66 ,96 ,98 )(Celsius)
         p4 = re.compile(r'(?P<slot>\S+)\s+(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+(\s+)?),(?P<major>\d+(\s+)?),(?P<critical>\d+(\s+)?),(?P<shutdown>\d+(\s+)?)\)\((?P<unit>\S+)\))?')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # Number of Critical alarms:  0
@@ -199,14 +198,12 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                    'show environment all | include {include}']
 
     def cli(self, include='', output=None):
-        if output is None:
+        if not output:
             if include:
                 cmd = self.cli_command[1].format(include=include)
             else:
                 cmd = self.cli_command[0]
-            out = self.device.execute(cmd)
-        else:
-            out = output
+            output = self.device.execute(cmd)
 
         # initial return dictionary
         ret_dict = {}
@@ -251,7 +248,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         # SYSTEM : GREEN
         p8 = re.compile(r'(?P<fantray_key>((.+)?Fantray(.+)?)|SYSTEM)(\s+)?:\s+(?P<fantray_value>(\S+)|(\d+\s+Watts))')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # Number of Critical alarms:  0
