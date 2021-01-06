@@ -16,7 +16,8 @@ from genie.metaparser.util.schemaengine import (Any,
 """
 class MonitorInterfaceTrafficSchema(MetaParser):
     schema = {
-        "monitor-time": {
+        Optional("no-output"):bool,
+        Optional("monitor-time"): {
             Any(): {
                 "hostname": str,
                 "seconds": str,
@@ -67,6 +68,10 @@ class MonitorInterfaceTraffic(MonitorInterfaceTrafficSchema):
         
         for line in out.splitlines():
             line = line.strip()
+
+            if line == '{master}':
+                return {'no-output':True}
+
             m = p1.match(line)
             if m:
                 group = m.groupdict()

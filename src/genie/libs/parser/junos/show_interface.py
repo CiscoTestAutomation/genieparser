@@ -850,7 +850,8 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(, +Generation: +\S+)$')
 
         # Description: none/100G/in/hktGCS002_ge-0/0/0
-        p3 = re.compile(r'^Description: +(?P<description>\S+)$')
+        # Description: TEST-DESC:1|TEST#1234 DEV
+        p3 = re.compile(r'^Description: +(?P<description>.+)$')
 
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
         # Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
