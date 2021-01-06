@@ -82,7 +82,7 @@ class ShowEnvironment(ShowEnvironmentSchema):
         # R0          HotSwap: Volts  Normal          53   V DC   	na
         # R0          Temp:   outlet  Normal          39   Celsius	(63 ,73 ,103,105)(Celsius)
         # R0          Temp:    inlet  Normal          32   Celsius	(56 ,66 ,96 ,98 )(Celsius)
-        p4 = re.compile(r'(?P<slot>\S+)\s+(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+(\s+)?),(?P<major>\d+(\s+)?),(?P<critical>\d+(\s+)?),(?P<shutdown>\d+(\s+)?)\)\((?P<unit>\S+)\))?')
+        p4 = re.compile(r'(?P<slot>\S+)\s+(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+\s*),(?P<major>\d+\s*),(?P<critical>\d+\s*),(?P<shutdown>\d+\s*)\)\((?P<unit>\S+)\))?')
 
         for line in output.splitlines():
             line = line.strip()
@@ -225,7 +225,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         #  Temp: UADP       R0                Normal            56 Celsius          	(107,117,123,125)(Celsius)
         #  V1: VX1          R0                Normal            869 mV               	na
         #  Temp:    inlet   R0                Normal            32 Celsius          	(56 ,66 ,96 ,98 )(Celsius)
-        p5 = re.compile(r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<slot>([A-Z][0-9]|\d/\d))\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+(\s+)?),(?P<major>\d+(\s+)?),(?P<critical>\d+(\s+)?),(?P<shutdown>\d+(\s+)?)\)\((?P<unit>\S+)\))?')
+        p5 = re.compile(r'(?P<sensor_name>\S+(:\s+\S+)?)\s+(?P<slot>([A-Z][0-9]|\d/\d))\s+(?P<state>\S+)\s+(?P<reading>\d+\s+\S+(\s+(AC|DC))?)\s+(\((?P<minor>\d+\s*),(?P<major>\d+\s*),(?P<critical>\d+\s*),(?P<shutdown>\d+\s*)\)\((?P<unit>\S+)\))?')
 
         # Power                                                       Fan States
         # Supply  Model No              Type  Capacity  Status        1     2
