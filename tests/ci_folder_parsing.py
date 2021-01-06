@@ -371,8 +371,8 @@ CLASS_SKIP = {
         "ShowIpOspfDatabaseTypeParser": True,
         "ShowIpOspfLinksParser": True,  # super class
         "ShowIpOspfLinksParser2": True, # super class
-        "ShowIpRouteDistributor": True,
-        "ShowIpv6RouteDistributor": True,
+        "ShowIpRouteDistributor": True, # super class
+        "ShowIpv6RouteDistributor": True, # super class
         "ShowControlLocalProperties_viptela": True,
         "ShowControlLocalProperties": True,
         "ShowVrfDetailSuperParser": True,
@@ -433,6 +433,8 @@ CLASS_SKIP = {
         "ShowIpOspfNeighborDetail": True,
         "ShowIpOspfShamLinks": True,
         "ShowIpOspfVirtualLinks": True,
+        "ShowIpRouteDistributor": True, # super class
+        "ShowIpv6RouteDistributor": True, # super class
         "ShowIpv6Route": True,
         "ShowIpBgp": True,
         "ShowMplsLdpNeighbor": True,
