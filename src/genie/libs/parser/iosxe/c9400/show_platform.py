@@ -16,12 +16,6 @@ import logging
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
-# genie.parsergen
-try:
-    import genie.parsergen
-except (ImportError, OSError):
-    pass
-
 log = logging.getLogger(__name__)
 
 
