@@ -1,0 +1,10 @@
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* IOSXR
+    * pep8 formatting for show_evn.py
+    * ShowEvpnEviDetail
+        * fix output reference to 'out'
+    * ShowEvpnEthernetSegment
+        * fix pattern matches and missing initial values
+

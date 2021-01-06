@@ -7,7 +7,7 @@ expected_output = {
                 "admin-status": {"@junos:format": "Enabled"},
                 "bpdu-error": "None",
                 "current-physical-address": "00:50:56:ff:56:b6",
-                "description": "none/100G/in/hktGCS002_ge-0/0/0",
+                "description": "TEST-DESC:1|TEST#1234 DEV",
                 "eth-switch-error": "None",
                 "ethernet-fec-statistics": {
                     "fec_ccw_count": "0",

@@ -1,4 +1,3 @@
-
 # Python
 import unittest
 from unittest.mock import Mock
@@ -29,7 +28,7 @@ from genie.libs.parser.iosxr.show_evpn import (ShowEvpnEvi,
 class TestShowEvpnEvi(unittest.TestCase):
 
     '''Unit test for 'show evpn evi'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -80,7 +79,7 @@ class TestShowEvpnEvi(unittest.TestCase):
 class TestShowEvpnEviDetail(unittest.TestCase):
 
     '''Unit test for 'show evpn evi detail'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -193,7 +192,7 @@ class TestShowEvpnEviDetail(unittest.TestCase):
         0100.beff.0303                 Import
 
         '''}
-    
+
     golden_parsed_output2 = {
         'evi': {
             1: {
@@ -243,7 +242,7 @@ class TestShowEvpnEviDetail(unittest.TestCase):
         obj = ShowEvpnEviDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
-    
+
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
@@ -258,7 +257,7 @@ class TestShowEvpnEviDetail(unittest.TestCase):
 class test_show_evpn_evi_mac(unittest.TestCase):
 
     '''Unit test for 'show evpn evi mac'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -286,7 +285,7 @@ class test_show_evpn_evi_mac(unittest.TestCase):
         65535      N/A    0000.0000.0000 ::                                       Local                                   0     
 
         '''}
-    
+
     golden_parsed_output2 = {
         'vpn_id': {
             65535: {
@@ -324,7 +323,7 @@ class test_show_evpn_evi_mac(unittest.TestCase):
         obj = ShowEvpnEviMac(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
-    
+
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
@@ -339,7 +338,7 @@ class test_show_evpn_evi_mac(unittest.TestCase):
 class test_show_evpn_evi_mac_private(unittest.TestCase):
 
     '''Unit test for 'show evpn evi mac private'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -427,7 +426,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         ---------------------------------------------------------------------------- 
 
         '''}
-    
+
     golden_parsed_output2 = {
         'vpn_id': {
             7: {
@@ -595,7 +594,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         ----------------------------------------------------------------------------
 
         '''}
-    
+
     golden_parsed_output3 = {
         'vpn_id': {
             19: {
@@ -2014,7 +2013,7 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         RP/0/RSP0/CPU0:genie-Router#
 
     '''}
-    
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowEvpnEviMacPrivate(device=self.device)
@@ -2027,14 +2026,14 @@ class test_show_evpn_evi_mac_private(unittest.TestCase):
         obj = ShowEvpnEviMacPrivate(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
-    
+
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowEvpnEviMacPrivate(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
-    
+
     def test_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
@@ -2107,8 +2106,8 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'evi': 
-            {145: 
+        'evi':
+            {145:
                 {'esi': 'ff00.00ff.c025.ce01.0000',
                 'eth_tag': 0,
                 'evi': 145,
@@ -2140,19 +2139,19 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 'mp_internal_label': 24002,
                 'mp_resolved': True,
                 'mp_info': 'Remote all-active',
-                'pathlists': 
-                    {'ead_es': 
-                        {'nexthop': 
-                            {'10.76.1.2': 
+                'pathlists':
+                    {'ead_es':
+                        {'nexthop':
+                            {'10.76.1.2':
                                 {'label': 0}}},
-                    'summary': 
-                        {'nexthop': 
-                            {'10.76.1.2': 
+                    'summary':
+                        {'nexthop':
+                            {'10.76.1.2':
                                 {'label': 16001,
                                 'value': '0x03000001'}}},
-                    'ead_evi': 
-                        {'nexthop': 
-                            {'10.76.1.2': 
+                    'ead_evi':
+                        {'nexthop':
+                            {'10.76.1.2':
                                 {'label': 16001}}}},
                 'vpn_id': 16001},
             16002:
@@ -2163,22 +2162,22 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
                 'mp_internal_label': 24003,
                 'mp_resolved': True,
                 'mp_info': 'Remote all-active',
-                'pathlists': 
-                    {'ead_es': 
-                        {'nexthop': 
-                            {'10.76.1.2': 
+                'pathlists':
+                    {'ead_es':
+                        {'nexthop':
+                            {'10.76.1.2':
                                 {'label': 0}}},
-                    'summary': 
-                        {'nexthop': 
-                            {'10.76.1.2': 
+                    'summary':
+                        {'nexthop':
+                            {'10.76.1.2':
                                 {'label': 16002,
                                     'value': '0x03000001'}}},
-                    'ead_evi': 
-                        {'nexthop': 
-                            {'10.76.1.2': 
+                    'ead_evi':
+                        {'nexthop':
+                            {'10.76.1.2':
                                 {'label': 16002}}}},
                 'vpn_id': 16002},
-            16003: 
+            16003:
                 {'encap': 'VXLAN',
                 'esi': '0001.04ff.0b0c.0607.0811',
                 'eth_tag': 0,
@@ -2343,7 +2342,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
         obj = ShowEvpnInternalLabelDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.deivce_parsed_output)
-    
+
     def test_golden4(self):
         self.device = Mock(**self.golden_output4)
         obj = ShowEvpnInternalLabelDetail(device=self.device)
@@ -2357,7 +2356,7 @@ class TestShowEvpnInternalLabelDetail(unittest.TestCase):
 class test_show_evpn_ethernet_segment(unittest.TestCase):
 
     '''Unit test for 'show evpn ethernet-segment'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -2453,7 +2452,7 @@ class test_show_evpn_ethernet_segment(unittest.TestCase):
 class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
     '''Unit test for 'show evpn ethernet-segment detail'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -2753,7 +2752,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
             },
         },
     }
-    
+
     golden_output2 = {'execute.return_value': '''
         show evpn ethernet-segment detail
 
@@ -2867,6 +2866,247 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
     '''}
 
+    golden_output3 = {'execute.return_value': '''
+        Mon Jan  4 10:56:40.197 JST
+        Legend:
+        B   - No Forwarders EVPN-enabled,
+        C   - Backbone Source MAC missing (PBB-EVPN),
+        RT  - ES-Import Route Target missing,
+        E   - ESI missing,
+        H   - Interface handle missing,
+        I   - Name (Interface or Virtual Access) missing,
+        M   - Interface in Down state,
+        O   - BGP End of Download missing,
+        P   - Interface already Access Protected,
+        Pf  - Interface forced single-homed,
+        R   - BGP RID not received,
+        S   - Interface in redundancy standby state,
+        X   - ESI-extracted MAC Conflict
+        SHG - No local split-horizon-group label allocated
+
+        Ethernet Segment Id      Interface                          Nexthops           
+        ------------------------ ---------------------------------- --------------------
+        0021.2210.1010.1010.1010 BE10                               192.168.99.21
+                                                                    192.168.99.22
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : Ready
+        Main port         :
+            Interface name : Bundle-Ether10
+            Interface MAC  : 00bc.6045.2cdc
+            IfHandle       : 0x08004054
+            State          : Up
+            Redundancy     : Not Defined
+        ESI type          : 0
+            Value          : 21.2210.1010.1010.1010
+        ES Import RT      : 2122.1010.1010 (from ESI)
+        Source MAC        : 0000.0000.0000 (N/A)
+        Topology          :
+            Operational    : MH, All-active
+            Configured     : All-active (AApF) (default)
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Convergence       : NH-Tracking
+            Tracked Nexthop: 192.168.99.22
+        Peering Details   : 2 Nexthops
+            192.168.99.21 [MOD:P:7fff:T]
+            192.168.99.22 [MOD:P:00:T]
+        Service Carving Synchronization:
+            Mode           : NONE
+            Peer Updates   :
+        Service Carving Results:
+            Forwarders     : 11
+            Elected        : 7
+            Not Elected    : 4
+        EVPN-VPWS Service Carving Results:
+            Primary        : 0
+            Backup         : 0
+            Non-DF         : 0
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 10 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        HRW Reset timer   : 5 sec [not running]
+        Local SHG label   : 28105
+        Remote SHG labels : 1
+                    28105 : nexthop 192.168.99.22
+        Access signal mode: Bundle OOS (Default)
+
+        0021.2211.1111.1111.1111 BE11                               192.168.99.21
+                                                                    192.168.99.22
+        ES to BGP Gates   : Ready
+        ES to L2FIB Gates : Ready
+        Main port         :
+            Interface name : Bundle-Ether11
+            Interface MAC  : 00bc.6045.2cdb
+            IfHandle       : 0x080040b4
+            State          : Standby
+            Redundancy     : Not Defined
+        ESI type          : 0
+            Value          : 21.2211.1111.1111.1111
+        ES Import RT      : 2122.1111.1111 (from ESI)
+        Source MAC        : 0000.0000.0000 (N/A)
+        Topology          :
+            Operational    : MH
+            Configured     : Port-Active
+        Service Carving   : Auto-selection
+            Multicast      : Disabled
+        Convergence       :
+        Peering Details   : 2 Nexthops
+            192.168.99.21 [MOD:P:00:T]
+            192.168.99.22 [MOD:P:00:T]
+        Service Carving Synchronization:
+            Mode           : NTP_SCT
+            Peer Updates   :
+                192.168.99.21 [SCT: 2020-12-21 17:21:05:210251]
+                192.168.99.22 [SCT: 2020-12-21 17:20:50:188446]
+        Service Carving Results:
+            Forwarders     : 1
+            Elected        : 0
+            Not Elected    : 1
+        EVPN-VPWS Service Carving Results:
+            Primary        : 0
+            Backup         : 0
+            Non-DF         : 0
+        MAC Flushing mode : STP-TCN
+        Peering timer     : 10 sec [not running]
+        Recovery timer    : 30 sec [not running]
+        Carving timer     : 0 sec [not running]
+        HRW Reset timer   : 5 sec [not running]
+        Local SHG label   : 28139
+        Remote SHG labels : 1
+                    28139 : nexthop 192.168.99.22
+        Access signal mode: Bundle Down
+    '''}
+
+    golden_parsed_output3 = {
+        'segment_id': {
+            '0021.2210.1010.1010.1010': {
+                'interface': {
+                    'Bundle-Ether10': {
+                        'next_hops': ['192.168.99.21', '192.168.99.22'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'Ready',
+                        'main_port': {
+                            'interface': 'Bundle-Ether10',
+                            'interface_mac': '00bc.6045.2cdc',
+                            'if_handle': '0x08004054',
+                            'state': 'Up',
+                            'redundancy': 'Not Defined'
+                        },
+                        'esi': {
+                            'type': '0',
+                            'value': '21.2210.1010.1010.1010'
+                        },
+                        'es_import_rt': '2122.1010.1010 (from ESI)',
+                        'source_mac': '0000.0000.0000 (N/A)',
+                        'topology': {
+                            'operational': 'MH, All-active',
+                            'configured': 'All-active (AApF) (default)'
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'convergence': 'NH-Tracking',
+                        'tracked_nexthop': '192.168.99.22',
+                        'peering_details': ['2', 'Nexthops'],
+                        'checkpoint_info': {
+                            'nexthop': ['192.168.99.21 [MOD:P:7fff:T]', '192.168.99.22 [MOD:P:00:T]']
+                        },
+                        'mode': 'NONE',
+                        'service_carving_results': {
+                            'forwarders': 11,
+                            'elected': {
+                                'num_of_total': 7
+                            },
+                            'not_elected': {
+                                'num_of_total': 4
+                            }
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '0',
+                            'backup': '0',
+                            'non_df': '0'
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '10 sec [not running]',
+                        'recovery_timer': '30 sec [not running]',
+                        'carving_timer': '0 sec [not running]',
+                        'local_shg_label': '28105',
+                        'remote_shg_labels': {
+                            '1': {
+                                'label': {
+                                    '28105': {
+                                        'nexthop': '192.168.99.22'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            '0021.2211.1111.1111.1111': {
+                'interface': {
+                    'Bundle-Ether11': {
+                        'next_hops': ['192.168.99.21', '192.168.99.22'],
+                        'es_to_bgp_gates': 'Ready',
+                        'es_to_l2fib_gates': 'Ready',
+                        'main_port': {
+                            'interface': 'Bundle-Ether11',
+                            'interface_mac': '00bc.6045.2cdb',
+                            'if_handle': '0x080040b4',
+                            'state': 'Standby',
+                            'redundancy': 'Not Defined'
+                        },
+                        'esi': {
+                            'type': '0',
+                            'value': '21.2211.1111.1111.1111'
+                        },
+                        'es_import_rt': '2122.1111.1111 (from ESI)',
+                        'source_mac': '0000.0000.0000 (N/A)',
+                        'topology': {
+                            'operational': 'MH',
+                            'configured': 'Port-Active'
+                        },
+                        'service_carving': 'Auto-selection',
+                        'multicast': 'Disabled',
+                        'peering_details': ['2', 'Nexthops'],
+                        'checkpoint_info': {
+                            'nexthop': ['192.168.99.21 [MOD:P:00:T]', '192.168.99.22 [MOD:P:00:T]']
+                        },
+                        'mode': 'NTP_SCT',
+                        'service_carving_results': {
+                            'forwarders': 1,
+                            'elected': {
+                                'num_of_total': 0
+                            },
+                            'not_elected': {
+                                'num_of_total': 1
+                            }
+                        },
+                        'evpn_vpws_service_carving_results': {
+                            'primary': '0',
+                            'backup': '0',
+                            'non_df': '0'
+                        },
+                        'mac_flushing_mode': 'STP-TCN',
+                        'peering_timer': '10 sec [not running]',
+                        'recovery_timer': '30 sec [not running]',
+                        'carving_timer': '0 sec [not running]',
+                        'local_shg_label': '28139',
+                        'remote_shg_labels': {
+                            '1': {
+                                'label': {
+                                    '28139': {
+                                        'nexthop': '192.168.99.22'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowEvpnEthernetSegmentDetail(device=self.device)
@@ -2879,13 +3119,21 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
         obj = ShowEvpnEthernetSegmentDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
-    
+
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowEvpnEthernetSegmentDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowEvpnEthernetSegmentDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output3)
+
 
 # ============================================================
 #  Unit test for 'show evpn ethernet-segment esi {esi} detail'
@@ -2894,7 +3142,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
 
     '''Unit test for 'show evpn ethernet-segment esi {esi} detail'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -3076,10 +3324,10 @@ class TestShowEvpnEthernetSegmentEsiDetail(unittest.TestCase):
 class TestShowEvpnInternalLabel(unittest.TestCase):
 
     '''Unit test for 'show evpn internal-label'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
-    
+
     golden_parsed_output1 = {
         'evi': {
             1000: {
@@ -3286,7 +3534,7 @@ class TestShowEvpnInternalLabel(unittest.TestCase):
         obj = ShowEvpnInternalLabel(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
-    
+
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
@@ -3300,7 +3548,7 @@ class TestShowEvpnInternalLabel(unittest.TestCase):
 class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
 
     '''Unit test for 'show evpn ethernet-segment private'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -6402,7 +6650,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
 
         RP/0/0/CPU0:PE1#
      '''}
-    
+
     golden_parsed_output2 = {
         'segment_id': {
             '0001.00ff.0108.0001.0007': {
@@ -9965,7 +10213,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
             },
         },
     }
-    
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowEvpnEthernetSegmentPrivate(device=self.device)
@@ -9978,7 +10226,7 @@ class TestShowEvpnEthernetSegmentPrivate(unittest.TestCase):
         obj = ShowEvpnEthernetSegmentPrivate(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output1)
-    
+
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
