@@ -89,8 +89,8 @@ class ShowLacpInterfacesInterface(ShowLacpInterfacesInterfaceSchema):
             r' +(?P<lacp_activity>\S+)$')
 
         #     xe-3/0/1                  Current   Fast periodic Collecting distributing
-        p3 = re.compile(r'^(?P<name>\S+) +(?P<lacp_receive_state>\S+) +'
-        r'(?P<lacp_transmit_state>\S+ +\S+) +(?P<lacp_mux_state>\S+ +\S+)$')
+        p3 = re.compile(r'^(?P<name>\S+) +(?P<lacp_receive_state>(Current|Defaulted|Port +disabled)) +'
+                        r'(?P<lacp_transmit_state>\S+( +\S+)?) +(?P<lacp_mux_state>\S+( +\S+)?)$')
 
         for line in out.splitlines():
             line = line.strip()
