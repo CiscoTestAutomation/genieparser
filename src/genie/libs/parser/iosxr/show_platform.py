@@ -354,7 +354,7 @@ class ShowPlatform(ShowPlatformSchema):
                              ' +(?P<name>[a-zA-Z0-9\-]+)'
                              '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                              '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
-                             ' +(?P<state>(IOS XR RUN|OK|OPERATIONAL)+)'
+                             ' +(?P<state>(IOS XR RUN|OK|OPERATIONAL|POWERED_ON)+)'
                              ' +(?P<config_state>[a-zA-Z\,]+)$')
             m = p1.match(line)
             if m:
