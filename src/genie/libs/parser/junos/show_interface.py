@@ -987,9 +987,9 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
         # Flags: Up SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
-        p25 = re.compile(r'^Flags: +(?P<iff_up>\S+)( +SNMP-Traps)?'
-            r'( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[[\S\s]+\])? +'
-            r'Encapsulation: +(?P<encapsulation>\S+)$')
+        p25 = re.compile(r'^Flags: +(?P<iff_up>(\S+|Hardware-Down Device-Down))'
+                         r'( +SNMP-Traps)?( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[[\S\s]+\])?'
+                         r' +Encapsulation: +(?P<encapsulation>\S+)$')
 
         # Input packets : 133657033
         p26 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)$')
@@ -1061,10 +1061,12 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0,
         # L3 incompletes: 0, L2 channel errors: 0, L2 mismatch timeouts: 0,
         # FIFO errors: 0, Resource errors: 0
+        # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Giants: 0, Policed discards: 0, Resource errors: 0
         p43 = re.compile(r'^(Errors: +(?P<input_errors>\d+),)?'
                            r'( *Drops: +(?P<input_drops>\d+),)?'
                            r'( *Framing +errors: +(?P<framing_errors>\d+),)?'
                            r'( *Runts: +(?P<input_runts>\d+),)?'
+                           r'( *Giants: +(?P<input_giants>\d+),)?'
                            r'( *Policed +discards: +(?P<input_discards>\d+),)?'
                            r'( *L3 +incompletes: +(?P<input_l3_incompletes>\d+),)?'
                            r'( *L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),)?'
@@ -1075,13 +1077,15 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
         # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0,
         # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0, MTU errors: 0, Resource errors: 0
-        p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+), +'
-            r'Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +'
-            r'Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +'
-            r'(?P<aged_packets>\d+),(( +FIFO +errors: +(?P<output_fifo_errors>\d+),)? +'
-            r'HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?'
-            r'( +MTU +errors: +(?P<mtu_errors>\d+),?)?'
-            r'( +Resource +errors: +(?P<output_resource_errors>\d+))?$')
+        p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+),'
+                           r' +Errors: +(?P<output_errors>\d+),'
+                           r' +Drops: +(?P<output_drops>\d+),'
+                           r'( +Collisions: +(?P<output_collisions>\d+),)?'
+                           r'( +Aged+ packets: +(?P<aged_packets>\d+),)?'
+                           r'(( +FIFO +errors: +(?P<output_fifo_errors>\d+),)?'
+                           r' +HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?'
+                           r'( +MTU +errors: +(?P<mtu_errors>\d+),?)?'
+                           r'( +Resource +errors: +(?P<output_resource_errors>\d+))?$')
 
         # MTU errors: 0, Resource errors: 0
         p44_2 = re.compile(r'^MTU +errors: +(?P<mtu_errors>\d+), +Resource +'
