@@ -75,7 +75,8 @@ class ShowInterfacesBrief(ShowInterfacesBriefSchema):
             've': 've'
         }
 
-        p0 = re.compile(r'((?P<interface>^\d+\/\d+|mgmt\d+|lb\d+|tn\d+|ve\d+)'
+        # 1/1    Disabled None         None  No  cc4e.2442.1000 description1
+        p1 = re.compile(r'((?P<interface>^\d+\/\d+|mgmt\d+|lb\d+|tn\d+|ve\d+)'
                         r'\s+(?P<link>Up|Down|Disabled)\s+'
                         r'(?P<state>None|Forward|N\/A)\s+'
                         r'(?P<speed>\d+\w|None|N\/A)\s+'
@@ -83,15 +84,17 @@ class ShowInterfacesBrief(ShowInterfacesBriefSchema):
                         r'(?P<mac>\w+.\w+.\w+|N\/A)'
                         r'(\s+(?P<desc>[^$]+)|$))')
 
-        p1 = re.compile(r'((?P<int>^[^\d]+)(?P<num>\d+$))')
+        # mgmt1
+        # tn30
+        # Used when pattern for the interface isnt just a port number (1/3)
+        p2 = re.compile(r'((?P<int>^[^\d]+)(?P<num>\d+$))')
 
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
-                if 'interfaces' not in result_dict:
-                    interface_dict = result_dict.setdefault('interfaces', {})
+                interface_dict = result_dict.setdefault('interfaces', {})
 
                 # Work out interface type
                 interface = m.groupdict()['interface']
@@ -100,7 +103,7 @@ class ShowInterfacesBrief(ShowInterfacesBriefSchema):
                 if is_eth:
                     int_type = 'ethernet'
                 else:
-                    n = p1.match(interface)
+                    n = p2.match(interface)
                     if n:
                         int_type = interface_def.get(n.groupdict()['int'])
                         interface = n.groupdict()['num']
@@ -165,7 +168,9 @@ loopback 1   9.9.9.9  YES  NVRAM  up         up       default-vrf
 
         result_dict = {}
 
-        p0 = re.compile(r'(^(?P<int_name>eth|mgmt|loopback|ve|tn|tunnel)\s+'
+        # eth 1/1      10.254.32.221  YES  NVRAM  admin/down down default-vrf
+        # loopback 1   9.9.9.9  YES  NVRAM  up         up       default-vrf
+        p1 = re.compile(r'(^(?P<int_name>eth|mgmt|loopback|ve|tn|tunnel)\s+'
                         r'(?P<int_num>\d+/\d+|\d+)\s+'
                         r'(?P<ip>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\s+'
                         r'(?P<ok>\w+)\s+'
@@ -188,13 +193,12 @@ loopback 1   9.9.9.9  YES  NVRAM  up         up       default-vrf
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
-                if 'interfaces' not in result_dict:
-                    interface_dict = result_dict.setdefault('interfaces', {})
+                interface_dict = result_dict.setdefault('interfaces', {})
 
                 expand = interface_def.get(m.groupdict()['int_name'])
-                interface = expand + m.groupdict()['int_num']
+                interface = '{0}{1}'.format(expand, m.groupdict()['int_num'])
 
                 interface_dict[interface] = {
                     'ip': m.groupdict()['ip'],

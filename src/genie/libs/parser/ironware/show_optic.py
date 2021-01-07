@@ -82,7 +82,7 @@ class ShowOptic(ShowOpticSchema):
 
         result_dict = {}
 
-        p0 = re.compile(r'(^(?P<port>\d+\/\d+)\s+'
+        p1 = re.compile(r'(^(?P<port>\d+\/\d+)\s+'
                         r'(?P<temp>\d+.\d+|N\/A)(\sC|)\s+'
                         r'(?P<tx>[-]?\d+.\d+|N\/A|NONE)(\s+dBm|'
                         r'\s+dBm\/\s*\d+\s+uW|)\s+'
@@ -90,7 +90,7 @@ class ShowOptic(ShowOpticSchema):
                         r'\s+dBm\/\s*\d+\s+uW|)\s+'
                         r'(?P<tbc>[-]?\d+.\d+|N\/A)(\s+mA|))')
 
-        p1 = re.compile(r'(^(?P<temp>Normal|Low-Alarm|Low-Warn|'
+        p2 = re.compile(r'(^(?P<temp>Normal|Low-Alarm|Low-Warn|'
                         r'High-Warn|High-Alarm)\s+'
                         r'(?P<tx>Normal|Low-Alarm|Low-Warn|'
                         r'High-Warn|High-Alarm)\s+'
@@ -102,7 +102,7 @@ class ShowOptic(ShowOpticSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
                 if 'interfaces' not in result_dict:
                     interfaces_dict = result_dict.setdefault('interfaces', {})
@@ -130,7 +130,7 @@ class ShowOptic(ShowOpticSchema):
                 }
                 continue
 
-            m = p1.match(line)
+            m = p2.match(line)
             if m:
                 temp = m.groupdict()['temp']
                 rx = m.groupdict()['rx']

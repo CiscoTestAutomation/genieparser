@@ -58,32 +58,34 @@ class ShowMediaInterface(ShowMediaInterfaceSchema):
 
         result_dict = {}
 
-        p0 = re.compile(r'(^Type\s+:\s+(?P<type>[^\n]+))')
+        # Type  : 10GE LR 10km SFP+
+        p1 = re.compile(r'(^Type\s+:\s+(?P<type>[^\n]+))')
 
-        p1 = re.compile(r'(^Vendor:\s+(?P<vendor>[^\s|,]+)(\s+,|,)\s+'
+        # Vendor:          FIBERSTORE, Version:   A
+        p2 = re.compile(r'(^Vendor:\s+(?P<vendor>[^\s|,]+)(\s+,|,)\s+'
                         r'Version:(\s+(?P<ver>[^\n]+)|$))')
 
-        p2 = re.compile(r'(^Part#\s+:\s+(?P<part>[^\s|,]+)(\s+,|,)\s+'
+        # Part# :  SFP-10GLR-31, Serial#: J0612100048
+        p3 = re.compile(r'(^Part#\s+:\s+(?P<part>[^\s|,]+)(\s+,|,)\s+'
                         r'Serial#:\s+(?P<serial>[^$]+))')
 
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
-                if interface not in result_dict:
-                    media_dict = result_dict.setdefault(interface, {})
+                media_dict = result_dict.setdefault(interface, {})
 
                 media_dict['type'] = m.groupdict()['type']
                 continue
 
-            m = p1.match(line)
+            m = p2.match(line)
             if m:
                 ver = m.groupdict().get('ver')
                 media_dict['version'] = ver if ver is not None else 'Unknown'
                 continue
 
-            m = p2.match(line)
+            m = p3.match(line)
             if m:
                 media_dict['part'] = m.groupdict()['part']
                 media_dict['serial'] = m.groupdict()['serial']
