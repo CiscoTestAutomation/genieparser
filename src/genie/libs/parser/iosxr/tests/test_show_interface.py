@@ -16,7 +16,8 @@ from genie.libs.parser.iosxr.show_interface import (ShowInterfacesDetail,
                                                     ShowIpInterfaceBrief,
                                                     ShowIpv4InterfaceBrief,
                                                     ShowInterfaces,
-                                                    ShowInterfacesDescription)
+                                                    ShowInterfacesDescription,
+                                                    ShowIpv6Interface)
 
 #############################################################################
 # unitest For Show Interfaces Detail
@@ -5592,7 +5593,95 @@ class test_show_interfaces_description(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
 
+#############################################################################
+# unitest For show ipv6 interface {interface}
+#############################################################################
+class test_show_ipv6_interface(unittest.TestCase):
+    device = Device(name='aDevice')
+    
+    empty_output = {'execute.return_value': ''}
 
+    golden_output = {'execute.return_value':'''
+        genie_device#show ipv6 interface gigabitEthernet 0/0/0/0.1
+        Wed Oct 28 02:37:35.972 UTC
+        GigabitEthernet0/0/0/0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is enabled, link-local address is fe80::250:56ff:fe8d:8d58
+        Global unicast address(es):
+            2001:112::1, subnet is 2001:112::/64
+        Joined group address(es): ff02::1:ff00:1 ff02::1:ff8d:8d58 ff02::2
+            ff02::1
+        MTU is 1514 (1500 is available to IPv6)
+        ICMP redirects are disabled
+        ICMP unreachables are enabled
+        ND DAD is enabled, number of DAD attempts 1
+        ND reachable time is 0 milliseconds
+        ND cache entry limit is 1000000000
+        ND advertised retransmit interval is 0 milliseconds
+        ND router advertisements are sent every 160 to 240 seconds
+        ND router advertisements live for 1800 seconds
+        Hosts use stateless autoconfig for addresses.
+        Outgoing access list is not set
+        Inbound  common access list is not set, access list is not set
+        Table Id is 0xe0800000
+        Complete protocol adjacency: 0
+        Complete glean adjacency: 0
+        Incomplete protocol adjacency: 0
+        Incomplete glean adjacency: 0
+        Dropped protocol request: 0
+        Dropped glean request: 0    
+    '''}
+
+    golden_parsed_output = {
+        'GigabitEthernet0/0/0/0': {
+            'enabled': True,
+            'oper_status': 'up',
+            'vrf': 'default',
+            'int_status': 'up',
+            'ipv6': {
+                'incomplete_protocol_adj': '0',
+                'complete_glean_adj': '0',
+                'dropped_protocol_req': '0',
+                'dropped_glean_req': '0',
+                'nd_router_adv': '1800',
+                'complete_protocol_adj': '0',
+                'icmp_unreachables': 'enabled',
+                'ipv6_link_local': 'fe80::250:56ff:fe8d:8d58',
+                'incomplete_glean_adj': '0',
+                'nd_adv_duration': '160-240',
+                'ipv6_groups': ['ff02::1:ff00:1', 'ff02::1:ff8d:8d58', 'ff02::2', 'ff02::1'],
+                'nd_adv_retrans_int': '0',
+                'nd_cache_limit': '1000000000',
+                'stateless_autoconfig': True,
+                'icmp_redirects': 'disabled',
+                'dad_attempts': '1',
+                'ipv6_mtu': '1514',
+                'ipv6_mtu_available': '1500',
+                '2001:112::1/64': {
+                    'ipv6_subnet': '2001:112::',
+                    'ipv6_prefix_length': '64',
+                    'ipv6': '2001:112::1',
+                },
+                'nd_dad': 'enabled',
+                'nd_reachable_time': '0',
+                'table_id': '0xe0800000',
+            },
+            'vrf_id': '0x60000000',
+            'ipv6_enabled': True,
+        },
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6VrfAllInterface(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpv6VrfAllInterface(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)    
 if __name__ == '__main__':
     unittest.main()
 

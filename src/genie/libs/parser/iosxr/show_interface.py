@@ -3008,3 +3008,7 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
                 continue
 
         return result_dict
+
+class ShowIpv6Interface(ShowIpv6VrfAllInterface):
+    """Parser for show ipv6 interface"""
+    pass
