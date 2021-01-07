@@ -121,7 +121,7 @@ class ShowBFDSessionDetail(ShowBFDSessionDetailSchema):
         *show bfd session address {ipaddress} detail
     """
 
-    cli_command = 'show bfd session {ipaddress} detail'
+    cli_command = 'show bfd session address {ipaddress} detail'
 
     def cli(self, ipaddress, output=None):
         if not output:
