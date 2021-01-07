@@ -69,10 +69,12 @@ v10    10.1.10.1       1   FULL/DR    10.1.10.2       10.65.12.1 5 2 0
 
         result_dict = {}
 
-        p0 = re.compile(r'(^Number\s+of\s+Neighbors\s+is\s+(?P<num>\d+),\s'
+        # Number of Neighbors is 2, in FULL state 2
+        p1 = re.compile(r'(^Number\s+of\s+Neighbors\s+is\s+(?P<num>\d+),\s'
                         r'+in\s+FULL\s+state\s+(?P<full>\d+))')
 
-        p1 = re.compile(r'(^(?P<port>\d+\/\d+|v\d+|tn\d+)\s+'
+        # 5/1    10.254.251.3 1 FULL/OTHER 10.254.251.2 1.2.3.4  61 82  0
+        p2 = re.compile(r'(^(?P<port>\d+\/\d+|v\d+|tn\d+)\s+'
                         r'(?P<local>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\s+'
                         r'(?P<pri>\d+)\s+(?P<state>\S+)\s+'
                         r'(?P<neighbor>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\s+'
@@ -83,20 +85,19 @@ v10    10.1.10.1       1   FULL/DR    10.1.10.2       10.65.12.1 5 2 0
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
                 result_dict['total'] = int(m.groupdict()['num'])
                 result_dict['total_full'] = int(m.groupdict()['full'])
                 continue
 
-            m = p1.match(line)
+            m = p2.match(line)
             if m:
-                if 'neighbors' not in result_dict:
-                    neighbors = result_dict.setdefault('neighbors', {})
+                neighbors = result_dict.setdefault('neighbors', {})
 
                 group = m.groupdict()
                 neighbor = group['neighbor']
-                neigh_dict = neighbors.setdefault(neighbor, {
+                neigh_dict = neighbors.update({neighbor: {
                     'interface': group['port'],
                     'local_ip': group['local'],
                     'priority': int(group['pri']),
@@ -105,7 +106,7 @@ v10    10.1.10.1       1   FULL/DR    10.1.10.2       10.65.12.1 5 2 0
                     'state_changes': int(group['changes']),
                     'options': int(group['opt']),
                     'lsa_retransmits': int(group['lsaretrans'])
-                })
+                }})
                 continue
 
         return result_dict
@@ -167,9 +168,11 @@ class ShowIPOSPFInterfaceBrief(ShowIPOSPFInterfaceBriefSchema):
 
         result_dict = {}
 
-        p0 = re.compile(r'(^Number\s+of\s+Interfaces\s+is\s+(?P<num>\d+)$)')
+        # Number of Interfaces is 3
+        p1 = re.compile(r'(^Number\s+of\s+Interfaces\s+is\s+(?P<num>\d+)$)')
 
-        p1 = re.compile(r'(^(?P<int_name>eth|mgmt|loopback|ve|tn|tunnel)\s+'
+        # eth 5/1     0         10.254.251.21/31   20    ptpt     1/1
+        p2 = re.compile(r'(^(?P<int_name>eth|mgmt|loopback|ve|tn|tunnel)\s+'
                         r'(?P<int_num>\d+\/\d+|\d+)\s+(?P<area>\d+)\s+'
                         r'(?P<net>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}\/\d{1,2})\s+'
                         r'(?P<cost>\d+)\s+(?P<state>\S+)\s+'
@@ -178,30 +181,28 @@ class ShowIPOSPFInterfaceBrief(ShowIPOSPFInterfaceBriefSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
                 total = int(m.groupdict()['num'])
                 result_dict['total'] = total
                 continue
 
-            m = p1.match(line)
+            m = p2.match(line)
             if m:
-                if 'interfaces' not in result_dict:
-                    interfaces = result_dict.setdefault('interfaces', {})
+                interfaces = result_dict.setdefault('interfaces', {})
 
                 group = m.groupdict()
                 interface = '{0}{1}'.format(interface_def.get(
                                 group['int_name']), group['int_num'])
 
-                interface_dict = interfaces.setdefault(interface, {
+                interface_dict = interfaces.update({interface: {
                     'area': int(group['area']),
                     'network': group['net'],
                     'cost': int(group['cost']),
                     'state': group['state'],
                     'full_neighbors': int(group['fullneigh']),
                     'configured_neighbors': int(group['configdneigh'])
-
-                })
+                }})
                 continue
 
         return result_dict

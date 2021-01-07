@@ -89,11 +89,13 @@ STATIC Codes - d:DHCPv6
 
         result_dict = {}
 
-        p0 = re.compile(
+        # Total number of IP routes: 13
+        p1 = re.compile(
             r'(^Total number of IP routes:\s+(?P<total>\d+))'
         )
 
-        p1 = re.compile(
+        # 10  10.200.0.85/32 10.254.248.10 eth 2/2 110/27 O  40d0h  -
+        p2 = re.compile(
             r'((?P<number>^\d+)\s+'
             r'(?P<network>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\/'
             r'(?P<cidr>\d{1,2})\s+'
@@ -105,7 +107,8 @@ STATIC Codes - d:DHCPv6
 
         # Used when src-vrf output wraps to the next line,
         # Brocade has no terminal-width
-        p2 = re.compile(
+        # 11  200.200.200.200/32   DIRECT   loopback 1 0/0   D   248d
+        p3 = re.compile(
             r'((?P<number>^\d+)\s+'
             r'(?P<network>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\/'
             r'(?P<cidr>\d{1,2})\s+'
@@ -115,7 +118,8 @@ STATIC Codes - d:DHCPv6
         )
 
         # Used when equal cost paths exist
-        p3 = re.compile(
+        #     1.1.1.1/32   10.254.251.108  eth 7/1  110/52  O  15h47m -
+        p4 = re.compile(
             r'(^(?P<network>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\/'
             r'(?P<cidr>\d{1,2})\s+'
             r'(?P<gateway>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}|DIRECT)\s+'
@@ -127,13 +131,13 @@ STATIC Codes - d:DHCPv6
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
                 ip_dict['total_routes'] = int(m.groupdict()['total'])
 
             # Will only even match on one as EOL provided in P2
-            m = p1.match(line)
-            n = p2.match(line)
+            m = p2.match(line)
+            n = p3.match(line)
             m = m if m else n
 
             if m:
@@ -143,8 +147,7 @@ STATIC Codes - d:DHCPv6
                 if srcvrf is None:
                     srcvrf = 'Unknown'
 
-                if 'routes' not in ip_dict:
-                    result_dict = ip_dict.setdefault('routes', {})
+                result_dict = ip_dict.setdefault('routes', {})
 
                 result_dict['{0}/{1}'.format(network, cidr)] = {
                   'network': network,
@@ -161,7 +164,7 @@ STATIC Codes - d:DHCPv6
                 }
                 continue
 
-            m = p3.match(line)
+            m = p4.match(line)
             if m:
                 network = m.groupdict()['network']
                 cidr = int(m.groupdict()['cidr'])
@@ -258,27 +261,31 @@ class ShowIPRouteSummary(ShowIPRouteSummarySchema):
 
         result_dict = {}
 
-        p0 = re.compile(r'(^IP\s+Routing\s+Table\s+-\s+'
+        # IP Routing Table - 449 entries
+        p1 = re.compile(r'(^IP\s+Routing\s+Table\s+-\s+'
                         r'(?P<entries>\S+)\s+entries)')
 
-        p1 = re.compile(r'(^(?P<connected>\S+)\s+connected,\s+'
+        # 3 connected, 0 static, 0 RIP, 446 OSPF, 0 BGP, 0 ISIS
+        p2 = re.compile(r'(^(?P<connected>\S+)\s+connected,\s+'
                         r'(?P<static>\S+)\s+static,\s+(?P<rip>\S+)\s+'
                         r'RIP,\s+(?P<ospf>\S+)\s+OSPF,\s+(?P<bgp>\S+)\s+'
                         r'BGP,\s+(?P<isis>\S+)\s+ISIS)')
 
-        p2 = re.compile(r'(\/\d{1,2}:\s+\d+)')
+        # /24: 1 /26: 2 /27: 3 /28: 5 /29: 1 /30: 34 /31: 242 /32: 161
+        p3 = re.compile(r'(\/\d{1,2}:\s+\d+)')
 
-        p3 = re.compile(r'(^\/(?P<key>\d{1,2}):\s+(?P<num>\d+))')
+        # /27: 3
+        p4 = re.compile(r'(^\/(?P<key>\d{1,2}):\s+(?P<num>\d+))')
 
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
                 route_dict['total'] = int(m.groupdict()['entries'])
                 continue
 
-            m = p1.match(line)
+            m = p2.match(line)
             if m:
                 protocols = route_dict.setdefault('protocols', {})
                 protocols['connected'] = int(m.groupdict()['connected'])
@@ -289,16 +296,16 @@ class ShowIPRouteSummary(ShowIPRouteSummarySchema):
                 protocols['isis'] = int(m.groupdict()['isis'])
                 continue
 
-            m = p2.match(line)
+            m = p3.match(line)
             if m:
                 cidrs = route_dict.setdefault('cidrs', {})
 
                 # Find all occurrences of a CIDR notation so we
                 # don't have to do each key individually
-                all_matches = p2.findall(line)
+                all_matches = p3.findall(line)
 
                 for match in all_matches:
-                    x = p3.match(match)
+                    x = p4.match(match)
                     if x:
                         key = int(x.groupdict()['key'])
                         cidrs[key] = int(x.groupdict()['num'])

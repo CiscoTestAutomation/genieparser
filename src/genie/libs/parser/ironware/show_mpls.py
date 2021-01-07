@@ -71,7 +71,8 @@ class ShowMPLSLSP(ShowMPLSLSPSchema):
 
         result_dict = {}
 
-        p0 = re.compile(
+        # mlx8.1_to_ces.2      1.1.1.1  UP    UP    tnl0     1     0     --
+        p1 = re.compile(
             r'(^(?P<name>\S+)\s+'
             r'(?P<endpoint>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\s+'
             r'(?P<adminstate>UP|DOWN)\s+(?P<operationstate>UP|DOWN)\s+'
@@ -82,10 +83,9 @@ class ShowMPLSLSP(ShowMPLSLSPSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
-                if 'lsps' not in lsp_dict:
-                    result_dict = lsp_dict.setdefault('lsps', {})
+                result_dict = lsp_dict.setdefault('lsps', {})
 
                 lsp_name = m.groupdict()['name']
                 result_dict[lsp_name] = {
@@ -204,84 +204,84 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
         }
 
         # VLL VLL-TEST1, VC-ID 2456, VLL-INDEX 2
-        p0 = re.compile(r'(^(VLL|vll|Vll)\s+(?P<name>[^,]+),+\s+VC-ID\s+'
+        p1 = re.compile(r'(^(VLL|vll|Vll)\s+(?P<name>[^,]+),+\s+VC-ID\s+'
                         r'(?P<vcid>[^,]+),'
                         r'\s+VLL-INDEX\s+(?P<vllindex>\d+$))')
 
         # End-point: tagged vlan 2501 e 2/10
         # End-point: untagged e 2/2
         # End-point: tagged vlan 100 inner-vlan 45 e 2/1
-        p1 = re.compile(r'(^End-point\s+:\s+'
+        p2 = re.compile(r'(^End-point\s+:\s+'
                         r'(?P<type>tagged|untagged|undefined)'
                         r'(\s+vlan\s+(?P<vid>\d+)|)(\s+inner-vlan\s+'
                         r'(?P<innerid>\d+)|)\s+(?P<interface_name>\w+)\s+'
                         r'(?P<interface>\d+\/\d+$))')
 
         # End-Point state  : Up
-        p2 = re.compile(r'(^End-Point state\s+:\s+(?P<state>Up|Down))')
+        p3 = re.compile(r'(^End-Point state\s+:\s+(?P<state>Up|Down))')
 
         # MCT state        : None
-        p3 = re.compile(r'(^MCT state\s+:\s+(?P<mctstate>\S+$))')
+        p4 = re.compile(r'(^MCT state\s+:\s+(?P<mctstate>\S+$))')
 
         # IFL-ID           : --
         # IFL-ID           : n/a
         # IFL-ID           : 1234
-        p4 = re.compile(r'(^IFL-ID\s+:\s+(?P<iflid>n\/a$|\d+$|--$))')
+        p5 = re.compile(r'(^IFL-ID\s+:\s+(?P<iflid>n\/a$|\d+$|--$))')
 
         # Local VC type    : tag
         # Local VC type : raw-pass-through
-        p5 = re.compile(r'(^Local VC type\s+:\s+'
+        p6 = re.compile(r'(^Local VC type\s+:\s+'
                         r'(?P<vctype>tag$|raw-pass-through$|--$|raw-mode$))')
 
         # Local VC MTU     : 9190
-        p6 = re.compile(r'(^Local VC MTU\s+:\s+(?P<mtu>\d+$|--$))')
+        p7 = re.compile(r'(^Local VC MTU\s+:\s+(?P<mtu>\d+$|--$))')
 
         # COS              : --
-        p7 = re.compile(r'(^COS\s+:\s+(?P<cos>\S+$))')
+        p8 = re.compile(r'(^COS\s+:\s+(?P<cos>\S+$))')
 
         # Extended Counters: Enabled
-        p8 = re.compile(r'(^Extended Counters:\s+'
+        p9 = re.compile(r'(^Extended Counters:\s+'
                         r'(?P<extcounters>[e|E]nabled|[d|D]isabled)$)')
 
         # Counter          : disabled
-        p9 = re.compile(r'(^Counter\s+:\s+'
-                        r'(?P<counter>[e|E]nabled|[d|D]isabled)$)')
+        p10 = re.compile(r'(^Counter\s+:\s+'
+                         r'(?P<counter>[e|E]nabled|[d|D]isabled)$)')
 
         # Vll-Peer         : 192.168.1.1
-        p10 = re.compile(r'(^Vll-Peer\s+:\s+'
+        p11 = re.compile(r'(^Vll-Peer\s+:\s+'
                          r'(?P<ip>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}$))')
 
         # State          : UP
         # State          : DOWN - PW is Down (Reason:Wait for peer label)
         # For all states see page 550 in reference material
-        p11 = re.compile(r'(^State\s+:\s+(?P<state>UP|DOWN)(\s-\s'
+        p12 = re.compile(r'(^State\s+:\s+(?P<state>UP|DOWN)(\s-\s'
                          r'(?P<reason>\w.+$)|$))')
 
         # Remote VC type : tag               Remote VC MTU  : 9190
-        p12 = re.compile(r'(^Remote VC type\s+:\s+'
+        p13 = re.compile(r'(^Remote VC type\s+:\s+'
                          r'(?P<vctype>tag|raw-pass-through|--)\s+'
                          r'Remote VC MTU\s+:\s+(?P<mtu>\d+$|--$))')
 
         # Local label    : 852217            Remote label   : 852417
         # Local label    : --                Remote label   : --
-        p13 = re.compile(r'(^Local label\s+:\s(?P<local>\d+|--)\s+'
+        p14 = re.compile(r'(^Local label\s+:\s(?P<local>\d+|--)\s+'
                          r'Remote label\s+:\s+(?P<remote>\d+$|--$))')
 
         # Local group-id : 0                 Remote group-id: 0
-        p14 = re.compile(r'(^Local group-id\s+:\s+(?P<localgid>\d+|--)\s+'
+        p15 = re.compile(r'(^Local group-id\s+:\s+(?P<localgid>\d+|--)\s+'
                          r'Remote group-id:\s+(?P<remotegid>\d+$|--$))')
 
         # Tunnel LSP     : mlx8.1_to_ces.2 (tnl15)
-        p15 = re.compile(r'(^Tunnel LSP\s+:\s+'
+        p16 = re.compile(r'(^Tunnel LSP\s+:\s+'
                          r'(?P<lspname>[^+\s]+)\s+\((?P<tunnel>\w+)\)$)')
 
         # LSPs assigned  : No LSPs assigned
-        p16 = re.compile(r'(^LSPs\s+assigned\s+:\s+(?P<lsps>\w+.*$))')
+        p17 = re.compile(r'(^LSPs\s+assigned\s+:\s+(?P<lsps>\w+.*$))')
 
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
                 vll_dict = result_dict.setdefault('vll', {}).setdefault(vll, {
                     'vcid': int(m.groupdict()['vcid']),
@@ -289,7 +289,7 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
                 })
                 continue
 
-            m = p1.match(line)
+            m = p2.match(line)
             if m:
                 tag_type = m.groupdict()['type']
 
@@ -313,31 +313,31 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
 
                 continue
 
-            m = p2.match(line)
+            m = p3.match(line)
             if m:
                 local_state = m.groupdict()['state']
                 vll_dict['local']['state'] = local_state
                 continue
 
-            m = p3.match(line)
+            m = p4.match(line)
             if m:
                 mct_state = m.groupdict()['mctstate']
                 vll_dict['local']['mct_state'] = mct_state
                 continue
 
-            m = p4.match(line)
+            m = p5.match(line)
             if m:
                 ifl_id = m.groupdict()['iflid']
                 vll_dict['local']['ifl_id'] = ifl_id
                 continue
 
-            m = p5.match(line)
+            m = p6.match(line)
             if m:
                 vc_type = m.groupdict()['vctype']
                 vll_dict['local']['vc_type'] = vc_type
                 continue
 
-            m = p6.match(line)
+            m = p7.match(line)
             if m:
                 mtu = m.groupdict()['mtu']
                 if mtu == '--':
@@ -346,33 +346,39 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
                 vll_dict['local']['mtu'] = int(mtu)
                 continue
 
-            m = p7.match(line)
+            m = p8.match(line)
             if m:
                 vll_dict['local']['cos'] = m.groupdict()['cos']
                 continue
 
-            m = p8.match(line)
-            if m:
-                extcounters = m.groupdict()['extcounters']
-                vll_dict['local']['extended_counters'] = True if \
-                    extcounters.lower() == 'enabled' else False
-                continue
-
             m = p9.match(line)
             if m:
-                counters = m.groupdict()['counter']
-                vll_dict['local']['counters'] = True if \
-                    counters.lower() == 'enabled' else False
+                if m.groupdict()['extcounters'].lower() == 'enabled':
+                    extcounters = True
+                else:
+                    extcounters = False
+
+                vll_dict['local']['extended_counters'] = extcounters
                 continue
 
             m = p10.match(line)
+            if m:
+                if m.groupdict()['counter'].lower() == 'enabled':
+                    counters = True
+                else:
+                    counters = False
+
+                vll_dict['local']['counters'] = counters
+                continue
+
+            m = p11.match(line)
             if m:
                 vll_dict['peer'] = {
                     'ip': m.groupdict()['ip']
                 }
                 continue
 
-            m = p11.match(line)
+            m = p12.match(line)
             if m:
                 state = m.groupdict()['state']
                 reason = m.groupdict().get('reason')
@@ -383,7 +389,7 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
                             else 'Unknown'
                 continue
 
-            m = p12.match(line)
+            m = p13.match(line)
             if m:
                 vc_type = m.groupdict()['vctype']
                 mtu = m.groupdict()['mtu']
@@ -394,7 +400,7 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
                 vll_dict['peer']['mtu'] = int(mtu)
                 continue
 
-            m = p13.match(line)
+            m = p14.match(line)
             if m:
                 local = m.groupdict()['local']
                 remote = m.groupdict()['remote']
@@ -410,7 +416,7 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
                     vll_dict['peer']['remote_label'] = int(remote)
                 continue
 
-            m = p14.match(line)
+            m = p15.match(line)
             if m:
                 local = m.groupdict()['localgid']
                 remote = m.groupdict()['remotegid']
@@ -426,7 +432,7 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
                     vll_dict['peer']['remote_group_id'] = int(remote)
                 continue
 
-            m = p15.match(line)
+            m = p16.match(line)
             if m:
                 lsp = m.groupdict()['lspname']
                 tunnel = m.groupdict().get('tunnel')
@@ -442,7 +448,7 @@ class ShowMPLSVLL(ShowMPLSVLLSchema):
                     }
                 continue
 
-            m = p16.match(line)
+            m = p17.match(line)
             if m:
                 vll_dict['peer']['lsps_assigned'] = m.groupdict()['lsps']
                 continue
@@ -522,38 +528,38 @@ class ShowMPLSVLLLocal(ShowMPLSVLLLocalSchema):
         }
 
         # Vll test-4 VLL-ID 4 IFL-ID 4096
-        p0 = re.compile(r'(^(VLL|vll|Vll)\s+(?P<name>[^\s]+)\s+VLL-ID\s+'
+        p1 = re.compile(r'(^(VLL|vll|Vll)\s+(?P<name>[^\s]+)\s+VLL-ID\s+'
                         r'(?P<vllid>\d+)\s+IFL-ID\s+(?P<iflid>--$|\d+$))')
 
         # State: UP
-        p1 = re.compile(r'(^State:\s+(?P<state>UP|DOWN)(\s+-\s+'
+        p2 = re.compile(r'(^State:\s+(?P<state>UP|DOWN)(\s+-\s+'
                         r'(?P<reason>configuration incomplete|'
                         r'endpoint port is down)|$))')
 
         # End-point 1: tagged vlan 2501 e 2/10
         # End-point 1: untagged e 2/2
         # End-point 1: tagged vlan 100 inner-vlan 45 e 2/1
-        p2 = re.compile(r'(^End-point (?P<endpoint>1|2):\s+'
+        p3 = re.compile(r'(^End-point (?P<endpoint>1|2):\s+'
                         r'(?P<type>tagged|untagged|undefined)'
                         r'(\s+vlan\s+(?P<vid>\d+)|)(\s+inner-vlan\s+'
                         r'(?P<innerid>\d+)|)\s+(?P<interface_name>\w+)\s+'
                         r'(?P<interface>\d+\/\d+$))')
 
         # COS: 6
-        p3 = re.compile(r'(^COS:\s+(?P<cos>--$|\d+$))')
+        p4 = re.compile(r'(^COS:\s+(?P<cos>--$|\d+$))')
 
         # Extended Counters: Enabled
-        p4 = re.compile(r'(^Extended Counters:\s+'
+        p5 = re.compile(r'(^Extended Counters:\s+'
                         r'(?P<extcounters>[e|E]nabled|[d|D]isabled)$)')
 
         # Counter          : disabled
-        p5 = re.compile(r'(^Counter\s+:\s+'
+        p6 = re.compile(r'(^Counter\s+:\s+'
                         r'(?P<counter>[e|E]nabled|[d|D]isabled)$)')
 
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
                 vll_dict = result_dict.setdefault('vll', {}).setdefault(vll, {
                     'vll_id': int(m.groupdict()['vllid']),
@@ -561,7 +567,7 @@ class ShowMPLSVLLLocal(ShowMPLSVLLLocalSchema):
                 })
                 continue
 
-            m = p1.match(line)
+            m = p2.match(line)
             if m:
                 state = m.groupdict()['state']
                 vll_dict['state'] = state
@@ -571,7 +577,7 @@ class ShowMPLSVLLLocal(ShowMPLSVLLLocalSchema):
                             m.groupdict()['state'] is not None else 'Unknown'
                 continue
 
-            m = p2.match(line)
+            m = p3.match(line)
             if m:
                 port_type = m.groupdict()['type']
                 endpoint_num = m.groupdict()['endpoint']
@@ -597,7 +603,7 @@ class ShowMPLSVLLLocal(ShowMPLSVLLLocalSchema):
                 vll_dict['endpoint_{0}'.format(endpoint_num)] = endpoint
                 continue
 
-            m = p3.match(line)
+            m = p4.match(line)
             if m:
                 cos = m.groupdict()['cos']
                 cos = int(cos) if cos != '--' else cos
@@ -609,18 +615,24 @@ class ShowMPLSVLLLocal(ShowMPLSVLLLocalSchema):
                     vll_dict['endpoint_1']['cos'] = cos
                 continue
 
-            m = p4.match(line)
-            if m:
-                extcounters = m.groupdict()['extcounters']
-                vll_dict['extended_counters'] = True if \
-                    extcounters.lower() == 'enabled' else False
-                continue
-
             m = p5.match(line)
             if m:
-                counters = m.groupdict()['counter']
-                vll_dict['counters'] = True if \
-                    counters.lower() == 'enabled' else False
+                if m.groupdict()['extcounters'].lower() == 'enabled':
+                    extcounters = True
+                else:
+                    extcounters = False
+
+                vll_dict['extended_counters'] = extcounters
+                continue
+
+            m = p6.match(line)
+            if m:
+                if m.groupdict()['counter'].lower() == 'enabled':
+                    counters = True
+                else:
+                    counters = False
+
+                vll_dict['counters'] = counters
                 continue
 
         return result_dict
@@ -667,7 +679,9 @@ class ShowMPLSLDPNeighbor(ShowMPLSLDPNeighborSchema):
 
         result_dict = {}
 
-        p0 = re.compile(r'(^(?P<neighbor>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\s+'
+        # 10.1.1.1      p4/1       10.1.1.1:0  15       14
+        # 10.4.4.4      (targeted) 10.4.4.4:0  15       13
+        p1 = re.compile(r'(^(?P<neighbor>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\s+'
                         r'(?P<int>\S+)\s+'
                         r'(?P<ldpid>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}:\d+)\s+'
                         r'(?P<hold>\d+)\s+(?P<time>\d+)$)')
@@ -675,10 +689,9 @@ class ShowMPLSLDPNeighbor(ShowMPLSLDPNeighborSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            m = p0.match(line)
+            m = p1.match(line)
             if m:
-                if 'neighbors' not in result_dict:
-                    neighbors_dict = result_dict.setdefault('neighbors', {})
+                neighbors_dict = result_dict.setdefault('neighbors', {})
 
                 group = m.groupdict()
                 neighbors_dict.setdefault(group['neighbor'], {
