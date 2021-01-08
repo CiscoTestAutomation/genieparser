@@ -1,0 +1,16 @@
+--------------------------------------------------------------------------------
+                                NEW
+--------------------------------------------------------------------------------
+* IOSXR
+    * Added ShowIPv6Interface
+        
+--------------------------------------------------------------------------------
+                                FIX
+--------------------------------------------------------------------------------
+* IOSXE
+    * ShowInterfaces
+        * Added a unit test
+* JUNOS
+    * ShowLogFilename
+        * Added 'except {except_show_log}' to command 'show log {filename} | except {except_show_log} | match {match}'
+
