@@ -21,7 +21,7 @@ expected_output = {
             "load-average-1": "0.29",
             "load-average-15": "0.41",
             "load-average-5": "0.38",
-            "up-time": {"#text": "209 days, 36 mins,", "@junos:seconds": "18187200"},
+            "up-time": {"#text": "209 days, 36 mins", "@junos:seconds": "18059760"},
         },
     }
 }
