@@ -977,11 +977,11 @@ class ShowBgpSummary(ShowBgpSummarySchema):
         # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
         # 20.0.0.2                  3          2          3       0       1           9 0/0/0/0              0/0/0/0
         p5 = re.compile(
-            r'^(?P<peer_address>[\d\w:.]+) +(?P<peer_as>\d+) +'
-            r'(?P<input_messages>\d+) +(?P<output_messages>\d+) +'
-            r'(?P<route_queue_count>\d+) +(?P<flap_count>\d+) +'
-            r'(?P<text>[\S\s]+) +(?P<peer_state>Active|Connect|Establ|'
-            r'(0/0/0/0 +0/0/0/0))$')
+            r'^(?P<peer_address>[\d\w:.]+)\s+(?P<peer_as>\d+)\s+'
+            r'(?P<input_messages>\d+)\s+(?P<output_messages>\d+)\s+'
+            r'(?P<route_queue_count>\d+)\s+(?P<flap_count>\d+)\s+'
+            r'(?P<text>[\S\s]+)\s+(?P<peer_state>Active|Connect|Establ|'
+            r'([\d\/]+\s+[\d\/]+))$')
 
         # ------------------------------------------------------------
         # p6:
@@ -1005,7 +1005,7 @@ class ShowBgpSummary(ShowBgpSummarySchema):
 
         for line in out.splitlines():
             line = line.strip()
-
+                
             # Threading mode: BGP I/O
             # Groups: 14 Peers: 19 Down peers: 15
             m = p1.match(line) or p2.match(line)
@@ -1095,12 +1095,13 @@ class ShowBgpSummary(ShowBgpSummarySchema):
             # 10.49.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
             # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
             # 20.0.0.2                  3          2          3       0       1           9 0/0/0/0              0/0/0/0
+            # 4.4.4.4               65000         71         71       0       0       31:15 0/1/1/0              0/0/0/0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 bgp_peer_dict = {}
 
-                special_case_state = re.compile(r'0/0/0/0 +0/0/0/0')
+                special_case_state = re.compile(r'([\d\/]+\s+[\d\/]+)')
 
                 for key, value in group.items():
                     if key == 'text':
