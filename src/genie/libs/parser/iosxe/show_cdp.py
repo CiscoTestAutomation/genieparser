@@ -214,7 +214,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
         # Platform: Meraki MV21 Cloud Managed Indoor HD Dom
         # Platform: Mitel 5320e,DN 2142      ,  Capabilities: Host Phone
-        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/:)]+'
+        # Platform: "CTS-CODEC-SX80",  Capabilities: Host Phone
+        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/:)\"]+'
                                   r'(?:,[\w ]+)?)(\,\s*Capabilities:\s+'
                                   r'(?P<capabilities>[\w\s\-]+))?$')
 
