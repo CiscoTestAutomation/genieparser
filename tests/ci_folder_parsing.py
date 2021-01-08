@@ -348,6 +348,10 @@ CLASS_SKIP = {
         "c9300": {
             "ShowInventory": True,
         },
+        "c9200": {
+            "ShowEnvironmentAllSchema": True,
+            "ShowEnvironmentAll_C9300": True,
+        },
         "ShowPimNeighbor": True,
         "ShowIpInterfaceBrief": True,
         "ShowIpInterfaceBriefPipeVlan": True,
