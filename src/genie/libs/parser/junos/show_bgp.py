@@ -1100,7 +1100,7 @@ class ShowBgpSummary(ShowBgpSummarySchema):
                 group = m.groupdict()
                 bgp_peer_dict = {}
 
-                special_case_state = re.compile(r'\d+/\d+/\d+/\d+ +\d+/\d+/\d+/\d+')
+                special_case_state = re.compile(r'([\d\/]+\s+[\d\/]+)')
 
                 for key, value in group.items():
                     if key == 'text':
