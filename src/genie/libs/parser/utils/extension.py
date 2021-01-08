@@ -62,8 +62,8 @@ class ExtendParsers(object):
     def _add_parsers(self, item, tokens):
         # Find all classes which has a function named parse
         # Will give module path
-        module_path = self.package + str(item).rsplit('.', 1)[0].\
-            replace(self.module_loc, '').replace('/', '.')
+        path_list = [self.package] + tokens + [item.name.replace(item.suffix, '')]
+        module_path = '.'.join(path_list)
         mod = importlib.import_module(module_path)
         parsers = self._find_parsers(mod)
 
