@@ -5679,7 +5679,7 @@ class test_show_ipv6_interface(unittest.TestCase):
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         obj = ShowIpv6VrfAllInterface(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output = obj.parse(interface='gigabitEthernet 0/0/0/0.1')
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)    
 if __name__ == '__main__':
