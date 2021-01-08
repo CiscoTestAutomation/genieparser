@@ -29,7 +29,7 @@ class ShowLogFilename(ShowLogFilenameSchema):
     cli_command = ['show log {filename}',
         'show log {filename} | except {except_show_log} | match {match}']
 
-    def cli(self, output=None, filename=None, match=None):
+    def cli(self, output=None, filename=None, except_show_log=None, match=None):
         if not output:
             if match:
                 out = self.device.execute(self.cli_command[1].format(
