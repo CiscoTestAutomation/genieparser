@@ -2,5 +2,5 @@
                                 Fix
 --------------------------------------------------------------------------------
 * JUNOS
-    * Added ShowDDosProtectionProtocol:
-        * show ddos-protection protocols {protocol}  
+    * Updated ShowBgpSummary:
+        * Handled regex to support various output

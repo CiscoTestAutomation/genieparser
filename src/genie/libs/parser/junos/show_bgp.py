@@ -1095,6 +1095,7 @@ class ShowBgpSummary(ShowBgpSummarySchema):
             # 10.49.216.179           65171          0          0       0       0 29w5d 22:42:36 Connect
             # 2001:db8:eb18:ca45::11       65151          0          0       0       0 29w5d 22:42:36 Connect
             # 20.0.0.2                  3          2          3       0       1           9 0/0/0/0              0/0/0/0
+            # 4.4.4.4               65000         71         71       0       0       31:15 0/1/1/0              0/0/0/0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
