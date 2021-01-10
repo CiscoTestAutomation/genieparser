@@ -2184,107 +2184,111 @@ class TestShowMplsDiscovery(unittest.TestCase):
                                     '''
             },
             'parsed': {
-                'local_ldp_identifier': {
-                    '10.52.26.119:0': {
-                        'discovery_sources': {
-                            'interfaces': {
-                                'Bundle-Ether1': {
-                                    'ldp_id': {
-                                        '10.52.26.124:0': {
-                                            'established_date': 'Nov  ''6 ''14:39:26.164',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
+                'vrf': {
+                    'default': {
+                        'local_ldp_identifier': {
+                            '10.52.26.119:0': {
+                                'discovery_sources': {
+                                    'interfaces': {
+                                        'Bundle-Ether1': {
+                                            'ldp_id': {
+                                                '10.52.26.124:0': {
+                                                    'established_date': 'Nov  6 14:39:26.164',
+                                                    'established_elapsed': '5w2d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.52.26.124',
+                                            'xmit': True
+                                        },
+                                        'Bundle-Ether100': {
+                                            'ldp_id': {
+                                                '10.52.31.244:0': {
+                                                    'established_date': 'Oct 30 12:06:32.962',
+                                                    'established_elapsed': '6w2d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.52.31.244',
+                                            'xmit': True
+                                        },
+                                        'Bundle-Ether3': {
+                                            'ldp_id': {
+                                                '10.52.31.247:0': {
+                                                    'established_date': 'Dec  1 11:54:28.707',
+                                                    'established_elapsed': '1w5d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/1': {
+                                            'ldp_id': {
+                                                '10.52.26.123:0': {
+                                                    'established_date': 'Oct 30 12:06:32.786',
+                                                    'established_elapsed': '6w2d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.52.26.123',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/18': {
+                                            'ldp_id': {
+                                                '10.52.31.253:0': {
+                                                    'established_date': 'Oct 30 12:06:30.788',
+                                                    'established_elapsed': '6w2d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.52.31.253',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/2': {
+                                            'ldp_id': {
+                                                '10.52.26.120:0': {
+                                                    'established_date': 'Oct 30 12:06:27.565',
+                                                    'established_elapsed': '6w2d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.52.26.120',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/6': {
+                                            'ldp_id': {
+                                                '10.52.31.250:0': {
+                                                    'established_date': 'Oct 30 12:06:29.720',
+                                                    'established_elapsed': '6w2d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.52.31.250',
+                                            'xmit': True
                                         }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.52.26.124',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'Bundle-Ether100': {
-                                    'ldp_id': {
-                                        '10.52.31.244:0': {
-                                            'established_date': 'Oct ''30 ''12:06:32.962',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.52.31.244',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'Bundle-Ether3': {
-                                    'ldp_id': {
-                                        '10.52.31.247:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:28.707',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/1': {
-                                    'ldp_id': {
-                                        '10.52.26.123:0': {
-                                            'established_date': 'Oct ''30 ''12:06:32.786',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.52.26.123',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/18': {
-                                    'ldp_id': {
-                                        '10.52.31.253:0': {
-                                            'established_date': 'Oct ''30 ''12:06:30.788',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.52.31.253',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/2': {
-                                    'ldp_id': {
-                                        '10.52.26.120:0': {
-                                            'established_date': 'Oct ''30 ''12:06:27.565',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.52.26.120',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/6': {
-                                    'ldp_id': {
-                                        '10.52.31.250:0': {
-                                            'established_date': 'Oct ''30 ''12:06:29.720',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.52.31.250',
-                                    'vrf': 'default',
-                                    'xmit': True
+                                    }
                                 }
                             }
                         }
@@ -2316,23 +2320,27 @@ class TestShowMplsDiscovery(unittest.TestCase):
                             '''
             },
             'parsed': {
-                'local_ldp_identifier': {
-                    '10.52.31.247:0': {
-                        'discovery_sources': {
-                            'interfaces': {
-                                'TenGigE0/0/0/5.2097': {
-                                    'ldp_id': {
-                                        '10.52.26.121:0': {
-                                            'established_date': 'Dec ''18 ''16:49:16.538',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
+                'vrf': {
+                    'default': {
+                        'local_ldp_identifier': {
+                            '10.52.31.247:0': {
+                                'discovery_sources': {
+                                    'interfaces': {
+                                        'TenGigE0/0/0/5.2097': {
+                                            'ldp_id': {
+                                                '10.52.26.121:0': {
+                                                    'established_date': 'Dec 18 16:49:16.538',
+                                                    'established_elapsed': '3d00h',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.52.26.121',
+                                            'xmit': True
                                         }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.52.26.121',
-                                    'vrf': 'default',
-                                    'xmit': True
+                                    }
                                 }
                             }
                         }
@@ -2426,159 +2434,161 @@ class TestShowMplsDiscovery(unittest.TestCase):
                         '''
             },
             'parsed': {
-                'local_ldp_identifier': {
-                    '10.112.31.247:0': {
-                        'discovery_sources': {
-                            'interfaces': {
-                                'Bundle-Ether100': {
-                                    'ldp_id': {
-                                        '10.112.31.251:0': {
-                                            'established_date': 'Dec  ''1 ''11:55:00.837',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
+                'vrf': {
+                    'default': {
+                        'local_ldp_identifier': {
+                            '10.112.31.247:0': {
+                                'discovery_sources': {
+                                    'interfaces': {
+                                        'Bundle-Ether100': {
+                                            'ldp_id': {
+                                                '10.112.31.251:0': {
+                                                    'established_date': 'Dec  1 11:55:00.837',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.112.31.251',
+                                            'xmit': True
+                                        },
+                                        'Bundle-Ether20': {
+                                            'ldp_id': {
+                                                '10.112.26.126:0': {
+                                                    'established_date': 'Dec 14 12:33:14.549',
+                                                    'established_elapsed': '1w0d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.112.26.126',
+                                            'xmit': True
+                                        },
+                                        'Bundle-Ether3': {
+                                            'ldp_id': {
+                                                '10.112.26.119:0': {
+                                                    'established_date': 'Dec  1 11:55:00.863',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.112.26.119',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/0': {
+                                            'ldp_id': {
+                                                '10.112.31.252:0': {
+                                                    'established_date': 'Dec  1 11:54:50.567',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.112.31.252',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/1': {
+                                            'ldp_id': {
+                                                '10.112.26.126:0': {
+                                                    'established_date': 'Dec 14 12:33:12.454',
+                                                    'established_elapsed': '1w0d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.112.26.126',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/18': {
+                                            'ldp_id': {
+                                                '10.112.31.253:0': {
+                                                    'established_date': 'Dec  1 11:54:49.304',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.112.31.253',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/2': {
+                                            'ldp_id': {
+                                                '10.112.26.120:0': {
+                                                    'established_date': 'Dec  1 11:54:49.538',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.112.26.120',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/4': {
+                                            'ldp_id': {
+                                                '10.112.31.245:0': {
+                                                    'established_date': 'Dec  1 11:54:54.341',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.112.31.245',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/4.2096': {
+                                            'recv': False,
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/4.2098': {
+                                            'ldp_id': {
+                                                '10.112.26.29:0': {
+                                                    'established_date': 'Dec 18 14:40:03.639',
+                                                    'established_elapsed': '3d03h',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.112.26.29',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/5.2095': {
+                                            'recv': False,
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/5.2097': {
+                                            'ldp_id': {
+                                                '10.112.26.121:0': {
+                                                    'established_date': 'Dec 18 16:49:16.538',
+                                                    'established_elapsed': '3d00h',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '10.112.26.121',
+                                            'xmit': True
                                         }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.112.31.251',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'Bundle-Ether20': {
-                                    'ldp_id': {
-                                        '10.112.26.126:0': {
-                                            'established_date': 'Dec ''14 ''12:33:14.549',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.112.26.126',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'Bundle-Ether3': {
-                                    'ldp_id': {
-                                        '10.112.26.119:0': {
-                                            'established_date': 'Dec  ''1 ''11:55:00.863',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.112.26.119',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/0': {
-                                    'ldp_id': {
-                                        '10.112.31.252:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:50.567',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.112.31.252',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/1': {
-                                    'ldp_id': {
-                                        '10.112.26.126:0': {
-                                            'established_date': 'Dec ''14 ''12:33:12.454',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.112.26.126',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/18': {
-                                    'ldp_id': {
-                                        '10.112.31.253:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:49.304',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.112.31.253',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/2': {
-                                    'ldp_id': {
-                                        '10.112.26.120:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:49.538',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.112.26.120',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/4': {
-                                    'ldp_id': {
-                                        '10.112.31.245:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:54.341',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.112.31.245',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/4.2096': {
-                                    'recv': False,
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/4.2098': {
-                                    'ldp_id': {
-                                        '10.112.26.29:0': {
-                                            'established_date': 'Dec ''18 ''14:40:03.639',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.112.26.29',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/5.2095': {
-                                    'recv': False,
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/5.2097': {
-                                    'ldp_id': {
-                                        '10.112.26.121:0': {
-                                            'established_date': 'Dec ''18 ''16:49:16.538',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '10.112.26.121',
-                                    'vrf': 'default',
-                                    'xmit': True
+                                    }
                                 }
                             }
                         }
@@ -2728,229 +2738,241 @@ class TestShowMplsDiscovery(unittest.TestCase):
                                 '''
             },
             'parsed': {
-                'local_ldp_identifier': {
-                    '81.52.31.247:0': {
-                        'discovery_sources': {
-                            'interfaces': {
-                                'Bundle-Ether100': {
-                                    'hello_due_time': '2.3 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.31.251:0': {
-                                            'established_date': 'Dec  ''1 ''11:55:00.837',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.58',
-                                            'transport_ip_addr': '81.52.31.251'
+                'vrf': {
+                    'default': {
+                        'local_ldp_identifier': {
+                            '81.52.31.247:0': {
+                                'discovery_sources': {
+                                    'interfaces': {
+                                        'Bundle-Ether100': {
+                                            'hello_due_time_ms': 2300,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.31.251:0': {
+                                                    'established_date': 'Dec  1 11:55:00.837',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 13.7,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.58',
+                                                    'transport_ip_addr': '81.52.31.251'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.57',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'Bundle-Ether20': {
+                                            'hello_due_time_ms': 514,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.26.126:0': {
+                                                    'established_date': 'Dec 14 12:33:14.549',
+                                                    'established_elapsed': '1w0d',
+                                                    'expiring_in': 11.3,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.26',
+                                                    'transport_ip_addr': '81.52.26.126'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.25',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'Bundle-Ether3': {
+                                            'hello_due_time_ms': 4500,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.26.119:0': {
+                                                    'established_date': 'Dec  1 11:55:00.863',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 12.5,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.53',
+                                                    'transport_ip_addr': '81.52.26.119'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.54',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/0': {
+                                            'hello_due_time_ms': 4400,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.31.252:0': {
+                                                    'established_date': 'Dec  1 11:54:50.567',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 11.2,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.66',
+                                                    'transport_ip_addr': '81.52.31.252'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.65',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/1': {
+                                            'hello_due_time_ms': 3000,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.26.126:0': {
+                                                    'established_date': 'Dec 14 12:33:12.454',
+                                                    'established_elapsed': '1w0d',
+                                                    'expiring_in': 14.0,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.46',
+                                                    'transport_ip_addr': '81.52.26.126'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.45',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/18': {
+                                            'hello_due_time_ms': 518,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.31.253:0': {
+                                                    'established_date': 'Dec  1 11:54:49.304',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 11.7,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.110',
+                                                    'transport_ip_addr': '81.52.31.253'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.109',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/2': {
+                                            'hello_due_time_ms': 232,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.26.120:0': {
+                                                    'established_date': 'Dec  1 11:54:49.538',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 14.8,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.30',
+                                                    'transport_ip_addr': '81.52.26.120'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.29',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/4': {
+                                            'hello_due_time_ms': 3700,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.31.245:0': {
+                                                    'established_date': 'Dec  1 11:54:54.341',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 14.4,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.70',
+                                                    'transport_ip_addr': '81.52.31.245'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.69',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/4.2096': {
+                                            'hello_due_time_ms': 4100,
+                                            'hello_interval_ms': 5000,
+                                            'quick_start': 'enabled',
+                                            'recv': False,
+                                            'source_ip_addr': '10.166.0.125',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/4.2098': {
+                                            'hello_due_time_ms': 1200,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.26.29:0': {
+                                                    'established_date': 'Dec 18 14:40:03.639',
+                                                    'established_elapsed': '3d02h',
+                                                    'expiring_in': 11.6,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.134',
+                                                    'transport_ip_addr': '81.52.26.29'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.133',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/5.2095': {
+                                            'hello_due_time_ms': 2800,
+                                            'hello_interval_ms': 5000,
+                                            'quick_start': 'enabled',
+                                            'recv': False,
+                                            'source_ip_addr': '10.166.0.149',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/5.2097': {
+                                            'hello_due_time_ms': 772,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.26.121:0': {
+                                                    'established_date': 'Dec 18 16:49:16.538',
+                                                    'established_elapsed': '3d00h',
+                                                    'expiring_in': 14.1,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.138',
+                                                    'transport_ip_addr': '81.52.26.121'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.137',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
                                         }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.57',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'Bundle-Ether20': {
-                                    'hello_due_time': '514 ''msec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.126:0': {
-                                            'established_date': 'Dec ''14 ''12:33:14.549',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.26',
-                                            'transport_ip_addr': '81.52.26.126'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.25',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'Bundle-Ether3': {
-                                    'hello_due_time': '4.5 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.119:0': {
-                                            'established_date': 'Dec  ''1 ''11:55:00.863',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.53',
-                                            'transport_ip_addr': '81.52.26.119'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.54',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/0': {
-                                    'hello_due_time': '4.4 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.31.252:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:50.567',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.66',
-                                            'transport_ip_addr': '81.52.31.252'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.65',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/1': {
-                                    'hello_due_time': '3 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.126:0': {
-                                            'established_date': 'Dec ''14 ''12:33:12.454',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.46',
-                                            'transport_ip_addr': '81.52.26.126'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.45',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/18': {
-                                    'hello_due_time': '518 ''msec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.31.253:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:49.304',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.110',
-                                            'transport_ip_addr': '81.52.31.253'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.109',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/2': {
-                                    'hello_due_time': '232 ''msec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.120:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:49.538',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.30',
-                                            'transport_ip_addr': '81.52.26.120'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.29',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/4': {
-                                    'hello_due_time': '3.7 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.31.245:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:54.341',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.70',
-                                            'transport_ip_addr': '81.52.31.245'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.69',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/4.2096': {
-                                    'hello_due_time': '4.1 ''sec',
-                                    'hello_interval': 5,
-                                    'quick_start': 'enabled',
-                                    'recv': False,
-                                    'source_ip_addr': '10.166.0.125',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/4.2098': {
-                                    'hello_due_time': '1.2 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.29:0': {
-                                            'established_date': 'Dec ''18 ''14:40:03.639',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.134',
-                                            'transport_ip_addr': '81.52.26.29'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.133',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/5.2095': {
-                                    'hello_due_time': '2.8 ''sec',
-                                    'hello_interval': 5,
-                                    'quick_start': 'enabled',
-                                    'recv': False,
-                                    'source_ip_addr': '10.166.0.149',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/5.2097': {
-                                    'hello_due_time': '772 ''msec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.121:0': {
-                                            'established_date': 'Dec ''18 ''16:49:16.538',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.138',
-                                            'transport_ip_addr': '81.52.26.121'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.137',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
+                                    }
                                 }
                             }
                         }
@@ -3044,159 +3066,161 @@ class TestShowMplsDiscovery(unittest.TestCase):
                                 '''
             },
             'parsed': {
-                'local_ldp_identifier': {
-                    '81.52.31.247:0': {
-                        'discovery_sources': {
-                            'interfaces': {
-                                'Bundle-Ether100': {
-                                    'ldp_id': {
-                                        '81.52.31.251:0': {
-                                            'established_date': 'Dec  ''1 ''11:55:00.837',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
+                'vrf': {
+                    'default': {
+                        'local_ldp_identifier': {
+                            '81.52.31.247:0': {
+                                'discovery_sources': {
+                                    'interfaces': {
+                                        'Bundle-Ether100': {
+                                            'ldp_id': {
+                                                '81.52.31.251:0': {
+                                                    'established_date': 'Dec  1 11:55:00.837',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '81.52.31.251',
+                                            'xmit': True
+                                        },
+                                        'Bundle-Ether20': {
+                                            'ldp_id': {
+                                                '81.52.26.126:0': {
+                                                    'established_date': 'Dec 14 12:33:14.549',
+                                                    'established_elapsed': '1w0d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '81.52.26.126',
+                                            'xmit': True
+                                        },
+                                        'Bundle-Ether3': {
+                                            'ldp_id': {
+                                                '81.52.26.119:0': {
+                                                    'established_date': 'Dec  1 11:55:00.863',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '81.52.26.119',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/0': {
+                                            'ldp_id': {
+                                                '81.52.31.252:0': {
+                                                    'established_date': 'Dec  1 11:54:50.567',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '81.52.31.252',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/1': {
+                                            'ldp_id': {
+                                                '81.52.26.126:0': {
+                                                    'established_date': 'Dec 14 12:33:12.454',
+                                                    'established_elapsed': '1w0d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '81.52.26.126',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/18': {
+                                            'ldp_id': {
+                                                '81.52.31.253:0': {
+                                                    'established_date': 'Dec  1 11:54:49.304',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '81.52.31.253',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/2': {
+                                            'ldp_id': {
+                                                '81.52.26.120:0': {
+                                                    'established_date': 'Dec  1 11:54:49.538',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '81.52.26.120',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/4': {
+                                            'ldp_id': {
+                                                '81.52.31.245:0': {
+                                                    'established_date': 'Dec  1 11:54:54.341',
+                                                    'established_elapsed': '2w6d',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '81.52.31.245',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/4.2096': {
+                                            'recv': False,
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/4.2098': {
+                                            'ldp_id': {
+                                                '81.52.26.29:0': {
+                                                    'established_date': 'Dec 18 14:40:03.639',
+                                                    'established_elapsed': '3d03h',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '81.52.26.29',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/5.2095': {
+                                            'recv': False,
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/5.2097': {
+                                            'ldp_id': {
+                                                '81.52.26.121:0': {
+                                                    'established_date': 'Dec 18 16:49:16.538',
+                                                    'established_elapsed': '3d01h',
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15
+                                                }
+                                            },
+                                            'recv': True,
+                                            'transport_ip_addr': '81.52.26.121',
+                                            'xmit': True
                                         }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '81.52.31.251',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'Bundle-Ether20': {
-                                    'ldp_id': {
-                                        '81.52.26.126:0': {
-                                            'established_date': 'Dec ''14 ''12:33:14.549',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '81.52.26.126',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'Bundle-Ether3': {
-                                    'ldp_id': {
-                                        '81.52.26.119:0': {
-                                            'established_date': 'Dec  ''1 ''11:55:00.863',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '81.52.26.119',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/0': {
-                                    'ldp_id': {
-                                        '81.52.31.252:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:50.567',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '81.52.31.252',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/1': {
-                                    'ldp_id': {
-                                        '81.52.26.126:0': {
-                                            'established_date': 'Dec ''14 ''12:33:12.454',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '81.52.26.126',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/18': {
-                                    'ldp_id': {
-                                        '81.52.31.253:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:49.304',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '81.52.31.253',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/2': {
-                                    'ldp_id': {
-                                        '81.52.26.120:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:49.538',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '81.52.26.120',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/4': {
-                                    'ldp_id': {
-                                        '81.52.31.245:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:54.341',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '81.52.31.245',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/4.2096': {
-                                    'recv': False,
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/4.2098': {
-                                    'ldp_id': {
-                                        '81.52.26.29:0': {
-                                            'established_date': 'Dec ''18 ''14:40:03.639',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '81.52.26.29',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/5.2095': {
-                                    'recv': False,
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/5.2097': {
-                                    'ldp_id': {
-                                        '81.52.26.121:0': {
-                                            'established_date': 'Dec ''18 ''16:49:16.538',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15
-                                        }
-                                    },
-                                    'recv': True,
-                                    'transport_ip_addr': '81.52.26.121',
-                                    'vrf': 'default',
-                                    'xmit': True
+                                    }
                                 }
                             }
                         }
@@ -3343,232 +3367,262 @@ class TestShowMplsDiscovery(unittest.TestCase):
                                         Hold time: 15 sec (local:15 sec, peer:15 sec)
                                                     (expiring in 14.5 sec)
                                         Established: Dec 18 16:49:16.538 (3d01h ago)
+                                Targeted Hellos:
+                                    10.1.1.1 -> 10.3.3.3 (active), xmit/recv
+                                        Hello interval: 6 sec (due in 4.2 sec)
+                                        Quick-start: Enabled
+                                        LDP Id: 10.3.3.3:0
+                                            Hold time: 60 sec (local:60 sec, peer:60 sec)
+                                                        (expiring in 55.3 sec)
+                                            Established: Jan  1 13:11:39.034 (00:01:33 ago)
                                 '''
             },
             'parsed': {
-                'local_ldp_identifier': {
-                    '81.52.31.247:0': {
-                        'discovery_sources': {
-                            'interfaces': {
-                                'Bundle-Ether100': {
-                                    'hello_due_time': '4 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.31.251:0': {
-                                            'established_date': 'Dec  ''1 ''11:55:00.837',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.58',
-                                            'transport_ip_addr': '81.52.31.251'
+                'vrf': {
+                    'default': {
+                        'local_ldp_identifier': {
+                            '81.52.31.247:0': {
+                                'discovery_sources': {
+                                    'interfaces': {
+                                        'Bundle-Ether100': {
+                                            'hello_due_time_ms': 4000,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.31.251:0': {
+                                                    'established_date': 'Dec  1 11:55:00.837',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 13.4,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.58',
+                                                    'transport_ip_addr': '81.52.31.251'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.57',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'Bundle-Ether20': {
+                                            'hello_due_time_ms': 1200,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.26.126:0': {
+                                                    'established_date': 'Dec 14 12:33:14.549',
+                                                    'established_elapsed': '1w0d',
+                                                    'expiring_in': 12.0,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.26',
+                                                    'transport_ip_addr': '81.52.26.126'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.25',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'Bundle-Ether3': {
+                                            'hello_due_time_ms': 133,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.26.119:0': {
+                                                    'established_date': 'Dec  1 11:55:00.863',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 13.4,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.53',
+                                                    'transport_ip_addr': '81.52.26.119'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.54',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/0': {
+                                            'hello_due_time_ms': 4400,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.31.252:0': {
+                                                    'established_date': 'Dec  1 11:54:50.567',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 11.8,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.66',
+                                                    'transport_ip_addr': '81.52.31.252'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.65',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/1': {
+                                            'hello_due_time_ms': 3300,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.26.126:0': {
+                                                    'established_date': 'Dec 14 12:33:12.454',
+                                                    'established_elapsed': '1w0d',
+                                                    'expiring_in': 10.5,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.46',
+                                                    'transport_ip_addr': '81.52.26.126'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.45',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/18': {
+                                            'hello_due_time_ms': 1000,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.31.253:0': {
+                                                    'established_date': 'Dec  1 11:54:49.304',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 13.7,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.110',
+                                                    'transport_ip_addr': '81.52.31.253'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.109',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/2': {
+                                            'hello_due_time_ms': 4500,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.26.120:0': {
+                                                    'established_date': 'Dec  1 11:54:49.538',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 12.8,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.30',
+                                                    'transport_ip_addr': '81.52.26.120'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.29',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'GigabitEthernet0/0/1/4': {
+                                            'hello_due_time_ms': 866,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.31.245:0': {
+                                                    'established_date': 'Dec  1 11:54:54.341',
+                                                    'established_elapsed': '2w6d',
+                                                    'expiring_in': 13.1,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.70',
+                                                    'transport_ip_addr': '81.52.31.245'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.69',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/4.2096': {
+                                            'hello_due_time_ms': 155,
+                                            'hello_interval_ms': 5000,
+                                            'quick_start': 'enabled',
+                                            'recv': False,
+                                            'source_ip_addr': '10.166.0.125',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/4.2098': {
+                                            'hello_due_time_ms': 1300,
+                                            'hello_interval_ms': 5000,
+                                            'ldp_id': {
+                                                '81.52.26.29:0': {
+                                                    'established_date': 'Dec 18 14:40:03.639',
+                                                    'established_elapsed': '3d03h',
+                                                    'expiring_in': 12.5,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
+                                                    'source_ip_addr': '10.166.0.134',
+                                                    'transport_ip_addr': '81.52.26.29'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.133',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/5.2095': {
+                                            'hello_due_time_ms': 3400,
+                                            'hello_interval_ms': 5000,
+                                            'quick_start': 'enabled',
+                                            'recv': False,
+                                            'source_ip_addr': '10.166.0.149',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
+                                        },
+                                        'TenGigE0/0/0/5.2097': {
+                                            'hello_due_time_ms': 4200,
+                                            'hello_interval_ms': 6000,
+                                            'ldp_id': {
+                                                '81.52.26.121:0': {
+                                                    'established_date': 'Jan  1 13:11:39.034',
+                                                    'established_elapsed': '3d01h',
+                                                    'expiring_in': 55.3,
+                                                    'holdtime_sec': 60,
+                                                    'proposed_local': 60,
+                                                    'proposed_peer': 60,
+                                                    'source_ip_addr': '10.166.0.138',
+                                                    'transport_ip_addr': '81.52.26.121'
+                                                }
+                                            },
+                                            'quick_start': 'enabled',
+                                            'recv': True,
+                                            'source_ip_addr': '10.166.0.137',
+                                            'transport_ip_addr': '81.52.31.247',
+                                            'xmit': True
                                         }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.57',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
+                                    }
                                 },
-                                'Bundle-Ether20': {
-                                    'hello_due_time': '1.2 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.126:0': {
-                                            'established_date': 'Dec ''14 ''12:33:14.549',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.26',
-                                            'transport_ip_addr': '81.52.26.126'
+                                'targeted_hellos': {
+                                    '10.1.1.1': {
+                                        '10.3.3.3': {
+                                            'active': True,
+                                            'ldp_id': '10.3.3.3:0',
+                                            'recv': True,
+                                            'xmit': True
                                         }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.25',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'Bundle-Ether3': {
-                                    'hello_due_time': '133 ''msec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.119:0': {
-                                            'established_date': 'Dec  ''1 ''11:55:00.863',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.53',
-                                            'transport_ip_addr': '81.52.26.119'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.54',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/0': {
-                                    'hello_due_time': '4.4 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.31.252:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:50.567',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.66',
-                                            'transport_ip_addr': '81.52.31.252'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.65',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/1': {
-                                    'hello_due_time': '3.3 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.126:0': {
-                                            'established_date': 'Dec ''14 ''12:33:12.454',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.46',
-                                            'transport_ip_addr': '81.52.26.126'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.45',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/18': {
-                                    'hello_due_time': '1 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.31.253:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:49.304',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.110',
-                                            'transport_ip_addr': '81.52.31.253'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.109',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/2': {
-                                    'hello_due_time': '4.5 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.120:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:49.538',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.30',
-                                            'transport_ip_addr': '81.52.26.120'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.29',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'GigabitEthernet0/0/1/4': {
-                                    'hello_due_time': '866 ''msec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.31.245:0': {
-                                            'established_date': 'Dec  ''1 ''11:54:54.341',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.70',
-                                            'transport_ip_addr': '81.52.31.245'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.69',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/4.2096': {
-                                    'hello_due_time': '155 ''msec',
-                                    'hello_interval': 5,
-                                    'quick_start': 'enabled',
-                                    'recv': False,
-                                    'source_ip_addr': '10.166.0.125',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/4.2098': {
-                                    'hello_due_time': '1.3 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.29:0': {
-                                            'established_date': 'Dec ''18 ''14:40:03.639',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.134',
-                                            'transport_ip_addr': '81.52.26.29'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.133',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/5.2095': {
-                                    'hello_due_time': '3.4 ''sec',
-                                    'hello_interval': 5,
-                                    'quick_start': 'enabled',
-                                    'recv': False,
-                                    'source_ip_addr': '10.166.0.149',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
-                                },
-                                'TenGigE0/0/0/5.2097': {
-                                    'hello_due_time': '2.3 ''sec',
-                                    'hello_interval': 5,
-                                    'ldp_id': {
-                                        '81.52.26.121:0': {
-                                            'established_date': 'Dec ''18 ''16:49:16.538',
-                                            'holdtime_sec': 15,
-                                            'proposed_local': 15,
-                                            'proposed_peer': 15,
-                                            'source_ip_addr': '10.166.0.138',
-                                            'transport_ip_addr': '81.52.26.121'
-                                        }
-                                    },
-                                    'quick_start': 'enabled',
-                                    'recv': True,
-                                    'source_ip_addr': '10.166.0.137',
-                                    'transport_ip_addr': '81.52.31.247',
-                                    'vrf': 'default',
-                                    'xmit': True
+                                    }
                                 }
                             }
                         }
