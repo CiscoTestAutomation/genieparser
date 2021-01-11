@@ -21,10 +21,10 @@ class ShowPPMTransmissionsProtocolBfdDetailSchema(MetaParser):
     ''' Schema for:
         * 'show ppm transmissions protocol bfd detail'
     '''
-
+    '''
     schema = {
     "ppm-transmissions": {
-        "transmission-data": {
+        "transmission-data": [{
             "protocol": str,
             "transmission-destination": str,
             "transmission-distributed": str,
@@ -33,9 +33,36 @@ class ShowPPMTransmissionsProtocolBfdDetailSchema(MetaParser):
             "transmission-interval": str,
             "transmission-pfe-addr": str,
             "transmission-pfe-handle": str
-            }
+            }]
         }
     }
+    '''
+
+    def validate_transmission_data(value):
+        if not isinstance(value, list):
+            raise SchemaError('transmission data is not a list')
+
+        transmission_data = Schema({
+            "protocol": str,
+            "transmission-destination": str,
+            "transmission-distributed": str,
+            Optional("transmission-host"): str,
+            "transmission-interface-index": str,
+            "transmission-interval": str,
+            "transmission-pfe-addr": str,
+            "transmission-pfe-handle": str
+        })
+
+        for item in value:
+            transmission_data.validate(item)
+        return value
+
+    schema = {
+        "ppm-transmissions": {
+            "transmission-data": Use(validate_transmission_data)
+        }
+    }
+
 
 
 # ===========================
@@ -81,10 +108,15 @@ class ShowPPMTransmissionsProtocolBfdDetail(ShowPPMTransmissionsProtocolBfdDetai
             if m:
                 group = m.groupdict()
                 ppm_transmissions = ret_dict.setdefault('ppm-transmissions', {}). \
-                    setdefault('transmission-data', {})
+                    setdefault('transmission-data', [])
+                
+                transmission_data_dict = {}
+
                 for key, value in group.items():
                     key = key.replace('_', '-')
-                    ppm_transmissions[key] = value
+                    transmission_data_dict[key] = value
+
+                ppm_transmissions.append(transmission_data_dict)
                 continue
 
             # Distributed: TRUE, Distribution handle: 6918, Distribution address: fpc9
@@ -93,7 +125,7 @@ class ShowPPMTransmissionsProtocolBfdDetail(ShowPPMTransmissionsProtocolBfdDetai
                 group = m.groupdict()
                 for key, value in group.items():
                     key = key.replace('_', '-')
-                    ppm_transmissions[key] = value
+                    transmission_data_dict.update({key:value})
                 continue
 
             # IFL-index: 783
@@ -102,7 +134,7 @@ class ShowPPMTransmissionsProtocolBfdDetail(ShowPPMTransmissionsProtocolBfdDetai
                 group = m.groupdict()
                 for key, value in group.items():
                     key = key.replace('_', '-')
-                    ppm_transmissions[key] = value
+                    transmission_data_dict.update({key:value})
                 continue
-        
+            
         return ret_dict
