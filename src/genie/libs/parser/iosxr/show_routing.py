@@ -995,3 +995,82 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 continue
 
         return ret_dict
+
+
+# ====================================================
+#  schema for show route summary
+# ====================================================
+class ShowIpRouteSummarySchema(MetaParser):
+    """Schema for show route summary
+    """
+    schema = {
+        'total_route_source': {
+            'routes': int,
+            'backup': int,
+            'deleted': int,
+            'memory_bytes': int,
+        'route_source': {
+            Any(): {
+
+                    Any(): {
+                        'routes': int,
+                        'backup': int,
+                        'deleted': int,
+                        'memory_bytes': int,
+
+                },
+                Optional('routes'): int,
+                Optional('backup'): int,
+                Optional('deleted'): int,
+                Optional('memory_bytes'): int,
+            },
+        }
+    }
+}
+
+# ====================================================
+#  parser for show route summary
+# ====================================================
+"""Parser for show ip route summary
+    """
+class ShowIpRouteSummary(ShowIpRouteSummarySchema):
+
+    cli_command = ['show route summary']
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        # application                       0           0           0           0
+        p1 = re.compile(
+            r'^(?P<protocol>[\w\-]+) +(?P<instance>\w+)*? *(?P<routes>\d+) +('
+            r'?P<backup>\d+)? +(?P<deleted>\d+)? +(?P<memory_bytes>\d+)$')
+
+        ret_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+            # application                0           0           0           0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                protocol = group.pop('protocol')
+                instance = group.pop('instance')
+                if protocol == 'Total':
+                    protocol_dict = ret_dict.setdefault('total_route_source', {})
+                else:
+                    protocol_dict = ret_dict.setdefault('route_source', {}).setdefault(protocol, {})
+                if instance is not None:
+                    inst_dict = protocol_dict.setdefault(instance, {})
+                    inst_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                else:
+                    group = {k: int(v) for k, v in group.items() if v is not None}
+                    protocol_dict.update(group)
+                continue
+
+        return ret_dict
