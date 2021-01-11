@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
                                 Fix
 --------------------------------------------------------------------------------
-* junos
-    * Modified ShowBgpSummary:
-        * Fixed UT failures
+* iosxe
+    * Modified ShowCdpNeighborsDetail:
+        * Updated code to handle scenario where there is no device_id
