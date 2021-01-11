@@ -1,4 +1,4 @@
-{
+expected_output = {
     "bgp-information": {
         "bgp-peer": [
             {
