@@ -1109,9 +1109,6 @@ class ShowBgpSummary(ShowBgpSummarySchema):
                         continue
                     key = key.replace('_', '-')
                     
-                    if special_case_state.match(value):
-                        value = 'Establ' 
-                    
                     bgp_peer_dict[key] = value
 
                 bgp_info_dict['bgp-information']['bgp-peer'].append(
