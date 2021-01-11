@@ -98,6 +98,7 @@ class ShowServicesAccountingUsage(ShowServicesAccountingUsageSchema):
 
         # CPU utilization
         p1 = re.compile(r'^CPU +utilization$')
+        p1_1 = re.compile(r'^{master}$')
 
         # ms-9/0/0
         p2 = re.compile(r'^(?P<interface_name>\S+)$')
@@ -115,6 +116,12 @@ class ShowServicesAccountingUsage(ShowServicesAccountingUsageSchema):
 
             # CPU utilization
             m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                continue
+            
+            # {master}
+            m = p1_1.match(line)
             if m:
                 group = m.groupdict()
                 continue
