@@ -1850,47 +1850,47 @@ class TestShowRunningConfigNvOverlay(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
 R6# show running-config nv overlay
- 
+ 
 !Command: show running-config nv overlay
 !No configuration change since last restart
 !Time: Wed May 30 14:42:18 2018
- 
-version 9.2(1) Bios:version 
+ 
+version 9.2(1) Bios:version 
 feature nv overlay
- 
+ 
 evpn multisite border-gateway 111111
-  delay-restore time 185
- 
- 
+  delay-restore time 185
+ 
+ 
 interface nve1
-  no shutdown
-  host-reachability protocol bgp
-  advertise virtual-rmac
-  source-interface loopback1
-  multisite border-gateway interface loopback3
-  member vni 10100 associate-vrf
-  member vni 10101
-    multisite ingress-replication
-    mcast-group 231.100.1.1
-  member vni 10102
-    multisite ingress-replication
-    mcast-group 231.100.1.1
-  member vni 100000-100002 associate-vrf
-  member vni 100004-100006
-    multisite ingress-replication
-    mcast-group 231.200.1.1
-  member vni 10202
-    multisite ingress-replication
-    mcast-group 231.200.1.1
- 
+  no shutdown
+  host-reachability protocol bgp
+  advertise virtual-rmac
+  source-interface loopback1
+  multisite border-gateway interface loopback3
+  member vni 10100 associate-vrf
+  member vni 10101
+    multisite ingress-replication
+    mcast-group 231.100.1.1
+  member vni 10102
+    multisite ingress-replication
+    mcast-group 231.100.1.1
+  member vni 100000-100002 associate-vrf
+  member vni 100004-100006
+    multisite ingress-replication
+    mcast-group 231.200.1.1
+  member vni 10202
+    multisite ingress-replication
+    mcast-group 231.200.1.1
+ 
 interface Ethernet1/1
-  evpn multisite fabric-tracking
- 
+  evpn multisite fabric-tracking
+ 
 interface Ethernet1/2
-  evpn multisite fabric-tracking
- 
+  evpn multisite fabric-tracking
+ 
 interface Ethernet1/6
-  evpn multisite dci-tracking
+  evpn multisite dci-tracking
 
 
     '''}
@@ -2007,45 +2007,45 @@ interface Ethernet1/6
 
     golden_output_2 = {'execute.return_value': '''
     R6# show running-config nv overlay
-     
+     
     !Command: show running-config nv overlay
     !No configuration change since last restart
     !Time: Wed May 30 14:42:18 2018
-     
-    version 9.2(1) Bios:version 
+     
+    version 9.2(1) Bios:version 
     feature nv overlay
-     
+     
     evpn multisite border-gateway 111111
-      delay-restore time 185
-     
-     
+      delay-restore time 185
+     
+     
     interface nve1
-      no shutdown
-      host-reachability protocol bgp
-      advertise virtual-rmac
-      source-interface loopback1
+      no shutdown
+      host-reachability protocol bgp
+      advertise virtual-rmac
+      source-interface loopback1
       global suppress-arp 
       global mcast-group 192.168.0.1 L2
-      multisite border-gateway interface loopback3
-      member vni 10100 associate-vrf
-      member vni 10101
-        multisite ingress-replication
-      member vni 10102
-        multisite ingress-replication
-      member vni 100000-100002 associate-vrf
-      member vni 100004-100006
-        multisite ingress-replication
-      member vni 10202
-        multisite ingress-replication
-     
+      multisite border-gateway interface loopback3
+      member vni 10100 associate-vrf
+      member vni 10101
+        multisite ingress-replication
+      member vni 10102
+        multisite ingress-replication
+      member vni 100000-100002 associate-vrf
+      member vni 100004-100006
+        multisite ingress-replication
+      member vni 10202
+        multisite ingress-replication
+     
     interface Ethernet1/1
-      evpn multisite fabric-tracking
-     
+      evpn multisite fabric-tracking
+     
     interface Ethernet1/2
-      evpn multisite fabric-tracking
-     
+      evpn multisite fabric-tracking
+     
     interface Ethernet1/6
-      evpn multisite dci-tracking
+      evpn multisite dci-tracking
 
 
         '''}
