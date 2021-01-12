@@ -44,8 +44,13 @@ def _load_parser_json():
         if ext_parser_package:
             ext = ExtendParsers(ext_parser_package)
             ext.extend()
+
             ext.output.pop('tokens', None)
+            summary = ext.output.pop('extend_info', None)
+
             merge_dict(parser_data, ext.output, update=True)
+            log.warning("External parser counts: {}\nSummary:\n{}"
+                .format(len(summary), json.dumps(summary, indent=2)))
 
     return parser_data
 

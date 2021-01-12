@@ -13,7 +13,7 @@ class ExtendParsers(object):
     IGNORE_FILE = ['__init__.py', 'base.py', 'utils.py']
 
     def __init__(self, package):
-        self.output = {'tokens': []}
+        self.output = {'tokens': [], 'extend_info': []}
         self.package = package
         # Figure out location of package so you can walk it
         self.module_loc = importlib.import_module(package).__path__[0]
@@ -44,6 +44,10 @@ class ExtendParsers(object):
     def _add_parser(self, parser, cli, tokens, mod):
         if cli not in self.output:
             self.output[cli] = {}
+
+        extend_info = self.output['extend_info']
+        extend_info.append("cli: '{}', tokens {}, class: {}"
+                    .format(cli, tokens, parser.__name__))
 
         output = self.output[cli]
         for token in tokens:
