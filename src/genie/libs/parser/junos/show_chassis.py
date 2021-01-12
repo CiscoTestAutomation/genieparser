@@ -3823,7 +3823,7 @@ class ShowChassisPicFpcSlotPicSlot(ShowChassisPicFpcSlotPicSlotSchema):
 
                 for k, v in group.items():
                     k = k.replace('_', '-')
-                    port_item[k] = v
+                    port_item[k] = v.strip()
 
                 port_list.append(port_item)
                 continue
