@@ -24,7 +24,7 @@ class ShowTaskReplicationSchema(MetaParser):
             "task-gres-state": str,
             Optional("task-protocol-replication-name"): list,
             Optional("task-protocol-replication-state"): list,
-            "task-re-mode": "Master",
+            "task-re-mode": str,
         }
     }
 
