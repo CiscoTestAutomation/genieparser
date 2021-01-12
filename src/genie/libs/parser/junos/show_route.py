@@ -55,7 +55,7 @@ class ShowRouteTableSchema(MetaParser):
                             'age': str,
                             Optional('metric'): str,
                             Optional('rt-tag'): str,
-                            Optional('next_hop'): {
+                            'next_hop': {
                                 'next_hop_list': {
                                     Any(): {
                                         'to': str,
