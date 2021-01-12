@@ -119,17 +119,17 @@ class test_show_lacp_counters(unittest.TestCase):
         NOTE: Clear lacp counters to get accurate statistics
     
         ------------------------------------------------------------------------------
-                                     LACPDUs                      Markers/Resp LACPDUs
-        Port              Sent                Recv                  Recv Sent  Pkts Err
+                                     LACPDUs                      Markers/Resp LACPDUs
+        Port              Sent                Recv                  Recv Sent  Pkts Err
         ------------------------------------------------------------------------------
         port-channel1
-        Ethernet1/1        92                   85                     0      0    0      
-        Ethernet1/2        79                   87                     0      0    0      
+        Ethernet1/1        92                   85                     0      0    0      
+        Ethernet1/2        79                   87                     0      0    0      
         
         port-channel2
-        Ethernet1/3        136                  112                    0      0    0      
-        Ethernet1/4        95                   90                     0      0    0      
-        Ethernet1/5        118                  146                    0      0    0  
+        Ethernet1/3        136                  112                    0      0    0      
+        Ethernet1/4        95                   90                     0      0    0      
+        Ethernet1/5        118                  146                    0      0    0  
     '''}
 
 
@@ -224,55 +224,55 @@ class test_show_lacp_neighbors(unittest.TestCase):
         }
     }
     golden_output = {'execute.return_value': '''
-Flags:  S - Device is sending Slow LACPDUs F - Device is sending Fast LACPDUs
-        A - Device is in Active mode       P - Device is in Passive mode
+Flags:  S - Device is sending Slow LACPDUs F - Device is sending Fast LACPDUs
+        A - Device is in Active mode       P - Device is in Passive mode
 port-channel1 neighbors
 Partner's information
-            Partner                Partner                     Partner
-Port        System ID              Port Number     Age         Flags
-Eth1/1      32768,5e-2-0-1-0-7     0x101           1140        SA
+            Partner                Partner                     Partner
+Port        System ID              Port Number     Age         Flags
+Eth1/1      32768,5e-2-0-1-0-7     0x101           1140        SA
 
-            LACP Partner           Partner                     Partner
-            Port Priority          Oper Key                    Port State
-            32768                  0x8000                      0x3d
+            LACP Partner           Partner                     Partner
+            Port Priority          Oper Key                    Port State
+            32768                  0x8000                      0x3d
 
 Partner's information
-            Partner                Partner                     Partner
-Port        System ID              Port Number     Age         Flags
-Eth1/2      32768,5e-2-0-1-0-7     0x102           1140        SA
+            Partner                Partner                     Partner
+Port        System ID              Port Number     Age         Flags
+Eth1/2      32768,5e-2-0-1-0-7     0x102           1140        SA
 
-            LACP Partner           Partner                     Partner
-            Port Priority          Oper Key                    Port State
-            32768                  0x8000                      0x3d
+            LACP Partner           Partner                     Partner
+            Port Priority          Oper Key                    Port State
+            32768                  0x8000                      0x3d
 
 
 Po2 neighbors
 Partner's information
-            Partner                Partner                     Partner
-Port        System ID              Port Number     Age         Flags
-Eth1/3      32768,5e-2-0-1-0-7     0x103           625         SA
+            Partner                Partner                     Partner
+Port        System ID              Port Number     Age         Flags
+Eth1/3      32768,5e-2-0-1-0-7     0x103           625         SA
 
-            LACP Partner           Partner                     Partner
-            Port Priority          Oper Key                    Port State
-            32768                  0x1                         0x3d
-
-Partner's information
-            Partner                Partner                     Partner
-Port        System ID              Port Number     Age         Flags
-Eth1/4      32768,5e-2-0-1-0-7     0x104           638         SA
-
-            LACP Partner           Partner                     Partner
-            Port Priority          Oper Key                    Port State
-            32768                  0x1                         0x3d
+            LACP Partner           Partner                     Partner
+            Port Priority          Oper Key                    Port State
+            32768                  0x1                         0x3d
 
 Partner's information
-            Partner                Partner                     Partner
-Port        System ID              Port Number     Age         Flags
-Eth1/5      32768,5e-2-0-1-0-7     0x105           834         SA
+            Partner                Partner                     Partner
+Port        System ID              Port Number     Age         Flags
+Eth1/4      32768,5e-2-0-1-0-7     0x104           638         SA
 
-            LACP Partner           Partner                     Partner
-            Port Priority          Oper Key                    Port State
-            32768                  0x1                         0xd
+            LACP Partner           Partner                     Partner
+            Port Priority          Oper Key                    Port State
+            32768                  0x1                         0x3d
+
+Partner's information
+            Partner                Partner                     Partner
+Port        System ID              Port Number     Age         Flags
+Eth1/5      32768,5e-2-0-1-0-7     0x105           834         SA
+
+            LACP Partner           Partner                     Partner
+            Port Priority          Oper Key                    Port State
+            32768                  0x1                         0xd
 '''}
 
 
@@ -336,20 +336,20 @@ class test_show_port_channel_summary(unittest.TestCase):
         }
     }
     golden_output = {'execute.return_value': '''
-Flags:  D - Down        P - Up in port-channel (members)
-        I - Individual  H - Hot-standby (LACP only)
-        s - Suspended   r - Module-removed
-        b - BFD Session Wait
-        S - Switched    R - Routed
-        U - Up (port-channel)
-        p - Up in delay-lacp mode (member)
-        M - Not in use. Min-links not met
+Flags:  D - Down        P - Up in port-channel (members)
+        I - Individual  H - Hot-standby (LACP only)
+        s - Suspended   r - Module-removed
+        b - BFD Session Wait
+        S - Switched    R - Routed
+        U - Up (port-channel)
+        p - Up in delay-lacp mode (member)
+        M - Not in use. Min-links not met
 --------------------------------------------------------------------------------
-Group Port-       Type     Protocol  Member Ports
-      Channel
+Group Port-       Type     Protocol  Member Ports
+      Channel
 --------------------------------------------------------------------------------
-1     Po1(RU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)
-2     Po2(SU)     Eth      LACP      Eth1/3(P)    Eth1/4(P)    Eth1/5(H)
+1     Po1(RU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)
+2     Po2(SU)     Eth      LACP      Eth1/3(P)    Eth1/4(P)    Eth1/5(H)
 '''}
     golden_parsed_output_1 = {
         'interfaces': {
@@ -477,27 +477,27 @@ class test_show_port_channel_database(unittest.TestCase):
     }
     golden_output = {'execute.return_value': '''
 port-channel1
-    Last membership update is successful
-    2 ports in total, 2 ports up
-    First operational port is Ethernet1/1
-    Age of the port-channel is 0d:02h:31m:22s
-    Time since last bundle is 0d:02h:28m:30s
-    Last bundled member is Ethernet1/2
-    Ports:   Ethernet1/1     [active ] [up] *
-             Ethernet1/2     [active ] [up]
+    Last membership update is successful
+    2 ports in total, 2 ports up
+    First operational port is Ethernet1/1
+    Age of the port-channel is 0d:02h:31m:22s
+    Time since last bundle is 0d:02h:28m:30s
+    Last bundled member is Ethernet1/2
+    Ports:   Ethernet1/1     [active ] [up] *
+             Ethernet1/2     [active ] [up]
 
 port-channel2
-    Last membership update is successful
-    3 ports in total, 2 ports up
-    First operational port is Ethernet1/4
-    Age of the port-channel is 0d:02h:27m:37s
-    Time since last bundle is 0d:00h:12m:50s
-    Last bundled member is Ethernet1/5
-    Time since last unbundle is 0d:00h:14m:05s
-    Last unbundled member is Ethernet1/5
-    Ports:   Ethernet1/3     [passive] [up]
-             Ethernet1/4     [passive] [up] *
-             Ethernet1/5     [passive] [hot-standy]
+    Last membership update is successful
+    3 ports in total, 2 ports up
+    First operational port is Ethernet1/4
+    Age of the port-channel is 0d:02h:27m:37s
+    Time since last bundle is 0d:00h:12m:50s
+    Last bundled member is Ethernet1/5
+    Time since last unbundle is 0d:00h:14m:05s
+    Last unbundled member is Ethernet1/5
+    Ports:   Ethernet1/3     [passive] [up]
+             Ethernet1/4     [passive] [up] *
+             Ethernet1/5     [passive] [hot-standy]
 '''}
 
 

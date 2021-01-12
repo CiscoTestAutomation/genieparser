@@ -1,0 +1,119 @@
+show interfaces extensive ae0 
+Physical interface: ae0, Enabled, Physical link is Up
+  Interface index: 159, SNMP ifIndex: 539, Generation: 162
+  Link-level type: Ethernet, MTU: 1514, Speed: 1Gbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Disabled
+  Pad to minimum frame size: Disabled
+  Minimum links needed: 1, Minimum bandwidth needed: 1bps
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Current address: 2c:6b:f5:d6:f8:c0, Hardware address: 2c:6b:f5:d6:f8:c0
+  Last flapped   : 2021-01-08 00:13:28 JST (00:03:32 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :               227807                 3432 bps
+   Output bytes  :               173544                 2120 bps
+   Input  packets:                 2357                    4 pps
+   Output packets:                 1341                    2 pps
+   IPv6 transit statistics:
+   Input  bytes  :                  912
+   Output bytes  :                    0
+   Input  packets:                   14
+   Output packets:                    0
+  Dropped traffic statistics due to STP State:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+  MAC statistics:                      Receive         Transmit
+    Broadcast packets                        0                0
+    Multicast packets                        0                0
+  Input errors:
+    Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Giants: 0, Policed discards: 0, Resource errors: 0
+  Output errors:
+    Carrier transitions: 0, Errors: 0, Drops: 0, MTU errors: 0, Resource errors: 0
+  Ingress queues: 8 supported, 4 in use
+  Queue counters:       Queued packets  Transmitted packets      Dropped packets
+    0                                0                    0                    0
+    1                                0                    0                    0
+    2                                0                    0                    0
+    3                                0                    0                    0
+  Egress queues: 8 supported, 4 in use
+  Queue counters:       Queued packets  Transmitted packets      Dropped packets
+    0                                1                    1                    0
+    1                                0                    0                    0
+    2                                0                    0                    0
+    3                             1336                 1336                    0
+  Queue number:         Mapped forwarding classes
+    0                   best-effort
+    1                   expedited-forwarding
+    2                   assured-forwarding
+    3                   network-control
+
+  Logical interface ae0.0 (Index 320) (SNMP ifIndex 542) (Generation 148)
+    Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+    Statistics        Packets        pps         Bytes          bps
+    Bundle:
+        Input :          1696          4        145843         3432
+        Output:            17          0          1322            0
+    Adaptive Statistics:
+        Adaptive Adjusts:          0
+        Adaptive Scans  :          0
+        Adaptive Updates:          0
+    Link:
+      ge-0/0/0.0
+        Input :          1347          4        124466         3256
+        Output:            17          0          1322            0
+      ge-0/0/4.0
+        Input :           349          0         21377          176
+        Output:             0          0             0            0
+      ge-0/0/6.0
+        Input :             0          0             0            0
+        Output:             0          0             0            0
+
+
+    Aggregate member links: 3
+
+    LACP info:        Role     System             System       Port     Port    Port 
+                             priority         identifier   priority   number     key 
+      ge-0/0/0.0     Actor        127  2c:6b:f5:d6:f8:c0        127        1       1
+      ge-0/0/0.0   Partner        127  2c:6b:f5:18:ef:c0        127        1       1
+      ge-0/0/4.0     Actor        127  2c:6b:f5:d6:f8:c0        127        2       1
+      ge-0/0/4.0   Partner          1  00:00:00:00:00:00          1        2       1
+      ge-0/0/6.0     Actor        127  2c:6b:f5:d6:f8:c0        127        3       1
+      ge-0/0/6.0   Partner          1  00:00:00:00:00:00          1        3       1
+    LACP Statistics:       LACP Rx     LACP Tx   Unknown Rx   Illegal Rx 
+      ge-0/0/0.0                 0           0            0            0
+      ge-0/0/4.0                 0           0            0            0
+      ge-0/0/6.0                 0           0            0            0
+    Marker Statistics:   Marker Rx     Resp Tx   Unknown Rx   Illegal Rx
+      ge-0/0/0.0                 0           0            0            0
+      ge-0/0/4.0                 0           0            0            0
+      ge-0/0/6.0                 0           0            0            0
+    List-Type       Status
+    Primary         Active
+                Interfaces:
+                ge-0/0/0        Up   
+                ge-0/0/4        Up   
+                ge-0/0/6        Up   
+    List-Type       Status
+    Backup          Down 
+    Standby         Down 
+    Protocol inet, MTU: 1500
+    Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+    Generation: 172, Route table: 0
+      Flags: Sendbcast-pkt-to-re
+      Addresses, Flags: Is-Default Is-Preferred Is-Primary
+        Destination: 10.0.0/24, Local: 10.0.0.1, Broadcast: 10.0.0.255, Generation: 164
+    Protocol inet6, MTU: 1500
+    Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+    Generation: 173, Route table: 0
+      Flags: Is-Primary
+      Addresses, Flags: Is-Default Is-Preferred Is-Primary
+        Destination: 2001:10::/64, Local: 2001:10::1
+    Generation: 166
+      Addresses, Flags: Is-Preferred
+        Destination: fe80::/64, Local: fe80::2e6b:f5ff:fed6:f8c0
+    Protocol multiservice, MTU: Unlimited, Generation: 168
+    Generation: 174, Route table: 0
+      Flags: Is-Primary
+      Policer: Input: __default_arp_policer__

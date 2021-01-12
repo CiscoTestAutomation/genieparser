@@ -720,31 +720,32 @@ class ShowInterfacesSchema(MetaParser):
             },
             Optional("ethernet-mac-statistics"): {
                     Optional("@junos:style"): str,
-                    "input-broadcasts": str,
-                    "input-bytes": str,
-                    "input-code-violations": str,
-                    "input-crc-errors": str,
-                    "input-fifo-errors": str,
-                    "input-fragment-frames": str,
-                    "input-jabber-frames": str,
-                    "input-mac-control-frames": str,
-                    "input-mac-pause-frames": str,
-                    "input-multicasts": str,
-                    "input-oversized-frames": str,
-                    "input-packets": str,
+                    Optional("input-broadcasts"): str,
+                    Optional("input-bytes"): str,
+                    Optional("input-code-violations"): str,
+                    Optional("input-crc-errors"): str,
+                    Optional("input-fifo-errors"): str,
+                    Optional("input-fragment-frames"): str,
+                    Optional("input-jabber-frames"): str,
+                    Optional("input-mac-control-frames"): str,
+                    Optional("input-mac-pause-frames"): str,
+                    Optional("input-multicasts"): str,
+                    Optional("input-oversized-frames"): str,
+                    Optional("input-packets"): str,
                     Optional("input-total-errors"): str,
-                    "input-unicasts": str,
-                    "input-vlan-tagged-frames": str,
-                    "output-broadcasts": str,
-                    "output-bytes": str,
-                    "output-crc-errors": str,
-                    "output-fifo-errors": str,
-                    "output-mac-control-frames": str,
-                    "output-mac-pause-frames": str,
-                    "output-multicasts": str,
-                    "output-packets": str,
+                    Optional("input-unicasts"): str,
+                    Optional("input-vlan-tagged-frames"): str,
+                    Optional("output-broadcasts"): str,
+                    Optional("input-multicasts"): str,
+                    Optional("output-bytes"): str,
+                    Optional("output-crc-errors"): str,
+                    Optional("output-fifo-errors"): str,
+                    Optional("output-mac-control-frames"): str,
+                    Optional("output-mac-pause-frames"): str,
+                    Optional("output-multicasts"): str,
+                    Optional("output-packets"): str,
                     Optional("output-total-errors"): str,
-                    "output-unicasts": str
+                    Optional("output-unicasts"): str,
             },
             Optional("ethernet-filter-statistics"): {
                 "input-packets": str,
@@ -987,9 +988,10 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
         # Flags: Up SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
-        p25 = re.compile(r'^Flags: +(?P<iff_up>\S+)( +SNMP-Traps)?'
-            r'( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[[\S\s]+\])? +'
-            r'Encapsulation: +(?P<encapsulation>\S+)$')
+        # Flags: Hardware-Down Device-Down SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
+        p25 = re.compile(r'^Flags: +(?P<iff_up>(\S+|Hardware-Down Device-Down))'
+                         r'( +SNMP-Traps)?( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[[\S\s]+\])?'
+                         r' +Encapsulation: +(?P<encapsulation>\S+)$')
 
         # Input packets : 133657033
         p26 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)$')
@@ -1061,10 +1063,12 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0,
         # L3 incompletes: 0, L2 channel errors: 0, L2 mismatch timeouts: 0,
         # FIFO errors: 0, Resource errors: 0
+        # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Giants: 0, Policed discards: 0, Resource errors: 0
         p43 = re.compile(r'^(Errors: +(?P<input_errors>\d+),)?'
                            r'( *Drops: +(?P<input_drops>\d+),)?'
                            r'( *Framing +errors: +(?P<framing_errors>\d+),)?'
                            r'( *Runts: +(?P<input_runts>\d+),)?'
+                           r'( *Giants: +(?P<input_giants>\d+),)?'
                            r'( *Policed +discards: +(?P<input_discards>\d+),)?'
                            r'( *L3 +incompletes: +(?P<input_l3_incompletes>\d+),)?'
                            r'( *L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),)?'
@@ -1075,13 +1079,15 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
         # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0,
         # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0, MTU errors: 0, Resource errors: 0
-        p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+), +'
-            r'Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +'
-            r'Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +'
-            r'(?P<aged_packets>\d+),(( +FIFO +errors: +(?P<output_fifo_errors>\d+),)? +'
-            r'HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?'
-            r'( +MTU +errors: +(?P<mtu_errors>\d+),?)?'
-            r'( +Resource +errors: +(?P<output_resource_errors>\d+))?$')
+        p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+),'
+                           r' +Errors: +(?P<output_errors>\d+),'
+                           r' +Drops: +(?P<output_drops>\d+),'
+                           r'( +Collisions: +(?P<output_collisions>\d+),)?'
+                           r'( +Aged+ packets: +(?P<aged_packets>\d+),)?'
+                           r'(( +FIFO +errors: +(?P<output_fifo_errors>\d+),)?'
+                           r' +HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?'
+                           r'( +MTU +errors: +(?P<mtu_errors>\d+),?)?'
+                           r'( +Resource +errors: +(?P<output_resource_errors>\d+))?$')
 
         # MTU errors: 0, Resource errors: 0
         p44_2 = re.compile(r'^MTU +errors: +(?P<mtu_errors>\d+), +Resource +'

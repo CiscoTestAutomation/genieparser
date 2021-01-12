@@ -16,22 +16,22 @@ class TestShowSpanningTreeMst(unittest.TestCase):
 
     output_1 = {'execute.return_value' : 
         '''
-           P1# show spanning-tree mst detail  
+           P1# show spanning-tree mst detail  
 
-                ##### MST0    vlans mapped:   1-399,501-4094
-            Bridge        address 0023.04ff.ad03  priority      32768 (32768 sysid 0)
-            Root          this switch for the CIST
+                ##### MST0    vlans mapped:   1-399,501-4094
+            Bridge        address 0023.04ff.ad03  priority      32768 (32768 sysid 0)
+            Root          this switch for the CIST
             Regional Root this switch
-            Operational   hello time 10, forward delay 30, max age 40, txholdcount 6 
-            Configured    hello time 10, forward delay 30, max age 40, max hops    255
+            Operational   hello time 10, forward delay 30, max age 40, txholdcount 6 
+            Configured    hello time 10, forward delay 30, max age 40, max hops    255
 
 
             Po30 of MST0 is broken (Bridge Assurance Inconsistent, VPC Peer-link Inconsisten
             t)
-            Port info             port id       128.4125  priority    128  cost   500      
-            Designated root       address 0023.04ff.ad03  priority  32768  cost   0        
-            Design. regional root address 0023.04ff.ad03  priority  32768  cost   0        
-            Designated bridge     address 4055.39ff.fee7  priority  61440  port id 128.4125
+            Port info             port id       128.4125  priority    128  cost   500      
+            Designated root       address 0023.04ff.ad03  priority  32768  cost   0        
+            Design. regional root address 0023.04ff.ad03  priority  32768  cost   0        
+            Designated bridge     address 4055.39ff.fee7  priority  61440  port id 128.4125
             Timers: message expires in 0 sec, forward delay 0, forward transitions 0
             Bpdus sent 113, received 0
         '''}
@@ -98,21 +98,21 @@ class TestShowSpanningTreeMst(unittest.TestCase):
 
     output_2 = {'execute.return_value' : 
         '''
-            P1# show spanning-tree mst detail 
+            P1# show spanning-tree mst detail 
 
-                ##### MST0    vlans mapped:   1-399,501-4094
-            Bridge        address 0023.04ff.ad03  priority      32768 (32768 sysid 0)
-            Root          this switch for the CIST
-            Operational   hello time 5, forward delay 20, max age 30, txholdcount 12
-            Configured    hello time 10, forward delay 30, max age 40, max hops    255
+                ##### MST0    vlans mapped:   1-399,501-4094
+            Bridge        address 0023.04ff.ad03  priority      32768 (32768 sysid 0)
+            Root          this switch for the CIST
+            Operational   hello time 5, forward delay 20, max age 30, txholdcount 12
+            Configured    hello time 10, forward delay 30, max age 40, max hops    255
 
 
             Po25 of MST0 is broken (Bridge Assurance Inconsistent, VPC Peer-link Inconsisten
             t)
-            Port info             port id       128.4125  priority    128  cost   500      
-            Designated root       address 0023.04ff.ad03  priority  32768  cost   0        
-            Design. regional root address 0023.04ff.ad03  priority  32768  cost   0        
-            Designated bridge     address 4055.39ff.fee7  priority  61440  port id 128.4125
+            Port info             port id       128.4125  priority    128  cost   500      
+            Designated root       address 0023.04ff.ad03  priority  32768  cost   0        
+            Design. regional root address 0023.04ff.ad03  priority  32768  cost   0        
+            Designated bridge     address 4055.39ff.fee7  priority  61440  port id 128.4125
             Timers: message expires in 0 sec, forward delay 0, forward transitions 0
             Bpdus sent 113, received 0
         '''}
@@ -203,25 +203,25 @@ class TestShowSpanningTreeSummary(unittest.TestCase):
     dev2 = Device(name = 'deviceB')
 
     golden_output_mstp = {'execute.return_value' : '''
-        P1# show spanning-tree summary 
+        P1# show spanning-tree summary 
 
         Switch is in mst mode (IEEE Standard)
         Root bridge for: MST0000
-        Port Type Default                        is disable
-        Edge Port [PortFast] BPDU Guard Default  is disabled
+        Port Type Default                        is disable
+        Edge Port [PortFast] BPDU Guard Default  is disabled
         Edge Port [PortFast] BPDU Filter Default is disabled
-        Bridge Assurance                         is enabled
-        Loopguard Default                        is disabled
-        Pathcost method used                     is long
-        PVST Simulation                          is enabled
-        vPC peer-switch                          is enabled (non-operational)
-        STP-Lite                                 is enabled
+        Bridge Assurance                         is enabled
+        Loopguard Default                        is disabled
+        Pathcost method used                     is long
+        PVST Simulation                          is enabled
+        vPC peer-switch                          is enabled (non-operational)
+        STP-Lite                                 is enabled
 
-        Name                   Blocking Listening Learning Forwarding STP Active
+        Name                   Blocking Listening Learning Forwarding STP Active
         ---------------------- -------- --------- -------- ---------- ----------
-        MST0000                      1         0        0          0          1
+        MST0000                      1         0        0          0          1
         ---------------------- -------- --------- -------- ---------- ----------
-        1 mst                        1         0        0          0          1
+        1 mst                        1         0        0          0          1
     '''}
 
     golden_parsed_output_mstp = {
@@ -258,26 +258,26 @@ class TestShowSpanningTreeSummary(unittest.TestCase):
     }
 
     golden_output_mstp_2 = {'execute.return_value' : '''
-        P1# show spanning-tree summary 
+        P1# show spanning-tree summary 
 
         Switch is in mst mode (IEEE Standard)
         Root bridge for: MST0000
-        Port Type Default                        is disable
-        Edge Port [PortFast] BPDU Guard Default  is enabled
+        Port Type Default                        is disable
+        Edge Port [PortFast] BPDU Guard Default  is enabled
         Edge Port [PortFast] BPDU Filter Default is enabled
-        Bridge Assurance                         is enabled
-        Loopguard Default                        is disabled
-        Pathcost method used                     is long
-        PVST Simulation                          is disabled
-        vPC peer-switch                          is enabled (non-operational)
-        STP-Lite                                 is enabled
+        Bridge Assurance                         is enabled
+        Loopguard Default                        is disabled
+        Pathcost method used                     is long
+        PVST Simulation                          is disabled
+        vPC peer-switch                          is enabled (non-operational)
+        STP-Lite                                 is enabled
 
-        Name                   Blocking Listening Learning Forwarding STP Active
+        Name                   Blocking Listening Learning Forwarding STP Active
         ---------------------- -------- --------- -------- ---------- ----------
         MST0                         3         0        0          9         12
         MST100                       3         0        0          1          4
         ---------------------- -------- --------- -------- ---------- ----------
-        1 mst                        1         0        0          0          1
+        1 mst                        1         0        0          0          1
     '''}
 
     golden_parsed_output_mstp_2 = {
@@ -512,28 +512,28 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
     golden_output_1 = {'execute.return_value': '''
         P1# show spanning-tree detail
 
-         MST0000 is executing the mstp compatible Spanning Tree protocol
-      Bridge Identifier has priority 32768, sysid 0, address 00e3.04ff.ad03
-      Configured hello time 10, max age 40, forward delay 30
-      We are the root of the spanning tree
-      Topology change flag not set, detected flag not set
-      Number of topology changes 0 last change occurred 142:22:13 ago
-      Times:  hold 1, topology change 70, notification 10
-              hello 10, max age 40, forward delay 30 
-      Timers: hello 0, topology change 0, notification 0
+         MST0000 is executing the mstp compatible Spanning Tree protocol
+      Bridge Identifier has priority 32768, sysid 0, address 00e3.04ff.ad03
+      Configured hello time 10, max age 40, forward delay 30
+      We are the root of the spanning tree
+      Topology change flag not set, detected flag not set
+      Number of topology changes 0 last change occurred 142:22:13 ago
+      Times:  hold 1, topology change 70, notification 10
+              hello 10, max age 40, forward delay 30 
+      Timers: hello 0, topology change 0, notification 0
 
-     Port 4125 (port-channel30, vPC Peer-link) of MST0000 is broken  (Bridge Assuran
+     Port 4125 (port-channel30, vPC Peer-link) of MST0000 is broken  (Bridge Assuran
     ce Inconsistent, VPC Peer-link Inconsistent)
-       Port path cost 500, Port priority 128, Port Identifier 128.4125
-       Designated root has priority 32768, address 0023.04ff.ad03
-       Designated bridge has priority 61440, address 4055.39ff.fee7
-       Designated port id is 128.4125, designated path cost 0
-       Timers: message age 0, forward delay 0, hold 0
-       Number of transitions to forwarding state: 0
-       The port type is network
-       Link type is point-to-point by default, Internal
-       PVST Simulation is enabled by default
-       BPDU: sent 110, received 0
+       Port path cost 500, Port priority 128, Port Identifier 128.4125
+       Designated root has priority 32768, address 0023.04ff.ad03
+       Designated bridge has priority 61440, address 4055.39ff.fee7
+       Designated port id is 128.4125, designated path cost 0
+       Timers: message age 0, forward delay 0, hold 0
+       Number of transitions to forwarding state: 0
+       The port type is network
+       Link type is point-to-point by default, Internal
+       PVST Simulation is enabled by default
+       BPDU: sent 110, received 0
         '''}
 
     golden_parsed_output_1 = {
@@ -605,28 +605,28 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
     golden_output_2 = {'execute.return_value' : '''
         P1# show spanning-tree detail
 
-         MST0000 is executing the mstp compatible Spanning Tree protocol
-      Bridge Identifier has priority 32768, sysid 0, address 0023.04ff.ad03
-      Configured hello time 10, fex hello time 10, max age 40, forward delay 30
-      We are the root of the spanning tree
-      Topology change flag not set, detected flag not set
-      Number of topology changes 0 last change occurred 142:22:13 ago
-      Times:  hold 1, topology change 70, notification 10
-              hello 10, max age 40, forward delay 30 
-      Timers: hello 0, topology change 0, notification 0
+         MST0000 is executing the mstp compatible Spanning Tree protocol
+      Bridge Identifier has priority 32768, sysid 0, address 0023.04ff.ad03
+      Configured hello time 10, fex hello time 10, max age 40, forward delay 30
+      We are the root of the spanning tree
+      Topology change flag not set, detected flag not set
+      Number of topology changes 0 last change occurred 142:22:13 ago
+      Times:  hold 1, topology change 70, notification 10
+              hello 10, max age 40, forward delay 30 
+      Timers: hello 0, topology change 0, notification 0
 
-     Port 4125 (port-channel30, vPC Peer-link) of MST0000 is broken  (Bridge Assuran
+     Port 4125 (port-channel30, vPC Peer-link) of MST0000 is broken  (Bridge Assuran
     ce Inconsistent, VPC Peer-link Inconsistent)
-       Port path cost 500, Port priority 128, Port Identifier 128.4125
-       Designated root has priority 32768, address 0023.04ff.ad03
-       Designated bridge has priority 61440, address 4055.39ff.fee7
-       Designated port id is 128.4125, designated path cost 0
-       Timers: message age 0, forward delay 0, hold 0
-       Number of transitions to forwarding state: 0
-       The port type is network
-       Link type is point-to-point by default, Internal
-       PVST Simulation is enabled by default
-       BPDU: sent 110, received 0
+       Port path cost 500, Port priority 128, Port Identifier 128.4125
+       Designated root has priority 32768, address 0023.04ff.ad03
+       Designated bridge has priority 61440, address 4055.39ff.fee7
+       Designated port id is 128.4125, designated path cost 0
+       Timers: message age 0, forward delay 0, hold 0
+       Number of transitions to forwarding state: 0
+       The port type is network
+       Link type is point-to-point by default, Internal
+       PVST Simulation is enabled by default
+       BPDU: sent 110, received 0
 
         Port 2390 (Port-channel14) of MST0 is broken   (Bridge Assuran
         ce Inconsistent, VPC Peer-link Inconsistent)
@@ -638,7 +638,7 @@ class TestShowSpanningTreeDetail(unittest.TestCase):
         Number of transitions to forwarding state: 0
         The port type is network
         Link type is point-to-point by default, Internal
-       PVST Simulation is enabled by default
+       PVST Simulation is enabled by default
         BPDU: sent 138231, received 167393
     '''}
 
