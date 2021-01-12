@@ -372,6 +372,7 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
                 ospf3_entry_list.append(ospf3_entry_dict)
                 continue
             
+            
         return ret_dict
 
 
