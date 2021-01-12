@@ -326,11 +326,14 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
             * show ospf3 neighbor
     """
 
-    cli_command = ['show ospf3 neighbor']
+    cli_command = ['show ospf3 neighbor', 'show ospf3 neighbor instance {name}']
 
-    def cli(self, output=None):
+    def cli(self, name=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command[0])
+            if name:
+                out = self.device.execute(self.cli_command[1].format(name=name))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -368,7 +371,7 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
                 ospf3_entry_dict['neighbor-address'] = neighbor_address
                 ospf3_entry_list.append(ospf3_entry_dict)
                 continue
-
+            
         return ret_dict
 
 
