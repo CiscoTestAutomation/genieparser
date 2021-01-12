@@ -9,6 +9,8 @@ JunOS parsers for the following show commands:
     * show interfaces descriptions {interface}
     * show interfaces queue {interface}
     * show interfaces policers {interface}
+    * show interfaces {interface} extensive
+    * show interfaces extensive
 """
 
 # python
@@ -631,7 +633,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional("iff-hardware-down"): bool,
             },
             Optional("if-auto-negotiation"): str,
-            "if-device-flags": {
+            Optional("if-device-flags"): {
                 "ifdf-present": bool,
                 "ifdf-running": bool,
                 Optional("ifdf-loopback"): bool,
