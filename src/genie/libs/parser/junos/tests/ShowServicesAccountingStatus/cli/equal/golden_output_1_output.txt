@@ -1,4 +1,3 @@
-TestDevice> show services accounting status
   Service Accounting interface: ms-9/0/0
   Export format: 9, Route record count: 902244
   IFL to SNMP index count: 296, AS count: 0

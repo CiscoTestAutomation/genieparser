@@ -1,4 +1,3 @@
-TestDevice> show services accounting flow
   Flow information
     Service Accounting interface: ms-9/0/0, Local interface index: 140
     Flow packets: 0, Flow bytes: 0

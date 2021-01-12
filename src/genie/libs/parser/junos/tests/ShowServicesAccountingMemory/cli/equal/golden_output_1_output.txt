@@ -1,4 +1,3 @@
-TestDevice> show services accounting memory
   Memory utilization
     Service Accounting interface: ms-9/0/0
     Allocation count: 1, Free count: 0

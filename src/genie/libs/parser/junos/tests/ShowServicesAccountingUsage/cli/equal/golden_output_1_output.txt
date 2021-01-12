@@ -1,4 +1,3 @@
-TestDevice> show services accounting usage
   CPU utilization
     ms-9/0/0
     Uptime: 79203479 milliseconds, Interrupt time: 0 microseconds

@@ -1,4 +1,3 @@
-TestDevice> show services accounting errors
   Error information
     Service Accounting interface: ms-9/0/0
     Service sets dropped: 0, Active timeout failures: 0
