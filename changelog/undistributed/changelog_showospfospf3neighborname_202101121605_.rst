@@ -2,4 +2,5 @@
                                 NEW
 --------------------------------------------------------------------------------
 * JUNOS
-    * Added ShowOspfStatistics
+    * Added ShowOspfNeighborName
+    * Added ShowOspf3NeighborName
