@@ -9,6 +9,7 @@ JunOs parsers for the following show commands:
     * show bgp summary
     * show bgp neighbor
     * show bgp neighbor {neighbor_address}
+    * show bgp summary instance {instance}
 """
 
 # Python
@@ -922,7 +923,6 @@ class ShowBgpSummarySchema(MetaParser):
         }
     }
 
-
 class ShowBgpSummary(ShowBgpSummarySchema):
     """
     Parser for:
@@ -961,7 +961,7 @@ class ShowBgpSummary(ShowBgpSummarySchema):
         # inet.0
         # inet6.0
         # VRF-TEST001.inet.0
-        p3 = re.compile(r'.*(?P<name>inet(\d+)?.\d)$')
+        p3 = re.compile(r'.*(?P<name>(inet|mdt)(\d+)?.\d)$')
 
         # 1366        682          0          0          0          0
         p4 = re.compile(
