@@ -1,0 +1,25 @@
+show ospf statistics
+
+        Packet type             Total                  Last 5 seconds
+                        Sent      Received        Sent      Received
+        Hello        6202169       5703920           0             3
+            DbD         212983        185459           0             0
+        LSReq            214           208           0             0
+        LSUpdate       15671465      16742100           0             0
+        LSAck        5229203       2964236           0             0
+
+        DBDs retransmitted     :               203656, last 5 seconds :          0
+        LSAs flooded           :             66582263, last 5 seconds :          0
+        LSAs flooded high-prio :            375568998, last 5 seconds :          0
+        LSAs retransmitted     :              8064643, last 5 seconds :          0
+        LSAs transmitted to nbr:              3423982, last 5 seconds :          0
+        LSAs requested         :                 3517, last 5 seconds :          0
+        LSAs acknowledged      :            225554974, last 5 seconds :          0
+
+        Flood queue depth      :               0
+        Total rexmit entries   :               0
+        db summaries           :               0
+        lsreq entries          :               0
+
+        Receive errors:
+        12 subnet mismatches
