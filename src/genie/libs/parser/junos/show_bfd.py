@@ -225,34 +225,7 @@ class ShowBFDSessionDetail(ShowBFDSessionDetailSchema):
                 continue
 
         return ret_dict
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        
 
 class ShowBFDSessionAddressExtensiveSchema(MetaParser):
     """
@@ -313,7 +286,7 @@ class ShowBFDSessionAddressExtensive(ShowBFDSessionAddressExtensiveSchema):
 
     cli_command = 'show bfd session address {ipaddress} extensive'
 
-    def cli(self, ipaddress, output=None):
+    def cli(self, ipaddress=None, output=None):
         if not output:
             cmd = self.cli_command.format(ipaddress=ipaddress)
             out = self.device.execute(cmd)
@@ -365,25 +338,33 @@ class ShowBFDSessionAddressExtensive(ShowBFDSessionAddressExtensiveSchema):
                         r'+(?P<adap_reception_interval>[\d\.]+)$')
 
         #Local min TX interval 1.000, minimum RX interval 1.000, multiplier 3
+        p9 = re.compile(r'^Local +min +TX +interval +(?P<minimum_transmission_interval>[\d\.]+), '
+                        r'minimum +RX +interval +(?P<minimum_reception_interval>[\d\.]+), '
+                        r'+multiplier +(?P<detection_multiplier>\d+)$')
 
         #Remote min TX interval 1.000, min RX interval 1.000, multiplier 3
+        p10 = re.compile(r'^Remote +min +TX +interval +(?P<neighbor_min_trans_interval>[\d\.]+), '
+                         r'min +RX +interval +(?P<neighbor_min_rec_interval>[\d\.]+), +multiplier '
+                         r'+(?P<neighbor_session_multiplier>\d+)$')
 
         #Local discriminator 350, remote discriminator 772
-        
+        p11 = re.compile(r'^Local +discriminator +(?P<local_discriminator>\d+), '
+                        r'remote +discriminator +(?P<remote_discriminator>\d+)$')
+
         #Echo mode disabled/inactive
-        
+        p12 = re.compile(r'^Echo +mode +(?P<echo_mode_desired>\S+)+\/+(?P<echo_mode_state>\S+)$')
+
         #Remote is control-plane independent
-        
+        p13 = re.compile(r'^(?P<neighbor_fate>Remote+ is+[\s\S]+)$')
+
         #Session ID: 0x1b3
-
-
-
-
+        p14 = re.compile(r'^(?P<no_refresh>Session+ ID:+[\s\S]+)$')
+        
         #     1 sessions, 1 clients
-        p7 = re.compile(r'^(?P<sessions>\S+) +sessions, +(?P<clients>\S+) +clients$')
+        p15 = re.compile(r'^(?P<sessions>\S+) +sessions, +(?P<clients>\S+) +clients$')
 
         #     Cumulative transmit rate 2.0 pps, cumulative receive rate 2.0 pps
-        p8 = re.compile(r'^Cumulative transmit rate (?P<cumulative_reception_rate>\S+) pps, '
+        p16 = re.compile(r'^Cumulative transmit rate (?P<cumulative_reception_rate>\S+) pps, '
                         r'cumulative receive rate (?P<cumulative_transmission_rate>\S+) pps$')
 
         # ========================================================
@@ -428,9 +409,83 @@ class ShowBFDSessionAddressExtensive(ShowBFDSessionAddressExtensiveSchema):
 
                 continue
 
+            #      Min async interval 1.000, min slow interval 1.000
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+
+                for k, v in group.items():
+                    bfd_session[k.replace('_', '-')] = v
+                continue
+
+            #      Adaptive async TX interval 1.000, RX interval 1.000
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+
+                bfd_session['adaptive-asynchronous-transmission-interval'] = group['adap_transmission_interval']
+                bfd_session['adaptive-reception-interval'] = group['adap_reception_interval']
+
+                continue
+
+            #      Local min TX interval 1.000, minimum RX interval 1.000, multiplier 3
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+
+                for k, v in group.items():
+                    bfd_session[k.replace('_', '-')] = v
+                continue
+
+            #      Remote min TX interval 1.000, min RX interval 1.000, multiplier 3
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+
+                bfd_session['neighbor-minimum-reception-interval'] = group['neighbor_min_rec_interval']
+                bfd_session['neighbor-minimum-transmission-interval'] = group['neighbor_min_trans_interval']
+                bfd_session['neighbor-session-multiplier'] = group['neighbor_session_multiplier']
+                continue
+
+            #      Local discriminator 350, remote discriminator 772
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+
+                for k, v in group.items():
+                    bfd_session[k.replace('_', '-')] = v
+                continue
+
+            #      Echo mode disabled/inactive
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+
+                for k, v in group.items():
+                    bfd_session[k.replace('_', '-')] = v
+                continue
+
+            #      Remote is control-plane independent
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+
+                for k, v in group.items():
+                    bfd_session[k.replace('_', '-')] = v
+                continue
+
+            #      Session ID: 0x1b3
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+
+                for k, v in group.items():
+                    bfd_session[k.replace('_', '-')] = v
+                continue
+
             #     1 sessions, 1 clients
             #     Cumulative transmit rate 2.0 pps, cumulative receive rate 2.0 pps
-            m = p7.match(line) or p8.match(line)
+            m = p15.match(line) or p16.match(line)
             if m:
                 group = m.groupdict()
 
@@ -438,5 +493,5 @@ class ShowBFDSessionAddressExtensive(ShowBFDSessionAddressExtensiveSchema):
                     ret_dict['bfd-session-information'][k.replace('_', '-')] = v
 
                 continue
-
+        
         return ret_dict
