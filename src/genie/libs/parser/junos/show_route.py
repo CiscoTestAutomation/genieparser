@@ -3638,3 +3638,83 @@ class ShowRouteReceiveProtocolPeerAddressExtensive(ShowRouteReceiveProtocolPeerA
                     continue 
 
         return ret_dict       
+
+
+class ShowRouteInstanceNameSchema(MetaParser):
+    """ Schema for:
+            * show route instance {name}
+    """
+    
+    def validate_instance_rib(value):
+        if not isinstance(value, list):
+            raise SchemaError('Instance rib is not a list')
+    
+        instance_rib = Schema({
+            "irib-name": str,
+            "irib-active-count": str,
+            "irib-holddown-count": str,
+            "irib-hidden-count": str,
+        })
+    
+        for item in value:
+            instance_rib.validate(item)
+        return value
+
+    # Main Schema
+    schema = {
+        "instance-information": {
+            "instance-core": {
+                "instance-name": str,
+                "instance-type": str,
+                "instance-ribs": Use(validate_instance_rib)
+            }
+        }
+    }        
+
+class ShowRouteInstanceName(ShowRouteInstanceNameSchema):
+    """Parser for
+        * show route instance {name}
+    """
+    cli_command = 'show route instance {name}'
+
+    def cli(self, name, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                name=name
+            ))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # NF-TEST              non-forwarding 
+        p1 = re.compile(r'^(?P<instance_name>\S+) +(?P<instance_type>[^/(Type)]+)$')  
+
+        # NF-TEST.inet.0                                  106/0/0
+        p2 = re.compile(r'^(?P<irib_name>\S+) +(?P<irib_active_count>\d+)/'
+                        r'(?P<irib_holddown_count>\d+)/(?P<irib_hidden_count>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # NF-TEST              non-forwarding 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                instance_core = ret_dict.setdefault('instance-information', {}).setdefault('instance-core', {})
+                instance_core.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # NF-TEST.inet.0                                  106/0/0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                instance_rib_list = instance_core.setdefault('instance-ribs', [])
+                instance_rib_list.append({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+
+        return ret_dict       
