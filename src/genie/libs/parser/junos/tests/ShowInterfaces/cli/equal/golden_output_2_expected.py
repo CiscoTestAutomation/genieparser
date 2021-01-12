@@ -3885,12 +3885,9 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "link-level-type": "GRE",
                 "local-index": "10",
-                "mtu": "Unlimited",
                 "name": "gre",
                 "snmp-index": "8",
-                "speed": "Unlimited",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
                     "input-bytes": "0",
@@ -3918,12 +3915,9 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "link-level-type": "IP-over-IP",
                 "local-index": "11",
-                "mtu": "Unlimited",
                 "name": "ipip",
                 "snmp-index": "9",
-                "speed": "Unlimited",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
                     "input-bytes": "0",
@@ -4358,12 +4352,9 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "link-level-type": "GRE",
                 "local-index": "66",
-                "mtu": "Unlimited",
                 "name": "mtun",
                 "snmp-index": "12",
-                "speed": "Unlimited",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
                     "input-bytes": "0",
@@ -4388,12 +4379,9 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "link-level-type": "PIM-Decapsulator",
                 "local-index": "26",
-                "mtu": "Unlimited",
                 "name": "pimd",
                 "snmp-index": "11",
-                "speed": "Unlimited",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
                     "input-bytes": "0",
@@ -4418,12 +4406,9 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "link-level-type": "PIM-Encapsulator",
                 "local-index": "25",
-                "mtu": "Unlimited",
                 "name": "pime",
                 "snmp-index": "10",
-                "speed": "Unlimited",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
                     "input-bytes": "0",
@@ -4494,13 +4479,10 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "link-level-type": "PPPoE",
                 "link-type": "Full-Duplex",
                 "local-index": "131",
-                "mtu": "1532",
                 "name": "pp0",
                 "snmp-index": "516",
-                "speed": "Unspecified",
                 "up-hold-time": "0"
             },
             {

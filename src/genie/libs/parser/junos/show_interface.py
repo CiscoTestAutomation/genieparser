@@ -9,6 +9,7 @@ JunOS parsers for the following show commands:
     * show interfaces descriptions {interface}
     * show interfaces queue {interface}
     * show interfaces policers {interface}
+    * show interfaces extensive {interface}
 """
 
 # python
@@ -854,13 +855,9 @@ class ShowInterfaces(ShowInterfacesSchema):
         p3 = re.compile(r'^Description: +(?P<description>.+)$')
 
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        # Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 100Gbps, BPDU Error: None, Loopback: Disabled,
         # Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
-        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +'
-            r'(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)'
-            r'(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
-            r'(, +Link-mode: +(?P<link_mode>\S+))?'
-            r'(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +'
-            r'(?P<bpdu_error>\S+),)?$')
+        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?(, +Link-mode: +(?P<link_mode>\S+))?(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +(?P<bpdu_error>\S+))?(, +Loopback: +(?P<loopback>\S+))?,$')
         
         # Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None,
         p4_1 = re.compile(r'^(Speed: +(?P<speed>[^\s,]+))(, +)?'
@@ -875,6 +872,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                           r'( +Ethernet-Switching +Error: +(?P<eth_switch_error>\S+),)?'
                           r'( +MAC-REWRITE +Error: +\S+)?$')
 
+        # Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 100Gbps, BPDU Error: None, Loopback: Disabled,
 
         # Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
         p5 = re.compile(r'^Loop +Detect +PDU +Error: +(?P<ld_pdu_error>\S+), +'
