@@ -209,7 +209,7 @@ class ShowCtsSxpConnectionsBrief(ShowCtsSxpConnectionsBriefSchema):
                     for k, v in groups.items():
                         if v is None:
                             continue
-                        if v.isdigit():
+                        if v.isdigit() and 'peer_sequence_traverse_limit' not in k:
                             v = int(v)
                         if not sxp_dict.get('sxp_connections'):
                             sxp_dict.update({"sxp_connections": {}})
