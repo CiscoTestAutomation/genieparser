@@ -89,6 +89,8 @@ class ShowLacpInterfacesInterface(ShowLacpInterfacesInterfaceSchema):
             r' +(?P<lacp_activity>\S+)$')
 
         #     xe-3/0/1                  Current   Fast periodic Collecting distributing
+        #     xe-3/0/2                  Defaulted   Fast periodic Collecting distributing
+        #     xe-3/0/3                  Port disabled   Fast periodic Collecting distributing
         p3 = re.compile(r'^(?P<name>\S+) +(?P<lacp_receive_state>(Current|Defaulted|Port +disabled)) +'
                         r'(?P<lacp_transmit_state>\S+( +\S+)?) +(?P<lacp_mux_state>\S+( +\S+)?)$')
 
@@ -120,6 +122,8 @@ class ShowLacpInterfacesInterface(ShowLacpInterfacesInterfaceSchema):
                 continue
 
             #     xe-3/0/1                  Current   Fast periodic Collecting distributing
+            #     xe-3/0/2                  Defaulted   Fast periodic Collecting distributing
+            #     xe-3/0/3                  Port disabled   Fast periodic Collecting distributing
             m = p3.match(line)
             if m:
                 group = m.groupdict()
