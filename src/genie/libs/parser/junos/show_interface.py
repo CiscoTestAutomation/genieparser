@@ -669,7 +669,7 @@ class ShowInterfacesSchema(MetaParser):
             Optional("mru"): str,
             Optional("mtu"): str,
             "name": str,
-            Optional("oper-status"): str,
+            "oper-status": str,
             Optional("pad-to-minimum-frame-size"): str,
             Optional("physical-interface-cos-information"): {
                 "physical-interface-cos-hw-max-queues": str,
@@ -1237,6 +1237,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 physical_interface_list =  interface_info_dict.setdefault('physical-interface', [])
                 physical_interface_dict = {}
                 physical_interface_dict.update({'name': group['name']})
+                physical_interface_dict.update({'oper-status': group['oper_status']})
                 admin_status = group['admin_status']
                 admin_status_dict = physical_interface_dict.setdefault('admin-status', {})
                 admin_status_dict.update({'@junos:format': admin_status})
