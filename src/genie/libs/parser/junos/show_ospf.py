@@ -441,11 +441,14 @@ Parser for:
 
 
 class ShowOspfNeighbor(ShowOspfNeighborSchema):
-    cli_command = 'show ospf neighbor'
+    cli_command = ['show ospf neighbor', 'show ospf neighbor instance {name}']
 
-    def cli(self, output=None):
+    def cli(self, name=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if name:
+                out = self.device.execute(self.cli_command[1].format(name=name))
+            else:
+                out = self.device.execute(self.cli_command)
         else:
             out = output
 
