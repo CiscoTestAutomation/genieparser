@@ -328,6 +328,40 @@ class ShowInterfacesSchema(MetaParser):
     #                 "ifd-specific-config-flags": {
     #                     "internal-flags": str
     #                 },
+    #                 "ingress-queue-counters": {
+    #                     Optional("@junos:style"): str,
+    #                     "interface-cos-short-summary": {
+    #                         "intf-cos-num-queues-in-use": str,
+    #                         "intf-cos-num-queues-supported": str,
+    #                         "intf-cos-queue-type": str
+    #                     },
+    #                     "queue": [
+    #                         {
+    #                             "forwarding-class-name": str,
+    #                             "queue-counters-queued-packets": str,
+    #                             "queue-counters-total-drop-packets": str,
+    #                             "queue-counters-trans-packets": str,
+    #                             "queue-number": str
+    #                         }
+    #                     ]
+    #                 },
+    #                 "queue-counters": {
+    #                     Optional("@junos:style"): str,
+    #                     "interface-cos-short-summary": {
+    #                         "intf-cos-num-queues-in-use": str,
+    #                         "intf-cos-num-queues-supported": str,
+    #                         "intf-cos-queue-type": str
+    #                     },
+    #                     "queue": [
+    #                         {
+    #                             "forwarding-class-name": str,
+    #                             "queue-counters-queued-packets": str,
+    #                             "queue-counters-total-drop-packets": str,
+    #                             "queue-counters-trans-packets": str,
+    #                             "queue-number": str
+    #                         }
+    #                     ]
+    #                 },
     #                 "interface-flapped": {
     #                     "#text": str,
     #                     Optional("@junos:seconds"): str
@@ -660,6 +694,8 @@ class ShowInterfacesSchema(MetaParser):
             Optional("local-index"): str,
             Optional("logical-interface"): Use(verify_logical_interface_list),
             Optional("loopback"): str,
+            Optional("minimum-links-in-aggregate"): str,
+            Optional("minimum-bandwidth-in-aggregate"): str,
             Optional("lsi-traffic-statistics"): {
                 Optional("@junos:style"): str,
                 "input-bps": str,
@@ -802,11 +838,19 @@ class ShowInterfacesSchema(MetaParser):
                 "destination-mask": str,
                 "destination-slot": str
             },
-            Optional("queue-counters"): {
-                Optional("@junos:style"): str,
+            Optional("ingress-queue-counters"): {
                 "interface-cos-short-summary": {
                     "intf-cos-num-queues-in-use": str,
                     "intf-cos-num-queues-supported": str,
+                    "intf-cos-queue-type": str,
+                },
+                "queue": Use(verify_queue_list),
+            },
+            Optional("queue-counters"): {
+                "interface-cos-short-summary": {
+                    "intf-cos-num-queues-in-use": str,
+                    "intf-cos-num-queues-supported": str,
+                    "intf-cos-queue-type": str,
                 },
                 "queue": Use(verify_queue_list)
             },
@@ -881,9 +925,8 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'Error: +\S+, +Loopback: +(?P<loopback>\S+),$')
 
         # Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
-        p5_1 = re.compile(r'^(Ethernet-Switching +Error: +(?P<eth_switch_error>[^\s,]+))'
-                          r'(, +)?(MAC-REWRITE +Error: +[^\s,]+)?(, +)?'
-                          r'(Loopback: +(?P<loopback>[^\s,]+))(, +)?')
+        # BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled
+        p5_1 = re.compile(r'^((Ethernet-Switching +Error: +(?P<eth_switch_error>[^\s,]+))|(BPDU +Error: +(?P<bpdu_error>[^\s,]+)))(, +)?(MAC-REWRITE +Error: +[^\s,]+)?(, +)?(Loopback: +(?P<loopback>[^\s,]+))(, +)?')
 
         # Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
         p5_2 = re.compile(r'^(Loopback: +(?P<loopback>\S+),)?'
@@ -893,14 +936,15 @@ class ShowInterfaces(ShowInterfacesSchema):
                           r'( +Remote +fault: +(?P<if_remote_fault>\S+))$')
 
         # Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
-        p6 = re.compile(r'^Source +filtering: +(?P<source_filtering>\S+), +'
-            r'Flow +control: +(?P<if_flow_control>\S+), +'
-            r'Auto-negotiation: +(?P<if_auto_negotiation>\S+), +'
-            r'Remote +fault: +(?P<if_remote_fault>\S+)$')
+        # Source filtering: Disabled, Flow control: Disabled
+        p6 = re.compile(r'^Source +filtering: +(?P<source_filtering>\S+), +Flow +control: +(?P<if_flow_control>\S+)(, +Auto-negotiation: +(?P<if_auto_negotiation>\S+), +Remote +fault: +(?P<if_remote_fault>\S+))?$')
 
         # Pad to minimum frame size: Disabled
         p7 = re.compile(r'^Pad +to +minimum +frame +size: +'
             r'(?P<pad_to_minimum_frame_size>\S+)$')
+
+        # Minimum links needed: 1, Minimum bandwidth needed: 1bps
+        p7_1 = re.compile(r'^Minimum +links +needed: +(?P<minimum_links_in_aggregate>\d+), +Minimum +bandwidth +needed: +(?P<minimum_bandwidth_in_aggregate>\S+)$')
 
         # Device flags   : Present Running
         p8 = re.compile(r'^Device +flags +: +(?P<if_device_flags>[\S\s]+)$')
@@ -1157,9 +1201,9 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Label-switched interface (LSI) traffic statistics:
         p61 = re.compile(r'^Label-switched +interface +\(LSI\) +traffic +statistics:$')
 
+        # Ingress queues: 8 supported, 4 in use
         # Egress queues: 8 supported, 4 in use
-        p62 = re.compile(r'^Egress +queues: +(?P<intf_cos_num_queues_supported>\d+) +'
-            r'supported, +(?P<intf_cos_num_queues_in_use>\d+) +in +use$')
+        p62 = re.compile(r'^((?P<intf_cos_queue_type>(Ingress|Egress) +queues)): +(?P<intf_cos_num_queues_supported>\d+) +supported, +(?P<intf_cos_num_queues_in_use>\d+) +in +use$')
 
         # 0                                0                    0                    0
         p63 = re.compile(r'^(?P<queue_number>\d+) +(?P<queue_counters_queued_packets>\d+) +'
@@ -1220,6 +1264,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         p80 = re.compile(r'^Policer: +Input: +(?P<policer_input>\S+)(, +Output: +(?P<policer_output>\S+))?$')
 
         cnt = 0
+        queue_name = ''
         for line in out.splitlines():
             line = line.strip()
             if not line:
@@ -1293,6 +1338,15 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
 
+            # Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+            # BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
             # Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
             m = p5_2.match(line)
             if m:
@@ -1311,6 +1365,14 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # Pad to minimum frame size: Disabled
             m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Minimum links needed: 1, Minimum bandwidth needed: 1bps
+            m = p7_1.match(line)
             if m:
                 group = m.groupdict()
                 physical_interface_dict.update({k.replace('_','-'):
@@ -1898,22 +1960,29 @@ class ShowInterfaces(ShowInterfacesSchema):
                 traffic_statistics_dict = physical_interface_dict.setdefault('lsi-traffic-statistics', {})
                 continue
 
+            # Ingress queues: 8 supported, 4 in use
             # Egress queues: 8 supported, 4 in use
             m = p62.match(line)
             if m:
                 group = m.groupdict()
-                cos_short_summary_dict = physical_interface_dict.setdefault('queue-counters', {}). \
-                    setdefault('interface-cos-short-summary', {})
+                queue_name = group['intf_cos_queue_type']
+                if queue_name == 'Egress queues':
+                    cos_short_summary_dict = physical_interface_dict.setdefault('queue-counters', {}).setdefault('interface-cos-short-summary', {})
+                elif queue_name == 'Ingress queues':
+                    cos_short_summary_dict = physical_interface_dict.setdefault('ingress-queue-counters', {}).setdefault('interface-cos-short-summary', {})
+
                 cos_short_summary_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 continue
 
             # 0                                0                    0                    0
             m = p63.match(line)
-            if m:
+            if m and queue_name:
                 group = m.groupdict()
-                queue_list = physical_interface_dict.setdefault('queue-counters', {}). \
-                    setdefault('queue', [])
+                if queue_name == 'Egress queues':
+                    queue_list = physical_interface_dict.setdefault('queue-counters', {}).setdefault('queue', [])
+                elif queue_name == 'Ingress queues':
+                    queue_list = physical_interface_dict.setdefault('ingress-queue-counters', {}).setdefault('queue', [])                    
                 queue_dict = {}
                 queue_dict.update({'queue-number': group['queue_number']})
                 queue_dict.update({'queue-counters-queued-packets': group['queue_counters_queued_packets']})
@@ -1946,10 +2015,14 @@ class ShowInterfaces(ShowInterfacesSchema):
             if m:
                 group = m.groupdict()
                 queue_number = int(group.pop('queue_number', 0))
-                queue_list = physical_interface_dict.setdefault('queue-counters', {}). \
-                    setdefault('queue', [])
-                queue_list[queue_number].update({k.replace('_','-'):
-                    v for k, v in group.items() if v is not None})
+                if 'queue-counters' in physical_interface_dict:
+                    queue_list = physical_interface_dict.setdefault('queue-counters', {}).setdefault('queue', [])
+                    queue_list[queue_number].update({k.replace('_','-'):
+                        v for k, v in group.items() if v is not None})
+                if 'ingress-queue-counters' in physical_interface_dict:
+                    queue_list = physical_interface_dict.setdefault('ingress-queue-counters', {}).setdefault('queue', [])
+                    queue_list[queue_number].update({k.replace('_','-'):
+                        v for k, v in group.items() if v is not None})
                 continue
 
             # Filter statistics:
