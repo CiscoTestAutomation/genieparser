@@ -52,74 +52,7 @@ expected_output = {
                 "link-level-type": "Ethernet",
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-no-redirects": True,
-                                    "ifff-sendbcast-pkt-to-re": True
-                                },
-                                "address-family-name": "inet",
-                                "interface-address": {
-                                    "ifa-broadcast": "10.189.5.95",
-                                    "ifa-destination": "10.189.5.92/30",
-                                    "ifa-flags": {
-                                        "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
-                                    },
-                                    "ifa-local": "10.189.5.93"
-                                },
-                                "intf-curr-cnt": "1",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1500",
-                                "new-hold-limit": "75000"
-                            },
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
-                                "address-family-name": "inet6",
-                                "interface-address": [
-                                    {
-                                        "ifa-destination": "2001:db8:223c:2c16::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True,
-                                            "ifaf-is-primary": True
-                                        },
-                                        "ifa-local": "2001:db8:223c:2c16::1"
-                                    },
-                                    {
-                                        "ifa-destination": "fe80::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:56b6"
-                                    }
-                                ],
-                                "intf-curr-cnt": "1",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1500",
-                                "new-hold-limit": "75000"
-                            },
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
-                                "address-family-name": "mpls",
-                                "maximum-labels": "3",
-                                "mtu": "1488"
-                            },
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
-                                "address-family-name": "multiservice",
-                                "mtu": "Unlimited"
-                            }
-                        ],
+                        "address-family": [],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
@@ -139,6 +72,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/0",
+                "oper-status": "Up",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",
@@ -156,5 +90,4 @@ expected_output = {
             }
         ]
     }
-
 }
