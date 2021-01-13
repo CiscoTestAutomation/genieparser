@@ -272,7 +272,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Encapsulation ARPA, medium is broadcast
         # Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
         # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
-        # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
+        # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
         # Encapsulation(s): AAL5
         p8 = re.compile(r'^Encapsulation(\(s\):)? +(?P<encapsulation>[\w\s\.]+)'
                 r'(, +(?P<rest>.*))?$')
@@ -614,7 +614,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Encapsulation ARPA, medium is broadcast
             # Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
             # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
-            # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
+            # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
             m = p8.match(line)
             if m:
                 encapsulation = m.groupdict()['encapsulation']
@@ -2646,8 +2646,8 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             # Vlan211 is up, line protocol is up
             # GigabitEthernet1/0/1 is administratively down, line protocol is down
             p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
-                              ' +(?P<enabled>[\w\s]+),'
-                              ' +line +protocol +is +(?P<oper_status>\w+)$')
+                             r' +(?P<enabled>[\w\s]+),'
+                             r' +line +protocol +is +(?P<oper_status>\w+)$')
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['interface']

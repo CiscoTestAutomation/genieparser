@@ -266,7 +266,7 @@ class FileBasedTest(aetest.Testcase):
                         log.info(banner(msg))
                     # Format expected and parsed output in a nice format
                     parsed_json_data = json.dumps(parsed_output, indent=4, sort_keys=True)
-                    golden_parsed_output_json_data = json.dumps(parsed_output, indent=4, sort_keys=True)
+                    golden_parsed_output_json_data = json.dumps(golden_parsed_output, indent=4, sort_keys=True)
                     
                     # Display device output, parsed output, and golden_output of failed tests
                     log.info("\nThe following is the device output before it is parsed:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
@@ -347,6 +347,10 @@ CLASS_SKIP = {
     "iosxe": {
         "c9300": {
             "ShowInventory": True,
+        },
+        "c9200": {
+            "ShowEnvironmentAllSchema": True,
+            "ShowEnvironmentAll_C9300": True,
         },
         "ShowPimNeighbor": True,
         "ShowIpInterfaceBrief": True,

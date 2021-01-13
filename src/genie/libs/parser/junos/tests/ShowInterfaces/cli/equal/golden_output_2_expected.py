@@ -270,6 +270,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "1",
@@ -333,7 +334,15 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
@@ -379,7 +388,14 @@ expected_output = {
                     }
                 ],
                 "name": "lc-0/0/0",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "519",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -410,7 +426,15 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
@@ -495,7 +519,14 @@ expected_output = {
                     }
                 ],
                 "name": "pfe-0/0/0",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "522",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -526,7 +557,15 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
@@ -623,7 +662,14 @@ expected_output = {
                     }
                 ],
                 "name": "pfh-0/0/0",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "521",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -900,6 +946,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/1",
+                "oper-status": "Up",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "1",
@@ -1158,6 +1205,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/2",
+                "oper-status": "Up",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "47",
@@ -1402,6 +1450,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/3",
+                "oper-status": "Up",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "3",
@@ -1584,6 +1633,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/4",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -1766,6 +1816,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/5",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -1948,6 +1999,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/6",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -2130,6 +2182,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/7",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -2312,6 +2365,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/8",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -2494,6 +2548,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/9",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -2561,7 +2616,15 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
@@ -3116,7 +3179,14 @@ expected_output = {
                     }
                 ],
                 "name": ".local.",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "0",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3150,14 +3220,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "129",
                 "name": "cbp0",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "501",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3188,14 +3273,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "128",
                 "name": "demux0",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "502",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3226,14 +3326,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Unspecified",
                 "local-index": "5",
                 "name": "dsc",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "5",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3264,7 +3379,15 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "2019-08-29 09:03:11 UTC (29w6d 22:25 ago)"
                 },
@@ -3404,7 +3527,14 @@ expected_output = {
                     }
                 ],
                 "name": "em1",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "23",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3438,14 +3568,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "134",
                 "name": "esi",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "503",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3479,14 +3624,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "136",
                 "name": "fti0",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "504",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3520,14 +3680,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "137",
                 "name": "fti1",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "505",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3561,14 +3736,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "138",
                 "name": "fti2",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "506",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3602,14 +3792,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "139",
                 "name": "fti3",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "507",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3643,14 +3848,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "140",
                 "name": "fti4",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "508",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3684,14 +3904,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "141",
                 "name": "fti5",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "509",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3725,14 +3960,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "142",
                 "name": "fti6",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "510",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3766,14 +4016,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "143",
                 "name": "fti7",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "511",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3804,7 +4069,15 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "2019-08-29 09:03:11 UTC (29w6d 22:25 ago)"
                 },
@@ -3859,7 +4132,14 @@ expected_output = {
                     }
                 ],
                 "name": "fxp0",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "1",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3889,6 +4169,7 @@ expected_output = {
                 "local-index": "10",
                 "mtu": "Unlimited",
                 "name": "gre",
+                "oper-status": "Up",
                 "snmp-index": "8",
                 "speed": "Unlimited",
                 "statistics-cleared": "Never",
@@ -3922,6 +4203,7 @@ expected_output = {
                 "local-index": "11",
                 "mtu": "Unlimited",
                 "name": "ipip",
+                "oper-status": "Up",
                 "snmp-index": "9",
                 "speed": "Unlimited",
                 "statistics-cleared": "Never",
@@ -3956,14 +4238,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "132",
                 "name": "irb",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "512",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -3994,7 +4291,15 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
@@ -4061,7 +4366,14 @@ expected_output = {
                     }
                 ],
                 "name": "jsrv",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "513",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -4096,7 +4408,15 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
@@ -4291,7 +4611,14 @@ expected_output = {
                     }
                 ],
                 "name": "lo0",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "6",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -4322,14 +4649,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Unspecified",
                 "local-index": "4",
                 "name": "lsi",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "4",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -4362,6 +4704,7 @@ expected_output = {
                 "local-index": "66",
                 "mtu": "Unlimited",
                 "name": "mtun",
+                "oper-status": "Up",
                 "snmp-index": "12",
                 "speed": "Unlimited",
                 "statistics-cleared": "Never",
@@ -4392,6 +4735,7 @@ expected_output = {
                 "local-index": "26",
                 "mtu": "Unlimited",
                 "name": "pimd",
+                "oper-status": "Up",
                 "snmp-index": "11",
                 "speed": "Unlimited",
                 "statistics-cleared": "Never",
@@ -4422,6 +4766,7 @@ expected_output = {
                 "local-index": "25",
                 "mtu": "Unlimited",
                 "name": "pime",
+                "oper-status": "Up",
                 "snmp-index": "10",
                 "speed": "Unlimited",
                 "statistics-cleared": "Never",
@@ -4456,14 +4801,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "130",
                 "name": "pip0",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "515",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -4499,6 +4859,7 @@ expected_output = {
                 "local-index": "131",
                 "mtu": "1532",
                 "name": "pp0",
+                "oper-status": "Up",
                 "snmp-index": "516",
                 "speed": "Unspecified",
                 "up-hold-time": "0"
@@ -4517,14 +4878,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "135",
                 "name": "rbeb",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "517",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -4558,14 +4934,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Unspecified",
                 "local-index": "12",
                 "name": "tap",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "7",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -4596,14 +4987,29 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "input-error-list": {},
+                "input-error-list": {
+                    "framing-errors": "0",
+                    "input-discards": "0",
+                    "input-drops": "0",
+                    "input-errors": "0",
+                    "input-giants": "0",
+                    "input-resource-errors": "0",
+                    "input-runts": "0"
+                },
                 "interface-flapped": {
                     "#text": "Never"
                 },
                 "link-type": "Full-Duplex",
                 "local-index": "133",
                 "name": "vtep",
-                "output-error-list": {},
+                "oper-status": "Up",
+                "output-error-list": {
+                    "carrier-transitions": "0",
+                    "mtu-errors": "0",
+                    "output-drops": "0",
+                    "output-errors": "0",
+                    "output-resource-errors": "0"
+                },
                 "snmp-index": "518",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {

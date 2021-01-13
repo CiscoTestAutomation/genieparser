@@ -942,7 +942,7 @@ class ShowModule(ShowModuleSchema):
                     module_dict['xbar'] = {}
                 continue
 
-            p3 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s\+]+) +(?P<model>\S+) +(?P<status>[a-zA-Z\-\s]+) *\*?$')
+            p3 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s\+\(\)]+) +(?P<model>\S+) +(?P<status>[a-zA-Z\-\s]+) *\*?$')
             p3_1 = re.compile(r'^\s*(?P<number>[0-9]+) +(?P<ports>[0-9]+) +(?P<module_type>[a-zA-Z0-9\/\-\s\+]+) +(?P<status>[a-zA-Z\-\s]+) *\*?$')
             m = p3.match(line)
             m1 = p3_1.match(line)
