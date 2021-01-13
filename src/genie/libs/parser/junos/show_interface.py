@@ -2753,22 +2753,8 @@ class ShowInterfacesStatisticsSchema(MetaParser):
                 },
                 Optional("traffic-statistics"): {
                     "input-bps": str,
-                    "input-bytes": str,
-                    "input-packets": str,
                     "input-pps": str,
-                    Optional("ipv6-transit-statistics"): {
-                        "input-pps": str,
-                        "input-bytes": str,
-                        "input-packets": str,
-                        "input-pps": str,
-                        "output-bps": str,
-                        "output-bytes": str,
-                        "output-packets": str,
-                        "output-pps": str
-                    },
                     "output-bps": str,
-                    "output-bytes": str,
-                    "output-packets": str,
                     "output-pps": str
                 },
                 Optional("input-error-count"): str,
