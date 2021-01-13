@@ -752,7 +752,7 @@ class ShowInterfacesSchema(MetaParser):
                 if not isinstance(value, list) and not isinstance(value, dict):
                     raise SchemaError('lag_marker is not a list/dict')
 
-                lag_marker_schema = Schema({
+                lag_marker_list_schema = Schema({
                     Optional("illegal-rx-packets"): str,
                     Optional("lacp-rx-packets"): str,
                     Optional("lacp-tx-packets"): str,
@@ -778,20 +778,20 @@ class ShowInterfacesSchema(MetaParser):
                     Optional("internal-flags"): str
                 },
                 Optional("lag-traffic-statistics"): {
-                    "aggregate-member-info": {
+                    Optional("aggregate-member-info"): {
                         "aggregate-member-count": str
                     },
-                    "if-distribution-list-information": Use(verify_if_distribution_list_information_list),
-                    "lag-adaptive-statistics": {
+                    Optional("if-distribution-list-information"): Use(verify_if_distribution_list_information_list),
+                    Optional("lag-adaptive-statistics"): {
                         "adaptive-adjusts": str,
                         "adaptive-scans": str,
                         "adaptive-updates": str
                     },
-                    "lag-bundle": Use(verify_lag_bundle_list),
-                    "lag-lacp-info": Use(verify_lag_lacp_info_list),
-                    "lag-lacp-statistics": Use(verify_lag_lacp_statistics_list),
-                    "lag-link": Use(verify_lag_link_list),
-                    "lag-marker": Use(verify_lag_marker_list),
+                    Optional("lag-bundle"): Use(verify_lag_bundle_list),
+                    Optional("lag-lacp-info"): Use(verify_lag_lacp_info_list),
+                    Optional("lag-lacp-statistics"): Use(verify_lag_lacp_statistics_list),
+                    Optional("lag-link"): Use(verify_lag_link_list),
+                    Optional("lag-marker"): Use(verify_lag_marker_list),
                 },
                 "local-index": str,
                 Optional("logical-interface-bandwidth"): str,
@@ -1324,11 +1324,11 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(?P<route_table>\S+))?$')
 
         # Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
-        p30 = re.compile(r'^Max +nh +cache: +(?P<max_local_cache>\d+), +'
-            r'New +hold +nh +limit: +(?P<new_hold_limit>\d+)'
-            r', Curr +nh +cnt: +(?P<intf_curr_cnt>\d+), +'
-            r'Curr +new +hold +cnt: +(?P<intf_unresolved_cnt>\d+)'
-            r', +NH +drop +cnt: +(?P<intf_dropcnt>\d+)$')
+        # Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1,
+        p30 = re.compile(r'^Max +nh +cache: +(?P<max_local_cache>\d+), +New +hold +nh +limit: +(?P<new_hold_limit>\d+), Curr +nh +cnt: +(?P<intf_curr_cnt>\d+),( +Curr +new +hold +cnt: +(?P<intf_unresolved_cnt>\d+), +NH +drop +cnt: +(?P<intf_dropcnt>\d+))?$')
+
+        # Curr new hold cnt: 0, NH drop cnt: 0
+        p30_1 = re.compile(r'^Curr +new +hold +cnt: +(?P<intf_unresolved_cnt>\d+), +NH +drop +cnt: +(?P<intf_dropcnt>\d+)$')
 
         # Flags: No-Redirects, Sendbcast-pkt-to-re
         p31 = re.compile(r'^Flags: +(?P<flags>[\S\s]+)')
@@ -1337,9 +1337,10 @@ class ShowInterfaces(ShowInterfacesSchema):
         p32 = re.compile(r'^Addresses, +Flags: +(?P<flags>[\S\s]+)$')
 
         # Destination: 10.189.5.92/30, Local: 10.189.5.93, Broadcast: 10.189.5.95
-        p33 = re.compile(r'^Destination: +(?P<ifa_destination>\S+)'
-            r', +Local: +(?P<ifa_local>\S+)'
-            r'(, +Broadcast: +(?P<ifa_broadcast>\S+))?(, +Generation: +(?P<generation>\S+))?$')
+        p33 = re.compile(r'^Destination: +(?P<ifa_destination>\S+), +Local: +(?P<ifa_local>\S+)(, +Broadcast: +(?P<ifa_broadcast>\S+))?(, +Generation: +(?P<generation>\S+))?$')
+
+        # Broadcast: 10.0.0.255, Generation: 8336
+        p33_1 = re.compile(r'^Broadcast: +(?P<ifa_broadcast>\S+), +Generation: +(?P<generation>\S+)$')
 
         # Bandwidth: 0
         p34 = re.compile(r'^Bandwidth: +(?P<logical_interface_bandwidth>\S+)$')
@@ -1537,8 +1538,52 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Policer: Input: GE_1M-xe-0/1/7.0-log_int-i, Output: GE_1M-xe-0/1/7.0-log_int-o
         p80 = re.compile(r'^Policer: +Input: +(?P<policer_input>\S+)(, +Output: +(?P<policer_output>\S+))?$')
 
+        # Bundle:
+        # Link:
+        p81 = re.compile(r'^(?P<lag_int_type>(Bundle)|(Link)):$')
+
+        # Input :           225          0         14514         1952
+        # Output:            16          0          1188            0
+        p82 = re.compile(r'^(?P<in_out>(Input\s*)|(Output)):\s+(?P<packets>\d+)\s+(?P<pps>\d+)\s+(?P<bytes>\d+)\s+(?P<bps>\d+)$')
+
+        # Adaptive Adjusts:          0
+        # Adaptive Scans  :          0
+        # Adaptive Updates:          0
+        p83 = re.compile(r'^(?P<adaptive>Adaptive\s+(Adjusts|Scans|Updates))\s*:\s+(?P<adaptive_value>\d+)$')
+
+        # Aggregate member links: 2
+        p84 = re.compile(r'^Aggregate\s+member\s+links:\s+(?P<aggregate_member_count>\d+)$')
+
+        # LACP info:        Role     System             System       Port     Port    Port
+        # LACP Statistics:       LACP Rx     LACP Tx   Unknown Rx   Illegal Rx
+        # Marker Statistics:   Marker Rx     Resp Tx   Unknown Rx   Illegal Rx
+        p85 = re.compile(r'^(?P<lacp_flag>(LACP info)|(LACP Statistics)|(Marker Statistics)):\s+.+$')
+
+        # ge-0/0/6.0     Actor        127  2c:6b:f5:d6:f8:c0        127        2       1
+        # ge-0/0/6.0   Partner        127  2c:6b:f5:18:ef:c0        127        2       1
+        p86 = re.compile(r'^(?P<name>\S+)\s+(?P<lacp_role>\S+)\s+(?P<lacp_sys_priority>\d+)\s+(?P<lacp_system_id>\S+)\s+(?P<lacp_port_priority>\d+)\s+(?P<lacp_port_number>\d+)\s+(?P<lacp_port_key>\d+)$')
+
+        # For LACP Statistics
+        # ge-0/0/6.0                 0           0            0            0
+        p87 = re.compile(r'(?P<name>\S+)\s+(?P<lacp_rx_packets>\d+)\s+(?P<lacp_tx_packets>\d+)\s+(?P<unknown_rx_packets>\d+)\s+(?P<illegal_rx_packets>\d+)$')
+
+        # For Maker Statistics
+        # ge-0/0/6.0                 0           0            0            0
+        p88 = re.compile(r'(?P<name>\S+)\s+(?P<marker_rx_packets>\d+)\s+(?P<marker_response_tx_packets>\d+)\s+(?P<unknown_rx_packets>\d+)\s+(?P<illegal_rx_packets>\d+)$')
+
+        # Primary         Active
+        # Backup          Down
+        # Standby         Down
+        p89 = re.compile(r'^(?P<list_type>(Primary)|(Backup)|(Standby))\s+(?P<list_status>(Active)|(Down))$')
+
+        # ge-0/0/7        Up
+        p90 = re.compile(r'^(?P<if_child_name>\S+)\s+(?P<if_status>(Up)|(Down))$')
+
         cnt = 0
         queue_name = ''
+        lag_int_type = ''
+        lacp_flag = ''
+        if_dist_dict = {}
         for line in out.splitlines():
             line = line.strip()
             if not line:
@@ -1977,11 +2022,18 @@ class ShowInterfaces(ShowInterfacesSchema):
                 address_family_list = logical_interface_dict.setdefault('address-family', [])
                 address_family_dict = {k.replace('_','-'):
                     v for k, v in group.items() if v is not None}
-                address_family_list.append(address_family_dict)
                 continue
 
             # Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
             m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                address_family_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Curr new hold cnt: 0, NH drop cnt: 0
+            m = p30_1.match(line)
             if m:
                 group = m.groupdict()
                 address_family_dict.update({k.replace('_','-'):
@@ -2033,7 +2085,15 @@ class ShowInterfaces(ShowInterfacesSchema):
                 interface_address_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 continue
-            
+
+            # Broadcast: 10.0.0.255, Generation: 8336
+            m = p33_1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_address_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
             # Bandwidth: 0
             m = p34.match(line)
             if m:
@@ -2402,13 +2462,13 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
             
-            # Direction : Output
+            # Generation: 9549, Route table: 0
             m = p79.match(line)
             if m:
                 group = m.groupdict()
                 address_family_list = logical_interface_dict.setdefault('address-family', [])
-                address_family_dict = {k.replace('_','-'):
-                    v for k, v in group.items() if v is not None}
+                address_family_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
                 address_family_list.append(address_family_dict)
                 continue
             
@@ -2420,7 +2480,117 @@ class ShowInterfaces(ShowInterfacesSchema):
                 policer_information_dict = {k.replace('_','-'):
                     v for k, v in group.items() if v is not None}
                 continue
-        
+            
+            # Bundle:
+            # Link:
+            m = p81.match(line)
+            if m:
+                group = m.groupdict()
+                lag_traffic_dict = logical_interface_dict.setdefault('lag-traffic-statistics', {})
+                lag_int_type = group['lag_int_type']
+                continue
+
+            # Input :           225          0         14514         1952
+            # Output:            16          0          1188            0
+            m = p82.match(line)
+            if m:
+                group = m.groupdict()
+                in_out_direction = group.pop('in_out')
+                in_out_dict = {"{iod}-{k}".format(iod=in_out_direction.rstrip().lower(), k=k):
+                    v for k, v in group.items() if v is not None}
+                if 'Bundle' == lag_int_type:
+                    lag_traffic_dict.setdefault('lag-bundle', {})
+                    lag_traffic_dict['lag-bundle'].update(in_out_dict)
+                elif 'Link' == lag_int_type:
+                    lag_traffic_dict.setdefault('lag-link', [])
+                    lag_traffic_dict['lag-link'].append(in_out_dict)
+                continue
+
+            # Adaptive Adjusts:          0
+            # Adaptive Scans  :          0
+            # Adaptive Updates:          0
+            m = p83.match(line)
+            if m:
+                group = m.groupdict()
+                lag_traffic_dict.setdefault('lag-adaptive-statistics', {}).setdefault(group['adaptive'].lower().replace(' ', '-'), group['adaptive_value'])
+                continue
+
+            # Aggregate member links: 2
+            m = p84.match(line)
+            if m:
+                group = m.groupdict()
+                lag_traffic_dict.setdefault('aggregate-member-info', {})
+                lag_traffic_dict['aggregate-member-info'] = {k.replace('_','-'):
+                    v for k, v in group.items() if v is not None}
+                continue
+
+            # LACP info:        Role     System             System       Port     Port    Port
+            # LACP Statistics:       LACP Rx     LACP Tx   Unknown Rx   Illegal Rx
+            # Marker Statistics:   Marker Rx     Resp Tx   Unknown Rx   Illegal Rx
+            m = p85.match(line)
+            if m:
+                lacp_flag = m.groupdict()['lacp_flag']
+                continue
+
+            # ge-0/0/6.0     Actor        127  2c:6b:f5:d6:f8:c0        127        2       1
+            # ge-0/0/6.0   Partner        127  2c:6b:f5:18:ef:c0        127        2       1
+            m = p86.match(line)
+            if m and lacp_flag == 'LACP info':
+                group = m.groupdict()
+                lag_link_name = group.pop('name')
+                lag_traffic_dict.setdefault('lag-lacp-info', [])
+                lag_lacp_info_dict = {k.replace('_','-'):
+                    v for k, v in group.items() if v is not None}
+                lag_lacp_info_dict['name'] = lag_link_name
+                lag_traffic_dict['lag-lacp-info'].append(lag_lacp_info_dict)
+                continue
+
+            # For LACP Statistics
+            # ge-0/0/6.0                 0           0            0            0
+            m = p87.match(line)
+            if m and lacp_flag == 'LACP Statistics':
+                group = m.groupdict()
+                lag_link_name = group.pop('name')
+                lag_traffic_dict.setdefault('lag-lacp-statistics', [])
+                lag_traffic_dict['lag-lacp-statistics'].append({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # For Maker Statistics
+            # ge-0/0/6.0                 0           0            0            0
+            m = p88.match(line)
+            if m and lacp_flag == 'Marker Statistics':
+                group = m.groupdict()
+                lag_link_name = group.pop('name')
+                lag_traffic_dict.setdefault('lag-marker', [])
+                lag_traffic_dict['lag-marker'].append({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Primary         Active
+            # Backup          Down
+            # Standby         Down
+            # p89 = re.compile(r'^(?P<list_type>(Primary)|(Backup)|(Standby))\s+(?P<list_status>(Active)|(Down))$')
+            m = p89.match(line)
+            if m:
+                group = m.groupdict()
+                lag_traffic_dict.setdefault('if-distribution-list-information', [])
+                if_dist_dict = {k.replace('_','-'):
+                    v for k, v in group.items() if v is not None}
+                lag_traffic_dict['if-distribution-list-information'].append(if_dist_dict)
+                continue
+
+            # ge-0/0/7        Up
+            # p90 = re.compile(r'^(?P<if_child_name>\S+)\s+(?P<if_status>(Up)|(Down))$')
+            m = p90.match(line)
+            if m and if_dist_dict:
+                group = m.groupdict()
+                lag_traffic_dict['if-distribution-list-information'][-1].setdefault('if-list', [])
+                if_list_dict = {k.replace('_','-'):
+                    v for k, v in group.items() if v is not None}
+                lag_traffic_dict['if-distribution-list-information'][-1]['if-list'].append(if_list_dict)
+                continue
+
         return ret_dict
 
 class ShowInterfacesExtensive(ShowInterfaces):
