@@ -96,6 +96,7 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
+                "if-flow-control": "Enabled",
                 "if-media-flags": {
                     "ifmf-none": True
                 },
@@ -150,7 +151,8 @@ expected_output = {
                 "queue-counters": {
                     "interface-cos-short-summary": {
                         "intf-cos-num-queues-in-use": "4",
-                        "intf-cos-num-queues-supported": "8"
+                        "intf-cos-num-queues-supported": "8",
+                        "intf-cos-queue-type": "Egress queues"
                     },
                     "queue": [
                         {
@@ -184,6 +186,7 @@ expected_output = {
                     ]
                 },
                 "snmp-index": "552",
+                "source-filtering": "Disabled",
                 "speed": "100Gbps",
                 "statistics-cleared": "2021-01-12 15:17:22 JST (00:23:45 ago)",
                 "stp-traffic-statistics": {
