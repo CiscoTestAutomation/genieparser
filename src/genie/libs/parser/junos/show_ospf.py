@@ -4715,7 +4715,7 @@ class ShowOspfStatisticsSchema(MetaParser):
 
     def validate_packet_statistic_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('packet_statistic is not a list')
+            raise SchemaError('packet_statistic is not a list')
         packet_schema = Schema({
             "ospf-packet-type": str,
             "packets-received": str,
