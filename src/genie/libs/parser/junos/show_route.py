@@ -70,6 +70,7 @@ class ShowRouteTableSchema(MetaParser):
                 }
             }
         }
+        
        
 '''
 Parser for:
@@ -118,8 +119,17 @@ class ShowRouteTable(ShowRouteTableSchema):
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
         # > to 192.168.220.6 via ge-0/0/1.0, Pop
-        r3 = re.compile(r'(?:(?P<best_route>\>*))?\s*to\s+(?P<to>\S+)\s+via\s+'
+        # Local via ge-0/0/4.11
+        r3 = re.compile(r'((?:(?P<best_route>\>*))?\s*to\s+)?(?P<to>\S+)\s+via\s+'
                          '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>[\S\s]+))?')
+
+        # fe80::250:5600:b8d:fea3/128
+        r4 = re.compile(r'^(?P<rt_destination>[\w\:\/]+)$')
+
+        # *[Local/0] 00:26:06
+        r5 = re.compile(r'^(?P<active_tag>\*)?\[(?P<protocol_name>[\w\-]+)\/'
+            r'(?P<preference>\d+)\/?(?P<preference2>\d+)?\] +(?P<age>[^,]+)'
+            r'(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
 
         parsed_output = {}
 
@@ -161,6 +171,7 @@ class ShowRouteTable(ShowRouteTableSchema):
             # > to 192.168.220.6 via ge-0/0/1.0
             # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
             # to 10.2.94.2 via lt-1/2/0.49
+            # 
             result = r3.match(line)
             if result:
 
@@ -192,6 +203,30 @@ class ShowRouteTable(ShowRouteTableSchema):
 
                 continue
         
+            # fe80::250:5600:b8d:fea3/128
+            result = r4.match(line)
+            if result:
+                group = result.groupdict()
+                rt_destination = group.pop('rt_destination', None)
+
+                route_dict = table_dict.setdefault('routes', {})\
+                                       .setdefault(rt_destination, {})
+                continue
+
+            result = r5.match(line)
+            if result:
+                group = result.groupdict()
+                rt_tag = group.pop('rt_tag', None)
+
+                route_dict = table_dict.setdefault('routes', {})\
+                                       .setdefault(rt_destination, {})
+
+                route_dict.update({k: v for k, v in group.items() if v})
+                if rt_tag:
+                    route_dict.update({'rt-tag': rt_tag})
+                continue
+
+
         return parsed_output
 
 class ShowRouteSchema(MetaParser):
