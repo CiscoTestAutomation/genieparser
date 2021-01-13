@@ -1794,32 +1794,32 @@ class test_show_ip_route(unittest.TestCase):
         '%<string>' in via output denotes VRF <string>
 
         10.4.1.1/32, ubest/mbest: 2/0
-            *via 10.1.3.1, Eth1/2, [1/0], 01:01:30, static
-            *via 10.186.3.1, Eth1/3, [1/0], 01:01:30, static
+            *via 10.1.3.1, Eth1/2, [1/0], 01:01:30, static
+            *via 10.186.3.1, Eth1/3, [1/0], 01:01:30, static
         10.36.3.3/32, ubest/mbest: 2/0, attached
-            *via 10.36.3.3, Lo0, [0/0], 01:01:31, local
-            *via 10.36.3.3, Lo0, [0/0], 01:01:31, direct
+            *via 10.36.3.3, Lo0, [0/0], 01:01:31, local
+            *via 10.36.3.3, Lo0, [0/0], 01:01:31, direct
         10.1.2.0/24, ubest/mbest: 4/0
-            *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
+            *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
         10.2.3.0/24, ubest/mbest: 1/0, attached
-            *via 10.2.3.3, Eth1/4, [0/0], 01:01:33, direct
+            *via 10.2.3.3, Eth1/4, [0/0], 01:01:33, direct
         10.2.3.3/32, ubest/mbest: 1/0, attached
-            *via 10.2.3.3, Eth1/4, [0/0], 01:01:33, local
+            *via 10.2.3.3, Eth1/4, [0/0], 01:01:33, local
         10.166.13.13/32, ubest/mbest: 2/0, attached
-            *via 10.166.13.13, Lo1, [0/0], 01:01:30, local
-            *via 10.166.13.13, Lo1, [0/0], 01:01:30, direct
+            *via 10.166.13.13, Lo1, [0/0], 01:01:30, local
+            *via 10.166.13.13, Lo1, [0/0], 01:01:30, direct
         10.186.2.0/24, ubest/mbest: 4/0
-            *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
-            *via 10.229.3.2, Eth1/1, [110/41], 01:01:18, ospf-1, intra
+            *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
+            *via 10.229.3.2, Eth1/1, [110/41], 01:01:18, ospf-1, intra
         10.229.3.0/24, ubest/mbest: 1/0, attached
-            *via 10.229.3.3, Eth1/1, [0/0], 01:01:35, direct
+            *via 10.229.3.3, Eth1/1, [0/0], 01:01:35, direct
         10.229.3.3/32, ubest/mbest: 1/0, attached
-            *via 10.229.3.3, Eth1/1, [0/0], 01:01:35, local
+            *via 10.229.3.3, Eth1/1, [0/0], 01:01:35, local
         10.234.21.21/32, ubest/mbest: 2/0
-            *via 10.1.3.1, Eth1/2, [115/50], 01:01:22, isis-1, L1
-            *via 10.186.3.1, Eth1/3, [115/50], 01:01:16, isis-1, L1
+            *via 10.1.3.1, Eth1/2, [115/50], 01:01:22, isis-1, L1
+            *via 10.186.3.1, Eth1/3, [115/50], 01:01:16, isis-1, L1
         10.19.31.31/32, ubest/mbest: 1/0
-            *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
+            *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
             *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
 
         IP Route Table for VRF "VRF1"
@@ -1829,8 +1829,8 @@ class test_show_ip_route(unittest.TestCase):
         '%<string>' in via output denotes VRF <string>
 
         10.4.1.1/32, ubest/mbest: 2/0, attached
-            *via 10.4.1.1, Lo4, [0/0], 00:00:10, local
-            *via 10.4.1.1, Lo4, [0/0], 00:00:10, direct
+            *via 10.4.1.1, Lo4, [0/0], 00:00:10, local
+            *via 10.4.1.1, Lo4, [0/0], 00:00:10, direct
     '''}
 
     golden_parsed_output_3 = {

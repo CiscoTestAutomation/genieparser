@@ -15119,53 +15119,53 @@ Tunnel10 is up, line protocol is up
 
     golden_interface_output_4 = { 'execute.return_value': '''
         GigabitEthernet0/0/0 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
-          Description: Genie to Genie-next for L2 Fiber lines ***
-          MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
-             reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
-          Keepalive not supported
-          Full Duplex, 1000Mbps, link type is auto, media type is T
-          output flow-control is on, input flow-control is on
-          ARP type: ARPA, ARP Timeout 04:00:00
-          Last input 00:00:00, output 00:00:00, output hang never
-          Last clearing of "show interface" counters never
-          Input queue: 0/375/9483/6181 (size/max/drops/flushes); Total output drops: 85587314
-          Queueing strategy: Class-based queueing
-          Output queue: 0/40 (size/max)
-          5 minute input rate 10684000 bits/sec, 5031 packets/sec
-          5 minute output rate 28954000 bits/sec, 5003 packets/sec
-             37252955968 packets input, 25781698415464 bytes, 0 no buffer
-             Received 110594334 broadcasts (0 IP multicasts)
-             0 runts, 0 giants, 0 throttles
-             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
-             0 watchdog, 1050221981 multicast, 0 pause input
-             35433262342 packets output, 29981591557915 bytes, 0 underruns
-             0 output errors, 0 collisions, 2 interface resets
-             11976504 unknown protocol drops
-             0 babbles, 0 late collision, 0 deferred
-             0 lost carrier, 0 no carrier, 0 pause output
-             0 output buffer failures, 0 output buffers swapped out
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
+          Description: Genie to Genie-next for L2 Fiber lines ***
+          MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+             reliability 255/255, txload 7/255, rxload 2/255
+          Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+          Keepalive not supported
+          Full Duplex, 1000Mbps, link type is auto, media type is T
+          output flow-control is on, input flow-control is on
+          ARP type: ARPA, ARP Timeout 04:00:00
+          Last input 00:00:00, output 00:00:00, output hang never
+          Last clearing of "show interface" counters never
+          Input queue: 0/375/9483/6181 (size/max/drops/flushes); Total output drops: 85587314
+          Queueing strategy: Class-based queueing
+          Output queue: 0/40 (size/max)
+          5 minute input rate 10684000 bits/sec, 5031 packets/sec
+          5 minute output rate 28954000 bits/sec, 5003 packets/sec
+             37252955968 packets input, 25781698415464 bytes, 0 no buffer
+             Received 110594334 broadcasts (0 IP multicasts)
+             0 runts, 0 giants, 0 throttles
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+             0 watchdog, 1050221981 multicast, 0 pause input
+             35433262342 packets output, 29981591557915 bytes, 0 underruns
+             0 output errors, 0 collisions, 2 interface resets
+             11976504 unknown protocol drops
+             0 babbles, 0 late collision, 0 deferred
+             0 lost carrier, 0 no carrier, 0 pause output
+             0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet0/0/0.105 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
-          Description: Another Genie L2 connection
-          Internet address is 10.95.2.252/24
-          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
-             reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
-          ARP type: ARPA, ARP Timeout 04:00:00
-          Keepalive not supported
-          Last clearing of "show interface" counters never
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
+          Description: Another Genie L2 connection
+          Internet address is 10.95.2.252/24
+          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
+             reliability 255/255, txload 7/255, rxload 2/255
+          Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
+          ARP type: ARPA, ARP Timeout 04:00:00
+          Keepalive not supported
+          Last clearing of "show interface" counters never
         GigabitEthernet0/0/0.1761524 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
-          Description: *** Genie VLAN  ***
-          Internet address is 10.121.113.98/27
-          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
-             reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation QinQ Virtual LAN, outer ID  176, inner ID 1524
-          ARP type: ARPA, ARP Timeout 04:00:00
-          Keepalive not supported
-          Last clearing of "show interface" counters never    
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
+          Description: *** Genie VLAN  ***
+          Internet address is 10.121.113.98/27
+          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
+             reliability 255/255, txload 7/255, rxload 2/255
+          Encapsulation QinQ Virtual LAN, outer ID  176, inner ID 1524
+          ARP type: ARPA, ARP Timeout 04:00:00
+          Keepalive not supported
+          Last clearing of "show interface" counters never    
     '''
     }
 
@@ -19351,152 +19351,152 @@ class TestShowIpv6Interface(unittest.TestCase):
             'addresses_config_method': 'stateless autoconfig'}}
 
     golden_output1 = {'execute.return_value': '''
-        csr1kv-1#show ipv6 interface 
+        csr1kv-1#show ipv6 interface 
         GigabitEthernet2 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE19:ABBA 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-              2001:db8:8548:1::1, subnet is 2001:db8:8548:1::/64 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::6
-                FF02::1:FF00:1
-                FF02::1:FF19:ABBA
-            MTU is 1500 bytes
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is enabled, number of DAD attempts: 1
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements live for 1801 seconds
-            ND advertised default router preference is Medium
-            ND RAs are suppressed (periodic)
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE19:ABBA 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+              2001:db8:8548:1::1, subnet is 2001:db8:8548:1::/64 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::6
+                FF02::1:FF00:1
+                FF02::1:FF19:ABBA
+            MTU is 1500 bytes
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is enabled, number of DAD attempts: 1
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements live for 1801 seconds
+            ND advertised default router preference is Medium
+            ND RAs are suppressed (periodic)
+            Hosts use stateless autoconfig for addresses.
         GigabitEthernet3 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE72:8407 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-                2001:db8:888c:1::1, subnet is 2001:db8:888c:1::/64 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::6
-                FF02::1:FF00:1
-                FF02::1:FF72:8407
-            MTU is 1500 bytes
-            VPN Routing/Forwarding "vrf1"
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is enabled, number of DAD attempts: 1
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements are sent every 200 seconds
-            ND router advertisements live for 1800 seconds
-            ND advertised default router preference is Medium
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE72:8407 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+                2001:db8:888c:1::1, subnet is 2001:db8:888c:1::/64 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::6
+                FF02::1:FF00:1
+                FF02::1:FF72:8407
+            MTU is 1500 bytes
+            VPN Routing/Forwarding "vrf1"
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is enabled, number of DAD attempts: 1
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements are sent every 200 seconds
+            ND router advertisements live for 1800 seconds
+            ND advertised default router preference is Medium
+            Hosts use stateless autoconfig for addresses.
         GigabitEthernet4 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE19:8682 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-                2001:db8:c56d:1::1, subnet is 2001:db8:c56d:1::/64 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::6
-                FF02::1:FF00:1
-                FF02::1:FF19:8682
-            MTU is 1500 bytes
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is enabled, number of DAD attempts: 1
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements are sent every 200 seconds
-            ND router advertisements live for 1800 seconds
-            ND advertised default router preference is Medium
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE19:8682 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+                2001:db8:c56d:1::1, subnet is 2001:db8:c56d:1::/64 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::6
+                FF02::1:FF00:1
+                FF02::1:FF19:8682
+            MTU is 1500 bytes
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is enabled, number of DAD attempts: 1
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements are sent every 200 seconds
+            ND router advertisements live for 1800 seconds
+            ND advertised default router preference is Medium
+            Hosts use stateless autoconfig for addresses.
         GigabitEthernet5 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::F816:3EFF:FEC7:8140 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-                2001:db8:c8d1:1::1, subnet is 2001:db8:c8d1:1::/64 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::6
-                FF02::1:FF00:1
-                FF02::1:FFC7:8140
-            MTU is 1500 bytes
-            VPN Routing/Forwarding "vrf1"
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is enabled, number of DAD attempts: 1
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements are sent every 200 seconds
-            ND router advertisements live for 1800 seconds
-            ND advertised default router preference is Medium
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::F816:3EFF:FEC7:8140 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+                2001:db8:c8d1:1::1, subnet is 2001:db8:c8d1:1::/64 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::6
+                FF02::1:FF00:1
+                FF02::1:FFC7:8140
+            MTU is 1500 bytes
+            VPN Routing/Forwarding "vrf1"
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is enabled, number of DAD attempts: 1
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements are sent every 200 seconds
+            ND router advertisements live for 1800 seconds
+            ND advertised default router preference is Medium
+            Hosts use stateless autoconfig for addresses.
         Loopback0 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::21E:49FF:FE5D:CC00 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-                2001:1:1::1, subnet is 2001:1:1::1/128 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::1:FF00:1
-                FF02::1:FF5D:CC00
-            MTU is 1514 bytes
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is not supported
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements live for 1800 seconds
-            ND advertised default router preference is Medium
-            ND RAs are suppressed (periodic)
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::21E:49FF:FE5D:CC00 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+                2001:1:1::1, subnet is 2001:1:1::1/128 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::1:FF00:1
+                FF02::1:FF5D:CC00
+            MTU is 1514 bytes
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is not supported
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements live for 1800 seconds
+            ND advertised default router preference is Medium
+            ND RAs are suppressed (periodic)
+            Hosts use stateless autoconfig for addresses.
         Loopback1 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::21E:49FF:FE5D:CC00 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-                2001:11:11::11, subnet is 2001:11:11::11/128 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::1:FF00:11
-                FF02::1:FF5D:CC00
-            MTU is 1514 bytes
-            VPN Routing/Forwarding "vrf1"
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is not supported
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements live for 1800 seconds
-            ND advertised default router preference is Medium
-            ND RAs are suppressed (periodic)
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::21E:49FF:FE5D:CC00 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+                2001:11:11::11, subnet is 2001:11:11::11/128 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::1:FF00:11
+                FF02::1:FF5D:CC00
+            MTU is 1514 bytes
+            VPN Routing/Forwarding "vrf1"
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is not supported
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements live for 1800 seconds
+            ND advertised default router preference is Medium
+            ND RAs are suppressed (periodic)
+            Hosts use stateless autoconfig for addresses.
     '''}
 
     def test_empty(self):

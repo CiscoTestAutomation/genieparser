@@ -81,8 +81,8 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
         # Init vars
         ret_dict = {}
 
-        # IPv6 Address                              Age Link-layer Addr State Interface
-        # 2001:db8:8548:1::2                                 0 fa16.3eff.09c8  REACH Gi2
+        # IPv6 Address                              Age Link-layer Addr State Interface
+        # 2001:db8:8548:1::2                                 0 fa16.3eff.09c8  REACH Gi2
         p1 = re.compile(r'^(?P<ip>([\w\:]+))\s+(?P<age>\S+)\s+'
                         '(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)'
                         '\s+(?P<interface>\S+)$')
@@ -90,7 +90,7 @@ class ShowIpv6Neighbors(ShowIpv6NeighborsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 2001:db8:8548:1::2                                 0 fa16.3eff.09c8  REACH Gi2
+            # 2001:db8:8548:1::2                                 0 fa16.3eff.09c8  REACH Gi2
             m = p1.match(line)
             if m:
                 ip = m.groupdict()['ip']

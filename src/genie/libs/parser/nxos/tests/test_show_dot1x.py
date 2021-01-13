@@ -45,12 +45,12 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
     output = {'execute.return_value': '''
         Dot1x Authenticator Port Statistics for Ethernet1/1
         --------------------------------------------
-        RxStart = 0     RxLogoff = 0    RxResp = 0      RxRespID = 0
-        RxInvalid = 0   RxLenErr = 0    RxTotal = 0
+        RxStart = 0     RxLogoff = 0    RxResp = 0      RxRespID = 0
+        RxInvalid = 0   RxLenErr = 0    RxTotal = 0
 
-        TxReq = 0       TxReqID = 0     TxTotal = 3
+        TxReq = 0       TxReqID = 0     TxTotal = 3
 
-        RxVersion = 0   LastRxSrcMAC = 00:00:00:ff:00:00
+        RxVersion = 0   LastRxSrcMAC = 00:00:00:ff:00:00
     '''}
 
     parsed_output_2 = {
@@ -78,12 +78,12 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
     output_2 = {'execute.return_value': '''
         Dot1x Authenticator Port Statistics for Ethernet1/1
         --------------------------------------------
-        RxStart = 111     RxLogoff = 25    RxResp = 224      RxRespID = 34
-        RxInvalid = 5   RxLenErr = 6    RxTotal = 543
+        RxStart = 111     RxLogoff = 25    RxResp = 224      RxRespID = 34
+        RxInvalid = 5   RxLenErr = 6    RxTotal = 543
 
-        TxReq = 5       TxReqID = 89     TxTotal = 6
+        TxReq = 5       TxReqID = 89     TxTotal = 6
 
-        RxVersion = 78   LastRxSrcMAC = 02:45:44:ff:bb:cd 
+        RxVersion = 78   LastRxSrcMAC = 02:45:44:ff:bb:cd 
     '''}
 
     def test_output(self):
@@ -143,13 +143,13 @@ class test_show_dot1x_all_summary(unittest.TestCase):
     }
 
     output = {'execute.return_value' : '''
-               Interface     PAE              Client          Status
+               Interface     PAE              Client          Status
     ------------------------------------------------------------------
-             Ethernet1/1    AUTH                none      AUTHORIZED
+             Ethernet1/1    AUTH                none      AUTHORIZED
 
-               Interface     PAE              Client          Status
+               Interface     PAE              Client          Status
     ------------------------------------------------------------------
-      Ethernet102/1/6    AUTH   0E:BE:EF:FF:3F:3F      AUTHORIZED
+      Ethernet102/1/6    AUTH   0E:BE:EF:FF:3F:3F      AUTHORIZED
     '''}
 
     parsed_output_2 = {
@@ -178,13 +178,13 @@ class test_show_dot1x_all_summary(unittest.TestCase):
     }
 
     output_2 = {'execute.return_value' : '''
-               Interface     PAE              Client          Status
+               Interface     PAE              Client          Status
     ------------------------------------------------------------------
-             Ethernet1/1    AUTH                none      AUTHORIZED
+             Ethernet1/1    AUTH                none      AUTHORIZED
 
-               Interface     PAE              Client          Status
+               Interface     PAE              Client          Status
     ------------------------------------------------------------------
-      Ethernet5    SUPP   0e:be:00:4g:e0:00      UNAUTHORIZED
+      Ethernet5    SUPP   0e:be:00:4g:e0:00      UNAUTHORIZED
     '''}
 
     # Tests
@@ -274,59 +274,59 @@ class test_show_dot1x_all_details(unittest.TestCase):
     }
 
     output =  {'execute.return_value': '''
-                   Sysauthcontrol Enabled   
-           Dot1x Protocol Version 2         
+                   Sysauthcontrol Enabled   
+           Dot1x Protocol Version 2         
 
         Dot1x Info for Ethernet1/1
         -----------------------------------
-                              PAE = AUTHENTICATOR
-                      PortControl = FORCE_AUTH
-                         HostMode = SINGLE HOST
-                 ReAuthentication = Disabled
-                      QuietPeriod = 60
-                    ServerTimeout = 30
-                      SuppTimeout = 30
-                     ReAuthPeriod = 3600 (Locally configured)
-                        ReAuthMax = 2
-                           MaxReq = 2
-                         TxPeriod = 30
-                  RateLimitPeriod = 0
-                  Mac-Auth-Bypass = Disabled
+                              PAE = AUTHENTICATOR
+                      PortControl = FORCE_AUTH
+                         HostMode = SINGLE HOST
+                 ReAuthentication = Disabled
+                      QuietPeriod = 60
+                    ServerTimeout = 30
+                      SuppTimeout = 30
+                     ReAuthPeriod = 3600 (Locally configured)
+                        ReAuthMax = 2
+                           MaxReq = 2
+                         TxPeriod = 30
+                  RateLimitPeriod = 0
+                  Mac-Auth-Bypass = Disabled
 
         Dot1x Authenticator Client List Empty
 
-                      Port Status = AUTHORIZED
+                      Port Status = AUTHORIZED
 
-                   Sysauthcontrol Enabled   
-           Dot1x Protocol Version 2 
+                   Sysauthcontrol Enabled   
+           Dot1x Protocol Version 2 
 
         Dot1x Info for Ethernet1/2
         -----------------------------------
-                              PAE = AUTHENTICATOR
-                      PortControl = AUTO
-                         HostMode = SINGLE HOST
-                 ReAuthentication = Enabled
-                      QuietPeriod = 60
-                    ServerTimeout = 30
-                      SuppTimeout = 30
-                     ReAuthPeriod = 60 (From Authentication Server)
-                        ReAuthMax = 2
-                           MaxReq = 3
-                         TxPeriod = 30
-                  RateLimitPeriod = 0
-                  Mac-Auth-Bypass = Disabled
+                              PAE = AUTHENTICATOR
+                      PortControl = AUTO
+                         HostMode = SINGLE HOST
+                 ReAuthentication = Enabled
+                      QuietPeriod = 60
+                    ServerTimeout = 30
+                      SuppTimeout = 30
+                     ReAuthPeriod = 60 (From Authentication Server)
+                        ReAuthMax = 2
+                           MaxReq = 3
+                         TxPeriod = 30
+                  RateLimitPeriod = 0
+                  Mac-Auth-Bypass = Disabled
 
         Dot1x Authenticator Client List
         -------------------------------
-                       Supplicant = 54:BE:EF:FF:E5:E5
-                Auth SM State = AUTHENTICATED
-                Auth BEND SM State = IDLE
-                      Port Status = AUTHORIZED
-            Authentication Method = EAP
-                 Authenticated By = Remote Server
-                     ReAuthPeriod = 60
-                     ReAuthAction = Reauthenticate
-                 TimeToNextReauth = 17
+                       Supplicant = 54:BE:EF:FF:E5:E5
+                Auth SM State = AUTHENTICATED
+                Auth BEND SM State = IDLE
+                      Port Status = AUTHORIZED
+            Authentication Method = EAP
+                 Authenticated By = Remote Server
+                     ReAuthPeriod = 60
+                     ReAuthAction = Reauthenticate
+                 TimeToNextReauth = 17
     '''}
 
 
@@ -370,36 +370,36 @@ class test_show_dot1x_all_details(unittest.TestCase):
     }
 
     output_2 = {'execute.return_value':'''
-                   Sysauthcontrol Disabled
-           Dot1x Protocol Version 3 
+                   Sysauthcontrol Disabled
+           Dot1x Protocol Version 3 
 
         Dot1x Info for Ethernet1/2
         -----------------------------------
-                              PAE = AUTHENTICATOR
-                      PortControl = NOT AUTO
-                         HostMode = DOUBLE HOST
-                 ReAuthentication = DISABLE
-                      QuietPeriod = 59
-                    ServerTimeout = 29
-                      SuppTimeout = 29
-                     ReAuthPeriod = 59 (From Authentication Server)
-                        ReAuthMax = 1
-                           MaxReq = 2
-                         TxPeriod = 29
-                  RateLimitPeriod = 1
-                  Mac-Auth-Bypass = ENABLED
+                              PAE = AUTHENTICATOR
+                      PortControl = NOT AUTO
+                         HostMode = DOUBLE HOST
+                 ReAuthentication = DISABLE
+                      QuietPeriod = 59
+                    ServerTimeout = 29
+                      SuppTimeout = 29
+                     ReAuthPeriod = 59 (From Authentication Server)
+                        ReAuthMax = 1
+                           MaxReq = 2
+                         TxPeriod = 29
+                  RateLimitPeriod = 1
+                  Mac-Auth-Bypass = ENABLED
 
         Dot1x Authenticator Client List
         -------------------------------
-                       Supplicant = 53:AB:DE:FF:E5:E5
-                Auth SM State = AUTHENTICATED
-                Auth BEND SM State = IDLE
-                      Port Status = AUTHORIZED
-            Authentication Method = EAP
-                 Authenticated By = Remote
-                     ReAuthPeriod = 59
-                     ReAuthAction = reauthenticate
-                 TimeToNextReauth = 16
+                       Supplicant = 53:AB:DE:FF:E5:E5
+                Auth SM State = AUTHENTICATED
+                Auth BEND SM State = IDLE
+                      Port Status = AUTHORIZED
+            Authentication Method = EAP
+                 Authenticated By = Remote
+                     ReAuthPeriod = 59
+                     ReAuthAction = reauthenticate
+                 TimeToNextReauth = 16
     '''}
 
     empty_output = {'execute.return_value' : '          '}

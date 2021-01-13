@@ -1,0 +1,8 @@
+        Stateful Replication: Enabled
+        RE mode: Master
+
+    Protocol                Synchronization Status
+    OSPF                    Complete              
+    BGP                     Complete              
+    MPLS                    Complete              
+    LDP                     Complete  

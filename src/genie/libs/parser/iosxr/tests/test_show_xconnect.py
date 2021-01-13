@@ -831,7 +831,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
     show l2vpn xconnect detail
     Sat Sep 28 10:09:46.728 UTC
     Group tjub_xc, XC siva_p2p, state is down; Interworking none
-      Monitor-Session: pw-span-test, state is configured
+      Monitor-Session: pw-span-test, state is configured
     AC: GigabitEthernet1/5/1/2, state is up
         Type Ethernet
         MTU 2611; XC ID 0x6111112; interworking none; MSTi 0
