@@ -104,7 +104,7 @@ class ShowBFDSessionDetailSchema(MetaParser):
                 "session-state": str,
                 "session-transmission-interval": str,
                 "session-type": str,
-                "session-up-time": str,
+                Optional("session-up-time"): str,
                 "session-version": str
             },
             "clients": str,
@@ -121,7 +121,7 @@ class ShowBFDSessionDetail(ShowBFDSessionDetailSchema):
         *show bfd session address {ipaddress} detail
     """
 
-    cli_command = 'show bfd session {ipaddress} detail'
+    cli_command = 'show bfd session address {ipaddress} detail'
 
     def cli(self, ipaddress, output=None):
         if not output:
@@ -146,7 +146,8 @@ class ShowBFDSessionDetail(ShowBFDSessionDetailSchema):
                         r'(?P<session_adaptive_multiplier>\S+)$')
 
         #      Client LDP-OAM, TX interval 0.050, RX interval 0.050
-        p2 = re.compile(r'^Client +(?P<client_name>\S+), +TX +interval '
+        #      Client LDP-OAM ipv4-unicast Area0.0.0.0, TX interval 0.050, RX interval 0.050
+        p2 = re.compile(r'^Client +(?P<client_name>\S+)([\S\s]+)?, +TX +interval '
                         r'(?P<client_transmission_interval>\S+), +RX +interval '
                         r'(?P<client_reception_interval>\S+)$')
 
