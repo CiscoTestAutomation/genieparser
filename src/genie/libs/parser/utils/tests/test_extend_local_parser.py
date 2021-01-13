@@ -6,11 +6,16 @@ from genie.libs.parser.utils.tests.dummy_parser import package_path
 class TestExtendParser(unittest.TestCase):
 
     def setUp(self):
-        os.environ['PYTHONPATH'] += package_path + ':'
+        python_path = os.environ.get('PYTHONPATH', None)
+        if python_path:
+            os.environ['PYTHONPATH'] += package_path + ':'
+        else:
+            os.environ['PYTHONPATH'] = package_path + ':'
 
     def test_extend_api(self):
         ext = ExtendParsers('dummy_parser')
         ext.extend()
+        ext.output.pop('extend_info')
         self.assertEqual(ext.output, 
             {
                 'tokens': ['iosxe', 'c9300', 'iosxr'],
