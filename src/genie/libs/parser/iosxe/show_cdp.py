@@ -214,7 +214,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
         # Platform: Meraki MV21 Cloud Managed Indoor HD Dom
         # Platform: Mitel 5320e,DN 2142      ,  Capabilities: Host Phone
-        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/:)]+'
+        # Platform: "CTS-CODEC-SX80",  Capabilities: Host Phone
+        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/:)\"]+'
                                   r'(?:,[\w ]+)?)(\,\s*Capabilities:\s+'
                                   r'(?P<capabilities>[\w\s\-]+))?$')
 
@@ -234,7 +235,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
                                     '(?P<native_vlan>\d+)')
 
-        # VTP Management Domain: ‘Accounting Group’      
+        # VTP Management Domain: 'Accounting Group'      
         vtp_management_domain_re = re.compile(r'VTP\s*Management\s*'
                                     'Domain\s*:\s*'
                                     '\W*(?P<vtp_management_domain>([a-zA-Z\s]+'
