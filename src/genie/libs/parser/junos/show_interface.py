@@ -1567,7 +1567,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # ge-0/0/6.0                 0           0            0            0
         p87 = re.compile(r'(?P<name>\S+)\s+(?P<lacp_rx_packets>\d+)\s+(?P<lacp_tx_packets>\d+)\s+(?P<unknown_rx_packets>\d+)\s+(?P<illegal_rx_packets>\d+)$')
 
-        # For Maker Statistics
+        # For Marker Statistics
         # ge-0/0/6.0                 0           0            0            0
         p88 = re.compile(r'(?P<name>\S+)\s+(?P<marker_rx_packets>\d+)\s+(?P<marker_response_tx_packets>\d+)\s+(?P<unknown_rx_packets>\d+)\s+(?P<illegal_rx_packets>\d+)$')
 
