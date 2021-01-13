@@ -52,74 +52,7 @@ expected_output = {
                 "link-level-type": "Ethernet",
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-no-redirects": True,
-                                    "ifff-sendbcast-pkt-to-re": True
-                                },
-                                "address-family-name": "inet",
-                                "interface-address": {
-                                    "ifa-broadcast": "10.189.5.95",
-                                    "ifa-destination": "10.189.5.92/30",
-                                    "ifa-flags": {
-                                        "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
-                                    },
-                                    "ifa-local": "10.189.5.93"
-                                },
-                                "intf-curr-cnt": "1",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1500",
-                                "new-hold-limit": "75000"
-                            },
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
-                                "address-family-name": "inet6",
-                                "interface-address": [
-                                    {
-                                        "ifa-destination": "2001:db8:223c:2c16::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True,
-                                            "ifaf-is-primary": True
-                                        },
-                                        "ifa-local": "2001:db8:223c:2c16::1"
-                                    },
-                                    {
-                                        "ifa-destination": "fe80::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:56b6"
-                                    }
-                                ],
-                                "intf-curr-cnt": "1",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1500",
-                                "new-hold-limit": "75000"
-                            },
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
-                                "address-family-name": "mpls",
-                                "maximum-labels": "3",
-                                "mtu": "1488"
-                            },
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
-                                "address-family-name": "multiservice",
-                                "mtu": "Unlimited"
-                            }
-                        ],
+                        "address-family": [],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
@@ -171,15 +104,7 @@ expected_output = {
                 },
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
-                                "address-family-name": "vpls",
-                                "mtu": "Unlimited"
-                            }
-                        ],
+                        "address-family": [],
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True
@@ -218,32 +143,7 @@ expected_output = {
                 },
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
-                                "address-family-name": "inet",
-                                "intf-curr-cnt": "0",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "0",
-                                "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            },
-                            {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
-                                "address-family-name": "inet6",
-                                "intf-curr-cnt": "0",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "0",
-                                "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
-                        ],
+                        "address-family": [],
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True
@@ -282,20 +182,7 @@ expected_output = {
                 },
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-none": True
-                                },
-                                "address-family-name": "inet",
-                                "intf-curr-cnt": "0",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "0",
-                                "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
-                        ],
+                        "address-family": [],
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True
@@ -310,20 +197,7 @@ expected_output = {
                         }
                     },
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
-                                "address-family-name": "inet",
-                                "intf-curr-cnt": "0",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "0",
-                                "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
-                        ],
+                        "address-family": [],
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True
@@ -397,65 +271,7 @@ expected_output = {
                 "link-level-type": "Ethernet",
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-no-redirects": True,
-                                    "ifff-sendbcast-pkt-to-re": True
-                                },
-                                "address-family-name": "inet",
-                                "interface-address": {
-                                    "ifa-broadcast": "10.169.14.123",
-                                    "ifa-destination": "10.169.14.120/30",
-                                    "ifa-flags": {
-                                        "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
-                                    },
-                                    "ifa-local": "10.169.14.122"
-                                },
-                                "intf-curr-cnt": "1",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1500",
-                                "new-hold-limit": "75000"
-                            },
-                            {
-                                "address-family-name": "inet6",
-                                "interface-address": [
-                                    {
-                                        "ifa-destination": "2001:db8:eb18:6337::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True,
-                                            "ifaf-is-primary": True
-                                        },
-                                        "ifa-local": "2001:db8:eb18:6337::2"
-                                    },
-                                    {
-                                        "ifa-destination": "fe80::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:37f9"
-                                    }
-                                ],
-                                "intf-curr-cnt": "2",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1500",
-                                "new-hold-limit": "75000"
-                            },
-                            {
-                                "address-family-name": "mpls",
-                                "maximum-labels": "3",
-                                "mtu": "1488"
-                            },
-                            {
-                                "address-family-name": "multiservice",
-                                "mtu": "Unlimited"
-                            }
-                        ],
+                        "address-family": [],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
@@ -542,38 +358,7 @@ expected_output = {
                 "link-level-type": "Ethernet",
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-sendbcast-pkt-to-re": True
-                                },
-                                "address-family-name": "inet",
-                                "interface-address": {
-                                    "ifa-broadcast": "10.19.198.27",
-                                    "ifa-destination": "10.19.198.24/30",
-                                    "ifa-flags": {
-                                        "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
-                                    },
-                                    "ifa-local": "10.19.198.25"
-                                },
-                                "intf-curr-cnt": "1",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1500",
-                                "new-hold-limit": "75000"
-                            },
-                            {
-                                "address-family-name": "mpls",
-                                "maximum-labels": "3",
-                                "mtu": "1488"
-                            },
-                            {
-                                "address-family-name": "multiservice",
-                                "mtu": "Unlimited"
-                            }
-                        ],
+                        "address-family": [],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
@@ -659,33 +444,7 @@ expected_output = {
                 "link-level-type": "Ethernet",
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-sendbcast-pkt-to-re": True
-                                },
-                                "address-family-name": "inet",
-                                "interface-address": {
-                                    "ifa-broadcast": "10.55.0.255",
-                                    "ifa-destination": "100.0.0/24",
-                                    "ifa-flags": {
-                                        "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
-                                    },
-                                    "ifa-local": "10.55.0.254"
-                                },
-                                "intf-curr-cnt": "1",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1500",
-                                "new-hold-limit": "75000"
-                            },
-                            {
-                                "address-family-name": "multiservice",
-                                "mtu": "Unlimited"
-                            }
-                        ],
+                        "address-family": [],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
@@ -1160,9 +919,7 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Ethernet",
                 "link-type": "Full-Duplex",
-                "mtu": "9192",
                 "name": "cbp0",
                 "oper-status": "Up",
                 "traffic-statistics": {
@@ -1229,91 +986,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "2019-08-29 09:03:11 UTC (29w6d 19:02 ago)"
                 },
-                "link-level-type": "Ethernet",
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
-                                "address-family-name": "inet",
-                                "interface-address": [
-                                    {
-                                        "ifa-broadcast": "10.255.255.255",
-                                        "ifa-destination": "10/8",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "10.0.0.4"
-                                    },
-                                    {
-                                        "ifa-broadcast": "172.16.16.255",
-                                        "ifa-destination": "128/2",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True,
-                                            "ifaf-kernel": True,
-                                            "ifaf-preferred": True
-                                        },
-                                        "ifa-local": "172.16.64.1"
-                                    },
-                                    {
-                                        "ifa-broadcast": "172.16.16.255",
-                                        "ifa-destination": "128/2",
-                                        "ifa-flags": {
-                                            "ifaf-is-default": True,
-                                            "ifaf-is-primary": True,
-                                            "ifaf-primary": True
-                                        },
-                                        "ifa-local": "172.16.64.4"
-                                    }
-                                ],
-                                "intf-curr-cnt": "1",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1500",
-                                "new-hold-limit": "75000"
-                            },
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
-                                "address-family-name": "inet6",
-                                "interface-address": [
-                                    {
-                                        "ifa-destination": "fe80::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-preferred": True
-                                        },
-                                        "ifa-local": "fe80::250:56ff:feff:e2c1"
-                                    },
-                                    {
-                                        "ifa-destination": "2001:db8:8d82::/64",
-                                        "ifa-flags": {
-                                            "ifaf-is-default": True,
-                                            "ifaf-is-preferred": True,
-                                            "ifaf-is-primary": True
-                                        },
-                                        "ifa-local": "0x4"
-                                    }
-                                ],
-                                "intf-curr-cnt": "1",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1500",
-                                "new-hold-limit": "75000"
-                            },
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True,
-                                    "ifff-primary": True
-                                },
-                                "address-family-name": "tnp",
-                                "mtu": "1500"
-                            }
-                        ],
+                        "address-family": [],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
@@ -1329,7 +1004,6 @@ expected_output = {
                         }
                     }
                 ],
-                "mtu": "1514",
                 "name": "em1",
                 "oper-status": "Up",
                 "traffic-statistics": {
@@ -1354,12 +1028,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "VxLAN-Tunnel-Endpoint",
                 "link-type": "Full-Duplex",
-                "mtu": "Unlimited",
                 "name": "esi",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1382,12 +1053,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Flexible-tunnel-Interface",
                 "link-type": "Full-Duplex",
-                "mtu": "Unlimited",
                 "name": "fti0",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1410,12 +1078,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Flexible-tunnel-Interface",
                 "link-type": "Full-Duplex",
-                "mtu": "Unlimited",
                 "name": "fti1",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1438,12 +1103,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Flexible-tunnel-Interface",
                 "link-type": "Full-Duplex",
-                "mtu": "Unlimited",
                 "name": "fti2",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1466,12 +1128,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Flexible-tunnel-Interface",
                 "link-type": "Full-Duplex",
-                "mtu": "Unlimited",
                 "name": "fti3",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1494,12 +1153,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Flexible-tunnel-Interface",
                 "link-type": "Full-Duplex",
-                "mtu": "Unlimited",
                 "name": "fti4",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1522,12 +1178,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Flexible-tunnel-Interface",
                 "link-type": "Full-Duplex",
-                "mtu": "Unlimited",
                 "name": "fti5",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1550,12 +1203,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Flexible-tunnel-Interface",
                 "link-type": "Full-Duplex",
-                "mtu": "Unlimited",
                 "name": "fti6",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1578,12 +1228,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Flexible-tunnel-Interface",
                 "link-type": "Full-Duplex",
-                "mtu": "Unlimited",
                 "name": "fti7",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1605,33 +1252,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "2019-08-29 09:03:11 UTC (29w6d 19:02 ago)"
                 },
-                "link-level-type": "Ethernet",
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True,
-                                    "ifff-sendbcast-pkt-to-re": True
-                                },
-                                "address-family-name": "inet",
-                                "interface-address": {
-                                    "ifa-broadcast": "10.1.0.255",
-                                    "ifa-destination": "1.0.0/24",
-                                    "ifa-flags": {
-                                        "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True
-                                    },
-                                    "ifa-local": "10.1.0.101"
-                                },
-                                "intf-curr-cnt": "2",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1500",
-                                "new-hold-limit": "75000"
-                            }
-                        ],
+                        "address-family": [],
                         "encapsulation": "ENET2",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
@@ -1647,7 +1270,6 @@ expected_output = {
                         }
                     }
                 ],
-                "mtu": "1514",
                 "name": "fxp0",
                 "oper-status": "Up",
                 "traffic-statistics": {
@@ -1663,11 +1285,8 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "link-level-type": "GRE",
-                "mtu": "Unlimited",
                 "name": "gre",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1684,11 +1303,8 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "link-level-type": "IP-over-IP",
-                "mtu": "Unlimited",
                 "name": "ipip",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1713,9 +1329,7 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Ethernet",
                 "link-type": "Full-Duplex",
-                "mtu": "1514",
                 "name": "irb",
                 "oper-status": "Up",
                 "traffic-statistics": {
@@ -1739,35 +1353,10 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Ethernet",
                 "link-type": "Full-Duplex",
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-is-primary": True
-                                },
-                                "address-family-name": "inet",
-                                "interface-address": {
-                                    "ifa-broadcast": "172.16.16.255",
-                                    "ifa-destination": "128/2",
-                                    "ifa-flags": {
-                                        "ifaf-is-default": True,
-                                        "ifaf-is-preferred": True,
-                                        "ifaf-is-primary": True,
-                                        "ifaf-primary": True
-                                    },
-                                    "ifa-local": "172.16.64.127"
-                                },
-                                "intf-curr-cnt": "0",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "75000",
-                                "mtu": "1514",
-                                "new-hold-limit": "75000"
-                            }
-                        ],
+                        "address-family": [],
                         "encapsulation": "unknown",
                         "if-config-flags": {
                             "iff-snmp-traps": True,
@@ -1784,7 +1373,6 @@ expected_output = {
                         }
                     }
                 ],
-                "mtu": "1514",
                 "name": "jsrv",
                 "oper-status": "Up",
                 "traffic-statistics": {
@@ -1812,44 +1400,7 @@ expected_output = {
                 },
                 "logical-interface": [
                     {
-                        "address-family": [
-                            {
-                                "address-family-flags": {
-                                    "ifff-no-redirects": True,
-                                    "ifff-sendbcast-pkt-to-re": True
-                                },
-                                "address-family-name": "inet",
-                                "interface-address": {
-                                    "ifa-flags": {
-                                        "ifaf-is-default": True,
-                                        "ifaf-is-primary": True
-                                    },
-                                    "ifa-local": "10.189.5.252"
-                                },
-                                "intf-curr-cnt": "0",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "0",
-                                "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            },
-                            {
-                                "address-family-name": "inet6",
-                                "interface-address": {
-                                    "ifa-flags": {
-                                        "ifaf-is-default": True,
-                                        "ifaf-is-primary": True
-                                    },
-                                    "ifa-local": "127.0.0.1"
-                                },
-                                "intf-curr-cnt": "0",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "0",
-                                "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
-                        ],
+                        "address-family": [],
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True
@@ -1863,17 +1414,7 @@ expected_output = {
                         }
                     },
                     {
-                        "address-family": [
-                            {
-                                "address-family-name": "inet",
-                                "intf-curr-cnt": "0",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "0",
-                                "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
-                        ],
+                        "address-family": [],
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True
@@ -1887,17 +1428,7 @@ expected_output = {
                         }
                     },
                     {
-                        "address-family": [
-                            {
-                                "address-family-name": "inet",
-                                "intf-curr-cnt": "0",
-                                "intf-dropcnt": "0",
-                                "intf-unresolved-cnt": "0",
-                                "max-local-cache": "0",
-                                "mtu": "Unlimited",
-                                "new-hold-limit": "0"
-                            }
-                        ],
+                        "address-family": [],
                         "if-config-flags": {
                             "iff-snmp-traps": True,
                             "iff-up": True
@@ -1932,11 +1463,8 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "LSI",
-                "mtu": "Unlimited",
                 "name": "lsi",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1953,11 +1481,8 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "link-level-type": "GRE",
-                "mtu": "Unlimited",
                 "name": "mtun",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1971,11 +1496,8 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "link-level-type": "PIM-Decapsulator",
-                "mtu": "Unlimited",
                 "name": "pimd",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1989,11 +1511,8 @@ expected_output = {
                     "ifdf-present": True,
                     "ifdf-running": True
                 },
-                "link-level-type": "PIM-Encapsulator",
-                "mtu": "Unlimited",
                 "name": "pime",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -2018,9 +1537,7 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Ethernet",
                 "link-type": "Full-Duplex",
-                "mtu": "9192",
                 "name": "pip0",
                 "oper-status": "Up",
                 "traffic-statistics": {
@@ -2039,9 +1556,7 @@ expected_output = {
                 "if-media-flags": {
                     "ifmf-none": True
                 },
-                "link-level-type": "PPPoE",
                 "link-type": "Full-Duplex",
-                "mtu": "1532",
                 "name": "pp0",
                 "oper-status": "Up"
             },
@@ -2059,12 +1574,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Remote-BEB",
                 "link-type": "Full-Duplex",
-                "mtu": "Unlimited",
                 "name": "rbeb",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -2087,11 +1599,8 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "Interface-Specific",
-                "mtu": "Unlimited",
                 "name": "tap",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -2111,12 +1620,9 @@ expected_output = {
                 "interface-flapped": {
                     "#text": "Never"
                 },
-                "link-level-type": "VxLAN-Tunnel-Endpoint",
                 "link-type": "Full-Duplex",
-                "mtu": "Unlimited",
                 "name": "vtep",
                 "oper-status": "Up",
-                "speed": "Unlimited",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
