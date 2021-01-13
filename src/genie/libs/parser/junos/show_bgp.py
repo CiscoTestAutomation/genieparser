@@ -9,6 +9,7 @@ JunOs parsers for the following show commands:
     * show bgp summary
     * show bgp neighbor
     * show bgp neighbor {neighbor_address}
+    * show bgp summary instance {instance}
 """
 
 # Python
@@ -922,7 +923,6 @@ class ShowBgpSummarySchema(MetaParser):
         }
     }
 
-
 class ShowBgpSummary(ShowBgpSummarySchema):
     """
     Parser for:
@@ -960,7 +960,8 @@ class ShowBgpSummary(ShowBgpSummarySchema):
         # ------------------------------------------------------------
         # inet.0
         # inet6.0
-        p3 = re.compile(r'^(?P<name>inet(\d+)?.\d)$')
+        # VRF-TEST001.inet.0
+        p3 = re.compile(r'.*(?P<name>(inet|mdt)(\d+)?.\d)$')
 
         # 1366        682          0          0          0          0
         p4 = re.compile(
@@ -1135,6 +1136,23 @@ class ShowBgpSummary(ShowBgpSummarySchema):
 
         return parsed_dict
 
+class ShowBgpSummaryInstance(ShowBgpSummary):
+    """
+    Parser for:
+        * show bgp summary instance {instance}
+    """
+    cli_command = 'show bgp summary instance {instance}'
+
+    def cli(self, instance, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                instance=instance
+            ))
+        else:
+            out = output
+        
+        return super().cli(output=out)
 
 class ShowBgpNeighborSchema(MetaParser):
     """ Schema for:
