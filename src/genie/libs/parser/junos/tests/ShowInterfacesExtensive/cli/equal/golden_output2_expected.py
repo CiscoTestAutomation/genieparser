@@ -128,6 +128,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "et-0/0/0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "0",

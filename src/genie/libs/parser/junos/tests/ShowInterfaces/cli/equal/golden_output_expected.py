@@ -72,6 +72,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/0",
+                "oper-status": "Up",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",
@@ -119,6 +120,7 @@ expected_output = {
                     }
                 ],
                 "name": "lc-0/0/0",
+                "oper-status": "Up",
                 "speed": "800mbps",
                 "traffic-statistics": {
                     "input-packets": "0",
@@ -157,6 +159,7 @@ expected_output = {
                     }
                 ],
                 "name": "pfe-0/0/0",
+                "oper-status": "Up",
                 "speed": "800mbps",
                 "traffic-statistics": {
                     "input-packets": "0",
@@ -210,6 +213,7 @@ expected_output = {
                     }
                 ],
                 "name": "pfh-0/0/0",
+                "oper-status": "Up",
                 "speed": "800mbps",
                 "traffic-statistics": {
                     "input-packets": "0",
@@ -287,6 +291,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/1",
+                "oper-status": "Up",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",
@@ -373,6 +378,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/2",
+                "oper-status": "Up",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",
@@ -458,6 +464,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/3",
+                "oper-status": "Up",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",
@@ -527,6 +534,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/4",
+                "oper-status": "Down",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",
@@ -596,6 +604,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/5",
+                "oper-status": "Down",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",
@@ -665,6 +674,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/6",
+                "oper-status": "Down",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",
@@ -734,6 +744,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/7",
+                "oper-status": "Down",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",
@@ -803,6 +814,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/8",
+                "oper-status": "Down",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",
@@ -872,6 +884,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/9",
+                "oper-status": "Down",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",
@@ -908,6 +921,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "cbp0",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -929,6 +943,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "demux0",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -949,6 +964,7 @@ expected_output = {
                     "#text": "Never"
                 },
                 "name": "dsc",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -989,6 +1005,7 @@ expected_output = {
                     }
                 ],
                 "name": "em1",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1013,6 +1030,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "esi",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1037,6 +1055,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "fti0",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1061,6 +1080,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "fti1",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1085,6 +1105,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "fti2",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1109,6 +1130,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "fti3",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1133,6 +1155,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "fti4",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1157,6 +1180,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "fti5",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1181,6 +1205,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "fti6",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1205,6 +1230,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "fti7",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1245,6 +1271,7 @@ expected_output = {
                     }
                 ],
                 "name": "fxp0",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1259,6 +1286,7 @@ expected_output = {
                     "ifdf-running": True
                 },
                 "name": "gre",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1276,6 +1304,7 @@ expected_output = {
                     "ifdf-running": True
                 },
                 "name": "ipip",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1302,6 +1331,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "irb",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1344,6 +1374,7 @@ expected_output = {
                     }
                 ],
                 "name": "jsrv",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1412,6 +1443,7 @@ expected_output = {
                     }
                 ],
                 "name": "lo0",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "33920578",
                     "output-packets": "33920578"
@@ -1432,6 +1464,7 @@ expected_output = {
                     "#text": "Never"
                 },
                 "name": "lsi",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1449,6 +1482,7 @@ expected_output = {
                     "ifdf-running": True
                 },
                 "name": "mtun",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1463,6 +1497,7 @@ expected_output = {
                     "ifdf-running": True
                 },
                 "name": "pimd",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1477,6 +1512,7 @@ expected_output = {
                     "ifdf-running": True
                 },
                 "name": "pime",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1503,6 +1539,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "pip0",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1520,7 +1557,8 @@ expected_output = {
                     "ifmf-none": True
                 },
                 "link-type": "Full-Duplex",
-                "name": "pp0"
+                "name": "pp0",
+                "oper-status": "Up"
             },
             {
                 "admin-status": {
@@ -1538,6 +1576,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "rbeb",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1561,6 +1600,7 @@ expected_output = {
                     "#text": "Never"
                 },
                 "name": "tap",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"
@@ -1582,6 +1622,7 @@ expected_output = {
                 },
                 "link-type": "Full-Duplex",
                 "name": "vtep",
+                "oper-status": "Up",
                 "traffic-statistics": {
                     "input-packets": "0",
                     "output-packets": "0"

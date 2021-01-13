@@ -329,6 +329,7 @@ expected_output = {
                 "minimum-links-in-aggregate": "1",
                 "mtu": "1514",
                 "name": "ae0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "1",
                     "mtu-errors": "0",

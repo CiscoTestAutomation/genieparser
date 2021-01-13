@@ -72,6 +72,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/0",
+                "oper-status": "Up",
                 "pad-to-minimum-frame-size": "Disabled",
                 "physical-interface-cos-information": {
                     "physical-interface-cos-hw-max-queues": "8",

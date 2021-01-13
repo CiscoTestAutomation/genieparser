@@ -283,6 +283,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "1",
@@ -390,6 +391,7 @@ expected_output = {
                     }
                 ],
                 "name": "lc-0/0/0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -516,6 +518,7 @@ expected_output = {
                     }
                 ],
                 "name": "pfe-0/0/0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -654,6 +657,7 @@ expected_output = {
                     }
                 ],
                 "name": "pfh-0/0/0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -950,6 +954,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/1",
+                "oper-status": "Up",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "1",
@@ -1192,6 +1197,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/2",
+                "oper-status": "Up",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "47",
@@ -1427,6 +1433,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/3",
+                "oper-status": "Up",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "3",
@@ -1609,6 +1616,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/4",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -1791,6 +1799,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/5",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -1973,6 +1982,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/6",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -2155,6 +2165,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/7",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -2337,6 +2348,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/8",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -2519,6 +2531,7 @@ expected_output = {
                 "mru": "1522",
                 "mtu": "1514",
                 "name": "ge-0/0/9",
+                "oper-status": "Down",
                 "output-error-list": {
                     "aged-packets": "0",
                     "carrier-transitions": "2",
@@ -3381,6 +3394,7 @@ expected_output = {
                     }
                 ],
                 "name": ".local.",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -3436,6 +3450,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "129",
                 "name": "cbp0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -3488,6 +3503,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "128",
                 "name": "demux0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -3540,6 +3556,7 @@ expected_output = {
                 "link-type": "Unspecified",
                 "local-index": "5",
                 "name": "dsc",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -3749,6 +3766,7 @@ expected_output = {
                     }
                 ],
                 "name": "em1",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -3804,6 +3822,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "134",
                 "name": "esi",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -3859,6 +3878,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "136",
                 "name": "fti0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -3914,6 +3934,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "137",
                 "name": "fti1",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -3969,6 +3990,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "138",
                 "name": "fti2",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -4024,6 +4046,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "139",
                 "name": "fti3",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -4079,6 +4102,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "140",
                 "name": "fti4",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -4134,6 +4158,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "141",
                 "name": "fti5",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -4189,6 +4214,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "142",
                 "name": "fti6",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -4244,6 +4270,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "143",
                 "name": "fti7",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -4342,6 +4369,7 @@ expected_output = {
                     }
                 ],
                 "name": "fxp0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -4376,6 +4404,7 @@ expected_output = {
                 },
                 "local-index": "10",
                 "name": "gre",
+                "oper-status": "Up",
                 "snmp-index": "8",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -4406,6 +4435,7 @@ expected_output = {
                 },
                 "local-index": "11",
                 "name": "ipip",
+                "oper-status": "Up",
                 "snmp-index": "9",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -4454,6 +4484,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "132",
                 "name": "irb",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -4564,6 +4595,7 @@ expected_output = {
                     }
                 ],
                 "name": "jsrv",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -4832,6 +4864,7 @@ expected_output = {
                     }
                 ],
                 "name": "lo0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -4884,6 +4917,7 @@ expected_output = {
                 "link-type": "Unspecified",
                 "local-index": "4",
                 "name": "lsi",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -4921,6 +4955,7 @@ expected_output = {
                 },
                 "local-index": "66",
                 "name": "mtun",
+                "oper-status": "Up",
                 "snmp-index": "12",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -4948,6 +4983,7 @@ expected_output = {
                 },
                 "local-index": "26",
                 "name": "pimd",
+                "oper-status": "Up",
                 "snmp-index": "11",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -4975,6 +5011,7 @@ expected_output = {
                 },
                 "local-index": "25",
                 "name": "pime",
+                "oper-status": "Up",
                 "snmp-index": "10",
                 "statistics-cleared": "Never",
                 "traffic-statistics": {
@@ -5023,6 +5060,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "130",
                 "name": "pip0",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -5063,6 +5101,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "131",
                 "name": "pp0",
+                "oper-status": "Up",
                 "snmp-index": "516",
                 "up-hold-time": "0"
             },
@@ -5095,6 +5134,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "135",
                 "name": "rbeb",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -5150,6 +5190,7 @@ expected_output = {
                 "link-type": "Unspecified",
                 "local-index": "12",
                 "name": "tap",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
@@ -5202,6 +5243,7 @@ expected_output = {
                 "link-type": "Full-Duplex",
                 "local-index": "133",
                 "name": "vtep",
+                "oper-status": "Up",
                 "output-error-list": {
                     "carrier-transitions": "0",
                     "mtu-errors": "0",
