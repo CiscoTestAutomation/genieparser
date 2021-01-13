@@ -1,4 +1,4 @@
-'''show_platform.py
+'''show_ppm.py
 
 JunOS parsers for the following show commands:
     * show ppm transmissions protocol bfd detail
