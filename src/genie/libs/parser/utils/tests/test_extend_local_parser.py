@@ -15,10 +15,11 @@ class TestExtendParser(unittest.TestCase):
     def test_extend_api(self):
         ext = ExtendParsers('dummy_parser')
         ext.extend()
+        ext.output.pop('tokens')
         ext.output.pop('extend_info')
+
         self.assertEqual(ext.output, 
             {
-                'tokens': ['iosxe', 'c9300', 'iosxr'],
                 'show inventory': {
                     'iosxe': {
                         'c9300': {
