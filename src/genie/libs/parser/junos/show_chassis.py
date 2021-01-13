@@ -8,6 +8,9 @@ Parser for the following show commands:
     * show chassis environment routing-engine
     * show chassis environment 
     * show chassis environment fpc
+    * show chassis environment component
+    * show chassis fabric summary
+    * show chassis fabric plane
     * show chassis firmware
     * show chassis firmware no-forwarding
     * show chassis fpc
@@ -19,6 +22,7 @@ Parser for the following show commands:
     * show chassis hardware extensive
     * show chassis hardware extensive no-forwarding
     * show chassis power
+    * show chassis pic fpc-slot {fpc-slot} pic-slot {pic-slot}
 '''
 # python
 import re
@@ -3624,3 +3628,205 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
                 continue
         
         return ret_dict
+
+# Schema for show chassis pic fpc-slot {fpc-slot} pic-slot {pic-slot}        
+class ShowChassisPicFpcSlotPicSlotSchema(MetaParser):
+    '''
+    schema = {
+        "fpc-information": {
+            "@junos:style": str,
+            "fpc": {
+                "pic-detail": {
+                    "pic-slot": str,
+                    "pic-type": str,
+                    "pic-version": str,
+                    "port-information": {
+                        "port": [
+                            {
+                                "cable-type": str,
+                                "fiber-mode": str,
+                                "port-number": str,
+                                "sfp-vendor-fw-ver": str,
+                                "sfp-vendor-name": str,
+                                "sfp-vendor-pno": str,
+                                "wavelength": str,
+                            },
+                        ]
+                    },
+                    "slot": str,
+                    "state": str,
+                    "up-time": {
+                        "#text": str,
+                        "@junos:seconds": str,
+                    }
+                }
+            }
+        }
+    }
+    '''
+
+    # validate 'port'
+    def validate_port(value):
+        if not isinstance(value, list):
+            raise SchemaError('Port is not a list')
+        port_schema = Schema({
+                        "cable-type": str,
+                        "fiber-mode": str,
+                        "port-number": str,
+                        "sfp-vendor-fw-ver": str,
+                        "sfp-vendor-name": str,
+                        "sfp-vendor-pno": str,
+                        "wavelength": str,
+                    })
+        for item in value:
+            port_schema.validate(item)
+        return value
+
+    # main schema
+    schema = {
+        "fpc-information": {
+            "fpc": {
+                "pic-detail": {
+                    "pic-slot": str,
+                    "pic-type": str,
+                    "pic-version": str,
+                    "port-information": {
+                        "port": Use(validate_port),
+                    },
+                    "slot": str,
+                    "state": str,
+                    "up-time": {
+                        "#text": str,
+                        "@junos:seconds": str,
+                    }
+                }
+            }
+        }
+    }
+
+
+# Parser for show chassis pic fpc-slot {fpc-slot} pic-slot {pic-slot}        
+class ShowChassisPicFpcSlotPicSlot(ShowChassisPicFpcSlotPicSlotSchema):
+    """
+    Parser for 
+        * show chassis pic fpc-slot {fpc-slot} pic-slot {pic-slot}        
+    """
+
+    cli_command = "show chassis pic fpc-slot {fpc_slot} pic-slot {pic_slot}"
+
+    def cli(self, fpc_slot=None, pic_slot=None, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                fpc_slot=fpc_slot,
+                pic_slot=pic_slot
+            ))
+        else:
+            out = output
+
+        # Regular Expressions
+
+        # FPC slot 0, PIC slot 0 information:
+        p1 = re.compile(r'^FPC +slot +(?P<slot>\d+), +PIC +slot +(?P<pic_slot>\d+) +information:$')
+
+        # Type                             2X100GE CFP2 OTN
+        p2 = re.compile(r'^Type +(?P<pic_type>[\s\S]+)$')
+
+        # State                            Online
+        p3 = re.compile(r'^State +(?P<state>\S+)$')
+        
+        # PIC version                 1.19
+        p4 = re.compile(r'^PIC version +(?P<pic_version>\S+)$')
+
+        # Uptime			 2 hours, 36 minutes, 32 seconds
+        p5 = re.compile(r'^Uptime\s+(?P<up_time>(?P<hours>\d+) +hours, '
+                        r'+(?P<minutes>\d+) +minutes, '
+                        r'+(?P<seconds>\d+) +seconds)$')
+
+        # PIC port information:
+        p6 = re.compile(r'PIC port information:')
+
+        #                        Fiber                    Xcvr vendor       Wave-    Xcvr
+        # Port Cable type        type  Xcvr vendor        part number       length   Firmware
+        # 0    100GBASE LR4      SM    FINISAR CORP.      FTLC1121RDNL-J3   1310 nm  1.5
+        p7 = re.compile(r'(?P<port_number>\d+) +(?P<cable_type>[0-9A-Z\s]+) '
+                        r'+(?P<fiber_mode>[A-Z]{2}) +(?P<sfp_vendor_name>[A-Z\s.]+) '
+                        r'+(?P<sfp_vendor_pno>[A-Z0-9\-]+) +(?P<wavelength>\d+ nm) '
+                        r'+(?P<sfp_vendor_fw_ver>\S+)')
+
+        # Build output
+        res = {}
+
+        for line in out.splitlines():
+            line = line.strip()     
+
+            # FPC slot 0, PIC slot 0 information:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                res = {
+                    "fpc-information":{
+                        "fpc":{
+                            "pic-detail":{
+                                "pic-slot": group["pic_slot"],
+                                "slot": group["slot"],
+                            }
+                        }
+                    }
+                }
+                continue
+
+            # Type                             2X100GE CFP2 OTN
+            # State                            Online
+            # PIC version                 1.19
+            m = p2.match(line) or p3.match(line) or p4.match(line)
+            if m:
+                group = m.groupdict()
+
+                pic_detail_dict = res["fpc-information"]["fpc"]["pic-detail"]
+
+                for k, v in group.items():
+                    k = k.replace('_', '-')
+                    pic_detail_dict[k] = v.strip()
+                continue
+
+            # Uptime			 2 hours, 36 minutes, 32 seconds
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                up_time = group["up_time"]
+
+                total_seconds = int(group["hours"])*60*60+int(group["minutes"])*60+int(group["seconds"])
+
+                pic_detail_dict["up-time"] = {
+                    "#text": up_time,
+                    "@junos:seconds": str(total_seconds),
+                }
+                
+                continue
+
+            # PIC port information:
+            m = p6.match(line)
+            if m:
+                pic_detail_dict["port-information"] = {
+                    "port": []
+                }
+                port_list = pic_detail_dict["port-information"]["port"]
+                continue
+
+            #                         Fiber                    Xcvr vendor       Wave-    Xcvr
+            # Port Cable type        type  Xcvr vendor        part number       length   Firmware
+            # 0    100GBASE LR4      SM    FINISAR CORP.      FTLC1121RDNL-J3   1310 nm  1.5
+            m = p7.match(line)             
+            if m:
+                group = m.groupdict()
+                port_item = {}
+
+                for k, v in group.items():
+                    k = k.replace('_', '-')
+                    port_item[k] = v.strip()
+
+                port_list.append(port_item)
+                continue
+
+        return res
+
