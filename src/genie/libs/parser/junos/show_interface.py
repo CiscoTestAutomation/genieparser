@@ -9,6 +9,8 @@ JunOS parsers for the following show commands:
     * show interfaces descriptions {interface}
     * show interfaces queue {interface}
     * show interfaces policers {interface}
+    * show interfaces diagnostics optics {interface}
+    * show interfaces diagnostics optics
 """
 
 # python
@@ -3155,3 +3157,212 @@ class ShowInterfacesExtensiveInterface(ShowInterfaces):
             out = output
         
         return super().cli(output=out)
+
+
+class ShowInterfacesDiagnosticsOpticsSchema(MetaParser):
+    """Schema for
+        * show interfaces diagnostics optics {interface}
+        * show interfaces diagnostics optics
+    """
+
+    def validate_interface(value):
+        if not isinstance(value, list):
+            raise SchemaError('Interface not a list')
+
+        def validate_lanes(value):
+            if not isinstance(value, list):
+                raise SchemaError('Lanes are not a list')
+        
+            lanes = Schema({
+                "lane-number": str,
+                "laser-bias-current": str,
+                "laser-output-power": str,
+                "laser-temperature": str,
+                "laser-receiver-power": str,
+                "laser-bias-current-high-alarm": str,
+                "laser-bias-current-low-alarm": str,
+                "laser-bias-current-high-warning": str,
+                "laser-bias-current-low-warning": str,
+                "laser-output-power-high-alarm": str,
+                "laser-output-power-low-alarm": str,
+                "laser-output-power-high-warning": str,
+                "laser-output-power-low-warning": str,
+                "laser-temperature-high-alarm": str,
+                "laser-temperature-low-alarm": str,
+                "laser-temperature-high-warning": str,
+                "laser-temperature-low-warning": str,
+                "laser-receiver-power-high-alarm": str,
+                "laser-receiver-power-low-alarm": str,
+                "laser-receiver-power-high-warning": str,
+                "laser-receiver-power-low-warning": str,
+                "tx-loss-of-signal-functionality-alarm": str,
+                "tx-cdr-loss-of-lock-alarm": str,
+                "rx-loss-of-signal-alarm": str,
+                "rx-cdr-loss-of-lock-alarm": str,
+                "apd-supply-fault-alarm": str,
+                "tec-fault-alarm": str,
+                "wavelength-unlocked-alarm": str,
+            })
+        
+            for item in value:
+                lanes.validate(item)
+            return value
+    
+        interface = Schema({
+            'name': str,
+            'optics-diagnostics': {
+                Optional("laser-bias-current"): str,
+                Optional("laser-output-power"): str,
+                "module-temperature": str,
+                "module-voltage": str,
+                Optional("receiver-signal-average-optical-power"): str,
+                Optional("laser-bias-current-high-alarm"): str,
+                Optional("laser-bias-current-low-alarm"): str,
+                Optional("laser-bias-current-high-warning"): str,
+                Optional("laser-bias-current-low-warning"): str,
+                Optional("laser-output-power-high-alarm"): str,
+                Optional("laser-output-power-low-alarm"): str,
+                Optional("laser-output-power-high-warning"): str,
+                Optional("laser-output-power-low-warning"): str,
+                "module-temperature-high-alarm": str,
+                "module-temperature-low-alarm": str,
+                "module-temperature-high-warning": str,
+                "module-temperature-low-warning": str,
+                "module-voltage-high-alarm": str,
+                "module-voltage-low-alarm": str,
+                "module-voltage-high-warning": str,
+                "module-voltage-low-warning": str,
+                Optional("laser-rx-power-high-alarm"): str,
+                Optional("laser-rx-power-low-alarm"): str,
+                Optional("laser-rx-power-high-warning"): str,
+                Optional("laser-rx-power-low-warning"): str,
+                "laser-bias-current-high-alarm-threshold": str,
+                "laser-bias-current-low-alarm-threshold": str,
+                "laser-bias-current-high-warning-threshold": str,
+                "laser-bias-current-low-warning-threshold": str,
+                "laser-output-power-high-alarm-threshold": str,
+                "laser-output-power-low-alarm-threshold": str,
+                "laser-output-power-high-warning-threshold": str,
+                "laser-output-power-low-warning-threshold": str,
+                "module-temperature-high-alarm-threshold": str,
+                "module-temperature-low-alarm-threshold": str,
+                "module-temperature-high-warning-threshold": str,
+                "module-temperature-low-warning-threshold": str,
+                "module-voltage-high-alarm-threshold": str,
+                "module-voltage-low-alarm-threshold": str,
+                "module-voltage-high-warning-threshold": str,
+                "module-voltage-low-warning-threshold": str,
+                "laser-rx-power-high-alarm-threshold": str,
+                "laser-rx-power-low-alarm-threshold": str,
+                Optional("laser-rx-power-high-warning-threshold"): str,
+                Optional("laser-rx-power-low-warning-threshold"): str,
+                Optional("module-not-ready-alarm"): str,
+                Optional("module-low-power-alarm"): str,
+                Optional("module-initialization-incomplete-alarm"): str,
+                Optional("module-fault-alarm"): str,
+                Optional("pld-flash-initialization-fault-alarm"): str,
+                Optional("power-supply-fault-alarm"): str,
+                Optional("checksum-fault-alarm"): str,
+                Optional("tx-laser-disabled-alarm"): str,
+                Optional("tx-loss-of-signal-functionality-alarm"): str,
+                Optional("tx-cdr-loss-of-lock-alarm"): str,
+                Optional("rx-loss-of-signal-alarm"): str,
+                Optional("rx-cdr-loss-of-lock-alarm"): str,
+                Optional("laser-temperature-high-alarm-threshold"): str,
+                Optional("laser-temperature-low-alarm-threshold"): str,
+                Optional("laser-temperature-high-warning-threshold"): str,
+                Optional("laser-temperature-low-warning-threshold"): str,
+                Optional("lanes"): Use(validate_lanes)
+            }
+        })
+    
+        for item in value:
+            interface.validate(item)
+        return value
+
+    schema = {
+        'interface-information': {
+            'physical-interface': Use(validate_interface)
+        }
+    }
+
+class ShowInterfacesDiagnosticsOptics(ShowInterfacesDiagnosticsOpticsSchema):
+    """Parser for
+        * show interfaces diagnostics optics {interface}
+        * show interfaces diagnostics optics
+    """
+
+    cli_command = [
+        "show interfaces diagnostics optics {interface}",
+        "show interfaces diagnostics optics"
+        ]
+
+    def cli(self, interface=None, output=None):
+        if not output:
+            if interface:
+                out = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[1]) 
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Physical interface: et-0/0/0
+        p1 = re.compile(r'^Physical +interface: +(?P<name>\S+)$')
+
+        # Module temperature                        :  48 degrees C / 119 degrees F
+        # Module voltage                            :  3.3340 V
+        # Module temperature high alarm             :  Off
+        p2 = re.compile(r'^(?P<key>[\S ]+) +: +(?P<value>[\S ]+)$')
+
+        # Lane 0
+        p3 = re.compile(r'^Lane +(?P<lane>\d+)$')
+
+        lane = None
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Physical interface: et-0/0/0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_list = ret_dict.setdefault(
+                    'interface-information',{}).setdefault(
+                        'physical-interface', [])
+                physical_interface_dict = {
+                    'name': group['name']
+                }
+                physical_interface_list.append(physical_interface_dict)
+                continue
+
+            # Module temperature                        :  48 degrees C / 119 degrees F
+            # Module voltage                            :  3.3340 V
+            # Module temperature high alarm             :  Off
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict = physical_interface_dict.setdefault('optics-diagnostics', {})
+                if not isinstance(lane, dict):
+                    optics_dict.update({
+                        group['key'].strip().lower().replace(' ', '-'): group['value']
+                    })
+                else:
+                    lane.update({
+                        group['key'].strip().lower().replace(' ', '-'): group['value']
+                    })
+                continue
+
+            # Lane 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict = physical_interface_dict.setdefault('optics-diagnostics', {})
+                lane_list = optics_dict.setdefault('lanes', [])
+                lane = {
+                    "lane-number": group['lane']
+                }
+                lane_list.append(lane)
+                continue
+                
+        return ret_dict
