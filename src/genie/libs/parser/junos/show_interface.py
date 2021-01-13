@@ -362,6 +362,12 @@ class ShowInterfacesSchema(MetaParser):
     #                         }
     #                     ]
     #                 },
+    #                 "queue-num-forwarding-class-name-map": [
+    #                     {
+    #                         "forwarding-class-name": str,
+    #                         "queue-number": str
+    #                     }
+    #                 ]
     #                 "interface-flapped": {
     #                     "#text": str,
     #                     Optional("@junos:seconds"): str
@@ -383,10 +389,14 @@ class ShowInterfacesSchema(MetaParser):
     #                                 "internal-flags": str
     #                             },
     #                             "address-family-name": str,
+    #                             "filter-information": str,
+    #                             "generation": str,
     #                             "interface-address": {
+    #                                 "generation": str,
     #                                 "ifa-broadcast": str,
     #                                 "ifa-destination": str,
     #                                 "ifa-flags": {
+    #                                     "ifaf-current-default": str,
     #                                     "ifaf-current-preferred": str,
     #                                     "ifaf-current-primary": str
     #                                 },
@@ -398,7 +408,9 @@ class ShowInterfacesSchema(MetaParser):
     #                             "max-local-cache": str,
     #                             "maximum-labels": str,
     #                             "mtu": str,
-    #                             "new-hold-limit": str
+    #                             "new-hold-limit": str,
+    #                             "policer-information": str,
+    #                             "route-table": str,
     #                         }
     #                     ],
     #                     "encapsulation": str,
@@ -407,6 +419,82 @@ class ShowInterfacesSchema(MetaParser):
     #                         "iff-snmp-traps": str,
     #                         "iff-up": str,
     #                         "internal-flags": str
+    #                     },
+    #                     "lag-traffic-statistics": {
+    #                         "aggregate-member-info": {
+    #                             "aggregate-member-count": str
+    #                         },
+    #                         "if-distribution-list-information": [
+    #                             {
+    #                                 "if-list": [
+    #                                     {
+    #                                         "if-child-name": str,
+    #                                         "if-status": str
+    #                                     }
+    #                                 ],
+    #                                 "list-status": str,
+    #                                 "list-type": str
+    #                             }
+    #                         ],
+    #                         "lag-adaptive-statistics": {
+    #                             "adaptive-adjusts": str,
+    #                             "adaptive-scans": str,
+    #                             "adaptive-updates": str
+    #                         },
+    #                         "lag-bundle": {
+    #                             "input-bps": str,
+    #                             "input-bytes": str,
+    #                             "input-packets": str,
+    #                             "input-pps": str,
+    #                             "output-bps": str,
+    #                             "output-bytes": str,
+    #                             "output-packets": str,
+    #                             "output-pps": str
+    #                         },
+    #                         "lag-lacp-info": [
+    #                             {
+    #                                 "lacp-port-key": str,
+    #                                 "lacp-port-number": str,
+    #                                 "lacp-port-priority": str,
+    #                                 "lacp-role": str,
+    #                                 "lacp-sys-priority": str,
+    #                                 "lacp-system-id": str,
+    #                                 "name": str
+    #                             }
+    #                         ],
+    #                         "lag-lacp-statistics": [
+    #                             {
+    #                                 "illegal-rx-packets": str,
+    #                                 "lacp-rx-packets": str,
+    #                                 "lacp-tx-packets": str,
+    #                                 "name": str,
+    #                                 "unknown-rx-packets": str
+    #                             }
+    #                         ],
+    #                         "lag-link": [
+    #                             {
+    #                                 "input-bps": str,
+    #                                 "input-bytes": str,
+    #                                 "input-packets": str,
+    #                                 "input-pps": str,
+    #                                 "name": str,
+    #                                 "output-bps": str,
+    #                                 "output-bytes": str,
+    #                                 "output-packets": str,
+    #                                 "output-pps": str
+    #                             }
+    #                         ],
+    #                         "lag-marker": [
+    #                             {
+    #                                 "illegal-rx-packets": str,
+    #                                 "lacp-rx-packets": str,
+    #                                 "lacp-tx-packets": str,
+    #                                 "marker-response-tx-packets": str,
+    #                                 "marker-rx-packets": str,
+    #                                 "name": str,
+    #                                 "unknown-rx-packets": str
+    #                             }
+    #                         ]
     #                     },
     #                     "local-index": str,
     #                     "logical-interface-bandwidth": str,
@@ -420,6 +508,8 @@ class ShowInterfacesSchema(MetaParser):
     #                     }
     #                 },
     #                 "loopback": str,
+    #                 "minimum-bandwidth-in-aggregate": str,
+    #                 "minimum-links-in-aggregate": str,
     #                 "mru": str,
     #                 "mtu": str,
     #                 "name": str,
@@ -434,11 +524,22 @@ class ShowInterfacesSchema(MetaParser):
     #                 "source-filtering": str,
     #                 "speed": str,
     #                 "traffic-statistics": {
-    #                     Optional("@junos:style"): str,
     #                     "input-bps": str,
+    #                     "input-bytes": str,
     #                     "input-packets": str,
     #                     "input-pps": str,
+    #                     "ipv6-transit-statistics": {
+    #                         "input-bps": str,
+    #                         "input-bytes": str,
+    #                         "input-packets": str,
+    #                         "input-pps": str,
+    #                         "output-bps": str,
+    #                         "output-bytes": str,
+    #                         "output-packets": str,
+    #                         "output-pps": str
+    #                     },
     #                     "output-bps": str,
+    #                     "output-bytes": str,
     #                     "output-packets": str,
     #                     "output-pps": str
     #                 }
@@ -452,7 +553,7 @@ class ShowInterfacesSchema(MetaParser):
         if not isinstance(value, list):
             raise SchemaError('physical interface is not a list')
         def verify_logical_interface_list(value):
-            # Pass address-family list of dict in value
+            # Pass logical-interface list of dict in value
             if not isinstance(value, list):
                 raise SchemaError('logical-interface is not a list')
 
@@ -462,7 +563,7 @@ class ShowInterfacesSchema(MetaParser):
                     raise SchemaError('address-family is not a list')
 
                 def verify_interface_address_list(value):
-                    # Pass physical-interface list of dict in value
+                    # Pass interface-address list of dict in value
                     if not isinstance(value, list) and not isinstance(value, dict):
                         raise SchemaError('interface-address is not a list/dict')
 
@@ -471,6 +572,7 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifa-destination"): str,
                         Optional("generation"): str,
                         "ifa-flags": {
+                            Optional("ifaf-current-default"): bool,
                             Optional("ifaf-current-preferred"): bool,
                             Optional("ifaf-current-primary"): bool,
                             Optional("ifaf-is-primary"): bool,
@@ -505,6 +607,8 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifff-encapsulation"): str,
                     },
                     Optional("address-family-name"): str,
+                    Optional("filter-information"): str,
+                    Optional("generation"): str,
                     Optional("interface-address"): Use(verify_interface_address_list),
                     Optional("intf-curr-cnt"): str,
                     Optional("intf-dropcnt"): str,
@@ -525,6 +629,145 @@ class ShowInterfacesSchema(MetaParser):
                     af_schema.validate(item)
                 return value
 
+            def verify_if_distribution_list_information_list(value):
+                # Pass if_distribution_list_information list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('if-distribution-list-information is not a list/dict')
+
+                def verify_if_list_list(value):
+                    # Pass if-list list of dict in value
+                    if not isinstance(value, list) and not isinstance(value, dict):
+                        raise SchemaError('if-list is not a list/dict')
+                    
+                    if_list_list_schema = Schema({
+                        Optional("if-child-name"): str,
+                        Optional("if-status"): str,
+                    })
+                    # Validate each dictionary in list
+                    if isinstance(value, dict):
+                        value = [value]
+                    for item in value:
+                        if_list_list_schema.validate(item)
+                    return value
+
+                if_distribution_list_information_list_schema = Schema({
+                    Optional("if-list"): Use(verify_if_list_list),
+                    Optional("list-status"): str,
+                    Optional("list-type"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    if_distribution_list_information_list_schema.validate(item)
+                return value
+
+            def verify_lag_bundle_list(value):
+                # Pass lag_bundle list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('lag_bundle is not a list/dict')
+
+                lag_bundle_list_schema = Schema({
+                    Optional("input-bps"): str,
+                    Optional("input-bytes"): str,
+                    Optional("input-packets"): str,
+                    Optional("input-pps"): str,
+                    Optional("output-bps"): str,
+                    Optional("output-bytes"): str,
+                    Optional("output-packets"): str,
+                    Optional("output-pps"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    lag_bundle_list_schema.validate(item)
+                return value
+
+            def verify_lag_lacp_info_list(value):
+                # Pass lag_lacp_info list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('lag_lacp_info is not a list/dict')
+
+                lag_lacp_info_list_schema = Schema({
+                    Optional("lacp-port-key"): str,
+                    Optional("lacp-port-number"): str,
+                    Optional("lacp-port-priority"): str,
+                    Optional("lacp-role"): str,
+                    Optional("lacp-sys-priority"): str,
+                    Optional("lacp-system-id"): str,
+                    Optional("name"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    lag_lacp_info_list_schema.validate(item)
+                return value
+
+            def verify_lag_lacp_statistics_list(value):
+                # Pass lag_lacp_statistics list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('lag_lacp_statistics is not a list/dict')
+
+                lag_lacp_statistics_list_schema = Schema({
+                    Optional("illegal-rx-packets"): str,
+                    Optional("lacp-rx-packets"): str,
+                    Optional("lacp-tx-packets"): str,
+                    Optional("name"): str,
+                    Optional("unknown-rx-packets"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    lag_lacp_statistics_list_schema.validate(item)
+                return value
+
+            def verify_lag_link_list(value):
+                # Pass lag_link list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('lag_link is not a list/dict')
+
+                lag_link_list_schema = Schema({
+                    Optional("input-bps"): str,
+                    Optional("input-bytes"): str,
+                    Optional("input-packets"): str,
+                    Optional("input-pps"): str,
+                    Optional("name"): str,
+                    Optional("output-bps"): str,
+                    Optional("output-bytes"): str,
+                    Optional("output-packets"): str,
+                    Optional("output-pps"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    lag_link_list_schema.validate(item)
+                return value
+
+            def verify_lag_marker_list(value):
+                # Pass lag_marker list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('lag_marker is not a list/dict')
+
+                lag_marker_schema = Schema({
+                    Optional("illegal-rx-packets"): str,
+                    Optional("lacp-rx-packets"): str,
+                    Optional("lacp-tx-packets"): str,
+                    Optional("marker-response-tx-packets"): str,
+                    Optional("marker-rx-packets"): str,
+                    Optional("name"): str,
+                    Optional("unknown-rx-packets"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    lag_marker_list_schema.validate(item)
+                return value
+
             l_i_schema = Schema({
                 Optional("address-family"): Use(verify_address_family_list),
                 Optional("encapsulation"): str,
@@ -533,6 +776,22 @@ class ShowInterfacesSchema(MetaParser):
                     "iff-snmp-traps": bool,
                     "iff-up": bool,
                     Optional("internal-flags"): str
+                },
+                Optional("lag-traffic-statistics"): {
+                    "aggregate-member-info": {
+                        "aggregate-member-count": str
+                    },
+                    "if-distribution-list-information": Use(verify_if_distribution_list_information_list),
+                    "lag-adaptive-statistics": {
+                        "adaptive-adjusts": str,
+                        "adaptive-scans": str,
+                        "adaptive-updates": str
+                    },
+                    "lag-bundle": Use(verify_lag_bundle_list),
+                    "lag-lacp-info": Use(verify_lag_lacp_info_list),
+                    "lag-lacp-statistics": Use(verify_lag_lacp_statistics_list),
+                    "lag-link": Use(verify_lag_link_list),
+                    "lag-marker": Use(verify_lag_marker_list),
                 },
                 "local-index": str,
                 Optional("logical-interface-bandwidth"): str,
@@ -615,6 +874,20 @@ class ShowInterfacesSchema(MetaParser):
             # Validate each dictionary in list
             for item in value:
                 queue_schema.validate(item)
+            return value
+
+        def verify_queue_num_forwarding_class_name_map_list(value):
+            # Pass address-family list of dict in value
+            if not isinstance(value, list):
+                raise SchemaError('queue_num_forwarding_class_map is not a list')
+            
+            queue_num_forwarding_class_map_schema = Schema({
+                "forwarding-class-name": str,
+                "queue-number": str,
+            })
+            # validate each dictionary in list
+            for item in value:
+                queue_num_forwarding_class_map_schema.validate(item)
             return value
 
         # Create physical-interface Schema
@@ -854,6 +1127,7 @@ class ShowInterfacesSchema(MetaParser):
                 },
                 "queue": Use(verify_queue_list)
             },
+            Optional("queue-num-forwarding-class-name-map"): Use(verify_queue_num_forwarding_class_name_map_list)
         })
         # Validate each dictionary in list
         for item in value:
@@ -2301,11 +2575,31 @@ class ShowInterfacesStatisticsSchema(MetaParser):
                 Optional("hardware-physical-address"): str,
                 Optional("interface-flapped"): str,
                 Optional("statistics-cleared"): str,
+                Optional("stp-traffic-statistics"): {
+                    "stp-input-bytes-dropped": str,
+                    "stp-input-packets-dropped": str,
+                    "stp-output-bytes-dropped": str,
+                    "stp-output-packets-dropped": str
+                },
                 Optional("traffic-statistics"): {
                     "input-bps": str,
+                    "input-bytes": str,
+                    "input-packets": str,
                     "input-pps": str,
+                    Optional("ipv6-transit-statistics"): {
+                        "input-pps": str,
+                        "input-bytes": str,
+                        "input-packets": str,
+                        "input-pps": str,
+                        "output-bps": str,
+                        "output-bytes": str,
+                        "output-packets": str,
+                        "output-pps": str
+                    },
                     "output-bps": str,
-                    "output-pps": str,
+                    "output-bytes": str,
+                    "output-packets": str,
+                    "output-pps": str
                 },
                 Optional("input-error-count"): str,
                 Optional("output-error-count"): str,
