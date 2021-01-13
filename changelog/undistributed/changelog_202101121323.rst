@@ -1,0 +1,16 @@
+--------------------------------------------------------------------------------
+                                New
+--------------------------------------------------------------------------------
+* Junos
+    * Added ShowServicesAccountingAggregationTemplate:
+        * show services accounting aggregation template template-name {name} extensive
+    * Added ShowServicesAccountingUsage:
+        * show services accounting usage
+    * Added ShowServicesAccountingErrors:
+        * show services accounting errors
+    * Added ShowServicesAccountingFlow:
+        * show services accounting flow
+    * Added ShowServicesAccountingMemory:
+        * show services accounting memory
+    * Added ShowServicesAccountingStatus:
+        * show services accounting status
