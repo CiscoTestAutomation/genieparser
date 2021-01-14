@@ -1,0 +1,40 @@
+Physical interface: et-0/0/0, Enabled, Physical link is Up
+  Interface index: 167, SNMP ifIndex: 552, Generation: 170
+  Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 100Gbps, BPDU Error: None, Loopback: Disabled,
+  Source filtering: Disabled, Flow control: Enabled
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 0 ms, Down 0 ms
+  Current address: 0c:86:10:22:41:00, Hardware address: 0c:86:10:22:41:00
+  Last flapped   : 2021-01-12 13:06:13 JST (02:36:21 ago)
+  Statistics last cleared: 2021-01-12 15:17:22 JST (00:25:12 ago)
+  Traffic statistics:
+   Input  bytes  :              1229986                    0 bps
+   Output bytes  :              1647636                    0 bps
+   Input  packets:                17084                    0 pps
+   Output packets:                17163                    0 pps
+   IPv6 transit statistics:
+    Input  bytes  :                   0
+    Output bytes  :                   0
+    Input  packets:                   0
+    Output packets:                   0
+  Egress queues: 8 supported, 4 in use
+  Queue counters:       Queued packets  Transmitted packets      Dropped packets
+    0                                4                    4                    0
+    1                                0                    0                    0
+    2                                0                    0                    0
+    3                            17184                17184                    0
+  Queue number:         Mapped forwarding classes
+    0                   best-effort
+    1                   expedited-forwarding
+    2                   assured-forwarding
+    3                   network-control
+  Active alarms  : None
+  Active defects : None
+  PCS statistics                      Seconds
+    Bit errors                             0
+    Errored blocks                         0
+  Interface transmit statistics: Disabled
