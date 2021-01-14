@@ -5,6 +5,7 @@ JunOS parsers for the following show commands:
     * show interfaces terse | match <interface>
     * show interfaces terse {interface}
     * show interfaces {interface} terse
+    * show interfaces {interface} detail
     * show interfaces descriptions
     * show interfaces descriptions {interface}
     * show interfaces queue {interface}
@@ -3667,6 +3668,19 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
 
 class ShowInterfacesExtensiveInterface(ShowInterfaces):
     cli_command = 'show interfaces extensive {interface}'
+    def cli(self, interface, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface
+            ))
+        else:
+            out = output
+        
+        return super().cli(output=out)
+
+class ShowInterfacesInterfaceDetail(ShowInterfaces):
+    cli_command = 'show interfaces {interface} detail'
     def cli(self, interface, output=None):
 
         if not output:
