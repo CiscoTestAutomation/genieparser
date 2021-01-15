@@ -484,9 +484,8 @@ class ShowInterface(ShowInterfaceSchema):
                     interface_dict[interface]['port_channel']['port_channel_member'] = False
 
                 if group['link_state']:
-                    link_state = group['link_state']
-                    interface_dict[interface]['link_state'] = link_state
-                    interface_dict[interface]['enabled'] = True if link_state == 'up' else False
+                    interface_dict[interface]['link_state'] = group['link_state']
+
 
                     if 'oper_status' not in interface_dict[interface]:
                         interface_dict[interface]['oper_status'] = group['link_state']
@@ -495,6 +494,8 @@ class ShowInterface(ShowInterfaceSchema):
                     interface_dict[interface]['enabled'] = False
                 elif group['admin_2']:
                     interface_dict[interface]['enabled'] = False
+                else:
+                    interface_dict[interface]['enabled'] = True
 
                 if group['line_protocol']:
                     interface_dict[interface]['line_protocol'] = group['line_protocol']

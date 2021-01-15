@@ -357,7 +357,7 @@ class TestShowInterface(unittest.TestCase):
             'dedicated_interface': True,
             'description': 'Connection to pe1',
             'duplex_mode': 'auto',
-            'enabled': False,
+            'enabled': True,
             'encapsulations': {'encapsulation': 'arpa'},
             'ethertype': '0x8100',
             'flow_control': {'receive': False, 'send': False},
@@ -579,7 +579,7 @@ class TestShowInterface(unittest.TestCase):
             "txload": "1/255",
             "oper_status": "down",
             'port_channel': {'port_channel_member': False},
-            "enabled": False,
+            "enabled": True,
             "mtu": 1500,
             "encapsulations": {
                  "encapsulation": "arpa"
@@ -1306,7 +1306,7 @@ class TestShowInterface(unittest.TestCase):
             'dedicated_interface': True,
             'delay': 10,
             'duplex_mode': 'auto',
-            'enabled': False,
+            'enabled': True,
             'encapsulations': {
                 'encapsulation': 'arpa',
             },
