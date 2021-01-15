@@ -5,10 +5,13 @@ JunOS parsers for the following show commands:
     * show interfaces terse | match <interface>
     * show interfaces terse {interface}
     * show interfaces {interface} terse
+    * show interfaces {interface} detail
     * show interfaces descriptions
     * show interfaces descriptions {interface}
     * show interfaces queue {interface}
     * show interfaces policers {interface}
+    * show interfaces {interface} extensive
+    * show interfaces extensive
     * show interfaces extensive {interface}
 """
 
@@ -939,7 +942,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional("iff-hardware-down"): bool,
             },
             Optional("if-auto-negotiation"): str,
-            "if-device-flags": {
+            Optional("if-device-flags"): {
                 "ifdf-present": bool,
                 "ifdf-running": bool,
                 Optional("ifdf-loopback"): bool,
@@ -3667,6 +3670,19 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
 
 class ShowInterfacesExtensiveInterface(ShowInterfaces):
     cli_command = 'show interfaces extensive {interface}'
+    def cli(self, interface, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface
+            ))
+        else:
+            out = output
+        
+        return super().cli(output=out)
+
+class ShowInterfacesInterfaceDetail(ShowInterfaces):
+    cli_command = 'show interfaces {interface} detail'
     def cli(self, interface, output=None):
 
         if not output:
