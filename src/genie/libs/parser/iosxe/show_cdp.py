@@ -87,10 +87,12 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         #                     Eth1/37/2      161    R S s     N9K-C93240YC- Eth1/6 
         # ott-bgp-laas(JAF1429BAKA)
         #                     Eth1/39/1      159    R S I s
+        # ENT-DNAC-EG00-ESX03
+        #                     Ten 1/1/2      154         S    VMware ES vmnic2
         p4 = re.compile(r'^(?P<device_id>\S+)$')
         p5 = re.compile(r'(?P<local_interface>[a-zA-Z]+[\s]*[\d/.]+) +'
                         r'(?P<hold_time>\d+) +(?P<capability>[RTBSsHIrPDCM\s]+)( +'
-                        r'(?P<platform>\S+))?( (?P<port_id>[\.a-zA-Z0-9/\s]+))?$')
+                        r'(?P<platform>VMware ES|\S+))?( (?P<port_id>[\.a-zA-Z0-9/\s]+))?$')
 
         device_id_index = 0
         parsed_dict = {}
