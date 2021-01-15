@@ -191,10 +191,10 @@ class ShowDDosProtectionProtocolSchema(MetaParser):
             },
             "flows-cumulative": str,
             "flows-current": str,
-            "mod-packet-types": str,
-            "packet-types-in-violation": str,
-            "packet-types-rcvd-packets": str,
-            "total-packet-types": str
+            Optional("mod-packet-types"): str,
+            Optional("packet-types-in-violation"): str,
+            Optional("packet-types-rcvd-packets"): str,
+            Optional("total-packet-types"): str
         }
     }
 
@@ -289,6 +289,7 @@ class ShowDDosProtectionProtocol(ShowDDosProtectionProtocolSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                ddos_protocols_information_dict = ret_dict.setdefault('ddos-protocols-information', {})
                 ddos_protocols_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
             
