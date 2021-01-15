@@ -2943,7 +2943,7 @@ class ShowChassisFabricSummarySchema(MetaParser):
         chassis_routing_schema = Schema({
                 "plane-slot": str,
                 "state": str,
-                "up-time": str
+                Optional("up-time"): str
             })
         # Validate each dictionary in list
         for item in value:
@@ -2970,7 +2970,8 @@ class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
             out = output
 
         # 0      Online   34 days, 18 hours, 43 minutes, 48 seconds
-        p1 = re.compile(r'^(?P<plane_slot>\d+) +(?P<state>\S+) +(?P<up_time>[\S\s]+)$')
+        # 0      Online   
+        p1 = re.compile(r'^(?P<plane_slot>\d+) +(?P<state>\S+)( +(?P<up_time>[\S\s]+))?$')
 
 
         ret_dict = {}
@@ -2987,8 +2988,9 @@ class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
 
                 fm_state_dict = {}
                 for key, value in m.groupdict().items():
-                    key = key.replace('_', '-')
-                    fm_state_dict[key] = value
+                    if value != None:
+                        key = key.replace('_', '-')
+                        fm_state_dict[key] = value
 
                 fm_state_information.append(fm_state_dict)
                 continue
