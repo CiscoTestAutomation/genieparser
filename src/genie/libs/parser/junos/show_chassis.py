@@ -2970,6 +2970,7 @@ class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
             out = output
 
         # 0      Online   34 days, 18 hours, 43 minutes, 48 seconds
+        # 0      Online   
         p1 = re.compile(r'^(?P<plane_slot>\d+) +(?P<state>\S+)( +(?P<up_time>[\S\s]+))?$')
 
 
