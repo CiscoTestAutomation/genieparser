@@ -4627,6 +4627,8 @@ class ShowOspfRoutePrefix(ShowOspfRoutePrefixSchema):
                         r'+(?P<route_origin>[\d\.]+), +priority +'
                         r'(?P<route_priority>\w+)$')
 
+        ospf_topology_name = ''
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -4634,14 +4636,18 @@ class ShowOspfRoutePrefix(ShowOspfRoutePrefixSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ospf_topology_route_table = ret_dict.setdefault(
-                    'ospf-route-information', {}).setdefault('ospf-topology-route-table', {})
-
-                ospf_topology_route_table['ospf-topology-name'] = group['ospf_topology_name']
+                ospf_topology_name = group['ospf_topology_name']
 
             #10.1.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    10.70.0.4
             m = p2.match(line)
             if m:
+                if ospf_topology_name:
+
+                    ospf_topology_route_table = ret_dict.setdefault(
+                        'ospf-route-information', {}).setdefault('ospf-topology-route-table', {})
+                    ospf_topology_route_table['ospf-topology-name'] = ospf_topology_name
+                    ospf_topology_name = ''
+
                 group = m.groupdict()
 
                 ospf_route_entry_dict = {}
