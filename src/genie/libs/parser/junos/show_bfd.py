@@ -89,7 +89,7 @@ class ShowBFDSessionDetailSchema(MetaParser):
     schema = {
         "bfd-session-information": {
             Optional("bfd-session"): {
-                "bfd-client": {
+                Optional("bfd-client"): {
                     "client-name": str,
                     "client-reception-interval": str,
                     "client-transmission-interval": str
