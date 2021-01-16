@@ -1545,6 +1545,10 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Link:
         p81 = re.compile(r'^(?P<lag_int_type>(Bundle)|(Link)):$')
 
+        # xe-0/1/10.0
+        # xe-0/1/10
+        p81_1 = re.compile(r'^(?P<name>[a-z]{2}-\d+/\d+/\d+(\.\d+)?)$')
+
         # Input :           225          0         14514         1952
         # Output:            16          0          1188            0
         p82 = re.compile(r'^(?P<in_out>(Input\s*)|(Output)):\s+(?P<packets>\d+)\s+(?P<pps>\d+)\s+(?P<bytes>\d+)\s+(?P<bps>\d+)$')
@@ -2489,25 +2493,37 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Link:
             m = p81.match(line)
             if m:
+                in_out_dict = {}
                 group = m.groupdict()
                 lag_traffic_dict = logical_interface_dict.setdefault('lag-traffic-statistics', {})
                 lag_int_type = group['lag_int_type']
                 continue
+
+            # xe-0/1/10.0
+            # xe-0/1/10
+            p81_1 = re.compile(r'^(?P<name>[a-z]{2}-\d+/\d+/\d+(\.\d+)?)$')
+            m = p81_1.match(line)
+            if m and lag_int_type == 'Link':
+                in_out_dict = {}
+                group = m.groupdict()
+                lag_link_name = group['name']
 
             # Input :           225          0         14514         1952
             # Output:            16          0          1188            0
             m = p82.match(line)
             if m:
                 group = m.groupdict()
-                in_out_direction = group.pop('in_out')
-                in_out_dict = {"{iod}-{k}".format(iod=in_out_direction.rstrip().lower(), k=k):
-                    v for k, v in group.items() if v is not None}
+                in_out_direction = group.pop('in_out').rstrip().lower()
+                in_out_dict.update({"{iod}-{k}".format(iod=in_out_direction, k=k):
+                    v for k, v in group.items() if v is not None})
                 if 'Bundle' == lag_int_type:
                     lag_traffic_dict.setdefault('lag-bundle', {})
                     lag_traffic_dict['lag-bundle'].update(in_out_dict)
                 elif 'Link' == lag_int_type:
                     lag_traffic_dict.setdefault('lag-link', [])
-                    lag_traffic_dict['lag-link'].append(in_out_dict)
+                    if in_out_direction == 'output':
+                        in_out_dict.update({'name': lag_link_name})
+                        lag_traffic_dict['lag-link'].append(in_out_dict)
                 continue
 
             # Adaptive Adjusts:          0
