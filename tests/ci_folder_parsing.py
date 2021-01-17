@@ -465,7 +465,6 @@ CLASS_SKIP = {
         "ShowInterfacesExtensiveNoForwarding": True, # need to check
         "ShowInterfacesExtensiveInterface": True, # need to check
         "ShowOspf3NeighborInstance": True, # need to check
-        "ShowOspf3RoutePrefix": True, # need to check
     }
 }
 
