@@ -9,6 +9,14 @@ expected_output = {
                     "ospf-next-hop": [
                         {
                             "next-hop-address": {
+                                "interface-address": "10.0.1.2"
+                            },
+                            "next-hop-name": {
+                                "interface-name": "ge-0/0/0.11"
+                            }
+                        },
+                        {
+                            "next-hop-address": {
                                 "interface-address": "10.0.0.2"
                             },
                             "next-hop-name": {

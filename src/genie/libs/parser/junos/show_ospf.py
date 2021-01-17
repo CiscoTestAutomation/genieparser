@@ -4567,6 +4567,53 @@ class ShowOspfDatabaseOpaqueArea(ShowOspfDatabaseOpaqueAreaSchema):
 
 
 class ShowOspfRoutePrefixSchema(MetaParser):
+
+    # schema = {
+    #     "ospf-route-information": {
+    #         "ospf-topology-route-table": {
+    #             "ospf-route": {
+    #                 "ospf-route-entry": {
+    #                     "address-prefix": str,
+    #                     "interface-cost": str,
+    #                     "next-hop-type": str,
+    #                     "ospf-next-hop": [
+    #                         {
+    #                             "next-hop-address": {
+    #                                 "interface-address": str
+    #                             },
+    #                             "next-hop-name": {
+    #                                 "interface-name": str
+    #                             }
+    #                         }
+    #                     ],
+    #                     "route-path-type": str,
+    #                     "route-type": str
+    #                 }
+    #             },
+    #             "ospf-topology-name": str
+    #         }
+    #     }
+    # }
+
+    def validate_ospf_next_hop_list(value):
+        ''' Validates each entry in ospf-next-hop '''
+        if not isinstance(value, list):
+            raise SchemaError('ospf-next-hop is not a list')
+        
+        ospf_next_hop_schema = Schema({
+            "next-hop-address": {
+                "interface-address": str,
+            },
+            "next-hop-name": {
+                "interface-name": str,
+            }
+        })
+
+        for entry in value:
+            ospf_next_hop_schema.validate(entry)    
+        return value
+
+
     schema = {
         "ospf-route-information": {
             "ospf-topology-route-table": {
@@ -4575,14 +4622,7 @@ class ShowOspfRoutePrefixSchema(MetaParser):
                         "address-prefix": str,
                         "interface-cost": str,
                         "next-hop-type": str,
-                        "ospf-next-hop": {
-                            "next-hop-address": {
-                                "interface-address": str
-                            },
-                            "next-hop-name": {
-                                "interface-name": str
-                            }
-                        },
+                        "ospf-next-hop": Use(validate_ospf_next_hop_list),
                         "route-path-type": str,
                         "route-type": str
                     }
@@ -4621,6 +4661,9 @@ class ShowOspfRoutePrefix(ShowOspfRoutePrefixSchema):
                         r'+(?P<route_type>\S+) +(?P<next_hop_type>\S+) +'
                         r'(?P<interface_cost>\d+) +(?P<interface_name>\S+)'
                         r'( +(?P<interface_address>\S+))?$')
+
+        #                                                    ge-0/0/4.0    10.0.0.2
+        p2_1 = re.compile(r'^(?P<interface_name>[a-z]{2}-\d+/\d+/\d+(\.\d+))?\s+(?P<interface_address>\d+.\d+\.\d+\.\d+)$')
 
         #area 0.0.0.0, origin 10.64.4.4, priority medium
         p3 = re.compile(r'^area +(?P<ospf_area>[\d\.]+)+, +origin '
@@ -4669,10 +4712,24 @@ class ShowOspfRoutePrefix(ShowOspfRoutePrefixSchema):
                             entry_key = group_key.replace('_', '-')
                             ospf_route_entry_dict[entry_key] = group_value
 
-                ospf_route_entry_dict.update({'ospf-next-hop': ospf_next_hop_dict})
+                ospf_route_entry_dict.update({'ospf-next-hop': [ospf_next_hop_dict]})
                 ospf_parent_route_dict = {}
                 ospf_parent_route_dict['ospf-route-entry'] = ospf_route_entry_dict
                 ospf_topology_route_table['ospf-route'] = ospf_parent_route_dict
+                continue
+
+            #                                                    ge-0/0/4.0    10.0.0.2
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_next_hop_dict = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    if entry_key == 'interface-address':
+                        ospf_next_hop_dict.setdefault('next-hop-address', {}).setdefault(entry_key, group_value)
+                    if entry_key == 'interface-name':
+                        ospf_next_hop_dict.setdefault('next-hop-name', {}).setdefault(entry_key, group_value)
+                ospf_route_entry_dict['ospf-next-hop'].append(ospf_next_hop_dict)
                 continue
 
         return ret_dict
