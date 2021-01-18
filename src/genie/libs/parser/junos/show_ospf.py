@@ -448,7 +448,7 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
             if name:
                 out = self.device.execute(self.cli_command[1].format(name=name))
             else:
-                out = self.device.execute(self.cli_command)
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
