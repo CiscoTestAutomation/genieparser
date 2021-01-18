@@ -1,0 +1,9 @@
+
+        Get Snapshot:
+        |-ROOT
+        --Snapshot Name        : P1_4_golden
+        --Snapshot Id        : 8
+        --Snapshot Desciption  :
+        --Snapshot Created On  : 2/10/2016 11:10:47
+        --Snapshot State       : powered off
+    
