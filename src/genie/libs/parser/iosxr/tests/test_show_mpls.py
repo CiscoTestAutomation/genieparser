@@ -3367,14 +3367,6 @@ class TestShowMplsDiscovery(unittest.TestCase):
                                         Hold time: 15 sec (local:15 sec, peer:15 sec)
                                                     (expiring in 14.5 sec)
                                         Established: Dec 18 16:49:16.538 (3d01h ago)
-                                Targeted Hellos:
-                                    10.1.1.1 -> 10.3.3.3 (active), xmit/recv
-                                        Hello interval: 6 sec (due in 4.2 sec)
-                                        Quick-start: Enabled
-                                        LDP Id: 10.3.3.3:0
-                                            Hold time: 60 sec (local:60 sec, peer:60 sec)
-                                                        (expiring in 55.3 sec)
-                                            Established: Jan  1 13:11:39.034 (00:01:33 ago)
                                 '''
             },
             'parsed': {
@@ -3592,16 +3584,16 @@ class TestShowMplsDiscovery(unittest.TestCase):
                                             'xmit': True
                                         },
                                         'TenGigE0/0/0/5.2097': {
-                                            'hello_due_time_ms': 4200,
-                                            'hello_interval_ms': 6000,
+                                            'hello_due_time_ms': 2300,
+                                            'hello_interval_ms': 5000,
                                             'ldp_id': {
                                                 '81.52.26.121:0': {
-                                                    'established_date': 'Jan  1 13:11:39.034',
+                                                    'established_date': 'Dec 18 16:49:16.538',
                                                     'established_elapsed': '3d01h',
-                                                    'expiring_in': 55.3,
-                                                    'holdtime_sec': 60,
-                                                    'proposed_local': 60,
-                                                    'proposed_peer': 60,
+                                                    'expiring_in': 14.5,
+                                                    'holdtime_sec': 15,
+                                                    'proposed_local': 15,
+                                                    'proposed_peer': 15,
                                                     'source_ip_addr': '10.166.0.138',
                                                     'transport_ip_addr': '81.52.26.121'
                                                 }
@@ -3610,16 +3602,6 @@ class TestShowMplsDiscovery(unittest.TestCase):
                                             'recv': True,
                                             'source_ip_addr': '10.166.0.137',
                                             'transport_ip_addr': '81.52.31.247',
-                                            'xmit': True
-                                        }
-                                    }
-                                },
-                                'targeted_hellos': {
-                                    '10.1.1.1': {
-                                        '10.3.3.3': {
-                                            'active': True,
-                                            'ldp_id': '10.3.3.3:0',
-                                            'recv': True,
                                             'xmit': True
                                         }
                                     }
