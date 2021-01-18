@@ -2633,13 +2633,13 @@ class ShowChassisEnvironmentFpcSchema(MetaParser):
 
         environment_item_schema = Schema({
             "name": str,
-            "power-information": {
+            Optional("power-information"): {
                 "power-title": {
                     "power-type": str
                 },
                 "voltage": Use(validate_voltage_list),
             },
-            "slave-revision": str,
+            Optional("slave-revision"): str,
             "state": str,
             "temperature-reading": Use(valivalidate_temp_reading_list),
         })
@@ -2671,12 +2671,12 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
         p1 = re.compile(r'^(?P<name>.*) +status:$')
 
         # State                      Online
-        p2 = re.compile(r'^State +(?P<state>\S+)$')
+        p2 = re.compile(r'^State+\s+(?P<state>\S+)$')
 
         # Temperature Intake         27 degrees C / 80 degrees F
         # Temperature I3 0 Chip      38 degrees C / 100 degrees F 
         p_temp = re.compile(r'^(?P<temperature_name>[\s\S]+) '
-                            r'+(?P<text>(?P<celsius>\d+)\sdegrees\sC.*)')
+                            r'+(?P<text>(?P<celsius>\d+)\sdegrees\sC) +.*')
 
         # Power
         p_power = re.compile(r'^Power$')
@@ -2705,12 +2705,14 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
                             "environment-component-item": []
                         }
                     }
+                    
 
                 env_list = res["environment-component-information"]["environment-component-item"]
 
                 env_item = {
                     "name": m.groupdict()["name"]
                 }
+                env_list.append(env_item)
                 continue
 
             # State                      Online
@@ -2774,7 +2776,6 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
             m = p_slave_revision.match(line)
             if m:
                 env_item["slave-revision"] = m.groupdict()["slave_revision"].strip()
-                env_list.append(env_item)
                 continue
 
         return res
