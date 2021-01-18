@@ -1,6 +1,384 @@
 expected_output = {
-    'environment-component-information': {
-        'environment-component-item': [{'name': 'CB 0', 'state': 'Online Master', 'temperature-reading': [{'temperature-name': 'IntakeA-Zone0 Temperature ', 'temperature': {'#text': '39 degrees C / 102 degrees F'}}, {'temperature-name': 'IntakeB-Zone1 Temperature ', 'temperature': {'#text': '36 degrees C / 96 degrees F'}}, {'temperature-name': 'IntakeC-Zone0 Temperature ', 'temperature': {'#text': '51 degrees C / 123 degrees F'}}, {'temperature-name': 'ExhaustA-Zone0 Temperature', 'temperature': {'#text': '40 degrees C / 104 degrees F'}}, {'temperature-name': 'ExhaustB-Zone1 Temperature', 'temperature': {'#text': '35 degrees C / 95 degrees F'}}, {'temperature-name': 'TCBC-Zone0 Temperature    ', 'temperature': {'#text': '45 degrees C / 113 degrees F'}}], 'power-information': {'power-title': {'power-type': '1'}, 'voltage': [{'reference-voltage': '1.0 V', 'actual-voltage': '1005'}, {'reference-voltage': '1.2 V', 'actual-voltage': '1205'}, {'reference-voltage': '1.8 V', 'actual-voltage': '1778'}, {'reference-voltage': '2.5 V', 'actual-voltage': '2513'}, {'reference-voltage': '3.3 V', 'actual-voltage': '3293'}, {'reference-voltage': '5.0 V', 'actual-voltage': '5020'}, {'reference-voltage': '5.0 V RE', 'actual-voltage': '4969'}, {'reference-voltage': '12.0 V', 'actual-voltage': '12026'}, {'reference-voltage': '12.0 V RE', 'actual-voltage': '11930'}]}, 'bus-revision': '100', 'fpga-revision': '272'}, {'name': 'CB 1', 'state': 'Online Standby', 'temperature-reading': [{'temperature-name': 'IntakeA-Zone0 Temperature ', 'temperature': {'#text': '29 degrees C / 84 degrees F'}}, {'temperature-name': 'IntakeB-Zone1 Temperature ', 'temperature': {'#text': '32 degrees C / 89 degrees F'}}, {'temperature-name': 'IntakeC-Zone0 Temperature ', 'temperature': {'#text': '33 degrees C / 91 degrees F'}}, {'temperature-name': 'ExhaustA-Zone0 Temperature', 'temperature': {'#text': '32 degrees C / 89 degrees F'}}, {'temperature-name': 'ExhaustB-Zone1 Temperature', 'temperature': {'#text': '32 degrees C / 89 degrees F'}}, {'temperature-name': 'TCBC-Zone0 Temperature    ', 'temperature': {'#text': '39 degrees C / 102 degrees F'}}], 'power-information': {'power-title': {'power-type': '1'}, 'voltage': [{'reference-voltage': '1.0 V', 'actual-voltage': '1011'}, {'reference-voltage': '1.2 V', 'actual-voltage': '1208'}, {'reference-voltage': '1.8 V', 'actual-voltage': '1807'}, {'reference-voltage': '2.5 V', 'actual-voltage': '2552'}, {'reference-voltage': '3.3 V', 'actual-voltage': '3325'}, {'reference-voltage': '5.0 V', 'actual-voltage': '5059'}, {'reference-voltage': '5.0 V RE', 'actual-voltage': '5040'}, {'reference-voltage': '12.0 V', 'actual-voltage': '12065'}, {'reference-voltage': '12.0 V RE', 'actual-voltage': '11988'}]}, 'bus-revision': '100', 'fpga-revision': '0'}],
-    },
+    "environment-component-information": {
+        "environment-component-item": [
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "51.50",
+                        "str-dc-load": "23.30",
+                        "str-dc-power": "489.25",
+                        "str-dc-voltage": "9.50"
+                    },
+                    "dc-feed0-current": "11.20",
+                    "dc-feed0-power": "560.00",
+                    "dc-feed0-voltage": "50.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 0",
+                "power-information": {
+                    "psm-hours-used": "45557"
+                },
+                "state": "Online"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "51.50",
+                        "str-dc-load": "23.30",
+                        "str-dc-power": "489.25",
+                        "str-dc-voltage": "9.50"
+                    },
+                    "dc-feed0-current": "11.20",
+                    "dc-feed0-power": "560.00",
+                    "dc-feed0-voltage": "50.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 1",
+                "power-information": {
+                    "psm-hours-used": "45551"
+                },
+                "state": "Online"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "51.75",
+                        "str-dc-load": "24.03",
+                        "str-dc-power": "504.56",
+                        "str-dc-voltage": "9.75"
+                    },
+                    "dc-feed0-current": "11.20",
+                    "dc-feed0-power": "560.00",
+                    "dc-feed0-voltage": "50.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 2",
+                "power-information": {
+                    "psm-hours-used": "45695"
+                },
+                "state": "Online"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "51.75",
+                        "str-dc-load": "23.41",
+                        "str-dc-power": "491.62",
+                        "str-dc-voltage": "9.50"
+                    },
+                    "dc-feed0-current": "11.20",
+                    "dc-feed0-power": "560.00",
+                    "dc-feed0-voltage": "50.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 3",
+                "power-information": {
+                    "psm-hours-used": "45556"
+                },
+                "state": "Online"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "0.00",
+                        "str-dc-load": "0.00",
+                        "str-dc-power": "0.00",
+                        "str-dc-voltage": "0.00"
+                    },
+                    "dc-feed0-current": "0.00",
+                    "dc-feed0-power": "0.00",
+                    "dc-feed0-voltage": "0.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 4",
+                "power-information": {
+                    "psm-hours-used": "45535"
+                },
+                "state": "Present"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "0.00",
+                        "str-dc-load": "0.00",
+                        "str-dc-power": "0.00",
+                        "str-dc-voltage": "0.00"
+                    },
+                    "dc-feed0-current": "0.00",
+                    "dc-feed0-power": "0.00",
+                    "dc-feed0-voltage": "0.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 5",
+                "power-information": {
+                    "psm-hours-used": "45991"
+                },
+                "state": "Present"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "0.00",
+                        "str-dc-load": "0.00",
+                        "str-dc-power": "0.00",
+                        "str-dc-voltage": "0.00"
+                    },
+                    "dc-feed0-current": "0.00",
+                    "dc-feed0-power": "0.00",
+                    "dc-feed0-voltage": "0.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 6",
+                "power-information": {
+                    "psm-hours-used": "45581"
+                },
+                "state": "Present"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "0.00",
+                        "str-dc-load": "0.00",
+                        "str-dc-power": "0.00",
+                        "str-dc-voltage": "0.00"
+                    },
+                    "dc-feed0-current": "0.00",
+                    "dc-feed0-power": "0.00",
+                    "dc-feed0-voltage": "0.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 7",
+                "power-information": {
+                    "psm-hours-used": "45534"
+                },
+                "state": "Present"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "0.00",
+                        "str-dc-load": "0.00",
+                        "str-dc-power": "0.00",
+                        "str-dc-voltage": "0.00"
+                    },
+                    "dc-feed0-current": "0.00",
+                    "dc-feed0-power": "0.00",
+                    "dc-feed0-voltage": "0.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 8",
+                "power-information": {
+                    "psm-hours-used": "45535"
+                },
+                "state": "Present"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "51.50",
+                        "str-dc-load": "14.10",
+                        "str-dc-power": "296.12",
+                        "str-dc-voltage": "5.75"
+                    },
+                    "dc-feed0-current": "7.00",
+                    "dc-feed0-power": "352.80",
+                    "dc-feed0-voltage": "50.40",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 9",
+                "power-information": {
+                    "psm-hours-used": "45556"
+                },
+                "state": "Online"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "51.25",
+                        "str-dc-load": "14.64",
+                        "str-dc-power": "307.50",
+                        "str-dc-voltage": "6.00"
+                    },
+                    "dc-feed0-current": "7.00",
+                    "dc-feed0-power": "352.80",
+                    "dc-feed0-voltage": "50.40",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 10",
+                "power-information": {
+                    "psm-hours-used": "46204"
+                },
+                "state": "Online"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "51.50",
+                        "str-dc-load": "14.71",
+                        "str-dc-power": "309.00",
+                        "str-dc-voltage": "6.00"
+                    },
+                    "dc-feed0-current": "7.35",
+                    "dc-feed0-power": "370.44",
+                    "dc-feed0-voltage": "50.40",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 11",
+                "power-information": {
+                    "psm-hours-used": "45556"
+                },
+                "state": "Online"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "0.00",
+                        "str-dc-load": "0.00",
+                        "str-dc-power": "0.00",
+                        "str-dc-voltage": "0.00"
+                    },
+                    "dc-feed0-current": "0.00",
+                    "dc-feed0-power": "0.00",
+                    "dc-feed0-voltage": "0.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 12",
+                "power-information": {
+                    "psm-hours-used": "45775"
+                },
+                "state": "Present"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "0.00",
+                        "str-dc-load": "0.00",
+                        "str-dc-power": "0.00",
+                        "str-dc-voltage": "0.00"
+                    },
+                    "dc-feed0-current": "0.00",
+                    "dc-feed0-power": "0.00",
+                    "dc-feed0-voltage": "0.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 13",
+                "power-information": {
+                    "psm-hours-used": "45534"
+                },
+                "state": "Present"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "0.00",
+                        "str-dc-load": "0.00",
+                        "str-dc-power": "0.00",
+                        "str-dc-voltage": "0.00"
+                    },
+                    "dc-feed0-current": "0.00",
+                    "dc-feed0-power": "0.00",
+                    "dc-feed0-voltage": "0.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 14",
+                "power-information": {
+                    "psm-hours-used": "45559"
+                },
+                "state": "Present"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "0.00",
+                        "str-dc-load": "0.00",
+                        "str-dc-power": "0.00",
+                        "str-dc-voltage": "0.00"
+                    },
+                    "dc-feed0-current": "0.00",
+                    "dc-feed0-power": "0.00",
+                    "dc-feed0-voltage": "0.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 15",
+                "power-information": {
+                    "psm-hours-used": "30482"
+                },
+                "state": "Present"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "0.00",
+                        "str-dc-load": "0.00",
+                        "str-dc-power": "0.00",
+                        "str-dc-voltage": "0.00"
+                    },
+                    "dc-feed0-current": "0.00",
+                    "dc-feed0-power": "0.00",
+                    "dc-feed0-voltage": "0.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 16",
+                "power-information": {
+                    "psm-hours-used": "45535"
+                },
+                "state": "Present"
+            },
+            {
+                "dc-information": {
+                    "dc-detail": {
+                        "str-dc-current": "0.00",
+                        "str-dc-load": "0.00",
+                        "str-dc-power": "0.00",
+                        "str-dc-voltage": "0.00"
+                    },
+                    "dc-feed0-current": "0.00",
+                    "dc-feed0-power": "0.00",
+                    "dc-feed0-voltage": "0.00",
+                    "dc-feed1-current": "0.00",
+                    "dc-feed1-power": "0.00",
+                    "dc-feed1-voltage": "0.00"
+                },
+                "name": "PSM 17",
+                "power-information": {
+                    "psm-hours-used": "45607"
+                },
+                "state": "Present"
+            }
+        ]
+    }
 }
-				
