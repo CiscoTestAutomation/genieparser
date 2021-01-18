@@ -1,5 +1,6 @@
 --------------------------------------------------------------------------------
-                                NEW
+                                New
 --------------------------------------------------------------------------------
-* JUNOS
-    * Added ShowOspfStatistics
+* Junos
+    * Added ShowRouteInstanceName
+      * show route instance {name}

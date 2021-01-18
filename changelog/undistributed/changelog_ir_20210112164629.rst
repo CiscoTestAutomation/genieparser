@@ -1,0 +1,6 @@
+--------------------------------------------------------------------------------
+                                FIX
+--------------------------------------------------------------------------------
+* JUNOS
+    * ShowTaskReplication
+        * Added two optional keys: task-protocol-replication-name and task-protocol-replication-state

@@ -1,0 +1,5 @@
+show ppm transmissions protocol bfd detail
+Destination: 27.85.194.102, Protocol: BFD, Transmission interval: 300
+Distributed: TRUE, Distribution handle: 6918, Distribution address: fpc9
+IFL-index: 783
+Replicated
