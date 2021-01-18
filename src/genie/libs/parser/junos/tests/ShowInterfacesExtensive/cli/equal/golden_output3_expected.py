@@ -308,9 +308,8 @@ expected_output = {
                                     "input-bps": "3256",
                                     "input-bytes": "124466",
                                     "input-packets": "1347",
-                                    "input-pps": "4"
-                                },
-                                {
+                                    "input-pps": "4",
+                                    "name": "ge-0/0/0.0",
                                     "output-bps": "0",
                                     "output-bytes": "1322",
                                     "output-packets": "17",
@@ -320,9 +319,8 @@ expected_output = {
                                     "input-bps": "176",
                                     "input-bytes": "21377",
                                     "input-packets": "349",
-                                    "input-pps": "0"
-                                },
-                                {
+                                    "input-pps": "0",
+                                    "name": "ge-0/0/4.0",
                                     "output-bps": "0",
                                     "output-bytes": "0",
                                     "output-packets": "0",
@@ -332,9 +330,8 @@ expected_output = {
                                     "input-bps": "0",
                                     "input-bytes": "0",
                                     "input-packets": "0",
-                                    "input-pps": "0"
-                                },
-                                {
+                                    "input-pps": "0",
+                                    "name": "ge-0/0/6.0",
                                     "output-bps": "0",
                                     "output-bytes": "0",
                                     "output-packets": "0",

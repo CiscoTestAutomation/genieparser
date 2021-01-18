@@ -280,24 +280,22 @@ expected_output = {
                             ],
                             "lag-link": [
                                 {
+                                    "name": "ge-0/0/6.0",
                                     "input-bps": "976",
                                     "input-bytes": "596",
                                     "input-packets": "10",
-                                    "input-pps": "0"
-                                },
-                                {
+                                    "input-pps": "0",
                                     "output-bps": "0",
                                     "output-bytes": "896",
                                     "output-packets": "12",
                                     "output-pps": "0"
                                 },
                                 {
+                                    "name": "ge-0/0/7.0",
                                     "input-bps": "976",
                                     "input-bytes": "136",
                                     "input-packets": "3",
-                                    "input-pps": "0"
-                                },
-                                {
+                                    "input-pps": "0",
                                     "output-bps": "0",
                                     "output-bytes": "292",
                                     "output-packets": "4",

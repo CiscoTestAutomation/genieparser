@@ -2945,7 +2945,7 @@ class ShowChassisFabricSummarySchema(MetaParser):
         chassis_routing_schema = Schema({
                 "plane-slot": str,
                 "state": str,
-                "up-time": str
+                Optional("up-time"): str
             })
         # Validate each dictionary in list
         for item in value:
@@ -2972,7 +2972,8 @@ class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
             out = output
 
         # 0      Online   34 days, 18 hours, 43 minutes, 48 seconds
-        p1 = re.compile(r'^(?P<plane_slot>\d+) +(?P<state>\S+) +(?P<up_time>[\S\s]+)$')
+        # 0      Online   
+        p1 = re.compile(r'^(?P<plane_slot>\d+) +(?P<state>\S+)( +(?P<up_time>[\S\s]+))?$')
 
 
         ret_dict = {}
@@ -2989,8 +2990,9 @@ class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
 
                 fm_state_dict = {}
                 for key, value in m.groupdict().items():
-                    key = key.replace('_', '-')
-                    fm_state_dict[key] = value
+                    if value != None:
+                        key = key.replace('_', '-')
+                        fm_state_dict[key] = value
 
                 fm_state_information.append(fm_state_dict)
                 continue
@@ -3502,15 +3504,30 @@ class ShowChassisEnvironmentComponentSchema(MetaParser):
         env_schema = Schema({
                 "name": str,
                 "state": str,
-                "bus-revision": str,
-                "fpga-revision": str,
-                "power-information": {
-                    "power-title": {
+                Optional("bus-revision"): str,
+                Optional("fpga-revision"): str,
+                Optional("power-information"): {
+                    Optional("power-title"): {
                         "power-type": str
                     },
-                    "voltage": Use(ShowChassisEnvironmentComponentSchema.validate_voltage_list)
+                    Optional("psm-hours-used"): str,
+                    Optional("voltage"): Use(ShowChassisEnvironmentComponentSchema.validate_voltage_list)
                 },
-                "temperature-reading": Use(ShowChassisEnvironmentComponentSchema.validate_temperature_reading_list)
+                Optional("dc-information"): {
+                    "dc-detail": {
+                        "str-dc-current": str,
+                        "str-dc-load": str,
+                        "str-dc-power": str,
+                        "str-dc-voltage": str
+                    },
+                    "dc-feed0-current": str,
+                    "dc-feed0-power": str,
+                    "dc-feed0-voltage": str,
+                    "dc-feed1-current": str,
+                    "dc-feed1-power": str,
+                    "dc-feed1-voltage": str
+                },
+                Optional("temperature-reading"): Use(ShowChassisEnvironmentComponentSchema.validate_temperature_reading_list)
             })
         # Validate each dictionary in list
         for item in value:
@@ -3564,6 +3581,21 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
 
         # FPGA Revision              272
         p7 = re.compile(r'^FPGA +Revision +(?P<fpga_revision>\d+)$')
+
+        # DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+        p8 = re.compile(r'^DC +Input +Feed +Voltage\S+ +Current\S+ +Power\S+$')
+
+        # INP0         50.00       11.20     560.00
+        p9 = re.compile(r'^\w+ +(?P<voltage>[\d\.]+) +(?P<current>[\d\.]+) +(?P<power>[\d\.]+)$')
+
+        # DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+        p10 = re.compile(r'^DC +Output +Voltage\S+ +Current\S+ +Power\S+ +Load\S+$')
+
+        # 50.1         50.00       11.20     560.00
+        p11 = re.compile(r'^(?P<voltage>[\d\.]+) +(?P<current>[\d\.]+) +(?P<power>[\d\.]+) +(?P<load>[\d\.]+)$')        
+
+        # Hours Used                 45607
+        p12 = re.compile(r'^Hours +Used +(?P<psm_hours_used>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3627,6 +3659,58 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
             if m:
                 group = m.groupdict()
                 environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
+                continue
+            
+            # DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                dc_information_dict = environment_component_item_dict.setdefault('dc-information', {})
+                feed_cnt = 0
+                continue
+
+            # INP0         50.00       11.20     560.00
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                voltage = group['voltage']
+                current = group['current']
+                power = group['power']
+                dc_information_dict.update({'dc-feed' + str(feed_cnt) +'-current': current})
+                dc_information_dict.update({'dc-feed' + str(feed_cnt) +'-voltage': voltage})
+                dc_information_dict.update({'dc-feed' + str(feed_cnt) +'-power': power})
+                feed_cnt = feed_cnt + 1
+                continue
+            
+            # DC Output                   Feed       Voltage(V)  Current(A) Power(W)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                dc_information_dict = environment_component_item_dict.setdefault('dc-information', {})
+                dc_detail_dict = dc_information_dict.setdefault('dc-detail', {})
+                feed_cnt = 0
+                continue
+
+            # INP0         50.00       11.20     560.00
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                voltage = group['voltage']
+                current = group['current']
+                power = group['power']
+                load = group['load']
+                dc_detail_dict.update({'str-dc-voltage': current})
+                dc_detail_dict.update({'str-dc-current': voltage})
+                dc_detail_dict.update({'str-dc-power': power})
+                dc_detail_dict.update({'str-dc-load': load})
+                continue
+
+            # Hours Used                 45557
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                power_information_dict = environment_component_item_dict.setdefault('power-information', {})
+                power_information_dict.update({'psm-hours-used': group['psm_hours_used']})
                 continue
         
         return ret_dict
