@@ -1,0 +1,4 @@
+show ospf3 neighbor instance NF-TEST    
+ID               Interface              State     Pri   Dead
+10.1.1.2         ge-0/0/5.11            Full      128     38
+  Neighbor-address fe80::250:5600:b8d:13e8
