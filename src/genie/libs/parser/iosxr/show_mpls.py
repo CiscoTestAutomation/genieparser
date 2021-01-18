@@ -25,6 +25,7 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
+
 # ======================================================
 # Parser for 'show mpls label range'
 # ======================================================
@@ -38,6 +39,7 @@ class ShowMplsLabelRangeSchema(MetaParser):
 			'max_range': int 	 
 			},	 
 	    }
+
 
 class ShowMplsLabelRange(ShowMplsLabelRangeSchema):
 
@@ -70,6 +72,7 @@ class ShowMplsLabelRange(ShowMplsLabelRangeSchema):
                 continue
             
         return mpls_dict
+
 
 # ==============================================
 # Parser for 'show mpls ldp discovery'
@@ -108,33 +111,13 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
                                             Optional('proposed_local'): int,
                                             Optional('proposed_peer'): int,
                                             Optional('source_ip_addr'): str,
-                                            Optional('transport_ip_addr'): str,
-                                        },
-                                    },
-                                },
-                            },
-                        },
-                        Optional('targeted_hellos'): {
-                            Any(): {
-                                Any(): {
-                                    Optional('ldp_id'): str,
-                                    Optional('hello_interval_ms'): int,
-                                    Optional('hello_due_time_ms'): int,
-                                    Optional('quick_start'): str,
-                                    Optional('tdp_id'): str,
-                                    Optional('xmit'): bool,
-                                    Optional('recv'): bool,
-                                    'active': bool,
-                                    Optional('established_date'): str,
-                                    Optional('established_elapsed'): str,
-                                    Optional('holdtime_sec'): int,
-                                    Optional('expiring_in'): float,
-                                    Optional('proposed_local'): int,
-                                    Optional('proposed_peer'): int,
-                                },
-                            },
-                        },
-                    },
+                                            Optional('transport_ip_addr'): str
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -180,6 +163,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
         if not vrf:
             vrf = "default"
+
         # initial return dictionary
         result_dict = {}
         discovery_flag = False
@@ -232,8 +216,10 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                             ' +\((?P<status>(active|passive|active\/passive)+)\),'
                             ' +(?P<xmit>xmit)?\/?(?P<recv>recv)?$')
 
+        # TODO Unlike iosxe, 'Hello interval', 'quick-start', 'hold time', 'established' 
+        # are also used for interfaces, hence Targeted Hello is omitted.
         # Targeted Hellos:
-        p13 = re.compile(r'^Targeted +Hellos:$')
+        # p13 = re.compile(r'^Targeted +Hellos:$')
 
         for line in out.splitlines(): 
             line = line.strip()
@@ -254,11 +240,11 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 continue 
 
             # Targeted Hellos:
-            m = p13.match(line)
-            if m:
-                discovery_flag = False
-                targeted_flag = True
-                continue
+            # m = p13.match(line)
+            # if m:
+            #     discovery_flag = False
+            #     targeted_flag = True
+            #     continue
             
             # Bundle-Ether1 : xmit/recv 
             m = p3.match(line) 
@@ -289,9 +275,9 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 if group['transport_ip_addr']:
                     interface_dict.update({'transport_ip_addr': group['transport_ip_addr']})
 
-                if targeted_flag:
-                    if targeted_dict:
-                        targeted_dict.update({'{}_id'.format(ldp_tdp): group['ldp_tdp_id']})
+                # if targeted_flag:
+                #     if targeted_dict:
+                #         targeted_dict.update({'{}_id'.format(ldp_tdp): group['ldp_tdp_id']})
                 continue
 
             # Hold time: 15 sec (local:15 sec, peer:15 sec) 
@@ -354,7 +340,9 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 targeted_dict.update({'recv': True if group['recv'] else False})
                 targeted_dict.update({'active': True if group['status'] == 'active' else False})
                 continue
+            
         return result_dict
+
 
 # ======================================================
 # Parser for 'show mpls ldp neighbor'
@@ -449,6 +437,7 @@ class ShowMplsLdpNeighborSchema(MetaParser):
             }
         }
     }
+
 
 class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
@@ -870,6 +859,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         return mpls_dict
 
+
 class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
     """Parser for show mpls ldp neighbor detail,
                   show mpls ldp neighbor {interface} detail"""
@@ -895,6 +885,7 @@ class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
             out = output
 
         return super().cli(vrf=vrf, interface=interface, output=out)
+
 
 # ======================================================
 # Parser for 'show mpls ldp neighbor brief'
@@ -1052,6 +1043,7 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
 
         return mpls_dict
 
+
 # ======================================================
 # Schema for 'show mpls label table detail'
 # ======================================================
@@ -1092,6 +1084,7 @@ class ShowMplsLabelTableDetailSchema(MetaParser):
             },
         }
     }
+
 
 # ======================================================
 # Parser for 'show mpls label table detail'
@@ -1207,6 +1200,7 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
 
         return mpls_dict
 
+
 # ======================================================
 # Parser for 'show mpls label table private'
 # ======================================================
@@ -1224,6 +1218,7 @@ class ShowMplsLabelTablePrivate(ShowMplsLabelTableDetail):
         else:
             out = output
         return super().cli(output=out)
+
 
 # ======================================================
 # Schema for 'show mpls interfaces'
