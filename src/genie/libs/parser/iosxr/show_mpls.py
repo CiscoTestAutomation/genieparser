@@ -102,7 +102,7 @@ class ShowMplsLdpDiscoverySchema(MetaParser):
                                     Optional('hello_interval_ms'): int,
                                     Optional('hello_due_time_ms'): int,
                                     Optional('quick_start'): str,
-                                    Any(): {
+                                    Optional('ldp_id'): {
                                         Any(): {
                                             Optional('established_date'): str,
                                             Optional('established_elapsed'): str,
