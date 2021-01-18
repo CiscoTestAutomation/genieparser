@@ -2776,7 +2776,6 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
             m = p_slave_revision.match(line)
             if m:
                 env_item["slave-revision"] = m.groupdict()["slave_revision"].strip()
-                # env_list.append(env_item)
                 continue
 
         return res
