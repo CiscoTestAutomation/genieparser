@@ -88,8 +88,8 @@ class ShowBFDSessionDetailSchema(MetaParser):
 
     schema = {
         "bfd-session-information": {
-            "bfd-session": {
-                "bfd-client": {
+            Optional("bfd-session"): {
+                Optional("bfd-client"): {
                     "client-name": str,
                     "client-reception-interval": str,
                     "client-transmission-interval": str
@@ -221,7 +221,7 @@ class ShowBFDSessionDetail(ShowBFDSessionDetailSchema):
                 group = m.groupdict()
 
                 for k, v in group.items():
-                    ret_dict['bfd-session-information'][k.replace('_', '-')] = v
+                    ret_dict.setdefault('bfd-session-information', {})[k.replace('_', '-')] = v
 
                 continue
 

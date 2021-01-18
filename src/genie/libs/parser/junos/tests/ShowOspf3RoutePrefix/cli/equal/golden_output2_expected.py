@@ -9,7 +9,15 @@ expected_output = {
                     "ospf-next-hop": [
                         {
                             "next-hop-address": {
-                                "interface-address": "fe80::250:56ff:fe8d:351d"
+                                "interface-address": "fe80::250:5600:b8d:c798"
+                            },
+                            "next-hop-name": {
+                                "interface-name": "ge-0/0/0.11"
+                            }
+                        },
+                        {
+                            "next-hop-address": {
+                                "interface-address": "fe80::250:56ff:fe8d:6d7e"
                             },
                             "next-hop-name": {
                                 "interface-name": "ge-0/0/4.0"
