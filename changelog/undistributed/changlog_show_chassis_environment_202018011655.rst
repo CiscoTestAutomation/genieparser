@@ -1,7 +1,6 @@
 --------------------------------------------------------------------------------
                                 New
 --------------------------------------------------------------------------------
-* NXOS
+* JUNOS
     * Added ShowVdcResourceDetail
-        * show vdc resource detail
-        * show vdc resource {resource} detail
+        * Optional output support added
