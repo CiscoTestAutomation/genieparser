@@ -5,13 +5,12 @@ from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.nxos.aci.show_firmware import (ShowFirmwareUpgradeStatus,
-                                                      ShowFirmwareUpgradeStatusControllerGroup,
-                                                      ShowFirmwareRepository)
-
+from genie.libs.parser.apic.show_firmware import (ShowFirmwareUpgradeStatus,
+                                                  ShowFirmwareUpgradeStatusControllerGroup,
+                                                  ShowFirmwareRepository)
 
 class TestShowFirmwareUpgradeStatus(unittest.TestCase):
-    dev = Device(name='aci')
+    dev = Device(name='apic')
     empty_output = {'execute.return_value': ''}
 
     golden_output = {'execute.return_value': """\
