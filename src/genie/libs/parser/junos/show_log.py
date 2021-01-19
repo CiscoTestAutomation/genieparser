@@ -3,6 +3,7 @@
 JunOs parsers for the following show commands:
     * show log {filename}
     * show log {filename} | match {match}
+    * show log {filename} | except {except_show_log} | match {match}
 """
 # Python
 import re
@@ -25,16 +26,23 @@ class ShowLogFilenameSchema(MetaParser):
 class ShowLogFilename(ShowLogFilenameSchema):
     """ Parser for:
             * show log {filename}
+            * show log {filename} | match {match}
+            * show log {filename} | except {except_show_log} | match {match}
     """
     cli_command = ['show log {filename}',
+                   'show log {filename} | match {match}'
         'show log {filename} | except {except_show_log} | match {match}']
 
     def cli(self, output=None, filename=None, except_show_log=None, match=None):
         if not output:
-            if match:
+            if match and except_show_log:
+                out = self.device.execute(self.cli_command[2].format(
+                    filename=filename,
+                    except_show_log=except_show_log,
+                    match=match))
+            elif match:
                 out = self.device.execute(self.cli_command[1].format(
                     filename=filename,
-                    except_show_log="show log",
                     match=match))
             else:
                 out = self.device.execute(self.cli_command[0].format(filename=filename))
