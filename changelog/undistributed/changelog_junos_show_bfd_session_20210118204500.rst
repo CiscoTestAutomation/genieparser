@@ -13,3 +13,4 @@
 * Junos
     * Added ShowLogFilename:
         * show log {filename} | match {match}
+        * show log {filename} | match {match} | except {except_}
