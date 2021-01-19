@@ -30,7 +30,7 @@ class ShowLogFilename(ShowLogFilenameSchema):
             * show log {filename} | except {except_show_log} | match {match}
     """
     cli_command = ['show log {filename}',
-                   'show log {filename} | match {match}'
+        'show log {filename} | match {match}',
         'show log {filename} | except {except_show_log} | match {match}']
 
     def cli(self, output=None, filename=None, except_show_log=None, match=None):
