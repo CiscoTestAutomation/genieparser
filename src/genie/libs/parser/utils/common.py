@@ -144,7 +144,6 @@ def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
         Returns:
             list: the result of the search
     """
-
     # Perfect match should return 
     if search in parser_data:
         return [(search, parser_data[search], {})]
@@ -354,8 +353,13 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                                 return None
 
                         # Currently spanned argument
-                        argument_value = ' '.join(tokens[i - 1:index]).rstrip(
-                                                        '"').replace('\\', '')
+                        if 'match' in tokens:
+                            argument_value = ' '.join(tokens[i - 1:index]).replace('\\', '')
+                        else:
+                            argument_value = ' '.join(tokens[i - 1:index]).rstrip(
+                                                            '"').replace('\\', '')
+
+                        # argument_value = ' '.join(tokens[i - 1:index]).replace('\\', '')
                         
                         # Delete the extra tokens if spanning more than one
                         tokens_copy = tokens[:i] + tokens[index:]
