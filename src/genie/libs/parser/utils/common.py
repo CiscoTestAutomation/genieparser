@@ -353,7 +353,7 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                                 return None
 
                         # Currently spanned argument
-                        if 'match' in tokens:
+                        if 'match' in tokens or 'include' in tokens:
                             argument_value = ' '.join(tokens[i - 1:index]).replace('\\', '')
                         else:
                             argument_value = ' '.join(tokens[i - 1:index]).rstrip(
