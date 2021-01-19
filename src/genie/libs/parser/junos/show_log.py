@@ -63,7 +63,7 @@ class ShowLogFilenameMatchExcept(ShowLogFilenameSchema):
     """
     cli_command = ['show log {filename} | match {match} | except {except_}']
 
-    def cli(self, filename, output=None, except_=None, match=None):
+    def cli(self, filename, except_, match, output=None):
         if not output:
             out = self.device.execute(self.cli_command[0].format(
                 filename=filename,
