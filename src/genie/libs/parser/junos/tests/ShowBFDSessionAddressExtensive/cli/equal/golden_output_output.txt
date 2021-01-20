@@ -1,0 +1,20 @@
+show bfd session address 12.0.0.2 extensive 
+                                                  Detect   Transmit
+Address                  State     Interface      Time     Interval  Multiplier
+12.0.0.2                 Up        ge-0/0/0.0     3.000     1.000        3   
+ Client OSPF realm ospf-v2 Area 0.0.0.0, TX interval 1.000, RX interval 1.000
+ Session up time 09:27:10
+ Local diagnostic None, remote diagnostic None
+ Remote state Up, version 1
+ Session type: Single hop BFD
+ Min async interval 1.000, min slow interval 1.000
+ Adaptive async TX interval 1.000, RX interval 1.000
+ Local min TX interval 1.000, minimum RX interval 1.000, multiplier 3
+ Remote min TX interval 1.000, min RX interval 1.000, multiplier 3
+ Local discriminator 350, remote discriminator 772
+ Echo mode disabled/inactive
+ Remote is control-plane independent
+  Session ID: 0x1b3
+
+1 sessions, 1 clients
+Cumulative transmit rate 1.0 pps, cumulative receive rate 1.0 pps

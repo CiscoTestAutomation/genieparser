@@ -1,0 +1,6 @@
+expected_output = {
+    "file-content": [
+        "Mar  5 02:42:53  sr_hktGCS001 sshd[87374]: Disconnected from 10.1.0.1 port 46480",
+        "Mar  5 14:47:18  sr_hktGCS001 sshd[91368]: Accepted keyboard-interactive/pam for user from 10.1.0.1 port 46494 ssh2",
+    ]
+}

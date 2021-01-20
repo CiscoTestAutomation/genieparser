@@ -8,6 +8,9 @@ Parser for the following show commands:
     * show chassis environment routing-engine
     * show chassis environment 
     * show chassis environment fpc
+    * show chassis environment component
+    * show chassis fabric summary
+    * show chassis fabric plane
     * show chassis firmware
     * show chassis firmware no-forwarding
     * show chassis fpc
@@ -19,6 +22,7 @@ Parser for the following show commands:
     * show chassis hardware extensive
     * show chassis hardware extensive no-forwarding
     * show chassis power
+    * show chassis pic fpc-slot {fpc-slot} pic-slot {pic-slot}
 '''
 # python
 import re
@@ -2629,13 +2633,13 @@ class ShowChassisEnvironmentFpcSchema(MetaParser):
 
         environment_item_schema = Schema({
             "name": str,
-            "power-information": {
+            Optional("power-information"): {
                 "power-title": {
                     "power-type": str
                 },
                 "voltage": Use(validate_voltage_list),
             },
-            "slave-revision": str,
+            Optional("slave-revision"): str,
             "state": str,
             "temperature-reading": Use(valivalidate_temp_reading_list),
         })
@@ -2667,12 +2671,12 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
         p1 = re.compile(r'^(?P<name>.*) +status:$')
 
         # State                      Online
-        p2 = re.compile(r'^State +(?P<state>\S+)$')
+        p2 = re.compile(r'^State+\s+(?P<state>\S+)$')
 
         # Temperature Intake         27 degrees C / 80 degrees F
         # Temperature I3 0 Chip      38 degrees C / 100 degrees F 
         p_temp = re.compile(r'^(?P<temperature_name>[\s\S]+) '
-                            r'+(?P<text>(?P<celsius>\d+)\sdegrees\sC.*)')
+                            r'+(?P<text>(?P<celsius>\d+)\sdegrees\sC) +.*')
 
         # Power
         p_power = re.compile(r'^Power$')
@@ -2701,12 +2705,14 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
                             "environment-component-item": []
                         }
                     }
+                    
 
                 env_list = res["environment-component-information"]["environment-component-item"]
 
                 env_item = {
                     "name": m.groupdict()["name"]
                 }
+                env_list.append(env_item)
                 continue
 
             # State                      Online
@@ -2770,7 +2776,6 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
             m = p_slave_revision.match(line)
             if m:
                 env_item["slave-revision"] = m.groupdict()["slave_revision"].strip()
-                env_list.append(env_item)
                 continue
 
         return res
@@ -2778,9 +2783,30 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
 
 class ShowChassisAlarmsSchema(MetaParser):
     """ Schema for show chassis alarms"""
-    schema = {
-        "alarm-information": {
-            "alarm-detail": {
+    # {
+    #     "alarm-information": {
+    #         Optional("alarm-detail"): [
+    #             {
+    #                 "alarm-class": "Major",
+    #                 "alarm-description": str,
+    #                 "alarm-short-description": str,
+    #                 "alarm-time": {
+    #                     "#text": str,
+    #                 },
+    #                 "alarm-type": str
+    #             },
+    #         ],
+    #         "alarm-summary": {
+    #             Optional("active-alarm-count"): str,
+    #             Optional("no-active-alarms"): bool
+    #         }
+    #     },
+    # }
+
+    def validate_alarm_detail(value):
+        if not isinstance(value, list):
+            raise SchemaError('alarm-detail is not a list')
+        alarm_detail_schema = Schema({
                 "alarm-class": str,
                 "alarm-description": str,
                 "alarm-short-description": str,
@@ -2788,9 +2814,18 @@ class ShowChassisAlarmsSchema(MetaParser):
                     "#text": str,
                 },
                 "alarm-type": str
-            },
+            })
+
+        for item in value:
+            alarm_detail_schema.validate(item)
+        return value
+
+    schema = {
+        "alarm-information": {
+            Optional("alarm-detail"): Use(validate_alarm_detail),
             "alarm-summary": {
-                "active-alarm-count": str
+                Optional("active-alarm-count"): str,
+                Optional("no-active-alarms"): bool
             }
         },
     }
@@ -2813,11 +2848,15 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
         p2 = re.compile(r'^(?P<text>\S+ +\d\d\:\d\d\:\d\d +\S+) '
                         r'+(?P<alarm_class>\S+) +(?P<description>[\s\S]+)$')
 
+        # No alarms currently active
+        p3 = re.compile(r'^No alarms currently active$')
+
         res = {}
 
         for line in out.splitlines():
             line = line.strip()
 
+            # 1 alarms currently active
             m = p1.match(line)
             if m:
                 res = {
@@ -2829,6 +2868,8 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
                 }
                 continue
 
+            # Alarm time               Class  Description
+            # 2020-07-16 13:38:21 EST  Major  PSM 15 Not OK 
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -2837,16 +2878,46 @@ class ShowChassisAlarms(ShowChassisAlarmsSchema):
                 alarm_class = group['alarm_class']
                 description = group['description']
 
-                res['alarm-information']['alarm-detail'] = {
-                    'alarm-class':alarm_class,
-                    'alarm-description':description,
-                    'alarm-short-description':description,
-                    'alarm-time':{
-                        '#text':text
-                    },
-                    "alarm-type": "Chassis"
+                if 'alarm-detail' not in res['alarm-information']:
+                    res['alarm-information']['alarm-detail'] = []
+                    alarm_detail_list = res['alarm-information']['alarm-detail']
+
+                short_description_dict = {
+                    "SPMB 1 not online":"SPMB 1 offline",
+                    "Loss of communication with Backup RE":"Backup RE communica",
                 }
+
+
+
+                alarm_detail_item = {
+                        'alarm-class':alarm_class,
+                        'alarm-description':description,
+                        'alarm-time':{
+                            '#text':text
+                        },
+                        "alarm-type": "Chassis"
+                    }
+
+                if description in short_description_dict:
+                    alarm_detail_item['alarm-short-description'] = short_description_dict[description]
+                else:
+                    alarm_detail_item['alarm-short-description'] = description
+                
+                alarm_detail_list.append(alarm_detail_item)
+
                 continue
+            
+            # No alarms currently active
+            m = p3.match(line)
+            if m:
+                res = {
+                    "alarm-information": {
+                        "alarm-summary": {
+                            "no-active-alarms": True
+                        }
+                    }
+                }
+                continue              
 
         return res
 
@@ -2873,7 +2944,7 @@ class ShowChassisFabricSummarySchema(MetaParser):
         chassis_routing_schema = Schema({
                 "plane-slot": str,
                 "state": str,
-                "up-time": str
+                Optional("up-time"): str
             })
         # Validate each dictionary in list
         for item in value:
@@ -2900,7 +2971,8 @@ class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
             out = output
 
         # 0      Online   34 days, 18 hours, 43 minutes, 48 seconds
-        p1 = re.compile(r'^(?P<plane_slot>\d+) +(?P<state>\S+) +(?P<up_time>[\S\s]+)$')
+        # 0      Online   
+        p1 = re.compile(r'^(?P<plane_slot>\d+) +(?P<state>\S+)( +(?P<up_time>[\S\s]+))?$')
 
 
         ret_dict = {}
@@ -2917,8 +2989,9 @@ class ShowChassisFabricSummary(ShowChassisFabricSummarySchema):
 
                 fm_state_dict = {}
                 for key, value in m.groupdict().items():
-                    key = key.replace('_', '-')
-                    fm_state_dict[key] = value
+                    if value != None:
+                        key = key.replace('_', '-')
+                        fm_state_dict[key] = value
 
                 fm_state_information.append(fm_state_dict)
                 continue
@@ -3430,15 +3503,30 @@ class ShowChassisEnvironmentComponentSchema(MetaParser):
         env_schema = Schema({
                 "name": str,
                 "state": str,
-                "bus-revision": str,
-                "fpga-revision": str,
-                "power-information": {
-                    "power-title": {
+                Optional("bus-revision"): str,
+                Optional("fpga-revision"): str,
+                Optional("power-information"): {
+                    Optional("power-title"): {
                         "power-type": str
                     },
-                    "voltage": Use(ShowChassisEnvironmentComponentSchema.validate_voltage_list)
+                    Optional("psm-hours-used"): str,
+                    Optional("voltage"): Use(ShowChassisEnvironmentComponentSchema.validate_voltage_list)
                 },
-                "temperature-reading": Use(ShowChassisEnvironmentComponentSchema.validate_temperature_reading_list)
+                Optional("dc-information"): {
+                    "dc-detail": {
+                        "str-dc-current": str,
+                        "str-dc-load": str,
+                        "str-dc-power": str,
+                        "str-dc-voltage": str
+                    },
+                    "dc-feed0-current": str,
+                    "dc-feed0-power": str,
+                    "dc-feed0-voltage": str,
+                    "dc-feed1-current": str,
+                    "dc-feed1-power": str,
+                    "dc-feed1-voltage": str
+                },
+                Optional("temperature-reading"): Use(ShowChassisEnvironmentComponentSchema.validate_temperature_reading_list)
             })
         # Validate each dictionary in list
         for item in value:
@@ -3478,7 +3566,8 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
         p2 = re.compile(r'^State +(?P<state>[\S\s]+)$')
 
         # Power 1
-        p3 = re.compile(r'^\w+ +(?P<power_type>\d+)$')
+        # Power
+        p3 = re.compile(r'^\w+( +(?P<power_type>\d+))?$')
 
         # 1.0 V                     1005 mV
         p4 = re.compile(r'^(?P<temperature_name>.*) +(?P<text>\d+ +degrees +\w+ +\/ +\d+ +degrees +\w+)$')
@@ -3491,6 +3580,21 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
 
         # FPGA Revision              272
         p7 = re.compile(r'^FPGA +Revision +(?P<fpga_revision>\d+)$')
+
+        # DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+        p8 = re.compile(r'^DC +Input +Feed +Voltage\S+ +Current\S+ +Power\S+$')
+
+        # INP0         50.00       11.20     560.00
+        p9 = re.compile(r'^\w+ +(?P<voltage>[\d\.]+) +(?P<current>[\d\.]+) +(?P<power>[\d\.]+)$')
+
+        # DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+        p10 = re.compile(r'^DC +Output +Voltage\S+ +Current\S+ +Power\S+ +Load\S+$')
+
+        # 50.1         50.00       11.20     560.00
+        p11 = re.compile(r'^(?P<voltage>[\d\.]+) +(?P<current>[\d\.]+) +(?P<power>[\d\.]+) +(?P<load>[\d\.]+)$')        
+
+        # Hours Used                 45607
+        p12 = re.compile(r'^Hours +Used +(?P<psm_hours_used>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3555,5 +3659,259 @@ class ShowChassisEnvironmentComponent(ShowChassisEnvironmentComponentSchema):
                 group = m.groupdict()
                 environment_component_item_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
+            
+            # DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                dc_information_dict = environment_component_item_dict.setdefault('dc-information', {})
+                feed_cnt = 0
+                continue
+
+            # INP0         50.00       11.20     560.00
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                voltage = group['voltage']
+                current = group['current']
+                power = group['power']
+                dc_information_dict.update({'dc-feed' + str(feed_cnt) +'-current': current})
+                dc_information_dict.update({'dc-feed' + str(feed_cnt) +'-voltage': voltage})
+                dc_information_dict.update({'dc-feed' + str(feed_cnt) +'-power': power})
+                feed_cnt = feed_cnt + 1
+                continue
+            
+            # DC Output                   Feed       Voltage(V)  Current(A) Power(W)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                dc_information_dict = environment_component_item_dict.setdefault('dc-information', {})
+                dc_detail_dict = dc_information_dict.setdefault('dc-detail', {})
+                feed_cnt = 0
+                continue
+
+            # INP0         50.00       11.20     560.00
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                voltage = group['voltage']
+                current = group['current']
+                power = group['power']
+                load = group['load']
+                dc_detail_dict.update({'str-dc-voltage': current})
+                dc_detail_dict.update({'str-dc-current': voltage})
+                dc_detail_dict.update({'str-dc-power': power})
+                dc_detail_dict.update({'str-dc-load': load})
+                continue
+
+            # Hours Used                 45557
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                power_information_dict = environment_component_item_dict.setdefault('power-information', {})
+                power_information_dict.update({'psm-hours-used': group['psm_hours_used']})
+                continue
         
         return ret_dict
+
+# Schema for show chassis pic fpc-slot {fpc-slot} pic-slot {pic-slot}        
+class ShowChassisPicFpcSlotPicSlotSchema(MetaParser):
+    '''
+    schema = {
+        "fpc-information": {
+            "@junos:style": str,
+            "fpc": {
+                "pic-detail": {
+                    "pic-slot": str,
+                    "pic-type": str,
+                    "pic-version": str,
+                    "port-information": {
+                        "port": [
+                            {
+                                "cable-type": str,
+                                "fiber-mode": str,
+                                "port-number": str,
+                                "sfp-vendor-fw-ver": str,
+                                "sfp-vendor-name": str,
+                                "sfp-vendor-pno": str,
+                                "wavelength": str,
+                            },
+                        ]
+                    },
+                    "slot": str,
+                    "state": str,
+                    "up-time": {
+                        "#text": str,
+                        "@junos:seconds": str,
+                    }
+                }
+            }
+        }
+    }
+    '''
+
+    # validate 'port'
+    def validate_port(value):
+        if not isinstance(value, list):
+            raise SchemaError('Port is not a list')
+        port_schema = Schema({
+                        "cable-type": str,
+                        "fiber-mode": str,
+                        "port-number": str,
+                        "sfp-vendor-fw-ver": str,
+                        "sfp-vendor-name": str,
+                        "sfp-vendor-pno": str,
+                        "wavelength": str,
+                    })
+        for item in value:
+            port_schema.validate(item)
+        return value
+
+    # main schema
+    schema = {
+        "fpc-information": {
+            "fpc": {
+                "pic-detail": {
+                    "pic-slot": str,
+                    "pic-type": str,
+                    "pic-version": str,
+                    "port-information": {
+                        "port": Use(validate_port),
+                    },
+                    "slot": str,
+                    "state": str,
+                    "up-time": {
+                        "#text": str,
+                        "@junos:seconds": str,
+                    }
+                }
+            }
+        }
+    }
+
+
+# Parser for show chassis pic fpc-slot {fpc-slot} pic-slot {pic-slot}        
+class ShowChassisPicFpcSlotPicSlot(ShowChassisPicFpcSlotPicSlotSchema):
+    """
+    Parser for 
+        * show chassis pic fpc-slot {fpc-slot} pic-slot {pic-slot}        
+    """
+
+    cli_command = "show chassis pic fpc-slot {fpc_slot} pic-slot {pic_slot}"
+
+    def cli(self, fpc_slot=None, pic_slot=None, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                fpc_slot=fpc_slot,
+                pic_slot=pic_slot
+            ))
+        else:
+            out = output
+
+        # Regular Expressions
+
+        # FPC slot 0, PIC slot 0 information:
+        p1 = re.compile(r'^FPC +slot +(?P<slot>\d+), +PIC +slot +(?P<pic_slot>\d+) +information:$')
+
+        # Type                             2X100GE CFP2 OTN
+        p2 = re.compile(r'^Type +(?P<pic_type>[\s\S]+)$')
+
+        # State                            Online
+        p3 = re.compile(r'^State +(?P<state>\S+)$')
+        
+        # PIC version                 1.19
+        p4 = re.compile(r'^PIC version +(?P<pic_version>\S+)$')
+
+        # Uptime			 2 hours, 36 minutes, 32 seconds
+        p5 = re.compile(r'^Uptime\s+(?P<up_time>(?P<hours>\d+) +hours, '
+                        r'+(?P<minutes>\d+) +minutes, '
+                        r'+(?P<seconds>\d+) +seconds)$')
+
+        # PIC port information:
+        p6 = re.compile(r'PIC port information:')
+
+        #                        Fiber                    Xcvr vendor       Wave-    Xcvr
+        # Port Cable type        type  Xcvr vendor        part number       length   Firmware
+        # 0    100GBASE LR4      SM    FINISAR CORP.      FTLC1121RDNL-J3   1310 nm  1.5
+        p7 = re.compile(r'(?P<port_number>\d+) +(?P<cable_type>[0-9A-Z\s]+) '
+                        r'+(?P<fiber_mode>[A-Z]{2}) +(?P<sfp_vendor_name>[A-Z\s.]+) '
+                        r'+(?P<sfp_vendor_pno>[A-Z0-9\-]+) +(?P<wavelength>\d+ nm) '
+                        r'+(?P<sfp_vendor_fw_ver>\S+)')
+
+        # Build output
+        res = {}
+
+        for line in out.splitlines():
+            line = line.strip()     
+
+            # FPC slot 0, PIC slot 0 information:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                res = {
+                    "fpc-information":{
+                        "fpc":{
+                            "pic-detail":{
+                                "pic-slot": group["pic_slot"],
+                                "slot": group["slot"],
+                            }
+                        }
+                    }
+                }
+                continue
+
+            # Type                             2X100GE CFP2 OTN
+            # State                            Online
+            # PIC version                 1.19
+            m = p2.match(line) or p3.match(line) or p4.match(line)
+            if m:
+                group = m.groupdict()
+
+                pic_detail_dict = res["fpc-information"]["fpc"]["pic-detail"]
+
+                for k, v in group.items():
+                    k = k.replace('_', '-')
+                    pic_detail_dict[k] = v.strip()
+                continue
+
+            # Uptime			 2 hours, 36 minutes, 32 seconds
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                up_time = group["up_time"]
+
+                total_seconds = int(group["hours"])*60*60+int(group["minutes"])*60+int(group["seconds"])
+
+                pic_detail_dict["up-time"] = {
+                    "#text": up_time,
+                    "@junos:seconds": str(total_seconds),
+                }
+                
+                continue
+
+            # PIC port information:
+            m = p6.match(line)
+            if m:
+                pic_detail_dict["port-information"] = {
+                    "port": []
+                }
+                port_list = pic_detail_dict["port-information"]["port"]
+                continue
+
+            #                         Fiber                    Xcvr vendor       Wave-    Xcvr
+            # Port Cable type        type  Xcvr vendor        part number       length   Firmware
+            # 0    100GBASE LR4      SM    FINISAR CORP.      FTLC1121RDNL-J3   1310 nm  1.5
+            m = p7.match(line)             
+            if m:
+                group = m.groupdict()
+                port_item = {}
+
+                for k, v in group.items():
+                    k = k.replace('_', '-')
+                    port_item[k] = v.strip()
+
+                port_list.append(port_item)
+                continue
+
+        return res
+
