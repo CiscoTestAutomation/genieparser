@@ -1,0 +1,10 @@
+
+Prefix                                       Path  Route      NH   Metric
+
+                                             Type  Type       Type
+
+2001:30::/64                                 Intra Network    IP   2       
+
+  NH-interface ge-0/0/0.11, NH-addr fe80::250:5600:b8d:c798
+
+  NH-interface ge-0/0/4.0, NH-addr fe80::250:56ff:fe8d:6d7e
