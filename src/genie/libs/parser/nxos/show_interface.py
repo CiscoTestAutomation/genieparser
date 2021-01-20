@@ -13,6 +13,10 @@ NXOS parsers for the following show commands:
     * show running-config interface {interface}
     * show interface status
     * show interface {interface} status
+    * show interface {interface} capabilities
+    * show interface {interface} transciever details
+    * show interface fec
+    * show interface hardware-mappings
 '''
 
 # python
@@ -4240,16 +4244,18 @@ class ShowInterfaceTransceiverDetailsSchema(MetaParser):
             Optional('cmis_ver'): int,
             Optional('cable_attenuation'): str,
             Optional('dom_supported'): bool,
-            Any():{
-                Any():{
-                    Optional('current'): str,
-                    Optional('high_alarm'): str,
-                    Optional('high_warning'): str,
-                    Optional('low_alarm'): str, 
-                    Optional('low_warning'): str,
-                    Optional('alarm'): str
-                },
-                Optional('tx_fault_count'): int
+            Optional('lane_number'): {
+              Any():{
+                  Any():{
+                      Optional('current'): str,
+                      Optional('high_alarm'): str,
+                      Optional('high_warning'): str,
+                      Optional('low_alarm'): str, 
+                      Optional('low_warning'): str,
+                      Optional('alarm'): str
+                  },
+                  Optional('tx_fault_count'): int
+              }
             }
         }
     }
@@ -4347,7 +4353,7 @@ class ShowInterfaceTransceiverDetails(ShowInterfaceTransceiverDetailsSchema):
 
         p36 = re.compile(r'^\s*DOM\s+is\s+not\s+supported')
 
-        p37 = re.compile(r'^\s*(?P<lane>Lane)\s+Number:(?P<lane_num>\d+)\s+Network\s+Lane')
+        p37 = re.compile(r'^\s*(?P<lane>Lane)\s+Number:(?P<lane_num>\d+\s+Network\s+Lane)')
 
         p38 = re.compile(r'^\s*(?P<temp>Temperature)\s+'
                       r'(?P<curr>[0-9.NAna/-]+)\s?C?(\s+)?'
@@ -4588,8 +4594,9 @@ class ShowInterfaceTransceiverDetails(ShowInterfaceTransceiverDetailsSchema):
             if m:
               values = m.groupdict()
               parsed_xcvr_dict[interface]['dom_supported'] = True
-              xcvr_lane = '%s_%s' %(values['lane'], values['lane_num'])
-              parsed_xcvr_dict[interface].setdefault(xcvr_lane, {})
+              xcvr_lane = values['lane_num']
+              parsed_xcvr_dict[interface].setdefault('lane_number', {})
+              parsed_xcvr_dict[interface]['lane_number'].setdefault(xcvr_lane, {})
               continue
 
 
@@ -4597,41 +4604,41 @@ class ShowInterfaceTransceiverDetails(ShowInterfaceTransceiverDetailsSchema):
             m = p38.match(line)
             if m:
               values = m.groupdict()
-              parsed_xcvr_dict[interface][xcvr_lane][values['temp']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
+              parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['temp']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
                     'low_alarm': values['low_alarm'], 'high_warning': values['high_warn'], 'low_warning': values['low_warn'], 'alarm': str(values['alarm']) }
 
             # Voltage        3.33 V         3.63 V      2.97 V      3.46 V        3.13 V
             m = p39.match(line)
             if m:
               values = m.groupdict()
-              parsed_xcvr_dict[interface][xcvr_lane][values['voltage']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
+              parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['voltage']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
                     'low_alarm': values['low_alarm'], 'high_warning': values['high_warn'], 'low_warning': values['low_warn'], 'alarm': str(values['alarm']) }
 
             # Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
             m = p40.match(line)
             if m:
               values = m.groupdict()
-              parsed_xcvr_dict[interface][xcvr_lane][values['current']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
+              parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['current']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
                     'low_alarm': values['low_alarm'], 'high_warning': values['high_warn'], 'low_warning': values['low_warn'], 'alarm': str(values['alarm']) }
 
             # Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
             m = p41.match(line)
             if m:
               values = m.groupdict()
-              parsed_xcvr_dict[interface][xcvr_lane][values['tx_power']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
+              parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['tx_power']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
                     'low_alarm': values['low_alarm'], 'high_warning': values['high_warn'], 'low_warning': values['low_warn'], 'alarm': str(values['alarm']) }
 
             # Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
             m = p42.match(line)
             if m:
               values = m.groupdict()
-              parsed_xcvr_dict[interface][xcvr_lane][values['rx_power']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
+              parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['rx_power']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
                     'low_alarm': values['low_alarm'], 'high_warning': values['high_warn'], 'low_warning': values['low_warn'], 'alarm': str(values['alarm']) }
             
             # Transmit Fault Count = 0
             m = p43.match(line)
             if m:
-                parsed_xcvr_dict[interface][xcvr_lane]['tx_fault_count'] = int(m.groupdict()['fault_count'])
+                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane]['tx_fault_count'] = int(m.groupdict()['fault_count'])
 
 
         return parsed_xcvr_dict
@@ -4644,7 +4651,7 @@ class ShowInterfaceFecSchema(MetaParser):
 
     schema = {
           Any():{
-              'ifIndex': str,
+              'ifindex': str,
               'admin-fec': str,
               'oper-fec': str,
               'status': str,
@@ -4683,7 +4690,7 @@ class ShowInterfaceFec(ShowInterfaceFecSchema):
             m = p.match(line)
             if m:
                 vdict = m.groupdict()
-                parsed_fec_dict[vdict['name']] = {'ifIndex': vdict['ifIdx'], 'admin-fec': vdict['admin_fec'], 'oper-fec': vdict['oper_fec'], 
+                parsed_fec_dict[vdict['name']] = {'ifindex': vdict['ifIdx'], 'admin-fec': vdict['admin_fec'], 'oper-fec': vdict['oper_fec'], 
                 'status': vdict['status'], 'speed': vdict['speed'], 'type': vdict['type'] }
 
         return parsed_fec_dict
@@ -4697,21 +4704,21 @@ class ShowInterfaceHardwareMapSchema(MetaParser):
 
     schema = {
           Any():{
-              'Ifindex': str,
-              'Smod': int,
-              'Unit': int,
-              'Hport': int,
-              'Fport': int,
-              'Nport': int,
-              'Vport': int,
-              'Slice': int,
-              'Sport': int,
-              'SrcId': int,
-              'MacId': int,
-              'MacSP': int,
-              'VIF': int,
-              'Block': int,
-              'BlkSrcID': int
+              'ifindex': str,
+              'smod': int,
+              'unit': int,
+              'hport': int,
+              'fport': int,
+              'nport': int,
+              'vport': int,
+              'slice': int,
+              'sport': int,
+              'srcid': int,
+              'macid': int,
+              'macsp': int,
+              'vif': int,
+              'block': int,
+              'blksrcid': int
           }
     }
 
@@ -4749,22 +4756,23 @@ class ShowInterfaceHardwareMap(ShowInterfaceHardwareMapSchema):
             m = p.match(line)
             if m:
                 vdict = m.groupdict()
-                parsed_hw_map_dict[vdict['name']] = {
-                'Ifindex': vdict['ifIdx'], 
-                'Smod': int(vdict['smod']), 
-                'Unit': int(vdict['unit']), 
-                'Hport': int(vdict['hport']), 
-                'Fport': int(vdict['fport']), 
-                'Nport': int(vdict['nport']), 
-                'Vport': int(vdict['vport']), 
-                'Slice': int(vdict['slice']),
-                'Sport': int(vdict['sport']), 
-                'SrcId': int(vdict['srcid']), 
-                'MacId': int(vdict['macid']), 
-                'MacSP': int(vdict['macsp']),
-                'VIF': int(vdict['vif']), 
-                'Block': int(vdict['block']), 
-                'BlkSrcID': int(vdict['blksrcid'])}
+                intf_name = interface = Common.convert_intf_name(vdict['name'])
+                parsed_hw_map_dict[intf_name] = {
+                'ifindex': vdict['ifIdx'], 
+                'smod': int(vdict['smod']), 
+                'unit': int(vdict['unit']), 
+                'hport': int(vdict['hport']), 
+                'fport': int(vdict['fport']), 
+                'nport': int(vdict['nport']), 
+                'vport': int(vdict['vport']), 
+                'slice': int(vdict['slice']),
+                'sport': int(vdict['sport']), 
+                'srcid': int(vdict['srcid']), 
+                'macid': int(vdict['macid']), 
+                'macsp': int(vdict['macsp']),
+                'vif': int(vdict['vif']), 
+                'block': int(vdict['block']), 
+                'blksrcid': int(vdict['blksrcid'])}
 
 
         return parsed_hw_map_dict

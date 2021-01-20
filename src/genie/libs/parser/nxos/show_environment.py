@@ -37,9 +37,9 @@ class ShowEnvironmentSchema(MetaParser):
             Optional('power_supply'):{
                 Any():{
                     Optional('model'): str,
-                    Optional('actual_output'): int,
-                    Optional('actual_input'): int,
-                    Optional('total_capacity'): int,
+                    Optional('actual_output_watts'): int,
+                    Optional('actual_input_watts'): int,
+                    Optional('total_capacity_watts'): int,
                     Optional('status'): str
                 }
             },
@@ -56,22 +56,22 @@ class ShowEnvironmentSchema(MetaParser):
                 Optional('oper_mode'): str
             },
             Optional('power_usage_summary'):{
-                Optional('total_power_capacity'): float,
-                Optional('total_grid_a'): float,
-                Optional('total_grid_b'): float,
-                Optional('total_power_cumalative'): float,
-                Optional('total_power_output'): float,
-                Optional('total_power_input'): float,
-                Optional('total_power_allocated'): float,
+                Optional('total_power_capacity_watts'): float,
+                Optional('total_grid_a_power_watts'): float,
+                Optional('total_grid_b_power_watts'): float,
+                Optional('total_power_cumulative_watts'): float,
+                Optional('total_power_output_watts'): float,
+                Optional('total_power_input_watts'): float,
+                Optional('total_power_allocated_watts'): float,
                 Optional('total_power_available'): float
             }
         },
         Optional('temperature'): {
             Any(): {
                 Any(): {
-                Optional('major_threshold'): int,
-                Optional('minor_threshold'): int,
-                Optional('current_temp'): int,
+                Optional('major_threshold_celsius'): int,
+                Optional('minor_threshold_celsius'): int,
+                Optional('current_temp_celsius'): int,
                 Optional('status'): str
                 }
             }
@@ -98,7 +98,7 @@ class ShowEnvironment(ShowEnvironmentSchema):
         
         #Match fan details
         #Fan1(sys_fan1)  N9K-C9508-FAN        0.6020 front-to-back   Ok
-        p1 = re.compile(r'^\s*(?P<sys_fan>Fan\d+)?\(sys_fan\d+\)\s+(?P<model>[A-Za-z0-9\-]+)? +(?P<hw>[0-9.-]+)+ +(?P<dir>[a-z-]+)? +(?P<status>\w+)?\s*')
+        p1 = re.compile(r'^\s*(?P<sys_fan>Fan\d+\(sys_fan\d+\))?\s+(?P<model>[A-Za-z0-9\-]+)? +(?P<hw>[0-9.-]+)+ +(?P<dir>[a-z-]+)? +(?P<status>\w+)?\s*')
         
         #Fan_in_PS1                           --     front-to-back   Ok
         p2 = re.compile(r'^\s*(?P<ps_fan>Fan_in_PS\d+)?\s+(?P<model>[A-Za-z0-9\-]+)?\s+(?P<hw>[0-9.-]+)+ +(?P<dir>[a-z-]+)? +(?P<status>\w+)?\s*')
@@ -209,8 +209,8 @@ class ShowEnvironment(ShowEnvironmentSchema):
             if m:
                 gpdict = m.groupdict()
                 parsed_env_dict['power']['power_supply'][gpdict['ps_id']] = {
-                    'model': gpdict['model'], 'actual_output': int(gpdict['act_out']), \
-                    'actual_input': int(gpdict['act_in']), 'total_capacity': int(gpdict['tot_cap']), \
+                    'model': gpdict['model'], 'actual_output_watts': int(gpdict['act_out']), \
+                    'actual_input_watts': int(gpdict['act_in']), 'total_capacity_watts': int(gpdict['tot_cap']), \
                     'status': gpdict['status']
                 }
                 continue
@@ -245,43 +245,43 @@ class ShowEnvironment(ShowEnvironmentSchema):
             #Total Power Capacity (based on configured mode)            18000.00 W
             m = p10.match(line)
             if m:
-                parsed_env_dict['power']['power_usage_summary']['total_power_capacity'] = float(m.group(1))
+                parsed_env_dict['power']['power_usage_summary']['total_power_capacity_watts'] = float(m.group(1))
                 continue
 
             #Total Grid-A (first half of PS slots) Power Capacity       12000.00 W
             m = p11.match(line)
             if m:
-                parsed_env_dict['power']['power_usage_summary']['total_grid_a'] = float(m.group(1))
+                parsed_env_dict['power']['power_usage_summary']['total_grid_a_power_watts'] = float(m.group(1))
                 continue
             
             #Total Power of all Inputs (cumulative)                     18000.00 W
             m = p12.match(line)
             if m:
-                parsed_env_dict['power']['power_usage_summary']['total_grid_b'] = float(m.group(1))
+                parsed_env_dict['power']['power_usage_summary']['total_grid_b_power_watts'] = float(m.group(1))
                 continue
             
             #Total Power of all Inputs (cumulative)                     18000.00 W
             m = p13.match(line)
             if m:
-                parsed_env_dict['power']['power_usage_summary']['total_power_cumalative'] = float(m.group(1))
+                parsed_env_dict['power']['power_usage_summary']['total_power_cumulative_watts'] = float(m.group(1))
                 continue
             
             #Total Power Output (actual draw)                           5655.00 W
             m = p14.match(line)
             if m:
-                parsed_env_dict['power']['power_usage_summary']['total_power_output'] = float(m.group(1))
+                parsed_env_dict['power']['power_usage_summary']['total_power_output_watts'] = float(m.group(1))
                 continue
             
             #Total Power Input (actual draw)                            6038.00 W
             m = p15.match(line)
             if m:
-                parsed_env_dict['power']['power_usage_summary']['total_power_input'] = float(m.group(1))
+                parsed_env_dict['power']['power_usage_summary']['total_power_input_watts'] = float(m.group(1))
                 continue
             
             #Total Power Allocated (budget)                             10759.00 W
             m = p16.match(line)
             if m:
-                parsed_env_dict['power']['power_usage_summary']['total_power_allocated'] = float(m.group(1))
+                parsed_env_dict['power']['power_usage_summary']['total_power_allocated_watts'] = float(m.group(1))
                 continue
             
             #Total Power Available for additional modules               7241.00 W
@@ -302,9 +302,9 @@ class ShowEnvironment(ShowEnvironmentSchema):
                 if groupdict['sensor'] not in parsed_env_dict['temperature'][groupdict['mod']]:
                     parsed_env_dict['temperature'][groupdict['mod']][groupdict['sensor']] = {}
                 parsed_env_dict['temperature'][groupdict['mod']][groupdict['sensor']] = {
-                    'major_threshold': int(groupdict['major_thresh']), \
-                    'minor_threshold': int(groupdict['minor_thresh']), \
-                    'current_temp': int(groupdict['curr_temp']), \
+                    'major_threshold_celsius': int(groupdict['major_thresh']), \
+                    'minor_threshold_celsius': int(groupdict['minor_thresh']), \
+                    'current_temp_celsius': int(groupdict['curr_temp']), \
                     'status': groupdict['status']
                 }
                 continue
@@ -351,7 +351,7 @@ class ShowEnvironmentFan(ShowEnvironmentFanSchema):
         
         #Match fan details
         #Fan1(sys_fan1)  N9K-C9508-FAN        0.6020 front-to-back   Ok
-        p1 = re.compile(r'^\s*(?P<sys_fan>Fan\d+)?\(sys_fan\d+\)\s+(?P<model>[A-Za-z0-9\-]+)? +(?P<hw>[0-9.-]+)+ +(?P<dir>[a-z-]+)? +(?P<status>\w+)?\s*')
+        p1 = re.compile(r'^\s*(?P<sys_fan>Fan\d+\(sys_fan\d+\))?\s+(?P<model>[A-Za-z0-9\-]+)? +(?P<hw>[0-9.-]+)+ +(?P<dir>[a-z-]+)? +(?P<status>\w+)?\s*')
         
         #Fan_in_PS1                           --     front-to-back   Ok
         p2 = re.compile(r'^\s*(?P<ps_fan>Fan_in_PS\d+)?\s+(?P<model>[A-Za-z0-9\-]+)?\s+(?P<hw>[0-9.-]+)+ +(?P<dir>[a-z-]+)? +(?P<status>\w+)?\s*')
@@ -453,7 +453,7 @@ class ShowEnvironmentFanDetail(ShowEnvironmentFanDetailSchema):
         
         #Match fan details
         #Fan1(sys_fan1)  N9K-C9508-FAN        0.6020 front-to-back   Ok
-        p1 = re.compile(r'^\s*(?P<sys_fan>Fan\d+)?\(sys_fan\d+\)\s+(?P<model>[A-Za-z0-9\-]+)? +(?P<hw>[0-9.-]+)+ +(?P<dir>[a-z-]+)? +(?P<status>\w+)?\s*')
+        p1 = re.compile(r'^\s*(?P<sys_fan>Fan\d+\(sys_fan\d+\))?\s+(?P<model>[A-Za-z0-9\-]+)? +(?P<hw>[0-9.-]+)+ +(?P<dir>[a-z-]+)? +(?P<status>\w+)?\s*')
         
         #Fan_in_PS1                           --     front-to-back   Ok
         p2 = re.compile(r'^\s*(?P<ps_fan>Fan_in_PS\d+)\s+(?P<model>[A-Za-z0-9\-]+)?\s+(?P<hw>[0-9.-]+) +(?P<dir>[a-z-]+) +(?P<status>\w+)\s*')
@@ -467,7 +467,7 @@ class ShowEnvironmentFanDetail(ShowEnvironmentFanDetailSchema):
         #Fan1(sys_fan1)      fan6    front-to-back    84        3272
         # Fan2(sys_fan2)      fan1    front-to-back    51        3280
         # Fan2(sys_fan2)      fan2    front-to-back    61        2362
-        p5 = re.compile(r'^\s*(?P<fan>Fan\d+)?\(sys_fan\d+\)\s+(?P<fan_num>fan\d+)?\s+(?P<dir>[a-z-]+)?\s+(?P<speed_per>\d+)?\s+(?P<speed_rpm>\d+)?\s*')
+        p5 = re.compile(r'^\s*(?P<fan>Fan\d+\(sys_fan\d+\))?\s+(?P<fan_num>fan\d+)?\s+(?P<dir>[a-z-]+)?\s+(?P<speed_per>\d+)?\s+(?P<speed_rpm>\d+)?\s*')
 
         # Fan_in_PS1            7978                8537
         # Fan_in_PS2            8021                8473
@@ -546,9 +546,9 @@ class ShowEnvironmentPowerSchema(MetaParser):
             Optional('power_supply'):{
                 Any():{
                     Optional('model'): str,
-                    Optional('actual_output'): int,
-                    Optional('actual_input'): int,
-                    Optional('total_capacity'): int,
+                    Optional('actual_output_watts'): int,
+                    Optional('actual_input_watts'): int,
+                    Optional('total_capacity_watts'): int,
                     Optional('status'): str
                 }
             },
@@ -565,13 +565,13 @@ class ShowEnvironmentPowerSchema(MetaParser):
                 Optional('oper_mode'): str
             },
             Optional('power_usage_summary'):{
-                Optional('total_power_capacity'): float,
-                Optional('total_grid_a'): float,
-                Optional('total_grid_b'): float,
-                Optional('total_power_cumalative'): float,
-                Optional('total_power_output'): float,
-                Optional('total_power_input'): float,
-                Optional('total_power_allocated'): float,
+                Optional('total_power_capacity_watts'): float,
+                Optional('total_grid_a_power_watts'): float,
+                Optional('total_grid_b_power_watts'): float,
+                Optional('total_power_cumulative_watts'): float,
+                Optional('total_power_output_watts'): float,
+                Optional('total_power_input_watts'): float,
+                Optional('total_power_allocated_watts'): float,
                 Optional('total_power_available'): float
             }
         }
@@ -657,8 +657,8 @@ class ShowEnvironmentPower(ShowEnvironmentPowerSchema):
             if m:
                 gpdict = m.groupdict()
                 parsed_env_power_dict['power']['power_supply'][gpdict['ps_id']] = {
-                    'model': gpdict['model'], 'actual_output': int(gpdict['act_out']), \
-                    'actual_input': int(gpdict['act_in']), 'total_capacity': int(gpdict['tot_cap']), \
+                    'model': gpdict['model'], 'actual_output_watts': int(gpdict['act_out']), \
+                    'actual_input_watts': int(gpdict['act_in']), 'total_capacity_watts': int(gpdict['tot_cap']), \
                     'status': gpdict['status']
                 }
                 continue
@@ -693,43 +693,43 @@ class ShowEnvironmentPower(ShowEnvironmentPowerSchema):
             #Total Power Capacity (based on configured mode)            18000.00 W
             m = p6.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_capacity'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_capacity_watts'] = float(m.group(1))
                 continue
 
             #Total Grid-A (first half of PS slots) Power Capacity       12000.00 W
             m = p7.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_grid_a'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_grid_a_power_watts'] = float(m.group(1))
                 continue
             
             #Total Power of all Inputs (cumulative)                     18000.00 W
             m = p8.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_grid_b'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_grid_b_power_watts'] = float(m.group(1))
                 continue
             
             #Total Power of all Inputs (cumulative)                     18000.00 W
             m = p9.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_cumalative'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_cumulative_watts'] = float(m.group(1))
                 continue
             
             #Total Power Output (actual draw)                           5655.00 W
             m = p10.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_output'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_output_watts'] = float(m.group(1))
                 continue
             
             #Total Power Input (actual draw)                            6038.00 W
             m = p11.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_input'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_input_watts'] = float(m.group(1))
                 continue
             
             #Total Power Allocated (budget)                             10759.00 W
             m = p12.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_allocated'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_allocated_watts'] = float(m.group(1))
                 continue
             
             #Total Power Available for additional modules               7241.00 W
@@ -754,9 +754,9 @@ class ShowEnvironmentPowerDetailSchema(MetaParser):
             Optional('power_supply'):{
                 Any():{
                     Optional('model'): str,
-                    Optional('actual_output'): int,
-                    Optional('actual_input'): int,
-                    Optional('total_capacity'): int,
+                    Optional('actual_output_watts'): int,
+                    Optional('actual_input_watts'): int,
+                    Optional('total_capacity_watts'): int,
                     Optional('status'): str
                 }
             },
@@ -773,18 +773,18 @@ class ShowEnvironmentPowerDetailSchema(MetaParser):
                 Optional('oper_mode'): str
             },
             Optional('power_usage_summary'):{
-                Optional('total_power_capacity'): float,
-                Optional('total_grid_a'): float,
-                Optional('total_grid_b'): float,
-                Optional('total_power_cumalative'): float,
-                Optional('total_power_output'): float,
-                Optional('total_power_input'): float,
-                Optional('total_power_allocated'): float,
+                Optional('total_power_capacity_watts'): float,
+                Optional('total_grid_a_power_watts'): float,
+                Optional('total_grid_b_power_watts'): float,
+                Optional('total_power_cumulative_watts'): float,
+                Optional('total_power_output_watts'): float,
+                Optional('total_power_input_watts'): float,
+                Optional('total_power_allocated_watts'): float,
                 Optional('total_power_available'): float
             },
             Optional('power_supply_details'):{
                 Any():{
-                    Optional('total_capacity'): int,
+                    Optional('total_capacity_watts'): int,
                     Optional('voltage'): int, 
                     Optional('Pin'): float,
                     Optional('Vin'): float,
@@ -909,8 +909,8 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
             if m:
                 gpdict = m.groupdict()
                 parsed_env_power_dict['power']['power_supply'][gpdict['ps_id']] = {
-                    'model': gpdict['model'], 'actual_output': int(gpdict['act_out']), \
-                    'actual_input': int(gpdict['act_in']), 'total_capacity': int(gpdict['tot_cap']), \
+                    'model': gpdict['model'], 'actual_output_watts': int(gpdict['act_out']), \
+                    'actual_input_watts': int(gpdict['act_in']), 'total_capacity_watts': int(gpdict['tot_cap']), \
                     'status': gpdict['status']
                 }
                 continue
@@ -945,43 +945,43 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
             #Total Power Capacity (based on configured mode)            18000.00 W
             m = p6.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_capacity'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_capacity_watts'] = float(m.group(1))
                 continue
 
             #Total Grid-A (first half of PS slots) Power Capacity       12000.00 W
             m = p7.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_grid_a'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_grid_a_power_watts'] = float(m.group(1))
                 continue
             
             #Total Power of all Inputs (cumulative)                     18000.00 W
             m = p8.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_grid_b'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_grid_b_power_watts'] = float(m.group(1))
                 continue
             
             #Total Power of all Inputs (cumulative)                     18000.00 W
             m = p9.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_cumalative'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_cumulative_watts'] = float(m.group(1))
                 continue
             
             #Total Power Output (actual draw)                           5655.00 W
             m = p10.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_output'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_output_watts'] = float(m.group(1))
                 continue
             
             #Total Power Input (actual draw)                            6038.00 W
             m = p11.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_input'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_input_watts'] = float(m.group(1))
                 continue
             
             #Total Power Allocated (budget)                             10759.00 W
             m = p12.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_allocated'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_allocated_watts'] = float(m.group(1))
                 continue
             
             #Total Power Available for additional modules               7241.00 W
@@ -995,7 +995,7 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
             m = p14.match(line)
             if m:
                 ps = m.group('ps')
-                parsed_env_power_dict['power']['power_supply_details'][ps] = {'total_capacity': int(m.group('tot_cap')), 'voltage': int(m.group('voltage'))}
+                parsed_env_power_dict['power']['power_supply_details'][ps] = {'total_capacity_watts': int(m.group('tot_cap')), 'voltage': int(m.group('voltage'))}
                 continue
             
             # Pin:1143.68W  Vin:236.07V    Iin:4.89A    Pout:1076.82W    Vout:12.08V    Iout:90.03A
@@ -1057,9 +1057,9 @@ class ShowEnvironmentTemperatureSchema(MetaParser):
     schema = {
         Any(): {
             Any(): {
-            Optional('major_threshold'): int,
-            Optional('minor_threshold'): int,
-            Optional('current_temp'): int,
+            Optional('major_threshold_celsius'): int,
+            Optional('minor_threshold_celsius'): int,
+            Optional('current_temp_celsius'): int,
             Optional('status'): str
             }
         }
@@ -1114,9 +1114,9 @@ class ShowEnvironmentTemperature(ShowEnvironmentTemperatureSchema):
                 if groupdict['sensor'] not in parsed_env_temp_dict[groupdict['mod']]:
                     parsed_env_temp_dict[groupdict['mod']][groupdict['sensor']] = {}
                 parsed_env_temp_dict[groupdict['mod']][groupdict['sensor']] = {
-                    'major_threshold': int(groupdict['major_thresh']), \
-                    'minor_threshold': int(groupdict['minor_thresh']), \
-                    'current_temp': int(groupdict['curr_temp']), \
+                    'major_threshold_celsius': int(groupdict['major_thresh']), \
+                    'minor_threshold_celsius': int(groupdict['minor_thresh']), \
+                    'current_temp_celsius': int(groupdict['curr_temp']), \
                     'status': groupdict['status']
                 }
                 continue
