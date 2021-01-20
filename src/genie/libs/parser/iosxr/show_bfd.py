@@ -1,6 +1,8 @@
 """ show_bfd.py
     supports commands:
         * show bfd session
+        * show bfd session destination {ip_address} detail
+        * show bfd ipv6 session destination {ip_address} detail
 """
 
 # Python
@@ -38,10 +40,6 @@ class ShowBfdSessionSchema(MetaParser):
             }
         }
     }
-
-
-
-
 
 class ShowBfdSession(ShowBfdSessionSchema):
     """ Parser for show bfd session"""
@@ -164,3 +162,467 @@ class ShowBfdSession(ShowBfdSessionSchema):
 
         return result_dict
 
+
+
+# ==================================================
+# Parser for 'show bfd session destination details'
+# ==================================================
+
+class ShowBfdSessionDestinationDetailsSchema(MetaParser):
+
+    """ 
+        Schema for the following show commands:
+            * show bfd session destination {ip_address} details
+            *show bfd ipv6 session destination {ip_address} details
+    """
+
+    schema = {
+        'interface': {
+        	Any():{
+        		'location': str,
+        		'dest': str,
+        		'src': str,
+        		'session':{
+        			'state': str,
+        			'duration': str,
+        			'num_of_times_up': int,
+        			'type': str,
+        			'owner_info':{
+        				Any():{
+        					'client':{
+        						Any():{
+        							'interval': int,
+        							'interval_unit': str,
+        							'multiplier': int,
+        						}
+        					}
+        				}
+        			}
+        		},
+        		Any():{
+        			'version': int,
+        			'desired_tx_interval': int,
+        			'desired_tx_interval_unit': str,
+        			'required_rx_interval': int,
+        			'required_rx_interval_unit': str,
+        			'required_echo_rx_interval': int,
+                    'required_echo_rx_interval_unit': str,
+        			'multiplier': int,
+        			'diag': str,
+        			'my_discr': int,
+        			'your_discr': int,
+        			'state': str,
+        			Optional(Any()): bool,
+        		},
+        		'timer_vals':{
+        			'local_async_tx_interval': int,
+        			'local_async_tx_interval_unit': str,
+        			'remote_async_tx_interval': int,
+        			'remote_async_tx_interval_unit': str,
+        			'desired_echo_tx_interval': int,
+        			'desired_echo_tx_interval_unit': str,
+        			'local_echo_tax_interval': int,
+        			'local_echo_tax_interval_unit': str,
+        			'echo_detection_time': int,
+        			'echo_detection_time_unit': str,
+        			'async_detection_time': int,
+        			'async_detection_time_unit': str,
+        		},
+        		'local_stats': {
+        			'latency_of_echo_packets':{
+        				'num_of_packets': int,
+        				'min':int,
+        				'min_unit': str,
+        				'max': int,
+        				'max_unit': str,
+                        'avg': int,
+                        'avg_unit': str
+        				},
+        			Any(): {
+        				Any(): {
+        					'num_intervals': int,
+        					'min': int,
+        					'min_unit': str,
+        					'max': int,
+        					'max_unit': str,
+        					'avg': int,
+        					'avg_unit': str,
+        					Optional('last_packet_transmitted_ago'): int,
+                            Optional('last_packet_transmitted_unit_ago'): str,
+        					Optional('last_packet_received_ago'): int,
+        					Optional('last_packet_received_unit_ago'): str,
+        				},
+        			}
+        		}
+        	}
+        }
+    }
+
+class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
+
+    """
+    Parser for the following show commands:
+        * show bfd session destination {ip_address} details
+        * show bfd ipv6 session destination {ip_address} details
+    """
+
+    cli_command = ['show bfd session destination {ip_address} details',
+                   'show bfd {ipv6} session destination {ip_address} details']
+
+    def cli(self, ip_address, ipv6='', output=None):
+        
+        if output is None:
+            if ipv6:
+                out = self.device.execute(
+                           self.cli_command[1].format(ipv6=ipv6, ip_address=ip_address))
+            else:
+                out = self.device.execute(
+                           self.cli_command[0].format(ip_address=ip_address))
+        else:
+            out = output
+
+        result_dict = {}
+
+        # I/f: GigabitEthernet0/0/0/0, Location: 0/0/CPU0
+        p1 = re.compile(r'I/f: +(?P<interface>[\S\s]+), '
+                        r'+Location: +(?P<location>[\S\s]+)')
+
+        # Dest: 31.1.1.1
+        p2 = re.compile(r'Dest: +(?P<dest>[\S\s]+)')
+
+        # Src: 31.1.1.2
+        p3 = re.compile(r'Src: +(?P<src>[\S\s]+)')
+
+        #  State: UP for 0d:0h:5m:50s, number of times UP: 1
+        p4 = re.compile(r'State: +(?P<state>UP|DOWN|Up|Down|up|down)'
+                        r' +for +(?P<duration>[\S\s]+),'
+                        r' +number +of +times +UP: +(?P<num_of_times_up>[\d]+)')
+
+        #  Session type: PR/V4/SH
+        p5 = re.compile(r'Session +type: +(?P<type>[\S\s]+)')
+
+        # Received parameters:
+        # Transmitted parameters:
+        p6 = re.compile(r'(?P<param>Received|Transmitted) +parameters')
+
+        #  Version: 1, desired tx interval: 500 ms, required rx interval: 500 ms
+        p7 = re.compile(r'Version: +(?P<version>\d+),'
+                        r' +desired +tx +interval:'
+                        r' +(?P<tx_interval>\d+) +(?P<tx_interval_unit>\w+),'
+                        r' +required +rx +interval: +(?P<rx_interval>\d+)'
+                        r' +(?P<rx_interval_unit>\w+)')
+
+        #  Required echo rx interval: 0 ms, multiplier: 6, diag: None
+        p8 = re.compile(r'Required echo rx interval:'
+                        r' +(?P<echo_rx_interval>\d+)'
+                        r' +(?P<echo_rx_interval_unit>[\w]+),'
+                        r' +multiplier: (?P<multiplier>\d+),'
+                        r' +diag: +(?P<diag>[\S\s]+)')
+
+        # My discr: 18, your discr: 2148532226, state UP, D/F/P/C/A: 0/0/0/1/0
+        p9 = re.compile(r'My +discr: +(?P<my_discr>\d+), +your +discr:'
+                        r' +(?P<your_discr>\d+), +state +(?P<state>UP|DOWN),'
+                        r' +D/F/P/C/A: +(?P<d_f_p_c_a>[\d\/]+)')
+        
+        # Timer Values:
+        p10 = re.compile(r'Timer +Values:')
+
+        # Local negotiated async tx interval: 500 ms
+        p11 = re.compile(r'Local +negotiated +async +tx +interval:'
+                         r' +(?P<tx_interval>\d+) +(?P<tx_interval_unit>[\w]+)')
+
+        # Remote negotiated async tx interval: 500 ms
+        p12 = re.compile(r'Remote +negotiated +async +tx +interval:'
+                         r' +(?P<tx_interval>\d+) +(?P<tx_interval_unit>[\w]+)')
+        
+        # Desired echo tx interval: 500 ms, local negotiated echo tx interval: 0 ms
+        p13 = re.compile(r'Desired +echo +tx +interval:'
+                         r' +(?P<echo_tx>\d+) +(?P<echo_tx_unit>\w+),'
+                         r' +local +negotiated +echo +tx +interval:'
+                         r' +(?P<local_echo_tx>\d+) +(?P<local_echo_tx_unit>\w+)')
+
+        # Echo detection time: 0 ms(0 ms*6), async detection time: 3 s(500 ms*6)
+        p14 = re.compile(r'Echo +detection +time:'
+                         r' +(?P<echo_time>\d+) +(?P<echo_time_unit>\w+)\([\S\s]+\),'
+                         r' +async +detection +time:'
+                         r' +(?P<async_time>\d+) +(?P<async_time_unit>\w+)\([\S\s]+\)')
+
+        # Local Stats:
+        p15 = re.compile(r'Local +Stats:')
+
+        #  Intervals between async packets:
+        #  Intervals between echo packets:
+        p16 = re.compile(r'Intervals +between +(?P<packet_type>async|echo) packets:')
+
+        #   Tx: Number of intervals=100, min=1 ms, max=500 ms, avg=229 ms
+        #   Rx: Number of intervals=100, min=490 ms, max=513 ms, avg=500 ms
+        p17 = re.compile(r'(?P<rx_tx>Tx|Rx): +Number +of +intervals=(?P<num_intervals>\d+),'
+                         r' +min=(?P<min>\d+) +(?P<min_unit>\w+),'
+                         r' +max=(?P<max>\d+) +(?P<max_unit>\w+),'
+                         r' +avg=(?P<avg>\d+) +(?P<avg_unit>\w+)')
+
+        #       Last packet transmitted 48 ms ago
+        #       Last packet received 304 ms ago
+        #       Last packet transmitted 0 s ago
+        #       Last packet received 0 s ago
+        p18 = re.compile(r'Last +packet +(?P<packet_direction>transmitted|received) +(?P<packet>\d+)'
+                         r' +(?P<packet_unit>\w+) +ago')
+
+        # Latency of echo packets (time between tx and rx):
+        p19 = re.compile(r'Latency +of +echo +packets +\(time +between +tx +and +rx\):')
+
+        #   Number of packets: 0, min=0 ms, max=0 ms, avg=0 ms 
+        p20 = re.compile(r'Number +of +packets: +(?P<num_packets>\d+),'
+                         r' +min=(?P<min>\d+) +(?P<min_unit>\w+),'
+                         r' +max=(?P<max>\d+) +(?P<max_unit>\w+),'
+                         r' +avg=(?P<avg>\d+) +(?P<avg_unit>\w+)')
+
+        # Session owner information:
+        p21 = re.compile(r'Session +owner +information:')
+
+        #                            Desired               Adjusted
+        p22 = re.compile(r'Desired +Adjusted')
+
+        #   ipv4_static          500 ms     6          500 ms     6
+        p23 = re.compile(r'(?P<client>[\S\s]+)'
+                         r' +(?P<desired_interval>\d+)'
+                         r' +(?P<desired_interval_unit>\w+)'
+                         r' +(?P<desired_multiplier>\d+)'
+                         r' +(?P<adjusted_interval>\d+)'
+                         r' +(?P<adjusted_interval_unit>\w+)'
+                         r' +(?P<adjusted_multiplier>\d+)')
+
+        dfpca_dict = {'d': 'demand',
+                      'f': 'final',
+                      'p': 'poll',
+                      'c': 'control',
+                      'a': 'authentication'}
+
+        for line in out.splitlines():
+            line = line.strip()
+            # I/f: GigabitEthernet0/0/0/0, Location: 0/0/CPU0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict = result_dict.setdefault('interface', {}).\
+                                             setdefault(group['interface'], {})
+                interface_dict.update({'location': group['location']})
+                continue
+
+            # Dest: 31.1.1.1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'dest': group['dest']})
+                continue
+
+            # Src: 31.1.1.2
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'src': group['src']})
+                continue
+
+            #  State: UP for 0d:0h:5m:50s, number of times UP: 1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict = interface_dict.setdefault('session', {})
+                session_dict.update({'state': group['state'],
+                                     'duration': group['duration'],
+                                     'num_of_times_up': int(group['num_of_times_up'])})
+                continue
+
+            #  Session type: PR/V4/SH
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict.update({'type': group['type']})
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                params_dict = interface_dict.setdefault(
+                                '{}_parameters'.format(group['param'].lower()), {})
+                continue
+
+            #  Version: 1, desired tx interval: 500 ms, required rx interval: 500 ms
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                params_dict.update({'version': int(group['version']),
+                                    'desired_tx_interval': int(group['tx_interval']),
+                                    'desired_tx_interval_unit': group['tx_interval_unit'],
+                                    'required_rx_interval': int(group['rx_interval']),
+                                    'required_rx_interval_unit': group['rx_interval_unit'],
+                                    })
+                continue
+
+            #  Required echo rx interval: 0 ms, multiplier: 6, diag: None
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                params_dict.update({'required_echo_rx_interval': int(group['echo_rx_interval']),
+                                    'required_echo_rx_interval_unit': group['echo_rx_interval_unit'],
+                                    'multiplier': int(group['multiplier']),
+                                    'diag': group['diag'],
+                                    })
+                continue
+
+            # My discr: 18, your discr: 2148532226, state UP, D/F/P/C/A: 0/0/0/1/0
+            m = p9.match(line)
+            if m:
+
+                group = m.groupdict()
+                if group.get('d_f_p_c_a'):
+                    dfpca_list = group['d_f_p_c_a'].split('/')
+                    dfpca_dict_with_value = dict(zip(dfpca_dict.values(), dfpca_list))
+                    binary_dict = {'0': False, '1': True}
+                    for key, value in dfpca_dict_with_value.items():
+                        params_dict.update({key: binary_dict[value]})
+
+                params_dict.update({'my_discr': int(group['my_discr']),
+                                    'your_discr':int(group['your_discr']),
+                                    'state': group['state']
+                                    })
+                continue
+
+
+            # Timer Values:
+            m = p10.match(line)
+            if m:
+                timer_dict = interface_dict.setdefault('timer_vals', {})
+                continue
+
+            # Local negotiated async tx interval: 500 ms
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                timer_dict.update({'local_async_tx_interval': int(group['tx_interval']),
+                                   'local_async_tx_interval_unit':group['tx_interval_unit']})
+                continue
+
+            # Remote negotiated async tx interval: 500 ms
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                timer_dict.update({'remote_async_tx_interval': int(group['tx_interval']),
+                                   'remote_async_tx_interval_unit':group['tx_interval_unit']})
+                continue
+
+            # Desired echo tx interval: 500 ms, local negotiated echo tx interval: 0 ms
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                timer_dict.update({'desired_echo_tx_interval': int(group['echo_tx']),
+                                   'desired_echo_tx_interval_unit':group['echo_tx_unit'],
+                                   'local_echo_tax_interval': int(group['local_echo_tx']),
+                                   'local_echo_tax_interval_unit':group['local_echo_tx_unit']})
+                continue
+
+            # Echo detection time: 0 ms(0 ms*6), async detection time: 3 s(500 ms*6)
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                timer_dict.update({'echo_detection_time': int(group['echo_time']),
+                                   'echo_detection_time_unit':group['echo_time_unit'],
+                                   'async_detection_time': int(group['async_time']),
+                                   'async_detection_time_unit':group['async_time_unit']})
+                continue
+
+            # Local Stats:
+            m = p15.match(line)
+            if m:
+                local_dict = interface_dict.setdefault('local_stats', {})
+                continue
+
+            #  Intervals between async packets:
+            #  Intervals between echo packets:
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                interval_dict = local_dict.setdefault('interval_{}_packets'.
+                                                      format(group['packet_type']), {})
+                continue
+
+            #   Tx: Number of intervals=100, min=1 ms, max=500 ms, avg=229 ms
+            #   Rx: Number of intervals=100, min=490 ms, max=513 ms, avg=500 ms
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                rx_tx_dict = interval_dict.setdefault(group['rx_tx'], {})
+                rx_tx_dict.update({'num_intervals': int(group['num_intervals']),
+                                   'min': int(group['min']),
+                                   'min_unit':group['min_unit'],
+                                   'max': int(group['max']),
+                                   'max_unit':group['max_unit'],
+                                   'avg': int(group['avg']),
+                                   'avg_unit':group['avg_unit']})
+                continue
+
+            #       Last packet transmitted 48 ms ago
+            #       Last packet received 304 ms ago
+            #       Last packet transmitted 0 s ago
+            #       Last packet received 0 s ago
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                direction = group['packet_direction']
+                rx_tx_dict.update({'last_packet_{}_ago'.format(direction): int(group['packet']),
+                                   'last_packet_{}_unit_ago'.format(direction):group['packet_unit']})
+                continue
+
+            # Latency of echo packets (time between tx and rx):
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                latency_dict = local_dict.setdefault('latency_of_echo_packets', {})
+                continue
+
+            #   Number of packets: 0, min=0 ms, max=0 ms, avg=0 ms 
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                latency_dict.update({'num_of_packets': int(group['num_packets']),
+                                     'min': int(group['min']),
+                                     'min_unit':group['min_unit'],
+                                     'max': int(group['max']),
+                                     'max_unit':group['max_unit'],
+                                     'avg': int(group['avg']),
+                                     'avg_unit':group['avg_unit']})
+                continue
+
+            # Session owner information:
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                owner_dict = session_dict.setdefault('owner_info', {})
+                continue
+
+            #                            Desired               Adjusted
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                desired_dict = owner_dict.setdefault('desired', {})\
+                                         .setdefault('client', {})
+                adjusted_dict = owner_dict.setdefault('adjusted', {})\
+                                          .setdefault('client', {})
+                continue
+
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                desired_dict.update({group['client'].strip():{
+                                    'interval': int(group['desired_interval']),
+                                    'interval_unit': group['desired_interval_unit'],
+                                    'multiplier': int(group['desired_multiplier'])
+                }})
+                adjusted_dict.update({group['client'].strip():{
+                                    'interval': int(group['adjusted_interval']),
+                                    'interval_unit': group['adjusted_interval_unit'],
+                                    'multiplier': int(group['adjusted_multiplier'])
+                }})
+                continue
+
+        return result_dict
