@@ -35,7 +35,11 @@ class ShowBFDSessionSchema(MetaParser):
 
     schema = {
         "bfd-session-information": {
-            "bfd-session": Use(validate_bfd_session)
+            Optional("bfd-session"): Use(validate_bfd_session),
+            "clients": str,
+            "cumulative-reception-rate": str,
+            "cumulative-transmission-rate": str,
+            "sessions": str
         }
     }
 
@@ -64,6 +68,13 @@ class ShowBFDSession(ShowBFDSessionSchema):
                         r'(?P<session_transmission_interval>[\d\.]+) +'
                         r'(?P<session_adaptive_multiplier>\S+)$')
 
+        #     1 sessions, 1 clients
+        p2 = re.compile(r'^(?P<sessions>\S+) +sessions, +(?P<clients>\S+) +clients$')
+
+        #     Cumulative transmit rate 2.0 pps, cumulative receive rate 2.0 pps
+        p3 = re.compile(r'^Cumulative transmit rate (?P<cumulative_reception_rate>\S+) pps, '
+                        r'cumulative receive rate (?P<cumulative_transmission_rate>\S+) pps$')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -76,6 +87,18 @@ class ShowBFDSession(ShowBFDSessionSchema):
                     k.replace('_', '-'): v
                     for k, v in group.items() if v is not None
                 })
+                continue
+
+            #     1 sessions, 1 clients
+            #     Cumulative transmit rate 2.0 pps, cumulative receive rate 2.0 pps
+            m = p2.match(line) or p3.match(line)
+            if m:
+                group = m.groupdict()
+
+                for k, v in group.items():
+                    ret_dict.setdefault('bfd-session-information', {})[k.replace('_', '-')] = v
+
+                continue
 
         return ret_dict
 
@@ -88,8 +111,8 @@ class ShowBFDSessionDetailSchema(MetaParser):
 
     schema = {
         "bfd-session-information": {
-            "bfd-session": {
-                "bfd-client": {
+            Optional("bfd-session"): {
+                Optional("bfd-client"): {
                     "client-name": str,
                     "client-reception-interval": str,
                     "client-transmission-interval": str
@@ -221,7 +244,7 @@ class ShowBFDSessionDetail(ShowBFDSessionDetailSchema):
                 group = m.groupdict()
 
                 for k, v in group.items():
-                    ret_dict['bfd-session-information'][k.replace('_', '-')] = v
+                    ret_dict.setdefault('bfd-session-information', {})[k.replace('_', '-')] = v
 
                 continue
 
