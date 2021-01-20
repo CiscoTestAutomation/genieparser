@@ -190,12 +190,10 @@ class ShowBfdSessionDestinationDetailsSchema(MetaParser):
         		        	'type': str,
         		        	'owner_info':{
         		        		Any():{
-        		        			'client':{
-        		        				Any():{
-        		        					'interval_ms': int,
-        		        					'multiplier': int,
-        		        				}
-        		        			}
+        		        			'desired_interval_ms': int,
+        		        			'desired_multiplier': int,
+        		        			'adjusted_interval_ms': int,
+        		        			'adjusted_multiplier': int,
         		        		}
         		        	}
         		        },
@@ -365,11 +363,8 @@ class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
         # Session owner information:
         p21 = re.compile(r'Session +owner +information:')
 
-        #                            Desired               Adjusted
-        p22 = re.compile(r'Desired +Adjusted')
-
         #   ipv4_static          500 ms     6          500 ms     6
-        p23 = re.compile(r'(?P<client>[\S\s]+)'
+        p22 = re.compile(r'(?P<client>[\S\s]+)'
                          r' +(?P<desired_interval>\d+)'
                          r' +(?P<desired_interval_unit>\w+)'
                          r' +(?P<desired_multiplier>\d+)'
@@ -618,34 +613,24 @@ class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
                 owner_dict = session_dict.setdefault('owner_info', {})
                 continue
 
-            #                            Desired               Adjusted
             m = p22.match(line)
             if m:
                 group = m.groupdict()
-                desired_dict = owner_dict.setdefault('desired', {})\
-                                         .setdefault('client', {})
-                adjusted_dict = owner_dict.setdefault('adjusted', {})\
-                                          .setdefault('client', {})
-                continue
+                client_dict = owner_dict.setdefault(group['client'].strip(), {})
 
-            m = p23.match(line)
-            if m:
-                group = m.groupdict()
                 desired_interval = int(group['desired_interval'])
                 if group['desired_interval_unit'] == 's':
                     desired_interval*=1000
-                desired_dict.update({group['client'].strip():{
-                                    'interval_ms': desired_interval,
-                                    'multiplier': int(group['desired_multiplier'])
-                }})
+                client_dict.update({'desired_interval_ms': desired_interval,
+                                   'desired_multiplier': int(group['desired_multiplier'])
+                                   })
 
                 adjusted_interval = int(group['adjusted_interval'])
                 if group['adjusted_interval_unit'] == 's':
                     adjusted_interval*=1000
-                adjusted_dict.update({group['client'].strip():{
-                                    'interval_ms': adjusted_interval,
-                                    'multiplier': int(group['adjusted_multiplier'])
-                }})
+                client_dict.update({'adjusted_interval_ms': adjusted_interval,
+                                    'adjusted_multiplier': int(group['adjusted_multiplier'])
+                })
                 continue
 
         return result_dict

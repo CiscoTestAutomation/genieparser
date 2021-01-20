@@ -28,24 +28,14 @@ class TestShowBfdSessionDestinationDetailss(unittest.TestCase):
                         "num_of_times_up":1,
                         "type":"PR/V4/SH",
                         "owner_info":{
-                           "desired":{
-                              "client":{
-                                 "ipv4_static":{
-                                    "interval_ms":500,
-                                    "multiplier":6
-                                 }
-                              }
-                           },
-                           "adjusted":{
-                              "client":{
-                                 "ipv4_static":{
-                                    "interval_ms":500,
-                                    "multiplier":6
-                                 }
+                              "ipv4_static":{
+                                 "desired_interval_ms":500,
+                                 "desired_multiplier":6,
+                                 "adjusted_interval_ms":500,
+                                 "adjusted_multiplier":6
                               }
                            }
-                        }
-                     },
+                        },
                      "received_parameters":{
                         "version":1,
                         "desired_tx_interval_ms":500,
@@ -223,24 +213,14 @@ class TestShowBfdSessionDestinationDetailss(unittest.TestCase):
                         "num_of_times_up":1,
                         "type":"PR/V6/SH",
                         "owner_info":{
-                           "desired":{
-                              "client":{
-                                 "ipv6_static":{
-                                    "interval_ms":500,
-                                    "multiplier":6
-                                 }
-                              }
-                           },
-                           "adjusted":{
-                              "client":{
-                                 "ipv6_static":{
-                                    "interval_ms":500,
-                                    "multiplier":6
-                                 }
+                              "ipv6_static":{
+                                 "desired_interval_ms":500,
+                                 "desired_multiplier":6,
+                                 "adjusted_interval_ms":500,
+                                 "adjusted_multiplier":6
                               }
                            }
-                        }
-                     },
+                        },
                      "received_parameters":{
                         "version":1,
                         "desired_tx_interval_ms":500,
