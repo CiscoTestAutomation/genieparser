@@ -380,7 +380,6 @@ class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            # import pdb; pdb.set_trace()
             # I/f: GigabitEthernet0/0/0/0, Location: 0/0/CPU0
             m = p1.match(line)
             if m:
