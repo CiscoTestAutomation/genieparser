@@ -242,7 +242,8 @@ class ShowBFDSessionDetail(ShowBFDSessionDetailSchema):
             m = p7.match(line) or p8.match(line)
             if m:
                 group = m.groupdict()
-
+                if "bfd-session-information" not in ret_dict:
+                    bfd_session = ret_dict.setdefault("bfd-session-information", {})
                 for k, v in group.items():
                     ret_dict.setdefault('bfd-session-information', {})[k.replace('_', '-')] = v
 
