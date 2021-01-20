@@ -1,173 +1,116 @@
 expected_output = {
-        "interface": {
-            "GigabitEthernet0/0/0/15.103": {
-                "dest_ip_address": {
-                    "172.16.100.130": {
-                        "async_msec": 2000,
-                        "async_multiplier": 3,
-                        "async_total_msec": 6000,
-                        "echo_msec": 150,
-                        "echo_multiplier": 3,
-                        "echo_total_msec": 450,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "UP",
-                    }
-                }
-            },
-            "GigabitEthernet0/0/0/15.50": {
-                "dest_ip_address": {
-                    "10.100.100.10": {
-                        "async_msec": 2000,
-                        "async_multiplier": 3,
-                        "async_total_msec": 6000,
-                        "echo_msec": 150,
-                        "echo_multiplier": 3,
-                        "echo_total_msec": 450,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "UP",
-                    }
-                }
-            },
-            "GigabitEthernet0/0/0/16.104": {
-                "dest_ip_address": {
-                    "172.16.100.66": {
-                        "async_msec": 2000,
-                        "async_multiplier": 3,
-                        "async_total_msec": 6000,
-                        "echo_msec": 150,
-                        "echo_multiplier": 3,
-                        "echo_total_msec": 450,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "UP",
-                    }
-                }
-            },
-            "GigabitEthernet0/0/0/16.200": {
-                "dest_ip_address": {
-                    "10.100.100.3": {
-                        "async_msec": 2000,
-                        "async_multiplier": 3,
-                        "async_total_msec": 6000,
-                        "echo_msec": 15,
-                        "echo_multiplier": 3,
-                        "echo_total_msec": 45,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "UP",
-                    }
-                }
-            },
-            "GigabitEthernet0/0/0/26.100": {
-                "dest_ip_address": {
-                    "10.0.100.2": {
-                        "async_msec": 300,
-                        "async_multiplier": 3,
-                        "async_total_msec": 900,
-                        "echo_msec": 0,
-                        "echo_multiplier": 0,
-                        "echo_total_msec": 0,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "UP",
-                    },
-                    "10.0.100.3": {
-                        "async_msec": 200,
-                        "async_multiplier": 3,
-                        "async_total_msec": 600,
-                        "echo_msec": 0,
-                        "echo_multiplier": 0,
-                        "echo_total_msec": 0,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "UP",
-                    },
-                }
-            },
-            "GigabitEthernet0/0/0/26.102": {
-                "dest_ip_address": {
-                    "10.150.23.98": {
-                        "async_msec": 200,
-                        "async_multiplier": 3,
-                        "async_total_msec": 600,
-                        "echo_msec": 0,
-                        "echo_multiplier": 0,
-                        "echo_total_msec": 0,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "UP",
-                    }
-                }
-            },
-            "GigabitEthernet0/0/0/26.120": {
-                "dest_ip_address": {
-                    "10.0.221.98": {
-                        "async_total_msec": 0,
-                        "dampening": "DAMP",
-                        "echo_total_msec": 0,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "DOWN",
-                    }
-                }
-            },
-            "GigabitEthernet0/0/0/26.900": {
-                "dest_ip_address": {
-                    "10.150.180.91": {
-                        "async_msec": 300,
-                        "async_multiplier": 3,
-                        "async_total_msec": 900,
-                        "echo_msec": 0,
-                        "echo_multiplier": 0,
-                        "echo_total_msec": 0,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "UP",
-                    }
-                }
-            },
-            "GigabitEthernet0/0/0/26.901": {
-                "dest_ip_address": {
-                    "10.150.180.98": {
-                        "async_msec": 300,
-                        "async_multiplier": 3,
-                        "async_total_msec": 900,
-                        "echo_msec": 0,
-                        "echo_multiplier": 0,
-                        "echo_total_msec": 0,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "UP",
-                    }
-                }
-            },
-            "GigabitEthernet0/0/0/36.902": {
-                "dest_ip_address": {
-                    "172.16.100.38": {
-                        "async_msec": 2000,
-                        "async_multiplier": 3,
-                        "async_total_msec": 6000,
-                        "echo_msec": 150,
-                        "echo_multiplier": 3,
-                        "echo_total_msec": 450,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "UP",
-                    }
-                }
-            },
-            "TenGigabitEthernet0/5/0/1.400": {
-                "dest_ip_address": {
-                    "10.150.100.1": {
-                        "async_total_msec": 0,
-                        "echo_total_msec": 0,
-                        "hardware": "No",
-                        "npu": "n/a",
-                        "state": "DOWN",
-                    }
-                }
-            },
-        }
-    }
+         "src":{
+            "31.1.1.2":{
+               "dest":{
+                  "31.1.1.1":{
+                     "interface":"GigabitEthernet0/0/0/0",
+                     "location":"0/0/CPU0",
+                     "session":{
+                        "state":"UP",
+                        "duration":"0d:0h:5m:50s",
+                        "num_of_times_up":1,
+                        "type":"PR/V4/SH",
+                        "owner_info":{
+                           "desired":{
+                              "client":{
+                                 "ipv4_static":{
+                                    "interval_ms":500,
+                                    "multiplier":6
+                                 }
+                              }
+                           },
+                           "adjusted":{
+                              "client":{
+                                 "ipv4_static":{
+                                    "interval_ms":500,
+                                    "multiplier":6
+                                 }
+                              }
+                           }
+                        }
+                     },
+                     "received_parameters":{
+                        "version":1,
+                        "desired_tx_interval_ms":500,
+                        "required_rx_interval_ms":500,
+                        "required_echo_rx_interval_ms":0,
+                        "multiplier":6,
+                        "diag":"None",
+                        "demand_bit":0,
+                        "final_bit":0,
+                        "poll_bit":0,
+                        "control_bit":1,
+                        "authentication_bit":0,
+                        "my_discr":18,
+                        "your_discr":2148532226,
+                        "state":"UP"
+                     },
+                     "transmitted_parameters":{
+                        "version":1,
+                        "desired_tx_interval_ms":500,
+                        "required_rx_interval_ms":500,
+                        "required_echo_rx_interval_ms":1,
+                        "multiplier":6,
+                        "diag":"None",
+                        "demand_bit":0,
+                        "final_bit":0,
+                        "poll_bit":0,
+                        "control_bit":1,
+                        "authentication_bit":0,
+                        "my_discr":2148532226,
+                        "your_discr":18,
+                        "state":"UP"
+                     },
+                     "timer_vals":{
+                        "local_async_tx_interval_ms":500,
+                        "remote_async_tx_interval_ms":500,
+                        "desired_echo_tx_interval_ms":500,
+                        "local_echo_tax_interval_ms":0,
+                        "echo_detection_time_ms":0,
+                        "async_detection_time_ms":3000
+                     },
+                     "local_stats":{
+                        "interval_async_packets":{
+                           "Tx":{
+                              "num_intervals":100,
+                              "min_ms":1,
+                              "max_ms":500,
+                              "avg_ms":229,
+                              "last_packet_transmitted_ms_ago":48
+                           },
+                           "Rx":{
+                              "num_intervals":100,
+                              "min_ms":490,
+                              "max_ms":513,
+                              "avg_ms":500,
+                              "last_packet_received_ms_ago":304
+                           }
+                        },
+                        "interval_echo_packets":{
+                           "Tx":{
+                              "num_intervals":0,
+                              "min_ms":0,
+                              "max_ms":0,
+                              "avg_ms":0,
+                              "last_packet_transmitted_ms_ago":0
+                           },
+                           "Rx":{
+                              "num_intervals":0,
+                              "min_ms":0,
+                              "max_ms":0,
+                              "avg_ms":0,
+                              "last_packet_received_ms_ago":0
+                           }
+                        },
+                        "latency_of_echo_packets":{
+                           "num_of_packets":0,
+                           "min_ms":0,
+                           "max_ms":0,
+                           "avg_ms":0
+                        }
+                     }
+                  }
+               }
+            }
+         }
+      }
