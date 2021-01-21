@@ -2142,6 +2142,13 @@ class TestShowEnvironmentPowerDetail(unittest.TestCase):
 	            "config_mode": "Non-Redundant(combined)",
 	            "oper_mode": "Non-Redundant(combined)",
 	        },
+            "power_usage_details":{
+            	"power_reserved_for_sup_watts" : "N/A",
+            	"power_reserved_for_fabric_sc_watts": "N/A",
+            	"power_reserved_for_fan_module_watts": "N/A",
+            	"total_power_reserved_watts": "N/A",
+            	"all_inlet_cords_connected": "No" 
+            },
 	        "power_usage_summary": {
 	            "total_grid_a_power_watts": 0.0,
 	            "total_grid_b_power_watts": 650.0,
@@ -2601,6 +2608,13 @@ class TestShowEnvironmentPowerDetail(unittest.TestCase):
 	            "config_mode": "Non-Redundant(combined)",
 	            "oper_mode": "Non-Redundant(combined)",
 	        },
+	        "power_usage_details":{
+            	"power_reserved_for_sup_watts" : "180",
+            	"power_reserved_for_fabric_sc_watts": "2870",
+            	"power_reserved_for_fan_module_watts": "740",
+            	"total_power_reserved_watts": "3799",
+            	"all_inlet_cords_connected": "No" 
+            },
 	        "power_usage_summary": {
 	            "total_grid_a_power_watts": 12000.0,
 	            "total_grid_b_power_watts": 6000.0,
