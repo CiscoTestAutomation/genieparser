@@ -7697,7 +7697,7 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
             "model": "N9K-C93108TC-EX",
             "sfp": False,
             "type": "10g",
-            "speed": "100,1000,10000",
+            "speed": [100,1000,10000],
             "duplex": "full",
             "trunk_encap_type": "802.1Q",
             "channel": "yes",
@@ -7826,7 +7826,7 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
             "model": "N9K-C9236C",
             "sfp": True,
             "type": "QSFP-100G-CR4",
-            "speed": "1000,10000",
+            "speed": [1000,10000],
             "duplex": "full",
             "trunk_encap_type": "802.1Q",
             "channel": "yes",
@@ -7857,7 +7857,7 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
             "model": "N9K-C93108TC-EX",
             "sfp": False,
             "type": "10g",
-            "speed": "100,1000,10000",
+            "speed": [100,1000,10000],
             "duplex": "full",
             "trunk_encap_type": "802.1Q",
             "channel": "yes",
@@ -7888,7 +7888,7 @@ class TestShowInterfaceCapabilities(unittest.TestCase):
             "model": "N9K-C9236C",
             "sfp": True,
             "type": "QSFP-100G-AOC1M",
-            "speed": "1000,10000,25000,40000,50000,100000",
+            "speed": [1000,10000,25000,40000,50000,100000],
             "duplex": "full",
             "trunk_encap_type": "802.1Q",
             "channel": "yes",
@@ -7979,8 +7979,8 @@ class TestShowInterfaceTransceiver(unittest.TestCase):
                  'part_number': '2821248-5',
                  'revision': 'D',
                  'serial_number': 'TED2318K229-B',
-                 'xcvr_present': True,
-                 'xcvr_type': 'QSFP-40G-CR4'
+                 'transceiver_present': True,
+                 'transceiver_type': 'QSFP-40G-CR4'
             }
         }
 
@@ -8038,8 +8038,8 @@ class TestShowInterfaceTransceiver(unittest.TestCase):
                  'revision': '00',
                  'serial_number': 'LCC2411GC93-A',
                  'vendor_oui': 'a8b0ae',
-                 'xcvr_present': True,
-                 'xcvr_type': 'QSFP-DD-400G-COPPER'
+                 'transceiver_present': True,
+                 'transceiver_type': 'QSFP-DD-400G-COPPER'
             }
     }
 
@@ -8180,8 +8180,8 @@ class TestShowInterfaceTransceiver(unittest.TestCase):
             "revision": "00",
             "serial_number": "LCC2411GG1W-A",
             "vendor_oui": "a8b0ae",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-DD-400G-COPPER",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-COPPER",
         },
         "Ethernet1/30": {
             "cis_part_number": "37-1317-03",
@@ -8193,8 +8193,8 @@ class TestShowInterfaceTransceiver(unittest.TestCase):
             "part_number": "2821248-5",
             "revision": "D",
             "serial_number": "TED2318K1QR-B",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-40G-CR4",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-40G-CR4",
         },
         "Ethernet1/52": {
             "advertising_code": "Optical Interfaces: SMF",
@@ -8226,11 +8226,11 @@ class TestShowInterfaceTransceiver(unittest.TestCase):
             "serial_number": "INL24265523",
             "vendor_oui": "447c7f",
             "wavelength_tolerance": "6.500 nm",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-DD-400G-FR4",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-FR4",
         },
         "Ethernet1/56": {
-            "xcvr_present": False
+            "transceiver_present": False
         },
         "Ethernet1/63": {
             "advertising_code": "Optical Interfaces: SMF",
@@ -8262,8 +8262,8 @@ class TestShowInterfaceTransceiver(unittest.TestCase):
             "serial_number": "INL24173669",
             "vendor_oui": "447c7f",
             "wavelength_tolerance": "6.500 nm",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-DD-400G-DR4",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-DR4",
         },
     }
 
@@ -8364,8 +8364,8 @@ class TestShowInterfaceTransceiverDetails(unittest.TestCase):
             "revision": "00",
             "serial_number": "LCC2411GG1W-A",
             "vendor_oui": "a8b0ae",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-DD-400G-COPPER",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-COPPER",
         }
     }
 
@@ -8669,8 +8669,8 @@ class TestShowInterfaceTransceiverDetails(unittest.TestCase):
             "serial_number": "INL24173669",
             "vendor_oui": "447c7f",
             "wavelength_tolerance": "6.500 nm",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-DD-400G-DR4",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-DR4",
         }
     }
 
@@ -8936,8 +8936,8 @@ class TestShowInterfaceTransceiverDetails(unittest.TestCase):
             "part_number": "QAOC-100G4F1A02C",
             "revision": "A",
             "serial_number": "DTS2419B340-B",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-100G-AOC2M",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-100G-AOC2M",
         },
         "Ethernet1/45": {
             "cis_part_number": "37-1322-03",
@@ -8950,8 +8950,8 @@ class TestShowInterfaceTransceiverDetails(unittest.TestCase):
             "part_number": "2821248-3",
             "revision": "D",
             "serial_number": "TED2027JJ2T-B",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-40G-CR4",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-40G-CR4",
         },
         "Ethernet1/46": {
             "cis_part_number": "37-1322-03",
@@ -8964,8 +8964,8 @@ class TestShowInterfaceTransceiverDetails(unittest.TestCase):
             "part_number": "2821248-3",
             "revision": "D",
             "serial_number": "TED2027JJ2T-A",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-40G-CR4",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-40G-CR4",
         },
         "Ethernet1/47": {
             "lane_number": {
@@ -9172,8 +9172,8 @@ class TestShowInterfaceTransceiverDetails(unittest.TestCase):
             "serial_number": "INL24173686",
             "vendor_oui": "447c7f",
             "wavelength_tolerance": "6.500 nm",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-DD-400G-DR4",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-DR4",
         },
         "Ethernet1/48": {
             "cis_part_number": "10-2930-03",
@@ -9186,8 +9186,8 @@ class TestShowInterfaceTransceiverDetails(unittest.TestCase):
             "part_number": "FCBN410QE2C07-C3",
             "revision": "A",
             "serial_number": "FIW234501JT-B",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-H40G-AOC7M",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-H40G-AOC7M",
         },
         "Ethernet1/49": {
             "cis_part_number": "10-2927-02",
@@ -9200,8 +9200,8 @@ class TestShowInterfaceTransceiverDetails(unittest.TestCase):
             "part_number": "FCBN410QE2C03-C2",
             "revision": "A",
             "serial_number": "FIW232200C5-A",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-H40G-AOC3M",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-H40G-AOC3M",
         },
         "Ethernet1/50": {
             "lane_number": {
@@ -9388,8 +9388,8 @@ class TestShowInterfaceTransceiverDetails(unittest.TestCase):
             "part_number": "LUX42604BO",
             "revision": "B",
             "serial_number": "CVR2225001K",
-            "xcvr_present": True,
-            "xcvr_type": "QSFP-100G-PSM4",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-100G-PSM4",
         },
     }
 
