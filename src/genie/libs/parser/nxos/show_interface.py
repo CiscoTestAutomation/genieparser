@@ -3534,7 +3534,7 @@ class ShowInterfaceCapabilitiesSchema(MetaParser):
             Optional('model'): str,
             Optional('sfp'): bool,
             Optional('type'): str,
-            Optional('speed'): str,
+            Optional('speed'): list,
             Optional('duplex'): str,
             Optional('trunk_encap_type'): str,
             Optional('channel'): str,
@@ -3712,7 +3712,7 @@ class ShowInterfaceCapabilities(ShowInterfaceCapabilitiesSchema):
             # Speed:                 100,1000,10000
             m = p4.match(line)
             if m:
-              parsed_cap_dict[interface]['speed'] = m.group(1)
+              parsed_cap_dict[interface]['speed'] = [int(val) for val in m.group(1).split(',')]
               continue
 
             # Duplex:                full
@@ -3884,8 +3884,8 @@ class ShowInterfaceTransceiverSchema(MetaParser):
 
     schema = {
         Any():{
-            Optional('xcvr_present'): bool,
-            Optional('xcvr_type'): str,
+            Optional('transceiver_present'): bool,
+            Optional('transceiver_type'): str,
             Optional('name'): str,
             Optional('part_number'): str,
             Optional('revision'): str,
@@ -4027,12 +4027,12 @@ class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
 
             m = p2.match(line)
             if m:
-              parsed_xcvr_dict[interface]['xcvr_present'] = False if 'not' in m.group(0) else True
+              parsed_xcvr_dict[interface]['transceiver_present'] = False if 'not' in m.group(0) else True
               continue
 
             m = p3.match(line)
             if m:
-              parsed_xcvr_dict[interface]['xcvr_type'] = m.group('type')
+              parsed_xcvr_dict[interface]['transceiver_type'] = m.group('type')
               continue
 
 
@@ -4209,8 +4209,8 @@ class ShowInterfaceTransceiverDetailsSchema(MetaParser):
 
     schema = {
         Any():{
-            Optional('xcvr_present'): bool,
-            Optional('xcvr_type'): str,
+            Optional('transceiver_present'): bool,
+            Optional('transceiver_type'): str,
             Optional('name'): str,
             Optional('part_number'): str,
             Optional('revision'): str,
@@ -4414,12 +4414,12 @@ class ShowInterfaceTransceiverDetails(ShowInterfaceTransceiverDetailsSchema):
 
             m = p2.match(line)
             if m:
-              parsed_xcvr_dict[interface]['xcvr_present'] = False if 'not' in m.group(0) else True
+              parsed_xcvr_dict[interface]['transceiver_present'] = False if 'not' in m.group(0) else True
               continue
 
             m = p3.match(line)
             if m:
-              parsed_xcvr_dict[interface]['xcvr_type'] = m.group('type')
+              parsed_xcvr_dict[interface]['transceiver_type'] = m.group('type')
               continue
 
 
