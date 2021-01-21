@@ -2674,7 +2674,7 @@ class TestShowRouteIpv6(unittest.TestCase):
             }
         }
     }
-    
+
 
     golden_output8 = {'execute.return_value': '''
         RP/0/RSP0/CPU0:ASR-01#
@@ -3597,4 +3597,4 @@ class TestShowRouteIpv6(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_10)
 
 if __name__ == '__main__':
-    unittest.ma
+    unittest.main()
