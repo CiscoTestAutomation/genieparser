@@ -43,7 +43,7 @@ class ShowRouteIpv4Schema(MetaParser):
                                         'clientid': int,
                                     },
                                 },
-                                'next_hop': {
+                                Optional('next_hop'): {
                                     Optional('outgoing_interface'): {
                                         Any(): {
                                             'outgoing_interface': str,
@@ -214,8 +214,10 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         p7 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
         
         # Route metric is 10880, traffic share count is 1
+        # Route metric is 0, Wt is 1
         p8 = re.compile(r'^Route +metric +is +(?P<metric>\d+)(, +'
-                        r'traffic +share +count +is +(?P<share_count>\d+))?$')
+                        r'traffic +share +count +is +(?P<share_count>\d+))?'
+                        r'(, +Wt +is +\d+)?$')
 
         # eigrp/100 (protoid=5, clientid=22)
         p9 = re.compile(r'^(?P<redist_advertiser>\S+) +\(protoid=(?P<protoid>\d+)'
@@ -227,7 +229,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # 10.12.90.1, from 10.12.90.1, via GigabitEthernet0/0/0/0.90
         # 172.23.6.96, from 172.23.15.196
         # 172.25.253.121, from 172.25.253.121, BGP external
-        p11 = re.compile(r'^(?P<nexthop>\S+),\s+from\s+(?P<from>\S+)(, '
+        # 2001:10::1, via GigabitEthernet0/0/0/0
+        p11 = re.compile(r'^(?P<nexthop>\S+)(,\s+from\s+(?P<from>\S+))?(, '
                          r'+via\s+(?P<interface>\S+))?'
                          r'(, +BGP external)?$')
         
@@ -537,8 +540,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 outgoing_interface_dict.update({'index': index})
                 if interface:
                     outgoing_interface_dict.update({'outgoing_interface': interface})
-
-                outgoing_interface_dict.update({'from': _from})
+                if _from:
+                    outgoing_interface_dict.update({'from': _from})
                 outgoing_interface_dict.update({'next_hop': nexthop})
                 continue
 
@@ -724,7 +727,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         
         # Route metric is 10880, traffic share count is 1
         p9 = re.compile(r'^Route +metric +is +(?P<metric>\d+)(, +'
-                        r'traffic +share +count +is +(?P<share_count>\d+))?$')
+                        r'traffic +share +count +is +(?P<share_count>\d+))?'
+                        r'(, +Wt +is +\d+)$')
 
         # eigrp/100 (protoid=5, clientid=22)
         p10 = re.compile(r'^(?P<redist_advertiser>\S+) +\(protoid=(?P<protoid>\d+)'
@@ -734,7 +738,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         p11 = re.compile(r'^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
 
         # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
-        p12 = re.compile(r'^(?P<nexthop>\S+), from +(?P<from>\S+), '
+        p12 = re.compile(r'^(?P<nexthop>\S+)(, from +(?P<from>\S+))?, '
                         r'+via +(?P<interface>\S+)$')
 
         # R2_xrv#show route ipv6
@@ -974,7 +978,8 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     setdefault(index, {})
                 outgoing_interface_dict.update({'index': index})
                 outgoing_interface_dict.update({'outgoing_interface': interface})
-                outgoing_interface_dict.update({'from': _from})
+                if _from:
+                    outgoing_interface_dict.update({'from': _from})
                 outgoing_interface_dict.update({'next_hop': nexthop})
                 continue
 
