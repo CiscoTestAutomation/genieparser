@@ -6,7 +6,7 @@ expected_output = {
             'operational': 'UP',
             'flap_count': 1,
             'retry_count': 0,
-            'tunnel_interface': 'tnl0'
+            'tunnel_interface': 'tunnel0'
         },
         'mlx8.1_to_ces.1': {
             'destination': '2.2.2.2',
@@ -14,7 +14,7 @@ expected_output = {
             'operational': 'UP',
             'flap_count': 1,
             'retry_count': 0,
-            'tunnel_interface': 'tnl56'
+            'tunnel_interface': 'tunnel56'
         },
         'mlx8.1_to_mlx8.2': {
             'destination': '3.3.3.3',
@@ -22,7 +22,7 @@ expected_output = {
             'operational': 'UP',
             'flap_count': 1,
             'retry_count': 0,
-            'tunnel_interface': 'tnl63'
+            'tunnel_interface': 'tunnel63'
         },
         'mlx8.1_to_mlx8.3': {
             'destination': '4.4.4.4',

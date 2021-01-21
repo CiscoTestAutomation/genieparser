@@ -3,7 +3,7 @@ expected_output = {
   'routes': {
     '10.200.0.12/30': {
       'network': '10.200.0.12',
-      'cidr': 30,
+      'netmask': 30,
       'via': {
         '10.254.248.10': {
           'interface': 'eth 2/2',
@@ -16,7 +16,7 @@ expected_output = {
     },
     '10.200.0.16/30': {
       'network': '10.200.0.16',
-      'cidr': 30,
+      'netmask': 30,
       'via': {
         '10.254.248.10': {
           'interface': 'eth 2/2',
@@ -29,7 +29,7 @@ expected_output = {
     },
     '10.200.0.28/30': {
       'network': '10.200.0.28',
-      'cidr': 30,
+      'netmask': 30,
       'via': {
         '10.254.248.10': {
           'interface': 'eth 2/2',
@@ -42,7 +42,7 @@ expected_output = {
     },
     '10.200.0.32/30': {
       'network': '10.200.0.32',
-      'cidr': 30,
+      'netmask': 30,
       'via': {
         '10.254.248.10': {
           'interface': 'eth 2/2',
@@ -55,7 +55,7 @@ expected_output = {
     },
     '10.200.0.56/30': {
       'network': '10.200.0.56',
-      'cidr': 30,
+      'netmask': 30,
       'via': {
         '10.254.248.10': {
           'interface': 'eth 2/2',
@@ -68,7 +68,7 @@ expected_output = {
     },
     '10.200.0.60/30': {
       'network': '10.200.0.60',
-      'cidr': 30,
+      'netmask': 30,
       'via': {
         '10.254.248.10': {
           'interface': 'eth 2/2',
@@ -81,7 +81,7 @@ expected_output = {
     },
     '10.200.0.65/32': {
       'network': '10.200.0.65',
-      'cidr': 32,
+      'netmask': 32,
       'via': {
         '10.254.248.10': {
           'interface': 'eth 2/2',
@@ -94,7 +94,7 @@ expected_output = {
     },
     '10.200.0.73/32': {
       'network': '10.200.0.73',
-      'cidr': 32,
+      'netmask': 32,
       'via': {
         '10.254.248.10': {
           'interface': 'eth 2/2',
@@ -107,7 +107,7 @@ expected_output = {
     },
     '10.200.0.80/30': {
       'network': '10.200.0.80',
-      'cidr': 30,
+      'netmask': 30,
       'via': {
         '10.254.248.10': {
           'interface': 'eth 2/2',
@@ -120,7 +120,7 @@ expected_output = {
     },
     '10.200.0.85/32': {
       'network': '10.200.0.85',
-      'cidr': 32,
+      'netmask': 32,
       'via': {
         '10.254.248.10': {
           'interface': 'eth 2/2',
@@ -133,7 +133,7 @@ expected_output = {
     },
     '200.200.200.200/32': {
       'network': '200.200.200.200',
-      'cidr': 32,
+      'netmask': 32,
       'via': {
         'DIRECT': {
           'interface': 'loopback 1',
@@ -146,7 +146,7 @@ expected_output = {
     },
     '1.1.1.1/32': {
       'network': '1.1.1.1',
-      'cidr': 32,
+      'netmask': 32,
       'via': {
         '10.254.251.2': {
           'interface': 'eth 5/1',
@@ -166,7 +166,7 @@ expected_output = {
     },
     '2.2.2.2/32': {
       'network': '2.2.2.2',
-      'cidr': 32,
+      'netmask': 32,
       'via': {
         '10.254.251.2': {
           'interface': 'eth 5/1',

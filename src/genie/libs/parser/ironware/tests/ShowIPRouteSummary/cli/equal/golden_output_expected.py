@@ -8,7 +8,7 @@ expected_output = {
     'bgp': 0,
     'isis': 0
   },
-  'cidrs': {
+  'netmask': {
     24: 1,
     26: 2,
     27: 3,
@@ -17,5 +17,6 @@ expected_output = {
     30: 34,
     31: 242,
     32: 161
-  }
+  },
+  'next_hop_table': 5
 }

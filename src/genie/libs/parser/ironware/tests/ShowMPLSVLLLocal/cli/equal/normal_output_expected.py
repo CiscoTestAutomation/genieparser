@@ -4,17 +4,19 @@ expected_output = {
       'vll_id': 3,
       'ifl_id': '--',
       'state': 'UP',
-      'endpoint_1': {
-        'type': 'tagged',
-        'vlan_id': 2501,
-        'interface': 'ethernet2/10',
-        'cos': 6
-      },
-      'endpoint_2': {
-        'type': 'tagged',
-        'vlan_id': 2501,
-        'interface': 'ethernet2/9',
-        'cos': 5
+      'endpoint': {
+        1: {
+          'type': 'tagged',
+          'vlan_id': 2501,
+          'interface': 'ethernet2/10',
+          'cos': 6
+        },
+        2: {
+          'type': 'tagged',
+          'vlan_id': 2501,
+          'interface': 'ethernet2/9',
+          'cos': 5
+        }
       },
       'extended_counters': True
     }
