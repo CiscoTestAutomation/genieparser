@@ -527,6 +527,7 @@ class Common():
         # Please add more when face other type of interface
         convert = {'Eth': 'Ethernet',
                    'Lo': 'Loopback',
+                   'lo': 'Loopback',
                    'Fa': 'FastEthernet',
                    'Fas': 'FastEthernet',
                    'Po': 'Port-channel',

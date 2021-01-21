@@ -172,8 +172,8 @@ class ShowBfdSessionDestinationDetailsSchema(MetaParser):
 
     """ 
         Schema for the following show commands:
-            * show bfd session destination {ip_address} details
-            *show bfd ipv6 session destination {ip_address} details
+            * show bfd session destination {ip_address} detail
+            *show bfd ipv6 session destination {ip_address} detail
     """
 
     schema = {
@@ -204,9 +204,9 @@ class ShowBfdSessionDestinationDetailsSchema(MetaParser):
         		        	'required_echo_rx_interval_ms': int,
         		        	'multiplier': int,
         		        	'diag': str,
-        		        	'my_discr': int,
-        		        	'your_discr': int,
-        		        	'state': str,
+        		        	Optional('my_discr'): int,
+        		        	Optional('your_discr'): int,
+        		        	Optional('state'): str,
         		        	Optional(Any()): int,
         		        },
         		        'timer_vals':{
@@ -214,8 +214,8 @@ class ShowBfdSessionDestinationDetailsSchema(MetaParser):
         		        	'remote_async_tx_interval_ms': int,
         		        	'desired_echo_tx_interval_ms': int,
         		        	'local_echo_tax_interval_ms': int,
-        		        	'echo_detection_time_ms': int,
-        		        	'async_detection_time_ms': int,
+        		        	Optional('echo_detection_time_ms'): int,
+        		        	Optional('async_detection_time_ms'): int,
         		        },
         		        'local_stats': {
         		        	'latency_of_echo_packets':{
@@ -245,12 +245,12 @@ class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
 
     """
     Parser for the following show commands:
-        * show bfd session destination {ip_address} details
-        * show bfd ipv6 session destination {ip_address} details
+        * show bfd session destination {ip_address} detail
+        * show bfd ipv6 session destination {ip_address} detail
     """
 
-    cli_command = ['show bfd session destination {ip_address} details',
-                   'show bfd {ipv6} session destination {ip_address} details']
+    cli_command = ['show bfd session destination {ip_address} detail',
+                   'show bfd {ipv6} session destination {ip_address} detail']
 
     def cli(self, ip_address, ipv6='', output=None):
         
@@ -304,8 +304,8 @@ class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
 
         # My discr: 18, your discr: 2148532226, state UP, D/F/P/C/A: 0/0/0/1/0
         p9 = re.compile(r'My +discr: +(?P<my_discr>\d+), +your +discr:'
-                        r' +(?P<your_discr>\d+), +state +(?P<state>UP|DOWN),'
-                        r' +D/F/P/C/A: +(?P<d_f_p_c_a>[\d\/]+)')
+                        r' +(?P<your_discr>\d+), +state +(?P<state>(ADMIN +)?(UP|DOWN)),'
+                        r' +D\/F\/P\/C\/A: +(?P<d_f_p_c_a>[\d\/]+)')
         
         # Timer Values:
         p10 = re.compile(r'Timer +Values:')
@@ -326,9 +326,9 @@ class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
 
         # Echo detection time: 0 ms(0 ms*6), async detection time: 3 s(500 ms*6)
         p14 = re.compile(r'Echo +detection +time:'
-                         r' +(?P<echo_time>\d+) +(?P<echo_time_unit>\w+)\([\S\s]+\),'
+                         r' +(?P<echo_time>\d+) +(?P<echo_time_unit>\w+)(\([\S\s]+\))?,'
                          r' +async +detection +time:'
-                         r' +(?P<async_time>\d+) +(?P<async_time_unit>\w+)\([\S\s]+\)')
+                         r' +(?P<async_time>\d+) +(?P<async_time_unit>\w+)(\([\S\s]+\))?')
 
         # Local Stats:
         p15 = re.compile(r'Local +Stats:')
