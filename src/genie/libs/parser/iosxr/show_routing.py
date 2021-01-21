@@ -52,7 +52,7 @@ class ShowRouteIpv4Schema(MetaParser):
                                         }
                                     },
                                     Optional('next_hop_list'): {
-                                        Any(): { # index
+                                        int: { # index
                                             'index': int,
                                             Optional('next_hop'): str,
                                             Optional('outgoing_interface'): str,
@@ -321,7 +321,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
                 next_hop_list_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
-                    setdefault(index, {})
+                    setdefault(int(index), {})
                 
                 next_hop_list_dict.update({'index': index})
                 next_hop_list_dict.update({'next_hop': next_hop})
@@ -346,7 +346,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
                 next_hop_list_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
-                    setdefault(index, {})
+                    setdefault(int(index), {})
                 
                 next_hop_list_dict.update({'index': index})
                 next_hop_list_dict.update({'next_hop': next_hop})
@@ -536,7 +536,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 index += 1
                 outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
-                    setdefault(index, {})
+                    setdefault(int(index), {})
                 outgoing_interface_dict.update({'index': index})
                 if interface:
                     outgoing_interface_dict.update({'outgoing_interface': interface})
@@ -568,7 +568,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 if interface:
                     nexthop_intf_dict = route_dict.setdefault('next_hop', {}).\
                         setdefault('next_hop_list', {}). \
-                        setdefault(index, {})
+                        setdefault(int(index), {})
 
                 nexthop_intf_dict.update({'index': index})
                 if interface:
@@ -728,7 +728,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # Route metric is 10880, traffic share count is 1
         p9 = re.compile(r'^Route +metric +is +(?P<metric>\d+)(, +'
                         r'traffic +share +count +is +(?P<share_count>\d+))?'
-                        r'(, +Wt +is +\d+)$')
+                        r'(, +Wt +is +\d+)?$')
 
         # eigrp/100 (protoid=5, clientid=22)
         p10 = re.compile(r'^(?P<redist_advertiser>\S+) +\(protoid=(?P<protoid>\d+)'
@@ -823,7 +823,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
                 next_hop_list_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
-                    setdefault(index, {})
+                    setdefault(int(index), {})
                 
                 next_hop_list_dict.update({'index': index})
                 if next_hop:
@@ -975,7 +975,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 index += 1
                 outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
-                    setdefault(index, {})
+                    setdefault(int(index), {})
                 outgoing_interface_dict.update({'index': index})
                 outgoing_interface_dict.update({'outgoing_interface': interface})
                 if _from:
