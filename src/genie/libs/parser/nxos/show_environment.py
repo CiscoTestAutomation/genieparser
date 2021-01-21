@@ -782,6 +782,13 @@ class ShowEnvironmentPowerDetailSchema(MetaParser):
                 Optional('total_power_allocated_watts'): float,
                 Optional('total_power_available'): float
             },
+            Optional('power_usage_details'):{
+                Optional('power_reserved_for_sup_watts'): str,
+                Optional('power_reserved_for_fabric_sc_watts'): str,
+                Optional('power_reserved_for_fan_module_watts'): str,
+                Optional('total_power_reserved_watts'): str,
+                Optional('all_inlet_cords_connected'): str
+            },
             Optional('power_supply_details'):{
                 Any():{
                     Optional('total_capacity_watts'): int,
@@ -862,33 +869,50 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
         #Total Power Available for additional modules               7241.00 W
         p13 = re.compile(r'^\s*Total Power Available for additional modules\s*([0-9.]+)\sW\s*')
 
+
+        # Power reserved for Supervisor(s):                              180 W
+        p14 = re.compile(r'^\s*Power reserved for Supervisor\(s\):\s+(?P<pow_res_sup>[0-9NA/]+)\s?W?') 
+
+        # Power reserved for Fabric, SC Module(s):                      2870 W
+        p15 = re.compile(r'^\s*Power reserved for Fabric, SC Module\(s\):\s+(?P<pow_res_sc>[0-9NA/]+)\s?W?')
+
+        # Power reserved for Fan Module(s):                              740 W
+        p16 = re.compile(r'^\s*Power reserved for Fan Module\(s\):\s+(?P<pow_res_fan>[0-9NA/]+)\s?W?')
+
+        # Total power reserved for Sups,SCs,Fabrics,Fans:               3799 W
+        p17 = re.compile(r'^\s*Total power reserved for Sups,SCs,Fabrics,Fans:\s+(?P<pow_res_total>[0-9NA/]+)\s?W?')
+
+        # Are all inlet cords connected: No
+        p18 = re.compile(r'^\s*Are all inlet cords connected:\s+(?P<inlet_cord_connected>\w+)')
+
         # PS_5 total capacity:       0 W   Voltage:12V
         # PS_7 total capacity:    3000 W   Voltage:12V
-        p14 = re.compile(r'^\s*(?P<ps>PS_\d+)\s+total capacity: +(?P<tot_cap>\d+) W\s+Voltage:(?P<voltage>\d+)V\s*')
+        p19 = re.compile(r'^\s*(?P<ps>PS_\d+)\s+total capacity: +(?P<tot_cap>\d+) W\s+Voltage:(?P<voltage>\d+)V\s*')
 
         # Pin:1143.68W  Vin:236.07V    Iin:4.89A    Pout:1076.82W    Vout:12.08V    Iout:90.03A
         # Pin:0.00W  Vin:0.00V    Iin:0.00A    Pout:0.00W    Vout:0.00V    Iout:0.00A
-        p15 = re.compile(r'^\s*Pin:(?P<power_in>[0-9.]+)W\s+Vin:(?P<volt_in>[0-9.]+)V\s+Iin:(?P<cur_in>[0-9.]+)A\s+Pout:(?P<power_out>[0-9.]+)W\s+Vout:(?P<volt_out>[0-9.]+)V\s+Iout:(?P<cur_out>[0-9.]+)A\s*')
+        p20 = re.compile(r'^\s*Pin:(?P<power_in>[0-9.]+)W\s+Vin:(?P<volt_in>[0-9.]+)V\s+Iin:(?P<cur_in>[0-9.]+)A\s+Pout:(?P<power_out>[0-9.]+)W\s+Vout:(?P<volt_out>[0-9.]+)V\s+Iout:(?P<cur_out>[0-9.]+)A\s*')
 
         # Cord connected to 220V AC
         # Cord not connected
-        p16 = re.compile(r'^\s*(?P<cord_connected>[Cord connected]+)\s?to?\s?(?P<input>\d+)?V?')
+        p21 = re.compile(r'^\s*(?P<cord_connected>[Cord connected]+)\s?to?\s?(?P<input>\d+)?V?')
 
         # Software-Alarm: No
-        p17 = re.compile(r'^\s*Software-Alarm: (?P<soft_alarm>.*)')
+        p22 = re.compile(r'^\s*Software-Alarm: (?P<soft_alarm>.*)')
         
         # Hardware alarm_bits reg0:20, reg2: 1,
         # Hardware alarm_bits
-        p18 = re.compile(r'^\s*Hardware alarm_bits\s?(?P<hard_alarm>.*)')
+        p23 = re.compile(r'^\s*Hardware alarm_bits\s?(?P<hard_alarm>.*)')
         
         # Reg0 bit5: No input detected
         # Reg2 bit0: Vin out of range
-        p19 = re.compile(r'^\s*(?P<reg_bit>Reg\d+ bit\d+): (?P<reg_val>.*)\s*')
+        p24 = re.compile(r'^\s*(?P<reg_bit>Reg\d+ bit\d+): (?P<reg_val>.*)\s*')
 
         parsed_env_power_dict = {}
         parsed_env_power_dict.setdefault('power', {}).setdefault('power_supply', {})
         parsed_env_power_dict.setdefault('power', {}).setdefault('power_supply_mode', {})
         parsed_env_power_dict.setdefault('power', {}).setdefault('power_usage_summary', {})
+        parsed_env_power_dict.setdefault('power', {}).setdefault('power_usage_details', {})
         parsed_env_power_dict.setdefault('power', {}).setdefault('power_supply_details', {})
         
         ps = ''
@@ -990,9 +1014,34 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
                 parsed_env_power_dict['power']['power_usage_summary']['total_power_available'] = float(m.group(1))
                 continue
 
+            m = p14.match(line)
+            if m:
+                parsed_env_power_dict['power']['power_usage_details']['power_reserved_for_sup_watts'] = m.group('pow_res_sup')
+                continue
+
+            m = p15.match(line)
+            if m:
+                parsed_env_power_dict['power']['power_usage_details']['power_reserved_for_fabric_sc_watts'] = m.group('pow_res_sc')
+                continue
+
+            m = p16.match(line)
+            if m:
+                parsed_env_power_dict['power']['power_usage_details']['power_reserved_for_fan_module_watts'] = m.group('pow_res_fan')
+                continue
+
+            m = p17.match(line)
+            if m:
+                parsed_env_power_dict['power']['power_usage_details']['total_power_reserved_watts'] = m.group('pow_res_total')
+                continue
+
+            m = p18.match(line)
+            if m:
+                parsed_env_power_dict['power']['power_usage_details']['all_inlet_cords_connected'] = m.group('inlet_cord_connected')
+                continue
+
             # PS_5 total capacity:       0 W   Voltage:12V
             # PS_7 total capacity:    3000 W   Voltage:12V
-            m = p14.match(line)
+            m = p19.match(line)
             if m:
                 ps = m.group('ps')
                 parsed_env_power_dict['power']['power_supply_details'][ps] = {'total_capacity_watts': int(m.group('tot_cap')), 'voltage': int(m.group('voltage'))}
@@ -1000,7 +1049,7 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
             
             # Pin:1143.68W  Vin:236.07V    Iin:4.89A    Pout:1076.82W    Vout:12.08V    Iout:90.03A
             # Pin:0.00W  Vin:0.00V    Iin:0.00A    Pout:0.00W    Vout:0.00V    Iout:0.00A
-            m = p15.match(line)
+            m = p20.match(line)
             if m:
                 p_dict = m.groupdict()
                 if ps:
@@ -1014,7 +1063,7 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
 
             # Cord connected to 220V AC
             # Cord not connected
-            m = p16.match(line)
+            m = p21.match(line)
             if m:
                 if ps:
                     parsed_env_power_dict['power']['power_supply_details'][ps].update({'cord_connected': False if 'not' in m.group('cord_connected') else True, \
@@ -1022,14 +1071,14 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
                 continue
 
             # Software-Alarm: No
-            m = p17.match(line)
+            m = p22.match(line)
             if m:
                 if ps:
                     parsed_env_power_dict['power']['power_supply_details'][ps]['software_alarm'] = m.group('soft_alarm')
 
             # Hardware alarm_bits reg0:20, reg2: 1,
             # Hardware alarm_bits
-            m = p18.match(line)
+            m = p23.match(line)
             if m:
                 v_dict = m.groupdict()
                 if ps:
@@ -1037,7 +1086,7 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
             
             # Reg0 bit5: No input detected
             # Reg2 bit0: Vin out of range
-            m = p19.match(line)
+            m = p24.match(line)
             if m:
                 if ps:
                     if 'hw_registers' not in parsed_env_power_dict['power']['power_supply_details'][ps]:
