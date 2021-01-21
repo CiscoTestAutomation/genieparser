@@ -98,6 +98,8 @@ class ShowMPLSLSP(ShowMPLSLSPSchema):
 
                 tunnel = m.groupdict()['tunnelint']
                 if tunnel != '--':
+                    num = int(tunnel.strip('tnl'))
+                    tunnel = 'tunnel{0}'.format(num)
                     result_dict[lsp_name]['tunnel_interface'] = tunnel
 
                 path = m.groupdict()['activepath']
@@ -468,21 +470,23 @@ class ShowMPLSVLLLocalSchema(MetaParser):
                 'ifl_id': str,
                 'state': str,
                 Optional('reason'): str,
-                'endpoint_1': {
-                    'type': str,
-                    Optional('vlan_id'): int,
-                    'interface': str,
-                    Optional('outer_vlan_id'): int,
-                    Optional('inner_vlan_id'): int,
-                    'cos': Or(int, str)
-                },
-                'endpoint_2': {
-                    'type': str,
-                    Optional('vlan_id'): int,
-                    'interface': str,
-                    Optional('outer_vlan_id'): int,
-                    Optional('inner_vlan_id'): int,
-                    'cos': Or(int, str)
+                'endpoint': {
+                    1: {
+                        'type': str,
+                        Optional('vlan_id'): int,
+                        'interface': str,
+                        Optional('outer_vlan_id'): int,
+                        Optional('inner_vlan_id'): int,
+                        'cos': Or(int, str)
+                    },
+                    2: {
+                        'type': str,
+                        Optional('vlan_id'): int,
+                        'interface': str,
+                        Optional('outer_vlan_id'): int,
+                        Optional('inner_vlan_id'): int,
+                        'cos': Or(int, str)
+                    }
                 },
                 Optional('extended_counters'): bool,
                 Optional('counters'): bool
@@ -563,7 +567,8 @@ class ShowMPLSVLLLocal(ShowMPLSVLLLocalSchema):
             if m:
                 vll_dict = result_dict.setdefault('vll', {}).setdefault(vll, {
                     'vll_id': int(m.groupdict()['vllid']),
-                    'ifl_id': m.groupdict()['iflid']
+                    'ifl_id': m.groupdict()['iflid'],
+                    'endpoint': {}
                 })
                 continue
 
@@ -580,7 +585,7 @@ class ShowMPLSVLLLocal(ShowMPLSVLLLocalSchema):
             m = p3.match(line)
             if m:
                 port_type = m.groupdict()['type']
-                endpoint_num = m.groupdict()['endpoint']
+                endpoint_num = int(m.groupdict()['endpoint'])
 
                 endpoint = {
                     'type': port_type
@@ -600,7 +605,7 @@ class ShowMPLSVLLLocal(ShowMPLSVLLLocalSchema):
 
                 endpoint['interface'] = expand_interface + interface_num
 
-                vll_dict['endpoint_{0}'.format(endpoint_num)] = endpoint
+                vll_dict['endpoint'][endpoint_num] = endpoint
                 continue
 
             m = p4.match(line)
@@ -609,10 +614,10 @@ class ShowMPLSVLLLocal(ShowMPLSVLLLocalSchema):
                 cos = int(cos) if cos != '--' else cos
 
                 # Check if COS exists in endpoint_1
-                if vll_dict['endpoint_1'].get('cos') is not None:
-                    vll_dict['endpoint_2']['cos'] = cos
+                if vll_dict['endpoint'][1].get('cos') is not None:
+                    vll_dict['endpoint'][2]['cos'] = cos
                 else:
-                    vll_dict['endpoint_1']['cos'] = cos
+                    vll_dict['endpoint'][1]['cos'] = cos
                 continue
 
             m = p5.match(line)

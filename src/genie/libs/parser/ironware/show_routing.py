@@ -29,7 +29,7 @@ class ShowIPRouteSchema(MetaParser):
         'routes': {
             Any(): {
                 'network': str,
-                'cidr': int,
+                'netmask': int,
                 'via': {
                     Any(): {
                         'cost': str,
@@ -98,7 +98,7 @@ STATIC Codes - d:DHCPv6
         p2 = re.compile(
             r'((?P<number>^\d+)\s+'
             r'(?P<network>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\/'
-            r'(?P<cidr>\d{1,2})\s+'
+            r'(?P<netmask>\d{1,2})\s+'
             r'(?P<gateway>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}|DIRECT)\s+'
             r'(?P<port>eth\s\d{1,2}\/\d{1,2}|loopback\s\d{1,3})\s+'
             r'(?P<cost>\w+\/\w+)\s+(?P<type>\w+)\s+(?P<uptime>\w+)\s+'
@@ -111,7 +111,7 @@ STATIC Codes - d:DHCPv6
         p3 = re.compile(
             r'((?P<number>^\d+)\s+'
             r'(?P<network>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\/'
-            r'(?P<cidr>\d{1,2})\s+'
+            r'(?P<netmask>\d{1,2})\s+'
             r'(?P<gateway>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}|DIRECT)\s+'
             r'(?P<port>eth\s\d{1,2}\/\d{1,2}|loopback\s\d{1,3})\s+'
             r'(?P<cost>\w+\/\w+)\s+(?P<type>\w+)\s+(?P<uptime>\w+)$)'
@@ -121,7 +121,7 @@ STATIC Codes - d:DHCPv6
         #     1.1.1.1/32   10.254.251.108  eth 7/1  110/52  O  15h47m -
         p4 = re.compile(
             r'(^(?P<network>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\/'
-            r'(?P<cidr>\d{1,2})\s+'
+            r'(?P<netmask>\d{1,2})\s+'
             r'(?P<gateway>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3}|DIRECT)\s+'
             r'(?P<port>eth\s\d{1,2}\/\d{1,2}|loopback\s\d{1,3})\s+'
             r'(?P<cost>\w+\/\w+)\s+(?P<type>\w+)\s+(?P<uptime>\w+)\s+'
@@ -142,7 +142,7 @@ STATIC Codes - d:DHCPv6
 
             if m:
                 network = m.groupdict()['network']
-                cidr = int(m.groupdict()['cidr'])
+                cidr = int(m.groupdict()['netmask'])
                 srcvrf = m.groupdict().get('vrf')
                 if srcvrf is None:
                     srcvrf = 'Unknown'
@@ -151,7 +151,7 @@ STATIC Codes - d:DHCPv6
 
                 result_dict['{0}/{1}'.format(network, cidr)] = {
                   'network': network,
-                  'cidr': cidr,
+                  'netmask': cidr,
                   'via': {
                       m.groupdict()['gateway']: {
                           'interface': m.groupdict()['port'],
@@ -167,7 +167,7 @@ STATIC Codes - d:DHCPv6
             m = p4.match(line)
             if m:
                 network = m.groupdict()['network']
-                cidr = int(m.groupdict()['cidr'])
+                cidr = int(m.groupdict()['netmask'])
                 route = '{0}/{1}'.format(network, cidr)
 
                 result_dict[route]['via'][m.groupdict()['gateway']] = {
@@ -197,7 +197,7 @@ class ShowIPRouteSummarySchema(MetaParser):
             'bgp': int,
             'isis': int
         },
-        'cidrs': {
+        'netmask': {
             Optional(32): int,
             Optional(31): int,
             Optional(30): int,
@@ -230,7 +230,8 @@ class ShowIPRouteSummarySchema(MetaParser):
             Optional(3): int,
             Optional(2): int,
             Optional(1): int
-        }
+        },
+        'next_hop_table': int
     }
 
 
@@ -277,6 +278,10 @@ class ShowIPRouteSummary(ShowIPRouteSummarySchema):
         # /27: 3
         p4 = re.compile(r'(^\/(?P<key>\d{1,2}):\s+(?P<num>\d+))')
 
+        # Nexthop Table Entry - 5 entries
+        p5 = re.compile(r'(^Nexthop\s+Table\s+Entry\s+\-\s+'
+                        r'(?P<entries>\d+)\s+entries$)')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -298,7 +303,7 @@ class ShowIPRouteSummary(ShowIPRouteSummarySchema):
 
             m = p3.match(line)
             if m:
-                cidrs = route_dict.setdefault('cidrs', {})
+                cidrs = route_dict.setdefault('netmask', {})
 
                 # Find all occurrences of a CIDR notation so we
                 # don't have to do each key individually
@@ -309,6 +314,12 @@ class ShowIPRouteSummary(ShowIPRouteSummarySchema):
                     if x:
                         key = int(x.groupdict()['key'])
                         cidrs[key] = int(x.groupdict()['num'])
+                continue
+            
+            m = p5.match(line)
+            if m:
+                entries = m.groupdict()['entries']
+                route_dict['next_hop_table'] = int(entries)
                 continue
 
         return route_dict
