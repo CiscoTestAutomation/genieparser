@@ -18,6 +18,14 @@ except Exception:
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional, Or, And, Default, Use
 
+def get_version_from_system_version (system_version:str) -> tuple :
+    # Tokenize system_version into a list with delimiters '.', '(' and ')'
+    ver: list = [ch for ch in re.split('\.|\(|\)', system_version.split(' ')[0]) if ch != '']
+    # Convert to int wherever possible
+    for i in range (len(ver)) :
+        try : ver[i] = int(ver[i])
+        except ValueError : continue
+    return tuple(ver)
 
 def regexp(expression):
     def match(value):
@@ -149,6 +157,9 @@ class ShowVersion(ShowVersionSchema):
 
                 if 'system_version' not in version_dict['platform']['software']:
                     version_dict['platform']['software']['system_version'] = system_version
+                    ver: tuple = get_version_from_system_version(system_version)
+                    if 'version' not in version_dict['platform']['software'] :
+                        version_dict['platform']['software']['version'] = ver
                 continue
 
             p6 = re.compile(r'^\s*NXOS: +version +(?P<system_version>[A-Za-z0-9\.\(\)\[\]\s]+)$')
@@ -158,6 +169,9 @@ class ShowVersion(ShowVersionSchema):
 
                 if 'system_version' not in version_dict['platform']['software']:
                     version_dict['platform']['software']['system_version'] = system_version
+                    ver: tuple = get_version_from_system_version(system_version)
+                    if 'version' not in version_dict['platform']['software'] :
+                        version_dict['platform']['software']['version'] = ver
                 continue
 
             p7 = re.compile(r'^\s*BIOS +compile +time: +(?P<bios_compile_time>[0-9\/]+)?$')
