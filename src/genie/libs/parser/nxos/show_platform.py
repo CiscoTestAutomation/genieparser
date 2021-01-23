@@ -60,6 +60,7 @@ class ShowVersionSchema(MetaParser):
                        Optional('kickstart_compile_time'): str,
                        Optional('kickstart_image_file'): str,
                        Optional('system_version'): str,
+                       Optional('version'): tuple,
                        Optional('system_compile_time'): str,
                        Optional('system_image_file'): str}
                   }
