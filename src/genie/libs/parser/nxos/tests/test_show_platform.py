@@ -49,6 +49,7 @@ class test_show_version(unittest.TestCase):
                                  'kickstart_compile_time': '4/30/2017 23:00:00 [04/15/2017 ''04:34:05]',
                                  'kickstart_image_file': 'slot0:///n7000-s2-kickstart.10.81.0.129.gbin',
                                  'system_version': '8.1(1) [build 8.1(0.129)] [gdb]',
+                                 'version': (8, 1, 1),
                                  'system_compile_time': '4/30/2017 23:00:00 [04/15/2017 ''06:43:41]',
                                  'system_image_file': 'slot0:///n7000-s2-dk10.34.1.0.129.gbin'}
                               }
@@ -75,6 +76,7 @@ class test_show_version(unittest.TestCase):
                                  'seconds': 37},
                               'software':
                                 {'system_version': '7.0(3)I5(2) [build 7.0(3)I5(1.145)]',
+                                 'version': (7, 0, 3, 'I5', 2),
                                  'system_compile_time': '1/4/2017 20:00:00 [01/04/2017 21:47:15]',
                                  'system_image_file': 'bootflash:///ISSUCleanGolden.system.gbin'}
                               }
@@ -251,6 +253,7 @@ Active Package(s):
                                 {'bios_version': '3.6.0',
                                  'kickstart_version': '7.3(3)N1(1)',
                                  'system_version': '7.3(3)N1(1)',
+                                 'version': (7, 3, 3, 'N1', 1),
                                  'bios_compile_time': '05/09/2012',
                                  'kickstart_image_file': 'bootflash:///n5000-uk9-kickstart.7.3.3.N1.1.bin',
                                  'kickstart_compile_time': '4/27/2018 9:00:00 [04/27/2018 17:18:59]',
@@ -330,6 +333,7 @@ Active Package(s):
                                 {'bios_version': '1.4.0',
                                  'kickstart_version': '6.0(2)U6(10)',
                                  'system_version': '6.0(2)U6(10)',
+                                 'version': (6, 0, 2, 'U6', 10),
                                  'bios_compile_time': '12/09/2013',
                                  'kickstart_image_file': 'bootflash:///n3000-uk9-kickstart.6.0.2.U6.10.bin',
                                  'kickstart_compile_time': '3/30/2017 9:00:00 [03/30/2017 19:37:34]',
