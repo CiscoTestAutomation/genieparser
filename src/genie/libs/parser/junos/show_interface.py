@@ -1994,7 +1994,6 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Logical interface ge-0/0/0.0 (Index 333) (SNMP ifIndex 606)
             m = p24.match(line)
             if m:
-                # import remote_pdb; remote_pdb.set_trace()
                 found_flag = False
                 statistics_type = 'logical'
                 group = m.groupdict()
@@ -2005,7 +2004,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 for phy_dict in physical_interface_list:
                     if phy_dict['name'] == phy_interface:
                         found_flag = True
-                        # physical_interface_dict = phy_dict
 
                 if not found_flag:
                     physical_interface_dict = {}
