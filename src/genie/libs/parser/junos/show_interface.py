@@ -86,6 +86,9 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
 
         ret_dict = {}
 
+        # error: interface ge-0/0/3.0 not found
+        p0 = re.compile(r'^error:\s+interface\s+\S+\s+not\s+found$')
+
         # Interface               Admin Link Proto    Local                 Remote
         # lo0.0                   up    up   inet     10.1.1.1            --> 0/0
         # em1.0                   up    up   inet     10.0.0.4/8
@@ -114,6 +117,10 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
             if 'show interfaces terse' in line:
                 continue
 
+            # error: interface ge-0/0/3.0 not found
+            m = p0.match(line)
+            if m:
+                return ret_dict
 
             # fxp0                    up    up
             # em1.0                   up    up   inet     10.0.0.4/8
