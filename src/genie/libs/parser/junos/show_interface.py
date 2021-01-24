@@ -991,7 +991,7 @@ class ShowInterfacesSchema(MetaParser):
             Optional("mru"): str,
             Optional("mtu"): str,
             "name": str,
-            "oper-status": str,
+            Optional("oper-status"): str,
             Optional("pad-to-minimum-frame-size"): str,
             Optional("physical-interface-cos-information"): {
                 "physical-interface-cos-hw-max-queues": str,
@@ -1994,13 +1994,29 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Logical interface ge-0/0/0.0 (Index 333) (SNMP ifIndex 606)
             m = p24.match(line)
             if m:
+                # import remote_pdb; remote_pdb.set_trace()
+                found_flag = False
                 statistics_type = 'logical'
                 group = m.groupdict()
+                phy_interface = '.'.join(group['name'].split('.')[:-1])
                 logical_interface_dict = {}
+                interface_info_dict = ret_dict.setdefault('interface-information', {})
+                physical_interface_list =  interface_info_dict.setdefault('physical-interface', [])
+                for phy_dict in physical_interface_list:
+                    if phy_dict['name'] == phy_interface:
+                        found_flag = True
+                        # physical_interface_dict = phy_dict
+
+                if not found_flag:
+                    physical_interface_dict = {}
+                    physical_interface_dict.update({'name': phy_interface})
+                    physical_interface_list.append(physical_interface_dict)
+
                 logical_interface_list = physical_interface_dict.setdefault('logical-interface', [])
                 logical_interface_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 logical_interface_list.append(logical_interface_dict)
+                found_flag = False
                 continue
 
             # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
