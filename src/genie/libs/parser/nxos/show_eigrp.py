@@ -8,6 +8,7 @@ NXOS parsers for the following commands
 
 # Python
 import re
+from ipaddress import ip_address
 
 # Metaparser
 from genie.metaparser import MetaParser
@@ -132,7 +133,8 @@ class ShowEigrpNeighborsSuperParser(ShowEigrpNeighborsSchema):
                     .setdefault(address_family, {})\
                     .setdefault('eigrp_interface', {})\
                     .setdefault(eigrp_interface, {})\
-                    .setdefault('eigrp_nbr', {}).setdefault(nbr_address, {})
+                    .setdefault('eigrp_nbr', {})\
+                    .setdefault(ip_address(nbr_address), {})
 
                 ip_dict['peer_handle'] = int(group['peer_handle'])
                 ip_dict['hold'] = int(group['hold'])
@@ -313,7 +315,8 @@ class ShowEigrpNeighborsDetailSuperParser(ShowEigrpNeighborsDetailSchema):
                     .setdefault(address_family, {})\
                     .setdefault('eigrp_interface', {})\
                     .setdefault(eigrp_interface, {})\
-                    .setdefault('eigrp_nbr', {}).setdefault(nbr_address, {})
+                    .setdefault('eigrp_nbr', {})\
+                    .setdefault(ip_address(nbr_address), {})
 
                 ip_dict['peer_handle'] = int(group['peer_handle'])
                 ip_dict['hold'] = int(group['hold'])
