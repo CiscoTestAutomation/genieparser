@@ -36,6 +36,10 @@ class ShowServicesAccountingAggregationTemplateSchema(MetaParser):
                                 "destination-address": str,
                                 "source-port": str,
                                 "destination-port": str,
+                                Optional("mpls-label-1"): str,
+                                Optional("mpls-label-2"): str,
+                                Optional("mpls-label-3"): str,
+                                Optional("top-label-address"): str,
                                 "protocol": {
                                     "#text": str},
                                 "tos": str,
@@ -61,7 +65,7 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
 
     cli_command = "show services accounting aggregation template template-name {name} extensive"
 
-    def cli(self, name, output=None):
+    def cli(self, name=None, output=None):
         if output is None:
             out = self.device.execute(self.cli_command.format(
                 name=name
@@ -70,10 +74,16 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
             out = output
 
         ret_dict = {}
-
+        
+        # Source address: 27.93.202.64, Destination address: 106.187.14.158, Top Label Address: 121
         # Source address: 27.93.202.64, Destination address: 106.187.14.158
-        p1 = re.compile(r'^Source +address: +(?P<source_address>\S+), '
-                        r'+Destination +address: +(?P<destination_address>\S+)$')
+        # Source address: 27.93.202.64
+        p1 = re.compile(r'^Source +address: +(?P<source_address>\S+)(, +Destination +address: '
+                        r'+(?P<destination_address>\S+))?(, Top +Label +Address: +'
+                        r'(?P<top_label_address>\S+))?$')
+
+        # Destination address: 000:0:0:0:0:0:0:0
+        p1_2 = re.compile(r'^Destination +address: +(?P<destination_address>\S+)$')
 
         # Source port: 8, Destination port: 0
         p2 = re.compile(r'^Source +port: +(?P<source_port>\d+), '
@@ -100,8 +110,13 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
         p7 = re.compile(r'^Packet +count: +(?P<packet_count>\d+), +'
                        r'Byte +count: +(?P<byte_count>\d+)$')
 
+        # MPLS label 1: 299888, MPLS label 2: 16, MPLS label 3: 0
+        p8 = re.compile(r'^MPLS +label 1: +(?P<mpls_label_1>\d+), +MPLS +label 2: '
+                        r'+(?P<mpls_label_2>\d+), MPLS +label 3: +(?P<mpls_label_3>\d+)$')
+
         for line in out.splitlines():
             line = line.strip()
+            
 
             # Source address: 27.93.202.64, Destination address: 106.187.14.158
             m = p1.match(line)
@@ -112,6 +127,13 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
                         "flow-aggregate-template-detail", {}).setdefault(
                             "flow-aggregate-template-detail-ipv4", {}).setdefault(
                                 "detail-entry", {})
+                entry_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+
+            # Destination address: 000:0:0:0:0:0:0:0
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
                 entry_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
 
@@ -158,6 +180,18 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
             m = p7.match(line)
             if m:
                 group = m.groupdict()
+                entry_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+
+            # MPLS label 1: 299888, MPLS label 2: 16, MPLS label 3: 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = ret_dict.setdefault(
+                    "services-accounting-information", {}).setdefault(
+                        "flow-aggregate-template-detail", {}).setdefault(
+                            "flow-aggregate-template-detail-ipv4", {}).setdefault(
+                                "detail-entry", {})
                 entry_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
 
