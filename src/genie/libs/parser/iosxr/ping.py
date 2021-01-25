@@ -8,7 +8,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import (Any, 
+from genie.metaparser.util.schemaengine import (Any,
         Optional, Use, SchemaTypeError, Schema)
 
 class PingSchema(MetaParser):
@@ -23,10 +23,11 @@ class PingSchema(MetaParser):
             Optional('repeat'): int,
             Optional('timeout_secs'): int,
             Optional('source'): str,
+            Optional('result_per_line'): list,
             'statistics': {
                 'send': int,
                 'received': int,
-                'success_percent': int,
+                'success_rate_percent': float,
                 Optional('round-trip'): {
                     'min_ms': int,
                     'avg_ms': int,
@@ -54,14 +55,18 @@ class Ping(PingSchema):
             out = output
 
         ret_dict = {}
+        result_per_line = []
 
         # Sending 100, 100-byte ICMP Echos to 31.1.1.1, timeout is 2 seconds:
         p1 = re.compile(r'Sending +(?P<repeat>\d+), +(?P<data_bytes>\d+)-byte'
                         r' +ICMP +Echos +to +(?P<address>[\S\s]+), +timeout'
                         r' +is +(?P<timeout>\d+) +seconds:')
-        
+
+        # !!!!!!!
+        p2 = re.compile(r'!+')
+
         # Success rate is 100 percent (100/100), round-trip min/avg/max = 1/2/14 ms
-        p2 = re.compile(r'Success +rate +is +(?P<success_percent>\d+) +percent'
+        p3 = re.compile(r'Success +rate +is +(?P<success_percent>\d+) +percent'
                         r' +\((?P<received>\d+)\/(?P<send>\d+)\),'
                         r' +round-trip +min/avg/max *= *(?P<min>\d+)/(?P<max>\d+)/(?P<avg>\d+) +(?P<unit>\w+)')
 
@@ -80,12 +85,19 @@ class Ping(PingSchema):
 
                 continue
 
-            # Success rate is 100 percent (100/100), round-trip min/avg/max = 1/2/14 ms
+            # !!!!!!
             m = p2.match(line)
             if m:
                 group = m.groupdict()
+                result_per_line.append(line)
+                ping_dict.update({'result_per_line': result_per_line})
+
+            # Success rate is 100 percent (100/100), round-trip min/avg/max = 1/2/14 ms
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
                 stat_dict = ping_dict.setdefault('statistics', {})
-                stat_dict.update({'success_percent': int(group['success_percent']),
+                stat_dict.update({'success_rate_percent': float(group['success_percent']),
                                   'received':int(group['received']),
                                   'send': int(group['send'])})
 

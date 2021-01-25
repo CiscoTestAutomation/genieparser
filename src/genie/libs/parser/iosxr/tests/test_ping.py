@@ -20,6 +20,8 @@ class TestShowBfdSessionDestinationDetailss(unittest.TestCase):
                      'address': '31.1.1.1',
                      'data_bytes': 100,
                      'repeat': 100,
+                      'result_per_line': ['!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
+                                          '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'],
                      'statistics': {
                         'received': 100,
                         'round-trip': {
@@ -28,7 +30,7 @@ class TestShowBfdSessionDestinationDetailss(unittest.TestCase):
                         'min_ms': 1
                         },
                         'send': 100,
-                        'success_percent': 100
+                        'success_rate_percent': 100.0
                      },
                      'timeout_secs': 2
                   }

@@ -6,8 +6,9 @@ expected_output = {
       'timeout_secs': 2,
       'source':
       '21.1.1.2',
+      'result_per_line': ['!!!!!!!!!!'],
       'statistics': {
-         'success_percent': 100,
+         'success_rate_percent': 100.0,
          'received': 10,
          'send': 10,
          'round-trip': {
