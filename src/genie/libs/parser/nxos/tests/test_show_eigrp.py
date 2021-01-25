@@ -1,6 +1,7 @@
 # Python
 import unittest
 from unittest.mock import Mock
+from ipaddress import IPv4Address, IPv6Address
 
 # ATS
 from pyats.topology import Device
@@ -29,7 +30,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                 'eigrp_interface': {
                                     'Ethernet1/2.90': {
                                         'eigrp_nbr': {
-                                            '10.13.90.1': {
+                                            IPv4Address('10.13.90.1'): {
                                                 'peer_handle': 1,
                                                 'hold': 13,
                                                 'uptime': '01:56:49',
@@ -39,7 +40,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'last_seq_number': 16, }}},
                                     'Ethernet1/1.90': {
                                         'eigrp_nbr': {
-                                            '10.23.90.2': {
+                                            IPv4Address('10.23.90.2'): {
                                                 'peer_handle': 0,
                                                 'hold': 11,
                                                 'uptime': '01:46:12',
@@ -53,7 +54,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                 'eigrp_interface': {
                                     'Ethernet1/2.390': {
                                         'eigrp_nbr': {
-                                            '10.13.90.1': {
+                                            IPv4Address('10.13.90.1'): {
                                                 'peer_handle': 1,
                                                 'hold': 13,
                                                 'uptime': '01:43:23',
@@ -66,7 +67,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                     },
                                     'Ethernet1/1.390': {
                                         'eigrp_nbr': {
-                                            '10.23.90.2': {
+                                            IPv4Address('10.23.90.2'): {
                                                 'peer_handle': 0,
                                                 'hold': 13,
                                                 'uptime': '01:44:12',
@@ -100,7 +101,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                 'eigrp_interface': {
                                     'Ethernet1/1.90': {
                                         'eigrp_nbr': {
-                                            'fe80::f816:3eff:fecf:5a5b': {
+                                            IPv6Address('fe80::f816:3eff:fecf:5a5b'): {
                                                 'peer_handle': 0,
                                                 'hold': 12,
                                                 'uptime': '01:40:09',
@@ -110,7 +111,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                                 'last_seq_number': 30}}},
                                     'Ethernet1/2.90': {
                                         'eigrp_nbr': {
-                                            'fe80::f816:3eff:fe62:65af': {
+                                            IPv6Address('fe80::f816:3eff:fe62:65af'): {
                                                 'peer_handle': 1,
                                                 'hold': 12,
                                                 'uptime': '01:40:07',
@@ -124,7 +125,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                 'eigrp_interface': {
                                     'Ethernet1/1.390': {
                                         'eigrp_nbr': {
-                                            'fe80::f816:3eff:fecf:5a5b': {
+                                            IPv6Address('fe80::f816:3eff:fecf:5a5b'): {
                                                 'peer_handle': 0,
                                                 'hold': 10,
                                                 'uptime': '01:44:27',
@@ -137,7 +138,7 @@ class test_show_eigrp_neighbors(unittest.TestCase):
                                     },
                                     'Ethernet1/2.390': {
                                         'eigrp_nbr': {
-                                            'fe80::f816:3eff:fe62:65af': {
+                                            IPv6Address('fe80::f816:3eff:fe62:65af'): {
                                                 'peer_handle': 1,
                                                 'hold': 13,
                                                 'uptime': '01:43:38',
@@ -198,7 +199,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                 'eigrp_interface': {
                                     'Ethernet1/2.90': {
                                         'eigrp_nbr': {
-                                            '10.13.90.1': {
+                                            IPv4Address('10.13.90.1'): {
                                                 'peer_handle': 1,
                                                 'hold': 14,
                                                 'uptime': '01:58:11',
@@ -218,7 +219,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'prefixes': 3, }, }, },
                                     'Ethernet1/1.90': {
                                         'eigrp_nbr': {
-                                            '10.23.90.2': {
+                                            IPv4Address('10.23.90.2'): {
                                                 'peer_handle': 0,
                                                 'hold': 13,
                                                 'uptime': '01:47:34',
@@ -242,7 +243,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                 'eigrp_interface': {
                                     'Ethernet1/2.390': {
                                         'eigrp_nbr': {
-                                            '10.13.90.1': {
+                                            IPv4Address('10.13.90.1'): {
                                                 'peer_handle': 1,
                                                 'hold': 14,
                                                 'uptime': '01:44:45',
@@ -262,7 +263,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                                 'prefixes': 3}, }, },
                                     'Ethernet1/1.390': {
                                         'eigrp_nbr': {
-                                            '10.23.90.2': {
+                                            IPv4Address('10.23.90.2'): {
                                                 'peer_handle': 0,
                                                 'hold': 14,
                                                 'uptime': '01:45:34',
@@ -310,7 +311,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                 'eigrp_interface': {
                                     'Ethernet1/1.90': {
                                         'eigrp_nbr': {
-                                            'fe80::f816:3eff:fecf:5a5b': {
+                                            IPv6Address('fe80::f816:3eff:fecf:5a5b'): {
                                                 'peer_handle': 0,
                                                 'hold': 12,
                                                 'uptime': '01:41:31',
@@ -333,7 +334,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                     },
                                     'Ethernet1/2.90': {
                                         'eigrp_nbr': {
-                                            'fe80::f816:3eff:fe62:65af': {
+                                            IPv6Address('fe80::f816:3eff:fe62:65af'): {
                                                 'peer_handle': 1,
                                                 'hold': 12,
                                                 'uptime': '01:41:30',
@@ -357,7 +358,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                 'eigrp_interface': {
                                     'Ethernet1/1.390': {
                                         'eigrp_nbr': {
-                                            'fe80::f816:3eff:fecf:5a5b': {
+                                            IPv6Address('fe80::f816:3eff:fecf:5a5b'): {
                                                 'peer_handle': 0,
                                                 'hold': 11,
                                                 'uptime': '01:45:50',
@@ -380,7 +381,7 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
                                     },
                                     'Ethernet1/2.390': {
                                         'eigrp_nbr': {
-                                            'fe80::f816:3eff:fe62:65af': {
+                                            IPv6Address('fe80::f816:3eff:fe62:65af'): {
                                                 'peer_handle': 1,
                                                 'hold': 14,
                                                 'uptime': '01:45:01',
