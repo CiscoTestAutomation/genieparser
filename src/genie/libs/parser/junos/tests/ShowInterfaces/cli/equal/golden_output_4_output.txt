@@ -1,0 +1,19 @@
+
+  Logical interface ge-0/0/1.0 (Index 333) (SNMP ifIndex 540)
+    Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+    Input packets : 189
+    Output packets: 195
+    Protocol inet, MTU: 1500
+    Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
+      Flags: Sendbcast-pkt-to-re
+      Addresses, Flags: Is-Preferred Is-Primary
+        Destination: 106.187.14.156/30, Local: 106.187.14.157, Broadcast: 106.187.14.159
+    Protocol inet6, MTU: 1500
+    Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
+      Addresses, Flags: Is-Preferred Is-Primary
+        Destination: 2001:268:fb8f:29::/64, Local: 2001:268:fb8f:29::1
+      Addresses, Flags: Is-Preferred
+        Destination: fe80::/64, Local: fe80::250:56ff:fe8d:e725
+    Protocol mpls, MTU: 1488, Maximum labels: 3
+    Protocol multiservice, MTU: Unlimited
+

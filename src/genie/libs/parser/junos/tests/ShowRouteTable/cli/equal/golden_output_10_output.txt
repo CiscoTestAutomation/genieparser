@@ -1,0 +1,6 @@
+
+TESTVPN.inet.0: 1 destinations, 1 routes (1 active, 0 holddown, 0 hidden)
++ = Active Route, - = Last Active, * = Both
+
+192.168.51.1/32    *[Local/0] 00:02:35
+                       Reject
