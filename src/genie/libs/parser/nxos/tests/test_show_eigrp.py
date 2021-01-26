@@ -465,7 +465,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "fd": 2816,
                                         "nexthops": {
                                             "0": {
-                                                "nexthope": "Connected",
+                                                "nexthop": "Connected",
                                                 "interface": "Ethernet1/2"
                                             }
                                         }
@@ -476,12 +476,12 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "fd": 51200,
                                         "nexthops": {
                                             "0": {
-                                                "nexthope": "Rstatic",
+                                                "nexthop": "Rstatic",
                                                 "fd": 51200,
                                                 "rd": 0
                                             },
                                             "1": {
-                                                "nexthope": "1.0.1.2",
+                                                "nexthop": "1.0.1.2",
                                                 "fd": 3072,
                                                 "rd": 576,
                                                 "interface": "Ethernet1/2"
@@ -494,12 +494,12 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "fd": 51200,
                                         "nexthops": {
                                             "0": {
-                                                "nexthope": "Rstatic",
+                                                "nexthop": "Rstatic",
                                                 "fd": 51200,
                                                 "rd": 0
                                             },
                                             "1": {
-                                                "nexthope": "1.0.1.2",
+                                                "nexthop": "1.0.1.2",
                                                 "fd": 3072,
                                                 "rd": 576,
                                                 "interface": "Ethernet1/2"
@@ -512,12 +512,12 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "fd": 51200,
                                         "nexthops": {
                                             "0": {
-                                                "nexthope": "Rstatic",
+                                                "nexthop": "Rstatic",
                                                 "fd": 51200,
                                                 "rd": 0
                                             },
                                             "1": {
-                                                "nexthope": "1.0.1.2",
+                                                "nexthop": "1.0.1.2",
                                                 "fd": 3072,
                                                 "rd": 576,
                                                 "interface": "Ethernet1/2"
@@ -530,12 +530,12 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "fd": 51200,
                                         "nexthops": {
                                             "0": {
-                                                "nexthope": "Rstatic",
+                                                "nexthop": "Rstatic",
                                                 "fd": 51200,
                                                 "rd": 0
                                             },
                                             "1": {
-                                                "nexthope": "1.0.1.2",
+                                                "nexthop": "1.0.1.2",
                                                 "fd": 3072,
                                                 "rd": 576,
                                                 "interface": "Ethernet1/2"
@@ -548,12 +548,12 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "fd": 51200,
                                         "nexthops": {
                                             "0": {
-                                                "nexthope": "Rstatic",
+                                                "nexthop": "Rstatic",
                                                 "fd": 51200,
                                                 "rd": 0
                                             },
                                             "1": {
-                                                "nexthope": "1.0.1.2",
+                                                "nexthop": "1.0.1.2",
                                                 "fd": 3072,
                                                 "rd": 576,
                                                 "interface": "Ethernet1/2"
