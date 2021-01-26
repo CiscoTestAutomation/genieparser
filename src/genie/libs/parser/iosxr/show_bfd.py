@@ -182,13 +182,13 @@ class ShowBfdSessionDestinationDetailsSchema(MetaParser):
                 'dest':{
                     Any():{
                         'interface': str,
-        		        'location': str,
-        		        'session':{
+        		        Optional('location'): str,
+        		        Optional('session'):{
         		        	'state': str,
-        		        	'duration': str,
-        		        	'num_of_times_up': int,
-        		        	'type': str,
-        		        	'owner_info':{
+        		        	Optional('duration'): str,
+        		        	Optional('num_of_times_up'): int,
+        		        	Optional('type'): str,
+        		        	Optional('owner_info'):{
         		        		Any():{
         		        			'desired_interval_ms': int,
         		        			'desired_multiplier': int,
@@ -210,14 +210,16 @@ class ShowBfdSessionDestinationDetailsSchema(MetaParser):
         		        	Optional(Any()): int,
         		        },
         		        'timer_vals':{
-        		        	'local_async_tx_interval_ms': int,
-        		        	'remote_async_tx_interval_ms': int,
-        		        	'desired_echo_tx_interval_ms': int,
-        		        	'local_echo_tax_interval_ms': int,
+        		        	Optional('local_async_tx_interval_ms'): int,
+        		        	Optional('remote_async_tx_interval_ms'): int,
+        		        	Optional('desired_echo_tx_interval_ms'): int,
+        		        	Optional('local_echo_tax_interval_ms'): int,
         		        	Optional('echo_detection_time_ms'): int,
         		        	Optional('async_detection_time_ms'): int,
+                            Optional('echo_detection_time'): str,
+                            Optional('async_detection_time'): str,
         		        },
-        		        'local_stats': {
+        		        Optional('local_stats'): {
         		        	'latency_of_echo_packets':{
         		        		'num_of_packets': int,
         		        		'min_ms':int,
@@ -328,8 +330,8 @@ class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
         p14 = re.compile(r'Echo +detection +time:'
                          r' +(?P<echo_time>\d+) +(?P<echo_time_unit>\w+)(\([\S\s]+\))?,'
                          r' +async +detection +time:'
-                         r' +(?P<async_time>\d+) +(?P<async_time_unit>\w+)(\([\S\s]+\))?')
-
+                         r' +(?P<det_time>(?P<async_time>\d+) +(?P<async_time_unit>\w+)(\([\S\s]+\)))?')
+        
         # Local Stats:
         p15 = re.compile(r'Local +Stats:')
 
@@ -371,6 +373,12 @@ class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
                          r' +(?P<adjusted_interval>\d+)'
                          r' +(?P<adjusted_interval_unit>\w+)'
                          r' +(?P<adjusted_multiplier>\d+)')
+        
+        # Te0/0/2/2           10.0.0.1        0s(0s*0)         450ms(150ms*3)   UP
+        p23 = re.compile(r'(?P<interface>\S+) +(?P<dest>\S+) +'
+            r'(?P<echo_detection_time>\S+\([\w \*]+\)) +'
+            r'(?P<async_detection_time>\S+\([\w \*]+\)) +'
+            r'(?P<state>\S+)')
 
         dfpca_dict = {'d': 'demand_bit',
                       'f': 'final_bit',
@@ -631,5 +639,49 @@ class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
                                     'adjusted_multiplier': int(group['adjusted_multiplier'])
                 })
                 continue
+            
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                intf = group['interface']
+                ip_address = group['dest']
+                echo_detection_time = group['echo_detection_time']
+                async_detection_time = group['async_detection_time']
+                state = group['state']
+                dest_dict = result_dict.setdefault('src', {}). \
+                    setdefault(ip_address, {}). \
+                    setdefault('dest', {}). \
+                    setdefault(ip_address, {})
+                dest_dict.update({'interface': intf})
+                timer_vals_dict = dest_dict.setdefault('timer_vals', {})
+                timer_vals_dict.update({'echo_detection_time': echo_detection_time})
+                timer_vals_dict.update({'async_detection_time': async_detection_time})
+                session_dict = dest_dict.setdefault('session', {})
+                session_dict.update({'state': state})
+                continue
 
         return result_dict
+
+class ShowBfdSessionDestination(ShowBfdSessionDestinationDetails):
+    """
+    Parser for the following show commands:
+        * show bfd session destination {ip_address}
+        * show bfd ipv6 session destination {ip_address}
+    """
+
+    cli_command = ['show bfd session destination {ip_address}',
+                   'show bfd {ipv6} session destination {ip_address}']
+
+    def cli(self, ip_address, ipv6='', output=None):
+        
+        if output is None:
+            if ipv6:
+                out = self.device.execute(
+                           self.cli_command[1].format(ipv6=ipv6, ip_address=ip_address))
+            else:
+                out = self.device.execute(
+                           self.cli_command[0].format(ip_address=ip_address))
+        else:
+            out = output
+
+        return super().cli(ip_address=ip_address, ipv6=ipv6, output=out)
