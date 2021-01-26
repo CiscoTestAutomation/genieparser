@@ -394,9 +394,8 @@ class ShowEigrpTopologySchema(MetaParser):
     '''
 
     schema = {
-        'eigrp_instance': {
+        'as': {
             Any(): {
-                'as': int,
                 'routeid': str,
                 'vrf': {
                     Any(): {
