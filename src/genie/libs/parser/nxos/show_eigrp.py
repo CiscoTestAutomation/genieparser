@@ -395,8 +395,9 @@ class ShowEigrpTopologySchema(MetaParser):
 
     schema = {
         Any(): { # eigrp_instance
+            'as': int,
+            'routeid': Or(IPv4Address, IPv6Address),
             Any(): { # vrf
-                'routeid': str,
                 Any(): { # address_family
                     Any(): { # route
                         'state': str,
