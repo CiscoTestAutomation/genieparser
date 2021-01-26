@@ -421,24 +421,24 @@ class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
         * 'show ipv6 eigrp topology vrf <vrf>'
     '''
 
-    def cli(self, vrf='', output=None): pass
+    def cli(self, vrf:str='', output:str=None) -> dict: pass
 
 class ShowIpv4EigrpTopology(ShowEigrpTopologySuperParser,
                             ShowEigrpTopologySchema):
     cli_command = 'show ip eigrp topology vrf {vrf}'
 
-    def cli(self, vrf='all', output=None):
+    def cli(self, vrf:str='all', output:str=None) -> dict:
         if output is None: 
-            cmd = self.cli_command.format(vrf=vrf)
-            output = self.device.execute(cmd)
+            cmd:str = self.cli_command.format(vrf=vrf)
+            output:str = self.device.execute(cmd)
         return super().cli(vrf=vrf, output=output)
 
 class ShowIpv6EigrpTopology(ShowEigrpTopologySuperParser,
                             ShowEigrpTopologySchema):
     cli_command = 'show ipv6 eigrp topology vrf {vrf}'
 
-    def cli(self, vrf='all', output=None):
+    def cli(self, vrf:str='all', output:str=None) -> dict:
         if output is None:
-            cmd = self.cli_command.format(vrf=vrf)
-            output = self.device.execute(cmd)
+            cmd:str = self.cli_command.format(vrf=vrf)
+            output:str = self.device.execute(cmd)
         return super().cli(vrf=vrf, output=output)
