@@ -372,6 +372,32 @@ class ShowVersion(ShowVersionSchema):
 
         return version_dict
 
+    @staticmethod
+    def get_version_from_system_version(system_version:str, format:type=tuple):
+        """get version from system version
+
+        Args:
+            system_version (str): system version from ShowVersionSchema
+            format (type, optional): Return format between str and tuple.
+                    Defaults to tuple.
+
+        Returns:
+            (str, tuple): version in str or tuple format
+        """
+        # Version is the first token when split with ' '
+        ver: str = system_version.split(' ')[0]
+        if format == str :
+            # If desired format is string then return from here
+            return ver
+        else :
+            # Tokenize system_version into a list with delimiters '.', '(' and ')'
+            ver: list = [ch for ch in re.split('\.|\(|\)', ver) if ch != '']
+            # Convert to int whereever possible
+            for i in range(len(ver)):
+                try : ver[i] = int(ver[i])
+                except ValueError: continue
+            return tuple(ver)
+
 class ShowInventorySchema(MetaParser):
     """Schema for show inventory"""
     schema = {'name':
