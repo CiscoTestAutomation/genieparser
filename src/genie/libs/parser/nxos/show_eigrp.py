@@ -11,7 +11,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 
 # Libs
 from genie.libs.parser.utils.common import Common
@@ -386,3 +386,59 @@ class ShowIpv6EigrpNeighborsDetail(ShowEigrpNeighborsDetailSuperParser,
             show_output = output
 
         return super().cli(output=show_output, vrf=vrf)
+
+class ShowEigrpTopologySchema(MetaParser):
+    '''Schema for:
+        * 'show ip eigrp topology vrf <vrf>'
+        * 'show ipv6 eigrp topology vrf <vrf>'
+    '''
+
+    schema = {
+        Any(): {
+            Any(): {
+                Any(): {
+                    Any(): {
+                        'state': str,
+                        'successors': int,
+                        'fd': int,
+                        'nexthops': {
+                            Any(): {
+                                'nexthop': str,
+                                Optional('fd'): int,
+                                Optional('rd'): int,
+                                Optional('interface'): str
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
+    '''Super parser for:
+        * 'show ip eigrp topology vrf <vrf>'
+        * 'show ipv6 eigrp topology vrf <vrf>'
+    '''
+
+    def cli(self, vrf='', output=None): pass
+
+class ShowIpv4EigrpTopology(ShowEigrpTopologySuperParser,
+                            ShowEigrpTopologySchema):
+    cli_command = 'show ip eigrp topology vrf {vrf}'
+
+    def cli(self, vrf='all', output=None):
+        if output is None: 
+            cmd = self.cli_command.format(vrf=vrf)
+            output = self.device.execute(cmd)
+        return super().cli(vrf=vrf, output=output)
+
+class ShowIpv6EigrpTopology(ShowEigrpTopologySuperParser,
+                            ShowEigrpTopologySchema):
+    cli_command = 'show ipv6 eigrp topology vrf {vrf}'
+
+    def cli(self, vrf='all', output=None):
+        if output is None:
+            cmd = self.cli_command.format(vrf=vrf)
+            output = self.device.execute(cmd)
+        return super().cli(vrf=vrf, output=output)
