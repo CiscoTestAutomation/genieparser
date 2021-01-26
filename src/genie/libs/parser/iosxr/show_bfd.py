@@ -3,6 +3,8 @@
         * show bfd session
         * show bfd session destination {ip_address} detail
         * show bfd ipv6 session destination {ip_address} detail
+        * show bfd session destination {ip_address}
+        * show bfd ipv6 session destination {ip_address}
 """
 
 # Python
