@@ -394,21 +394,29 @@ class ShowEigrpTopologySchema(MetaParser):
     '''
 
     schema = {
-        Any(): { # eigrp_instance
-            'as': int,
-            'routeid': Or(IPv4Address, IPv6Address),
-            Any(): { # vrf
-                Any(): { # address_family
-                    Any(): { # route
-                        'state': str,
-                        'successors': int,
-                        'fd': int,
-                        'nexthops': {
+        'eigrp_instance': {
+            Any(): {
+                'as': int,
+                'routeid': str,
+                'vrf': {
+                    Any(): {
+                        'address_family': {
                             Any(): {
-                                'nexthop': str,
-                                Optional('fd'): int,
-                                Optional('rd'): int,
-                                Optional('interface'): str
+                                'route': {
+                                    Any(): {
+                                        'state': str,
+                                        'successors': int,
+                                        'fd': int,
+                                        'nexthops': {
+                                            Any(): {
+                                                'nexthop': str,
+                                                Optional('fd'): int,
+                                                Optional('rd'): int,
+                                                Optional('interface'): str
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
