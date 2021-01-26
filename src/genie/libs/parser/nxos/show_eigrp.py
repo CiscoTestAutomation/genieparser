@@ -396,7 +396,7 @@ class ShowEigrpTopologySchema(MetaParser):
     schema = {
         'as': {
             Any(): {
-                # 'routeid': str,
+                'routeid': str,
                 'vrf': {
                     Any(): {
                         'address_family': {
@@ -445,15 +445,20 @@ class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
                         '(?P<successors>\d+)\s+successors,'
                         '\s+FD\s+is\s+(?P<fd>\d+)$')
 
+        # via Connected, Ethernet1/2
+        # via Rstatic (51200/0)
+        # via 1.0.1.2 (3072/576), Ethernet1/2
+        r3 = re.compile(r'via\s+(?P<nexthop>\S+)'
+                        '(\s+\((?P<fd>\d+)\/(?P<rd>\d+)\))?'
+                        '(,\s(?P<interface>\S+))?$')
+
         parsed_dict:dict = {}
 
-        second_line: bool = False
+        nexthop_count:int = 0
+
         # loop over all the lines
         for line in output.splitlines():
             line = line.strip()
-
-            if second_line:
-                second_line = False
 
             result = r1.match(line)
             if result:
@@ -464,17 +469,15 @@ class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
                 as_num = group['as_num']
                 routerid = group['routerid']
                 vrf = group['vrf']
-                '''
                 as_dict:dict = parsed_dict \
                     .setdefault('as', {}) \
                     .setdefault(as_num, {})
                 as_dict['routerid'] = routerid
-                '''
                 continue
 
             result = r2.match(line)
             if result:
-                second_line = True
+                nexthop_count = 0
                 group:dict = result.groupdict()
 
                 if not vrf:
@@ -498,6 +501,28 @@ class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
                 route_dict['successors'] = int(group['successors'])
                 route_dict['fd'] = int(group['fd'])
                 route_dict['nexthops'] = {}
+
+            result = r3.match(line)
+            if result:
+                group:dict = result.groupdict()
+                nexthop_dict:dict = parsed_dict \
+                    .setdefault('as', {}) \
+                    .setdefault(as_num, {}) \
+                    .setdefault('vrf', {}) \
+                    .setdefault(vrf, {}) \
+                    .setdefault('address_family', {}) \
+                    .setdefault(address_family, {}) \
+                    .setdefault('route', {}) \
+                    .setdefault(route, {}) \
+                    .setdefault('nexthops', {}) \
+                    .setdefault(nexthop_count, {})
+                nexthop_count = nexthop_count + 1
+                nexthop_dict['nexthope'] = group['nexthop']
+                for key in ('fd', 'rd') :
+                    if group[key]:
+                        nexthop_dict[key] = int(group[key])
+                if group['interface']:
+                    nexthop_dict['interface'] = group['interface']
 
         print(__import__('json').dumps(parsed_dict, indent=4))
         return parsed_dict
