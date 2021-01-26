@@ -1,0 +1,2 @@
+sdk_generator/outputs/github_parser.json merge=union
+/CommandHelper/includes/getHeroInfo.ms merge=union
