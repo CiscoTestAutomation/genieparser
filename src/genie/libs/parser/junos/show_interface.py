@@ -1994,6 +1994,9 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Logical interface ge-0/0/0.0 (Index 333) (SNMP ifIndex 606)
             m = p24.match(line)
             if m:
+                # found_flag : To check if `physical-interface` list created
+                #              for logical-interface
+                #              This prevents to create redundant list for same physical interface
                 found_flag = False
                 statistics_type = 'logical'
                 group = m.groupdict()

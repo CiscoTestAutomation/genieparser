@@ -127,6 +127,9 @@ class ShowRouteTable(ShowRouteTableSchema):
                         r'(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>[\S\s]+))?')
 
         # fe80::250:5600:b8d:fea3/128
+        # this regex widely match other pattern. intendedly exclude below `Reject`
+        # 192.168.51.1/32    *[Local/0] 00:02:35
+        #                Reject # <-----
         r4 = re.compile(r'^(?!.*Reject)(?P<rt_destination>[\w\:\/]+)$')
 
         # *[Local/0] 00:26:06
