@@ -55,7 +55,10 @@ class ShowRouteTableSchema(MetaParser):
                             'age': str,
                             Optional('metric'): str,
                             Optional('rt-tag'): str,
-                            'next_hop': {
+                            Optional('learned_from'): str,
+                            Optional('local_preference'): str,
+                            Optional('nh_type'): str,
+                            Optional('next_hop'): {
                                 'next_hop_list': {
                                     Any(): {
                                         'to': str,
@@ -105,31 +108,37 @@ class ShowRouteTable(ShowRouteTableSchema):
 
         # inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
         r1 = re.compile(r'(?P<table_name>\S+):\s+(?P<destination_count>\d+)\s+'
-                         'destinations\,\s+(?P<total_route_count>\d+)\s+routes\s+'
-                         '\((?P<active_route_count>\d+)\s+active\,\s+(?P<holddown_route_count>\d+)'
-                         '\s+holddown\,\s+(?P<hidden_route_count>\d+)\s+hidden\)')
+                        r'destinations\,\s+(?P<total_route_count>\d+)\s+routes\s+'
+                        r'\((?P<active_route_count>\d+)\s+active\,\s+(?P<holddown_route_count>\d+)'
+                        r'\s+holddown\,\s+(?P<hidden_route_count>\d+)\s+hidden\)')
 
+        # 192.168.51.1/32    *[Local/0] 00:02:35
         # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
         # 10.64.4.4/32   *[L-OSPF/9/5] 1d 02:16:51, metric 110
         # 118420             *[VPN/170] 31w3d 20:13:54
-        r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?'
-                        r'\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)\/?(?P<preference2>\d+)?\]'
-                        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
+        # 192.168.61.0/30    *[BGP/170] 00:25:19, localpref 100, from 27.93.202.40
+        r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)\/?(?P<preference2>\d+)?\] +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?(, +localpref +(?P<local_preference>\d+))?(, +from +(?P<learned_from>\S+))?(, +tag +(?P<rt_tag>\d+))?$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
         # > to 192.168.220.6 via ge-0/0/1.0, Pop
         # Local via ge-0/0/4.11
         r3 = re.compile(r'((?:(?P<best_route>\>*))?\s*to\s+)?(?P<to>\S+)\s+via\s+'
-                         '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>[\S\s]+))?')
+                        r'(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>[\S\s]+))?')
 
         # fe80::250:5600:b8d:fea3/128
-        r4 = re.compile(r'^(?P<rt_destination>[\w\:\/]+)$')
+        # this regex widely match other pattern. intendedly exclude below `Reject`
+        # 192.168.51.1/32    *[Local/0] 00:02:35
+        #                Reject # <-----
+        r4 = re.compile(r'^(?!.*Reject)(?P<rt_destination>[\w\:\/]+)$')
 
         # *[Local/0] 00:26:06
         r5 = re.compile(r'^(?P<active_tag>\*)?\[(?P<protocol_name>[\w\-]+)\/'
             r'(?P<preference>\d+)\/?(?P<preference2>\d+)?\] +(?P<age>[^,]+)'
             r'(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
+
+        # Reject
+        r6 = re.compile(r'^(?P<nh_type>Reject)$')
 
         parsed_output = {}
 
@@ -226,6 +235,11 @@ class ShowRouteTable(ShowRouteTableSchema):
                     route_dict.update({'rt-tag': rt_tag})
                 continue
 
+            result = r6.match(line)
+            if result:
+                group = result.groupdict()
+                route_dict.update({k: v for k, v in group.items() if v})
+                continue
 
         return parsed_output
 
@@ -422,13 +436,7 @@ class ShowRoute(ShowRouteSchema):
         # 0.0.0.0/0          *[OSPF/150/10] 3w3d 03:24:58, metric 101, tag 0
         # 167963             *[LDP/9] 1w6d 20:41:01, metric 1, metric2 100, tag 65000500
         # 10.16.2.2/32         *[Static/5] 00:00:02
-        p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?'
-                        r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
-                        r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+( +\S+)?)'
-                        r'(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?'
-                        r'(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?'
-                        r'(, +localpref +(?P<local_preference>\d+))?'
-                        r'(, +from +(?P<learned_from>\S+))?$')
+        p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)(\/(?P<preference2>\d+))?\] +(?P<text>\S+( +\S+)?)(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?(, +localpref +(?P<local_preference>\d+))?(, +from +(?P<learned_from>\S+))?$')
 
         # MultiRecv
         p2_1 = re.compile(r'^(?P<nh_type>MultiRecv)$')
