@@ -701,6 +701,7 @@ class ShowBfdSessionDestination(ShowBfdSessionDestinationSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            # Gi0/0/0/0           2001:10::1
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -718,7 +719,8 @@ class ShowBfdSessionDestination(ShowBfdSessionDestinationSchema):
                     dest_dict.update({'npu': npu})
 
                 continue
-
+            
+            # Te0/0/2/2           10.0.0.1        0s(0s*0)         450ms(150ms*3)   UP
             m = p2.match(line)
             if m:
                 group = m.groupdict()
