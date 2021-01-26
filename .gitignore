@@ -60,3 +60,5 @@ uni.log
 # .vscode
 .vscode
 
+# Python virtual environment
+env
