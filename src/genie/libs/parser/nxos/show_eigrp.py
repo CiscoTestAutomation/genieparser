@@ -394,10 +394,11 @@ class ShowEigrpTopologySchema(MetaParser):
     '''
 
     schema = {
-        Any(): {
-            Any(): {
-                Any(): {
-                    Any(): {
+        Any(): { # eigrp_instance
+            Any(): { # vrf
+                'routeid': str,
+                Any(): { # address_family
+                    Any(): { # route
                         'state': str,
                         'successors': int,
                         'fd': int,
