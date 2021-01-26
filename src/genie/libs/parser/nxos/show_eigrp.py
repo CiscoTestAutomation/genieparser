@@ -396,7 +396,7 @@ class ShowEigrpTopologySchema(MetaParser):
     schema = {
         'as': {
             Any(): {
-                'routeid': str,
+                'routerid': str,
                 'vrf': {
                     Any(): {
                         'address_family': {
@@ -500,7 +500,6 @@ class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
                 route_dict['state'] = group['state']
                 route_dict['successors'] = int(group['successors'])
                 route_dict['fd'] = int(group['fd'])
-                route_dict['nexthops'] = {}
 
             result = r3.match(line)
             if result:
@@ -517,14 +516,13 @@ class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
                     .setdefault('nexthops', {}) \
                     .setdefault(nexthop_count, {})
                 nexthop_count = nexthop_count + 1
-                nexthop_dict['nexthope'] = group['nexthop']
+                nexthop_dict['nexthop'] = group['nexthop']
                 for key in ('fd', 'rd') :
                     if group[key]:
                         nexthop_dict[key] = int(group[key])
                 if group['interface']:
                     nexthop_dict['interface'] = group['interface']
 
-        print(__import__('json').dumps(parsed_dict, indent=4))
         return parsed_dict
 
 class ShowIpv4EigrpTopology(ShowEigrpTopologySuperParser,
