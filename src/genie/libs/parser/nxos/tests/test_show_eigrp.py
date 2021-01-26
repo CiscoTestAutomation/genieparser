@@ -451,107 +451,116 @@ class test_show_eigrp_topology(unittest.TestCase):
     device_output_empty = {'execute.return_value': ''}
 
     expected_parsed_output_1 = {
-        '100': {
-            'default': {
-                'ipv4': {
-                    '1.0.1.0/24': {
-                        'state': 'P',
-                        'successors': 1,
-                        'fd': 2816,
-                        'nexthops': {
-                            0: {
-                                'nexthop': 'Connected',
-                                'interface': 'Ethernet1/2',
-                            }
-                        }
-                    },
-                    '11.0.0.0/24': {
-                        'state': 'P',
-                        'successors': 1,
-                        'fd': 51200,
-                        'nexthops': {
-                            0: {
-                                'nexthop': 'Rstatic',
-                                'fd': 51200,
-                                'rd': 0
-                            },
-                            1: {
-                                'nexthop': '1.0.1.2',
-                                'fd': 3072,
-                                'rd': 576,
-                                'interface': 'Ethernet1/2'
-                            }
-                        }
-                    },
-                    '11.0.1.0/24': {
-                        'state': 'P',
-                        'successors': 1,
-                        'fd': 51200,
-                        'nexthops': {
-                            0: {
-                                'nexthop': 'Rstatic',
-                                'fd': 51200,
-                                'rd': 0
-                            },
-                            1: {
-                                'nexthop': '1.0.1.2',
-                                'fd': 3072,
-                                'rd': 576,
-                                'interface': 'Ethernet1/2'
-                            }
-                        }
-                    },
-                    '11.0.2.0/24': {
-                        'state': 'P',
-                        'successors': 1,
-                        'fd': 51200,
-                        'nexthops': {
-                            0: {
-                                'nexthop': 'Rstatic',
-                                'fd': 51200,
-                                'rd': 0
-                            },
-                            1: {
-                                'nexthop': '1.0.1.2',
-                                'fd': 3072,
-                                'rd': 576,
-                                'interface': 'Ethernet1/2'
-                            }
-                        }
-                    },
-                    '11.0.3.0/24': {
-                        'state': 'P',
-                        'successors': 1,
-                        'fd': 51200,
-                        'nexthops': {
-                            0: {
-                                'nexthop': 'Rstatic',
-                                'fd': 51200,
-                                'rd': 0
-                            },
-                            1: {
-                                'nexthop': '1.0.1.2',
-                                'fd': 3072,
-                                'rd': 576,
-                                'interface': 'Ethernet1/2'
-                            }
-                        }
-                    },
-                    '11.0.4.0/24': {
-                        'state': 'P',
-                        'successors': 1,
-                        'fd': 51200,
-                        'nexthops': {
-                            0: {
-                                'nexthop': 'Rstatic',
-                                'fd': 51200,
-                                'rd': 0
-                            },
-                            1: {
-                                'nexthop': '1.0.1.2',
-                                'fd': 3072,
-                                'rd': 576,
-                                'interface': 'Ethernet1/2'
+        "as": {
+            "1": {
+                "routerid": "10.0.0.1",
+                "vrf": {
+                    "default": {
+                        "address_family": {
+                            "ipv4": {
+                                "route": {
+                                    "1.0.1.0/24": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 2816,
+                                        "nexthops": {
+                                            "0": {
+                                                "nexthope": "Connected",
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "11.0.0.0/24": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 51200,
+                                        "nexthops": {
+                                            "0": {
+                                                "nexthope": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            "1": {
+                                                "nexthope": "1.0.1.2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "11.0.1.0/24": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 51200,
+                                        "nexthops": {
+                                            "0": {
+                                                "nexthope": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            "1": {
+                                                "nexthope": "1.0.1.2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "11.0.2.0/24": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 51200,
+                                        "nexthops": {
+                                            "0": {
+                                                "nexthope": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            "1": {
+                                                "nexthope": "1.0.1.2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "11.0.3.0/24": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 51200,
+                                        "nexthops": {
+                                            "0": {
+                                                "nexthope": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            "1": {
+                                                "nexthope": "1.0.1.2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "11.0.4.0/24": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 51200,
+                                        "nexthops": {
+                                            "0": {
+                                                "nexthope": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            "1": {
+                                                "nexthope": "1.0.1.2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
