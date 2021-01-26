@@ -655,10 +655,14 @@ class ShowBfdSessionDestinationSchema(MetaParser):
                 Optional('hardware'): str,
                 Optional('npu'): str,
                 'timer_vals':{
-                    'echo_detection_time_ms': int,
-                    'async_detection_time_ms': int,
-                    'echo_detection_time': str,
                     'async_detection_time': str,
+                    'async_detection_time_ms': int,
+                    'async_detection_interval_ms': int,
+                    'async_detection_multiplier': int,
+                    'echo_detection_time': str,
+                    'echo_detection_time_ms': int,
+                    'echo_detection_interval_ms': int,
+                    'echo_detection_multiplier': int,
                 },
             }       
         }
@@ -693,8 +697,8 @@ class ShowBfdSessionDestination(ShowBfdSessionDestinationSchema):
 
         # Te0/0/2/2           10.0.0.1        0s(0s*0)         450ms(150ms*3)   UP
         p2 = re.compile(r'^(((?P<hardware>(No|Yes)) +(?P<npu>\S+))|((?P<interface>\S+) +(?P<dest>\S+))) +'
-            r'(?P<echo_detection_time>(?P<echo_time>\d+) *(?P<echo_time_unit>\w+)\([\w \*]+\)) +'
-            r'(?P<async_detection_time>(?P<async_time>\d+) *(?P<async_time_unit>\w+)\([\w \*]+\)) +'
+            r'(?P<echo_detection_time>(?P<echo_time>\d+) *(?P<echo_time_unit>\w+)\((?P<echo_detection_interval_ms>\d+)[\w ]+\*(?P<echo_detection_multiplier>\d+)\)) +'
+            r'(?P<async_detection_time>(?P<async_time>\d+) *(?P<async_time_unit>\w+)\((?P<async_detection_interval_ms>\d+)[\w ]+\*(?P<async_detection_multiplier>\d+)\)) +'
             r'(?P<state>\S+)$')
 
 
@@ -728,6 +732,11 @@ class ShowBfdSessionDestination(ShowBfdSessionDestinationSchema):
                 ip_address = group.get('dest', None)
                 echo_detection_time = group['echo_detection_time']
                 async_detection_time = group['async_detection_time']
+                echo_detection_interval_ms = group['echo_detection_interval_ms']
+                echo_detection_multiplier = group['echo_detection_multiplier']
+                async_detection_interval_ms = group['async_detection_interval_ms']
+                async_detection_multiplier = group['async_detection_multiplier']
+                
                 state = group['state']
                 
                 if intf and ip_address:
@@ -743,7 +752,13 @@ class ShowBfdSessionDestination(ShowBfdSessionDestinationSchema):
 
                 timer_vals_dict = dest_dict.setdefault('timer_vals', {})
                 timer_vals_dict.update({'echo_detection_time': echo_detection_time})
+                timer_vals_dict.update({'echo_detection_interval_ms': int(echo_detection_interval_ms)})
+                timer_vals_dict.update({'echo_detection_multiplier': int(echo_detection_multiplier)})
+
                 timer_vals_dict.update({'async_detection_time': async_detection_time})
+                timer_vals_dict.update({'async_detection_interval_ms': int(async_detection_interval_ms)})
+                timer_vals_dict.update({'async_detection_multiplier': int(async_detection_multiplier)})
+
                 session_dict = dest_dict.setdefault('session', {})
                 session_dict.update({'state': state})
 
