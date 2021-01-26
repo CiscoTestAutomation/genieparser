@@ -761,5 +761,6 @@ class test_show_eigrp_topology(unittest.TestCase):
         obj = ShowIpv6EigrpTopology(device=self.device)
         parsed_output:dict = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
+
 if __name__ == '__main__':
     unittest.main()
