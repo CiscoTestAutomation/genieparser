@@ -396,7 +396,7 @@ class ShowEigrpTopologySchema(MetaParser):
     schema = {
         'as': {
             Any(): {
-                'routeid': str,
+                # 'routeid': str,
                 'vrf': {
                     Any(): {
                         'address_family': {
@@ -430,7 +430,77 @@ class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
         * 'show ipv6 eigrp topology vrf <vrf>'
     '''
 
-    def cli(self, vrf:str='', output:str=None) -> dict: pass
+    def cli(self, vrf:str='', output:str=None) -> dict:
+
+        # IP-EIGRP Topology Table for AS(1)/ID(10.0.0.1) VRF default
+        # IPv6-EIGRP Topology Table for AS(0)/ID(0.0.0.0) VRF vrf1
+        r1 = re.compile(r'^(?P<address_family>IP|IPv4|IPv6)'
+                        '\-EIGRP\s+Topology\s+Table\s+for\s+'
+                        'AS\((?P<as_num>\d+)\)\/ID\((?P<routerid>\S+)\)'
+                        '\s+VRF\s+(?P<vrf>\S+)$')
+
+        # P 1.0.1.0/24, 1 successors, FD is 2816
+        # P 2001:1::1:0/112, 1 successors, FD is 2816
+        r2 = re.compile(r'^(?P<state>P|A|U|Q|R|r|s)\s+(?P<route>\S+),\s+'
+                        '(?P<successors>\d+)\s+successors,'
+                        '\s+FD\s+is\s+(?P<fd>\d+)$')
+
+        parsed_dict:dict = {}
+
+        second_line: bool = False
+        # loop over all the lines
+        for line in output.splitlines():
+            line = line.strip()
+
+            if second_line:
+                second_line = False
+
+            result = r1.match(line)
+            if result:
+                group:dict = result.groupdict()
+                address_family = group['address_family'].lower()
+                if address_family == 'ip':
+                    address_family = 'ipv4'
+                as_num = group['as_num']
+                routerid = group['routerid']
+                vrf = group['vrf']
+                '''
+                as_dict:dict = parsed_dict \
+                    .setdefault('as', {}) \
+                    .setdefault(as_num, {})
+                as_dict['routerid'] = routerid
+                '''
+                continue
+
+            result = r2.match(line)
+            if result:
+                second_line = True
+                group:dict = result.groupdict()
+
+                if not vrf:
+                    vrf = 'default'
+                if not as_num:
+                    as_num = 0
+                if not routerid:
+                    routerid = ''
+
+                route:str = group['route']
+                route_dict:dict = parsed_dict \
+                    .setdefault('as', {}) \
+                    .setdefault(as_num, {}) \
+                    .setdefault('vrf', {}) \
+                    .setdefault(vrf, {}) \
+                    .setdefault('address_family', {}) \
+                    .setdefault(address_family, {}) \
+                    .setdefault('route', {}) \
+                    .setdefault(route, {})
+                route_dict['state'] = group['state']
+                route_dict['successors'] = int(group['successors'])
+                route_dict['fd'] = int(group['fd'])
+                route_dict['nexthops'] = {}
+
+        print(__import__('json').dumps(parsed_dict, indent=4))
+        return parsed_dict
 
 class ShowIpv4EigrpTopology(ShowEigrpTopologySuperParser,
                             ShowEigrpTopologySchema):
