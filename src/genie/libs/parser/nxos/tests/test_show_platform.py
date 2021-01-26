@@ -53,6 +53,8 @@ class test_show_version(unittest.TestCase):
                                  'system_image_file': 'slot0:///n7000-s2-dk10.34.1.0.129.gbin'}
                               }
                             }
+    golden_parsed_output_version_str = '8.1(1)'
+    golden_parsed_output_version_tuple = (8, 1, 1)
 
     golden_parsed_output2 = {'platform':
                               {'reason': 'Unknown',
@@ -79,6 +81,8 @@ class test_show_version(unittest.TestCase):
                                  'system_image_file': 'bootflash:///ISSUCleanGolden.system.gbin'}
                               }
                             }
+    golden_parsed_output2_version_str = '7.0(3)I5(2)'
+    golden_parsed_output2_version_tuple = (7, 0, 3, 'I5', 2)
 
     golden_output = {'execute.return_value': '''
  
@@ -258,6 +262,8 @@ Active Package(s):
                                  'system_compile_time': '4/27/2018 9:00:00 [04/27/2018 21:24:41]'}
                               }
                             }
+    golden_parsed_output3_version_str = '7.3(3)N1(1)'
+    golden_parsed_output3_version_tuple = (7, 3, 3, 'N1', 1)
 
     golden_output4 = {'execute.return_value': '''
  
@@ -337,6 +343,8 @@ Active Package(s):
                                  'system_compile_time': '3/30/2017 9:00:00 [03/30/2017 20:04:06]'}
                               }
                             }
+    golden_parsed_output4_version_str = '6.0(2)U6(10)'
+    golden_parsed_output4_version_tuple = (6, 0, 2, 'U6', 10)
 
     ats_mock.tcl.eval.return_value = 'nxos'
 
@@ -346,6 +354,12 @@ Active Package(s):
         version_obj = ShowVersion(device=self.device)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(ShowVersion.get_version_from_system_version(
+            parsed_output['platform']['software']['system_version']
+        ), self.golden_parsed_output_version_tuple)
+        self.assertEqual(ShowVersion.get_version_from_system_version(
+            parsed_output['platform']['software']['system_version'], format=str
+        ), self.golden_parsed_output_version_str)
 
     def test_golden2(self):
         self.maxDiff = None
@@ -353,6 +367,12 @@ Active Package(s):
         version_obj = ShowVersion(device=self.device)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+        self.assertEqual(ShowVersion.get_version_from_system_version(
+            parsed_output['platform']['software']['system_version']
+        ), self.golden_parsed_output2_version_tuple)
+        self.assertEqual(ShowVersion.get_version_from_system_version(
+            parsed_output['platform']['software']['system_version'], format=str
+        ), self.golden_parsed_output2_version_str)
 
     def test_golden3(self):
         self.maxDiff = None
@@ -360,6 +380,12 @@ Active Package(s):
         version_obj = ShowVersion(device=self.device)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output3)
+        self.assertEqual(ShowVersion.get_version_from_system_version(
+            parsed_output['platform']['software']['system_version']
+        ), self.golden_parsed_output3_version_tuple)
+        self.assertEqual(ShowVersion.get_version_from_system_version(
+            parsed_output['platform']['software']['system_version'], format=str
+        ), self.golden_parsed_output3_version_str)
 
     def test_golden4(self):
         self.maxDiff = None
@@ -367,6 +393,12 @@ Active Package(s):
         version_obj = ShowVersion(device=self.device)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output4)
+        self.assertEqual(ShowVersion.get_version_from_system_version(
+            parsed_output['platform']['software']['system_version']
+        ), self.golden_parsed_output4_version_tuple)
+        self.assertEqual(ShowVersion.get_version_from_system_version(
+            parsed_output['platform']['software']['system_version'], format=str
+        ), self.golden_parsed_output4_version_str)
 
     def test_empty(self):
         self.device2 = Mock(**self.empty_output)
