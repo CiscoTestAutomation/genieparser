@@ -12,7 +12,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 
 # iosxr show_pim
 from genie.libs.parser.iosxr.show_pim import ShowPimVrfMstatic, ShowPimVrfRpfSummary,\
-                                  ShowPimVrfInterfaceDetail
+                                  ShowPimVrfInterfaceDetail, ShowPimTopologySummary
 
 
 # ===================================================
@@ -539,6 +539,81 @@ class test_show_pim_vrf_rpf_summary(unittest.TestCase):
         obj = ShowPimVrfRpfSummary(device=self.device)
         parsed_output = obj.parse(vrf='default', af='ipv6')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+
+# ==========================================================================
+# Unittest for 'show pim topology summary'
+# ==========================================================================
+class test_show_pim_topology_summary(unittest.TestCase):
+    """ Unit test for show pim topology summary. """
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': """
+        RP/0/RSP0/CPU0:PE5#show pim topology summary 
+        Tue Jan 26 04:06:02.148 UTC
+
+        PIM Topology Summary for VRF default
+          No. of group ranges = 5 (Active group ranges = 4)
+          No. of (*,G) routes = 1
+          No. of (S,G) routes = 200
+          No. of (S,G)RPT routes = 0
+        """}
+
+    golden_parsed_output_1 = {
+        'vrf':
+            {'default':
+                 {'active_group_ranges': 4,
+                  'no_group_ranges': 5,
+                  'no_sg_routes': 200,
+                  'no_sg_rpt_routes': 0,
+                  'no_stg_routes': 1
+                  }
+             }
+    }
+
+    golden_output_2 = {'execute.return_value': """
+        RP/0/RSP0/CPU0:PE5#show pim vrf vpn101 topology summary 
+        Tue Jan 26 04:22:07.176 UTC
+
+        PIM Topology Summary for VRF vpn101
+          No. of group ranges = 5 (Active group ranges = 4)
+          No. of (*,G) routes = 1
+          No. of (S,G) routes = 150
+          No. of (S,G)RPT routes = 0
+        """}
+
+    golden_parsed_output_2 = {
+        'vrf':
+            {'vpn101':
+                 {'active_group_ranges': 4,
+                  'no_group_ranges': 5,
+                  'no_sg_routes': 150,
+                  'no_sg_rpt_routes': 0,
+                  'no_stg_routes': 1
+                  }
+             }
+    }
+
+    maxDiff = None
+
+    def test_show_pim_topology_summary_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPimTopologySummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_pim_topology_summary_full(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowPimTopologySummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_show_pim_topology_summary_full_custom_vrf(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowPimTopologySummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':
