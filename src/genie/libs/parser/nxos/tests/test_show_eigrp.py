@@ -464,7 +464,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "successors": 1,
                                         "fd": 2816,
                                         "nexthops": {
-                                            "0": {
+                                            0: {
                                                 "nexthop": "Connected",
                                                 "interface": "Ethernet1/2"
                                             }
@@ -475,12 +475,12 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
-                                            "0": {
+                                            0: {
                                                 "nexthop": "Rstatic",
                                                 "fd": 51200,
                                                 "rd": 0
                                             },
-                                            "1": {
+                                            1: {
                                                 "nexthop": "1.0.1.2",
                                                 "fd": 3072,
                                                 "rd": 576,
@@ -493,12 +493,12 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
-                                            "0": {
+                                            0: {
                                                 "nexthop": "Rstatic",
                                                 "fd": 51200,
                                                 "rd": 0
                                             },
-                                            "1": {
+                                            1: {
                                                 "nexthop": "1.0.1.2",
                                                 "fd": 3072,
                                                 "rd": 576,
@@ -511,12 +511,12 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
-                                            "0": {
+                                            0: {
                                                 "nexthop": "Rstatic",
                                                 "fd": 51200,
                                                 "rd": 0
                                             },
-                                            "1": {
+                                            1: {
                                                 "nexthop": "1.0.1.2",
                                                 "fd": 3072,
                                                 "rd": 576,
@@ -529,12 +529,12 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
-                                            "0": {
+                                            0: {
                                                 "nexthop": "Rstatic",
                                                 "fd": 51200,
                                                 "rd": 0
                                             },
-                                            "1": {
+                                            1: {
                                                 "nexthop": "1.0.1.2",
                                                 "fd": 3072,
                                                 "rd": 576,
@@ -547,12 +547,12 @@ class test_show_eigrp_topology(unittest.TestCase):
                                         "successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
-                                            "0": {
+                                            0: {
                                                 "nexthop": "Rstatic",
                                                 "fd": 51200,
                                                 "rd": 0
                                             },
-                                            "1": {
+                                            1: {
                                                 "nexthop": "1.0.1.2",
                                                 "fd": 3072,
                                                 "rd": 576,
@@ -562,23 +562,6 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     }
                                 }
                             }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    excepteed_parsed_output_1 = {
-        '100': {
-            'default': {
-                'ipv4': {
-                    '1.0.1.0/24': {
-                        'state': 'P',
-                        'successors': 1,
-                        'fd': 2816,
-                        'via': {
-                            
                         }
                     }
                 }
@@ -626,7 +609,7 @@ class test_show_eigrp_topology(unittest.TestCase):
         self.device = Mock(**self.device_output_1)
         obj = ShowIpv4EigrpTopology(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.expected_output_1)
+        self.assertEqual(parsed_output, self.expected_parsed_output_1)
 
 if __name__ == '__main__':
     unittest.main()
