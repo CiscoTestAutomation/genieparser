@@ -595,6 +595,151 @@ class test_show_eigrp_topology(unittest.TestCase):
                 via 1.0.1.2 (3072/576), Ethernet1/2
     '''}
 
+    expected_parsed_output_2 = {
+        "as": {
+            "1": {
+                "routerid": "2001:10::1",
+                "vrf": {
+                    "default": {
+                        "address_family": {
+                            "ipv6": {
+                                "route": {
+                                    "2001:1::1:0/112": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 2816,
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Connected",
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "2001:11::/112": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 51200,
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "2001:1::1:2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "2001:11::1:0/112": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 51200,
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "2001:1::1:2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "2001:11::2:0/112": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 51200,
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "2001:1::1:2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "2001:11::3:0/112": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 51200,
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "2001:1::1:2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "2001:11::4:0/112": {
+                                        "state": "P",
+                                        "successors": 1,
+                                        "fd": 51200,
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "2001:1::1:2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    device_output_2 = {'execute.return_value': '''
+    # show ipv6 eigrp topology vrf all
+        IPv6-EIGRP Topology Table for AS(1)/ID(2001:10::1) VRF default
+
+        Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply,
+            r - reply Status, s - sia Status 
+
+        P 2001:1::1:0/112, 1 successors, FD is 2816
+                via Connected, Ethernet1/2
+        P 2001:11::/112, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 2001:1::1:2 (3072/576), Ethernet1/2
+        P 2001:11::1:0/112, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 2001:1::1:2 (3072/576), Ethernet1/2
+        P 2001:11::2:0/112, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 2001:1::1:2 (3072/576), Ethernet1/2
+        P 2001:11::3:0/112, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 2001:1::1:2 (3072/576), Ethernet1/2
+        P 2001:11::4:0/112, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 2001:1::1:2 (3072/576), Ethernet1/2
+    '''}
+
     def test_show_eigrp_topology_empty(self):
         self.device = Mock(**self.device_output_empty)
         obj = ShowIpv4EigrpTopology(device=self.device)
@@ -608,8 +753,13 @@ class test_show_eigrp_topology(unittest.TestCase):
     def test_show_eigrp_topology_1(self):
         self.device = Mock(**self.device_output_1)
         obj = ShowIpv4EigrpTopology(device=self.device)
-        parsed_output = obj.parse()
+        parsed_output:dict = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_1)
 
+    def test_show_eigrp_topology_2(self):
+        self.device = Mock(**self.device_output_2)
+        obj = ShowIpv6EigrpTopology(device=self.device)
+        parsed_output:dict = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_2)
 if __name__ == '__main__':
     unittest.main()
