@@ -990,6 +990,7 @@ class ShowInterfacesSchema(MetaParser):
             },
             Optional("mru"): str,
             Optional("mtu"): str,
+            Optional("mac-rewrite-error"): str,
             "name": str,
             Optional("oper-status"): str,
             Optional("pad-to-minimum-frame-size"): str,
@@ -1188,7 +1189,15 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 100Gbps, BPDU Error: None, Loopback: Disabled,
         # Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
-        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?(, +Link-mode: +(?P<link_mode>\S+))?(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +(?P<bpdu_error>\S+))?(, +Loopback: +(?P<loopback>\S+))?,$')
+        # Link-level type: Ethernet, MTU: 1514, Speed: 1Gbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Disabled
+        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +(?P<link_level_type>\S+), '
+                        r'+MTU: +(?P<mtu>\S+)(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
+                        r'(, +Link-mode: +(?P<link_mode>\S+))?(, +Speed: +(?P<speed>\S+))?'
+                        r'(, +BPDU +Error: +(?P<bpdu_error>\w+))?'
+                        r'(, +MAC-REWRITE Error: +(?P<mac_rewrite_error>\S+))?'
+                        r'(, +Loopback: +(?P<loopback>\S+))?'
+                        r'(, Source +filtering: +(?P<source_filtering>\S+))?'
+                        r'(, +Flow +control: +(?P<if_flow_control>\S+))?(,)?$')
         
         # Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None,
         p4_1 = re.compile(r'^(Speed: +(?P<speed>[^\s,]+))(, +)?'
