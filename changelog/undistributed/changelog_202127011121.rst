@@ -1,0 +1,6 @@
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* nxos
+    * Modified ShowIPpoute:
+        * Updated code to parse address families properly in case of offline output
