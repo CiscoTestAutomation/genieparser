@@ -1,0 +1,139 @@
+==========================================================
+              AOIM Statistics
+==========================================================
+Total Number Of Peer Syncs      : 68
+Current Number Of Peer Syncs in Progress      : 0
+Number Of Peer Re-Syncs Needed      : 0
+Total Passthrough Connections Due to Peer Version Mismatch   : 1
+AOIM DB Size (Bytes): 4194304
+ 
+LOCAL AO Statistics
+----------------------------------------
+Number Of AOs      : 2
+AO             Version   Registered
+SSL             1.2        Y  
+  DRE             0.23       Y  
+ 
+PEER Statistics
+----------------------------------------
+Number Of Peers      : 38
+Peer ID: 140.1.0.14
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.12
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.10
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.8
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.20
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.16
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.18
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.6
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.4
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.2
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 130.1.0.14
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 130.1.0.12
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 130.1.0.20
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 130.1.0.18
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 130.1.0.8
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N   
+ Peer ID: 130.1.0.10
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 130.1.0.6
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 130.1.0.16
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 130.1.0.2
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 130.1.0.4
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.19
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.9
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.11
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
+ Peer ID: 140.1.0.17
+Peer Num AOs      : 2
+ AO             Version   InCompatible
+SSL             1.2        N  
+ DRE             0.23       N  
