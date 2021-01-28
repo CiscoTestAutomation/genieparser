@@ -2,7 +2,7 @@
         RE mode: Master
 
     Protocol                Synchronization Status
-    OSPF                    Complete              
+    OSPF3                   Complete              
     BGP                     Complete              
     MPLS                    Complete              
     LDP                     Complete  

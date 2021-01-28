@@ -48,8 +48,9 @@ class ShowTaskReplication(ShowTaskReplicationSchema):
 
         # Protocol                Synchronization Status
         # OSPF                    Complete              
+        # OSPF3                   Complete              
         # BGP                     Complete  
-        p3 = re.compile(r'(?P<name>[A-Z]+) +(?P<state>\S+)')        
+        p3 = re.compile(r'(?P<name>[A-Z0-6]+) +(?P<state>\S+)')        
 
         ret_dict = {}
 

@@ -1,0 +1,139 @@
+# show interfaces extensive ge-9/2/2
+Physical interface: ge-9/2/2, Enabled, Physical link is Up
+  Interface index: 144, SNMP ifIndex: 524, Generation: 147
+  Description: to_lab_mx480-2_ge-0/1/2
+  Link-level type: Ethernet, MTU: 4484, MRU: 4492, Speed: 1000mbps, BPDU Error: None, MAC-REWRITE Error: None,
+  Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled,
+  Remote fault: Online
+  Pad to minimum frame size: Disabled
+  Device flags   : Present Running
+  Interface flags: SNMP-Traps Internal: 0x4000
+  Link flags     : None
+  CoS queues     : 8 supported, 8 maximum usable queues
+  Hold-times     : Up 2000 ms, Down 0 ms
+  Current address: 0c:86:10:22:48:77, Hardware address: 0c:86:10:22:48:77
+  Last flapped   : 2021-01-26 03:35:35 JST (09:40:40 ago)
+  Statistics last cleared: Never
+  Traffic statistics:
+   Input  bytes  :         100615221914             23189648 bps
+   Output bytes  :          37883585351              8692424 bps
+   Input  packets:            278703879                 8029 pps
+   Output packets:            104887413                 3006 pps
+   IPv6 transit statistics:
+    Input  bytes  :         50267998768
+    Output bytes  :         12704251274
+    Input  packets:           138916283
+    Output packets:            35149025
+  Label-switched interface (LSI) traffic statistics:
+   Input  bytes  :                    0                    0 bps
+   Input  packets:                    0                    0 pps
+  Dropped traffic statistics due to STP State:
+   Input  bytes  :                    0
+   Output bytes  :                    0
+   Input  packets:                    0
+   Output packets:                    0
+  Input errors:
+    Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0, L3 incompletes: 0, L2 channel errors: 0,
+    L2 mismatch timeouts: 0, FIFO errors: 0, Resource errors: 0
+  Output errors:
+    Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
+    MTU errors: 0, Resource errors: 0
+  Egress queues: 8 supported, 4 in use
+  Queue counters:       Queued packets  Transmitted packets      Dropped packets
+    0                        104629656            104629656                    0
+    1                                0                    0                    0
+    2                                0                    0                    0
+    3                           258751               258751                    0
+  Queue number:         Mapped forwarding classes
+    0                   best-effort
+    1                   expedited-forwarding
+    2                   assured-forwarding
+    3                   network-control
+  Active alarms  : None
+  Active defects : None
+  MAC statistics:                      Receive         Transmit
+    Total octets                  105634656122      39769721503
+    Total packets                    278711162        104890137
+    Unicast packets                  278686092        104865003
+    Broadcast packets                       18               16
+    Multicast packets                    25052            25118
+    CRC/Align errors                         0                0
+    FIFO errors                              0                0
+    MAC control frames                       0                0
+    MAC pause frames                         0                0
+    Oversized frames                         0
+    Jabber frames                            0
+    Fragment frames                          0
+    VLAN tagged frames                       0
+    Code violations                          0
+    Total errors                             0                0
+  Filter statistics:
+    Input packet count               278703130
+    Input packet rejects                     0
+    Input DA rejects                         0
+    Input SA rejects                         0
+    Output packet count                               104887131
+    Output packet pad count                                   0
+    Output packet error count                                 0
+    CAM destination filters: 0, CAM source filters: 0
+  Autonegotiation information:
+    Negotiation status: Complete
+    Link partner:
+        Link mode: Full-duplex, Flow control: Symmetric/Asymmetric, Remote fault: OK
+    Local resolution:
+        Flow control: Symmetric, Remote fault: Link OK
+  Packet Forwarding Engine configuration:
+    Destination slot: 0 (0x00)
+  CoS information:
+    Direction : Output
+    CoS transmit queue               Bandwidth               Buffer Priority   Limit
+                              %            bps     %           usec
+    0 best-effort            95      950000000    95              0      low    none
+    3 network-control         5       50000000     5              0      low    none
+  Interface transmit statistics: Disabled
+
+  Logical interface ge-9/2/2.0 (Index 345) (SNMP ifIndex 654) (Generation 154)
+    Description: lab_hktGCS001/YW7087/10G/BB/sgeGCS001_ge-0/1/2[SJC]
+    Flags: Up SNMP-Traps 0x4000 Encapsulation: ENET2
+    Traffic statistics:
+     Input  bytes  :         100604222077
+     Output bytes  :          37869655272
+     Input  packets:            278564000
+     Output packets:            104745735
+     IPv6 transit statistics:
+      Input  bytes  :         50267998768
+      Output bytes  :         12704251274
+      Input  packets:           138916283
+      Output packets:            35149025
+    Local statistics:
+     Input  bytes  :               180296
+     Output bytes  :               198017
+     Input  packets:                 1939
+     Output packets:                 1959
+    Transit statistics:
+     Input  bytes  :         100604041781             23186736 bps
+     Output bytes  :          37869457255              8689624 bps
+     Input  packets:            278562061                 8025 pps
+     Output packets:            104743776                 3003 pps
+     IPv6 transit statistics:
+      Input  bytes  :         50267998768
+      Output bytes  :         12704251274
+      Input  packets:           138916283
+      Output packets:            35149025
+    Protocol inet, MTU: 4470, Generation: 195, Route table: 6
+      Flags: No-Redirects, Sendbcast-pkt-to-re, Is-Primary, User-MTU
+      Addresses, Flags: Is-Preferred Is-Primary
+        Destination: 111.87.5.60/30, Local: 111.87.5.61, Broadcast: 111.87.5.63, Generation: 166
+    Protocol inet6, MTU: 4470, Generation: 196, Route table: 6
+      Flags: Is-Primary, User-MTU
+      Addresses, Flags: Is-Preferred Is-Primary
+        Destination: 2001:268:fb90:1e::/64, Local: 2001:268:fb90:1e::1
+    Generation: 168
+      Addresses, Flags: Is-Preferred
+        Destination: fe80::/64, Local: fe80::e86:10ff:fe22:4877
+    Protocol mpls, MTU: 4470, Maximum labels: 3, Generation: 170
+    Generation: 197, Route table: 6
+      Flags: Is-Primary, User-MTU
+    Protocol multiservice, MTU: Unlimited, Generation: 198, Route table: 6
+      Flags: Is-Primary
+      Policer: Input: __default_arp_policer__
