@@ -117,14 +117,14 @@ class ShowRouteTable(ShowRouteTableSchema):
         # 10.64.4.4/32   *[L-OSPF/9/5] 1d 02:16:51, metric 110
         # 118420             *[VPN/170] 31w3d 20:13:54
         # ff02::2/128 *[INET6/0] 00:05:35
-        r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)\/?(?P<preference2>\d+)?\] +(?P<age>[\d\:wd ]+)(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
+        r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)\/?(?P<preference2>\d+)?\] +(?P<age>[\d\:wd ]+)(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?(, +localpref +(?P<local_preference>\d+))?(, +from +(?P<learned_from>\S+))?$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
         # > to 192.168.220.6 via ge-0/0/1.0, Pop
         # Local via ge-0/0/4.11
         # >  via ge-0/0/2.1
-        r3 = re.compile(r'^(?P<best_route>>)?(Local)? *(to +(?P<to>\S+))? *via +(?P<via>\S+),? *(?P<mpls_label>[\S ]+)?$')
+        r3 = re.compile(r'^(?P<best_route>>)?(Local)? *(to +(?P<to>\S+))? *via +(?P<via>[^,\s]+)(, +(?P<mpls_label>[\S ]+))?')
 
         # fe80::250:5600:b8d:fea3/128
         # this regex widely match other pattern. intendedly exclude below `Reject`
