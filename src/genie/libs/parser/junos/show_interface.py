@@ -617,6 +617,7 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifff-receive-ttl-exceeded"): bool,
                         Optional("ifff-receive-options"): bool,
                         Optional("ifff-encapsulation"): str,
+                        Optional("ifff-user-mtu"): bool,
                     },
                     Optional("address-family-name"): str,
                     Optional("filter-information"): str,
@@ -1352,6 +1353,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         p30_1 = re.compile(r'^Curr +new +hold +cnt: +(?P<intf_unresolved_cnt>\d+), +NH +drop +cnt: +(?P<intf_dropcnt>\d+)$')
 
         # Flags: No-Redirects, Sendbcast-pkt-to-re
+        # Flags: Is-Primary, User-MTU
+        # Flags: Up SNMP-Traps 0x4000 Encapsulation: ENET2
         p31 = re.compile(r'^Flags: +(?P<flags>[\S\s]+)')
 
         # Addresses, Flags: Is-Preferred Is-Primary
@@ -2084,6 +2087,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Flags: No-Redirects, Sendbcast-pkt-to-re
+            # Flags: Is-Primary, User-MTU
             m = p31.match(line)
             if m:
                 group = m.groupdict()

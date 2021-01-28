@@ -1,0 +1,10 @@
+
+        default via 192.168.1.1 dev enp7s0 proto dhcp metric 100
+        169.254.0.0/16 dev enp7s0 scope link metric 1000
+        172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1
+        172.18.0.0/16 dev br-d19b23fac393 proto kernel scope link src 172.18.0.1 linkdown
+        192.168.1.0/24 dev enp7s0 proto kernel scope link src 192.168.1.212 metric 100 
+        broadcast 127.0.0.0 dev lo table local proto kernel scope link src 127.0.0.1 
+        local 10.233.44.70 dev kube-ipvs0 table local proto kernel scope host src 10.233.44.70
+        broadcast 192.168.1.255 dev enp7s0 table local proto kernel scope link src 192.168.1.212 
+    
