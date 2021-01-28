@@ -1,0 +1,3 @@
+  MPLS label 1: 299792, MPLS label 2: 16, MPLS label 3: 0
+  Input SNMP interface index: 1014, Output SNMP interface index: 624
+  Packet count: 2, Byte count: 184

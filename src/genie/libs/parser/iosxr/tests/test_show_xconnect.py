@@ -11,6 +11,7 @@ from genie.libs.parser.iosxr.show_xconnect import (ShowL2vpnXconnect,
                                                    ShowL2VpnXconnectBrief,
                                                    ShowL2vpnXconnectMp2mpDetail)
 
+
 # ==========================================
 #  Unit test for 'show l2vpn xconnect brief'
 # ==========================================
@@ -21,44 +22,59 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'atom': 
-            {'like_to_like': 
-                {'efp': 
-                    {'down': 0,
+        'atom': {
+            'like_to_like': {
+                'efp': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 10},
-                'total': 
-                    {'down': 0,
+                    'up': 10
+                },
+                'total': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 10}},
-            'total':
-                {'down': 0,
+                    'up': 10
+                }
+            },
+            'total': {
+                'down': 0,
                 'unr': 0,
-                'up': 10}},
-        'locally_switching': 
-            {'like_to_like': 
-                {'efp': 
-                    {'down': 0,
+                'up': 10
+            }
+        },
+        'locally_switching': {
+            'like_to_like': {
+                'efp': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 3},
-                'efp_invalid_ac':
-                    {'down': 0,
+                    'up': 3
+                },
+                'efp_invalid_ac': {
+                    'down': 0,
                     'unr': 1,
-                    'up': 0},
-                'invalid_ac': 
-                    {'down': 0,
+                    'up': 0
+                },
+                'invalid_ac': {
+                    'down': 0,
                     'unr': 1,
-                    'up': 0},
-                'total': 
-                    {'down': 0,
+                    'up': 0
+                },
+                'total': {
+                    'down': 0,
                     'unr': 2,
-                    'up': 3}},
-            'total':
-                {'down': 0,
+                    'up': 3
+                }
+            },
+            'total': {
+                'down': 0,
                 'unr': 2,
-                'up': 3}}}
+                'up': 3
+            }
+        }
+    }
 
-    golden_output1 = {'execute.return_value': '''
+    golden_output1 = {
+        'execute.return_value':
+        '''
         RP/0/RP0/CPU0:ios# show l2vpn xconnect brief 
         Mon Sep 19 10:52:27.818 UTC
         Locally Switching
@@ -76,39 +92,53 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
             Total                             10          0          0
 
           Total                               10          0          0
-        '''}
+        '''
+    }
 
     golden_parsed_output2 = {
-        'atom': 
-            {'like_to_like': 
-                {'efp': 
-                    {'down': 0,
+        'atom': {
+            'like_to_like': {
+                'efp': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 32},
-                'total': 
-                    {'down': 0,
+                    'up': 32
+                },
+                'total': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 32}},
-            'total': 
-                {'down': 0,
+                    'up': 32
+                }
+            },
+            'total': {
+                'down': 0,
                 'unr': 0,
-                'up': 32}},
-        'locally_switching': 
-            {'like_to_like': 
-                {'ether': 
-                    {'down': 0,
+                'up': 32
+            }
+        },
+        'locally_switching': {
+            'like_to_like': {
+                'ether': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 1},
-                'total':
-                    {'down': 0,
+                    'up': 1
+                },
+                'total': {
+                    'down': 0,
                     'unr': 0,
-                    'up': 1}},
-            'total':
-                {'down': 0,
+                    'up': 1
+                }
+            },
+            'total': {
+                'down': 0,
                 'unr': 0,
-                'up': 1}}}
+                'up': 1
+            }
+        }
+    }
 
-    golden_output2 = {'execute.return_value': '''
+    golden_output2 = {
+        'execute.return_value':
+        '''
         RP/0/RP0/CPU0:SIT-540#show l2vpn xconnect brief 
         Sat Aug  4 14:48:34.079 IST
         Locally Switching
@@ -124,20 +154,20 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
             Total                             32          0          0
 
           Total                               32          0          0
-        '''}
+        '''
+    }
 
-    golden_parsed_output3 = {
-        'total': 
-            {'down': 0,
-            'unr': 0,
-            'up': 0}}
+    golden_parsed_output3 = {'total': {'down': 0, 'unr': 0, 'up': 0}}
 
-    golden_output3 = {'execute.return_value': '''
+    golden_output3 = {
+        'execute.return_value':
+        '''
         [2019-10-08 09:30:35,071] +++ R2_xr: executing command 'show l2vpn xconnect brief' +++
         show l2vpn xconnect brief
         Tue Oct  8 16:30:05.044 UTC
         Total: 0 UP, 0 DOWN, 0 UNRESOLVED
-        '''}
+        '''
+    }
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -150,7 +180,7 @@ class TestShowL2vpnXconnectBrief(unittest.TestCase):
         obj = ShowL2VpnXconnectBrief(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-    
+
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
         obj = ShowL2VpnXconnectBrief(device=self.device)
@@ -348,7 +378,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
     ----------------------------------------------------------------------------------------
 
         '''}
-    
+
     golden_parsed_output4 = {
         'groups': {
             'genie_wqst': {
@@ -576,7 +606,7 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
-    
+
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
@@ -590,21 +620,21 @@ class TestShowL2vpnXconnect(unittest.TestCase):
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
-    
+
     def test_golden4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
-    
+
     def test_golden5(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
         obj = ShowL2vpnXconnect(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output5)
-    
+
     def test_golden6(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output6)
@@ -801,7 +831,7 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
     show l2vpn xconnect detail
     Sat Sep 28 10:09:46.728 UTC
     Group tjub_xc, XC siva_p2p, state is down; Interworking none
-      Monitor-Session: pw-span-test, state is configured
+      Monitor-Session: pw-span-test, state is configured
     AC: GigabitEthernet1/5/1/2, state is up
         Type Ethernet
         MTU 2611; XC ID 0x6111112; interworking none; MSTi 0
@@ -1117,6 +1147,567 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         bytes: received 0, sent 291
         '''}
 
+    golden_parsed_output3 = {
+        'group': {
+            'CLIENT': {
+                'xc': {
+                    'C1': {
+                        'state': 'up',
+                        'interworking': 'none',
+                        'ac': {
+                            'GigabitEthernet200/0/0/1.3109': {
+                                'state': 'up, active in RG-ID 10',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['3109', '3109'],
+                                'mtu': 1500,
+                                'xc_id': '0x120000e',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 3711214,
+                                        'send': 3707556
+                                    },
+                                    'byte_totals': {
+                                        'receive': 566159136,
+                                        'send': 793161693
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0
+                                    }
+                                }
+                            }
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '192.168.1.1': {
+                                    'id': {
+                                        1384496: {
+                                            'state': 'up ( established )',
+                                            'pw_class': 'not set',
+                                            'xc_id': '0xa0000003',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '192.168.0.47',
+                                            'type': 'Ethernet',
+                                            'control_word': 'disabled',
+                                            'interworking': 'none',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '24047',
+                                                    'remote': '1784'
+                                                },
+                                                'group_id': {
+                                                    'local': '0x4002580',
+                                                    'remote': '0x7'
+                                                },
+                                                'interface': {
+                                                    'local': 'GigabitEthernet200/0/0/1.3109',
+                                                    'remote': 'C1'
+                                                },
+                                                'mtu': {
+                                                    'local': '1500',
+                                                    'remote': '1500'
+                                                },
+                                                'control_word': {
+                                                    'local': 'disabled',
+                                                    'remote': 'disabled'
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'Ethernet'
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x2',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['LSP ping verification']
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x6',
+                                                    'remote': '0x2',
+                                                    'local_type': ['router alert label', 'TTL expiry'],
+                                                    'remote_type': ['router alert label']
+                                                }
+                                            },
+                                            'create_time': '08/12/2020 01:02:44 (2w0d ago)',
+                                            'last_time_status_changed': '12/12/2020 14:05:44 (1w3d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 3707556,
+                                                    'send': 3711214
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 793161693,
+                                                    'send': 566159136
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'C2': {
+                        'state': 'up',
+                        'interworking': 'none',
+                        'ac': {
+                            'GigabitEthernet100/0/0/5.3100': {
+                                'state': 'up, active in RG-ID 10',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['3100', '3100'],
+                                'mtu': 9198,
+                                'xc_id': '0x1200008',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 0,
+                                        'send': 225798
+                                    },
+                                    'byte_totals': {
+                                        'receive': 0,
+                                        'send': 13547880
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0
+                                    }
+                                }
+                            }
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '192.168.0.51': {
+                                    'id': {
+                                        1542017: {
+                                            'state': 'up ( established )',
+                                            'pw_class': 'not set',
+                                            'xc_id': '0xa0000005',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '192.168.0.47',
+                                            'type': 'Ethernet',
+                                            'control_word': 'disabled',
+                                            'interworking': 'none',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '24043',
+                                                    'remote': '26256'
+                                                },
+                                                'group_id': {
+                                                    'local': '0x4001980',
+                                                    'remote': '0x4002b40'
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'GigabitEthernet100/0/0/5.3100',
+                                                    'remote': 'GigabitEthernet300/0/0/23.571'
+                                                },
+                                                'mtu': {
+                                                    'local': '9198',
+                                                    'remote': '9198'
+                                                },
+                                                'control_word': {
+                                                    'local': 'disabled',
+                                                    'remote': 'disabled'
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'Ethernet'
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x2',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['LSP ping verification']
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x6',
+                                                    'remote': '0x6',
+                                                    'local_type': ['router alert label', 'TTL expiry'],
+                                                    'remote_type': ['router alert label', 'TTL expiry']
+                                                }
+                                            },
+                                            'create_time': '08/12/2020 01:02:44 (2w0d ago)',
+                                            'last_time_status_changed': '11/12/2020 12:45:30 (1w4d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 225798,
+                                                    'send': 0
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 13547880,
+                                                    'send': 0
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        'backup_pw': {
+                            'neighbor': {
+                                '192.168.0.52': {
+                                    'id': {
+                                        1542017: {
+                                            'state': 'standby ( all ready )',
+                                            'pw_class': 'not set',
+                                            'xc_id': '0xa0000007',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '192.168.0.47',
+                                            'type': 'Ethernet',
+                                            'control_word': 'disabled',
+                                            'interworking': 'none',
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '24044',
+                                                    'remote': '25981'
+                                                },
+                                                'group_id': {
+                                                    'local': '0x4001980',
+                                                    'remote': '0x4002b00'
+                                                },
+                                                'interface': {
+                                                    'local': 'GigabitEthernet100/0/0/5.3100',
+                                                    'remote': 'GigabitEthernet300/0/0/23.571'
+                                                },
+                                                'mtu': {
+                                                    'local': '9198',
+                                                    'remote': '9198'
+                                                },
+                                                'control_word': {
+                                                    'local': 'disabled',
+                                                    'remote': 'disabled'
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'Ethernet'
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x2',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['LSP ping verification']
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x6',
+                                                    'remote': '0x6',
+                                                    'local_type': ['router alert label', 'TTL expiry'],
+                                                    'remote_type': ['router alert label', 'TTL expiry']
+                                                }
+                                            },
+                                            'create_time': '08/12/2020 01:02:44 (2w0d ago)',
+                                            'last_time_status_changed': '08/12/2020 01:06:55 (2w0d ago)'
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    'C3': {
+                        'state': 'up',
+                        'interworking': 'none',
+                        'ac': {
+                            'GigabitEthernet100/0/0/6.3100': {
+                                'state': 'up, active in RG-ID 10',
+                                'type': 'VLAN',
+                                'num_ranges': 1,
+                                'rewrite_tags': '',
+                                'vlan_ranges': ['3100', '3100'],
+                                'mtu': 9198,
+                                'xc_id': '0x120000a',
+                                'interworking': 'none',
+                                'statistics': {
+                                    'packet_totals': {
+                                        'receive': 50709266,
+                                        'send': 81925195
+                                    },
+                                    'byte_totals': {
+                                        'receive': 20472200681,
+                                        'send': 29487822535
+                                    },
+                                    'drops': {
+                                        'illegal_vlan': 0,
+                                        'illegal_length': 0
+                                    }
+                                }
+                            }
+                        },
+                        'pw': {
+                            'neighbor': {
+                                '192.168.0.51': {
+                                    'id': {
+                                        1542550: {
+                                            'state': 'up ( established )',
+                                            'pw_class': 'not set',
+                                            'xc_id': '0xa0000009',
+                                            'encapsulation': 'MPLS',
+                                            'protocol': 'LDP',
+                                            'source_address': '192.168.0.47',
+                                            'type': 'Ethernet',
+                                            'control_word': 'disabled',
+                                            'interworking': 'none',
+                                            'backup_disable_delay': 0,
+                                            'sequencing': 'not set',
+                                            'lsp': 'Up',
+                                            'status_tlv': 'not set',
+                                            'mpls': {
+                                                'label': {
+                                                    'local': '24045',
+                                                    'remote': '24029'
+                                                },
+                                                'group_id': {
+                                                    'local': '0x4001940',
+                                                    'remote': '0x4000180'
+                                                },
+                                                'monitor_interface': {
+                                                    'local': 'GigabitEthernet100/0/0/6.3100',
+                                                    'remote': 'TenGigE0/0/0/3.214'
+                                                },
+                                                'mtu': {
+                                                    'local': '9198',
+                                                    'remote': '9198'
+                                                },
+                                                'control_word': {
+                                                    'local': 'disabled',
+                                                    'remote': 'disabled'
+                                                },
+                                                'pw_type': {
+                                                    'local': 'Ethernet',
+                                                    'remote': 'Ethernet'
+                                                },
+                                                'vccv_cv_type': {
+                                                    'local': '0x2',
+                                                    'remote': '0x2',
+                                                    'local_type': ['LSP ping verification'],
+                                                    'remote_type': ['LSP ping verification']
+                                                },
+                                                'vccv_cc_type': {
+                                                    'local': '0x6',
+                                                    'remote': '0x6',
+                                                    'local_type': ['router alert label', 'TTL expiry'],
+                                                    'remote_type': ['router alert label', 'TTL expiry']
+                                                }
+                                            },
+                                            'create_time': '08/12/2020 01:02:44 (2w0d ago)',
+                                            'last_time_status_changed': '08/12/2020 01:12:15 (2w0d ago)',
+                                            'statistics': {
+                                                'packet_totals': {
+                                                    'receive': 81925195,
+                                                    'send': 50709266
+                                                },
+                                                'byte_totals': {
+                                                    'receive': 29487822535,
+                                                    'send': 20472200681
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    golden_output3 = {
+        'execute.return_value':
+        '''
+    show l2vpn xconnect detail
+    Tue Dec 22 16:40:24.524 AST
+
+    Group CLIENT, XC C1, state is up; Interworking none
+    AC: GigabitEthernet200/0/0/1.3109, state is up, active in RG-ID 10
+        Type VLAN; Num Ranges: 1
+        Rewrite Tags: []
+        VLAN ranges: [3109, 3109]
+        MTU 1500; XC ID 0x120000e; interworking none
+        Statistics:
+        packets: received 3711214, sent 3707556
+        bytes: received 566159136, sent 793161693
+        drops: illegal VLAN 0, illegal length 0
+    PW: neighbor 192.168.1.1, PW ID 1384496, state is up ( established )
+        PW class not set, XC ID 0xa0000003
+        Encapsulation MPLS, protocol LDP
+        Source address 192.168.0.47
+        PW type Ethernet, control word disabled, interworking none
+        PW backup disable delay 0 sec
+        Sequencing not set
+        LSP : Up
+
+        PW Status TLV in use
+        MPLS         Local                          Remote                        
+        ------------ ------------------------------ -----------------------------
+        Label        24047                          1784                          
+        Group ID     0x4002580                      0x7                           
+        Interface    GigabitEthernet200/0/0/1.3109  C1
+        MTU          1500                           1500                          
+        Control word disabled                       disabled                      
+        PW type      Ethernet                       Ethernet                      
+        VCCV CV type 0x2                            0x2                           
+                    (LSP ping verification)        (LSP ping verification)       
+        VCCV CC type 0x6                            0x2                           
+                    (router alert label)           (router alert label)          
+                    (TTL expiry)                                                 
+        ------------ ------------------------------ -----------------------------
+        Incoming Status (PW Status TLV):
+        Status code: 0x0 (Up) in Notification message
+        Outgoing Status (PW Status TLV):
+        Status code: 0x0 (Up) in Notification message
+        MIB cpwVcIndex: 2684354563
+        Create time: 08/12/2020 01:02:44 (2w0d ago)
+        Last time status changed: 12/12/2020 14:05:44 (1w3d ago)
+        Last time PW went down: 12/12/2020 14:00:30 (1w3d ago)
+        Statistics:
+        packets: received 3707556, sent 3711214
+        bytes: received 793161693, sent 566159136
+
+    Group CLIENT, XC C2, state is up; Interworking none
+    AC: GigabitEthernet100/0/0/5.3100, state is up, active in RG-ID 10
+        Type VLAN; Num Ranges: 1
+        Rewrite Tags: []
+        VLAN ranges: [3100, 3100]
+        MTU 9198; XC ID 0x1200008; interworking none
+        Statistics:
+        packets: received 0, sent 225798
+        bytes: received 0, sent 13547880
+        drops: illegal VLAN 0, illegal length 0
+    PW: neighbor 192.168.0.51, PW ID 1542017, state is up ( established )
+        PW class not set, XC ID 0xa0000005
+        Encapsulation MPLS, protocol LDP
+        Source address 192.168.0.47
+        PW type Ethernet, control word disabled, interworking none
+        PW backup disable delay 0 sec
+        Sequencing not set
+        LSP : Up
+
+        PW Status TLV in use
+        MPLS         Local                          Remote                        
+        ------------ ------------------------------ -----------------------------
+        Label        24043                          26256                         
+        Group ID     0x4001980                      0x4002b40                     
+        Interface    GigabitEthernet100/0/0/5.3100  GigabitEthernet300/0/0/23.571 
+        MTU          9198                           9198                          
+        Control word disabled                       disabled                      
+        PW type      Ethernet                       Ethernet                      
+        VCCV CV type 0x2                            0x2                           
+                    (LSP ping verification)        (LSP ping verification)       
+        VCCV CC type 0x6                            0x6                           
+                    (router alert label)           (router alert label)          
+                    (TTL expiry)                   (TTL expiry)                  
+        ------------ ------------------------------ -----------------------------
+        Incoming Status (PW Status TLV):
+        Status code: 0x0 (Up) in Notification message
+        Outgoing Status (PW Status TLV):
+        Status code: 0x0 (Up) in Notification message
+        MIB cpwVcIndex: 2684354565
+        Create time: 08/12/2020 01:02:44 (2w0d ago)
+        Last time status changed: 11/12/2020 12:45:30 (1w4d ago)
+        Last time PW went down: 11/12/2020 12:44:41 (1w4d ago)
+        MAC withdraw messages: sent 0, received 0
+        Statistics:
+        packets: received 225798, sent 0
+        bytes: received 13547880, sent 0
+
+    Backup PW:
+    PW: neighbor 192.168.0.52, PW ID 1542017, state is standby ( all ready )
+        Backup for neighbor 192.168.0.51 PW ID 1542017 ( inactive )
+        PW class not set, XC ID 0xa0000007
+        Encapsulation MPLS, protocol LDP
+        Source address 192.168.0.47
+        PW type Ethernet, control word disabled, interworking none
+        Sequencing not set
+        LSP : Up
+
+        PW Status TLV in use
+        MPLS         Local                          Remote                        
+        ------------ ------------------------------ -----------------------------
+        Label        24044                          25981                         
+        Group ID     0x4001980                      0x4002b00                     
+        Interface    GigabitEthernet100/0/0/5.3100  GigabitEthernet300/0/0/23.571 
+        MTU          9198                           9198                          
+        Control word disabled                       disabled                      
+        PW type      Ethernet                       Ethernet                      
+        VCCV CV type 0x2                            0x2                           
+                    (LSP ping verification)        (LSP ping verification)       
+        VCCV CC type 0x6                            0x6                           
+                    (router alert label)           (router alert label)          
+                    (TTL expiry)                   (TTL expiry)                  
+        ------------ ------------------------------ -----------------------------
+        Incoming Status (PW Status TLV):
+        Status code: 0x20 (Standby) in Notification message
+        Outgoing Status (PW Status TLV):
+        Status code: 0x0 (Up) in Notification message
+        MIB cpwVcIndex: 2684354567
+        Create time: 08/12/2020 01:02:44 (2w0d ago)
+        Last time status changed: 08/12/2020 01:06:55 (2w0d ago)
+        MAC withdraw messages: sent 0, received 0
+
+    Group CLIENT, XC C3, state is up; Interworking none
+    AC: GigabitEthernet100/0/0/6.3100, state is up, active in RG-ID 10
+        Type VLAN; Num Ranges: 1
+        Rewrite Tags: []
+        VLAN ranges: [3100, 3100]
+        MTU 9198; XC ID 0x120000a; interworking none
+        Statistics:
+        packets: received 50709266, sent 81925195
+        bytes: received 20472200681, sent 29487822535
+        drops: illegal VLAN 0, illegal length 0
+    PW: neighbor 192.168.0.51, PW ID 1542550, state is up ( established )
+        PW class not set, XC ID 0xa0000009
+        Encapsulation MPLS, protocol LDP
+        Source address 192.168.0.47
+        PW type Ethernet, control word disabled, interworking none
+        PW backup disable delay 0 sec
+        Sequencing not set
+        LSP : Up
+
+        PW Status TLV in use
+        MPLS         Local                          Remote                        
+        ------------ ------------------------------ -----------------------------
+        Label        24045                          24029                         
+        Group ID     0x4001940                      0x4000180                     
+        Interface    GigabitEthernet100/0/0/6.3100  TenGigE0/0/0/3.214            
+        MTU          9198                           9198                          
+        Control word disabled                       disabled                      
+        PW type      Ethernet                       Ethernet                      
+        VCCV CV type 0x2                            0x2                           
+                    (LSP ping verification)        (LSP ping verification)       
+        VCCV CC type 0x6                            0x6                           
+                    (router alert label)           (router alert label)          
+                    (TTL expiry)                   (TTL expiry)                  
+        ------------ ------------------------------ -----------------------------
+        Incoming Status (PW Status TLV):
+        Status code: 0x0 (Up) in Notification message
+        Outgoing Status (PW Status TLV):
+        Status code: 0x0 (Up) in Notification message
+        MIB cpwVcIndex: 2684354569
+        Create time: 08/12/2020 01:02:44 (2w0d ago)
+        Last time status changed: 08/12/2020 01:12:15 (2w0d ago)
+        Statistics:
+        packets: received 81925195, sent 50709266
+        bytes: received 29487822535, sent 20472200681
+    '''
+    }
+
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnXconnectDetail(device=self.device)
@@ -1129,13 +1720,21 @@ class TestShowL2vpnXconnectDetail(unittest.TestCase):
         obj = ShowL2vpnXconnectDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
-    
+
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowL2vpnXconnectDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output3)
+        obj = ShowL2vpnXconnectDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output3)
+
 
 # ==================================================
 #  Unit test for 'show l2vpn xconnect summary'
@@ -1334,7 +1933,7 @@ class TestShowL2vpnXconnectMp2mpDetail(unittest.TestCase):
             },
         },
     }
-    
+
     golden_output = {'execute.return_value': '''
         show l2vpn xconnect mp2mp detail
 
@@ -1394,7 +1993,7 @@ class TestShowL2vpnXconnectMp2mpDetail(unittest.TestCase):
 
             CE-ID        1                              2                            
     '''}
-    
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnXconnectMp2mpDetail(device=self.device)

@@ -1,0 +1,5 @@
+{
+    "filename": "messages",
+    "except_": "BGP",
+    "match": "DOWN"
+}

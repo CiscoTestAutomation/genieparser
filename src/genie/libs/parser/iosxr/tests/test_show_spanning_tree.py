@@ -75,7 +75,7 @@ class show_spanning_tree_mst(unittest.TestCase):
 	golden_output = {'execute.return_value': '''\
 	RP/0/RSP0/CPU0:athens#show spanning-tree mst test
 	Tue Nov 14 05:54:37.272 EST
-	Role:  ROOT=Root, DSGN=Designated, ALT=Alternate, BKP=Backup, MSTR=Master
+	Role:  ROOT=Root, DSGN=Designated, ALT=Alternate, BKP=Backup, MSTR=Master
 	State: FWD=Forwarding, LRN=Learning, BLK=Blocked, DLY=Bringup Delayed
 
 	Operating in dot1q mode
@@ -83,30 +83,30 @@ class show_spanning_tree_mst(unittest.TestCase):
 
 	MSTI 0 (CIST):
 
-	  VLANS Mapped: 1-4094
+	  VLANS Mapped: 1-4094
 
-	  CIST Root  Priority    32768
-	             Address     0021.1bff.0e05
-	             Ext Cost    2000
+	  CIST Root  Priority    32768
+	             Address     0021.1bff.0e05
+	             Ext Cost    2000
 
-	  Root ID    Priority    32768
-	             Address     d867.d9ff.e420
-	             This bridge is the root
-	             Int Cost    0
-	             Max Age 20 sec, Forward Delay 15 sec
-
-
-	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
-	             Address     d867.d9ff.e420
-	             Max Age 20 sec, Forward Delay 15 sec
-	             Max Hops 20, Transmit Hold count  6
+	  Root ID    Priority    32768
+	             Address     d867.d9ff.e420
+	             This bridge is the root
+	             Int Cost    0
+	             Max Age 20 sec, Forward Delay 15 sec
 
 
-	Interface    Port ID           Role State Designated           Port ID
-	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
+	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
+	             Address     d867.d9ff.e420
+	             Max Age 20 sec, Forward Delay 15 sec
+	             Max Hops 20, Transmit Hold count  6
+
+
+	Interface    Port ID           Role State Designated           Port ID
+	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
 	------------ ------- --------- ---- ----- -------------------- -------
-	Te0/0/0/16   128.1   2000      ROOT FWD   32768 0021.1bff.0e05 128.1  
-	Te0/0/0/17   128.2   2000      ALT  BLK   32768 0021.1bff.0e05 128.2  
+	Te0/0/0/16   128.1   2000      ROOT FWD   32768 0021.1bff.0e05 128.1  
+	Te0/0/0/17   128.2   2000      ALT  BLK   32768 0021.1bff.0e05 128.2  
 	'''}
 
 	golden_parsed_output_2 = {
@@ -225,33 +225,33 @@ class show_spanning_tree_mstag(unittest.TestCase):
 	RP/0/RSP0/CPU0:iamx#show spanning-tree mstag risc
 	Fri Apr 22 17:26:52.757 CEST
 	Bundle-Ether10.0
-	  Pre-empt delay is disabled
-	  Name:            risc
-	  Revision:        1
-	  Max Age:         20
-	  Provider Bridge: no
-	  Bridge ID:       0000.00ff.0002
-	  Port ID:         1
-	  External Cost:   0
-	  Hello Time:      2
-	  Active:          yes
-	  BPDUs sent:      39921
-	    MSTI 0 (CIST):
-	    VLAN IDs:         1-2,4-4094
-	    Bridge Priority:  8192
-	    Port Priority:    128
-	    Cost:             0
-	    Root Bridge:      0000.00ff.0001
-	    Root Priority:    4096
-	    Topology Changes: 31
-	  MSTI 1
-	    VLAN IDs:         3
-	    Bridge Priority:  4096
-	    Port Priority:    128
-	    Cost:             0
-	    Root Bridge:      0000.00ff.0002
-	    Root Priority:    4096
-	    Topology Changes: 51
+	  Pre-empt delay is disabled
+	  Name:            risc
+	  Revision:        1
+	  Max Age:         20
+	  Provider Bridge: no
+	  Bridge ID:       0000.00ff.0002
+	  Port ID:         1
+	  External Cost:   0
+	  Hello Time:      2
+	  Active:          yes
+	  BPDUs sent:      39921
+	    MSTI 0 (CIST):
+	    VLAN IDs:         1-2,4-4094
+	    Bridge Priority:  8192
+	    Port Priority:    128
+	    Cost:             0
+	    Root Bridge:      0000.00ff.0001
+	    Root Priority:    4096
+	    Topology Changes: 31
+	  MSTI 1
+	    VLAN IDs:         3
+	    Bridge Priority:  4096
+	    Port Priority:    128
+	    Cost:             0
+	    Root Bridge:      0000.00ff.0002
+	    Root Priority:    4096
+	    Topology Changes: 51
 
 	'''}
 
@@ -586,73 +586,73 @@ class show_spanning_tree_pvrst(unittest.TestCase):
 		}
 
 	golden_output = {'execute.return_value': '''\
-	RP/0/RSP0/CPU0:vkg3#show spanning-tree pvrst a       
-	Role:  ROOT=Root, DSGN=Designated, ALT=Alternate, BKP=Backup
+	RP/0/RSP0/CPU0:vkg3#show spanning-tree pvrst a       
+	Role:  ROOT=Root, DSGN=Designated, ALT=Alternate, BKP=Backup
 	State: FWD=Forwarding, LRN=Learning, BLK=Blocked
 
 
 	VLAN 2:
 
-	  Root ID    Priority    32768
-	             Address     0021.1bff.d973
-	             Max Age 20 sec, Forward Delay 15 sec
+	  Root ID    Priority    32768
+	             Address     0021.1bff.d973
+	             Max Age 20 sec, Forward Delay 15 sec
 
 
-	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
-	             Address     8cb6.4fff.6588
-	             Max Age 20 sec, Forward Delay 15 sec
-	             Transmit Hold count   6
+	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
+	             Address     8cb6.4fff.6588
+	             Max Age 20 sec, Forward Delay 15 sec
+	             Transmit Hold count   6
 
 
-	Interface    Port ID           Role State Designated           Port ID
-	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
+	Interface    Port ID           Role State Designated           Port ID
+	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
 	------------ ------- --------- ---- ----- -------------------- -------
 	Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fff.6588 128.1
-	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
-	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
-	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4  
+	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
+	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
+	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4  
 
 	VLAN 3:
 
-	  Root ID    Priority    32768
-	             Address     0021.1bff.d973
-	             Max Age 20 sec, Forward Delay 15 sec
+	  Root ID    Priority    32768
+	             Address     0021.1bff.d973
+	             Max Age 20 sec, Forward Delay 15 sec
 
 
-	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
-	             Address     8cb6.4fff.6588
-	             Max Age 20 sec, Forward Delay 15 sec
-	             Transmit Hold count  6
+	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
+	             Address     8cb6.4fff.6588
+	             Max Age 20 sec, Forward Delay 15 sec
+	             Transmit Hold count  6
 
 
-	Interface    Port ID           Role State Designated           Port ID
-	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
+	Interface    Port ID           Role State Designated           Port ID
+	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
 	------------ ------- --------- ---- ----- -------------------- -------
-	Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fff.6588 128.1  
-	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
-	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
-	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4  
+	Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fff.6588 128.1  
+	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
+	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
+	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4  
 
 	VLAN 4:
 
-	  Root ID    Priority    32768
-	             Address     0021.1bff.d973
-	             Max Age 20 sec, Forward Delay 15 sec
+	  Root ID    Priority    32768
+	             Address     0021.1bff.d973
+	             Max Age 20 sec, Forward Delay 15 sec
 
 
-	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
-	             Address     8cb6.4fff.6588
-	             Max Age 20 sec, Forward Delay 15 sec
-	             Transmit Hold count  6
+	  Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
+	             Address     8cb6.4fff.6588
+	             Max Age 20 sec, Forward Delay 15 sec
+	             Transmit Hold count  6
 
 
-	Interface    Port ID           Role State Designated           Port ID
-	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
+	Interface    Port ID           Role State Designated           Port ID
+	             Pri.Nbr Cost                 Bridge ID            Pri.Nbr 
 	------------ ------- --------- ---- ----- -------------------- -------
-	Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fff.6588 128.1  
-	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
-	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
-	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4
+	Gi0/7/0/0    128.1   20000     DSGN FWD   32768 8cb6.4fff.6588 128.1  
+	Gi0/7/0/1    128.2   20000     DSGN FWD   32768 8cb6.4fff.6588 128.2  
+	Gi0/7/0/10   128.3   20000     ROOT FWD   32768 0021.1bff.d973 128.3  
+	Gi0/7/0/11   128.4   20000     ALT  BLK   32768 0021.1bff.d973 128.4
 
 	'''}
 
@@ -1019,38 +1019,38 @@ class show_spanning_tree_pvrstag(unittest.TestCase):
 	RP/0/0/CPU0:ios#show spanning-tree pvrstag foo
 	Wed Mar 29 12:38:05.528 UTC
 	GigabitEthernet0/0/0/0
-	  VLAN 5
-	    Pre-empt delay is enabled. Sending startup BPDU until 13:38:03
-	    Sub-interface:    GigabitEthernet0/0/0/0.5 (Up)
-	    Max Age: 20
-	    Root Priority:    0
-	    Root Bridge: 0000.0000.0000
-	    Cost:             1
-	    Bridge Priority:  32768
-	    Bridge ID:        0255.1dff.3c70
-	    Port Priority:    128
-	    Port ID           1
-	    Hello Time:       2
-	    Active:           Yes
-	    BPDUs sent:       6
-	    Topology Changes: 0
+	  VLAN 5
+	    Pre-empt delay is enabled. Sending startup BPDU until 13:38:03
+	    Sub-interface:    GigabitEthernet0/0/0/0.5 (Up)
+	    Max Age: 20
+	    Root Priority:    0
+	    Root Bridge: 0000.0000.0000
+	    Cost:             1
+	    Bridge Priority:  32768
+	    Bridge ID:        0255.1dff.3c70
+	    Port Priority:    128
+	    Port ID           1
+	    Hello Time:       2
+	    Active:           Yes
+	    BPDUs sent:       6
+	    Topology Changes: 0
 
 	GigabitEthernet0/0/0/1
-	  VLAN 5
-	    Pre-empt delay is enabled. Sending standard BPDU
-	    Sub-interface:    GigabitEthernet0/0/0/1.5 (Up)
-	    Max Age:          20
-	    Root Priority:    0
-	    Root Bridge:      0000.0000.0000
-	    Cost:             0
-	    Bridge Priority:  32768
-	    Bridge ID:        021a.9eff.5645
-	    Port Priority:    128
-	    Port ID           1
-	    Hello Time:       2
-	    Active:           Yes
-	    BPDUs sent:       7
-	    Topology Changes: 0
+	  VLAN 5
+	    Pre-empt delay is enabled. Sending standard BPDU
+	    Sub-interface:    GigabitEthernet0/0/0/1.5 (Up)
+	    Max Age:          20
+	    Root Priority:    0
+	    Root Bridge:      0000.0000.0000
+	    Cost:             0
+	    Bridge Priority:  32768
+	    Bridge ID:        021a.9eff.5645
+	    Port Priority:    128
+	    Port ID           1
+	    Hello Time:       2
+	    Active:           Yes
+	    BPDUs sent:       7
+	    Topology Changes: 0
 	'''}
 
 	def test_empty(self):
@@ -1106,23 +1106,23 @@ class show_spanning_tree_pvstag(unittest.TestCase):
 		}
 
 	golden_output = {'execute.return_value': '''\
-	RP/0/RSP0/CPU0:SMU-uut#show spanning-tree pvstag foo 
+	RP/0/RSP0/CPU0:SMU-uut#show spanning-tree pvstag foo 
 	Bundle-Ether1000
-	  VLAN 2100
-	    Pre-empt delay is disabled
-	    Sub-interface:    Bundle-Ether1000.2100 (Up)
-	    Max Age:          20
-	    Root Priority:    0
-	    Root Bridge:      0000.0000.0000
-	    Cost:             0
-	    Bridge Priority:  32768
-	    Bridge ID:        6c9c.edff.8d95
-	    Port Priority:    128
-	    Port ID           1
-	    Hello Time:       2
-	    Active:           Yes
-	    BPDUs sent:       10
-	    Topology Changes: 0
+	  VLAN 2100
+	    Pre-empt delay is disabled
+	    Sub-interface:    Bundle-Ether1000.2100 (Up)
+	    Max Age:          20
+	    Root Priority:    0
+	    Root Bridge:      0000.0000.0000
+	    Cost:             0
+	    Bridge Priority:  32768
+	    Bridge ID:        6c9c.edff.8d95
+	    Port Priority:    128
+	    Port ID           1
+	    Hello Time:       2
+	    Active:           Yes
+	    BPDUs sent:       10
+	    Topology Changes: 0
 	'''}
 
 	def test_empty(self):
