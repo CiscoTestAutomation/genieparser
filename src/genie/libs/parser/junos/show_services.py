@@ -428,6 +428,27 @@ class ShowServicesAccountingFlowSchema(MetaParser):
     def validate_flow_information(value):
         if not isinstance(value, list):
             raise SchemaError('Flow information is not a list')
+
+        """schema
+            "services-accounting-information": {
+                "flow-information": [
+                    {
+                        "interface-name": str,
+                        "local-ifd-index": str,
+                        "flow-packets": str,
+                        "flow-bytes": str,
+                        "flow-packets-ten-second-rate": str,
+                        "flow-bytes-ten-second-rate": str,
+                        "active-flows": str,
+                        "flows": str,
+                        "flows-exported": str,
+                        "flow-packets-exported": str,
+                        "flows-expired": str,
+                        "flows-aged": str,
+                    }
+                ]
+            }   
+        """
     
         flow_information = Schema({
                 "interface-name": str,
