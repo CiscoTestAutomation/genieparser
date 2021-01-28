@@ -7,6 +7,7 @@ JunOS parsers for the following show commands:
     * ping {addr} ttl {ttl} count {count} wait {wait}
     * ping {addr} source {source} count {count}
     * ping {addr} source {source} size {size} do-not-fragment count {count}
+    * ping {addr} size {size} count {count} do-not-fragment
 """
 # Python
 import re
@@ -96,7 +97,8 @@ class Ping(PingSchema):
         'ping {addr} ttl {ttl} count {count} wait {wait}',
         'ping {addr} source {source} count {count}',
         'ping {addr} source {source} size {size} do-not-fragment count {count}',
-        'ping {addr} source {source} size {size} count {count} tos {tos} rapid'
+        'ping {addr} source {source} size {size} count {count} tos {tos} rapid',
+        'ping {addr} size {size} count {count} do-not-fragment'
     ]
 
     def cli(self, addr, count=None, ttl=None, 
@@ -104,36 +106,41 @@ class Ping(PingSchema):
             tos=None, output=None):
 
         if not output:
-            if count and ttl and wait:
-                cmd = self.cli_command[2].format(
-                    addr=addr,
-                    count=count,
-                    ttl=ttl,
-                    wait=wait)
-            elif count and source and tos:
-                cmd = self.cli_command[5].format(
-                    addr=addr, 
-                    source=source, 
-                    size=size, 
-                    count=count, 
-                    tos=tos)
-            elif count and source:
-                cmd = self.cli_command[3].format(addr=addr, 
+            if addr and count:
+                if ttl and wait:
+                    cmd = self.cli_command[2].format(
+                        addr=addr,
+                        count=count,
+                        ttl=ttl,
+                        wait=wait)
+                elif source and size and tos:
+                    cmd = self.cli_command[5].format(
+                        addr=addr, 
+                        source=source, 
+                        size=size, 
+                        count=count, 
+                        tos=tos)
+                elif source and size:
+                    cmd = self.cli_command[4].format(
+                        addr=addr,
                         source=source,
+                        size=size,
+                        count=count,
+                    )   
+                elif source:
+                    cmd = self.cli_command[3].format(
+                        addr=addr, 
+                        source=source,
+                        count=count) 
+                elif size:
+                    cmd = self.cli_command[6].format(
+                        addr=addr, 
+                        size=size,
+                        count=count)                                   
+                else:
+                    cmd = self.cli_command[1].format(
+                        addr=addr, 
                         count=count)
-            elif source and size:
-                cmd = self.cli_command[4].format(
-                    addr=addr,
-                    source=source,
-                    size=size,
-                    count=count,
-                )   
-            elif count and source:
-                cmd = self.cli_command[3].format(addr=addr, 
-                        source=source,
-                        count=count)                                        
-            elif count:
-                cmd = self.cli_command[1].format(addr=addr, count=count)
             else:
                 cmd = self.cli_command[0].format(addr=addr)
             out = self.device.execute(cmd)

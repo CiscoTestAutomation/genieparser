@@ -1,0 +1,20 @@
+
+                                                  Detect   Transmit
+
+Address                  State     Interface      Time     Interval  Multiplier
+
+10.0.0.2                 AdminDown ge-0/0/4.0     3.000     1.000        6   
+
+ Session down time 00:00:08, previous up time 00:13:57
+
+ Local diagnostic CtlExpire, remote diagnostic None
+
+ Remote state Up, version 1
+
+ Session type: Single hop BFD
+
+
+
+1 sessions, 0 clients
+
+Cumulative transmit rate 1.0 pps, cumulative receive rate 2.0 pps

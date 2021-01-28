@@ -1,8 +1,8 @@
 """show_lag.py
    supported commands:
      *  show lacp system-id
-     *  show bundle 
-     *  show bundle <interface>
+     *  show bundle 
+     *  show bundle <interface>
      *  show bundle reasons
      *  show bundle <interface> reasons 
      *  show lacp

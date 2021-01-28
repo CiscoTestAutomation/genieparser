@@ -81,7 +81,7 @@ class ShowMemoryDebugLeaksSchema(MetaParser):
     '''
 
     schema = {
-        'tracekey': str,
+        Optional('tracekey'): str,
         'memory': {
             str: {
                 Optional(str): {
