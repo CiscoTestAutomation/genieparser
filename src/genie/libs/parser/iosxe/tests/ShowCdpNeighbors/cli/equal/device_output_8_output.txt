@@ -1,0 +1,34 @@
+show cdp neighbors
+Capability Codes: R - Router, T - Trans Bridge, B - Source Route Bridge
+                  S - Switch, H - Host, I - IGMP, r - Repeater, P - Phone, 
+                  D - Remote, C - CVTA, M - Two-port Mac Relay 
+
+Device ID        Local Intrfce     Holdtme    Capability  Platform  Port ID
+Fusion-Rtr-PG00-P01.cisco.local
+                 Ten 1/1/2         132              R I   CSR1000V  Gig 2
+Fusion-Rtr-PG00-P01.cisco.local
+                 Ten 1/1/2         123              R I   CSR1000V  Gig 1
+C9500-PG00-P01.cisco.local
+                 Ten 1/0/21        148             R S I  C9500-40X Ten 1/0/21
+ENT-DNAC-EG00-ESX04
+                 Ten 1/1/1         139               S    VMware ES vmnic2
+ENT-DNAC-EG00-ESX03
+                 Ten 1/1/2         154               S    VMware ES vmnic2
+C3560-CX-B-PG00-P01.cisco.local
+                 Ten 1/0/11        161              S I   WS-C3560C Gig 0/3
+C3560-CX-A-PG00-P01.cisco.local
+                 Ten 1/0/5         167             R S I  WS-C3560C Gig 0/1
+C3560-CX-A-PG00-P01.cisco.local
+                 Ten 1/0/7         133             R S I  WS-C3560C Gig 0/7
+C9800-WLC-PG00-P01
+                 Ten 1/1/2         165              R I   C9800-CL  Gig 2
+ISR4431-A-PG00-P01.cisco.local
+                 Ten 1/0/13        162             R S I  ISR4431/K Gig 0/0/0
+C9300-B-PG00-P01.cisco.local
+                 Ten 1/0/24        124             R S I  C9300-24U Ten 1/0/24
+ISR4431-B-PG00-P01.cisco.local
+                 Ten 1/0/17        164             R S I  ISR4431/K Gig 0/0/1
+ISR4431-B-PG00-P01.cisco.local
+                 Ten 1/0/19        133             R S I  ISR4431/K Gig 0/0/0
+
+Total cdp entries displayed : 13

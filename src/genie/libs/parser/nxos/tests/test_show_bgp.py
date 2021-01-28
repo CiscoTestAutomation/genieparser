@@ -29248,7 +29248,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-   10.64.4.4         10.100.5.5        
+   10.64.4.4         10.100.5.5        
 BGP routing table entry for [5][10.4.1.3][238.8.4.102]/64, version 409
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29261,7 +29261,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4        10.100.5.5        
+    10.64.4.4        10.100.5.5        
 BGP routing table entry for [5][10.111.2.3][238.8.4.101]/64, version 24
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29274,7 +29274,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4        10.100.5.5        
+    10.64.4.4        10.100.5.5        
 BGP routing table entry for [5][10.4.2.3][238.8.4.102]/64, version 58
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29287,7 +29287,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
      Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-   10.64.4.4         10.100.5.5        
+   10.64.4.4         10.100.5.5        
 BGP routing table entry for [5][10.111.1.4][238.8.4.101]/64, version 410
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29300,7 +29300,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4            10.100.5.5        
+    10.64.4.4            10.100.5.5        
 BGP routing table entry for [5][10.111.2.4][238.8.4.101]/64, version 7
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29313,7 +29313,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4            10.100.5.5        
+    10.64.4.4            10.100.5.5        
 
 Route Distinguisher: 10.144.6.6:3
 BGP routing table entry for [5][10.111.6.3][238.8.4.101]/64, version 454
@@ -29325,14 +29325,14 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn, is not in HW
     10.144.6.6 (inaccessible, metric 4294967295) from 10.100.5.5 (10.100.5.5)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
+      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
 
   Path type: internal, path is invalid(rnh not resolved), no labeled nexthop
   AS-Path: NONE, path sourced internal to AS
     10.144.6.6 (inaccessible, metric 4294967295) from 10.64.4.4 (10.64.4.4)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
+      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
 
 BGP routing table entry for [5][10.4.6.3][238.8.4.102]/64, version 456
 Paths: (2 available, best #0)
@@ -29343,14 +29343,14 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn, is not in HW
     10.144.6.6 (inaccessible, metric 4294967295) from 10.100.5.5 (10.100.5.5)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
+      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
 
   Path type: internal, path is invalid(rnh not resolved), no labeled nexthop
   AS-Path: NONE, path sourced internal to AS
     10.144.6.6 (inaccessible, metric 4294967295) from 10.64.4.4 (10.64.4.4)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
+      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
 
 '''}
 

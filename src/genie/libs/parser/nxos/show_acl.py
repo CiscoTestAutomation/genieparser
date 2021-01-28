@@ -325,7 +325,7 @@ class ShowAccessListsSummarySchema(MetaParser):
                 Optional('ingress'): {
                     Any(): { # 'ipv4_acl'
                         'name': str, # 'ipv4_acl'
-                        'type': str, # 'Router ACL'
+                        Optional('type'): str, # 'Router ACL'
                         'active': bool,
                         'total_aces_configured': int,
                     }
@@ -333,7 +333,7 @@ class ShowAccessListsSummarySchema(MetaParser):
                 Optional('egress'): {
                     Any(): {
                         'name': str,
-                        'type': str,
+                        Optional('type'): str,
                         'active': bool,
                         'total_aces_configured': int,
                     }
@@ -362,7 +362,8 @@ class ShowAccessListsSummary(ShowAccessListsSummarySchema):
 
         # IPV4 ACL acl_name
         # IPV6 ACL ipv6_acl2
-        p1 = re.compile(r'^(?P<type>[A-Z0-9]+) +ACL +(?P<name>[a-z0-9_]+)$')
+        # IPV6 ACL __urpf_v6_acl__
+        p1 = re.compile(r'^(?P<type>[A-Z0-9]+) +ACL +(?P<name>\S+)$')
 
         stack = []
         stacks = []
@@ -385,12 +386,7 @@ class ShowAccessListsSummary(ShowAccessListsSummarySchema):
 
         stacks.append('\n'.join(stack))
 
-        p = re.compile(r'^(?P<ip>[A-Z0-9]+) +ACL +(?P<name>[a-z0-9_]+)\n '
-                       r'+Total +ACEs +Configured: +(?P<total_configured>\d+)\n '
-                       r'+Configured +on +interfaces:\n(?: +(?P<interface>Ethernet1/1) '
-                       r'+- +(?P<traffic>egress|ingress) +\((?P<type>[\w\s]+)\)\n)? '
-                       r'+(?P<active>Active) +on +interfaces:(?:\n +(?P<interface2>Ethernet1/1) '
-                       r'+- +(?P<traffic2>egress|ingress) +\((?P<type2>[\w\s]+)\))?')
+        p = re.compile(r'^(?P<ip>[A-Z0-9]+) +ACL +(?P<name>\S+)\n +Total +ACEs +Configured: +(?P<total_configured>\d+)\n +Configured +on +interfaces:\n(?: +(?P<interface>\S+) +- +(?P<traffic>egress|ingress)( +\((?P<type>[\w\s]+)\))?\n)? +(?P<active>Active) +on +interfaces:(?:\n +(?P<interface2>\S+) +- +(?P<traffic2>egress|ingress)( +\((?P<type2>[\w\s]+)\))?)?')
 
         for s in stacks:
             m = p.match(s)
@@ -408,7 +404,8 @@ class ShowAccessListsSummary(ShowAccessListsSummarySchema):
                                                 setdefault(name, {})
 
                     traffic_dict['name'] = name
-                    traffic_dict['type'] = group['type']
+                    if group['type']:
+                        traffic_dict['type'] = group['type']
                     if group['active'] == 'Active':
                         active = True
                     else:

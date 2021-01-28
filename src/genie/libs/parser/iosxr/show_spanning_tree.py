@@ -96,12 +96,12 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 			'(?P<cist_root_priority>\d+)')
 		# Address	 0021.1bff.0e05
 		p4 = re.compile(r'^Address\s+(?P<address>[\w\.]+)$')
-		# Ext Cost    2000
+		# Ext Cost    2000
 		p5 = re.compile(r'^Ext\s+Cost\s+(?P<cist_root_cost>\d+)$')
-		# Root ID    Priority    32768
+		# Root ID    Priority    32768
 		p6 = re.compile(r'^Root\s+ID\s+Priority\s+(?P<designated_root_priority>'
 			'\d+)')
-		# Int Cost    0
+		# Int Cost    0
 		p7 = re.compile(r'^Int\s+Cost\s+(?P<root_cost>\d+)$')
 		# Max Age 20 sec, Forward Delay 15 sec
 		p8 = re.compile(r'^Max\s+Age\s+(?P<max_age>\d+)\s+sec,'
@@ -112,7 +112,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 		# Bridge ID Priority 32768 (priority 32768 sys-id-ext 0)
 		p10 = re.compile(r'^Bridge\s+ID\s+Priority\s+(?P<bridge_priority>\d+)'
 			'(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
-		# Te0/0/0/16   128.1   2000      ROOT FWD   32768 0021.1bff.0e05 128.1  
+		# Te0/0/0/16   128.1   2000      ROOT FWD   32768 0021.1bff.0e05 128.1  
 		p11 = re.compile(r'^(?P<name>\S+)\s+(?P<port_priority>\d+)\.'
 			'(?P<port_num>\d+)\s+(?P<cost>\d+)\s+(?P<role>\w+)\s+'
 			'(?P<port_state>\w+)\s+((?P<designated_cost>\d+)\s+)?'
@@ -142,7 +142,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 				mst_instances.update({'vlan' : group['vlan']})
 				continue
 
-			# CIST Root  Priority    32768
+			# CIST Root  Priority    32768
 			m = p3.match(line)
 			if m:
 				address_type = 'cist_root_address'
@@ -150,21 +150,21 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 				mst_instances.update({k:int(v) for k, v in group.items()})
 				continue
 
-		   	# Address     0021.1bff.0e05
+		   	# Address     0021.1bff.0e05
 			m = p4.match(line)
 			if m:
 				group = m.groupdict()
 				mst_instances.update({address_type : group['address']})
 				continue
 			
-			# Ext Cost    2000
+			# Ext Cost    2000
 			m = p5.match(line)
 			if m:
 				group = m.groupdict()
 				mst_instances.update({k:int(v) for k, v in group.items()})
 				continue
 
-			# Root ID    Priority    32768
+			# Root ID    Priority    32768
 			m = p6.match(line)
 			if m:
 				address_type = 'designated_root_address'
@@ -172,7 +172,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 				mst_instances.update({k:int(v) for k, v in group.items()})
 				continue
 
-			# Int Cost    0
+			# Int Cost    0
 			m = p7.match(line)
 			if m:
 				group = m.groupdict()
@@ -210,7 +210,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 				mst_instances.update({k:int(v) for k, v in group.items()})
 				continue
 
-			# Te0/0/0/16   128.1   2000	  ROOT FWD   32768 0021.1bff.0e05 128.1
+			# Te0/0/0/16   128.1   2000	  ROOT FWD   32768 0021.1bff.0e05 128.1
 			m = p11.match(line)
 			if m:
 				group = m.groupdict()
@@ -309,7 +309,7 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 		p2 = re.compile(r'^Pre(\-)?empt +delay +is +(?P<preempt_delay>\w+)\.?'
 			'( +)?(?P<preempt_delay_state>Sending +(startup|standard) '
 			'+BPDU( +until \S+)?)?')
-		# Name:            risc
+		# Name:            risc
 		p3 = re.compile(r'^Name:\s+(?P<name>\S+)$')
 		# Revision: 1
 		p4 = re.compile(r'^Revision:\s+(?P<revision>\d+)$')
@@ -317,33 +317,33 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 		p5 = re.compile(r'^Max Age:\s+(?P<max_age>\d+)$')
 		# Provider Bridge: no
 		p6 = re.compile(r'^Provider +Bridge:\s+(?P<provider_bridge>\w+)$')
-		# Bridge ID:       0000.00ff.0002
+		# Bridge ID:       0000.00ff.0002
 		p7 = re.compile(r'^Bridge +ID:\s+(?P<bridge_id>[\w\.]+)$')
-		# Port ID:         1
+		# Port ID:         1
 		p8 = re.compile(r'^Port +ID:\s+(?P<port_id>\d+)$')
-		# External Cost:   0
+		# External Cost:   0
 		p9 = re.compile(r'^External +Cost:\s+(?P<external_cost>\d+)$')
-		# Hello Time:      2
+		# Hello Time:      2
 		p10 = re.compile(r'^Hello +Time:\s+(?P<hello_time>\d+)$')
-		# Active:          yes
+		# Active:          yes
 		p11 = re.compile(r'^Active:\s+(?P<active>\w+)$')
-		# BPDUs sent:      39921
+		# BPDUs sent:      39921
 		p12 = re.compile(r'^BPDUs +sent:\s+(?P<bdpu_sent>\d+)$')
-		# MSTI 0 (CIST):
+		# MSTI 0 (CIST):
 		p13 = re.compile(r'^MSTI +(?P<mst_id>\d+)( +\(CIST\))?:?$')
-		#     VLAN IDs:         1-2,4-4094
+		#     VLAN IDs:         1-2,4-4094
 		p14 = re.compile(r'^VLAN +IDs:\s+(?P<vlans>\S+)$')
-		#     Bridge Priority:  8192
+		#     Bridge Priority:  8192
 		p15 = re.compile(r'^Bridge +Priority:\s+(?P<priority>\d+)$')
-		#     Port Priority:    128
+		#     Port Priority:    128
 		p16 = re.compile(r'^Port +Priority:\s+(?P<port_priority>\d+)$')
-		#     Cost:             0
+		#     Cost:             0
 		p17 = re.compile(r'^Cost:\s+(?P<cost>\d+)$')
-		#     Root Bridge:      0000.00ff.0001
+		#     Root Bridge:      0000.00ff.0001
 		p18 = re.compile(r'^Root +Bridge:\s+(?P<root_bridge>[\w\.]+)$')
-		#     Root Priority:    4096
+		#     Root Priority:    4096
 		p19 = re.compile(r'^Root +Priority:\s+(?P<root_priority>\d+)$')
-		#     Topology Changes: 31
+		#     Topology Changes: 31
 		p20 = re.compile(r'^Topology +Changes:\s+(?P<topology_changes>\d+)$')
 
 		for line in out.splitlines():
@@ -373,14 +373,14 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 					interface.update({
 						'preempt_delay_state' : group['preempt_delay_state']})
 				continue
-			# Name:            risc
+			# Name:            risc
 			m = p3.match(line)
 			if m:
 				group = m.groupdict()
 				interface.update({'name' : Common.convert_intf_name(group['name'])})
 				continue
 
-			# Name:            risc
+			# Name:            risc
 			m = p3.match(line)
 			if m:
 				group = m.groupdict()
@@ -409,42 +409,42 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 					'provider_bridge':(group['provider_bridge'].lower() == 'yes')})
 				continue
 
-			# Bridge ID:       0000.00ff.0002
+			# Bridge ID:       0000.00ff.0002
 			m = p7.match(line)
 			if m:
 				group = m.groupdict()
 				interface.update({k:v for k, v in group.items()})
 				continue
 
-			# Port ID:         1
+			# Port ID:         1
 			m = p8.match(line)
 			if m:
 				group = m.groupdict()
 				interface.update({k:int(v) for k, v in group.items()})
 				continue
 
-			# External Cost:   0
+			# External Cost:   0
 			m = p9.match(line)
 			if m:
 				group = m.groupdict()
 				interface.update({k:int(v) for k, v in group.items()})
 				continue
 
-			# Hello Time:      2
+			# Hello Time:      2
 			m = p10.match(line)
 			if m:
 				group = m.groupdict()
 				interface.update({k:int(v) for k, v in group.items()})
 				continue
 
-			# Active:          yes
+			# Active:          yes
 			m = p11.match(line)
 			if m:
 				group = m.groupdict()
 				interface.update({'active': (group['active'] == 'yes')})
 				continue
 
-			# BPDUs sent:      39921
+			# BPDUs sent:      39921
 			m = p12.match(line)
 			if m:
 				group = m.groupdict()
@@ -452,7 +452,7 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 				interface.update({'counters': bdpu_sent})
 				continue
 
-			# MSTI 0 (CIST):
+			# MSTI 0 (CIST):
 			m = p13.match(line)
 			if m:
 				group = m.groupdict()
@@ -461,49 +461,49 @@ class ShowSpanningTreeMstag(ShowSpanningTreeMstagSchema):
 				instances.update({'instance': int(group['mst_id'])})
 				continue
 
-			#     VLAN IDs:         1-2,4-4094
+			#     VLAN IDs:         1-2,4-4094
 			m = p14.match(line)
 			if m:
 				group = m.groupdict()
 				instances.update({k:v for k, v in group.items()})
 				continue
 
-			#     Bridge Priority:  8192
+			#     Bridge Priority:  8192
 			m = p15.match(line)
 			if m:
 				group = m.groupdict()
 				instances.update({k:int(v) for k, v in group.items()})
 				continue
 
-			#     Port Priority:    128
+			#     Port Priority:    128
 			m = p16.match(line)
 			if m:
 				group = m.groupdict()
 				instances.update({k:int(v) for k, v in group.items()})
 				continue
 
-			#     Cost:             0
+			#     Cost:             0
 			m = p17.match(line)
 			if m:
 				group = m.groupdict()
 				instances.update({k:int(v) for k, v in group.items()})
 				continue
 
-			#     Root Bridge:      0000.00ff.0001
+			#     Root Bridge:      0000.00ff.0001
 			m = p18.match(line)
 			if m:
 				group = m.groupdict()
 				instances.update({k:v for k, v in group.items()})
 				continue
 
-			#     Root Priority:    4096
+			#     Root Priority:    4096
 			m = p19.match(line)
 			if m:
 				group = m.groupdict()
 				instances.update({k:int(v) for k, v in group.items()})
 				continue
 
-			#     Topology Changes: 31
+			#     Topology Changes: 31
 			m = p20.match(line)
 			if m:
 				group = m.groupdict()
@@ -567,15 +567,15 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 
 		# VLAN 2:
 		p1 = re.compile(r'^VLAN +(?P<vlan_id>\d+):$')
-		# Root ID    Priority    32768
+		# Root ID    Priority    32768
 		p2 = re.compile(r'^Root\s+ID\s+Priority\s+'
 			'(?P<designated_root_priority>\d+)')
-		# Address     0021.1bff.d973
+		# Address     0021.1bff.d973
 		p3 = re.compile(r'^Address\s+(?P<address>[\w\.]+)$')
 		# Max Age 20 sec, Forward Delay 15 sec
 		p4 = re.compile(r'^Max\s+Age\s+(?P<max_age>\d+)\s+sec,'
 			'\s+Forward\s+Delay\s+(?P<forward_delay>\d+)\s+sec$')
-		# Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
+		# Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
 		p5 = re.compile(r'^Bridge\s+ID\s+Priority\s+(?P<bridge_priority>\d+)'
 			'(\s+\(priority\s+\d+\s+sys\-id\-ext\s+(?P<sys_id_ext>\d+)\))?')
 		# Transmit Hold count   6
@@ -603,7 +603,7 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 				vlan.update({'vlan_id' : int(group['vlan_id'])})
 				continue
 
-		   	# Root ID    Priority    32768
+		   	# Root ID    Priority    32768
 			m = p2.match(line)
 			if m:
 				address_type = 'designated_root_address'
@@ -611,7 +611,7 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
 
-		   	# Address     0021.1bff.d973
+		   	# Address     0021.1bff.d973
 			m = p3.match(line)
 			if m:
 				group = m.groupdict()
@@ -632,7 +632,7 @@ class ShowSpanningTreePvrst(ShowSpanningTreePvrstSchema):
 						'bridge_forward_delay' : int(group['forward_delay'])})
 				continue
 
-			# Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
+			# Bridge ID  Priority    32768 (priority 32768 sys-id-ext 0)
 			m = p5.match(line)
 			if m:
 				address_type = 'bridge_address'
@@ -738,25 +738,25 @@ class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 			'\((?P<sub_interface_state>\w+)\)$')
 		# Max Age:			20
 		p4 = re.compile(r'^Max\s+Age:\s+(?P<max_age>\d+)$')
-		# Root Priority:    0
+		# Root Priority:    0
 		p5 = re.compile(r'^Root\s+Priority:\s+(?P<root_priority>\d+)$')
 		# Root Bridge: 0000.0000.0000
 		p6 = re.compile(r'^Root\s+Bridge:\s+(?P<root_bridge>[\w\.]+)$')
-		# Cost:             1
+		# Cost:             1
 		p7 = re.compile(r'^Cost:\s+(?P<root_cost>\d+)$')
-		# Bridge Priority:  32768
+		# Bridge Priority:  32768
 		p8 = re.compile(r'^Bridge\s+Priority:\s+(?P<bridge_priority>\d+)$')
-		# Bridge ID:        0255.1dff.3c70
+		# Bridge ID:        0255.1dff.3c70
 		p9 = re.compile(r'^Bridge\s+ID:\s+(?P<bridge_id>[\w\.]+)$')
-		# Port Priority:    128
+		# Port Priority:    128
 		p10 = re.compile(r'^Port\s+Priority:\s+(?P<port_priority>\d+)$')
-		# Port ID           1
+		# Port ID           1
 		p11 = re.compile(r'^Port\s+ID:?\s+(?P<port_id>\d+)$')
-		# Hello Time:       2
+		# Hello Time:       2
 		p12 = re.compile(r'^Hello\s+Time:\s+(?P<hello_time>\d+)$')
-		# Active:           Yes
+		# Active:           Yes
 		p13 = re.compile(r'^Active:\s+(?P<active>\w+)$')
-		# BPDUs sent:       6
+		# BPDUs sent:       6
 		p14 = re.compile(r'^BPDUs\s+sent:\s+(?P<bdpu_sent>\d+)$')
 		# Topology Changes: 0
 		p15 = re.compile(r'^Topology\s+Changes:\s+(?P<topology_changes>\d+)$')
@@ -798,7 +798,7 @@ class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Root Priority:    0
+			# Root Priority:    0
 			m = p5.match(line)
 			if m:
 				group = m.groupdict()
@@ -810,49 +810,49 @@ class ShowSpanningTreePvrsTag(ShowSpanningTreePvrsTagSchema):
 				group = m.groupdict()
 				vlan.update({k:v for k, v in group.items()})
 				continue
-			# Cost:             1
+			# Cost:             1
 			m = p7.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Bridge Priority:  32768
+			# Bridge Priority:  32768
 			m = p8.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Bridge ID:        0255.1dff.3c70
+			# Bridge ID:        0255.1dff.3c70
 			m = p9.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:v for k, v in group.items()})
 				continue
-			# Port Priority:    128
+			# Port Priority:    128
 			m = p10.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Port ID           1
+			# Port ID           1
 			m = p11.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Hello Time:       2
+			# Hello Time:       2
 			m = p12.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Active:           Yes
+			# Active:           Yes
 			m = p13.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({'active' : (group['active'].lower() == 'yes')})
 				continue
-			# BPDUs sent:       6
+			# BPDUs sent:       6
 			m = p14.match(line)
 			if m:
 				group = m.groupdict()
@@ -948,25 +948,25 @@ class ShowSpanningTreePvsTag(ShowSpanningTreePvsTagSchema):
 			'\s+\((?P<sub_interface_state>\w+)\)$')
 		# Max Age:			20
 		p4 = re.compile(r'^Max\s+Age:\s+(?P<max_age>\d+)$')
-		# Root Priority:    0
+		# Root Priority:    0
 		p5 = re.compile(r'^Root\s+Priority:\s+(?P<root_priority>\d+)$')
 		# Root Bridge: 0000.0000.0000
 		p6 = re.compile(r'^Root\s+Bridge:\s+(?P<root_bridge>[\w\.]+)$')
-		# Cost:             1
+		# Cost:             1
 		p7 = re.compile(r'^Cost:\s+(?P<root_cost>\d+)$')
-		# Bridge Priority:  32768
+		# Bridge Priority:  32768
 		p8 = re.compile(r'^Bridge\s+Priority:\s+(?P<bridge_priority>\d+)$')
-		# Bridge ID:        0255.1dff.3c70
+		# Bridge ID:        0255.1dff.3c70
 		p9 = re.compile(r'^Bridge\s+ID:\s+(?P<bridge_id>[\w\.]+)$')
-		# Port Priority:    128
+		# Port Priority:    128
 		p10 = re.compile(r'^Port\s+Priority:\s+(?P<port_priority>\d+)$')
-		# Port ID           1
+		# Port ID           1
 		p11 = re.compile(r'^Port\s+ID:?\s+(?P<port_id>\d+)$')
-		# Hello Time:       2
+		# Hello Time:       2
 		p12 = re.compile(r'^Hello\s+Time:\s+(?P<hello_time>\d+)$')
-		# Active:           Yes
+		# Active:           Yes
 		p13 = re.compile(r'^Active:\s+(?P<active>\w+)$')
-		# BPDUs sent:       6
+		# BPDUs sent:       6
 		p14 = re.compile(r'^BPDUs\s+sent:\s+(?P<bdpu_sent>\d+)$')
 		# Topology Changes: 0
 		p15 = re.compile(r'^Topology\s+Changes:\s+(?P<topology_changes>\d+)$')
@@ -1005,61 +1005,61 @@ class ShowSpanningTreePvsTag(ShowSpanningTreePvsTagSchema):
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Root Priority:    0
+			# Root Priority:    0
 			m = p5.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Root Bridge:      0000.0000.0000
+			# Root Bridge:      0000.0000.0000
 			m = p6.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:v for k, v in group.items()})
 				continue
-			# Cost:             0
+			# Cost:             0
 			m = p7.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Bridge Priority:  32768
+			# Bridge Priority:  32768
 			m = p8.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Bridge ID:        6c9c.edff.8d95
+			# Bridge ID:        6c9c.edff.8d95
 			m = p9.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:v for k, v in group.items()})
 				continue
-			# Port Priority:    128
+			# Port Priority:    128
 			m = p10.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Port ID           1
+			# Port ID           1
 			m = p11.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Hello Time:       2
+			# Hello Time:       2
 			m = p12.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({k:int(v) for k, v in group.items()})
 				continue
-			# Active:           Yes
+			# Active:           Yes
 			m = p13.match(line)
 			if m:
 				group = m.groupdict()
 				vlan.update({'active' : (group['active'].lower() == 'yes')})
 				continue
-			# BPDUs sent:       10
+			# BPDUs sent:       10
 			m = p14.match(line)
 			if m:
 				group = m.groupdict()

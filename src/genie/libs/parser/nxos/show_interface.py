@@ -207,12 +207,19 @@ class ShowInterface(ShowInterfaceSchema):
         # Ethernet1/3 is down (XCVR not inserted)
         # Ethernet1/2 is down (SFP validation failed)
         # Ethernet1/4 is down (SFP not inserted)
-        p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*(?P<link_state>(down|up))?'
-                        r'(administratively\s+(?P<admin_1>(down|up)))?\s*'
-                        r'(\(Administratively\s*(?P<admin_2>(down|up))\))?'
+        # Ethernet1/11 is down (inactive)
+        # Ethernet1/12 is down (Transceiver validation failed)
+        # Ethernet1/13 is down (SFP validation failed)
+        # Ethernet1/13 is down (Channel admin down)
+        p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*(?P<link_state>(down|up|'
+                        r'inactive|Transceiver +validation +failed|'
+                        r'SFP +validation +failed|Channel +admin +down))?'
+                        r'(administratively\s+(?P<admin_1>(down)))?\s*'
+                        r'(\(Administratively\s*(?P<admin_2>(down))\))?'
                         r'(\(VLAN\/BD\s+is+\s+(down|up)\))?'
                         r'(,\s*line\s+protocol\s+is\s+(?P<line_protocol>\w+))?'
                         r'(,\s+autostate\s+(?P<autostate>\S+))?'
+                        r'(\(No\s+operational\s+members\))?'
                         r'(\(Link\s+not\s+connected\))?'
                         r'(\(SFP\s+validation\s+failed\))?'
                         r'(\(SFP\s+not\s+inserted\))?'
@@ -484,15 +491,17 @@ class ShowInterface(ShowInterfaceSchema):
 
                 if group['link_state']:
                     interface_dict[interface]['link_state'] = group['link_state']
+
+
                     if 'oper_status' not in interface_dict[interface]:
                         interface_dict[interface]['oper_status'] = group['link_state']
 
                 if group['admin_1']:
-                    interface_dict[interface]['enabled'] = True if group['admin_1'] == 'up' else False
-                elif group['admin_2']:
-                    interface_dict[interface]['enabled'] = True if group['admin_2'] == 'up' else False
-                else:
                     interface_dict[interface]['enabled'] = False
+                elif group['admin_2']:
+                    interface_dict[interface]['enabled'] = False
+                else:
+                    interface_dict[interface]['enabled'] = True
 
                 if group['line_protocol']:
                     interface_dict[interface]['line_protocol'] = group['line_protocol']
