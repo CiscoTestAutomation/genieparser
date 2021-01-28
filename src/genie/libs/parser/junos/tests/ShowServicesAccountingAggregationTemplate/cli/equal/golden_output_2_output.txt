@@ -1,0 +1,9 @@
+  show services accounting aggregation template template-name xflow2 extensive
+  Source address: 100:0:0:0:0:0:0:2
+  Destination address: 200:0:0:0:0:0:0:2
+  Source port: 0, Destination port: 0
+  Protocol: 59, TOS: 0, TCP flags: 0
+  Source mask: 64, Destination mask: 64
+  Input SNMP interface index: 1169, Output SNMP interface index: 776
+  Start time: 58268748, End time: 58418928
+  Packet count: 38, Byte count: 3116

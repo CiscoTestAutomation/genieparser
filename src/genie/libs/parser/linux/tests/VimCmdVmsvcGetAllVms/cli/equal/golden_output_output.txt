@@ -1,0 +1,8 @@
+
+         42     P1-4          [VM_storage] P1-4/P1-4.vmx                 other26xLinuxGuest     vmx-07              
+         43     PE1-4_old     [VM_storage] PE1-4/PE1-4.vmx               other26xLinuxGuest     vmx-07              
+         45     N7K-PE1-2     [VM_storage] N7K-PE1-2/N7K-PE1-2.vmx       other24xLinuxGuest     vmx-08              
+         51     n9kv1_1       [VM_storage] n9kv1_1/n9kv1_1.vmx           otherGuest64           vmx-10              
+         52     n9kv2_1       [VM_storage] n9kv2_1/n9kv2_1.vmx           otherGuest64           vmx-10              
+          9     PE1-2         [VM_storage] PE1/PE1.vmx                   other24xLinuxGuest     vmx-08
+    

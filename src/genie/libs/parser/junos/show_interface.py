@@ -86,6 +86,9 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
 
         ret_dict = {}
 
+        # error: interface ge-0/0/3.0 not found
+        p0 = re.compile(r'^error:\s+interface\s+\S+\s+not\s+found$')
+
         # Interface               Admin Link Proto    Local                 Remote
         # lo0.0                   up    up   inet     10.1.1.1            --> 0/0
         # em1.0                   up    up   inet     10.0.0.4/8
@@ -114,6 +117,10 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
             if 'show interfaces terse' in line:
                 continue
 
+            # error: interface ge-0/0/3.0 not found
+            m = p0.match(line)
+            if m:
+                return ret_dict
 
             # fxp0                    up    up
             # em1.0                   up    up   inet     10.0.0.4/8
@@ -983,8 +990,9 @@ class ShowInterfacesSchema(MetaParser):
             },
             Optional("mru"): str,
             Optional("mtu"): str,
+            Optional("mac-rewrite-error"): str,
             "name": str,
-            "oper-status": str,
+            Optional("oper-status"): str,
             Optional("pad-to-minimum-frame-size"): str,
             Optional("physical-interface-cos-information"): {
                 "physical-interface-cos-hw-max-queues": str,
@@ -1181,7 +1189,15 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 100Gbps, BPDU Error: None, Loopback: Disabled,
         # Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
-        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?(, +Link-mode: +(?P<link_mode>\S+))?(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +(?P<bpdu_error>\S+))?(, +Loopback: +(?P<loopback>\S+))?,$')
+        # Link-level type: Ethernet, MTU: 1514, Speed: 1Gbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Disabled
+        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +(?P<link_level_type>\S+), '
+                        r'+MTU: +(?P<mtu>\S+)(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
+                        r'(, +Link-mode: +(?P<link_mode>\S+))?(, +Speed: +(?P<speed>\S+))?'
+                        r'(, +BPDU +Error: +(?P<bpdu_error>\w+))?'
+                        r'(, +MAC-REWRITE Error: +(?P<mac_rewrite_error>\S+))?'
+                        r'(, +Loopback: +(?P<loopback>\S+))?'
+                        r'(, Source +filtering: +(?P<source_filtering>\S+))?'
+                        r'(, +Flow +control: +(?P<if_flow_control>\S+))?(,)?$')
         
         # Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None,
         p4_1 = re.compile(r'^(Speed: +(?P<speed>[^\s,]+))(, +)?'
@@ -1987,13 +2003,30 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Logical interface ge-0/0/0.0 (Index 333) (SNMP ifIndex 606)
             m = p24.match(line)
             if m:
+                # found_flag : To check if `physical-interface` list created
+                #              for logical-interface
+                #              This prevents to create redundant list for same physical interface
+                found_flag = False
                 statistics_type = 'logical'
                 group = m.groupdict()
+                phy_interface = '.'.join(group['name'].split('.')[:-1])
                 logical_interface_dict = {}
+                interface_info_dict = ret_dict.setdefault('interface-information', {})
+                physical_interface_list =  interface_info_dict.setdefault('physical-interface', [])
+                for phy_dict in physical_interface_list:
+                    if phy_dict['name'] == phy_interface:
+                        found_flag = True
+
+                if not found_flag:
+                    physical_interface_dict = {}
+                    physical_interface_dict.update({'name': phy_interface})
+                    physical_interface_list.append(physical_interface_dict)
+
                 logical_interface_list = physical_interface_dict.setdefault('logical-interface', [])
                 logical_interface_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 logical_interface_list.append(logical_interface_dict)
+                found_flag = False
                 continue
 
             # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
