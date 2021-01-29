@@ -1,6 +1,0 @@
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* NXOS
-    * Modified ShowModule:
-      * Updated regex pattern to handle parenthesis inmodule type name

@@ -357,7 +357,7 @@ class TestShowInterface(unittest.TestCase):
             'dedicated_interface': True,
             'description': 'Connection to pe1',
             'duplex_mode': 'auto',
-            'enabled': False,
+            'enabled': True,
             'encapsulations': {'encapsulation': 'arpa'},
             'ethertype': '0x8100',
             'flow_control': {'receive': False, 'send': False},
@@ -380,7 +380,7 @@ class TestShowInterface(unittest.TestCase):
             'txload': '1/255',
             'types': '1000/10000 Ethernet'},
         'nve1': 
-            {'enabled': False,
+            {'enabled': True,
              'link_state': 'up',
             'oper_status': 'up',
             'port_channel': 
@@ -579,7 +579,7 @@ class TestShowInterface(unittest.TestCase):
             "txload": "1/255",
             "oper_status": "down",
             'port_channel': {'port_channel_member': False},
-            "enabled": False,
+            "enabled": True,
             "mtu": 1500,
             "encapsulations": {
                  "encapsulation": "arpa"
@@ -1306,7 +1306,7 @@ class TestShowInterface(unittest.TestCase):
             'dedicated_interface': True,
             'delay': 10,
             'duplex_mode': 'auto',
-            'enabled': False,
+            'enabled': True,
             'encapsulations': {
                 'encapsulation': 'arpa',
             },
@@ -1336,6 +1336,188 @@ class TestShowInterface(unittest.TestCase):
             'types': '1000/10000 Ethernet',
         },
     }
+
+    golden_output_7 = {'execute.return_value': """ 
+    
+        Vlan88 is up, line protocol is up, autostate enabled
+            Hardware is EtherSVI, address is  000c.29ff.f8a2
+            MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
+            reliability 255/255, txload 1/255, rxload 1/255
+            Encapsulation ARPA, loopback not set
+            Keepalive not supported
+            ARP type: ARPA
+            Last clearing of "show interface" counters never
+            L3 in Switched:
+            ucast: 0 pkts, 0 bytes
+
+        port-channel233 is down (No operational members)
+            admin state is up, Dedicated Interface
+              Hardware: 10/100/1000 Ethernet, address: aaaa.bbff.8888 (bia 5254.00ff.8506)
+              Description: desc-1
+              Internet Address is 10.4.4.4/24 secondary tag 10
+              MTU 1600 bytes, BW 768 Kbit, DLY 3330 usec
+              reliability 255/255, txload 1/255, rxload 1/255
+              Encapsulation ARPA, medium is broadcast
+              Port mode is routed
+              full-duplex, 1000 Mb/s
+              Beacon is turned off
+              Auto-Negotiation is turned off
+              Input flow-control is off, output flow-control is off
+              Auto-mdix is turned off
+              Switchport monitor is off 
+              EtherType is 0x8100 
+              EEE (efficient-ethernet) : n/a
+              Last link flapped 00:00:29
+              Last clearing of "show interface" counters never
+              1 interface resets
+              Load-Interval #1: 0 seconds
+                0 seconds input rate 0 bits/sec, 0 packets/sec
+                0 seconds output rate 0 bits/sec, 0 packets/sec
+                input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
+              Load-Interval #2: 0 seconds
+                0 seconds input rate 0 bits/sec, 0 packets/sec
+                0 seconds output rate 0 bits/sec, 0 packets/sec
+                input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
+              RX
+                0 unicast packets  0 multicast packets  0 broadcast packets
+                0 input packets  0 bytes
+                0 jumbo packets  0 storm suppression packets
+                0 runts  0 giants  0 CRC/FCS  0 no buffer
+                0 input error  0 short frame  0 overrun   0 underrun  0 ignored
+                0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
+                0 input with dribble  0 input discard
+                0 Rx pause
+              TX
+                0 unicast packets  0 multicast packets  0 broadcast packets
+                0 output packets  0 bytes
+                0 jumbo packets
+                0 output error  0 collision  0 deferred  0 late collision
+                0 lost carrier  0 no carrier  0 babble  0 output discard
+                0 Tx pause
+    """}
+
+    golden_parsed_output_7 = {
+           "Vlan88":{
+              "port_channel":{
+                 "port_channel_member":False
+              },
+              "link_state":"up",
+              "enabled":True,
+              "oper_status":"up",
+              "line_protocol":"up",
+              "autostate":True,
+              "delay":10,
+              "mtu":1500,
+              "bandwidth":1000000,
+              "reliability":"255/255",
+              "txload":"1/255",
+              "rxload":"1/255",
+              "encapsulations":{
+                 "encapsulation":"arpa"
+              }
+           },
+           "port-channel233":{
+              "port_channel":{
+                 "port_channel_member":False
+              },
+              "link_state":"down",
+              "enabled":True,
+              "oper_status":"down",
+              "admin_state":"up",
+              "dedicated_interface":True,
+              "types":"10/100/1000 Ethernet",
+              "mac_address":"aaaa.bbff.8888",
+              "phys_address":"5254.00ff.8506",
+              "description":"desc-1",
+              "ipv4":{
+                 "10.4.4.4/24":{
+                    "ip":"10.4.4.4",
+                    "prefix_length":"24",
+                    "secondary":True,
+                    "route_tag":"10"
+                 }
+              },
+              "delay":3330,
+              "mtu":1600,
+              "bandwidth":768,
+              "reliability":"255/255",
+              "txload":"1/255",
+              "rxload":"1/255",
+              "encapsulations":{
+                 "encapsulation":"arpa"
+              },
+              "medium":"broadcast",
+              "port_mode":"routed",
+              "duplex_mode":"full",
+              "port_speed":"1000",
+              "beacon":"off",
+              "auto_negotiate":False,
+              "flow_control":{
+                 "receive":False,
+                 "send":False
+              },
+              "auto_mdix":"off",
+              "switchport_monitor":"off",
+              "ethertype":"0x8100",
+              "efficient_ethernet":"n/a",
+              "last_link_flapped":"00:00:29",
+              "interface_reset":1,
+              "counters":{
+                 "rate":{
+                    "load_interval":0,
+                    "in_rate":0,
+                    "in_rate_pkts":0,
+                    "out_rate":0,
+                    "out_rate_pkts":0,
+                    "in_rate_bps":0,
+                    "in_rate_pps":0,
+                    "out_rate_bps":0,
+                    "out_rate_pps":0
+                 },
+                 "rx":True,
+                 "in_unicast_pkts":0,
+                 "in_multicast_pkts":0,
+                 "in_broadcast_pkts":0,
+                 "last_clear":"never",
+                 "in_pkts":0,
+                 "in_octets":0,
+                 "in_jumbo_packets":0,
+                 "in_storm_suppression_packets":0,
+                 "in_runts":0,
+                 "in_oversize_frame":0,
+                 "in_crc_errors":0,
+                 "in_no_buffer":0,
+                 "in_errors":0,
+                 "in_short_frame":0,
+                 "in_overrun":0,
+                 "in_underrun":0,
+                 "in_ignored":0,
+                 "in_watchdog":0,
+                 "in_bad_etype_drop":0,
+                 "in_unknown_protos":0,
+                 "in_if_down_drop":0,
+                 "in_with_dribble":0,
+                 "in_discard":0,
+                 "in_mac_pause_frames":0,
+                 "tx":True,
+                 "out_unicast_pkts":0,
+                 "out_multicast_pkts":0,
+                 "out_broadcast_pkts":0,
+                 "out_pkts":0,
+                 "out_octets":0,
+                 "out_jumbo_packets":0,
+                 "out_errors":0,
+                 "out_collision":0,
+                 "out_deferred":0,
+                 "out_late_collision":0,
+                 "out_lost_carrier":0,
+                 "out_no_carrier":0,
+                 "out_babble":0,
+                 "out_discard":0,
+                 "out_mac_pause_frames":0
+              }
+           }
+        }
 
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
@@ -1384,6 +1566,13 @@ class TestShowInterface(unittest.TestCase):
         interface_obj = ShowInterface(device=self.device)
         parsed_output = interface_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
+    
+    def test_golden_7(self):
+        self.device = Mock(**self.golden_output_7)
+        interface_obj = ShowInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
+    
 
 # #############################################################################
 # # Unittest For Show Ip Interface Vrf All
