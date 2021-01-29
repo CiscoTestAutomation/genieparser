@@ -1,0 +1,7 @@
+show bfd session destination 10.0.0.1
+Sat Jan 23 08:45:45.813 JST
+Interface           Dest Addr           Local det time(int*mult)      State     
+                                    Echo             Async   H/W   NPU     
+------------------- --------------- ---------------- ---------------- ----------
+Gi0/0/0/0           10.0.0.1        0s(0s*0)         3s(500ms*6)      UP        
+                                                             No    n/a            
