@@ -1797,7 +1797,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         p6 = re.compile(r'^\s*advertise virtual-rmac$')
         #   source-interface loopback1
         p7 = re.compile(r'^\s*source-interface +(?P<source_if>[\w]+)$')
-        #   multisite border-gateway interface loopback3
+        #   multisite border-gateway interface loopback3
         p8 = re.compile(r'^\s*multisite +border\-gateway +interface +(?P<multisite_bgw_if>[\w]+)$')
         #   member vni 10100 associate-vrf
         #   member vni 10100-10105 associate-vrf

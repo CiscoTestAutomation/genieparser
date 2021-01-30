@@ -272,7 +272,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Encapsulation ARPA, medium is broadcast
         # Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
         # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
-        # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
+        # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
         # Encapsulation(s): AAL5
         p8 = re.compile(r'^Encapsulation(\(s\):)? +(?P<encapsulation>[\w\s\.]+)'
                 r'(, +(?P<rest>.*))?$')
@@ -614,7 +614,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Encapsulation ARPA, medium is broadcast
             # Encapsulation QinQ Virtual LAN, outer ID  10, inner ID 20
             # Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
-            # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
+            # Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
             m = p8.match(line)
             if m:
                 encapsulation = m.groupdict()['encapsulation']
@@ -1889,8 +1889,8 @@ class ShowIpInterfaceSchema(MetaParser):
                     Optional('address_determined_by'): str,
                     Optional('helper_address'): Or(str, list),
                     Optional('directed_broadcast_forwarding'): bool,
-                    Optional('out_common_access_list'): str,
-                    Optional('out_access_list'): str,
+                    Optional('outbound_common_access_list'): str,
+                    Optional('outbound_access_list'): str,
                     Optional('inbound_common_access_list'): str,
                     Optional('inbound_access_list'): str,
                     Optional('proxy_arp'): bool,
@@ -2155,27 +2155,27 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Outgoing Common access list is not set 
             p7 = re.compile(r'^Outgoing +Common +access +list +is +'
-                            r'(?P<access_list>[\w\s]+)$')
+                            r'(?P<access_list>.+)$')
             m = p7.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:
-                    interface_dict[interface]['out_common_access_list'] = \
+                    interface_dict[interface]['outbound_common_access_list'] = \
                         m.groupdict()['access_list']
                 continue
 
             # Outgoing access list is not set
             p8 = re.compile(r'^Outgoing +access +list +is +'
-                            r'(?P<access_list>[\w\s]+)$')
+                            r'(?P<access_list>.+)$')
             m = p8.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:
-                    interface_dict[interface]['out_access_list'] = \
+                    interface_dict[interface]['outbound_access_list'] = \
                         m.groupdict()['access_list']
                 continue
 
             # Inbound Common access list is not set
             p9 = re.compile(r'^Inbound +Common +access +list +is +'
-                            r'(?P<access_list>[\w\s]+)$')
+                            r'(?P<access_list>.+)$')
             m = p9.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:
@@ -2184,8 +2184,8 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 continue
 
             # Inbound  access list is not set
-            p10 = re.compile(r'^Outgoing +access +list +is +'
-                            r'(?P<access_list>[\w\s]+)$')
+            p10 = re.compile(r'^Inbound +access +list +is +'
+                            r'(?P<access_list>.+)$')
             m = p10.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:
@@ -2646,8 +2646,8 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
             # Vlan211 is up, line protocol is up
             # GigabitEthernet1/0/1 is administratively down, line protocol is down
             p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
-                              ' +(?P<enabled>[\w\s]+),'
-                              ' +line +protocol +is +(?P<oper_status>\w+)$')
+                             r' +(?P<enabled>[\w\s]+),'
+                             r' +line +protocol +is +(?P<oper_status>\w+)$')
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['interface']

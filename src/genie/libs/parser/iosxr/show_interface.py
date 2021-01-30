@@ -76,9 +76,10 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
             out = output
 
         # Loopback500                    192.168.220.1       Up              Up       default
+        # BVI123                         10.12.34.56         Up              Up       MyOrg-MyGroup_Channel_Zone
         p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
-            '+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-zA-Z]+) '
-            '+(?P<protocol_status>[a-zA-Z]+) +(?P<vrf_name>[A-Za-z0-9:]+)$')
+                       r'+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-zA-Z]+) '
+                       r'+(?P<protocol_status>[a-zA-Z]+) +(?P<vrf_name>[\w\:-]+)$')
 
         interface_dict = {}
         for line in out.splitlines():
@@ -3008,3 +3009,17 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
                 continue
 
         return result_dict
+
+class ShowIpv6Interface(ShowIpv6VrfAllInterface):
+    """Parser for show ipv6 interface"""
+
+    cli_command = 'show ipv6 interface {interface}'
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        return super().cli(output=out)

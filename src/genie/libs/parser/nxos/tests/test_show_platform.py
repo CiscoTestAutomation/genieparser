@@ -81,7 +81,7 @@ class test_show_version(unittest.TestCase):
                             }
 
     golden_output = {'execute.return_value': '''
- 
+
 Cisco Nexus Operating System (NX-OS) Software
 TAC support: http://www.cisco.com/tac
 Documents: http://www.cisco.com/en/US/products/ps9372/tsd_products_support_series_home.html
@@ -121,7 +121,7 @@ Last reset at 885982 usecs after  Wed Apr 19 10:23:31 2017
 
   Reason: Reset Requested by CLI command reload
   System version: 6.2(6)
-  Service: 
+  Service:
 
 plugin
   Core Plugin, Ethernet Plugin
@@ -145,15 +145,15 @@ http://www.gnu.org/licenses/gpl.html.
 NX-OSv9K is a demo version of the Nexus Operating System
 
 Software
-  BIOS: version 
+  BIOS: version
   NXOS: version 7.0(3)I5(2) [build 7.0(3)I5(1.145)]
-  BIOS compile time:  
+  BIOS compile time:
   NXOS image file is: bootflash:///ISSUCleanGolden.system.gbin
   NXOS compile time:  1/4/2017 20:00:00 [01/04/2017 21:47:15]
 
 
 Hardware
-  cisco NX-OSv Chassis 
+  cisco NX-OSv Chassis
   Intel(R) Xeon(R) CPU E5-2699 v3 @ 2.30GHz with 10214428 kB of memory.
   Processor Board ID 9YH2MQQB30N
 
@@ -161,20 +161,20 @@ Hardware
   bootflash:    3509454 kB
 Kernel uptime is 0 day(s), 18 hour(s), 29 minute(s), 37 second(s)
 
-Last reset 
+Last reset
   Reason: Unknown
-  System version: 
-  Service: 
+  System version:
+  Service:
 
 plugin
   Core Plugin, Ethernet Plugin
 
 Active Package(s):
- 
+
 ''', 'os': 'nxos'}
 
     golden_output3 = {'execute.return_value': '''
- 
+
         Cisco Nexus Operating System (NX-OS) Software
         TAC support: http://www.cisco.com/tac
         Documents: http://www.cisco.com/en/US/products/ps9372/tsd_products_support_series_home.html
@@ -184,17 +184,17 @@ Active Package(s):
         Some parts of this software are covered under the GNU Public
         License. A copy of the license is available at
         http://www.gnu.org/licenses/gpl.html.
-        
+
         Software
           BIOS:      version 3.6.0
-          Power Sequencer Firmware: 
+          Power Sequencer Firmware:
                      Module 1: v7.0
                      Module 1: v1.0
                      Module 3: v1.0
           Microcontroller Firmware:        version v10.1.0.2
-          QSFP Microcontroller Firmware:   
+          QSFP Microcontroller Firmware:
                      Module 3: v0.0.0.0
-          CXP Microcontroller Firmware:   
+          CXP Microcontroller Firmware:
                      Module not detected
           kickstart: version 7.3(3)N1(1)
           system:    version 7.3(3)N1(1)
@@ -203,29 +203,29 @@ Active Package(s):
           kickstart compile time:  4/27/2018 9:00:00 [04/27/2018 17:18:59]
           system image file is:    bootflash:///n5000-uk10.1.3.3.N1.1.bin
           system compile time:     4/27/2018 9:00:00 [04/27/2018 21:24:41]
-        
-        
+
+
         Hardware
           cisco Nexus 5596 Chassis ("O2 48X10GE/Modular Supervisor")
           Intel(R) Xeon(R) CPU         with 8253792 kB of memory.
           Processor Board ID FOC171850PP
-        
+
           Device name: sample_5k
           bootflash:    2007040 kB
-        
+
         Kernel uptime is 289 day(s), 16 hour(s), 36 minute(s), 32 second(s)
-        
+
         Last reset at 463212 usecs after  Thu Jan 24 05:58:41 2019
-        
+
           Reason: Disruptive upgrade
           System version: 7.0(8)N1(1)
-          Service: 
-        
+          Service:
+
         plugin
           Core Plugin, Ethernet Plugin, Fc Plugin
-        
+
         Active Package(s)
-        
+
         '''}
 
     golden_parsed_output3 = {'platform': {
@@ -260,7 +260,7 @@ Active Package(s):
                             }
 
     golden_output4 = {'execute.return_value': '''
- 
+
         Cisco Nexus Operating System (NX-OS) Software
         TAC support: http://www.cisco.com/tac
         Documents: http://www.cisco.com/en/US/products/ps9372/tsd_products_support_series_home.html
@@ -276,7 +276,7 @@ Active Package(s):
           loader:    version N/A
           kickstart: version 6.0(2)U6(10)
           system:    version 6.0(2)U6(10)
-          Power Sequencer Firmware: 
+          Power Sequencer Firmware:
                      Module 1: version v4.4
           BIOS compile time:       12/09/2013
           kickstart image file is: bootflash:///n3000-uk9-kickstart.6.0.2.U6.10.bin
@@ -299,7 +299,7 @@ Active Package(s):
 
           Reason: Disruptive upgrade
           System version: 6.0(2)U6(5b)
-          Service: 
+          Service:
 
         plugin
           Core Plugin, Ethernet Plugin
@@ -426,28 +426,28 @@ class test_show_inventory(unittest.TestCase):
                             }
 
     golden_output = {'execute.return_value': '''
- 
-        NAME: "Chassis",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis "     
-        PID: N7K-C7009           ,  VID: V01 ,  SN: JAF1704ARQG          
 
-        NAME: "Slot 1",  DESCR: "Supervisor Module-2"                   
-        PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGTH          
+        NAME: "Chassis",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis "
+        PID: N7K-C7009           ,  VID: V01 ,  SN: JAF1704ARQG
 
-        NAME: "Slot 2",  DESCR: "Supervisor Module-2"                   
-        PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGQH          
+        NAME: "Slot 1",  DESCR: "Supervisor Module-2"
+        PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGTH
 
-        NAME: "Slot 3",  DESCR: "1/10 Gbps Ethernet Module"             
-        PID: N7K-F248XP-25E      ,  VID: V01 ,  SN: JAF1717AAND          
+        NAME: "Slot 2",  DESCR: "Supervisor Module-2"
+        PID: N7K-SUP2            ,  VID: V01 ,  SN: JAF1708AGQH
 
-        NAME: "Slot 4",  DESCR: "10/40 Gbps Ethernet Module"            
-        PID: N7K-F312FQ-25       ,  VID: V01 ,  SN: JAE18120FLU      
+        NAME: "Slot 3",  DESCR: "1/10 Gbps Ethernet Module"
+        PID: N7K-F248XP-25E      ,  VID: V01 ,  SN: JAF1717AAND
+
+        NAME: "Slot 4",  DESCR: "10/40 Gbps Ethernet Module"
+        PID: N7K-F312FQ-25       ,  VID: V01 ,  SN: JAE18120FLU
 
         NAME: "Slot 33",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Power Supply"
-        PID: N7K-AC-6.0KW        ,  VID: V03 ,  SN: DTM171300QB                   
+        PID: N7K-AC-6.0KW        ,  VID: V03 ,  SN: DTM171300QB
 
         NAME: "Slot 35",  DESCR: "Nexus7000 C7009 (9 Slot) Chassis Fan Module"
         PID: N7K-C7009-FAN       ,  VID: V01 ,  SN: JAF1702AEBE
- 
+
     '''}
 
     golden_parsed_output1 = {
@@ -528,31 +528,31 @@ class test_show_inventory(unittest.TestCase):
         show inventory
         NAME: "Slot 38",  DESCR: "Nexus7700 C7706 (6 Slot) Chassis Fan Module"
         PID: N77-C7706-FAN       ,  VID: V01 ,  SN: DCH212300ZQ
-        
+
         NAME: "Slot 39",  DESCR: "Nexus7700 C7706 (6 Slot) Chassis Fan Module"
         PID: N77-C7706-FAN       ,  VID: V01 ,  SN: DCH212300ZR
-        
+
         NAME: "FEX 106 CHASSIS",  DESCR: "N2K-C2248TP-E-1GE  CHASSIS"
         PID: N2K-C2248TP-E-1GE   ,  VID: V03 ,  SN: FOX2129PR28
-        
+
         NAME: "FEX 106 Module 1",  DESCR: "Fabric Extender Module: 48x1GE, 4x10GE Supervisor"
         PID: N2K-C2248TP-E-1GE   ,  VID: V03 ,  SN: FOC21306SY6
-        
+
         NAME: "FEX 106 Fan 1",  DESCR: "Fabric Extender Fan module"
         PID: N2K-C2248-FAN       ,  VID: N/A ,  SN: N/A
-        
+
         NAME: "FEX 106 Power Supply 1",  DESCR: "Fabric Extender AC power supply"
         PID: N2200-PAC-400W      ,  VID: V06 ,  SN: DCA21265683
-        
+
         NAME: "FEX 106 Power Supply 2",  DESCR: "Fabric Extender AC power supply"
         PID: N2200-PAC-400W      ,  VID: V06 ,  SN: DCA21265681
-        
+
         NAME: "FEX 108 CHASSIS",  DESCR: "N2K-C2248TP-E-1GE  CHASSIS"
         PID: N2K-C2248TP-E-1GE   ,  VID: V03 ,  SN: FOX2131P982
-        
+
         NAME: "FEX 108 Module 1",  DESCR: "Fabric Extender Module: 48x1GE, 4x10GE Supervisor"
         PID: N2K-C2248TP-E-1GE   ,  VID: V03 ,  SN: FOC21306TAS
-        
+
         NAME: "FEX 108 Fan 1",  DESCR: "Fabric Extender Fan module"
         PID: N2K-C2248-FAN       ,  VID: N/A ,  SN: N/A
     '''}
@@ -593,7 +593,7 @@ class test_show_install_active(unittest.TestCase):
                             }
 
     golden_output = {'execute.return_value': '''
- 
+
     Boot Images:
             Kickstart Image: slot0:/n7000-s2-kickstart.8.3.0.CV.0.658.gbin
             System Image: slot0:/n7000-s2-dk10.34.3.0.CV.0.658.gbin
@@ -616,7 +616,7 @@ class test_show_install_active(unittest.TestCase):
 
 
     Active Packages on Module #8:
- 
+
 '''}
 
     def test_golden(self):
@@ -650,7 +650,7 @@ class test_show_system_redundancy_status(unittest.TestCase):
                           }
 
     golden_output = {'execute.return_value': '''
- 
+
     Redundancy mode
     ---------------
           administrative:   HA
@@ -667,7 +667,7 @@ class test_show_system_redundancy_status(unittest.TestCase):
         Redundancy state:   Standby
         Supervisor state:   HA standby
           Internal state:   HA standby
- 
+
 '''}
 
     def test_golden(self):
@@ -704,7 +704,7 @@ class test_show_redundancy_status(unittest.TestCase):
                             'active_supervisor_time': '0 days, 7 hours, 57 minutes, 30 seconds'}
 
     golden_output = {'execute.return_value': '''
- 
+
     Redundancy mode
     ---------------
           administrative:   HA
@@ -775,7 +775,7 @@ class test_show_boot(unittest.TestCase):
                             }
 
     golden_output = {'execute.return_value': '''
- 
+
     Current Boot Variables:
 
     sup-1
@@ -831,7 +831,7 @@ class test_show_boot_without_sup(unittest.TestCase):
                                       }
 
     golden_output = {'execute.return_value': '''
- 
+
     Current Boot Variables:
 
 
@@ -998,7 +998,7 @@ class test_show_module(unittest.TestCase):
                           }
 
     golden_output = {'execute.return_value': '''
- 
+
     Mod  Ports  Module-Type                         Model              Status
     ---  -----  ----------------------------------- ------------------ ----------
     1    0      Supervisor Module-2                 N7K-SUP2           active *
@@ -1011,13 +1011,13 @@ class test_show_module(unittest.TestCase):
 
     Mod  Sw               Hw
     ---  ---------------  ------
-    1    8.3(0)CV(0.658)  1.0     
-    2    8.3(0)CV(0.658)  1.0     
-    3    8.3(0)CV(0.658)  1.0     
-    4    8.3(0)CV(0.658)  1.0     
-    6    8.3(0)CV(0.658)  2.0     
-    7    8.3(0)CV(0.658)  1.0     
-    8    8.3(0)CV(0.658)  2.1     
+    1    8.3(0)CV(0.658)  1.0
+    2    8.3(0)CV(0.658)  1.0
+    3    8.3(0)CV(0.658)  1.0
+    4    8.3(0)CV(0.658)  1.0
+    6    8.3(0)CV(0.658)  2.0
+    7    8.3(0)CV(0.658)  1.0
+    8    8.3(0)CV(0.658)  2.1
 
 
 
@@ -1051,11 +1051,11 @@ class test_show_module(unittest.TestCase):
 
     Xbar Sw               Hw
     ---  ---------------  ------
-    1    NA               3.1     
-    2    NA               3.1     
-    3    NA               3.1     
-    4    NA               3.1     
-    5    NA               3.1     
+    1    NA               3.1
+    2    NA               3.1
+    3    NA               3.1
+    4    NA               3.1
+    5    NA               3.1
 
 
 
@@ -1067,7 +1067,7 @@ class test_show_module(unittest.TestCase):
     4    NA                                      JAF1705BFCF
     5    NA                                      JAF1704APQH
 
-    * this terminal session 
+    * this terminal session
 
 
 '''}
@@ -1075,25 +1075,25 @@ class test_show_module(unittest.TestCase):
     output = {'execute.return_value': '''
         Mod Ports             Module-Type                       Model          Status
         --- ----- ------------------------------------- --------------------- ---------
-        1    52   48x1/10G SFP+ 4x40G Ethernet Module   N9K-X9564PX           ok        
-        22   0    Fabric Module                         N9K-C9504-FM          ok        
-        24   0    Fabric Module                         N9K-C9504-FM          ok        
-        26   0    Fabric Module                         N9K-C9504-FM          ok        
+        1    52   48x1/10G SFP+ 4x40G Ethernet Module   N9K-X9564PX           ok
+        22   0    Fabric Module                         N9K-C9504-FM          ok
+        24   0    Fabric Module                         N9K-C9504-FM          ok
+        26   0    Fabric Module                         N9K-C9504-FM          ok
         27   0    Supervisor Module                     N9K-SUP-A             ha-standby
-        28   0    Supervisor Module                     N9K-SUP-A             active *  
-        29   0    System Controller                     N9K-SC-A              active    
-        30   0    System Controller                     N9K-SC-A              standby   
+        28   0    Supervisor Module                     N9K-SUP-A             active *
+        29   0    System Controller                     N9K-SC-A              active
+        30   0    System Controller                     N9K-SC-A              standby
 
         Mod  Sw                Hw     Slot
         ---  ----------------  ------ ----
-        1    7.0(3)I5(0.125)   1.3    LC1 
-        22   7.0(3)I5(0.125)   1.1    FM2 
-        24   7.0(3)I5(0.125)   1.1    FM4 
-        26   7.0(3)I5(0.125)   1.1    FM6 
+        1    7.0(3)I5(0.125)   1.3    LC1
+        22   7.0(3)I5(0.125)   1.1    FM2
+        24   7.0(3)I5(0.125)   1.1    FM4
+        26   7.0(3)I5(0.125)   1.1    FM6
         27   7.0(3)I5(0.125)   1.4    SUP1
         28   7.0(3)I5(0.125)   1.4    SUP2
-        29   7.0(3)I5(0.125)   1.4    SC1 
-        30   7.0(3)I5(0.125)   1.4    SC2 
+        29   7.0(3)I5(0.125)   1.4    SC1
+        30   7.0(3)I5(0.125)   1.4    SC2
 
 
         Mod  MAC-Address(es)                         Serial-Num
@@ -1233,12 +1233,207 @@ class test_show_module(unittest.TestCase):
        }
     }
 
-    def test_golden_1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.output)
-        module_obj = ShowModule(device=self.device)
-        parsed_output = module_obj.parse()
-        self.assertEqual(parsed_output,self.parsed_output_1)
+    golden_output_2 = {'execute.return_value': '''
+        Mod Ports             Module-Type                      Model           Status
+        --- ----- ------------------------------------- --------------------- ---------
+        1    16   16x400G Ethernet Module               N9K-X9716D-GX         ok
+        2    36   36x40/100G Ethernet Module            N9K-X9736C-FX         ok
+        5    36   36x40G Ethernet Module                                      pwr-denied
+        6    52   48x10/25G + 4x40/100G Ethernet Module N9K-X97160YC-EX       ok
+        7    52   48x10G + 4x40/100G Ethernet Module                          pwr-denied
+        22   0    8-slot (100G) Fabric Module           N9K-C9508-FM-E2       ok
+        24   0    8-slot (100G) Fabric Module           N9K-C9508-FM-E2       ok
+        26   0    8-slot (100G) Fabric Module           N9K-C9508-FM-E2       ok
+        27   0    Supervisor Module                     N9K-SUP-A+            active *
+        29   0    System Controller                     N9K-SC-A              active
+        30   0    System Controller                     N9K-SC-A              standby
+
+        Mod  Sw                       Hw    Slot
+        ---  ----------------------- ------ ----
+        1    10.1(0.233)              3.1    LC1
+        2    10.1(0.233)              1.1    LC2
+        6    10.1(0.233)              2.3    LC6
+        22   10.1(0.233)              1.1    FM2
+        24   10.1(0.233)              1.1    FM4
+        26   10.1(0.233)              1.1    FM6
+        27   10.1(0.233)              1.1    SUP1
+        29   10.1(0.233)              2.0    SC1
+        30   10.1(0.233)              2.0    SC2
+
+
+        Mod  MAC-Address(es)                         Serial-Num
+        ---  --------------------------------------  ----------
+        1    bc-4a-56-aa-50-b0 to bc-4a-56-aa-51-33  FOC24322RBW
+        2    90-77-ee-34-f8-7c to 90-77-ee-34-f9-0f  FOC24294DJ8
+        6    24-16-9d-d0-c9-38 to 24-16-9d-d0-c9-7b  FOC24021CNU
+        22   NA                                      FOC24381TPG
+        24   NA                                      FOC24381TX1
+        26   NA                                      FOC24381TUV
+        27   54-88-de-ae-5a-80 to 54-88-de-ae-5a-91  FOC24362EGB
+        29   NA                                      FOC24362EU0
+        30   NA                                      FOC2435407P
+
+        Mod  Online Diag Status
+        ---  ------------------
+        1    Pass
+        2    Pass
+        6    Pass
+        22   Pass
+        24   Pass
+        26   Pass
+        27   Pass
+        29   Pass
+        30   Pass
+        '''
+    }
+
+    golden_parsed_output_2 = {
+        'slot': {
+            'lc': {
+                '1': {
+                    '16x400G Ethernet Module': {
+                        'hardware': '3.1',
+                        'mac_address': 'bc-4a-56-aa-50-b0 '
+                        'to '
+                        'bc-4a-56-aa-51-33',
+                        'model': 'N9K-X9716D-GX',
+                        'online_diag_status': 'Pass',
+                        'ports': '16',
+                        'serial_number': 'FOC24322RBW',
+                        'slot/world_wide_name': 'LC1',
+                        'software': '10.1(0.233)',
+                        'status': 'ok'
+                    }
+                },
+                '2': {
+                    '36x40/100G Ethernet Module': {
+                        'hardware': '1.1',
+                        'mac_address': '90-77-ee-34-f8-7c '
+                        'to '
+                        '90-77-ee-34-f9-0f',
+                        'model': 'N9K-X9736C-FX',
+                        'online_diag_status': 'Pass',
+                        'ports': '36',
+                        'serial_number': 'FOC24294DJ8',
+                        'slot/world_wide_name': 'LC2',
+                        'software': '10.1(0.233)',
+                        'status': 'ok'
+                    }
+                },
+                '22': {
+                    '8-slot (100G) Fabric Module': {
+                        'hardware': '1.1',
+                        'mac_address': 'NA',
+                        'model': 'N9K-C9508-FM-E2',
+                        'online_diag_status': 'Pass',
+                        'ports': '0',
+                        'serial_number': 'FOC24381TPG',
+                        'slot/world_wide_name': 'FM2',
+                        'software': '10.1(0.233)',
+                        'status': 'ok'
+                    }
+                },
+                '24': {
+                    '8-slot (100G) Fabric Module': {
+                        'hardware': '1.1',
+                        'mac_address': 'NA',
+                        'model': 'N9K-C9508-FM-E2',
+                        'online_diag_status': 'Pass',
+                        'ports': '0',
+                        'serial_number': 'FOC24381TX1',
+                        'slot/world_wide_name': 'FM4',
+                        'software': '10.1(0.233)',
+                        'status': 'ok'
+                    }
+                },
+                '26': {
+                    '8-slot (100G) Fabric Module': {
+                        'hardware': '1.1',
+                        'mac_address': 'NA',
+                        'model': 'N9K-C9508-FM-E2',
+                        'online_diag_status': 'Pass',
+                        'ports': '0',
+                        'serial_number': 'FOC24381TUV',
+                        'slot/world_wide_name': 'FM6',
+                        'software': '10.1(0.233)',
+                        'status': 'ok'
+                    }
+                },
+                '29': {
+                    'System Controller': {
+                        'hardware': '2.0',
+                        'mac_address': 'NA',
+                        'model': 'N9K-SC-A',
+                        'online_diag_status': 'Pass',
+                        'ports': '0',
+                        'serial_number': 'FOC24362EU0',
+                        'slot/world_wide_name': 'SC1',
+                        'software': '10.1(0.233)',
+                        'status': 'active'
+                    }
+                },
+                '30': {
+                    'System Controller': {
+                        'hardware': '2.0',
+                        'mac_address': 'NA',
+                        'model': 'N9K-SC-A',
+                        'online_diag_status': 'Pass',
+                        'ports': '0',
+                        'serial_number': 'FOC2435407P',
+                        'slot/world_wide_name': 'SC2',
+                        'software': '10.1(0.233)',
+                        'status': 'standby'
+                    }
+                },
+                '5': {
+                    '36x40G Ethernet': {
+                        'model': 'Module',
+                        'ports': '36',
+                        'status': 'pwr-denied'
+                    }
+                },
+                '6': {
+                    '48x10/25G + 4x40/100G Ethernet Module': {
+                        'hardware': '2.3',
+                        'mac_address': '24-16-9d-d0-c9-38 '
+                        'to '
+                        '24-16-9d-d0-c9-7b',
+                        'model': 'N9K-X97160YC-EX',
+                        'online_diag_status': 'Pass',
+                        'ports': '52',
+                        'serial_number': 'FOC24021CNU',
+                        'slot/world_wide_name': 'LC6',
+                        'software': '10.1(0.233)',
+                        'status': 'ok'
+                    }
+                },
+                '7': {
+                    '48x10G + 4x40/100G Ethernet': {
+                        'model': 'Module',
+                        'ports': '52',
+                        'status': 'pwr-denied'
+                    }
+                }
+            },
+            'rp': {
+                '27': {
+                    'Supervisor Module': {
+                        'hardware': '1.1',
+                        'mac_address': '54-88-de-ae-5a-80 '
+                        'to '
+                        '54-88-de-ae-5a-91',
+                        'model': 'N9K-SUP-A+',
+                        'online_diag_status': 'Pass',
+                        'ports': '0',
+                        'serial_number': 'FOC24362EGB',
+                        'slot/world_wide_name': 'SUP1',
+                        'software': '10.1(0.233)',
+                        'status': 'active'
+                    }
+                }
+            }
+        }
+    }
 
     def test_golden(self):
         self.maxDiff = None
@@ -1247,11 +1442,25 @@ class test_show_module(unittest.TestCase):
         parsed_output = module_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
+    def test_golden_1(self):
+        self.maxDiff = None
+        self.device = Mock(**self.output)
+        module_obj = ShowModule(device=self.device)
+        parsed_output = module_obj.parse()
+        self.assertEqual(parsed_output,self.parsed_output_1)
+
+    def test_golden_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        module_obj = ShowModule(device=self.device)
+        parsed_output = module_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         module_obj = ShowModule(device=self.device1)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = module_obj.parse()       
+            parsed_output = module_obj.parse()
 
 class test_dir(unittest.TestCase):
     device = Device(name='aDevice')
@@ -1288,7 +1497,7 @@ class test_dir(unittest.TestCase):
                           }
 
     golden_output = {'execute.return_value': '''
- 
+
        4096    Apr 20 10:23:05 2017  .patch/
        1398    Feb 02 00:48:18 2017  20170202_074746_poap_7537_init.log
      251599    Mar 15 10:35:50 2017  ethpm_act_logs.log
@@ -1385,8 +1594,8 @@ class test_show_vdc_detail(unittest.TestCase):
                         }
 
     golden_output = {'execute.return_value': '''
- 
-    Switchwide mode is m1 f1 m1xl f2 m2xl f2e f3 m3 
+
+    Switchwide mode is m1 f1 m1xl f2 m2xl f2e f3 m3
 
     vdc id: 1
     vdc name: PE1
@@ -1403,7 +1612,7 @@ class test_show_vdc_detail(unittest.TestCase):
     vdc restart count: 1
     vdc restart time: Fri Apr 28 03:36:26 2017
     vdc type: Ethernet
-    vdc supported linecards: f3 
+    vdc supported linecards: f3
 
     vdc id: 2
     vdc name: PE2
@@ -1420,7 +1629,7 @@ class test_show_vdc_detail(unittest.TestCase):
     vdc restart count: 1
     vdc restart time: Fri Apr 28 03:48:01 2017
     vdc type: Ethernet
-    vdc supported linecards: f3 
+    vdc supported linecards: f3
 
     vdc id: 3
     vdc name: CORE
@@ -1437,7 +1646,7 @@ class test_show_vdc_detail(unittest.TestCase):
     vdc restart count: 1
     vdc restart time: Fri Apr 28 03:49:33 2017
     vdc type: Ethernet
-    vdc supported linecards: f3 
+    vdc supported linecards: f3
 
 '''}
 
@@ -1540,31 +1749,31 @@ class test_show_vdc_membership_status(unittest.TestCase):
                             }
 
     golden_output = {'execute.return_value': '''
- 
+
     Flags : b - breakout port
     ---------------------------------
 
     vdc_id: 0 vdc_name: Unallocated interfaces:
-    Port        Status      
-    ----        ----------  
+    Port        Status
+    ----        ----------
     Eth3/1      OK
     Eth3/2      OK
 
     vdc_id: 1 vdc_name: PE1 interfaces:
-    Port        Status      
-    ----        ----------  
+    Port        Status
+    ----        ----------
     Eth4/5      OK
     Eth4/6      OK
 
     vdc_id: 2 vdc_name: PE2 interfaces:
-    Port        Status      
-    ----        ----------  
+    Port        Status
+    ----        ----------
     Eth4/3      OK
     Eth4/4      OK
 
     vdc_id: 3 vdc_name: CORE interfaces:
-    Port        Status      
-    ----        ----------  
+    Port        Status
+    ----        ----------
     Eth4/1      OK
     Eth4/2(b)   OK
 

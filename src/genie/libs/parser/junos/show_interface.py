@@ -5,10 +5,16 @@ JunOS parsers for the following show commands:
     * show interfaces terse | match <interface>
     * show interfaces terse {interface}
     * show interfaces {interface} terse
+    * show interfaces {interface} detail
     * show interfaces descriptions
     * show interfaces descriptions {interface}
     * show interfaces queue {interface}
     * show interfaces policers {interface}
+    * show interfaces diagnostics optics {interface}
+    * show interfaces diagnostics optics
+    * show interfaces {interface} extensive
+    * show interfaces extensive
+    * show interfaces extensive {interface}
 """
 
 # python
@@ -80,6 +86,9 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
 
         ret_dict = {}
 
+        # error: interface ge-0/0/3.0 not found
+        p0 = re.compile(r'^error:\s+interface\s+\S+\s+not\s+found$')
+
         # Interface               Admin Link Proto    Local                 Remote
         # lo0.0                   up    up   inet     10.1.1.1            --> 0/0
         # em1.0                   up    up   inet     10.0.0.4/8
@@ -108,6 +117,10 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
             if 'show interfaces terse' in line:
                 continue
 
+            # error: interface ge-0/0/3.0 not found
+            m = p0.match(line)
+            if m:
+                return ret_dict
 
             # fxp0                    up    up
             # em1.0                   up    up   inet     10.0.0.4/8
@@ -327,6 +340,46 @@ class ShowInterfacesSchema(MetaParser):
     #                 "ifd-specific-config-flags": {
     #                     "internal-flags": str
     #                 },
+    #                 "ingress-queue-counters": {
+    #                     Optional("@junos:style"): str,
+    #                     "interface-cos-short-summary": {
+    #                         "intf-cos-num-queues-in-use": str,
+    #                         "intf-cos-num-queues-supported": str,
+    #                         "intf-cos-queue-type": str
+    #                     },
+    #                     "queue": [
+    #                         {
+    #                             "forwarding-class-name": str,
+    #                             "queue-counters-queued-packets": str,
+    #                             "queue-counters-total-drop-packets": str,
+    #                             "queue-counters-trans-packets": str,
+    #                             "queue-number": str
+    #                         }
+    #                     ]
+    #                 },
+    #                 "queue-counters": {
+    #                     Optional("@junos:style"): str,
+    #                     "interface-cos-short-summary": {
+    #                         "intf-cos-num-queues-in-use": str,
+    #                         "intf-cos-num-queues-supported": str,
+    #                         "intf-cos-queue-type": str
+    #                     },
+    #                     "queue": [
+    #                         {
+    #                             "forwarding-class-name": str,
+    #                             "queue-counters-queued-packets": str,
+    #                             "queue-counters-total-drop-packets": str,
+    #                             "queue-counters-trans-packets": str,
+    #                             "queue-number": str
+    #                         }
+    #                     ]
+    #                 },
+    #                 "queue-num-forwarding-class-name-map": [
+    #                     {
+    #                         "forwarding-class-name": str,
+    #                         "queue-number": str
+    #                     }
+    #                 ]
     #                 "interface-flapped": {
     #                     "#text": str,
     #                     Optional("@junos:seconds"): str
@@ -348,10 +401,14 @@ class ShowInterfacesSchema(MetaParser):
     #                                 "internal-flags": str
     #                             },
     #                             "address-family-name": str,
+    #                             "filter-information": str,
+    #                             "generation": str,
     #                             "interface-address": {
+    #                                 "generation": str,
     #                                 "ifa-broadcast": str,
     #                                 "ifa-destination": str,
     #                                 "ifa-flags": {
+    #                                     "ifaf-current-default": str,
     #                                     "ifaf-current-preferred": str,
     #                                     "ifaf-current-primary": str
     #                                 },
@@ -363,7 +420,9 @@ class ShowInterfacesSchema(MetaParser):
     #                             "max-local-cache": str,
     #                             "maximum-labels": str,
     #                             "mtu": str,
-    #                             "new-hold-limit": str
+    #                             "new-hold-limit": str,
+    #                             "policer-information": str,
+    #                             "route-table": str,
     #                         }
     #                     ],
     #                     "encapsulation": str,
@@ -372,6 +431,82 @@ class ShowInterfacesSchema(MetaParser):
     #                         "iff-snmp-traps": str,
     #                         "iff-up": str,
     #                         "internal-flags": str
+    #                     },
+    #                     "lag-traffic-statistics": {
+    #                         "aggregate-member-info": {
+    #                             "aggregate-member-count": str
+    #                         },
+    #                         "if-distribution-list-information": [
+    #                             {
+    #                                 "if-list": [
+    #                                     {
+    #                                         "if-child-name": str,
+    #                                         "if-status": str
+    #                                     }
+    #                                 ],
+    #                                 "list-status": str,
+    #                                 "list-type": str
+    #                             }
+    #                         ],
+    #                         "lag-adaptive-statistics": {
+    #                             "adaptive-adjusts": str,
+    #                             "adaptive-scans": str,
+    #                             "adaptive-updates": str
+    #                         },
+    #                         "lag-bundle": {
+    #                             "input-bps": str,
+    #                             "input-bytes": str,
+    #                             "input-packets": str,
+    #                             "input-pps": str,
+    #                             "output-bps": str,
+    #                             "output-bytes": str,
+    #                             "output-packets": str,
+    #                             "output-pps": str
+    #                         },
+    #                         "lag-lacp-info": [
+    #                             {
+    #                                 "lacp-port-key": str,
+    #                                 "lacp-port-number": str,
+    #                                 "lacp-port-priority": str,
+    #                                 "lacp-role": str,
+    #                                 "lacp-sys-priority": str,
+    #                                 "lacp-system-id": str,
+    #                                 "name": str
+    #                             }
+    #                         ],
+    #                         "lag-lacp-statistics": [
+    #                             {
+    #                                 "illegal-rx-packets": str,
+    #                                 "lacp-rx-packets": str,
+    #                                 "lacp-tx-packets": str,
+    #                                 "name": str,
+    #                                 "unknown-rx-packets": str
+    #                             }
+    #                         ],
+    #                         "lag-link": [
+    #                             {
+    #                                 "input-bps": str,
+    #                                 "input-bytes": str,
+    #                                 "input-packets": str,
+    #                                 "input-pps": str,
+    #                                 "name": str,
+    #                                 "output-bps": str,
+    #                                 "output-bytes": str,
+    #                                 "output-packets": str,
+    #                                 "output-pps": str
+    #                             }
+    #                         ],
+    #                         "lag-marker": [
+    #                             {
+    #                                 "illegal-rx-packets": str,
+    #                                 "lacp-rx-packets": str,
+    #                                 "lacp-tx-packets": str,
+    #                                 "marker-response-tx-packets": str,
+    #                                 "marker-rx-packets": str,
+    #                                 "name": str,
+    #                                 "unknown-rx-packets": str
+    #                             }
+    #                         ]
     #                     },
     #                     "local-index": str,
     #                     "logical-interface-bandwidth": str,
@@ -385,6 +520,8 @@ class ShowInterfacesSchema(MetaParser):
     #                     }
     #                 },
     #                 "loopback": str,
+    #                 "minimum-bandwidth-in-aggregate": str,
+    #                 "minimum-links-in-aggregate": str,
     #                 "mru": str,
     #                 "mtu": str,
     #                 "name": str,
@@ -399,11 +536,22 @@ class ShowInterfacesSchema(MetaParser):
     #                 "source-filtering": str,
     #                 "speed": str,
     #                 "traffic-statistics": {
-    #                     Optional("@junos:style"): str,
     #                     "input-bps": str,
+    #                     "input-bytes": str,
     #                     "input-packets": str,
     #                     "input-pps": str,
+    #                     "ipv6-transit-statistics": {
+    #                         "input-bps": str,
+    #                         "input-bytes": str,
+    #                         "input-packets": str,
+    #                         "input-pps": str,
+    #                         "output-bps": str,
+    #                         "output-bytes": str,
+    #                         "output-packets": str,
+    #                         "output-pps": str
+    #                     },
     #                     "output-bps": str,
+    #                     "output-bytes": str,
     #                     "output-packets": str,
     #                     "output-pps": str
     #                 }
@@ -417,7 +565,7 @@ class ShowInterfacesSchema(MetaParser):
         if not isinstance(value, list):
             raise SchemaError('physical interface is not a list')
         def verify_logical_interface_list(value):
-            # Pass address-family list of dict in value
+            # Pass logical-interface list of dict in value
             if not isinstance(value, list):
                 raise SchemaError('logical-interface is not a list')
 
@@ -427,7 +575,7 @@ class ShowInterfacesSchema(MetaParser):
                     raise SchemaError('address-family is not a list')
 
                 def verify_interface_address_list(value):
-                    # Pass physical-interface list of dict in value
+                    # Pass interface-address list of dict in value
                     if not isinstance(value, list) and not isinstance(value, dict):
                         raise SchemaError('interface-address is not a list/dict')
 
@@ -436,6 +584,7 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifa-destination"): str,
                         Optional("generation"): str,
                         "ifa-flags": {
+                            Optional("ifaf-current-default"): bool,
                             Optional("ifaf-current-preferred"): bool,
                             Optional("ifaf-current-primary"): bool,
                             Optional("ifaf-is-primary"): bool,
@@ -470,6 +619,8 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifff-encapsulation"): str,
                     },
                     Optional("address-family-name"): str,
+                    Optional("filter-information"): str,
+                    Optional("generation"): str,
                     Optional("interface-address"): Use(verify_interface_address_list),
                     Optional("intf-curr-cnt"): str,
                     Optional("intf-dropcnt"): str,
@@ -490,6 +641,145 @@ class ShowInterfacesSchema(MetaParser):
                     af_schema.validate(item)
                 return value
 
+            def verify_if_distribution_list_information_list(value):
+                # Pass if_distribution_list_information list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('if-distribution-list-information is not a list/dict')
+
+                def verify_if_list_list(value):
+                    # Pass if-list list of dict in value
+                    if not isinstance(value, list) and not isinstance(value, dict):
+                        raise SchemaError('if-list is not a list/dict')
+                    
+                    if_list_list_schema = Schema({
+                        Optional("if-child-name"): str,
+                        Optional("if-status"): str,
+                    })
+                    # Validate each dictionary in list
+                    if isinstance(value, dict):
+                        value = [value]
+                    for item in value:
+                        if_list_list_schema.validate(item)
+                    return value
+
+                if_distribution_list_information_list_schema = Schema({
+                    Optional("if-list"): Use(verify_if_list_list),
+                    Optional("list-status"): str,
+                    Optional("list-type"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    if_distribution_list_information_list_schema.validate(item)
+                return value
+
+            def verify_lag_bundle_list(value):
+                # Pass lag_bundle list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('lag_bundle is not a list/dict')
+
+                lag_bundle_list_schema = Schema({
+                    Optional("input-bps"): str,
+                    Optional("input-bytes"): str,
+                    Optional("input-packets"): str,
+                    Optional("input-pps"): str,
+                    Optional("output-bps"): str,
+                    Optional("output-bytes"): str,
+                    Optional("output-packets"): str,
+                    Optional("output-pps"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    lag_bundle_list_schema.validate(item)
+                return value
+
+            def verify_lag_lacp_info_list(value):
+                # Pass lag_lacp_info list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('lag_lacp_info is not a list/dict')
+
+                lag_lacp_info_list_schema = Schema({
+                    Optional("lacp-port-key"): str,
+                    Optional("lacp-port-number"): str,
+                    Optional("lacp-port-priority"): str,
+                    Optional("lacp-role"): str,
+                    Optional("lacp-sys-priority"): str,
+                    Optional("lacp-system-id"): str,
+                    Optional("name"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    lag_lacp_info_list_schema.validate(item)
+                return value
+
+            def verify_lag_lacp_statistics_list(value):
+                # Pass lag_lacp_statistics list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('lag_lacp_statistics is not a list/dict')
+
+                lag_lacp_statistics_list_schema = Schema({
+                    Optional("illegal-rx-packets"): str,
+                    Optional("lacp-rx-packets"): str,
+                    Optional("lacp-tx-packets"): str,
+                    Optional("name"): str,
+                    Optional("unknown-rx-packets"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    lag_lacp_statistics_list_schema.validate(item)
+                return value
+
+            def verify_lag_link_list(value):
+                # Pass lag_link list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('lag_link is not a list/dict')
+
+                lag_link_list_schema = Schema({
+                    Optional("input-bps"): str,
+                    Optional("input-bytes"): str,
+                    Optional("input-packets"): str,
+                    Optional("input-pps"): str,
+                    Optional("name"): str,
+                    Optional("output-bps"): str,
+                    Optional("output-bytes"): str,
+                    Optional("output-packets"): str,
+                    Optional("output-pps"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    lag_link_list_schema.validate(item)
+                return value
+
+            def verify_lag_marker_list(value):
+                # Pass lag_marker list of dict in value
+                if not isinstance(value, list) and not isinstance(value, dict):
+                    raise SchemaError('lag_marker is not a list/dict')
+
+                lag_marker_list_schema = Schema({
+                    Optional("illegal-rx-packets"): str,
+                    Optional("lacp-rx-packets"): str,
+                    Optional("lacp-tx-packets"): str,
+                    Optional("marker-response-tx-packets"): str,
+                    Optional("marker-rx-packets"): str,
+                    Optional("name"): str,
+                    Optional("unknown-rx-packets"): str
+                })
+                # Validate each dictionary in list
+                if isinstance(value, dict):
+                    value = [value]
+                for item in value:
+                    lag_marker_list_schema.validate(item)
+                return value
+
             l_i_schema = Schema({
                 Optional("address-family"): Use(verify_address_family_list),
                 Optional("encapsulation"): str,
@@ -498,6 +788,22 @@ class ShowInterfacesSchema(MetaParser):
                     "iff-snmp-traps": bool,
                     "iff-up": bool,
                     Optional("internal-flags"): str
+                },
+                Optional("lag-traffic-statistics"): {
+                    Optional("aggregate-member-info"): {
+                        "aggregate-member-count": str
+                    },
+                    Optional("if-distribution-list-information"): Use(verify_if_distribution_list_information_list),
+                    Optional("lag-adaptive-statistics"): {
+                        "adaptive-adjusts": str,
+                        "adaptive-scans": str,
+                        "adaptive-updates": str
+                    },
+                    Optional("lag-bundle"): Use(verify_lag_bundle_list),
+                    Optional("lag-lacp-info"): Use(verify_lag_lacp_info_list),
+                    Optional("lag-lacp-statistics"): Use(verify_lag_lacp_statistics_list),
+                    Optional("lag-link"): Use(verify_lag_link_list),
+                    Optional("lag-marker"): Use(verify_lag_marker_list),
                 },
                 "local-index": str,
                 Optional("logical-interface-bandwidth"): str,
@@ -582,6 +888,20 @@ class ShowInterfacesSchema(MetaParser):
                 queue_schema.validate(item)
             return value
 
+        def verify_queue_num_forwarding_class_name_map_list(value):
+            # Pass address-family list of dict in value
+            if not isinstance(value, list):
+                raise SchemaError('queue_num_forwarding_class_map is not a list')
+            
+            queue_num_forwarding_class_map_schema = Schema({
+                "forwarding-class-name": str,
+                "queue-number": str,
+            })
+            # validate each dictionary in list
+            for item in value:
+                queue_num_forwarding_class_map_schema.validate(item)
+            return value
+
         # Create physical-interface Schema
         physical_interface_schema = Schema({
             Optional("down-hold-time"): str,
@@ -631,7 +951,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional("iff-hardware-down"): bool,
             },
             Optional("if-auto-negotiation"): str,
-            "if-device-flags": {
+            Optional("if-device-flags"): {
                 "ifdf-present": bool,
                 "ifdf-running": bool,
                 Optional("ifdf-loopback"): bool,
@@ -659,6 +979,8 @@ class ShowInterfacesSchema(MetaParser):
             Optional("local-index"): str,
             Optional("logical-interface"): Use(verify_logical_interface_list),
             Optional("loopback"): str,
+            Optional("minimum-links-in-aggregate"): str,
+            Optional("minimum-bandwidth-in-aggregate"): str,
             Optional("lsi-traffic-statistics"): {
                 Optional("@junos:style"): str,
                 "input-bps": str,
@@ -668,6 +990,7 @@ class ShowInterfacesSchema(MetaParser):
             },
             Optional("mru"): str,
             Optional("mtu"): str,
+            Optional("mac-rewrite-error"): str,
             "name": str,
             Optional("oper-status"): str,
             Optional("pad-to-minimum-frame-size"): str,
@@ -720,31 +1043,32 @@ class ShowInterfacesSchema(MetaParser):
             },
             Optional("ethernet-mac-statistics"): {
                     Optional("@junos:style"): str,
-                    "input-broadcasts": str,
-                    "input-bytes": str,
-                    "input-code-violations": str,
-                    "input-crc-errors": str,
-                    "input-fifo-errors": str,
-                    "input-fragment-frames": str,
-                    "input-jabber-frames": str,
-                    "input-mac-control-frames": str,
-                    "input-mac-pause-frames": str,
-                    "input-multicasts": str,
-                    "input-oversized-frames": str,
-                    "input-packets": str,
+                    Optional("input-broadcasts"): str,
+                    Optional("input-bytes"): str,
+                    Optional("input-code-violations"): str,
+                    Optional("input-crc-errors"): str,
+                    Optional("input-fifo-errors"): str,
+                    Optional("input-fragment-frames"): str,
+                    Optional("input-jabber-frames"): str,
+                    Optional("input-mac-control-frames"): str,
+                    Optional("input-mac-pause-frames"): str,
+                    Optional("input-multicasts"): str,
+                    Optional("input-oversized-frames"): str,
+                    Optional("input-packets"): str,
                     Optional("input-total-errors"): str,
-                    "input-unicasts": str,
-                    "input-vlan-tagged-frames": str,
-                    "output-broadcasts": str,
-                    "output-bytes": str,
-                    "output-crc-errors": str,
-                    "output-fifo-errors": str,
-                    "output-mac-control-frames": str,
-                    "output-mac-pause-frames": str,
-                    "output-multicasts": str,
-                    "output-packets": str,
+                    Optional("input-unicasts"): str,
+                    Optional("input-vlan-tagged-frames"): str,
+                    Optional("output-broadcasts"): str,
+                    Optional("input-multicasts"): str,
+                    Optional("output-bytes"): str,
+                    Optional("output-crc-errors"): str,
+                    Optional("output-fifo-errors"): str,
+                    Optional("output-mac-control-frames"): str,
+                    Optional("output-mac-pause-frames"): str,
+                    Optional("output-multicasts"): str,
+                    Optional("output-packets"): str,
                     Optional("output-total-errors"): str,
-                    "output-unicasts": str
+                    Optional("output-unicasts"): str,
             },
             Optional("ethernet-filter-statistics"): {
                 "input-packets": str,
@@ -800,14 +1124,23 @@ class ShowInterfacesSchema(MetaParser):
                 "destination-mask": str,
                 "destination-slot": str
             },
-            Optional("queue-counters"): {
-                Optional("@junos:style"): str,
+            Optional("ingress-queue-counters"): {
                 "interface-cos-short-summary": {
                     "intf-cos-num-queues-in-use": str,
                     "intf-cos-num-queues-supported": str,
+                    "intf-cos-queue-type": str,
+                },
+                "queue": Use(verify_queue_list),
+            },
+            Optional("queue-counters"): {
+                "interface-cos-short-summary": {
+                    "intf-cos-num-queues-in-use": str,
+                    "intf-cos-num-queues-supported": str,
+                    "intf-cos-queue-type": str,
                 },
                 "queue": Use(verify_queue_list)
             },
+            Optional("queue-num-forwarding-class-name-map"): Use(verify_queue_num_forwarding_class_name_map_list)
         })
         # Validate each dictionary in list
         for item in value:
@@ -850,16 +1183,21 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(, +Generation: +\S+)$')
 
         # Description: none/100G/in/hktGCS002_ge-0/0/0
-        p3 = re.compile(r'^Description: +(?P<description>\S+)$')
+        # Description: TEST-DESC:1|TEST#1234 DEV
+        p3 = re.compile(r'^Description: +(?P<description>.+)$')
 
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        # Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 100Gbps, BPDU Error: None, Loopback: Disabled,
         # Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
-        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +'
-            r'(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)'
-            r'(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
-            r'(, +Link-mode: +(?P<link_mode>\S+))?'
-            r'(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +'
-            r'(?P<bpdu_error>\S+),)?$')
+        # Link-level type: Ethernet, MTU: 1514, Speed: 1Gbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Disabled
+        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +(?P<link_level_type>\S+), '
+                        r'+MTU: +(?P<mtu>\S+)(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
+                        r'(, +Link-mode: +(?P<link_mode>\S+))?(, +Speed: +(?P<speed>\S+))?'
+                        r'(, +BPDU +Error: +(?P<bpdu_error>\w+))?'
+                        r'(, +MAC-REWRITE Error: +(?P<mac_rewrite_error>\S+))?'
+                        r'(, +Loopback: +(?P<loopback>\S+))?'
+                        r'(, Source +filtering: +(?P<source_filtering>\S+))?'
+                        r'(, +Flow +control: +(?P<if_flow_control>\S+))?(,)?$')
         
         # Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None,
         p4_1 = re.compile(r'^(Speed: +(?P<speed>[^\s,]+))(, +)?'
@@ -874,6 +1212,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                           r'( +Ethernet-Switching +Error: +(?P<eth_switch_error>\S+),)?'
                           r'( +MAC-REWRITE +Error: +\S+)?$')
 
+        # Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 100Gbps, BPDU Error: None, Loopback: Disabled,
 
         # Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
         p5 = re.compile(r'^Loop +Detect +PDU +Error: +(?P<ld_pdu_error>\S+), +'
@@ -881,9 +1220,8 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'Error: +\S+, +Loopback: +(?P<loopback>\S+),$')
 
         # Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
-        p5_1 = re.compile(r'^(Ethernet-Switching +Error: +(?P<eth_switch_error>[^\s,]+))'
-                          r'(, +)?(MAC-REWRITE +Error: +[^\s,]+)?(, +)?'
-                          r'(Loopback: +(?P<loopback>[^\s,]+))(, +)?')
+        # BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled
+        p5_1 = re.compile(r'^((Ethernet-Switching +Error: +(?P<eth_switch_error>[^\s,]+))|(BPDU +Error: +(?P<bpdu_error>[^\s,]+)))(, +)?(MAC-REWRITE +Error: +[^\s,]+)?(, +)?(Loopback: +(?P<loopback>[^\s,]+))(, +)?')
 
         # Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
         p5_2 = re.compile(r'^(Loopback: +(?P<loopback>\S+),)?'
@@ -893,14 +1231,15 @@ class ShowInterfaces(ShowInterfacesSchema):
                           r'( +Remote +fault: +(?P<if_remote_fault>\S+))$')
 
         # Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
-        p6 = re.compile(r'^Source +filtering: +(?P<source_filtering>\S+), +'
-            r'Flow +control: +(?P<if_flow_control>\S+), +'
-            r'Auto-negotiation: +(?P<if_auto_negotiation>\S+), +'
-            r'Remote +fault: +(?P<if_remote_fault>\S+)$')
+        # Source filtering: Disabled, Flow control: Disabled
+        p6 = re.compile(r'^Source +filtering: +(?P<source_filtering>\S+), +Flow +control: +(?P<if_flow_control>\S+)(, +Auto-negotiation: +(?P<if_auto_negotiation>\S+), +Remote +fault: +(?P<if_remote_fault>\S+))?$')
 
         # Pad to minimum frame size: Disabled
         p7 = re.compile(r'^Pad +to +minimum +frame +size: +'
             r'(?P<pad_to_minimum_frame_size>\S+)$')
+
+        # Minimum links needed: 1, Minimum bandwidth needed: 1bps
+        p7_1 = re.compile(r'^Minimum +links +needed: +(?P<minimum_links_in_aggregate>\d+), +Minimum +bandwidth +needed: +(?P<minimum_bandwidth_in_aggregate>\S+)$')
 
         # Device flags   : Present Running
         p8 = re.compile(r'^Device +flags +: +(?P<if_device_flags>[\S\s]+)$')
@@ -986,9 +1325,10 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
         # Flags: Up SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
-        p25 = re.compile(r'^Flags: +(?P<iff_up>\S+)( +SNMP-Traps)?'
-            r'( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[[\S\s]+\])? +'
-            r'Encapsulation: +(?P<encapsulation>\S+)$')
+        # Flags: Hardware-Down Device-Down SNMP-Traps 0x4000 VLAN-Tag [ 0x8100.1 ]  Encapsulation: ENET2
+        p25 = re.compile(r'^Flags: +(?P<iff_up>(\S+|Hardware-Down Device-Down))'
+                         r'( +SNMP-Traps)?( +(?P<internal_flags>\S+))?( +VLAN-Tag +\[[\S\s]+\])?'
+                         r' +Encapsulation: +(?P<encapsulation>\S+)$')
 
         # Input packets : 133657033
         p26 = re.compile(r'^Input +packets *: +(?P<input_packets>\S+)$')
@@ -1005,11 +1345,11 @@ class ShowInterfaces(ShowInterfacesSchema):
             r'(?P<route_table>\S+))?$')
 
         # Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
-        p30 = re.compile(r'^Max +nh +cache: +(?P<max_local_cache>\d+), +'
-            r'New +hold +nh +limit: +(?P<new_hold_limit>\d+)'
-            r', Curr +nh +cnt: +(?P<intf_curr_cnt>\d+), +'
-            r'Curr +new +hold +cnt: +(?P<intf_unresolved_cnt>\d+)'
-            r', +NH +drop +cnt: +(?P<intf_dropcnt>\d+)$')
+        # Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1,
+        p30 = re.compile(r'^Max +nh +cache: +(?P<max_local_cache>\d+), +New +hold +nh +limit: +(?P<new_hold_limit>\d+), Curr +nh +cnt: +(?P<intf_curr_cnt>\d+),( +Curr +new +hold +cnt: +(?P<intf_unresolved_cnt>\d+), +NH +drop +cnt: +(?P<intf_dropcnt>\d+))?$')
+
+        # Curr new hold cnt: 0, NH drop cnt: 0
+        p30_1 = re.compile(r'^Curr +new +hold +cnt: +(?P<intf_unresolved_cnt>\d+), +NH +drop +cnt: +(?P<intf_dropcnt>\d+)$')
 
         # Flags: No-Redirects, Sendbcast-pkt-to-re
         p31 = re.compile(r'^Flags: +(?P<flags>[\S\s]+)')
@@ -1018,9 +1358,10 @@ class ShowInterfaces(ShowInterfacesSchema):
         p32 = re.compile(r'^Addresses, +Flags: +(?P<flags>[\S\s]+)$')
 
         # Destination: 10.189.5.92/30, Local: 10.189.5.93, Broadcast: 10.189.5.95
-        p33 = re.compile(r'^Destination: +(?P<ifa_destination>\S+)'
-            r', +Local: +(?P<ifa_local>\S+)'
-            r'(, +Broadcast: +(?P<ifa_broadcast>\S+))?(, +Generation: +(?P<generation>\S+))?$')
+        p33 = re.compile(r'^Destination: +(?P<ifa_destination>\S+), +Local: +(?P<ifa_local>\S+)(, +Broadcast: +(?P<ifa_broadcast>\S+))?(, +Generation: +(?P<generation>\S+))?$')
+
+        # Broadcast: 10.0.0.255, Generation: 8336
+        p33_1 = re.compile(r'^Broadcast: +(?P<ifa_broadcast>\S+), +Generation: +(?P<generation>\S+)$')
 
         # Bandwidth: 0
         p34 = re.compile(r'^Bandwidth: +(?P<logical_interface_bandwidth>\S+)$')
@@ -1060,10 +1401,12 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Policed discards: 0,
         # L3 incompletes: 0, L2 channel errors: 0, L2 mismatch timeouts: 0,
         # FIFO errors: 0, Resource errors: 0
+        # Errors: 0, Drops: 0, Framing errors: 0, Runts: 0, Giants: 0, Policed discards: 0, Resource errors: 0
         p43 = re.compile(r'^(Errors: +(?P<input_errors>\d+),)?'
                            r'( *Drops: +(?P<input_drops>\d+),)?'
                            r'( *Framing +errors: +(?P<framing_errors>\d+),)?'
                            r'( *Runts: +(?P<input_runts>\d+),)?'
+                           r'( *Giants: +(?P<input_giants>\d+),)?'
                            r'( *Policed +discards: +(?P<input_discards>\d+),)?'
                            r'( *L3 +incompletes: +(?P<input_l3_incompletes>\d+),)?'
                            r'( *L2 +channel +errors: +(?P<input_l2_channel_errors>\d+),)?'
@@ -1074,13 +1417,15 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Carrier transitions: 1, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0,
         # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0,
         # Carrier transitions: 0, Errors: 0, Drops: 0, Collisions: 0, Aged packets: 0, FIFO errors: 0, HS link CRC errors: 0, MTU errors: 0, Resource errors: 0
-        p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+), +'
-            r'Errors: +(?P<output_errors>\d+), +Drops: +(?P<output_drops>\d+), +'
-            r'Collisions: +(?P<output_collisions>\d+), +Aged+ packets: +'
-            r'(?P<aged_packets>\d+),(( +FIFO +errors: +(?P<output_fifo_errors>\d+),)? +'
-            r'HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?'
-            r'( +MTU +errors: +(?P<mtu_errors>\d+),?)?'
-            r'( +Resource +errors: +(?P<output_resource_errors>\d+))?$')
+        p44_1 = re.compile(r'^Carrier +transitions: +(?P<carrier_transitions>\d+),'
+                           r' +Errors: +(?P<output_errors>\d+),'
+                           r' +Drops: +(?P<output_drops>\d+),'
+                           r'( +Collisions: +(?P<output_collisions>\d+),)?'
+                           r'( +Aged+ packets: +(?P<aged_packets>\d+),)?'
+                           r'(( +FIFO +errors: +(?P<output_fifo_errors>\d+),)?'
+                           r' +HS +link +CRC +errors: +(?P<hs_link_crc_errors>\d+),)?'
+                           r'( +MTU +errors: +(?P<mtu_errors>\d+),?)?'
+                           r'( +Resource +errors: +(?P<output_resource_errors>\d+))?$')
 
         # MTU errors: 0, Resource errors: 0
         p44_2 = re.compile(r'^MTU +errors: +(?P<mtu_errors>\d+), +Resource +'
@@ -1152,9 +1497,9 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Label-switched interface (LSI) traffic statistics:
         p61 = re.compile(r'^Label-switched +interface +\(LSI\) +traffic +statistics:$')
 
+        # Ingress queues: 8 supported, 4 in use
         # Egress queues: 8 supported, 4 in use
-        p62 = re.compile(r'^Egress +queues: +(?P<intf_cos_num_queues_supported>\d+) +'
-            r'supported, +(?P<intf_cos_num_queues_in_use>\d+) +in +use$')
+        p62 = re.compile(r'^((?P<intf_cos_queue_type>(Ingress|Egress) +queues)): +(?P<intf_cos_num_queues_supported>\d+) +supported, +(?P<intf_cos_num_queues_in_use>\d+) +in +use$')
 
         # 0                                0                    0                    0
         p63 = re.compile(r'^(?P<queue_number>\d+) +(?P<queue_counters_queued_packets>\d+) +'
@@ -1214,7 +1559,56 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Policer: Input: GE_1M-xe-0/1/7.0-log_int-i, Output: GE_1M-xe-0/1/7.0-log_int-o
         p80 = re.compile(r'^Policer: +Input: +(?P<policer_input>\S+)(, +Output: +(?P<policer_output>\S+))?$')
 
+        # Bundle:
+        # Link:
+        p81 = re.compile(r'^(?P<lag_int_type>(Bundle)|(Link)):$')
+
+        # xe-0/1/10.0
+        # xe-0/1/10
+        p81_1 = re.compile(r'^(?P<name>[a-z]{2}-\d+/\d+/\d+(\.\d+)?)$')
+
+        # Input :           225          0         14514         1952
+        # Output:            16          0          1188            0
+        p82 = re.compile(r'^(?P<in_out>(Input\s*)|(Output)):\s+(?P<packets>\d+)\s+(?P<pps>\d+)\s+(?P<bytes>\d+)\s+(?P<bps>\d+)$')
+
+        # Adaptive Adjusts:          0
+        # Adaptive Scans  :          0
+        # Adaptive Updates:          0
+        p83 = re.compile(r'^(?P<adaptive>Adaptive\s+(Adjusts|Scans|Updates))\s*:\s+(?P<adaptive_value>\d+)$')
+
+        # Aggregate member links: 2
+        p84 = re.compile(r'^Aggregate\s+member\s+links:\s+(?P<aggregate_member_count>\d+)$')
+
+        # LACP info:        Role     System             System       Port     Port    Port
+        # LACP Statistics:       LACP Rx     LACP Tx   Unknown Rx   Illegal Rx
+        # Marker Statistics:   Marker Rx     Resp Tx   Unknown Rx   Illegal Rx
+        p85 = re.compile(r'^(?P<lacp_flag>(LACP info)|(LACP Statistics)|(Marker Statistics)):\s+.+$')
+
+        # ge-0/0/6.0     Actor        127  2c:6b:f5:d6:f8:c0        127        2       1
+        # ge-0/0/6.0   Partner        127  2c:6b:f5:18:ef:c0        127        2       1
+        p86 = re.compile(r'^(?P<name>\S+)\s+(?P<lacp_role>\S+)\s+(?P<lacp_sys_priority>\d+)\s+(?P<lacp_system_id>\S+)\s+(?P<lacp_port_priority>\d+)\s+(?P<lacp_port_number>\d+)\s+(?P<lacp_port_key>\d+)$')
+
+        # For LACP Statistics
+        # ge-0/0/6.0                 0           0            0            0
+        p87 = re.compile(r'(?P<name>\S+)\s+(?P<lacp_rx_packets>\d+)\s+(?P<lacp_tx_packets>\d+)\s+(?P<unknown_rx_packets>\d+)\s+(?P<illegal_rx_packets>\d+)$')
+
+        # For Marker Statistics
+        # ge-0/0/6.0                 0           0            0            0
+        p88 = re.compile(r'(?P<name>\S+)\s+(?P<marker_rx_packets>\d+)\s+(?P<marker_response_tx_packets>\d+)\s+(?P<unknown_rx_packets>\d+)\s+(?P<illegal_rx_packets>\d+)$')
+
+        # Primary         Active
+        # Backup          Down
+        # Standby         Down
+        p89 = re.compile(r'^(?P<list_type>(Primary)|(Backup)|(Standby))\s+(?P<list_status>(Active)|(Down))$')
+
+        # ge-0/0/7        Up
+        p90 = re.compile(r'^(?P<if_child_name>\S+)\s+(?P<if_status>(Up)|(Down))$')
+
         cnt = 0
+        queue_name = ''
+        lag_int_type = ''
+        lacp_flag = ''
+        if_dist_dict = {}
         for line in out.splitlines():
             line = line.strip()
             if not line:
@@ -1230,6 +1624,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 physical_interface_list =  interface_info_dict.setdefault('physical-interface', [])
                 physical_interface_dict = {}
                 physical_interface_dict.update({'name': group['name']})
+                physical_interface_dict.update({'oper-status': group['oper_status']})
                 admin_status = group['admin_status']
                 admin_status_dict = physical_interface_dict.setdefault('admin-status', {})
                 admin_status_dict.update({'@junos:format': admin_status})
@@ -1288,6 +1683,15 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
 
+            # Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+            # BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled
+            m = p5_1.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
             # Loopback: Disabled, Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
             m = p5_2.match(line)
             if m:
@@ -1306,6 +1710,14 @@ class ShowInterfaces(ShowInterfacesSchema):
 
             # Pad to minimum frame size: Disabled
             m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Minimum links needed: 1, Minimum bandwidth needed: 1bps
+            m = p7_1.match(line)
             if m:
                 group = m.groupdict()
                 physical_interface_dict.update({k.replace('_','-'):
@@ -1591,13 +2003,30 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Logical interface ge-0/0/0.0 (Index 333) (SNMP ifIndex 606)
             m = p24.match(line)
             if m:
+                # found_flag : To check if `physical-interface` list created
+                #              for logical-interface
+                #              This prevents to create redundant list for same physical interface
+                found_flag = False
                 statistics_type = 'logical'
                 group = m.groupdict()
+                phy_interface = '.'.join(group['name'].split('.')[:-1])
                 logical_interface_dict = {}
+                interface_info_dict = ret_dict.setdefault('interface-information', {})
+                physical_interface_list =  interface_info_dict.setdefault('physical-interface', [])
+                for phy_dict in physical_interface_list:
+                    if phy_dict['name'] == phy_interface:
+                        found_flag = True
+
+                if not found_flag:
+                    physical_interface_dict = {}
+                    physical_interface_dict.update({'name': phy_interface})
+                    physical_interface_list.append(physical_interface_dict)
+
                 logical_interface_list = physical_interface_dict.setdefault('logical-interface', [])
                 logical_interface_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 logical_interface_list.append(logical_interface_dict)
+                found_flag = False
                 continue
 
             # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
@@ -1636,11 +2065,18 @@ class ShowInterfaces(ShowInterfacesSchema):
                 address_family_list = logical_interface_dict.setdefault('address-family', [])
                 address_family_dict = {k.replace('_','-'):
                     v for k, v in group.items() if v is not None}
-                address_family_list.append(address_family_dict)
                 continue
 
             # Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
             m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                address_family_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Curr new hold cnt: 0, NH drop cnt: 0
+            m = p30_1.match(line)
             if m:
                 group = m.groupdict()
                 address_family_dict.update({k.replace('_','-'):
@@ -1692,7 +2128,15 @@ class ShowInterfaces(ShowInterfacesSchema):
                 interface_address_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 continue
-            
+
+            # Broadcast: 10.0.0.255, Generation: 8336
+            m = p33_1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_address_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
             # Bandwidth: 0
             m = p34.match(line)
             if m:
@@ -1893,22 +2337,29 @@ class ShowInterfaces(ShowInterfacesSchema):
                 traffic_statistics_dict = physical_interface_dict.setdefault('lsi-traffic-statistics', {})
                 continue
 
+            # Ingress queues: 8 supported, 4 in use
             # Egress queues: 8 supported, 4 in use
             m = p62.match(line)
             if m:
                 group = m.groupdict()
-                cos_short_summary_dict = physical_interface_dict.setdefault('queue-counters', {}). \
-                    setdefault('interface-cos-short-summary', {})
+                queue_name = group['intf_cos_queue_type']
+                if queue_name == 'Egress queues':
+                    cos_short_summary_dict = physical_interface_dict.setdefault('queue-counters', {}).setdefault('interface-cos-short-summary', {})
+                elif queue_name == 'Ingress queues':
+                    cos_short_summary_dict = physical_interface_dict.setdefault('ingress-queue-counters', {}).setdefault('interface-cos-short-summary', {})
+
                 cos_short_summary_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 continue
 
             # 0                                0                    0                    0
             m = p63.match(line)
-            if m:
+            if m and queue_name:
                 group = m.groupdict()
-                queue_list = physical_interface_dict.setdefault('queue-counters', {}). \
-                    setdefault('queue', [])
+                if queue_name == 'Egress queues':
+                    queue_list = physical_interface_dict.setdefault('queue-counters', {}).setdefault('queue', [])
+                elif queue_name == 'Ingress queues':
+                    queue_list = physical_interface_dict.setdefault('ingress-queue-counters', {}).setdefault('queue', [])                    
                 queue_dict = {}
                 queue_dict.update({'queue-number': group['queue_number']})
                 queue_dict.update({'queue-counters-queued-packets': group['queue_counters_queued_packets']})
@@ -1941,10 +2392,14 @@ class ShowInterfaces(ShowInterfacesSchema):
             if m:
                 group = m.groupdict()
                 queue_number = int(group.pop('queue_number', 0))
-                queue_list = physical_interface_dict.setdefault('queue-counters', {}). \
-                    setdefault('queue', [])
-                queue_list[queue_number].update({k.replace('_','-'):
-                    v for k, v in group.items() if v is not None})
+                if 'queue-counters' in physical_interface_dict:
+                    queue_list = physical_interface_dict.setdefault('queue-counters', {}).setdefault('queue', [])
+                    queue_list[queue_number].update({k.replace('_','-'):
+                        v for k, v in group.items() if v is not None})
+                if 'ingress-queue-counters' in physical_interface_dict:
+                    queue_list = physical_interface_dict.setdefault('ingress-queue-counters', {}).setdefault('queue', [])
+                    queue_list[queue_number].update({k.replace('_','-'):
+                        v for k, v in group.items() if v is not None})
                 continue
 
             # Filter statistics:
@@ -2050,13 +2505,13 @@ class ShowInterfaces(ShowInterfacesSchema):
                     v for k, v in group.items() if v is not None})
                 continue
             
-            # Direction : Output
+            # Generation: 9549, Route table: 0
             m = p79.match(line)
             if m:
                 group = m.groupdict()
                 address_family_list = logical_interface_dict.setdefault('address-family', [])
-                address_family_dict = {k.replace('_','-'):
-                    v for k, v in group.items() if v is not None}
+                address_family_dict.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
                 address_family_list.append(address_family_dict)
                 continue
             
@@ -2068,7 +2523,129 @@ class ShowInterfaces(ShowInterfacesSchema):
                 policer_information_dict = {k.replace('_','-'):
                     v for k, v in group.items() if v is not None}
                 continue
-        
+            
+            # Bundle:
+            # Link:
+            m = p81.match(line)
+            if m:
+                in_out_dict = {}
+                group = m.groupdict()
+                lag_traffic_dict = logical_interface_dict.setdefault('lag-traffic-statistics', {})
+                lag_int_type = group['lag_int_type']
+                continue
+
+            # xe-0/1/10.0
+            # xe-0/1/10
+            p81_1 = re.compile(r'^(?P<name>[a-z]{2}-\d+/\d+/\d+(\.\d+)?)$')
+            m = p81_1.match(line)
+            if m and lag_int_type == 'Link':
+                in_out_dict = {}
+                group = m.groupdict()
+                lag_link_name = group['name']
+
+            # Input :           225          0         14514         1952
+            # Output:            16          0          1188            0
+            m = p82.match(line)
+            if m:
+                group = m.groupdict()
+                in_out_direction = group.pop('in_out').rstrip().lower()
+                in_out_dict.update({"{iod}-{k}".format(iod=in_out_direction, k=k):
+                    v for k, v in group.items() if v is not None})
+                if 'Bundle' == lag_int_type:
+                    lag_traffic_dict.setdefault('lag-bundle', {})
+                    lag_traffic_dict['lag-bundle'].update(in_out_dict)
+                elif 'Link' == lag_int_type:
+                    lag_traffic_dict.setdefault('lag-link', [])
+                    if in_out_direction == 'output':
+                        in_out_dict.update({'name': lag_link_name})
+                        lag_traffic_dict['lag-link'].append(in_out_dict)
+                continue
+
+            # Adaptive Adjusts:          0
+            # Adaptive Scans  :          0
+            # Adaptive Updates:          0
+            m = p83.match(line)
+            if m:
+                group = m.groupdict()
+                lag_traffic_dict.setdefault('lag-adaptive-statistics', {}).setdefault(group['adaptive'].lower().replace(' ', '-'), group['adaptive_value'])
+                continue
+
+            # Aggregate member links: 2
+            m = p84.match(line)
+            if m:
+                group = m.groupdict()
+                lag_traffic_dict.setdefault('aggregate-member-info', {})
+                lag_traffic_dict['aggregate-member-info'] = {k.replace('_','-'):
+                    v for k, v in group.items() if v is not None}
+                continue
+
+            # LACP info:        Role     System             System       Port     Port    Port
+            # LACP Statistics:       LACP Rx     LACP Tx   Unknown Rx   Illegal Rx
+            # Marker Statistics:   Marker Rx     Resp Tx   Unknown Rx   Illegal Rx
+            m = p85.match(line)
+            if m:
+                lacp_flag = m.groupdict()['lacp_flag']
+                continue
+
+            # ge-0/0/6.0     Actor        127  2c:6b:f5:d6:f8:c0        127        2       1
+            # ge-0/0/6.0   Partner        127  2c:6b:f5:18:ef:c0        127        2       1
+            m = p86.match(line)
+            if m and lacp_flag == 'LACP info':
+                group = m.groupdict()
+                lag_link_name = group.pop('name')
+                lag_traffic_dict.setdefault('lag-lacp-info', [])
+                lag_lacp_info_dict = {k.replace('_','-'):
+                    v for k, v in group.items() if v is not None}
+                lag_lacp_info_dict['name'] = lag_link_name
+                lag_traffic_dict['lag-lacp-info'].append(lag_lacp_info_dict)
+                continue
+
+            # For LACP Statistics
+            # ge-0/0/6.0                 0           0            0            0
+            m = p87.match(line)
+            if m and lacp_flag == 'LACP Statistics':
+                group = m.groupdict()
+                lag_link_name = group.pop('name')
+                lag_traffic_dict.setdefault('lag-lacp-statistics', [])
+                lag_traffic_dict['lag-lacp-statistics'].append({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # For Maker Statistics
+            # ge-0/0/6.0                 0           0            0            0
+            m = p88.match(line)
+            if m and lacp_flag == 'Marker Statistics':
+                group = m.groupdict()
+                lag_link_name = group.pop('name')
+                lag_traffic_dict.setdefault('lag-marker', [])
+                lag_traffic_dict['lag-marker'].append({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # Primary         Active
+            # Backup          Down
+            # Standby         Down
+            # p89 = re.compile(r'^(?P<list_type>(Primary)|(Backup)|(Standby))\s+(?P<list_status>(Active)|(Down))$')
+            m = p89.match(line)
+            if m:
+                group = m.groupdict()
+                lag_traffic_dict.setdefault('if-distribution-list-information', [])
+                if_dist_dict = {k.replace('_','-'):
+                    v for k, v in group.items() if v is not None}
+                lag_traffic_dict['if-distribution-list-information'].append(if_dist_dict)
+                continue
+
+            # ge-0/0/7        Up
+            # p90 = re.compile(r'^(?P<if_child_name>\S+)\s+(?P<if_status>(Up)|(Down))$')
+            m = p90.match(line)
+            if m and if_dist_dict:
+                group = m.groupdict()
+                lag_traffic_dict['if-distribution-list-information'][-1].setdefault('if-list', [])
+                if_list_dict = {k.replace('_','-'):
+                    v for k, v in group.items() if v is not None}
+                lag_traffic_dict['if-distribution-list-information'][-1]['if-list'].append(if_list_dict)
+                continue
+
         return ret_dict
 
 class ShowInterfacesExtensive(ShowInterfaces):
@@ -2223,11 +2800,17 @@ class ShowInterfacesStatisticsSchema(MetaParser):
                 Optional("hardware-physical-address"): str,
                 Optional("interface-flapped"): str,
                 Optional("statistics-cleared"): str,
+                Optional("stp-traffic-statistics"): {
+                    "stp-input-bytes-dropped": str,
+                    "stp-input-packets-dropped": str,
+                    "stp-output-bytes-dropped": str,
+                    "stp-output-packets-dropped": str
+                },
                 Optional("traffic-statistics"): {
                     "input-bps": str,
                     "input-pps": str,
                     "output-bps": str,
-                    "output-pps": str,
+                    "output-pps": str
                 },
                 Optional("input-error-count"): str,
                 Optional("output-error-count"): str,
@@ -3138,6 +3721,228 @@ class ShowInterfacesQueue(ShowInterfacesQueueSchema):
 
 class ShowInterfacesExtensiveInterface(ShowInterfaces):
     cli_command = 'show interfaces extensive {interface}'
+    def cli(self, interface, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface
+            ))
+        else:
+            out = output
+        
+        return super().cli(output=out)
+
+
+class ShowInterfacesDiagnosticsOpticsSchema(MetaParser):
+    """Schema for
+        * show interfaces diagnostics optics {interface}
+        * show interfaces diagnostics optics
+    """
+
+    def validate_interface(value):
+        if not isinstance(value, list):
+            raise SchemaError('Interface not a list')
+
+        def validate_lanes(value):
+            if not isinstance(value, list):
+                raise SchemaError('Lanes are not a list')
+        
+            lanes = Schema({
+                "lane-number": str,
+                "laser-bias-current": str,
+                "laser-output-power": str,
+                "laser-temperature": str,
+                "laser-receiver-power": str,
+                "laser-bias-current-high-alarm": str,
+                "laser-bias-current-low-alarm": str,
+                "laser-bias-current-high-warning": str,
+                "laser-bias-current-low-warning": str,
+                "laser-output-power-high-alarm": str,
+                "laser-output-power-low-alarm": str,
+                "laser-output-power-high-warning": str,
+                "laser-output-power-low-warning": str,
+                "laser-temperature-high-alarm": str,
+                "laser-temperature-low-alarm": str,
+                "laser-temperature-high-warning": str,
+                "laser-temperature-low-warning": str,
+                "laser-receiver-power-high-alarm": str,
+                "laser-receiver-power-low-alarm": str,
+                "laser-receiver-power-high-warning": str,
+                "laser-receiver-power-low-warning": str,
+                "tx-loss-of-signal-functionality-alarm": str,
+                "tx-cdr-loss-of-lock-alarm": str,
+                "rx-loss-of-signal-alarm": str,
+                "rx-cdr-loss-of-lock-alarm": str,
+                "apd-supply-fault-alarm": str,
+                "tec-fault-alarm": str,
+                "wavelength-unlocked-alarm": str,
+            })
+        
+            for item in value:
+                lanes.validate(item)
+            return value
+    
+        interface = Schema({
+            'name': str,
+            'optics-diagnostics': {
+                Optional("laser-bias-current"): str,
+                Optional("laser-output-power"): str,
+                "module-temperature": str,
+                "module-voltage": str,
+                Optional("receiver-signal-average-optical-power"): str,
+                Optional("laser-bias-current-high-alarm"): str,
+                Optional("laser-bias-current-low-alarm"): str,
+                Optional("laser-bias-current-high-warning"): str,
+                Optional("laser-bias-current-low-warning"): str,
+                Optional("laser-output-power-high-alarm"): str,
+                Optional("laser-output-power-low-alarm"): str,
+                Optional("laser-output-power-high-warning"): str,
+                Optional("laser-output-power-low-warning"): str,
+                "module-temperature-high-alarm": str,
+                "module-temperature-low-alarm": str,
+                "module-temperature-high-warning": str,
+                "module-temperature-low-warning": str,
+                "module-voltage-high-alarm": str,
+                "module-voltage-low-alarm": str,
+                "module-voltage-high-warning": str,
+                "module-voltage-low-warning": str,
+                Optional("laser-rx-power-high-alarm"): str,
+                Optional("laser-rx-power-low-alarm"): str,
+                Optional("laser-rx-power-high-warning"): str,
+                Optional("laser-rx-power-low-warning"): str,
+                "laser-bias-current-high-alarm-threshold": str,
+                "laser-bias-current-low-alarm-threshold": str,
+                "laser-bias-current-high-warning-threshold": str,
+                "laser-bias-current-low-warning-threshold": str,
+                "laser-output-power-high-alarm-threshold": str,
+                "laser-output-power-low-alarm-threshold": str,
+                "laser-output-power-high-warning-threshold": str,
+                "laser-output-power-low-warning-threshold": str,
+                "module-temperature-high-alarm-threshold": str,
+                "module-temperature-low-alarm-threshold": str,
+                "module-temperature-high-warning-threshold": str,
+                "module-temperature-low-warning-threshold": str,
+                "module-voltage-high-alarm-threshold": str,
+                "module-voltage-low-alarm-threshold": str,
+                "module-voltage-high-warning-threshold": str,
+                "module-voltage-low-warning-threshold": str,
+                "laser-rx-power-high-alarm-threshold": str,
+                "laser-rx-power-low-alarm-threshold": str,
+                Optional("laser-rx-power-high-warning-threshold"): str,
+                Optional("laser-rx-power-low-warning-threshold"): str,
+                Optional("module-not-ready-alarm"): str,
+                Optional("module-low-power-alarm"): str,
+                Optional("module-initialization-incomplete-alarm"): str,
+                Optional("module-fault-alarm"): str,
+                Optional("pld-flash-initialization-fault-alarm"): str,
+                Optional("power-supply-fault-alarm"): str,
+                Optional("checksum-fault-alarm"): str,
+                Optional("tx-laser-disabled-alarm"): str,
+                Optional("tx-loss-of-signal-functionality-alarm"): str,
+                Optional("tx-cdr-loss-of-lock-alarm"): str,
+                Optional("rx-loss-of-signal-alarm"): str,
+                Optional("rx-cdr-loss-of-lock-alarm"): str,
+                Optional("laser-temperature-high-alarm-threshold"): str,
+                Optional("laser-temperature-low-alarm-threshold"): str,
+                Optional("laser-temperature-high-warning-threshold"): str,
+                Optional("laser-temperature-low-warning-threshold"): str,
+                Optional("lanes"): Use(validate_lanes)
+            }
+        })
+    
+        for item in value:
+            interface.validate(item)
+        return value
+
+    schema = {
+        'interface-information': {
+            'physical-interface': Use(validate_interface)
+        }
+    }
+
+class ShowInterfacesDiagnosticsOptics(ShowInterfacesDiagnosticsOpticsSchema):
+    """Parser for
+        * show interfaces diagnostics optics {interface}
+        * show interfaces diagnostics optics
+    """
+
+    cli_command = [
+        "show interfaces diagnostics optics {interface}",
+        "show interfaces diagnostics optics"
+        ]
+
+    def cli(self, interface=None, output=None):
+        if not output:
+            if interface:
+                out = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[1]) 
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Physical interface: et-0/0/0
+        p1 = re.compile(r'^Physical +interface: +(?P<name>\S+)$')
+
+        # Module temperature                        :  48 degrees C / 119 degrees F
+        # Module voltage                            :  3.3340 V
+        # Module temperature high alarm             :  Off
+        p2 = re.compile(r'^(?P<key>[\S ]+) +: +(?P<value>[\S ]+)$')
+
+        # Lane 0
+        p3 = re.compile(r'^Lane +(?P<lane>\d+)$')
+
+        lane = None
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Physical interface: et-0/0/0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_list = ret_dict.setdefault(
+                    'interface-information',{}).setdefault(
+                        'physical-interface', [])
+                physical_interface_dict = {
+                    'name': group['name']
+                }
+                physical_interface_list.append(physical_interface_dict)
+                continue
+
+            # Module temperature                        :  48 degrees C / 119 degrees F
+            # Module voltage                            :  3.3340 V
+            # Module temperature high alarm             :  Off
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict = physical_interface_dict.setdefault('optics-diagnostics', {})
+                if not isinstance(lane, dict):
+                    optics_dict.update({
+                        group['key'].strip().lower().replace(' ', '-'): group['value']
+                    })
+                else:
+                    lane.update({
+                        group['key'].strip().lower().replace(' ', '-'): group['value']
+                    })
+                continue
+
+            # Lane 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict = physical_interface_dict.setdefault('optics-diagnostics', {})
+                lane_list = optics_dict.setdefault('lanes', [])
+                lane = {
+                    "lane-number": group['lane']
+                }
+                lane_list.append(lane)
+                continue
+                
+        return ret_dict
+
+class ShowInterfacesInterfaceDetail(ShowInterfaces):
+    cli_command = 'show interfaces {interface} detail'
     def cli(self, interface, output=None):
 
         if not output:

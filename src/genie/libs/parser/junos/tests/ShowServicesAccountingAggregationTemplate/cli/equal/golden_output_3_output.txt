@@ -1,0 +1,8 @@
+MPLS label 1: 299888, MPLS label 2: 16, MPLS label 3: 0
+Source address: 192.168.51.2, Destination address: 192.168.61.2, Top Label Address: 27.93.202.40
+Source port: 0, Destination port: 0
+Protocol: 61, TOS: 0, TCP flags: 0
+Source mask: 0, Destination mask: 0
+Input SNMP interface index: 1169, Output SNMP interface index: 776
+Start time: 58267189, End time: 58426191
+Packet count: 2, Byte count: 180

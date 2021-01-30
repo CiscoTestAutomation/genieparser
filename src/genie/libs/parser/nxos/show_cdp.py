@@ -251,7 +251,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
                                     '(?P<native_vlan>\d+)')
 
-        # VTP Management Domain: ‘Accounting Group’
+        # VTP Management Domain: 'Accounting Group'
         vtp_management_domain_re = re.compile(r''
             'VTP\s*Management\s*Domain\s*:\s*\W*'
             '(?P<vtp_management_domain>([a-zA-Z\s]+))\W*')

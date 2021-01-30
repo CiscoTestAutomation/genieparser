@@ -1,0 +1,4 @@
+  Service Accounting interface: ms-9/0/0
+  Export format: 9, Route record count: 902244
+  IFL to SNMP index count: 296, AS count: 0
+  Configuration set: Yes, Route record set: No, IFL SNMP map set: Yes

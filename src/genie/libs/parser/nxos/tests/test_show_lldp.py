@@ -77,9 +77,9 @@ class TestShowLldpTimers(unittest.TestCase):
                          '''
                          LLDP Timers:
 
-                             Holdtime in seconds: 120
-                             Reinit-time in seconds: 2
-                             Transmit interval in seconds: 30
+                             Holdtime in seconds: 120
+                             Reinit-time in seconds: 2
+                             Transmit interval in seconds: 30
                          '''
                      }
 
@@ -147,15 +147,15 @@ class TestShowLldpTlvSelect(unittest.TestCase):
         }
     }
     golden_output = {'execute.return_value': '''
-           management-address-v4
-           management-address-v6
-           port-description
-           port-vlan
-           power-management
-           system-capabilities
-           system-description
-           system-name
-           dcbxp
+           management-address-v4
+           management-address-v6
+           port-description
+           port-vlan
+           power-management
+           system-capabilities
+           system-description
+           system-name
+           dcbxp
         '''}
 
     def test_empty(self):
@@ -242,9 +242,9 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
     }
     golden_output = {'execute.return_value': '''
             Capability codes:
-              (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
-              (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
-            Device ID            Local Intf      Hold-time  Capability  Port ID  
+              (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+              (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+            Device ID            Local Intf      Hold-time  Capability  Port ID  
 
             Chassis id: 001e.49ff.24f7
             Port id: Gi3
@@ -254,7 +254,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
             System Description: Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2)
             Technical Support: http://www.cisco.com/techsupport
             Copyright (c) 1986-2017 by Cisco Systems, Inc.
-            Compiled Sat 22-Jul-17 05:51 by 
+            Compiled Sat 22-Jul-17 05:51 by 
             Time remaining: 114 seconds
             System Capabilities: B, R
             Enabled Capabilities: R
