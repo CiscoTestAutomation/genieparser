@@ -326,11 +326,14 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
             * show ospf3 neighbor
     """
 
-    cli_command = ['show ospf3 neighbor']
+    cli_command = ['show ospf3 neighbor', 'show ospf3 neighbor instance {name}']
 
-    def cli(self, output=None):
+    def cli(self, name=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command[0])
+            if name:
+                out = self.device.execute(self.cli_command[1].format(name=name))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -368,7 +371,8 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
                 ospf3_entry_dict['neighbor-address'] = neighbor_address
                 ospf3_entry_list.append(ospf3_entry_dict)
                 continue
-
+            
+            
         return ret_dict
 
 
@@ -1677,7 +1681,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
         )
 
         # fe80::250:56ff:fe8d:a96c
-        p12 = re.compile(r"^(?P<linklocal_address>[\S\:]+)$")
+        p12 = re.compile(r"^(?P<linklocal_address>[a-fA-F\d\:]+)$")
 
         # Gen timer 00:49:49
         p13 = re.compile(r"^Gen +timer +(?P<generation_timer>\S+)$")
@@ -2557,10 +2561,14 @@ class ShowOspf3RouteNetworkExtensiveSchema(MetaParser):
         ospf3_route_schema = Schema({
             "ospf3-route-entry": {
                 "address-prefix": str,
+                Optional("forward"): str,
                 "interface-cost": str,
                 "next-hop-type": str,
                 "ospf-area": str,
                 Optional("ospf-next-hop"): {
+                    Optional("next-hop-address"): {
+                                "interface-address": str
+                    },
                     "next-hop-name": {
                         "interface-name": str
                     }
@@ -2608,12 +2616,12 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
                         r'+(?P<next_hop_type>\S+) +(?P<interface_cost>\d+)$')
 
         #NH-interface lo0.0
-        p2 = re.compile(r'^NH-interface +(?P<interface_name>\S+)$')
+        #NH-interface et-0/0/0.0, NH-addr fe80::96f7:adff:fe5a:4840
+        p2 = re.compile(r'^NH-interface +(?P<interface_name>[\w\d\-\/\.]+)(, +NH-addr +(?P<interface_address>\S+))?$')
 
         #Area 0.0.0.0, Origin 10.64.4.4, Priority low
-        p3 = re.compile(r'^Area +(?P<ospf_area>\S+),+ Origin '
-                        r'+(?P<route_origin>\S+), +Priority '
-                        r'+(?P<route_priority>\S+)$')
+        #Area 0.0.0.0, Origin 3.3.3.3, Fwd NZ, Priority medium
+        p3 = re.compile(r'^Area +(?P<ospf_area>\S+),+ Origin +(?P<route_origin>\S+),( +Fwd +(?P<forward>\S+),)? +Priority +(?P<route_priority>\S+)$')
 
 
         for line in out.splitlines():
@@ -2640,6 +2648,8 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
             if m:
                 group = m.groupdict()
                 next_hop_dict = {'next-hop-name':{'interface-name':group['interface_name']}}
+                if group['interface_address']:
+                    next_hop_dict['next-hop-address'] = {'interface-address':group['interface_address']} 
                 route_entry_dict['ospf-next-hop'] = next_hop_dict                
                 continue
 
@@ -2648,8 +2658,9 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
             if m:
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_', '-')
-                    route_entry_dict[entry_key] = group_value
+                    if group_value != None:
+                        entry_key = group_key.replace('_', '-')
+                        route_entry_dict[entry_key] = group_value
 
                 ospf3_parent_route_dict = {}
                 ospf3_parent_route_dict['ospf3-route-entry'] = route_entry_dict
@@ -2705,7 +2716,7 @@ class ShowOspf3NeighborInstanceAllSchema(MetaParser):
                 "ospf3-instance-name": str,
                 "ospf3-realm-neighbor": {
                     "ospf3-realm-name": str,
-                    "ospf3-neighbor": Use(validate_ospf3_neighbor_list)
+                    Optional("ospf3-neighbor"): Use(validate_ospf3_neighbor_list)
                 }
             }
         }
@@ -2783,6 +2794,127 @@ class ShowOspf3NeighborInstanceAll(ShowOspf3NeighborInstanceAllSchema):
                 neighbor_address = group['neighbor_address']
                 ospf3_entry_dict['neighbor-address'] = neighbor_address
                 ospf3_entry_list.append(ospf3_entry_dict)
+                continue
+
+        return ret_dict
+
+class ShowOspf3RouteRouteSchema(MetaParser):
+
+    # schema = {
+    #   "ospf3-route-information": {
+    #         "ospf-topology-route-table": {
+    #             "ospf3-route": {
+    #                 "ospf3-route-entry": {
+    #                     "address-prefix": str,
+    #                     "interface-cost": str,
+    #                     "next-hop-type": str,
+    #                     "ospf-next-hop": [
+    #                         {
+    #                             "next-hop-address": {
+    #                                 "interface-address": str
+    #                             },
+    #                             "next-hop-name": {
+    #                                 "interface-name": str
+    #                             }
+    #                         }
+    #                     ],
+    #                     "route-path-type": str,
+    #                     "route-type": str
+    #                     }
+    #                 }
+    #             }
+    #         }
+    #     }
+
+    def validate_ospf_next_hop_list(value):
+        ''' Validates each entry in ospf-next-hop '''
+        if not isinstance(value, list):
+            raise SchemaError('ospf-next-hop is not a list')
+        
+        ospf_next_hop_schema = Schema({
+            "next-hop-address": {
+                "interface-address": str,
+            },
+            "next-hop-name": {
+                "interface-name": str,
+            }
+        })
+
+        for entry in value:
+            ospf_next_hop_schema.validate(entry)    
+        return value
+
+    schema = {
+      "ospf3-route-information": {
+            "ospf-topology-route-table": {
+                "ospf3-route": {
+                    "ospf3-route-entry": {
+                        "address-prefix": str,
+                        "interface-cost": str,
+                        "next-hop-type": str,
+                        "ospf-next-hop": Use(validate_ospf_next_hop_list),
+                        "route-path-type": str,
+                        "route-type": str
+                        }
+                    }
+                }
+            }
+        }
+
+'''
+Parser for:
+    * show ospf3 route {route}
+'''
+
+
+class ShowOspf3RoutePrefix(ShowOspf3RouteRouteSchema):
+    cli_command = 'show ospf3 route {prefix}'
+
+    def cli(self ,prefix, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                prefix=prefix
+            ))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #2001:30::/64                                 Intra Network    IP   2
+        p1 = re.compile(r'^(?P<address_prefix>[\d\:\/]+) '
+                        r'+(?P<route_path_type>\S+) +(?P<route_type>\S+) '
+                        r'+(?P<next_hop_type>\S+) +(?P<interface_cost>\d+)$')
+
+        #NH-interface ge-0/0/4.0, NH-addr fe80::250:56ff:fe8d:351d
+        p2 = re.compile(r'^NH-interface +(?P<interface_name>[\w\d\-\/\.]+)(, +NH-addr +(?P<interface_address>\S+))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #2001:30::/64                                 Intra Network    IP   2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf3_topology_route_table = ret_dict.setdefault(
+                    'ospf3-route-information', {}).setdefault('ospf-topology-route-table', {})
+
+                route_entry_dict = {}
+
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    route_entry_dict[entry_key] = group_value
+
+            #NH-interface ge-0/0/4.0, NH-addr fe80::250:56ff:fe8d:351d
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop_dict = {'next-hop-name':{'interface-name':group['interface_name']}}
+                if group['interface_address']:
+                    next_hop_dict['next-hop-address'] = {'interface-address':group['interface_address']} 
+                route_entry_dict.setdefault('ospf-next-hop', []).append(next_hop_dict)
+                ospf3_parent_route_dict = {}
+                ospf3_parent_route_dict['ospf3-route-entry'] = route_entry_dict
+                ospf3_topology_route_table['ospf3-route'] = ospf3_parent_route_dict   
                 continue
 
         return ret_dict

@@ -207,12 +207,19 @@ class ShowInterface(ShowInterfaceSchema):
         # Ethernet1/3 is down (XCVR not inserted)
         # Ethernet1/2 is down (SFP validation failed)
         # Ethernet1/4 is down (SFP not inserted)
-        p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*(?P<link_state>(down|up))?'
-                        r'(administratively\s+(?P<admin_1>(down|up)))?\s*'
-                        r'(\(Administratively\s*(?P<admin_2>(down|up))\))?'
+        # Ethernet1/11 is down (inactive)
+        # Ethernet1/12 is down (Transceiver validation failed)
+        # Ethernet1/13 is down (SFP validation failed)
+        # Ethernet1/13 is down (Channel admin down)
+        p1 = re.compile(r'^(?P<interface>\S+)\s*is\s*(?P<link_state>(down|up|'
+                        r'inactive|Transceiver +validation +failed|'
+                        r'SFP +validation +failed|Channel +admin +down))?'
+                        r'(administratively\s+(?P<admin_1>(down)))?\s*'
+                        r'(\(Administratively\s*(?P<admin_2>(down))\))?'
                         r'(\(VLAN\/BD\s+is+\s+(down|up)\))?'
                         r'(,\s*line\s+protocol\s+is\s+(?P<line_protocol>\w+))?'
                         r'(,\s+autostate\s+(?P<autostate>\S+))?'
+                        r'(\(No\s+operational\s+members\))?'
                         r'(\(Link\s+not\s+connected\))?'
                         r'(\(SFP\s+validation\s+failed\))?'
                         r'(\(SFP\s+not\s+inserted\))?'
@@ -484,15 +491,17 @@ class ShowInterface(ShowInterfaceSchema):
 
                 if group['link_state']:
                     interface_dict[interface]['link_state'] = group['link_state']
+
+
                     if 'oper_status' not in interface_dict[interface]:
                         interface_dict[interface]['oper_status'] = group['link_state']
 
                 if group['admin_1']:
-                    interface_dict[interface]['enabled'] = True if group['admin_1'] == 'up' else False
-                elif group['admin_2']:
-                    interface_dict[interface]['enabled'] = True if group['admin_2'] == 'up' else False
-                else:
                     interface_dict[interface]['enabled'] = False
+                elif group['admin_2']:
+                    interface_dict[interface]['enabled'] = False
+                else:
+                    interface_dict[interface]['enabled'] = True
 
                 if group['line_protocol']:
                     interface_dict[interface]['line_protocol'] = group['line_protocol']
@@ -1208,6 +1217,7 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
         del interface # delete this to prevent use from below due to scope
         ip_interface_vrf_all_dict = {}
         temp_intf = []
+        save_addr_for_route_tag_next_line = None
 
         for line in out.splitlines():
             line = line.rstrip()
@@ -1320,8 +1330,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                               r'*(?P<ip_subnet>[a-z0-9\.]+)\/(?P<prefix_length>[0-9\,]+)'
                               r'(\s*(?P<secondary>secondary)\s*)?(?: *route-preference: *'
                               r'(?P<route_preference>[0-9]+),)?'
-                              r'(?: *tag: *(?P<route_tag>[0-9]+))?$')
+                              r'(?: *tag: *(?P<route_tag>[0-9]+)?)?$')
             m = p3_1.match(line)
+            
             if m:
                 group = m.groupdict()
                 ip = group['ip']
@@ -1356,6 +1367,8 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     if route_tag:
                         ip_interface_vrf_all_dict[intf]['ipv4'][address]\
                         ['route_tag'] = route_tag
+                    else:
+                        save_addr_for_route_tag_next_line = address
                     if route_preference:
                         ip_interface_vrf_all_dict[intf]['ipv4'][address]\
                         ['route_preference'] = route_preference
@@ -1376,6 +1389,26 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                     ip_interface_vrf_all_dict[interface]['ipv4'][address] = {}
                 ip_interface_vrf_all_dict[interface]['ipv4'][address]\
                     ['ip'] = address
+                continue
+
+            #   0
+            p3_3 = re.compile(r'^\s*(?P<route_tag>\d+)$')
+            m = p3_3.match(line)
+            if m:
+                group = m.groupdict()
+                route_tag = group['route_tag']
+                if temp_intf:
+                    temp_intf.append(interface)
+                    intf_lst = temp_intf
+                else:
+                    intf_lst = [interface]
+
+                if save_addr_for_route_tag_next_line:
+                    for intf in intf_lst:
+                        address = save_addr_for_route_tag_next_line
+                        ip_interface_vrf_all_dict[intf]['ipv4'][address]\
+                            ['route_tag'] = route_tag
+                        save_addr_for_route_tag_next_line = None
                 continue
 
             #IP broadcast address: 255.255.255.255
@@ -2769,7 +2802,7 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 
         # Init
         parsed_dict = {}
-
+        vlan_flag = False
         # Port   VRF          Status IP Address                              Speed    MTU
         p1 = re.compile(r'^Port +VRF +Status +IP Address +Speed +MTU$')
 
@@ -2903,13 +2936,14 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
             # Interface Secondary VLAN(Type)                    Status Reason
             m = p9.match(line)
             if m:
+                vlan_flag = True
                 vlan_dict = parsed_dict.setdefault('interface', {}).\
                                         setdefault('vlan', {})
                 continue
 
             # Vlan1     --                                      down   Administratively down
             m = p10.match(line)
-            if m:
+            if m and vlan_flag:
                 group = m.groupdict()
                 intf_dict = vlan_dict.\
                     setdefault(Common.convert_intf_name(group['interface']), {})

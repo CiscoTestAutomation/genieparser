@@ -743,11 +743,12 @@ class ShowNveMultisiteDciLinks(ShowNveMultisiteDciLinksSchema):
             out = output
 
         result_dict = {}
+
         # Interface      State
         # ---------      -----
         # Ethernet1/53   Up
-
-        p1 = re.compile(r'^\s*(?P<if_name>(?!Interface)[\w\/]+) +(?P<if_state>[\w]+)$')
+        # port-channel11 Up
+        p1 = re.compile(r'^\s*(?P<if_name>(?!Interface)[\S]+) +(?P<if_state>[\w]+)$')
         for line in out.splitlines():
             if line:
                 line = line.rstrip()
@@ -804,8 +805,8 @@ class ShowNveMultisiteFabricLinks(ShowNveMultisiteFabricLinksSchema):
         # Interface      State
         # ---------      -----
         # Ethernet1/53   Up
-
-        p1 = re.compile(r'^\s*(?P<if_name>(?!Interface)[\w\/]+) +(?P<if_state>[\w]+)$')
+        # port-channel11 Up
+        p1 = re.compile(r'^\s*(?P<if_name>(?!Interface)[\S]+) +(?P<if_state>[\w]+)$')
 
         result_dict = {}
         for line in out.splitlines():
@@ -1796,7 +1797,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         p6 = re.compile(r'^\s*advertise virtual-rmac$')
         #   source-interface loopback1
         p7 = re.compile(r'^\s*source-interface +(?P<source_if>[\w]+)$')
-        #   multisite border-gateway interface loopback3
+        #   multisite border-gateway interface loopback3
         p8 = re.compile(r'^\s*multisite +border\-gateway +interface +(?P<multisite_bgw_if>[\w]+)$')
         #   member vni 10100 associate-vrf
         #   member vni 10100-10105 associate-vrf

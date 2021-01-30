@@ -1,0 +1,5 @@
+Topology default Route Table:
+
+Prefix             Path  Route      NH       Metric NextHop       Nexthop      
+                   Type  Type       Type            Interface     Address/LSP
+30.0.0.0/24        Intra Network    IP            2 ge-0/0/4.0    10.0.0.2

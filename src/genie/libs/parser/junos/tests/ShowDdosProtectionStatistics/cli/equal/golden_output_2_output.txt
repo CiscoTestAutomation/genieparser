@@ -1,0 +1,12 @@
+DDOS protection global statistics:
+    Policing on routing engine:         Yes
+    Policing on FPC:                    Yes
+    Flow detection:                     No
+    Logging:                            Yes
+    Policer violation report rate:      100
+    Flow report rate:                   100
+    Currently violated packet types:    0
+    Packet types have seen violations:  6
+    Total violation counts:             19
+    Currently tracked flows:            0
+    Total detected flows:               0  

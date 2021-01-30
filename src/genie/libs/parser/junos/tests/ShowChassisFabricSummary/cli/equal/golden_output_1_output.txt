@@ -1,0 +1,9 @@
+        Plane   State    Uptime
+        0      Online   
+        1      Online   34 days, 18 hours, 43 minutes, 47 seconds
+        2      Online   34 days, 18 hours, 43 minutes, 48 seconds
+        3      Online   34 days, 18 hours, 43 minutes, 47 seconds
+        4      Spare    34 days, 18 hours, 43 minutes, 47 seconds
+        5      Spare    34 days, 18 hours, 43 minutes, 46 seconds
+        6      Spare    34 days, 18 hours, 43 minutes, 46 seconds
+        7      Spare    34 days, 18 hours, 43 minutes, 46 seconds   

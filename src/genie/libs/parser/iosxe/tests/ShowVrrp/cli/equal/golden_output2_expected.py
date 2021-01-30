@@ -2,7 +2,7 @@ expected_output = {
     "interface": {
         "GigabitEthernet1": {
             "group": {
-                "100": {
+                100: {
                     "advertise_interval_secs": 1.0,
                     "auth_text": "hash",
                     "master_advertisement_interval_secs": 1.0,

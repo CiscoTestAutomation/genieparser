@@ -81,12 +81,16 @@ compile:
 	$(CYTHON_CMD) 
 	@echo "Done Compiling"
 	@echo ""
+	@echo "Done."
+	@echo ""
 
 coverage_all:
 	@echo ""
 	@echo "Running Code coverage on all unittests"
 	@echo ---------------------------------------
 	@$(TESTCMD) --path tests/ --coverage --no-refresh
+	@echo ""
+	@echo "Done."
 	@echo ""
 
 pylint_all:
@@ -95,6 +99,8 @@ pylint_all:
 	@echo "-----------------------------"
 	@$(PYLINT_CMD)
 	@echo "Done linting"
+	@echo ""
+	@echo "Done."
 	@echo ""
 
 devnet: package
@@ -127,6 +133,8 @@ package:
 	@echo ""
 	@echo "Completed building: $@"
 	@echo ""
+	@echo "Done."
+	@echo ""
 
 develop:
 	@echo ""
@@ -142,6 +150,8 @@ develop:
 	@echo ""
 	@echo "Completed building and installing: $@"
 	@echo ""
+	@echo "Done."
+	@echo ""
 
 undevelop:
 	@echo ""
@@ -153,6 +163,8 @@ undevelop:
 
 	@echo ""
 	@echo "Completed uninstalling: $@"
+	@echo ""
+	@echo "Done."
 	@echo ""
 
 clean:
@@ -194,5 +206,6 @@ changelogs:
 	@echo "Generating changelog file"
 	@echo ""
 	@python "./tools/changelog_script.py" "./changelog/undistributed" --output "./changelog/undistributed.rst"
+	@echo ""
 	@echo "Done."
 	@echo ""
