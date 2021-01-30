@@ -1,0 +1,10 @@
+
+        show ted database 10.34.2.250
+        TED database: 0 ISIS nodes 5 INET nodes
+        ID                            Type Age(s) LnkIn LnkOut Protocol
+        10.34.2.250                  Rtr    1876     2      2 OSPF(0.0.0.8)
+            To: 10.169.14.240, Local: 10.169.14.158, Remote: 10.169.14.157
+            Local interface index: 333, Remote interface index: 0
+            To: 10.34.3.252, Local: 192.168.145.217, Remote: 192.168.145.218
+            Local interface index: 337, Remote interface index: 0
+    

@@ -353,7 +353,7 @@ class ShowPlatform(ShowPlatformSchema):
             p1 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/]+)'
                              ' +(?P<name>[a-zA-Z0-9\-]+)'
                              '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
-                             '(?: +(?P<plim>[a-zA-Z\/]+))?'
+                             '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
                              ' +(?P<state>(IOS XR RUN|OK|OPERATIONAL)+)'
                              ' +(?P<config_state>[a-zA-Z\,]+)$')
             m = p1.match(line)
@@ -373,7 +373,7 @@ class ShowPlatform(ShowPlatformSchema):
                 last_entry = str(parse_node.groupdict()['last_entry'])
 
                 # Check if subslot/daughtercard
-                parse_subslot = re.compile(r'.*(0\/0\/[0-9]+).*').match(node)
+                parse_subslot = re.compile(r'.*(0\/[0-9]\/[0-9]+).*').match(node)
                 if parse_subslot and last_entry.isdigit():
                     # This entry is a daughtercard/subslot
                     entry_is_daughter = True
@@ -381,7 +381,7 @@ class ShowPlatform(ShowPlatformSchema):
 
                 # Determine if slot is RP/LineCard/OtherCard
                 parse_rp = re.compile(r'.*(RSP|RP).*').match(slot)
-                parse_lc = re.compile(r'.*(0\/0).*').match(slot)
+                parse_lc = re.compile(r'.*(0\/[0-9]).*').match(slot)
                 parse_name = re.compile(r'.*(RSP|RP).*').match(name)
                 if parse_rp or parse_name:
                     slot_type = 'rp'
@@ -403,7 +403,7 @@ class ShowPlatform(ShowPlatformSchema):
                     show_platform['slot'][slot_type][slot]['config_state'] = config_state
                     if redundancy_state != 'None':
                         show_platform['slot'][slot_type][slot]['redundancy_state'] = redundancy_state
-                    if plim != 'None':
+                    if plim != 'None' and plim != '':
                         show_platform['slot'][slot_type][slot]['plim'] = plim
                     # Check for daughtercards
                     if daughtercard_dict and slot in daughtercard_dict:

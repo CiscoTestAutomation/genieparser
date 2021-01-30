@@ -64,6 +64,13 @@ expected_output = {
                             "R1_xe.00": {"neighbor_id": "R1_xe.00", "metric": 0},
                             "R2_xr.00": {"neighbor_id": "R2_xr.00", "metric": 0},
                         },
+                        "ipv4_interarea_reachability": {
+                            "10.100.100.0/24":{
+                                "ip_prefix": "10.100.100.0",
+                                "prefix_len": "24",
+                                "metric": 10,
+                            }
+                        },
                     },
                     "R1_xe.02-00": {
                         "local_router": True,
@@ -110,6 +117,18 @@ expected_output = {
                                 "prefix_len": "24",
                                 "metric": 10,
                             },
+                        },
+                        "ipv4_interarea_reachability": {
+                            "10.200.200.0/24":{
+                                "ip_prefix": "10.200.200.0",
+                                "prefix_len": "24",
+                                "metric": 10,
+                            },
+                            "10.220.220.0/24":{
+                                "ip_prefix": "10.220.220.0",
+                                "prefix_len": "24",
+                                "metric": 10,
+                            }
                         },
                         "hostname": "R2_xr",
                         "mt_is_neighbor": {
@@ -279,6 +298,13 @@ expected_output = {
                             "R1_xe.00": {"neighbor_id": "R1_xe.00", "metric": 0},
                             "R2_xr.00": {"neighbor_id": "R2_xr.00", "metric": 0},
                         },
+                        "ipv4_interarea_reachability": {
+                            "10.100.100.0/24":{
+                                "ip_prefix": "10.100.100.0",
+                                "prefix_len": "24",
+                                "metric": 10,
+                            }
+                        },
                     },
                     "R1_xe.02-00": {
                         "local_router": True,
@@ -335,6 +361,18 @@ expected_output = {
                                 "prefix_len": "24",
                                 "metric": 20,
                             },
+                        },
+                        "ipv4_interarea_reachability": {
+                            "10.200.200.0/24":{
+                                "ip_prefix": "10.200.200.0",
+                                "prefix_len": "24",
+                                "metric": 10,
+                            },
+                            "10.220.220.0/24":{
+                                "ip_prefix": "10.220.220.0",
+                                "prefix_len": "24",
+                                "metric": 10,
+                            }
                         },
                         "hostname": "R2_xr",
                         "mt_is_neighbor": {

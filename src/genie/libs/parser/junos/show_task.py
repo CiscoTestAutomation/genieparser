@@ -18,13 +18,15 @@ class ShowTaskReplicationSchema(MetaParser):
     """ Schema for:
             * show task replication
     """
-
-    schema = {
-    "task-replication-state": {
-        "task-gres-state": str,
-        "task-re-mode": str
+    # main schema
+    schema =  {
+        "task-replication-state": {
+            "task-gres-state": str,
+            Optional("task-protocol-replication-name"): list,
+            Optional("task-protocol-replication-state"): list,
+            "task-re-mode": str,
+        }
     }
-}
 
 class ShowTaskReplication(ShowTaskReplicationSchema):
     """ Parser for:
@@ -43,6 +45,12 @@ class ShowTaskReplication(ShowTaskReplicationSchema):
 
         # RE mode: Master
         p2 = re.compile(r'^RE +mode: +(?P<task_re_mode>\S+)$')
+
+        # Protocol                Synchronization Status
+        # OSPF                    Complete              
+        # OSPF3                   Complete              
+        # BGP                     Complete  
+        p3 = re.compile(r'(?P<name>[A-Z0-6]+) +(?P<state>\S+)')        
 
         ret_dict = {}
 
@@ -64,6 +72,25 @@ class ShowTaskReplication(ShowTaskReplicationSchema):
                 ret_dict.setdefault("task-replication-state",{})\
                     .setdefault("task-re-mode", group["task_re_mode"])
                 continue
+            
+            # Protocol                Synchronization Status
+            # OSPF                    Complete              
+            # BGP                     Complete  
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                replication_dict = ret_dict.setdefault("task-replication-state",{})
+
+                if "task-protocol-replication-name" not in replication_dict:
+                    replication_dict["task-protocol-replication-name"] = []
+
+                replication_dict["task-protocol-replication-name"].append(group["name"])
+
+                if "task-protocol-replication-state" not in replication_dict:
+                    replication_dict["task-protocol-replication-state"] = []
+
+                replication_dict["task-protocol-replication-state"].append(group["state"])    
+                continue            
 
         return ret_dict
 

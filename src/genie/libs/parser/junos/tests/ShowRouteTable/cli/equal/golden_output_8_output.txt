@@ -1,0 +1,10 @@
+show route table NF-TEST.inet6.0 
+NF-TEST.inet6.0: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
++ = Active Route, - = Last Active, * = Both
+2001:10:1:1::/64   *[Direct/0] 00:26:06
+                    >  via ge-0/0/4.11
+2001:10:1:1::1/128 *[Local/0] 00:26:06
+                       Local via ge-0/0/4.11
+fe80::250:5600:b8d:fea3/128
+                   *[Local/0] 00:26:06
+                       Local via ge-0/0/4.11

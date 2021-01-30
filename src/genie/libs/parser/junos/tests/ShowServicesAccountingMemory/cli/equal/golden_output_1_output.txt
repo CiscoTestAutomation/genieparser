@@ -1,0 +1,6 @@
+  Memory utilization
+    Service Accounting interface: ms-9/0/0
+    Allocation count: 1, Free count: 0
+    Allocations per second: 0, Frees per second: 0
+    Total memory used (in bytes): 862529184, Total memory free (in bytes): 3164002312
+    Memory used by Jflow-v9 (in bytes): 48

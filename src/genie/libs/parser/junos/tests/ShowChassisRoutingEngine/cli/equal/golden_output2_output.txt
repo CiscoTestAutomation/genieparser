@@ -1,0 +1,46 @@
+ show chassis routing-engine
+        Routing Engine status:
+        Slot 0:
+            Current state                  Master
+            Election priority              Master (default)
+            Temperature                 42 degrees C / 107 degrees F
+            CPU temperature             38 degrees C / 100 degrees F
+            DRAM                      32733 MB (32768 MB installed)
+            Memory utilization          19 percent
+            CPU utilization:
+            User                       3 percent
+            Background                 0 percent
+            Kernel                    11 percent
+            Interrupt                  4 percent
+            Idle                      82 percent
+            Model                          RE-S-1800x4
+            Serial ID                      9009237267
+            Start time                     2020-07-16 13:36:25 EST
+            Uptime                         5 days, 3 hours, 24 minutes, 13 seconds
+            Last reboot reason             Router rebooted after a normal shutdown.
+            Load averages:                 1 minute   5 minute  15 minute
+                                            0.22       0.26       0.23
+        Routing Engine status:
+        Slot 1:
+            Current state                  Backup
+            Election priority              Backup (default)
+            Temperature                 39 degrees C / 102 degrees F
+            CPU temperature             34 degrees C / 93 degrees F
+            DRAM                      32733 MB (32768 MB installed)
+            Memory utilization           8 percent
+            CPU utilization:
+            User                       0 percent
+            Background                 0 percent
+            Kernel                     0 percent
+            Interrupt                  0 percent
+            Idle                      99 percent
+            Model                          RE-S-1800x4
+            Serial ID                      9009237474
+            Start time                     2020-07-16 13:36:22 EST
+            Uptime                         5 days, 3 hours, 23 minutes, 59 seconds
+            Last reboot reason             Router rebooted after a normal shutdown.
+            Load averages:                 1 minute   5 minute  15 minute
+                                            0.00       0.00       0.00
+                                            
+        {master}
+    

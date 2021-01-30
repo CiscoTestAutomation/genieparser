@@ -1,0 +1,48 @@
+
+            show configuration snmp
+        location TH-HK2/floor_1B-002/rack_KHK1104;
+        contact KHK;
+        community safaripub {
+            authorization read-only;
+            clients {
+                10.169.5.0/25;
+                10.25.32.0/24;
+                192.168.219.128/27;
+                192.168.64.0/24;
+                192.168.154.0/24;
+                0.0.0.0/0 restrict;
+                2001:db8:d38a:cf16::/64;
+                2001:db8:d38a:d3e9::/64;
+                10.49.164.48/28;
+                192.168.21.0/24;
+                10.64.97.0/24;
+            }
+        }
+        community SpiderSDC {
+            authorization read-only;
+            clients {
+                10.64.99.0/26;
+            }
+        }
+        community kitsune {
+            authorization read-only;
+            clients {
+                192.168.34.0/24;
+            }
+        }
+        trap-options {
+            source-address lo0;
+        }
+        trap-group safaripub {
+            version v1;
+            categories {
+                chassis;
+                link;
+                routing;
+            }
+            targets {
+                10.64.99.32;                   
+                10.169.249.67;
+            }
+        }
+    

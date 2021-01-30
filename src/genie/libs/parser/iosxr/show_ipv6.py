@@ -63,12 +63,12 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
 
         ret_dict = {}
 
-        # 2001:db8:8548:1::1  82   fa16.3eff.c4d3 REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff
+        # 2001:db8:8548:1::1  82   fa16.3eff.c4d3 REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff
         # fe80::f816:3eff:feff:384a  119  fa16.3eff.384a REACH Gi0/0/0/0.90         0/0/CPU0
         p1 = re.compile(r'^(?P<ip>\S+)\s+(?P<age>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+(?P<interface>\S+)\s+'
                          '(?P<location>\S+)(\s+(?P<static>\S+)\s+(?P<dynamic>\S+)\s+(?P<sync>\S+)\s+(?P<serg_flags>\S+))?$')
 
-        # [Mcast adjacency]                - 0000.0000.0000 REACH Gi0/0/0/0            0/0/CPU0        -      -       -            ff
+        # [Mcast adjacency]                - 0000.0000.0000 REACH Gi0/0/0/0            0/0/CPU0        -      -       -            ff
         # [Mcast adjacency]                - 0000.0000.0000 REACH Gi0/0/0/0.90         0/0/CPU0
         p2 = re.compile(r'^\[(?P<ip>([\w\s]+))\]\s+(?P<age>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<neighbor_state>\S+)\s+'
                          '(?P<interface>\S+)\s+(?P<location>\S+)(\s+(?P<static>\S+)\s+(?P<dynamic>\S+)\s+(?P<sync>\S+)\s+(?P<serg_flags>\S+))?$')
@@ -76,7 +76,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 2001:db8:8548:1::1  82   fa16.3eff.c4d3 REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff 
+            # 2001:db8:8548:1::1  82   fa16.3eff.c4d3 REACH Gi0/0/0/0  0/0/CPU0  -  Y  - ff 
             m = p1.match(line)
             if m:
                 ip = m.groupdict()['ip']
@@ -118,7 +118,7 @@ class ShowIpv6NeighborsDetail(ShowIpv6NeighborsDetailSchema):
 
                 continue
 
-            # [Mcast adjacency]  - 0000.0000.0000 REACH Gi0/0/0/0   0/0/CPU0  -      -       -            ff
+            # [Mcast adjacency]  - 0000.0000.0000 REACH Gi0/0/0/0   0/0/CPU0  -      -       -            ff
             m = p2.match(line)
             if m:
                 ip = m.groupdict()['ip']

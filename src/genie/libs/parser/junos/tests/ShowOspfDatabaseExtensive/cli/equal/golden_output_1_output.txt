@@ -1,0 +1,19 @@
+
+        show ospf database advertising-router 10.34.2.250 extensive
+            OSPF database, Area 0.0.0.8
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Router   10.34.2.250     10.34.2.250     0x80000003  1107  0x22 0x29f7  60
+        bits 0x0, link count 3
+        id 10.169.14.240, data 10.169.14.158, Type PointToPoint (1)
+            Topology count: 0, Default metric: 1
+        id 10.169.14.156, data 255.255.255.252, Type Stub (3)
+            Topology count: 0, Default metric: 1
+        id 10.34.2.250, data 255.255.255.255, Type Stub (3)
+            Topology count: 0, Default metric: 0
+        Topology default (ID 0)
+            Type: PointToPoint, Node ID: 10.169.14.240
+            Metric: 1, Bidirectional
+        Aging timer 00:41:32
+        Installed 00:18:24 ago, expires in 00:41:33
+        Last changed 00:18:53 ago, Change count: 2
+        

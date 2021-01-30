@@ -151,7 +151,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
             output = self.device.execute(self.cli_command)
         else:
             output=output
- 
+
         # Policy Profile Name                 : lizzard_Fabric_F_90c67354
         # Description                         : lizzard_Fabric_F_90c67354
         # Status                              : ENABLED
@@ -195,8 +195,8 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
         # Anchor                            : DISABLED
         # AVC VISIBILITY                      : Enabled
         # IPv4 Flow Monitors
-        # Ingress             
-        # Egress               
+        # Ingress
+        # Egress
         # IPv6 Flow Monitors
         # Ingress
         # Egress
@@ -263,7 +263,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
         # 2.4Ghz ATF Policy                 : default-atf-policy
         # 5Ghz ATF Policy                   : default-atf-policy
         # Policy Profile Name                 : default-policy-profile
-        
+
         p_policy_profile_name = re.compile(r"^Policy\s+Profile\s+Name\s+:\s+(?P<name>\S+)$")
         # Description                         : default policy profile
         p_description = re.compile(r"^Description\s+:\s+(?P<value>.*)$")
@@ -273,7 +273,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
         p_vlan = re.compile(r"^VLAN\s+:\s+(?P<value>\S+)$")
         # Multicast VLAN                      : 0
         p_multi_vlan = re.compile(r"^Multicast\s+VLAN\s+:\s+(?P<value>\S+)$")
-        # OSEN client VLAN                    : 
+        # OSEN client VLAN                    :
         p_osen = re.compile(r"^OSEN\s+client\s+VLAN\s+:\s+(?P<value>.*)$")
         # Wireless management interface VLAN  : 10
         p_wireless_mgmt = re.compile(r"^Wireless\s+management\s+interface\s+VLAN\s+:\s+(?P<value>\S+)$")
@@ -522,7 +522,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
               show_wireless_profile_policy_dict.update({ "wireless_mgmt_interface_vlan" : match.group("value") })
               continue
             elif p_osen.match(line):
-              # OSEN client VLAN                    : 
+              # OSEN client VLAN                    :
               match = p_osen.match(line)
               show_wireless_profile_policy_dict.update({ "osen_client_vlan" : match.group("value") })
               continue
@@ -918,7 +918,7 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
               # Exclusionlist Params
               if not show_wireless_profile_policy_dict.get("exclusionlist_params"):
                 show_wireless_profile_policy_dict.update({ "exclusionlist_params": {} })
-              continue 
+              continue
             elif p_exclusionlist.match(line):
               # Exclusionlist                     : ENABLED
               match = p_exclusionlist.match(line)
@@ -1034,10 +1034,10 @@ class ShowWirelessProfilePolicyDetailed(ShowWirelessProfilePolicyDetailedSchema)
               match = p_airtime_5.match(line)
               show_wireless_profile_policy_dict["airtime_fairness_profile"].update({ "5ghz_atf_policy": match.group("value") })
               continue
-            
+
         return show_wireless_profile_policy_dict
 
-      
+
 # ==============================
 # Schema for:
 #  * 'show wireless cts summary'
@@ -1062,7 +1062,7 @@ class ShowWirelessCtsSummarySchema(MetaParser):
                     Optional("inline_tagging"): str
                 }
             }
-        } 
+        }
     }
 
 
@@ -1081,25 +1081,25 @@ class ShowWirelessCtsSummary(ShowWirelessCtsSummarySchema):
             output=output
 
         # Local Mode CTS Configuration
-        # 
-        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt      
+        #
+        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt
         # ----------------------------------------------------------------------------------------
-        # default-policy-profile            DISABLED              DISABLED         0                
-        # lizzard_Fabric_F_dee07a54        DISABLED              DISABLED         0                
-        # internet_Fabric_F_ed7a6bda        DISABLED              DISABLED         0                
-        # lizzard_l_Fabric_F_90c6dccd      DISABLED              DISABLED         0                
-        # 
-        # 
+        # default-policy-profile            DISABLED              DISABLED         0
+        # lizzard_Fabric_F_dee07a54        DISABLED              DISABLED         0
+        # internet_Fabric_F_ed7a6bda        DISABLED              DISABLED         0
+        # lizzard_l_Fabric_F_90c6dccd      DISABLED              DISABLED         0
+        #
+        #
         # Flex Mode CTS Configuration
-        # 
-        # Flex Profile Name                 SGACL Enforcement     Inline-Tagging   
+        #
+        # Flex Profile Name                 SGACL Enforcement     Inline-Tagging
         # -----------------------------------------------------------------------
-        # default-flex-profile              DISABLED              DISABLED    
+        # default-flex-profile              DISABLED              DISABLED
 
         # Local Mode CTS Configuration
         p_local = re.compile(r"Local\s+Mode\s+CTS\s+Configuration$")
 
-        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt 
+        # Policy Profile Name               SGACL Enforcement     Inline-Tagging   Default-Sgt
         p_local_header = re.compile(r"^Policy\s+Profile\s+Name\s+SGACL\s+Enforcement\s+Inline-Tagging\s+Default-Sgt$")
 
         # ----------------------------------------------------------------------------------------
@@ -1142,7 +1142,7 @@ class ShowWirelessCtsSummary(ShowWirelessCtsSummarySchema):
                 wireless_cts_summary_dict["local_mode_cts_configuration"]["policy_profile_name"].update({ group["name"] : {} })
                 wireless_cts_summary_dict["local_mode_cts_configuration"]["policy_profile_name"][group["name"]].update({ "sgacl_enforcement": group["sgacl"],
                                                                                                                         "inline_tagging": group["tag"],
-                                                                                                                        "default_sgt": int(group["sgt"]) 
+                                                                                                                        "default_sgt": int(group["sgt"])
                                                                                                                         })
                 continue
             # Flex Mode CTS Configuration
@@ -1186,7 +1186,7 @@ class ShowWirelessFabricClientSummarySchema(MetaParser):
             }
         }
     }
-              
+
 # ========================================
 # Parser for:
 #  * 'show wireless fabric client summary'
@@ -1195,30 +1195,30 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
     """Parser for show wireless fabric client summary"""
 
     cli_command = 'show wireless fabric client summary'
-    
+
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
         else:
             output=output
-              
+
         show_wireless_fabric_client_summary_dict = {}
 
 
         # Number of Fabric Clients : 8
 
-        # MAC Address    AP Name                          WLAN State              Protocol Method     
+        # MAC Address    AP Name                          WLAN State              Protocol Method
         # --------------------------------------------------------------------------------------------
-        # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x     
-        # 58bf.eaff.ac28 a2-11-cap50                   19   IP Learn           11n(2.4) MAB       
-        # 58bf.eaff.6393 a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.eaff.89a2 a2-11-cap43                   17   Run                11ac     Dot1x
+        # 58bf.eaff.ac28 a2-11-cap50                   19   IP Learn           11n(2.4) MAB
+        # 58bf.eaff.6393 a2-11-cap52                   19   Webauth Pending    11n(2.4) MAB
         # --------------------------------------------------------------------------------------------
-        # 58bf.eaff.63a0 a2-11-cap46                   17   Run                11ac     Dot1x     
-        # 58bf.eaff.2c06 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB       
-        # 58bf.eaff.8759 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB       
+        # 58bf.eaff.63a0 a2-11-cap46                   17   Run                11ac     Dot1x
+        # 58bf.eaff.2c06 a2-12-cap15                   19   Webauth Pending    11n(2.4) MAB
+        # 58bf.eaff.8759 a2-11-cap44                   19   Webauth Pending    11n(2.4) MAB
         # --------------------------------------------------------------------------------------------
-        # 58bf.eaff.5e2c a2-12-cap17                   19   Webauth Pending    11ac     MAB       
-        # 58bf.eaff.fc60 a2-12-cap17                   19   Webauth Pending    11ac     MAB   
+        # 58bf.eaff.5e2c a2-12-cap17                   19   Webauth Pending    11ac     MAB
+        # 58bf.eaff.fc60 a2-12-cap17                   19   Webauth Pending    11ac     MAB
 
         # Number of Fabric Clients : 8
         p_clients = re.compile(r"^Number\s+of\s+Fabric\s+Clients\s+:\s+(?P<clients>\S+)$")
@@ -1269,7 +1269,7 @@ class ShowWirelessFabricClientSummary(ShowWirelessFabricClientSummarySchema):
 
         return show_wireless_fabric_client_summary_dict
 
-      
+
 # =================================
 # Schema for:
 #  * 'show wireless fabric summary'
@@ -1335,27 +1335,8 @@ class ShowWirelessClientSummarySchema(MetaParser):
             }
         }
     }
-# ========================================
-# Schema for:
-#  * 'show wireless fabric client summary'
-# ========================================
-class ShowWirelessFabricClientSummarySchema(MetaParser):
-    """Schema for show wireless fabric client summary."""
 
-    schema = {
-        "number_of_fabric_clients" : int,
-        Optional("mac_address") : {
-            Optional(str) : {
-                Optional("ap_name") : str,
-                Optional("wlan") : int,
-                Optional("state") : str,
-                Optional("protocol") : str,
-                Optional("method") : str,
-            }
-        }
-    }
-    
-    
+
 # =================================
 # Parser for:
 #  * 'show wireless fabric summary'
@@ -1364,13 +1345,13 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
     """Parser for show wireless fabric summary"""
 
     cli_command = 'show wireless fabric summary'
-    
+
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
         else:
             output=output
-            
+
         # Fabric Status      : Enabled
         #
         #
@@ -1384,8 +1365,8 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
         # Fabric VNID Mapping:
         # Name               L2-VNID        L3-VNID        IP Address             Subnet        Control plane name
         # ----------------------------------------------------------------------------------------------------------------------
-        # Data                8192           0                                  0.0.0.0            default-control-plane 
-        # Guest               8189           0                                  0.0.0.0            default-control-plane 
+        # Data                8192           0                                  0.0.0.0            default-control-plane
+        # Guest               8189           0                                  0.0.0.0            default-control-plane
         # Voice               8191           0                                  0.0.0.0            default-control-plane
         # Fabric_B_INFRA_VN     8188           4097           10.10.40.0          255.255.254.0      default-control-plane
         # Physical_Security     8190           0                                  0.0.0.0            default-control-plane
@@ -1470,7 +1451,7 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
             elif p_vnid_mappings.match(line):
                 match = p_vnid_mappings.match(line)
                 groups = match.groupdict()
-                show_wireless_fabric_summary_dict["fabric_vnid_mapping"]["l2_vnid"].update({ int(groups["vnid_l2"]) : { "name": groups["vnid_name"], "l3_vnid": int(groups["vnid_l3"]), "ip_address": groups["vnid_ip_address"], 
+                show_wireless_fabric_summary_dict["fabric_vnid_mapping"]["l2_vnid"].update({ int(groups["vnid_l2"]) : { "name": groups["vnid_name"], "l3_vnid": int(groups["vnid_l3"]), "ip_address": groups["vnid_ip_address"],
                                                                                 "subnet": groups["vnid_subnet"], "control_plane_name": groups["vnid_cp_name"]}})
                 continue
             # Voice               8191           0                                  0.0.0.0            default-control-plane
@@ -1479,10 +1460,10 @@ class ShowWirelessFabricSummary(ShowWirelessFabricSummarySchema):
                 groups = match.groupdict()
                 show_wireless_fabric_summary_dict["fabric_vnid_mapping"]["l2_vnid"].update({ int(groups["vnid_l2"]) : { "name": groups["vnid_name"], "l3_vnid": int(groups["vnid_l3"]), "control_plane_name": groups["vnid_name"] }})
                 continue
-        
+
         return show_wireless_fabric_summary_dict
-      
-      
+
+
 # =================================
 # Schema for:
 #  * 'show wireless client summary'
@@ -1520,7 +1501,7 @@ class ShowWirelessClientSummarySchema(MetaParser):
             }
         }
     }
-    
+
 # =================================
 # Parser for:
 #  * 'show wireless client summary'
@@ -1621,7 +1602,6 @@ class ShowWirelessClientSummary(ShowWirelessClientSummarySchema):
                 type = groups['type']
                 id = int(groups['id'])
                 state = groups['state'].strip()
-                print(state)
                 protocol = groups['protocol']
                 method = groups['method']
                 role = groups['role']
@@ -1732,7 +1712,7 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
     """Parser for show wireless mobility ap-list"""
 
     cli_command = "show wireless mobility ap-list"
-    
+
     def cli(self, output=None):
         if output is None:
             output = self.device.execute(self.cli_command)
@@ -1786,6 +1766,28 @@ class ShowWirelessMobilityApList(ShowWirelessMobilityApListSchema):
                 ap_info_obj["ap_name"].update(ap_name_dict)
 
         return ap_info_obj
+      
+      
+# ========================================
+# Schema for:
+#  * 'show wireless fabric client summary'
+# ========================================
+class ShowWirelessFabricClientSummarySchema(MetaParser):
+    """Schema for show wireless fabric client summary."""
+
+    schema = {
+        "number_of_fabric_clients" : int,
+        Optional("mac_address") : {
+            Optional(str) : {
+                Optional("ap_name") : str,
+                Optional("wlan") : int,
+                Optional("state") : str,
+                Optional("protocol") : str,
+                Optional("method") : str,
+            }
+        }
+    }
+
 # ========================================
 # Parser for:
 #  * 'show wireless fabric client summary'
@@ -2033,27 +2035,27 @@ class ShowWirelessProfilePolicySummary(ShowWirelessProfilePolicySummarySchema):
 
         # Number of Policy Profiles: 31
 
-        # Policy Profile Name               Description                             Status           
+        # Policy Profile Name               Description                             Status
         # -----------------------------------------------------------------------------------------
-        # wip-b60                        b60-voice                             ENABLED          
-        # wip-b70                        b70-voice                             ENABLED          
-        # wip-b80                        b80-voice                             ENABLED          
-        # lizzard_b60                    b60-lizzard/legacy                   ENABLED          
-        # lizzard_b70                    b70-lizzard/legacy                   ENABLED          
-        # lizzard_b80                    b80-lizzard/legacy                   ENABLED          
-        # internet-b60                    b60-guest                             ENABLED          
-        # internet-b70                    b70-guest                             ENABLED          
-        # internet-b80                    b80-guest                             ENABLED          
-        # lizzard_b70_1                  Not required                            ENABLED          
+        # wip-b60                        b60-voice                             ENABLED
+        # wip-b70                        b70-voice                             ENABLED
+        # wip-b80                        b80-voice                             ENABLED
+        # lizzard_b60                    b60-lizzard/legacy                   ENABLED
+        # lizzard_b70                    b70-lizzard/legacy                   ENABLED
+        # lizzard_b80                    b80-lizzard/legacy                   ENABLED
+        # internet-b60                    b60-guest                             ENABLED
+        # internet-b70                    b70-guest                             ENABLED
+        # internet-b80                    b80-guest                             ENABLED
+        # lizzard_b70_1                  Not required                            ENABLED
 
         # Number of Policy Profiles: 31
         policy_count_capture = re.compile(r"^Number of Policy Profiles:\s+(?P<policy_count>\d+)$")
 
-        # wip-b60                        b60-voice                             ENABLED          
+        # wip-b60                        b60-voice                             ENABLED
         policy_info_capture = re.compile(
             # wip-b60
             r"^(?P<policy_name>\S+)\s+"
-            # b60-voice 
+            # b60-voice
             r"(?P<description>Not required|default policy profile|\S+)\s+"
             # ENABLED
             r"(?P<status>ENABLED|DISABLED)$"
@@ -2090,8 +2092,8 @@ class ShowWirelessProfilePolicySummary(ShowWirelessProfilePolicySummarySchema):
                 policy_info_obj["policy_name"].update(policy_info_dict)
 
         return policy_info_obj
-          
-          
+
+
 # ===================================
 # Schema for:
 #  * 'show wireless stats ap join summary'
@@ -2121,7 +2123,7 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
     """Parser for show wireless stats ap join summary"""
 
     cli_command = ["show wireless stats ap join summary"]
-          
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command[0])
@@ -2189,7 +2191,2164 @@ class ShowWirelessStatsApJoinSummary(ShowWirelessStatsApJoinSummarySchema):
 
         return wireless_info_obj
 
+# ====================================
+# Schema for:
+#  * 'show wireless client mac {mac_address} detail'
+# ====================================
+class ShowWirelessClientMacDetailSchema(MetaParser):
+    """Schema for show wireless client mac {mac_address} detail."""
 
+    schema = {
+          "client_mac_address": str,
+          "client_mac_type": str,
+          "client_ipv4_address": str,
+          "client_ipv6_addresses": str,
+          "client_username": str,
+          "ap_mac_address": str,
+          "ap_name": str,
+          "ap_slot": int,
+          "client_state": str,
+          "policy_profile": str,
+          "flex_profile": str,
+          "wireless_lan_id": int,
+          "wlan_profile_name": str,
+          "wireless_lan_network_name_ssid": str,
+          "bssid": str,
+          "connected_for_seconds": int,
+          "protocol": str,
+          "channel": int,
+          "client_iif_id": str,
+          "association_id": int,
+          "authentication_alogrithm": str,
+          "idle_state_timeout": str,
+          "re_authentication_timeout_secs": {
+              "configured": int,
+              "remaining_time": int
+          },
+          "input_policy_name": str,
+          "input_policy_state": str,
+          "input_policy_source": str,
+          "output_policy_name": str,
+          "output_policy_state": str,
+          "output_policy_source": str,
+          "wmm_support": str,
+          "u_apsd_support": {
+              "status": str,
+              "u_apsd_value": int,
+              "apsd_acs": list
+          },
+          "fastlane_support": str,
+          "client_active_state": str,
+          "power_save": str,
+          "current_rate": float,
+          "supported_rates": list,
+          "mobility": {
+              "move_count": int,
+              "mobility_role": str,
+              "mobility_roam_type": str,
+              Optional("mobility_complete_timestamp"): str
+          },
+          "client_join_time": str,
+          "client_state_servers": str,
+          "client_acls": str,
+          "policy_manager_state": str,
+          "last_policy_manager_state": str,
+          "client_entry_create_time_secs": int,
+          "policy_type": str,
+          "encryption_cipher": str,
+          "authentication_key_management": str,
+          "user_defined_private_network": str,
+          "user_defined_private_network_drop_unicast": str,
+          "encrypted_traffic_analytics": str,
+          "protected_management_frame__802.11w": str,
+          "eap_type": str,
+          "vlan_override_after_webauth": str,
+          "vlan": str,
+          "multicast_vlan": int,
+          "wifi_direct_capabilities": {
+              "wifi_direct_capable": str
+          },
+          "central_nat": str,
+          "session_manager": {
+              "point_of_attachment": str,
+              "iif_id": str,
+              "authorized": str,
+              "session_timeout": int,
+              "common_session_id": str,
+              "acct_session_id": str,
+              "last_tried_aaa_server_details": {
+                  "server_ip": str
+              },
+              "auth_method_status_list": {
+                  "method": {
+                    str: {
+                        "sm_state": str,
+                        "sm_bend_state": str
+                    }
+                  }
+              },
+              "local_policies": {
+                  "service_template": {
+                    str : {
+                        "vlan_group": str,
+                        "absolute_timer": int
+                    }
+                  }
+              },
+              "server_policies": {
+                  "output_sgt": str
+              },
+              "resultant_policies": {
+                  "output_sgt": str,
+                  "vlan_name": str,
+                  "vlan_group": str,
+                  "vlan": int,
+                  "absolute_timer": int
+              }
+          },
+          "dns_snooped_ipv4_addresses": str,
+          "dns_snooped_ipv6_addresses": str,
+          "client_capabilities": {
+              "cf_pollable": str,
+              "cf_poll_request": str,
+              "short_preamble": str,
+              "pbcc": str,
+              "channel_agility": str,
+              "listen_interval": int
+          },
+          "fast_bss_transition_details": {
+              "reassociation_timeout": int
+          },
+          "11v_bss_transition": str,
+          "11v_dms_capable": str,
+          "qos_map_capable": str,
+          "flexconnect_data_switching": str,
+          "flexconnect_dhcp_status": str,
+          "flexconnect_authentication": str,
+          "flexconnect_central_association": str,
+          "client_statistics": {
+              "number_of_bytes_received": int,
+              "number_of_bytes_sent": int,
+              "number_of_packets_received": int,
+              "number_of_packets_sent": int,
+              "number_of_policy_errors": int,
+              "radio_signal_strength_indicator_dbm": int,
+              "signal_to_noise_ration_db": int
+          },
+          "fabric_status": "Disabled",
+          "radio_measurement_enabled_capabilities": {
+              "capabilities": list
+          },
+          "client_scan_report_time": str,
+          "nearby_ap_statistics": {
+              "ap_names": {
+                Optional(str): {
+                  Optional("antenna"): {
+                    Optional(str): {
+                      Optional("seconds_ago"): int,
+                      Optional("dbm"): int
+                    }
+                  }
+                }
+              }
+          },
+          "eogre": str,
+          "device_info": {
+              "device_type": str,
+              "device_name": str,
+              "protocol_map": str,
+              "device_os": str,
+              "protocols": {
+                str: {
+                  int: {
+                  "type": str,
+                  "data_size": str,
+                  "data": list
+                  }
+                }
+              }
+          },
+          "max_client_protocol_capability": str,
+          "cellular_capability": str
+          }
+
+
+# ====================================
+# Parser for:
+#  * 'show wireless client mac {mac_address} detail'
+# ====================================
+class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
+    """Parser for show wireless client mac {mac_address} detail"""
+    cli_command = 'show wireless client mac detail'
+          
+    def change_data_type(self, value):
+        if value.isdigit():
+            value = value.strip()
+            value = int(value)
+        else:
+            try:
+                # Change strings to float if possible
+                value = float(value)
+            except ValueError:
+                # if the value is not an int or float, leave it as a string.
+                pass
+        return value
+
+    def cli(self, mac_address="", output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command.format(mac_address=mac_address))
+        else:
+          output = output
+
+
+        # Client MAC Address : 0aba.dd93.ac36
+        # Client MAC Type : Locally Administered Address
+        # Client IPv4 Address : 10.22.4.19
+        # Client IPv6 Addresses : fe80::8ba:ddff:fe93:ac36
+        # Client Username : aking
+        # AP MAC Address : 70b3.1875.7f00
+        # AP Name: b1-11-cap9
+        # AP slot : 0
+        # Client State : Associated
+        # Policy Profile : lizzard_b1
+        # Flex Profile : N/A
+        # Wireless LAN Id: 20
+        # WLAN Profile Name: lizzard-l_Global
+        # Wireless LAN Network Name (SSID): lizzard-legacy
+        # BSSID : 70b3.1875.7f03
+        # Connected For : 3233 seconds
+        # Protocol : 802.11n - 2.4 GHz
+        # Channel : 6
+        # Client IIF-ID : 0xa0000012
+        # Association Id : 1
+        # Authentication Algorithm : Open System
+        # Idle state timeout : N/A
+        # Re-Authentication Timeout : 36000 sec (Remaining time: 32768 sec)
+        # Session Warning Time : Timer not running
+        # Input Policy Name  : client-default
+        # Input Policy State : Installed
+        # Input Policy Source : QOS Internal Policy
+        # Output Policy Name  : client-default
+        # Output Policy State : Installed
+        # Output Policy Source : QOS Internal Policy
+        # WMM Support : Enabled
+        # U-APSD Support : Enabled
+        #   U-APSD value : 0
+        #   APSD ACs    : BK, BE, VI, VO
+        # ...OUTPUT OMITTED...
+
+
+        nearby_ap = ''
+        section_tracker = []
+        current_protocol = ''
+        client_mac_dict = {}
+        device_section = False
+        data_counter = 0
+        data_list = []
+
+        # U-APSD Support : Enabled
+        p_uapsd = re.compile(r"^U-APSD\s+Support\s+:\s+(?P<status>\S+)$")
+
+        # Client MAC Type : Universally Administered Address
+        p_client_mac_type = re.compile(r"^Client\s+MAC\s+Type\s+:\s+(?P<value>.*)$")
+
+        # Connected For : 3233 seconds
+        p_connected = re.compile(r"^Connected\s+For\s+:\s+(?P<value>\d+)\s+seconds$")
+
+        # Protocol : 802.11n - 2.4 GHz
+        p_protocol = re.compile(r"^Protocol\s+:\s+(?P<value>.*)")
+
+        # Re-Authentication Timeout : 36000 sec (Remaining time: 32768 sec)
+        p_re_timer = re.compile(r"^Re-Authentication\s+Timeout\s+:\s+(?P<value>\d+)\s+sec\s+\(Remaining\s+time:\s+(?P<remain>\d+)\s+sec\)$")
+
+        # Re-Authentication Timeout : 36000 sec (Timer not running)
+        p_re_timer_not_running = re.compile(r"^^Re-Authentication\s+Timeout\s+:\s+(?P<value>\d+)\s+sec\s+\(Timer\s+not\s+running\)$")
+
+        # Authentication Algorithm : Open System
+        p_authen_algorithm = re.compile(r"^Authentication\s+Algorithm\s+:\s+(?P<value>.*)$")
+
+        # Input Policy Source : QOS Internal Policy
+        p_input_policy_source = re.compile(r"^Input\s+Policy\s+Source\s+:\s+(?P<value>.*)$")
+
+        # Output Policy Source : QOS Internal Policy
+        p_output_policy_source = re.compile(r"^Output\s+Policy\s+Source\s+:\s+(?P<value>.*)$")
+
+        # APSD ACs    : BK, BE, VI, VO
+        p_uapsd_ac = re.compile(r"^APSD\s+ACs\s+:\s+(?P<ac>.*)$")
+
+        # Mobility
+        p_mobility = re.compile(r"^Mobility:$")
+
+        # Mobility Complete Timestamp : 10/22/2020 08:07:55 IST
+        p_mobility_timestamp = re.compile(r"^Mobility\s+Complete\s+Timestamp\s+:\s+(?P<date>.*)$")
+
+        # Mobility Roam Type          : Unknown
+        p_mobility_roam = re.compile(r"^Mobility\s+Roam\s+Type\s+:\s+(?P<value>\S+)$")
+
+        # Supported Rates : 24.0,36.0,48.0,54.0
+        p_supported_rates = re.compile(r"^Supported\s+Rates\s+:\s+(?P<value>.*)$")
+
+        # Client Join Time:
+        p_client_join = re.compile(r"^Client\s+Join\s+Time:$")
+
+        # Join Time Of Client : 10/22/2020 08:46:54 IST
+        p_client_join_time = re.compile(r"^Join\s+Time\s+Of\s+Client\s+:\s+(?P<date>.*)$")
+
+        # Last Policy Manager State : IP Learn Complete
+        p_last_policy = re.compile(r"^Last\s+Policy\s+Manager\s+State\s+:\s+(?P<value>.*)$")
+
+        # Client Entry Create Time : 5572 seconds
+        p_client_entry_create = re.compile(r"^Client\s+Entry\s+Create\s+Time\s+:\s+(?P<value>\d+)\s+seconds$")
+
+        # Encryption Cipher : CCMP (AES)
+        p_encryption_cipher = re.compile(r"Encryption\s+Cipher\s+:\s+(?P<value>.*)$")
+
+        # EAP Type : Not Applicable
+        p_eap_type = re.compile(r"^EAP\s+Type\s+:\s+(?P<value>.*)$")
+
+        # WiFi Direct Capabilities:
+        p_wifi_capabilities = re.compile(r"WiFi\s+Direct\s+Capabilities:$")
+
+        # Central NAT : DISABLED
+        p_central_nat = re.compile(r"^Central\s+NAT\s+:\s+(?P<value>\S+)$")
+
+        # Session Manager:
+        p_session = re.compile(r"^Session\s+Manager:")
+
+        # Last Tried Aaa Server Details:
+        p_last_tried_aaa = re.compile(r"^Last\s+Tried\s+Aaa\s+Server\s+Details:")
+
+        # Auth Method Status List
+        p_auth_method = re.compile(r"^Auth\s+Method\s+Status\s+List$")
+
+        # Method : Dot1x
+        p_auth_method_check = re.compile(r"^Method\s+:\s+(?P<value>\S+)$")
+
+        # Local Policies:
+        p_local_policies = re.compile(r"^Local\s+Policies:$")
+
+        # Service Template : wlan_svc_lizzard_b1_local (priority 254)
+        p_service_template = re.compile(r"^Service\s+Template\s+:\s+(?P<template>.*)$")
+
+        # Server Policies:
+        p_server_policies = re.compile(r"^Server\s+Policies:$")
+
+        # Resultant Policies:
+        p_resultant_policies = re.compile(r"^Resultant\s+Policies:$")
+
+        # Client Capabilities
+        p_client_capabilities = re.compile(r"^Client\s+Capabilities$")
+
+        # DNS Snooped IPv4 Addresses : None
+        p_dns_ipv4 = re.compile(r"^DNS\s+Snooped\s+IPv4\s+Addresses\s+:\s+(?P<value>\S+)$")
+
+        # DNS Snooped IPv6 Addresses : None
+        p_dns_ipv6 = re.compile(r"^DNS\s+Snooped\s+IPv6\s+Addresses\s+:\s+(?P<value>\S+)$")
+
+        # CF Pollable : Not implemented
+        p_cf_pollable = re.compile(r"^CF\s+Pollable\s+:\s+(?P<value>.*)$")
+
+        # CF Poll Request : Not implemented
+        p_cf_poll_request = re.compile(r"^CF\s+Poll\s+Request\s+:\s+(?P<value>.*)$")
+
+        # Short Preamble : Not implemented
+        p_short_preamble = re.compile(r"^Short\s+Preamble\s+:\s+(?P<value>.*)$")
+
+        # PBCC : Not implemented
+        p_pbcc = re.compile(r"^PBCC\s+:\s+(?P<value>.*)$")
+
+        # Channel Agility : Not implemented
+        p_channel_agility = re.compile(r"Channel\s+Agility\s+:\s+(?P<value>.*)$")
+
+        # Fast BSS Transition Details :
+        p_fast_bss = re.compile(r"^Fast\s+BSS\s+Transition\s+Details\s+:$")
+
+        # Reassociation Timeout : 0
+        p_reassoc_timeout = re.compile(r"^Reassociation\s+Timeout\s+:\s+(?P<value>\d+)")
+
+        # Client Statistics:
+        p_client_statistics = re.compile(r"^Client\s+Statistics:$")
+
+        # Fabric status : Disabled
+        p_fabric_status = re.compile(r"^Fabric\s+status\s+:\s+(?P<value>\S+)$")
+
+        # Radio Measurement Enabled Capabilities
+        p_radio_measurement = re.compile(r"^Radio\s+Measurement\s+Enabled\s+Capabilities$")
+
+        # Client Scan Report Time : Timer not running
+        p_client_scan_report = re.compile(r"^Client\s+Scan\s+Report\s+Time\s+:\s+(?P<value>.*)")
+
+        # Radio Signal Strength Indicator : -64 dBm
+        p_radio_strength = re.compile(r"^Radio\s+Signal\s+Strength\s+Indicator\s+:\s+(?P<value>\S+)\s+dBm$")
+
+        # Signal to Noise Ratio : 30 dB
+        p_s2n = re.compile(r"^Signal\s+to\s+Noise\s+Ratio\s+:\s+(?P<value>\d+)\s+dB$")
+
+        # Capabilities: Link Measurement, Neighbor Report, Repeated Measurements, Passive Beacon Measurement, Active Beacon Measurement, Table Beacon Measurement, RM MIB
+        p_capabilities = re.compile(r"Capabilities:\s+(?P<value>.*)")
+
+        # Client Scan Report Time : Timer not running
+        p_client_scan_report_no = re.compile(r"^Client\s+Scan\s+Report\s+Time\s+:\s+(?P<value>.*)$")
+
+        # Protocol Map     : 0x000029  (OUI, DHCP, HTTP)
+        p_protocol_map = re.compile(r"Protocol\s+Map\s+:\s+(?P<value>.*)$")
+
+        # Device OS        : Linux; U; Android 10; RMX1825 Build/QP1A.190711.020
+        p_device_os = re.compile(r"^Device\s+OS\s+:\s+(?P<value>.*)$")
+
+        # Type             : 12   12
+        p_device_type_data = re.compile(r"^Type\s+:\s+(?P<value>\d+\s+\d+)")
+
+        # Data             : 0c
+        p_device_data_size = re.compile(r"^Data\s+:\s+(?P<value>\S{2})$")
+
+        # 00000000  00 0c 00 08 72 65 61 6c  6d 65 2d 33               |....realme-3    |
+        p_device_data = re.compile(r"^(?P<value>0000.*)$")
+
+        # Nearby AP Statistics:
+        p_nearby_ap = re.compile(r"^Nearby\s+AP\s+Statistics:$")
+
+        # b1-72-cap16 (slot 0)
+        p_ap = re.compile(r"^(?P<name>.*)\s+\((?P<slot>slot\s+\d+)\)$")
+
+        # antenna 0: 0 s ago	........ -62  dBm
+        p_ant_0 = re.compile(r"^(?P<ant>\S+\s+\d+):\s+(?P<sec>\d+)\s+s\s+ago\s+........\s+(?P<value>\S+)\s+dBm$")
+
+        # EoGRE : Pending Classification
+        p_eogre = re.compile(r"^EoGRE\s+:\s+(?P<value>.*)$")
+
+        # Device Type      : Android
+        p_device_type = re.compile(r"^Device\s+Type\s+:\s+(?P<value>\S+)$")
+
+        # Device Name      : android-dhcp-10
+        p_device_name = re.compile(r"^Device\s+Name\s+:\s+(?P<value>.*)$")
+
+        # Max Client Protocol Capability: 802.11ac Wave 2
+        p_max_client_protocol_capability = re.compile(r"^Max\s+Client\s+Protocol\s+Capability:\s+(?P<value>.*)$")
+
+        # [key] : [value]
+        p_colon_split = re.compile(r"^(?P<key>[\S\s]+\S)\s*: +(?P<value>\S+)$")
+
+
+        for line in output.splitlines():
+            line = line.strip()
+            if p_uapsd.match(line):
+                # U-APSD Support : Enabled
+                match = p_uapsd.match(line)
+                client_mac_dict.update({ "u_apsd_support": {} })
+                client_mac_dict["u_apsd_support"].update({ "status": match.group("status")})
+                section_tracker.append("u_apsd_support")
+                continue
+            elif p_connected.match(line):
+                # Connected For : 3233 seconds
+                match = p_connected.match(line)
+                client_mac_dict.update({ "connected_for_seconds": int(match.group("value")) })
+                continue
+            elif p_client_mac_type.match(line):
+                # Client MAC Type : Universally Administered Address
+                match = p_client_mac_type.match(line)
+                client_mac_dict.update({ "client_mac_type": match.group("value")})
+                continue
+            elif p_protocol.match(line) and device_section == False:
+                # Protocol : 802.11n - 2.4 GHz
+                match = p_protocol.match(line)
+                client_mac_dict.update({ "protocol": match.group("value")})
+                device_section = True
+                continue
+            elif p_authen_algorithm.match(line):
+                # Authentication Algorithm : Open System
+                match = p_authen_algorithm.match(line)
+                client_mac_dict.update({ "authentication_alogrithm": match.group("value")})
+                continue
+            elif p_re_timer.match(line):
+                # Re-Authentication Timeout : 36000 sec (Remaining time: 32768 sec)
+                match = p_re_timer.match(line)
+                client_mac_dict.update({ "re_authentication_timeout_secs": {} })
+                client_mac_dict["re_authentication_timeout_secs"].update({ "configured": int(match.group("value")) })
+                client_mac_dict["re_authentication_timeout_secs"].update({ "remaining_time": int(match.group("remain")) })
+                continue
+            elif p_re_timer_not_running.match(line):
+                # Re-Authentication Timeout : 36000 sec (Timer not running)
+                match = p_re_timer_not_running.match(line)
+                client_mac_dict.update({ "re_authentication_timeout_secs": {} })
+                client_mac_dict["re_authentication_timeout_secs"].update({ "configured": int(match.group("value")) })
+                client_mac_dict["re_authentication_timeout_secs"].update({ "remaining_time": "timer not running" })
+                continue
+            elif p_input_policy_source.match(line):
+                # Input Policy Source : QOS Internal Policy
+                match = p_input_policy_source.match(line)
+                client_mac_dict.update({ "input_policy_source": match.group("value") })
+                continue
+            elif p_output_policy_source.match(line):
+                # Output Policy Source : QOS Internal Policy
+                match = p_output_policy_source.match(line)
+                client_mac_dict.update({ "output_policy_source": match.group("value") })
+                continue
+            elif p_supported_rates.match(line):
+                # Supported Rates : 24.0,36.0,48.0,54.0
+                match = p_supported_rates.match(line)
+                rates_list = [float(x.strip()) for x in match.group("value").split(',')]
+                client_mac_dict.update({ "supported_rates": rates_list })
+            elif p_uapsd_ac.match(line):
+                # APSD ACs    : BK, BE, VI, VO
+                section_tracker.pop()
+                match = p_uapsd_ac.match(line)
+                ac_list = [x.strip() for x in match.group("ac").split(',')]
+                client_mac_dict["u_apsd_support"].update({ "apsd_acs": ac_list })
+                continue
+            elif p_mobility.match(line):
+                # Mobility:
+                client_mac_dict.update({ "mobility": {} })
+                section_tracker.append("mobility")
+                continue
+            elif p_client_join.match(line):
+                # Client Join Time:
+                client_mac_dict.update({ "client_join_time": {} })
+                section_tracker.append("client_join_time")
+                continue
+            elif p_client_join_time.match(line):
+                # Join Time Of Client : 10/22/2020 08:46:54 IST
+                section_tracker.pop()
+                match = p_client_join_time.match(line)
+                client_mac_dict["client_join_time"] = match.group("date")
+                continue
+            elif p_eap_type.match(line):
+                # EAP Type : Not Applicable
+                match = p_eap_type.match(line)
+                client_mac_dict.update({ "eap_type" : match.group("value") })
+                continue
+            elif p_mobility_timestamp.match(line):
+                # Mobility Complete Timestamp : 10/22/2020 08:07:55 IST
+                match = p_mobility_timestamp.match(line)
+                client_mac_dict["mobility"].update({ "mobility_complete_timestamp": match.group("date") })
+                continue
+            elif p_mobility_roam.match(line):
+                # Mobility Roam Type          : Unknown
+                section_tracker.pop()
+                match = p_mobility_roam.match(line)
+                client_mac_dict["mobility"].update({ "mobility_roam_type": match.group("value") })
+                continue
+            elif p_last_policy.match(line):
+                # Last Policy Manager State : IP Learn Complete
+                match = p_last_policy.match(line)
+                client_mac_dict.update({ "last_policy_manager_state": match.group("value") })
+                continue
+            elif p_client_entry_create.match(line):
+                # Client Entry Create Time : 5572 seconds
+                match = p_client_entry_create.match(line)
+                client_mac_dict.update({ "client_entry_create_time_secs": int(match.group("value")) })
+                continue
+            elif p_encryption_cipher.match(line):
+                # Encryption Cipher : CCMP (AES)
+                match = p_encryption_cipher.match(line)
+                client_mac_dict.update({ "encryption_cipher": match.group("value") })
+                continue
+            elif p_wifi_capabilities.match(line):
+                # WiFi Direct Capabilities:
+                client_mac_dict.update({ "wifi_direct_capabilities": {} })
+                section_tracker.append("wifi_direct_capabilities")
+                continue
+            elif p_central_nat.match(line):
+                # Central NAT : DISABLED
+                match = p_central_nat.match(line)
+                client_mac_dict.update({ "central_nat": match.group("value") })
+                continue
+            elif p_session.match(line):
+                # Session Manager:
+                section_tracker.pop()
+                client_mac_dict.update({ "session_manager": {} })
+                section_tracker.append("session_manager")
+                continue
+            elif p_last_tried_aaa.match(line):
+                # Last Tried Aaa Server Details:
+                client_mac_dict["session_manager"].update({"last_tried_aaa_server_details": {} })
+                section_tracker.append("last_tried_aaa_server_details")
+                continue
+            elif p_dns_ipv4.match(line):
+                # DNS Snooped IPv4 Addresses : None
+                match = p_dns_ipv4.match(line)
+                client_mac_dict.update({ "dns_snooped_ipv4_addresses": match.group("value") })
+                continue
+            elif p_dns_ipv6.match(line):
+                # DNS Snooped IPv6 Addresses : None
+                match = p_dns_ipv6.match(line)
+                client_mac_dict.update({ "dns_snooped_ipv6_addresses": match.group("value") })
+                continue
+            elif p_auth_method.match(line):
+                # Auth Method Status List
+                section_tracker.pop()
+                client_mac_dict["session_manager"].update({ "auth_method_status_list": {"method": {} }})
+                section_tracker.append("auth_method_status_list")
+                section_tracker.append("method")
+                continue
+            elif p_auth_method_check.match(line):
+                # Method : Dot1x
+                match = p_auth_method_check.match(line)
+                auth_method = match.group("value")
+                client_mac_dict["session_manager"]["auth_method_status_list"]["method"].update({ auth_method: {} })
+                section_tracker.append(auth_method)
+                continue
+            elif p_local_policies.match(line):
+                # Local Policies:
+                section_tracker.pop()
+                section_tracker.pop()
+                section_tracker.pop()
+                client_mac_dict["session_manager"].update({ "local_policies": {"service_template": {} } })
+                section_tracker.append("local_policies")
+                section_tracker.append("service_template")
+                continue
+            elif p_service_template.match(line):
+                # Service Template : wlan_svc_lizzard_b1_local (priority 254)
+                match = p_service_template.match(line)
+                template = match.group("template")
+                client_mac_dict["session_manager"]["local_policies"]["service_template"].update({ template: {} })
+                section_tracker.append(template)
+                continue
+            elif p_server_policies.match(line):
+                # Server Policies:
+                section_tracker.pop()
+                section_tracker.pop()
+                section_tracker.pop()
+                client_mac_dict["session_manager"].update({ "server_policies": {} })
+                section_tracker.append("server_policies")
+                continue
+            elif p_resultant_policies.match(line):
+                # Resultant Policies:
+                section_tracker.pop()
+                client_mac_dict["session_manager"].update({ "resultant_policies": {} })
+                section_tracker.append("resultant_policies")
+                continue
+            elif p_client_capabilities.match(line):
+                # Client Capabilities
+                section_tracker.pop()
+                section_tracker.pop()
+                client_mac_dict.update({ "client_capabilities": {} })
+                section_tracker.append("client_capabilities")
+                continue
+            elif p_cf_pollable.match(line):
+                # CF Pollable : Not implemented
+                match = p_cf_pollable.match(line)
+                client_mac_dict["client_capabilities"].update({ "cf_pollable": match.group("value") })
+                continue
+            elif p_cf_poll_request.match(line):
+                # CF Poll Request : Not implemented
+                match = p_cf_poll_request.match(line)
+                client_mac_dict["client_capabilities"].update({ "cf_poll_request": match.group("value") })
+                continue
+            elif p_short_preamble.match(line):
+                # Short Preamble : Not implemented
+                match = p_short_preamble.match(line)
+                client_mac_dict["client_capabilities"].update({ "short_preamble": match.group("value") })
+                continue
+            elif p_channel_agility.match(line):
+                # Channel Agility : Not implemented
+                match = p_channel_agility.match(line)
+                client_mac_dict["client_capabilities"].update({ "channel_agility": match.group("value") })
+                continue
+            elif p_pbcc.match(line):
+                # Listen Interval : 0
+                match = p_pbcc.match(line)
+                client_mac_dict["client_capabilities"].update({ "pbcc": match.group("value") })
+                continue
+            elif p_fast_bss.match(line):
+                # Fast BSS Transition Details :
+                section_tracker.pop()
+                client_mac_dict.update({ "fast_bss_transition_details": {} })
+                continue
+            elif p_reassoc_timeout.match(line):
+                # Reassociation Timeout : 0
+                match = p_reassoc_timeout.match(line)
+                client_mac_dict["fast_bss_transition_details"].update({ "reassociation_timeout": int(match.group("value"))})
+            elif p_client_statistics.match(line):
+                # Client Statistics:
+                client_mac_dict.update({"client_statistics": {} })
+                section_tracker.append("client_statistics")
+                continue
+            elif p_fabric_status.match(line):
+                # Fabric status : Disabled
+                match = p_fabric_status.match(line)
+                client_mac_dict.update({ "fabric_status": match.group("value") })
+                continue
+            elif p_radio_measurement.match(line):
+                # Radio Measurement Enabled Capabilities
+                section_tracker.pop()
+                client_mac_dict.update({ "radio_measurement_enabled_capabilities": {} })
+                continue
+            elif p_capabilities.match(line):
+                # Capabilities: Link Measurement, Neighbor Report, Repeated Measurements, Passive Beacon Measurement, Active Beacon Measurement, Table Beacon Measurement, RM MIB
+                match = p_capabilities.match(line)
+                cap_list = [x.strip() for x in match.group("value").split(",")]
+                client_mac_dict["radio_measurement_enabled_capabilities"].update({ "capabilities": cap_list })
+                continue
+            elif p_radio_strength.match(line):
+                # Radio Signal Strength Indicator : -84 dBm
+                match = p_radio_strength.match(line)
+                client_mac_dict["client_statistics"].update({ "radio_signal_strength_indicator_dbm": int(match.group("value")) })
+                continue
+            elif p_s2n.match(line):
+                # Signal to Noise Ratio : 30 dB
+                match = p_s2n.match(line)
+                client_mac_dict["client_statistics"].update({ "signal_to_noise_ration_db": int(match.group("value")) })
+                continue
+            elif p_nearby_ap.match(line):
+                # Nearby AP Statistics:
+                client_mac_dict.update({ "nearby_ap_statistics": { "ap_names": {} }})
+                continue
+            elif p_ap.match(line):
+                # b1-72-cap16 (slot 0)
+                match = p_ap.match(line)
+                nearby_ap = match.group("name") + " (" + match.group("slot") + ")"
+                client_mac_dict["nearby_ap_statistics"]["ap_names"].update({ nearby_ap: {} })
+                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap].update({ "antenna": {} })
+                continue
+            elif p_ant_0.match(line):
+                # antenna 0: 0 s ago	........ -62  dBm
+                match = p_ant_0.match(line)
+                antenna = match.group("ant")
+                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna"].update({ antenna: {} })
+                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna"][antenna].update({ "seconds_ago": int(match.group("sec")) })
+                client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna"][antenna].update({ "dbm": int(match.group("value")) })
+                continue
+            elif p_eogre.match(line):
+                # EoGRE : Pending Classification
+                match = p_eogre.match(line)
+                client_mac_dict.update({ "eogre": match.group("value") })
+                continue
+            elif p_device_type.match(line):
+                # Device Type      : Android
+                match = p_device_type.match(line)
+                client_mac_dict.setdefault("device_info", {} )
+                client_mac_dict["device_info"].update({ "device_type": match.group("value") })
+                continue
+            elif p_device_name.match(line):
+                # Device Name      : android-dhcp-10
+                match = p_device_name.match(line)
+                client_mac_dict["device_info"].update({ "device_name": match.group("value") })
+                continue
+            elif p_client_scan_report_no.match(line):
+                # Client Scan Report Time : Timer not running
+                match = p_client_scan_report_no.match(line)
+                client_mac_dict.update({ "client_scan_report_time": match.group("value") })
+                continue
+            elif p_protocol_map.match(line):
+                # Protocol Map     : 0x000029  (OUI, DHCP, HTTP)
+                match = p_protocol_map.match(line)
+                client_mac_dict["device_info"].update({ "protocol_map": match.group("value") })
+                continue
+            elif p_device_os.match(line):
+                # Device OS        : Linux; U; Android 10; RMX1825 Build/QP1A.190711.020`
+                match = p_device_os.match(line)
+                client_mac_dict["device_info"].update({ "device_os" : match.group("value") })
+                continue
+            elif p_protocol.match(line) and device_section == True:
+                # Protocol         : DHCP
+                data_counter = 0
+                match = p_protocol.match(line)
+                current_protocol = match.group("value")
+                client_mac_dict["device_info"].setdefault("protocols", {} )
+                client_mac_dict["device_info"]["protocols"].update({ current_protocol: {} })
+                device_section = True
+                continue
+            elif p_device_type_data.match(line):
+                # Type             : 12   12
+                data_counter += 1
+                data_list = []
+                match = p_device_type_data.match(line)
+                client_mac_dict["device_info"]["protocols"][current_protocol].update({ data_counter: {} })
+                client_mac_dict["device_info"]["protocols"][current_protocol][data_counter].update({ "type": match.group("value") })
+                continue
+            elif p_device_data_size.match(line):
+                # Data             : 0c
+                match = p_device_data_size.match(line)
+                client_mac_dict["device_info"]["protocols"][current_protocol][data_counter].update({ "data_size": match.group("value") })
+                continue
+            elif p_device_data.match(line):
+                # 00000000  00 0c 00 08 72 65 61 6c  6d 65 2d 33               |....realme-3    |
+                match = p_device_data.match(line)
+                data_list.append(match.group("value"))
+                client_mac_dict["device_info"]["protocols"][current_protocol][data_counter].update({ "data": data_list })
+                continue
+            elif p_max_client_protocol_capability.match(line):
+                # Max Client Protocol Capability: 802.11ac Wave 2
+                match = p_max_client_protocol_capability.match(line)
+                client_mac_dict.update({ "max_client_protocol_capability": match.group("value") })
+                continue
+            elif p_colon_split.match(line):
+                # [key] : [value]
+                match = p_colon_split.match(line)
+                group = match.groupdict()
+
+                if group["key"][-1] == ")":
+                    group["key"] = group["key"][:-1]
+
+                group["key"] = group["key"].replace(" ", "_").replace("-", "_").replace("(", "_").replace(")", "_").replace("__", "_").lower()
+                group["value"] = self.change_data_type(group["value"])
+
+                if group["key"] == "data":
+                    continue
+
+                if len(section_tracker) == 0:
+                    client_mac_dict.update({ group["key"]: group["value"] })
+                elif len(section_tracker) == 1:
+                    client_mac_dict[section_tracker[-1]].update({ group["key"]: group["value"] })
+                elif len(section_tracker) == 2:
+                    client_mac_dict[section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
+                elif len(section_tracker) == 3:
+                    client_mac_dict[section_tracker[-3]][section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
+                elif len(section_tracker) == 4:
+                    client_mac_dict[section_tracker[-4]][section_tracker[-3]][section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
+
+        return client_mac_dict
+    
+# ======================================
+# Schema for:
+#  * 'show wireless fabric vnid mapping'
+# ======================================
+class ShowWirelessFabricVnidMappingSchema(MetaParser):
+    """Schema for show wireless fabric vnid mapping."""
+
+    schema = {
+      "fabric_vnid_mapping" : {
+        "name": {
+          str : {
+            "l2_vnid": int,
+            "l3_vnid": int,
+            Optional("ip_address"): str,
+            "subnet": str,
+            "control_plane_name": str
+          }
+        }
+      }
+    }
+    
+    
+# ======================================    
+# Parser for:
+#  * 'show wireless fabric vnid mapping'
+# ======================================
+class ShowWirelessFabricVnidMapping(ShowWirelessFabricVnidMappingSchema):
+    """Parser for show wireless fabric vnid mapping"""
+
+    cli_command = 'show wireless fabric vnid mapping'
+    
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+          output = output
+
+        # Fabric VNID Mapping:
+        #   Name               L2-VNID        L3-VNID        IP Address             Subnet       Control plane name
+        # ----------------------------------------------------------------------------------------------------------------------
+        #   Data                8190           0                                  0.0.0.0            default-control-plane
+        #   Guest               8189           0                                  0.0.0.0            default-control-plane
+        #   Voice               8191           0                                  0.0.0.0            default-control-plane
+        #   Fabric_A_INF_VN     8188           4097           10.8.132.0          255.255.254.0      default-control-plane
+        #   Physical_Security     8192           0                                  0.0.0.0            default-control-plane
+
+        # Fabric VNID Mapping:
+        p_fabric_mapping = re.compile(r"^Fabric\s+VNID\s+Mapping:")
+
+        # Data                8190           0                                  0.0.0.0            default-control-plane
+        p_fabric_row_4 = re.compile(r"^(?P<name>\S+)\s+(?P<l2_vnid>\d+)\s+(?P<l3_vnid>\d+)"
+                                    r"\s+(?P<subnet>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+                                    r"\s+(?P<control_name>\S+)$")
+
+        # Fabric_A_INF_VN     8188           4097           10.8.132.0          255.255.254.0      default-control-plane
+        p_fabric_row_5 = re.compile(r"^(?P<name>\S+)\s+(?P<l2_vnid>\d+)\s+(?P<l3_vnid>\d+)\s+"
+                                    r"(?P<ip>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+                                    r"(?P<subnet>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+"
+                                    r"(?P<control_name>\S+)")
+
+
+        fabric_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+            if p_fabric_mapping.match(line):
+                # Fabric VNID Mapping:
+                fabric_dict.update({ "fabric_vnid_mapping": {} })
+                continue
+            elif p_fabric_row_5.match(line):
+                match = p_fabric_row_5.match(line)
+                group = match.groupdict()
+                if not fabric_dict["fabric_vnid_mapping"].get("name"):
+                    fabric_dict["fabric_vnid_mapping"].update({ "name": {} })
+                fabric_dict["fabric_vnid_mapping"]["name"].update({ group["name"] : {} })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "l2_vnid": int(group["l2_vnid"]), "l3_vnid": int(group["l3_vnid"]) })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "ip_address": group["ip"], "subnet": group["subnet"] })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "control_plane_name": group["control_name"] })
+                continue
+            elif p_fabric_row_4.match(line):
+                match = p_fabric_row_4.match(line)
+                group = match.groupdict()
+                if not fabric_dict["fabric_vnid_mapping"].get("name"):
+                    fabric_dict["fabric_vnid_mapping"].update({ "name": {} })
+                fabric_dict["fabric_vnid_mapping"]["name"].update({ group["name"] : {} })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "l2_vnid": int(group["l2_vnid"]), "l3_vnid": int(group["l3_vnid"]) })
+                fabric_dict["fabric_vnid_mapping"]["name"][group["name"]].update({ "subnet": group["subnet"], "control_plane_name": group["control_name"] })
+                continue
+
+        return fabric_dict
+      
+
+# ==============================================
+# Schema for:
+#  * 'show wireless stats client delete reasons'
+# ==============================================
+class ShowWirelessStatsClientDeleteReasonsSchema(MetaParser):
+    """Schema for show wireless stats client delete reasons."""
+
+    schema = {
+            "total_client_delete_reasons": {
+                "controller_deletes": {
+                    "no_operation": int,
+                    "unknown": int,
+                    "session_manager": int,
+                    "connection_timeout": int,
+                    "datapath_plumb": int,
+                    "wpa_key_exchange_timeout": int,
+                    "802.11w_max_sa_queries_reached": int,
+                    "client_deleted_during_ha_recovery": int,
+                    "inter_instance_roam_failure": int,
+                    "inter_instance_roam_success": int,
+                    "inter_controller_roam_success": int,
+                    "due_to_mobility_failure": int,
+                    "nas_error": int,
+                    "policy_manager_internal_error": int,
+                    "80211v_smart_roam_failed": int,
+                    "dot11v_association_failed": int,
+                    "dot11r_pre_authentication_failure": int,
+                    "sae_authentication_failure": int,
+                    "dot11_failure": int,
+                    "dot11_sae_invalid_message": int,
+                    "dot11_denied_data_rates": int,
+                    "802.11v_client_rssi_lower_than_the_association_rssi_threshold": int,
+                    "invalid_qos_parameter": int,
+                    "dot11_ie_validation_failed": int,
+                    "dot11_group_cipher_in_ie_validation_failed": int,
+                    "dot11_invalid_pairwise_cipher": int,
+                    "dot11_invalid_akm": int,
+                    "dot11_unsupported_rsn_version": int,
+                    "dot11_invalid_rsnie_capabilities": int,
+                    "dot11_received_invalid_pmkid_in_the_received_rsn_ie": int,
+                    "dot11_received_invalid_pmk_length": int,
+                    "dot11_invalid_mdie": int,
+                    "dot11_invalid_ft_ie": int,
+                    "dot11_aid_allocation_conflicts": int,
+                    "avc_client_re_anchored_at_the_foreign_controller": int,
+                    "client_eap_id_timeout": int,
+                    "client_dot1x_timeout": int,
+                    "malformed_eap_key_frame": int,
+                    "eap_key_install_bit_is_not_expected": int,
+                    "eap_key_error_bit_is_not_expected": int,
+                    "eap_key_ack_bit_is_not_expected": int,
+                    "invalid_key_type": int,
+                    "eap_key_secure_bit_is_not_expected": int,
+                    "key_description_version_mismatch": int,
+                    "wrong_replay_counter": 8,
+                    "eap_key_mic_bit_expected": int,
+                    "mic_validation_failed": int,
+                    "mac_theft": int,
+                    "ip_theft": int,
+                    "policy_bind_failure": int,
+                    "web_authentication_failure": int,
+                    "802.1x_authentication_credential_failure": int,
+                    "802.1x_authentication_timeout": int,
+                    "802.11_authentication_failure": int,
+                    "802.11_association_failure": int,
+                    "manually_excluded": int,
+                    "db_error": int,
+                    "anchor_creation_failure": int,
+                    "anchor_invalid_mobility_bssid": int,
+                    "anchor_no_memory": int,
+                    "call_admission_controller_at_anchor_node": int,
+                    "supplicant_restart": int,
+                    "port_admin_disabled": int,
+                    "reauthentication_failure": int,
+                    "client_connection_lost": int,
+                    "error_while_ptk_computation": int,
+                    "mac_and_ip_theft": int,
+                    "qos_policy_failure": int,
+                    "qos_policy_send_to_ap_failure": int,
+                    "qos_policy_bind_on_ap_failure": int,
+                    "qos_policy_unbind_on_ap_failure": int,
+                    "static_ip_anchor_discovery_failure": int,
+                    "vlan_failure": int,
+                    "acl_failure": int,
+                    "redirect_acl_failure": int,
+                    "accounting_failure": int,
+                    "security_group_tag_failure": int,
+                    "fqdn_filter_definition_does_not_exist": int,
+                    "wrong_filter_type,_expected_postauth_fqdn_filter": int,
+                    "wrong_filter_type,_expected_preauth_fqdn_filter": int,
+                    "invalid_group_id_for_fqdn_filter_valid_range_1_16": int,
+                    "policy_parameter_mismatch": int,
+                    "reauth_failure": int,
+                    "wrong_psk": int,
+                    "policy_failure": int,
+                    "aaa_server_unavailable": int,
+                    "aaa_server_not_ready": int,
+                    "no_dot1x_method_configuration": int,
+                    "association_connection_timeout": int,
+                    "mac_auth_connection_timeout": int,
+                    "l2_auth_connection_timeout": int,
+                    "l3_auth_connection_timeout": int,
+                    "mobility_connection_timeout": int,
+                    "static_ip_connection_timeout": int,
+                    "sm_session_creation_timeout": int,
+                    "ip_learn_connection_timeout": int,
+                    "nack_ifid_exists": int,
+                    "guest_lan_invalid_mbssid": int,
+                    "guest_lan_no_memory": int,
+                    "guest_lan_ceate_request_failed": int,
+                    "eogre_reset": int,
+                    "eogre_generic_join_failure": int,
+                    "eogre_ha_reconciliation": int,
+                    "wired_idle_timeout": int,
+                    "ip_update_timeout": int,
+                    "sae_commit_received_in_associated_state": int,
+                    "nack_ifid_mismatch": int,
+                    "eogre_invalid_vlan": int,
+                    "eogre_empty_domain": int,
+                    "eogre_invalid_domain": int,
+                    "eogre_domain_shut": int,
+                    "eogre_invalid_gateway": int,
+                    "eogre_all_gateways_down": int,
+                    "eogre_flex_no_active_gateway": int,
+                    "eogre_rule_matching_error": int,
+                    "eogre_aaa_override_error": int,
+                    "eogre_client_onboarding_error": int,
+                    "eogre_mobility_handoff_error": int,
+                    "l3_vlan_override_connection_timeout": int,
+                    "delete_received_from_ap": int,
+                    "qos_failure": int,
+                    "wpa_group_key_update_timeout": int,
+                    "client_blacklist": int,
+                    "dot11_unsupported_client_capabilities": int,
+                    "dot11_association_denied_unspecified": int,
+                    "dot11_ap_have_insufficient_bandwidth": int,
+                    "dot11_invalid_qos_parameter": int,
+                    "client_not_allowed_by_assisted_roaming": int,
+                    "wired_client_deleted_due_to_wgb_delete": int,
+                    "client_abort": int,
+                    "mobility_peer_delete": int,
+                    "no_ip": int,
+                    "bssid_down": 1,
+                    "dot11_qos_policy": int,
+                    "roam_across_policy_profile_deny": int,
+                    "4way_handshake_failure_m1_issue": int,
+                    "4way_handshake_failure_m3_issue": int,
+                    "exclusion_policy_template_fail": int,
+                    "dot11_cipher_suite_rejected": int
+                },
+                "informational_delete_reason": {
+                    "mobility_wlan_down": int,
+                    "ap_upgrade": int,
+                    "l3_authentication_failure": int,
+                    "ap_down_disjoin": 2,
+                    "mac_authentication_failure": int,
+                    "due_to_ssid_change": int,
+                    "due_to_vlan_change": int,
+                    "admin_deauthentication": int,
+                    "session_timeout": int,
+                    "idle_timeout": int,
+                    "supplicant_request": int,
+                    "mobility_tunnel_down": int,
+                    "dot11v_timer_timeout": int,
+                    "dot11_max_sta": int,
+                    "iapp_disassociation_for_wired_client": int,
+                    "wired_wgb_change": int,
+                    "wired_vlan_change": int,
+                    "wgb_wired_client_joins_as_a_direct_wireless_client": int,
+                    "incorrect_credentials": int,
+                    "wired_client_cleanup_due_to_wgb_roaming": int,
+                    "radio_down": int,
+                    "mobility_failure_on_fast_roam": 54,
+                    "due_to_ip_zone_change": int
+                },
+                "client_initiate_delete": {
+                    "deauthentication_or_disassociation_request": int,
+                    "client_dhcp": int,
+                    "client_eap_timeout": int,
+                    "client_8021x_failure": int,
+                    "client_device_idle": int,
+                    "client_captive_portal_security_failure": int,
+                    "client_decryption_failure": int,
+                    "client_interface_disabled": int,
+                    "client_user_triggered_disassociation": int,
+                    "client_miscellaneous_reason": int,
+                    "unknown": int,
+                    "client_peer_triggered": int,
+                    "client_beacon_loss": int
+                },
+                "ap_deletes": {
+                    "ap_initiated_delete_when_client_is_sending_disassociation": int,
+                    "ap_initiated_delete_for_idle_timeout": int,
+                    "ap_initiated_delete_for_client_acl_mismatch": int,
+                    "ap_initiated_delete_for_ap_auth_stop": int,
+                    "ap_initiated_delete_for_association_expired_at_ap": int,
+                    "ap_initiated_delete_for_4_way_handshake_failed": int,
+                    "ap_initiated_delete_for_dhcp_timeout": int,
+                    "ap_initiated_delete_for_reassociation_timeout": int,
+                    "ap_initiated_delete_for_sa_query_timeout": int,
+                    "ap_initiated_delete_for_intra_ap_roam": int,
+                    "ap_initiated_delete_for_channel_switch_at_ap": int,
+                    "ap_initiated_delete_for_bad_aid": int,
+                    "ap_initiated_delete_for_request": int,
+                    "ap_initiated_delete_for_interface_reset": int,
+                    "ap_initiated_delete_for_all_on_slot": int,
+                    "ap_initiated_delete_for_reaper_radio": int,
+                    "ap_initiated_delete_for_slot_disable": int,
+                    "ap_initiated_delete_for_mic_failure": int,
+                    "ap_initiated_delete_for_vlan_delete": int,
+                    "ap_initiated_delete_for_channel_change": 5,
+                    "ap_initiated_delete_for_stop_reassociation": int,
+                    "ap_initiated_delete_for_packet_max_retry": int,
+                    "ap_initiated_delete_for_transmission_deauth": int,
+                    "ap_initiated_delete_for_sensor_station_timeout": int,
+                    "ap_initiated_delete_for_age_timeout": int,
+                    "ap_initiated_delete_for_transmission_fail_threshold": int,
+                    "ap_initiated_delete_for_uplink_receive_timeout": int,
+                    "ap_initiated_delete_for_sensor_scan_next_radio": int,
+                    "ap_initiated_delete_for_sensor_scan_other_bssid": int,
+                    "ap_initiated_delete_for_auth_timeout_and_web_auth_timeout": int,
+                    "ap_initiated_delete_for_sending_deauth_pak_to_client": int
+                }
+            }
+        }
+
+
+
+# ==============================================
+# Parser for:
+#  * 'show wireless stats client delete reasons'
+# ==============================================
+class ShowWirelessStatsClientDeleteReasons(ShowWirelessStatsClientDeleteReasonsSchema):
+    """Parser for show wireless stats client delete reasons"""
+
+    cli_command = 'show wireless stats client delete reasons'
+    
+    def change_data_type(self, value):
+        if value.isdigit():
+            value = value.strip()
+            value = int(value)
+        else:
+            try:
+                # Change strings to float if possible
+                value = float(value)
+            except ValueError:
+                # if the value is not an int or float, leave it as a string.
+                pass
+        return value
+      
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+          output = output
+
+        section_tracker = []
+        client_delete_dict = {}
+        
+        # Total client delete reasons
+        p_total_client_delete_reasons = re.compile(r"^Total\s+client\s+delete\s+reasons$")
+
+        # Controller deletes
+        p_controller_deletes = re.compile(r"^Controller\s+deletes$")
+
+        # Informational Delete Reason
+        p_informational_delete = re.compile(r"^Informational\s+Delete\s+Reason$")
+
+        # Client initiate delete
+        p_client_initiate_delete = re.compile(r"^Client\s+initiate\s+delete$")
+
+        # AP Deletes
+        p_ap_deletes = re.compile(r"^AP\s+Deletes$")
+
+        # [key] : [value]
+        p_colon_split = re.compile(r"^(?P<key>[\S\s]+\S)\s*: +(?P<value>\d+)$")
+
+
+        for line in output.splitlines():
+            line = line.strip()
+            if p_total_client_delete_reasons.match(line):
+                # Total client delete reasons
+                client_delete_dict.update({ "total_client_delete_reasons": {} })
+                section_tracker.append("total_client_delete_reasons")
+                continue
+            elif p_controller_deletes.match(line):
+                # Controller deletes
+                client_delete_dict["total_client_delete_reasons"].update({ "controller_deletes": {} })
+                section_tracker.append("controller_deletes")
+                continue
+            elif p_informational_delete.match(line):
+                # Informational Delete Reason
+                section_tracker.pop()
+                client_delete_dict["total_client_delete_reasons"].update({ "informational_delete_reason": {} })
+                section_tracker.append("informational_delete_reason")
+                continue
+            elif p_client_initiate_delete.match(line):
+                # Client initiate delete
+                section_tracker.pop()
+                client_delete_dict["total_client_delete_reasons"].update({ "client_initiate_delete": {} })
+                section_tracker.append("client_initiate_delete")
+                continue
+            elif p_ap_deletes.match(line):
+                # AP Deletes
+                section_tracker.pop()
+                client_delete_dict["total_client_delete_reasons"].update({ "ap_deletes": {} })
+                section_tracker.append("ap_deletes")
+                continue
+            elif p_colon_split.match(line):
+                # [key] : [value]
+                match = p_colon_split.match(line)
+                group = match.groupdict()
+                group["key"] = group["key"].replace(" ", "_").replace("-", "_").replace("..", "_").replace("/", "_").replace("___", "_").replace("__", "_").lower()
+                group["value"] = self.change_data_type(group["value"])
+                if len(section_tracker) == 1:
+                    client_delete_dict[section_tracker[-1]].update({ group["key"]: group["value"] })
+                elif len(section_tracker) == 2:
+                    client_delete_dict[section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
+
+        return client_delete_dict
+
+# ======================================
+# Schema for:
+#  * 'show wireless stats client detail'
+# ======================================
+class ShowWirelessStatsClientDetailSchema(MetaParser):
+    """Schema for show wireless stats client detail."""
+
+    schema = {
+    "total_clients": int,
+    "protocol_statistics_client_count": {
+        "802_11b": int,
+        "802_11g": int,
+        "802_11a": int,
+        "802_11n_2_4ghz": int,
+        "802_11n_5_ghz": int,
+        "802_11ac": int,
+        "802_11ax_5_ghz": int,
+        "802_11ax_2_4_ghz": int
+    },
+    "current_client_state_statistics": {
+        "authenticating": int,
+        "mobility": int,
+        "ip_learn": int,
+        "webauth_pending": int,
+        "run": int,
+        "delete_in_progress": int
+    },
+    "client_summary": {
+        "current_clients": int,
+        "excluded_clients": int,
+        "disabled_clients": int,
+        "foreign_clients": int,
+        "anchor_clients": int,
+        "local_clients": int,
+        "idle_clients": int
+    },
+    "client_global_statistics": {
+        "total_association_requests_received": int,
+        "total_association_attempts": int,
+        "total_ft_localauth_requests": int,
+        "total_association_failures": int,
+        "total_association_response_accepts": int,
+        "total_association_response_rejects": int,
+        "total_association_response_errors": int,
+        "total_association_failures_due_to_blacklist": int,
+        "total_association_drops_due_to_multicast_mac": int,
+        "total_association_drops_due_to_throttling": int,
+        "total_association_drops_due_to_unknown_bssid": int,
+        "total_association_drops_due_to_parse_failure": int,
+        "total_association_drops_due_to_other_reasons": int,
+        "total_association_requests_wired_clients": int,
+        "total_association_drops_wired_clients": int,
+        "total_association_success_wired_clients": int,
+        "total_peer_association_requests_wired_clients": int,
+        "total_peer_association_drops_wired_clients": int,
+        "total_peer_association_success_wired_clients": int,
+        "total_association_success_wifi_direct_clients": int,
+        "total_association_rejects_wifi_direct_clients": int,
+        "total_11r_ft_authentication_requests_received": int,
+        "total_11r_ft_authentication_response_success": int,
+        "total_11r_ft_authentication_response_failure":int,
+        "total_11r_ft_action_requests_received": int,
+        "total_11r_ft_action_response_success": int,
+        "total_11r_ft_action_response_failure": int,
+        "total_11r_pmkr0_name_mismatch": int,
+        "total_11r_pmkr1_name_mismatch": int,
+        "total_11r_mdid_mismatch": int,
+        "total_aid_allocation_failures": int,
+        "total_aid_free_failures": int,
+        "total_roam_across_policy_profiles": int,
+        "roam_attempts": {
+            "total_roam_attempts": int,
+            "total_cckm_roam_attempts": int,
+            "total_11r_roam_attempts": int,
+            "total_11r_slow_roam_attempts": int,
+            "total_11i_fast_roam_attempts": int,
+            "total_11i_slow_roam_attempts": int,
+            "total_other_roam_type_attempts": int
+        },
+        "total_roam_failures_in_dot11": int,
+        "total_11r_flex_roam_attempts": int,
+        "wpa3_sae": {
+            "total_wpa3_sae_attempts": int,
+            "total_wpa3_sae_successful_authentications": int,
+            "total_wpa3_sae_authentication_failures": int,
+            "total_incomplete_protocol_failures": int,
+            "total_wpa3_sae_commit_messages_received": int,
+            "total_wpa3_sae_commit_messages_rejected": int,
+            "total_unsupported_group_rejections": int,
+            "total_wpa3_sae_commit_messages_sent": int,
+            "total_wpa3_sae_confirm_messages_received": int,
+            "total_wpa3_sae_confirm_messages_rejected": int,
+            "total_wpa3_sae_message_confirm_field_mismatch": int,
+            "total_wpa3_sae_confirm_message_invalid_length": int,
+            "total_wpa3_sae_confirm_messages_sent": int,
+            "total_wpa3_sae_open_sessions": int,
+            "total_sae_message_drops_due_to_throttling": int
+        },
+        "flexconnect_local_auth_roam": {
+            "total_flexconnect_local_auth_roam_attempts": int,
+            "total_ap_11i_fast_roam_attempts": int,
+            "total_ap_11i_slow_roam_attempts": int
+        },
+        "total_client_state_starts": int,
+        "total_client_state_associated": int,
+        "total_client_state_l2auth_success": int,
+        "total_client_state_l2auth_failures": int,
+        "total_blacklisted_clients_on_dot1xauth_failure": int,
+        "total_client_state_mab_attempts": int,
+        "total_client_state_mab_failed": int,
+        "total_client_state_ip_learn_attempts": int,
+        "total_client_state_ip_learn_failed": int,
+        "total_client_state_l3_auth_attempts": int,
+        "total_client_state_l3_auth_failed": int,
+        "total_client_state_session_push_attempts": int,
+        "total_client_state_session_push_failed": int,
+        "total_client_state_run": int,
+        "total_client_idle_state_attempts": int,
+        "total_client_deleted": int
+    },
+    "total_clients_recovered_from_idle_state": {
+        "total_clients_intra_wncd_idle_to_run": int,
+        "total_clients_inter_wncd_roam_in_idle_state": int,
+        "total_clients_l2_roam_in_idle_state": int,
+        "total_clients_l3_roam_in_idle_state": int,
+        "total_add_mobiles_sent": int,
+        "total_delete_mobiles_sent": int,
+        "total_client_deferred_delete_mobiles": int,
+        "total_client_deferred_delete_mobiles_sent": int,
+        "total_client_deferred_delete_mobile_timeouts": int,
+        "total_udn_payloads_sent": int,
+        "total_key_exchange_attempts": int,
+        "total_broadcast_key_exchange_attempts": int,
+        "total_broadcast_key_exchange_failures": int,
+        "total_eapol_key_sent": int,
+        "total_eapol_key_received": int,
+        "total_m1_sent": int,
+        "total_m3_sent": int,
+        "total_m5_sent": int,
+        "total_m2_received": int,
+        "total_m4_received": int,
+        "total_m6_received": int,
+        "total_m1_resent": int,
+        "total_m3_resent": int,
+        "total_m5_resent": int,
+        "total_data_path_client_create": int,
+        "total_data_path_client_create_success": int,
+        "total_data_path_client_create_failed": int,
+        "total_data_path_deplumb_client_create": int,
+        "total_data_path_deplumb_client_create_success": int,
+        "total_data_path_deplumb_client_create_fail": int,
+        "total_data_path_client_update": int,
+        "total_data_path_client_update_success": int,
+        "total_data_path_client_update_failed": 0,
+        "total_data_path_client_delete": int,
+        "total_data_path_client_delete_success": int,
+        "total_data_path_client_delete_failed": int,
+        "total_data_path_client_nack": int,
+        "total_data_path_client_delete_nack": int,
+        "total_data_path_client_unknown_nack": int,
+        "total_dms_requests_received_in_action_frame": int,
+        "total_dms_responses_sent_in_action_frame": int,
+        "total_dms_requests_received_in_re_assoc_request": int,
+        "total_l3_vlan_override_vlan_change_received": int,
+        "total_l3_vlan_override_disassociations_sent": int,
+        "total_l3_vlan_override_re_associations_received": int,
+        "total_l3_vlan_override_successful_vlan_change": int,
+        "total_ppsk_key_generation_cache_hit": int,
+        "total_ppsk_key_generation_cache_miss": int
+    },
+    "client_state_statistics": {
+        "average_time_in_each_state_ms": {
+            "associated_state": int,
+            "l2_state": int,
+            "mobility_state": int,
+            "ip_learn_state": int,
+            "l3_auth_state": int
+        },
+        "average_run_state_latency_ms": int,
+        "average_run_state_latency_without_user_delay_ms": int,
+        "latency_distribution_ms": {
+            "1_100": int,
+            "100_200": int,
+            "200_300": int,
+            "300_600": int,
+            "600_1000": int,
+            "1000+": int
+        }
+    },
+    "webauth_http_statistics": {
+        "intercepted_http_requests": int,
+        "io_read_events": int,
+        "received_http_messages": int,
+        "io_write_events": int,
+        "sent_http_replies": int,
+        "io_aaa_messages": int,
+        "ssl_ok": int,
+        "ssl_read_would_block": int,
+        "ssl_write_would_block": int,
+        "socket_opens": int,
+        "socket_closes": int
+    },
+    "time_spent_in_each_httpd_state_msec": {
+        "io_reading_state": {
+            "total": int,
+            "max": int,
+            "min": int,
+            "samples": int
+        },
+        "io_writing_state": {
+            "total": int,
+            "max": int,
+            "min": int,
+            "samples": int
+        },
+        "io_aaa_state": {
+            "total": int,
+            "max": int,
+            "min": int,
+            "samples": int
+        },
+        "method_after_reading": {
+            "total": int,
+            "max": int,
+            "min": int,
+            "samples": int
+        },
+        "method_after_writing": {
+            "total": int,
+            "max": int,
+            "min": int,
+            "samples": int
+        },
+        "method_after_aaa": {
+            "total": int,
+            "max": int,
+            "min": int,
+            "samples": int
+        }
+    },
+    "webauth_http_status_counts": {
+        "http_200_ok": int,
+        "http_201_created": int,
+        "http_202_accepted": int,
+        "http_203_provisional_info": int,
+        "http_204_no_content": int,
+        "http_300_multiple_choices": int,
+        "http_301_moved_permanently": int,
+        "http_302_moved_temporarily": int,
+        "http_303_method": int,
+        "http_304_not_modified": int,
+        "http_400_bad_request": int,
+        "http_401_unauthorized": int,
+        "http_402_payment_required": int,
+        "http_403_forbidden": int,
+        "http_404_not_found": int,
+        "http_405_method_not_allowed": int,
+        "http_406_none_acceptable": int,
+        "http_407_proxy_auth_required": int,
+        "http_408_request_timeout": int,
+        "http_409_conflict": int,
+        "http_410_gone": int,
+        "http_500_internal_server_error": int,
+        "http_501_not_implemeneted": int,
+        "http_502_bad_gateway": int,
+        "http_503_service_unavailable": int,
+        "http_504_gateway_timeout": int
+    },
+    "webauth_backpressure_queue_counters": {
+        "pending_ssl_handshakes": int,
+        "pending_https_new_requests": int,
+        "pending_aaa_replies": int
+    },
+    "dot1x_global_statistics": {
+        "rx_start": int,
+        "rx_logoff": int,
+        "rx_resp": int,
+        "rx_resp_id": int,
+        "rx_req": int,
+        "rx_invalid": int,
+        "rx_len_error": int,
+        "rx_total": int,
+        "tx_start": int,
+        "tx_logoff": int,
+        "tx_resp": int,
+        "tx_req": int,
+        "re_tx_req": int,
+        "re_tx_req_fail": int,
+        "tx_req_id": int,
+        "re_tx_req_id": int
+    },
+    "total_client_delete_reasons": {
+        "controller_deletes": {
+            "no_operation": int,
+            "unknown": int,
+            "session_manager": int,
+            "connection_timeout": int,
+            "datapath_plumb": int,
+            "wpa_key_exchange_timeout": int,
+            "802_11w_max_sa_queries_reached": int,
+            "client_deleted_during_ha_recovery": int,
+            "inter_instance_roam_failure": int,
+            "inter_instance_roam_success": int,
+            "inter_controller_roam_success": int,
+            "due_to_mobility_failure": int,
+            "nas_error": int,
+            "policy_manager_internal_error": int,
+            "80211v_smart_roam_failed": int,
+            "dot11v_association_failed": int,
+            "dot11r_pre_authentication_failure": int,
+            "sae_authentication_failure": int,
+            "dot11_failure": int,
+            "dot11_sae_invalid_message": int,
+            "dot11_denied_data_rates": int,
+            "802_11v_client_rssi_lower_than_the_association_rssi_threshold": int,
+            "invalid_qos_parameter": int,
+            "dot11_ie_validation_failed": int,
+            "dot11_group_cipher_in_ie_validation_failed": int,
+            "dot11_invalid_pairwise_cipher": int,
+            "dot11_invalid_akm": int,
+            "dot11_unsupported_rsn_version": int,
+            "dot11_invalid_rsnie_capabilities": int,
+            "dot11_received_invalid_pmkid_in_the_received_rsn_ie": int,
+            "dot11_received_invalid_pmk_length": int,
+            "dot11_invalid_mdie": int,
+            "dot11_invalid_ft_ie": int,
+            "dot11_aid_allocation_conflicts": int,
+            "avc_client_re_anchored_at_the_foreign_controller": int,
+            "client_eap_id_timeout": int,
+            "client_dot1x_timeout": int,
+            "malformed_eap_key_frame": int,
+            "eap_key_install_bit_is_not_expected": int,
+            "eap_key_error_bit_is_not_expected": int,
+            "eap_key_ack_bit_is_not_expected": int,
+            "invalid_key_type": int,
+            "eap_key_secure_bit_is_not_expected": int,
+            "key_description_version_mismatch": int,
+            "wrong_replay_counter": int,
+            "eap_key_mic_bit_expected": int,
+            "mic_validation_failed": int,
+            "mac_theft": int,
+            "ip_theft": int,
+            "policy_bind_failure": int,
+            "web_authentication_failure": int,
+            "802_1x_authentication_credential_failure": int,
+            "802_1x_authentication_timeout": int,
+            "802_11_authentication_failure": int,
+            "802_11_association_failure": int,
+            "manually_excluded": int,
+            "db_error": int,
+            "anchor_creation_failure": int,
+            "anchor_invalid_mobility_bssid": int,
+            "anchor_no_memory": int,
+            "call_admission_controller_at_anchor_node": int,
+            "supplicant_restart": int,
+            "port_admin_disabled": int,
+            "reauthentication_failure": int,
+            "client_connection_lost": int,
+            "error_while_ptk_computation": int,
+            "mac_and_ip_theft": int,
+            "qos_policy_failure": int,
+            "qos_policy_send_to_ap_failure": int,
+            "qos_policy_bind_on_ap_failure": int,
+            "qos_policy_unbind_on_ap_failure": int,
+            "static_ip_anchor_discovery_failure": int,
+            "vlan_failure": int,
+            "acl_failure": int,
+            "redirect_acl_failure": int,
+            "accounting_failure": int,
+            "security_group_tag_failure": int,
+            "fqdn_filter_definition_does_not_exist": int,
+            "wrong_filter_type,_expected_postauth_fqdn_filter": int,
+            "wrong_filter_type,_expected_preauth_fqdn_filter": int,
+            "invalid_group_id_for_fqdn_filter_valid_range_1_16": int,
+            "policy_parameter_mismatch": int,
+            "reauth_failure": int,
+            "wrong_psk": int,
+            "policy_failure": int,
+            "aaa_server_unavailable": int,
+            "aaa_server_not_ready": int,
+            "no_dot1x_method_configuration": int,
+            "association_connection_timeout": int,
+            "mac_auth_connection_timeout": int,
+            "l2_auth_connection_timeout": int,
+            "l3_auth_connection_timeout": int,
+            "mobility_connection_timeout": int,
+            "static_ip_connection_timeout": int,
+            "sm_session_creation_timeout": int,
+            "ip_learn_connection_timeout": int,
+            "nack_ifid_exists": int,
+            "guest_lan_invalid_mbssid": int,
+            "guest_lan_no_memory": int,
+            "guest_lan_ceate_request_failed": int,
+            "eogre_reset": int,
+            "eogre_generic_join_failure": int,
+            "eogre_ha_reconciliation": int,
+            "wired_idle_timeout": int,
+            "ip_update_timeout": int,
+            "sae_commit_received_in_associated_state":int,
+            "nack_ifid_mismatch":int,
+            "eogre_invalid_vlan":int,
+            "eogre_empty_domain":int,
+            "eogre_invalid_domain":int,
+            "eogre_domain_shut":int,
+            "eogre_invalid_gateway":int,
+            "eogre_all_gateways_down": int,
+            "eogre_flex_no_active_gateway": int,
+            "eogre_rule_matching_error": int,
+            "eogre_aaa_override_error": int,
+            "eogre_client_onboarding_error": int,
+            "eogre_mobility_handoff_error": int,
+            "l3_vlan_override_connection_timeout": int,
+            "delete_received_from_ap": int,
+            "qos_failure": int,
+            "wpa_group_key_update_timeout": int,
+            "client_blacklist": int,
+            "dot11_unsupported_client_capabilities": int,
+            "dot11_association_denied_unspecified": int,
+            "dot11_ap_have_insufficient_bandwidth": int,
+            "dot11_invalid_qos_parameter": int,
+            "client_not_allowed_by_assisted_roaming": int,
+            "wired_client_deleted_due_to_wgb_delete": int,
+            "client_abort": int,
+            "mobility_peer_delete": int,
+            "no_ip": int,
+            "bssid_down": int,
+            "dot11_qos_policy": int,
+            "roam_across_policy_profile_deny": int,
+            "4way_handshake_failure_m1_issue": int,
+            "4way_handshake_failure_m3_issue": int,
+            "exclusion_policy_template_fail": int,
+            "dot11_cipher_suite_rejected": int
+        },
+        "informational_delete_reason": {
+            "mobility_wlan_down": int,
+            "ap_upgrade": int,
+            "l3_authentication_failure": int,
+            "ap_down_disjoin": int,
+            "mac_authentication_failure": int,
+            "due_to_ssid_change": int,
+            "due_to_vlan_change": int,
+            "admin_deauthentication": int,
+            "session_timeout": int,
+            "idle_timeout": int,
+            "supplicant_request": int,
+            "mobility_tunnel_down": int,
+            "dot11v_timer_timeout": int,
+            "dot11_max_sta": int,
+            "iapp_disassociation_for_wired_client": int,
+            "wired_wgb_change": int,
+            "wired_vlan_change": int,
+            "wgb_wired_client_joins_as_a_direct_wireless_client": int,
+            "incorrect_credentials": int,
+            "wired_client_cleanup_due_to_wgb_roaming": int,
+            "radio_down": int,
+            "mobility_failure_on_fast_roam": int,
+            "due_to_ip_zone_change": int
+        },
+        "client_initiate_delete": {
+            "deauthentication_or_disassociation_request": int,
+            "client_dhcp": int,
+            "client_eap_timeout": int,
+            "client_8021x_failure": int,
+            "client_device_idle": int,
+            "client_captive_portal_security_failure": int,
+            "client_decryption_failure": int,
+            "client_interface_disabled": int,
+            "client_user_triggered_disassociation": int,
+            "client_miscellaneous_reason": int,
+            "unknown": int,
+            "client_peer_triggered": int,
+            "client_beacon_loss": int
+        },
+        "ap_deletes": {
+            "ap_initiated_delete_when_client_is_sending_disassociation": int,
+            "ap_initiated_delete_for_idle_timeout": int,
+            "ap_initiated_delete_for_client_acl_mismatch": int,
+            "ap_initiated_delete_for_ap_auth_stop": int,
+            "ap_initiated_delete_for_association_expired_at_ap": int,
+            "ap_initiated_delete_for_4_way_handshake_failed": int,
+            "ap_initiated_delete_for_dhcp_timeout": int,
+            "ap_initiated_delete_for_reassociation_timeout": int,
+            "ap_initiated_delete_for_sa_query_timeout": int,
+            "ap_initiated_delete_for_intra_ap_roam": int,
+            "ap_initiated_delete_for_channel_switch_at_ap": int,
+            "ap_initiated_delete_for_bad_aid": int,
+            "ap_initiated_delete_for_request": int,
+            "ap_initiated_delete_for_interface_reset": int,
+            "ap_initiated_delete_for_all_on_slot": int,
+            "ap_initiated_delete_for_reaper_radio": int,
+            "ap_initiated_delete_for_slot_disable": int,
+            "ap_initiated_delete_for_mic_failure": int,
+            "ap_initiated_delete_for_vlan_delete": int,
+            "ap_initiated_delete_for_channel_change": int,
+            "ap_initiated_delete_for_stop_reassociation": int,
+            "ap_initiated_delete_for_packet_max_retry": int,
+            "ap_initiated_delete_for_transmission_deauth": int,
+            "ap_initiated_delete_for_sensor_station_timeout": int,
+            "ap_initiated_delete_for_age_timeout": int,
+            "ap_initiated_delete_for_transmission_fail_threshold": int,
+            "ap_initiated_delete_for_uplink_receive_timeout": int,
+            "ap_initiated_delete_for_sensor_scan_next_radio": int,
+            "ap_initiated_delete_for_sensor_scan_other_bssid": int,
+            "ap_initiated_delete_for_auth_timeout_and_web_auth_timeout": int,
+            "ap_initiated_delete_for_sending_deauth_pak_to_client": int
+        }
+    }
+}
+
+
+# ======================================
+# Parser for:
+#  * 'show wireless stats client detail'
+# ======================================
+class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
+    """Parser for show wireless stats client detail"""
+
+    cli_command = 'show wireless stats client detail'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+          output = output
+            
+        # Total Number of Clients : 16
+        p_total_client = re.compile(r"^Total\s+Number\s+of\s+Clients\s+:\s+(?P<value>\d+)$")
+
+        # Protocol Statistics
+        p_protocol_stats_section = re.compile(r"^Protocol\s+Statistics$")
+
+        # Current client state statistics:
+        p_current_client_stats_section = re.compile(r"^Current\s+client\s+state\s+statistics:$")
+
+        # Client Summary
+        p_client_summary_section = re.compile(r"^Client\s+Summary$")
+
+        # client global statistics:
+        p_client_global_s1 = re.compile(r"^client\s+global\s+statistics:$")
+
+        # Total roam attempts                              : 4200
+        p_client_global_s2 = re.compile(r"^Total\s+roam\s+attempts\s+:\s+(?P<total_roam>\d+)$")
+
+        # Total roam failures in dot11                     : 5
+        p_client_global_s3 = re.compile(r"Total\s+roam\s+failures\s+in\s+dot11\s+:\s+(?P<dot11>\d+)$")
+
+        # Total WPA3 SAE attempts                          : 0
+        p_client_global_s4 = re.compile(r"Total\s+WPA3\s+SAE\s+attempts\s+:\s+(?P<wpa3_sae>\d+)$")
+
+        # Total Flexconnect local-auth roam attempts       : 0
+        p_client_global_s5 = re.compile(r"^Total\s+Flexconnect\s+local-auth\s+roam\s+attempts\s+:\s+(?P<flex_roam>\d+)$")
+
+        # Total client state starts                        : 41695
+        p_client_global_s6 = re.compile(r"^Total\s+client\s+state\s+starts\s+:\s+(?P<start_state>\d+)$")
+
+        # client state statistics:
+        p_client_state_stats = re.compile(r"^client\s+state\s+statistics:$")
+
+        # Total clients recovered from idle state:
+        p_total_clients_recovered_idle = re.compile(r"^Total\s+clients\s+recovered\s+from\s+idle\s+state:$")
+
+        # Average Time in Each State (ms)
+        p_average_time_state = re.compile(r"Average\s+Time\s+in\s+Each\s+State\s+\(ms\)")
+
+        # Average Run State Latency (ms) : 5
+        p_average_run_latency = re.compile(r"^Average\s+Run\s+State\s+Latency\s+\(ms\)\s+:\s+(?P<run_latency>\d+)$")
+
+        # Average Run State Latency without user delay (ms) : 1
+        p_average_run_latency_user = re.compile(r"^Average\s+Run\s+State\s+Latency\s+without\s+user\s+delay\s+\(ms\)\s+:\s+(?P<run_latency_user>\d+)$")
+
+        # Latency Distribution (ms)
+        p_latency_distribution = re.compile(r"^Latency\s+Distribution\s+\(ms\)$")
+
+        # Webauth HTTP Statistics
+        p_webhttp_stats = re.compile(r"^Webauth\s+HTTP\s+Statistics$")
+
+        # Time spent in each httpd states (in msecs)
+        p_time_spent_http_states_section = re.compile(r"Time\s+spent\s+in\s+each\s+httpd\s+states\s+\(in\s+msecs\)")
+
+        # IO Reading state          4654682      58788          0     294534
+        p_time_spent_io_read = re.compile(r"IO\s+Reading\s+state\s+(?P<total>\d+)\s+(?P<max>\d+)\s+(?P<min>\d+)\s+(?P<samples>\d+)")
+
+        # IO Writing state             6445          1          0     293834
+        p_time_spent_io_write = re.compile(r"IO\s+Writing\s+state\s+(?P<total>\d+)\s+(?P<max>\d+)\s+(?P<min>\d+)\s+(?P<samples>\d+)")
+
+        # IO AAA state                    0          0          0          0
+        p_time_spent_io_aaa = re.compile(r"IO\s+AAA\s+state\s+(?P<total>\d+)\s+(?P<max>\d+)\s+(?P<min>\d+)\s+(?P<samples>\d+)")
+
+        # Method after reading         9865          1          0     294534
+        p_time_spent_method_read = re.compile(r"Method\s+after\s+reading\s+(?P<total>\d+)\s+(?P<max>\d+)\s+(?P<min>\d+)\s+(?P<samples>\d+)")
+
+        # Method after writing           31          1          0     293834
+        p_time_spent_method_writing = re.compile(r"Method\s+after\s+writing\s+(?P<total>\d+)\s+(?P<max>\d+)\s+(?P<min>\d+)\s+(?P<samples>\d+)")
+
+        # Method after AAA                0          0          0          0
+        p_time_spent_method_aaa = re.compile(r"Method\s+after\s+AAA\s+(?P<total>\d+)\s+(?P<max>\d+)\s+(?P<min>\d+)\s+(?P<samples>\d+)")
+
+        # Webauth HTTP status counts
+        p_webauth_http_status_counts = re.compile(r"^Webauth\s+HTTP\s+status\s+counts$")
+
+        # Webauth backpressure queue counters
+        p_webauth_backpressure = re.compile(r"Webauth\s+backpressure\s+queue\s+counters")
+
+        # Dot1x Global Statistics
+        p_dot1x_global_section = re.compile(r"Dot1x\s+Global\s+Statistics")
+
+        # RxStart = 6657 RxLogoff = 18  RxResp = 104310 RxRespID = 15453
+        p_dot1x_rxstart = re.compile(r"^RxStart\s+=\s+(?P<start>\d+)\s+RxLogoff\s+=\s+(?P<logoff>\d+)\s+RxResp\s+=\s+(?P<resp>\d+)\s+RxRespID\s+=\s+(?P<respid>\d+)$")
+
+        # RxReq = 0 RxInvalid = 0  RxLenErr = 0
+        p_dot1x_req = re.compile(r"^RxReq\s+=\s+(?P<req>\d+)\s+RxInvalid\s+=\s+(?P<invalid>\d+)\s+RxLenErr\s+=\s+(?P<lenerror>\d+)$")
+
+        # RxTotal = 126939
+        p_dot1x_rx_total = re.compile(r"^RxTotal\s+=\s+(?P<total>\d+)$")
+
+        # TxStart = 0 TxLogoff = 0  TxResp = 0
+        p_dot1x_txstart = re.compile(r"^TxStart\s+=\s+(?P<start>\d+)\s+TxLogoff\s+=\s+(?P<logoff>\d+)\s+TxResp\s+=\s+(?P<resp>\d+)$")
+
+        # TxReq = 117345 ReTxReq = 3909  ReTxReqFail = 11528
+        p_dot1_tx_req = re.compile(r"^TxReq\s+=\s+(?P<req>\d+)\s+ReTxReq\s+=\s+(?P<rereq>\d+)\s+ReTxReqFail\s+=\s+(?P<txfail>\d+)$")
+
+        # TxReqID = 67670 ReTxReqID = 29908  ReTxReqIDFail = 1310
+        p_dot1_tx_reqid = re.compile(r"TxReqID\s+=\s+(?P<reqid>\d+)\s+ReTxReqID\s+=\s+(?P<rereqid>\d+)\s+ReTxReqIDFail\s+=\s+(?P<reqidfail>\d+)$")
+
+        # TxTotal = 185057
+        p_dot1_tx_total = re.compile(r"TxTotal\s+=\s+(?P<tx_total>\d+)$")
+        
+        # Total client delete reasons
+        p_total_client_delete_reasons = re.compile(r"^Total\s+client\s+delete\s+reasons$")
+
+        # Controller deletes
+        p_controller_deletes = re.compile(r"^Controller\s+deletes$")
+
+        # Informational Delete Reason
+        p_informational_delete = re.compile(r"^Informational\s+Delete\s+Reason$")
+
+        # Client initiate delete
+        p_client_initiate_delete = re.compile(r"^Client\s+initiate\s+delete$")
+
+        # AP Deletes
+        p_ap_deletes = re.compile(r"^AP\s+Deletes$")
+
+        # [key] : [value]
+        p_colon_split = re.compile(r"^(?P<key>[\S\s]+\S)\s*: +(?P<value>\d+)$")
+        
+        def change_data_type(self, value):
+            if value.isdigit():
+                value = value.strip()
+                value = int(value)
+            else:
+                try:
+                    # Change strings to float if possible
+                    value = float(value)
+                except ValueError:
+                    # if the value is not an int or float, leave it as a string.
+                    pass
+            return value
+        
+        
+        section_tracker = []
+        client_detail_dict = {}
+
+        for line in output.splitlines():
+          line = line.strip()
+          if p_total_client.match(line):
+              # Total Number of Clients : 16
+              m_total_client = p_total_client.match(line)
+              client_detail_dict.update({ "total_clients": int(m_total_client.group("value")) })
+              continue
+          elif p_protocol_stats_section.match(line):
+              # Protocol Statistics
+              client_detail_dict.update({ "protocol_statistics_client_count": {} })
+              section_tracker.append("protocol_statistics_client_count")
+              continue
+          elif p_current_client_stats_section.match(line):
+              # Current client state statistics:
+              section_tracker.pop()
+              client_detail_dict.update({ "current_client_state_statistics": {} })
+              section_tracker.append("current_client_state_statistics")
+              continue
+          elif p_client_summary_section.match(line):
+              # Client Summary
+              section_tracker.pop()
+              client_detail_dict.update({ "client_summary": {} })
+              section_tracker.append("client_summary")
+              continue
+          elif p_client_global_s1.match(line):
+              # client global statistics:
+              section_tracker.pop()
+              client_detail_dict.update({ "client_global_statistics": {} })
+              section_tracker.append("client_global_statistics")
+              continue
+          elif p_client_global_s2.match(line):
+              # Total roam attempts                              : 4200
+              m_client_global_s2 = p_client_global_s2.match(line)
+              client_detail_dict["client_global_statistics"].update({ "roam_attempts": {} })
+              client_detail_dict["client_global_statistics"]["roam_attempts"].update( {"total_roam_attempts": int(m_client_global_s2.group("total_roam")) })
+              section_tracker.append("roam_attempts")
+              continue
+          elif p_client_global_s3.match(line):
+              # Total roam failures in dot11                     : 5
+              section_tracker.pop()
+              match = p_client_global_s3.match(line)
+              client_detail_dict["client_global_statistics"].update({ "total_roam_failures_in_dot11": int(match.group("dot11")) })
+              continue
+          elif p_client_global_s4.match(line):
+              # Total WPA3 SAE attempts                          : 0
+              m_client_global_s4 = p_client_global_s4.match(line)
+              client_detail_dict["client_global_statistics"].update({ "wpa3_sae": {} })
+              client_detail_dict["client_global_statistics"]["wpa3_sae"].update({ "total_wpa3_sae_attempts": int(m_client_global_s4.group("wpa3_sae")) })
+              section_tracker.append("wpa3_sae")
+              continue
+          elif p_client_global_s5.match(line):
+              # Total Flexconnect local-auth roam attempts       : 0
+              section_tracker.pop()
+              m_client_global_s5 = p_client_global_s5.match(line)
+              client_detail_dict["client_global_statistics"].update({ "flexconnect_local_auth_roam": {} })
+              client_detail_dict["client_global_statistics"]["flexconnect_local_auth_roam"].update({ "total_flexconnect_local_auth_roam_attempts": int(m_client_global_s5.group("flex_roam")) })
+              section_tracker.append("flexconnect_local_auth_roam")
+              continue
+          elif p_client_global_s6.match(line):
+              # Total client state starts                        : 41695
+              section_tracker.pop()
+              match = p_client_global_s6.match(line)
+              client_detail_dict["client_global_statistics"].update({ "total_client_state_starts": int(match.group("start_state")) })
+              continue
+          elif p_total_clients_recovered_idle.match(line):
+              # Total clients recovered from idle state:
+              section_tracker.pop()
+              client_detail_dict.update({ "total_clients_recovered_from_idle_state": {}})
+              section_tracker.append("total_clients_recovered_from_idle_state")
+              continue
+          elif p_client_state_stats.match(line):
+              # client state statistics:
+              section_tracker.pop()
+              client_detail_dict.update({ "client_state_statistics": {} })
+              section_tracker.append("client_state_statistics")
+              continue
+          elif p_average_time_state.match(line):
+              # Average Time in Each State (ms)
+              client_detail_dict["client_state_statistics"].update({ "average_time_in_each_state_ms": {} })
+              section_tracker.append("average_time_in_each_state_ms")
+              continue
+          elif p_average_run_latency.match(line):
+              # Average Run State Latency (ms) : 5
+              m_average_run_latency = p_average_run_latency.match(line)
+              client_detail_dict["client_state_statistics"].update({"average_run_state_latency_ms": int(m_average_run_latency.group("run_latency")) })
+              continue
+          elif p_average_run_latency_user.match(line):
+              # Average Run State Latency without user delay (ms) : 1
+              m_average_run_latency_user = p_average_run_latency_user.match(line)
+              client_detail_dict["client_state_statistics"].update({"average_run_state_latency_without_user_delay_ms": int(m_average_run_latency_user.group("run_latency_user")) })
+              continue
+          elif p_latency_distribution.match(line):
+              # Latency Distribution (ms)
+              section_tracker.pop()
+              client_detail_dict["client_state_statistics"].update({ "latency_distribution_ms": {} })
+              section_tracker.append("latency_distribution_ms")
+          elif p_webhttp_stats.match(line):
+              # Webauth HTTP Statistics
+              section_tracker.pop()
+              section_tracker.pop()
+              client_detail_dict.update({ "webauth_http_statistics": {} })
+              section_tracker.append("webauth_http_statistics")
+              continue
+          elif p_time_spent_http_states_section.match(line):
+              # Time spent in each httpd states (in msecs)
+              client_detail_dict.update({ "time_spent_in_each_httpd_state_msec": {} })
+              continue
+          elif p_time_spent_io_read.match(line):
+              # IO Reading state          4654682      58788          0     294534
+              m_time_spent_io_read = p_time_spent_io_read.match(line)
+              group_m_time_spent_io_read = m_time_spent_io_read.groupdict()
+              client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "io_reading_state": {} })
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"total": int(group_m_time_spent_io_read["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"max": int(group_m_time_spent_io_read["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"min": int(group_m_time_spent_io_read["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_reading_state"].update({"samples": int(group_m_time_spent_io_read["samples"])})
+              continue
+          elif p_time_spent_io_write.match(line):
+              # IO Writing state          4654682      58788          0     294534
+              m_time_spent_io_write = p_time_spent_io_write.match(line)
+              group_m_time_spent_io_write = m_time_spent_io_write.groupdict()
+              client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "io_writing_state": {} })
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"total": int(group_m_time_spent_io_write["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"max": int(group_m_time_spent_io_write["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"min": int(group_m_time_spent_io_write["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_writing_state"].update({"samples": int(group_m_time_spent_io_write["samples"])})
+              continue
+          elif p_time_spent_io_aaa.match(line):
+              # IO AAA state                    0          0          0          0
+              m_time_spent_io_aaa = p_time_spent_io_aaa.match(line)
+              group_m_time_spent_io_aaa = m_time_spent_io_aaa.groupdict()
+              client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "io_aaa_state": {} })
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"total": int(group_m_time_spent_io_aaa["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"max": int(group_m_time_spent_io_aaa["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"min": int(group_m_time_spent_io_aaa["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["io_aaa_state"].update({"samples": int(group_m_time_spent_io_aaa["samples"])})
+              continue
+          elif p_time_spent_method_read.match(line):
+              # Method after reading         9865          1          0     294534
+              m_time_spent_method_read = p_time_spent_method_read.match(line)
+              group_m_time_spent_method_read = m_time_spent_method_read.groupdict()
+              client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "method_after_reading": {} })
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"total": int(group_m_time_spent_method_read["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"max": int(group_m_time_spent_method_read["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"min": int(group_m_time_spent_method_read["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_reading"].update({"samples": int(group_m_time_spent_method_read["samples"])})
+              continue
+          elif p_time_spent_method_writing.match(line):
+              # Method after writing           31          1          0     293834
+              m_time_spent_method_writing = p_time_spent_method_writing.match(line)
+              group_m_time_spent_method_writing = m_time_spent_method_writing.groupdict()
+              client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "method_after_writing": {} })
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"total": int(group_m_time_spent_method_writing["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"max": int(group_m_time_spent_method_writing["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"min": int(group_m_time_spent_method_writing["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_writing"].update({"samples": int(group_m_time_spent_method_writing["samples"])})
+              continue
+          elif p_time_spent_method_aaa.match(line):
+              # Method after AAA                0          0          0          0
+              m_time_spent_method_aaa = p_time_spent_method_aaa.match(line)
+              group_m_time_spent_method_aaa = m_time_spent_method_aaa.groupdict()
+              client_detail_dict["time_spent_in_each_httpd_state_msec"].update({ "method_after_aaa": {} })
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"total": int(group_m_time_spent_method_aaa["total"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"max": int(group_m_time_spent_method_aaa["max"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"min": int(group_m_time_spent_method_aaa["min"])})
+              client_detail_dict["time_spent_in_each_httpd_state_msec"]["method_after_aaa"].update({"samples": int(group_m_time_spent_method_aaa["samples"])})
+              continue
+          elif p_webauth_http_status_counts.match(line):
+              # Webauth HTTP status counts
+              section_tracker.pop()
+              client_detail_dict.update({ "webauth_http_status_counts": {} })
+              section_tracker.append("webauth_http_status_counts")
+              continue
+          elif p_webauth_backpressure.match(line):
+              # Webauth backpressure queue counters
+              section_tracker.pop()
+              client_detail_dict.update({ "webauth_backpressure_queue_counters": {} })
+              section_tracker.append("webauth_backpressure_queue_counters")
+              continue
+          elif p_dot1x_global_section.match(line):
+              # Dot1x Global Statistics
+              client_detail_dict.update({ "dot1x_global_statistics": {} })
+              continue
+          elif p_dot1x_rxstart.match(line):
+              # RxStart = 6657 RxLogoff = 18  RxResp = 104310 RxRespID = 15453
+              m_dot1x_rxstart = p_dot1x_rxstart.match(line)
+              group_m_dot1x_rxstart = m_dot1x_rxstart.groupdict()
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_start": int(group_m_dot1x_rxstart["start"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_logoff": int(group_m_dot1x_rxstart["logoff"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_resp": int(group_m_dot1x_rxstart["resp"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_resp_id": int(group_m_dot1x_rxstart["respid"]) })
+              continue
+          elif p_dot1x_req.match(line):
+              # RxReq = 0 RxInvalid = 0  RxLenErr = 0
+              m_dot1x_req = p_dot1x_req.match(line)
+              group_m_dot1x_req = m_dot1x_req.groupdict()
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_req": int(group_m_dot1x_req["req"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_invalid": int(group_m_dot1x_req["invalid"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_len_error": int(group_m_dot1x_req["lenerror"]) })
+              continue
+          elif p_dot1x_rx_total.match(line):
+              # RxTotal = 126939
+              m_dot1x_rx_total = p_dot1x_rx_total.match(line)
+              client_detail_dict["dot1x_global_statistics"].update({ "rx_total": int(m_dot1x_rx_total.group("total")) })
+              continue
+          elif p_dot1x_txstart.match(line):
+              # TxStart = 0 TxLogoff = 0  TxResp = 0
+              m_dot1x_txstart = p_dot1x_txstart.match(line)
+              group_m_dot1x_txstart = m_dot1x_txstart.groupdict()
+              client_detail_dict["dot1x_global_statistics"].update({ "tx_start": int(group_m_dot1x_txstart["start"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "tx_logoff": int(group_m_dot1x_txstart["logoff"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "tx_resp": int(group_m_dot1x_txstart["resp"]) })
+              continue
+          elif p_dot1_tx_req.match(line):
+              # TxReq = 117345 ReTxReq = 3909  ReTxReqFail = 11528
+              m_dot1_tx_req = p_dot1_tx_req.match(line)
+              group_m_dot1_tx_req = m_dot1_tx_req.groupdict()
+              client_detail_dict["dot1x_global_statistics"].update({ "tx_req": int(group_m_dot1_tx_req["req"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req": int(group_m_dot1_tx_req["rereq"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req_fail": int(group_m_dot1_tx_req["txfail"]) })
+              continue
+          elif p_dot1_tx_reqid.match(line):
+              # TxReqID = 67670 ReTxReqID = 29908  ReTxReqIDFail = 1310
+              m_dot1_tx_reqid = p_dot1_tx_reqid.match(line)
+              group_m_dot1_tx_reqid = m_dot1_tx_reqid.groupdict()
+              client_detail_dict["dot1x_global_statistics"].update({ "tx_req_id": int(group_m_dot1_tx_reqid["reqid"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req_id": int(group_m_dot1_tx_reqid["rereqid"]) })
+              client_detail_dict["dot1x_global_statistics"].update({ "re_tx_req_fail": int(group_m_dot1_tx_reqid["reqidfail"]) })
+              continue
+          elif p_total_client_delete_reasons.match(line):
+              # Total client delete reasons
+              section_tracker.pop()
+              client_detail_dict.update({ "total_client_delete_reasons": {} })
+              section_tracker.append("total_client_delete_reasons")
+              continue
+          elif p_controller_deletes.match(line):
+              # Controller deletes
+              client_detail_dict["total_client_delete_reasons"].update({ "controller_deletes": {} })
+              section_tracker.append("controller_deletes")
+              continue
+          elif p_informational_delete.match(line):
+              # Informational Delete Reason
+              section_tracker.pop()
+              client_detail_dict["total_client_delete_reasons"].update({ "informational_delete_reason": {} })
+              section_tracker.append("informational_delete_reason")
+              continue
+          elif p_client_initiate_delete.match(line):
+              # Client initiate delete
+              section_tracker.pop()
+              client_detail_dict["total_client_delete_reasons"].update({ "client_initiate_delete": {} })
+              section_tracker.append("client_initiate_delete")
+              continue
+          elif p_ap_deletes.match(line):
+              # AP Deletes
+              section_tracker.pop()
+              client_detail_dict["total_client_delete_reasons"].update({ "ap_deletes": {} })
+              section_tracker.append("ap_deletes")
+              continue
+          elif p_colon_split.match(line):
+              # [key] : [value]
+              match = p_colon_split.match(line)
+              group = match.groupdict()
+              group["key"] = group["key"].replace(" ", "_").replace(".", "_").replace("-", "_").replace("___", "_").replace("__", "_").replace("/", "_").lower()
+              print(group["key"])
+              group["value"] = int(group["value"])
+              if len(section_tracker) == 1:
+                  client_detail_dict[section_tracker[-1]].update({ group["key"]: group["value"] })
+              elif len(section_tracker) == 2:
+                  client_detail_dict[section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
+
+
+        return client_detail_dict
+
+      
 # =================================
 # Schema for:
 #  * 'show wireless stats mobility'

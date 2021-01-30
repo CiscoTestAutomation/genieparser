@@ -1,0 +1,7 @@
+
+        show interfaces descriptions
+        Interface       Admin Link Description
+        ge-0/0/0        up    up   none/100G/in/hktGCS002_ge-0/0/0
+        ge-0/0/1        up    up   YW7079/9.6G/BB/sjkGDS221-EC11_xe-0/1/5[SJC]_Area8_Cost100
+        ge-0/0/2        up    up   ve-hkgasr01_Gi2[DefaultCost1000]
+    

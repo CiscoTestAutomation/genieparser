@@ -1,0 +1,8 @@
+
+        show firewall log
+        Log :
+        Time      Filter    Action Interface     Protocol        Src Addr                         Dest Addr
+        10:28:22  pfe       D      ge-0/0/0.0    TCP             10.70.0.2                         10.70.0.1
+        10:15:22  pfe       D      ge-0/0/0.0    TCP             10.70.0.2                         10.70.0.1
+        10:15:19  pfe       D      ge-0/0/0.0    TCP             10.70.0.2                         10.70.0.1
+    

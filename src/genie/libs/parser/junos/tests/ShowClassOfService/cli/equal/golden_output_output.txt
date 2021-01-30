@@ -1,0 +1,15 @@
+
+        show class-of-service interface ge-0/0/2
+        Physical interface: ge-0/0/2, Index: 150
+        Maximum usable queues: 8, Queues in use: 4
+        Exclude aggregate overhead bytes: disabled
+        Logical interface aggregate statistics: disabled
+        Shaping rate: 1000000 bps
+        Scheduler map: <default>, Index: 2
+        Congestion-notification: Disabled
+
+        Logical interface: ge-0/0/2.0, Index: 335
+        Object                  Name                   Type                    Index
+        Classifier              dscp-ipv6-compatibility dscp-ipv6                  9
+        Classifier              ipprec-compatibility   ip                         13
+    

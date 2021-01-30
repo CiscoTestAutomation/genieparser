@@ -1,0 +1,96 @@
+
+        show ospf route brief
+        Topology default Route Table:
+
+        Prefix             Path  Route      NH       Metric NextHop       Nexthop
+                        Type  Type       Type            Interface     Address/LSP
+        10.36.3.3            Intra Router     IP         1201 ge-0/0/1.0    10.169.14.121
+        10.100.5.5            Intra Router     IP         1200 ge-0/0/1.0    10.169.14.121
+        10.19.198.239      Intra Router     IP         1000 ge-0/0/2.0    10.19.198.26
+        10.34.2.250       Intra AS BR      IP          200 ge-0/0/1.0    10.169.14.121
+        10.34.2.251       Intra AS BR      IP          205 ge-0/0/1.0    10.169.14.121
+        10.169.196.241    Intra Router     IP         1200 ge-0/0/1.0    10.169.14.121
+        10.169.14.240     Intra AS BR      IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.241     Intra AS BR      IP          105 ge-0/0/1.0    10.169.14.121
+        10.189.5.253       Intra AS BR      IP            5 ge-0/0/0.0    10.189.5.94
+        192.168.36.119    Intra AS BR      IP        10100 ge-0/0/1.0    10.169.14.121
+        192.168.36.120    Intra AS BR      IP        10100 ge-0/0/1.0    10.169.14.121
+        0.0.0.0/0          Ext1  Network    IP          101 ge-0/0/1.0    10.169.14.121
+        10.1.0.0/24         Ext2  Network    IP           20 ge-0/0/1.0    10.169.14.121
+        10.36.3.3/32         Intra Network    IP         1202 ge-0/0/1.0    10.169.14.121
+        10.16.0.0/30         Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        10.100.5.5/32         Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.100.5.5/32         Intra Network    Spring     1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.19.198.24/30    Intra Network    IP         1000 ge-0/0/2.0
+        10.19.198.28/30    Intra Network    IP         1005 ge-0/0/0.0    10.189.5.94
+        10.19.198.239/32   Intra Network    IP         1001 ge-0/0/2.0    10.19.198.26
+        10.19.198.239/32   Intra Network    Spring     1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.174.132.237/32   Ext1  Network    IP          150 ge-0/0/1.0    10.169.14.121
+        10.34.2.200/30    Intra Network    IP          205 ge-0/0/1.0    10.169.14.121
+        10.34.2.250/32    Intra Network    IP          200 ge-0/0/1.0    10.169.14.121
+        10.34.2.250/32    Intra Network    Spring      200 ge-0/0/1.0    10.169.14.121
+        10.34.2.251/32    Intra Network    IP          205 ge-0/0/1.0    10.169.14.121
+        10.34.2.251/32    Intra Network    Spring      205 ge-0/0/1.0    10.169.14.121
+        10.15.0.0/30        Intra Network    IP         1001 ge-0/0/2.0    10.19.198.26
+        10.64.0.0/30        Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.55.0.0/24       Intra Network    IP          100 ge-0/0/3.0
+        10.169.196.212/30 Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        10.169.196.216/30 Intra Network    IP         1205 ge-0/0/1.0    10.169.14.121
+        10.169.196.241/32 Intra Network    IP         1201 ge-0/0/1.0    10.169.14.121
+        10.169.196.241/32 Intra Network    Spring     1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.169.14.16/30   Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.169.14.32/30   Intra Network    IP          225 ge-0/0/1.0    10.169.14.121
+        10.169.14.120/30  Intra Network    IP          100 ge-0/0/1.0
+        10.169.14.128/30  Intra Network    IP          125 ge-0/0/0.0    10.189.5.94
+        10.169.14.156/30  Intra Network    IP          200 ge-0/0/1.0    10.169.14.121
+        10.169.14.240/32  Intra Network    IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.240/32  Intra Network    Spring      100 ge-0/0/1.0    10.169.14.121
+                                            Bkup SPRING     ge-0/0/0.0    10.189.5.94
+        10.169.14.241/32  Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.169.14.241/32  Intra Network    Spring      105 ge-0/0/1.0    10.169.14.121
+        10.169.14.242/32  Intra Network    IP          100 ge-0/0/1.0    10.169.14.121
+        10.169.14.243/32  Intra Network    IP          105 ge-0/0/1.0    10.169.14.121
+        10.189.5.92/30     Intra Network    IP            5 ge-0/0/0.0
+        10.189.5.252/32    Intra Network    IP            0 lo0.0
+        10.189.5.252/32    Intra Network    Spring        0 lo0.0
+        10.189.5.253/32    Intra Network    IP            5 ge-0/0/0.0    10.189.5.94
+        10.189.5.253/32    Intra Network    Spring        5 ge-0/0/0.0    10.189.5.94
+        192.168.220.0/30       Intra Network    IP         1200 ge-0/0/1.0    10.169.14.121
+        192.168.36.119/32 Intra Network    IP        10101 ge-0/0/1.0    10.169.14.121
+        192.168.36.120/32 Intra Network    IP        10101 ge-0/0/1.0    10.169.14.121
+        2567               Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        2567 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        2568               Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        2568 (S=0)         Intra Network    Mpls          0 ge-0/0/1.0    10.169.14.121
+        167966             Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        167966 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        167967             Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+        167967 (S=0)       Intra Network    Mpls          0 ge-0/0/2.0    10.19.198.26
+        28985              Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28985 (S=0)        Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28986              Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        28986 (S=0)        Intra Network    Mpls          0 ge-0/0/0.0    10.189.5.94
+        17000              Intra Network    Mpls       1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16051              Intra Network    Mpls        100 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16051 (S=0)        Intra Network    Mpls        100 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16052              Intra Network    Mpls        105 ge-0/0/1.0    10.169.14.121
+        16061              Intra Network    Mpls        200 ge-0/0/1.0    10.169.14.121
+        16062              Intra Network    Mpls        205 ge-0/0/1.0    10.169.14.121
+        16063              Intra Network    Mpls       1201 ge-0/0/1.0    10.169.14.121
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16072              Intra Network    Mpls          5 ge-0/0/0.0    10.189.5.94
+        16073              Intra Network    Mpls       1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+        16073 (S=0)        Intra Network    Mpls       1001 ge-0/0/2.0    10.19.198.26
+                                            Bkup MPLS       ge-0/0/0.0    10.189.5.94
+    

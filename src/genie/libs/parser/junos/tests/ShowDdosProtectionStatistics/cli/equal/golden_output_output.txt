@@ -1,0 +1,16 @@
+show ddos-protection statistics 
+DDOS protection global statistics:
+Policing on routing engine:         Yes
+Policing on FPC:                    Yes
+Flow detection:                     No
+Logging:                            Yes
+Policer violation report rate:      100
+Flow report rate:                   100
+Default flow detection mode         Automatic
+Default flow level detection mode   Automatic
+Default flow level control mode     Drop
+Currently violated packet types:    0
+Packet types have seen violations:  0
+Total violation counts:             0
+Currently tracked flows:            0
+Total detected flows:               0
