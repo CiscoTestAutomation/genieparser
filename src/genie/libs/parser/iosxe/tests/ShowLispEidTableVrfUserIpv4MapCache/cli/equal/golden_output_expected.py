@@ -26,7 +26,7 @@ expected_output = {
                         "status": "Encapsulating to proxy ETR"
                     }
                 },
-                "8.0.0.0/7": {
+                "10.64.0.0/7": {
                     "uptime": "07:18:55",
                     "expire": "00:07:19",
                     "via": [

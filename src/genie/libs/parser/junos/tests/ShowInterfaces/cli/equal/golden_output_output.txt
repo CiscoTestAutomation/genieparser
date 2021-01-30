@@ -2,7 +2,7 @@
         show interfaces
         Physical interface: ge-0/0/0, Enabled, Physical link is Up
         Interface index: 148, SNMP ifIndex: 526
-        Description: none/100G/in/hktGCS002_ge-0/0/0
+        Description: TEST-DESC:1|TEST#1234 DEV
         Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
         Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
         Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online

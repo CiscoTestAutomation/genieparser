@@ -2,6 +2,7 @@
 
 IOSXE parsers for the following show commands:
 	* 'show run policy-map {name}'
+	* 'show running-config interface {interface}'
 '''
 
 # Python
@@ -214,6 +215,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('authentication_timer_reauthenticate_server'): bool,
                 Optional('authentication_violation'): str,
 				Optional('carrier_delay'): list,
+				Optional('shutdown'): bool,
 				Optional('encapsulation_dot1q'): str,
                 Optional('description'): str,
                 Optional('dot1x_pae_authenticator'): bool,
@@ -289,7 +291,8 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 		p2 = re.compile(r'^description +(?P<description>[\S\s]+)$')
 
 		# vrf forwarding Mgmt-intf
-		p3 = re.compile(r'^vrf +forwarding +(?P<vrf>[\S\s]+)$')
+		# ip vrf forwarding oam
+		p3 = re.compile(r'^(ip )?vrf +forwarding +(?P<vrf>[\S\s]+)$')
 
 		# ip address 10.1.21.249 255.255.255.0
 		p4 = re.compile(r'^ip +address +(?P<ip>[\S]+) +(?P<netmask>[\S]+)$')

@@ -1,0 +1,87 @@
+
+Number of Critical alarms:  0
+Number of Major alarms:     0
+Number of Minor alarms:     0
+
+
+Sensor List:  Environmental Monitoring
+ Sensor           Location          State          Reading           Threshold(Minor,Major,Critical,Shutdown)
+ Temp: Coretemp   R0                Normal            47 Celsius          	(107,117,123,125)(Celsius)
+ Temp: UADP       R0                Normal            56 Celsius          	(107,117,123,125)(Celsius)
+ V1: VX1          R0                Normal            871 mV               	na
+ V1: VX2          R0                Normal            1499 mV               	na
+ V1: VX3          R0                Normal            1055 mV               	na
+ V1: VX4          R0                Normal            851 mV               	na
+ V1: VX5          R0                Normal            1509 mV               	na
+ V1: VX6          R0                Normal            1304 mV               	na
+ V1: VX7          R0                Normal            1008 mV               	na
+ V1: VX8          R0                Normal            1098 mV               	na
+ V1: VX9          R0                Normal            1204 mV               	na
+ V1: VX10         R0                Normal            1704 mV               	na
+ V1: VX11         R0                Normal            1224 mV               	na
+ V1: VX12         R0                Normal            1804 mV               	na
+ V1: VX13         R0                Normal            2488 mV               	na
+ V1: VX14         R0                Normal            3290 mV               	na
+ V1: VX15         R0                Normal            5020 mV               	na
+ V1: VX16         R0                Normal            900 mV               	na
+ Temp:   outlet   R0                Normal            39 Celsius          	(63 ,73 ,103,105)(Celsius)
+ Temp:    inlet   R0                Normal            32 Celsius          	(56 ,66 ,96 ,98 )(Celsius)
+ HotSwap: Volts   R0                Normal            53 V DC             	na
+ HotSwap: Power   R0                Normal            263 Watts            	na
+ V1: VX1          1/0               Normal            1027 mV               	na
+ V1: VX2          1/0               Normal            899 mV               	na
+ V1: VX3          1/0               Normal            1801 mV               	na
+ V1: VX4          1/0               Normal            3306 mV               	na
+ V1: VX5          1/0               Normal            3315 mV               	na
+ V1: VX6          1/0               Normal            1508 mV               	na
+ V1: VX7          1/0               Normal            999 mV               	na
+ V1: VX8          1/0               Normal            12031 mV               	na
+ V1: VX9          1/0               Normal            1037 mV               	na
+ V1: VX10         1/0               Normal            1036 mV               	na
+ V1: VX11         1/0               Normal            1038 mV               	na
+ V1: VX12         1/0               Normal            1036 mV               	na
+ Temp:   Outlet   1/0               Normal            31 Celsius          	(51 ,61 ,88 ,90 )(Celsius)
+ Temp:    Inlet   1/0               Normal            28 Celsius          	(50 ,60 ,84 ,86 )(Celsius)
+ HotSwap: Volts   1/0               Normal            53 V DC             	na
+ HotSwap: Power   1/0               Normal            413 Watts            	na
+ V1: VX1          5/0               Normal            3301 mV               	na
+ V1: VX2          5/0               Normal            899 mV               	na
+ V1: VX3          5/0               Normal            995 mV               	na
+ V1: VX4          5/0               Normal            1025 mV               	na
+ V1: VX5          5/0               Normal            1507 mV               	na
+ V1: VX6          5/0               Normal            1200 mV               	na
+ V1: VX7          5/0               Normal            1500 mV               	na
+ V1: VX8          5/0               Normal            1792 mV               	na
+ V1: VX9          5/0               Normal            2085 mV               	na
+ V1: VX10         5/0               Normal            2508 mV               	na
+ V1: VX11         5/0               Normal            3313 mV               	na
+ V1: VX12         5/0               Normal            851 mV               	na
+ V1: VX13         5/0               Normal            1036 mV               	na
+ V1: VX14         5/0               Normal            1035 mV               	na
+ V1: VX15         5/0               Normal            1033 mV               	na
+ V1: VX16         5/0               Normal            1035 mV               	na
+ Temp:   Outlet   5/0               Normal            37 Celsius          	(58 ,68 ,111,113)(Celsius)
+ Temp:    Inlet   5/0               Normal            33 Celsius          	(52 ,62 ,104,106)(Celsius)
+ HotSwap: Volts   5/0               Normal            53 V DC             	na
+ HotSwap: Power   5/0               Normal            311 Watts            	na
+
+Power                                                       Fan States
+Supply  Model No              Type  Capacity  Status        1     2
+------  --------------------  ----  --------  ------------  -----------
+PS1     C9400-PWR-3200AC      ac    3200 W    active        good  good
+PS2     C9400-PWR-3200AC      ac    n.a.      faulty        good  good
+PS4     C9400-PWR-3200AC      ac    n.a.      faulty        good  good
+
+PS Current Configuration Mode : Combined
+PS Current Operating State    : Combined
+
+Power supplies currently active    : 1
+Power supplies currently available : 1
+
+
+Fantray : good
+Power consumed by Fantray : 540 Watts
+Fantray airflow direction : side-to-side
+Fantray beacon LED: off
+Fantray status LED: green
+SYSTEM : GREEN

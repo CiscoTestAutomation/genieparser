@@ -95,40 +95,40 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
             out = output
 
         ret_dict = {}
-        p1_1 = re.compile(r'^##### MST(?P<mst_id>\d+) +\s+vlans\s+mapped: '
+        p1_1 = re.compile(r'^##### MST(?P<mst_id>\d+) +\s+vlans\s+mapped: '
                           r'+\s+(?P<vlan>\w+\-\w+,\w+\-\w+)$')
             
-        p2_1 = re.compile(r'^Bridge +\saddress\s+(?P<b_address>\w+\.\w+.\w+)'
-                          r' +\spriority +\s(?P<b_priority>\d+)\s+\(\d+\s+sysid'
+        p2_1 = re.compile(r'^Bridge +\saddress\s+(?P<b_address>\w+\.\w+.\w+)'
+                          r' +\spriority +\s(?P<b_priority>\d+)\s+\(\d+\s+sysid'
                           r'\s+(?P<b_sysid>\d+)\)$')
 
-        p3_1 = re.compile(r'^Root +\s(?P<switch>\w+\s+\w+)\s+for\s+the\s+(?P<root>\w+)$')
+        p3_1 = re.compile(r'^Root +\s(?P<switch>\w+\s+\w+)\s+for\s+the\s+(?P<root>\w+)$')
         
         p3_2= re.compile(r'^Regional\s+Root\s(?P<switch>\w+\s+\w+)$')
 
-        p4_1 = re.compile(r'^(?P<mst_domain>\w+) +\shello\s+time\s+'
+        p4_1 = re.compile(r'^(?P<mst_domain>\w+) +\shello\s+time\s+'
                           r'(?P<hello_time>\d+),\s+forward\s+delay\s+'
                           r'(?P<forward_delay>\d+),\s+max\s+age\s+(?P<max_age>\d+), '
-                          r'((txholdcount|max hops))\ *\s(?P<holdcount_or_maxhops>\d+)$')
+                          r'((txholdcount|max hops))\ *\s(?P<holdcount_or_maxhops>\d+)$')
 
         p5_1 = re.compile(r'^(?P<port_channel>\w+)\sof\s+\w+\s+is\s+(?P<port_state>\w+)\s+'
                           r'\(Bridge Assurance\s+(?P<bridge_assurance_inconsistent>\w+), '
                           r'VPC Peer-link\s+(?P<vpc_peer_link_inconsistent>\w+)$')
 
-        p6_1 = re.compile(r'^Port\s+info +\sport\s+id +\s(?P<port_id>\d+\.*\d+)'
-                          r' +\spriority +\s(?P<port_priority>\d+)'
-                          r' +\scost +\s(?P<port_cost>\d+)$')
+        p6_1 = re.compile(r'^Port\s+info +\sport\s+id +\s(?P<port_id>\d+\.*\d+)'
+                          r' +\spriority +\s(?P<port_priority>\d+)'
+                          r' +\scost +\s(?P<port_cost>\d+)$')
             
-        p7_1 = re.compile(r'^Designated\s+root +\saddress\s+(?P<d_root_address>'
-                          r'\w+\.\w+\.\w+) +\spriority +\s(?P<d_priority>\d+)'
-                          r' +\scost +\s(?P<d_cost>\d+)$')
+        p7_1 = re.compile(r'^Designated\s+root +\saddress\s+(?P<d_root_address>'
+                          r'\w+\.\w+\.\w+) +\spriority +\s(?P<d_priority>\d+)'
+                          r' +\scost +\s(?P<d_cost>\d+)$')
 
-        p7_2 = re.compile(r'Design.\s+regional\s+root\s+address\s+(?P<designated_regional_root_address>\w+\.\w+\.\w+) '
-                          r'+\spriority +\s(?P<designated_regional_root_priority>\d+) +\scost +\s(?P<designated_regional_root_cost>\d+)')
+        p7_2 = re.compile(r'Design.\s+regional\s+root\s+address\s+(?P<designated_regional_root_address>\w+\.\w+\.\w+) '
+                          r'+\spriority +\s(?P<designated_regional_root_priority>\d+) +\scost +\s(?P<designated_regional_root_cost>\d+)')
 
-        p8_1 = re.compile(r'^Designated\s+bridge +\saddress\s+(?P<d_bridge_address>'
-                          r'\w+\.\w+\.\w+) +\spriority +\s(?P<d_bridge_priority>\d+)'
-                          r' +\sport\s+id\s+(?P<d_bridge_port_id>\d+(\.\d+)*)$')
+        p8_1 = re.compile(r'^Designated\s+bridge +\saddress\s+(?P<d_bridge_address>'
+                          r'\w+\.\w+\.\w+) +\spriority +\s(?P<d_bridge_priority>\d+)'
+                          r' +\sport\s+id\s+(?P<d_bridge_port_id>\d+(\.\d+)*)$')
             
         p9_1 = re.compile(r'^Timers\:\s+message\s+expires\s+in\s+'
                           r'(?P<message_expires_in>\d+)\s+sec,\s+forward'
@@ -142,7 +142,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
             line = line.strip()
 
 
-            ##### MST0    vlans mapped:   1-399,501-4094
+            ##### MST0    vlans mapped:   1-399,501-4094
             m = p1_1.match(line)
             if m:
                 mst_id = m.groupdict()['mst_id']
@@ -152,7 +152,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                 instances_dict['vlans_mapped'] = m.groupdict()['vlan']
                 continue
 
-            # Bridge        address 0023.04ff.ad03  priority      32768 (32768 sysid 0) 
+            # Bridge        address 0023.04ff.ad03  priority      32768 (32768 sysid 0) 
             m = p2_1.match(line)
             if m:
                 instances_dict['bridge_address'] = m.groupdict()['b_address']
@@ -160,7 +160,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                 instances_dict['sys_id'] = int(m.groupdict()['b_sysid'])
                 continue
 
-            # Root          this switch for the CIST
+            # Root          this switch for the CIST
             m = p3_1.match(line)
             if m:
                 instances_dict['root_for_cist'] = m.groupdict()['switch']
@@ -172,8 +172,8 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                 instances_dict['regional_root'] = m.groupdict()['switch']
                 continue
 
-            # Operational   hello time 10, forward delay 30, max age 40, txholdcount 6 
-            # Configured    hello time 10, forward delay 30, max age 40, max hops    255
+            # Operational   hello time 10, forward delay 30, max age 40, txholdcount 6 
+            # Configured    hello time 10, forward delay 30, max age 40, max hops    255
             m = p4_1.match(line)
             if m:
                 domain = m.groupdict()['mst_domain']
@@ -204,7 +204,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
 
                 continue
 
-            # Port info             port id       128.4125  priority    128  cost   500      
+            # Port info             port id       128.4125  priority    128  cost   500      
             m = p6_1.match(line)
             if m:
                 intf_dict['port_id'] = m.groupdict()['port_id']
@@ -212,7 +212,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                 intf_dict['port_cost'] = int(m.groupdict()['port_cost'])
                 continue
 
-            # Designated root       address 0023.04ff.ad03  priority  32768  cost   0        
+            # Designated root       address 0023.04ff.ad03  priority  32768  cost   0        
             m = p7_1.match(line)
             if m:
                 intf_dict['designated_root_address'] = m.groupdict()['d_root_address']
@@ -227,7 +227,7 @@ class ShowSpanningTreeMst(ShowSpanningTreeMstSchema):
                 intf_dict['designated_regional_root_cost'] = int(m.groupdict()['designated_regional_root_cost'])
                 continue
 
-            # Designated bridge     address 4055.39ff.fee7  priority  61440  port id 128.4125
+            # Designated bridge     address 4055.39ff.fee7  priority  61440  port id 128.4125
             m = p8_1.match(line)
             if m:
                 intf_dict['designated_bridge_address'] = m.groupdict()['d_bridge_address']
@@ -324,15 +324,15 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         p6 = re.compile(r'^Loopguard +Default\s+is +(?P<loop_guard>\w+)$')
         p7 = re.compile(r'^(?:Configured +)?Pathcost +method +used\s+is '
                         r'+(?P<path_cost_method>\w+)(?: +\(Operational +value +is +(?P<operational_value>\w+)\))?$')
-        p8 = re.compile(r'^PVST\s+Simulation +\s+is\s+(?P<pvst_simulation>\w+)$')
+        p8 = re.compile(r'^PVST\s+Simulation +\s+is\s+(?P<pvst_simulation>\w+)$')
         p9 = re.compile(r'^vPC +peer-switch\s+is +(?P<vpc_peer_switch>\w+)(?: +\((?P<vpc_peer_switch_status>[\S]+)?\))$')
         p10 = re.compile(r'^STP-Lite\s+is +(?P<stp_lite>\w+)$')
-        p11 = re.compile(r'^(?P<mode_name>\w+) *\s+(?P<blocking>\d+) '
-                         r'*\s+(?P<listening>\d+) *\s+(?P<learning>\d+) '
-                         r'*\s+(?P<forwarding>\d+) *\s+(?P<stp_active>\d+)$')
-        p12 = re.compile(r'^\d+\s+\w+ *\s+(?P<blockings>\d+) '
-                         r'*\s+(?P<listenings>\d+) *\s+(?P<learnings>\d+) '
-                         r'*\s+(?P<forwardings>\d+) *\s+(?P<stp_actives>\d+)$')
+        p11 = re.compile(r'^(?P<mode_name>\w+) *\s+(?P<blocking>\d+) '
+                         r'*\s+(?P<listening>\d+) *\s+(?P<learning>\d+) '
+                         r'*\s+(?P<forwarding>\d+) *\s+(?P<stp_active>\d+)$')
+        p12 = re.compile(r'^\d+\s+\w+ *\s+(?P<blockings>\d+) '
+                         r'*\s+(?P<listenings>\d+) *\s+(?P<learnings>\d+) '
+                         r'*\s+(?P<forwardings>\d+) *\s+(?P<stp_actives>\d+)$')
 
         p13 = re.compile(r'^(?P<root_bridge_for>(?:(?:[\w-]+, +)+)?[\w-]+)$')
 
@@ -445,7 +445,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                 mode_name_dict.update({k: int(v) for k,v in group.items() if 'mode_name' not in k})
                 continue
 
-            # 1 mst                        1         0        0          0          1   
+            # 1 mst                        1         0        0          0          1   
             m = p12.match(line)
             if m:
                 stats_dict = ret_dict.setdefault('total_statistics', {})
@@ -655,7 +655,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             line = line.strip()
 
 
-        #  MST0000 is executing the mstp compatible Spanning Tree protocol
+        #  MST0000 is executing the mstp compatible Spanning Tree protocol
         # VLAN0109 is executing the rstp compatible Spanning Tree protocol
             m = p1.match(line)
             if m:
@@ -667,7 +667,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 inst_dict[self.MODE_KEY_MAP[mode]] = int(group['inst'])
                 continue
 
-            #   Bridge Identifier has priority 32768, sysid 0, address 0023.04ff.ad03
+            #   Bridge Identifier has priority 32768, sysid 0, address 0023.04ff.ad03
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -675,8 +675,8 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 inst_dict.update({k:int(v) for k, v in group.items()})
                 continue
 
-            #   Configured hello time 10, max age 40, forward delay 30
-            #   Configured hello time 10, fex hello time 10, max age 40, forward delay 30
+            #   Configured hello time 10, max age 40, forward delay 30
+            #   Configured hello time 10, fex hello time 10, max age 40, forward delay 30
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -712,7 +712,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 inst_dict['topology_from_port'] = m.groupdict()['topology_from_port']
                 continue
 
-            # Times:  hold 1, topology change 70, notification 10
+            # Times:  hold 1, topology change 70, notification 10
             m = p6.match(line)
             if m:
                 time_dict = inst_dict.setdefault('times', {})

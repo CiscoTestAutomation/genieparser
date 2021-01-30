@@ -1,30 +1,49 @@
 #!/usr/bin/env python
 
-import os
+# Written by Thomas Ryan
+
 import re
 import pathlib
 import argparse
 
-# Recursive function for putting the file together because we're cool like that
-def build_file(parsed_dict, txt="", indent=-1):
-    # This will be the end of the dict tree where it's a list
-    if isinstance(parsed_dict, list):
-        for item in parsed_dict:
-            txt += ' ' * indent + '* ' + item + '\n'
-        return txt
-    # Recursively go through the keys in the dict
-    for key in parsed_dict:
-        # For the first level of the dict that holds the New/Fix labels
-        if indent == -1:
+# Linked list class to store our information
+class LList():
+    def __init__(self, key, prev=None):
+        self.prev = prev.set_next(self) if prev else None
+        self.next = None
+        self.key = key
+
+    def set_next(self, obj):
+        if isinstance(self.next, list):
+            self.next.append(obj)
+            return self
+        if self.next:
+            self.next = [self.next]
+            self.next.append(obj)
+            return self
+        self.next = obj
+        return self
+
+# Function for building our file
+def build_file(llist, txt="", indent=-4):
+    if isinstance(llist, LList):
+        if not llist.prev:
             txt += '-' * 80 + '\n'
-            txt += '{:^80}\n'.format(key)
+            txt += '{:^80}\n'.format(llist.key)
             txt += '-' * 80 + '\n'
-            txt = build_file(parsed_dict.get(key), txt, 0) + '\n\n'
-        # Everything else that isn't New/Fix or a list of data
         else:
-            txt += ' ' * indent + '* ' + key + '\n'
-            txt = build_file(parsed_dict.get(key), txt, indent+4)
-    
+            if indent == 0:
+                txt += ' ' * indent + '\n* ' + llist.key.upper() + '\n'
+            else:
+                txt += ' ' * indent + '* ' + llist.key + '\n'
+
+    if isinstance(llist.next, list):
+        for sub_llist in llist.next:
+            txt = build_file(sub_llist, txt, indent+4)
+    else:
+        if llist.next:
+            txt = build_file(llist.next, txt, indent+4)
+
     return txt
 
 # Main function
@@ -68,17 +87,12 @@ if __name__ == "__main__":
     #                                 Fix
     p2 = re.compile(r'^ *(?P<key>[^\*\-\s]+)$')
 
-    # * IOSXE
-    # * Junos
-    p3 = re.compile(r'^ {0,3}\* +(?P<os>[\S ]+)$')
+    p3 = re.compile(r'^(?P<spaces>\s*)\* *(?P<data>.+):?$')
 
-    #     * Added ShowLdpSessionIpaddressDetail
-    #     * Fixed ShowLDPOverviewSchema
-    p4 = re.compile(r'^ {4,7}\* +(?P<change>[\S ]+)$')
-
-    #         * Made several keys optional
-    #         * Show Ldp Session Ipaddress Detail
-    p5 = re.compile(r'^ {8}\* +(?P<note>[\S ]+)$')
+    # Some variables for our use
+    last_space = 0
+    key_dict = dict()
+    key = None
 
     # Open each file (skip the template file if it exists) and parse through each one
     # Goal here is to make a dictionary structure 
@@ -98,29 +112,56 @@ if __name__ == "__main__":
                 m = p2.match(line)
                 if m:
                     group = m.groupdict()
-                    os_dict = parsed_dict.setdefault(group.get('key').title(), {})
+                    key = group['key'].title()
+                    key_dict.setdefault(key, LList(key))
+                    index_list = list()
 
-                # * IOSXE
-                # * Junos
                 m = p3.match(line)
                 if m:
-                    group = m.groupdict()
-                    change_dict = os_dict.setdefault(group.get('os').upper(), {})
+                    space_count = len(m.groupdict()['spaces'])
+                    data = m.groupdict()['data'].replace(':','').strip().title()
 
-                #     * Added ShowLdpSessionIpaddressDetail
-                #     * Fixed ShowLDPOverviewSchema
-                m = p4.match(line)
-                if m:
-                    group = m.groupdict()
-                    notes_list = change_dict.setdefault(group.get('change'), [])
+                    if space_count not in index_list:
+                        index_list.append(space_count)
+                        index_list.sort()
 
-                #         * Made several keys optional
-                #         * Show Ldp Session Ipaddress Detail
-                m = p5.match(line)
-                if m:
-                    group = m.groupdict()
-                    notes_list.append(group.get('note'))
+                    if space_count == 0:
+                        last_space = space_count
+                        if isinstance(key_dict[key].next, list):
+                            if data in [llist.key for llist in key_dict[key].next]:
+                                for llist in key_dict[key].next:
+                                    if llist.key == data:
+                                        last_llist = llist
+                                        break
+                            else:
+                                last_llist = LList(data, key_dict[key])
+                        else:
+                            if key_dict[key].next and key_dict[key].next.key == data:
+                                last_llist = key_dict[key].next
+                            else:
+                                last_llist = LList(data, key_dict[key])
+                        continue
+
+                    elif space_count == last_space:
+                        last_llist = LList(data, last_llist.prev)
+                        continue
+
+                    elif space_count > last_space:
+                        last_space = space_count
+                        last_llist = LList(data, last_llist)
+                        continue
+                    
+                    elif space_count < last_space:
+                        go_back = index_list.index(last_space) - index_list.index(space_count)
+                        for i in range(abs(go_back)+1):
+                            last_llist = last_llist.prev
+                        last_llist = LList(data, last_llist)
+                        last_space = space_count
+                        continue
 
     # And after a hard second's work it's time to write it all to a file
     with open(FINAL_PATH, 'w') as fil:
-        fil.write(build_file(parsed_dict))
+        txt = ""
+        for llist in key_dict.values():
+            txt += build_file(llist) + '\n\n'
+        fil.write(txt)

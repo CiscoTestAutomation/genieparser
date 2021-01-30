@@ -352,3 +352,106 @@ class ShowMribVrfRouteSummary(ShowMribVrfRouteSummarySchema):
                 continue
 
         return parsed_dict
+
+
+# ==========================================================================
+# Schema for 'show mrib evpn bucket-db'
+# ==========================================================================
+class ShowMribEvpnBucketDbSchema(MetaParser):
+    """ Schema for show mrib evpn bucket-db. """
+
+    schema = {
+        'bucket_id':
+            {int:
+                {'if_handle': str,
+                 'if_name': str,
+                 'delete_in_progress': str,
+                 'state': str,
+                 'uptime': str
+                 },
+             },
+    }
+
+
+# ==========================================================================
+# Parser for 'show mrib evpn bucket-db'
+# ==========================================================================
+class ShowMribEvpnBucketDb(ShowMribEvpnBucketDbSchema):
+    """
+    Parser for show mrib evpn bucket-db.
+
+    Parameters
+    ----------
+    device : Router
+        Device to be parsed.
+
+    Returns
+    -------
+    parsed_dict : dict
+        Contains the CLI output parsed into a dictionary.
+
+    Examples
+    --------
+    >>> show_mrib_evpn_bucket_db(uut1)
+
+    {'bucket_id':
+        {0:
+            {'if_handle': '0x2007ae0',
+             'if_name': 'Bundle-Ether1',
+             'delete_in_progress': 'N',
+             'state': 'Forward',
+             'uptime': '02:24:24'
+            },
+        1:
+            {'if_handle': '0x2007ae0',
+             'if_name': 'Bundle-Ether1',
+             'delete_in_progress': 'N',
+             'state': 'Blocked',
+             'uptime': '02:24:24'
+            },
+        2: ...
+        }
+    }
+
+    """
+
+    cli_command = ["show mrib evpn bucket-db"]
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        parsed_dict = {}
+
+        # IFName   IFHandle   BucketID    State    Uptime    Delete In Progress
+        p1 = re.compile(r"IFName +IFHandle +BucketID +State +Uptime +Delete +In +Progress")
+
+        # Bundle-Ether1   0x400b920   0   Forward   01:56:04   N
+        p2 = re.compile(r"(?P<if_name>\S+) +(?P<if_handle>0x[a-fA-F\d]+) +"
+                        r"(?P<bucket_id>\d+) +(?P<state>\S+) +"
+                        r"(?P<uptime>[\d:dhm]+) +(?P<delete_in_progress>\S+)")
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m1 = p1.match(line)
+            if m1:
+                parsed_dict.setdefault('bucket_id', {})
+                continue
+
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                bucket_id = int(group['bucket_id'])
+                bucket_dict = parsed_dict['bucket_id'].setdefault(bucket_id, {})
+                bucket_dict['if_handle'] = group['if_handle']
+                bucket_dict['if_name'] = group['if_name']
+                bucket_dict['delete_in_progress'] = group['delete_in_progress']
+                bucket_dict['state'] = group['state']
+                bucket_dict['uptime'] = group['uptime']
+                continue
+
+        return parsed_dict

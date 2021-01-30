@@ -112,25 +112,25 @@ class ShowLacpCounters(ShowLacpCountersSchema):
         # port-channel1
         p1 = re.compile(r'^port-channel\d+$')
         # ------------------------------------------------------------------------------
-        #                              LACPDUs                      Markers / Resp
+        #                              LACPDUs                      Markers / Resp
         # LACPDUs
-        # Port              Sent                Recv                  Recv
-        # Sent  Pkts
+        # Port              Sent                Recv                  Recv
+        # Sent  Pkts
         # Err
         # ------------------------------------------------------------------------------
         # port - channel1
-        # Ethernet1 / 1        92                   85                     0      0   
-        # 0      
-        # Ethernet1 / 2        79                   87                     0      0   
-        # 0      
+        # Ethernet1 / 1        92                   85                     0      0   
+        # 0      
+        # Ethernet1 / 2        79                   87                     0      0   
+        # 0      
         #
         # port - channel2
-        # Ethernet1 / 3        136                  112                    0      0   
-        # 0      
-        # Ethernet1 / 4        95                   90                     0      0   
-        # 0      
-        # Ethernet1 / 5        118                  146                    0      0   
-        # 0      
+        # Ethernet1 / 3        136                  112                    0      0   
+        # 0      
+        # Ethernet1 / 4        95                   90                     0      0   
+        # 0      
+        # Ethernet1 / 5        118                  146                    0      0   
+        # 0      
         p2 = re.compile(
             r'^(?P<interface>[\w\/]+) +(?P<lacp_out_pkts>[\d]+) +(?P<lacp_in_pkts>[\d]+)'
             ' +(?P<marker_in_pkts>[\d]+) +(?P<marker_out_pkts>[\d]+) +( +('
@@ -215,15 +215,15 @@ class ShowLacpNeighbor(ShowLacpNeighborSchema):
         member_dict = {}
         # port-channel1 neighbors
         p1 = re.compile(r'^(?P<port_channel>[\w-]+)[\xa0 ]+neighbors$')
-        #             Partner                Partner                     Partner
-        # Port        System ID              Port Number     Age         Flags
-        # Eth1/1      32768,5e-2-0-1-0-7     0x101           1140        SA
+        #             Partner                Partner                     Partner
+        # Port        System ID              Port Number     Age         Flags
+        # Eth1/1      32768,5e-2-0-1-0-7     0x101           1140        SA
         p2 = re.compile(
             r'^(?P<interface>[\w/]+)[\xa0 ]+\d+,[\xa0 ]*(?P<sys_id>[\w.\-]+)[\xa0 ]+('
             r'?P<port_num>0x[a-fA-F0-9]+)[\xa0 ]+(?P<age>\d+)[\xa0 ]+(?P<flags>[\w]+)$')
-        #             LACP Partner           Partner                     Partner
-        #             Port Priority          Oper Key                    Port State
-        #             32768                  0x8000                      0x3d
+        #             LACP Partner           Partner                     Partner
+        #             Port Priority          Oper Key                    Port State
+        #             32768                  0x8000                      0x3d
         p3 = re.compile(
             r'^(?P<lacp_port_priority>\d+)[\xa0 ]+(?P<oper_key>0x[a-fA-F0-9]+)[\xa0 ]+('
             r'?P<port_state>0x[a-fA-F0-9]+)$')
@@ -319,16 +319,16 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
         inft_dict = {}
 
         # --------------------------------------------------------------------------------
-        # Group Port-       Type     Protocol  Member Ports
-        #       Channel
+        # Group Port-       Type     Protocol  Member Ports
+        #       Channel
         # --------------------------------------------------------------------------------
-        # 1     Po1(RU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)
-        # 2     Po2(SU)     Eth      LACP      Eth1/3(P)    Eth1/4(P)    Eth1/5(H)
+        # 1     Po1(RU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)
+        # 2     Po2(SU)     Eth      LACP      Eth1/3(P)    Eth1/4(P)    Eth1/5(H)
         p1 = re.compile(
             r'(?P<bundle_id>[\d]+)[\xa0 ]+(?P<name>[\w\-]+)\((?P<flags>[\w]+)\)?[\xa0 '
             r']+(?P<type>\w+)[\xa0 ]+(?P<protocol>[\w\-]+)?[\xa0 ]+(?P<ports>[\w\-/() '
             r'\xa0]+ *)?$')
-        #                                      Eth1/6(P)    Eth1/7(P)    Eth1/8(H)
+        #                                      Eth1/6(P)    Eth1/7(P)    Eth1/8(H)
         p2 = re.compile(
             r'^\s*(?P<space>\s{37})(?P<ports>[\w\-\/() \xa0]+)?')
         for line in out.splitlines():
@@ -336,7 +336,7 @@ class ShowPortChannelSummary(ShowPortChannelSummarySchema):
                 line = line.rstrip()
             else:
                 continue
-            # 1     Po1(RU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)
+            # 1     Po1(RU)     Eth      LACP      Eth1/1(P)    Eth1/2(P)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -441,9 +441,9 @@ class ShowPortChannelDatabase(ShowPortChannelDatabaseSchema):
         # Last unbundled member is Ethernet1/5
         p9 = re.compile(
             r'^Last +unbundled +member +is +(?P<last_unbundled_member>[\w/]+)$')
-        #     Ports:   Ethernet1/3     [passive] [up]
-        #              Ethernet1/4     [passive] [up] *
-        #              Ethernet1/5     [passive] [hot-standy]
+        #     Ports:   Ethernet1/3     [passive] [up]
+        #              Ethernet1/4     [passive] [up] *
+        #              Ethernet1/5     [passive] [hot-standy]
         p10 = re.compile(
             r'^(Ports:)?\s*(?P<interface>[\w/]+)\s+\[(?P<activity>(passive|active)) *\] '
             r'+\['
@@ -511,9 +511,9 @@ class ShowPortChannelDatabase(ShowPortChannelDatabaseSchema):
                 intf_dict.update(
                     {'last_unbundled_member': group['last_unbundled_member']})
                 continue
-            #     Ports:   Ethernet1/3     [passive] [up]
-            #              Ethernet1/4     [passive] [up] *
-            #              Ethernet1/5     [passive] [hot-standy]
+            #     Ports:   Ethernet1/3     [passive] [up]
+            #              Ethernet1/4     [passive] [up] *
+            #              Ethernet1/5     [passive] [hot-standy]
             m = p10.match(line)
             if m:
                 group = m.groupdict()

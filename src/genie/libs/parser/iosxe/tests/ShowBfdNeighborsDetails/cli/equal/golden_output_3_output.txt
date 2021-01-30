@@ -1,0 +1,25 @@
+show bfd neighbors ipv4 21.1.1.1 details
+IPv4 Sessions
+NeighAddr                              LD/RD         RH/RS     State     Int
+21.1.1.1                             4097/16         Up        Up        Gi2
+Session state is UP and not using echo function.
+Session Host: Software
+OurAddr: 21.1.1.2
+Handle: 1
+Local Diag: 0, Demand mode: 0, Poll bit: 0
+MinTxInt: 500000, MinRxInt: 300000, Multiplier: 6
+Received MinRxInt: 500000, Received Multiplier: 6
+Holddown (hits): 2561(0), Hello (hits): 500(544)
+Rx Count: 388, Rx Interval (ms) min/max/avg: 499/1997/503 last: 439 ms ago
+Tx Count: 442, Tx Interval (ms) min/max/avg: 3/1823/443 last: 76 ms ago
+Elapsed time watermarks: 0 0 (last: 0)
+Registered protocols: OSPF CEF
+Uptime: 00:03:15
+Last packet: Version: 1                  - Diagnostic: 0
+             State bit: Up               - Demand bit: 0
+             Poll bit: 0                 - Final bit: 0
+             C bit: 1
+             Multiplier: 6               - Length: 24
+             My Discr.: 16               - Your Discr.: 4097
+             Min tx interval: 500000     - Min rx interval: 500000
+             Min Echo interval: 0

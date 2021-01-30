@@ -714,6 +714,7 @@ class TestShowNveInterfaceDetail(unittest.TestCase):
 class TestShowFabricLinks(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
 
     golden_parsed_output = {
         'multisite': {
@@ -729,18 +730,37 @@ class TestShowFabricLinks(unittest.TestCase):
             },
         },
     }
-
     golden_output = {'execute.return_value': '''
-    BMS-VPC-BL1# show nve multisite fabric-links
-    Interface      State
-    ---------      -----
-    Ethernet1/53   Up
-    Ethernet1/54   Down
+        BMS-VPC-BL1# show nve multisite fabric-links
+        Interface      State
+        ---------      -----
+        Ethernet1/53   Up
+        Ethernet1/54   Down
+    '''}
 
+    golden_parsed_output1 = {
+        'multisite': {
+            'fabric_links': {
+                'Ethernet1/53': {
+                    'if_name': 'Ethernet1/53',
+                    'if_state': 'up'
+                },
+                'port-channel11': {
+                    'if_name': 'port-channel11',
+                    'if_state': 'up'
+                },
+            },
+        },
+    }
+    golden_output1 = {'execute.return_value': '''
+        BMS-VPC-BL1# show nve multisite fabric-links
+        Interface      State
+        ---------      -----
+        Ethernet1/53   Up
+        port-channel11 Up
     '''}
 
     def test_show_fabric_links(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowNveMultisiteFabricLinks(device=self.device)
         parsed_output = obj.parse()
@@ -752,6 +772,12 @@ class TestShowFabricLinks(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowNveMultisiteFabricLinks(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
+
 
 # ====================================================
 #  Unit test for 'show nve multisites dci-links'
@@ -760,6 +786,7 @@ class TestShowFabricLinks(unittest.TestCase):
 class TestShowDciLinks(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
+    maxDiff = None
 
     golden_parsed_output = {
         'multisite': {
@@ -775,18 +802,49 @@ class TestShowDciLinks(unittest.TestCase):
             },
         },
     }
-
     golden_output = {'execute.return_value': '''
-    BMS-VPC-BL1# show nve multisite dci-links
-    Interface      State
-    ---------      -----
-    Ethernet1/50   Up
-    Ethernet1/52   Up
-
+        BMS-VPC-BL1# show nve multisite dci-links
+        Interface      State
+        ---------      -----
+        Ethernet1/50   Up
+        Ethernet1/52   Up
     '''}
 
+    golden_output1 = {'execute.return_value': '''
+        show nve multisite dci-links 
+        Interface      State 
+        ---------      ----- 
+        port-channel11 Up
+        port-channel12 Up
+        port-channel21 Up
+        port-channel22 Up
+
+        SKO-DATA-AG-023-O04-01-INT#
+    '''}
+    golden_parsed_output1 = {
+        'multisite': {
+            'dci_links': {
+                'port-channel11': {
+                    'if_name': 'port-channel11',
+                    'if_state': 'up',
+                },
+                'port-channel12': {
+                    'if_name': 'port-channel12',
+                    'if_state': 'up',
+                },
+                'port-channel21': {
+                    'if_name': 'port-channel21',
+                    'if_state': 'up',
+                },
+                'port-channel22': {
+                    'if_name': 'port-channel22',
+                    'if_state': 'up',
+                },
+            },
+        },
+    }
+
     def test_show_dci_links(self):
-        self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowNveMultisiteDciLinks(device=self.device)
         parsed_output = obj.parse()
@@ -797,6 +855,12 @@ class TestShowDciLinks(unittest.TestCase):
         obj = ShowNveMultisiteDciLinks(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output1)
+        obj = ShowNveMultisiteDciLinks(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output1)
 
 
 # ====================================================
@@ -1786,47 +1850,47 @@ class TestShowRunningConfigNvOverlay(unittest.TestCase):
 
     golden_output = {'execute.return_value': '''
 R6# show running-config nv overlay
- 
+ 
 !Command: show running-config nv overlay
 !No configuration change since last restart
 !Time: Wed May 30 14:42:18 2018
- 
-version 9.2(1) Bios:version 
+ 
+version 9.2(1) Bios:version 
 feature nv overlay
- 
+ 
 evpn multisite border-gateway 111111
-  delay-restore time 185
- 
- 
+  delay-restore time 185
+ 
+ 
 interface nve1
-  no shutdown
-  host-reachability protocol bgp
-  advertise virtual-rmac
-  source-interface loopback1
-  multisite border-gateway interface loopback3
-  member vni 10100 associate-vrf
-  member vni 10101
-    multisite ingress-replication
-    mcast-group 231.100.1.1
-  member vni 10102
-    multisite ingress-replication
-    mcast-group 231.100.1.1
-  member vni 100000-100002 associate-vrf
-  member vni 100004-100006
-    multisite ingress-replication
-    mcast-group 231.200.1.1
-  member vni 10202
-    multisite ingress-replication
-    mcast-group 231.200.1.1
- 
+  no shutdown
+  host-reachability protocol bgp
+  advertise virtual-rmac
+  source-interface loopback1
+  multisite border-gateway interface loopback3
+  member vni 10100 associate-vrf
+  member vni 10101
+    multisite ingress-replication
+    mcast-group 231.100.1.1
+  member vni 10102
+    multisite ingress-replication
+    mcast-group 231.100.1.1
+  member vni 100000-100002 associate-vrf
+  member vni 100004-100006
+    multisite ingress-replication
+    mcast-group 231.200.1.1
+  member vni 10202
+    multisite ingress-replication
+    mcast-group 231.200.1.1
+ 
 interface Ethernet1/1
-  evpn multisite fabric-tracking
- 
+  evpn multisite fabric-tracking
+ 
 interface Ethernet1/2
-  evpn multisite fabric-tracking
- 
+  evpn multisite fabric-tracking
+ 
 interface Ethernet1/6
-  evpn multisite dci-tracking
+  evpn multisite dci-tracking
 
 
     '''}
@@ -1943,45 +2007,45 @@ interface Ethernet1/6
 
     golden_output_2 = {'execute.return_value': '''
     R6# show running-config nv overlay
-     
+     
     !Command: show running-config nv overlay
     !No configuration change since last restart
     !Time: Wed May 30 14:42:18 2018
-     
-    version 9.2(1) Bios:version 
+     
+    version 9.2(1) Bios:version 
     feature nv overlay
-     
+     
     evpn multisite border-gateway 111111
-      delay-restore time 185
-     
-     
+      delay-restore time 185
+     
+     
     interface nve1
-      no shutdown
-      host-reachability protocol bgp
-      advertise virtual-rmac
-      source-interface loopback1
+      no shutdown
+      host-reachability protocol bgp
+      advertise virtual-rmac
+      source-interface loopback1
       global suppress-arp 
       global mcast-group 192.168.0.1 L2
-      multisite border-gateway interface loopback3
-      member vni 10100 associate-vrf
-      member vni 10101
-        multisite ingress-replication
-      member vni 10102
-        multisite ingress-replication
-      member vni 100000-100002 associate-vrf
-      member vni 100004-100006
-        multisite ingress-replication
-      member vni 10202
-        multisite ingress-replication
-     
+      multisite border-gateway interface loopback3
+      member vni 10100 associate-vrf
+      member vni 10101
+        multisite ingress-replication
+      member vni 10102
+        multisite ingress-replication
+      member vni 100000-100002 associate-vrf
+      member vni 100004-100006
+        multisite ingress-replication
+      member vni 10202
+        multisite ingress-replication
+     
     interface Ethernet1/1
-      evpn multisite fabric-tracking
-     
+      evpn multisite fabric-tracking
+     
     interface Ethernet1/2
-      evpn multisite fabric-tracking
-     
+      evpn multisite fabric-tracking
+     
     interface Ethernet1/6
-      evpn multisite dci-tracking
+      evpn multisite dci-tracking
 
 
         '''}
