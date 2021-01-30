@@ -1,0 +1,136 @@
+
+        ---------------------------------------------------
+        tloc entries for 10.220.100.10
+                        default
+                        ipsec
+        ---------------------------------------------------
+                    RECEIVED FROM:                   
+        peer            0.0.0.0
+        status          C,Red,R
+        loss-reason     not set
+        lost-to-peer    not set
+        lost-to-path-id not set
+            Attributes:
+            attribute-type    installed
+            encap-key         not set
+            encap-proto       0
+            encap-spi         365
+            encap-auth        sha1-hmac,ah-sha1-hmac
+            encap-encrypt     aes256
+            public-ip         10.66.12.2
+            public-port       12426
+            private-ip        10.66.12.2
+            private-port      12426
+            public-ip         ::
+            public-port       0
+            private-ip        ::
+            private-port      0
+            bfd-status        up
+            domain-id         not set
+            site-id           101
+            overlay-id        not set
+            preference        0
+            tag               not set
+            stale             not set
+            weight            1
+            version           3
+            gen-id             0x80000003
+            carrier           default
+            restrict          0
+            on-demand          0
+            groups            [ 0 ]
+            bandwidth         0
+            qos-group         default-group
+            border             not set
+            unknown-attr-len  not set
+
+        ---------------------------------------------------
+        tloc entries for 10.220.100.20
+                        default
+                        ipsec
+        ---------------------------------------------------
+                    RECEIVED FROM:                   
+        peer            10.220.100.3
+        status          C,I,R
+        loss-reason     not set
+        lost-to-peer    not set
+        lost-to-path-id not set
+            Attributes:
+            attribute-type    installed
+            encap-key         not set
+            encap-proto       0
+            encap-spi         355
+            encap-auth        sha1-hmac,ah-sha1-hmac
+            encap-encrypt     aes256
+            public-ip         10.66.13.2
+            public-port       12426
+            private-ip        10.66.13.2
+            private-port      12426
+            public-ip         ::
+            public-port       0
+            private-ip        ::
+            private-port      0
+            bfd-status        up
+            domain-id         not set
+            site-id           102
+            overlay-id        not set
+            preference        0
+            tag               not set
+            stale             not set
+            weight            1
+            version           3
+            gen-id             0x80000011
+            carrier           default
+            restrict          0
+            on-demand          0
+            groups            [ 0 ]
+            bandwidth         0
+            qos-group         default-group
+            border             not set
+            unknown-attr-len  not set
+
+        ---------------------------------------------------
+        tloc entries for 10.220.100.30
+                        default
+                        ipsec
+        ---------------------------------------------------
+                    RECEIVED FROM:                   
+        peer            10.220.100.3
+        status          C,I,R
+        loss-reason     not set
+        lost-to-peer    not set
+        lost-to-path-id not set
+            Attributes:
+            attribute-type    installed
+            encap-key         not set
+            encap-proto       0
+            encap-spi         359
+            encap-auth        sha1-hmac,ah-sha1-hmac
+            encap-encrypt     aes256
+            public-ip         10.229.11.10
+            public-port       12426
+            private-ip        10.229.11.10
+            private-port      12426
+            public-ip         ::
+            public-port       0
+            private-ip        ::
+            private-port      0
+            bfd-status        up
+            domain-id         not set
+            site-id           103
+            overlay-id        not set
+            preference        0
+            tag               not set
+            stale             not set
+            weight            1
+            version           3
+            gen-id             0x80000022
+            carrier           default
+            restrict          0
+            on-demand          0
+            groups            [ 0 ]
+            bandwidth         0
+            qos-group         default-group
+            border             not set
+            unknown-attr-len  not set
+     

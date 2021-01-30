@@ -1,0 +1,43 @@
+
+        srp_vedge# show system status
+
+        Viptela (tm) vedge Operating System Software
+        Copyright (c) 2013-2020 by Viptela, Inc.
+        Controller Compatibility: 20.3
+        Version: 99.99.999-4567
+        Build: 4567
+
+
+        System logging to host  is disabled
+        System logging to disk is enabled
+
+        System state:            GREEN. All daemons up
+        System FIPS state:       Enabled
+        Testbed mode:            Enabled
+        Engineering Signed       True
+
+        Last reboot:             Initiated by user - activate 99.99.999-4567.
+        CPU-reported reboot:     Not Applicable
+        Boot loader version:     Not applicable
+        System uptime:           0 days 21 hrs 35 min 28 sec
+        Current time:            Thu Aug 06 02:49:25 PDT 2020
+
+        Load average:            1 minute: 3.20, 5 minutes: 3.13, 15 minutes: 3.10
+        Processes:               250 total
+        CPU allocation:          4 total,   1 control,   3 data
+        CPU states:              1.25% user,   5.26% system,   93.48% idle
+        Memory usage:            1907024K total,    1462908K used,   444116K free
+                                0K buffers,  0K cache
+
+        Disk usage:              Filesystem      Size   Used  Avail   Use %  Mounted on
+                                /dev/root       7615M  447M  6741M   6%   /
+
+
+        Personality:             vedge
+        Model name:              vedge-cloud
+        Services:                None
+        vManaged:                true
+        Commit pending:          false
+        Configuration template:  CLItemplate_srp_vedge
+        Chassis serial number:   None
+    
