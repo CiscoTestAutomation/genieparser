@@ -26,17 +26,21 @@ __author__ = 'James Di Trapani <james@ditrapani.com.au>'
 class ShowIPRouteSchema(MetaParser):
     """Schema for show ip route"""
     schema = {
-        'routes': {
+        'vrf': {
             Any(): {
-                'network': str,
-                'netmask': int,
-                'via': {
+                'routes': {
                     Any(): {
-                        'cost': str,
-                        'interface': str,
-                        'type': str,
-                        'uptime': str,
-                        'src-vrf': str
+                        'network': str,
+                        'netmask': int,
+                        'via': {
+                            Any(): {
+                                'cost': str,
+                                'interface': str,
+                                'type': str,
+                                'uptime': str,
+                                'src-vrf': str
+                            }
+                        }
                     }
                 }
             }
@@ -147,7 +151,13 @@ STATIC Codes - d:DHCPv6
                 if srcvrf is None:
                     srcvrf = 'Unknown'
 
-                result_dict = ip_dict.setdefault('routes', {})
+                # Set VRF to default given this command is not parsing
+                # vrf specific output
+                if ip_dict.get('vrf') is None:
+                    ip_dict.update({'vrf': {'default': {}}})
+
+                result_dict = ip_dict['vrf']['default'].setdefault(
+                                                            'routes', {})
 
                 result_dict['{0}/{1}'.format(network, cidr)] = {
                   'network': network,
@@ -158,7 +168,7 @@ STATIC Codes - d:DHCPv6
                           'cost': m.groupdict()['cost'],
                           'type': m.groupdict()['type'],
                           'uptime': m.groupdict()['uptime'],
-                          'src-vrf': srcvrf
+                          'src-vrf': 'local' if srcvrf == '-' else srcvrf
                       }
                   }
                 }
@@ -175,7 +185,7 @@ STATIC Codes - d:DHCPv6
                     'cost': m.groupdict()['cost'],
                     'type': m.groupdict()['type'],
                     'uptime': m.groupdict()['uptime'],
-                    'src-vrf': srcvrf if srcvrf is not None else 'Unknown'
+                    'src-vrf': 'local' if srcvrf == '-' else srcvrf
                 }
                 continue
 

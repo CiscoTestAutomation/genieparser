@@ -28,16 +28,20 @@ class ShowIPOSPFNeighborSchema(MetaParser):
     schema = {
         Optional('total'): int,
         Optional('total_full'): int,
-        'neighbors': {
+        'vrf': {
             Any(): {
-                'interface': str,
-                'local_ip': str,
-                'priority': int,
-                'state': str,
-                'neighbor_rid': str,
-                'state_changes': int,
-                'options': int,
-                'lsa_retransmits': int
+                'neighbors': {
+                    Any(): {
+                        'interface': str,
+                        'local_ip': str,
+                        'priority': int,
+                        'state': str,
+                        'neighbor_rid': str,
+                        'state_changes': int,
+                        'options': int,
+                        'lsa_retransmits': int
+                    }
+                }
             }
         }
     }
@@ -93,7 +97,13 @@ v10    10.1.10.1       1   FULL/DR    10.1.10.2       10.65.12.1 5 2 0
 
             m = p2.match(line)
             if m:
-                neighbors = result_dict.setdefault('neighbors', {})
+                # Set VRF to default given this command is not parsing
+                # vrf specific output
+                if result_dict.get('vrf') is None:
+                    result_dict.update({'vrf': {'default': {}}})
+
+                neighbors = result_dict['vrf']['default'].setdefault(
+                                                            'neighbors', {})
 
                 group = m.groupdict()
                 neighbor = group['neighbor']
