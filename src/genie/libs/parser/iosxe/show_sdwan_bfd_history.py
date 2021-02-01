@@ -13,35 +13,37 @@ class ShowSdwanBfdHistorySchema(MetaParser):
     """schema for show sdwan bfd history"""
 
     schema={
-        Any():
+        'site_id':
         {
             Any():
             {
-                Any():
+                'system_ip':
                 {
                     Any():
                     {
-                        Any():
+                        'dst_public_ip':
                         {
                             Any():
                             {
-                                'system_ip': str,
-                                'site_id': str,
-                                'color': str,
-                                'state': str,
-                                'dst_public_ip': str,
-                                'dst_public_port': str,
-                                'encap': str,
-                                'time': str,
-                                'rx_pkts': str,
-                                'tx_pkts' : str,
-                                'del': str
+                                'time':
+                                {
+                                    Any():
+                                    {
+                                        'color': str,
+                                        'state': str,
+                                        'dst_public_port': str,
+                                        'encap': str,
+                                        'rx_pkts': str,
+                                        'tx_pkts' : str,
+                                        'del': str
+                                    },   
+                                }
                             },
-                        },
+                        }
                     },               
-                },
+                }
             },
-        },
+        }
     }
             
 class ShowSdwanBfdHistory(ShowSdwanBfdHistorySchema):
@@ -67,11 +69,34 @@ class ShowSdwanBfdHistory(ShowSdwanBfdHistorySchema):
         parsed_out = pg.oper_fill_tabular(device_output=out,  
                                     header_fields=["SYSTEM IP", "SITE ID", "COLOR", "STATE", "IP", "PORT", "ENCAP","TIME","PKTS","PKTS","DEL"],
                                     label_fields=["system_ip", "site_id", "color", "state", "dst_public_ip", "dst_public_port","encap","time","rx_pkts","tx_pkts","del"], 
-                                    index= [0,1,2,3,4,7]
+                                    index= [1,0,4,7]
                                     )
 
         #creating a parsed dict using the output
         parsed_dict = parsed_out.entries
 
-        return parsed_dict
+        #Parsing the dict according to the schema
+        out_dict={}
+        out_dict['site_id']={}
+        cur_dict=out_dict['site_id']
+
+
+
+        for key in parsed_dict.keys():
+            cur_dict[key]={}
+            cur_dict[key]['system_ip']={}
+            for subkey in parsed_dict[key].keys():
+                cur_dict[key]['system_ip'][subkey]={}
+                cur_dict[key]['system_ip'][subkey]['dst_public_ip']={}
+                for subsubkey in parsed_dict[key][subkey].keys():
+                    cur_dict[key]['system_ip'][subkey]['dst_public_ip'][subsubkey]={}
+                    cur_dict[key]['system_ip'][subkey]['dst_public_ip'][subsubkey]['time']={}
+                    for subsubsubkey in parsed_dict[key][subkey][subsubkey].keys():
+                        cur_dict[key]['system_ip'][subkey]['dst_public_ip'][subsubkey]['time'][subsubsubkey]={}
+                        for valuekey in parsed_dict[key][subkey][subsubkey][subsubsubkey].keys():
+                            if valuekey not in ['site_id','system_ip','dst_public_ip','time']:
+                                cur_dict[key]['system_ip'][subkey]['dst_public_ip'][subsubkey]['time'][subsubsubkey][valuekey]=parsed_dict[key][subkey][subsubkey][subsubsubkey][valuekey]
+
+
+        return out_dict
 
