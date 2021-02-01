@@ -9,17 +9,17 @@ class ShowSdwanAppqoeAoimStatisticsSchema(MetaParser):
     ''' Schema for show sdwan appqoe aoim-statistics'''
     schema = {
         "total_peer_syncs": int,
-        "current_peer_syncs": int,
+        "current_peer_syncs_in_progress": int,
         "Needed_peer_resyncs": int,
-        "passthrough_connections_dueto_peerversion_mismatch": int,
+        "passthrough_connections_dueto_peer_version_mismatch": int,
         "aoim_db_size_in_bytes": int,
         "local_ao_stats":{
             "number_of_aos": int,
             "ao_name":{
                 Any():
                 {
-                    "ao_version" : str,
-                    "ao_registered": str
+                    "version" : str,
+                    "registered": str
                 },
             }
         },
@@ -31,8 +31,8 @@ class ShowSdwanAppqoeAoimStatisticsSchema(MetaParser):
                     "ao_name":{
                         Any():
                         {
-                            "ao_version" : str,
-                            "ao_registered": str
+                            "version" : str,
+                            "incompatible": str
                         },
                     }
                 },
@@ -54,21 +54,22 @@ class ShowSdwanAppqoeAoimStatistics(ShowSdwanAppqoeAoimStatisticsSchema):
             out = output
 
         
-        p1=re.compile(r'Total Number Of Peer Syncs+\s+\:+\s+(?P<total_peer_syncs>[\d]+)')
-        p2=re.compile(r'Current Number Of Peer Syncs in Progress+\s+\:+\s+(?P<current_peer_syncs>[\d]+)')
-        p3=re.compile(r'Number Of Peer Re-Syncs Needed+\s+\:+\s+(?P<peer_resyncs>[\d]+)')
-        p4=re.compile(r'Total Passthrough Connections Due to Peer Version Mismatch+\s+\:+\s+(?P<passthrough_connections>[\d]+)')
-        p5=re.compile(r'AOIM DB Size +\(+Bytes+\)+\:+\s+(?P<aoim_db_size>\d+)')
-        p6=re.compile(r'LOCAL AO Statistics')
-        p7=re.compile(r'Number Of AOs +\s+\:+\s+(?P<ao_number>\d+)')
-        p8=re.compile(r'AO+\s+Version+\s+\w+')
+        p1=re.compile(r'\s*Total Number Of Peer Syncs+\s+\:+\s+(?P<total_peer_syncs>[\d]+)')
+        p2=re.compile(r'\s*Current Number Of Peer Syncs in Progress+\s+\:+\s+(?P<current_peer_syncs>[\d]+)')
+        p3=re.compile(r'\s*Number Of Peer Re-Syncs Needed+\s+\:+\s+(?P<peer_resyncs>[\d]+)')
+        p4=re.compile(r'\s*Total Passthrough Connections Due to Peer Version Mismatch+\s+\:+\s+(?P<passthrough_connections>[\d]+)')
+        p5=re.compile(r'\s*AOIM DB Size +\(+Bytes+\)+\:+\s+(?P<aoim_db_size>\d+)')
+        p6=re.compile(r'\s*LOCAL AO Statistics')
+        p7=re.compile(r'\s*Number Of AOs +\s+\:+\s+(?P<ao_number>\d+)')
+        p8=re.compile(r'\s*AO+\s+Version+\s+\w+')
         p9=re.compile(r'\s*(?P<ao_name>\w+)+\s+(?P<ao_version>[\d.]+)+\s+(?P<ao_status>\w+)')
-        p10=re.compile(r'PEER Statistics')
-        p11=re.compile(r'Number Of Peers+\s+\:+\s+(?P<peer_total>\d+)')
+        p10=re.compile(r'\s*PEER Statistics')
+        p11=re.compile(r'\s*Number Of Peers+\s+\:+\s+(?P<peer_total>\d+)')
         p12=re.compile(r'\s*Peer ID:+\s+(?P<peer_id>[\d.]+)')
-        p13=re.compile(r'Peer Num AOs+\s+\:+\s+(?P<peer_ao_num>\d+)')
+        p13=re.compile(r'\s*Peer Num AOs+\s+\:+\s+(?P<peer_ao_num>\d+)')
 
         parsed_dict={}
+        check_flag=0
 
         for line in out.splitlines():
             m1= p1.match(line)
@@ -79,7 +80,7 @@ class ShowSdwanAppqoeAoimStatistics(ShowSdwanAppqoeAoimStatisticsSchema):
             m2= p2.match(line)
             if m2:
                 groups=m2.groupdict()
-                parsed_dict['current_peer_syncs']=int(groups['current_peer_syncs'])
+                parsed_dict['current_peer_syncs_in_progress']=int(groups['current_peer_syncs'])
 
             m3= p3.match(line)
             if m3:
@@ -89,7 +90,7 @@ class ShowSdwanAppqoeAoimStatistics(ShowSdwanAppqoeAoimStatisticsSchema):
             m4= p4.match(line)
             if m4:
                 groups=m4.groupdict()
-                parsed_dict['passthrough_connections_dueto_peerversion_mismatch']=int(groups['passthrough_connections'])
+                parsed_dict['passthrough_connections_dueto_peer_version_mismatch']=int(groups['passthrough_connections'])
 
             m5= p5.match(line)
             if m5:
@@ -113,13 +114,17 @@ class ShowSdwanAppqoeAoimStatistics(ShowSdwanAppqoeAoimStatisticsSchema):
             if m9 and not m8:
                 groups=m9.groupdict()
                 cur_dict[groups['ao_name']]={}
-                cur_dict[groups['ao_name']]['ao_version']=groups['ao_version']
-                cur_dict[groups['ao_name']]['ao_registered']=groups['ao_status']
+                cur_dict[groups['ao_name']]['version']=groups['ao_version']
+                if check_flag==0:
+                    cur_dict[groups['ao_name']]['registered']=groups['ao_status']
+                else:
+                    cur_dict[groups['ao_name']]['incompatible']=groups['ao_status']
 
             m10=p10.match(line)
             if m10:
                 parsed_dict['peer_stats'] = {}
                 cur_dict=parsed_dict['peer_stats']
+                check_flag=1
 
             m11=p11.match(line)
             if m11:
