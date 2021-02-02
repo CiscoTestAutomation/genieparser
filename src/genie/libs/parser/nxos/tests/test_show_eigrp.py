@@ -13,8 +13,7 @@ from genie.libs.parser.nxos.show_eigrp import ShowIpv4EigrpNeighbors,\
                                               ShowIpv6EigrpNeighbors,\
                                               ShowIpv4EigrpNeighborsDetail,\
                                               ShowIpv6EigrpNeighborsDetail, \
-                                              ShowIpv4EigrpTopology, \
-                                              ShowIpv6EigrpTopology
+                                              ShowEigrpTopology
 
 
 class test_show_eigrp_neighbors(unittest.TestCase):
@@ -742,24 +741,24 @@ class test_show_eigrp_topology(unittest.TestCase):
 
     def test_show_eigrp_topology_empty(self):
         self.device = Mock(**self.device_output_empty)
-        obj = ShowIpv4EigrpTopology(device=self.device)
+        obj = ShowEigrpTopology(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()
+            obj.parse(af='ip')
         del obj
-        obj = ShowIpv6EigrpTopology(device=self.device)
+        obj = ShowEigrpTopology(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()
+            obj.parse(af='ipv6')
 
     def test_show_eigrp_topology_1(self):
         self.device = Mock(**self.device_output_1)
-        obj = ShowIpv4EigrpTopology(device=self.device)
-        parsed_output:dict = obj.parse()
+        obj = ShowEigrpTopology(device=self.device)
+        parsed_output:dict = obj.parse(af='ip')
         self.assertEqual(parsed_output, self.expected_parsed_output_1)
 
     def test_show_eigrp_topology_2(self):
         self.device = Mock(**self.device_output_2)
-        obj = ShowIpv6EigrpTopology(device=self.device)
-        parsed_output:dict = obj.parse()
+        obj = ShowEigrpTopology(device=self.device)
+        parsed_output:dict = obj.parse(af='ipv6')
         self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
 if __name__ == '__main__':
