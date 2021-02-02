@@ -10,7 +10,7 @@ expected_output = {
             "time-length": {"#text": "2w1d 00:03"},
         },
         "last-configured-time": {
-            "user": "kddi",
+            "user": "cisco",
             "date-time": {"#text": "2021-01-06 12:30:08 JST "},
             "time-length": {"#text": "00:01:40"},
         },
