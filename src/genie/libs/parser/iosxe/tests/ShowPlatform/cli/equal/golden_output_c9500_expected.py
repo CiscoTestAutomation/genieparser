@@ -1,4 +1,7 @@
 expected_output = {
+    "main": {
+          "chassis": "C9500-32QC"
+      },
     "slot": {
         "1": {
             "lc": {
