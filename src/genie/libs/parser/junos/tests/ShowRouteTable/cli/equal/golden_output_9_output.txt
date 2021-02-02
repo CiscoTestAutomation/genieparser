@@ -1,0 +1,11 @@
+
+TESTVPN.inet.0: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
++ = Active Route, - = Last Active, * = Both
+
+192.168.51.0/30    *[Direct/0] 00:41:59
+                    > via xe-1/0/0.0
+192.168.51.1/32    *[Local/0] 00:41:59
+                      Local via xe-1/0/0.0
+192.168.61.0/30    *[BGP/170] 00:25:19, localpref 100, from 27.93.202.40
+                      AS path: I, validation-state: unverified
+                    > to 27.93.202.49 via xe-2/0/0.0, Push 16, Push 299792(top)

@@ -2638,42 +2638,43 @@ class TestShowRouteIpv6(unittest.TestCase):
     '''}
 
     golden_parsed_output_7 = {
-        'vrf': {
-            'VRF1': {
-                'address_family': {
-                    'ipv6': {
-                        'routes': {
-                            '2001:1:1:1::1/128': {
-                                'route': '2001:1:1:1::1/128',
-                                'ip': '2001:1:1:1::1',
-                                'mask': '128',
-                                'active': True,
-                                'known_via': 'eigrp 100',
-                                'metric': 10880,
-                                'distance': 90,
-                                'type': 'internal',
-                                'installed': {
-                                    'date': 'Oct 23 22:09:38.380',
-                                    'for': '5d21h',
+        "vrf": {
+            "VRF1": {
+                "address_family": {
+                    "ipv6": {
+                        "routes": {
+                            "2001:1:1:1::1/128": {
+                                "active": True,
+                                "distance": 90,
+                                "installed": {
+                                    "date": "Oct 23 22:09:38.380",
+                                    "for": "5d21h"
                                 },
-                                'next_hop': {
-                                    'next_hop_list': {
+                                "ip": "2001:1:1:1::1",
+                                "known_via": "eigrp 100",
+                                "mask": "128",
+                                "metric": 10880,
+                                "next_hop": {
+                                    "next_hop_list": {
                                         1: {
-                                            'index': 1,
-                                            'outgoing_interface': 'GigabitEthernet0/0/0/0.390',
-                                            'from': 'fe80::f816:3eff:fe76:b56d',
-                                            'next_hop': 'fe80::f816:3eff:fe76:b56d',
-                                            'metric': 10880,
-                                        },
-                                    },
+                                            "from": "fe80::f816:3eff:fe76:b56d",
+                                            "index": 1,
+                                            "metric": 10880,
+                                            "next_hop": "fe80::f816:3eff:fe76:b56d",
+                                            "outgoing_interface": "GigabitEthernet0/0/0/0.390"
+                                        }
+                                    }
                                 },
-                            },
-                        },
-                    },
-                },
-            },
-        },
+                                "route": "2001:1:1:1::1/128",
+                                "type": "internal"
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
+
 
     golden_output8 = {'execute.return_value': '''
         RP/0/RSP0/CPU0:ASR-01#
