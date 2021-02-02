@@ -52,7 +52,7 @@ def get_operating_systems(_os):
     # Update and fix as more OS's converted to folder based tests
     if _os:
         return [_os]
-    return ["asa", "ios", "iosxe", "junos"]
+    return ["asa", "ios", "iosxe", "junos", "viptela"]
     # operating_system = []
     # for folder in os.listdir("./"):
     #    if os.path.islink("./" + folder):
