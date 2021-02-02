@@ -424,13 +424,24 @@ class ShowEigrpTopologySchema(MetaParser):
         }
     }
 
-class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
+class ShowEigrpTopology(ShowEigrpTopologySchema):
     '''Super parser for:
         * 'show ip eigrp topology vrf <vrf>'
         * 'show ipv6 eigrp topology vrf <vrf>'
     '''
 
-    def cli(self, vrf:str='', output:str=None) -> dict:
+    cli_command = [
+        'show {af} eigrp topology',
+        'show {af} eigrp topology vrf {vrf}'
+    ]
+
+    def cli(self, af:str, vrf:str='', output:str=None) -> dict:
+        if output is None :
+            if (vrf == '') :
+                cmd:str = self.cli_command[0].format(af=af)
+            else :
+                cmd:str = self.cli_command[1].format(af=af, vrf=vrf)
+            output = self.device.execute(cmd)
 
         # IP-EIGRP Topology Table for AS(1)/ID(10.0.0.1) VRF default
         # IPv6-EIGRP Topology Table for AS(0)/ID(0.0.0.0) VRF vrf1
@@ -524,23 +535,3 @@ class ShowEigrpTopologySuperParser(ShowEigrpTopologySchema):
                     nexthop_dict['interface'] = group['interface']
 
         return parsed_dict
-
-class ShowIpv4EigrpTopology(ShowEigrpTopologySuperParser,
-                            ShowEigrpTopologySchema):
-    cli_command = 'show ip eigrp topology vrf {vrf}'
-
-    def cli(self, vrf:str='all', output:str=None) -> dict:
-        if output is None: 
-            cmd:str = self.cli_command.format(vrf=vrf)
-            output:str = self.device.execute(cmd)
-        return super().cli(vrf=vrf, output=output)
-
-class ShowIpv6EigrpTopology(ShowEigrpTopologySuperParser,
-                            ShowEigrpTopologySchema):
-    cli_command = 'show ipv6 eigrp topology vrf {vrf}'
-
-    def cli(self, vrf:str='all', output:str=None) -> dict:
-        if output is None:
-            cmd:str = self.cli_command.format(vrf=vrf)
-            output:str = self.device.execute(cmd)
-        return super().cli(vrf=vrf, output=output)
