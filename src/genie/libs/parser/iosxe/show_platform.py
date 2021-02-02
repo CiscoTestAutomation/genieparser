@@ -2274,7 +2274,8 @@ class ShowPlatform(ShowPlatformSchema):
 
         # ----------      ASR1K    -------------
         # Chassis type: ASR1006
-        p5 = re.compile(r'^[Cc]hassis +type: +(?P<chassis>\w+)$')
+        # Chassis type: ASR-903
+        p5 = re.compile(r'^[Cc]hassis +type: +(?P<chassis>\S+)$')
 
         # Slot      Type                State                 Insert time (ago)
         # --------- ------------------- --------------------- -----------------
@@ -2363,6 +2364,7 @@ class ShowPlatform(ShowPlatformSchema):
                 continue
 
             # Chassis type: ASR1006
+            # Chassis type: ASR-903
             m = p5.match(line)
             if m:
                 if 'main' not in platform_dict:
@@ -2386,9 +2388,51 @@ class ShowPlatform(ShowPlatformSchema):
                 # subslot
                 if subslot:
                     try:
+                        # no-slot-type output: 
+                        # Slot      Type                State                 Insert time (ago)
+
+                        # --------- ------------------- --------------------- -----------------
+
+                        # 0/2      A900-IMA8Z          ok                    1w4d        
+                          
+                        if 'slot' not in platform_dict:
+                            platform_dict['slot'] = {}
                         if slot not in platform_dict['slot']:
-                            continue
-                        for key, value in platform_dict['slot'][slot].items():
+                            platform_dict['slot'][slot] = {}                        
+                        # if slot not in platform_dict['slot']:
+                        #     continue
+
+                        slot_items = platform_dict['slot'][slot].items()
+
+                        # for no-slot-type output
+                        if not slot_items:
+                            if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
+                                if 'R' in slot:
+                                    lc_type = 'rp'
+                                elif re.match(r'^\d+', slot):
+                                    lc_type = 'lc'
+                                else:
+                                    lc_type = 'other'
+                            elif re.match(r'^ASR\d+-RP\d+', name):
+                                lc_type = 'rp'
+                            elif re.match(r'^CSR\d+V', name):
+                                if 'R' in slot:
+                                    lc_type = 'rp'
+                                else:
+                                    lc_type = 'other'
+                            else:
+                                lc_type = 'other'
+
+                            if lc_type not in platform_dict['slot'][slot]:
+                                platform_dict['slot'][slot][lc_type] = {}
+
+                            if name not in platform_dict['slot'][slot][lc_type]:
+                                platform_dict['slot'][slot][lc_type][name] = {}
+                            sub_dict = platform_dict['slot'][slot][lc_type][name]
+                            sub_dict['slot'] = slot
+
+                        # Add subslot
+                        for key, value in slot_items:
                             for key, last in value.items():
                                 if 'subslot' not in last:
                                     last['subslot'] = {}
@@ -2398,6 +2442,8 @@ class ShowPlatform(ShowPlatformSchema):
                                     last['subslot'][subslot][name] = {}
                                 sub_dict = last['subslot'][subslot][name]
                         sub_dict['subslot'] = subslot
+
+                    # KeyError: 'slot'
                     except Exception:
                         continue
                 else:
