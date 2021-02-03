@@ -4481,7 +4481,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         'nsr_initial_initsync_version', 'nsr_initial_init_ver_status',
         'nsr_issu_sync_group_versions', 'standbyver']
 
-    def cli(self, vrf_type='all', address_family='', instance='all', vrf='all', output=None):
+    def cli(self, instance='all', vrf_type='all', vrf='all', address_family='', output=None):
 
         assert vrf_type in ['all', 'vrf']
         # assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
@@ -4506,7 +4506,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         p2 = re.compile(r'^\s*VRF: *(?P<vrf>[\S]+)$')
         p3 = re.compile(r'^\s*Address *Family:'
                         ' *(?P<address_family>[\S\s]+)$')
-        p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[A-Z0-9]+), *state:'
+        p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[a-zA-Z0-9]+), *state:'
                         ' *(?P<vrf_state>[a-zA-Z]+)$')
         p5 = re.compile(r'^\s*BGP *Route *Distinguisher:'
                         ' *(?P<route_distinguisher>\S+)$')
@@ -4646,7 +4646,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['route_distinguisher'] = route_distinguisher
                 continue
-
+            
             # VRF ID: 0x60000001
 
             m = p6.match(line)
