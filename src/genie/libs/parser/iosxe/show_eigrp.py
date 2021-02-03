@@ -684,3 +684,115 @@ class ShowIpv6EigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
             show_output = output
 
         return super().cli(output=show_output, vrf='default')
+
+
+class ShowIpEigrpInterfacesSchema(MetaParser):
+
+    ''' Schema for "show ip eigrp interfaces" '''
+
+# These are the key-value pairs to add to the parsed dictionary
+    schema = {
+            'eigrp_instance':
+                {Any():
+                     {'vrf':
+                          {Any():
+                               {'address_family':
+                                    {Any():
+                                         {'interface':
+                                              {Any():
+                                                   {'peers': int,
+                                                    'xmit_q_un': int,
+                                                    'xmit_q_re': int,
+                                                    'peer_q_un': int,
+                                                    'peer_q_re': int,
+                                                    'mean_srtt': int,
+                                                    'pacing_time_un': int,
+                                                    'pacing_time_re': int,
+                                                    'mcast_flow': int,
+                                                    'pend_routes': int
+                                                    },
+                                               },
+                                          },
+                                     },
+                                },
+                           },
+                      },
+                 },
+            }
+
+
+class ShowIpEigrpInterfaces(ShowIpEigrpInterfacesSchema):
+
+    ''' Parser for "show ip eigrp interfaces"'''
+
+    cli_command = 'show ip eigrp interfaces'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Initializes the Python dictionary variable
+        parsed_dict = {}
+
+        # Defines the regex for the first line of device output, which is:
+        # EIGRP-IPv4 Interfaces for AS(1)
+
+        p1 = re.compile('EIGRP\-(?P<addr_fam>(\S+)) +Interfaces +for +AS\((?P<auto_sys>(\d+))\)$')
+        p2 = re.compile('Xmit +Queue +PeerQ +Mean +Pacing +Time +Multicast +Pending')
+        p3 = re.compile('Interface +Peers +Un/Reliable +Un/Reliable +SRTT +Un/Reliable +Flow +Timer +Routes$')
+        p4 = re.compile('(?P<interface>(\S+\d)) +(?P<peers>(\d+)) +(?P<xmit_q_un>(\d+))/(?P<xmit_q_re>(\d+)) +(?P<peer_q_un>(\d+))/(?P<peer_q_re>(\d+)) +(?P<mean_srtt>(\d+)) +(?P<pacing_t_un>(\d+))/(?P<pacing_t_re>(\d+)) +(?P<mcast_flow>(\d+)) +(?P<pend_routes>(\d+))$')
+
+
+        # Defines the "for" loop, to pattern match each line of output
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Processes the matched patterns for the first line of output
+            m = p1.match(line)
+
+            if m:
+                group = m.groupdict()
+                vrf = 'default'
+                addr_fam = 'ipv4'
+                addr_fam = group['addr_fam'].lower()
+                auto_sys = group['auto_sys']
+                instance_dict = parsed_dict.setdefault('eigrp_instance', {}). \
+                    setdefault(auto_sys, {}).setdefault('vrf', {}). \
+                    setdefault(vrf, {}).setdefault('address_family', {}). \
+                    setdefault(addr_fam, {})
+
+                continue
+
+            # Processes the matched patterns for the second line of output
+            m = p2.match(line)
+            if m:
+                continue
+
+            # Processes the matched patterns for the third line of output
+            m = p3.match(line)
+            if m:
+                continue
+
+            # Processes the matched patterns for the third line of output
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface']
+                int_dict = instance_dict.setdefault('interface', {}).setdefault(interface, {})
+                int_dict['peers'] = int(group['peers'])
+                int_dict['xmit_q_un'] = int(group['xmit_q_un'])
+                int_dict['xmit_q_re'] = int(group['xmit_q_re'])
+                int_dict['peer_q_un'] = int(group['peer_q_un'])
+                int_dict['peer_q_re'] = int(group['peer_q_re'])
+                int_dict['mean_srtt'] = int(group['mean_srtt'])
+                int_dict['pacing_time_un'] = int(group['pacing_t_un'])
+                int_dict['pacing_time_re'] = int(group['pacing_t_re'])
+                int_dict['mcast_flow'] = int(group['mcast_flow'])
+                int_dict['pend_routes'] = int(group['pend_routes'])
+                continue
+
+        return parsed_dict
