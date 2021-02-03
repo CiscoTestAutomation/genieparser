@@ -4622,6 +4622,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 continue
 
             # BGP VRF VRF1, state: Active
+            # BGP VRF vrf1, state: Active
 
             m = p4.match(line)
             if m:
