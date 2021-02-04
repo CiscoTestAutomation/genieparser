@@ -131,63 +131,92 @@ class DisplayInterfaces(DisplayInterfaceSchema):
 
         # GigabitEthernet3/8/0/38 current state: DOWN
         p1 = re.compile(r'^ *(?P<interface>[\w\/\.\-]+) current state: (?P<enabled>[\(?\w\s\)?]+)$')
+
         # IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: aaaa-bbbb-cccc
         p2 = re.compile(r'^IP Packet Frame Type: (?P<frame_type>\w+), +Hardware Address: (?P<mac_address>[a-z0-9-]+)$')
+
         # Description:
         p3 = re.compile(r'^Description: *(?P<description>.*)$')
+
         # Media type is twisted pair
         p4 = re.compile(r'^Media type is (?P<media_type>.*?)($|,.*$)')
+
         # Port hardware type is  1000_BASE_T
         p5 = re.compile(r'Port hardware type is\s+(?P<port_type>[\w+_?]+)')
+
         #  Unknown-speed mode, unknown-duplex mode
         p6 = re.compile(r'^(?P<port_speed>\w+[Mbps]?)-speed mode, (?P<duplex_mode>\w+)[\-\s]+[d|D]uplex mode$')
+
         # Link speed type is autonegotiation, link duplex type is autonegotiation
         p7 = re.compile(r'^Link speed type is (?P<speed_type>\w+), link duplex type is (?P<duplex_type>\w+)$')
+
         # The Maximum Frame Length is 9216
         p8_0 = re.compile(r'^The Maximum Frame Length is (?P<max_frame_length>\d+)$')
         p8_1 = re.compile(r'^The Maximum Transmit Unit is (?P<mtu>\d+)$')
+
         # Internet Address is 192.168.0.1/24 Primary
         p9 = re.compile(r'^Internet *Address *is *(?P<ipv4>(?P<ip>[0-9\.x]+)\/(?P<prefix_length>[0-9]+)) (?P<type>\w+)$')
+
         # PVID: 17
         p10 = re.compile(r'^PVID: *(?P<pvid>\d+)$')
+
         # Port link-type: access
         p11 = re.compile(r'^\s*Port link-type: (?P<switchport_mode>\w+)$')
+
         # Tagged   VLAN ID : none
         p12 = re.compile(r'^Tagged +VLAN ID : (?P<tagged>\w+)$')
+
         # Untagged VLAN ID : 123
         p13 = re.compile(r'^Untagged +VLAN ID : (?P<untagged>\w+)$')
+
         # VLAN passing  : 1(default vlan), 3, 5, 7, 9
         p14 = re.compile(r'^ *VLAN passing *: (?P<passing>(.*))$')
+
         # VLAN permitted  : 1(default vlan), 3, 5, 7, 9
         p15 = re.compile(r'^ *VLAN permitted *: (?P<permitted>(.*))$')
+
         # Trunk port encapsulation: IEEE 802.1q
         p16 = re.compile(r'^ *Trunk port encapsulation: (?P<encapsulation>.*)$')
+
         # Port priority: 0
         p17 = re.compile(r'^ *Port priority: (?P<priority>\d+)$')
+
         #  Last clearing of counters:  Never
         p18 = re.compile(r'^ *Last clearing of counters: *(?P<last_clear>.*)$')
+
         # Last 300 seconds input:  0 packets/sec 0 bytes/sec -%
         p19 = re.compile(r'Last (?P<load_interval>[0-9\#]+) *(?P<unit>(minute|second|minutes|seconds)) input: *(?P<in_rate_pkts>[0-9]+) packets\/sec *(?P<in_rate_bytes>[0-9]+) *bytes\/sec *.*%$')
+
         # Last 300 seconds output:  0 packets/sec 0 bytes/sec -%
         p20 = re.compile(r'Last (?P<load_interval>[0-9\#]+) *(?P<unit>(minute|second|minutes|seconds)) output: *(?P<out_rate_pkts>[0-9]+) packets\/sec *(?P<out_rate_bytes>[0-9]+) *bytes\/sec *.*%$')
+
         # Input (total):  7446905 packets, 10280397282 bytes
         p21_0 = re.compile(r'^ *Input \((?P<type>\w+)\): *(?P<packets>.*) packets, (?P<bytes>.*) bytes$')
+
         # Output (total): 40981139 packets, 44666966188 bytes
         p21_1 = re.compile(r'^ *Output \((?P<type>\w+)\): *(?P<packets>.*) packets, (?P<bytes>.*) bytes$')
+
         # 7426948 unicasts, 1093 broadcasts, 18864 multicasts, 0 pauses
         p22 = re.compile(r'^ *(?P<unicasts>.*) unicasts, (?P<broadcasts>.*) broadcasts, (?P<multicasts>.*) multicasts, (?P<pauses>.*) pauses$')
+
         # Input:  0 input errors, 0 runts, 0 giants, 0 throttles
         p23 = re.compile(r'^ *Input: *(?P<in_errors>.*) input errors, (?P<in_runts>.*) runts, (?P<in_giants>.*) giants, (?P<in_throttles>.*) throttles$')
+
         # 0 CRC, 0 frame, - overruns, 0 aborts
         p24 = re.compile(r'^ *(?P<in_crc_errors>.*) CRC, (?P<in_frame>.*) frame, (?P<in_overrun>.*) overruns, (?P<in_abort>.*) aborts$')
+
         #        - ignored, - parity errors
         p25 = re.compile(r'^ *(?P<in_ignored>.*) ignored, (?P<in_parity_errors>.*) parity errors$')
+
         # Output: 0 output errors, - underruns, - buffer failures
         p26 = re.compile(r'^ *Output: *(?P<out_errors>.*) output errors, (?P<out_underruns>.*) underruns, (?P<out_buffer_failure>.*) buffer failures$')
+
         #  aborts, 0 deferred, 0 collisions, 0 late collisions
         p27 = re.compile(r'^ *(?P<out_abort>.*) aborts, (?P<out_deferred>.*) deferred, (?P<out_collision>.*) collisions, (?P<out_late_collision>.*) late collisions$')
+
         #          0 lost carrier, - no carrier
         p28 = re.compile(r'^ *(?P<out_lost_carrier>.*) lost carrier, (?P<out_no_carrier>.*) no carrier$')
+
         interface_dict = {}
 
         for line in out.splitlines():
@@ -576,7 +605,7 @@ class DisplayInterfaces(DisplayInterfaceSchema):
                 interface_dict[interface]['counters']["out_no_carrier"] = int(out_no_carrier)
                 continue
 
-        return(interface_dict)
+        return interface_dict
 
 
 class DisplayIpInterfaceBriefSchema(MetaParser):
@@ -637,7 +666,7 @@ class DisplayInterfacesBrief(DisplayIpInterfaceBriefSchema):
         route_out = ''
         bridge_out = ''
         table = ''
-        
+
         if out:
             for line in out.splitlines():
                 if re.search('under route', line):
@@ -699,5 +728,5 @@ class DisplayInterfacesBrief(DisplayIpInterfaceBriefSchema):
             if(bridge_dict != {}):
                 parsed_dict.update(bridge_dict)
 
-        return (parsed_dict)
+        return parsed_dict
 
