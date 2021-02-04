@@ -1807,6 +1807,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         #   mcast-group 231.100.1.1
         p11 = re.compile(r'^\s*mcast-group +(?P<mcast_group>[\d\.]+)$')
         #   interface Ethernet1/1
+        #   interface port-channel11
         p12 = re.compile(r'^\s*interface +(?P<interface>(?!nve)[\w\/\-]+)$')
         #   evpn multisite fabric-tracking
         #   evpn multisite dci-tracking
@@ -1921,7 +1922,9 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
             if m:
                 interface = m.groupdict().pop('interface')
                 continue
-
+            
+            # interface port-channel11
+            # interface Ethernet1/1
             m = p13.match(line)
             if m:
                 tracking = m.groupdict().pop('fabric_dci_tracking')
