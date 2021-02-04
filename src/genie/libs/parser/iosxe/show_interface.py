@@ -57,18 +57,18 @@ class ShowInterfacesSchema(MetaParser):
 
     schema = {
             Any(): {
-                'oper_status': str,
+                Optional('oper_status'): str,
                 Optional('line_protocol'): str,
-                'enabled': bool,
+                Optional('enabled'): bool,
                 Optional('connected'): bool,
                 Optional('description'): str,
-                'type': str,
+                Optional('type'): str,
                 Optional('link_state'): str,
                 Optional('port_speed'): str,
                 Optional('duplex_mode'): str,
                 Optional('link_type'): str,
                 Optional('media_type'): str,
-                'mtu': int,
+                Optional('mtu'): int,
                 Optional('maximum_active_vcs'): str,
                 Optional('vcs_per_vp'): str,
                 Optional('vc_idle_disconnect_time'): str,
@@ -123,7 +123,7 @@ class ShowInterfacesSchema(MetaParser):
                     Optional('active_members'): int,
                     Optional('num_of_pf_jumbo_supported_members'): int,
                 },
-                'bandwidth': int,
+                Optional('bandwidth'): int,
                 Optional('counters'):
                     {Optional('rate'):
                        {Optional('load_interval'): int,
@@ -471,6 +471,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         interface_dict = {}
         unnumbered_dict = {}
+        import pdb;pdb.set_trace()
         for line in out.splitlines():
             line = line.strip()
             # GigabitEthernet1 is up, line protocol is up 
@@ -1177,6 +1178,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                             interface_dict[intf]['ipv4']['unnumbered'] = {}
                             interface_dict[intf]['ipv4']['unnumbered']\
                                 ['interface_ref'] = unnumbered_intf
+        import pdb;pdb.set_trace()
         return(interface_dict)
 
 
