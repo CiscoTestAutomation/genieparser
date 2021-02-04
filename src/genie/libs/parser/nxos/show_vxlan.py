@@ -1931,12 +1931,9 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                     fabric_dict.update({'if_name': interface})
                     fabric_dict.update({'if_state': 'up'})
                 if 'dci' in tracking:
-                    try:
-                        dci_dict = tracking_dict.setdefault('dci_links', {}).setdefault(interface, {})
-                        dci_dict.update({'if_name': interface})
-                        dci_dict.update({'if_state': 'up'})
-                    except Exception as e:
-                        print(line)
+                    dci_dict = tracking_dict.setdefault('dci_links', {}).setdefault(interface, {})
+                    dci_dict.update({'if_name': interface})
+                    dci_dict.update({'if_state': 'up'})
                 continue
 
             m = p14.match(line)
