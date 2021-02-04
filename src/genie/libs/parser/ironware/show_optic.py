@@ -82,6 +82,7 @@ class ShowOptic(ShowOpticSchema):
 
         result_dict = {}
 
+        # 1/1   31.3789 C  -040.0000 dBm -040.0000 dBm    0.000 mA
         p1 = re.compile(r'(^(?P<port>\d+\/\d+)\s+'
                         r'(?P<temp>\d+.\d+|N\/A)(\sC|)\s+'
                         r'(?P<tx>[-]?\d+.\d+|N\/A|NONE)(\s+dBm|'
@@ -90,6 +91,7 @@ class ShowOptic(ShowOpticSchema):
                         r'\s+dBm\/\s*\d+\s+uW|)\s+'
                         r'(?P<tbc>[-]?\d+.\d+|N\/A)(\s+mA|))')
 
+        # Normal      Low-Alarm      Low-Alarm     Low-Warn
         p2 = re.compile(r'(^(?P<temp>Normal|Low-Alarm|Low-Warn|'
                         r'High-Warn|High-Alarm)\s+'
                         r'(?P<tx>Normal|Low-Alarm|Low-Warn|'
