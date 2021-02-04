@@ -1807,7 +1807,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         #   mcast-group 231.100.1.1
         p11 = re.compile(r'^\s*mcast-group +(?P<mcast_group>[\d\.]+)$')
         #   interface Ethernet1/1
-        p12 = re.compile(r'^\s*interface +(?P<interface>(?!nve)[\w\/]+)$')
+        p12 = re.compile(r'^\s*interface +(?P<interface>(?!nve)[\w\/\-]+)$')
         #   evpn multisite fabric-tracking
         #   evpn multisite dci-tracking
         p13 = re.compile(r'^\s*evpn multisite +(?P<fabric_dci_tracking>[\w\-]+)$')
@@ -1931,9 +1931,12 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
                     fabric_dict.update({'if_name': interface})
                     fabric_dict.update({'if_state': 'up'})
                 if 'dci' in tracking:
-                    dci_dict = tracking_dict.setdefault('dci_links', {}).setdefault(interface, {})
-                    dci_dict.update({'if_name': interface})
-                    dci_dict.update({'if_state': 'up'})
+                    try:
+                        dci_dict = tracking_dict.setdefault('dci_links', {}).setdefault(interface, {})
+                        dci_dict.update({'if_name': interface})
+                        dci_dict.update({'if_state': 'up'})
+                    except Exception as e:
+                        print(line)
                 continue
 
             m = p14.match(line)
