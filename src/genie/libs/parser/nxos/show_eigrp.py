@@ -409,7 +409,7 @@ class ShowEigrpTopologySchema(MetaParser):
                                         'num_successors': int,
                                         'fd': str,
                                         'nexthops': {
-                                            Any(): {
+                                            int: {
                                                 'nexthop': str,
                                                 Optional('fd'): int,
                                                 Optional('rd'): int,
