@@ -460,7 +460,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                 "route": {
                                     "1.0.1.0/24": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 2816,
                                         "nexthops": {
                                             0: {
@@ -471,7 +471,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     },
                                     "11.0.0.0/24": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
                                             0: {
@@ -489,7 +489,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     },
                                     "11.0.1.0/24": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
                                             0: {
@@ -507,7 +507,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     },
                                     "11.0.2.0/24": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
                                             0: {
@@ -525,7 +525,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     },
                                     "11.0.3.0/24": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
                                             0: {
@@ -543,7 +543,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     },
                                     "11.0.4.0/24": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
                                             0: {
@@ -605,7 +605,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                 "route": {
                                     "2001:1::1:0/112": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 2816,
                                         "nexthops": {
                                             0: {
@@ -616,7 +616,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     },
                                     "2001:11::/112": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
                                             0: {
@@ -634,7 +634,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     },
                                     "2001:11::1:0/112": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
                                             0: {
@@ -652,7 +652,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     },
                                     "2001:11::2:0/112": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
                                             0: {
@@ -670,7 +670,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     },
                                     "2001:11::3:0/112": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
                                             0: {
@@ -688,7 +688,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     },
                                     "2001:11::4:0/112": {
                                         "state": "P",
-                                        "successors": 1,
+                                        "num_successors": 1,
                                         "fd": 51200,
                                         "nexthops": {
                                             0: {
