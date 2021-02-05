@@ -6267,7 +6267,16 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
             # router bgp 333
             m = p1.match(line)
             if m:
-                bgp_id = int(m.groupdict()['bgp_id'])
+                # Coversion to BGP ASN 4260036636(AS-PLAIN) from 65003.28(AS-COLON)
+                bgp_id = m.groupdict()['bgp_id']
+                if '.' in bgp_id:
+                    val = bgp_id.split('.')
+                    bgp_id = 65536*int(val[0])+int(val[1])
+                else:
+                    bgp_id = int(bgp_id)
+                    
+                sum_dict['bgp_id'] = bgp_id
+
                 if 'bgp' not in bgp_dict:
                     bgp_dict['bgp'] = {}
                 if 'instance' not in bgp_dict['bgp']:
