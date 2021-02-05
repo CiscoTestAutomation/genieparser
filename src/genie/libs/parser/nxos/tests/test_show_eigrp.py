@@ -461,7 +461,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "1.0.1.0/24": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 2816,
+                                        "fd": "2816",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Connected",
@@ -472,7 +472,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "11.0.0.0/24": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 51200,
+                                        "fd": "51200",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Rstatic",
@@ -490,7 +490,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "11.0.1.0/24": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 51200,
+                                        "fd": "51200",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Rstatic",
@@ -508,7 +508,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "11.0.2.0/24": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 51200,
+                                        "fd": "51200",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Rstatic",
@@ -526,7 +526,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "11.0.3.0/24": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 51200,
+                                        "fd": "51200",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Rstatic",
@@ -544,7 +544,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "11.0.4.0/24": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 51200,
+                                        "fd": "Inaccessible",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Rstatic",
@@ -589,7 +589,7 @@ class test_show_eigrp_topology(unittest.TestCase):
         P 11.0.3.0/24, 1 successors, FD is 51200
                 via Rstatic (51200/0)
                 via 1.0.1.2 (3072/576), Ethernet1/2
-        P 11.0.4.0/24, 1 successors, FD is 51200
+        P 11.0.4.0/24, 1 successors, FD is Inaccessible
                 via Rstatic (51200/0)
                 via 1.0.1.2 (3072/576), Ethernet1/2
     '''}
@@ -606,7 +606,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "2001:1::1:0/112": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 2816,
+                                        "fd": "2816",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Connected",
@@ -617,7 +617,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "2001:11::/112": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 51200,
+                                        "fd": "51200",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Rstatic",
@@ -635,7 +635,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "2001:11::1:0/112": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 51200,
+                                        "fd": "51200",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Rstatic",
@@ -653,7 +653,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "2001:11::2:0/112": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 51200,
+                                        "fd": "51200",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Rstatic",
@@ -671,7 +671,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "2001:11::3:0/112": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 51200,
+                                        "fd": "51200",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Rstatic",
@@ -689,7 +689,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                     "2001:11::4:0/112": {
                                         "state": "P",
                                         "num_successors": 1,
-                                        "fd": 51200,
+                                        "fd": "Inaccessible",
                                         "nexthops": {
                                             0: {
                                                 "nexthop": "Rstatic",
@@ -734,7 +734,7 @@ class test_show_eigrp_topology(unittest.TestCase):
         P 2001:11::3:0/112, 1 successors, FD is 51200
                 via Rstatic (51200/0)
                 via 2001:1::1:2 (3072/576), Ethernet1/2
-        P 2001:11::4:0/112, 1 successors, FD is 51200
+        P 2001:11::4:0/112, 1 successors, FD is Inaccessible
                 via Rstatic (51200/0)
                 via 2001:1::1:2 (3072/576), Ethernet1/2
     '''}
