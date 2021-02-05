@@ -407,7 +407,7 @@ class ShowEigrpTopologySchema(MetaParser):
                                     Any(): {
                                         'state': str,
                                         'num_successors': int,
-                                        'fd': int,
+                                        'fd': str,
                                         'nexthops': {
                                             Any(): {
                                                 'nexthop': str,
@@ -456,9 +456,10 @@ class ShowEigrpTopology(ShowEigrpTopologySchema):
 
         # P 1.0.1.0/24, 1 successors, FD is 2816
         # P 2001:1::1:0/112, 1 successors, FD is 2816
+        # P 2.0.1.0/24, 2 successors, FD is Inaccessible
         r2 = re.compile(r'^(?P<state>P|A|U|Q|R|r|s)\s+(?P<route>\S+),\s+'
                         '(?P<num_successors>\d+)\s+successors,'
-                        '\s+FD\s+is\s+(?P<fd>\d+)$')
+                        '\s+FD\s+is\s+(?P<fd>(\d+)|Inaccessible)$')
 
         # via Connected, Ethernet1/2
         # via Rstatic (51200/0)
@@ -514,7 +515,7 @@ class ShowEigrpTopology(ShowEigrpTopologySchema):
                     .setdefault(route, {})
                 route_dict['state'] = group['state']
                 route_dict['num_successors'] = int(group['num_successors'])
-                route_dict['fd'] = int(group['fd'])
+                route_dict['fd'] = group['fd']
 
             result = r3.match(line)
             if result:
