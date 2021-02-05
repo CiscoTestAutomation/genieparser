@@ -426,6 +426,8 @@ class ShowEigrpTopologySchema(MetaParser):
 
 class ShowEigrpTopology(ShowEigrpTopologySchema):
     '''Super parser for:
+        * 'show ip eigrp topology'
+        * 'show ipv6 eigrp topology'
         * 'show ip eigrp topology vrf <vrf>'
         * 'show ipv6 eigrp topology vrf <vrf>'
     '''
