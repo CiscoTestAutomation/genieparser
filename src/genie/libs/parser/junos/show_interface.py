@@ -1085,7 +1085,7 @@ class ShowInterfacesSchema(MetaParser):
             Optional("cos-information"): {
                 Optional("cos-stream-information"): {
                     "cos-direction": str,
-                    "cos-queue-configuration": Use(verify_cos_queue_configuration)
+                    Optional("cos-queue-configuration"): Use(verify_cos_queue_configuration)
                 }
             },
             Optional("input-error-list"): {
