@@ -350,6 +350,7 @@ class ShowPlatform(ShowPlatformSchema):
             # 0/RSP0/CPU0     A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
             # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
             # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
+            # 0/0/CPU0        RP(Active)      N/A             POWERED_ON      PWR,NSHUT,MON
             p1 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/]+)'
                              ' +(?P<name>[a-zA-Z0-9\-]+)'
                              '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
