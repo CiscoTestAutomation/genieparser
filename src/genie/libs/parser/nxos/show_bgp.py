@@ -6274,8 +6274,6 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
                     bgp_id = 65536*int(val[0])+int(val[1])
                 else:
                     bgp_id = int(bgp_id)
-                    
-                sum_dict['bgp_id'] = bgp_id
 
                 if 'bgp' not in bgp_dict:
                     bgp_dict['bgp'] = {}
