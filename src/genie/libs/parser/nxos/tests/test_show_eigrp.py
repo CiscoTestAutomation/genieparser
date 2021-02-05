@@ -451,7 +451,7 @@ class test_show_eigrp_topology(unittest.TestCase):
 
     expected_parsed_output_1 = {
         "as": {
-            "1": {
+            1: {
                 "routerid": "10.0.0.1",
                 "vrf": {
                     "default": {
@@ -596,7 +596,7 @@ class test_show_eigrp_topology(unittest.TestCase):
 
     expected_parsed_output_2 = {
         "as": {
-            "1": {
+            1: {
                 "routerid": "2001:10::1",
                 "vrf": {
                     "default": {

@@ -397,7 +397,7 @@ class ShowEigrpTopologySchema(MetaParser):
 
     schema = {
         'as': {
-            Any(): {
+            int: {
                 'routerid': str,
                 'vrf': {
                     Any(): {
@@ -482,7 +482,7 @@ class ShowEigrpTopology(ShowEigrpTopologySchema):
                 address_family = group['address_family'].lower()
                 if address_family == 'ip':
                     address_family = 'ipv4'
-                as_num = group['as_num']
+                as_num = int(group['as_num'])
                 routerid = group['routerid']
                 vrf = group['vrf']
                 as_dict:dict = parsed_dict \
