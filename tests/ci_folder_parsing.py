@@ -501,6 +501,11 @@ if __name__ == "__main__":
                         type=int,
                         help="The specific unittest we want to run, such as '25'",
                         default=None)
+    my_parser.add_argument('-v', "--verbose",
+                        action='store_true',
+                        help="Set Logging level to INFO",
+                        default=False)
+
     args = my_parser.parse_args()
 
     _os = args.operating_system
@@ -508,6 +513,10 @@ if __name__ == "__main__":
     _token = args.token
     _display_only_failed = args.display_only_failed
     _number = args.number
+    _verbose = args.verbose
+
+    if(_verbose):
+        log.setLevel(logging.INFO)
 
     if _number and (not _class or not _number):
         sys.exit("Unittest number provided but missing supporting arguments:"
