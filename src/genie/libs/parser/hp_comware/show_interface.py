@@ -48,6 +48,20 @@ class DisplayInterfaceSchema(MetaParser):
                             Optional('in_rate_bytes'): int,
                             Optional('out_rate_bytes'): int,
                             },
+                        Optional('normal'):
+                           {Optional('in_pkts'): int,
+                            Optional('in_octets'): int,
+                            Optional('out_pkts'): int,
+                            Optional('out_octets'): int,
+                            Optional('in_unicast_pkts'): int,
+                            Optional('in_broadcast_pkts'): int,
+                            Optional('in_multicast_pkts'): int,
+                            Optional('in_mac_pause_frames'): int,
+                            Optional('out_unicast_pkts'): int,
+                            Optional('out_broadcast_pkts'): int,
+                            Optional('out_multicast_pkts'): int,
+                            Optional('out_mac_pause_frames'): int,
+                            },
                         Optional('out_unicast_pkts'): int,
                         Optional('out_errors'): int,
                         Optional('out_collision'): int,
@@ -452,11 +466,24 @@ class DisplayInterfaces(DisplayInterfaceSchema):
 
                 packets = m.groupdict()['packets']
                 octets = m.groupdict()['bytes']
+                
+                if(packets == '-'):
+                    packets = 0
+                if(octets == '-'):
+                    octets = 0
+
                 if 'counters' not in interface_dict[interface]:
                     interface_dict[interface]['counters'] = {}
                 if inout_type == 'total':
                     interface_dict[interface]['counters'][inout + "_pkts"] = int(packets)
                     interface_dict[interface]['counters'][inout + "_octets"] = int(octets)
+                elif inout_type == 'normal':
+                    if 'normal' not in interface_dict[interface]['counters']:
+                        interface_dict[interface]['counters']['normal'] = {}
+
+                    interface_dict[interface]['counters']['normal'][inout + "_pkts"] = int(packets)
+                    interface_dict[interface]['counters']['normal'][inout + "_octets"] = int(octets)
+
                 continue
 
             # r'^ *Output \((?P<type>\w+)\): *(?P<packets>.*) packets, (?P<bytes>.*) bytes$'
@@ -466,11 +493,23 @@ class DisplayInterfaces(DisplayInterfaceSchema):
                 inout_type = m.groupdict()['type']
                 packets = m.groupdict()['packets']
                 octets = m.groupdict()['bytes']
+
+                if(packets == '-'):
+                    packets = 0
+                if(octets == '-'):
+                    octets = 0
+
                 if 'counters' not in interface_dict[interface]:
                     interface_dict[interface]['counters'] = {}
                 if inout_type == 'total':
                     interface_dict[interface]['counters'][inout + "_pkts"] = int(packets)
                     interface_dict[interface]['counters'][inout + "_octets"] = int(octets)
+                elif inout_type == 'normal':
+                    if 'normal' not in interface_dict[interface]['counters']:
+                        interface_dict[interface]['counters']['normal'] = {}
+
+                    interface_dict[interface]['counters']['normal'][inout + "_pkts"] = int(packets)
+                    interface_dict[interface]['counters']['normal'][inout + "_octets"] = int(octets)
                 continue
 
             # r'^ *(?P<unicasts>.*) unicasts, (?P<broadcasts>.*) broadcasts, (?P<multicasts>.*) multicasts, (?P<pauses>.*) pauses$'
@@ -480,11 +519,26 @@ class DisplayInterfaces(DisplayInterfaceSchema):
                 broadcasts = m.groupdict()['broadcasts']
                 multicasts = m.groupdict()['multicasts']
                 pauses = m.groupdict()['pauses']
+
+                if(unicasts == '-'):
+                    unicasts = 0
+                if(broadcasts == '-'):
+                    broadcasts = 0
+                if(multicasts == '-'):
+                    multicasts = 0
+                if(pauses == '-'):
+                    pauses = 0
+
                 if inout_type == 'total':
                     interface_dict[interface]['counters'][inout + "_unicast_pkts"] = int(unicasts)
                     interface_dict[interface]['counters'][inout + "_broadcast_pkts"] = int(broadcasts)
                     interface_dict[interface]['counters'][inout + "_multicast_pkts"] = int(multicasts)
                     interface_dict[interface]['counters'][inout + "_mac_pause_frames"] = int(pauses)
+                elif inout_type == 'normal':
+                    interface_dict[interface]['counters']['normal'][inout + "_unicast_pkts"] = int(unicasts)
+                    interface_dict[interface]['counters']['normal'][inout + "_broadcast_pkts"] = int(broadcasts)
+                    interface_dict[interface]['counters']['normal'][inout + "_multicast_pkts"] = int(multicasts)
+                    interface_dict[interface]['counters']['normal'][inout + "_mac_pause_frames"] = int(pauses)
                 continue
 
             # r'^ *Input: *(?P<in_errors>.*) input errors, (?P<in_runts>.*) runts, (?P<in_giants>.*) giants, (?P<in_throttles>.*) throttles$'
