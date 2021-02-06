@@ -2,6 +2,20 @@ expected_output = {
     "GigabitEthernet3/8/0/48": {
         "auto_negotiate": True,
         "counters": {
+            "normal": {
+                "in_broadcast_pkts": 0,
+                "in_mac_pause_frames": 0,
+                "in_multicast_pkts": 3832415,
+                "in_octets": 0,
+                "in_pkts": 3184372634,
+                "in_unicast_pkts": 3180540219,
+                "out_broadcast_pkts": 2279737294,
+                "out_mac_pause_frames": 0,
+                "out_multicast_pkts": 25375569217,
+                "out_octets": 0,
+                "out_pkts": 189514390228,
+                "out_unicast_pkts": 161859083717
+            },
             "in_abort": 0,
             "in_broadcast_pkts": 0,
             "in_crc_errors": 0,
@@ -83,4 +97,5 @@ expected_output = {
         "type": "GigabitEthernet"
     }
 }
+
 
