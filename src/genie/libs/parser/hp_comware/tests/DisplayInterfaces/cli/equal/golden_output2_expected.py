@@ -10,6 +10,8 @@ expected_output = {
             }
         },
         "mac_address": "cc3e-5f69-abcd",
+        "ipv6_frame_type": "PKTFMT_ETHNT_2",
+        "ipv6_mac_address": "cc3e-5f69-abcd",
         "mtu": 1500,
         "oper_status": "UP",
         "type": "Vlan-interface"

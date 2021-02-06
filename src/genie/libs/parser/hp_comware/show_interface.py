@@ -30,6 +30,7 @@ class DisplayInterfaceSchema(MetaParser):
                     Optional('description'): str,
                     'type': str,
                     Optional('frame_type'): str,
+                    Optional('ipv6_frame_type'): str,
                     Optional('port_speed'): str,
                     Optional('duplex_mode'): str,
                     Optional('media_type'): str,
@@ -38,6 +39,7 @@ class DisplayInterfaceSchema(MetaParser):
                     Optional('max_frame_length'): int,
                     Optional('pvid'): int,
                     Optional('mac_address'): str,
+                    Optional('ipv6_mac_address'): str,
                     Optional('auto_negotiate'): bool,
                     Optional('priority'): int,
                     Optional('counters'):
@@ -147,7 +149,10 @@ class DisplayInterfaces(DisplayInterfaceSchema):
         p1 = re.compile(r'^ *(?P<interface>[\w\/\.\-]+) current state: (?P<enabled>[\(?\w\s\)?]+)$')
 
         # IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: aaaa-bbbb-cccc
-        p2 = re.compile(r'^IP Packet Frame Type: (?P<frame_type>\w+), +Hardware Address: (?P<mac_address>[a-z0-9-]+)$')
+        p2_0 = re.compile(r'^IP Packet Frame Type: (?P<frame_type>\w+), +Hardware Address: (?P<mac_address>[a-z0-9-]+)$')
+
+        # IPv6 Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: aaaa-bbbb-cccc
+        p2_1 = re.compile(r'^IPv6 Packet Frame Type: (?P<frame_type>\w+), +Hardware Address: (?P<mac_address>[a-z0-9-]+)$')
 
         # Description:
         p3 = re.compile(r'^Description: *(?P<description>.*)$')
@@ -256,13 +261,23 @@ class DisplayInterfaces(DisplayInterfaceSchema):
                 continue
 
             # r'^IP Packet Frame Type: (?P<frame_type>\w+), +Hardware Address: (?P<mac_address>[a-z0-9-]+)$'
-            m = p2.match(line)
+            m = p2_0.match(line)
             if m:
                 frame_type = m.groupdict()['frame_type']
                 mac_address = m.groupdict()['mac_address']
 
                 interface_dict[interface]['frame_type'] = frame_type
                 interface_dict[interface]['mac_address'] = mac_address
+                continue
+
+            # r'^IPv6 Packet Frame Type: (?P<frame_type>\w+), +Hardware Address: (?P<mac_address>[a-z0-9-]+)$'
+            m = p2_1.match(line)
+            if m:
+                frame_type = m.groupdict()['frame_type']
+                mac_address = m.groupdict()['mac_address']
+
+                interface_dict[interface]['ipv6_frame_type'] = frame_type
+                interface_dict[interface]['ipv6_mac_address'] = mac_address
                 continue
 
             # r'^Description: *(?P<description>.*)$'
