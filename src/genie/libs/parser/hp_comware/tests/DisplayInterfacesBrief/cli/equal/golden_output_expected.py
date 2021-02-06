@@ -1,6 +1,6 @@
 expected_output = {
     "bridge": {
-        "BAGG1": {
+        "Bridge-Aggregation1": {
             "description": "## BAGG 1 ##",
             "duplex": "F(a)",
             "link": "UP",
@@ -8,7 +8,7 @@ expected_output = {
             "speed": "3G(a)",
             "type": "T"
         },
-        "BAGG2": {
+        "Bridge-Aggregation2": {
             "description": "## BAGG 2 ##",
             "duplex": "F(a)",
             "link": "UP",
@@ -16,7 +16,7 @@ expected_output = {
             "speed": "40G(a)",
             "type": "T"
         },
-        "BAGG5": {
+        "Bridge-Aggregation5": {
             "description": "## BAGG 5 ##",
             "duplex": "F(a)",
             "link": "UP",
@@ -24,7 +24,7 @@ expected_output = {
             "speed": "20G(a)",
             "type": "T"
         },
-        "BAGG8": {
+        "Bridge-Aggregation8": {
             "description": "## BAGG 8 ##",
             "duplex": "F(a)",
             "link": "UP",
@@ -34,7 +34,7 @@ expected_output = {
         }
     },
     "route": {
-        "M-E1/0/0/0": {
+        "M-Ethernet1/0/0/0": {
             "description": "",
             "ip_address": "10.0.0.1",
             "link": "DOWN",
