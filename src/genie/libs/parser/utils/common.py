@@ -530,9 +530,11 @@ class Common():
                    'Hun': 'HundredGigE',
                    'vl': 'vasileft',
                    'vr': 'vasiright',
-                   'BE': 'Bundle-Ether'
+                   'BE': 'Bundle-Ether',
+                   'M-E': 'M-Ethernet',
+                   'BAGG' : 'Bridge-Aggregation'
                    }
-        m = re.search(r'([a-zA-Z]+)', intf) 
+        m = re.search(r'([a-zA-Z|-]+)', intf) 
         m1 = re.search(r'([\d\/\.]+)', intf)
         if hasattr(m, 'group') and hasattr(m1, 'group'):
             int_type = m.group(0)
