@@ -1,0 +1,3 @@
+Type  : SFP (T-Copper)
+Vendor:          FIBERSTORE      , Version:
+Part# :          SFP-1GTX-1MA    , Serial#:     J0509011137

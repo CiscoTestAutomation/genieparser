@@ -1,0 +1,19 @@
+VLL MY-DOWN-VLL, VC-ID 2344, VLL-INDEX 45
+
+  End-point        : tagged  vlan 3033  e 4/7
+  End-Point state  : Down
+  MCT state        : None
+  IFL-ID           : --
+  Local VC type    : tag
+  Local VC MTU     : 9190
+  COS              : --
+  Extended Counters: Enabled
+
+  Vll-Peer         : 192.168.1.1
+    State          : DOWN - endpoint is not UP
+    Remote VC type : --                Remote VC MTU  : --
+    Local label    : --                Remote label   : --
+    Local group-id : 0                 Remote group-id: --
+    Tunnel LSP     : my_tunnel_lsp.1 (tnl32)
+    MCT Status TLV : --
+    LSPs assigned  : No LSPs assigned
