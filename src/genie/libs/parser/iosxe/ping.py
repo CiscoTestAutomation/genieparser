@@ -300,15 +300,135 @@ class PingSchema(MetaParser):
 class Ping(PingSchema):
     """ parser for
             * ping {addr}
-            * ping {addr} source {source}
             * ping {addr} repeat {count}
-            * ping {addr} source {source} repeat {count}
+            * ping {addr} source {source}
+            * ping {addr} size {size}
+            * ping {addr} timeout {timeout}
+            * ping {addr} source {source} timeout {timeout}
+            * ping {addr} timeout {timeout} source {source}
+            * ping {addr} size {size} timeout {timeout}
+            * ping {addr} timeout {timeout} size {size}
             * ping {addr} repeat {count} source {source}
+            * ping {addr} source {source} repeat {count}
+            * ping {addr} source {source} size {size}
+            * ping {addr} size {size} source {source}
+            * ping {addr} repeat {count} timeout {timeout}
+            * ping {addr} timeout {timeout} repeat {count}
+            * ping {addr} repeat {count} size {size}
+            * ping {addr} size {size} repeat {count}
+            * ping {addr} repeat {count} size {size} timeout {timeout}
+            * ping {addr} repeat {count} timeout {timeout} size {size}
+            * ping {addr} size {size} repeat {count} timeout {timeout}
+            * ping {addr} size {size} timeout {timeout} repeat {count}
+            * ping {addr} timeout {timeout} repeat {count} size {size}
+            * ping {addr} timeout {timeout} size {size} repeat {count}
+            * ping {addr} repeat {count} source {source} timeout {timeout}
+            * ping {addr} repeat {count} timeout {timeout} source {source}
+            * ping {addr} source {source} repeat {count} timeout {timeout}
+            * ping {addr} source {source} timeout {timeout} repeat {count}
+            * ping {addr} timeout {timeout} repeat {count} source {source}
+            * ping {addr} timeout {timeout} source {source} repeat {count}
+            * ping {addr} repeat {count} source {source} size {size}
+            * ping {addr} repeat {count} size {size} source {source}
+            * ping {addr} source {source} repeat {count} size {size}
+            * ping {addr} source {source} size {size} repeat {count}
+            * ping {addr} size {size} repeat {count} source {source}
+            * ping {addr} size {size} source {source} repeat {count}
+            * ping {addr} source {source} size {size} timeout {timeout}
+            * ping {addr} source {source} timeout {timeout} size {size}
+            * ping {addr} size {size} source {source} timeout {timeout}
+            * ping {addr} size {size} timeout {timeout} source {source}
+            * ping {addr} timeout {timeout} source {source} size {size}
+            * ping {addr} timeout {timeout} size {size} source {source}
+            * ping {addr} source {source} repeat {count} size {size} timeout {timeout}
+            * ping {addr} source {source} repeat {count} timeout {timeout} size {size}
+            * ping {addr} source {source} size {size} repeat {count} timeout {timeout}
+            * ping {addr} source {source} size {size} timeout {timeout} repeat {count}
+            * ping {addr} source {source} timeout {timeout} repeat {count} size {size}
+            * ping {addr} source {source} timeout {timeout} size {size} repeat {count}
+            * ping {addr} size {size} repeat {count} source {source} timeout {timeout}
+            * ping {addr} size {size} repeat {count} timeout {timeout} source {source}
+            * ping {addr} size {size} source {source} repeat {count} timeout {timeout}
+            * ping {addr} size {size} source {source} timeout {timeout} repeat {count}
+            * ping {addr} size {size} timeout {timeout} repeat {count} source {source}
+            * ping {addr} size {size} timeout {timeout} source {source} repeat {count}
+            * ping {addr} timeout {timeout} repeat {count} source {source} size {size}
+            * ping {addr} timeout {timeout} repeat {count} size {size} source {source}
+            * ping {addr} timeout {timeout} source {source} repeat {count} size {size}
+            * ping {addr} timeout {timeout} source {source} size {size} repeat {count}
+            * ping {addr} timeout {timeout} size {size} repeat {count} source {source}
+            * ping {addr} timeout {timeout} size {size} source {source} repeat {count}
+            * ping {addr} repeat {count} source {source} size {size} timeout {timeout}
+            * ping {addr} repeat {count} source {source} timeout {timeout} size {size}
+            * ping {addr} repeat {count} size {size} source {source} timeout {timeout}
+            * ping {addr} repeat {count} size {size} timeout {timeout} source {source}
+            * ping {addr} repeat {count} timeout {timeout} source {source} size {size}
+            * ping {addr} repeat {count} timeout {timeout} size {size} source {source}
             * ping vrf {vrf} {addr}
-            * ping vrf {vrf} {addr} source {source}
             * ping vrf {vrf} {addr} repeat {count}
-            * ping vrf {vrf} {addr} source {source} repeat {count}
+            * ping vrf {vrf} {addr} source {source}
+            * ping vrf {vrf} {addr} size {size}
+            * ping vrf {vrf} {addr} timeout {timeout}
+            * ping vrf {vrf} {addr} source {source} timeout {timeout}
+            * ping vrf {vrf} {addr} timeout {timeout} source {source}
+            * ping vrf {vrf} {addr} size {size} timeout {timeout}
+            * ping vrf {vrf} {addr} timeout {timeout} size {size}
             * ping vrf {vrf} {addr} repeat {count} source {source}
+            * ping vrf {vrf} {addr} source {source} repeat {count}
+            * ping vrf {vrf} {addr} source {source} size {size}
+            * ping vrf {vrf} {addr} size {size} source {source}
+            * ping vrf {vrf} {addr} repeat {count} timeout {timeout}
+            * ping vrf {vrf} {addr} timeout {timeout} repeat {count}
+            * ping vrf {vrf} {addr} repeat {count} size {size}
+            * ping vrf {vrf} {addr} size {size} repeat {count}
+            * ping vrf {vrf} {addr} repeat {count} size {size} timeout {timeout}
+            * ping vrf {vrf} {addr} repeat {count} timeout {timeout} size {size}
+            * ping vrf {vrf} {addr} size {size} repeat {count} timeout {timeout}
+            * ping vrf {vrf} {addr} size {size} timeout {timeout} repeat {count}
+            * ping vrf {vrf} {addr} timeout {timeout} repeat {count} size {size}
+            * ping vrf {vrf} {addr} timeout {timeout} size {size} repeat {count}
+            * ping vrf {vrf} {addr} repeat {count} source {source} timeout {timeout}
+            * ping vrf {vrf} {addr} repeat {count} timeout {timeout} source {source}
+            * ping vrf {vrf} {addr} source {source} repeat {count} timeout {timeout}
+            * ping vrf {vrf} {addr} source {source} timeout {timeout} repeat {count}
+            * ping vrf {vrf} {addr} timeout {timeout} repeat {count} source {source}
+            * ping vrf {vrf} {addr} timeout {timeout} source {source} repeat {count}
+            * ping vrf {vrf} {addr} repeat {count} source {source} size {size}
+            * ping vrf {vrf} {addr} repeat {count} size {size} source {source}
+            * ping vrf {vrf} {addr} source {source} repeat {count} size {size}
+            * ping vrf {vrf} {addr} source {source} size {size} repeat {count}
+            * ping vrf {vrf} {addr} size {size} repeat {count} source {source}
+            * ping vrf {vrf} {addr} size {size} source {source} repeat {count}
+            * ping vrf {vrf} {addr} source {source} size {size} timeout {timeout}
+            * ping vrf {vrf} {addr} source {source} timeout {timeout} size {size}
+            * ping vrf {vrf} {addr} size {size} source {source} timeout {timeout}
+            * ping vrf {vrf} {addr} size {size} timeout {timeout} source {source}
+            * ping vrf {vrf} {addr} timeout {timeout} source {source} size {size}
+            * ping vrf {vrf} {addr} timeout {timeout} size {size} source {source}
+            * ping vrf {vrf} {addr} source {source} repeat {count} size {size} timeout {timeout}
+            * ping vrf {vrf} {addr} source {source} repeat {count} timeout {timeout} size {size}
+            * ping vrf {vrf} {addr} source {source} size {size} repeat {count} timeout {timeout}
+            * ping vrf {vrf} {addr} source {source} size {size} timeout {timeout} repeat {count}
+            * ping vrf {vrf} {addr} source {source} timeout {timeout} repeat {count} size {size}
+            * ping vrf {vrf} {addr} source {source} timeout {timeout} size {size} repeat {count}
+            * ping vrf {vrf} {addr} size {size} repeat {count} source {source} timeout {timeout}
+            * ping vrf {vrf} {addr} size {size} repeat {count} timeout {timeout} source {source}
+            * ping vrf {vrf} {addr} size {size} source {source} repeat {count} timeout {timeout}
+            * ping vrf {vrf} {addr} size {size} source {source} timeout {timeout} repeat {count}
+            * ping vrf {vrf} {addr} size {size} timeout {timeout} repeat {count} source {source}
+            * ping vrf {vrf} {addr} size {size} timeout {timeout} source {source} repeat {count}
+            * ping vrf {vrf} {addr} timeout {timeout} repeat {count} source {source} size {size}
+            * ping vrf {vrf} {addr} timeout {timeout} repeat {count} size {size} source {source}
+            * ping vrf {vrf} {addr} timeout {timeout} source {source} repeat {count} size {size}
+            * ping vrf {vrf} {addr} timeout {timeout} source {source} size {size} repeat {count}
+            * ping vrf {vrf} {addr} timeout {timeout} size {size} repeat {count} source {source}
+            * ping vrf {vrf} {addr} timeout {timeout} size {size} source {source} repeat {count}
+            * ping vrf {vrf} {addr} repeat {count} source {source} size {size} timeout {timeout}
+            * ping vrf {vrf} {addr} repeat {count} source {source} timeout {timeout} size {size}
+            * ping vrf {vrf} {addr} repeat {count} size {size} source {source} timeout {timeout}
+            * ping vrf {vrf} {addr} repeat {count} size {size} timeout {timeout} source {source}
+            * ping vrf {vrf} {addr} repeat {count} timeout {timeout} source {source} size {size}
+            * ping vrf {vrf} {addr} repeat {count} timeout {timeout} size {size} source {source}
     """
 
     cli_command = [
