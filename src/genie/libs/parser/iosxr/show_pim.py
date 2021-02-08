@@ -548,7 +548,7 @@ class ShowPimTopologySummarySchema(MetaParser):
                 {'active_group_ranges': int,
                  'no_group_ranges': int,
                  'no_g_routes': int,
-                 'no_g_rpt_routes': int,
+                 'no_sg_rpt_routes': int,
                  'no_sg_routes': int
                  },
              },
@@ -583,7 +583,7 @@ class ShowPimTopologySummary(ShowPimTopologySummarySchema):
             {'active_group_ranges': 4,
              'no_group_ranges': 5,
              'no_g_routes': 2,
-             'no_g_rpt_routes': 0,
+             'no_sg_rpt_routes': 0,
              'no_sg_routes': 1
             }
         }
@@ -615,13 +615,13 @@ class ShowPimTopologySummary(ShowPimTopologySummarySchema):
                         r"\(Active group ranges = (?P<active_group_ranges>\d+)\)")
 
         # No. of (*,G) routes = 1
-        p3 = re.compile(r"No\. of \(\*,G\) routes = (?P<no_sg_routes>\d+)")
+        p3 = re.compile(r"No\. of \(\*,G\) routes = (?P<no_g_routes>\d+)")
 
         # No. of (S,G) routes = 1100
-        p4 = re.compile(r"No\. of \(S,G\) routes = (?P<no_g_routes>\d+)")
+        p4 = re.compile(r"No\. of \(S,G\) routes = (?P<no_sg_routes>\d+)")
 
         # No. of (S,G)RPT routes = 0
-        p5 = re.compile(r"No\. of \(S,G\)RPT routes = (?P<no_g_rpt_routes>\d+)")
+        p5 = re.compile(r"No\. of \(S,G\)RPT routes = (?P<no_sg_rpt_routes>\d+)")
 
         for line in out.splitlines():
             line = line.strip()
@@ -643,19 +643,19 @@ class ShowPimTopologySummary(ShowPimTopologySummarySchema):
             m3 = p3.match(line)
             if m3:
                 group = m3.groupdict()
-                vrf_dict['no_sg_routes'] = int(group['no_sg_routes'])
+                vrf_dict['no_g_routes'] = int(group['no_g_routes'])
                 continue
 
             m4 = p4.match(line)
             if m4:
                 group = m4.groupdict()
-                vrf_dict['no_g_routes'] = int(group['no_g_routes'])
+                vrf_dict['no_sg_routes'] = int(group['no_sg_routes'])
                 continue
 
             m5 = p5.match(line)
             if m5:
                 group = m5.groupdict()
-                vrf_dict['no_g_rpt_routes'] = int(group['no_g_rpt_routes'])
+                vrf_dict['no_sg_rpt_routes'] = int(group['no_sg_rpt_routes'])
                 continue
 
         return parsed_dict
