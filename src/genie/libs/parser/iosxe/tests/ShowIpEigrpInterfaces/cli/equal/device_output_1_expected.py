@@ -1,45 +1,45 @@
 expected_output = {
-    "eigrp_instance": {
-        "1": {
-            "vrf": {
-                "default": {
+    "vrf": {
+        "default": {
+            "eigrp_instance": {
+                "1": {
                     "address_family": {
                         "ipv4": {
                             "interface": {
-                                "Gi1": {
+                                "GigabitEthernet1": {
                                     "peers": 1,
-                                    "xmit_q_un": 0,
-                                    "xmit_q_re": 0,
-                                    "peer_q_un": 0,
-                                    "peer_q_re": 0,
+                                    "xmit_q_unreliable": 0,
+                                    "xmit_q_reliable": 0,
+                                    "peer_q_unreliable": 0,
+                                    "peer_q_reliable": 0,
                                     "mean_srtt": 20,
-                                    "pacing_time_un": 0,
-                                    "pacing_time_re": 0,
-                                    "mcast_flow": 84,
+                                    "pacing_time_unreliable": 0,
+                                    "pacing_time_reliable": 0,
+                                    "mcast_flow_timer": 84,
                                     "pend_routes": 0,
                                 },
-                                "Gi2": {
+                                "GigabitEthernet2": {
                                     "peers": 1,
-                                    "xmit_q_un": 0,
-                                    "xmit_q_re": 0,
-                                    "peer_q_un": 0,
-                                    "peer_q_re": 0,
+                                    "xmit_q_unreliable": 0,
+                                    "xmit_q_reliable": 0,
+                                    "peer_q_unreliable": 0,
+                                    "peer_q_reliable": 0,
                                     "mean_srtt": 5,
-                                    "pacing_time_un": 0,
-                                    "pacing_time_re": 0,
-                                    "mcast_flow": 50,
+                                    "pacing_time_unreliable": 0,
+                                    "pacing_time_reliable": 0,
+                                    "mcast_flow_timer": 50,
                                     "pend_routes": 0,
                                 },
-                                "Lo0": {
+                                "Loopback0": {
                                     "peers": 0,
-                                    "xmit_q_un": 0,
-                                    "xmit_q_re": 0,
-                                    "peer_q_un": 0,
-                                    "peer_q_re": 0,
+                                    "xmit_q_unreliable": 0,
+                                    "xmit_q_reliable": 0,
+                                    "peer_q_unreliable": 0,
+                                    "peer_q_reliable": 0,
                                     "mean_srtt": 0,
-                                    "pacing_time_un": 0,
-                                    "pacing_time_re": 0,
-                                    "mcast_flow": 0,
+                                    "pacing_time_unreliable": 0,
+                                    "pacing_time_reliable": 0,
+                                    "mcast_flow_timer": 0,
                                     "pend_routes": 0,
                                 },
                             }
@@ -50,3 +50,4 @@ expected_output = {
         }
     }
 }
+

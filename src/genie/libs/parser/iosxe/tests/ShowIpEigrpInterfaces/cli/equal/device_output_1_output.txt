@@ -1,4 +1,3 @@
-CSR-RT#show ip eigrp interfaces
 EIGRP-IPv4 Interfaces for AS(1)
                               Xmit Queue   PeerQ        Mean   Pacing Time   Multicast    Pending
 Interface              Peers  Un/Reliable  Un/Reliable  SRTT   Un/Reliable   Flow Timer   Routes
