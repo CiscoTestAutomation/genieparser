@@ -216,21 +216,21 @@ class test_show_ipv6_neighbors_detail(unittest.TestCase):
     golden_output = {'execute.return_value': '''
         RP/0/RP0/CPU0:xr9kv-2#show ipv6 neighbors detail
         Thu Apr 26 13:09:53.379 UTC
-        IPv6 Address                             Age  Link-layer Add State Interface            Location      Static Dynamic Sync       Serg-Flags 
-        2001:db8:8548:1::1                              82   fa16.3eff.c4d3 REACH Gi0/0/0/0            0/0/CPU0        -      Y       -            ff
-        2001:db8:8548:1::22                                - aaaa.beff.6b6b REACH Gi0/0/0/0            0/0/CPU0        Y      -       -            ff
-        fe80::f816:3eff:feff:c4d3                158  fa16.3eff.c4d3 REACH Gi0/0/0/0            0/0/CPU0        -      Y       -            ff
-        [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/0            0/0/CPU0        -      -       -            ff
-        2001:db8:c8d1:4::3                              114  5e01.c0ff.0209 REACH Gi0/0/0/3            0/0/CPU0        -      Y       -            ff
-        fe80::5c01:c0ff:feff:209                   12   5e01.c0ff.0209 REACH Gi0/0/0/3            0/0/CPU0        -      Y       -            ff
-        [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/3            0/0/CPU0        -      -       -            ff
-        2001:db8:c56d:4::3                              1    5e01.c0ff.0209 REACH Gi0/0/0/2            0/0/CPU0        -      Y       -            ff
-        fe80::5c01:c0ff:feff:209                   12   5e01.c0ff.0209 REACH Gi0/0/0/2            0/0/CPU0        -      Y       -            ff
-        [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/2            0/0/CPU0        -      -       -            ff
-        2001:db8:888c:1::1                              4    fa16.3eff.f679 REACH Gi0/0/0/1            0/0/CPU0        -      Y       -            ff
-        2001:db8:888c:1::22                                - dddd.beff.9a9a REACH Gi0/0/0/1            0/0/CPU0        Y      -       -            ff
-        fe80::f816:3eff:feff:f679                37   fa16.3eff.f679 REACH Gi0/0/0/1            0/0/CPU0        -      Y       -            ff
-        [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/1            0/0/CPU0        -      -       -            ff
+        IPv6 Address                             Age  Link-layer Add State Interface            Location      Static Dynamic Sync       Serg-Flags 
+        2001:db8:8548:1::1                              82   fa16.3eff.c4d3 REACH Gi0/0/0/0            0/0/CPU0        -      Y       -            ff
+        2001:db8:8548:1::22                                - aaaa.beff.6b6b REACH Gi0/0/0/0            0/0/CPU0        Y      -       -            ff
+        fe80::f816:3eff:feff:c4d3                158  fa16.3eff.c4d3 REACH Gi0/0/0/0            0/0/CPU0        -      Y       -            ff
+        [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/0            0/0/CPU0        -      -       -            ff
+        2001:db8:c8d1:4::3                              114  5e01.c0ff.0209 REACH Gi0/0/0/3            0/0/CPU0        -      Y       -            ff
+        fe80::5c01:c0ff:feff:209                   12   5e01.c0ff.0209 REACH Gi0/0/0/3            0/0/CPU0        -      Y       -            ff
+        [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/3            0/0/CPU0        -      -       -            ff
+        2001:db8:c56d:4::3                              1    5e01.c0ff.0209 REACH Gi0/0/0/2            0/0/CPU0        -      Y       -            ff
+        fe80::5c01:c0ff:feff:209                   12   5e01.c0ff.0209 REACH Gi0/0/0/2            0/0/CPU0        -      Y       -            ff
+        [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/2            0/0/CPU0        -      -       -            ff
+        2001:db8:888c:1::1                              4    fa16.3eff.f679 REACH Gi0/0/0/1            0/0/CPU0        -      Y       -            ff
+        2001:db8:888c:1::22                                - dddd.beff.9a9a REACH Gi0/0/0/1            0/0/CPU0        Y      -       -            ff
+        fe80::f816:3eff:feff:f679                37   fa16.3eff.f679 REACH Gi0/0/0/1            0/0/CPU0        -      Y       -            ff
+        [Mcast adjacency]                           - 0000.0000.0000 REACH Gi0/0/0/1            0/0/CPU0        -      -       -            ff
     '''}
 
     def test_show_ipv6_neighbors_detail_empty(self):

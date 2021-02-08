@@ -326,11 +326,14 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
             * show ospf3 neighbor
     """
 
-    cli_command = ['show ospf3 neighbor']
+    cli_command = ['show ospf3 neighbor', 'show ospf3 neighbor instance {name}']
 
-    def cli(self, output=None):
+    def cli(self, name=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command[0])
+            if name:
+                out = self.device.execute(self.cli_command[1].format(name=name))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -368,7 +371,8 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
                 ospf3_entry_dict['neighbor-address'] = neighbor_address
                 ospf3_entry_list.append(ospf3_entry_dict)
                 continue
-
+            
+            
         return ret_dict
 
 
@@ -2796,6 +2800,50 @@ class ShowOspf3NeighborInstanceAll(ShowOspf3NeighborInstanceAllSchema):
 
 class ShowOspf3RouteRouteSchema(MetaParser):
 
+    # schema = {
+    #   "ospf3-route-information": {
+    #         "ospf-topology-route-table": {
+    #             "ospf3-route": {
+    #                 "ospf3-route-entry": {
+    #                     "address-prefix": str,
+    #                     "interface-cost": str,
+    #                     "next-hop-type": str,
+    #                     "ospf-next-hop": [
+    #                         {
+    #                             "next-hop-address": {
+    #                                 "interface-address": str
+    #                             },
+    #                             "next-hop-name": {
+    #                                 "interface-name": str
+    #                             }
+    #                         }
+    #                     ],
+    #                     "route-path-type": str,
+    #                     "route-type": str
+    #                     }
+    #                 }
+    #             }
+    #         }
+    #     }
+
+    def validate_ospf_next_hop_list(value):
+        ''' Validates each entry in ospf-next-hop '''
+        if not isinstance(value, list):
+            raise SchemaError('ospf-next-hop is not a list')
+        
+        ospf_next_hop_schema = Schema({
+            "next-hop-address": {
+                "interface-address": str,
+            },
+            "next-hop-name": {
+                "interface-name": str,
+            }
+        })
+
+        for entry in value:
+            ospf_next_hop_schema.validate(entry)    
+        return value
+
     schema = {
       "ospf3-route-information": {
             "ospf-topology-route-table": {
@@ -2804,14 +2852,7 @@ class ShowOspf3RouteRouteSchema(MetaParser):
                         "address-prefix": str,
                         "interface-cost": str,
                         "next-hop-type": str,
-                        "ospf-next-hop": {
-                            "next-hop-address": {
-                                "interface-address": str
-                            },
-                            "next-hop-name": {
-                                "interface-name": str
-                            }
-                        },
+                        "ospf-next-hop": Use(validate_ospf_next_hop_list),
                         "route-path-type": str,
                         "route-type": str
                         }
@@ -2870,7 +2911,7 @@ class ShowOspf3RoutePrefix(ShowOspf3RouteRouteSchema):
                 next_hop_dict = {'next-hop-name':{'interface-name':group['interface_name']}}
                 if group['interface_address']:
                     next_hop_dict['next-hop-address'] = {'interface-address':group['interface_address']} 
-                route_entry_dict['ospf-next-hop'] = next_hop_dict    
+                route_entry_dict.setdefault('ospf-next-hop', []).append(next_hop_dict)
                 ospf3_parent_route_dict = {}
                 ospf3_parent_route_dict['ospf3-route-entry'] = route_entry_dict
                 ospf3_topology_route_table['ospf3-route'] = ospf3_parent_route_dict   

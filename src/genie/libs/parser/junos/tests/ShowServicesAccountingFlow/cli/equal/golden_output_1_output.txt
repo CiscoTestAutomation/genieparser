@@ -1,0 +1,7 @@
+  Flow information
+    Service Accounting interface: ms-9/0/0, Local interface index: 140
+    Flow packets: 0, Flow bytes: 0
+    Flow packets 10-second rate: 0, Flow bytes 10-second rate: 0
+    Active flows: 0, Total flows: 0
+    Flows exported: 0, Flows packets exported: 9
+    Flows inactive timed out: 0, Flows active timed out: 0

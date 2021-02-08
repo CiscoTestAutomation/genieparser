@@ -11817,7 +11817,7 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>\S+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
 
-        # Route Distinguisher: 10.16.2.2:3    (L3VNI 10100)
+        # Route Distinguisher: 10.16.2.2:3    (L3VNI 10100)
         p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)'
                         '( +\((L[2|3]VNI|Local VNI:) +(?P<rd_vrf>[\d]+)\))?$')
 
@@ -11835,7 +11835,7 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
         p5 = re.compile(r'^\s*Flags: (?P<flag_xmit>[\S\s]+) +on +xmit-list'
             '(, +(?P<flags_attr>[\w\s\/\,]+))?$')
 
-        #   Advertised path-id 1
+        #   Advertised path-id 1
         p7 = re.compile(r'^\s*Advertised path-id +(?P<path_id>[\d]+)$')
 
         # Path type: local, path is valid, is best path, no labeled nexthop
@@ -11844,32 +11844,32 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
         p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+),'
                         ' +(?P<pathtypes>[\S\s\,\:\/\(\)]+)?$')
 
-        #   AS-Path: NONE, path locally originated
+        #   AS-Path: NONE, path locally originated
         p9 = re.compile(
             r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?'
                 '(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
 
-        #     0.0.0.0 (metric 0) from 0.0.0.0 (10.16.2.2)
+        #     0.0.0.0 (metric 0) from 0.0.0.0 (10.16.2.2)
         #     10.144.6.6 (inaccessible, metric 4294967295) from 10.64.4.4 (10.64.4.4)
         p10 = re.compile(
             r'^\s*(?P<ipnexthop>[\d\.]+) +\(((?P<nexthop_status>[\w]+), )?metric +(?P<nexthopmetric>[\d]+)\)'
             ' +from +(?P<neighbor>[\d\.]+)'
             ' +\((?P<neighborid>[\d\.]+)\)$')
 
-        #       Origin IGP, MED not set, localpref 100, weight 32768
+        #       Origin IGP, MED not set, localpref 100, weight 32768
         p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)?'
                          ' +localpref +(?P<localpref>[\d]+),'
                          ' +weight +(?P<weight>[\d]+)$')
 
-        #       Extcommunity: RT:100:10100
+        #       Extcommunity: RT:100:10100
         p12 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
 
-        # Originator: 10.144.6.6 Cluster list: 10.100.5.5 
+        # Originator: 10.144.6.6 Cluster list: 10.100.5.5 
         p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+)'
                          ' +Cluster +list: +(?P<clusterlist>[\d\.]+)$')
 
-        #   Path-id 1 advertised to peers:
-        #     10.64.4.4            10.100.5.5        
+        #   Path-id 1 advertised to peers:
+        #     10.64.4.4            10.100.5.5        
         p14 = re.compile(r'^\s*Path-id +(?P<path_id>[\d]+) +advertised to peers:$')
         p15 = re.compile(r'^\s*(?P<advertisedto>[\d\s\.]+)$')
 

@@ -1,0 +1,5 @@
+Number of Neighbors is 2, in FULL state 2
+
+Port   Address         Pri State      Neigh Address   Neigh ID        Ev Opt Cnt
+7/1    10.254.32.23   1   FULL/OTHER 10.254.32.22   1.2.3.4  4  82  0
+5/1    10.254.32.21   1   FULL/OTHER 10.254.32.20   4.3.2.1  4  82  0

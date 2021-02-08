@@ -52,7 +52,7 @@ def get_operating_systems(_os):
     # Update and fix as more OS's converted to folder based tests
     if _os:
         return [_os]
-    return ["asa", "ios", "iosxe", "junos"]
+    return ["asa", "ios", "iosxe", "junos", "viptela"]
     # operating_system = []
     # for folder in os.listdir("./"):
     #    if os.path.islink("./" + folder):
@@ -266,7 +266,7 @@ class FileBasedTest(aetest.Testcase):
                         log.info(banner(msg))
                     # Format expected and parsed output in a nice format
                     parsed_json_data = json.dumps(parsed_output, indent=4, sort_keys=True)
-                    golden_parsed_output_json_data = json.dumps(parsed_output, indent=4, sort_keys=True)
+                    golden_parsed_output_json_data = json.dumps(golden_parsed_output, indent=4, sort_keys=True)
                     
                     # Display device output, parsed output, and golden_output of failed tests
                     log.info("\nThe following is the device output before it is parsed:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
@@ -348,6 +348,10 @@ CLASS_SKIP = {
         "c9300": {
             "ShowInventory": True,
         },
+        "c9200": {
+            "ShowEnvironmentAllSchema": True,
+            "ShowEnvironmentAll_C9300": True,
+        },
         "ShowPimNeighbor": True,
         "ShowIpInterfaceBrief": True,
         "ShowIpInterfaceBriefPipeVlan": True,
@@ -371,8 +375,8 @@ CLASS_SKIP = {
         "ShowIpOspfDatabaseTypeParser": True,
         "ShowIpOspfLinksParser": True,  # super class
         "ShowIpOspfLinksParser2": True, # super class
-        "ShowIpRouteDistributor": True,
-        "ShowIpv6RouteDistributor": True,
+        "ShowIpRouteDistributor": True, # super class
+        "ShowIpv6RouteDistributor": True, # super class
         "ShowControlLocalProperties_viptela": True,
         "ShowControlLocalProperties": True,
         "ShowVrfDetailSuperParser": True,
@@ -433,6 +437,8 @@ CLASS_SKIP = {
         "ShowIpOspfNeighborDetail": True,
         "ShowIpOspfShamLinks": True,
         "ShowIpOspfVirtualLinks": True,
+        "ShowIpRouteDistributor": True, # super class
+        "ShowIpv6RouteDistributor": True, # super class
         "ShowIpv6Route": True,
         "ShowIpBgp": True,
         "ShowMplsLdpNeighbor": True,
@@ -449,9 +455,7 @@ CLASS_SKIP = {
         "ShowBgpGroupBriefNoMore": True, # need to check
         "ShowTaskMemory": True, # need to check
         "ShowConfigurationSystemNtp": True, # need to check
-        "ShowDdosProtectionStatistics": True, # need to check
         "ShowLDPSession": True, # need to check
-        "ShowOspfRoutePrefix": True, # need to check
         "ShowOspfNeighborInstance": True, # need to check
         "ShowOspfDatabaseAdvertisingRouterExtensive": True, # need to check
         "ShowArpNoMore": True, # need to check
@@ -461,7 +465,6 @@ CLASS_SKIP = {
         "ShowInterfacesExtensiveNoForwarding": True, # need to check
         "ShowInterfacesExtensiveInterface": True, # need to check
         "ShowOspf3NeighborInstance": True, # need to check
-        "ShowOspf3RoutePrefix": True, # need to check
     }
 }
 

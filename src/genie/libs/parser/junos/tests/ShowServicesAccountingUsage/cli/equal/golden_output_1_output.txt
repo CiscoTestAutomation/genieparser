@@ -1,0 +1,4 @@
+  CPU utilization
+    ms-9/0/0
+    Uptime: 79203479 milliseconds, Interrupt time: 0 microseconds
+    Load (5 second): 1%, Load (1 minute): 1%

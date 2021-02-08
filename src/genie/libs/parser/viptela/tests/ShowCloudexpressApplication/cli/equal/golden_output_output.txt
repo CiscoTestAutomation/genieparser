@@ -1,0 +1,9 @@
+
+        vEdge# show cloudexpress applications
+
+                                      EXIT     GATEWAY                                  LOCAL  REMOTE
+        VPN  APPLICATION              TYPE     SYSTEM IP      INTERFACE  LATENCY  LOSS  COLOR  COLOR
+        ---------------------------------------------------------------------------------------------
+        1    salesforce               gateway  172.16.255.14  -          103      1     lte    lte
+        1    google_apps              gateway  172.16.255.14  -          47       0     lte    lte
+    
