@@ -12,7 +12,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                              SchemaMissingKeyError
 
 # iosxr traceroute
-from genie.libs.parser.nxos.show_session import ShowUsers
+from genie.libs.parser.nxos.show_users import ShowUsers
 
 
 # ================

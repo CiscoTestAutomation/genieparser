@@ -15,7 +15,6 @@ class ShowUsersSchema(MetaParser):
     # LOCATION is optional
     # ACTIVE will be True if * at the begining of the output line
     schema = {
-        'date': str,
         'line': {
             Any(): {
                 'active': bool,
@@ -46,27 +45,15 @@ class ShowUsers(ShowUsersSchema):
         
         # initial root return dictionary
         ret_dict = {}
-
-        # Thu Jan 28 15:14:53.365 UTC
-        p1 = re.compile(r'^(?P<date>^\w.+UTC)$')
         
         # * con0/RP0/CPU0   admin   hardware     0  00:00:00
-        p2 = re.compile(r'(?P<active>\*)? *(?P<line>\S+) +(?P<user>\S+) +(?P<service>\S+) +(?P<conns>\d+) +(?P<idle>[\d:]+)*(?P<location>[^*]+)?$')
+        p = re.compile(r'(?P<active>\*)? *(?P<line>\S+) +(?P<user>\S+) +(?P<service>\S+) +(?P<conns>\d+) +(?P<idle>[\d:]+)*(?P<location>[^*]+)?$')
 
         for cur_line in out.splitlines():
             cur_line = cur_line.strip()
 
-            # match the date
-            m = p1.match(cur_line)
-
-            if m:
-                if 'date' not in ret_dict:
-                    user_dict = ret_dict.setdefault('date',{})
-                ret_dict['date'] = m.groupdict()['date']
-                continue
-
             # match output line
-            m = p2.match(cur_line)
+            m = p.match(cur_line)
             
             if m:
                 if 'line' not in ret_dict:

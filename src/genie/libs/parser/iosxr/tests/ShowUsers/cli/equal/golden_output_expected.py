@@ -1,5 +1,4 @@
 expected_output = {
-   "date":"Thu Jan 28 15:14:53.365 UTC",
    "line":{
       "con0/RP0/CPU0":{
          "active":True,

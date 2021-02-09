@@ -25,17 +25,6 @@ class ShowUsersSchema(MetaParser):
                 'active': bool,
             },
         },
-        Optional('interface'): {
-            Any(): {
-                'user': {
-                    Any(): {
-                        'mode': str,
-                        'idle': str,
-                        Optional('peer_address'): str,
-                    }
-                }
-            }
-        }
     }
 
 

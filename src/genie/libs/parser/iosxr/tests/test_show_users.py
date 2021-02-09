@@ -12,7 +12,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
                                              SchemaMissingKeyError
 
 # iosxr traceroute
-from genie.libs.parser.iosxr.show_session import ShowUsers
+from genie.libs.parser.iosxr.show_users import ShowUsers
 
 
 # ================
@@ -25,7 +25,6 @@ class TestShowUsers(unittest.TestCase):
     empty_output = ''
 
     golden_parsed_output = {
-    "date":"Thu Jan 28 15:14:53.365 UTC",
     "line":{
         "con0/RP0/CPU0":{
             "active":True,
