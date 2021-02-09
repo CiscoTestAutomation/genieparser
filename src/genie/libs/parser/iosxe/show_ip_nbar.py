@@ -66,7 +66,7 @@ class ShowIpNbarClassificationSocket(ShowIpNbarClassificationSocketSchema):
        
         ret_dict = {}
         first_line = 1
-        sess_num = 0 
+        sess_num = 1 
         for line in out.splitlines():
             line = line.strip()
             

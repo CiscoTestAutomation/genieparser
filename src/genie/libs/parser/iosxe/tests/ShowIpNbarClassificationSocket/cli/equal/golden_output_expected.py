@@ -1,6 +1,6 @@
 expected_output ={
   'flow_cache': {
-    0: {
+    1: {
       'server_ip': '13.229.188.209',
       'vrf': 2,
       'port': 443,
@@ -13,7 +13,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 1
     },
-    1: {
+    2: {
       'server_ip': '18.205.186.254',
       'vrf': 2,
       'port': 443,
@@ -26,7 +26,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 1
     },
-    2: {
+    3: {
       'server_ip': '216.58.196.161',
       'vrf': 2,
       'port': 443,
@@ -39,7 +39,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 1
     },
-    3: {
+    4: {
       'server_ip': '172.217.31.202',
       'vrf': 2,
       'port': 443,
@@ -52,7 +52,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 1
     },
-    4: {
+    5: {
       'server_ip': '40.126.17.130',
       'vrf': 2,
       'port': 443,
@@ -65,7 +65,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 4
     },
-    5: {
+    6: {
       'server_ip': '35.166.202.43',
       'vrf': 2,
       'port': 443,
@@ -78,7 +78,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 1
     },
-    6: {
+    7: {
       'server_ip': '52.59.18.254',
       'vrf': 2,
       'port': 443,
@@ -91,7 +91,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 2
     },
-    7: {
+    8: {
       'server_ip': '13.249.220.101',
       'vrf': 2,
       'port': 443,
@@ -104,7 +104,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 6
     },
-    8: {
+    9: {
       'server_ip': '34.225.100.243',
       'vrf': 2,
       'port': 443,
@@ -117,7 +117,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 3
     },
-    9: {
+    10: {
       'server_ip': '35.227.229.34',
       'vrf': 2,
       'port': 443,
@@ -130,7 +130,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 2
     },
-    10: {
+    11: {
       'server_ip': '199.232.252.176',
       'vrf': 2,
       'port': 443,
@@ -143,7 +143,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 1
     },
-    11: {
+    12: {
       'server_ip': '13.250.212.174',
       'vrf': 2,
       'port': 443,
@@ -156,7 +156,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 1
     },
-    12: {
+    13: {
       'server_ip': '199.232.253.140',
       'vrf': 2,
       'port': 443,
@@ -169,7 +169,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 2
     },
-    13: {
+    14: {
       'server_ip': '44.238.171.221',
       'vrf': 2,
       'port': 443,
@@ -182,7 +182,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 1
     },
-    14: {
+    15: {
       'server_ip': '43.250.0.199',
       'vrf': 2,
       'port': 443,
@@ -195,7 +195,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 3
     },
-    15: {
+    16: {
       'server_ip': '103.43.90.179',
       'vrf': 2,
       'port': 443,
@@ -208,7 +208,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 1
     },
-    16: {
+    17: {
       'server_ip': '182.79.143.19',
       'vrf': 2,
       'port': 443,
@@ -221,7 +221,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 2
     },
-    17: {
+    18: {
       'server_ip': '13.33.93.84',
       'vrf': 2,
       'port': 443,
@@ -234,7 +234,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 1
     },
-    18: {
+    19: {
       'server_ip': '142.250.76.66',
       'vrf': 2,
       'port': 443,
@@ -247,7 +247,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 1
     },
-    19: {
+    20: {
       'server_ip': '40.119.249.228',
       'vrf': 2,
       'port': 443,
@@ -260,7 +260,7 @@ expected_output ={
       'entry_type': 'Infra',
       'hit_count': 4
     },
-    20: {
+    21: {
       'server_ip': '40.119.249.228',
       'vrf': 3,
       'port': 443,
