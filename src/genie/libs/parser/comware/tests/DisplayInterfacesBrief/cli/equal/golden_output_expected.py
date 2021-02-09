@@ -68,7 +68,7 @@ expected_output = {
             "description": "== VLAN 9 ==",
             "ip_address": "--",
             "link": "UP",
-            "protocol": "UP"
+            "protocol": "UP",
         }
     }
 }
