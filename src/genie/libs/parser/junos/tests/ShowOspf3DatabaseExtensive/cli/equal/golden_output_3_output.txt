@@ -1,0 +1,13 @@
+
+        show ospf3 database router advertising-router 10.16.2.2 extensive
+
+            OSPF3 database, Area 0.0.0.0
+        Type       ID               Adv Rtr           Seq         Age  Cksum  Len
+        Router      0.0.0.0          10.16.2.2          0x80000002   823  0x549c  40
+        bits 0x0, Options 0x33
+        Type PointToPoint (1), Metric 1
+            Loc-If-Id 1, Nbr-If-Id 1, Nbr-Rtr-Id 10.4.1.1
+        Type: PointToPoint, Node ID: 10.4.1.1, Metric: 1, Bidirectional
+        Aging timer 00:46:16
+        Installed 00:13:40 ago, expires in 00:46:17, sent 00:13:38 ago
+        Last changed 00:14:09 ago, Change count: 1

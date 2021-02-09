@@ -773,11 +773,11 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
         '[x/y]' denotes [preference/metric]
 
         2001:db8::/64, ubest/mbest: 1/0, attached
-            *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, direct, 
+            *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, direct,
         2001:db8::5054:ff:fed5:63f9/128, ubest/mbest: 1/0, attached
             *via 2001:db8::5054:ff:fed5:63f9, Eth1/1, [0/0], 00:15:46, local
         2001:db8:1:1::/64, ubest/mbest: 1/0, attached
-            *via 2001:db8:1:1::1, Eth1/1, [0/0], 00:15:46, direct, 
+            *via 2001:db8:1:1::1, Eth1/1, [0/0], 00:15:46, direct,
         2001:db8:1:1::1/128, ubest/mbest: 1/0, attached
             *via 2001:db8:1:1::1, Eth1/1, [0/0], 00:15:46, local
         2001:db8:2:2::/64, ubest/mbest: 1/0, attached
@@ -1054,31 +1054,31 @@ class test_show_routing_ipv6_vrf_all(unittest.TestCase):
         '[x/y]' denotes [preference/metric]
 
         2001:112:1:2b3::/64, ubest/mbest: 1/0, attached
-            *via 2001:112:1:2b3::2, Vlan1191, [0/0], 20:58:10, direct, 
+            *via 2001:112:1:2b3::2, Vlan1191, [0/0], 20:58:10, direct,
         2001:112:1:2b3::1/128, ubest/mbest: 1/0, attached
             *via 2001:112:1:2b3::1, Vlan1191, [0/0], 20:57:53, hsrp
         2001:112:1:2b3::2/128, ubest/mbest: 1/0, attached
             *via 2001:112:1:2b3::2, Vlan1191, [0/0], 20:58:10, local
         2001:112:1:2b4::/64, ubest/mbest: 1/0, attached
-            *via 2001:112:1:2b4::2, Vlan1192, [0/0], 20:58:10, direct, 
+            *via 2001:112:1:2b4::2, Vlan1192, [0/0], 20:58:10, direct,
         2001:112:1:2b4::1/128, ubest/mbest: 1/0, attached
             *via 2001:112:1:2b4::1, Vlan1192, [0/0], 20:57:53, hsrp
         2001:112:1:2b4::2/128, ubest/mbest: 1/0, attached
             *via 2001:112:1:2b4::2, Vlan1192, [0/0], 20:58:10, local
         2001:112:1:2b5::/64, ubest/mbest: 1/0, attached
-            *via 2001:112:1:2b5::2, Vlan1193, [0/0], 20:58:10, direct, 
+            *via 2001:112:1:2b5::2, Vlan1193, [0/0], 20:58:10, direct,
         2001:112:1:2b5::1/128, ubest/mbest: 1/0, attached
             *via 2001:112:1:2b5::1, Vlan1193, [0/0], 20:57:52, hsrp
         2001:112:1:2b5::2/128, ubest/mbest: 1/0, attached
             *via 2001:112:1:2b5::2, Vlan1193, [0/0], 20:58:10, local
         2001:112:1:2b6::/64, ubest/mbest: 1/0, attached
-            *via 2001:112:1:2b6::2, Vlan1194, [0/0], 20:58:10, direct, 
+            *via 2001:112:1:2b6::2, Vlan1194, [0/0], 20:58:10, direct,
         2001:112:1:2b6::1/128, ubest/mbest: 1/0, attached
             *via 2001:112:1:2b6::1, Vlan1194, [0/0], 20:57:52, hsrp
         2001:112:1:2b6::2/128, ubest/mbest: 1/0, attached
             *via 2001:112:1:2b6::2, Vlan1194, [0/0], 20:58:10, local
         2001:112:1:2b7::/64, ubest/mbest: 1/0, attached
-            *via 2001:112:1:2b7::2, Vlan1195, [0/0], 20:58:10, direct, 
+            *via 2001:112:1:2b7::2, Vlan1195, [0/0], 20:58:10, direct,
         2001:112:1:2b7::1/128, ubest/mbest: 1/0, attached
             *via 2001:112:1:2b7::1, Vlan1195, [0/0], 20:57:52, hsrp
         2001:112:1:2b7::2/128, ubest/mbest: 1/0, attached
@@ -1563,11 +1563,11 @@ class test_show_ip_route(unittest.TestCase):
         10.111.8.3/32, ubest/mbest: 1/0
             *via 10.84.66.66%default, [200/2000], 00:20:43, bgp-100, internal, tag 200 (
         evpn) segid: 10100 tunnelid: 0x42424242 encap: VXLAN
-        
+
         10.111.8.4/32, ubest/mbest: 1/0
             *via 10.84.66.66%default, [200/2000], 00:20:43, bgp-100, internal, tag 200 (
         evpn) segid: 10100 tunnelid: 0x42424242 encap: VXLAN
-        
+
         10.4.0.0/16, ubest/mbest: 1/0, attached
             *via 10.4.0.1, Vlan102, [0/0], 00:46:13, direct
         10.4.0.1/32, ubest/mbest: 1/0, attached
@@ -1794,32 +1794,32 @@ class test_show_ip_route(unittest.TestCase):
         '%<string>' in via output denotes VRF <string>
 
         10.4.1.1/32, ubest/mbest: 2/0
-            *via 10.1.3.1, Eth1/2, [1/0], 01:01:30, static
-            *via 10.186.3.1, Eth1/3, [1/0], 01:01:30, static
+            *via 10.1.3.1, Eth1/2, [1/0], 01:01:30, static
+            *via 10.186.3.1, Eth1/3, [1/0], 01:01:30, static
         10.36.3.3/32, ubest/mbest: 2/0, attached
-            *via 10.36.3.3, Lo0, [0/0], 01:01:31, local
-            *via 10.36.3.3, Lo0, [0/0], 01:01:31, direct
+            *via 10.36.3.3, Lo0, [0/0], 01:01:31, local
+            *via 10.36.3.3, Lo0, [0/0], 01:01:31, direct
         10.1.2.0/24, ubest/mbest: 4/0
-            *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
+            *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
         10.2.3.0/24, ubest/mbest: 1/0, attached
-            *via 10.2.3.3, Eth1/4, [0/0], 01:01:33, direct
+            *via 10.2.3.3, Eth1/4, [0/0], 01:01:33, direct
         10.2.3.3/32, ubest/mbest: 1/0, attached
-            *via 10.2.3.3, Eth1/4, [0/0], 01:01:33, local
+            *via 10.2.3.3, Eth1/4, [0/0], 01:01:33, local
         10.166.13.13/32, ubest/mbest: 2/0, attached
-            *via 10.166.13.13, Lo1, [0/0], 01:01:30, local
-            *via 10.166.13.13, Lo1, [0/0], 01:01:30, direct
+            *via 10.166.13.13, Lo1, [0/0], 01:01:30, local
+            *via 10.166.13.13, Lo1, [0/0], 01:01:30, direct
         10.186.2.0/24, ubest/mbest: 4/0
-            *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
-            *via 10.229.3.2, Eth1/1, [110/41], 01:01:18, ospf-1, intra
+            *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra
+            *via 10.229.3.2, Eth1/1, [110/41], 01:01:18, ospf-1, intra
         10.229.3.0/24, ubest/mbest: 1/0, attached
-            *via 10.229.3.3, Eth1/1, [0/0], 01:01:35, direct
+            *via 10.229.3.3, Eth1/1, [0/0], 01:01:35, direct
         10.229.3.3/32, ubest/mbest: 1/0, attached
-            *via 10.229.3.3, Eth1/1, [0/0], 01:01:35, local
+            *via 10.229.3.3, Eth1/1, [0/0], 01:01:35, local
         10.234.21.21/32, ubest/mbest: 2/0
-            *via 10.1.3.1, Eth1/2, [115/50], 01:01:22, isis-1, L1
-            *via 10.186.3.1, Eth1/3, [115/50], 01:01:16, isis-1, L1
+            *via 10.1.3.1, Eth1/2, [115/50], 01:01:22, isis-1, L1
+            *via 10.186.3.1, Eth1/3, [115/50], 01:01:16, isis-1, L1
         10.19.31.31/32, ubest/mbest: 1/0
-            *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
+            *via 10.229.11.11, [200/0], 01:01:12, bgp-100, internal, tag 100
             *via 10.1.3.1, Eth1/2, [110/41], 01:01:18, ospf-1, intra, tag 100,
 
         IP Route Table for VRF "VRF1"
@@ -1829,8 +1829,8 @@ class test_show_ip_route(unittest.TestCase):
         '%<string>' in via output denotes VRF <string>
 
         10.4.1.1/32, ubest/mbest: 2/0, attached
-            *via 10.4.1.1, Lo4, [0/0], 00:00:10, local
-            *via 10.4.1.1, Lo4, [0/0], 00:00:10, direct
+            *via 10.4.1.1, Lo4, [0/0], 00:00:10, local
+            *via 10.4.1.1, Lo4, [0/0], 00:00:10, direct
     '''}
 
     golden_parsed_output_3 = {
@@ -2629,7 +2629,7 @@ class test_show_ip_route(unittest.TestCase):
     '**' denotes best mcast next-hop
     '[x/y]' denotes [preference/metric]
     '%' in via output denotes VRF
-    
+
     show ip route static
     10.111.1.1/32, ubest/mbest: 1/0
     *via 10.144.10.2, [1/0], 13:35:01, static
@@ -3078,12 +3078,12 @@ class test_show_ip_route(unittest.TestCase):
     '''}
 
     golden_parsed_output_00 = {
-        'vrf': 
-            {'default': 
-                {'address_family': 
-                    {'ipv4': 
-                        {'routes': 
-                            {'192.168.1.1/32': 
+        'vrf':
+            {'default':
+                {'address_family':
+                    {'ipv4':
+                        {'routes':
+                            {'192.168.1.1/32':
                                 {'active': True,
                                                 'attached': False,
                                                 'mbest': 0,
@@ -3179,7 +3179,7 @@ class test_show_ip_route(unittest.TestCase):
                                   interface='e1/1.120',
                                   vrf='default')
         self.assertEqual(parsed_output,self.golden_parsed_output_4)
-    
+
     def test_show_ip_route_route_protocol_interface(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_5)
@@ -3188,7 +3188,7 @@ class test_show_ip_route(unittest.TestCase):
                                   protocol='rip',
                                   interface='e1/2.120')
         self.assertEqual(parsed_output, self.golden_parsed_output_5)
-    
+
     def test_show_ip_route_route_protocol_vrf(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_6)
@@ -3197,7 +3197,7 @@ class test_show_ip_route(unittest.TestCase):
                                   protocol='rip',
                                   vrf='default')
         self.assertEqual(parsed_output, self.golden_parsed_output_6)
-    
+
     def test_show_ip_route_protocol_interface_vrf(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_7)
@@ -3206,7 +3206,7 @@ class test_show_ip_route(unittest.TestCase):
                                   interface='e1/2.120',
                                   vrf='default')
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
-    
+
     def test_show_ip_route_route_interface_vrf(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_8)
@@ -3215,7 +3215,7 @@ class test_show_ip_route(unittest.TestCase):
                                   interface='e1/2.120',
                                   vrf='default')
         self.assertEqual(parsed_output, self.golden_parsed_output_8)
-    
+
     def test_show_ip_route_route_protocol(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_9)
@@ -3223,7 +3223,7 @@ class test_show_ip_route(unittest.TestCase):
         parsed_output = obj.parse(route='10.12.120.0/24',
                                   protocol='rip')
         self.assertEqual(parsed_output, self.golden_parsed_output_9)
-    
+
     def test_show_ip_route_protocol_interface(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output_10)
@@ -3572,7 +3572,7 @@ class test_show_ipv6_route(unittest.TestCase):
         2001:2:2:2::2/128, ubest/mbest: 1/0
             *via fe80::f816:3eff:fe80:67f4, Eth1/1.90, [90/2842], 03:51:46, eigrp-test, internal
         2001:3:3:3::3/128, ubest/mbest: 2/0, attached
-            *via 2001:3:3:3::3, Lo0, [0/0], 03:55:33, direct, 
+            *via 2001:3:3:3::3, Lo0, [0/0], 03:55:33, direct,
             *via 2001:3:3:3::3, Lo0, [0/0], 03:55:33, local
         2001:10:12:90::/64, ubest/mbest: 2/0
             *via fe80::f816:3eff:fe80:67f4, Eth1/1.90, [90/3072], 03:51:46, eigrp-test, internal
@@ -3580,11 +3580,11 @@ class test_show_ipv6_route(unittest.TestCase):
         2001:10:12:120::/64, ubest/mbest: 1/0
             *via fe80::f816:3eff:fef8:e824, Eth1/2.90, [90/3072], 03:39:27, eigrp-test, internal
         2001:10:13:90::/64, ubest/mbest: 1/0, attached
-            *via 2001:10:13:90::3, Eth1/2.90, [0/0], 03:55:45, direct, 
+            *via 2001:10:13:90::3, Eth1/2.90, [0/0], 03:55:45, direct,
         2001:10:13:90::3/128, ubest/mbest: 1/0, attached
             *via 2001:10:13:90::3, Eth1/2.90, [0/0], 03:55:45, local
         2001:10:23:120::/64, ubest/mbest: 1/0, attached
-            *via 2001:10:23:120::3, Eth1/1.120, [0/0], 02:50:42, direct, 
+            *via 2001:10:23:120::3, Eth1/1.120, [0/0], 02:50:42, direct,
         2001:10:23:120::3/128, ubest/mbest: 1/0, attached
             *via 2001:10:23:120::3, Eth1/1.120, [0/0], 02:50:42, local
 
@@ -3598,7 +3598,7 @@ class test_show_ipv6_route(unittest.TestCase):
         2001:2:2:2::2/128, ubest/mbest: 1/0
             *via fe80::f816:3eff:fe80:67f4, Eth1/1.390, [90/2842], 03:51:47, eigrp-test, internal
         2001:3:3:3::3/128, ubest/mbest: 2/0, attached
-            *via 2001:3:3:3::3, Lo300, [0/0], 03:55:33, direct, 
+            *via 2001:3:3:3::3, Lo300, [0/0], 03:55:33, direct,
             *via 2001:3:3:3::3, Lo300, [0/0], 03:55:33, local
         2001:10:12:90::/64, ubest/mbest: 2/0
             *via fe80::f816:3eff:fe80:67f4, Eth1/1.390, [90/3072], 03:51:47, eigrp-test, internal
@@ -3606,11 +3606,11 @@ class test_show_ipv6_route(unittest.TestCase):
         2001:10:12:120::/64, ubest/mbest: 1/0
             *via fe80::f816:3eff:fef8:e824, Eth1/2.390, [90/3072], 03:25:35, eigrp-test, internal
         2001:10:13:90::/64, ubest/mbest: 1/0, attached
-            *via 2001:10:13:90::3, Eth1/2.390, [0/0], 03:55:44, direct, 
+            *via 2001:10:13:90::3, Eth1/2.390, [0/0], 03:55:44, direct,
         2001:10:13:110::3/128, ubest/mbest: 1/0, attached
             *via 2001:10:13:110::3, Eth1/2.410, [0/0], 03:55:43, local
         2001:10:13:115::/64, ubest/mbest: 1/0, attached
-            *via 2001:10:13:115::3, Eth1/2.415, [0/0], 03:55:43, direct, 
+            *via 2001:10:13:115::3, Eth1/2.415, [0/0], 03:55:43, direct,
         2001:10:13:120::3/128, ubest/mbest: 1/0, attached
     '''}
 
@@ -4186,6 +4186,17 @@ class test_show_ipv6_route(unittest.TestCase):
             via fe80::f816:3eff:feb2:c76f, Eth1/2.390, [200/0], 2w0d, bgp-65000, internal, tag 65000 (hidden)
     '''}
 
+
+    golden_output_5 = {'execute.return_value': '''
+        show ipv6 route srv6
+        IPv6 Routing Table for VRF "default"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+    '''}
+
+    golden_parsed_output_5 = {'vrf': {'default': {'address_family': {'ipv6': {'routes': {}}}}}}
+
     def test_empty_1(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpv6Route(device=self.device)
@@ -4212,7 +4223,7 @@ class test_show_ipv6_route(unittest.TestCase):
         obj = ShowIpv6Route(device=self.device)
         parsed_output = obj.parse(vrf="all")
         self.assertEqual(parsed_output,self.golden_parsed_output_2)
-    
+
     def test_show_ipv6_route_4(self):
         self.device = Mock(**self.golden_output_4)
         obj = ShowIpv6Route(device=self.device)
@@ -4220,6 +4231,12 @@ class test_show_ipv6_route(unittest.TestCase):
                                   route='2001:2:2:2::2/128',
                                   protocol='eigrp')
         self.assertEqual(parsed_output,self.golden_parsed_output_4)
+
+    def test_show_ipv6_route_5(self):
+        self.device = Mock(**self.golden_output_5)
+        obj = ShowIpv6Route(device=self.device)
+        parsed_output = obj.parse(protocol='srv6')
+        self.assertEqual(parsed_output,self.golden_parsed_output_5)
 
 
 # ================================================
@@ -4238,15 +4255,15 @@ class test_show_ip_route_summary(unittest.TestCase):
 
         Best paths per protocol:      Backup paths per protocol:
           am             : 1            None
-          local          : 4     
-          direct         : 4     
-          broadcast      : 5     
-          ospf-1         : 6         
-          ospf-2         : 6  
+          local          : 4
+          direct         : 4
+          broadcast      : 5
+          ospf-1         : 6
+          ospf-2         : 6
           bgp-100        : 1000
 
         Number of routes per mask-length:
-          /8 : 1       /24: 4       /32: 12      
+          /8 : 1       /24: 4       /32: 12
 
 
         IP Route Table for VRF "management"
@@ -4255,13 +4272,13 @@ class test_show_ip_route_summary(unittest.TestCase):
 
         Best paths per protocol:      Backup paths per protocol:
           am             : 3            None
-          local          : 1     
-          direct         : 1     
-          static         : 1     
-          broadcast      : 5     
+          local          : 1
+          direct         : 1
+          static         : 1
+          broadcast      : 5
 
         Number of routes per mask-length:
-          /0 : 1       /8 : 1       /24: 1       /32: 8       
+          /0 : 1       /8 : 1       /24: 1       /32: 8
 
 
         IP Route Table for VRF "evpn-tenant-0002"
@@ -4270,11 +4287,11 @@ class test_show_ip_route_summary(unittest.TestCase):
 
         Best paths per protocol:      Backup paths per protocol:
           local          : 2            None
-          direct         : 2     
-          broadcast      : 7     
+          direct         : 2
+          broadcast      : 7
 
         Number of routes per mask-length:
-          /8 : 1       /16: 2       /32: 8       
+          /8 : 1       /16: 2       /32: 8
 
 
         IP Route Table for VRF "evpn-t-0003"
@@ -4283,11 +4300,11 @@ class test_show_ip_route_summary(unittest.TestCase):
 
         Best paths per protocol:      Backup paths per protocol:
           local          : 2            None
-          direct         : 2     
-          broadcast      : 7     
+          direct         : 2
+          broadcast      : 7
 
         Number of routes per mask-length:
-          /8 : 1       /16: 2       /32: 8       
+          /8 : 1       /16: 2       /32: 8
             '''}
 
     golden_parsed_output = {
@@ -4371,13 +4388,13 @@ class test_show_ip_route_summary(unittest.TestCase):
     IP Route Table for VRF "xxx"
     Total number of routes: 308
     Total number of paths:  332
-    
+
     Best paths per protocol:      Backup paths per protocol:
       am             : 214          ospf-1000      : 10
-      local          : 14    
-      direct         : 14    
-      broadcast      : 29    
-      hsrp           : 10    
+      local          : 14
+      direct         : 14
+      broadcast      : 29
+      hsrp           : 10
       ospf-1000      : 41
     '''}
 

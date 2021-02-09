@@ -94,6 +94,16 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
                          '(?P<poll>\d+) +(?P<reach>\d+) +(?P<delay>[\d\.]+)'
                          '( *(?P<vrf>\S+))?$')
 
+        #     remote                                 local
+        #*10.25.1.11                              10.126.80.251 
+        p2_1 = re.compile(r'^(?P<mode_code>[\*\-\+\=]+)? *(?P<remote>[\w\.\:]+) +'
+                         '(?P<local>[\w\.\:]+)')
+        
+        #   st   poll   reach delay   vrf
+        #  3   64     377   0.00580default
+        p2_2 = re.compile(r'(?P<st>\d+) +(?P<poll>\d+) +(?P<reach>\d+) '
+                           '+(?P<delay>[\d\.]+)( *(?P<vrf>\S+))?$')
+
 
         for line in out.splitlines():
             line = line.strip()
@@ -132,6 +142,29 @@ class ShowNtpPeerStatus(ShowNtpPeerStatusSchema):
                     clock_dict['clock_stratum'] = int(groups['st'])
                     clock_dict['associations_address'] = peer
                     clock_dict['root_delay'] = float(groups['delay'])
+            
+            m = p2_1.match(line)
+            if m:
+                groups = m.groupdict()
+                peer = groups['remote']
+                mode = self.MODE_MAP.get(groups['mode_code'])
+                local = groups['local']
+
+            m = p2_2.match(line)
+            if m:
+                groups = m.groupdict()
+                vrf = groups['vrf'] or 'default'
+                peer_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})\
+                    .setdefault('peer', {}).setdefault(peer, {})
+                peer_dict['mode'] = mode
+                peer_dict['remote'] = peer
+                peer_dict['local'] = local
+                peer_dict['stratum'] = int(groups['st'])
+                peer_dict['poll'] = int(groups['poll'])
+                peer_dict['reach'] = int(groups['reach'])
+                peer_dict['delay'] = float(groups['delay'])
+                if groups['vrf']:
+                    peer_dict['vrf'] = groups['vrf']
 
         # check if has synchronized peers, if no create unsynchronized entry
         if ret_dict and not ret_dict.get('clock_state'):

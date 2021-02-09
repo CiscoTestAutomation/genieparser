@@ -1,0 +1,31 @@
+
+            show snmp statistics
+        SNMP statistics:
+            Input:
+                Packets: 8, Bad versions: 0, Bad community names: 0,
+                Bad community uses: 0, ASN parse errors: 0,
+                Too bigs: 0, No such names: 0, Bad values: 0,
+                Read onlys: 0, General errors: 0,
+                Total request varbinds: 8, Total set varbinds: 0,
+                Get requests: 0, Get nexts: 8, Set requests: 0,
+                Get responses: 0, Traps: 0,
+                Silent drops: 0, Proxy drops: 0, Commit pending drops: 0,
+                Throttle drops: 0, Duplicate request drops: 0
+            V3 Input:
+                Unknown security models: 0, Invalid messages: 0
+                Unknown pdu handlers: 0, Unavailable contexts: 0
+                Unknown contexts: 0, Unsupported security levels: 0
+                Not in time windows: 0, Unknown user names: 0
+                Unknown engine ids: 0, Wrong digests: 0, Decryption errors: 0
+            Output:
+                Packets: 8, Too bigs: 0, No such names: 0,
+                Bad values: 0, General errors: 0,
+                    Get requests: 0, Get nexts: 0, Set requests: 0,
+                Get responses: 8, Traps: 0
+            Performance:
+                Average response time(ms): 10.91
+            Number of requests dispatched to subagents in last:
+                1 minute:0, 5 minutes:0, 15 minutes:0
+            Number of responses dispatched to NMS in last:
+                1 minute:0, 5 minutes:0, 15 minutes:0
+    

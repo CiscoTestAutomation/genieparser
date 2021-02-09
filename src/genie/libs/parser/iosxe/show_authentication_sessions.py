@@ -97,9 +97,10 @@ class ShowAuthenticationSessions(ShowAuthenticationSessionsSchema):
         # Gi1/48     0015.63ff.a727  dot1x    DATA     Authz Success  0A3462B1000000102983C05C
         # Gi1/5      000f.23ff.69c5  mab      DATA     Authz Success  0A3462B10000000D24F80B58
         # Gi1/5      0014.bfff.30ca  dot1x    DATA     Authz Success  0A3462B10000000E29811B94
+        # Gi1/0/7    0014.bfff.30ca  N/A      DATA     Authz Success  0A3462B10000000E29811B94
         p4 = re.compile(r'^(?P<interface>\S+) +'
                         '(?P<client>\w+\.\w+\.\w+) +'
-                        '(?P<method>\w+) +'
+                        '(?P<method>[\w/]+) +'
                         '(?P<domain>\w+) +'
                         '(?P<status>\w+(?: +\w+)?) +'
                         '(?P<session>\w+)$')

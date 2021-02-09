@@ -11,7 +11,7 @@ expected_output = {
             "conn_retry": 120,
             "reconcile_secs": 120,
             "retry_timer": "not running",
-            "peer_sequence_traverse_limit_for_export": "Not Set",
+            "peer_sequence_traverse_limit_for_export": "2",
             "peer_sequence_traverse_limit_for_import": "Not Set",
         },
         "sxp_peers": {

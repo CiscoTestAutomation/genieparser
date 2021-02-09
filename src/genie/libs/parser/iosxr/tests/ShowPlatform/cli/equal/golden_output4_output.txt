@@ -1,0 +1,18 @@
+RP/0/RP0/CPU0:Router#show platform 
+Thu Dec  3 14:23:54.005 UTC
+Node          Type              PLIM               State           Config State
+------------- ----------------- ------------------ --------------- ---------------
+0/0/CPU0      FP-140G           14-10GbE           IOS XR RUN      PWR,NSHUT,MON
+0/1/CPU0      FP-140G           Services Plim      IOS XR RUN      PWR,NSHUT,MON
+0/1/0         FP-140G(SPA)      CGSE-PLUS          OK              PWR,NSHUT,MON
+0/2/CPU0      FP-140G           Services Plim      IOS XR RUN      PWR,NSHUT,MON
+0/2/0         FP-140G(SPA)      CGSE-PLUS          OK              PWR,NSHUT,MON
+0/3/CPU0      FP-X              4-100GbE           IOS XR RUN      PWR,NSHUT,MON
+0/4/CPU0      FP-140G           Services Plim      IOS XR RUN      PWR,NSHUT,MON
+0/4/0         FP-140G(SPA)      CGSE-PLUS          OK              PWR,NSHUT,MON
+0/5/CPU0      FP-140G           Services Plim      IOS XR RUN      PWR,NSHUT,MON
+0/5/0         FP-140G(SPA)      CGSE-PLUS          OK              PWR,NSHUT,MON
+0/6/CPU0      FP-X              4-100GbE           IOS XR RUN      PWR,NSHUT,MON
+0/7/CPU0      FP-X              40-10GbE           IOS XR RUN      PWR,NSHUT,MON
+0/RP0/CPU0    RP(Active)        N/A                IOS XR RUN      PWR,NSHUT,MON
+0/RP1/CPU0    RP(Standby)       N/A                IOS XR RUN      PWR,NSHUT,MON

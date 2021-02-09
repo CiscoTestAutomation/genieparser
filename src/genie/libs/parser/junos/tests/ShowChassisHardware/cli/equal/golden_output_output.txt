@@ -1,0 +1,12 @@
+ show chassis hardware
+        Hardware inventory:
+        Item             Version  Part number  Serial number     Description
+        Chassis                                VM5D4C6B3599      VMX
+        Midplane        
+        Routing Engine 0                                         RE-VMX
+        CB 0                                                     VMX SCB
+        FPC 0                                                    Virtual FPC
+          CPU            Rev. 1.0 RIOT-LITE    BUILTIN          
+          MIC 0                                                  Virtual
+            PIC 0                 BUILTIN      BUILTIN           Virtual
+    

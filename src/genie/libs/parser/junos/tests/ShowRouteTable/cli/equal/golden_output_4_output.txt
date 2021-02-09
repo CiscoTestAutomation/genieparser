@@ -1,0 +1,10 @@
+
+        #show route table inet.3
+        inet.3: 5 destinations, 5 routes (5 active, 0 holddown, 0 hidden)
+        + = Active Route, - = Last Active, * = Both
+
+        10.0.0.5/32        *[LDP/9] 00:25:43, metric 10
+                              to 10.2.94.2 via lt-1/2/0.49
+                            > to 10.2.3.2 via lt-1/2/0.23
+
+    

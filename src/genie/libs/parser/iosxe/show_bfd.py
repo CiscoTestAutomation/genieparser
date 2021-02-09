@@ -36,12 +36,12 @@ class ShowBfdNeighborsDetailsSchema(MetaParser):
 			Any(): {
 				'neighbor_address': {
 					Any(): {
-						'ld_rd': str,
-						'rh_rs': str,
+						Optional('ld_rd'): str,
+						Optional('rh_rs'): str,
 						Optional('holdown_timer'): int,
 						Optional('holdown_timer_multiplier'): int,
-						'state': str,
-						'interface': str,
+						Optional('state'): str,
+						Optional('interface'): str,
 						Optional('session'): {
 							'state': str,
 							'echo_function': bool,
@@ -123,19 +123,29 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 			* 'show bfd neighbors details'
 			* 'show bfd neighbors client {client} details'
             * 'show bfd neighbors interface {interface} details'
+			* 'show bfd neighbors ipv4 {ipv4_address} details',
+			* 'show bfd neighbors ipv6 {ipv6_address} details'
 	"""
 	
 	cli_command = ['show bfd neighbors details',
 		'show bfd neighbors client {client} details',
-        'show bfd neighbors interface {interface} details']
+        'show bfd neighbors interface {interface} details',
+		'show bfd neighbors ipv4 {ipv4_address} details',
+		'show bfd neighbors ipv6 {ipv6_address} details']
 
-	def cli(self, client='', interface=None, output= None):
+	def cli(self, client='', interface=None, ipv4_address=None, ipv6_address=None, output= None):
 		if output is None:
 			#execute command to get output
 			if client:
 				out = self.device.execute(self.cli_command[1].format(client=client))
 			elif interface:
 				out = self.device.execute(self.cli_command[2].format(interface=interface))
+			elif ipv4_address:
+				out = self.device.execute(self.cli_command[3].format(
+					ipv4_address=ipv4_address))
+			elif ipv6_address:
+				out = self.device.execute(self.cli_command[4].format(
+					ipv6_address=ipv6_address))
 			else:
 				out = self.device.execute(self.cli_command[0])
 		else:
@@ -146,14 +156,16 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 		neighbors_found = False
 
 		# 172.16.10.1	172.16.10.2		1/2		1		532 (3 )		Up 		Gig0/0/0
-		p1 = re.compile(r'^(?P<our_address>[\d\.]+)\s+(?P<our_neighbor>[\d\.]+' \
+		# FE11::251:57EF:FF8D:E8CC      FE11::251:57EF:FF8D:E8CB          1/17         Up        Up        Gi2
+		p1 = re.compile(r'^(?P<our_address>[\w\.\:]+)\s+(?P<our_neighbor>[\w\.\:]+' \
 			')\s+(?P<ld_rd>\d+\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<holdown_timer>\d+)' \
 			'\s+\((?P<holdown_timer_multiplier>\d+)\s+\)\s+(?P<state>\w+)' \
 			'\s+(?P<interface>[\w\W]+)$')
 
 		# 172.16.1.1	172.16.1.3
-		p2 = re.compile(r'^(?P<our_address>[\d\.]+) +(?P<our_neighbor>'\
-			'[\d\.]+)$')
+		# # FE11::251:57EF:FF8D:E8CC 
+		p2 = re.compile(r'^(?P<our_address>[\w\.\:]+) +(?P<our_neighbor>'\
+			'[\w\.\:]+)$')
 
 		# 		5/2		1(RH)	150 (3)		Up 		Gig0/0/1
 		p3 = re.compile(r'^(?P<ld_rd>\d+\/\d+)\s+(?P<rh_rs>\S+)\s+' \
@@ -161,17 +173,18 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 			'\s+(?P<state>\w+)\s+(?P<interface>[\w\W]+)')
 
 		# 10.169.197.93 					4097/4097		Up 		Up 	Gi0/0/0
-		p4 = re.compile(r'^(?P<our_neighbor>[\d\.]+)\s+(?P<ld_rd>\d+'\
+		# FE11::251:57EF:FF8D:E8CC                1/17         Up        Up        Gi2
+		p4 = re.compile(r'^(?P<our_neighbor>[\w\.\:]+)\s+(?P<ld_rd>\d+'\
 			'\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<state>\w+)\s+(?P<interface>'\
 			'[\w\W]+)$')
 
 		# OurAddr: 10.186.213.12
-		p5 = re.compile(r'^OurAddr:\s+(?P<our_address>[\d\.]+)$')
+		p5 = re.compile(r'^OurAddr:\s+(?P<our_address>[\w\.\:]+)$')
 
 		# Session state is UP and using echo function with 500 ms interval.
 		p6 = re.compile(r'^\s*Session +state +is +(?P<state>\S+) +and +using'\
-			' +(?P<echo_function>\S+) +function +with +(?P<interval_in_ms>\d+)'\
-			' +ms +interval\.$')
+			r' +(?P<echo_function>\S+) +function +with +(?P<interval_in_ms>\d+)'\
+			r' +ms +interval\.$')
 		
 		# Session state is UP and not using echo function.
 		p7 = re.compile(r'^\s*Session +state +is +(?P<state>\S+) +and +not '\
@@ -214,19 +227,19 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 
 		# Received MinRxInt: 100000, Received Multiplier: 6
 		p14 = re.compile(r'^\s*Received +MinRxInt:\s+'\
-			'(?P<received_min_rx_interface>\d+),\s+Received\s+Multiplier:'\
-			'\s+(?P<received_multiplier>\d+)$')
+			r'(?P<received_min_rx_interface>\d+),\s+Received\s+Multiplier:'\
+			r'\s+(?P<received_multiplier>\d+)$')
 
 		# Holdown (hits): 1000(0), Hello (hits): 200(5995)
 		p15 = re.compile(r'^\s*Hold(d)?own +\(hits\): +' \
-			'(?P<holddown>\d+)\((?P<holddown_hits>\d+)\), +Hello +\(hits\): +' \
-			'(?P<hello>\d+)\((?P<hello_hits>\d+)\)$')
+			r'(?P<holddown>\d+)\((?P<holddown_hits>\d+)\), +Hello +\(hits\): +' \
+			r'(?P<hello>\d+)\((?P<hello_hits>\d+)\)$')
 
 		# Rx Count: 1940, Rx Interval (ms) min/max/avg: 1/1003/879 last: 182 ms ago
 		p16 = re.compile(r'^\s*Rx +Count: +(?P<count>\d+), +Rx +' \
-			'Interval +\(ms\) +min\/max\/avg: +(?P<min_int_ms>\d+)' \
-			'\/(?P<max_int_ms>\d+)\/(?P<avg_int_ms>\d+) +' \
-			'last: +(?P<last_ms_ago>\d+) +ms +ago$')
+			r'Interval +\(ms\) +min\/max\/avg: +(?P<min_int_ms>\d+)' \
+			r'\/(?P<max_int_ms>\d+)\/(?P<avg_int_ms>\d+) +' \
+			r'last: +(?P<last_ms_ago>\d+) +ms +ago$')
 
 		# Rx Count: 5052
 		p17 = re.compile(r'^\s*Rx +Count: +(?P<count>\d+)$')
@@ -323,10 +336,20 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 		p41 = re.compile(r'^\s*Hol(d)?down +\- +negotiated: +'\
 			'(?P<holddown_negotiated>\d+) +adjusted: +'\
 			'(?P<holddown_adjusted>\d+)$')
+		
+		# IPv4 Sessions
+		# IPv6 Sessions
+		p42 = re.compile(r'^IPv(4|6) +Sessions$')
 
 		for line in out.splitlines():
 			line = line.strip()
 			
+			# IPv4 Sessions
+			# IPv6 Sessions
+			m = p42.match(line)
+			if m:
+				continue
+
 			# 172.16.10.1	172.16.10.2		1/2		1		532 (3 )		Up 		Gig0/0/0
 			m = p1.match(line)
 			if m:
@@ -344,16 +367,6 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 				our_neighbor.update({'state' : group['state']})
 				our_neighbor.update({'interface' : \
 				 Common.convert_intf_name(group['interface'])})
-				continue
-
-			# 172.16.1.1	172.16.1.3
-			m = p2.match(line)
-			if m:
-				group = m.groupdict()
-				our_address = ret_dict.setdefault('our_address', {}). \
-					setdefault(group['our_address'], {})
-				our_neighbor = our_address.setdefault('neighbor_address', \
-					{}).setdefault(group['our_neighbor'], {})
 				continue
 
 			# 		5/2		1(RH)	150 (3)		Up 		Gig0/0/1
@@ -717,6 +730,16 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 					int(group['holddown_negotiated'])})
 				our_neighbor.update({'holddown_adjusted': \
 					int(group['holddown_adjusted'])})
+				continue
+
+			# 172.16.1.1	172.16.1.3
+			m = p2.match(line)
+			if m:
+				group = m.groupdict()
+				our_address = ret_dict.setdefault('our_address', {}). \
+					setdefault(group['our_address'], {})
+				our_neighbor = our_address.setdefault('neighbor_address', \
+					{}).setdefault(group['our_neighbor'], {})
 				continue
 
 		return ret_dict

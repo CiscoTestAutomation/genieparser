@@ -1,0 +1,4 @@
+2 alarms currently active
+Alarm time               Class  Description
+2020-12-22 14:48:15 JST  Major  SPMB 1 not online
+2020-12-22 14:48:12 JST  Minor  Loss of communication with Backup RE

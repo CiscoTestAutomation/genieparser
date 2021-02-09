@@ -1,0 +1,90 @@
+
+        inet.0: 16 destinations, 19 routes (16 active, 0 holddown, 0 hidden)
+
+        10.1.0.0/24 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        10.64.4.4/32 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        10.145.0.0/24 (2 entries, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        * 192.168.220.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: I 
+
+
+
+        * 192.168.240.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 5 6 I 
+
+
+
+        * 192.168.205.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 7 8 I 
+
+
+
+        * 192.168.115.0/24 (1 entry, 1 announced)
+
+            Accepted
+
+            Nexthop: 10.64.4.4
+
+            Localpref: 100
+
+            AS path: 200000 4 100000 8 I 
+
+
+
+        inet6.0: 18 destinations, 20 routes (18 active, 0 holddown, 0 hidden)
+    
+    

@@ -1,0 +1,752 @@
+
+        show interfaces
+        Physical interface: ge-0/0/0, Enabled, Physical link is Up
+        Interface index: 148, SNMP ifIndex: 526
+        Description: TEST-DESC:1|TEST#1234 DEV
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 00:50:56:ff:56:b6, Hardware address: 00:50:56:ff:56:b6
+        Last flapped   : 2019-08-29 09:09:19 UTC (29w6d 18:56 ago)
+        Input rate     : 2952 bps (5 pps)
+        Output rate    : 3080 bps (3 pps)
+        Active alarms  : None
+        Active defects : None
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/0.0 (Index 333) (SNMP ifIndex 606)
+            Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+            Input packets : 133657033
+            Output packets: 129243982
+            Protocol inet, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: No-Redirects, Sendbcast-pkt-to-re
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 10.189.5.92/30, Local: 10.189.5.93, Broadcast: 10.189.5.95
+            Protocol inet6, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: Is-Primary
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 2001:db8:223c:2c16::/64, Local: 2001:db8:223c:2c16::1
+            Addresses, Flags: Is-Preferred
+                Destination: fe80::/64, Local: fe80::250:56ff:feff:56b6
+            Protocol mpls, MTU: 1488, Maximum labels: 3
+            Flags: Is-Primary
+            Protocol multiservice, MTU: Unlimited
+            Flags: Is-Primary
+
+        Physical interface: lc-0/0/0, Enabled, Physical link is Up
+        Interface index: 145, SNMP ifIndex: 519
+        Speed: 800mbps
+        Device flags   : Present Running
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Logical interface lc-0/0/0.32769 (Index 329) (SNMP ifIndex 520)
+            Flags: Up Encapsulation: ENET2
+            Bandwidth: 0
+            Input packets : 0
+            Output packets: 0
+            Protocol vpls, MTU: Unlimited
+            Flags: Is-Primary
+
+        Physical interface: pfe-0/0/0, Enabled, Physical link is Up
+        Interface index: 147, SNMP ifIndex: 522
+        Speed: 800mbps
+        Device flags   : Present Running
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Logical interface pfe-0/0/0.16383 (Index 330) (SNMP ifIndex 523)
+            Flags: Up SNMP-Traps Encapsulation: ENET2
+            Bandwidth: 0
+            Input packets : 0
+            Output packets: 0
+            Protocol inet, MTU: Unlimited
+            Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: None
+            Protocol inet6, MTU: Unlimited
+            Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: None
+
+        Physical interface: pfh-0/0/0, Enabled, Physical link is Up
+        Interface index: 146, SNMP ifIndex: 521
+        Speed: 800mbps
+        Device flags   : Present Running
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Logical interface pfh-0/0/0.16383 (Index 331) (SNMP ifIndex 524)
+            Flags: Up SNMP-Traps Encapsulation: ENET2
+            Bandwidth: 0
+            Input packets : 0
+            Output packets: 0
+            Protocol inet, MTU: Unlimited
+            Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: None
+
+        Logical interface pfh-0/0/0.16384 (Index 332) (SNMP ifIndex 525)
+            Flags: Up SNMP-Traps Encapsulation: ENET2
+            Bandwidth: 0
+            Input packets : 0
+            Output packets: 0
+            Protocol inet, MTU: Unlimited
+            Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: Is-Primary
+
+        Physical interface: ge-0/0/1, Enabled, Physical link is Up
+        Interface index: 149, SNMP ifIndex: 527
+        Description: YW7079/9.6G/BB/sjkGDS221-EC11_xe-0/1/5[SJC]_Area8_Cost100
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 00:50:56:ff:37:f9, Hardware address: 00:50:56:ff:37:f9
+        Last flapped   : 2019-08-29 09:09:19 UTC (29w6d 18:56 ago)
+        Input rate     : 3696 bps (6 pps)
+        Output rate    : 7736 bps (9 pps)
+        Active alarms  : None
+        Active defects : None
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/1.0 (Index 334) (SNMP ifIndex 605)
+            Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+            Input packets : 376821627
+            Output packets: 370477594
+            Protocol inet, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: No-Redirects, Sendbcast-pkt-to-re
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 10.169.14.120/30, Local: 10.169.14.122, Broadcast: 10.169.14.123
+            Protocol inet6, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 2, Curr new hold cnt: 0, NH drop cnt: 0
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 2001:db8:eb18:6337::/64, Local: 2001:db8:eb18:6337::2
+            Addresses, Flags: Is-Preferred
+                Destination: fe80::/64, Local: fe80::250:56ff:feff:37f9
+            Protocol mpls, MTU: 1488, Maximum labels: 3
+            Protocol multiservice, MTU: Unlimited
+
+        Physical interface: ge-0/0/2, Enabled, Physical link is Up
+        Interface index: 150, SNMP ifIndex: 528
+        Description: ve-hkgasr01_Gi2[DefaultCost1000]
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 00:50:56:ff:1e:ba, Hardware address: 00:50:56:ff:1e:ba
+        Last flapped   : 2020-03-05 16:04:34 UTC (2w6d 12:00 ago)
+        Input rate     : 928 bps (1 pps)
+        Output rate    : 800 bps (0 pps)
+        Active alarms  : None
+        Active defects : None
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/2.0 (Index 336) (SNMP ifIndex 536)
+            Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+            Input packets : 210359939
+            Output packets: 222589463
+            Protocol inet, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: Sendbcast-pkt-to-re
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 10.19.198.24/30, Local: 10.19.198.25, Broadcast: 10.19.198.27
+            Protocol mpls, MTU: 1488, Maximum labels: 3
+            Protocol multiservice, MTU: Unlimited
+
+        Physical interface: ge-0/0/3, Enabled, Physical link is Up
+        Interface index: 151, SNMP ifIndex: 529
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 00:50:56:ff:93:cb, Hardware address: 00:50:56:ff:93:cb
+        Last flapped   : 2019-10-25 08:50:18 UTC (21w5d 19:15 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Active alarms  : None
+        Active defects : None
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        Interface transmit statistics: Disabled
+
+        Logical interface ge-0/0/3.0 (Index 335) (SNMP ifIndex 537)
+            Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
+            Input packets : 14609
+            Output packets: 17416
+            Protocol inet, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: Sendbcast-pkt-to-re
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 100.0.0/24, Local: 10.55.0.254, Broadcast: 10.55.0.255
+            Protocol multiservice, MTU: Unlimited
+
+        Physical interface: ge-0/0/4, Enabled, Physical link is Down
+        Interface index: 152, SNMP ifIndex: 530
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running Down
+        Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 00:50:56:ff:3e:28, Hardware address: 00:50:56:ff:3e:28
+        Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Active alarms  : LINK
+        Active defects : LINK
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        Interface transmit statistics: Disabled
+
+        Physical interface: ge-0/0/5, Enabled, Physical link is Down
+        Interface index: 153, SNMP ifIndex: 531
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running Down
+        Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 2c:6b:f5:ff:01:1d, Hardware address: 2c:6b:f5:ff:01:1d
+        Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Active alarms  : LINK
+        Active defects : LINK
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        Interface transmit statistics: Disabled
+
+        Physical interface: ge-0/0/6, Enabled, Physical link is Down
+        Interface index: 154, SNMP ifIndex: 532
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running Down
+        Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 2c:6b:f5:ff:01:1e, Hardware address: 2c:6b:f5:ff:01:1e
+        Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Active alarms  : LINK
+        Active defects : LINK
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        Interface transmit statistics: Disabled
+
+        Physical interface: ge-0/0/7, Enabled, Physical link is Down
+        Interface index: 155, SNMP ifIndex: 533
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running Down
+        Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 2c:6b:f5:ff:01:1f, Hardware address: 2c:6b:f5:ff:01:1f
+        Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Active alarms  : LINK
+        Active defects : LINK
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        Interface transmit statistics: Disabled
+
+        Physical interface: ge-0/0/8, Enabled, Physical link is Down
+        Interface index: 156, SNMP ifIndex: 534
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running Down
+        Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 2c:6b:f5:ff:01:20, Hardware address: 2c:6b:f5:ff:01:20
+        Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Active alarms  : LINK
+        Active defects : LINK
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        Interface transmit statistics: Disabled
+
+        Physical interface: ge-0/0/9, Enabled, Physical link is Down
+        Interface index: 157, SNMP ifIndex: 535
+        Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
+        Loop Detect PDU Error: None, Ethernet-Switching Error: None, MAC-REWRITE Error: None, Loopback: Disabled,
+        Source filtering: Disabled, Flow control: Enabled, Auto-negotiation: Enabled, Remote fault: Online
+        Pad to minimum frame size: Disabled
+        Device flags   : Present Running Down
+        Interface flags: Hardware-Down SNMP-Traps Internal: 0x4000
+        Link flags     : None
+        CoS queues     : 8 supported, 8 maximum usable queues
+        Current address: 2c:6b:f5:ff:01:21, Hardware address: 2c:6b:f5:ff:01:21
+        Last flapped   : 2019-08-29 09:09:20 UTC (29w6d 18:55 ago)
+        Input rate     : 0 bps (0 pps)
+        Output rate    : 0 bps (0 pps)
+        Active alarms  : LINK
+        Active defects : LINK
+        PCS statistics                      Seconds
+            Bit errors                             0
+            Errored blocks                         0
+        Ethernet FEC statistics              Errors
+            FEC Corrected Errors                    0
+            FEC Uncorrected Errors                  0
+            FEC Corrected Errors Rate               0
+            FEC Uncorrected Errors Rate             0
+        Interface transmit statistics: Disabled
+
+        Physical interface: cbp0, Enabled, Physical link is Up
+        Interface index: 129, SNMP ifIndex: 501
+        Type: Ethernet, Link-level type: Ethernet, MTU: 9192
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Current address: 2c:6b:f5:ff:01:29, Hardware address: 2c:6b:f5:ff:01:29
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: demux0, Enabled, Physical link is Up
+        Interface index: 128, SNMP ifIndex: 502
+        Type: Software-Pseudo, MTU: 9192, Clocking: 1
+        Device flags   : Present Running
+        Interface flags: Point-To-Point SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: dsc, Enabled, Physical link is Up
+        Interface index: 5, SNMP ifIndex: 5
+        Type: Software-Pseudo, MTU: Unlimited
+        Device flags   : Present Running
+        Interface flags: Point-To-Point SNMP-Traps
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: em1, Enabled, Physical link is Up
+        Interface index: 65, SNMP ifIndex: 23
+        Type: Ethernet, Link-level type: Ethernet, MTU: 1514
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Current address: 00:50:56:ff:e2:c1, Hardware address: 00:50:56:ff:e2:c1
+        Last flapped   : 2019-08-29 09:03:11 UTC (29w6d 19:02 ago)
+            Input packets : 0
+            Output packets: 0
+
+        Logical interface em1.0 (Index 3) (SNMP ifIndex 24)
+            Flags: Up SNMP-Traps 0x4000000 Encapsulation: ENET2
+            Input packets : 724625563
+            Output packets: 793953088
+            Protocol inet, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: Is-Primary
+            Addresses, Flags: Is-Preferred
+                Destination: 10/8, Local: 10.0.0.4, Broadcast: 10.255.255.255
+            Addresses, Flags: Preferred Kernel Is-Preferred
+                Destination: 128/2, Local: 172.16.64.1, Broadcast: 172.16.16.255
+            Addresses, Flags: Primary Is-Default Is-Primary
+                Destination: 128/2, Local: 172.16.64.4, Broadcast: 172.16.16.255
+            Protocol inet6, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 1, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: Is-Primary
+            Addresses, Flags: Is-Preferred
+                Destination: fe80::/64, Local: fe80::250:56ff:feff:e2c1
+            Addresses, Flags: Is-Default Is-Preferred Is-Primary
+                Destination: 2001:db8:8d82::/64, Local: 2001:db8:8d82::a:0:0:4
+            Protocol tnp, MTU: 1500
+            Flags: Primary, Is-Primary
+            Addresses
+                Local: 0x4
+
+        Physical interface: esi, Enabled, Physical link is Up
+        Interface index: 134, SNMP ifIndex: 503
+        Type: Software-Pseudo, Link-level type: VxLAN-Tunnel-Endpoint, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: fti0, Enabled, Physical link is Up
+        Interface index: 136, SNMP ifIndex: 504
+        Type: FTI, Link-level type: Flexible-tunnel-Interface, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: fti1, Enabled, Physical link is Up
+        Interface index: 137, SNMP ifIndex: 505
+        Type: FTI, Link-level type: Flexible-tunnel-Interface, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: fti2, Enabled, Physical link is Up
+        Interface index: 138, SNMP ifIndex: 506
+        Type: FTI, Link-level type: Flexible-tunnel-Interface, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: fti3, Enabled, Physical link is Up
+        Interface index: 139, SNMP ifIndex: 507
+        Type: FTI, Link-level type: Flexible-tunnel-Interface, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: fti4, Enabled, Physical link is Up
+        Interface index: 140, SNMP ifIndex: 508
+        Type: FTI, Link-level type: Flexible-tunnel-Interface, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: fti5, Enabled, Physical link is Up
+        Interface index: 141, SNMP ifIndex: 509
+        Type: FTI, Link-level type: Flexible-tunnel-Interface, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: fti6, Enabled, Physical link is Up
+        Interface index: 142, SNMP ifIndex: 510
+        Type: FTI, Link-level type: Flexible-tunnel-Interface, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: fti7, Enabled, Physical link is Up
+        Interface index: 143, SNMP ifIndex: 511
+        Type: FTI, Link-level type: Flexible-tunnel-Interface, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: fxp0, Enabled, Physical link is Up
+        Interface index: 64, SNMP ifIndex: 1
+        Type: Ethernet, Link-level type: Ethernet, MTU: 1514
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Current address: 00:50:56:ff:0a:95, Hardware address: 00:50:56:ff:0a:95
+        Last flapped   : 2019-08-29 09:03:11 UTC (29w6d 19:02 ago)
+            Input packets : 0
+            Output packets: 0
+
+        Logical interface fxp0.0 (Index 4) (SNMP ifIndex 13)
+            Flags: Up SNMP-Traps 0x4000000 Encapsulation: ENET2
+            Input packets : 563129
+            Output packets: 805208
+            Protocol inet, MTU: 1500
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 2, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: Sendbcast-pkt-to-re, Is-Primary
+            Addresses, Flags: Is-Preferred Is-Primary
+                Destination: 1.0.0/24, Local: 10.1.0.101, Broadcast: 10.1.0.255
+
+        Physical interface: gre, Enabled, Physical link is Up
+        Interface index: 10, SNMP ifIndex: 8
+        Type: GRE, Link-level type: GRE, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: Point-To-Point SNMP-Traps
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: ipip, Enabled, Physical link is Up
+        Interface index: 11, SNMP ifIndex: 9
+        Type: IPIP, Link-level type: IP-over-IP, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: irb, Enabled, Physical link is Up
+        Interface index: 132, SNMP ifIndex: 512
+        Type: Ethernet, Link-level type: Ethernet, MTU: 1514
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Current address: 2c:6b:f5:ff:08:09, Hardware address: 2c:6b:f5:ff:08:09
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: jsrv, Enabled, Physical link is Up
+        Interface index: 144, SNMP ifIndex: 513
+        Type: Ethernet, Link-level type: Ethernet, MTU: 1514
+        Device flags   : Present Running
+        Link type      : Full-Duplex
+        Link flags     : None
+        Current address: 2c:6b:f5:ff:08:d8, Hardware address: 2c:6b:f5:ff:08:d8
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Logical interface jsrv.1 (Index 325) (SNMP ifIndex 514)
+            Flags: Up 0x24004000 Encapsulation: unknown
+            Bandwidth: 1Gbps
+            Routing Instance: None Bridging Domain: None
+            Input packets : 0
+            Output packets: 0
+            Protocol inet, MTU: 1514
+            Max nh cache: 75000, New hold nh limit: 75000, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: Is-Primary
+            Addresses, Flags: Primary Is-Default Is-Preferred Is-Primary
+                Destination: 128/2, Local: 172.16.64.127, Broadcast: 172.16.16.255
+
+        Physical interface: lo0, Enabled, Physical link is Up
+        Interface index: 6, SNMP ifIndex: 6
+        Type: Loopback, MTU: Unlimited
+        Device flags   : Present Running Loopback
+        Interface flags: SNMP-Traps
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 33920578
+            Output packets: 33920578
+
+        Logical interface lo0.0 (Index 320) (SNMP ifIndex 16)
+            Flags: SNMP-Traps Encapsulation: Unspecified
+            Input packets : 83
+            Output packets: 83
+            Protocol inet, MTU: Unlimited
+            Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Flags: No-Redirects, Sendbcast-pkt-to-re
+            Addresses, Flags: Is-Default Is-Primary
+                Local: 10.189.5.252
+            Protocol inet6, MTU: Unlimited
+            Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Addresses, Flags: Is-Default Is-Primary
+                Local: 2001:db8:223c:ca45::b
+                Local: fe80::250:560f:fc8d:7c08
+
+        Logical interface lo0.16384 (Index 322) (SNMP ifIndex 21)
+            Flags: SNMP-Traps Encapsulation: Unspecified
+            Input packets : 0
+            Output packets: 0
+            Protocol inet, MTU: Unlimited
+            Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+            Addresses
+                Local: 127.0.0.1
+
+        Logical interface lo0.16385 (Index 321) (SNMP ifIndex 22)
+            Flags: SNMP-Traps Encapsulation: Unspecified
+            Input packets : 33920495
+            Output packets: 33920495
+            Protocol inet, MTU: Unlimited
+            Max nh cache: 0, New hold nh limit: 0, Curr nh cnt: 0, Curr new hold cnt: 0, NH drop cnt: 0
+
+        Physical interface: lsi, Enabled, Physical link is Up
+        Interface index: 4, SNMP ifIndex: 4
+        Type: Software-Pseudo, Link-level type: LSI, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: mtun, Enabled, Physical link is Up
+        Interface index: 66, SNMP ifIndex: 12
+        Type: Multicast-GRE, Link-level type: GRE, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: pimd, Enabled, Physical link is Up
+        Interface index: 26, SNMP ifIndex: 11
+        Type: PIMD, Link-level type: PIM-Decapsulator, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: pime, Enabled, Physical link is Up
+        Interface index: 25, SNMP ifIndex: 10
+        Type: PIME, Link-level type: PIM-Encapsulator, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: pip0, Enabled, Physical link is Up
+        Interface index: 130, SNMP ifIndex: 515
+        Type: Ethernet, Link-level type: Ethernet, MTU: 9192
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+        Current address: 2c:6b:f5:ff:08:c8, Hardware address: 2c:6b:f5:ff:08:c8
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: pp0, Enabled, Physical link is Up
+        Interface index: 131, SNMP ifIndex: 516
+        Type: PPPoE, Link-level type: PPPoE, MTU: 1532
+        Device flags   : Present Running
+        Interface flags: Point-To-Point SNMP-Traps
+        Link type      : Full-Duplex
+        Link flags     : None
+
+        Physical interface: rbeb, Enabled, Physical link is Up
+        Interface index: 135, SNMP ifIndex: 517
+        Type: Software-Pseudo, Link-level type: Remote-BEB, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: tap, Enabled, Physical link is Up
+        Interface index: 12, SNMP ifIndex: 7
+        Type: Software-Pseudo, Link-level type: Interface-Specific, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Interface flags: SNMP-Traps
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+
+        Physical interface: vtep, Enabled, Physical link is Up
+        Interface index: 133, SNMP ifIndex: 518
+        Type: Software-Pseudo, Link-level type: VxLAN-Tunnel-Endpoint, MTU: Unlimited, Speed: Unlimited
+        Device flags   : Present Running
+        Link type      : Full-Duplex
+        Link flags     : None
+        Last flapped   : Never
+            Input packets : 0
+            Output packets: 0
+    

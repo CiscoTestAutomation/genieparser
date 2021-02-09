@@ -87,10 +87,12 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         #                     Eth1/37/2      161    R S s     N9K-C93240YC- Eth1/6 
         # ott-bgp-laas(JAF1429BAKA)
         #                     Eth1/39/1      159    R S I s
+        # ENT-DNAC-EG00-ESX03
+        #                     Ten 1/1/2      154         S    VMware ES vmnic2
         p4 = re.compile(r'^(?P<device_id>\S+)$')
         p5 = re.compile(r'(?P<local_interface>[a-zA-Z]+[\s]*[\d/.]+) +'
                         r'(?P<hold_time>\d+) +(?P<capability>[RTBSsHIrPDCM\s]+)( +'
-                        r'(?P<platform>\S+))?( (?P<port_id>[\.a-zA-Z0-9/\s]+))?$')
+                        r'(?P<platform>VMware ES|\S+))?( (?P<port_id>[\.a-zA-Z0-9/\s]+))?$')
 
         device_id_index = 0
         parsed_dict = {}
@@ -214,7 +216,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         # Platform: cisco WS-C6506-E,  Capabilities: Router Switch_6506 IGMP
         # Platform: Meraki MV21 Cloud Managed Indoor HD Dom
         # Platform: Mitel 5320e,DN 2142      ,  Capabilities: Host Phone
-        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/:)]+'
+        # Platform: "CTS-CODEC-SX80",  Capabilities: Host Phone
+        platf_cap_re = re.compile(r'Platform:\s+(?P<platform>[\w +(\-|\_\/:)\"]+'
                                   r'(?:,[\w ]+)?)(\,\s*Capabilities:\s+'
                                   r'(?P<capabilities>[\w\s\-]+))?$')
 
@@ -234,7 +237,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
         native_vlan_re = re.compile(r'Native\s*VLAN\s*:\s*'
                                     '(?P<native_vlan>\d+)')
 
-        # VTP Management Domain: ‘Accounting Group’      
+        # VTP Management Domain: 'Accounting Group'      
         vtp_management_domain_re = re.compile(r'VTP\s*Management\s*'
                                     'Domain\s*:\s*'
                                     '\W*(?P<vtp_management_domain>([a-zA-Z\s]+'
