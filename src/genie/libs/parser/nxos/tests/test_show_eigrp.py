@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.nxos.show_eigrp import ShowIpv4EigrpNeighbors,\
                                               ShowIpv6EigrpNeighbors,\
                                               ShowIpv4EigrpNeighborsDetail,\
-                                              ShowIpv6EigrpNeighborsDetail
+                                              ShowIpv6EigrpNeighborsDetail, \
+                                              ShowEigrpTopology
 
 
 class test_show_eigrp_neighbors(unittest.TestCase):
@@ -440,6 +441,325 @@ class test_show_eigrp_neighbors_detail(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
 
+
+class test_show_eigrp_topology(unittest.TestCase):
+
+    maxDiff = None
+    device = Device(name='aDevice')
+
+    device_output_empty = {'execute.return_value': ''}
+
+    expected_parsed_output_1 = {
+        "as": {
+            1: {
+                "routerid": "10.0.0.1",
+                "vrf": {
+                    "default": {
+                        "address_family": {
+                            "ipv4": {
+                                "route": {
+                                    "1.0.1.0/24": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "2816",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Connected",
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "11.0.0.0/24": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "51200",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "1.0.1.2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "11.0.1.0/24": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "51200",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "1.0.1.2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "11.0.2.0/24": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "51200",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "1.0.1.2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "11.0.3.0/24": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "51200",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "1.0.1.2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "11.0.4.0/24": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "Inaccessible",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "1.0.1.2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    device_output_1 = {'execute.return_value': '''
+        # show ip eigrp topology vrf all
+        IP-EIGRP Topology Table for AS(1)/ID(10.0.0.1) VRF default
+
+        Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply,
+            r - reply Status, s - sia Status 
+
+        P 1.0.1.0/24, 1 successors, FD is 2816
+                via Connected, Ethernet1/2
+        P 11.0.0.0/24, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 1.0.1.2 (3072/576), Ethernet1/2
+        P 11.0.1.0/24, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 1.0.1.2 (3072/576), Ethernet1/2
+        P 11.0.2.0/24, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 1.0.1.2 (3072/576), Ethernet1/2
+        P 11.0.3.0/24, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 1.0.1.2 (3072/576), Ethernet1/2
+        P 11.0.4.0/24, 1 successors, FD is Inaccessible
+                via Rstatic (51200/0)
+                via 1.0.1.2 (3072/576), Ethernet1/2
+    '''}
+
+    expected_parsed_output_2 = {
+        "as": {
+            1: {
+                "routerid": "2001:10::1",
+                "vrf": {
+                    "default": {
+                        "address_family": {
+                            "ipv6": {
+                                "route": {
+                                    "2001:1::1:0/112": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "2816",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Connected",
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "2001:11::/112": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "51200",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "2001:1::1:2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "2001:11::1:0/112": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "51200",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "2001:1::1:2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "2001:11::2:0/112": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "51200",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "2001:1::1:2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "2001:11::3:0/112": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "51200",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "2001:1::1:2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    },
+                                    "2001:11::4:0/112": {
+                                        "state": "P",
+                                        "num_successors": 1,
+                                        "fd": "Inaccessible",
+                                        "nexthops": {
+                                            0: {
+                                                "nexthop": "Rstatic",
+                                                "fd": 51200,
+                                                "rd": 0
+                                            },
+                                            1: {
+                                                "nexthop": "2001:1::1:2",
+                                                "fd": 3072,
+                                                "rd": 576,
+                                                "interface": "Ethernet1/2"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    device_output_2 = {'execute.return_value': '''
+    # show ipv6 eigrp topology vrf all
+        IPv6-EIGRP Topology Table for AS(1)/ID(2001:10::1) VRF default
+
+        Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply,
+            r - reply Status, s - sia Status 
+
+        P 2001:1::1:0/112, 1 successors, FD is 2816
+                via Connected, Ethernet1/2
+        P 2001:11::/112, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 2001:1::1:2 (3072/576), Ethernet1/2
+        P 2001:11::1:0/112, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 2001:1::1:2 (3072/576), Ethernet1/2
+        P 2001:11::2:0/112, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 2001:1::1:2 (3072/576), Ethernet1/2
+        P 2001:11::3:0/112, 1 successors, FD is 51200
+                via Rstatic (51200/0)
+                via 2001:1::1:2 (3072/576), Ethernet1/2
+        P 2001:11::4:0/112, 1 successors, FD is Inaccessible
+                via Rstatic (51200/0)
+                via 2001:1::1:2 (3072/576), Ethernet1/2
+    '''}
+
+    def test_show_eigrp_topology_empty(self):
+        self.device = Mock(**self.device_output_empty)
+        obj = ShowEigrpTopology(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse(af='ip')
+        del obj
+        obj = ShowEigrpTopology(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            obj.parse(af='ipv6')
+
+    def test_show_eigrp_topology_1(self):
+        self.device = Mock(**self.device_output_1)
+        obj = ShowEigrpTopology(device=self.device)
+        parsed_output:dict = obj.parse(af='ip')
+        self.assertEqual(parsed_output, self.expected_parsed_output_1)
+
+    def test_show_eigrp_topology_2(self):
+        self.device = Mock(**self.device_output_2)
+        obj = ShowEigrpTopology(device=self.device)
+        parsed_output:dict = obj.parse(af='ipv6')
+        self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
 if __name__ == '__main__':
     unittest.main()
