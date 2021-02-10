@@ -208,7 +208,6 @@ class ShowInterfaces(ShowInterfacesSchema):
         'out_lost_carrier', '(Tunnel.*)', 'input_queue_flushes',
         'reliability']
 
-
     def cli(self,interface="",output=None):
         if output is None:
             if interface:
@@ -471,7 +470,6 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         interface_dict = {}
         unnumbered_dict = {}
-        import pdb;pdb.set_trace()
         for line in out.splitlines():
             line = line.strip()
             # GigabitEthernet1 is up, line protocol is up 
@@ -1178,7 +1176,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                             interface_dict[intf]['ipv4']['unnumbered'] = {}
                             interface_dict[intf]['ipv4']['unnumbered']\
                                 ['interface_ref'] = unnumbered_intf
-        import pdb;pdb.set_trace()
+
         return(interface_dict)
 
 
