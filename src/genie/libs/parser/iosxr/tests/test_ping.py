@@ -24,7 +24,7 @@ class TestShowBfdSessionDestinationDetailss(unittest.TestCase):
                                           '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'],
                      'statistics': {
                         'received': 100,
-                        'round-trip': {
+                        'round_trip': {
                         'avg_ms': 14,
                         'max_ms': 2,
                         'min_ms': 1

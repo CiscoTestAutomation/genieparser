@@ -71,9 +71,9 @@ class PingSchema(MetaParser):
     # Main Schema
     schema = {
         'ping': {
-            'address': str,
-            'source': str,
-            'data-bytes': int,
+            Optional('address'): str,
+            Optional('source'): str,
+            Optional('data-bytes'): int,
             Optional('result'): Use(validate_ping_result_list),
             'statistics': {
                 'send': int,
@@ -218,6 +218,7 @@ class Ping(PingSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
+                ping_dict = ret_dict.setdefault('ping', {})
                 ping_statistics_dict = ping_dict.setdefault('statistics', {})
                 ping_statistics_dict.update({k.replace('_', '-'): (
                     int(v) if v.isdigit() else v) for k, v in group.items() if v is not None})
