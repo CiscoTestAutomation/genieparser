@@ -1,4 +1,3 @@
-ISR4461-spoke1#show flow monitor sdwan_flow_monitor statistics
 Cache type: Normal (Platform cache)
 Cache size: 200000
 Current entries: 12534
