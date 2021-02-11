@@ -49,31 +49,33 @@ class ShowVrrpSchema(MetaParser):
     schema = {
         'interfaces': {
             Any(): {
-                'group_number': int,
-                Optional('description'): str,
-                Optional('auth_text'): str,
-                'advertise_interval_secs': float,
-                'master_advertisement_interval_secs': float,
-                'master_down_interval_secs': float,
-                'master_router_ip': str,
-                Optional('master_router'): str,
-                'master_router_priority': int,
-                'preemption': str,
-                'priority': int,
-                Optional('vrrs_group_name'): str,
-                'virtual_ip_address': str,
-                'virtual_mac_address': str,
-                'state': str,
-                Optional('vrrp_delay'): float,
-                Optional('track_object'): { 
-                    Any(): {
-                        Optional('decrement'): int,
-                        Optional('state'): str,
-                    }
-                },
-                Optional('flags'): str   
-                    
-            }   
+            	'group': {
+            		Any(): {
+		                Optional('description'): str,
+		                Optional('auth_text'): str,
+		                'advertise_interval_secs': float,
+		                'master_advertisement_interval_secs': float,
+		                'master_down_interval_secs': float,
+		                'master_router_ip': str,
+		                Optional('master_router'): str,
+		                'master_router_priority': int,
+		                'preemption': str,
+		                'priority': int,
+		                Optional('vrrs_group_name'): str,
+		                'virtual_ip_address': str,
+		                'virtual_mac_address': str,
+		                'state': str,
+		                Optional('vrrp_delay'): float,
+		                Optional('track_object'): { 
+		                    Any(): {
+		                        Optional('decrement'): int,
+		                        Optional('state'): str,
+		                    }
+		                },
+		                Optional('flags'): str
+	                },
+                }      
+            },   
         }
     }
     
@@ -196,9 +198,11 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 interface = group['interface']
+                vrrp_group = int(group['group_number'])
                 vrrp_dict = result_dict.setdefault('interfaces', {})\
-                                       .setdefault(interface, {})
-                vrrp_dict['group_number'] = int(group['group_number'])
+                                       .setdefault(interface, {})\
+                                       .setdefault('group', {})\
+                                       .setdefault(vrrp_group, {})
                 continue
 
             #State is Master
@@ -402,15 +406,18 @@ class ShowVrrpBriefSchema(MetaParser):
     schema = {
         'interfaces':{
             Any(): {
-                'grp': int, 
-                'pri': int, 
-                'time': int,
-                'pre': str,
-                'state': str,
-                'master_addr': str,
-                'group_addr': str
+            	'group': {
+            		Any(): {
+		                'pri': int, 
+		                'time': int,
+		                'pre': str,
+		                'state': str,
+		                'master_addr': str,
+		                'group_addr': str
+	                },
+	            }
             },
-        },
+        }
     }
 
 
@@ -457,11 +464,13 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
             if m:
                 group = m.groupdict()
                 interface_name = group['interface_name']
+                group_id =  int(group['grp'])
                 
                 interface_dict = parsed_dict.setdefault('interfaces', {})\
-                                            .setdefault(interface_name, {})
+                                            .setdefault(interface_name, {})\
+                                            .setdefault('group', {})\
+                                            .setdefault(group_id, {})
                 
-                interface_dict['grp'] =  int(group['grp'])
                 interface_dict['pri'] =  int(group['pri'])
                 interface_dict['time'] =  int(group['time'])
                 interface_dict['pre'] =  group['pre']
