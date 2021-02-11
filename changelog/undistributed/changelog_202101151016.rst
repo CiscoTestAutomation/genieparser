@@ -1,6 +1,0 @@
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* IOSXE
-    * Modified ShowCdpNeighbors:
-        * Updated p5 regex to handle scenario where platform is VMware ES

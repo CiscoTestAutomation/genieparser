@@ -2,7 +2,7 @@ expected_output = {
         "task-replication-state": {
             "task-gres-state": "Enabled",
             "task-protocol-replication-name": [
-                "OSPF",
+                "OSPF3",
                 "BGP",
                 "MPLS",
                 "LDP"

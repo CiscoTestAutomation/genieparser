@@ -1,0 +1,7 @@
+--------------------------------------------------------------------------------
+                                NEW
+--------------------------------------------------------------------------------
+* iosxr
+    * Added ShowBfdSessionDestination:
+        * show bfd session destination {ip_address}
+        * show bfd ipv6 session destination {ip_address}

@@ -1,0 +1,4 @@
+ping mpls rsvp test_lsp_01 
+!!!!!
+--- lsping statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss

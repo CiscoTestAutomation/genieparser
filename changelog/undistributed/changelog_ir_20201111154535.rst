@@ -1,6 +1,0 @@
---------------------------------------------------------------------------------
-                                New
---------------------------------------------------------------------------------
-* JUNOS
-    * Modified ShowInterfacesDescriptions:
-        * Added a command: show interfaces descriptions {interface} 
