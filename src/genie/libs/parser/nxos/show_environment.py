@@ -63,7 +63,7 @@ class ShowEnvironmentSchema(MetaParser):
                 Optional('total_power_output_watts'): float,
                 Optional('total_power_input_watts'): float,
                 Optional('total_power_allocated_watts'): float,
-                Optional('total_power_available'): float
+                Optional('total_power_available_watts'): float
             }
         },
         Optional('temperature'): {
@@ -287,7 +287,7 @@ class ShowEnvironment(ShowEnvironmentSchema):
             #Total Power Available for additional modules               7241.00 W
             m = p17.match(line)
             if m:
-                parsed_env_dict['power']['power_usage_summary']['total_power_available'] = float(m.group(1))
+                parsed_env_dict['power']['power_usage_summary']['total_power_available_watts'] = float(m.group(1))
                 continue
             
             #Match Temperatures
@@ -572,7 +572,7 @@ class ShowEnvironmentPowerSchema(MetaParser):
                 Optional('total_power_output_watts'): float,
                 Optional('total_power_input_watts'): float,
                 Optional('total_power_allocated_watts'): float,
-                Optional('total_power_available'): float
+                Optional('total_power_available_watts'): float
             }
         }
     }
@@ -735,7 +735,7 @@ class ShowEnvironmentPower(ShowEnvironmentPowerSchema):
             #Total Power Available for additional modules               7241.00 W
             m = p13.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_available'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_available_watts'] = float(m.group(1))
                 continue
 
 
@@ -780,7 +780,7 @@ class ShowEnvironmentPowerDetailSchema(MetaParser):
                 Optional('total_power_output_watts'): float,
                 Optional('total_power_input_watts'): float,
                 Optional('total_power_allocated_watts'): float,
-                Optional('total_power_available'): float
+                Optional('total_power_available_watts'): float
             },
             Optional('power_usage_details'):{
                 Optional('power_reserved_for_sup_watts'): str,
@@ -1011,7 +1011,7 @@ class ShowEnvironmentPowerDetail(ShowEnvironmentPowerDetailSchema):
             #Total Power Available for additional modules               7241.00 W
             m = p13.match(line)
             if m:
-                parsed_env_power_dict['power']['power_usage_summary']['total_power_available'] = float(m.group(1))
+                parsed_env_power_dict['power']['power_usage_summary']['total_power_available_watts'] = float(m.group(1))
                 continue
 
             m = p14.match(line)
