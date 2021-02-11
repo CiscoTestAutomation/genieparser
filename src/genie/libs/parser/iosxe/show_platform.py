@@ -7734,7 +7734,7 @@ class ShowPlatformSoftwareMemoryRpActiveAllocType(ShowPlatformSoftwareMemoryRpAc
                 module_dict = ret_dict.setdefault('module', {}). \
                     setdefault(module, {})
                 continue
-            
+
             # type: process
             m = p1_1.match(line)
             if m:

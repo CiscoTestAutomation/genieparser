@@ -169,7 +169,6 @@ class TestShowLogging(unittest.TestCase):
         ]
     }
     device_output = {'execute.return_value': '''
-        show logging
         Fri Sep 25 23:34:26.169 UTC
         Syslog logging: enabled (0 messages dropped, 0 flushes, 0 overruns)
             Console logging: Disabled
