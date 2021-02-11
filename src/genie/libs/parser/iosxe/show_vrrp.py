@@ -278,7 +278,7 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 track_object_number = int(group['obj_name'])
-                track_object_dict = vrrp_dict.setdefault('track_object', {})
+                track_object_dict = vrrp_dict.setdefault('track_object', {})\
                 						.setdefault(track_object_number,{})
                 track_object_dict['decrement'] = int(group['value'])
                 track_object_dict['state'] = group['obj_state']
