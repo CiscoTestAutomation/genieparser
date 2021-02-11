@@ -500,3 +500,4 @@ class ShowVrrpBriefAll(ShowVrrpBrief):
             out = output
 
         return super().cli(output=out)
+
