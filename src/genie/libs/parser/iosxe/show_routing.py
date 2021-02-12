@@ -207,19 +207,19 @@ class ShowIpRoute(ShowIpRouteSchema):
             vrf = 'default'
 
         source_protocol_dict = {}
-        source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2']
+        source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2', '+', '%', 'p', '&']
         source_protocol_dict['odr'] = ['o']
         source_protocol_dict['isis'] = ['i','su','L1','L2','ia', 'I1', 'I2']
-        source_protocol_dict['eigrp'] = ['D','EX']
-        source_protocol_dict['static'] = ['S']
+        source_protocol_dict['eigrp'] = ['D','EX', '+', '%', 'p', '&']
+        source_protocol_dict['static'] = ['S', '+', '%', 'p', '&']
         source_protocol_dict['mobile'] = ['M']
         source_protocol_dict['rip'] = ['R']
         source_protocol_dict['lisp'] = ['I', 'Ir','Ia','Id']
         source_protocol_dict['nhrp'] = ['H']
         source_protocol_dict['local'] = ['L']
-        source_protocol_dict['connected'] = ['C']
+        source_protocol_dict['connected'] = ['C', '+', '%', 'p', '&']
         source_protocol_dict['local_connected'] = ['LC']
-        source_protocol_dict['bgp'] = ['B']
+        source_protocol_dict['bgp'] = ['B', '+', '%', 'p', '&']
 
         result_dict = {}
 
@@ -299,12 +299,12 @@ class ShowIpRoute(ShowIpRouteSchema):
             # L        FF00::/8 [0/0]
             if self.IP_VER == 'ipv4':
                 p3 = re.compile(
-                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[0-9\.\:\/]+)?( '
+                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+]+)? +(?P<network>[0-9\.\:\/]+)?( '
                     r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
                     r'via +)?(?P<next_hop>[\d\.]+))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
             else:
                 p3 = re.compile(
-                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[\w\.\:\/]+)?( '
+                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+]+)? +(?P<network>[\w\.\:\/]+)?( '
                     r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
                     r'via +)?(?P<next_hop>[\d\.]+))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
 
