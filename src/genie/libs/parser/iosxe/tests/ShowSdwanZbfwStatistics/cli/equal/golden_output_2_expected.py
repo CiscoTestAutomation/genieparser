@@ -30,7 +30,7 @@ expected_output = {
             }
           },
           'proto_entry': {
-            '1': {
+            1: {
               'protocol-name': 'tcp',
               'byte-counters': 1063161213,
               'pkt-counters': 3500756201
@@ -189,7 +189,7 @@ expected_output = {
             }
           },
           'proto_entry': {
-            '1': {
+            1: {
               'protocol-name': 'tcp',
               'byte-counters': 3390354167,
               'pkt-counters': 11613838

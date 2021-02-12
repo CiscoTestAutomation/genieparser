@@ -30,7 +30,7 @@ expected_output = {
             }
           },
           'proto_entry': {
-            '2': {
+            2: {
               'protocol-name': 'udp',
               'byte-counters': 2380355513,
               'pkt-counters': 2480825086
