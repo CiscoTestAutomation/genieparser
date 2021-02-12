@@ -90,7 +90,8 @@ class ShowTrack(ShowTrackSchema):
         # Line protocol is Up
         # Reachability is Down (no ip route), delayed Up (1 sec remaining) (connected)
         # Metric threshold is Down (no route)
-        p3 = re.compile(r'(?P<parameter>[\w ]+) +is +(?P<parameter_state>Up|Down)'
+        p3 = re.compile(r'(?P<parameter>[\w ]+) +is +'
+        '(?P<parameter_state>Up|Down)'
         '( +\((?P<issue>[\w ]+)\),*( delayed (?P<delayed_state>Up|Down)'
         ' \((?P<seconds_remaining>\d) sec remaining\)'
         ' \((?P<connection_state>[\w]+)\))*)*')
@@ -167,7 +168,8 @@ class ShowTrack(ShowTrackSchema):
                     delayed_dict['delayed_state'] = group['delayed_state']
                 if group['seconds_remaining']:
                     delayed_dict = parameter_dict.setdefault('delayed', {})
-                    delayed_dict['seconds_remaining'] = float(group['seconds_remaining'])
+                    delayed_dict['seconds_remaining'] = \
+                        float(group['seconds_remaining'])
                 if group['connection_state']:
                     delayed_dict = parameter_dict.setdefault('delayed', {})
                     delayed_dict['connection_state'] = group['connection_state']
@@ -188,9 +190,11 @@ class ShowTrack(ShowTrackSchema):
             if m:
                 group = m.groupdict()
                 if group['delay_up_seconds']:
-                    track_dict['delay_up_seconds'] = float(group['delay_up_seconds'])
+                    track_dict['delay_up_seconds'] = \
+                    float(group['delay_up_seconds'])
                 if group['delay_down_seconds']:
-                    track_dict['delay_down_seconds'] = float(group['delay_down_seconds'])                
+                    track_dict['delay_down_seconds'] = \
+                        float(group['delay_down_seconds'])                
                 continue
 
             # First-hop interface is unknown (was Ethernet1/0)
@@ -198,9 +202,11 @@ class ShowTrack(ShowTrackSchema):
             if m:
                 group = m.groupdict()
                 if group['first_hop_interface_state']:
-                    track_dict['first_hop_interface_state'] = group['first_hop_interface_state']
+                    track_dict['first_hop_interface_state'] = \
+                        group['first_hop_interface_state']
                 if group['prev_first_hop_interface']:
-                    track_dict['prev_first_hop_interface'] = group['prev_first_hop_interface']
+                    track_dict['prev_first_hop_interface'] = \
+                        group['prev_first_hop_interface']
                 continue
 
             # Metric threshold down 255 up 254
@@ -208,9 +214,11 @@ class ShowTrack(ShowTrackSchema):
             if m:
                 group = m.groupdict()
                 if group['threshold_down']:
-                    parameter_dict['threshold_down'] = int(group['threshold_down'])
+                    parameter_dict['threshold_down'] = \
+                        int(group['threshold_down'])
                 if group['threshold_up']:
-                    parameter_dict['threshold_up'] = int(group['threshold_up'])
+                    parameter_dict['threshold_up'] = \
+                        int(group['threshold_up'])
                 continue
 
             # VRRP GigabitEthernet3.420 10
