@@ -14,33 +14,6 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
-'''
-Track 1
-  Interface GigabitEthernet3.420 line-protocol
-  Line protocol is Up
-    1 change, last change 00:00:27
-  Tracked by:
-    VRRP GigabitEthernet3.420 10
-
-Track 2
-  IP route 10.21.12.0 255.255.255.0 reachability
-  Reachability is Down (no ip route), delayed Up (1 sec remaining) (connected)
-    1 change, last change 00:00:24
-  Delay up 20 secs, down 10 secs
-  First-hop interface is unknown (was Ethernet1/0)
-  Tracked by:
-    HSRP Ethernet0/0 3
-
-Track 1
-  IP route 172.16.52.0 255.255.255.0 metric threshold
-  Metric threshold is Down (no route)
-    1 change, last change 00:00:35
-  Metric threshold down 255 up 254
-  Delay up 2 secs, down 1 sec
-  First-hop interface is unknown
-'''
-
-
 
 # =======================
 # Schema for 'show track'
