@@ -201,27 +201,27 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
 
         #zbfw zonepair-statistics ZP_lanZone_lanZone_Is_-902685811
         #p1 = re.compile(r'^zbfw zonepair-statistics (?P<zp_name>\S+)$')
-        p1 = re.compile(r'^zbfw\s+zonepair[\-\_]statistics\s+(?P<zp_name>\S+)$')
+        p1 = re.compile(r'^zbfw\s+zonepair-statistics\s+(?P<zp_name>\S+)$')
 
         #fw-traffic-class-entry Isn4451ZbfPolicy-seq-1-cm_
         #p2 = re.compile(r'^(?P<class_name>(fw-traffic-class-entry|fw-l7-traffic-class-entry)) (?P<class_entry>\S+)$')
-        p2 = re.compile(r'^(?P<class_name>(fw[\-\_]traffic[\-\_]class[\-\_]entry|fw[\-\_]l7[\-\_]traffic[\-\_]class[\-\_]entry))\s+(?P<class_entry>\S+)$')
+        p2 = re.compile(r'^(?P<class_name>(fw-traffic-class-entry|fw-l7-traffic-class-entry))\s+(?P<class_entry>\S+)$')
                         
         #fw-tc-match-entry "match-any Isn4451ZbfPolicy-svrf1-l4-cm_" 11
         #p3 = re.compile(r'^fw-tc-match-entry "(?P<match_crit>\S+)\s+(?P<tc_entry>[\w\d\s-]+)"\s(?P<tc_num>\S+)$')
-        p3 = re.compile(r'^fw[\-\_]tc[\-\_]match[\-\_]entry\s+"(?P<match_crit>\S+)\s+(?P<tc_entry>[\w\d\s-]+)"\s+(?P<tc_num>\S+)$')
+        p3 = re.compile(r'^fw-tc-match-entry\s+"(?P<match_crit>\S+)\s+(?P<tc_entry>[\w\d\s-]+)"\s+(?P<tc_num>\S+)$')
 
         #fw-tc-match-entry Isn4451ZbfPolicy-seq-vrf5-acl_ 3
         #p4 = re.compile(r'^fw-tc-match-entry (?P<tc_entry>[\w\d\s-]+)\s(?P<tc_num>\S+)$')
-        p4 = re.compile(r'^fw[\-\_]tc[\-\_]match[\-\_]entry\s+(?P<tc_entry>[\w\d\s-]+)\s(?P<tc_num>\S+)$')
+        p4 = re.compile(r'^fw-tc-match-entry\s+(?P<tc_entry>[\w\d\s-]+)\s(?P<tc_num>\S+)$')
 
         #fw-tc-proto-entry 1
         #p5 = re.compile(r'^(?P<match_name>fw-tc-proto-entry|fw-l7-tc-match-app-entry)\s+(?P<entry_val>[\w\d\-]+)$')
-        p5 = re.compile(r'^(?P<match_name>fw[\-\_]tc[\-\_]proto[\-\_]entry|fw[\-\_]l7[\-\_]tc[\-\_]match[\-\_]app[\-\_]entry)\s+(?P<entry_val>[\w\d\-]+)$')
+        p5 = re.compile(r'^(?P<match_name>fw-tc-proto-entry|fw-l7-tc-match-app-entry)\s+(?P<entry_val>[\w\d\-]+)$')
 
         #l7-policy-name                 NONE
         #p6 = re.compile(r'^(?P<entry_name>l7-policy-name)\s+(?P<entry_val>\S+)$')
-        p6 = re.compile(r'^(?P<entry_name>l7[\-\_]policy[\-\_]name)\s+(?P<entry_val>\S+)$')
+        p6 = re.compile(r'^(?P<entry_name>l7-policy-name)\s+(?P<entry_val>\S+)$')
 
         #src-zone-name lanZone
         #p5 = re.compile(r'^(?P<key>\S+)\s+(?P<value>\S+)$')
