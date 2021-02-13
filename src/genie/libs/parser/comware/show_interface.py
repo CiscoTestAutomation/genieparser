@@ -3,8 +3,6 @@ Author: Renato Almeida de Oliveira
 Contact: renato.almeida.oliveira@gmail.com
 https://twitter.com/ORenato_Almeida
 https://www.youtube.com/c/RenatoAlmeidadeOliveira
-Contents largely inspired by sample Unicon repo:
-https://github.com/CiscoDevNet/pyats-plugin-examples/tree/master/unicon_plugin_example/src/unicon_plugin_example
 '''
 
 from genie.metaparser import MetaParser
