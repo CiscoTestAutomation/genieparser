@@ -1,3 +1,7 @@
+'''show_sdwan_appqoe_aoim_statistics.py
+IOSXE parser for the following show command
+	* show sdwan appqoe aoim-statistics
+'''
 # Python
 import re
 # Genie
