@@ -259,7 +259,7 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
                     # class_dict = key_update(feature_dict['l7_class_entry']['class_entry'])
                     # class_dict = key_update(feature_dict['l7_class_entry'])
                 else:
-                    # class_dict = feature_dict.setdefault('class_entry', {}).setdefault(groups['class_entry'], {})
+                    class_dict = feature_dict.setdefault('class_entry', {}).setdefault(groups['class_entry'], {})
                     # class_dict = key_update(['class_entry'])
                 last_dict_ptr = class_dict
                 continue
