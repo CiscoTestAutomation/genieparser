@@ -227,6 +227,14 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
         #p5 = re.compile(r'^(?P<key>\S+)\s+(?P<value>\S+)$')
         p7 = re.compile(r'^(?P<key>\S+)\s+\"?(?P<value>[\w\s\d\-\_]+)\"?$')
 
+        # convert dash to underscore in a dictionary key
+        # def key_update(d):
+        #     for k,v in list(d.items()):
+        #         if type(k) == int and '-' in k:
+        #             d[k.replace('-','_')] = d[k]
+        #             del d[k]
+        #     return d
+
         ret_dict = {}
         last_dict_ptr = {}
         for line in out.splitlines():
@@ -238,6 +246,7 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
             if m:
                 groups = m.groupdict()
                 feature_dict = ret_dict.setdefault('zp_name', {}).setdefault(groups['zp_name'], {})
+                # feature_dict = key_update(feature_dict['zp_name'])
                 last_dict_ptr = feature_dict
                 continue
 
@@ -247,8 +256,11 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
                 groups = m.groupdict()
                 if(groups['class_name'] == 'fw-l7-traffic-class-entry'):
                     class_dict = feature_dict.setdefault('l7_class_entry', {}).setdefault(groups['class_entry'], {})
+                    # class_dict = key_update(feature_dict['l7_class_entry']['class_entry'])
+                    # class_dict = key_update(feature_dict['l7_class_entry'])
                 else:
-                    class_dict = feature_dict.setdefault('class_entry', {}).setdefault(groups['class_entry'], {})
+                    # class_dict = feature_dict.setdefault('class_entry', {}).setdefault(groups['class_entry'], {})
+                    # class_dict = key_update(['class_entry'])
                 last_dict_ptr = class_dict
                 continue
 
