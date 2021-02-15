@@ -1,52 +1,41 @@
-"""
-    show_ip_sla.py
-    IOSXE parsers for the following show commands:
-
+'''show_ip_sla.py
+IOSXE parsers for the following show commands:
     * show ip sla summary
-"""
+'''
 
-
-
-from genie import parsergen
-from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Or, Optional
-from genie.metaparser.util.schemaengine import Schema
+# Python
 import re
+import xmltodict
 
-# ==============================
+# Metaparser
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Schema, Any, Optional
+
+
+# ===============================
 # Schema for 'show ip sla summary'
-# ==============================
-
+# ===============================
 class ShowIpSlaSummarySchema(MetaParser):
     ''' Schema for "show ip sla summary" '''
-    schema ={'id':
-    {Any(): 
-    {
-        Optional('id'): str,
-        Optional('probe_status'): str,
-        Optional('type'): str,
-        Optional('destination'): str,
-        Optional('rtt_stats_mseconds'): str,
-        Optional('return_code'): str,
-        Optional('last_run_seconds_ago'): str
-    },
-    },
+    schema = {
+        'id': {
+            All(){
+                'id': str,
+                'probe_status': str, #Codes: * active, ^ inactive, ~ pending
+                'type': str,
+                'destination': str,
+                'rtt_stats': str,
+                'return_code': str,
+                'last_run_seconds_ago': int,
+            },
+        },
     }
 
 
 class ShowIpSlaSummary(ShowIpSlaSummarySchema):
     """Parser for:
     show ip sla summary
-    parser class implements detail parsing mechanisms for cli.
     """
-
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the ouput 
-    # (nested dict) that has the same data structure across all supported parsing mechanisms
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
 
     def cli(self):
         """parsing mechanism: cli
@@ -56,19 +45,14 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
         """
 
         parsed_dict = {}
-        cmd = 'show ip sla summary'
+        cli_command = 'show ip sla summary'
         
         out = self.device.execute(cmd)
 
-        #ID           Type        Destination       Stats       Return      Last
-        #                                                       Code        Run 
-        #-----------------------------------------------------------------------
-        #*1           tcp-connect 123.23.213.32     RTT=44      OK          21 seconds ag
-        #                                                                   o            
-        #                                                                                
-        #                                                                                
-        #                                                                                
-        #*2           dns         11.121.2.123      -           Timeout     7 seconds ago
+        #ID           Type        Destination       Stats       ReturnCOde     LastRun
+        #-----------------------------------------------------------------------------
+        #*1           tcp-connect 123.23.213.32     RTT=44      OK             21 seconds ago                                                                              
+        #*2           dns         11.121.2.123      -           Timeout        7 seconds ago
 
         if out:
             headers = [['ID','Type','Destination','Stats','Return','Last'],['','','','','Code','Run']]
