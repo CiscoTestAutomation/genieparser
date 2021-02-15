@@ -230,7 +230,7 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
         # convert dash to underscore in a dictionary key
         # def key_update(d):
         #     for k,v in list(d.items()):
-        #         if type(k) == str and '-' in k:
+        #         if type(d[k]) == str and '-' in k:
         #             d[k.replace('-','_')] = d[k]
         #             del d[k]
         #     return d
