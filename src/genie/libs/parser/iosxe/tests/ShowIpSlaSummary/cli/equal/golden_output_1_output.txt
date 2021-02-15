@@ -2,8 +2,7 @@ IPSLAs Latest Operation Summary
 Codes: * active, ^ inactive, ~ pending
 All Stats are in milliseconds. Stats with u are in microseconds
 
-ID           Type        Destination       Stats       Return      Last
-                                                       Code        Run 
+ID           Type        Destination       Stats       ReturnCode  LastRun
 -----------------------------------------------------------------------
 *1           tcp-connect 123.23.213.32     RTT=44      OK          21 seconds ago                                                                                
 *2           dns         11.121.2.123      -           Timeout     7 seconds ago                                                                              
