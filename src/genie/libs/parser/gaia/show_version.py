@@ -36,13 +36,14 @@ class ShowVersion(ShowVersionSchema):
 
         result_dict = {
             'version': {
-             'product': '',   
-             'os': {
-                'build': '',
-                'kernel': '',
-                'edition': ''
+                'product': '',   
+                'os': {
+                    'build': '',
+                    'kernel': '',
+                    'edition': ''
+                    }
                 }
-              }}
+            }
 
         p_version = re.compile(r'^Product version Check Point Gaia (?P<version>.*)$')
         p_build = re.compile(r'^OS build (?P<build>.*)$')
