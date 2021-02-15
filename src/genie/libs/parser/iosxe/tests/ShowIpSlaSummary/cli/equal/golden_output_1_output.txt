@@ -4,10 +4,10 @@ All Stats are in milliseconds. Stats with u are in microseconds
 
 ID           Type        Destination       Stats       ReturnCode  LastRun
 -----------------------------------------------------------------------
-*1           tcp-connect 123.23.213.32     RTT=44      OK          21 seconds ago                                                                                
-*2           dns         11.121.2.123      -           Timeout     7 seconds ago                                                                              
-*3           udp-jitter  121.32.11.1       RTT=1       OK          54 seconds ago                                                                             
-*4           udp-jitter  12.223.33.3       RTT=1       OK          15 seconds ago                                                                                                                                                   
-*5           udp-jitter  13.132.32.2       RTT=1       OK          8 seconds ago                                                                                
-*6           udp-jitter  11.311.31.2       RTT=1       OK          40 seconds ago                                                                              
+*1           tcp-connect 123.23.213.32     RTT=44      OK          21 seconds ago
+*2           dns         11.121.2.123      -           Timeout     7 seconds ago
+*3           udp-jitter  121.32.11.1       RTT=1       OK          54 seconds ago
+*4           udp-jitter  12.223.33.3       RTT=1       OK          15 seconds ago
+*5           udp-jitter  13.132.32.2       RTT=1       OK          8 seconds ago
+*6           udp-jitter  11.311.31.2       RTT=1       OK          40 seconds ago
 *7           icmp-echo   131.31.11.1       RTT=1       OK          2 seconds ago
