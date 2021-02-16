@@ -10,9 +10,6 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
-# import parser utils
-from genie.libs.parser.utils.common import Common
-
 
 # =======================
 # Schema for 'show track'
@@ -70,46 +67,46 @@ class ShowTrack(ShowTrackSchema):
         parsed_dict = {}
 
         #Track 1
-        p1 = re.compile(r'Track +(?P<track_number>\d+)')
+        p1 = re.compile(r'^Track +(?P<track_number>\d+)')
 
         # Interface GigabitEthernet3.420 line-protocol
         # IP route 10.21.12.0 255.255.255.0 reachability
         # IP route 172.16.52.0 255.255.255.0 metric threshold
-        p2 = re.compile(r'\s*(?P<type>IP route|Interface) +'
-            '((?P<ip_address>[\d.]+) +(?P<subnet_mask>[\d.]+)|'
-            '(?P<name>[\d\w.]+)) +(?P<parameter>[\w \-]+)')
+        p2 = re.compile(r'^(?P<type>IP route|Interface) +'
+            r'((?P<ip_address>[\d.]+) +(?P<subnet_mask>[\d.]+)|'
+            r'(?P<name>[\d\w.]+)) +(?P<parameter>[\w \-]+)')
 
         # Line protocol is Up
         # Reachability is Down (no ip route), delayed Up (1 sec remaining) (connected)
         # Metric threshold is Down (no route)
-        p3 = re.compile(r'(?P<parameter>[\w ]+) +is +'
-        '(?P<parameter_state>Up|Down)'
-        '( +\((?P<issue>[\w ]+)\),*( delayed (?P<delayed_state>Up|Down)'
-        ' \((?P<seconds_remaining>\d) sec remaining\)'
-        ' \((?P<connection_state>[\w]+)\))*)*')
+        p3 = re.compile(r'^(?P<parameter>[\w ]+) +is +'
+            r'(?P<parameter_state>Up|Down)'
+            r'( +\((?P<issue>[\w ]+)\),*( delayed (?P<delayed_state>Up|Down)'
+            r' \((?P<seconds_remaining>\d+) sec remaining\)'
+            r' \((?P<connection_state>\w+)\))*)*')
 
         # 1 change, last change 00:00:27
-        p4 = re.compile(r'(?P<change_count>[\d]+) +change, +last +change'
-        				 ' +(?P<last_change>[\d:]+)')
+        p4 = re.compile(r'^(?P<change_count>\d+) +change, +last +change'
+        	r' +(?P<last_change>[\d:]+)')
 
         # Delay up 20 secs, down 10 secs
-        p5 = re.compile(r'\s*Delay +up +(?P<delay_up_seconds>[\d]+)'
-            ' +secs,* +down +(?P<delay_down_seconds>[\d]+) +sec')
+        p5 = re.compile(r'^Delay +up +(?P<delay_up_seconds>\d+)'
+            r' +secs,* +down +(?P<delay_down_seconds>\d+) +sec')
 
         # First-hop interface is unknown (was Ethernet1/0)
-        p6 = re.compile(r'\s*First-hop +interface +is +'
-            '(?P<first_hop_interface_state>[\w]+)( +\(was'
-            ' +(?P<prev_first_hop_interface>[\w\d\/\.\-\_]+)\))*')
+        p6 = re.compile(r'^First-hop +interface +is +'
+            r'(?P<first_hop_interface_state>\w+)( +\(was'
+            r' +(?P<prev_first_hop_interface>[\w\d\/\.\-\_]+)\))*')
 
         # Metric threshold down 255 up 254
-        p7 = re.compile(r'\s*Metric +threshold +down'
-            ' +(?P<threshold_down>[\d]+) +up +(?P<threshold_up>[\d]+)')
+        p7 = re.compile(r'^Metric +threshold +down'
+            r' +(?P<threshold_down>\d+) +up +(?P<threshold_up>\d+)')
 
         # VRRP GigabitEthernet3.420 10
         # HSRP Ethernet0/0 3
         # HSRP Ethernet0/1 3
-        p8 = re.compile(r'\s*(?P<name>[A-Z]{3,4}) +'
-            '(?P<interface>[A-Za-z0-9/.]+) +((?P<group_id>[\d]+)|(\n))')
+        p8 = re.compile(r'^(?P<name>[a-zA-Z]{3,4}) +'
+            r'(?P<interface>[A-Za-z0-9/.]+) +((?P<group_id>\d+)|(\n))')
 
         for line in output.splitlines():
             line = line.strip()
