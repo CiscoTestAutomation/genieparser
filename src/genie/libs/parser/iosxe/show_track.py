@@ -178,7 +178,7 @@ class ShowTrack(ShowTrackSchema):
                 group = m.groupdict()
                 if group['delay_up_seconds']:
                     track_dict['delay_up_seconds'] = \
-                    float(group['delay_up_seconds'])
+                        float(group['delay_up_seconds'])
                 if group['delay_down_seconds']:
                     track_dict['delay_down_seconds'] = \
                         float(group['delay_down_seconds'])
