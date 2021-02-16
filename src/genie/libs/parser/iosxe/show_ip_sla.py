@@ -69,14 +69,14 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
         # 104   video         1232:232  		 Active   100      OK       22:49:53 PST Tue May 3 2011
         #                       ::222
 
-        p1 = re.compile(r'(?P<state_symbol>\*|\^|\~)*(?P<id>[\d]+) +'
-        '(?P<type>[\w-]+) +(?P<destination>[\d.\:]+)\s*(?P<state_word>[\w]+)*'
-        ' +(RTT=)*((?P<rtt_milliseconds>[\d]+)|(?P<rtt_na>-))'
-        '(?P<is_microseconds>u)* +(?P<return_code>[\w]+) +'
-        '(?P<last_run>[\w\: ]+)')
+        p1 = re.compile(r'(?P<state_symbol>\*|\^|\~)?(?P<id>\d+) +'
+            r'(?P<type>\S+) +(?P<destination>\S+) +(?P<state_word>\w+)?'
+            r' +(RTT=)*((?P<rtt_milliseconds>\d+)|(?P<rtt_na>-))'
+            r'(?P<is_microseconds>u)? +(?P<return_code>\w+) +'
+            r'(?P<last_run>[\w\: ]+)')
 
         #                       ::222
-        p2 = re.compile(r'^ *(?P<extended_ip_address>[\d\:\.]+)')
+        p2 = re.compile(r'(?P<extended_ip_address>[\d\:\.]+)')
 
         for line in out.splitlines():
             line = line.strip()
