@@ -33,7 +33,7 @@ class ShowCloudexpressApplication(ShowCloudexpressApplicationSchema):
     def cli(self, output=None):
         out = self.device.execute(
             self.cli_command) if output is None else output
-        result_dict = {}
+        result_dict = {} 
         index = 0
         #1    salesforce               gateway  172.16.255.14  -          103      1     lte    lte
         #1    google_apps              gateway  172.16.255.14  -          47       0     lte    lte
