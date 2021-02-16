@@ -15,7 +15,7 @@ from genie.metaparser.util.schemaengine import Any, Optional
 # Schema for 'show track'
 # =======================
 class ShowTrackSchema(MetaParser):
-    ''' Schema for "show track" '''
+    """ Schema for 'show track' """
     schema = {
     	'tracks':{
 	        Any(): {
@@ -56,7 +56,7 @@ class ShowTrackSchema(MetaParser):
 # Parser for 'show track'
 # =======================
 class ShowTrack(ShowTrackSchema):
-    ''' Parser for "show track" '''
+    """ Parser for 'show track' """
     cli_command = 'show track'
 
     def cli(self, output=None):
@@ -117,7 +117,7 @@ class ShowTrack(ShowTrackSchema):
                 group = m.groupdict()
                 track_number = int(group['track_number'])
                 track_dict = parsed_dict.setdefault('tracks', {})\
-                						.setdefault(track_number, {})
+                    .setdefault(track_number, {})
                 continue
 
             # Interface GigabitEthernet3.420 line-protocol
@@ -135,7 +135,6 @@ class ShowTrack(ShowTrackSchema):
 
                 track_dict['type'] = group['type']
                 track_dict['parameter'] = group['parameter']
-
                 continue
 
             # Line protocol is Up
@@ -145,8 +144,8 @@ class ShowTrack(ShowTrackSchema):
             if m:
                 group = m.groupdict()
                 parameter_object_name = group['parameter'].lower()\
-                                                        .replace(' ', '_')\
-                                                        .replace('-', '_')
+                    .replace(' ', '_')\
+                    .replace('-', '_')
                 parameter_dict = \
                     track_dict.setdefault(parameter_object_name, {})
                 parameter_dict['parameter_state'] = group['parameter_state']
@@ -161,9 +160,8 @@ class ShowTrack(ShowTrackSchema):
                         float(group['seconds_remaining'])
                 if group['connection_state']:
                     delayed_dict = parameter_dict.setdefault('delayed', {})
-                    delayed_dict['connection_state'] = group['connection_state']
-
-
+                    delayed_dict['connection_state'] = \
+                        group['connection_state']
                 continue
 
             # 1 change, last change 00:00:27
