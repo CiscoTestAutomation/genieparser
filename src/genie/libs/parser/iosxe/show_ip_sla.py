@@ -70,7 +70,7 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
         #                       ::222
 
         p1 = re.compile(r'(?P<state_symbol>\*|\^|\~)?(?P<id>\d+) +'
-            r'(?P<type>\S+) +(?P<destination>\S+) +(?P<state_word>\w+)?'
+            r'(?P<type>\S+) +(?P<destination>\S+)\s+(?P<state_word>\w+)?'
             r' +(RTT=)*((?P<rtt_milliseconds>\d+)|(?P<rtt_na>-))'
             r'(?P<is_microseconds>u)? +(?P<return_code>\w+) +'
             r'(?P<last_run>[\w\: ]+)')
