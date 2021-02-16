@@ -9,7 +9,7 @@ expected_output = {
                             "active": True,
                             "metric": 0,
                             "route_preference": 1,
-                            "source_protocol_codes": "S",
+                            "source_protocol_codes": "S %",
                             "source_protocol": "static",
                             "next_hop": {
                                 "next_hop_list": {
@@ -23,7 +23,7 @@ expected_output = {
                         "17.0.0.2/32": {
                             "route": "17.0.0.2/32",
                             "active": True,
-                            "source_protocol_codes": "C",
+                            "source_protocol_codes": "C p",
                             "source_protocol": "connected",
                             "next_hop": {
                                 "outgoing_interface": {
@@ -38,7 +38,7 @@ expected_output = {
                             "active": True,
                             "metric": 0,
                             "route_preference": 1,
-                            "source_protocol_codes": "S",
+                            "source_protocol_codes": "S &",
                             "source_protocol": "static",
                             "next_hop": {
                                 "next_hop_list": {

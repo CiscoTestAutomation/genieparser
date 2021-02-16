@@ -299,12 +299,12 @@ class ShowIpRoute(ShowIpRouteSchema):
             # L        FF00::/8 [0/0]
             if self.IP_VER == 'ipv4':
                 p3 = re.compile(
-                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+]+)? +(?P<network>[0-9\.\:\/]+)?( '
+                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+%&p]+)? +(?P<network>[0-9\.\:\/]+)?( '
                     r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
                     r'via +)?(?P<next_hop>[\d\.]+))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
             else:
                 p3 = re.compile(
-                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+]+)? +(?P<network>[\w\.\:\/]+)?( '
+                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+%&p]+)? +(?P<network>[\w\.\:\/]+)?( '
                     r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
                     r'via +)?(?P<next_hop>[\d\.]+))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
 
