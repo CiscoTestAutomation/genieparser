@@ -17,8 +17,8 @@ from genie.metaparser.util.schemaengine import Any, Optional
 class ShowTrackSchema(MetaParser):
     """ Schema for 'show track' """
     schema = {
-    	'tracks':{
-	        Any(): {
+        'tracks':{
+            Any(): {
                 'type': str,
                 Optional('name'): str,
                 Optional('ip_address'): str,
@@ -48,7 +48,7 @@ class ShowTrackSchema(MetaParser):
                         Optional('group_id'): str,
                     }
                 }
-	        }
+            }
         }
     }
 
@@ -87,7 +87,7 @@ class ShowTrack(ShowTrackSchema):
 
         # 1 change, last change 00:00:27
         p4 = re.compile(r'^(?P<change_count>\d+) +change, +last +change'
-        	r' +(?P<last_change>[\d:]+)')
+            r' +(?P<last_change>[\d:]+)')
 
         # Delay up 20 secs, down 10 secs
         p5 = re.compile(r'^Delay +up +(?P<delay_up_seconds>\d+)'
