@@ -1,4 +1,4 @@
-'''show_vrrp.py
+"""show_vrrp.py
 
 IOSXE parsers for the following show commands:
     * 'show vrrp'
@@ -7,26 +7,20 @@ IOSXE parsers for the following show commands:
     * 'show vrrp interface {interface} all'
     * 'show vrrp interface {interface} group {group}'
     * 'show vrrp interface {interface} group {group} all'
-    * 'show vrrp brief'   
+    * 'show vrrp brief'
     * 'show vrrp brief all'
     * 'show vrrp interface {interface} brief'
-
-'''
+"""
 
 # Python
 import re
-import xmltodict
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
-                                         Default, Use
-
-# import parser utils
-from genie.libs.parser.utils.common import Common
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
-# ======================
+# ========================================================
 # Schema for:
 #    * 'show vrrp'
 #    * 'show vrrp all'
@@ -34,66 +28,63 @@ from genie.libs.parser.utils.common import Common
 #    * 'show vrrp interface {interface} all'
 #    * 'show vrrp interface {interface} group {group}'
 #    * 'show vrrp interface {interface} group {group} all'
-# ======================
+# ========================================================
 class ShowVrrpSchema(MetaParser):
-
-    ''' Schema for:
+    """ Schema for:
         * 'show vrrp'
         * 'show vrrp all'
         * 'show vrrp interface {interface}'
         * 'show vrrp interface {interface} all'
         * 'show vrrp interface {interface} group {group}'
         * 'show vrrp interface {interface} group {group} all'
-    '''
+    """
 
     schema = {
         'interfaces': {
             Any(): {
-            	'group': {
-            		Any(): {
-		                Optional('description'): str,
-		                Optional('auth_text'): str,
-		                'advertise_interval_secs': float,
-		                'master_advertisement_interval_secs': float,
-		                'master_down_interval_secs': float,
-		                'master_router_ip': str,
-		                Optional('master_router'): str,
-		                'master_router_priority': int,
-		                'preemption': str,
-		                'priority': int,
-		                Optional('vrrs_group_name'): str,
-		                'virtual_ip_address': str,
-		                'virtual_mac_address': str,
-		                'state': str,
-		                Optional('vrrp_delay'): float,
-		                Optional('track_object'): { 
-		                    Any(): {
-		                        Optional('decrement'): int,
-		                        Optional('state'): str,
-		                    }
-		                },
-		                Optional('flags'): str
-	                },
-                }      
-            },   
+                'group': {
+                    Any(): {
+                        Optional('description'): str,
+                        Optional('auth_text'): str,
+                        'advertise_interval_secs': float,
+                        'master_advertisement_interval_secs': float,
+                        'master_down_interval_secs': float,
+                        'master_router_ip': str,
+                        Optional('master_router'): str,
+                        'master_router_priority': int,
+                        'preemption': str,
+                        'priority': int,
+                        Optional('vrrs_group_name'): str,
+                        'virtual_ip_address': str,
+                        'virtual_mac_address': str,
+                        'state': str,
+                        Optional('vrrp_delay'): float,
+                        Optional('track_object'): {
+                            Any(): {
+                                Optional('decrement'): int,
+                                Optional('state'): str,
+                            }
+                        },
+                        Optional('flags'): str
+                    },
+                }
+            },
         }
     }
-    
 
 
-# ==========================
+# ===================================================
 # Parser for:
 #   * 'show vrrp'
 #   * 'show vrrp interface {interface}'
 #   * 'show vrrp interface {interface} group {group}'
-# ==========================
+# ===================================================
 class ShowVrrp(ShowVrrpSchema):
-
-    ''' Parser for:
+    """ Parser for:
         * 'show vrrp'
         * 'show vrrp interface {interface}'
         * 'show vrrp interface {interface} group {group}''
-    '''
+    """
 
     cli_command = ['show vrrp', 'show vrrp interface {interface}',
                    'show vrrp interface {interface} group {group}']
@@ -102,18 +93,14 @@ class ShowVrrp(ShowVrrpSchema):
 
         if output is None:
             if interface and group:
-                cmd = self.cli_command[2].format(interface=interface, 
-                								 group=group)
+                cmd = self.cli_command[2].format(interface=interface,
+                                                 group=group)
             elif interface:
                 cmd = self.cli_command[1].format(interface=interface)
             else:
                 cmd = self.cli_command[0]
 
-            out = self.device.execute(cmd)
-
-        else:
-            out = output
-
+            output = self.device.execute(cmd)
 
         result_dict = {}
 
@@ -189,7 +176,7 @@ class ShowVrrp(ShowVrrpSchema):
         p19 = re.compile(r'(?P<description>[\w+ \-]+)')
 
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # Defines the regex for the first line of device output, which is:
@@ -200,9 +187,9 @@ class ShowVrrp(ShowVrrpSchema):
                 interface = group['interface']
                 vrrp_group = int(group['group_number'])
                 vrrp_dict = result_dict.setdefault('interfaces', {})\
-                                       .setdefault(interface, {})\
-                                       .setdefault('group', {})\
-                                       .setdefault(vrrp_group, {})
+                    .setdefault(interface, {})\
+                    .setdefault('group', {})\
+                    .setdefault(vrrp_group, {})
                 continue
 
             #State is Master
@@ -283,11 +270,11 @@ class ShowVrrp(ShowVrrpSchema):
                 group = m.groupdict()
                 track_object_number = int(group['obj_name'])
                 track_object_dict = vrrp_dict.setdefault('track_object', {})\
-                						.setdefault(track_object_number,{})
+                    .setdefault(track_object_number,{})
                 track_object_dict['decrement'] = int(group['value'])
                 track_object_dict['state'] = group['obj_state']
                 continue
-             
+
             # Authentication text "hash"
             m = p13.match(line)
             if m:
@@ -311,8 +298,8 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 vrrp_dict.update(
-                    {'master_advertisement_interval_secs': 
-                    		float(group['mast_adv_interval'])})
+                    {'master_advertisement_interval_secs':
+                        float(group['mast_adv_interval'])})
                 continue
 
             # Master Down interval is 9.609 sec
@@ -320,8 +307,8 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 vrrp_dict.update(
-                    {'master_down_interval_secs': 
-                    		float(group['mast_down_interval'])})
+                    {'master_down_interval_secs':
+                        float(group['mast_down_interval'])})
                 continue
 
             # Master Router is 192.168.1.233, priority is 120
@@ -358,14 +345,13 @@ class ShowVrrp(ShowVrrpSchema):
 #   * 'show vrrp interface {interface} group {group} all'
 # ==========================
 class ShowVrrpAll(ShowVrrp):
-
-    ''' Parser for:
+    """ Parser for:
         * 'show vrrp all'
         * 'show vrrp interface {interface} all'
         * 'show vrrp interface {interface} group {group} all
-    '''
+    """
 
-    cli_command = ['show vrrp all', 'show vrrp interface {interface} all', 
+    cli_command = ['show vrrp all', 'show vrrp interface {interface} all',
                     'show vrrp interface {interface} group {group} all']
 
 
@@ -373,19 +359,16 @@ class ShowVrrpAll(ShowVrrp):
 
         if output is None:
             if interface and group:
-                cmd = self.cli_command[2].format(interface=interface, 
-                								 group=group)
+                cmd = self.cli_command[2].format(interface=interface,
+                                                 group=group)
             elif interface:
                 cmd = self.cli_command[1].format(interface=interface)
             else:
                 cmd = self.cli_command[0]
 
-            out = self.device.execute(cmd)
+            output = self.device.execute(cmd)
 
-        else:
-            out = output
-
-        return super().cli(output=out)
+        return super().cli(output=output)
 
 
 
@@ -396,26 +379,25 @@ class ShowVrrpAll(ShowVrrp):
 #   * 'show vrrp interface {interface} brief'
 # ==============================
 class ShowVrrpBriefSchema(MetaParser):
-
-    ''' Schema for:
+    """ Schema for:
         * 'show vrrp brief'
         * 'show vrrp brief all'
         * 'show vrrp interface {interface} brief'
-    '''
+    """
 
     schema = {
         'interfaces':{
             Any(): {
-            	'group': {
-            		Any(): {
-		                'pri': int, 
-		                'time': int,
-		                'pre': str,
-		                'state': str,
-		                'master_addr': str,
-		                'group_addr': str
-	                },
-	            }
+                'group': {
+                    Any(): {
+                        'pri': int,
+                        'time': int,
+                        'pre': str,
+                        'state': str,
+                        'master_addr': str,
+                        'group_addr': str
+                    },
+                }
             },
         }
     }
@@ -427,11 +409,10 @@ class ShowVrrpBriefSchema(MetaParser):
 #   * 'show vrrp interface {interface} brief'
 # ==============================
 class ShowVrrpBrief(ShowVrrpBriefSchema):
-
-    ''' Parser for:
+    """ Parser for:
         * 'show vrrp brief'
         * 'show vrrp interface {interface} brief'
-    '''
+    """
 
     cli_command = ['show vrrp brief', 'show vrrp interface {interface} brief']
 
@@ -442,21 +423,20 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
             else:
                 cmd = self.cli_command[0]
 
-            out = self.device.execute(cmd)
-        else:
-            out = output
+            output = self.device.execute(cmd)
 
         #Init vars
         parsed_dict = {}
 
         # Interface   Grp Pri Time  Own Pre State   Master addr  Group addr
         # Gi3.420    10  100 3609    N   Y Master  10.13.120.1  10.13.120.254
-        p1 = re.compile(r'^(?P<interface_name>^\S+)\s+(?P<grp>\d+)'
-                         '\s+(?P<pri>\d+)\s+(?P<time>\d+)\s+(?P<pre>\w)\s+'
-                         '(?P<state>\w+)\s+(?P<master_addr>[\d.]+)\s+'
-                         '(?P<group_addr>[\d.]+)')
+        p1 = re.compile(
+            r'^(?P<interface_name>^\S+)\s+(?P<grp>\d+)'
+            r'\s+(?P<pri>\d+)\s+(?P<time>\d+)\s+(?P<pre>\w)\s+'
+            r'(?P<state>\w+)\s+(?P<master_addr>[\d.]+)\s+'
+            r'(?P<group_addr>[\d.]+)')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # Gi3.420   10  100 3609  N  Y Master  10.13.120.1  10.13.120.254
@@ -465,12 +445,12 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
                 group = m.groupdict()
                 interface_name = group['interface_name']
                 group_id =  int(group['grp'])
-                
+
                 interface_dict = parsed_dict.setdefault('interfaces', {})\
-                                            .setdefault(interface_name, {})\
-                                            .setdefault('group', {})\
-                                            .setdefault(group_id, {})
-                
+                    .setdefault(interface_name, {})\
+                    .setdefault('group', {})\
+                    .setdefault(group_id, {})
+
                 interface_dict['pri'] =  int(group['pri'])
                 interface_dict['time'] =  int(group['time'])
                 interface_dict['pre'] =  group['pre']
@@ -486,18 +466,15 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
 # Parser for 'show vrrp brief all'
 # ================================
 class ShowVrrpBriefAll(ShowVrrpBrief):
-
-    ''' Parser for:
+    """ Parser for:
         * 'show vrrp brief all'
-    '''
+    """
 
     cli_command = 'show vrrp brief all'
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
-        return super().cli(output=out)
+        return super().cli(output=output)
 
