@@ -8,7 +8,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional
+from genie.metaparser.util.schemaengine import Any
 
 
 # ===============================
@@ -37,7 +37,6 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
     """Parser for:
     show ip sla summary
     """
-
     cli_command = 'show ip sla summary'
 
     def cli(self, output=None):
@@ -45,9 +44,7 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
         parsed_dict = {}
 
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
         # ID           Type        Destination       Stats       ReturnCode  LastRun
         # -----------------------------------------------------------------------
@@ -78,7 +75,7 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
         #                       ::222
         p2 = re.compile(r'(?P<extended_ip_address>[\d\:\.]+)')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             #*1           tcp-connect 123.23.213.32     RTT=44      OK          21 seconds ago
@@ -109,7 +106,7 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
                     rtt_in_microseconds = float(group['rtt_milliseconds'])\
                          / 1000
                     id_dict['rtt_stats'] = "{} microsecond(s)"\
-                        .format(rtt_in_microseconds)
+                        .format(str(rtt_in_microseconds))
                 else:
                     rtt_in_milliseconds = group['rtt_milliseconds']
                     id_dict['rtt_stats'] = "{} millisecond(s)"\
