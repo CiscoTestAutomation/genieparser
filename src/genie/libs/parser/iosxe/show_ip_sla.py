@@ -41,7 +41,7 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
     cli_command = 'show ip sla summary'
 
     def cli(self, output=None):
-        
+
         parsed_dict = {}
 
         if output is None:
@@ -58,25 +58,26 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
         # *5           udp-jitter  13.132.32.2       RTT=1       OK          8 seconds ago
         # *6           udp-jitter  11.311.31.2       RTT=1       OK          40 seconds ago
         # *7           icmp-echo   131.31.11.1       RTT=1       OK          2 seconds ago
-        
+
         # ID       Type      Destination  State   Stats(ms)  ReturnCode  LastRun
         # ---      ----      -----------  -----   -------  ----------  -------
         # 100   icmp-jitter   192.0.2.2    Active   100      OK       22:49:53 PST Tue May 3 2011
         # 101   udp-jitter    192.0.2.2    Active   100      OK       22:49:53 PST Tue May 3 2011
         # 102   tcp-connect   192.0.2.2    Active    -      NoConnection  22:49:53 PST Tue May 3 2011
-        # 103   video         1232:232  		 Active   100      OK       22:49:53 PST Tue May 3 2011  
-        #                       ::222                                                                  
-        # 104   video         1232:232  		 Active   100      OK       22:49:53 PST Tue May 3 2011 
-        #                       ::222  
-        
+        # 103   video         1232:232  		 Active   100      OK       22:49:53 PST Tue May 3 2011
+        #                       ::222
+        # 104   video         1232:232  		 Active   100      OK       22:49:53 PST Tue May 3 2011
+        #                       ::222
+
         p1 = re.compile(r'(?P<state_symbol>\*|\^|\~)*(?P<id>[\d]+) +'
         '(?P<type>[\w-]+) +(?P<destination>[\d.\:]+)\s*(?P<state_word>[\w]+)*'
         ' +(RTT=)*((?P<rtt_milliseconds>[\d]+)|(?P<rtt_na>-))'
         '(?P<is_microseconds>u)* +(?P<return_code>[\w]+) +'
         '(?P<last_run>[\w\: ]+)')
 
+        #                       ::222
         p2 = re.compile(r'^ *(?P<extended_ip_address>[\d\:\.]+)')
-        
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -87,17 +88,17 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
                 group = m.groupdict()
                 id = group['id']
                 id_dict = parsed_dict.setdefault('ids', {}).setdefault(id, {})
-                
+
                 # State can be a *, ^, or ~ at front of line, or can be a word
                 if group['state_symbol'] == '*':
-                    id_dict['state'] = 'active' 
+                    id_dict['state'] = 'active'
                 elif group['state_symbol'] == '^':
                     id_dict['state'] = 'inactive'
                 elif group['state_symbol'] == '~':
                     id_dict['state'] = 'pending'
                 else:
                     id_dict['state'] = group['state_word'].lower()
-                
+
                 id_dict['type'] = group['type']
                 id_dict['destination'] = group['destination']
 
@@ -108,24 +109,21 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
                     rtt_in_microseconds = float(group['rtt_milliseconds'])\
                          / 1000
                     id_dict['rtt_stats'] = "{} microsecond(s)"\
-                        .format(rtt_in_microseconds) 
+                        .format(rtt_in_microseconds)
                 else:
                     rtt_in_milliseconds = group['rtt_milliseconds']
                     id_dict['rtt_stats'] = "{} millisecond(s)"\
                         .format(rtt_in_milliseconds)
 
-
                 id_dict['return_code'] = group['return_code']
                 id_dict['last_run'] = group['last_run']
-
                 continue
 
-
+            #                       ::222
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 id_dict['destination'] += group['extended_ip_address']
                 continue
-
 
         return parsed_dict
