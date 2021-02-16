@@ -8,8 +8,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
-                                         Default, Use
+from genie.metaparser.util.schemaengine import Any, Optional
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -19,18 +18,16 @@ from genie.libs.parser.utils.common import Common
 # Schema for 'show track'
 # =======================
 class ShowTrackSchema(MetaParser):
-
     ''' Schema for "show track" '''
-
     schema = {
     	'tracks':{
 	        Any(): {
-                'type': str, 
+                'type': str,
                 Optional('name'): str,
                 Optional('ip_address'): str,
-                Optional('subnet_mask'): str, 
+                Optional('subnet_mask'): str,
                 'parameter': str,
-                Any(): {   
+                Any(): {
                     'parameter_state': str,
                     Optional('issue'): str,
                     Optional('delayed'): {
@@ -48,37 +45,32 @@ class ShowTrackSchema(MetaParser):
                 Optional('first_hop_interface_state'): str,
                 Optional('prev_first_hop_interface'): str,
                 Optional('tracked_by') : {
-                    Any(): {   #increasing index 0, 1, 2, 3, ... 
+                    Any(): {   #increasing index 0, 1, 2, 3, ...
                         'name': str,
                         'interface': str,
                         Optional('group_id'): str,
                     }
                 }
 	        }
-        }             
+        }
     }
-
 
 # =======================
 # Parser for 'show track'
 # =======================
 class ShowTrack(ShowTrackSchema):
-
     ''' Parser for "show track" '''
-
     cli_command = 'show track'
-    
+
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+            output = self.device.execute(self.cli_command)
 
         #Init vars
         parsed_dict = {}
 
         #Track 1
-        p1 = re.compile(r'Track +(?P<track_number>[\d]+)')
+        p1 = re.compile(r'Track +(?P<track_number>\d+)')
 
         # Interface GigabitEthernet3.420 line-protocol
         # IP route 10.21.12.0 255.255.255.0 reachability
@@ -118,15 +110,15 @@ class ShowTrack(ShowTrackSchema):
         # HSRP Ethernet0/1 3
         p8 = re.compile(r'\s*(?P<name>[A-Z]{3,4}) +'
             '(?P<interface>[A-Za-z0-9/.]+) +((?P<group_id>[\d]+)|(\n))')
-        
-        for line in out.splitlines():
+
+        for line in output.splitlines():
             line = line.strip()
 
             #Track 1
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                track_number = int(group['track_number'])                
+                track_number = int(group['track_number'])
                 track_dict = parsed_dict.setdefault('tracks', {})\
                 						.setdefault(track_number, {})
                 continue
@@ -143,10 +135,10 @@ class ShowTrack(ShowTrackSchema):
                     track_dict['ip_address'] = group['ip_address']
                 if group['subnet_mask']:
                     track_dict['subnet_mask'] = group['subnet_mask']
-                
+
                 track_dict['type'] = group['type']
                 track_dict['parameter'] = group['parameter']
-                
+
                 continue
 
             # Line protocol is Up
@@ -181,8 +173,8 @@ class ShowTrack(ShowTrackSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                parameter_dict['change_count'] = int(group['change_count']) 
-                parameter_dict['last_change'] = group['last_change'] 
+                parameter_dict['change_count'] = int(group['change_count'])
+                parameter_dict['last_change'] = group['last_change']
                 continue
 
             # Delay up 20 secs, down 10 secs
@@ -194,7 +186,7 @@ class ShowTrack(ShowTrackSchema):
                     float(group['delay_up_seconds'])
                 if group['delay_down_seconds']:
                     track_dict['delay_down_seconds'] = \
-                        float(group['delay_down_seconds'])                
+                        float(group['delay_down_seconds'])
                 continue
 
             # First-hop interface is unknown (was Ethernet1/0)
