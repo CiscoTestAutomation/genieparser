@@ -493,6 +493,95 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         IPv4 Address: 192.168.0.97
     """}
 
+    expected_parsed_output_6 = {
+        "index": {
+            "1": {
+                "advertisement_ver": 2,
+                "capabilities": "Router Switch IGMP Filtering",
+                "device_id": "PYATS-4451-CUBE01.yourdomain.com",
+                "duplex_mode": "full",
+                "hold_time": 129,
+                "interface_addresses": {
+                    "172.16.3.2": {}
+                },
+                "local_interface": "Ethernet1/5",
+                "management_addresses": {
+                    "172.16.3.2": {}
+                },
+                "native_vlan": "",
+                "physical_location": "",
+                "platform": "ISR4451-X/K9",
+                "port_id": "GigabitEthernet0/0/2",
+                "software_version": "Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.4, RELEASE SOFTWARE (fc3)\nTechnical Support:   http://www.cisco.com/techsupport\nCopyright (c) 1986-2018 by Cisco Systems, Inc.\nCompiled Sun 08-Jul-18 04:33 by mcpre",
+                "system_name": "",
+                "vtp_management_domain": ""
+            }
+        },
+        "total_entries_displayed": 1
+    }
+
+    device_output_6 = {'execute.return_value': """
+        Device ID:PYATS-4451-CUBE01.yourdomain.com
+        VTP Management Domain Name: null
+
+        Interface address(es):
+            IPv4 Address: 172.16.3.2
+        Platform: ISR4451-X/K9, Capabilities: Router Switch IGMP Filtering
+        Interface: Ethernet1/5, Port ID (outgoing port): GigabitEthernet0/0/2
+        Holdtime: 129 sec
+
+        Version:
+        Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.4, RELEASE SOFTWARE (fc3)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Sun 08-Jul-18 04:33 by mcpre
+
+        Advertisement Version: 2
+        Duplex: full
+        Mgmt address(es):
+            IPv4 Address: 172.16.3.2
+    """}
+
+    expected_parsed_output_7 = {
+        "index": {
+            "1": {
+                "advertisement_ver": 2,
+                "capabilities": "Router Switch IGMP Filtering",
+                "device_id": "PYATS-3850X-2SW-1-01.javitscenter.com",
+                "duplex_mode": "full",
+                "hold_time": 153,
+                "interface_addresses": {
+                    "172.16.4.110": {}
+                },
+                "local_interface": "Ethernet9/9",
+                "management_addresses": {},
+                "native_vlan": "1",
+                "physical_location": "",
+                "platform": "WS-C3850-48P",
+                "port_id": "TenGigabitEthernet2/1/1",
+                "system_name": "",
+                "vtp_management_domain": ""
+            }
+        },
+        "total_entries_displayed": 1
+    }
+
+    device_output_7 = {'execute.return_value': """
+        Device ID:PYATS-3850X-2SW-1-01.javitscenter.com
+        VTP Management Domain Name: JavitsCenter
+
+        Interface address(es):
+            IPv4 Address: 172.16.4.110
+        Platform: WS-C3850-48P, Capabilities: Router Switch IGMP Filtering
+        Interface: Ethernet9/9, Port ID (outgoing port): TenGigabitEthernet2/1/1
+        Holdtime: 153 sec
+
+        Advertisement Version: 2
+
+        Native VLAN: 1
+        Duplex: full
+    """}
+
     device_output_empty = {'execute.return_value': """
     """}
 
@@ -530,6 +619,20 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_5)
+
+    def test_show_cdp_neighbors_detail_6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_6)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_6)
+
+    def test_show_cdp_neighbors_detail_7(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_7)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_7)
 
     def test_show_cdp_neighbors_detail_empty(self):
         self.maxDiff = None
