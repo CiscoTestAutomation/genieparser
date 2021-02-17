@@ -19,6 +19,9 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
+# parser utils
+from genie.libs.parser.utils.common import Common
+
 
 # ========================================================
 # Schema for:
@@ -438,7 +441,8 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                interface_name = group['interface_name']
+                interface_name = \
+                    Common.convert_intf_name(group['interface_name'])
                 group_id =  int(group['grp'])
 
                 interface_dict = parsed_dict.setdefault('interface', {})\

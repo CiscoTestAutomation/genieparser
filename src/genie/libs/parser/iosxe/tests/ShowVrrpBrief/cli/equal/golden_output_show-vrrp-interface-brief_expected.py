@@ -1,6 +1,6 @@
 expected_output = {
     'interface': {
-        'Gi3.420': {
+        'GigabitEthernet3.420': {
             'group':{
                 10: {
                     'pri': 100,
