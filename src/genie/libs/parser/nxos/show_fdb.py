@@ -34,7 +34,7 @@ class ShowMacAddressTableBaseSchema(MetaParser):
         'show mac address-table vni <WORD> | grep <WORD>'
         'show mac address-table local vni <WORD>'
         'show mac address-table'
-        'show system internal l2fwder mac'"""
+    """
 
     schema = {
             'mac_table': {
@@ -71,7 +71,7 @@ class ShowMacAddressTableBase(ShowMacAddressTableBaseSchema):
         'show mac address-table vni <WORD> | grep <WORD>'
         'show mac address-table local vni <WORD>'
         'show mac address-table'
-        'show system internal l2fwder mac'"""
+    """
 
     def cli(self, out):
 
@@ -341,28 +341,5 @@ class ShowMacAddressTableLimit(ShowMacAddressTableLimitSchema):
                 vlan_dict.update({'curr_count': int(group['curr_count'])})
                 vlan_dict.update({'cfg_action': group['cfg_action']})
                 vlan_dict.update({'currently': group['currently']})
-
-        return ret_dict
-
-
-class ShowSystemInternalL2fwderMac(ShowMacAddressTableBase, ShowMacAddressTableBaseSchema):
-    """Parser for show system internal l2fwder mac"""
-
-    cli_command = 'show system internal l2fwder mac'
-
-    def cli(self, output=None):
-        if output is None:
-            # get output from device
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        #     VLAN    MAC Address    Type     age     Secure  NTFY  Ports
-        # ---------+---------------+--------+---------+------+----+---------
-        # G     -  5e00:c000:0007   static   -          F     F   sup-eth1(R)
-        # *     1  fa16.3eff.5e69   dynamic   00:01:02   F     F     Eth1/4
-
-        # get return dictionary
-        ret_dict = super().cli(out)
 
         return ret_dict
