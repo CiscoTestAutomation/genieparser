@@ -1,0 +1,10 @@
+
+ID       Type      Destination  State   Stats(ms)  ReturnCode  LastRun
+---      ----      -----------  -----   -------  ----------  -------
+100   icmp-jitter   192.0.2.2    Active   100      OK       22:49:53 PST Tue May 3 2011
+101   udp-jitter    192.0.2.2    Active   100      OK       22:49:53 PST Tue May 3 2011
+102   tcp-connect   192.0.2.2    Active    -      NoConnection  22:49:53 PST Tue May 3 2011
+103   video         1232:232  		 Active   100      OK       22:49:53 PST Tue May 3 2011  
+                      ::222                                                                  
+104   video         1232:232  		 Active   100      OK       22:49:53 PST Tue May 3 2011 
+                      ::222     
