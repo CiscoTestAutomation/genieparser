@@ -15,10 +15,10 @@ class ShowFlowMonitorSdwanFlowMonitorStatisticsSchema(MetaParser):
         "flows_added": int,
         "flows_aged":{
                     "total_flows_aged" : int,
-                    "active_timeout_secs": int,
-                    "active_time": int,
-                    "inactive_timeout_secs":int,
-                    "inactive_time":int
+                    Optional("active_timeout_secs"): int,
+                    Optional("active_time"): int,
+                    Optional("inactive_timeout_secs"):int,
+                    Optional("inactive_time"):int
                 }
             }
 
