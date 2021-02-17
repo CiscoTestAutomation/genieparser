@@ -21,7 +21,7 @@ class ShowTrackSchema(MetaParser):
             Any(): {
                 'type': str,
                 Optional('name'): str,
-                Optional('ip_address'): str,
+                Optional('address'): str,
                 Optional('subnet_mask'): str,
                 'parameter': str,
                 Any(): {
