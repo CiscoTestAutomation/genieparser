@@ -684,3 +684,125 @@ class ShowIpv6EigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
             show_output = output
 
         return super().cli(output=show_output, vrf='default')
+
+
+class ShowIpEigrpInterfacesSchema(MetaParser):
+
+    ''' Schema for "show ip eigrp interfaces" '''
+
+# These are the key-value pairs to add to the parsed dictionary
+    schema = {
+            'vrf':
+                {Any():
+                     {'eigrp_instance':
+                          {Any():
+                               {'address_family':
+                                    {Any():
+                                         {'interface':
+                                              {Any():
+                                                   {'peers': int,
+                                                    'xmit_q_unreliable': int,
+                                                    'xmit_q_reliable': int,
+                                                    'peer_q_unreliable': int,
+                                                    'peer_q_reliable': int,
+                                                    'mean_srtt': int,
+                                                    'pacing_time_unreliable': int,
+                                                    'pacing_time_reliable': int,
+                                                    'mcast_flow_timer': int,
+                                                    'pend_routes': int
+                                                    },
+                                               },
+                                          },
+                                     },
+                                },
+                           },
+                      },
+                 },
+            }
+
+
+class ShowIpEigrpInterfaces(ShowIpEigrpInterfacesSchema):
+
+    ''' Parser for "show ip eigrp interfaces"'''
+
+    cli_command = 'show ip eigrp interfaces'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Initializes the Python dictionary variable
+        parsed_dict = {}
+
+        # Defines the regex for the first line of device output. Example is:
+        # EIGRP-IPv4 Interfaces for AS(1)
+        p1 = re.compile('EIGRP-IPv4 +Interfaces +for +AS\((?P<auto_sys>(\d+))\)$')
+
+        # Defines the regex for the second line of device output. Example is:
+        # Xmit Queue   PeerQ        Mean   Pacing Time   Multicast    Pending
+        p2 = re.compile('Xmit +Queue +PeerQ +Mean +Pacing +Time +Multicast +Pending$')
+
+        # Defines the regex for the third line of device output. Example is:
+        # Interface              Peers  Un/Reliable  Un/Reliable  SRTT   Un/Reliable   Flow Timer   Routes
+        p3 = re.compile('Interface +Peers +Un/Reliable +Un/Reliable +SRTT +Un/Reliable +Flow +Timer +Routes$')
+
+        # Defines the regex for the fourth, and repeating, lines of device output. Example is:
+        # Gi1                      1        0/0       0/0          20       0/0           84           0
+        p4 = re.compile('(?P<interface>(\S+\d)) +(?P<peers>(\d+)) +(?P<xmit_q_unreliable>(\d+))/(?P<xmit_q_reliable>(\d+)) +(?P<peer_q_unreliable>(\d+))/(?P<peer_q_reliable>(\d+)) +(?P<mean_srtt>(\d+)) +(?P<pacing_t_unreliable>(\d+))/(?P<pacing_t_reliable>(\d+)) +(?P<mcast_flow_timer>(\d+)) +(?P<pend_routes>(\d+))$')
+
+
+        # Defines the "for" loop, to pattern match each line of output
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Processes the matched patterns for the first line of output
+            # EIGRP-IPv4 Interfaces for AS(1)
+            m = p1.match(line)
+
+            if m:
+                group = m.groupdict()
+                auto_sys = group['auto_sys']
+                instance_dict = parsed_dict.setdefault('vrf', {}). \
+                    setdefault('default', {}).setdefault('eigrp_instance', {}). \
+                    setdefault(auto_sys, {}).setdefault('address_family', {}). \
+                    setdefault('ipv4', {})
+
+                continue
+
+            # Processes the matched patterns for the second line of output
+            # Xmit Queue   PeerQ        Mean   Pacing Time   Multicast    Pending
+            m = p2.match(line)
+            if m:
+                continue
+
+            # Processes the matched patterns for the third line of output
+            # Interface              Peers  Un/Reliable  Un/Reliable  SRTT   Un/Reliable   Flow Timer   Routes
+            m = p3.match(line)
+            if m:
+                continue
+
+            # Processes the matched patterns for the fourth, and repeating, lines of output
+            #  Gi1                      1        0/0       0/0          20       0/0           84           0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                interface_short = group['interface']
+                interface_long = Common.convert_intf_name(interface_short)
+                int_dict = instance_dict.setdefault('interface', {}).setdefault(interface_long, {})
+                int_dict['peers'] = int(group['peers'])
+                int_dict['xmit_q_unreliable'] = int(group['xmit_q_unreliable'])
+                int_dict['xmit_q_reliable'] = int(group['xmit_q_reliable'])
+                int_dict['peer_q_unreliable'] = int(group['peer_q_unreliable'])
+                int_dict['peer_q_reliable'] = int(group['peer_q_reliable'])
+                int_dict['mean_srtt'] = int(group['mean_srtt'])
+                int_dict['pacing_time_unreliable'] = int(group['pacing_t_unreliable'])
+                int_dict['pacing_time_reliable'] = int(group['pacing_t_reliable'])
+                int_dict['mcast_flow_timer'] = int(group['mcast_flow_timer'])
+                int_dict['pend_routes'] = int(group['pend_routes'])
+                continue
+
+        return parsed_dict
