@@ -1,5 +1,4 @@
 expected_output = {
-    {
     "vrf": {
         "default": {
             "eigrp_instance": {
@@ -27,5 +26,4 @@ expected_output = {
             }
         }
     }
-}
 
