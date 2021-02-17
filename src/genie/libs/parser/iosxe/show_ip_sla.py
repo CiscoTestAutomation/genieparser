@@ -68,8 +68,7 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
 
         p1 = re.compile(r'(?P<state_symbol>\*|\^|\~)?(?P<id>\d+) +'
             r'(?P<type>\S+) +(?P<destination>\S+)\s+(?P<state_word>\w+)?'
-            r' +(RTT=)*((?P<rtt_milliseconds>\d+)|(?P<rtt_na>-))'
-            r'(?P<is_microseconds>u)? +(?P<return_code>\w+) +'
+            r' +(?P<rtt_stats>\S+) +(?P<return_code>\w+) +'
             r'(?P<last_run>[\w\: ]+)')
 
         #                       ::222
@@ -98,20 +97,7 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
 
                 id_dict['type'] = group['type']
                 id_dict['destination'] = group['destination']
-
-                # RTT Stats can be milliseconds, microseconds, or - (n/a)
-                if group['rtt_na']:
-                    id_dict['rtt_stats'] = '-'
-                elif group['is_microseconds']:
-                    rtt_in_microseconds = float(group['rtt_milliseconds'])\
-                         / 1000
-                    id_dict['rtt_stats'] = "{} microsecond(s)"\
-                        .format(str(rtt_in_microseconds))
-                else:
-                    rtt_in_milliseconds = group['rtt_milliseconds']
-                    id_dict['rtt_stats'] = "{} millisecond(s)"\
-                        .format(rtt_in_milliseconds)
-
+                id_dict['rtt_stats'] = group['rtt_stats']
                 id_dict['return_code'] = group['return_code']
                 id_dict['last_run'] = group['last_run']
                 continue
