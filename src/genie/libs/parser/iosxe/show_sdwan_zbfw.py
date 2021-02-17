@@ -124,58 +124,58 @@ class ShowSdwanZbfwStatisticsSchema(MetaParser):
     schema = {
         'zp_name': {
             Any(): {
-                'src-zone-name': str,
-                'dst-zone-name': str,
-                'policy-name': str,
+                'src_zone_name': str,
+                'dst_zone_name': str,
+                'policy_name': str,
                 'class_entry': {
                     Any():{
-                        'zonepair-name': str,
-                        'class-action': str,
-                        'pkts-counter': int,
-                        'bytes-counter': int,
-                        'attempted-conn': int,
-                        'current-active-conn': int,
-                        'max-active-conn': int,
-                        'current-halfopen-conn': int,
-                        'max-halfopen-conn': int,
-                        'current-terminating-conn': int,
-                        'max-terminating-conn': int,
-                        'time-since-last-session-create': int,
+                        'zonepair_name': str,
+                        'class_action': str,
+                        'pkts_counter': int,
+                        'bytes_counter': int,
+                        'attempted_conn': int,
+                        'current_active_conn': int,
+                        'max_active_conn': int,
+                        'current_halfopen_conn': int,
+                        'max_halfopen_conn': int,
+                        'current_terminating_conn': int,
+                        'max_terminating_conn': int,
+                        'time_since_last_session_create': int,
                         Optional('match_entry'): {
                             Any(): {
                                 'seq_num': int,
                                 Optional('match_crit'): str,
-                                'match-type': str
+                                'match_type': str
                             }
                         },
                         Optional('proto_entry'):{
                             int: {
-                                'protocol-name': str,
-                                'byte-counters': int,
-                                'pkt-counters': int
+                                'protocol_name': str,
+                                'byte_counters': int,
+                                'pkt_counters': int
                             }
                         },
-                        'l7-policy-name': str      
+                        'l7_policy_name': str      
                     }
                 },   
                 Optional('l7_class_entry'): {
                     Any(): {
-                        'parent-class-name': str,
-                        'child-class-action': str,
-                        'pkts-counter': int,
-                        'bytes-counter': int,
-                        'attempted-conn': int,
-                        'current-active-conn': int,
-                        'max-active-conn': int,
-                        'current-halfopen-conn': int,
-                        'max-halfopen-conn': int,
-                        'current-terminating-conn': int,
-                        'max-terminating-conn': int,
-                        'time-since-last-session-create': int,
+                        'parent_class_name': str,
+                        'child_class_action': str,
+                        'pkts_counter': int,
+                        'bytes_counter': int,
+                        'attempted_conn': int,
+                        'current_active_conn': int,
+                        'max_active_conn': int,
+                        'current_halfopen_conn': int,
+                        'max_halfopen_conn': int,
+                        'current_terminating_conn': int,
+                        'max_terminating_conn': int,
+                        'time_since_last_session_create': int,
                         Optional('l7_match_entry'): {
                             Any(): {
-                                'byte-counters': int,
-                                'pkt-counters': int
+                                'byte_counters': int,
+                                'pkt_counters': int
                             }
                         }
                     }
@@ -204,8 +204,7 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
         p1 = re.compile(r'^zbfw\s+zonepair-statistics\s+(?P<zp_name>\S+)$')
 
         #fw-traffic-class-entry Isn4451ZbfPolicy-seq-1-cm_
-        #p2 = re.compile(r'^(?P<class_name>(fw-traffic-class-entry|fw-l7-traffic-class-entry)) (?P<class_entry>\S+)$')
-        p2 = re.compile(r'^(?P<class_name>(fw-traffic-class-entry|fw-l7-traffic-class-entry))\s+(?P<class_entry>\S+)$')
+        p2 = re.compile(r'^(?P<class_name>(fw-traffic-class-entry|fw-l7-traffic-class-entry)) (?P<class_entry>\S+)$')
                         
         #fw-tc-match-entry "match-any Isn4451ZbfPolicy-svrf1-l4-cm_" 11
         #p3 = re.compile(r'^fw-tc-match-entry "(?P<match_crit>\S+)\s+(?P<tc_entry>[\w\d\s-]+)"\s(?P<tc_num>\S+)$')
@@ -220,20 +219,12 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
         p5 = re.compile(r'^(?P<match_name>fw-tc-proto-entry|fw-l7-tc-match-app-entry)\s+(?P<entry_val>[\w\d\-]+)$')
 
         #l7-policy-name                 NONE
-        #p6 = re.compile(r'^(?P<entry_name>l7-policy-name)\s+(?P<entry_val>\S+)$')
         p6 = re.compile(r'^(?P<entry_name>l7-policy-name)\s+(?P<entry_val>\S+)$')
 
         #src-zone-name lanZone
         #p5 = re.compile(r'^(?P<key>\S+)\s+(?P<value>\S+)$')
         p7 = re.compile(r'^(?P<key>\S+)\s+\"?(?P<value>[\w\s\d\-\_]+)\"?$')
 
-        # convert dash to underscore in a dictionary key
-        # def key_update(d):
-        #     for k,v in list(d.items()):
-        #         if type(d[k]) == str and '-' in k:
-        #             d[k.replace('-','_')] = d[k]
-        #             del d[k]
-        #     return d
 
         ret_dict = {}
         last_dict_ptr = {}
@@ -245,8 +236,9 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
             m = p1.match(line)      
             if m:
                 groups = m.groupdict()
+
                 feature_dict = ret_dict.setdefault('zp_name', {}).setdefault(groups['zp_name'], {})
-                # feature_dict = key_update(feature_dict['zp_name'])
+
                 last_dict_ptr = feature_dict
                 continue
 
@@ -254,20 +246,18 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
             m = p2.match(line)      
             if m:
                 groups = m.groupdict()
+
                 if(groups['class_name'] == 'fw-l7-traffic-class-entry'):
                     class_dict = feature_dict.setdefault('l7_class_entry', {}).setdefault(groups['class_entry'], {})
-                    # class_dict = key_update(feature_dict['l7_class_entry']['class_entry'])
-                    # class_dict = key_update(feature_dict['l7_class_entry'])
                 else:
                     class_dict = feature_dict.setdefault('class_entry', {}).setdefault(groups['class_entry'], {})
-                    # class_dict = key_update(['class_entry'])
                 last_dict_ptr = class_dict
                 continue
 
             #fw-tc-match-entry "match-any Isn4451ZbfPolicy-svrf1-l4-cm_" 11
             m = p3.match(line)
             if m:
-                groups = m.groupdict()
+                groups = m.groupdict()                
                 tc_dict = class_dict.setdefault('match_entry', {}).setdefault(groups['tc_entry'], {})
                 tc_dict.update({'seq_num': int(groups['tc_num'])})
                 tc_dict.update({'match_crit': (groups['match_crit'])})
@@ -284,7 +274,6 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
 
             m = p5.match(line)
             if m:
-                #import pdb;pdb.set_trace()
                 groups = m.groupdict()
                 if(groups['match_name'] == 'fw-l7-tc-match-app-entry'):
                     tc1_dict = class_dict.setdefault('l7_match_entry', {}).setdefault(groups['entry_val'], {})
@@ -299,18 +288,17 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
             m = p6.match(line)
             if m:
                 groups = m.groupdict()
-                class_dict.update({groups['entry_name']: (groups['entry_val'])})
+                class_dict.update({groups['entry_name'].replace('-', '_'): (groups['entry_val'])})
                 continue
 
             #src-zone-name lanZone
             m = p7.match(line)
             if m:
-                groups = m.groupdict() 
-
-                if groups['key'].strip() in ['class-action','src-zone-name','dst-zone-name','policy-name','zonepair-name','class-action','protocol-name','match-type','parent-class-name','child-class-action']:
-                    last_dict_ptr.update({groups['key']: groups['value']})
+                groups = m.groupdict()
+                if groups['key'].replace('-', '_').strip() in ['class_action','src_zone_name','dst_zone_name','policy_name','zonepair_name','class_action','protocol_name','match_type','parent_class_name','child_class_action']:
+                    last_dict_ptr.update({groups['key'].replace('-', '_'): groups['value']})
                 else:
-                    last_dict_ptr.update({groups['key']: int(groups['value'])})
+                    last_dict_ptr.update({groups['key'].replace('-', '_'): int(groups['value'])})
                     continue
 
         print(ret_dict)
