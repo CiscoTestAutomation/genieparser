@@ -1,5 +1,5 @@
 expected_output = {
-    'interfaces': {
+    'interface': {
         'GigabitEthernet3.420': {
             'group': {
                 10: {
@@ -11,8 +11,8 @@ expected_output = {
                     'priority': 100,
                     'track_object': {
                         1: {
-                            'decrement': 15,
                             'state': 'Up',
+                            'decrement': 15,
                         }
                     },
                     'master_router_ip': '10.13.120.1',

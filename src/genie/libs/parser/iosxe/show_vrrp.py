@@ -38,9 +38,8 @@ class ShowVrrpSchema(MetaParser):
         * 'show vrrp interface {interface} group {group}'
         * 'show vrrp interface {interface} group {group} all'
     """
-
     schema = {
-        'interfaces': {
+        'interface': {
             Any(): {
                 'group': {
                     Any(): {
@@ -85,7 +84,6 @@ class ShowVrrp(ShowVrrpSchema):
         * 'show vrrp interface {interface}'
         * 'show vrrp interface {interface} group {group}''
     """
-
     cli_command = ['show vrrp', 'show vrrp interface {interface}',
                    'show vrrp interface {interface} group {group}']
 
@@ -186,7 +184,7 @@ class ShowVrrp(ShowVrrpSchema):
                 group = m.groupdict()
                 interface = group['interface']
                 vrrp_group = int(group['group_number'])
-                vrrp_dict = result_dict.setdefault('interfaces', {})\
+                vrrp_dict = result_dict.setdefault('interface', {})\
                     .setdefault(interface, {})\
                     .setdefault('group', {})\
                     .setdefault(vrrp_group, {})
@@ -350,7 +348,6 @@ class ShowVrrpAll(ShowVrrp):
         * 'show vrrp interface {interface} all'
         * 'show vrrp interface {interface} group {group} all
     """
-
     cli_command = ['show vrrp all', 'show vrrp interface {interface} all',
                     'show vrrp interface {interface} group {group} all']
 
@@ -384,9 +381,8 @@ class ShowVrrpBriefSchema(MetaParser):
         * 'show vrrp brief all'
         * 'show vrrp interface {interface} brief'
     """
-
     schema = {
-        'interfaces':{
+        'interface':{
             Any(): {
                 'group': {
                     Any(): {
@@ -413,7 +409,6 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
         * 'show vrrp brief'
         * 'show vrrp interface {interface} brief'
     """
-
     cli_command = ['show vrrp brief', 'show vrrp interface {interface} brief']
 
     def cli(self, interface='', output=None):
@@ -446,7 +441,7 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
                 interface_name = group['interface_name']
                 group_id =  int(group['grp'])
 
-                interface_dict = parsed_dict.setdefault('interfaces', {})\
+                interface_dict = parsed_dict.setdefault('interface', {})\
                     .setdefault(interface_name, {})\
                     .setdefault('group', {})\
                     .setdefault(group_id, {})
@@ -469,7 +464,6 @@ class ShowVrrpBriefAll(ShowVrrpBrief):
     """ Parser for:
         * 'show vrrp brief all'
     """
-
     cli_command = 'show vrrp brief all'
 
     def cli(self, output=None):

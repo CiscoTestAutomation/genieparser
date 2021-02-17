@@ -1,5 +1,5 @@
 expected_output = {
-    'interfaces': {
+    'interface': {
         'Gi3.420': {
             'group': {
                 10: {
