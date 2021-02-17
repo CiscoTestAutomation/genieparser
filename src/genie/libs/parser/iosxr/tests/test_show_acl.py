@@ -332,19 +332,19 @@ class test_show_acl_afi_all(unittest.TestCase):
     RP/0/0/CPU0:ios#show access-lists afi-all
 	Wed Mar 28 04:03:46.345 UTC
 	ipv4 access-list acl_name
-	 10 permit ipv4 any any
+	 10 permit ipv4 any any
 	ipv4 access-list ipv4_acl
-	 10 permit tcp any any eq www
-	 20 permit tcp any any eq ssh
-	 30 permit tcp any any eq 443
+	 10 permit tcp any any eq www
+	 20 permit tcp any any eq ssh
+	 30 permit tcp any any eq 443
 	ipv4 access-list test22
-	 10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
-	 20 permit tcp host 10.16.2.2 eq www any precedence network ttl eq 255
-	 30 deny ipv4 any any
+	 10 permit tcp 192.168.1.0 0.0.0.255 host 10.4.1.1 established log
+	 20 permit tcp host 10.16.2.2 eq www any precedence network ttl eq 255
+	 30 deny ipv4 any any
 	ipv6 access-list ipv6_acl
-	 10 permit ipv6 any any log
-	 20 permit ipv6 host 2001::1 host 2001:1::2
-	 30 permit tcp any eq 8443 host 2001:2::2
+	 10 permit ipv6 any any log
+	 20 permit ipv6 host 2001::1 host 2001:1::2
+	 30 permit tcp any eq 8443 host 2001:2::2
     '''
     }
 
@@ -454,15 +454,15 @@ class test_show_acl_ethernet_services(unittest.TestCase):
 		    },
 		}
     golden_output = {'execute.return_value': '''\
-   RP/0/0/CPU0:ios#show access-lists ethernet-services 
+   RP/0/0/CPU0:ios#show access-lists ethernet-services 
 Wed Mar 28 04:04:37.482 UTC
 ethernet-services access-list eth_acl
- 10 permit any any
+ 10 permit any any
 ethernet-services access-list mac_acl
- 10 permit host 0000.0000.0000 host 0000.0000.0000
- 20 deny host 0000.0000.0000 host 0000.0000.0000 8041
- 30 deny host 0000.0000.0000 host 0000.0000.0000 vlan 10
- 40 permit host aaaa.aaff.5555 host bbbb.bbff.7777 80f3
+ 10 permit host 0000.0000.0000 host 0000.0000.0000
+ 20 deny host 0000.0000.0000 host 0000.0000.0000 8041
+ 30 deny host 0000.0000.0000 host 0000.0000.0000 vlan 10
+ 40 permit host aaaa.aaff.5555 host bbbb.bbff.7777 80f3
     '''
     }
     def test_empty(self):

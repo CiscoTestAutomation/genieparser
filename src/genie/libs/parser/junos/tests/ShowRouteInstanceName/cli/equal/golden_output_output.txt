@@ -1,0 +1,5 @@
+Instance             Type
+         Primary RIB                                     Active/holddown/hidden
+NF-TEST              non-forwarding 
+         NF-TEST.inet.0                                  106/0/0
+         NF-TEST.inet6.0                                 3/0/0

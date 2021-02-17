@@ -107,7 +107,7 @@ class test_show_mld_summary_internal(unittest.TestCase):
 
     golden_output2 = { 'execute.return_value': 
         '''
-        RP/0/0/CPU0:ios#show mld vrf VRF1 summary internal 
+        RP/0/0/CPU0:ios#show mld vrf VRF1 summary internal 
 
         Robustness Value 10
         No. of Group x Interfaces 10

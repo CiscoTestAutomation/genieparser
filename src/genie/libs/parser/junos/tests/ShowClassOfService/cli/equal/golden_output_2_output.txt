@@ -1,0 +1,11 @@
+
+        show class-of-service interface xe-0/1/7 
+        Physical interface: xe-0/1/7, Index: 184
+        Queues supported: 8, Queues in use: 4
+        Scheduler map: <default>, Index: 2
+        Congestion-notification: Disabled
+        Logical interface: xe-0/1/7.0, Index: 430
+        Object                  Name                   Type                    Index
+        Classifier              dscp-ipv6-compatibility dscp-ipv6                  9
+        Classifier              ipprec-compatibility   ip                         13
+    

@@ -1,0 +1,6 @@
+show system uptime 
+Current time: 2021-01-06 12:31:48 JST
+System booted: 2020-12-22 12:27:02 JST (2w1d 00:04 ago)
+Protocols started: 2020-12-22 12:28:48 JST (2w1d 00:03 ago)
+Last configured: 2021-01-06 12:30:08 JST (00:01:40 ago) by cisco
+12:31PM  up 15 days, 5 mins, 1 user, load averages: 0.07, 0.09, 0.04

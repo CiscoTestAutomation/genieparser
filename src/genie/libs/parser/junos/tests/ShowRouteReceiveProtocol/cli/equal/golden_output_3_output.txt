@@ -1,0 +1,12 @@
+
+        show route receive-protocol bgp 10.64.4.4 192.168.225.0 
+
+
+
+        inet.0: 850018 destinations, 850021 routes (850018 active, 0 holddown, 0 hidden)
+
+        Prefix		  Nexthop	       MED     Lclpref    AS path
+
+        * 192.168.225.0/24           10.64.4.4                      100        200000 4 5 6 I
+        
+    

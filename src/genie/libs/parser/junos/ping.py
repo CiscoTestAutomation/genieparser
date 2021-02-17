@@ -7,6 +7,7 @@ JunOS parsers for the following show commands:
     * ping {addr} ttl {ttl} count {count} wait {wait}
     * ping {addr} source {source} count {count}
     * ping {addr} source {source} size {size} do-not-fragment count {count}
+    * ping {addr} size {size} count {count} do-not-fragment
 """
 # Python
 import re
@@ -60,7 +61,7 @@ class PingSchema(MetaParser):
                     Optional('ttl'): int,
                     Optional('time'): str,
                     Optional('message'): str,
-                    Optional('mtu'): str,
+                    Optional('mtu'): int,
                 })
         # Validate each dictionary in list
         for item in value:
@@ -70,9 +71,9 @@ class PingSchema(MetaParser):
     # Main Schema
     schema = {
         'ping': {
-            'address': str,
-            'source': str,
-            'data-bytes': int,
+            Optional('address'): str,
+            Optional('source'): str,
+            Optional('data-bytes'): int,
             Optional('result'): Use(validate_ping_result_list),
             'statistics': {
                 'send': int,
@@ -96,7 +97,8 @@ class Ping(PingSchema):
         'ping {addr} ttl {ttl} count {count} wait {wait}',
         'ping {addr} source {source} count {count}',
         'ping {addr} source {source} size {size} do-not-fragment count {count}',
-        'ping {addr} source {source} size {size} count {count} tos {tos} rapid'
+        'ping {addr} source {source} size {size} count {count} tos {tos} rapid',
+        'ping {addr} size {size} count {count} do-not-fragment'
     ]
 
     def cli(self, addr, count=None, ttl=None, 
@@ -104,38 +106,41 @@ class Ping(PingSchema):
             tos=None, output=None):
 
         if not output:
-            if count and ttl and wait:
-                cmd = self.cli_command[2].format(
-                    addr=addr,
-                    count=count,
-                    ttl=ttl,
-                    wait=wait)
-            elif count and source and tos:
-                cmd = self.cli_command[5].format(
-                    addr=addr, 
-                    source=source, 
-                    size=size, 
-                    count=count, 
-                    tos=tos)
-            elif count and source:
-                cmd = self.cli_command[3].format(addr=addr, 
+            if addr and count:
+                if ttl and wait:
+                    cmd = self.cli_command[2].format(
+                        addr=addr,
+                        count=count,
+                        ttl=ttl,
+                        wait=wait)
+                elif source and size and tos:
+                    cmd = self.cli_command[5].format(
+                        addr=addr, 
+                        source=source, 
+                        size=size, 
+                        count=count, 
+                        tos=tos)
+                elif source and size:
+                    cmd = self.cli_command[4].format(
+                        addr=addr,
                         source=source,
-                        count=count)
-            elif count:
-                cmd = self.cli_command[1].format(addr=addr, count=count)
-            elif source and size:
-                cmd = self.cli_command[4].format(
-                    addr=addr,
-                    source=source,
-                    size=size,
-                    count=count,
-                )                    
-            elif count and source:
-                cmd = self.cli_command[3].format(addr=addr, 
+                        size=size,
+                        count=count,
+                    )   
+                elif source:
+                    cmd = self.cli_command[3].format(
+                        addr=addr, 
                         source=source,
+                        count=count) 
+                elif size:
+                    cmd = self.cli_command[6].format(
+                        addr=addr, 
+                        size=size,
+                        count=count)                                   
+                else:
+                    cmd = self.cli_command[1].format(
+                        addr=addr, 
                         count=count)
-            elif count:
-                cmd = self.cli_command[1].format(addr=addr, count=count)
             else:
                 cmd = self.cli_command[0].format(addr=addr)
             out = self.device.execute(cmd)
@@ -213,6 +218,7 @@ class Ping(PingSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
+                ping_dict = ret_dict.setdefault('ping', {})
                 ping_statistics_dict = ping_dict.setdefault('statistics', {})
                 ping_statistics_dict.update({k.replace('_', '-'): (
                     int(v) if v.isdigit() else v) for k, v in group.items() if v is not None})

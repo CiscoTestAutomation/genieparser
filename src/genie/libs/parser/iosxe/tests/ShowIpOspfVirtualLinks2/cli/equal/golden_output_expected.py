@@ -1,0 +1,47 @@
+expected_output = {
+             "address_family":{
+                "ipv4":{
+                   "areas":{
+                      "0.0.0.1":{
+                         "virtual_links":{
+                            "0.0.0.1 10.36.3.3":{
+                               "transit_area_id":"0.0.0.1",
+                               "demand_circuit":True,
+                               "interface":"GigabitEthernet0/1",
+                               "name":"VL0",
+                               "router_id":"10.36.3.3",
+                               "dcbitless_lsa_count":7,
+                               "donotage_lsa":"not allowed",
+                               "link_state":"up",
+                               "topology":{
+                                  0:{
+                                     "cost":1,
+                                     "name":"Base",
+                                     "disabled":False,
+                                     "shutdown":False
+                                  }
+                               },
+                               "transmit_delay":1,
+                               "state":"point-to-point,",
+                               "hello_interval":10,
+                               "dead_interval":40,
+                               "wait_interval":40,
+                               "retransmit_interval":5,
+                               "hello_timer":"00:00:08",
+                               "adjacency_state":"full",
+                               "index":"1/3",
+                               "retrans_qlen":0,
+                               "total_retransmission":0,
+                               "first":"0x0(0)/0x0(0)",
+                               "next":"0x0(0)/0x0(0)",
+                               "last_retransmission_scan_length":0,
+                               "last_retransmission_max_length":0,
+                               "last_retransmission_scan_time":0,
+                               "last_retransmission_max_scan":0
+                            }
+                         }
+                      }
+                   }
+                }
+             }
+          }

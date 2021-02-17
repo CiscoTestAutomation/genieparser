@@ -1,0 +1,7 @@
+
+        show ospf neighbor
+        Address          Interface              State     ID               Pri  Dead
+        10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
+        10.169.14.121   ge-0/0/1.0             Full      10.169.14.240   128    33
+        10.19.198.26     ge-0/0/2.0             Full      10.19.198.239      1    33
+        

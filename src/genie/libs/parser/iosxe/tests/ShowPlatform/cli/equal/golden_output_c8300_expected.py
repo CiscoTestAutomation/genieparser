@@ -1,4 +1,7 @@
 expected_output = {
+    "main": {
+          "chassis": "C8300-1N1S-4G2X"
+      },
     "slot": {
         "0": {
             "other": {

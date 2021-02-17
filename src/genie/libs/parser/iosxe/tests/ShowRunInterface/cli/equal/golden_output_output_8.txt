@@ -1,0 +1,9 @@
+interface ABC1213
+ description lte-cplane-clusterDobo2
+ ip vrf forwarding lte-cplane
+ ip address 10.246.206.246 255.255.255.240
+ no ip redirects
+ no ip unreachables
+ no ip proxy-arp
+ shutdown
+end

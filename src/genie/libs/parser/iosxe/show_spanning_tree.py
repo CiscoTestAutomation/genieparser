@@ -253,7 +253,7 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                     'topology_change_timer': int,
                     'notification_timer': int,
                     Optional('aging_timer'): int,
-                    'interfaces': {
+                    Optional('interfaces'): {
                         Any(): {
                             'status': str,
                             'name': str,

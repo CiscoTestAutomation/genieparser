@@ -2274,7 +2274,8 @@ class ShowPlatform(ShowPlatformSchema):
 
         # ----------      ASR1K    -------------
         # Chassis type: ASR1006
-        p5 = re.compile(r'^[Cc]hassis +type: +(?P<chassis>\w+)$')
+        # Chassis type: ASR-903
+        p5 = re.compile(r'^[Cc]hassis +type: +(?P<chassis>\S+)$')
 
         # Slot      Type                State                 Insert time (ago)
         # --------- ------------------- --------------------- -----------------
@@ -2363,6 +2364,7 @@ class ShowPlatform(ShowPlatformSchema):
                 continue
 
             # Chassis type: ASR1006
+            # Chassis type: ASR-903
             m = p5.match(line)
             if m:
                 if 'main' not in platform_dict:
@@ -2386,9 +2388,51 @@ class ShowPlatform(ShowPlatformSchema):
                 # subslot
                 if subslot:
                     try:
+                        # no-slot-type output: 
+                        # Slot      Type                State                 Insert time (ago)
+
+                        # --------- ------------------- --------------------- -----------------
+
+                        # 0/2      A900-IMA8Z          ok                    1w4d        
+                          
+                        if 'slot' not in platform_dict:
+                            platform_dict['slot'] = {}
                         if slot not in platform_dict['slot']:
-                            continue
-                        for key, value in platform_dict['slot'][slot].items():
+                            platform_dict['slot'][slot] = {}                        
+                        # if slot not in platform_dict['slot']:
+                        #     continue
+
+                        slot_items = platform_dict['slot'][slot].items()
+
+                        # for no-slot-type output
+                        if not slot_items:
+                            if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
+                                if 'R' in slot:
+                                    lc_type = 'rp'
+                                elif re.match(r'^\d+', slot):
+                                    lc_type = 'lc'
+                                else:
+                                    lc_type = 'other'
+                            elif re.match(r'^ASR\d+-RP\d+', name):
+                                lc_type = 'rp'
+                            elif re.match(r'^CSR\d+V', name):
+                                if 'R' in slot:
+                                    lc_type = 'rp'
+                                else:
+                                    lc_type = 'other'
+                            else:
+                                lc_type = 'other'
+
+                            if lc_type not in platform_dict['slot'][slot]:
+                                platform_dict['slot'][slot][lc_type] = {}
+
+                            if name not in platform_dict['slot'][slot][lc_type]:
+                                platform_dict['slot'][slot][lc_type][name] = {}
+                            sub_dict = platform_dict['slot'][slot][lc_type][name]
+                            sub_dict['slot'] = slot
+
+                        # Add subslot
+                        for key, value in slot_items:
                             for key, last in value.items():
                                 if 'subslot' not in last:
                                     last['subslot'] = {}
@@ -2398,6 +2442,8 @@ class ShowPlatform(ShowPlatformSchema):
                                     last['subslot'][subslot][name] = {}
                                 sub_dict = last['subslot'][subslot][name]
                         sub_dict['subslot'] = subslot
+
+                    # KeyError: 'slot'
                     except Exception:
                         continue
                 else:
@@ -2900,7 +2946,7 @@ class ShowSwitchSchema(MetaParser):
     schema = {
         'switch': {
             'mac_address': str,
-            'mac_persistency_wait_time': str,
+            Optional('mac_persistency_wait_time'): str,
             'stack': {
                 Any(): {
                     'role': str,
@@ -2936,7 +2982,7 @@ class ShowEnvironmentAllSchema(MetaParser):
                         'state': str,
                         Optional('pid'): str,
                         Optional('serial_number'): str,
-                        'status': str,
+                        Optional('status'): str,
                         Optional('system_power'): str,
                         Optional('poe_power'): str,
                         Optional('watts'): str
@@ -2956,6 +3002,12 @@ class ShowEnvironmentAllSchema(MetaParser):
                     'red_threshold': str
                 },
                 Optional('asic_temperature'): {
+                    'value': str,
+                    'state': str,
+                    'yellow_threshold': str,
+                    'red_threshold': str
+                },
+                Optional('outlet_temperature'): {
                     'value': str,
                     'state': str,
                     'yellow_threshold': str,
@@ -2988,6 +3040,8 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         p1_1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) '
                           '+direction +is +(?P<direction>[\w\s]+)$')
 
+        p1_2 = re.compile(r'^(?P<switch>\d+) +(?P<fan>\d+) +\d+ +(?P<state>.*)')
+
         p2 = re.compile(r'^FAN +PS\-(?P<ps>\d+) +is +(?P<state>[\w\s]+)$')
 
         p3 = re.compile(r'^Switch +(?P<switch>\d+): +SYSTEM +TEMPERATURE +is +(?P<state>[\w\s]+)$')
@@ -3001,7 +3055,7 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         p7 = re.compile(r'^(?P<sw>\d+)(?P<ps>\w+) *'
                         '((?P<pid>[\w\-]+) +'
                         '(?P<serial_number>\w+) +)?'
-                        '(?P<status>(\w+|Not Present)) *'
+                        '(?P<status>(\w+|Not Present|No +Input +Power)) *'
                         '((?P<system_power>\w+) +'
                         '(?P<poe_power>[\w\/]+) +'
                         '(?P<watts>\w+))?$')
@@ -3028,6 +3082,15 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 fan_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})\
                                    .setdefault('fan', {}).setdefault(fan, {})
                 fan_dict.update({'direction': group['direction'].lower()})
+                continue
+            
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                fan = group['fan']
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                root_dict.setdefault('fan', {}).setdefault(fan, {}).setdefault('state', group['state'].lower())
                 continue
 
             # FAN PS-1 is OK
@@ -3090,7 +3153,6 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                      if k in ['status', 'system_power', 'poe_power'] and v})
                 continue
         return ret_dict
-
 
 class ShowModuleSchema(MetaParser):
     """Schema for show module"""
@@ -6244,7 +6306,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 boot_loader_dict = ret_dict.setdefault('boot', {}). \
                     setdefault('loader', {})
                 boot_loader_dict.update({'version': child.text})
-            elif child.tag.endswith('package-signature'):
+            elif child.tag.endswith('package-signature') or child.tag.endswith('package-integrity'):
                 for sub_child in child:
                     os_hashes = ret_dict.setdefault('os_hashes', {})
                     if sub_child.tag.endswith('name'):
@@ -7672,7 +7734,7 @@ class ShowPlatformSoftwareMemoryRpActiveAllocType(ShowPlatformSoftwareMemoryRpAc
                 module_dict = ret_dict.setdefault('module', {}). \
                     setdefault(module, {})
                 continue
-            
+
             # type: process
             m = p1_1.match(line)
             if m:

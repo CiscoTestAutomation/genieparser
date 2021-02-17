@@ -1,0 +1,20 @@
+
+        show ospf3 route network extensive
+        Prefix                                       Path  Route      NH   Metric
+                                             Type  Type       Type
+        2001::1/128                                  Intra Network    IP   0
+        NH-interface lo0.0
+        Area 0.0.0.0, Origin 10.4.1.1, Priority low
+        2001::4/128                                  Intra Network    IP   1
+        NH-interface ge-0/0/0.0, NH-addr fe80::250:56ff:fe8d:e8e8
+        Area 0.0.0.0, Origin 10.64.4.4, Priority medium
+        2001:30::/64                                 Intra Network    IP   1
+        NH-interface ge-0/0/1.0
+        Area 0.0.0.0, Origin 10.4.1.1, Priority low
+        2001:40::/64                                 Intra Network    IP   1
+        NH-interface ge-0/0/0.0
+        Area 0.0.0.0, Origin 10.64.4.4, Priority low
+        2001:50::/64                                 Intra Network    IP   2
+        NH-interface ge-0/0/0.0, NH-addr fe80::250:56ff:fe8d:e8e8
+        Area 0.0.0.0, Origin 10.64.4.4, Priority medium
+    

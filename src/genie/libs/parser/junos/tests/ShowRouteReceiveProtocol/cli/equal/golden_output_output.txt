@@ -1,0 +1,18 @@
+
+        show route receive-protocol bgp 10.189.5.253
+        inet.0: 929 destinations, 1615 routes (929 active, 0 holddown, 0 hidden)
+        Prefix      Nexthop        MED     Lclpref    AS path
+        10.220.0.0/16           10.189.5.253         12003   120        (65151 65000) I
+        10.229.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.189.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.151.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.115.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.81.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.49.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        10.19.0.0/16            10.189.5.253         12003   120        (65151 65000) I
+        inet.3: 11 destinations, 11 routes (11 active, 0 holddown, 0 hidden)
+
+        mpls.0: 44 destinations, 44 routes (44 active, 0 holddown, 0 hidden)
+
+        inet6.0: 22 destinations, 23 routes (22 active, 0 holddown, 0 hidden)
+    

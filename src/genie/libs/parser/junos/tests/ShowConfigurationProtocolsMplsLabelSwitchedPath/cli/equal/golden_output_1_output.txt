@@ -1,0 +1,10 @@
+
+            show configuration protocols mpls label-switched-path test_data
+            to 10.0.0.1;
+            revert-timer 0;
+            no-cspf;
+            priority 3 3;
+            record;
+            inter-domain;
+            primary test_data;
+    

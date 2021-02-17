@@ -1,0 +1,24 @@
+
+        show route advertising-protocol bgp 10.34.2.250 10.169.196.254 detail
+
+        inet.0: 60 destinations, 66 routes (60 active, 1 holddown, 0 hidden)
+        10.169.196.254/32 (2 entries, 2 announced)
+        BGP group lacGCS001 type External
+            Nexthop: 10.189.5.252
+            MED: 29012
+            Localpref: 4294967285
+            AS path: [65151] (65171) I
+            Communities: 65151:65109
+
+        inet.3: 27 destinations, 27 routes (27 active, 0 holddown, 0 hidden)
+
+        * 10.169.196.254/32 (1 entry, 1 announced)
+        BGP group lacGCS001 type External
+            Route Label: 118071
+            Nexthop: 10.189.5.252
+            MED: 29012
+            Localpref: 100
+            AS path: [65151] (65171) I
+            Communities: 65151:65109
+            Entropy label capable
+    
