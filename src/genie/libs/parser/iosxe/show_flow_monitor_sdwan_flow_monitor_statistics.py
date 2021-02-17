@@ -29,7 +29,7 @@ class ShowFlowMonitorSdwanFlowMonitorStatistics(ShowFlowMonitorSdwanFlowMonitorS
     
     cli_command = "show flow monitor {flow_monitor_name} statistics"
 
-    def cli(self, flow_monitor_name='sdwan_flow_monitor statistics',output=None):
+    def cli(self, flow_monitor_name='sdwan_flow_monitor',output=None):
         if output is None:
             out = self.device.execute(self.cli_command.format(flow_monitor_name=flow_monitor_name))
         else:
