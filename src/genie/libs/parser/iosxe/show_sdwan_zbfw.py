@@ -236,9 +236,7 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
             m = p1.match(line)      
             if m:
                 groups = m.groupdict()
-
                 feature_dict = ret_dict.setdefault('zp_name', {}).setdefault(groups['zp_name'], {})
-
                 last_dict_ptr = feature_dict
                 continue
 
@@ -246,7 +244,6 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
             m = p2.match(line)      
             if m:
                 groups = m.groupdict()
-
                 if(groups['class_name'] == 'fw-l7-traffic-class-entry'):
                     class_dict = feature_dict.setdefault('l7_class_entry', {}).setdefault(groups['class_entry'], {})
                 else:
