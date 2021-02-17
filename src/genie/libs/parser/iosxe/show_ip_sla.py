@@ -8,7 +8,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
 # ===============================
@@ -23,6 +23,7 @@ class ShowIpSlaSummarySchema(MetaParser):
                 'type': str,
                 'destination': str,
                 'rtt_stats': str,
+                Optional('rtt_stats_msecs'): int,
                 'return_code': str,
                 'last_run': str,
             },
@@ -98,6 +99,12 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
                 id_dict['type'] = group['type']
                 id_dict['destination'] = group['destination']
                 id_dict['rtt_stats'] = group['rtt_stats']
+
+                # Strip chars and convert 'rtt_stats' to an integer if possible
+                rtt_stats_msecs = re.sub('[^0-9]', '', group['rtt_stats'])
+                if rtt_stats_msecs != '':
+                    id_dict['rtt_stats_msecs'] = int(rtt_stats_msecs)
+
                 id_dict['return_code'] = group['return_code']
                 id_dict['last_run'] = group['last_run']
                 continue
