@@ -512,7 +512,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 "physical_location": "",
                 "platform": "ISR4451-X/K9",
                 "port_id": "GigabitEthernet0/0/2",
-                "software_version": "Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.4, RELEASE SOFTWARE (fc3)\nTechnical Support:   http://www.cisco.com/techsupport\nCopyright (c) 1986-2018 by Cisco Systems, Inc.\nCompiled Sun 08-Jul-18 04:33 by mcpre",
+                "software_version": "Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.4, RELEASE SOFTWARE (fc3)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2018 by Cisco Systems, Inc.\nCompiled Sun 08-Jul-18 04:33 by mcpre",
                 "system_name": "",
                 "vtp_management_domain": ""
             }
