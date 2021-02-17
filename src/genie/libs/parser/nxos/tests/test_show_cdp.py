@@ -495,7 +495,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
 
     expected_parsed_output_6 = {
         "index": {
-            "1": {
+            1: {
                 "advertisement_ver": 2,
                 "capabilities": "Router Switch IGMP Filtering",
                 "device_id": "PYATS-4451-CUBE01.yourdomain.com",
@@ -544,10 +544,10 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
 
     expected_parsed_output_7 = {
         "index": {
-            "1": {
+            1: {
                 "advertisement_ver": 2,
                 "capabilities": "Router Switch IGMP Filtering",
-                "device_id": "PYATS-3850X-2SW-1-01.javitscenter.com",
+                "device_id": "PYATS-3850X-2SW-1-01.pyatscenter.com",
                 "duplex_mode": "full",
                 "hold_time": 153,
                 "interface_addresses": {
@@ -567,8 +567,8 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
     }
 
     device_output_7 = {'execute.return_value': """
-        Device ID:PYATS-3850X-2SW-1-01.javitscenter.com
-        VTP Management Domain Name: JavitsCenter
+        Device ID:PYATS-3850X-2SW-1-01.pyatscenter.com
+        VTP Management Domain Name: PyatsCenter
 
         Interface address(es):
             IPv4 Address: 172.16.4.110
