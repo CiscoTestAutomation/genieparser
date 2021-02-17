@@ -53,5 +53,5 @@ class ShowIpv6EigrpNeighborsDetail(ShowIpv6EigrpNeighborsDetail_iosxe):
 
 class ShowIpEigrpInterfaces(ShowIpEigrpInterfaces_iosxe):
     # Parser for:
-    #   'show ipv6 eigrp neighbors detail'
+    #   'show ip eigrp interfaces'
     pass
