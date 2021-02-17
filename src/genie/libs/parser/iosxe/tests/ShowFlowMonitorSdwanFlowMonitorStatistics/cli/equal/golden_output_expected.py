@@ -6,7 +6,9 @@ expected_output={
     "cache_size": 200000, 
     "flows_aged": {
         "total_flows_aged": 197795708, 
-        "active_timeout_60secs": 11897289, 
-        "inactive_timeout_10secs": 185898419
+        "active_timeout_secs": 60,
+        "active_time": 11897289,
+        "inactive_timeout_secs": 10, 
+        "inactive_time": 185898419
     }
 }

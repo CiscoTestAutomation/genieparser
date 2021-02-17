@@ -15,8 +15,10 @@ class ShowFlowMonitorSdwanFlowMonitorStatisticsSchema(MetaParser):
         "flows_added": int,
         "flows_aged":{
                     "total_flows_aged" : int,
-                    "active_timeout_60secs": int,
-                    "inactive_timeout_10secs":int
+                    "active_timeout_secs": int,
+                    "active_time": int,
+                    "inactive_timeout_secs":int,
+                    "inactive_time":int
                 }
             }
 
@@ -25,11 +27,11 @@ class ShowFlowMonitorSdwanFlowMonitorStatistics(ShowFlowMonitorSdwanFlowMonitorS
 
     """ Parser for "show flow monitor sdwan_flow_monitor statistics" """
     
-    cli_command = "show flow monitor sdwan_flow_monitor statistics"
+    cli_command = "show flow monitor {flow_monitor_name} statistics"
 
-    def cli(self, output=None):
+    def cli(self, flow_monitor_name='sdwan_flow_monitor statistics',output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command.format(flow_monitor_name=flow_monitor_name))
         else:
             out = output
 
@@ -52,10 +54,10 @@ class ShowFlowMonitorSdwanFlowMonitorStatistics(ShowFlowMonitorSdwanFlowMonitorS
         p6=re.compile(r'Flows+\s+aged+\:+\s+(?P<flows_aged>\d+)')
 
         #- Active timeout ( 60 secs) 11897289
-        p7=re.compile(r'\-+\s+Active+\s+timeout+\s+\(+\s+60 secs+\)+\s+(?P<active_timeout_60secs>\d+)')
+        p7=re.compile(r'\-+\s+Active+\s+timeout+\s+\(+\s+(?P<active_time_secs>\d+)+\s+secs+\)+\s+(?P<active_time>\d+)')
 
         #- Inactive timeout ( 10 secs) 185898419
-        p8=re.compile(r'\-+\s+Inactive+\s+timeout+\s+\(+\s+10 secs+\)+\s+(?P<inactive_timeout_10secs>\d+)')
+        p8=re.compile(r'\-+\s+Inactive+\s+timeout+\s+\(+\s+(?P<inactive_time_secs>\d+)+\s+secs+\)+\s+(?P<inactive_time>\d+)')
 
 
         parsed_dict={}
@@ -102,14 +104,16 @@ class ShowFlowMonitorSdwanFlowMonitorStatistics(ShowFlowMonitorSdwanFlowMonitorS
 
             m7=p7.match(line)
             if m7:
-                #{'active_timeout_60secs':'11897289'}
+                #{'active_time_secs':'60','active_time':'11897289'}
                 groups=m7.groupdict()
-                cur_dict['active_timeout_60secs']= int(groups['active_timeout_60secs'])
+                cur_dict['active_timeout_secs']= int(groups['active_time_secs'])
+                cur_dict['active_time']= int(groups['active_time'])
 
             m8=p8.match(line)
             if m8:
-                #{'inactive_timeout_10secs':'185898419'}
+                #{'inactive_time_secs':'10','inactive_time':'185898419'}
                 groups=m8.groupdict()
-                cur_dict['inactive_timeout_10secs']= int(groups['inactive_timeout_10secs'])
+                cur_dict['inactive_timeout_secs']= int(groups['inactive_time_secs'])
+                cur_dict['inactive_time']= int(groups['inactive_time'])
 
         return parsed_dict
