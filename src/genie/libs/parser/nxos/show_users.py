@@ -11,7 +11,11 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 class ShowUsersSchema(MetaParser):
-    """Schema for show users"""
+    """Schema for show users on nxos
+    > show users
+        NAME     LINE         TIME         IDLE          PID COMMENT
+        admin    pts/0        Jan 28 13:44   .          8096 *
+    """
     # COMMENT is optional
     # ACTIVE will be True if * at the end of output line
     schema = {
@@ -51,27 +55,26 @@ class ShowUsers(ShowUsersSchema):
         for cur_line in out.splitlines():
             cur_line = cur_line.strip()
         
-            # match each column
+            # admin    pts/0        Jan 28 13:44   .          8096 *
             m = p.match(cur_line)
             
             if m:
                 user_dict = ret_dict.setdefault('line',{})
-                active = m.groupdict()['active']
-                name = m.groupdict()['name']
-                line = m.groupdict()['line']
-                time = m.groupdict()['time']
-                idle = m.groupdict()['idle']
-                pid = m.groupdict()['pid']
-                comment = m.groupdict()['comment']
+                group = m.groupdict()
+                active = group['active']
+                name = group['name']
+                line = group['line']
+                time = group['time']
+                idle = group['idle']
+                pid = group['pid']
+                comment = group['comment']
             
                 # declare line dictionary inside root dictionary
                 user_dict[line] = {}
 
                 # check if line is active and set boolean feild
-                if active == '*':
-                    user_dict[line]['active'] = True
-                else:
-                    user_dict[line]['active'] = False
+                user_dict[line]['active'] = True if active == '*' else False
+
                 user_dict[line]['name'] = name
                 user_dict[line]['time'] = time
                 user_dict[line]['idle'] = idle

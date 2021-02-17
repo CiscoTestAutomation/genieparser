@@ -11,14 +11,19 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional
 
 class ShowUsersSchema(MetaParser):
-    """Schema for show users on iosxr"""
+    """Schema for show users on iosxr
+    > show users
+    Thu Jan 28 15:14:53.365 UTC
+      Line            User                 Service  Conns   Idle        Location
+    * con0/RP0/CPU0   admin                hardware     0  00:00:00
+    """
     # LOCATION is optional
     # ACTIVE will be True if * at the begining of the output line
     schema = {
         'line': {
             Any(): {
                 'active': bool,
-                Optional('user'): str,
+                'user': str,
                 'service': str,
                 'conns': str,
                 'idle': str,
@@ -52,7 +57,7 @@ class ShowUsers(ShowUsersSchema):
         for cur_line in out.splitlines():
             cur_line = cur_line.strip()
 
-            # match output line
+            # * con0/RP0/CPU0   admin   hardware     0  00:00:00
             m = p.match(cur_line)
             
             if m:
@@ -70,10 +75,7 @@ class ShowUsers(ShowUsersSchema):
                 user_dict[line] = {}
                 
                 # check if line is active and set boolean feild
-                if active == '*':
-                    user_dict[line]['active'] = True
-                else:
-                    user_dict[line]['active'] = False
+                user_dict[line]['active'] = True if active == '*' else False
                 user_dict[line]['user'] = user
                 user_dict[line]['service'] = service
                 user_dict[line]['conns'] = conns
