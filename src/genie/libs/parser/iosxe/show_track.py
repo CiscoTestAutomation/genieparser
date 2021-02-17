@@ -17,36 +17,32 @@ from genie.metaparser.util.schemaengine import Any, Optional
 class ShowTrackSchema(MetaParser):
     """ Schema for 'show track' """
     schema = {
-        'tracks':{
+        'type': {
             Any(): {
-                'type': str,
                 Optional('name'): str,
                 Optional('address'): str,
                 Optional('subnet_mask'): str,
-                'parameter': str,
-                Any(): {
-                    'parameter_state': str,
-                    Optional('issue'): str,
-                    Optional('delayed'): {
-                        Optional('delayed_state'): str,
-                        Optional('seconds_remaining'): float,
-                        Optional('connection_state'): str,
-                    },
-                    'change_count': int,
-                    'last_change': str,
-                    Optional('threshold_down'): int,
-                    Optional('threshold_up'): int,
+                'state': str,
+                Optional('state_description'): str,
+                Optional('delayed'): {
+                    Optional('delayed_state'): str,
+                    Optional('secs_remaining'): float,
+                    Optional('connection_state'): str,
                 },
-                Optional('delay_up_secs'): float,
-                Optional('delay_down_secs'): float,
-                Optional('first_hop_interface_state'): str,
-                Optional('prev_first_hop_interface'): str,
-                Optional('tracked_by') : {
-                    Any(): {   #increasing index 0, 1, 2, 3, ...
-                        'name': str,
-                        'interface': str,
-                        Optional('group_id'): str,
-                    }
+                'change_count': int,
+                'last_change': str,
+                Optional('threshold_down'): int,
+                Optional('threshold_up'): int,
+            },
+            Optional('delay_up_secs'): float,
+            Optional('delay_down_secs'): float,
+            Optional('first_hop_interface_state'): str,
+            Optional('prev_first_hop_interface'): str,
+            Optional('tracked_by') : {
+                Any(): {   #increasing index 0, 1, 2, 3, ...
+                    'name': str,
+                    'interface': str,
+                    Optional('group_id'): str,
                 }
             }
         }
