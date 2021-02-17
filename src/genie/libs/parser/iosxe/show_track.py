@@ -37,8 +37,8 @@ class ShowTrackSchema(MetaParser):
                     Optional('threshold_down'): int,
                     Optional('threshold_up'): int,
                 },
-                Optional('delay_up_seconds'): float,
-                Optional('delay_down_seconds'): float,
+                Optional('delay_up_secs'): float,
+                Optional('delay_down_secs'): float,
                 Optional('first_hop_interface_state'): str,
                 Optional('prev_first_hop_interface'): str,
                 Optional('tracked_by') : {
