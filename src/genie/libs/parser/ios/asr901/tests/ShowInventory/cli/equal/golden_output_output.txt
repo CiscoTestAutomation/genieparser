@@ -1,0 +1,47 @@
+NAME: "A901-6CZ-FT-A Chassis", DESCR: "A901-6CZ-FT-A Chassis"
+PID: A901-6CZ-FT-A     , VID: V04 , SN: CAT2342U1S6
+
+NAME: "Chassis Slot", DESCR: "A901-6CZ-FT-A Chassis Slot "
+PID: A901-6CZ-FT-A     , VID: V04 , SN:
+
+NAME: "A901-6CZ-FT-A Motherboard ", DESCR: "A901-6CZ-FT-A Motherboard with Built-in 12GE, 2 10GE, 1FE, 8T1E1 "
+PID: A901-6CZ-FT-A     , VID: V04 , SN:
+
+NAME: "AC/DC Power supply", DESCR: "AC/DC Power Supply 1 (12V)"
+PID: POWER SUPPLY      , VID:    , SN: 34-2593-01
+
+NAME: "Fan1", DESCR: "High Speed Fan1 Module for A901-6CZ-FT-A"
+PID: FAN               , VID:    , SN: 33-0629-01
+
+NAME: "Fan2", DESCR: "High Speed Fan2 Module for A901-6CZ-FT-A"
+PID: FAN               , VID:    , SN: 33-0629-01
+
+NAME: "Fan3", DESCR: "High Speed Fan3 Module for A901-6CZ-FT-A"
+PID: FAN               , VID:    , SN: 33-0629-01
+
+NAME: "Board Temperature Sensor", DESCR: "Board Temperature Sensor"
+PID: Temperature Sensor, VID:    , SN: 15-9325-01
+
+NAME: "Alarm Sensor 1", DESCR: "Alarm Sensor 1"
+PID: Alarm Sensor      , VID:    , SN:
+
+NAME: "Inlet Temperature Sensor", DESCR: "Inlet Temperature Sensor"
+PID: Temperature Sensor, VID:    , SN: 15-9325-01
+
+NAME: "Alarm Sensor 2", DESCR: "Alarm Sensor 2"
+PID: Alarm Sensor      , VID:    , SN:
+
+NAME: "Alarm Sensor 3", DESCR: "Alarm Sensor 3"
+PID: Alarm Sensor      , VID:    , SN:
+
+NAME: "Alarm Sensor 4", DESCR: "Alarm Sensor 4"
+PID: Alarm Sensor      , VID:    , SN:
+
+NAME: "usb0", DESCR: "USB Port"
+PID: USB               , VID:    , SN:
+
+NAME: "GigabitEthernet 0/10", DESCR: "1000BASE-T SFP"
+PID: SBCU-5740ARZ-CS1  , VID: G3., SN: AVC211321TE
+
+NAME: "GigabitEthernet 0/11", DESCR: "1000BASE-T SFP"
+PID: GLC-T             , VID: B2 , SN: AGM183321AW

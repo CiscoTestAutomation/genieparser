@@ -199,7 +199,7 @@ class ShowCdpNeighborsDetailSchema(MetaParser):
                  'local_interface': str,
                  'port_id': str,
                  'hold_time': int,
-                 'software_version': str,
+                 Optional('software_version'): str,
                  Optional('physical_location'): str,
                  'interface_addresses':
                     {Any():
@@ -236,9 +236,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
             'System\s*Name\s*:\s*(?P<system_name>\S+)')
 
         # Platform: N9K-9000v,  Capabilities: Router Switch CVTA phone port
-        platf_cap_re = re.compile(r'Platform:\s*(?P<platform>[a-zA-Z\d +\-]+)'
-                                '\s*\,\s*Capabilities:\s*'
-                                '(?P<capabilities>[a-zA-Z\d\s*\-\/]+)')
+        # Platform: ISR4451-X/K9, Capabilities: Router Switch IGMP Filtering
+        platf_cap_re = re.compile(r'Platform:\s*(?P<platform>[\S\s]+),\s*Capabilities:\s*(?P<capabilities>[\S\s]+)')
 
         # Interface: GigabitEthernet0/0,  Port ID (outgoing port): mgmt0
         # Interface: Ethernet1/1, Port ID (outgoing port): Ethernet1/2

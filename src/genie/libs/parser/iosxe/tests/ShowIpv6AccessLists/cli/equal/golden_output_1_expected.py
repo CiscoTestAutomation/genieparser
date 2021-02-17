@@ -64,6 +64,7 @@ expected_output = {
         },
         "name": "NAT_ACL",
         "type": "ipv4-acl-type",
+        "acl_type": "standard",
     },
     "NAT_ACL2": {
         "aces": {
@@ -114,6 +115,7 @@ expected_output = {
         },
         "name": "NAT_ACL2",
         "type": "ipv4-acl-type",
+        "acl_type": "standard",
     },
     "PYATS_ACL_TEST": {
         "aces": {
@@ -189,6 +191,7 @@ expected_output = {
         },
         "name": "PYATS_ACL_TEST",
         "type": "ipv4-acl-type",
+        "acl_type": "extended",
     },
     "PYATS_ACL_TEST_IPv6": {
         "aces": {
@@ -281,5 +284,6 @@ expected_output = {
         },
         "name": "PYATS_ACL_TEST_IPv6",
         "type": "ipv6-acl-type",
+        "acl_type": "ipv6",
     },
 }
