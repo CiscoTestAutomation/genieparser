@@ -45,32 +45,41 @@ class ShowVrrpSchema(MetaParser):
         'interface': {
             Any(): {
                 'group': {
-                    Any(): {
+                    int: {
                         Optional('description'): str,
-                        Optional('auth_text'): str,
-                        'advertise_interval_secs': float,
-                        'master_advertisement_interval_secs': float,
-                        'master_down_interval_secs': float,
-                        'master_router_ip': str,
-                        Optional('master_router'): str,
-                        'master_router_priority': int,
-                        'preemption': str,
-                        'priority': int,
-                        Optional('vrrs_group_name'): str,
+                        'state': str,
                         'virtual_ip_address': str,
                         'virtual_mac_address': str,
-                        'state': str,
+                        'advertise_interval_secs': float,
+                        'preemption': str,
                         Optional('vrrp_delay'): float,
+                        'priority': int,
+                        Optional('vrrs_name'): {
+                            str: {
+                                Optional('track_object'): {
+                                    int: {
+                                        Optional('state'): str,
+                                        Optional('decrement'): int,
+                                    }
+                                }
+                            }
+                        },
                         Optional('track_object'): {
                             Any(): {
                                 Optional('decrement'): int,
                                 Optional('state'): str,
                             }
                         },
+                        Optional('auth_text'): str,
+                        'master_router_ip': str,
+                        Optional('master_router'): str,
+                        'master_router_priority': int,
+                        'master_advertisement_interval_secs': float,
+                        'master_down_interval_secs': float,
                         Optional('flags'): str
-                    },
+                    }
                 }
-            },
+            }
         }
     }
 
@@ -140,7 +149,7 @@ class ShowVrrp(ShowVrrpSchema):
         p10 = re.compile(r'^Priority (?P<priority>\w+)')
 
         # VRRS Group name DC_LAN
-        p11 = re.compile(r'^VRRS +Group +name (?P<vrrs_group_name>[\w,\_]+)')
+        p11 = re.compile(r'^VRRS +Group +name (?P<vrrs_grp_name>[\w,\_]+)')
 
         # Track object 1 state down decrement 15
         p12 = re.compile(
@@ -262,7 +271,9 @@ class ShowVrrp(ShowVrrpSchema):
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                vrrp_dict['vrrs_group_name'] = group['vrrs_group_name']
+                vrf_group_name = group['vrrs_grp_name']
+                vrf_dict = vrrp_dict.setdefault('vrrs_name',{})\
+                    .setdefault(vrf_group_name,{})
                 continue
 
             # Track object 1 state down decrement 15
@@ -270,8 +281,14 @@ class ShowVrrp(ShowVrrpSchema):
             if m:
                 group = m.groupdict()
                 track_object_number = int(group['obj_name'])
-                track_object_dict = vrrp_dict.setdefault('track_object', {})\
-                    .setdefault(track_object_number,{})
+
+                if 'vrrs_name' in vrrp_dict.keys():
+                    track_object_dict = vrf_dict.setdefault('track_object',{})\
+                        .setdefault(track_object_number,{})
+                else:
+                    track_object_dict = vrrp_dict.setdefault('track_object', {})\
+                        .setdefault(track_object_number,{})
+
                 track_object_dict['decrement'] = int(group['value'])
                 track_object_dict['state'] = group['obj_state']
                 continue
