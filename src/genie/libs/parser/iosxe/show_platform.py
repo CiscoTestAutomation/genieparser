@@ -54,12 +54,12 @@ class ShowBootvarSchema(MetaParser):
         Optional('config_file'): str,
         Optional('bootldr'): str,
         Optional('active'): {
-            'configuration_register': str,
+            Optional('configuration_register'): str,
             Optional("next_reload_configuration_register"): str,
             Optional('boot_variable'): str,
         },
         Optional('standby'): {
-            'configuration_register': str,
+            Optional('configuration_register'): str,
             Optional("next_reload_configuration_register"): str,
             Optional('boot_variable'): str,
         },
