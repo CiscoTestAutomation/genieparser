@@ -1565,8 +1565,8 @@ class Dir(DirSchema):
 
             # Directory of /misc/scratch
             # Directory of disk0a:/usr
-            p1 = re.compile(r'\s*Directory +of'
-                             ' +(?P<dir_name>[a-zA-Z0-9\:\/]+)$')
+            # Directory of net/node0_RSP1_CPU0/harddisk:/dumper
+            p1 = re.compile(r'\s*Directory\s+of\s+(?P<dir_name>\S+)$')
             m = p1.match(line)
             if m:
                 if 'dir' not in dir_dict:
