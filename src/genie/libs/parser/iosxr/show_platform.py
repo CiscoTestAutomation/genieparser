@@ -13,6 +13,9 @@ IOSXR parsers for the following show commands:
     * 'show redundancy summary'
     * 'show redundancy'
     * 'dir'
+    * 'dir {directory}'
+    * 'dir location {location}'
+    * 'dir {directory} location {location}'
     * 'show processes memory detail'
     * 'show processes memory detail | include <WORD>'
 '''
@@ -1498,12 +1501,19 @@ class ShowRedundancy(ShowRedundancySchema):
 # Schema for 'dir'
 # ================
 class DirSchema(MetaParser):
-    """Schema for dir"""
+    """Schema for 
+        * dir
+        * dir {directory}
+        * dir location {location}
+        * dir {directory} location {location}
+    """
+
     schema = {
         'dir': {
             'dir_name': str,
             'total_bytes': str,
             'total_free_bytes': str,
+            Optional('location'): str,
             Optional('files'):
                 {Any():
                     {Optional('size'): str,
@@ -1517,14 +1527,31 @@ class DirSchema(MetaParser):
         }
 
 class Dir(DirSchema):
-    """Parser for dir"""
-    cli_command = ['dir', 'dir {directory}']
+    """Parser for
+        * dir
+        * dir {directory}
+        * dir location {location}
+        * dir {directory} location {location}
+    """
+
+    cli_command = [
+        'dir', 'dir {directory}', 'dir location {location}',
+        'dir {directory} location {location}'
+    ]
+
     exclude = ['size', 'time', 'total_free_bytes', 'date', 'index']
 
-    def cli(self, directory='', output=None):
+    def cli(self, directory='', location='', output=None):
         if output is None:
-            if directory:
-                out = self.device.execute(self.cli_command[1].format(directory=directory))
+            if directory and location:
+                out = self.device.execute(self.cli_command[3].format(
+                    directory=directory, location=location))
+            elif location:
+                out = self.device.execute(
+                    self.cli_command[2].format(location=location))
+            elif directory:
+                out = self.device.execute(
+                    self.cli_command[1].format(directory=directory))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:
@@ -1545,6 +1572,8 @@ class Dir(DirSchema):
                 if 'dir' not in dir_dict:
                     dir_dict['dir'] = {}
                     dir_dict['dir']['dir_name'] = str(m.groupdict()['dir_name'])
+                    if location:
+                        dir_dict['dir']['location'] = location
                 continue
 
             # 1012660 kbytes total (939092 kbytes free)
@@ -1596,8 +1625,6 @@ class Dir(DirSchema):
                 continue
 
         return dir_dict
-
-# vim: ft=python et sw=4
 
 
 class ShowProcessesMemorySchema(MetaParser):
