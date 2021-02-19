@@ -5,11 +5,11 @@
            * Added key <flags> into the schema.
 
        * Added parser capabilities and a new 'show vrrp all' parser to handle the following commands:
-           'show vrrp all'
-           'show vrrp interface {interface}'
-           'show vrrp interface {interface} all'
-           'show vrrp interface {interface} group {group}'
-           'show vrrp interface {interface} group {group} all'
+           * show vrrp all
+           * show vrrp interface {interface}
+           * show vrrp interface {interface} all
+           * show vrrp interface {interface} group {group}
+           * show vrrp interface {interface} group {group} all
 
        * Added new tests to the iosxe/tests/ShowVrrp folder
 
