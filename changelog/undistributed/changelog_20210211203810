@@ -1,6 +1,6 @@
 * IOS-XE
     * Modified ShowVrrp:
-       * Changed schema to have track_group nested one level less.
+       * Changed schema to allow track_group to optionally be nested level with most other key/value pairs.
            * Added regex pattern <track> to accommodate various outputs.
            * Added key <flags> into the schema.
 
