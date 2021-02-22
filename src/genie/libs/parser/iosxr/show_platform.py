@@ -274,7 +274,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
             # RP         0/RSP0/CPU0   IOS XR RUN        Primary    0/RSP1/CPU0
             p8 = re.compile(r'\s*(?P<type>[a-zA-Z0-9\-]+)'
                              ' +(?P<node_name>[a-zA-Z0-9\/]+)'
-                             ' +(?P<node_status>[IOS XR RUN|OPERATIONAL]+)'
+                             ' +(?P<node_status>[IOS XR RUN|OPERATIONAL|POWERED_ON]+)'
                              ' +(?P<red_state>[a-zA-Z\/\-]+)?'
                              ' +(?P<partner_name>[a-zA-Z0-9\/]+)$')
             m = p8.match(line)
@@ -350,12 +350,14 @@ class ShowPlatform(ShowPlatformSchema):
             # 0/RSP0/CPU0     A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
             # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
             # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
-            p1 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/]+)'
-                             ' +(?P<name>[a-zA-Z0-9\-]+)'
+            # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
+            # 0/1               NCS1K4-1.2T-K9             OPERATIONAL       NSHUT
+            p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
+                             '\s+(?P<name>[a-zA-Z0-9\-\.]+)'
                              '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                              '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
-                             ' +(?P<state>(IOS XR RUN|OK|OPERATIONAL)+)'
-                             ' +(?P<config_state>[a-zA-Z\,]+)$')
+                             '\s+(?P<state>(IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
+                             '\s+(?P<config_state>[a-zA-Z\,]+)$')
             m = p1.match(line)
             if m:
                 # Parse regexp
@@ -381,7 +383,7 @@ class ShowPlatform(ShowPlatformSchema):
 
                 # Determine if slot is RP/LineCard/OtherCard
                 parse_rp = re.compile(r'.*(RSP|RP).*').match(slot)
-                parse_lc = re.compile(r'.*(0\/[0-9]).*').match(slot)
+                parse_lc = re.compile(r'.*(0\/)\d').match(slot)
                 parse_name = re.compile(r'.*(RSP|RP).*').match(name)
                 if parse_rp or parse_name:
                     slot_type = 'rp'
