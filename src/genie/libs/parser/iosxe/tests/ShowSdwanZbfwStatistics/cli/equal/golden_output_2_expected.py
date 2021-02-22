@@ -1,5 +1,5 @@
 expected_output = {
-  'zp_name': {
+  'zonepair_name': {
     'ZP_lanZone_lanZone_Is_-902685811': {
       'src_zone_name': 'lanZone',
       'dst_zone_name': 'lanZone',

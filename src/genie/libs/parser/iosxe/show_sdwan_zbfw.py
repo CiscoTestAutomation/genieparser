@@ -122,7 +122,7 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
 
 class ShowSdwanZbfwStatisticsSchema(MetaParser):
     schema = {
-        'zp_name': {
+        'zonepair_name': {
             Any(): {
                 'src_zone_name': str,
                 'dst_zone_name': str,
@@ -236,7 +236,7 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
             m = p1.match(line)      
             if m:
                 groups = m.groupdict()
-                feature_dict = ret_dict.setdefault('zp_name', {}).setdefault(groups['zp_name'], {})
+                feature_dict = ret_dict.setdefault('zonepair_name', {}).setdefault(groups['zp_name'], {})
                 last_dict_ptr = feature_dict
                 continue
 
@@ -298,5 +298,4 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
                     last_dict_ptr.update({groups['key'].replace('-', '_'): int(groups['value'])})
                     continue
 
-        print(ret_dict)
         return(ret_dict) 

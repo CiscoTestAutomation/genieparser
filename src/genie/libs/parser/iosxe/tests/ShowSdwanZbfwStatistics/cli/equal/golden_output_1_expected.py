@@ -1,5 +1,5 @@
 expected_output = {
-  'zp_name': {
+  'zonepair_name': {
     'ZP_LAN_ZONE_vpn20_LAN__968352866': {
       'src_zone_name': 'LAN_ZONE_vpn20',
       'dst_zone_name': 'LAN_ZONE_vpn20',
