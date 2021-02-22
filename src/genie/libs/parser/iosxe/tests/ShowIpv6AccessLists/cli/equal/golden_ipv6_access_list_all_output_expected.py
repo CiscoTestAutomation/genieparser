@@ -68,6 +68,7 @@ expected_output = {
         },
         "name": "inbound",
         "type": "ipv6-acl-type",
+        "acl_type": "ipv6",
     },
     "Virtual-Access2.1#427819008151": {
         "aces": {
@@ -139,5 +140,6 @@ expected_output = {
         "name": "Virtual-Access2.1#427819008151",
         "per_user": True,
         "type": "ipv6-acl-type",
+        "acl_type": "ipv6",
     },
 }

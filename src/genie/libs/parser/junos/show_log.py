@@ -50,10 +50,16 @@ class ShowLogFilename(ShowLogFilenameSchema):
             out = output
 
         ret_dict = {}
-
         lines = out.splitlines()
         if len(lines) > 1:
-            ret_dict['file-content'] = out.splitlines()[1:]
+            ret_dict['file-content'] = []
+        p = re.compile(r"^(?!{).*")
+
+        for line in lines:
+            line = line.strip()
+            m = p.match(line)
+            if m:
+                ret_dict['file-content'].append(line)
 
         return ret_dict
 
@@ -73,9 +79,15 @@ class ShowLogFilenameMatchExcept(ShowLogFilenameSchema):
             out = output
 
         ret_dict = {}
-
         lines = out.splitlines()
         if len(lines) > 1:
-            ret_dict['file-content'] = out.splitlines()[1:]
+            ret_dict['file-content'] = []
+        p = re.compile(r"^(?!{).*")
+
+        for line in lines:
+            line = line.strip()
+            m = p.match(line)
+            if m:
+                ret_dict['file-content'].append(line)
 
         return ret_dict

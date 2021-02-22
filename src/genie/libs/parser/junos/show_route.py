@@ -3711,7 +3711,7 @@ class ShowRouteInstanceNameSchema(MetaParser):
             "instance-core": {
                 "instance-name": str,
                 "instance-type": str,
-                "instance-ribs": Use(validate_instance_rib)
+                Optional("instance-ribs"): Use(validate_instance_rib)
             }
         }
     }        

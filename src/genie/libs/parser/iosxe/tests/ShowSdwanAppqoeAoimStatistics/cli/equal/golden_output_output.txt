@@ -1,0 +1,30 @@
+SN12#show sdwan appqoe aoim-statistics 
+==========================================================
+              AOIM Statistics
+==========================================================
+ Total Number Of Peer Syncs      : 2
+ Current Number Of Peer Syncs in Progress      : 0
+ Number Of Peer Re-Syncs Needed      : 0
+ Total Passthrough Connections Due to Peer Version Mismatch   : 0
+ AOIM DB Size (Bytes): 4194304
+
+ LOCAL AO Statistics
+----------------------------------------
+ Number Of AOs      : 2
+ AO             Version   Registered
+ SSL             1.2        Y   
+ DRE             0.23       Y   
+
+ PEER Statistics
+----------------------------------------
+ Number Of Peers      : 2
+ Peer ID: 100.100.100.214
+ Peer Num AOs      : 2 
+ AO             Version   InCompatible
+ SSL             1.2        N   
+ DRE             0.23       N   
+ Peer ID: 100.100.100.212
+ Peer Num AOs      : 2 
+ AO             Version   InCompatible
+ SSL             1.2        N   
+ DRE             0.23       N   
