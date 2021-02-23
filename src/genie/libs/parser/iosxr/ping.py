@@ -1,6 +1,7 @@
 """ping.py
 
 IOSXR parsers for the following show commands:
+    * ping {addr}
     * ping {addr} source {source} repeat {count}
 """
 # Python
@@ -13,6 +14,7 @@ from genie.metaparser.util.schemaengine import (Any,
 
 class PingSchema(MetaParser):
     """ Schema for
+            * ping {addr}
             * ping {addr} source {source} repeat {count}
     """
 
@@ -28,7 +30,7 @@ class PingSchema(MetaParser):
                 'send': int,
                 'received': int,
                 'success_rate_percent': float,
-                Optional('round-trip'): {
+                Optional('round_trip'): {
                     'min_ms': int,
                     'avg_ms': int,
                     'max_ms': int,
@@ -40,10 +42,12 @@ class PingSchema(MetaParser):
 class Ping(PingSchema):
 
     """ parser for
+        * ping {addr}
         * ping {addr} source {source} repeat {count}
     """
 
     cli_command = [
+        'ping {addr}',
         'ping {addr} source {source} repeat {count}',
     ]
 
@@ -101,7 +105,7 @@ class Ping(PingSchema):
                                   'received':int(group['received']),
                                   'send': int(group['send'])})
 
-                round_dict = stat_dict.setdefault('round-trip', {})
+                round_dict = stat_dict.setdefault('round_trip', {})
 
                 min_ms = int(group['min'])
                 max_ms = int(group['max'])
