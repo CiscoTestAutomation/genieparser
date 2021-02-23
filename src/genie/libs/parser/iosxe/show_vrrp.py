@@ -116,8 +116,9 @@ class ShowVrrp(ShowVrrpSchema):
 
         # Defines the regex for the first line of device output, which is:
         # Ethernet1/0 - Group 1
+        # GigabitEthernet3.415 - Group 13
         p1 = re.compile(
-            r'^(?P<interface>[\w,.\/]+) - +Group (?P<group_number>\d+)$')
+            r'^(?P<interface>[\w,\.\/]+) - +Group (?P<group_number>\d+)$')
 
         #State is Master
         p2 = re.compile(r'State is (?P<state>(Master|UP|Init))')
@@ -154,7 +155,7 @@ class ShowVrrp(ShowVrrpSchema):
         # Track object 1 state down decrement 15
         p12 = re.compile(
             r'Track +object (?P<obj_name>\w+) +state (?P<obj_state>(Up|Down))'
-             ' +decrement (?P<value>\w+)')
+            r' +decrement (?P<value>\w+)')
 
         # Authentication text "hash"
         p13 = re.compile(r'Authentication +text \"(?P<type>[\w,\"]+)\"')
@@ -162,22 +163,22 @@ class ShowVrrp(ShowVrrpSchema):
         # Master Router is 10.2.0.1 (local), priority is 100
         p14 = re.compile(
             r'^Master +Router +is (?P<mast_ip_addr>[\w,\.]+)'
-             ' \((?P<server>\S+)\), +priority +is (?P<digit>\d+)')
+            r' \((?P<server>\S+)\), +priority +is (?P<digit>\d+)')
 
         # Master Advertisement interval is 3.000 sec
         p15 = re.compile(
             r'^Master +Advertisement +interval +is '
-             '(?P<mast_adv_interval>[\d,\.]+) +sec')
+            r'(?P<mast_adv_interval>[\d,\.]+) +sec')
 
         # Master Down interval is 9.609 sec
         p16 = re.compile(
             r'^Master +Down +interval +is (?P<mast_down_interval>[\d,\.]+)'
-             ' +sec')
+            r' +sec')
 
         # Master Router is 192.168.1.233, priority is 120
         p17 = re.compile(
             r'^Master +Router +is (?P<mast_ip_addr>[\w,\.]+)+, +priority +is '
-             '(?P<digit>\d+)')
+            r'(?P<digit>\d+)')
 
         # FLAGS: 1/1
         p18 = re.compile(r'^FLAGS: +(?P<flags>[\d\/]+)')
@@ -448,8 +449,8 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
         p1 = re.compile(
             r'^(?P<interface_name>^\S+)\s+(?P<grp>\d+)'
             r'\s+(?P<pri>\d+)\s+(?P<time>\d+)\s+(?P<pre>\w)\s+'
-            r'(?P<state>\w+)\s+(?P<master_addr>[\d.]+)\s+'
-            r'(?P<group_addr>[\d.]+)')
+            r'(?P<state>\w+)\s+(?P<master_addr>[\d\.]+)\s+'
+            r'(?P<group_addr>[\d\.]+)')
 
         for line in output.splitlines():
             line = line.strip()
