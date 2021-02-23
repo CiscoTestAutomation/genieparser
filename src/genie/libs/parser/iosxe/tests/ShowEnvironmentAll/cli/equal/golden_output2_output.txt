@@ -1,0 +1,27 @@
+show environment all
+Switch	 FAN	 Speed	 State
+---------------------------------------------------
+  3  	  1	13760 	  OK
+  3  	  2	13760 	  OK
+  3  	  3	13760 	  OK
+FAN PS-1 is OK
+FAN PS-2 is NOT PRESENT
+Switch 3: SYSTEM TEMPERATURE is OK
+Inlet Temperature Value: 32 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 46 Degree Celsius
+Red Threshold    : 56 Degree Celsius
+
+Outlet Temperature Value: 42 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+
+Hotspot Temperature Value: 55 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+3A  PWR-C1-715WAC       DCA2120G474  OK              Good     Good     715
+3B  Not Present
