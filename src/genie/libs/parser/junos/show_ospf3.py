@@ -666,7 +666,7 @@ class ShowOspf3InterfaceExtensive(ShowOspf3InterfaceExtensiveSchema):
         # Adj count: 1, Router LSA ID: 0
         p4 = re.compile(
             r'^Adj( +)count:( +)(?P<adj_count>\d+),( +)Router( +)LSA'
-            r'( +)ID:( +)(?P<ospf3_router_lsa_id>\S+)$')
+            r'( +)ID:( +)(?P<ospf3_router_lsa_id>\S+)(, \S+)?$')
 
         # Hello 10, Dead 40, ReXmit 5, Not Stub
         p5 = re.compile(
