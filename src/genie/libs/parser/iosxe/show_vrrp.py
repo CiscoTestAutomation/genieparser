@@ -445,7 +445,7 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
         parsed_dict = {}
 
         # Interface   Grp Pri Time  Own Pre State   Master addr  Group addr
-        # Gi3.420    10  100 3609    N   Y Master  10.13.120.1  10.13.120.254
+        # Gi3.420    10  100 3609        Y Master  10.13.120.1  10.13.120.254
         p1 = re.compile(
             r'^(?P<interface_name>^\S+)\s+(?P<grp>\d+)'
             r'\s+(?P<pri>\d+)\s+(?P<time>\d+)\s+(?P<pre>\w)\s+'
@@ -455,7 +455,7 @@ class ShowVrrpBrief(ShowVrrpBriefSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            # Gi3.420   10  100 3609  N  Y Master  10.13.120.1  10.13.120.254
+            # Gi3.420   10  100 3609     Y Master  10.13.120.1  10.13.120.254
             m = p1.match(line)
             if m:
                 group = m.groupdict()
