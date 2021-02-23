@@ -2,6 +2,7 @@ expected_output = {
    "1":{
       "name":"1",
       "type":"ipv4-acl-type",
+      "acl_type": "standard",
       "aces":{
          "10":{
             "name":"10",
@@ -50,6 +51,7 @@ expected_output = {
    },
    "meraki-fqdn-dns":{
       "name":"meraki-fqdn-dns",
-      "type":"ipv4-acl-type"
+      "type":"ipv4-acl-type",
+      "acl_type": "extended",
    }
 }

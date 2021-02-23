@@ -57,18 +57,18 @@ class ShowInterfacesSchema(MetaParser):
 
     schema = {
             Any(): {
-                'oper_status': str,
+                Optional('oper_status'): str,
                 Optional('line_protocol'): str,
-                'enabled': bool,
+                Optional('enabled'): bool,
                 Optional('connected'): bool,
                 Optional('description'): str,
-                'type': str,
+                Optional('type'): str,
                 Optional('link_state'): str,
                 Optional('port_speed'): str,
                 Optional('duplex_mode'): str,
                 Optional('link_type'): str,
                 Optional('media_type'): str,
-                'mtu': int,
+                Optional('mtu'): int,
                 Optional('maximum_active_vcs'): str,
                 Optional('vcs_per_vp'): str,
                 Optional('vc_idle_disconnect_time'): str,
@@ -123,7 +123,7 @@ class ShowInterfacesSchema(MetaParser):
                     Optional('active_members'): int,
                     Optional('num_of_pf_jumbo_supported_members'): int,
                 },
-                'bandwidth': int,
+                Optional('bandwidth'): int,
                 Optional('counters'):
                     {Optional('rate'):
                        {Optional('load_interval'): int,
@@ -207,7 +207,6 @@ class ShowInterfaces(ShowInterfacesSchema):
         'in_giants', 'unnumbered', 'mac_address', 'phys_address',
         'out_lost_carrier', '(Tunnel.*)', 'input_queue_flushes',
         'reliability']
-
 
     def cli(self,interface="",output=None):
         if output is None:
@@ -1177,6 +1176,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                             interface_dict[intf]['ipv4']['unnumbered'] = {}
                             interface_dict[intf]['ipv4']['unnumbered']\
                                 ['interface_ref'] = unnumbered_intf
+
         return(interface_dict)
 
 
@@ -1889,8 +1889,8 @@ class ShowIpInterfaceSchema(MetaParser):
                     Optional('address_determined_by'): str,
                     Optional('helper_address'): Or(str, list),
                     Optional('directed_broadcast_forwarding'): bool,
-                    Optional('out_common_access_list'): str,
-                    Optional('out_access_list'): str,
+                    Optional('outbound_common_access_list'): str,
+                    Optional('outbound_access_list'): str,
                     Optional('inbound_common_access_list'): str,
                     Optional('inbound_access_list'): str,
                     Optional('proxy_arp'): bool,
@@ -2155,27 +2155,27 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Outgoing Common access list is not set 
             p7 = re.compile(r'^Outgoing +Common +access +list +is +'
-                            r'(?P<access_list>[\w\s]+)$')
+                            r'(?P<access_list>.+)$')
             m = p7.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:
-                    interface_dict[interface]['out_common_access_list'] = \
+                    interface_dict[interface]['outbound_common_access_list'] = \
                         m.groupdict()['access_list']
                 continue
 
             # Outgoing access list is not set
             p8 = re.compile(r'^Outgoing +access +list +is +'
-                            r'(?P<access_list>[\w\s]+)$')
+                            r'(?P<access_list>.+)$')
             m = p8.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:
-                    interface_dict[interface]['out_access_list'] = \
+                    interface_dict[interface]['outbound_access_list'] = \
                         m.groupdict()['access_list']
                 continue
 
             # Inbound Common access list is not set
             p9 = re.compile(r'^Inbound +Common +access +list +is +'
-                            r'(?P<access_list>[\w\s]+)$')
+                            r'(?P<access_list>.+)$')
             m = p9.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:
@@ -2184,8 +2184,8 @@ class ShowIpInterface(ShowIpInterfaceSchema):
                 continue
 
             # Inbound  access list is not set
-            p10 = re.compile(r'^Outgoing +access +list +is +'
-                            r'(?P<access_list>[\w\s]+)$')
+            p10 = re.compile(r'^Inbound +access +list +is +'
+                            r'(?P<access_list>.+)$')
             m = p10.match(line)
             if m:
                 if 'not set' not in m.groupdict()['access_list']:

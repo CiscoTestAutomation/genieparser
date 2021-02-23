@@ -10,6 +10,8 @@ JunOS parsers for the following show commands:
     * show interfaces descriptions {interface}
     * show interfaces queue {interface}
     * show interfaces policers {interface}
+    * show interfaces diagnostics optics {interface}
+    * show interfaces diagnostics optics
     * show interfaces {interface} extensive
     * show interfaces extensive
     * show interfaces extensive {interface}
@@ -84,6 +86,9 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
 
         ret_dict = {}
 
+        # error: interface ge-0/0/3.0 not found
+        p0 = re.compile(r'^error:\s+interface\s+\S+\s+not\s+found$')
+
         # Interface               Admin Link Proto    Local                 Remote
         # lo0.0                   up    up   inet     10.1.1.1            --> 0/0
         # em1.0                   up    up   inet     10.0.0.4/8
@@ -112,6 +117,10 @@ class ShowInterfacesTerse(ShowInterfacesTerseSchema):
             if 'show interfaces terse' in line:
                 continue
 
+            # error: interface ge-0/0/3.0 not found
+            m = p0.match(line)
+            if m:
+                return ret_dict
 
             # fxp0                    up    up
             # em1.0                   up    up   inet     10.0.0.4/8
@@ -608,6 +617,7 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifff-receive-ttl-exceeded"): bool,
                         Optional("ifff-receive-options"): bool,
                         Optional("ifff-encapsulation"): str,
+                        Optional("ifff-user-mtu"): bool,
                     },
                     Optional("address-family-name"): str,
                     Optional("filter-information"): str,
@@ -981,8 +991,9 @@ class ShowInterfacesSchema(MetaParser):
             },
             Optional("mru"): str,
             Optional("mtu"): str,
+            Optional("mac-rewrite-error"): str,
             "name": str,
-            "oper-status": str,
+            Optional("oper-status"): str,
             Optional("pad-to-minimum-frame-size"): str,
             Optional("physical-interface-cos-information"): {
                 "physical-interface-cos-hw-max-queues": str,
@@ -1074,7 +1085,7 @@ class ShowInterfacesSchema(MetaParser):
             Optional("cos-information"): {
                 Optional("cos-stream-information"): {
                     "cos-direction": str,
-                    "cos-queue-configuration": Use(verify_cos_queue_configuration)
+                    Optional("cos-queue-configuration"): Use(verify_cos_queue_configuration)
                 }
             },
             Optional("input-error-list"): {
@@ -1179,7 +1190,15 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, LAN-PHY mode, Speed: 1000mbps, BPDU Error: None,
         # Link-level type: Ethernet, MTU: 1514, MRU: 1522, Speed: 100Gbps, BPDU Error: None, Loopback: Disabled,
         # Link-level type: Ethernet, MTU: 1514, Link-mode: Full-duplex, Speed: 1000mbps,
-        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +(?P<link_level_type>\S+), +MTU: +(?P<mtu>\S+)(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?(, +Link-mode: +(?P<link_mode>\S+))?(, +Speed: +(?P<speed>\S+))?(, +BPDU +Error: +(?P<bpdu_error>\S+))?(, +Loopback: +(?P<loopback>\S+))?,$')
+        # Link-level type: Ethernet, MTU: 1514, Speed: 1Gbps, BPDU Error: None, MAC-REWRITE Error: None, Loopback: Disabled, Source filtering: Disabled, Flow control: Disabled
+        p4 = re.compile(r'^(Type: +\S+, )?Link-level +type: +(?P<link_level_type>\S+), '
+                        r'+MTU: +(?P<mtu>\S+)(, +MRU: +(?P<mru>\d+))?(, +(?P<sonet_mode>\S+) +mode)?'
+                        r'(, +Link-mode: +(?P<link_mode>\S+))?(, +Speed: +(?P<speed>\S+))?'
+                        r'(, +BPDU +Error: +(?P<bpdu_error>\w+))?'
+                        r'(, +MAC-REWRITE Error: +(?P<mac_rewrite_error>\S+))?'
+                        r'(, +Loopback: +(?P<loopback>\S+))?'
+                        r'(, Source +filtering: +(?P<source_filtering>\S+))?'
+                        r'(, +Flow +control: +(?P<if_flow_control>\S+))?(,)?$')
         
         # Speed: 1000mbps, BPDU Error: None, Loop Detect PDU Error: None,
         p4_1 = re.compile(r'^(Speed: +(?P<speed>[^\s,]+))(, +)?'
@@ -1334,6 +1353,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         p30_1 = re.compile(r'^Curr +new +hold +cnt: +(?P<intf_unresolved_cnt>\d+), +NH +drop +cnt: +(?P<intf_dropcnt>\d+)$')
 
         # Flags: No-Redirects, Sendbcast-pkt-to-re
+        # Flags: Is-Primary, User-MTU
+        # Flags: Up SNMP-Traps 0x4000 Encapsulation: ENET2
         p31 = re.compile(r'^Flags: +(?P<flags>[\S\s]+)')
 
         # Addresses, Flags: Is-Preferred Is-Primary
@@ -1544,6 +1565,10 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Bundle:
         # Link:
         p81 = re.compile(r'^(?P<lag_int_type>(Bundle)|(Link)):$')
+
+        # xe-0/1/10.0
+        # xe-0/1/10
+        p81_1 = re.compile(r'^(?P<name>[a-z]{2}-\d+/\d+/\d+(\.\d+)?)$')
 
         # Input :           225          0         14514         1952
         # Output:            16          0          1188            0
@@ -1981,13 +2006,30 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Logical interface ge-0/0/0.0 (Index 333) (SNMP ifIndex 606)
             m = p24.match(line)
             if m:
+                # found_flag : To check if `physical-interface` list created
+                #              for logical-interface
+                #              This prevents to create redundant list for same physical interface
+                found_flag = False
                 statistics_type = 'logical'
                 group = m.groupdict()
+                phy_interface = '.'.join(group['name'].split('.')[:-1])
                 logical_interface_dict = {}
+                interface_info_dict = ret_dict.setdefault('interface-information', {})
+                physical_interface_list =  interface_info_dict.setdefault('physical-interface', [])
+                for phy_dict in physical_interface_list:
+                    if phy_dict['name'] == phy_interface:
+                        found_flag = True
+
+                if not found_flag:
+                    physical_interface_dict = {}
+                    physical_interface_dict.update({'name': phy_interface})
+                    physical_interface_list.append(physical_interface_dict)
+
                 logical_interface_list = physical_interface_dict.setdefault('logical-interface', [])
                 logical_interface_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 logical_interface_list.append(logical_interface_dict)
+                found_flag = False
                 continue
 
             # Flags: Up SNMP-Traps 0x4004000 Encapsulation: ENET2
@@ -2045,6 +2087,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Flags: No-Redirects, Sendbcast-pkt-to-re
+            # Flags: Is-Primary, User-MTU
             m = p31.match(line)
             if m:
                 group = m.groupdict()
@@ -2489,25 +2532,37 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Link:
             m = p81.match(line)
             if m:
+                in_out_dict = {}
                 group = m.groupdict()
                 lag_traffic_dict = logical_interface_dict.setdefault('lag-traffic-statistics', {})
                 lag_int_type = group['lag_int_type']
                 continue
+
+            # xe-0/1/10.0
+            # xe-0/1/10
+            p81_1 = re.compile(r'^(?P<name>[a-z]{2}-\d+/\d+/\d+(\.\d+)?)$')
+            m = p81_1.match(line)
+            if m and lag_int_type == 'Link':
+                in_out_dict = {}
+                group = m.groupdict()
+                lag_link_name = group['name']
 
             # Input :           225          0         14514         1952
             # Output:            16          0          1188            0
             m = p82.match(line)
             if m:
                 group = m.groupdict()
-                in_out_direction = group.pop('in_out')
-                in_out_dict = {"{iod}-{k}".format(iod=in_out_direction.rstrip().lower(), k=k):
-                    v for k, v in group.items() if v is not None}
+                in_out_direction = group.pop('in_out').rstrip().lower()
+                in_out_dict.update({"{iod}-{k}".format(iod=in_out_direction, k=k):
+                    v for k, v in group.items() if v is not None})
                 if 'Bundle' == lag_int_type:
                     lag_traffic_dict.setdefault('lag-bundle', {})
                     lag_traffic_dict['lag-bundle'].update(in_out_dict)
                 elif 'Link' == lag_int_type:
                     lag_traffic_dict.setdefault('lag-link', [])
-                    lag_traffic_dict['lag-link'].append(in_out_dict)
+                    if in_out_direction == 'output':
+                        in_out_dict.update({'name': lag_link_name})
+                        lag_traffic_dict['lag-link'].append(in_out_dict)
                 continue
 
             # Adaptive Adjusts:          0
@@ -3680,6 +3735,215 @@ class ShowInterfacesExtensiveInterface(ShowInterfaces):
             out = output
         
         return super().cli(output=out)
+
+
+class ShowInterfacesDiagnosticsOpticsSchema(MetaParser):
+    """Schema for
+        * show interfaces diagnostics optics {interface}
+        * show interfaces diagnostics optics
+    """
+
+    def validate_interface(value):
+        if not isinstance(value, list):
+            raise SchemaError('Interface not a list')
+
+        def validate_lanes(value):
+            if not isinstance(value, list):
+                raise SchemaError('Lanes are not a list')
+        
+            lanes = Schema({
+                "lane-number": str,
+                "laser-bias-current": str,
+                "laser-output-power": str,
+                "laser-temperature": str,
+                "laser-receiver-power": str,
+                "laser-bias-current-high-alarm": str,
+                "laser-bias-current-low-alarm": str,
+                "laser-bias-current-high-warning": str,
+                "laser-bias-current-low-warning": str,
+                "laser-output-power-high-alarm": str,
+                "laser-output-power-low-alarm": str,
+                "laser-output-power-high-warning": str,
+                "laser-output-power-low-warning": str,
+                "laser-temperature-high-alarm": str,
+                "laser-temperature-low-alarm": str,
+                "laser-temperature-high-warning": str,
+                "laser-temperature-low-warning": str,
+                "laser-receiver-power-high-alarm": str,
+                "laser-receiver-power-low-alarm": str,
+                "laser-receiver-power-high-warning": str,
+                "laser-receiver-power-low-warning": str,
+                "tx-loss-of-signal-functionality-alarm": str,
+                "tx-cdr-loss-of-lock-alarm": str,
+                "rx-loss-of-signal-alarm": str,
+                "rx-cdr-loss-of-lock-alarm": str,
+                "apd-supply-fault-alarm": str,
+                "tec-fault-alarm": str,
+                "wavelength-unlocked-alarm": str,
+            })
+        
+            for item in value:
+                lanes.validate(item)
+            return value
+    
+        interface = Schema({
+            'name': str,
+            'optics-diagnostics': {
+                Optional("laser-bias-current"): str,
+                Optional("laser-output-power"): str,
+                "module-temperature": str,
+                "module-voltage": str,
+                Optional("receiver-signal-average-optical-power"): str,
+                Optional("laser-bias-current-high-alarm"): str,
+                Optional("laser-bias-current-low-alarm"): str,
+                Optional("laser-bias-current-high-warning"): str,
+                Optional("laser-bias-current-low-warning"): str,
+                Optional("laser-output-power-high-alarm"): str,
+                Optional("laser-output-power-low-alarm"): str,
+                Optional("laser-output-power-high-warning"): str,
+                Optional("laser-output-power-low-warning"): str,
+                "module-temperature-high-alarm": str,
+                "module-temperature-low-alarm": str,
+                "module-temperature-high-warning": str,
+                "module-temperature-low-warning": str,
+                "module-voltage-high-alarm": str,
+                "module-voltage-low-alarm": str,
+                "module-voltage-high-warning": str,
+                "module-voltage-low-warning": str,
+                Optional("laser-rx-power-high-alarm"): str,
+                Optional("laser-rx-power-low-alarm"): str,
+                Optional("laser-rx-power-high-warning"): str,
+                Optional("laser-rx-power-low-warning"): str,
+                "laser-bias-current-high-alarm-threshold": str,
+                "laser-bias-current-low-alarm-threshold": str,
+                "laser-bias-current-high-warning-threshold": str,
+                "laser-bias-current-low-warning-threshold": str,
+                "laser-output-power-high-alarm-threshold": str,
+                "laser-output-power-low-alarm-threshold": str,
+                "laser-output-power-high-warning-threshold": str,
+                "laser-output-power-low-warning-threshold": str,
+                "module-temperature-high-alarm-threshold": str,
+                "module-temperature-low-alarm-threshold": str,
+                "module-temperature-high-warning-threshold": str,
+                "module-temperature-low-warning-threshold": str,
+                "module-voltage-high-alarm-threshold": str,
+                "module-voltage-low-alarm-threshold": str,
+                "module-voltage-high-warning-threshold": str,
+                "module-voltage-low-warning-threshold": str,
+                "laser-rx-power-high-alarm-threshold": str,
+                "laser-rx-power-low-alarm-threshold": str,
+                Optional("laser-rx-power-high-warning-threshold"): str,
+                Optional("laser-rx-power-low-warning-threshold"): str,
+                Optional("module-not-ready-alarm"): str,
+                Optional("module-low-power-alarm"): str,
+                Optional("module-initialization-incomplete-alarm"): str,
+                Optional("module-fault-alarm"): str,
+                Optional("pld-flash-initialization-fault-alarm"): str,
+                Optional("power-supply-fault-alarm"): str,
+                Optional("checksum-fault-alarm"): str,
+                Optional("tx-laser-disabled-alarm"): str,
+                Optional("tx-loss-of-signal-functionality-alarm"): str,
+                Optional("tx-cdr-loss-of-lock-alarm"): str,
+                Optional("rx-loss-of-signal-alarm"): str,
+                Optional("rx-cdr-loss-of-lock-alarm"): str,
+                Optional("laser-temperature-high-alarm-threshold"): str,
+                Optional("laser-temperature-low-alarm-threshold"): str,
+                Optional("laser-temperature-high-warning-threshold"): str,
+                Optional("laser-temperature-low-warning-threshold"): str,
+                Optional("lanes"): Use(validate_lanes)
+            }
+        })
+    
+        for item in value:
+            interface.validate(item)
+        return value
+
+    schema = {
+        'interface-information': {
+            'physical-interface': Use(validate_interface)
+        }
+    }
+
+class ShowInterfacesDiagnosticsOptics(ShowInterfacesDiagnosticsOpticsSchema):
+    """Parser for
+        * show interfaces diagnostics optics {interface}
+        * show interfaces diagnostics optics
+    """
+
+    cli_command = [
+        "show interfaces diagnostics optics {interface}",
+        "show interfaces diagnostics optics"
+        ]
+
+    def cli(self, interface=None, output=None):
+        if not output:
+            if interface:
+                out = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[1]) 
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Physical interface: et-0/0/0
+        p1 = re.compile(r'^Physical +interface: +(?P<name>\S+)$')
+
+        # Module temperature                        :  48 degrees C / 119 degrees F
+        # Module voltage                            :  3.3340 V
+        # Module temperature high alarm             :  Off
+        p2 = re.compile(r'^(?P<key>[\S ]+) +: +(?P<value>[\S ]+)$')
+
+        # Lane 0
+        p3 = re.compile(r'^Lane +(?P<lane>\d+)$')
+
+        lane = None
+
+        for line in out.splitlines():
+            line = line.strip()
+            # Physical interface: et-0/0/0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                physical_interface_list = ret_dict.setdefault(
+                    'interface-information',{}).setdefault(
+                        'physical-interface', [])
+                physical_interface_dict = {
+                    'name': group['name']
+                }
+                physical_interface_list.append(physical_interface_dict)
+                continue
+
+            # Module temperature                        :  48 degrees C / 119 degrees F
+            # Module voltage                            :  3.3340 V
+            # Module temperature high alarm             :  Off
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict = physical_interface_dict.setdefault('optics-diagnostics', {})
+                if not isinstance(lane, dict):
+                    optics_dict.update({
+                        group['key'].strip().lower().replace(' ', '-'): group['value']
+                    })
+                else:
+                    lane.update({
+                        group['key'].strip().lower().replace(' ', '-'): group['value']
+                    })
+                continue
+
+            # Lane 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                optics_dict = physical_interface_dict.setdefault('optics-diagnostics', {})
+                lane_list = optics_dict.setdefault('lanes', [])
+                lane = {
+                    "lane-number": group['lane']
+                }
+                lane_list.append(lane)
+                continue
+                
+        return ret_dict
 
 class ShowInterfacesInterfaceDetail(ShowInterfaces):
     cli_command = 'show interfaces {interface} detail'

@@ -7,6 +7,7 @@ JunOS parsers for the following show commands:
     * ping {addr} ttl {ttl} count {count} wait {wait}
     * ping {addr} source {source} count {count}
     * ping {addr} source {source} size {size} do-not-fragment count {count}
+    * ping {addr} size {size} count {count} do-not-fragment
 """
 # Python
 import re
@@ -70,9 +71,9 @@ class PingSchema(MetaParser):
     # Main Schema
     schema = {
         'ping': {
-            'address': str,
-            'source': str,
-            'data-bytes': int,
+            Optional('address'): str,
+            Optional('source'): str,
+            Optional('data-bytes'): int,
             Optional('result'): Use(validate_ping_result_list),
             'statistics': {
                 'send': int,
@@ -96,7 +97,8 @@ class Ping(PingSchema):
         'ping {addr} ttl {ttl} count {count} wait {wait}',
         'ping {addr} source {source} count {count}',
         'ping {addr} source {source} size {size} do-not-fragment count {count}',
-        'ping {addr} source {source} size {size} count {count} tos {tos} rapid'
+        'ping {addr} source {source} size {size} count {count} tos {tos} rapid',
+        'ping {addr} size {size} count {count} do-not-fragment'
     ]
 
     def cli(self, addr, count=None, ttl=None, 
@@ -129,7 +131,12 @@ class Ping(PingSchema):
                     cmd = self.cli_command[3].format(
                         addr=addr, 
                         source=source,
-                        count=count)                                        
+                        count=count) 
+                elif size:
+                    cmd = self.cli_command[6].format(
+                        addr=addr, 
+                        size=size,
+                        count=count)                                   
                 else:
                     cmd = self.cli_command[1].format(
                         addr=addr, 
@@ -211,6 +218,7 @@ class Ping(PingSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
+                ping_dict = ret_dict.setdefault('ping', {})
                 ping_statistics_dict = ping_dict.setdefault('statistics', {})
                 ping_statistics_dict.update({k.replace('_', '-'): (
                     int(v) if v.isdigit() else v) for k, v in group.items() if v is not None})

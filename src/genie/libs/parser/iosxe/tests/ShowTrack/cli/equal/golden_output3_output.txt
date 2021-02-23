@@ -1,0 +1,7 @@
+Track 1
+  IP route 172.16.52.0 255.255.255.0 metric threshold
+  Metric threshold is Down (no route)
+    1 change, last change 00:00:35
+  Metric threshold down 255 up 254
+  Delay up 2 secs, down 1 sec
+  First-hop interface is unknown

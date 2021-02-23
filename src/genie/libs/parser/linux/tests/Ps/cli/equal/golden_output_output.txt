@@ -1,0 +1,7 @@
+
+        UID        PID  PPID  C STIME TTY          TIME CMD       
+        root         1     0  0  2019 ?        00:03:36 /sbin/init
+        root         2     0  0  2019 ?        00:00:07 [kthreadd]                  
+        root      1774  1730  0  2019 ?        00:00:00 hald-addon-input: Listening on /dev/input/event2 /dev/input/event0  
+        68        1781  1730  0  2019 ?        00:00:00 hald-addon-acpi: listening on acpid socket /var/run/acpid.socket
+    

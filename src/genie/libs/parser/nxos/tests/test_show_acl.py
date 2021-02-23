@@ -754,6 +754,654 @@ IPV4 ACL test22
     },
 }
 
+    device_output2 = {'execute.return_value': '''
++++ executing command 'show access-lists summary' +++
+show access-lists summary
+
+IPV4 ACL 23
+        Total ACEs Configured: 13
+        Configured on interfaces:
+                VTY         - ingress
+        Active on interfaces:
+                VTY         - ingress
+IPV4 ACL Deny-any
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL FROM_AD_LAB_ESX
+        Total ACEs Configured: 17
+        Configured on interfaces:
+                Vlan125 - ingress (Router ACL)
+        Active on interfaces:
+                Vlan125 - ingress (Router ACL)
+IPV4 ACL TO_AD_LAB_ESX
+        Total ACEs Configured: 17
+        Configured on interfaces:
+                Vlan125 - egress (Router ACL)
+        Active on interfaces:
+                Vlan125 - egress (Router ACL)
+IPV4 ACL __urpf_v4_acl__
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL __urpf_v6_acl__
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-bgp
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-bgp6
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-cts
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-dhcp
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-dhcp-relay-response
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-dhcp6
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-dhcp6-relay-response
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-eigrp
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-eigrp6
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-ftp
+        Total ACEs Configured: 4
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-glbp
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-hsrp
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-hsrp6
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-http-response
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-http6-response
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-icmp
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-icmp6
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-igmp
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-lisp
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-lisp6
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-cdp-udld-vtp
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-cfsoe
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-dot1x
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-fabricpath-isis
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-fcoe
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-flow-control
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-l2-tunnel
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-l2pt
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-l3-isis
+        Total ACEs Configured: 3
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-lacp
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-lldp
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-mvrp
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-otv-isis
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-sdp-srp
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-stp
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+MAC ACL copp-system-p-acl-mac-undesirable
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-mld
+        Total ACEs Configured: 4
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-mpls-ldp
+        Total ACEs Configured: 3
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-mpls-oam
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-mpls-rsvp
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-msdp
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-ndp
+        Total ACEs Configured: 5
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-ntp
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-ntp6
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-ospf
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-ospf6
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-otv-as
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-pim
+        Total ACEs Configured: 3
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-pim-mdt-join
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-pim-reg
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-pim6
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-pim6-reg
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-radius
+        Total ACEs Configured: 8
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-radius6
+        Total ACEs Configured: 8
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-rip
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-rip6
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-rise
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-rise6
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-sftp
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-smtp-response
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-smtp6-response
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-snmp
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-ssh
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-ssh6
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-tacacs
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-tacacs6
+        Total ACEs Configured: 2
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-telnet
+        Total ACEs Configured: 4
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-telnet6
+        Total ACEs Configured: 4
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-tftp
+        Total ACEs Configured: 4
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-tftp6
+        Total ACEs Configured: 4
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-traceroute
+        Total ACEs Configured: 3
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-undesirable
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-vpc
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-vrrp
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL copp-system-p-acl-vrrp6
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL copp-system-p-acl-wccp
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL ctrlNet
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL jtienm
+        Total ACEs Configured: 3
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL jtinms
+        Total ACEs Configured: 0
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL jtisnmp
+        Total ACEs Configured: 11
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL sl_def_acl
+
+        Statistics enabled
+        Total ACEs Configured: 4
+        Configured on interfaces:
+        Active on interfaces:
+    '''}
+
+
+    parsed_output2 = {
+        "acl": {
+            "Deny-any": {
+                "total_aces_configured": 1
+            },
+            "__urpf_v4_acl__": {
+                "total_aces_configured": 1
+            },
+            "__urpf_v6_acl__": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-bgp": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-bgp6": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-cts": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-dhcp": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-dhcp-relay-response": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-dhcp6": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-dhcp6-relay-response": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-eigrp": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-eigrp6": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-ftp": {
+                "total_aces_configured": 4
+            },
+            "copp-system-p-acl-glbp": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-hsrp": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-hsrp6": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-http-response": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-http6-response": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-icmp": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-icmp6": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-igmp": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-lisp": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-lisp6": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-mac-cdp-udld-vtp": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mac-cfsoe": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-mac-dot1x": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mac-fabricpath-isis": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mac-fcoe": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-mac-flow-control": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mac-l2-tunnel": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mac-l2pt": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mac-l3-isis": {
+                "total_aces_configured": 3
+            },
+            "copp-system-p-acl-mac-lacp": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mac-lldp": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mac-mvrp": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mac-otv-isis": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mac-sdp-srp": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mac-stp": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-mac-undesirable": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mld": {
+                "total_aces_configured": 4
+            },
+            "copp-system-p-acl-mpls-ldp": {
+                "total_aces_configured": 3
+            },
+            "copp-system-p-acl-mpls-oam": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-mpls-rsvp": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-msdp": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-ndp": {
+                "total_aces_configured": 5
+            },
+            "copp-system-p-acl-ntp": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-ntp6": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-ospf": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-ospf6": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-otv-as": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-pim": {
+                "total_aces_configured": 3
+            },
+            "copp-system-p-acl-pim-mdt-join": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-pim-reg": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-pim6": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-pim6-reg": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-radius": {
+                "total_aces_configured": 8
+            },
+            "copp-system-p-acl-radius6": {
+                "total_aces_configured": 8
+            },
+            "copp-system-p-acl-rip": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-rip6": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-rise": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-rise6": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-sftp": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-smtp-response": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-smtp6-response": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-snmp": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-ssh": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-ssh6": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-tacacs": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-tacacs6": {
+                "total_aces_configured": 2
+            },
+            "copp-system-p-acl-telnet": {
+                "total_aces_configured": 4
+            },
+            "copp-system-p-acl-telnet6": {
+                "total_aces_configured": 4
+            },
+            "copp-system-p-acl-tftp": {
+                "total_aces_configured": 4
+            },
+            "copp-system-p-acl-tftp6": {
+                "total_aces_configured": 4
+            },
+            "copp-system-p-acl-traceroute": {
+                "total_aces_configured": 3
+            },
+            "copp-system-p-acl-undesirable": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-vpc": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-vrrp": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-vrrp6": {
+                "total_aces_configured": 1
+            },
+            "copp-system-p-acl-wccp": {
+                "total_aces_configured": 1
+            },
+            "ctrlNet": {
+                "total_aces_configured": 1
+            },
+            "jtienm": {
+                "total_aces_configured": 3
+            },
+            "jtinms": {
+                "total_aces_configured": 0
+            },
+            "jtisnmp": {
+                "total_aces_configured": 11
+            }
+        },
+        "attachment_points": {
+            "VTY": {
+                "ingress": {
+                    "23": {
+                        "active": True,
+                        "name": "23",
+                        "total_aces_configured": 13
+                    }
+                },
+                "interface_id": "VTY"
+            },
+            "Vlan125": {
+                "egress": {
+                    "TO_AD_LAB_ESX": {
+                        "active": True,
+                        "name": "TO_AD_LAB_ESX",
+                        "total_aces_configured": 17,
+                        "type": "Router ACL"
+                    }
+                },
+                "ingress": {
+                    "FROM_AD_LAB_ESX": {
+                        "active": True,
+                        "name": "FROM_AD_LAB_ESX",
+                        "total_aces_configured": 17,
+                        "type": "Router ACL"
+                    }
+                },
+                "interface_id": "Vlan125"
+            }
+        }
+    }
+
     def test_empty(self):
         self.dev = Mock(**self.empty_output)
         obj = ShowAccessListsSummary(device=self.dev)
@@ -766,3 +1414,10 @@ IPV4 ACL test22
         obj = ShowAccessListsSummary(device=self.dev)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.parsed_output)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.dev = Mock(**self.device_output2)
+        obj = ShowAccessListsSummary(device=self.dev)
+        parsed_output2 = obj.parse()
+        self.assertEqual(parsed_output2,self.parsed_output2)

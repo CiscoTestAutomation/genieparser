@@ -3319,6 +3319,22 @@ class test_show_ip_interface_brief(unittest.TestCase):
       MgmtEth0/RP0/CPU0/0            10.1.17.179     Up              Up       default 
     '''}
 
+    golden_parsed_output_1 = {
+        'interface': {
+            'BVI123': {
+                'interface_status': 'Up',
+                'ip_address': '10.12.34.56',
+                'protocol_status': 'Up',
+                'vrf_name': 'MyOrg-MyGroup_Channel_Zone'
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:PE1#show ip interface brief
+        BVI123        10.12.34.56        Up     Up      MyOrg-MyGroup_Channel_Zone
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpInterfaceBrief(device=self.device)
@@ -3332,6 +3348,12 @@ class test_show_ip_interface_brief(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIpInterfaceBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_pip(self):
         self.device = Mock(**self.golden_output_pipe_ip)
         obj = ShowIpInterfaceBrief(device=self.device)
         parsed_output = obj.parse(ip='10.1.17.179')

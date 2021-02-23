@@ -1,0 +1,6 @@
+Track 1
+  Interface GigabitEthernet3.420 line-protocol
+  Line protocol is Up
+    1 change, last change 00:00:27
+  Tracked by:
+    VRRP GigabitEthernet3.420 10

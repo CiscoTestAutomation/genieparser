@@ -32,6 +32,7 @@ class ShowAccessListsSchema(MetaParser):
         Any():{
             'name': str,
             'type': str,
+            'acl_type': str, # 'standard', 'extended' or 'ipv6'
             Optional('per_user'): bool,
             Optional('aces'): {
                 Any(): {
@@ -244,13 +245,13 @@ class ShowAccessLists(ShowAccessListsSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p_ip = re.compile(r'^(Extended|Standard) +IP +access +list[s]? '
+        p_ip = re.compile(r'^(?P<acl_type>Extended|Standard) +IP +access +list[s]? '
                           r'+(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
         p_ip_1 = re.compile(r'^ip +access-list +extended +(?P<name>[\w\-'
                             r'\.#]+)( *\((?P<per_user>.*)\))?$')
-        p_ipv6 = re.compile(r'^IPv6 +access +list +(?P<name>[\w\-\.#]+)'
+        p_ipv6 = re.compile(r'^(?P<acl_type>IPv6) +access +list +(?P<name>[\w\-\.#]+)'
                             r'( *\((?P<per_user>.*)\))?.*$')
-        p_mac = re.compile(r'^Extended +MAC +access +list +(?P<name>[\w\-\.'
+        p_mac = re.compile(r'^(?P<acl_type>Extended) +MAC +access +list +(?P<name>[\w\-\.'
                            r']+)( *\((?P<per_user>.*)\))?$')
 
 
@@ -378,6 +379,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 acl_dict = ret_dict.setdefault(group['name'], {})
                 acl_dict['name'] = group['name']
                 acl_dict['type'] = acl_type
+                acl_dict['acl_type'] = group['acl_type'].lower()
                 acl_dict.setdefault('per_user', True) if group['per_user'] else None
                 continue
 

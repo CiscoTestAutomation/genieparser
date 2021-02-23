@@ -1,0 +1,36 @@
+I/f: GigabitEthernet0/0/0/0, Location: 0/0/CPU0
+Dest: 2001:31::1
+Src: 2001:31::2
+ State: UP for 0d:0h:7m:8s, number of times UP: 1
+ Session type: PR/V6/SH
+Received parameters:
+ Version: 1, desired tx interval: 500 ms, required rx interval: 500 ms
+ Required echo rx interval: 0 ms, multiplier: 6, diag: None
+ My discr: 19, your discr: 2148532225, state UP, D/F/P/C/A: 0/0/0/1/0
+Transmitted parameters:
+ Version: 1, desired tx interval: 500 ms, required rx interval: 500 ms
+ Required echo rx interval: 0 ms, multiplier: 6, diag: None
+ My discr: 2148532225, your discr: 19, state UP, D/F/P/C/A: 0/0/0/1/0
+Timer Values:
+ Local negotiated async tx interval: 500 ms
+ Remote negotiated async tx interval: 500 ms
+ Desired echo tx interval: 0 s, local negotiated echo tx interval: 0 ms
+ Echo detection time: 0 ms(0 ms*6), async detection time: 3 s(500 ms*6)
+Local Stats:
+ Intervals between async packets:
+   Tx: Number of intervals=100, min=1 ms, max=498 ms, avg=226 ms
+       Last packet transmitted 169 ms ago
+   Rx: Number of intervals=100, min=490 ms, max=507 ms, avg=500 ms
+       Last packet received 198 ms ago
+ Intervals between echo packets:
+   Tx: Number of intervals=0, min=0 s, max=0 s, avg=0 s
+       Last packet transmitted 0 s ago
+   Rx: Number of intervals=0, min=0 s, max=0 s, avg=0 s
+       Last packet received 0 s ago
+ Latency of echo packets (time between tx and rx):
+   Number of packets: 0, min=0 ms, max=0 ms, avg=0 ms
+Session owner information:
+                            Desired               Adjusted
+  Client               Interval   Multiplier Interval   Multiplier
+  -------------------- --------------------- ---------------------
+  ipv6_static          500 ms     6          500 ms     6

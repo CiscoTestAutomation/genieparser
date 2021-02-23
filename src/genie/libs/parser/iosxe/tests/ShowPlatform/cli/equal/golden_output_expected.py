@@ -1,4 +1,7 @@
 expected_output = {
+    "main": {
+          "chassis": "ISR4331/K9"
+     },
     "slot": {
         "1": {
             "lc": {
