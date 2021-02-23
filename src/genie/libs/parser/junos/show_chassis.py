@@ -2637,7 +2637,7 @@ class ShowChassisEnvironmentFpcSchema(MetaParser):
                 "power-title": {
                     "power-type": str
                 },
-                "voltage": Use(validate_voltage_list),
+                Optional("voltage"): Use(validate_voltage_list),
             },
             Optional("slave-revision"): str,
             "state": str,
@@ -2778,7 +2778,6 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
             if m:
                 env_item["slave-revision"] = m.groupdict()["slave_revision"].strip()
                 continue
-
         return res
 
 
