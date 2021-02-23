@@ -596,7 +596,7 @@ class ShowOspf3InterfaceExtensiveSchema(MetaParser):
         if not isinstance(value, list):
             raise SchemaError('ospf3-interface is not a list')
         ospf3_interface_schema = Schema({
-            Optional("adj-count"): str,
+            "adj-count": str,
             "bdr-id": str,
             "dead-interval": str,
             "dr-id": str,
