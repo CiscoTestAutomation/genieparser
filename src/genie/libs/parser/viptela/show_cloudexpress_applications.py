@@ -115,25 +115,3 @@ class ShowCloudexpressApplication(ShowCloudexpressApplicationSchema):
                 continue
 
         return result_dict
-
-
-            #1    salesforce               gateway  172.16.255.14  -          103      1     lte    lte
-            #1    google_apps              gateway  172.16.255.14  -          47       0     lte    lte
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                #vpn = group['vpn']
-                vpn_dict = result_dict.setdefault('index', {}).setdefault(index, {})
-                vpn_dict.update({'vpn': int(group['vpn'])})
-                vpn_dict.update({'application': group['application']})
-                vpn_dict.update({'exit_type': group['exit_type']})
-                vpn_dict.update({'gw_sys_ip': group['gw_sys_ip']})
-                vpn_dict.update({'interface': group['interface']})
-                vpn_dict.update({'latency': int(group['latency'])})
-                vpn_dict.update({'loss': int(group['loss'])})
-                vpn_dict.update({'local_color': group['local_color']})
-                vpn_dict.update({'remote_color': group['remote_color']})
-                index += 1
-                continue
-
-        return result_dict
