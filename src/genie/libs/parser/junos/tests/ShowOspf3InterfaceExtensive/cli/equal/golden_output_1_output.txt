@@ -1,0 +1,23 @@
+
+                    show ospf3 interface extensive | no-more
+            Interface           State   Area            DR ID           BDR ID          Nbrs
+            ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+            Address fe80::250:56ff:fe8d:c829, Prefix-length 64
+            OSPF3-Intf-index 2, Type P2P, MTU 1500, Cost 5
+            Adj count: 1, Router LSA ID: 0
+            Hello 10, Dead 40, ReXmit 5, Not Stub
+            Protection type: None
+            ge-0/0/1.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
+            Address fe80::250:56ff:fe8d:a96c, Prefix-length 64
+            OSPF3-Intf-index 3, Type P2P, MTU 1500, Cost 100
+            Adj count: 1, Router LSA ID: 0
+            Hello 10, Dead 40, ReXmit 5, Not Stub
+            Protection type: None
+            lo0.0               DR      0.0.0.8         10.189.5.252    0.0.0.0            0
+            Address fe80::250:560f:fc8d:7c08, Prefix-length 128
+            OSPF3-Intf-index 1, Type LAN, MTU 65535, Cost 0, Priority 128
+            Adj count: 0, Router LSA ID: -
+            DR addr fe80::250:560f:fc8d:7c08, BDR addr fe80::250:560f:fc8d:7c08
+            Hello 10, Dead 40, ReXmit 5, Not Stub
+            Protection type: None
+        
