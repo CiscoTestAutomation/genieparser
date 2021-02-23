@@ -11,7 +11,7 @@ expected_output = {
          'success_rate_percent': 100.0,
          'received': 10,
          'send': 10,
-         'round_trip': {
+         'round-trip': {
             'min_ms': 1,
             'max_ms': 1,
             'avg_ms': 1
