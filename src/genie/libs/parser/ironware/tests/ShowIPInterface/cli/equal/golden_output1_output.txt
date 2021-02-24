@@ -4,4 +4,4 @@ eth 5/1      10.254.32.3    YES  NVRAM  up         up       default-vrf
 eth 7/1      10.254.32.109  YES  manual up         up       default-vrf
 ve 150       10.15.15.2     YES  NVRAM  up         up       default-vrf VS
 mgmt 1       172.16.15.4   YES  NVRAM  up         up       oob
-loopback 1   9.9.9.9  YES  NVRAM  up         up       default-vrf
+loopback 1   10.69.9.9  YES  NVRAM  up         up       default-vrf

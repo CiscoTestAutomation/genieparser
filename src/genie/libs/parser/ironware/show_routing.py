@@ -76,12 +76,12 @@ STATIC Codes - d:DHCPv6
 8   10.200.0.73/32     10.254.248.10   eth 2/2   110/73     O   40d0h  -
 9   10.200.0.80/30     10.254.248.10   eth 2/2   110/76     O   1d1h   -
 10  10.200.0.85/32     10.254.248.10   eth 2/2   110/27     O   40d0h  -
-11  200.200.200.200/32   DIRECT        loopback 1 0/0       D   248d
+11  192.168.195.200/32   DIRECT        loopback 1 0/0       D   248d
 -
-12  1.1.1.1/32         10.254.251.2    eth 5/1    110/52     O   15h47m -
-    1.1.1.1/32         10.254.251.108  eth 7/1    110/52     O   15h47m -
-13  2.2.2.2/32         10.254.251.2    eth 5/1    110/42     O   15h47m -
-    2.2.2.2/32         10.254.251.108  eth 7/1    110/42     O   15h47m -
+12  10.4.1.1/32         10.254.251.2    eth 5/1    110/52     O   15h47m -
+    10.4.1.1/32         10.254.251.108  eth 7/1    110/52     O   15h47m -
+13  10.16.2.2/32         10.254.251.2    eth 5/1    110/42     O   15h47m -
+    10.16.2.2/32         10.254.251.108  eth 7/1    110/42     O   15h47m -
     """
 
     def cli(self, output=None):
@@ -111,7 +111,7 @@ STATIC Codes - d:DHCPv6
 
         # Used when src-vrf output wraps to the next line,
         # Brocade has no terminal-width
-        # 11  200.200.200.200/32   DIRECT   loopback 1 0/0   D   248d
+        # 11  192.168.195.200/32   DIRECT   loopback 1 0/0   D   248d
         p3 = re.compile(
             r'((?P<number>^\d+)\s+'
             r'(?P<network>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\/'
@@ -122,7 +122,7 @@ STATIC Codes - d:DHCPv6
         )
 
         # Used when equal cost paths exist
-        #     1.1.1.1/32   10.254.251.108  eth 7/1  110/52  O  15h47m -
+        #     10.4.1.1/32   10.254.251.108  eth 7/1  110/52  O  15h47m -
         p4 = re.compile(
             r'(^(?P<network>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\/'
             r'(?P<netmask>\d{1,2})\s+'

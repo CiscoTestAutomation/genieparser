@@ -60,8 +60,8 @@ class ShowIPOSPFNeighbor(ShowIPOSPFNeighborSchema):
 Number of Neighbors is 2, in FULL state 2
 
 Port   Address         Pri State      Neigh Address   Neigh ID Ev Opt Cnt
-5/1    10.254.251.3    1   FULL/OTHER 10.254.251.2    1.2.3.4  61 82  0
-7/1    10.254.251.109  1   FULL/OTHER 10.254.251.108  4.3.2.1  83 82  0
+5/1    10.254.251.3    1   FULL/OTHER 10.254.251.2    10.9.3.4  61 82  0
+7/1    10.254.251.109  1   FULL/OTHER 10.254.251.108  10.49.2.1  83 82  0
 v10    10.1.10.1       1   FULL/DR    10.1.10.2       10.65.12.1 5 2 0
     """
 
@@ -77,7 +77,7 @@ v10    10.1.10.1       1   FULL/DR    10.1.10.2       10.65.12.1 5 2 0
         p1 = re.compile(r'(^Number\s+of\s+Neighbors\s+is\s+(?P<num>\d+),\s'
                         r'+in\s+FULL\s+state\s+(?P<full>\d+))')
 
-        # 5/1    10.254.251.3 1 FULL/OTHER 10.254.251.2 1.2.3.4  61 82  0
+        # 5/1    10.254.251.3 1 FULL/OTHER 10.254.251.2 10.9.3.4  61 82  0
         p2 = re.compile(r'(^(?P<port>\d+\/\d+|v\d+|tn\d+)\s+'
                         r'(?P<local>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\s+'
                         r'(?P<pri>\d+)\s+(?P<state>\S+)\s+'
@@ -157,7 +157,7 @@ class ShowIPOSPFInterfaceBrief(ShowIPOSPFInterfaceBriefSchema):
     Interface   Area      IP Addr/Mask       Cost  State    Nbrs(F/C)
     eth 5/1     0         10.254.251.21/31   20    ptpt     1/1
     eth 7/1     0         10.254.251.23/31   20    ptpt     1/1
-    loopback 1  0         11.22.33.44/32  1     DR       0/0
+    loopback 1  0         10.69.33.44/32  1     DR       0/0
     """
 
     def cli(self, output=None):

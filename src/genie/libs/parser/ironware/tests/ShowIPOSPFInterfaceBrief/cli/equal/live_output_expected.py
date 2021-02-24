@@ -27,7 +27,7 @@ expected_output = {
     },
     'loopback1': {
       'area': 0,
-      'network': '23.33.33.22/32',
+      'network': '10.76.33.22/32',
       'cost': 1,
       'state': 'DR',
       'full_neighbors': 0,

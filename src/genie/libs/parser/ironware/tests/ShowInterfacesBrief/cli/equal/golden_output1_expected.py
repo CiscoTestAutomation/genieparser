@@ -5,7 +5,7 @@ expected_output = {
       'state': 'None',
       'speed': 'None',
       'tag': 'No',
-      'mac': 'cc4e.2442.1000',
+      'mac': 'cc4e.24ff.5242',
       'description': 'description1'
     },
     'ethernet1/2': {
@@ -13,7 +13,7 @@ expected_output = {
       'state': 'Forward',
       'speed': '1G',
       'tag': 'No',
-      'mac': 'cc4e.2442.2000',
+      'mac': 'cc4e.24ff.6242',
       'description': 'description2'
     },
     'ethernet1/3': {
@@ -21,7 +21,7 @@ expected_output = {
       'state': 'Forward',
       'speed': '1G',
       'tag': 'Yes',
-      'mac': 'cc4e.2442.3000',
+      'mac': 'cc4e.24ff.7242',
       'description': 'description3'
     },
     'management1': {
@@ -29,7 +29,7 @@ expected_output = {
       'state': 'Forward',
       'speed': '100M',
       'tag': 'Yes',
-      'mac': 'cc4e.2442.4000',
+      'mac': 'cc4e.24ff.8242',
       'description': None
     },
     'loopback1': {

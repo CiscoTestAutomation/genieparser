@@ -1,10 +1,10 @@
-show bfd neighbors ipv4 21.1.1.1 details
+show bfd neighbors ipv4 10.229.1.1 details
 IPv4 Sessions
 NeighAddr                              LD/RD         RH/RS     State     Int
-21.1.1.1                             4097/16         Up        Up        Gi2
+10.229.1.1                             4097/16         Up        Up        Gi2
 Session state is UP and not using echo function.
 Session Host: Software
-OurAddr: 21.1.1.2
+OurAddr: 10.229.1.2
 Handle: 1
 Local Diag: 0, Demand mode: 0, Poll bit: 0
 MinTxInt: 500000, MinRxInt: 300000, Multiplier: 6

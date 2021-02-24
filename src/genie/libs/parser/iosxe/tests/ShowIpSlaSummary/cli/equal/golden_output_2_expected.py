@@ -29,7 +29,7 @@ expected_output = {
         '103': {
             'state': 'active',
             'type': 'video',
-            'destination': '1232:232::222',
+            'destination': '2001:db8:130f:d1c8::222',
             'rtt_stats': '100',
             'rtt_stats_msecs': 100,
             'return_code': 'OK',
@@ -38,7 +38,7 @@ expected_output = {
         '104': {
             'state': 'active',
             'type': 'video',
-            'destination': '1232:232::222',
+            'destination': '2001:db8:130f:d1c8::222',
             'rtt_stats': '100',
             'rtt_stats_msecs': 100,
             'return_code': 'OK',

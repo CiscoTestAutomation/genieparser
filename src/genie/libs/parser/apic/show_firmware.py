@@ -133,9 +133,9 @@ class ShowFirmwareRepository(ShowFirmwareRepositorySchema):
         if output is None:
             output = self.device.execute(self.cli_command[0])
 
-        #  aci-catalog-dk9.70.8.2.bin                catalog     70.8(2)        0.129
+        #  aci-catalog-dk10.121.8.2.bin                catalog     70.8(2)        0.129
         #  aci-apic-dk9.5.0.1k.bin                   controller  5.0(1k)        6266.102
-        #  aci-catalog-dk9.70.7.4.bin                catalog     70.7(4)        0.128
+        #  aci-catalog-dk10.121.7.4.bin                catalog     70.7(4)        0.128
         p1 = re.compile(r"^(?P<name>\S+) +(?P<type>\S+) +(?P<version>\S+) +(?P<size>[\d\.]+)$")
 
         ret_dict = {}

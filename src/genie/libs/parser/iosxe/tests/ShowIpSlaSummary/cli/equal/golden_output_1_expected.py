@@ -3,7 +3,7 @@ expected_output = {
         '1': {
             'state': 'active',
             'type': 'tcp-connect',
-            'destination': '123.23.213.32',
+            'destination': '10.151.213.32',
             'rtt_stats': 'RTT=44',
             'rtt_stats_msecs': 44,
             'return_code': 'OK',
@@ -12,7 +12,7 @@ expected_output = {
         '2': {
             'state': 'active',
             'type': 'dns',
-            'destination': '11.121.2.123',
+            'destination': '10.84.2.123',
             'rtt_stats': '-',
             'return_code': 'Timeout',
             'last_run': '7 seconds ago',
@@ -20,7 +20,7 @@ expected_output = {
         '3': {
             'state': 'active',
             'type': 'udp-jitter',
-            'destination': '121.32.11.1',
+            'destination': '10.204.11.1',
             'rtt_stats': 'RTT=1',
             'rtt_stats_msecs': 1,
             'return_code': 'OK',
@@ -29,7 +29,7 @@ expected_output = {
         '4': {
             'state': 'active',
             'type': 'udp-jitter',
-            'destination': '12.223.33.3',
+            'destination': '10.145.33.3',
             'rtt_stats': 'RTT=1',
             'rtt_stats_msecs': 1,
             'return_code': 'OK',
@@ -38,7 +38,7 @@ expected_output = {
         '5': {
             'state': 'active',
             'type': 'udp-jitter',
-            'destination': '13.132.32.2',
+            'destination': '10.115.32.2',
             'rtt_stats': 'RTT=1',
             'rtt_stats_msecs': 1,
             'return_code': 'OK',
@@ -56,7 +56,7 @@ expected_output = {
         '7': {
             'state': 'active',
             'type': 'icmp-echo',
-            'destination': '131.31.11.1',
+            'destination': '172.16.94.1',
             'rtt_stats': 'RTT=1',
             'rtt_stats_msecs': 1,
             'return_code': 'OK',

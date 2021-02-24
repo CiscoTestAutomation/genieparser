@@ -2637,7 +2637,7 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
         p2 = re.compile(r'^NH-interface +(?P<interface_name>[\w\d\-\/\.]+)(, +NH-addr +(?P<interface_address>\S+))?$')
 
         #Area 0.0.0.0, Origin 10.64.4.4, Priority low
-        #Area 0.0.0.0, Origin 3.3.3.3, Fwd NZ, Priority medium
+        #Area 0.0.0.0, Origin 10.36.3.3, Fwd NZ, Priority medium
         p3 = re.compile(r'^Area +(?P<ospf_area>\S+),+ Origin +(?P<route_origin>\S+),( +Fwd +(?P<forward>\S+),)? +Priority +(?P<route_priority>\S+)$')
 
 
