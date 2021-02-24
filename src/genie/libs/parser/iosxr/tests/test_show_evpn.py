@@ -2867,7 +2867,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
     '''}
 
     golden_output3 = {'execute.return_value': '''
-        Mon Jan  4 10:56:40.197 JST
+        Mon Jan  4 10:56:40.197 EST
         Legend:
         B   - No Forwarders EVPN-enabled,
         C   - Backbone Source MAC missing (PBB-EVPN),
@@ -2886,19 +2886,19 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
         Ethernet Segment Id      Interface                          Nexthops           
         ------------------------ ---------------------------------- --------------------
-        0021.2210.1010.1010.1010 BE10                               192.168.99.21
+        0021.22ff.2020.1010.1010 BE10                               192.168.99.21
                                                                     192.168.99.22
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
             Interface name : Bundle-Ether10
-            Interface MAC  : 00bc.6045.2cdc
+            Interface MAC  : 00bc.60ff.7122
             IfHandle       : 0x08004054
             State          : Up
             Redundancy     : Not Defined
         ESI type          : 0
-            Value          : 21.2210.1010.1010.1010
-        ES Import RT      : 2122.1010.1010 (from ESI)
+            Value          : 21.2210.10ff.2020.1010
+        ES Import RT      : 2122.10ff.2020 (from ESI)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : MH, All-active
@@ -2931,19 +2931,19 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                     28105 : nexthop 192.168.99.22
         Access signal mode: Bundle OOS (Default)
 
-        0021.2211.1111.1111.1111 BE11                               192.168.99.21
+        0021.22ff.2222.1111.1111 BE11                               192.168.99.21
                                                                     192.168.99.22
         ES to BGP Gates   : Ready
         ES to L2FIB Gates : Ready
         Main port         :
             Interface name : Bundle-Ether11
-            Interface MAC  : 00bc.6045.2cdb
+            Interface MAC  : 00bc.60ff.7121
             IfHandle       : 0x080040b4
             State          : Standby
             Redundancy     : Not Defined
         ESI type          : 0
-            Value          : 21.2211.1111.1111.1111
-        ES Import RT      : 2122.1111.1111 (from ESI)
+            Value          : 21.2211.11ff.2222.1111
+        ES Import RT      : 2122.11ff.2222 (from ESI)
         Source MAC        : 0000.0000.0000 (N/A)
         Topology          :
             Operational    : MH
@@ -2980,7 +2980,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
 
     golden_parsed_output3 = {
         'segment_id': {
-            '0021.2210.1010.1010.1010': {
+            '0021.22ff.2020.1010.1010': {
                 'interface': {
                     'Bundle-Ether10': {
                         'next_hops': ['192.168.99.21', '192.168.99.22'],
@@ -2988,16 +2988,16 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
                             'interface': 'Bundle-Ether10',
-                            'interface_mac': '00bc.6045.2cdc',
+                            'interface_mac': '00bc.60ff.7122',
                             'if_handle': '0x08004054',
                             'state': 'Up',
                             'redundancy': 'Not Defined'
                         },
                         'esi': {
                             'type': '0',
-                            'value': '21.2210.1010.1010.1010'
+                            'value': '21.2210.10ff.2020.1010'
                         },
-                        'es_import_rt': '2122.1010.1010 (from ESI)',
+                        'es_import_rt': '2122.10ff.2020 (from ESI)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'MH, All-active',
@@ -3043,7 +3043,7 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                     }
                 }
             },
-            '0021.2211.1111.1111.1111': {
+            '0021.22ff.2222.1111.1111': {
                 'interface': {
                     'Bundle-Ether11': {
                         'next_hops': ['192.168.99.21', '192.168.99.22'],
@@ -3051,16 +3051,16 @@ class test_show_evpn_ethernet_segment_detail(unittest.TestCase):
                         'es_to_l2fib_gates': 'Ready',
                         'main_port': {
                             'interface': 'Bundle-Ether11',
-                            'interface_mac': '00bc.6045.2cdb',
+                            'interface_mac': '00bc.60ff.7121',
                             'if_handle': '0x080040b4',
                             'state': 'Standby',
                             'redundancy': 'Not Defined'
                         },
                         'esi': {
                             'type': '0',
-                            'value': '21.2211.1111.1111.1111'
+                            'value': '21.2211.11ff.2222.1111'
                         },
-                        'es_import_rt': '2122.1111.1111 (from ESI)',
+                        'es_import_rt': '2122.11ff.2222 (from ESI)',
                         'source_mac': '0000.0000.0000 (N/A)',
                         'topology': {
                             'operational': 'MH',

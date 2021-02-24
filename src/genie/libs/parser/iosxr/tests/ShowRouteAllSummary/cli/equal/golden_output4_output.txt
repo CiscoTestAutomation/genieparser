@@ -1,0 +1,21 @@
+RP/0/RP0/CPU0:Router#show route vrf VRF_Name_02 afi-all safi-all summary
+Tue Dec  8 11:54:17.777 UTC
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+static                           50         0          0           8000         
+bgp 111                          4          20         0           3840         
+connected                        2          1          0           480          
+local                            3          0          0           480          
+ospf 13                          554        46         0           96000        
+dagr                             0          0          0           0            
+Total                            613        67         0           108800       
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+local                            0          0          0           0            
+connected                        0          0          0           0            
+Total                            0          0          0           0            

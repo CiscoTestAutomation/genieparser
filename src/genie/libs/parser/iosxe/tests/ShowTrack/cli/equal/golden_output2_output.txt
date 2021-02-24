@@ -1,0 +1,9 @@
+Track 2
+  IP route 10.21.12.0 255.255.255.0 reachability
+  Reachability is Down (no ip route), delayed Up (1 sec remaining) (connected)
+    1 change, last change 00:00:24
+  Delay up 20 secs, down 10 secs
+  First-hop interface is unknown (was Ethernet1/0)
+  Tracked by:
+    HSRP Ethernet0/0 3
+    HSRP Ethernet0/1 3

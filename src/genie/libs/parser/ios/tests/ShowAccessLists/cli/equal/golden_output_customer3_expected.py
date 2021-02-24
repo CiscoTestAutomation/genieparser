@@ -2,6 +2,7 @@ expected_output = {
     "acl1": {
         "name": "acl1",
         "type": "ipv4-acl-type",
+        "acl_type": "extended",
         "aces": {
             "10": {
                 "name": "10",

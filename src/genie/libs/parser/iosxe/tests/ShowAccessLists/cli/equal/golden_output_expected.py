@@ -21,6 +21,7 @@ expected_output = {
         },
         "name": "acl_name",
         "type": "ipv4-acl-type",
+        "acl_type": "extended",
     },
     "ipv4_acl": {
         "aces": {
@@ -73,6 +74,7 @@ expected_output = {
         },
         "name": "ipv4_acl",
         "type": "ipv4-acl-type",
+        "acl_type": "extended",
     },
     "ipv6_acl": {
         "aces": {
@@ -146,6 +148,7 @@ expected_output = {
         },
         "name": "ipv6_acl",
         "type": "ipv6-acl-type",
+        "acl_type": "ipv6",
     },
     "mac_acl": {
         "aces": {
@@ -218,6 +221,7 @@ expected_output = {
         },
         "name": "mac_acl",
         "type": "eth-acl-type",
+        "acl_type": "extended",
     },
     "preauth_v6": {
         "aces": {
@@ -281,6 +285,7 @@ expected_output = {
         "name": "preauth_v6",
         "per_user": True,
         "type": "ipv6-acl-type",
+        "acl_type": "ipv6",
     },
     "test1": {
         "aces": {
@@ -324,6 +329,7 @@ expected_output = {
         },
         "name": "test1",
         "type": "ipv4-acl-type",
+        "acl_type": "extended",
     },
     "test22": {
         "aces": {
@@ -424,6 +430,7 @@ expected_output = {
         },
         "name": "test22",
         "type": "ipv4-acl-type",
+        "acl_type": "extended",
     },
     "test33": {
         "aces": {
@@ -473,5 +480,6 @@ expected_output = {
         },
         "name": "test33",
         "type": "ipv4-acl-type",
+        "acl_type": "extended",
     },
 }

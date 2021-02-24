@@ -20,6 +20,7 @@ expected_output = {
         },
         "name": "1",
         "type": "ipv4-acl-type",
+        "acl_type": "standard",
     },
     "10": {
         "aces": {
@@ -42,6 +43,7 @@ expected_output = {
         },
         "name": "10",
         "type": "ipv4-acl-type",
+        "acl_type": "standard",
     },
     "12": {
         "aces": {
@@ -64,6 +66,7 @@ expected_output = {
         },
         "name": "12",
         "type": "ipv4-acl-type",
+        "acl_type": "standard",
     },
     "32": {
         "aces": {
@@ -86,6 +89,7 @@ expected_output = {
         },
         "name": "32",
         "type": "ipv4-acl-type",
+        "acl_type": "standard",
     },
     "34": {
         "aces": {
@@ -124,5 +128,6 @@ expected_output = {
         },
         "name": "34",
         "type": "ipv4-acl-type",
+        "acl_type": "standard",
     },
 }

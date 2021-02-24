@@ -1,17 +1,17 @@
 expected_output = {
     "system-uptime-information": {
-        "current-time": {"date-time": {"#text": "2021-01-06 12:31:48 JST"}},
+        "current-time": {"date-time": {"#text": "2021-01-06 12:31:48 EST"}},
         "system-booted-time": {
-            "date-time": {"#text": "2020-12-22 12:27:02 JST"},
+            "date-time": {"#text": "2020-12-22 12:27:02 EST"},
             "time-length": {"#text": "2w1d 00:04"},
         },
         "protocols-started-time": {
-            "date-time": {"#text": "2020-12-22 12:28:48 JST"},
+            "date-time": {"#text": "2020-12-22 12:28:48 EST"},
             "time-length": {"#text": "2w1d 00:03"},
         },
         "last-configured-time": {
-            "user": "kddi",
-            "date-time": {"#text": "2021-01-06 12:30:08 JST "},
+            "user": "cisco",
+            "date-time": {"#text": "2021-01-06 12:30:08 EST "},
             "time-length": {"#text": "00:01:40"},
         },
         "uptime-information": {

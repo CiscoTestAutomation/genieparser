@@ -1,0 +1,3 @@
+Number of Interfaces is 1
+Interface Area IP Addr/Mask Cost State Nbrs(F/C)
+eth 1/2 0 10.1.1.2/24 1 down 0/0

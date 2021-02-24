@@ -48,11 +48,11 @@ class ShowRouteTableSchema(MetaParser):
                 'hidden_route_count': int,
                 'routes': {                            
                         Any(): {
-                            'active_tag': str,
-                            'protocol_name': str,
-                            'preference': str,
+                            Optional('active_tag'): str,
+                            Optional('protocol_name'): str,
+                            Optional('preference'): str,
                             Optional('preference2'): str,
-                            'age': str,
+                            Optional('age'): str,
                             Optional('metric'): str,
                             Optional('rt-tag'): str,
                             Optional('learned_from'): str,
@@ -61,7 +61,7 @@ class ShowRouteTableSchema(MetaParser):
                             Optional('next_hop'): {
                                 'next_hop_list': {
                                     Any(): {
-                                        'to': str,
+                                        Optional('to'): str,
                                         'via': str,
                                         Optional('mpls_label'): str,
                                         Optional('best_route'): str
@@ -116,15 +116,15 @@ class ShowRouteTable(ShowRouteTableSchema):
         # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
         # 10.64.4.4/32   *[L-OSPF/9/5] 1d 02:16:51, metric 110
         # 118420             *[VPN/170] 31w3d 20:13:54
-        # 192.168.61.0/30    *[BGP/170] 00:25:19, localpref 100, from 27.93.202.40
-        r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)\/?(?P<preference2>\d+)?\] +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?(, +localpref +(?P<local_preference>\d+))?(, +from +(?P<learned_from>\S+))?(, +tag +(?P<rt_tag>\d+))?$')
+        # ff02::2/128 *[INET6/0] 00:05:35
+        r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)\/?(?P<preference2>\d+)?\] +(?P<age>[\d\:wd ]+)(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?(, +localpref +(?P<local_preference>\d+))?(, +from +(?P<learned_from>\S+))?$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
         # > to 192.168.220.6 via ge-0/0/1.0, Pop
         # Local via ge-0/0/4.11
-        r3 = re.compile(r'((?:(?P<best_route>\>*))?\s*to\s+)?(?P<to>\S+)\s+via\s+'
-                        r'(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>[\S\s]+))?')
+        # >  via ge-0/0/2.1
+        r3 = re.compile(r'^(?P<best_route>>)?(Local)? *(to +(?P<to>\S+))? *via +(?P<via>[^,\s]+)(, +(?P<mpls_label>[\S ]+))?')
 
         # fe80::250:5600:b8d:fea3/128
         # this regex widely match other pattern. intendedly exclude below `Reject`
@@ -134,7 +134,7 @@ class ShowRouteTable(ShowRouteTableSchema):
 
         # *[Local/0] 00:26:06
         r5 = re.compile(r'^(?P<active_tag>\*)?\[(?P<protocol_name>[\w\-]+)\/'
-            r'(?P<preference>\d+)\/?(?P<preference2>\d+)?\] +(?P<age>[^,]+)'
+            r'(?P<preference>\d+)\/?(?P<preference2>\d+)?\] +(?P<age>[\d\:wd ]+)'
             r'(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
 
         # Reject
@@ -199,7 +199,9 @@ class ShowRouteTable(ShowRouteTableSchema):
                                     .setdefault('next_hop_list', {})\
                                     .setdefault(max_index, {})
 
-                nh_dict['to'] = group['to']
+                if group['to']:
+                    nh_dict['to'] = group['to']
+
                 nh_dict['via'] = group['via']
 
                 mpls_label = group['mpls_label']
@@ -3709,7 +3711,7 @@ class ShowRouteInstanceNameSchema(MetaParser):
             "instance-core": {
                 "instance-name": str,
                 "instance-type": str,
-                "instance-ribs": Use(validate_instance_rib)
+                Optional("instance-ribs"): Use(validate_instance_rib)
             }
         }
     }        
@@ -3732,7 +3734,9 @@ class ShowRouteInstanceName(ShowRouteInstanceNameSchema):
         ret_dict = {}
 
         # NF-TEST              non-forwarding 
-        p1 = re.compile(r'^(?P<instance_name>\S+) +(?P<instance_type>[^/(Type)]+)$')  
+        # VR-TEST001           virtual-router
+        # VRF-TEST001          vrf
+        p1 = re.compile(r'^(?P<instance_name>\S+) +(?P<instance_type>(non-forwarding|virtual-router|vrf))$')  
 
         # NF-TEST.inet.0                                  106/0/0
         p2 = re.compile(r'^(?P<irib_name>\S+) +(?P<irib_active_count>\d+)/'
@@ -3742,6 +3746,8 @@ class ShowRouteInstanceName(ShowRouteInstanceNameSchema):
             line = line.strip()
 
             # NF-TEST              non-forwarding 
+            # VR-TEST001           virtual-router
+            # VRF-TEST001          vrf
             m = p1.match(line)
             if m:
                 group = m.groupdict()
