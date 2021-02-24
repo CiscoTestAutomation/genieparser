@@ -12,7 +12,7 @@ expected_output = {
                     "next_hop": {
                         "next_hop_list": {
                             1: {
-                                "to": ">",
+                                "best_route": ">",
                                 "via": "xe-1/0/0.0"
                             }
                         }
@@ -26,7 +26,6 @@ expected_output = {
                     "next_hop": {
                         "next_hop_list": {
                             1: {
-                                "to": "Local",
                                 "via": "xe-1/0/0.0"
                             }
                         }
@@ -37,14 +36,14 @@ expected_output = {
                 "192.168.61.0/30": {
                     "active_tag": "*",
                     "age": "00:25:19",
-                    "learned_from": "27.93.202.40",
+                    "learned_from": "10.120.202.40",
                     "local_preference": "100",
                     "next_hop": {
                         "next_hop_list": {
                             1: {
                                 "best_route": ">",
                                 "mpls_label": "Push 16, Push 299792(top)",
-                                "to": "27.93.202.49",
+                                "to": "10.120.202.49",
                                 "via": "xe-2/0/0.0"
                             }
                         }

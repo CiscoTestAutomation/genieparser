@@ -616,7 +616,8 @@ class ShowOspf3InterfaceExtensiveSchema(MetaParser):
             "prefix-length": str,
             "retransmit-interval": str,
             Optional("router-priority"): str,
-            Optional("dr-address"): str
+            Optional("dr-address"): str,
+            Optional("br-address"): str
         })
         # Validate each dictionary in list
         for item in value:
@@ -665,7 +666,7 @@ class ShowOspf3InterfaceExtensive(ShowOspf3InterfaceExtensiveSchema):
         # Adj count: 1, Router LSA ID: 0
         p4 = re.compile(
             r'^Adj( +)count:( +)(?P<adj_count>\d+),( +)Router( +)LSA'
-            r'( +)ID:( +)(?P<ospf3_router_lsa_id>\S+)$')
+            r'( +)ID:( +)(?P<ospf3_router_lsa_id>\S+)(, \S+)?$')
 
         # Hello 10, Dead 40, ReXmit 5, Not Stub
         p5 = re.compile(
@@ -688,10 +689,12 @@ class ShowOspf3InterfaceExtensive(ShowOspf3InterfaceExtensiveSchema):
         # DR addr fe80::250:560f:fc8d:7c08
         p8 = re.compile(r'^DR( +)addr( +)(?P<dr_address>\S+)$')
 
+        # DR addr fe80::250:560f:fc8d:7c08 BDR addr fe80::250:560f:fc8d:7c08
+        p9 = re.compile(r'^DR addr +(?P<dr_address>\S+), BDR addr +(?P<br_address>\S+)$')
+
         # Validate each dictionary in list
         for line in out.splitlines():
             line = line.strip()
-
             # ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
             m = p1.match(line)
             if m:
@@ -808,6 +811,20 @@ class ShowOspf3InterfaceExtensive(ShowOspf3InterfaceExtensiveSchema):
 
                 continue
 
+            # DR addr fe80::250:560f:fc8d:7c08 BR addr fe80::250:560f:fc8d:7c08
+            m = p9.match(line)
+            if m:
+                last_interface = ret_dict["ospf3-interface-information"][
+                    "ospf3-interface"][-1]
+
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    entry[entry_key] = group_value
+
+                continue
+            
         return ret_dict
 
 
@@ -2620,7 +2637,7 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
         p2 = re.compile(r'^NH-interface +(?P<interface_name>[\w\d\-\/\.]+)(, +NH-addr +(?P<interface_address>\S+))?$')
 
         #Area 0.0.0.0, Origin 10.64.4.4, Priority low
-        #Area 0.0.0.0, Origin 3.3.3.3, Fwd NZ, Priority medium
+        #Area 0.0.0.0, Origin 10.36.3.3, Fwd NZ, Priority medium
         p3 = re.compile(r'^Area +(?P<ospf_area>\S+),+ Origin +(?P<route_origin>\S+),( +Fwd +(?P<forward>\S+),)? +Priority +(?P<route_priority>\S+)$')
 
 

@@ -42,7 +42,7 @@ expected_output = {
       'vrf': 'oob'
     },
     'loopback1': {
-      'ip': '9.9.9.9',
+      'ip': '10.69.9.9',
       'ok': 'YES',
       'method': 'NVRAM',
       'status': 'up',

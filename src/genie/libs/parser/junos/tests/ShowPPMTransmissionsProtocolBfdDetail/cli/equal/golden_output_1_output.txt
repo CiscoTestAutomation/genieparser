@@ -1,6 +1,6 @@
 show ppm transmissions protocol bfd detail 
 
-Destination: 12.0.0.1, Protocol: BFD, Transmission interval: 1000
+Destination: 10.144.0.1, Protocol: BFD, Transmission interval: 1000
 Distributed: TRUE, Distribution handle: 4453, Distribution address: fpc0
 IFL-index: 333
 
@@ -9,7 +9,7 @@ Distributed: FALSE
 IFL-index: 333
 Tx Jitter: 25, Tx Delayed: FALSE, Delay Difference: 0, Last Tx Interval: 821, Tx Delayed count: 0, Tx Interval Threshold: 1250, Tx Largest Interval: 0, Tx Counter: 15891
 
-Destination: 24.0.0.2, Protocol: BFD, Transmission interval: 1000
+Destination: 10.66.0.2, Protocol: BFD, Transmission interval: 1000
 Distributed: TRUE, Distribution handle: 4390, Distribution address: fpc0
 IFL-index: 334
 
@@ -18,7 +18,7 @@ Distributed: FALSE
 IFL-index: 334
 Tx Jitter: 25, Tx Delayed: FALSE, Delay Difference: 0, Last Tx Interval: 827, Tx Delayed count: 0, Tx Interval Threshold: 1250, Tx Largest Interval: 0, Tx Counter: 20000
 
-Destination: 12.0.1.1, Protocol: BFD, Transmission interval: 1000
+Destination: 10.144.1.1, Protocol: BFD, Transmission interval: 1000
 Distributed: TRUE, Distribution handle: 4446, Distribution address: fpc0
 IFL-index: 335
 

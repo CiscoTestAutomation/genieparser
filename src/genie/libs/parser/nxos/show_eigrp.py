@@ -454,16 +454,16 @@ class ShowEigrpTopology(ShowEigrpTopologySchema):
                         'AS\((?P<as_num>\d+)\)\/ID\((?P<routerid>\S+)\)'
                         '\s+VRF\s+(?P<vrf>\S+)$')
 
-        # P 1.0.1.0/24, 1 successors, FD is 2816
+        # P 10.1.1.0/24, 1 successors, FD is 2816
         # P 2001:1::1:0/112, 1 successors, FD is 2816
-        # P 2.0.1.0/24, 2 successors, FD is Inaccessible
+        # P 10.4.1.0/24, 2 successors, FD is Inaccessible
         r2 = re.compile(r'^(?P<state>P|A|U|Q|R|r|s)\s+(?P<route>\S+),\s+'
                         '(?P<num_successors>\d+)\s+successors,'
                         '\s+FD\s+is\s+(?P<fd>(\d+)|Inaccessible)$')
 
         # via Connected, Ethernet1/2
         # via Rstatic (51200/0)
-        # via 1.0.1.2 (3072/576), Ethernet1/2
+        # via 10.1.1.2 (3072/576), Ethernet1/2
         r3 = re.compile(r'via\s+(?P<nexthop>\S+)'
                         '(\s+\((?P<fd>\d+)\/(?P<rd>\d+)\))?'
                         '(,\s(?P<interface>\S+))?$')

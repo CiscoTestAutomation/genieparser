@@ -496,6 +496,7 @@ expected_output = {
             },
         },
         "type": "ipv4-acl-type",
+        "acl_type": "extended",
         "name": "ACL_TEST",
     }
 }
