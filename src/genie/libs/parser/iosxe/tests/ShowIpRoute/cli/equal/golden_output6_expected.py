@@ -61,7 +61,7 @@ expected_output = {
                                     1: {
                                         "index": 1,
                                         "next_hop": "12.0.0.1",
-                                        "outgoing_interface": "(red)"
+                                        "vrf": "red"
                                     }
                                 }
                             }
@@ -88,6 +88,24 @@ expected_output = {
                                 "outgoing_interface": {
                                     "Ethernet0/1": {
                                         "outgoing_interface": "Ethernet0/1"
+                                    }
+                                }
+                            }
+                        },
+                        "100.0.0.0/24": {
+                            "route": "100.0.0.0/24",
+                            "active": True,
+                            "metric": 0,
+                            "route_preference": 20,
+                            "source_protocol_codes": "B +",
+                            "source_protocol": "bgp",
+                            "next_hop": {
+                                "next_hop_list": {
+                                    1: {
+                                        "index": 1,
+                                        "next_hop": "12.0.0.1",
+                                        "updated": "00:00:09",
+                                        "vrf": "red"
                                     }
                                 }
                             }

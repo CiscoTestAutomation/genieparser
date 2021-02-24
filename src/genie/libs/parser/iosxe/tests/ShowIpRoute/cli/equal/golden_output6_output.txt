@@ -26,3 +26,5 @@ S   +    80.1.1.0 [1/0] via 12.0.0.1 (red)
       192.168.16.0/24 is variably subnetted, 2 subnets, 2 masks
 C        192.168.16.0/24 is directly connected, Ethernet0/1
 L        192.168.16.2/32 is directly connected, Ethernet0/1
+      100.0.0.0/24 is subnetted, 1 subnets
+B   +    100.0.0.0 [20/0] via 12.0.0.1 (red), 00:00:09
