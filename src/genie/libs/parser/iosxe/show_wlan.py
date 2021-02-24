@@ -33,7 +33,7 @@ class ShowWlanSummarySchema(MetaParser):
 class ShowWlanSummary(ShowWlanSummarySchema):
     """Parser for show wlan summary"""
 
-    cli_command = 'show ap cdp neighbor'
+    cli_command = 'show wlan summary'
 
     def cli(self, output=None):
         if output is None:
