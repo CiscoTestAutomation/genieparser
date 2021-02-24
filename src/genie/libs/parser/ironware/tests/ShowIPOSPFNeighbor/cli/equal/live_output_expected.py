@@ -7,7 +7,7 @@ expected_output = {
           'local_ip': '10.254.32.23',
           'priority': 1,
           'state': 'FULL/OTHER',
-          'neighbor_rid': '1.2.3.4',
+          'neighbor_rid': '10.9.3.4',
           'state_changes': 4,
           'options': 82,
           'lsa_retransmits': 0
@@ -17,7 +17,7 @@ expected_output = {
           'local_ip': '10.254.32.21',
           'priority': 1,
           'state': 'FULL/OTHER',
-          'neighbor_rid': '4.3.2.1',
+          'neighbor_rid': '10.49.2.1',
           'state_changes': 4,
           'options': 82,
           'lsa_retransmits': 0

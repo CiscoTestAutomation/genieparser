@@ -49,13 +49,13 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
 
         # ID           Type        Destination       Stats       ReturnCode  LastRun
         # -----------------------------------------------------------------------
-        # *1           tcp-connect 123.23.213.32     RTT=44      OK          21 seconds ago
-        # *2           dns         11.121.2.123      -           Timeout     7 seconds ago
-        # *3           udp-jitter  121.32.11.1       RTT=1       OK          54 seconds ago
-        # *4           udp-jitter  12.223.33.3       RTT=1       OK          15 seconds ago
-        # *5           udp-jitter  13.132.32.2       RTT=1       OK          8 seconds ago
+        # *1           tcp-connect 10.151.213.32     RTT=44      OK          21 seconds ago
+        # *2           dns         10.84.2.123      -           Timeout     7 seconds ago
+        # *3           udp-jitter  10.204.11.1       RTT=1       OK          54 seconds ago
+        # *4           udp-jitter  10.145.33.3       RTT=1       OK          15 seconds ago
+        # *5           udp-jitter  10.115.32.2       RTT=1       OK          8 seconds ago
         # *6           udp-jitter  11.311.31.2       RTT=1       OK          40 seconds ago
-        # *7           icmp-echo   131.31.11.1       RTT=1       OK          2 seconds ago
+        # *7           icmp-echo   172.16.94.1       RTT=1       OK          2 seconds ago
 
         # ID       Type      Destination  State   Stats(ms)  ReturnCode  LastRun
         # ---      ----      -----------  -----   -------  ----------  -------
@@ -63,22 +63,22 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
         # 101   udp-jitter    192.0.2.2    Active   100      OK       22:49:53 PST Tue May 3 2011
         # 102   tcp-connect   192.0.2.2    Active    -      NoConnection  22:49:53 PST Tue May 3 2011
         # 103   video         1232:232  		 Active   100      OK       22:49:53 PST Tue May 3 2011
-        #                       ::222
+        #                       2001:db8::222
         # 104   video         1232:232  		 Active   100      OK       22:49:53 PST Tue May 3 2011
-        #                       ::222
+        #                       2001:db8::222
 
         p1 = re.compile(r'(?P<state_symbol>\*|\^|\~)?(?P<id>\d+) +'
             r'(?P<type>\S+) +(?P<destination>\S+)\s+(?P<state_word>\w+)?'
             r' +(?P<rtt_stats>\S+) +(?P<return_code>\w+) +'
             r'(?P<last_run>[\w\: ]+)')
 
-        #                       ::222
+        #                       2001:db8::222
         p2 = re.compile(r'(?P<extended_ip_address>[\d\:\.]+)')
 
         for line in output.splitlines():
             line = line.strip()
 
-            #*1           tcp-connect 123.23.213.32     RTT=44      OK          21 seconds ago
+            #*1           tcp-connect 10.151.213.32     RTT=44      OK          21 seconds ago
             # 100   icmp-jitter   192.0.2.2    Active   100      OK       22:49:53 PST Tue May 3 2011
             m = p1.match(line)
             if m:
@@ -109,7 +109,7 @@ class ShowIpSlaSummary(ShowIpSlaSummarySchema):
                 id_dict['last_run'] = group['last_run']
                 continue
 
-            #                       ::222
+            #                       2001:db8::222
             m = p2.match(line)
             if m:
                 group = m.groupdict()

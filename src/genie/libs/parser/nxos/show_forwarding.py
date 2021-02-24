@@ -77,8 +77,8 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
                          ' +routes +for +table +(?P<route_table>(\w+\/+\w+)|(0x[0-5a-fA-F]+))')
         
         #0.0.0.0/32           Drop                                      Null0
-        #*3.3.3.2/32          10.2.1.2                                  Ethernet1/1
-        #3.3.3.2/32          10.2.1.2                                  Ethernet1/1       vni: 501003
+        #*10.36.3.2/32          10.2.1.2                                  Ethernet1/1
+        #10.36.3.2/32          10.2.1.2                                  Ethernet1/1       vni: 501003
         p3 = re.compile(r'^(?P<is_best_next_hop>\*)?'
                           '(?P<prefix>[0-9\.]+\/[0-9]+)?'
                           ' +(?P<next_hop>[0-9A-Za-z.]+)'  
@@ -122,8 +122,8 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
                 continue
         
             #0.0.0.0/32           Drop                                      Null0
-            #*3.3.3.2/32          10.2.1.2                                  Ethernet1/1
-            #3.3.3.2/32          10.2.1.2                                  Ethernet1/1       vni: 501003
+            #*10.36.3.2/32          10.2.1.2                                  Ethernet1/1
+            #10.36.3.2/32          10.2.1.2                                  Ethernet1/1       vni: 501003
             m = p3.match(line)
             if m:
                 group = m.groupdict()

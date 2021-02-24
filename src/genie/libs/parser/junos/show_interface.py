@@ -617,6 +617,7 @@ class ShowInterfacesSchema(MetaParser):
                         Optional("ifff-receive-ttl-exceeded"): bool,
                         Optional("ifff-receive-options"): bool,
                         Optional("ifff-encapsulation"): str,
+                        Optional("ifff-user-mtu"): bool,
                     },
                     Optional("address-family-name"): str,
                     Optional("filter-information"): str,
@@ -1084,7 +1085,7 @@ class ShowInterfacesSchema(MetaParser):
             Optional("cos-information"): {
                 Optional("cos-stream-information"): {
                     "cos-direction": str,
-                    "cos-queue-configuration": Use(verify_cos_queue_configuration)
+                    Optional("cos-queue-configuration"): Use(verify_cos_queue_configuration)
                 }
             },
             Optional("input-error-list"): {
@@ -1352,6 +1353,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         p30_1 = re.compile(r'^Curr +new +hold +cnt: +(?P<intf_unresolved_cnt>\d+), +NH +drop +cnt: +(?P<intf_dropcnt>\d+)$')
 
         # Flags: No-Redirects, Sendbcast-pkt-to-re
+        # Flags: Is-Primary, User-MTU
+        # Flags: Up SNMP-Traps 0x4000 Encapsulation: ENET2
         p31 = re.compile(r'^Flags: +(?P<flags>[\S\s]+)')
 
         # Addresses, Flags: Is-Preferred Is-Primary
@@ -1584,8 +1587,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Marker Statistics:   Marker Rx     Resp Tx   Unknown Rx   Illegal Rx
         p85 = re.compile(r'^(?P<lacp_flag>(LACP info)|(LACP Statistics)|(Marker Statistics)):\s+.+$')
 
-        # ge-0/0/6.0     Actor        127  2c:6b:f5:d6:f8:c0        127        2       1
-        # ge-0/0/6.0   Partner        127  2c:6b:f5:18:ef:c0        127        2       1
+        # ge-0/0/6.0     Actor        127  2c:6b:f5:ff:cf:97        127        2       1
+        # ge-0/0/6.0   Partner        127  2c:6b:f5:ff:08:d8        127        2       1
         p86 = re.compile(r'^(?P<name>\S+)\s+(?P<lacp_role>\S+)\s+(?P<lacp_sys_priority>\d+)\s+(?P<lacp_system_id>\S+)\s+(?P<lacp_port_priority>\d+)\s+(?P<lacp_port_number>\d+)\s+(?P<lacp_port_key>\d+)$')
 
         # For LACP Statistics
@@ -2084,6 +2087,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
             # Flags: No-Redirects, Sendbcast-pkt-to-re
+            # Flags: Is-Primary, User-MTU
             m = p31.match(line)
             if m:
                 group = m.groupdict()
@@ -2587,8 +2591,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                 lacp_flag = m.groupdict()['lacp_flag']
                 continue
 
-            # ge-0/0/6.0     Actor        127  2c:6b:f5:d6:f8:c0        127        2       1
-            # ge-0/0/6.0   Partner        127  2c:6b:f5:18:ef:c0        127        2       1
+            # ge-0/0/6.0     Actor        127  2c:6b:f5:ff:cf:97        127        2       1
+            # ge-0/0/6.0   Partner        127  2c:6b:f5:ff:08:d8        127        2       1
             m = p86.match(line)
             if m and lacp_flag == 'LACP info':
                 group = m.groupdict()

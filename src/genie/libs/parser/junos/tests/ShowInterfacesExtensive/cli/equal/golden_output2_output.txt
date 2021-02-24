@@ -8,9 +8,9 @@ Physical interface: et-0/0/0, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 0 ms, Down 0 ms
-  Current address: 0c:86:10:22:41:00, Hardware address: 0c:86:10:22:41:00
-  Last flapped   : 2021-01-12 13:06:13 JST (02:34:54 ago)
-  Statistics last cleared: 2021-01-12 15:17:22 JST (00:23:45 ago)
+  Current address: 0c:86:10:ff:63:22, Hardware address: 0c:86:10:ff:63:22
+  Last flapped   : 2021-01-12 13:06:13 EST (02:34:54 ago)
+  Statistics last cleared: 2021-01-12 15:17:22 EST (00:23:45 ago)
   Traffic statistics:
    Input  bytes  :              1229986                    0 bps
    Output bytes  :              1647636                    0 bps

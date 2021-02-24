@@ -7,8 +7,8 @@ IOS parsers for the following show commands:
     * show ipv6 route vrf <vrf>
     * show ip route <Hostname or A.B.C.D>
     * show ip route vrf <vrf> <Hostname or A.B.C.D>
-    * show ipv6 route <Hostname or A:B::C:D>
-    * show ipv6 route vrf <vrf> <Hostname or A:B::C:D>
+    * show ipv6 route <Hostname or 2001:DB8:64:79::C:D>
+    * show ipv6 route vrf <vrf> <Hostname or 2001:DB8:64:79::C:D>
     * show ipv6 route updated
     * show ipv6 route vrf <vrf> updated
     * show ip route summary

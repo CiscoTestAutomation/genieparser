@@ -1,4 +1,7 @@
 expected_output = {
+    "main": {
+          "chassis": "ASR1002-X"
+      },
     "slot": {
         "0": {
             "lc": {

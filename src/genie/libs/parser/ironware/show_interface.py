@@ -50,10 +50,10 @@ class ShowInterfacesBrief(ShowInterfacesBriefSchema):
 
     """
     Port   Link     Port-State   Speed Tag MAC            Name
-    1/1    Disabled None         None  No  cc4e.2442.1000 description1
-    1/2    Up       Forward      1G    No  cc4e.2442.2000 description2
-    1/3    Up       Forward      1G    Yes cc4e.2442.3000 description3
-    mgmt1  Up       Forward      100M  Yes cc4e.2442.4000
+    1/1    Disabled None         None  No  cc4e.24ff.5242 description1
+    1/2    Up       Forward      1G    No  cc4e.24ff.6242 description2
+    1/3    Up       Forward      1G    Yes cc4e.24ff.7242 description3
+    mgmt1  Up       Forward      100M  Yes cc4e.24ff.8242
     lb1    Up       N/A          N/A   N/A N/A
     tn30   Down     N/A          N/A   N/A N/A
     """
@@ -75,7 +75,7 @@ class ShowInterfacesBrief(ShowInterfacesBriefSchema):
             've': 've'
         }
 
-        # 1/1    Disabled None         None  No  cc4e.2442.1000 description1
+        # 1/1    Disabled None         None  No  cc4e.24ff.5242 description1
         p1 = re.compile(r'((?P<interface>^\d+\/\d+|mgmt\d+|lb\d+|tn\d+|ve\d+)'
                         r'\s+(?P<link>Up|Down|Disabled)\s+'
                         r'(?P<state>None|Forward|N\/A)\s+'
@@ -157,7 +157,7 @@ eth 5/1      10.254.32.3    YES  NVRAM  up         up       default-vrf
 eth 7/1      10.254.32.109  YES  manual up         up       default-vrf
 ve 150       10.15.15.2     YES  NVRAM  up         up       default-vrf VS
 mgmt 1       172.16.15.4   YES  NVRAM  up         up       oob
-loopback 1   9.9.9.9  YES  NVRAM  up         up       default-vrf
+loopback 1   10.69.9.9  YES  NVRAM  up         up       default-vrf
     """
 
     def cli(self, output=None):
@@ -169,7 +169,7 @@ loopback 1   9.9.9.9  YES  NVRAM  up         up       default-vrf
         result_dict = {}
 
         # eth 1/1      10.254.32.221  YES  NVRAM  admin/down down default-vrf
-        # loopback 1   9.9.9.9  YES  NVRAM  up         up       default-vrf
+        # loopback 1   10.69.9.9  YES  NVRAM  up         up       default-vrf
         p1 = re.compile(r'(^(?P<int_name>eth|mgmt|loopback|ve|tn|tunnel)\s+'
                         r'(?P<int_num>\d+/\d+|\d+)\s+'
                         r'(?P<ip>\d{1,3}.\d{1,3}.\d{1,3}.\d{1,3})\s+'

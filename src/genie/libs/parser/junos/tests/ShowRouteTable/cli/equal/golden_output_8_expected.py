@@ -12,7 +12,7 @@ expected_output = {
                     'next_hop': {
                         'next_hop_list': {
                             1: {
-                                'to': '>',
+                                'best_route': '>',
                                 'via': 'ge-0/0/4.11',
                             },
                         },
@@ -26,7 +26,6 @@ expected_output = {
                     'next_hop': {
                         'next_hop_list': {
                             1: {
-                                'to': 'Local',
                                 'via': 'ge-0/0/4.11',
                             },
                         },
@@ -40,7 +39,6 @@ expected_output = {
                     'next_hop': {
                         'next_hop_list': {
                             1: {
-                                'to': 'Local',
                                 'via': 'ge-0/0/4.11',
                             },
                         },
