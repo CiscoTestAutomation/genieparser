@@ -3128,12 +3128,12 @@ class ShowChassisPowerSchema(MetaParser):
             raise SchemaError('power-usage-item is not a list')        
         
         power_usage_item_schema = Schema({
-            "dc-input-detail2": {
+            Optional("dc-input-detail2"): {
                 Optional("dc-input-status"): str,
                 Optional("str-dc-actual-feed"): str,
                 Optional("str-dc-expect-feed"): str
             },
-            "dc-output-detail2": {
+            Optional("dc-output-detail2"): {
                 "str-dc-current": str,
                 "str-dc-load": str,
                 "str-dc-power": str,
@@ -3141,11 +3141,12 @@ class ShowChassisPowerSchema(MetaParser):
                 "str-zone": str
             },
             "name": str,
-            "pem-capacity-detail": {
+            Optional("pem-capacity-detail"): {
                 "capacity-actual": str,
                 "capacity-max": str
             },
-            "state": str
+            "state": str,
+            Optional("input"): str,
         })
 
         for item in value:
@@ -3201,6 +3202,9 @@ class ShowChassisPower(ShowChassisPowerSchema):
         # State                      Online Master
         p2 = re.compile(r'^State: +(?P<state>[\S\s]+)$')
 
+        # Input:                      Abset
+        p2_1 = re.compile(r'^Input: +(?P<input>[\S\s]+)$')
+
         # DC input:  OK (INP0 feed expected, INP0 feed connected)
         p3 = re.compile(r'^DC +input: +(?P<dc_input_status>[\S\s]+)( +\((?P<str_dc_expect_feed>\S+) +'
             r'feed +expected, +(?P<str_dc_actual_feed>\S+) +feed +connected\))?$')
@@ -3252,6 +3256,13 @@ class ShowChassisPower(ShowChassisPowerSchema):
             if m:
                 group = m.groupdict()
                 power_usage_item_dict.update({'state' : group['state']})
+                continue
+
+            # Input:                      Absent
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                power_usage_item_dict.update({'input' : group['input']})
                 continue
             
             # DC input:  OK (INP0 feed expected, INP0 feed connected)
@@ -3321,7 +3332,7 @@ class ShowChassisPower(ShowChassisPowerSchema):
                 group = m.groupdict()
                 power_usage_zone_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
-        
+        import pdb;pdb.set_trace()
         return ret_dict
 
 """
