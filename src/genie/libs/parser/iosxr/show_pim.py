@@ -4,6 +4,8 @@ IOSXR parsers for the following show commands:
     * 'show pim vrf <WORD> <WORD> mstatic'
     * 'show pim vrf <WORD> <WORD> interface detail'
     * 'show pim vrf <WORD> <WORD> rpf summary'
+    * 'show pim topology summary'
+    * 'show pim vrf <vrf> topology summary
 """
 
 # Python
@@ -529,6 +531,131 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                     sub_dict['table'][table]['rib_table_converged'] = True
                 else:
                     sub_dict['table'][table]['rib_table_converged'] = False
+                continue
+
+        return parsed_dict
+
+
+# ==========================================================================
+# Schema for 'show pim topology summary'
+# ==========================================================================
+class ShowPimTopologySummarySchema(MetaParser):
+    """ Schema for show pim [vrf <vrf>] topology summary. """
+
+    schema = {
+        'vrf':
+            {Any():
+                {'active_group_ranges': int,
+                 'no_group_ranges': int,
+                 'no_g_routes': int,
+                 'no_sg_rpt_routes': int,
+                 'no_sg_routes': int
+                 },
+             },
+        }
+
+
+# ==========================================================================
+# Parser for 'show pim topology summary'
+# ==========================================================================
+class ShowPimTopologySummary(ShowPimTopologySummarySchema):
+    """
+    Parser for show pim [vrf <vrf>] topology summary.
+
+    Parameters
+    ----------
+    device : Router
+        Device to be parsed.
+    vrf : str, optional
+        Selected vrf to parse.
+
+    Returns
+    -------
+    parsed_dict : dict
+        Contains the CLI output parsed into a dictionary.
+
+    Examples
+    --------
+    >>> dev.parse('show pim topology summary')
+
+    {'vrf':
+        {'default':
+            {'active_group_ranges': 4,
+             'no_group_ranges': 5,
+             'no_g_routes': 2,
+             'no_sg_rpt_routes': 0,
+             'no_sg_routes': 1
+            }
+        }
+    }
+
+    """
+
+    cli_command = ["show pim topology summary",
+                   "show pim vrf {vrf} topology summary"]
+
+    def cli(self, vrf='', output=None):
+
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        parsed_dict = {}
+
+        # PIM Topology Summary for VRF vpn1
+        p1 = re.compile(r"PIM Topology Summary for VRF (?P<vrf>\S+)")
+
+        # No. of group ranges = 6 (Active group ranges = 5)
+        p2 = re.compile(r"No\. of group ranges = (?P<no_group_ranges>\d+) "
+                        r"\(Active group ranges = (?P<active_group_ranges>\d+)\)")
+
+        # No. of (*,G) routes = 1
+        p3 = re.compile(r"No\. of \(\*,G\) routes = (?P<no_g_routes>\d+)")
+
+        # No. of (S,G) routes = 1100
+        p4 = re.compile(r"No\. of \(S,G\) routes = (?P<no_sg_routes>\d+)")
+
+        # No. of (S,G)RPT routes = 0
+        p5 = re.compile(r"No\. of \(S,G\)RPT routes = (?P<no_sg_rpt_routes>\d+)")
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                vrf = group['vrf']
+                vrf_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                continue
+
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                vrf_dict['no_group_ranges'] = int(group['no_group_ranges'])
+                vrf_dict['active_group_ranges'] = int(group['active_group_ranges'])
+                continue
+
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                vrf_dict['no_g_routes'] = int(group['no_g_routes'])
+                continue
+
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                vrf_dict['no_sg_routes'] = int(group['no_sg_routes'])
+                continue
+
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                vrf_dict['no_sg_rpt_routes'] = int(group['no_sg_rpt_routes'])
                 continue
 
         return parsed_dict

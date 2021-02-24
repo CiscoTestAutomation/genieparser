@@ -20,7 +20,7 @@ expected_output={
     "peer_stats": {
         "number_of_peers": 2,
         "peer_id": {
-            "100.100.100.214": {
+            "10.220.100.214": {
                 "number_of_peer_aos": 2,
                 "ao_name": {
                     "SSL": {
@@ -33,7 +33,7 @@ expected_output={
                     }
                 }
             },
-            "100.100.100.212": {
+            "10.220.100.212": {
                 "number_of_peer_aos": 2,
                 "ao_name": {
                     "SSL": {

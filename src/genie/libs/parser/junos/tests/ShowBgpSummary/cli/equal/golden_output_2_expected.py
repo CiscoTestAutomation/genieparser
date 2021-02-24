@@ -8,7 +8,7 @@ expected_output = {
                 "flap-count": "1",
                 "input-messages": "2",
                 "output-messages": "3",
-                "peer-address": "20.0.0.2",
+                "peer-address": "10.145.0.2",
                 "peer-as": "3",
                 "peer-state": "0/0/0/0              0/0/0/0",
                 "route-queue-count": "0"

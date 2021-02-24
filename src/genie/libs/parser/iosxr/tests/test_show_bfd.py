@@ -17,9 +17,9 @@ class TestShowBfdSessionDestinationDetailss(unittest.TestCase):
 
     expected_parsed_output = {
          "src":{
-            "31.1.1.2":{
+            "10.4.1.2":{
                "dest":{
-                  "31.1.1.1":{
+                  "10.4.1.1":{
                      "interface":"GigabitEthernet0/0/0/0",
                      "location":"0/0/CPU0",
                      "session":{
@@ -124,8 +124,8 @@ class TestShowBfdSessionDestinationDetailss(unittest.TestCase):
 
     device_output = {'execute.return_value': '''
         I/f: GigabitEthernet0/0/0/0, Location: 0/0/CPU0
-        Dest: 31.1.1.1
-        Src: 31.1.1.2
+        Dest: 10.4.1.1
+        Src: 10.4.1.2
          State: UP for 0d:0h:5m:50s, number of times UP: 1
          Session type: PR/V4/SH
         Received parameters:
@@ -315,7 +315,7 @@ class TestShowBfdSessionDestinationDetailss(unittest.TestCase):
 
         self.device = Mock(**self.device_output)
         obj = ShowBfdSessionDestinationDetails(device=self.device)
-        parsed_output = obj.parse(ip_address='31.1.1.1')
+        parsed_output = obj.parse(ip_address='10.4.1.1')
         self.assertEqual(parsed_output, self.expected_parsed_output)
 
     def test_show_bfd_destination_details_2(self):

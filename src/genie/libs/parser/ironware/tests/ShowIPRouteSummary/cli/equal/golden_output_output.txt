@@ -1,0 +1,5 @@
+IP Routing Table - 449 entries
+  3 connected, 0 static, 0 RIP, 446 OSPF, 0 BGP, 0 ISIS
+  Number of prefixes:
+  /24: 1 /26: 2 /27: 3 /28: 5 /29: 1 /30: 34 /31: 242 /32: 161
+Nexthop Table Entry - 5 entries

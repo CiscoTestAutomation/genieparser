@@ -272,10 +272,10 @@ class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
         p1 = re.compile(r'I/f: +(?P<interface>[\S\s]+), '
                         r'+Location: +(?P<location>[\S\s]+)')
 
-        # Dest: 31.1.1.1
+        # Dest: 10.4.1.1
         p2 = re.compile(r'Dest: +(?P<dest>[\S\s]+)')
 
-        # Src: 31.1.1.2
+        # Src: 10.4.1.2
         p3 = re.compile(r'Src: +(?P<src>[\S\s]+)')
 
         #  State: UP for 0d:0h:5m:50s, number of times UP: 1
@@ -391,14 +391,14 @@ class ShowBfdSessionDestinationDetails(ShowBfdSessionDestinationDetailsSchema):
 
                 continue
 
-            # Dest: 31.1.1.1
+            # Dest: 10.4.1.1
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 dest = group['dest']
                 continue
 
-            # Src: 31.1.1.2
+            # Src: 10.4.1.2
             m = p3.match(line)
             if m:
                 group = m.groupdict()
