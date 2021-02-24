@@ -3202,7 +3202,7 @@ class ShowChassisPower(ShowChassisPowerSchema):
         # State                      Online Master
         p2 = re.compile(r'^State: +(?P<state>[\S\s]+)$')
 
-        # Input:                      Abset
+        # Input:                      Absent
         p2_1 = re.compile(r'^Input: +(?P<input>[\S\s]+)$')
 
         # DC input:  OK (INP0 feed expected, INP0 feed connected)
@@ -3332,7 +3332,6 @@ class ShowChassisPower(ShowChassisPowerSchema):
                 group = m.groupdict()
                 power_usage_zone_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
-        import pdb;pdb.set_trace()
         return ret_dict
 
 """
