@@ -1,7 +1,8 @@
 """ping.py
 
 NXOS parsers for the following show commands:
-    * ping {addr} source {source} repeat {count}
+    * ping {addr}
+    * ping {addr} source {source} count {count}
 """
 # Python
 import re
@@ -42,12 +43,12 @@ class PingSchema(MetaParser):
 class Ping(PingSchema):
 
     """ parser for
-        * ping {addr} source {source} repeat {count}
+        * ping {addr} source {source} count {count}
     """
 
     cli_command = [
         'ping {addr}',
-        'ping {addr} source {source} repeat {count}',
+        'ping {addr} source {source} count {count}',
     ]
 
     def cli(self,
