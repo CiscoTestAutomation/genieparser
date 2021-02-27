@@ -40,6 +40,7 @@
         * Showsdwanappqoeaoimstatistics
     * Added Showswitchstackportssummary
         * 'Show Switch Stack-Ports Summary'
+    * Added Parser For Show Ip Nbar Version
 
 * IRONWARE
     * Initial Creation Of Ironware Parsers
