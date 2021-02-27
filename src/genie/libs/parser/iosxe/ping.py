@@ -39,8 +39,8 @@ class PingSchema(MetaParser):
         }
     }
 
-class Ping(PingSchema):
 
+class Ping(PingSchema):
     """ parser for
         * ping {addr}
         * ping {addr} source {source} repeat {count}
@@ -51,13 +51,48 @@ class Ping(PingSchema):
         'ping {addr} source {source} repeat {count}',
     ]
 
-    def cli(self, addr=None, count=None, source=None, output=None):
+    def cli(self,
+            addr=None,
+            vrf=None,
+            count=None,
+            source=None,
+            size=None,
+            ttl=None,
+            timeout=None,
+            tos=None,
+            dscp=None,
+            command=None,
+            rapid=None,
+            do_not_fragment=None,
+            validate=None,
+            output=None):
 
         if not output:
-            if addr and source and count:
-                out = self.device.execute(self.cli_command[1].format(addr=addr, source=source, count=count))
+            cmd = []
+            if addr and vrf:
+                cmd.append('ping vrf {vrf} {addr}'.format(vrf=vrf, addr=addr))
             elif addr:
-                out = self.device.execute(self.cli_command[0].format(addr=addr, source=source, count=count))
+                cmd.append('ping {addr}'.format(addr=addr))
+            if source:
+                cmd.append('source {source}'.format(source=source))
+            if count:
+                cmd.append('repeat {count}'.format(count=count))
+            if size:
+                cmd.append('size {size}'.format(size=size))
+            if timeout:
+                cmd.append('timeout {timeout}'.format(timeout=timeout))
+            if tos:
+                cmd.append('tos {tos}'.format(tos=tos))
+            if dscp:
+                cmd.append('dscp {dscp}'.format(dscp=dscp))
+            if do_not_fragment:
+                cmd.append('df-bit')
+            if validate:
+                cmd.append('validate')
+            cmd = ' '.join(cmd)
+            if command:
+                cmd = command
+            out = self.device.execute(cmd)
         else:
             out = output
 
@@ -69,15 +104,18 @@ class Ping(PingSchema):
                         r' +is +(?P<timeout>\d+) +seconds:')
 
         #Packet sent with a source address of 21.1.1.2
-        p2 = re.compile(r'Packet +sent +with +a +source +address +of +(?P<source>[\S\s]+)')
+        p2 = re.compile(
+            r'Packet +sent +with +a +source +address +of +(?P<source>[\S\s]+)')
 
         # !!!!!!!
         p3 = re.compile(r'!+')
 
         # Success rate is 100 percent (100/100), round-trip min/avg/max = 1/2/14 ms
-        p4 = re.compile(r'Success +rate +is +(?P<success_percent>\d+) +percent'
-                        r' +\((?P<received>\d+)\/(?P<send>\d+)\),'
-                        r' +round-trip +min/avg/max *= *(?P<min>\d+)/(?P<max>\d+)/(?P<avg>\d+) +(?P<unit>\w+)')
+        p4 = re.compile(
+            r'Success +rate +is +(?P<success_percent>\d+) +percent'
+            r' +\((?P<received>\d+)\/(?P<send>\d+)\),'
+            r' +round-trip +min/avg/max *= *(?P<min>\d+)/(?P<max>\d+)/(?P<avg>\d+) +(?P<unit>\w+)'
+        )
 
         for line in out.splitlines():
             line = line.strip()
@@ -87,10 +125,12 @@ class Ping(PingSchema):
             if m:
                 group = m.groupdict()
                 ping_dict = ret_dict.setdefault('ping', {})
-                ping_dict.update({'repeat': int(group['repeat']),
-                                  'data_bytes':int(group['data_bytes']),
-                                  'address': group['address'],
-                                  'timeout_secs': int(group['timeout'])})
+                ping_dict.update({
+                    'repeat': int(group['repeat']),
+                    'data_bytes': int(group['data_bytes']),
+                    'address': group['address'],
+                    'timeout_secs': int(group['timeout'])
+                })
                 continue
             # Packet sent with a source address of 21.1.1.2
             m = p2.match(line)
@@ -106,15 +146,19 @@ class Ping(PingSchema):
                 result_per_line.append(line)
                 ping_dict.update({'result_per_line': result_per_line})
 
-
             # Sending 10, 100-byte ICMP Echos to 21.1.1.1, timeout is 2 seconds:
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 stat_dict = ping_dict.setdefault('statistics', {})
-                stat_dict.update({'success_rate_percent': float(group['success_percent']),
-                                  'received':int(group['received']),
-                                  'send': int(group['send'])})
+                stat_dict.update({
+                    'success_rate_percent':
+                    float(group['success_percent']),
+                    'received':
+                    int(group['received']),
+                    'send':
+                    int(group['send'])
+                })
 
                 round_dict = stat_dict.setdefault('round_trip', {})
 
@@ -128,9 +172,9 @@ class Ping(PingSchema):
                     avg_ms *= 1000
 
                 round_dict.update({
-                        'min_ms': min_ms,
-                        'max_ms': max_ms,
-                        'avg_ms': avg_ms
+                    'min_ms': min_ms,
+                    'max_ms': max_ms,
+                    'avg_ms': avg_ms
                 })
 
                 continue
