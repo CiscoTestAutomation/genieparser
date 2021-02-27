@@ -50,13 +50,45 @@ class Ping(PingSchema):
         'ping {addr} source {source} repeat {count}',
     ]
 
-    def cli(self, addr=None, count=None, source=None, output=None):
+    def cli(self,
+            addr=None,
+            vrf=None,
+            count=None,
+            source=None,
+            size=None,
+            ttl=None,
+            timeout=None,
+            tos=None,
+            dscp=None,
+            command=None,
+            rapid=None,
+            do_not_fragment=None,
+            validate=None,
+            output=None):
 
         if not output:
-            if addr and source and count:
-                out = self.device.execute(self.cli_command[1].format(addr=addr, source=source, count=count))
+            cmd = []
+            if addr and vrf:
+                cmd.append('ping {addr} vrf {vrf}'.format(vrf=vrf, addr=addr))
             elif addr:
-                out = self.device.execute(self.cli_command[0].format(addr=addr, source=source, count=count))
+                cmd.append('ping {addr}'.format(addr=addr))
+            if source:
+                if re.match(r'\d+\.\d+\.\d+\.\d+', source) or ':' in source:
+                    cmd.append('source {source}'.format(source=source))
+                else:
+                    cmd.append('source-interface {source}'.format(source=source))
+            if count:
+                cmd.append('count {count}'.format(count=count))
+            if size:
+                cmd.append('packet-size {size}'.format(size=size))
+            if timeout:
+                cmd.append('timeout {timeout}'.format(timeout=timeout))
+            if do_not_fragment:
+                cmd.append('df-bit')
+            cmd = ' '.join(cmd)
+            if command:
+                cmd = command
+            out = self.device.execute(cmd)
         else:
             out = output
 
