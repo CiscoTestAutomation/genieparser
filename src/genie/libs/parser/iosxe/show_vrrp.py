@@ -73,7 +73,7 @@ class ShowVrrp(ShowVrrpSchema):
         # Virtual IP address is 10.2.0.10
         p3 = re.compile(r'^Virtual +IP +address is (?P<vir_ip>[\d,\.]+)')
 
-        # Virtual MAC address is 0000.5e00.0101
+        # Virtual MAC address is 0000.5eff.0101
         p4 = re.compile(
             r'^Virtual +MAC +address +is (?P<vir_mac_addr>[\w,\.]+)')
 

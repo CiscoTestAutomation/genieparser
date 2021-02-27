@@ -2637,7 +2637,7 @@ class ShowChassisEnvironmentFpcSchema(MetaParser):
                 "power-title": {
                     "power-type": str
                 },
-                "voltage": Use(validate_voltage_list),
+                Optional("voltage"): Use(validate_voltage_list),
             },
             Optional("slave-revision"): str,
             "state": str,
@@ -2679,7 +2679,8 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
                             r'+(?P<text>(?P<celsius>\d+)\sdegrees\sC) +.*')
 
         # Power
-        p_power = re.compile(r'^Power$')
+        # Power Disabled
+        p_power = re.compile(r'^Power(\s+Disabled)?$')
 
         # 1.2 V PFE 0               1231 mV
         # 1.5 V                     1498 mV
@@ -2777,7 +2778,6 @@ class ShowChassisEnvironmentFpc(ShowChassisEnvironmentFpcSchema):
             if m:
                 env_item["slave-revision"] = m.groupdict()["slave_revision"].strip()
                 continue
-
         return res
 
 

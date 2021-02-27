@@ -1,0 +1,7 @@
+VLL MY-NORMAL-VLL-LOCAL VLL-ID 3 IFL-ID --
+ State: UP
+ End-point 1: tagged vlan 2501 e 2/10
+ COS: 6
+ End-point 2: tagged vlan 2501 e 2/9
+ COS: 5
+Extended Counters: Enabled

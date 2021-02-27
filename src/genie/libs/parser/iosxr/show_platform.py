@@ -13,6 +13,9 @@ IOSXR parsers for the following show commands:
     * 'show redundancy summary'
     * 'show redundancy'
     * 'dir'
+    * 'dir {directory}'
+    * 'dir location {location}'
+    * 'dir {directory} location {location}'
     * 'show processes memory detail'
     * 'show processes memory detail | include <WORD>'
 '''
@@ -274,7 +277,7 @@ class ShowSdrDetail(ShowSdrDetailSchema):
             # RP         0/RSP0/CPU0   IOS XR RUN        Primary    0/RSP1/CPU0
             p8 = re.compile(r'\s*(?P<type>[a-zA-Z0-9\-]+)'
                              ' +(?P<node_name>[a-zA-Z0-9\/]+)'
-                             ' +(?P<node_status>[IOS XR RUN|OPERATIONAL]+)'
+                             ' +(?P<node_status>[IOS XR RUN|OPERATIONAL|POWERED_ON]+)'
                              ' +(?P<red_state>[a-zA-Z\/\-]+)?'
                              ' +(?P<partner_name>[a-zA-Z0-9\/]+)$')
             m = p8.match(line)
@@ -350,12 +353,15 @@ class ShowPlatform(ShowPlatformSchema):
             # 0/RSP0/CPU0     A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
             # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
             # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
-            p1 = re.compile(r'\s*(?P<node>[a-zA-Z0-9\/]+)'
-                             ' +(?P<name>[a-zA-Z0-9\-]+)'
+            # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
+            # 0/1               NCS1K4-1.2T-K9             OPERATIONAL       NSHUT
+            # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
+            p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
+                             '\s+(?P<name>[a-zA-Z0-9\-\.]+)'
                              '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                              '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
-                             ' +(?P<state>(IOS XR RUN|OK|OPERATIONAL)+)'
-                             ' +(?P<config_state>[a-zA-Z\,]+)$')
+                             '\s+(?P<state>(IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
+                             '\s+(?P<config_state>[a-zA-Z\,]+)$')
             m = p1.match(line)
             if m:
                 # Parse regexp
@@ -381,7 +387,7 @@ class ShowPlatform(ShowPlatformSchema):
 
                 # Determine if slot is RP/LineCard/OtherCard
                 parse_rp = re.compile(r'.*(RSP|RP).*').match(slot)
-                parse_lc = re.compile(r'.*(0\/[0-9]).*').match(slot)
+                parse_lc = re.compile(r'.*(0\/)\d').match(slot)
                 parse_name = re.compile(r'.*(RSP|RP).*').match(name)
                 if parse_rp or parse_name:
                     slot_type = 'rp'
@@ -1498,12 +1504,19 @@ class ShowRedundancy(ShowRedundancySchema):
 # Schema for 'dir'
 # ================
 class DirSchema(MetaParser):
-    """Schema for dir"""
+    """Schema for 
+        * dir
+        * dir {directory}
+        * dir location {location}
+        * dir {directory} location {location}
+    """
+
     schema = {
         'dir': {
             'dir_name': str,
             'total_bytes': str,
             'total_free_bytes': str,
+            Optional('location'): str,
             Optional('files'):
                 {Any():
                     {Optional('size'): str,
@@ -1517,14 +1530,31 @@ class DirSchema(MetaParser):
         }
 
 class Dir(DirSchema):
-    """Parser for dir"""
-    cli_command = ['dir', 'dir {directory}']
+    """Parser for
+        * dir
+        * dir {directory}
+        * dir location {location}
+        * dir {directory} location {location}
+    """
+
+    cli_command = [
+        'dir', 'dir {directory}', 'dir location {location}',
+        'dir {directory} location {location}'
+    ]
+
     exclude = ['size', 'time', 'total_free_bytes', 'date', 'index']
 
-    def cli(self, directory='', output=None):
+    def cli(self, directory='', location='', output=None):
         if output is None:
-            if directory:
-                out = self.device.execute(self.cli_command[1].format(directory=directory))
+            if directory and location:
+                out = self.device.execute(self.cli_command[3].format(
+                    directory=directory, location=location))
+            elif location:
+                out = self.device.execute(
+                    self.cli_command[2].format(location=location))
+            elif directory:
+                out = self.device.execute(
+                    self.cli_command[1].format(directory=directory))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:
@@ -1538,13 +1568,15 @@ class Dir(DirSchema):
 
             # Directory of /misc/scratch
             # Directory of disk0a:/usr
-            p1 = re.compile(r'\s*Directory +of'
-                             ' +(?P<dir_name>[a-zA-Z0-9\:\/]+)$')
+            # Directory of net/node0_RSP1_CPU0/harddisk:/dumper
+            p1 = re.compile(r'\s*Directory\s+of\s+(?P<dir_name>\S+)$')
             m = p1.match(line)
             if m:
                 if 'dir' not in dir_dict:
                     dir_dict['dir'] = {}
                     dir_dict['dir']['dir_name'] = str(m.groupdict()['dir_name'])
+                    if location:
+                        dir_dict['dir']['location'] = location
                 continue
 
             # 1012660 kbytes total (939092 kbytes free)
@@ -1596,8 +1628,6 @@ class Dir(DirSchema):
                 continue
 
         return dir_dict
-
-# vim: ft=python et sw=4
 
 
 class ShowProcessesMemorySchema(MetaParser):

@@ -226,5 +226,6 @@ expected_output = {
         },
         "name": "OutFilter_IPv6",
         "type": "ipv6-acl-type",
+        "acl_type": "ipv6",
     }
 }

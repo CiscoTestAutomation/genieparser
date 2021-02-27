@@ -25,6 +25,7 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
+
 # ======================================================
 # Parser for 'show mpls label range'
 # ======================================================
@@ -38,6 +39,7 @@ class ShowMplsLabelRangeSchema(MetaParser):
 			'max_range': int 	 
 			},	 
 	    }
+
 
 class ShowMplsLabelRange(ShowMplsLabelRangeSchema):
 
@@ -70,6 +72,277 @@ class ShowMplsLabelRange(ShowMplsLabelRangeSchema):
                 continue
             
         return mpls_dict
+
+
+# ==============================================
+# Parser for 'show mpls ldp discovery'
+# ==============================================
+class ShowMplsLdpDiscoverySchema(MetaParser):
+
+    """Schema for show mpls ldp discovery
+                  show mpls ldp discovery detail
+                  show mpls ldp afi-all discovery
+                  show mpls ldp discovery <ldp>
+                  show mpls ldp vrf <vrf> discovery
+                  show mpls ldp vrf <vrf> discovery detail
+    """
+
+    schema = {
+        'vrf': {
+            Any(): {
+                Optional('local_ldp_identifier'): {
+                    Any(): {
+                        Optional('discovery_sources'): {
+                            'interfaces': {
+                                Any(): {
+                                    Optional('source_ip_addr'): str,
+                                    Optional('transport_ip_addr'): str,
+                                    Optional('xmit'): bool,
+                                    Optional('recv'): bool,
+                                    Optional('hello_interval_ms'): int,
+                                    Optional('hello_due_time_ms'): int,
+                                    Optional('quick_start'): str,
+                                    Optional('ldp_id'): {
+                                        Any(): {
+                                            Optional('established_date'): str,
+                                            Optional('established_elapsed'): str,
+                                            Optional('holdtime_sec'): int,
+                                            Optional('expiring_in'): float,
+                                            Optional('proposed_local'): int,
+                                            Optional('proposed_peer'): int,
+                                            Optional('source_ip_addr'): str,
+                                            Optional('transport_ip_addr'): str
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
+    
+    """Parser for show mpls ldp discovery
+                  show mpls ldp discovery detail
+                  show mpls ldp afi-all discovery
+                  show mpls ldp discovery <ldp>
+                  show mpls ldp vrf <vrf> discovery
+                  show mpls ldp vrf <vrf> discovery detail
+    """
+
+    cli_command = ['show mpls ldp discovery',
+                   'show mpls ldp discovery detail',
+                   'show mpls ldp afi-all discovery',
+                   'show mpls ldp discovery {ldp}',
+                   'show mpls ldp vrf {vrf} discovery',
+                   'show mpls ldp vrf {vrf} discovery detail']
+
+    def cli(self, all="", detail="", vrf="", ldp="", output=None):
+        if output is None:
+            if vrf:
+                if detail:
+                    cmd = self.cli_command[5].format(vrf=vrf)
+                else:
+                    cmd = self.cli_command[4].format(vrf=vrf)
+            elif ldp:
+                cmd = self.cli_command[3].format(ldp=ldp)
+            elif all:
+                cmd = self.cli_command[2].format(ldp=ldp)
+            elif detail:
+                cmd = self.cli_command[1].format(ldp=ldp)
+            else:
+                cmd = self.cli_command[0]
+
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        if not vrf:
+            vrf = "default"
+
+        # initial return dictionary
+        result_dict = {}
+        discovery_flag = False
+        targeted_flag = False
+
+        # Local LDP Identifier: 10.52.26.119:0 
+        p1 = re.compile(r'^Local +LDP +Identifier: ' 
+                        '(?P<local_ldp_identifier>[\d\.\:]+)$') 
+
+        # Discovery Sources: 
+        p2 = re.compile(r'^Discovery +Sources:$') 
+
+        # Bundle-Ether1 : xmit/recv 
+        # TenGigE0/0/0/4.2096 (0x14c0) : xmit
+        # Bundle-Ether3 (0x8000260) : xmit/recv
+        p3 = re.compile(r'^((?P<interface>\S+) +)(\S.*|): *(?P<xmit>xmit)?\/?(?P<recv>recv)?$') 
+
+        # VRF: 'default' (0x60000000) 
+        p4 = re.compile(r'^VRF: \'(?P<vrf>\S+)\' +\(\d+x\d+\)$') 
+
+        # LDP Id: 10.12.31.251:0
+        # LDP Id: 10.52.31.244:0, Transport address: 10.52.31.244 
+        p5 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:(?P<space>\s{1,2})?(?P<ldp_tdp_id>[\d\.\:]+)(,' 
+                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)|)$')
+
+        # Hold time: 15 sec (local:15 sec, peer:15 sec) 
+        p6 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec ' 
+                        '\(local:(?P<proposed_local>\d+) +sec, ' 
+                        'peer:(?P<proposed_peer>\d+) +sec\)$') 
+
+        # (expiring in 12.5 sec)
+        p7 = re.compile(r'\(expiring +in +(?P<expiring_in>\d.*) +sec\)$')
+
+        # Established: Nov  6 14:39:26.164 (5w2d ago) 
+        p8 = re.compile(r'^Established: +(?P<established_date>\S.*) +\((?P<established_elapsed>\S*) +ago\)$') 
+
+        # Source address: 10.166.0.57; Transport address: 10.52.31.247
+        p9 = re.compile(r'^Source +address: +(?P<source_ip_addr>[\d\.]+);'
+                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
+
+        # Hello interval: 5 sec (due in 2.3 sec)
+        p10 = re.compile(r'^Hello +interval: +(?P<hello_interval>\d+) +sec'
+                        ' +\(due +in +(?P<hello_due_time>\S+ \S+)\)$')
+
+        # Quick-start: Enabled
+        p11 = re.compile(r'^Quick-start: +(?P<quick_start>\S+)$')
+
+        # 10.1.1.1 -> 10.3.3.3 (active), xmit/recv
+        p12 = re.compile(r'^(?P<source>[\d\.]+) +\-> +(?P<destination>[\d\.]+)'
+                            ' +\((?P<status>(active|passive|active\/passive)+)\),'
+                            ' +(?P<xmit>xmit)?\/?(?P<recv>recv)?$')
+
+        # TODO Unlike iosxe, 'Hello interval', 'quick-start', 'hold time', 'established' 
+        # are also used for interfaces, hence Targeted Hello is omitted.
+        # Targeted Hellos:
+        # p13 = re.compile(r'^Targeted +Hellos:$')
+
+        for line in out.splitlines(): 
+            line = line.strip()
+            
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                local_ldp_identifier_dict = ldp_dict.setdefault('local_ldp_identifier', {}). \
+                            setdefault(group['local_ldp_identifier'], {})
+                continue
+
+            # Discovery Sources: 
+            m = p2.match(line) 
+            if m:  
+                discovery_flag = True 
+                targeted_flag = False
+                continue 
+
+            # Targeted Hellos:
+            # m = p13.match(line)
+            # if m:
+            #     discovery_flag = False
+            #     targeted_flag = True
+            #     continue
+            
+            # Bundle-Ether1 : xmit/recv 
+            m = p3.match(line) 
+            if m:  
+                group = m.groupdict()
+                interface = group['interface'] if group['interface'] else "default" 
+                interface_dict = local_ldp_identifier_dict.setdefault('discovery_sources', {}).setdefault('interfaces', {}).setdefault(interface, {}) 
+                interface_dict.update({'xmit': True if group['xmit'] else False}) 
+                interface_dict.update({'recv': True if group['recv'] else False}) 
+                continue 
+
+            # VRF: 'default' (0x60000000) 
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                # group['vrf']
+                continue
+
+            # LDP Id: 10.52.31.244:0, Transport address: 10.52.31.244 
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_tdp = group['ldp_tdp'].lower()
+                if discovery_flag:
+                    ldp_dict = interface_dict.setdefault('{}_id'.format(ldp_tdp), {}).setdefault(
+                        group['ldp_tdp_id'], {})
+
+                if group['transport_ip_addr']:
+                    interface_dict.update({'transport_ip_addr': group['transport_ip_addr']})
+
+                # if targeted_flag:
+                #     if targeted_dict:
+                #         targeted_dict.update({'{}_id'.format(ldp_tdp): group['ldp_tdp_id']})
+                continue
+
+            # Hold time: 15 sec (local:15 sec, peer:15 sec) 
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({k: int(v) for k, v in group.items() if v})
+                continue
+
+            # (expiring in 12.5 sec)
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({'expiring_in': float(group['expiring_in'])})
+
+            # Established: Nov  6 14:39:26.164 (5w2d ago) 
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict.update({'established_date': group['established_date']})
+                ldp_dict.update({'established_elapsed': group['established_elapsed']})
+
+            # Source address: 10.166.0.57; Transport address: 10.52.31.247
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if 'source_ip_addr' in interface_dict.keys():
+                    ldp_dict.update({k: v for k, v in group.items() if v})
+                else:
+                    interface_dict.update({k: v for k, v in group.items() if v})
+                continue
+
+            # Hello interval: 5 sec (due in 2.3 sec)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'hello_interval_ms': 1000*int(group['hello_interval'])})
+                if ' sec' in group['hello_due_time']:
+                    hello_due_time_ms = int(1000*float(group['hello_due_time'].split(' ')[0]))
+                else: 
+                    hello_due_time_ms = int(group['hello_due_time'].split(' ')[0])
+                interface_dict.update({'hello_due_time_ms': hello_due_time_ms})
+                continue
+
+            # Quick-start: Enabled
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'quick_start': group['quick_start'].lower()})
+                continue
+
+            #  10.81.1.1 -> 172.16.94.33 (active), xmit/recv
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                targeted_dict = local_ldp_identifier_dict.setdefault('targeted_hellos', {}). \
+                    setdefault(group['source'], {}). \
+                    setdefault(group['destination'], {})
+                targeted_dict.update({'xmit': True if group['xmit'] else False})
+                targeted_dict.update({'recv': True if group['recv'] else False})
+                targeted_dict.update({'active': True if group['status'] == 'active' else False})
+                continue
+            
+        return result_dict
+
 
 # ======================================================
 # Parser for 'show mpls ldp neighbor'
@@ -164,6 +437,7 @@ class ShowMplsLdpNeighborSchema(MetaParser):
             }
         }
     }
+
 
 class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
@@ -585,6 +859,7 @@ class ShowMplsLdpNeighbor(ShowMplsLdpNeighborSchema):
 
         return mpls_dict
 
+
 class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
     """Parser for show mpls ldp neighbor detail,
                   show mpls ldp neighbor {interface} detail"""
@@ -610,6 +885,7 @@ class ShowMplsLdpNeighborDetail(ShowMplsLdpNeighbor):
             out = output
 
         return super().cli(vrf=vrf, interface=interface, output=out)
+
 
 # ======================================================
 # Parser for 'show mpls ldp neighbor brief'
@@ -767,6 +1043,7 @@ class ShowMplsLdpNeighborBrief(ShowMplsLdpNeighborBriefSchema):
 
         return mpls_dict
 
+
 # ======================================================
 # Schema for 'show mpls label table detail'
 # ======================================================
@@ -807,6 +1084,7 @@ class ShowMplsLabelTableDetailSchema(MetaParser):
             },
         }
     }
+
 
 # ======================================================
 # Parser for 'show mpls label table detail'
@@ -922,6 +1200,7 @@ class ShowMplsLabelTableDetail(ShowMplsLabelTableDetailSchema):
 
         return mpls_dict
 
+
 # ======================================================
 # Parser for 'show mpls label table private'
 # ======================================================
@@ -939,6 +1218,7 @@ class ShowMplsLabelTablePrivate(ShowMplsLabelTableDetail):
         else:
             out = output
         return super().cli(output=out)
+
 
 # ======================================================
 # Schema for 'show mpls interfaces'

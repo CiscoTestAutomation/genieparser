@@ -1,0 +1,3 @@
+Type  : N/A
+Vendor:                       N/A, Version:              Unknown
+Part# :                   Unknown, Serial#:              Unknown

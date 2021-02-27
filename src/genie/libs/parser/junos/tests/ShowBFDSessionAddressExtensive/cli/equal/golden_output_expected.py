@@ -26,7 +26,7 @@ expected_output={
                                              'session-adaptive-multiplier': '3',
                                              'session-detection-time': '3.000',
                                              'session-interface': 'ge-0/0/0.0',
-                                             'session-neighbor': '12.0.0.2',
+                                             'session-neighbor': '10.144.0.2',
                                              'session-state': 'Up',
                                              'session-transmission-interval': '1.000',
                                              'session-type': 'Single hop BFD',

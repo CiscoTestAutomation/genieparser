@@ -1,0 +1,45 @@
+RP/0/RP0/CPU0:Router#show route afi-all safi-all summary 
+Mon Dec  7 12:27:42.176 CST
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+local                            24         0          0           5760         
+connected                        21         3          0           5760         
+dagr                             0          0          0           0            
+isis IGP                         11         8          0           4896         
+bgp 1                            841284     9          0           201910320    
+static                           61         0          0           14640        
+ospf 13                          596        1          0           144960       
+ospf 2                           11         0          0           3088         
+Total                            842008     21         0           202089424    
+
+
+IPv4 Multicast:
+---------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+local                            0          0          0           0            
+connected                        0          0          0           0            
+isis IGP                         0          0          0           0            
+Total                            0          0          0           0            
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        5          1          0           1584         
+connected l2tpv3_xconnect        0          0          0           0            
+local                            6          0          0           1584         
+local-srv6 bgp-1                 0          0          0           0            
+static                           1          0          0           264          
+bgp 1                            101864     1          0           26892360     
+ospf 1                           8          1          0           2376         
+Total                            101884     3          0           26898168     
+
+
+IPv6 Multicast:
+---------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            
