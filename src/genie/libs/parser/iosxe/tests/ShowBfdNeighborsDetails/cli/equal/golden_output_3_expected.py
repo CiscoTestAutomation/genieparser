@@ -1,8 +1,8 @@
 expected_output = {
     'our_address': {
-        '21.1.1.2': {
+        '10.229.1.2': {
             'neighbor_address': {
-                '21.1.1.1': {
+                '10.229.1.1': {
                     'demand_mode': 0,
                     'elapsed_time_watermarks': '0 0',
                     'elapsed_time_watermarks_last': 0,

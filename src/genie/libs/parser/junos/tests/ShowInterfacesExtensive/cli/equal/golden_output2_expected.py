@@ -19,7 +19,7 @@ expected_output={'interface-information': {'physical-interface': [{'active-alarm
                                                                                                                                'cos-queue-limit': 'none',
                                                                                                                                'cos-queue-number': '3',
                                                                                                                                'cos-queue-priority': 'low'}]}},
-                                                   'current-physical-address': '0c:86:10:22:41:00',
+                                                   'current-physical-address': '0c:86:10:ff:63:22',
                                                    'down-hold-time': '0',
                                                    'ethernet-filter-statistics': {'cam-destination-filter-count': '0',
                                                                                   'cam-source-filter-count': '0',
@@ -57,7 +57,7 @@ expected_output={'interface-information': {'physical-interface': [{'active-alarm
                                                                                'output-unicasts': '2'},
                                                    'ethernet-pcs-statistics': {'bit-error-seconds': '0',
                                                                                'errored-blocks-seconds': '0'},
-                                                   'hardware-physical-address': '0c:86:10:22:41:00',
+                                                   'hardware-physical-address': '0c:86:10:ff:63:22',
                                                    'if-config-flags': {'iff-snmp-traps': True,
                                                                        'internal-flags': '0x4000'},
                                                    'if-device-flags': {'ifdf-present': True,
@@ -76,7 +76,7 @@ expected_output={'interface-information': {'physical-interface': [{'active-alarm
                                                                         'input-runts': '0'},
                                                    'interface-flapped': {'#text': '2021-01-12 '
                                                                                   '13:06:13 '
-                                                                                  'JST '
+                                                                                  'EST '
                                                                                   '(02:34:54 '
                                                                                   'ago)'},
                                                    'interface-transmit-statistics': 'Disabled',
@@ -134,7 +134,7 @@ expected_output={'interface-information': {'physical-interface': [{'active-alarm
                                                    'speed': '100Gbps',
                                                    'statistics-cleared': '2021-01-12 '
                                                                          '15:17:22 '
-                                                                         'JST '
+                                                                         'EST '
                                                                          '(00:23:45 '
                                                                          'ago)',
                                                    'stp-traffic-statistics': {'stp-input-bytes-dropped': '0',

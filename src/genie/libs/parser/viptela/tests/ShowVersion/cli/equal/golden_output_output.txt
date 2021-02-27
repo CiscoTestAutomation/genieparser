@@ -1,0 +1,4 @@
+
+        srp_vedge# show version
+        99.99.999-4567
+    

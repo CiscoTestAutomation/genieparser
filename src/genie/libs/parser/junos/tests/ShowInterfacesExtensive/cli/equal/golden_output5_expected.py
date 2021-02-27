@@ -33,7 +33,7 @@ expected_output = {
                         ],
                     }
                 },
-                "current-physical-address": "0c:86:10:22:48:77",
+                "current-physical-address": "0c:86:10:ff:6a:99",
                 "description": "to_lab_mx480-2_ge-0/1/2",
                 "down-hold-time": "0",
                 "ethernet-filter-statistics": {
@@ -74,7 +74,7 @@ expected_output = {
                     "output-total-errors": "0",
                     "output-unicasts": "104865003",
                 },
-                "hardware-physical-address": "0c:86:10:22:48:77",
+                "hardware-physical-address": "0c:86:10:ff:6a:99",
                 "if-config-flags": {"iff-snmp-traps": True, "internal-flags": "0x4000"},
                 "if-device-flags": {"ifdf-present": True, "ifdf-running": True},
                 "if-media-flags": {"ifmf-none": True},
@@ -91,7 +91,7 @@ expected_output = {
                     "input-runts": "0",
                 },
                 "interface-flapped": {
-                    "#text": "2021-01-26 " "03:35:35 " "JST " "(09:40:40 " "ago)"
+                    "#text": "2021-01-26 " "03:35:35 " "EST " "(09:40:40 " "ago)"
                 },
                 "interface-transmit-statistics": "Disabled",
                 "link-level-type": "Ethernet",
@@ -108,17 +108,17 @@ expected_output = {
                                 "generation": "168",
                                 "interface-address": [
                                     {
-                                        "ifa-destination": "2001:268:fb90:1e::/64",
+                                        "ifa-destination": "2001:db8:223c:5e2a::/64",
                                         "ifa-flags": {
                                             "ifaf-is-preferred": True,
                                             "ifaf-is-primary": True,
                                         },
-                                        "ifa-local": "2001:268:fb90:1e::1",
+                                        "ifa-local": "2001:db8:223c:5e2a::1",
                                     },
                                     {
                                         "ifa-destination": "fe80::/64",
                                         "ifa-flags": {"ifaf-is-preferred": True},
-                                        "ifa-local": "fe80::e86:10ff:fe22:4877",
+                                        "ifa-local": "fe80::e86:10ff:feff:6a99",
                                     },
                                 ],
                                 "mtu": "4470",

@@ -98,7 +98,7 @@ class ShowPPMTransmissionsProtocolBfdDetail(ShowPPMTransmissionsProtocolBfdDetai
         # Init
         ret_dict = {}
 
-        # Destination: 27.85.194.102, Protocol: BFD, Transmission interval: 300
+        # Destination: 10.49.194.102, Protocol: BFD, Transmission interval: 300
         p1 = re.compile(r'^Destination: +(?P<transmission_destination>\S+), '
                         r'+Protocol: +(?P<protocol>\S+), Transmission +interval: '
                         r'+(?P<transmission_interval>\d+)$')
@@ -124,7 +124,7 @@ class ShowPPMTransmissionsProtocolBfdDetail(ShowPPMTransmissionsProtocolBfdDetai
         for line in out.splitlines():
             line = line.strip()
 
-            # Destination: 27.85.194.102, Protocol: BFD, Transmission interval: 300
+            # Destination: 10.49.194.102, Protocol: BFD, Transmission interval: 300
             m = p1.match(line)
             if m:
                 group = m.groupdict()

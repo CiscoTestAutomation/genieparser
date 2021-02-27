@@ -1263,13 +1263,13 @@ class test_show_module(unittest.TestCase):
 
         Mod  MAC-Address(es)                         Serial-Num
         ---  --------------------------------------  ----------
-        1    bc-4a-56-aa-50-b0 to bc-4a-56-aa-51-33  FOC24322RBW
-        2    90-77-ee-34-f8-7c to 90-77-ee-34-f9-0f  FOC24294DJ8
-        6    24-16-9d-d0-c9-38 to 24-16-9d-d0-c9-7b  FOC24021CNU
+        1    bc-4a-56-ff-fa-5b to bc-4a-56-ff-fb-dd  FOC24322RBW
+        2    90-77-ee-ff-2d-b0 to 90-77-ee-ff-2e-43  FOC24294DJ8
+        6    24-16-9d-ff-9a-09 to 24-16-9d-ff-9a-4c  FOC24021CNU
         22   NA                                      FOC24381TPG
         24   NA                                      FOC24381TX1
         26   NA                                      FOC24381TUV
-        27   54-88-de-ae-5a-80 to 54-88-de-ae-5a-91  FOC24362EGB
+        27   54-88-de-ff-09-2f to 54-88-de-ff-09-40  FOC24362EGB
         29   NA                                      FOC24362EU0
         30   NA                                      FOC2435407P
 
@@ -1293,9 +1293,9 @@ class test_show_module(unittest.TestCase):
                 '1': {
                     '16x400G Ethernet Module': {
                         'hardware': '3.1',
-                        'mac_address': 'bc-4a-56-aa-50-b0 '
+                        'mac_address': 'bc-4a-56-ff-fa-5b '
                         'to '
-                        'bc-4a-56-aa-51-33',
+                        'bc-4a-56-ff-fb-dd',
                         'model': 'N9K-X9716D-GX',
                         'online_diag_status': 'Pass',
                         'ports': '16',
@@ -1308,9 +1308,9 @@ class test_show_module(unittest.TestCase):
                 '2': {
                     '36x40/100G Ethernet Module': {
                         'hardware': '1.1',
-                        'mac_address': '90-77-ee-34-f8-7c '
+                        'mac_address': '90-77-ee-ff-2d-b0 '
                         'to '
-                        '90-77-ee-34-f9-0f',
+                        '90-77-ee-ff-2e-43',
                         'model': 'N9K-X9736C-FX',
                         'online_diag_status': 'Pass',
                         'ports': '36',
@@ -1395,9 +1395,9 @@ class test_show_module(unittest.TestCase):
                 '6': {
                     '48x10/25G + 4x40/100G Ethernet Module': {
                         'hardware': '2.3',
-                        'mac_address': '24-16-9d-d0-c9-38 '
+                        'mac_address': '24-16-9d-ff-9a-09 '
                         'to '
-                        '24-16-9d-d0-c9-7b',
+                        '24-16-9d-ff-9a-4c',
                         'model': 'N9K-X97160YC-EX',
                         'online_diag_status': 'Pass',
                         'ports': '52',
@@ -1419,9 +1419,9 @@ class test_show_module(unittest.TestCase):
                 '27': {
                     'Supervisor Module': {
                         'hardware': '1.1',
-                        'mac_address': '54-88-de-ae-5a-80 '
+                        'mac_address': '54-88-de-ff-09-2f '
                         'to '
-                        '54-88-de-ae-5a-91',
+                        '54-88-de-ff-09-40',
                         'model': 'N9K-SUP-A+',
                         'online_diag_status': 'Pass',
                         'ports': '0',

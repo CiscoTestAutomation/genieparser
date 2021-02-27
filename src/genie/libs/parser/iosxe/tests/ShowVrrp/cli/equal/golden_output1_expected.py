@@ -15,7 +15,7 @@ expected_output = {
                     "priority": 120,
                     "state": "Master",
                     "virtual_ip_address": "192.168.10.1",
-                    "virtual_mac_address": "0000.5e00.0164",  
+                    "virtual_mac_address": "0000.5eff.0164",  
                     "vrrs_name": {
                         "DC_LAN": {
                             "track_object": 

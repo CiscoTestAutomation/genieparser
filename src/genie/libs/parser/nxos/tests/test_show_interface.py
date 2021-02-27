@@ -32,15 +32,15 @@ class TestShowInterface(unittest.TestCase):
     maxDiff = None
 
     empty_output = {'execute.return_value': ''}
-    
+
     golden_parsed_output1 = {
-        'Ethernet2/1': 
+        'Ethernet2/1':
             {'auto_mdix': 'off',
             'auto_negotiate': False,
             'admin_state': 'up',
             'bandwidth': 768,
             'beacon': 'off',
-            'counters': 
+            'counters':
                 {'in_bad_etype_drop': 0,
                 'in_broadcast_pkts': 0,
                 'in_crc_errors': 0,
@@ -80,7 +80,7 @@ class TestShowInterface(unittest.TestCase):
                 'out_octets': 0,
                 'out_pkts': 0,
                 'out_unicast_pkts': 0,
-                'rate': 
+                'rate':
                     {'in_rate': 0,
                     'in_rate_bps': 0,
                    'in_rate_pkts': 0,
@@ -98,14 +98,14 @@ class TestShowInterface(unittest.TestCase):
             'duplex_mode': 'full',
             'efficient_ethernet': 'n/a',
             'enabled': True,
-            'encapsulations': 
+            'encapsulations':
                 {'encapsulation': 'arpa'},
             'ethertype': '0x8100',
-            'flow_control': 
+            'flow_control':
                 {'receive': False, 'send': False},
             'interface_reset': 1,
-            'ipv4': 
-                {'10.4.4.4/24': 
+            'ipv4':
+                {'10.4.4.4/24':
                     {'ip': '10.4.4.4',
                     'prefix_length': '24',
                     'route_tag': '10',
@@ -116,7 +116,7 @@ class TestShowInterface(unittest.TestCase):
             'medium': 'broadcast',
             'mtu': 1600,
             'oper_status': 'up',
-            'port_channel': 
+            'port_channel':
                 {'port_channel_member': False},
             'phys_address': '5254.00ff.8506',
             'port_mode': 'routed',
@@ -126,14 +126,14 @@ class TestShowInterface(unittest.TestCase):
             'switchport_monitor': 'off',
             'txload': '1/255',
             'types': '10/100/1000 Ethernet'},
-        'Ethernet2/1.10': 
+        'Ethernet2/1.10':
             {'auto_mdix': 'off',
             'admin_state': 'down',
             'bandwidth': 768,
             'delay': 10,
             'dedicated_interface': True,
             'enabled': False,
-            'encapsulations': 
+            'encapsulations':
                 {'encapsulation': 'dot1q',
                 'first_dot1q': '10'},
             'ethertype': '0x8100',
@@ -142,7 +142,7 @@ class TestShowInterface(unittest.TestCase):
             'medium': 'broadcast',
             'mtu': 1600,
             'oper_status': 'down',
-            'port_channel': 
+            'port_channel':
                 {'port_channel_member': False},
             'parent_interface': 'Ethernet2/1',
             'phys_address': '5254.00ff.8506',
@@ -151,14 +151,14 @@ class TestShowInterface(unittest.TestCase):
             'rxload': '1/255',
             'txload': '1/255',
             'types': '10/100/1000 Ethernet'},
-        'Ethernet2/1.20': 
+        'Ethernet2/1.20':
             {'auto_mdix': 'off',
             'admin_state': 'up',
             'bandwidth': 768,
             'delay': 10,
             'dedicated_interface': True,
             'enabled': True,
-            'encapsulations': 
+            'encapsulations':
                 {'encapsulation': 'dot1q',
                 'first_dot1q': '20'},
             'ethertype': '0x8100',
@@ -167,7 +167,7 @@ class TestShowInterface(unittest.TestCase):
             'medium': 'p2p',
             'mtu': 1600,
             'oper_status': 'up',
-            'port_channel': 
+            'port_channel':
                 {'port_channel_member': False},
             'parent_interface': 'Ethernet2/1',
             'phys_address': '5254.00ff.8506',
@@ -176,13 +176,13 @@ class TestShowInterface(unittest.TestCase):
             'rxload': '1/255',
             'txload': '1/255',
             'types': '10/100/1000 Ethernet'},
-        'Ethernet2/2': 
+        'Ethernet2/2':
             {'auto_mdix': 'off',
             'auto_negotiate': False,
             'admin_state': 'up',
             'bandwidth': 1000000,
             'beacon': 'off',
-            'counters': 
+            'counters':
                 {'in_bad_etype_drop': 0,
                 'in_broadcast_pkts': 0,
                 'in_crc_errors': 0,
@@ -222,7 +222,7 @@ class TestShowInterface(unittest.TestCase):
                 'out_octets': 0,
                 'out_pkts': 0,
                 'out_unicast_pkts': 0,
-                'rate': 
+                'rate':
                     {'in_rate': 0,
                     'in_rate_bps': 0,
                     'in_rate_pkts': 0,
@@ -239,10 +239,10 @@ class TestShowInterface(unittest.TestCase):
             'duplex_mode': 'full',
             'efficient_ethernet': 'n/a',
             'enabled': True,
-            'encapsulations': 
+            'encapsulations':
                 {'encapsulation': 'arpa'},
             'ethertype': '0x8100',
-            'flow_control': 
+            'flow_control':
                 {'receive': False, 'send': False},
             'interface_reset': 1,
             'last_link_flapped': '00:07:28',
@@ -251,7 +251,7 @@ class TestShowInterface(unittest.TestCase):
             'medium': 'broadcast',
             'mtu': 1500,
             'oper_status': 'up',
-            'port_channel': 
+            'port_channel':
                 {'port_channel_member': False},
             'phys_address': '5254.00ff.62da',
             'port_mode': 'trunk',
@@ -261,18 +261,18 @@ class TestShowInterface(unittest.TestCase):
             'switchport_monitor': 'off',
             'txload': '1/255',
             'types': '10/100/1000 Ethernet'},
-        'mgmt0': 
+        'mgmt0':
             {'auto_mdix': 'off',
             'auto_negotiate': True,
             'admin_state': 'up',
             'bandwidth': 1000000,
-            'counters': 
+            'counters':
                 { 'in_multicast_pkts': 2,
                   'in_unicast_pkts': 0,
                   'in_broadcast_pkts': 4,
                 'in_pkts': 2,
                   'in_octets': 4726,
-                  'rate': 
+                  'rate':
                     {'in_rate': 0,
                     'in_rate_pkts': 0,
                     'load_interval': 1,
@@ -283,7 +283,7 @@ class TestShowInterface(unittest.TestCase):
             'delay': 10,
             'duplex_mode': 'full',
             'enabled': True,
-            'encapsulations': 
+            'encapsulations':
                 {'encapsulation': 'arpa'},
             'ethertype': '0x0000',
             'link_state': 'up',
@@ -291,7 +291,7 @@ class TestShowInterface(unittest.TestCase):
             'medium': 'broadcast',
             'mtu': 1500,
             'oper_status': 'up',
-            'port_channel': 
+            'port_channel':
                 {'port_channel_member': False},
             'phys_address': '5254.00ff.9c38',
             'port_mode': 'routed',
@@ -300,10 +300,10 @@ class TestShowInterface(unittest.TestCase):
             'rxload': '1/255',
             'txload': '1/255',
             'types': 'Ethernet'},
-        'Ethernet1/1': 
+        'Ethernet1/1':
             {'bandwidth': 10000000,
             'beacon': 'off',
-            'counters': 
+            'counters':
                 {'in_bad_etype_drop': 0,
                 'in_broadcast_pkts': 0,
                 'in_crc_errors': 0,
@@ -341,7 +341,7 @@ class TestShowInterface(unittest.TestCase):
                 'out_octets': 0,
                 'out_pkts': 0,
                 'out_unicast_pkts': 0,
-                'rate': 
+                'rate':
                     {'in_rate': 0,
                     'in_rate_bps': 0,
                     'in_rate_pkts': 0,
@@ -379,11 +379,11 @@ class TestShowInterface(unittest.TestCase):
             'switchport_monitor': 'off',
             'txload': '1/255',
             'types': '1000/10000 Ethernet'},
-        'nve1': 
+        'nve1':
             {'enabled': True,
              'link_state': 'up',
             'oper_status': 'up',
-            'port_channel': 
+            'port_channel':
                 {'port_channel_member': False}}}
 
     golden_output1 = {'execute.return_value': '''
@@ -397,7 +397,7 @@ class TestShowInterface(unittest.TestCase):
           full-duplex, 1000 Mb/s
           Auto-Negotiation is turned on
           Auto-mdix is turned off
-          EtherType is 0x0000 
+          EtherType is 0x0000
           1 minute input rate 0 bits/sec, 0 packets/sec
           1 minute output rate 24 bits/sec, 0 packets/sec
           Rx
@@ -420,8 +420,8 @@ class TestShowInterface(unittest.TestCase):
               Auto-Negotiation is turned off
               Input flow-control is off, output flow-control is off
               Auto-mdix is turned off
-              Switchport monitor is off 
-              EtherType is 0x8100 
+              Switchport monitor is off
+              EtherType is 0x8100
               EEE (efficient-ethernet) : n/a
               Last link flapped 00:00:29
               Last clearing of "show interface" counters never
@@ -458,7 +458,7 @@ class TestShowInterface(unittest.TestCase):
               Encapsulation 802.1Q Virtual LAN, Vlan ID 10, medium is broadcast
               Port mode is routed
               Auto-mdix is turned off
-              EtherType is 0x8100 
+              EtherType is 0x8100
         Ethernet2/1.20 is up
             admin state is up, Dedicated Interface, [parent interface is Ethernet2/1]
               Hardware: 10/100/1000 Ethernet, address: 5254.00ff.8534 (bia 5254.00ff.8506)
@@ -467,7 +467,7 @@ class TestShowInterface(unittest.TestCase):
               Encapsulation 802.1Q Virtual LAN, Vlan ID 20, medium is p2p
               Port mode is routed
               Auto-mdix is turned off
-              EtherType is 0x8100 
+              EtherType is 0x8100
         Ethernet2/2 is up
             admin state is up, Dedicated Interface
               Hardware: 10/100/1000 Ethernet, address: 5254.00ff.62da (bia 5254.00ff.62da)
@@ -480,8 +480,8 @@ class TestShowInterface(unittest.TestCase):
               Auto-Negotiation is turned off
               Input flow-control is off, output flow-control is off
               Auto-mdix is turned off
-              Switchport monitor is off 
-              EtherType is 0x8100 
+              Switchport monitor is off
+              EtherType is 0x8100
               EEE (efficient-ethernet) : n/a
               Last link flapped 00:07:28
               Last clearing of "show interface" counters never
@@ -511,7 +511,7 @@ class TestShowInterface(unittest.TestCase):
                 0 lost carrier  0 no carrier  0 babble  0 output discard
                 0 Tx pause
         Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
-         Dedicated Interface 
+         Dedicated Interface
 
           Hardware: 1000/10000 Ethernet, address: 002a.6aff.4571 (bia 002a.6aff.451d)
           Description: Connection to pe1
@@ -523,8 +523,8 @@ class TestShowInterface(unittest.TestCase):
           Beacon is turned off
           Input flow-control is off, output flow-control is off
           Rate mode is dedicated
-          Switchport monitor is off 
-          EtherType is 0x8100 
+          Switchport monitor is off
+          EtherType is 0x8100
           Last link flapped 13:23:37
           Last clearing of "show interface" counters 13:44:29
           0 interface resets
@@ -627,8 +627,8 @@ class TestShowInterface(unittest.TestCase):
           Auto-Negotiation is turned on, FEC mode is Auto
           Input flow-control is off, output flow-control is off
           Auto-mdix is turned off
-          Switchport monitor is off 
-          EtherType is 0x8100 
+          Switchport monitor is off
+          EtherType is 0x8100
           EEE (efficient-ethernet) : n/a
           Last link flapped never
           Last clearing of "show interface" counters never
@@ -746,8 +746,8 @@ class TestShowInterface(unittest.TestCase):
               Auto-Negotiation is turned off
               Input flow-control is off, output flow-control is off
               Auto-mdix is turned off
-              Switchport monitor is off 
-              EtherType is 0x8100 
+              Switchport monitor is off
+              EtherType is 0x8100
               EEE (efficient-ethernet) : n/a
               Last link flapped 00:00:29
               Last clearing of "show interface" counters never
@@ -885,7 +885,7 @@ class TestShowInterface(unittest.TestCase):
         full-duplex, 1000 Mb/s
         Auto-Negotiation is turned on
         Auto-mdix is turned off
-        EtherType is 0x0000 
+        EtherType is 0x0000
         1 minute input rate 13408 bits/sec, 16 packets/sec
         1 minute output rate 51208 bits/sec, 17 packets/sec
         Rx
@@ -910,8 +910,8 @@ class TestShowInterface(unittest.TestCase):
         Input flow-control is off, output flow-control is off
         Auto-mdix is turned off
         Rate mode is dedicated
-        Switchport monitor is off 
-        EtherType is 0x8100 
+        Switchport monitor is off
+        EtherType is 0x8100
         EEE (efficient-ethernet) : n/a
         Last link flapped 3d22h
         Last clearing of "show interface" counters never
@@ -951,8 +951,8 @@ class TestShowInterface(unittest.TestCase):
         Input flow-control is off, output flow-control is off
         Auto-mdix is turned off
         Rate mode is dedicated
-        Switchport monitor is off 
-        EtherType is 0x8100 
+        Switchport monitor is off
+        EtherType is 0x8100
         EEE (efficient-ethernet) : n/a
         Last link flapped 82week(s) 6day(s)
         Last clearing of "show interface" counters never
@@ -1185,9 +1185,9 @@ class TestShowInterface(unittest.TestCase):
         abc-defg# show int eth1/10
 
         Ethernet1/10 is down (Link not connected)
-        
+
         admin state is up, Dedicated Interface
-        
+
           Hardware: 100/1000/10000 Ethernet, address: 1234.12ff.df07 (bia 1234.12ff.df07)
     '''}
 
@@ -1337,8 +1337,8 @@ class TestShowInterface(unittest.TestCase):
         },
     }
 
-    golden_output_7 = {'execute.return_value': """ 
-    
+    golden_output_7 = {'execute.return_value': """
+
         Vlan88 is up, line protocol is up, autostate enabled
             Hardware is EtherSVI, address is  000c.29ff.f8a2
             MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
@@ -1364,8 +1364,8 @@ class TestShowInterface(unittest.TestCase):
               Auto-Negotiation is turned off
               Input flow-control is off, output flow-control is off
               Auto-mdix is turned off
-              Switchport monitor is off 
-              EtherType is 0x8100 
+              Switchport monitor is off
+              EtherType is 0x8100
               EEE (efficient-ethernet) : n/a
               Last link flapped 00:00:29
               Last clearing of "show interface" counters never
@@ -1574,13 +1574,26 @@ class TestShowInterface(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
     
 
+    def test_golden_7(self):
+        self.device = Mock(**self.golden_output_7)
+        interface_obj = ShowInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
+
+
+    def test_golden_7(self):
+        self.device = Mock(**self.golden_output_7)
+        interface_obj = ShowInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
+
 # #############################################################################
 # # Unittest For Show Ip Interface Vrf All
 # #############################################################################
 
 
 class TestShowIpInterfaceVrfAll(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -1608,7 +1621,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
                           '10.4.4.4/24': {'ip': '10.4.4.4',
                                           'ip_subnet': '10.4.4.0',
                                           'prefix_length': '24',
-                                          'secondary': False},           
+                                          'secondary': False},
                           'unnumbered':{'interface_ref': 'loopback0'},
                           'counters': {'broadcast_bytes_consumed': 0,
                                        'broadcast_bytes_forwarded': 0,
@@ -1672,7 +1685,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
           IP address: 10.2.2.2, IP subnet: 10.2.2.0/24 secondary
           IP address: 10.3.3.3, IP subnet: 10.3.3.0/24 secondary
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
+          IP multicast groups locally joined:
              224.0.0.6  224.0.0.5  224.0.0.2
           IP MTU: 1600 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
@@ -1681,12 +1694,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
           IP Local Proxy ARP : disabled
           IP multicast routing: disabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -1706,7 +1719,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
           IP Interface Status for VRF "default"
           loopback0, Interface status: protocol-up/link-up/admin-up, iod: 180,
           Unnumbered interfaces of loopback0: first iod 46
-          Ethernet2/11: 
+          Ethernet2/11:
             IP address: 10.64.4.4, IP subnet: 10.64.4.0/24
             IP broadcast address: 255.255.255.255
             IP multicast groups locally joined: none
@@ -1716,12 +1729,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             IP Local Proxy ARP : disabled
             IP multicast routing: disabled
             IP icmp redirects: enabled
-            IP directed-broadcast: disabled 
-            IP Forwarding: disabled 
+            IP directed-broadcast: disabled
+            IP Forwarding: disabled
             IP icmp unreachables (except port): disabled
             IP icmp port-unreachable: enabled
             IP unicast reverse path forwarding: none
-            IP load sharing: none 
+            IP load sharing: none
             IP interface statistics last reset: never
             IP interface software stats: (sent/received/forwarded/originated/consumed)
               Unicast packets    : 0/0/0/0/92391
@@ -1738,20 +1751,20 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
           Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36,
             IP address: 10.3.4.4, IP subnet: 10.3.4.0/24
             IP broadcast address: 255.255.255.255
-            IP multicast groups locally joined: 
-                224.0.0.6  224.0.0.5  224.0.0.2  
+            IP multicast groups locally joined:
+                224.0.0.6  224.0.0.5  224.0.0.2
             IP MTU: 1500 bytes (using link MTU)
             IP primary address route-preference: 0, tag: 0
             IP proxy ARP : disabled
             IP Local Proxy ARP : disabled
             IP multicast routing: disabled
             IP icmp redirects: enabled
-            IP directed-broadcast: disabled 
-            IP Forwarding: disabled 
+            IP directed-broadcast: disabled
+            IP Forwarding: disabled
             IP icmp unreachables (except port): disabled
             IP icmp port-unreachable: enabled
             IP unicast reverse path forwarding: none
-            IP load sharing: none 
+            IP load sharing: none
             IP interface statistics last reset: never
             IP interface software stats: (sent/received/forwarded/originated/consumed)
               Unicast packets    : 53942/46139/0/53942/46150
@@ -1768,7 +1781,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
           Ethernet2/10.12, Interface status: protocol-down/link-down/admin-down, iod: 184,
           Unnumbered interfaces of Ethernet2/10.12: first iod 47
-          Ethernet2/12: 
+          Ethernet2/12:
             IP address: 10.66.12.12, IP subnet: 10.66.12.0/24
             IP broadcast address: 255.255.255.255
             IP multicast groups locally joined: none
@@ -1778,12 +1791,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             IP Local Proxy ARP : disabled
             IP multicast routing: disabled
             IP icmp redirects: enabled
-            IP directed-broadcast: disabled 
-            IP Forwarding: disabled 
+            IP directed-broadcast: disabled
+            IP Forwarding: disabled
             IP icmp unreachables (except port): disabled
             IP icmp port-unreachable: enabled
             IP unicast reverse path forwarding: none
-            IP load sharing: none 
+            IP load sharing: none
             IP interface statistics last reset: never
             IP interface software stats: (sent/received/forwarded/originated/consumed)
               Unicast packets    : 0/0/0/0/0
@@ -1806,12 +1819,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             IP Local Proxy ARP : disabled
             IP multicast routing: disabled
             IP icmp redirects: enabled
-            IP directed-broadcast: disabled 
-            IP Forwarding: disabled 
+            IP directed-broadcast: disabled
+            IP Forwarding: disabled
             IP icmp unreachables (except port): disabled
             IP icmp port-unreachable: enabled
             IP unicast reverse path forwarding: none
-            IP load sharing: none 
+            IP load sharing: none
             IP interface statistics last reset: never
             IP interface software stats: (sent/received/forwarded/originated/consumed)
               Unicast packets    : 0/0/0/0/0
@@ -1834,12 +1847,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             IP Local Proxy ARP : disabled
             IP multicast routing: disabled
             IP icmp redirects: enabled
-            IP directed-broadcast: disabled 
-            IP Forwarding: disabled 
+            IP directed-broadcast: disabled
+            IP Forwarding: disabled
             IP icmp unreachables (except port): disabled
             IP icmp port-unreachable: enabled
             IP unicast reverse path forwarding: none
-            IP load sharing: none 
+            IP load sharing: none
             IP interface statistics last reset: never
             IP interface software stats: (sent/received/forwarded/originated/consumed)
               Unicast packets    : 0/0/0/0/0
@@ -2240,23 +2253,23 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
       IP Interface Status for VRF "default"
       loopback0, Interface status: protocol-up/link-up/admin-up, iod: 53,
       Unnumbered interfaces of loopback0: first iod 61
-      mti18: tunnel-te11: tunnel-te12: 
-        IP address: 192.168.4.1, IP subnet: 192.168.4.1/32 route-preference: 0, tag: 0 
+      mti18: tunnel-te11: tunnel-te12:
+        IP address: 192.168.4.1, IP subnet: 192.168.4.1/32 route-preference: 0, tag: 0
         IP broadcast address: 255.255.255.255
-        IP multicast groups locally joined: 
-            224.0.1.40  224.0.1.39  224.0.0.13  224.0.0.2  224.0.0.1  
+        IP multicast groups locally joined:
+            224.0.1.40  224.0.1.39  224.0.0.13  224.0.0.2  224.0.0.1
         IP MTU: 1500 bytes (using link MTU)
         IP primary address route-preference: 0, tag: 0
         IP proxy ARP : disabled
         IP Local Proxy ARP : disabled
         IP multicast routing: enabled
         IP icmp redirects: enabled
-        IP directed-broadcast: disabled 
-        IP Forwarding: disabled 
+        IP directed-broadcast: disabled
+        IP Forwarding: disabled
         IP icmp unreachables (except port): disabled
         IP icmp port-unreachable: enabled
         IP unicast reverse path forwarding: none
-        IP load sharing: none 
+        IP load sharing: none
         IP interface statistics last reset: never
         IP interface software stats: (sent/received/forwarded/originated/consumed)
           Unicast packets    : 0/0/0/0/2571380
@@ -2271,22 +2284,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         WCCP Redirect inbound: disabled
         WCCP Redirect exclude: disabled
       Ethernet1/5, Interface status: protocol-up/link-up/admin-up, iod: 66,
-        IP address: 192.168.1.1, IP subnet: 192.168.1.0/24 route-preference: 0, tag: 0 
+        IP address: 192.168.1.1, IP subnet: 192.168.1.0/24 route-preference: 0, tag: 0
         IP broadcast address: 255.255.255.255
-        IP multicast groups locally joined: 
-            224.0.0.102  
+        IP multicast groups locally joined:
+            224.0.0.102
         IP MTU: 1500 bytes (using link MTU)
         IP primary address route-preference: 0, tag: 0
         IP proxy ARP : disabled
         IP Local Proxy ARP : disabled
         IP multicast routing: disabled
         IP icmp redirects: enabled
-        IP directed-broadcast: disabled 
-        IP Forwarding: disabled 
+        IP directed-broadcast: disabled
+        IP Forwarding: disabled
         IP icmp unreachables (except port): disabled
         IP icmp port-unreachable: enabled
         IP unicast reverse path forwarding: none
-        IP load sharing: none 
+        IP load sharing: none
         IP interface statistics last reset: never
         IP interface software stats: (sent/received/forwarded/originated/consumed)
           Unicast packets    : 1681098/1471082/0/1681098/2942164
@@ -2309,12 +2322,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         IP Local Proxy ARP : disabled
         IP multicast routing: disabled
         IP icmp redirects: enabled
-        IP directed-broadcast: disabled 
-        IP Forwarding: disabled 
+        IP directed-broadcast: disabled
+        IP Forwarding: disabled
         IP icmp unreachables (except port): disabled
         IP icmp port-unreachable: enabled
         IP unicast reverse path forwarding: none
-        IP load sharing: none 
+        IP load sharing: none
         IP interface statistics last reset: never
         IP interface software stats: (sent/received/forwarded/originated/consumed)
           Unicast packets    : 215366/0/0/215366/0
@@ -2337,12 +2350,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         IP Local Proxy ARP : disabled
         IP multicast routing: disabled
         IP icmp redirects: enabled
-        IP directed-broadcast: disabled 
-        IP Forwarding: disabled 
+        IP directed-broadcast: disabled
+        IP Forwarding: disabled
         IP icmp unreachables (except port): disabled
         IP icmp port-unreachable: enabled
         IP unicast reverse path forwarding: none
-        IP load sharing: none 
+        IP load sharing: none
         IP interface statistics last reset: never
         IP interface software stats: (sent/received/forwarded/originated/consumed)
           Unicast packets    : 1169001/0/0/1169001/0
@@ -2359,7 +2372,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
       IP Interface Status for VRF "management"
       mgmt0, Interface status: protocol-up/link-up/admin-up, iod: 7,
-        IP address: 10.1.17.218, IP subnet: 10.1.17.0/24 route-preference: 0, tag: 0 
+        IP address: 10.1.17.218, IP subnet: 10.1.17.0/24 route-preference: 0, tag: 0
         IP broadcast address: 255.255.255.255
         IP multicast groups locally joined: none
         IP MTU: 1500 bytes (using link MTU)
@@ -2368,12 +2381,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         IP Local Proxy ARP : disabled
         IP multicast routing: disabled
         IP icmp redirects: enabled
-        IP directed-broadcast: disabled 
-        IP Forwarding: disabled 
+        IP directed-broadcast: disabled
+        IP Forwarding: disabled
         IP icmp unreachables (except port): disabled
         IP icmp port-unreachable: enabled
         IP unicast reverse path forwarding: none
-        IP load sharing: none 
+        IP load sharing: none
         IP interface statistics last reset: never
         IP interface software stats: (sent/received/forwarded/originated/consumed)
           Unicast packets    : 387/659/0/387/1318
@@ -2394,19 +2407,19 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
       mti18, Interface status: protocol-up/link-up/admin-up, iod: 61,
         IP unnumbered interface (loopback0)
         IP broadcast address: 255.255.255.255
-        IP multicast groups locally joined: 
-            224.0.0.13  224.0.0.2  224.0.0.1  
+        IP multicast groups locally joined:
+            224.0.0.13  224.0.0.2  224.0.0.1
         IP MTU: 1376 bytes (using link MTU)
         IP proxy ARP : disabled
         IP Local Proxy ARP : disabled
         IP multicast routing: enabled
         IP icmp redirects: enabled
-        IP directed-broadcast: disabled 
-        IP Forwarding: disabled 
+        IP directed-broadcast: disabled
+        IP Forwarding: disabled
         IP icmp unreachables (except port): disabled
         IP icmp port-unreachable: enabled
         IP unicast reverse path forwarding: none
-        IP load sharing: none 
+        IP load sharing: none
         IP interface statistics last reset: never
         IP interface software stats: (sent/received/forwarded/originated/consumed)
           Unicast packets    : 0/0/0/0/0
@@ -2889,7 +2902,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
           IP address: 10.2.2.2, IP subnet: 10.2.2.0/24 secondary
           IP address: 10.3.3.3, IP subnet: 10.3.3.0/24 secondary
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
+          IP multicast groups locally joined:
              224.0.0.6  224.0.0.5  224.0.0.2
           IP MTU: 1600 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
@@ -2898,12 +2911,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
           IP Local Proxy ARP : disabled
           IP multicast routing: disabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -2999,7 +3012,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
     golden_output_3 = {'execute.return_value': '''
     IP Interface Status for VRF "default"
     Vlan355, Interface status: protocol-up/link-up/admin-up, iod: 2,
-      IP address: 10.170.153.133, IP subnet: 10.170.153.128/28 
+      IP address: 10.170.153.133, IP subnet: 10.170.153.128/28
       IP broadcast address: 255.255.255.255
       IP multicast groups locally joined: none
       IP MTU: 9216 bytes (using link MTU)
@@ -3008,12 +3021,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
       IP Local Proxy ARP : disabled
       IP multicast routing: disabled
       IP icmp redirects: enabled
-      IP directed-broadcast: disabled 
-      IP Forwarding: disabled 
+      IP directed-broadcast: disabled
+      IP Forwarding: disabled
       IP icmp unreachables (except port): disabled
       IP icmp port-unreachable: enabled
       IP unicast reverse path forwarding: none
-      IP load sharing: none 
+      IP load sharing: none
       ip interface statistics last reset: never
       IP interface software stats: (sent/received/forwarded/originated/consumed)
         Unicast packets    : 5498120/5436721/0/5498120/5436721
@@ -3119,12 +3132,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         IP Local Proxy ARP : disabled
         IP multicast routing: disabled
         IP icmp redirects: enabled
-        IP directed-broadcast: disabled 
-        IP Forwarding: enabled 
+        IP directed-broadcast: disabled
+        IP Forwarding: enabled
         IP icmp unreachables (except port): disabled
         IP icmp port-unreachable: enabled
         IP unicast reverse path forwarding: none
-        IP load sharing: none 
+        IP load sharing: none
         IP interface statistics last reset: never
         IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3224,22 +3237,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
     golden_output_5 = {'execute.return_value': '''
         IP Interface Status for VRF "default"
         loopback0, Interface status: protocol-up/link-up/admin-up, iod: 94,
-          IP address: 10.49.1.0, IP subnet: 10.49.1.0/32 route-preference: 0, tag: 0 
+          IP address: 10.49.1.0, IP subnet: 10.49.1.0/32 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: enabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3251,23 +3264,23 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         loopback1, Interface status: protocol-down/link-down/admin-up, iod: 95,
-          IP address: 10.49.1.1, IP subnet: 10.49.1.1/32 route-preference: 0, tag: 0 
-          IP address: 10.49.2.1, IP subnet: 10.49.2.1/32 secondary route-preference: 0, tag: 0 
+          IP address: 10.49.1.1, IP subnet: 10.49.1.1/32 route-preference: 0, tag: 0
+          IP address: 10.49.2.1, IP subnet: 10.49.2.1/32 secondary route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3279,22 +3292,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Ethernet1/3, Interface status: protocol-up/link-up/admin-up, iod: 7,
-          IP address: 10.69.111.2, IP subnet: 10.69.111.0/24 route-preference: 0, tag: 0 
+          IP address: 10.69.111.2, IP subnet: 10.69.111.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.6  224.0.0.5  224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.6  224.0.0.5  224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: enabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 6/6/0/6/12
@@ -3308,7 +3321,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "management"
         mgmt0, Interface status: protocol-up/link-up/admin-up, iod: 2,
-          IP address: 10.1.6.40, IP subnet: 10.1.6.0/24 route-preference: 0, tag: 0 
+          IP address: 10.1.6.40, IP subnet: 10.1.6.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
           IP multicast groups locally joined: none
           IP MTU: 1500 bytes (using link MTU)
@@ -3317,12 +3330,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
           IP Local Proxy ARP : disabled
           IP multicast routing: disabled
           IP icmp redirects: enabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 805/796/0/805/1592
@@ -3336,22 +3349,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9100"
         Vlan100, Interface status: protocol-up/link-up/admin-up, iod: 71,
-          IP address: 10.220.11.1, IP subnet: 10.220.11.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.11.1, IP subnet: 10.220.11.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3363,22 +3376,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan101, Interface status: protocol-up/link-up/admin-up, iod: 72,
-          IP address: 10.220.12.1, IP subnet: 10.220.12.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.12.1, IP subnet: 10.220.12.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3390,22 +3403,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan102, Interface status: protocol-down/link-down/admin-up, iod: 73,
-          IP address: 10.220.13.1, IP subnet: 10.220.13.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.13.1, IP subnet: 10.220.13.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3425,12 +3438,12 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
           IP Local Proxy ARP : disabled
           IP multicast routing: disabled
           IP icmp redirects: enabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: enabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: enabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3444,19 +3457,19 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         Vlan1000, Interface status: protocol-up/link-up/admin-up, iod: 86,
           IP address: none
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: enabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: enabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3470,22 +3483,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9105"
         Vlan105, Interface status: protocol-up/link-up/admin-up, iod: 75,
-          IP address: 10.220.16.1, IP subnet: 10.220.16.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.16.1, IP subnet: 10.220.16.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3497,22 +3510,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan110, Interface status: protocol-up/link-up/admin-up, iod: 80,
-          IP address: 10.220.21.1, IP subnet: 10.220.21.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.21.1, IP subnet: 10.220.21.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3526,19 +3539,19 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         Vlan1005, Interface status: protocol-up/link-up/admin-up, iod: 87,
           IP address: none
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: enabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: enabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3552,22 +3565,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9106"
         Vlan106, Interface status: protocol-up/link-up/admin-up, iod: 76,
-          IP address: 10.220.17.1, IP subnet: 10.220.17.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.17.1, IP subnet: 10.220.17.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3579,22 +3592,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan111, Interface status: protocol-up/link-up/admin-up, iod: 81,
-          IP address: 10.220.22.1, IP subnet: 10.220.22.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.22.1, IP subnet: 10.220.22.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3608,19 +3621,19 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         Vlan1006, Interface status: protocol-up/link-up/admin-up, iod: 88,
           IP address: none
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: enabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: enabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3634,22 +3647,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9107"
         Vlan107, Interface status: protocol-up/link-up/admin-up, iod: 77,
-          IP address: 10.220.18.1, IP subnet: 10.220.18.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.18.1, IP subnet: 10.220.18.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3661,22 +3674,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan112, Interface status: protocol-up/link-up/admin-up, iod: 82,
-          IP address: 10.220.23.1, IP subnet: 10.220.23.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.23.1, IP subnet: 10.220.23.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3690,19 +3703,19 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         Vlan1007, Interface status: protocol-up/link-up/admin-up, iod: 89,
           IP address: none
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: enabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: enabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3716,22 +3729,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9108"
         Vlan108, Interface status: protocol-up/link-up/admin-up, iod: 78,
-          IP address: 10.220.19.1, IP subnet: 10.220.19.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.19.1, IP subnet: 10.220.19.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3743,22 +3756,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan113, Interface status: protocol-up/link-up/admin-up, iod: 83,
-          IP address: 10.220.24.1, IP subnet: 10.220.24.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.24.1, IP subnet: 10.220.24.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3772,19 +3785,19 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         Vlan1008, Interface status: protocol-up/link-up/admin-up, iod: 90,
           IP address: none
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: enabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: enabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3798,22 +3811,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 
         IP Interface Status for VRF "vrf-9109"
         Vlan109, Interface status: protocol-up/link-up/admin-up, iod: 79,
-          IP address: 10.220.20.1, IP subnet: 10.220.20.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.20.1, IP subnet: 10.220.20.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3825,22 +3838,22 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
         Vlan114, Interface status: protocol-up/link-up/admin-up, iod: 84,
-          IP address: 10.220.25.1, IP subnet: 10.220.25.0/24 route-preference: 0, tag: 0 
+          IP address: 10.220.25.1, IP subnet: 10.220.25.0/24 route-preference: 0, tag: 0
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP primary address route-preference: 0, tag: 0
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: disabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: disabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3854,19 +3867,19 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         Vlan1009, Interface status: protocol-up/link-up/admin-up, iod: 91,
           IP address: none
           IP broadcast address: 255.255.255.255
-          IP multicast groups locally joined: 
-              224.0.0.2  224.0.0.1  224.0.0.13  
+          IP multicast groups locally joined:
+              224.0.0.2  224.0.0.1  224.0.0.13
           IP MTU: 1500 bytes (using link MTU)
           IP proxy ARP : disabled
           IP Local Proxy ARP : disabled
           IP multicast routing: enabled
           IP icmp redirects: disabled
-          IP directed-broadcast: disabled 
-          IP Forwarding: enabled 
+          IP directed-broadcast: disabled
+          IP Forwarding: enabled
           IP icmp unreachables (except port): disabled
           IP icmp port-unreachable: enabled
           IP unicast reverse path forwarding: none
-          IP load sharing: none 
+          IP load sharing: none
           IP interface statistics last reset: never
           IP interface software stats: (sent/received/forwarded/originated/consumed)
             Unicast packets    : 0/0/0/0/0
@@ -3878,11 +3891,11 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             Labeled packets    : 0/0/0/0/0
             Labeled bytes      : 0/0/0/0/0
 
-        N95_1# 
+        N95_1#
         '''}
 
     golden_parsed_output_5 = {
-        'Ethernet1/3': 
+        'Ethernet1/3':
             {'directed_broadcast': 'disabled',
             'icmp_port_unreachable': 'enabled',
             'icmp_redirects': 'enabled',
@@ -3892,15 +3905,15 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
             'iod': 7,
             'ip_forwarding': 'disabled',
             'ip_mtu': 1500,
-            'ipv4': 
-                {'10.69.111.2/24': 
+            'ipv4':
+                {'10.69.111.2/24':
                     {'broadcast_address': '255.255.255.255',
                     'ip': '10.69.111.2',
                     'ip_subnet': '10.69.111.0',
                     'prefix_length': '24',
                     'route_preference': '0',
                     'route_tag': '0'},
-                    'counters': 
+                    'counters':
                         {'broadcast_bytes_consumed': 0,
                         'broadcast_bytes_forwarded': 0,
                         'broadcast_bytes_originated': 0,
@@ -5502,7 +5515,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
       IP multicast groups locally joined:
           224.0.0.102
       IP MTU: 1500 bytes (using link MTU)
-      IP primary address route-preference: 0, tag: 
+      IP primary address route-preference: 0, tag:
         0
       IP proxy ARP : disabled
       IP Local Proxy ARP : disabled
@@ -5570,7 +5583,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
         parsed_output = ip_interface_vrf_all_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output_3)
-    
+
     def test_golden_4(self):
         self.device = Mock(**self.golden_output_4)
         ip_interface_vrf_all_obj = ShowIpInterfaceVrfAll(device=self.device)
@@ -5604,7 +5617,7 @@ class TestShowIpInterfaceVrfAll(unittest.TestCase):
 # #############################################################################
 
 class TestShowVrfAllInterface(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -5756,7 +5769,7 @@ class TestShowVrfAllInterface(unittest.TestCase):
  'mgmt0': {'site_of_origin': '--', 'vrf': 'management', 'vrf_id': 2}}
 
     golden_output = {'execute.return_value': '''
-       
+
     Interface                 VRF-Name                        VRF-ID  Site-of-Origin
     Ethernet2/1               VRF1                                 3  --
     Null0                     default                              1  --
@@ -5947,7 +5960,7 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output_1 = {
-        'Ethernet2/2': 
+        'Ethernet2/2':
             {'access_vlan': 1,
             'access_vlan_mode': 'default',
             'admin_priv_vlan_primary_host_assoc': 'none',
@@ -5966,7 +5979,7 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
             'switchport_status': 'enabled',
             'switchport_enable': True,
             'trunk_vlans': '100,300'},
-        'Ethernet2/3': 
+        'Ethernet2/3':
             {'access_vlan': 100,
             'access_vlan_mode': 'Vlan not created',
             'admin_priv_vlan_primary_host_assoc': 'none',
@@ -5989,7 +6002,7 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
     golden_output_1 = {'execute.return_value': '''
         Name: Ethernet2/2
           Switchport: Enabled
-          Switchport Monitor: Not enabled 
+          Switchport Monitor: Not enabled
           Operational Mode: trunk
           Access Mode VLAN: 1 (default)
           Trunking Native Mode VLAN: 1 (default)
@@ -6005,7 +6018,7 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
           Operational private-vlan: none
         Name: Ethernet2/3
           Switchport: Enabled
-          Switchport Monitor: Not enabled 
+          Switchport Monitor: Not enabled
           Operational Mode: access
           Access Mode VLAN: 100 (Vlan not created)
           Trunking Native Mode VLAN: 1 (default)
@@ -6018,11 +6031,11 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
           Administrative private-vlan trunk encapsulation: dot1q
           Administrative private-vlan trunk normal VLANs: none
           Administrative private-vlan trunk private VLANs: none
-          Operational private-vlan: none  
+          Operational private-vlan: none
       '''}
 
     golden_parsed_output_2 = {
-        'port-channel662': 
+        'port-channel662':
             {'access_vlan': 1,
             'access_vlan_mode': 'default',
             'admin_priv_vlan_primary_host_assoc': 'none',
@@ -6045,7 +6058,7 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
     golden_output_2 = {'execute.return_value': '''
         Name: port-channel662
           Switchport: Enabled
-          Switchport Monitor: Not enabled 
+          Switchport Monitor: Not enabled
           Operational Mode: trunk
           Access Mode VLAN: 1 (default)
           Trunking Native Mode VLAN: 3967 (Vlan not created)
@@ -6085,7 +6098,7 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
     golden_output_custom = {'execute.return_value': '''
             Name: Ethernet2/2
               Switchport: Enabled
-              Switchport Monitor: Not enabled 
+              Switchport Monitor: Not enabled
               Operational Mode: trunk
               Access Mode VLAN: 1 (default)
               Trunking Native Mode VLAN: 1 (default)
@@ -6150,7 +6163,7 @@ class TestShowInterfaceSwitchport(unittest.TestCase):
 
 
 class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     device0 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
@@ -6214,7 +6227,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
 
         IPv6 Interface Status for VRF "VRF1"
         Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36
-          IPv6 address: 
+          IPv6 address:
             2001:db8:1:1::1/64 [VALID]
             2001:db8:3:3::3/64 [VALID]
             2001:db8:4:4:a8aa:bbff:feff:8888/64 [VALID]
@@ -6227,13 +6240,13 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
           IPv6 multicast routing: disabled
           IPv6 report link local: disabled
           IPv6 Forwarding feature: disabled
-          IPv6 multicast groups locally joined:   
-              ff02::1:ffbb:cccc  ff02::1:ff00:3  ff02::1:ff00:2  ff02::2   
-              ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0  
+          IPv6 multicast groups locally joined:
+              ff02::1:ffbb:cccc  ff02::1:ff00:3  ff02::1:ff00:2  ff02::2
+              ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0
           IPv6 multicast (S,G) entries joined: none
           IPv6 MTU: 1600 (using link MTU)
           IPv6 unicast reverse path forwarding: none
-          IPv6 load sharing: none 
+          IPv6 load sharing: none
           IPv6 interface statistics last reset: never
           IPv6 interface RP-traffic statistics: (forwarded/originated/consumed)
             Unicast packets:      0/0/0
@@ -6296,7 +6309,7 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
         'execute.return_value': '''
             IPv6 Interface Status for VRF "VRF1"
             Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36
-              IPv6 address: 
+              IPv6 address:
                 2001:db8:1:1::1/64 [VALID]
                 2001:db8:3:3::3/64 [VALID]
                 2001:db8:4:4:a8aa:bbff:feff:8888/64 [VALID]
@@ -6309,13 +6322,13 @@ class TestShowIpv6InterfaceVrfAll(unittest.TestCase):
               IPv6 multicast routing: disabled
               IPv6 report link local: disabled
               IPv6 Forwarding feature: disabled
-              IPv6 multicast groups locally joined:   
-                  ff02::1:ffbb:cccc  ff02::1:ff00:3  ff02::1:ff00:2  ff02::2   
-                  ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0  
+              IPv6 multicast groups locally joined:
+                  ff02::1:ffbb:cccc  ff02::1:ff00:3  ff02::1:ff00:2  ff02::2
+                  ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0
               IPv6 multicast (S,G) entries joined: none
               IPv6 MTU: 1600 (using link MTU)
               IPv6 unicast reverse path forwarding: none
-              IPv6 load sharing: none 
+              IPv6 load sharing: none
               IPv6 interface statistics last reset: never
               IPv6 interface RP-traffic statistics: (forwarded/originated/consumed)
                 Unicast packets:      0/0/0
@@ -6350,60 +6363,60 @@ class TestShowIpInterfaceBrief(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'interface': 
-                                {'Eth5/48.106': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.6.1'}, 
-                                 'Lo3': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.205.1'}, 
-                                 'Po1.102': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.70.2'}, 
-                                 'Lo11': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.151.1'}, 
-                                 'Vlan23': 
-                                    {'vlan_id': 
+    golden_parsed_output = {'interface':
+                                {'Eth5/48.106':
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.6.1'},
+                                 'Lo3':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.205.1'},
+                                 'Po1.102':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.70.2'},
+                                 'Lo11':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.151.1'},
+                                 'Vlan23':
+                                    {'vlan_id':
                                         {'23':
-                                            {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.186.1'}}}, 
-                                 'Eth5/48.101': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.1.1'}, 
-                                 'Eth5/48.102': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.2.1'}, 
-                                 'Eth5/48.105': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.5.1'}, 
-                                 'Lo2': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.51.1'}, 
-                                 'Lo1': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.154.1'}, 
-                                 'Eth6/22': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.145.1'}, 
-                                 'Po1.101': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.151.2'}, 
-                                 'Lo10': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.64.1'}, 
-                                 'Po1.103': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.246.2'}, 
-                                 'Eth5/48.100': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.0.1'}, 
-                                 'Po2.107': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.66.1'}, 
-                                 'Eth5/48.103': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.3.1'}, 
-                                 'tunnel-te12': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': 'unnumbered(loopback0)'}, 
-                                 'Eth5/48.110': 
-                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.10.1'}, 
-                                 'Po2.103': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.19.1'}, 
-                                 'Lo0': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.4.1'}, 
-                                 'Po2.101': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.135.1'}, 
-                                 'Po2.100': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.196.1'}, 
-                                 'tunnel-te11': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': 'unnumbered(loopback0)'}, 
-                                 'Po2.102': 
-                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.76.1'}, 
-                                 'Eth5/48.104': 
+                                            {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.186.1'}}},
+                                 'Eth5/48.101':
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.1.1'},
+                                 'Eth5/48.102':
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.2.1'},
+                                 'Eth5/48.105':
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.5.1'},
+                                 'Lo2':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.51.1'},
+                                 'Lo1':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.154.1'},
+                                 'Eth6/22':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.145.1'},
+                                 'Po1.101':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.151.2'},
+                                 'Lo10':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.64.1'},
+                                 'Po1.103':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.246.2'},
+                                 'Eth5/48.100':
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.0.1'},
+                                 'Po2.107':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.66.1'},
+                                 'Eth5/48.103':
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.3.1'},
+                                 'tunnel-te12':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': 'unnumbered(loopback0)'},
+                                 'Eth5/48.110':
+                                    {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.10.1'},
+                                 'Po2.103':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.19.1'},
+                                 'Lo0':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.4.1'},
+                                 'Po2.101':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.135.1'},
+                                 'Po2.100':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.196.1'},
+                                 'tunnel-te11':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': 'unnumbered(loopback0)'},
+                                 'Po2.102':
+                                    {'interface_status': 'protocol-up/link-up/admin-up', 'ip_address': '192.168.76.1'},
+                                 'Eth5/48.104':
                                     {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '10.81.4.1'}
                                 }
                             }
@@ -6411,35 +6424,35 @@ class TestShowIpInterfaceBrief(unittest.TestCase):
     golden_output = {'execute.return_value': '''
  IP Interface Status for VRF "default"(1)
  Interface            IP Address      Interface Status
- Vlan23               192.168.186.1     protocol-up/link-up/admin-up       
- Lo0                  192.168.4.1       protocol-up/link-up/admin-up       
- Lo1                  192.168.154.1       protocol-up/link-up/admin-up       
- Lo2                  192.168.51.1       protocol-up/link-up/admin-up       
- Lo3                  192.168.205.1       protocol-up/link-up/admin-up       
- Lo10                 192.168.64.1      protocol-up/link-up/admin-up       
- Lo11                 192.168.151.1      protocol-up/link-up/admin-up       
- Po2.100              192.168.196.1      protocol-up/link-up/admin-up       
- Po1.101              192.168.151.2      protocol-up/link-up/admin-up       
- Po2.101              192.168.135.1      protocol-up/link-up/admin-up       
- Po1.102              192.168.70.2      protocol-up/link-up/admin-up       
- Po2.102              192.168.76.1      protocol-up/link-up/admin-up       
- Po1.103              192.168.246.2      protocol-up/link-up/admin-up       
- Po2.103              192.168.19.1      protocol-up/link-up/admin-up       
- Po2.107              192.168.66.1      protocol-up/link-up/admin-up       
- Eth5/48.100          10.81.0.1       protocol-down/link-down/admin-up   
- Eth5/48.101          10.81.1.1       protocol-down/link-down/admin-up   
- Eth5/48.102          10.81.2.1       protocol-down/link-down/admin-up   
- Eth5/48.103          10.81.3.1       protocol-down/link-down/admin-up   
- Eth5/48.104          10.81.4.1       protocol-down/link-down/admin-up   
- Eth5/48.105          10.81.5.1       protocol-down/link-down/admin-up   
- Eth5/48.106          10.81.6.1       protocol-down/link-down/admin-up   
- Eth5/48.110          10.81.10.1      protocol-down/link-down/admin-up   
- Eth6/22              192.168.145.1     protocol-up/link-up/admin-up       
- tunnel-te11          unnumbered      protocol-up/link-up/admin-up       
+ Vlan23               192.168.186.1     protocol-up/link-up/admin-up
+ Lo0                  192.168.4.1       protocol-up/link-up/admin-up
+ Lo1                  192.168.154.1       protocol-up/link-up/admin-up
+ Lo2                  192.168.51.1       protocol-up/link-up/admin-up
+ Lo3                  192.168.205.1       protocol-up/link-up/admin-up
+ Lo10                 192.168.64.1      protocol-up/link-up/admin-up
+ Lo11                 192.168.151.1      protocol-up/link-up/admin-up
+ Po2.100              192.168.196.1      protocol-up/link-up/admin-up
+ Po1.101              192.168.151.2      protocol-up/link-up/admin-up
+ Po2.101              192.168.135.1      protocol-up/link-up/admin-up
+ Po1.102              192.168.70.2      protocol-up/link-up/admin-up
+ Po2.102              192.168.76.1      protocol-up/link-up/admin-up
+ Po1.103              192.168.246.2      protocol-up/link-up/admin-up
+ Po2.103              192.168.19.1      protocol-up/link-up/admin-up
+ Po2.107              192.168.66.1      protocol-up/link-up/admin-up
+ Eth5/48.100          10.81.0.1       protocol-down/link-down/admin-up
+ Eth5/48.101          10.81.1.1       protocol-down/link-down/admin-up
+ Eth5/48.102          10.81.2.1       protocol-down/link-down/admin-up
+ Eth5/48.103          10.81.3.1       protocol-down/link-down/admin-up
+ Eth5/48.104          10.81.4.1       protocol-down/link-down/admin-up
+ Eth5/48.105          10.81.5.1       protocol-down/link-down/admin-up
+ Eth5/48.106          10.81.6.1       protocol-down/link-down/admin-up
+ Eth5/48.110          10.81.10.1      protocol-down/link-down/admin-up
+ Eth6/22              192.168.145.1     protocol-up/link-up/admin-up
+ tunnel-te11          unnumbered      protocol-up/link-up/admin-up
                       (loopback0)
- tunnel-te12          unnumbered      protocol-up/link-up/admin-up       
+ tunnel-te12          unnumbered      protocol-up/link-up/admin-up
                       (loopback0)
- 
+
 '''}
 
     def test_golden(self):
@@ -6459,10 +6472,10 @@ class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
     device = Device(name='aDevice')
     device1 = Device(name='bDevice')
     empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'interface': 
-                                {'Vlan98': 
-                                    {'vlan_id': 
-                                        {'98': 
+    golden_parsed_output = {'interface':
+                                {'Vlan98':
+                                    {'vlan_id':
+                                        {'98':
                                             {'interface_status': 'protocol-down/link-down/admin-up', 'ip_address': '192.168.234.1'}
                                         }
                                     }
@@ -6470,7 +6483,7 @@ class TestShowIpInterfaceBriefPipeVlan(unittest.TestCase):
                             }
 
     golden_output = {'execute.return_value': '''
- Vlan98               192.168.234.1      protocol-down/link-down/admin-up 
+ Vlan98               192.168.234.1      protocol-down/link-down/admin-up
 '''}
 
     def test_golden(self):
@@ -6497,8 +6510,8 @@ class TestShowInterfaceBrief(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'interface': 
-                              {'ethernet': 
+    golden_parsed_output = {'interface':
+                              {'ethernet':
                                 {'Ethernet1/1': {'mode': 'routed',
                                             'port_ch': '--',
                                             'reason': 'none',
@@ -6522,18 +6535,18 @@ class TestShowInterfaceBrief(unittest.TestCase):
                                             'status': 'down',
                                             'type': 'eth',
                                             'vlan': '1'}},
-                              'loopback': 
+                              'loopback':
                                 {'Loopback0':
                                   {'description': '--',
                                    'status': 'up'}},
-                              'port': 
-                                {'mgmt0': 
+                              'port':
+                                {'mgmt0':
                                   {'ip_address': '172.25.143.76',
                                    'mtu': 1500,
                                    'speed': '1000',
                                    'status': 'up',
                                    'vrf': '--'}},
-                              'port_channel': 
+                              'port_channel':
                                 {'Port-channel8':
                                   {'mode': 'access',
                                    'protocol': 'none',
@@ -6545,7 +6558,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
                                    'vlan': '1'}}}}
 
     golden_output = {'execute.return_value': '''
-        pinxdt-n9kv-3 # show interface brief 
+        pinxdt-n9kv-3 # show interface brief
 
         --------------------------------------------------------------------------------
         Port   VRF          Status IP Address                              Speed    MTU
@@ -6563,7 +6576,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
 
         --------------------------------------------------------------------------------
         Port-channel VLAN    Type Mode   Status  Reason                    Speed   Protocol
-        Interface                                                                  
+        Interface
         --------------------------------------------------------------------------------
         Po8          1       eth  access down    No operational members      auto(I)  none
 
@@ -6585,8 +6598,8 @@ class TestShowInterfaceBrief(unittest.TestCase):
                 '''}
 
     golden_parsed_output2 = {
-        'interface': 
-            {'ethernet': 
+        'interface':
+            {'ethernet':
                 {'Ethernet1/1':
                     {'mode': 'routed',
                     'port_ch': '--',
@@ -6604,7 +6617,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
 
         --------------------------------------------------------------------------------
 
-        mgmt0  --           up     172.31.150.153                          1000    1500    
+        mgmt0  --           up     172.31.150.153                          1000    1500
 
         --------------------------------------------------------------------------------
 
@@ -6634,11 +6647,11 @@ class TestShowInterfaceBrief(unittest.TestCase):
 
         -------------------------------------------------------------------------------
 
-        Interface Secondary VLAN(Type)                    Status Reason                 
+        Interface Secondary VLAN(Type)                    Status Reason
 
         -------------------------------------------------------------------------------
 
-        Vlan1     --                                      down   Administratively down  
+        Vlan1     --                                      down   Administratively down
     '''}
 
     golden_parsed_output3 = {
@@ -6752,7 +6765,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
 
         --------------------------------------------------------------------------------
 
-        mgmt0  --           up     172.28.249.175                          1000    1500    
+        mgmt0  --           up     172.28.249.175                          1000    1500
 
         --------------------------------------------------------------------------------
 
@@ -6773,13 +6786,13 @@ class TestShowInterfaceBrief(unittest.TestCase):
         Eth1/5          --      eth  routed down    XCVR not inserted        auto(D) --
 
         Eth1/6          --      eth  routed down    XCVR not inserted        auto(D) --
-    
+
 
         ------------------------------------------------------------------------------------------
 
         Port-channel VLAN    Type Mode   Status  Reason                              Speed   Protocol
 
-        Interface                                                                            
+        Interface
 
         ------------------------------------------------------------------------------------------
 
@@ -6929,7 +6942,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
         self.device = Mock(**self.golden_output4)
         intf_obj = ShowInterfaceBrief(device=self.device)
         parsed_output = intf_obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output4)            
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
 
 
 class TestShowRunInterface(unittest.TestCase):
@@ -7159,7 +7172,7 @@ class TestShowRunInterface(unittest.TestCase):
         intf_obj = ShowRunningConfigInterface(device=self.device)
         parsed_output = intf_obj.parse(interface='nve1')
         self.assertEqual(parsed_output,self.golden_parsed_output_1)
-      
+
     def test_golden_2(self):
         self.device = Mock(**self.golden_output_2)
         intf_obj = ShowRunningConfigInterface(device=self.device)
@@ -7292,28 +7305,28 @@ class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
         }
 
     golden_output = {'execute.return_value': '''\
-        N95_1# show ip interface brief vrf all 
+        N95_1# show ip interface brief vrf all
 
         IP Interface Status for VRF "default"(1)
         Interface            IP Address      Interface Status
-        Vlan100              10.51.1.1        protocol-up/link-up/admin-up       
-        Vlan101              10.154.1.1        protocol-up/link-up/admin-up       
-        Lo0                  10.1.1.1       protocol-up/link-up/admin-up       
-        Eth1/1.1             192.168.4.1       protocol-up/link-up/admin-up       
-        Eth1/1.2             192.168.154.1       protocol-up/link-up/admin-up       
-        Eth1/1.4             192.168.106.1       protocol-up/link-up/admin-up       
-        Eth1/2.1             192.168.154.1       protocol-up/link-up/admin-up       
-        Eth1/2.2             192.168.51.1       protocol-up/link-up/admin-up       
-        Eth1/2.4             192.168.9.1       protocol-up/link-up/admin-up       
+        Vlan100              10.51.1.1        protocol-up/link-up/admin-up
+        Vlan101              10.154.1.1        protocol-up/link-up/admin-up
+        Lo0                  10.1.1.1       protocol-up/link-up/admin-up
+        Eth1/1.1             192.168.4.1       protocol-up/link-up/admin-up
+        Eth1/1.2             192.168.154.1       protocol-up/link-up/admin-up
+        Eth1/1.4             192.168.106.1       protocol-up/link-up/admin-up
+        Eth1/2.1             192.168.154.1       protocol-up/link-up/admin-up
+        Eth1/2.2             192.168.51.1       protocol-up/link-up/admin-up
+        Eth1/2.4             192.168.9.1       protocol-up/link-up/admin-up
 
         IP Interface Status for VRF "management"(2)
         Interface            IP Address      Interface Status
-        mgmt0                10.255.5.169    protocol-up/link-up/admin-up       
+        mgmt0                10.255.5.169    protocol-up/link-up/admin-up
 
         IP Interface Status for VRF "VRF1"(3)
         Interface            IP Address      Interface Status
-        Vlan200              10.76.1.1        protocol-up/link-up/admin-up       
-        Lo1                  10.81.1.1       protocol-up/link-up/admin-up    
+        Vlan200              10.76.1.1        protocol-up/link-up/admin-up
+        Lo1                  10.81.1.1       protocol-up/link-up/admin-up
     '''
     }
 
@@ -7327,7 +7340,7 @@ class TestShowIpInterfaceBriefVrfAll(unittest.TestCase):
 
     golden_output_pipe = {'execute.return_value': '''\
         N95_1# show ip interface brief vrf all | i 10.255.5.169
-        mgmt0                10.255.5.169    protocol-up/link-up/admin-up    
+        mgmt0                10.255.5.169    protocol-up/link-up/admin-up
     '''
     }
 
@@ -7468,7 +7481,7 @@ class test_show_interface_description(unittest.TestCase):
         Interface                Description
         -------------------------------------------------------------------------------
         mgmt0                    --
-        
+
         -------------------------------------------------------------------------------
         Port          Type   Speed   Description
         -------------------------------------------------------------------------------
@@ -7489,13 +7502,13 @@ class test_show_interface_description(unittest.TestCase):
         Eth1/2.410    eth    10G     --
         Eth1/2.415    eth    10G     --
         Eth1/2.420    eth    10G     --
-        
+
         -------------------------------------------------------------------------------
         Interface                Description
         -------------------------------------------------------------------------------
         Po13                     --
         Po23                     --
-        
+
         -------------------------------------------------------------------------------
         Interface                Description
         -------------------------------------------------------------------------------
@@ -7533,7 +7546,7 @@ class test_show_interface_description(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_output)
-        
+
     def test_golden_interface(self):
         self.device = Mock(**self.golden_interface_output)
         obj = ShowInterfaceDescription(device=self.device)
@@ -7620,19 +7633,19 @@ class test_show_interface_status(unittest.TestCase):
         --------------------------------------------------------------------------------
         Port          Name               Status    Vlan      Duplex  Speed   Type
         --------------------------------------------------------------------------------
-        mgmt0         ES1SW18AUN6_6/22   connected routed    full    1000    --         
-        
+        mgmt0         ES1SW18AUN6_6/22   connected routed    full    1000    --
+
         --------------------------------------------------------------------------------
         Port          Name               Status    Vlan      Duplex  Speed   Type
         --------------------------------------------------------------------------------
-        Eth1/1        AOTLXPRPBD10001    connected trunk     full    10G     10g        
-        Eth1/2        AOTLXPRPBD10004    connected 360       full    10G     10g        
+        Eth1/1        AOTLXPRPBD10001    connected trunk     full    10G     10g
+        Eth1/2        AOTLXPRPBD10004    connected 360       full    10G     10g
         Eth1/43       --                 disabled  1         auto    auto    10g
         Eth1/52.511   --                 connected routed    full    10G     10Gbase-LR
-        Po147         AOTLXPRPBD10112    connected 360       full    10G     --         
+        Po147         AOTLXPRPBD10112    connected 360       full    10G     --
         Vlan1         --                 down      routed    auto    auto    --
-        Vlan366       BigData            connected routed    auto    auto    --        
-        nve1          --                 connected --        auto    auto    --        
+        Vlan366       BigData            connected routed    auto    auto    --
+        nve1          --                 connected --        auto    auto    --
     '''}
 
     golden_parsed_interface_output = {
@@ -7650,18 +7663,18 @@ class test_show_interface_status(unittest.TestCase):
     golden_interface_output = {'execute.return_value': '''
         Port          Name               Status    Vlan      Duplex  Speed   Type
         --------------------------------------------------------------------------------
-        Eth1/1        AOTLXPRPBD10001    connected trunk     full    10G     10g     
+        Eth1/1        AOTLXPRPBD10001    connected trunk     full    10G     10g
     '''}
 
     golden_output_2 = {'execute.return_value': '''
     --------------------------------------------------------------------------------
     Port          Name               Status    Vlan      Duplex  Speed   Type
-    --------------------------------------------------------------------------------    
-    Po135         DO-DD01            connected 51        full    a-10G   --         
-    Po140         DO-UCS01-B         connected trunk     full    a-10G   --         
-    mgmt0         --                 connected routed    full    a-1000  --         
-    Eth101/1/1    DODC01             connected 101       full    a-1000             
-    Eth101/1/2    DO-EXCH-01         connected 101       full    a-1000             
+    --------------------------------------------------------------------------------
+    Po135         DO-DD01            connected 51        full    a-10G   --
+    Po140         DO-UCS01-B         connected trunk     full    a-10G   --
+    mgmt0         --                 connected routed    full    a-1000  --
+    Eth101/1/1    DODC01             connected 101       full    a-1000
+    Eth101/1/2    DO-EXCH-01         connected 101       full    a-1000
     '''}
 
     golden_parsed_output_2 = {
@@ -7705,7 +7718,7 @@ class test_show_interface_status(unittest.TestCase):
 
     golden_output_3 = {'execute.return_value': '''
         N7K-1-LAB# show int status
-        
+
         --------------------------------------------------------------------------------
         Port Name Status Vlan Duplex Speed Type
         --------------------------------------------------------------------------------

@@ -4,7 +4,7 @@ expected_output = {
         'flow-aggregate-template-detail-ipv4': {
             'detail-entry': {
                 'byte-count': '3116',
-                'destination-address': '200:0:0:0:0:0:0:2',
+                'destination-address': '2001:db8:4::2',
                 'destination-mask': '64',
                 'destination-port': '0',
                 'end-time': '58418928',

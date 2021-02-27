@@ -189,13 +189,13 @@ class TestShowFirmwareUpgradeStatusSwitchGroup(unittest.TestCase):
     golden_output = {'execute.return_value': """\
  Name                                      Type        Version        Size(MB)
  ----------------------------------------  ----------  -------------  ----------
- aci-catalog-dk9.70.8.2.bin                catalog     70.8(2)        0.129
+ aci-catalog-dk10.121.8.2.bin                catalog     70.8(2)        0.129
  aci-apic-dk9.5.0.1k.bin                   controller  5.0(1k)        6266.102
- aci-catalog-dk9.70.7.4.bin                catalog     70.7(4)        0.128"""}
+ aci-catalog-dk10.121.7.4.bin                catalog     70.7(4)        0.128"""}
 
     golden_parsed_output = {
         'name': {
-            'aci-catalog-dk9.70.8.2.bin': {
+            'aci-catalog-dk10.121.8.2.bin': {
                 'version': {
                     '70.8(2)': {
                         'type': 'catalog',
@@ -211,7 +211,7 @@ class TestShowFirmwareUpgradeStatusSwitchGroup(unittest.TestCase):
                     }
                 }
             },
-            'aci-catalog-dk9.70.7.4.bin': {
+            'aci-catalog-dk10.121.7.4.bin': {
                 'version': {
                     '70.7(4)': {
                         'type': 'catalog',

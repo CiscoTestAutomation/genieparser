@@ -6,6 +6,6 @@ inet.0
 inet6.0              
                        0          0          0          0          0          0
 Peer                     AS      InPkt     OutPkt    OutQ   Flaps Last Up/Dwn State|#Active/Received/Accepted/Damped...
-20.0.0.2                  3          2          3       0       1           9 0/0/0/0              0/0/0/0
+10.145.0.2                  3          2          3       0       1           9 0/0/0/0              0/0/0/0
 2001:20::2                3          2          3       0       1           5 Establ
   inet6.0: 0/0/0/0

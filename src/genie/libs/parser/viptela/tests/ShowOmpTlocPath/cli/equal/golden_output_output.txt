@@ -1,0 +1,6 @@
+
+    show omp tloc-paths
+    tloc-paths entries 10.220.100.10 default ipsec
+    tloc-paths entries 10.220.100.20 default ipsec
+    tloc-paths entries 10.220.100.30 default ipsec
+    

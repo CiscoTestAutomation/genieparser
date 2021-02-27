@@ -2,7 +2,7 @@ GigabitEthernet1 - Group 100
 DC-LAN Subnet
   State is Master
   Virtual IP address is 192.168.10.1
-  Virtual MAC address is 0000.5e00.0164
+  Virtual MAC address is 0000.5eff.0164
   Advertisement interval is 1.000 sec
   Preemption enabled
   Priority is 120 

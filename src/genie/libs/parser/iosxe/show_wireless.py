@@ -2401,12 +2401,12 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
           output = output
 
 
-        # Client MAC Address : 0aba.dd93.ac36
+        # Client MAC Address : 0aba.ddff.40c9
         # Client MAC Type : Locally Administered Address
         # Client IPv4 Address : 10.22.4.19
-        # Client IPv6 Addresses : fe80::8ba:ddff:fe93:ac36
+        # Client IPv6 Addresses : fe80::8ba:ddff:feff:40c9
         # Client Username : aking
-        # AP MAC Address : 70b3.1875.7f00
+        # AP MAC Address : 70b3.18ff.f475
         # AP Name: b1-11-cap9
         # AP slot : 0
         # Client State : Associated
@@ -2415,7 +2415,7 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
         # Wireless LAN Id: 20
         # WLAN Profile Name: lizzard-l_Global
         # Wireless LAN Network Name (SSID): lizzard-legacy
-        # BSSID : 70b3.1875.7f03
+        # BSSID : 70b3.18ff.f478
         # Connected For : 3233 seconds
         # Protocol : 802.11n - 2.4 GHz
         # Channel : 6

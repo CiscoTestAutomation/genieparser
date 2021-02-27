@@ -3768,12 +3768,12 @@ class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
         # Site Name      Last      Up     Who Last             Inst     EID Prefix
         #             Register         Registered           ID
         # site_uci       never     no     --                   8188     any-mac
-        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c100/48
-        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c2c0/48
-        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c300/48
-        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c3a0/48
-        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.ea00/48
-        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.eac0/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9dff.e928/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9dff.eae8/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9dff.eb28/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9dff.ebc8/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9dff.1328/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9dff.13e8/48
         # ...OUTPUT OMITTED...
 
         # Output for router lisp 0 instance-id 8188
@@ -3786,7 +3786,7 @@ class ShowLispInstanceIdEthernetServer(ShowLispInstanceIdEthernetServerSchema):
             r"^(?P<site_name>\S+)\s+(?P<last_register>\S+)\s+(?P<up>\S+)\s+(?P<who_last_registered>\-\-|\d+\.\d+\.\d+\.\d+\:\d+)\s+(?P<inst_id>\d+)\s+(?P<eid_prefix>any\-mac|\S+\.\S+\.\S+\d+)$"
         )
 
-        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9d28.c100/48
+        #             2w1d      yes#   10.8.130.4:61275     8188     1416.9dff.e928/48
         lisp_info_capture = re.compile(
             r"^(?P<last_register>\S+)\s+(?P<up>\S+)\s+(?P<who_last_registered>\d+\.\d+\.\d+\.\d+\:\d+)\s+(?P<inst_id>\d+)\s+(?P<eid_prefix>\S+\.\S+\.\S+\d+)$"
         )

@@ -11,8 +11,8 @@ Physical interface: ge-9/2/2, Enabled, Physical link is Up
   Link flags     : None
   CoS queues     : 8 supported, 8 maximum usable queues
   Hold-times     : Up 2000 ms, Down 0 ms
-  Current address: 0c:86:10:22:48:77, Hardware address: 0c:86:10:22:48:77
-  Last flapped   : 2021-01-26 03:35:35 JST (09:40:40 ago)
+  Current address: 0c:86:10:ff:6a:99, Hardware address: 0c:86:10:ff:6a:99
+  Last flapped   : 2021-01-26 03:35:35 EST (09:40:40 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :         100615221914             23189648 bps
@@ -123,14 +123,14 @@ Physical interface: ge-9/2/2, Enabled, Physical link is Up
     Protocol inet, MTU: 4470, Generation: 195, Route table: 6
       Flags: No-Redirects, Sendbcast-pkt-to-re, Is-Primary, User-MTU
       Addresses, Flags: Is-Preferred Is-Primary
-        Destination: 111.87.5.60/30, Local: 111.87.5.61, Broadcast: 111.87.5.63, Generation: 166
+        Destination: 10.189.5.60/30, Local: 10.189.5.61, Broadcast: 10.189.5.63, Generation: 166
     Protocol inet6, MTU: 4470, Generation: 196, Route table: 6
       Flags: Is-Primary, User-MTU
       Addresses, Flags: Is-Preferred Is-Primary
-        Destination: 2001:268:fb90:1e::/64, Local: 2001:268:fb90:1e::1
+        Destination: 2001:db8:223c:5e2a::/64, Local: 2001:db8:223c:5e2a::1
     Generation: 168
       Addresses, Flags: Is-Preferred
-        Destination: fe80::/64, Local: fe80::e86:10ff:fe22:4877
+        Destination: fe80::/64, Local: fe80::e86:10ff:feff:6a99
     Protocol mpls, MTU: 4470, Maximum labels: 3, Generation: 170
     Generation: 197, Route table: 6
       Flags: Is-Primary, User-MTU
