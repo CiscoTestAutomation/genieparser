@@ -99,24 +99,23 @@ class Ping(PingSchema):
         ret_dict = {}
         result_per_line = []
         # Sending 10, 100-byte ICMP Echos to 21.1.1.1, timeout is 2 seconds:
-        p1 = re.compile(r'Sending +(?P<repeat>\d+), +(?P<data_bytes>\d+)-byte'
-                        r' +ICMP +Echos +to +(?P<address>[\S\s]+), +timeout'
-                        r' +is +(?P<timeout>\d+) +seconds:')
+        p1 = re.compile(r'Sending +(?P<repeat>\d+), +(?P<data_bytes>\d+)-byte +ICMP +Echos +to +(?P<address>[\S\s]+), +timeout +is +(?P<timeout>\d+) +seconds:')
 
         #Packet sent with a source address of 21.1.1.2
         p2 = re.compile(
             r'Packet +sent +with +a +source +address +of +(?P<source>[\S\s]+)')
 
         # !!!!!!!
-        p3 = re.compile(r'!+')
+        # !.UQM?&
+        p3 = re.compile(r'[!\.UQM\?&]+')
 
         # Success rate is 100 percent (100/100), round-trip min/avg/max = 1/2/14 ms
+        # Success rate is 0 percent (0/10)
         p4 = re.compile(
-            r'Success +rate +is +(?P<success_percent>\d+) +percent'
-            r' +\((?P<received>\d+)\/(?P<send>\d+)\),'
-            r' +round-trip +min/avg/max *= *(?P<min>\d+)/(?P<max>\d+)/(?P<avg>\d+) +(?P<unit>\w+)'
+            r'Success +rate +is +(?P<success_percent>\d+) +percent +\((?P<received>\d+)\/(?P<send>\d+)\)(, +round-trip +min/avg/max *= *(?P<min>\d+)/(?P<max>\d+)/(?P<avg>\d+) +(?P<unit>\w+))?'
         )
 
+        ping_dict = {}
         for line in out.splitlines():
             line = line.strip()
 
@@ -132,6 +131,7 @@ class Ping(PingSchema):
                     'timeout_secs': int(group['timeout'])
                 })
                 continue
+
             # Packet sent with a source address of 21.1.1.2
             m = p2.match(line)
             if m:
@@ -160,22 +160,24 @@ class Ping(PingSchema):
                     int(group['send'])
                 })
 
-                round_dict = stat_dict.setdefault('round_trip', {})
+                if 'min' in group and group['min'] != None:
+                    round_dict = stat_dict.setdefault('round_trip', {})
 
-                min_ms = int(group['min'])
-                max_ms = int(group['max'])
-                avg_ms = int(group['avg'])
+                    min_ms = int(group['min'])
+                    max_ms = int(group['max'])
+                    avg_ms = int(group['avg'])
 
-                if group['unit'] == "s":
-                    min_ms *= 1000
-                    max_ms *= 1000
-                    avg_ms *= 1000
+                    if group['unit'] == "s":
+                        min_ms *= 1000
+                        max_ms *= 1000
+                        avg_ms *= 1000
 
-                round_dict.update({
-                    'min_ms': min_ms,
-                    'max_ms': max_ms,
-                    'avg_ms': avg_ms
-                })
+
+                    round_dict.update({
+                        'min_ms': min_ms,
+                        'max_ms': max_ms,
+                        'avg_ms': avg_ms
+                    })
 
                 continue
 
