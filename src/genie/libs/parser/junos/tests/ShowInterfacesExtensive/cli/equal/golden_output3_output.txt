@@ -6,8 +6,8 @@ Physical interface: ae0, Enabled, Physical link is Up
   Minimum links needed: 1, Minimum bandwidth needed: 1bps
   Device flags   : Present Running
   Interface flags: SNMP-Traps Internal: 0x4000
-  Current address: 2c:6b:f5:d6:f8:c0, Hardware address: 2c:6b:f5:d6:f8:c0
-  Last flapped   : 2021-01-08 00:13:28 JST (00:03:32 ago)
+  Current address: 2c:6b:f5:ff:cf:97, Hardware address: 2c:6b:f5:ff:cf:97
+  Last flapped   : 2021-01-08 00:13:28 EST (00:03:32 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :               227807                 3432 bps
@@ -75,12 +75,12 @@ Physical interface: ae0, Enabled, Physical link is Up
 
     LACP info:        Role     System             System       Port     Port    Port 
                              priority         identifier   priority   number     key 
-      ge-0/0/0.0     Actor        127  2c:6b:f5:d6:f8:c0        127        1       1
-      ge-0/0/0.0   Partner        127  2c:6b:f5:18:ef:c0        127        1       1
-      ge-0/0/4.0     Actor        127  2c:6b:f5:d6:f8:c0        127        2       1
-      ge-0/0/4.0   Partner          1  00:00:00:00:00:00          1        2       1
-      ge-0/0/6.0     Actor        127  2c:6b:f5:d6:f8:c0        127        3       1
-      ge-0/0/6.0   Partner          1  00:00:00:00:00:00          1        3       1
+      ge-0/0/0.0     Actor        127  2c:6b:f5:ff:cf:97        127        1       1
+      ge-0/0/0.0   Partner        127  2c:6b:f5:ff:08:d8        127        1       1
+      ge-0/0/4.0     Actor        127  2c:6b:f5:ff:cf:97        127        2       1
+      ge-0/0/4.0   Partner          1  00:00:00:ff:00:00          1        2       1
+      ge-0/0/6.0     Actor        127  2c:6b:f5:ff:cf:97        127        3       1
+      ge-0/0/6.0   Partner          1  00:00:00:ff:00:00          1        3       1
     LACP Statistics:       LACP Rx     LACP Tx   Unknown Rx   Illegal Rx 
       ge-0/0/0.0                 0           0            0            0
       ge-0/0/4.0                 0           0            0            0
@@ -112,7 +112,7 @@ Physical interface: ae0, Enabled, Physical link is Up
         Destination: 2001:10::/64, Local: 2001:10::1
     Generation: 166
       Addresses, Flags: Is-Preferred
-        Destination: fe80::/64, Local: fe80::2e6b:f5ff:fed6:f8c0
+        Destination: fe80::/64, Local: fe80::2e6b:f5ff:feff:cf97
     Protocol multiservice, MTU: Unlimited, Generation: 168
     Generation: 174, Route table: 0
       Flags: Is-Primary

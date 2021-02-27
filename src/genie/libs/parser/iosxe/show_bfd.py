@@ -156,14 +156,14 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 		neighbors_found = False
 
 		# 172.16.10.1	172.16.10.2		1/2		1		532 (3 )		Up 		Gig0/0/0
-		# FE11::251:57EF:FF8D:E8CC      FE11::251:57EF:FF8D:E8CB          1/17         Up        Up        Gi2
+		# 2001:DB8:B947:0:251:57EF:FF8D:E8CC      2001:DB8:B947:0:251:57EF:FF8D:E8CB          1/17         Up        Up        Gi2
 		p1 = re.compile(r'^(?P<our_address>[\w\.\:]+)\s+(?P<our_neighbor>[\w\.\:]+' \
 			')\s+(?P<ld_rd>\d+\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<holdown_timer>\d+)' \
 			'\s+\((?P<holdown_timer_multiplier>\d+)\s+\)\s+(?P<state>\w+)' \
 			'\s+(?P<interface>[\w\W]+)$')
 
 		# 172.16.1.1	172.16.1.3
-		# # FE11::251:57EF:FF8D:E8CC 
+		# # 2001:DB8:B947:0:251:57EF:FF8D:E8CC 
 		p2 = re.compile(r'^(?P<our_address>[\w\.\:]+) +(?P<our_neighbor>'\
 			'[\w\.\:]+)$')
 
@@ -173,7 +173,7 @@ class ShowBfdNeighborsDetails(ShowBfdNeighborsDetailsSchema):
 			'\s+(?P<state>\w+)\s+(?P<interface>[\w\W]+)')
 
 		# 10.169.197.93 					4097/4097		Up 		Up 	Gi0/0/0
-		# FE11::251:57EF:FF8D:E8CC                1/17         Up        Up        Gi2
+		# 2001:DB8:B947:0:251:57EF:FF8D:E8CC                1/17         Up        Up        Gi2
 		p4 = re.compile(r'^(?P<our_neighbor>[\w\.\:]+)\s+(?P<ld_rd>\d+'\
 			'\/\d+)\s+(?P<rh_rs>\S+)\s+(?P<state>\w+)\s+(?P<interface>'\
 			'[\w\W]+)$')

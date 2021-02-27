@@ -26,11 +26,11 @@ from genie.libs.parser.iosxr.show_platform import (ShowRedundancy,
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 # ==============================
-#  Unit test for 'show version'       
+#  Unit test for 'show version'
 # ==============================
 
 class TestShowVersion(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -222,11 +222,11 @@ class TestShowVersion(unittest.TestCase):
 
 
 # ================================
-#  Unit test for 'show sdr detail'       
+#  Unit test for 'show sdr detail'
 # ================================
 
 class TestShowSdrDetail(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -379,11 +379,11 @@ class TestShowSdrDetail(unittest.TestCase):
             parsed_output = show_sdr_obj.parse()
 
 # ==============================
-#  Unit test for 'show platform'       
+#  Unit test for 'show platform'
 # ==============================
 
 class TestShowPlatform(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -577,14 +577,14 @@ class TestShowPlatform(unittest.TestCase):
         show_platform_obj1 = ShowPlatform(device=self.device)
         parsed_output1 = show_platform_obj1.parse()
         self.assertEqual(parsed_output1,self.golden_parsed_output1)
-    
+
     def test_show_platform_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         show_platform_obj2 = ShowPlatform(device=self.device)
         parsed_output2 = show_platform_obj2.parse()
         self.assertEqual(parsed_output2,self.golden_parsed_output2)
-    
+
     def test_show_platform_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
@@ -613,11 +613,11 @@ class TestShowPlatform(unittest.TestCase):
             parsed_output = show_platform_obj.parse()
 
 # =================================
-#  Unit test for 'show platform vm'       
+#  Unit test for 'show platform vm'
 # =================================
 
 class TestShowPlatformVm(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -690,11 +690,11 @@ class TestShowPlatformVm(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 # ============================================
-#  Unit test for 'show install active summary'       
+#  Unit test for 'show install active summary'
 # ============================================
 
 class TestShowInstallActiveSummary(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -750,7 +750,7 @@ class TestShowInstallActiveSummary(unittest.TestCase):
 # ===============================
 
 class TestShowInventory(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
     maxDiff = None
@@ -1188,7 +1188,7 @@ class TestShowInventory(unittest.TestCase):
         invetory_obj2 = ShowInventory(device=self.device)
         parsed_output2 = invetory_obj2.parse()
         self.assertEqual(parsed_output2,self.golden_parsed_output2)
-    
+
     def test_show_inventory_golden3(self):
         self.device = Mock(**self.golden_output3)
         invetory_obj2 = ShowInventory(device=self.device)
@@ -1202,11 +1202,11 @@ class TestShowInventory(unittest.TestCase):
             parsed_output = invetory_obj.parse()
 
 # =======================================
-#  Unit test for admin show diag chassis'       
+#  Unit test for admin show diag chassis'
 # =======================================
 
 class TestAdminShowDiagChassis(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1233,7 +1233,7 @@ class TestAdminShowDiagChassis(unittest.TestCase):
           CLEI:  IPMUP00BRB
           Top Assy. Number:   68-4235-02
         '''}
-    
+
     golden_parsed_output2 = {
         'rack_num': 0,
         'desc': ' Cisco CRS Series 16 Slots Line Card Chassis',
@@ -1415,7 +1415,7 @@ class TestAdminShowDiagChassis(unittest.TestCase):
         diag_chassis_obj1 = AdminShowDiagChassis(device=self.device)
         parsed_output1 = diag_chassis_obj1.parse()
         self.assertEqual(parsed_output1,self.golden_parsed_output1)
-    
+
     def test_admin_show_diag_chassis_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
@@ -1452,11 +1452,11 @@ class TestAdminShowDiagChassis(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 # ========================================
-#  Unit test for 'show redundancy summary'       
+#  Unit test for 'show redundancy summary'
 # ========================================
 
 class TestShowRedundancySummary(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1518,11 +1518,11 @@ class TestShowRedundancySummary(unittest.TestCase):
 
 
 # ================================
-#  Unit test for 'show redundancy'       
+#  Unit test for 'show redundancy'
 # ================================
 
 class TestShowRedundancy(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1628,11 +1628,11 @@ class TestShowRedundancy(unittest.TestCase):
 
 
 # ====================
-#  Unit test for 'dir'       
+#  Unit test for 'dir'
 # ====================
 
 class TestDir(unittest.TestCase):
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
@@ -1796,6 +1796,235 @@ class TestDir(unittest.TestCase):
         }
     }
 
+    golden_output5 = {'execute.return_value': '''
+        Thu Feb 18 02:33:46.162 UTC
+
+        Directory of /misc/scratch
+           43 -rw-r--r--. 1  2655 Jan  4 14:23 status_file
+           11 drwx------. 2 16384 Jan  4 14:17 lost+found
+        16354 drwxrwxrwx. 3  4096 Jan  4 14:20 cvac
+           18 -rw-r--r--. 1   141 Jan  4 14:23 oor_aware_process
+           14 -rw-r--r--. 1 10429 Jan  4 14:17 pnet_cfg.log
+         8180 drwxr-xr-x. 2  4096 Jan  4 15:13 nvgen_traces
+           37 -rw-rw-rw-. 1  1020 Jan  4 14:23 cvac.log
+           13 -rw-r--r--. 1  1438 Jan  4 14:17 envoke_log
+           12 drwxr-xr-x. 2  4096 Jan  4 14:17 core
+           15 lrwxrwxrwx. 1    12 Jan  4 14:17 config -> /misc/config
+        16355 drwxr-xr-x. 3  4096 Jan  4 14:21 pam
+        16353 drwxr-xr-x. 9  4096 Jan  4 14:23 ztp
+         8178 drwxr-xr-x. 3  4096 Jan  4 14:18 syslog-hm
+         8179 drwxr-xr-x. 2  4096 Jan  4 14:18 crypto
+         8177 drwx---r-x. 2  4096 Jan  4 14:17 clihistory
+
+        1012660 kbytes total (941920 kbytes free)
+    '''
+    }
+
+    golden_parsed_output5 = {
+        'dir': {
+            'dir_name': '/misc/scratch',
+            'location': '0/RP0/CPU0',
+            'files': {
+                'status_file': {
+                    'size': '2655',
+                    'permission': '-rw-r--r--',
+                    'index': '43',
+                    'date': 'Jan 4 14:23'
+                },
+                'lost+found': {
+                    'size': '16384',
+                    'permission': 'drwx------',
+                    'index': '11',
+                    'date': 'Jan 4 14:17'
+                },
+                'cvac': {
+                    'size': '4096',
+                    'permission': 'drwxrwxrwx',
+                    'index': '16354',
+                    'date': 'Jan 4 14:20'
+                },
+                'oor_aware_process': {
+                    'size': '141',
+                    'permission': '-rw-r--r--',
+                    'index': '18',
+                    'date': 'Jan 4 14:23'
+                },
+                'pnet_cfg.log': {
+                    'size': '10429',
+                    'permission': '-rw-r--r--',
+                    'index': '14',
+                    'date': 'Jan 4 14:17'
+                },
+                'nvgen_traces': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '8180',
+                    'date': 'Jan 4 15:13'
+                },
+                'cvac.log': {
+                    'size': '1020',
+                    'permission': '-rw-rw-rw-',
+                    'index': '37',
+                    'date': 'Jan 4 14:23'
+                },
+                'envoke_log': {
+                    'size': '1438',
+                    'permission': '-rw-r--r--',
+                    'index': '13',
+                    'date': 'Jan 4 14:17'
+                },
+                'core': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '12',
+                    'date': 'Jan 4 14:17'
+                },
+                'config -> /misc/config': {
+                    'size': '12',
+                    'permission': 'lrwxrwxrwx',
+                    'index': '15',
+                    'date': 'Jan 4 14:17'
+                },
+                'pam': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '16355',
+                    'date': 'Jan 4 14:21'
+                },
+                'ztp': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '16353',
+                    'date': 'Jan 4 14:23'
+                },
+                'syslog-hm': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '8178',
+                    'date': 'Jan 4 14:18'
+                },
+                'crypto': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '8179',
+                    'date': 'Jan 4 14:18'
+                },
+                'clihistory': {
+                    'size': '4096',
+                    'permission': 'drwx---r-x',
+                    'index': '8177',
+                    'date': 'Jan 4 14:17'
+                }
+            },
+            'total_bytes': '1012660 kbytes',
+            'total_free_bytes': '941920 kbytes'
+        }
+    }
+
+    golden_output6 = {'execute.return_value': '''
+        Thu Feb 18 02:51:42.460 UTC
+
+        Directory of disk0:/ztp
+        30 lrwxrwxrwx. 1   22 Jan  4 14:19 ztp_xrcmd.log -> /var/log/ztp_xrcmd.log
+        22 drwxr-xr-x. 2 4096 Jan  4 14:23 tmp
+        24 drwxr-xr-x. 2 4096 Jan  4 14:23 xr_config
+        26 drwxr-xr-x. 2 4096 Jan  4 14:19 auto_breakout
+        29 lrwxrwxrwx. 1   21 Jan  4 14:19 ztp_exec.log -> /var/log/ztp_exec.log
+        25 drwxr-xr-x. 2 4096 Jan  4 14:19 customer
+        27 drwxr-xr-x. 2 4096 Jan  4 14:20 rate_limit
+        28 lrwxrwxrwx. 1   16 Jan  4 14:19 ztp.log -> /var/log/ztp.log
+        33 drwxr-xr-x. 2 4096 Jan  4 14:23 data
+        32 -rw-rw-rw-. 1   90 Jan  4 14:23 pid_list.txt
+        31 lrwxrwxrwx. 1   25 Jan  4 14:19 ztp_admincmd.log -> /var/log/ztp_admincmd.log
+        23 drwxr-xr-x. 2 4096 Jan  4 14:23 state
+
+        1012660 kbytes total (941912 kbytes free)
+    '''
+    }
+
+    golden_parsed_output6 = {
+        'dir': {
+            'dir_name': 'disk0:/ztp',
+            'location': '0/RP0/CPU0',
+            'files': {
+                'ztp_xrcmd.log -> /var/log/ztp_xrcmd.log': {
+                    'size': '22',
+                    'permission': 'lrwxrwxrwx',
+                    'index': '30',
+                    'date': 'Jan 4 14:19'
+                },
+                'tmp': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '22',
+                    'date': 'Jan 4 14:23'
+                },
+                'xr_config': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '24',
+                    'date': 'Jan 4 14:23'
+                },
+                'auto_breakout': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '26',
+                    'date': 'Jan 4 14:19'
+                },
+                'ztp_exec.log -> /var/log/ztp_exec.log': {
+                    'size': '21',
+                    'permission': 'lrwxrwxrwx',
+                    'index': '29',
+                    'date': 'Jan 4 14:19'
+                },
+                'customer': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '25',
+                    'date': 'Jan 4 14:19'
+                },
+                'rate_limit': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '27',
+                    'date': 'Jan 4 14:20'
+                },
+                'ztp.log -> /var/log/ztp.log': {
+                    'size': '16',
+                    'permission': 'lrwxrwxrwx',
+                    'index': '28',
+                    'date': 'Jan 4 14:19'
+                },
+                'data': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '33',
+                    'date': 'Jan 4 14:23'
+                },
+                'pid_list.txt': {
+                    'size': '90',
+                    'permission': '-rw-rw-rw-',
+                    'index': '32',
+                    'date': 'Jan 4 14:23'
+                },
+                'ztp_admincmd.log -> /var/log/ztp_admincmd.log': {
+                    'size': '25',
+                    'permission': 'lrwxrwxrwx',
+                    'index': '31',
+                    'date': 'Jan 4 14:19'
+                },
+                'state': {
+                    'size': '4096',
+                    'permission': 'drwxr-xr-x',
+                    'index': '23',
+                    'date': 'Jan 4 14:23'
+                }
+            },
+            'total_bytes': '1012660 kbytes',
+            'total_free_bytes': '941912 kbytes'
+        }
+    }
+
     def test_dir_golden1(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
@@ -1830,6 +2059,21 @@ class TestDir(unittest.TestCase):
         dir_obj4 = Dir(device=self.device)
         parsed_output4 = dir_obj4.parse()
         self.assertEqual(parsed_output4,self.golden_parsed_output4)
+
+    def test_dir_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        dir_obj5 = Dir(device=self.device)
+        parsed_output5 = dir_obj5.parse(location='0/RP0/CPU0')
+        self.assertEqual(parsed_output5,self.golden_parsed_output5)
+
+    def test_dir_golden6(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output6)
+        dir_obj6 = Dir(device=self.device)
+        parsed_output6 = dir_obj6.parse(directory='/misc/scratch/ztp',
+                                        location='0/RP0/CPU0')
+        self.assertEqual(parsed_output6, self.golden_parsed_output6)
 
     def test_dir_empty(self):
         self.device = Mock(**self.empty_output)
@@ -2130,7 +2374,7 @@ class TestShowInstallCommitSummary(unittest.TestCase):
 
 
 class TestShowProcessesMemory(unittest.TestCase):
-    
+
     maxDiff = None
     dev = Device(name='ASR9K')
     empty_output = {'execute.return_value': ''}
@@ -4490,7 +4734,7 @@ class TestShowProcessesMemory(unittest.TestCase):
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
 class TestShowProcessesMemoryDetail(unittest.TestCase):
-    
+
     maxDiff = None
     dev = Device(name='ASR9K')
     empty_output = {'execute.return_value': ''}

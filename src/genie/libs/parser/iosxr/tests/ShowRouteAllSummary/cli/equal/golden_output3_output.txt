@@ -1,0 +1,365 @@
+RP/0/RP0/CPU0:Router#show route vrf all afi-all safi-all summary
+Mon Dec  7 13:23:23.863 UTC
+
+VRF: **VRF_Name_01
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+local                            2          0          0           320          
+connected                        0          2          0           320          
+Total                            2          2          0           640          
+
+
+VRF: VRF_Name_02
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+static                           50         0          0           8000         
+bgp 111                          4          20         0           3840         
+connected                        2          1          0           480          
+local                            3          0          0           480          
+ospf 13                          554        46         0           96000        
+dagr                             0          0          0           0            
+Total                            613        67         0           108800       
+
+
+VRF: VRF_Name_04
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+bgp 111                          75         1          0           12160        
+static                           1          0          0           160          
+ospf 13                          0          0          0           0            
+Total                            78         1          0           12640        
+
+
+VRF: VRF_Name_05
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        2          0          0           320          
+bgp 111                          74         1          0           12000        
+static                           1          0          0           160          
+local                            2          0          0           320          
+ospf 13                          0          0          0           0            
+dagr                             0          0          0           0            
+Total                            79         1          0           12800        
+
+
+VRF: VRF_Name_06
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+dagr                             0          0          0           0            
+bgp 111                          49         1          0           8000         
+Total                            51         1          0           8320         
+
+
+VRF: VRF_Name_07
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+dagr                             0          0          0           0            
+bgp 111                          15         1          0           2560         
+Total                            17         1          0           2880         
+
+
+VRF: VRF_Name_08
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+static                           1          0          0           160          
+ospf 13                          0          0          0           0            
+bgp 111                          75         1          0           12160        
+Total                            78         1          0           12640        
+
+
+VRF: VRF_Name_09
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+static                           1          0          0           160          
+bgp 111                          49         0          0           7840         
+Total                            52         0          0           8320         
+
+
+VRF: VRF_Name_10
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+static                           1          0          0           160          
+bgp 111                          15         0          0           2400         
+Total                            18         0          0           2880         
+
+
+VRF: VRF_Name_11
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+static                           1          0          0           160          
+bgp 111                          49         0          0           7840         
+Total                            52         0          0           8320         
+
+
+VRF: VRF_Name_12
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+static                           1          0          0           160          
+bgp 111                          15         0          0           2400         
+Total                            18         0          0           2880         
+
+
+VRF: VRF_Name_13
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+static                           1          0          0           160          
+bgp 111                          49         0          0           7840         
+Total                            52         0          0           8320         
+
+
+VRF: VRF_Name_14
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+static                           1          0          0           160          
+bgp 111                          15         0          0           2400         
+Total                            18         0          0           2880         
+
+
+VRF: VRF_Name_15
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+bgp 111                          49         0          0           7840         
+static                           1          0          0           160          
+Total                            52         0          0           8320         
+
+
+VRF: VRF_Name_16
+
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        1          0          0           160          
+local                            1          0          0           160          
+static                           1          0          0           160          
+bgp 111                          15         0          0           2400         
+Total                            18         0          0           2880         
+
+
+VRF: **VRF_Name_01
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+local                            0          0          0           0            
+connected                        0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_02
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+local                            0          0          0           0            
+connected                        0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_04
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+local                            0          0          0           0            
+connected                        0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_05
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+local                            0          0          0           0            
+connected                        0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_06
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_07
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_08
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_09
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_10
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_11
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_12
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_13
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_14
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_15
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            
+
+
+VRF: VRF_Name_16
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+Total                            0          0          0           0            

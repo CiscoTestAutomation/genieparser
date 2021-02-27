@@ -13,7 +13,7 @@ class TestExtendParser(unittest.TestCase):
             os.environ['PYTHONPATH'] = package_path + ':'
 
     def test_extend_api(self):
-        ext = ExtendParsers('dummy_parser')
+        ext = ExtendParsers('genie.libs.parser.utils.tests.dummy_parser')
         ext.extend()
         ext.output.pop('tokens')
         ext.output.pop('extend_info')
@@ -24,7 +24,7 @@ class TestExtendParser(unittest.TestCase):
                     'iosxe': {
                         'c9300': {
                             'module_name': 'show_platform', 
-                            'package': 'dummy_parser', 
+                            'package': 'genie.libs.parser.utils.tests.dummy_parser', 
                             'class': 'ShowInventory', 
                             'doc': '\n    Parser for :\n        * show inventory\n    ', 
                             'uid': 'show_inventory'
@@ -34,14 +34,14 @@ class TestExtendParser(unittest.TestCase):
                 'show clock': {
                     'iosxe': {
                         'module_name': 'show_clock', 
-                        'package': 'dummy_parser', 
+                        'package': 'genie.libs.parser.utils.tests.dummy_parser', 
                         'class': 'ShowClock', 
                         'doc': 'Parser for show clock',
                         'uid': 'show_clock'
                     },
                     'iosxr': {
                         'module_name': 'show_clock', 
-                        'package': 'dummy_parser', 
+                        'package': 'genie.libs.parser.utils.tests.dummy_parser', 
                         'class': 'ShowClock', 
                         'doc': 'Parser for show clock', 
                         'uid': 'show_clock'

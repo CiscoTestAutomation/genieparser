@@ -119,7 +119,7 @@ class Ping(PingSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Sending 100, 100-byte ICMP Echos to 31.1.1.1, timeout is 2 seconds:
+            # Sending 100, 100-byte ICMP Echos to 10.4.1.1, timeout is 2 seconds:
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -131,8 +131,7 @@ class Ping(PingSchema):
                     'timeout_secs': int(group['timeout'])
                 })
                 continue
-
-            # Packet sent with a source address of 21.1.1.2
+            # Packet sent with a source address of 10.229.1.2
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -146,7 +145,8 @@ class Ping(PingSchema):
                 result_per_line.append(line)
                 ping_dict.update({'result_per_line': result_per_line})
 
-            # Sending 10, 100-byte ICMP Echos to 21.1.1.1, timeout is 2 seconds:
+
+            # Sending 10, 100-byte ICMP Echos to 10.229.1.1, timeout is 2 seconds:
             m = p4.match(line)
             if m:
                 group = m.groupdict()

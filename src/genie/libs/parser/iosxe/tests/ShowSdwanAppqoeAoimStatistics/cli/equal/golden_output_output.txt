@@ -18,12 +18,12 @@ SN12#show sdwan appqoe aoim-statistics
  PEER Statistics
 ----------------------------------------
  Number Of Peers      : 2
- Peer ID: 100.100.100.214
+ Peer ID: 10.220.100.214
  Peer Num AOs      : 2 
  AO             Version   InCompatible
  SSL             1.2        N   
  DRE             0.23       N   
- Peer ID: 100.100.100.212
+ Peer ID: 10.220.100.212
  Peer Num AOs      : 2 
  AO             Version   InCompatible
  SSL             1.2        N   
