@@ -3833,9 +3833,7 @@ class ShowChassisPicFpcSlotPicSlot(ShowChassisPicFpcSlotPicSlotSchema):
         p4 = re.compile(r'^PIC version +(?P<pic_version>\S+)$')
 
         # Uptime			 2 hours, 36 minutes, 32 seconds
-        p5 = re.compile(r'^Uptime\s+(?P<up_time>(?P<hours>\d+) +hours, '
-                        r'+(?P<minutes>\d+) +minutes, '
-                        r'+(?P<seconds>\d+) +seconds)$')
+        p5 = re.compile(r'^Uptime\s+(?P<up_time>(?P<hours>\d+) +hours, +(?P<minutes>\d+) +minutes, +(?P<seconds>\d+) +seconds?)$')
 
         # PIC port information:
         p6 = re.compile(r'PIC port information:')
