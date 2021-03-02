@@ -207,19 +207,19 @@ class ShowIpRoute(ShowIpRouteSchema):
             vrf = 'default'
 
         source_protocol_dict = {}
-        source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2']
+        source_protocol_dict['ospf'] = ['O','IA','N1','N2','E1','E2', '+', '%', 'p', '&']
         source_protocol_dict['odr'] = ['o']
         source_protocol_dict['isis'] = ['i','su','L1','L2','ia', 'I1', 'I2']
-        source_protocol_dict['eigrp'] = ['D','EX']
-        source_protocol_dict['static'] = ['S']
+        source_protocol_dict['eigrp'] = ['D','EX', '+', '%', 'p', '&']
+        source_protocol_dict['static'] = ['S', '+', '%', 'p', '&']
         source_protocol_dict['mobile'] = ['M']
         source_protocol_dict['rip'] = ['R']
         source_protocol_dict['lisp'] = ['I', 'Ir','Ia','Id']
         source_protocol_dict['nhrp'] = ['H']
         source_protocol_dict['local'] = ['L']
-        source_protocol_dict['connected'] = ['C']
+        source_protocol_dict['connected'] = ['C', '+', '%', 'p', '&']
         source_protocol_dict['local_connected'] = ['LC']
-        source_protocol_dict['bgp'] = ['B']
+        source_protocol_dict['bgp'] = ['B', '+', '%', 'p', '&']
 
         result_dict = {}
 
@@ -260,7 +260,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             else:
                 continue
 
-            next_hop = interface = updated = metrics = route_preference = ""
+            next_hop = interface = updated = metrics = route_preference = nh_vrf = ""
             # Routing Table: VRF1
             # Routing Table: VRF-infra
             p1 = re.compile(r'^Routing Table: +(?P<vrf>[\w?-]+)$')
@@ -297,16 +297,21 @@ class ShowIpRoute(ShowIpRouteSchema):
             # D        192.168.205.1
             # S*       0.0.0.0/0 [1/0] via 10.50.15.1
             # L        FF00::/8 [0/0]
+            # S   %    17.0.0.1 [1/0] via 192.168.16.1
+            # C   p    17.0.0.2 is directly connected, Loopback0
+            # S   &    18.0.0.0 [1/0] via 17.0.0.1
+            # S   +    80.1.1.0 [1/0] via 12.0.0.1 (red)
+            # B   +    100.0.0.0 [20/0] via 12.0.0.1 (red), 00:00:09
             if self.IP_VER == 'ipv4':
                 p3 = re.compile(
-                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[0-9\.\:\/]+)?( '
+                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+%&p]+)? +(?P<network>[0-9\.\:\/]+)?( '
                     r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
-                    r'via +)?(?P<next_hop>[\d\.]+))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                    r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
             else:
                 p3 = re.compile(
-                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w]+)? +(?P<network>[\w\.\:\/]+)?( '
+                    r'^(?P<code>[\w\*]+) +(?P<code1>[\w+%&p]+)? +(?P<network>[\w\.\:\/]+)?( '
                     r'+is +directly +connected,)? *\[?(?P<route_preference>[\d\/]+)?\]?( *('
-                    r'via +)?(?P<next_hop>[\d\.]+))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
+                    r'via +)?(?P<next_hop>[\d\.]+))?,?( +\((?P<nh_vrf>[\w+]+)\))?,?( +(?P<date>[0-9][\w\:]+))?,?( +(?P<interface>[\S]+))?$')
 
             m = p3.match(line)
             if m:
@@ -349,6 +354,9 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if m.groupdict()['date']:
                     updated = m.groupdict()['date']
 
+                if m.groupdict()['nh_vrf']:
+                    nh_vrf = m.groupdict()['nh_vrf']
+
                 route_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {})\
                                         .setdefault('address_family', {}).setdefault(af, {})\
                                         .setdefault('routes', {}).setdefault(route, {})
@@ -379,6 +387,8 @@ class ShowIpRoute(ShowIpRouteSchema):
                         idx_dict['updated'] = updated
                     if interface:
                         idx_dict['outgoing_interface'] = interface
+                    if nh_vrf:
+                        idx_dict['vrf'] = nh_vrf
 
                 continue
 

@@ -1,0 +1,7 @@
+VLL MY-UNTAGGED-BOTH-VLL-LOCAL VLL-ID 1 IFL-ID --
+ State: UP
+ End-point 1: untagged e 2/2
+ COS: --
+ End-point 2: untagged e 2/13
+ COS: --
+Extended Counters: Enabled

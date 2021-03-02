@@ -1,6 +1,6 @@
 expected_output = {
                   'ping': {
-                     'address': '31.1.1.1',
+                     'address': '10.4.1.1',
                      'data_bytes': 100,
                      'repeat': 100,
                      'statistics': {

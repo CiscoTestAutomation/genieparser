@@ -121,13 +121,13 @@ class test_show_arp_detail(unittest.TestCase):
 							'10.3.4.3': {
 								'age': '-',
 								'ip': '10.3.4.3',
-      							'link_layer_address': '6c6c.d35f.e62c',
+      							'link_layer_address': '6c6c.d3ff.468b',
       							'origin': 'static',
       							'type': 'ARPA'},
      						'10.3.4.4': {
 								 'age': '01:55:46',
 								'ip': '10.3.4.4',
-      							'link_layer_address': '0896.ad50.16a8',
+      							'link_layer_address': '0896.adff.66f8',
       							'origin': 'dynamic',
       							'type': 'ARPA'}
 						}
@@ -148,8 +148,8 @@ class test_show_arp_detail(unittest.TestCase):
 			10.1.2.2        -          fa16.3eff.f847  Interface  Unknown ARPA GigabitEthernet0/0/0/0
 			10.2.3.2        -          fa16.3eff.c3f7  Interface  Unknown ARPA GigabitEthernet0/0/0/1
 			10.2.3.3        00:13:49   5e00.80ff.0209  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/1
-			10.3.4.3        -          6c6c.d35f.e62c  Interface  Unknown ARPA Bundle-Ether1
-			10.3.4.4        01:55:46   0896.ad50.16a8  Dynamic    Dynamic ARPA Bundle-Ether1
+			10.3.4.3        -          6c6c.d3ff.468b  Interface  Unknown ARPA Bundle-Ether1
+			10.3.4.4        01:55:46   0896.adff.66f8  Dynamic    Dynamic ARPA Bundle-Ether1
 		'''}
 
 		def test_empty(self):

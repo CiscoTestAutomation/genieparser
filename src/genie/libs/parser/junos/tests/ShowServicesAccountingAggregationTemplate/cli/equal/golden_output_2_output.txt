@@ -1,6 +1,6 @@
   show services accounting aggregation template template-name xflow2 extensive
   Source address: 100:0:0:0:0:0:0:2
-  Destination address: 200:0:0:0:0:0:0:2
+  Destination address: 2001:db8:4::2
   Source port: 0, Destination port: 0
   Protocol: 59, TOS: 0, TCP flags: 0
   Source mask: 64, Destination mask: 64

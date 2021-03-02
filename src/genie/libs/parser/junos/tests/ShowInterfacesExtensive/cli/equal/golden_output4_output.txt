@@ -7,8 +7,8 @@ Physical interface: ae0, Enabled, Physical link is Up
   Minimum links needed: 1, Minimum bandwidth needed: 1bps
   Device flags   : Present Running
   Interface flags: SNMP-Traps Internal: 0x4000
-  Current address: 2c:6b:f5:d6:f8:cf, Hardware address: 2c:6b:f5:d6:f8:cf
-  Last flapped   : 2021-01-12 10:04:59 JST (00:30:40 ago)
+  Current address: 2c:6b:f5:ff:cf:a6, Hardware address: 2c:6b:f5:ff:cf:a6
+  Last flapped   : 2021-01-12 10:04:59 EST (00:30:40 ago)
   Statistics last cleared: Never
   Traffic statistics:
    Input  bytes  :               450746                 1952 bps
@@ -76,10 +76,10 @@ Physical interface: ae0, Enabled, Physical link is Up
 
     LACP info:        Role     System             System       Port     Port    Port 
                              priority         identifier   priority   number     key 
-      ge-0/0/6.0     Actor        127  2c:6b:f5:d6:f8:c0        127        2       1
-      ge-0/0/6.0   Partner        127  2c:6b:f5:18:ef:c0        127        2       1
-      ge-0/0/7.0     Actor        127  2c:6b:f5:d6:f8:c0        127        3       1
-      ge-0/0/7.0   Partner        127  2c:6b:f5:18:ef:c0        127        3       1
+      ge-0/0/6.0     Actor        127  2c:6b:f5:ff:cf:97        127        2       1
+      ge-0/0/6.0   Partner        127  2c:6b:f5:ff:08:d8        127        2       1
+      ge-0/0/7.0     Actor        127  2c:6b:f5:ff:cf:97        127        3       1
+      ge-0/0/7.0   Partner        127  2c:6b:f5:ff:08:d8        127        3       1
     LACP Statistics:       LACP Rx     LACP Tx   Unknown Rx   Illegal Rx 
       ge-0/0/6.0                 0           0            0            0
       ge-0/0/7.0                 0           0            0            0
@@ -111,7 +111,7 @@ Physical interface: ae0, Enabled, Physical link is Up
         Destination: 2001:10::/64, Local: 2001:10::1
     Generation: 8338
       Addresses, Flags: Is-Preferred
-        Destination: fe80::/64, Local: fe80::2e6b:f5ff:fed6:f8cf
+        Destination: fe80::/64, Local: fe80::2e6b:f5ff:feff:cfa6
     Protocol multiservice, MTU: Unlimited, Generation: 8340
     Generation: 4863, Route table: 0
       Flags: Is-Primary

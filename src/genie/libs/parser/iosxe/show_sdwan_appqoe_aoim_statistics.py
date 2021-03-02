@@ -91,7 +91,7 @@ class ShowSdwanAppqoeAoimStatistics(ShowSdwanAppqoeAoimStatisticsSchema):
         #Number Of Peers      : 2
         p11=re.compile(r'\s*Number Of Peers+\s+\:+\s+(?P<peer_total>\d+)')
 
-        #Peer ID: 100.100.100.214
+        #Peer ID: 10.220.100.214
         p12=re.compile(r'\s*Peer ID:+\s+(?P<peer_id>[\d.]+)')
 
         #Peer Num AOs      : 2
@@ -179,7 +179,7 @@ class ShowSdwanAppqoeAoimStatistics(ShowSdwanAppqoeAoimStatisticsSchema):
 
             m12=p12.match(line)
             if m12:
-                #{'peer_id':'100.100.100.214'}
+                #{'peer_id':'10.220.100.214'}
                 groups=m12.groupdict()
                 cur_dict=temp_dict
                 cur_dict[groups['peer_id']]={}
