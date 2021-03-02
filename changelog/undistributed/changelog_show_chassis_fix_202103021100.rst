@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
-                                FIX
+                                Fix
 --------------------------------------------------------------------------------
-* NXOS
-    * Modified ShowRunningConfigNvOverlay:
-        * fixed regex to support more output
+* Junos
+    * Modified ShowChassisPicFpcSlotPicSlot
+      * Fixed uptime regex
