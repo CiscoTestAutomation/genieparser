@@ -2,5 +2,6 @@
                                 New
 --------------------------------------------------------------------------------
 * IOSXR
-    * Added ShowMribEvpnBucketDB
-        * parser for show mrib evpn bucket-db
+    * Added following commands for Dir
+        * dir location {location}
+        * dir {directory} location {location}
