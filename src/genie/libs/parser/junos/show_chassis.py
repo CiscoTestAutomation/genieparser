@@ -3832,8 +3832,10 @@ class ShowChassisPicFpcSlotPicSlot(ShowChassisPicFpcSlotPicSlotSchema):
         # PIC version                 1.19
         p4 = re.compile(r'^PIC version +(?P<pic_version>\S+)$')
 
+        # Uptime			 18 minutes, 56 seconds
+        # Uptime			 6 hours, 24 minutes, 1 second
         # Uptime			 2 hours, 36 minutes, 32 seconds
-        p5 = re.compile(r'^Uptime\s+(?P<up_time>(?P<hours>\d+) +hours, +(?P<minutes>\d+) +minutes, +(?P<seconds>\d+) +seconds?)$')
+        p5 = re.compile(r'^Uptime\s+(?P<up_time>((?P<hours>\d+) +hours, +)?(?P<minutes>\d+) +minutes, +(?P<seconds>\d+) +seconds?)$')
 
         # PIC port information:
         p6 = re.compile(r'PIC port information:')
@@ -3882,13 +3884,15 @@ class ShowChassisPicFpcSlotPicSlot(ShowChassisPicFpcSlotPicSlotSchema):
                     pic_detail_dict[k] = v.strip()
                 continue
 
+            # Uptime			 18 minutes, 56 seconds
+            # Uptime			 6 hours, 24 minutes, 1 second
             # Uptime			 2 hours, 36 minutes, 32 seconds
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 up_time = group["up_time"]
 
-                total_seconds = int(group["hours"])*60*60+int(group["minutes"])*60+int(group["seconds"])
+                total_seconds = int(group.get("hours") or 0)*60*60+int(group["minutes"])*60+int(group["seconds"])
 
                 pic_detail_dict["up-time"] = {
                     "#text": up_time,
