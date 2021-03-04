@@ -180,6 +180,7 @@ class ShowSystemStatus(ShowSystemStatusSchema):
                     break
             #Disk usage:              Filesystem      Size   Used  Avail   Use %  Mounted on
             #                         /dev/root       7615M  447M  6741M   6%   /
+            #                         /dev/disk/by-label/fs-bootflash       11039M  1240M  9219M   12%   /bootflash
             p8 = re.compile(r'^Disk +usage: +Filesystem +Size +Used +Avail + Use +% +Mounted +on +(?P<filesystem>[\d\w/\%\.\-]+) +(?P<size_mega>[\d\w]+) +(?P<used_mega>[\d\w]+) +(?P<avail_mega>[\d\w]+) +(?P<use_pc>[\d\w/\%\.]+) +(?P<mounted_on>[\d\w/\%\.]+)$')
             m8 = p8.match(line)
             if m8:
