@@ -5,11 +5,11 @@ DC-LAN Subnet
   Virtual MAC address is 0000.5eff.0164
   Advertisement interval is 1.000 sec
   Preemption enabled
-  Priority is 120 
+  Priority is 120
   VRRS Group name DC_LAN
     Track object 1 state Up decrement 30
   Authentication text "hash"
-  Master Router is 192.168.1.233 (local), priority is 120 
+  Master Router is 192.168.1.233 (local), priority is 120
   Master Advertisement interval is 1.000 sec
   Master Down interval is 3.531 sec
 
