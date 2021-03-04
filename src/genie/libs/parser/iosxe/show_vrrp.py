@@ -154,31 +154,26 @@ class ShowVrrp(ShowVrrpSchema):
 
         # Track object 1 state down decrement 15
         p12 = re.compile(
-            r'Track +object (?P<obj_name>\w+) +state (?P<obj_state>(Up|Down))'
-            r' +decrement (?P<value>\w+)')
+            r'Track +object (?P<obj_name>\w+) +state (?P<obj_state>(Up|Down)) +decrement (?P<value>\w+)')
 
         # Authentication text "hash"
         p13 = re.compile(r'Authentication +text \"(?P<type>[\w,\"]+)\"')
 
         # Master Router is 10.2.0.1 (local), priority is 100
         p14 = re.compile(
-            r'^Master +Router +is (?P<mast_ip_addr>[\w,\.]+)'
-            r' \((?P<server>\S+)\), +priority +is (?P<digit>\d+)')
+            r'^Master +Router +is (?P<mast_ip_addr>[\w,\.]+) \((?P<server>\S+)\), +priority +is (?P<digit>\d+)')
 
         # Master Advertisement interval is 3.000 sec
         p15 = re.compile(
-            r'^Master +Advertisement +interval +is '
-            r'(?P<mast_adv_interval>[\d,\.]+) +sec')
+            r'^Master +Advertisement +interval +is (?P<mast_adv_interval>[\d,\.]+) +sec')
 
         # Master Down interval is 9.609 sec
         p16 = re.compile(
-            r'^Master +Down +interval +is (?P<mast_down_interval>[\d,\.]+)'
-            r' +sec')
+            r'^Master +Down +interval +is (?P<mast_down_interval>[\d,\.]+) +sec')
 
         # Master Router is 192.168.1.233, priority is 120
         p17 = re.compile(
-            r'^Master +Router +is (?P<mast_ip_addr>[\w,\.]+)+, +priority +is '
-            r'(?P<digit>\d+)')
+            r'^Master +Router +is (?P<mast_ip_addr>[\w,\.]+)+, +priority +is (?P<digit>\d+)')
 
         # FLAGS: 1/1
         p18 = re.compile(r'^FLAGS: +(?P<flags>[\d\/]+)')
