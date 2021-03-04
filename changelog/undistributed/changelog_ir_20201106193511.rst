@@ -1,8 +1,0 @@
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* JUNOS
-    * Modified ShowBgpSummary:
-        * Changed 'bgp-thread-mode' to Optional.
-        * Updated regex pattern <p5> to accommodate various outputs.
-        

@@ -11,7 +11,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 
 # Libs
 from genie.libs.parser.utils.common import Common
@@ -386,3 +386,157 @@ class ShowIpv6EigrpNeighborsDetail(ShowEigrpNeighborsDetailSuperParser,
             show_output = output
 
         return super().cli(output=show_output, vrf=vrf)
+
+class ShowEigrpTopologySchema(MetaParser):
+    '''Schema for:
+        * 'show ip eigrp topology'
+        * 'show ipv6 eigrp topology'
+        * 'show ip eigrp topology vrf <vrf>'
+        * 'show ipv6 eigrp topology vrf <vrf>'
+    '''
+
+    schema = {
+        'as': {
+            int: {
+                'routerid': str,
+                'vrf': {
+                    Any(): {
+                        'address_family': {
+                            Any(): {
+                                'route': {
+                                    Any(): {
+                                        'state': str,
+                                        'num_successors': int,
+                                        'fd': str,
+                                        'nexthops': {
+                                            int: {
+                                                'nexthop': str,
+                                                Optional('fd'): int,
+                                                Optional('rd'): int,
+                                                Optional('interface'): str
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+class ShowEigrpTopology(ShowEigrpTopologySchema):
+    '''Super parser for:
+        * 'show ip eigrp topology'
+        * 'show ipv6 eigrp topology'
+        * 'show ip eigrp topology vrf <vrf>'
+        * 'show ipv6 eigrp topology vrf <vrf>'
+    '''
+
+    cli_command = [
+        'show {af} eigrp topology',
+        'show {af} eigrp topology vrf {vrf}'
+    ]
+
+    def cli(self, af:str, vrf:str='', output:str=None) -> dict:
+        if output is None :
+            if (vrf == '') :
+                cmd:str = self.cli_command[0].format(af=af)
+            else :
+                cmd:str = self.cli_command[1].format(af=af, vrf=vrf)
+            output = self.device.execute(cmd)
+
+        # IP-EIGRP Topology Table for AS(1)/ID(10.0.0.1) VRF default
+        # IPv6-EIGRP Topology Table for AS(0)/ID(0.0.0.0) VRF vrf1
+        r1 = re.compile(r'^(?P<address_family>IP|IPv4|IPv6)'
+                        '\-EIGRP\s+Topology\s+Table\s+for\s+'
+                        'AS\((?P<as_num>\d+)\)\/ID\((?P<routerid>\S+)\)'
+                        '\s+VRF\s+(?P<vrf>\S+)$')
+
+        # P 10.1.1.0/24, 1 successors, FD is 2816
+        # P 2001:1::1:0/112, 1 successors, FD is 2816
+        # P 10.4.1.0/24, 2 successors, FD is Inaccessible
+        r2 = re.compile(r'^(?P<state>P|A|U|Q|R|r|s)\s+(?P<route>\S+),\s+'
+                        '(?P<num_successors>\d+)\s+successors,'
+                        '\s+FD\s+is\s+(?P<fd>(\d+)|Inaccessible)$')
+
+        # via Connected, Ethernet1/2
+        # via Rstatic (51200/0)
+        # via 10.1.1.2 (3072/576), Ethernet1/2
+        r3 = re.compile(r'via\s+(?P<nexthop>\S+)'
+                        '(\s+\((?P<fd>\d+)\/(?P<rd>\d+)\))?'
+                        '(,\s(?P<interface>\S+))?$')
+
+        parsed_dict:dict = {}
+
+        nexthop_count:int = 0
+
+        # loop over all the lines
+        for line in output.splitlines():
+            line = line.strip()
+
+            result = r1.match(line)
+            if result:
+                group:dict = result.groupdict()
+                address_family = group['address_family'].lower()
+                if address_family == 'ip':
+                    address_family = 'ipv4'
+                as_num = int(group['as_num'])
+                routerid = group['routerid']
+                vrf = group['vrf']
+                as_dict:dict = parsed_dict \
+                    .setdefault('as', {}) \
+                    .setdefault(as_num, {})
+                as_dict['routerid'] = routerid
+                continue
+
+            result = r2.match(line)
+            if result:
+                nexthop_count = 0
+                group:dict = result.groupdict()
+
+                if not vrf:
+                    vrf = 'default'
+                if not as_num:
+                    as_num = 0
+                if not routerid:
+                    routerid = ''
+
+                route:str = group['route']
+                route_dict:dict = parsed_dict \
+                    .setdefault('as', {}) \
+                    .setdefault(as_num, {}) \
+                    .setdefault('vrf', {}) \
+                    .setdefault(vrf, {}) \
+                    .setdefault('address_family', {}) \
+                    .setdefault(address_family, {}) \
+                    .setdefault('route', {}) \
+                    .setdefault(route, {})
+                route_dict['state'] = group['state']
+                route_dict['num_successors'] = int(group['num_successors'])
+                route_dict['fd'] = group['fd']
+
+            result = r3.match(line)
+            if result:
+                group:dict = result.groupdict()
+                nexthop_dict:dict = parsed_dict \
+                    .setdefault('as', {}) \
+                    .setdefault(as_num, {}) \
+                    .setdefault('vrf', {}) \
+                    .setdefault(vrf, {}) \
+                    .setdefault('address_family', {}) \
+                    .setdefault(address_family, {}) \
+                    .setdefault('route', {}) \
+                    .setdefault(route, {}) \
+                    .setdefault('nexthops', {}) \
+                    .setdefault(nexthop_count, {})
+                nexthop_count = nexthop_count + 1
+                nexthop_dict['nexthop'] = group['nexthop']
+                for key in ('fd', 'rd') :
+                    if group[key]:
+                        nexthop_dict[key] = int(group[key])
+                if group['interface']:
+                    nexthop_dict['interface'] = group['interface']
+
+        return parsed_dict

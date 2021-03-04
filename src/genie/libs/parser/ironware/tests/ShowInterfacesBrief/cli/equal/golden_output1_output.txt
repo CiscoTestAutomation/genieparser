@@ -1,0 +1,7 @@
+Port   Link     Port-State   Speed Tag MAC            Name
+1/1    Disabled None         None  No  cc4e.24ff.5242 description1
+1/2    Up       Forward      1G    No  cc4e.24ff.6242 description2
+1/3    Up       Forward      1G    Yes cc4e.24ff.7242 description3
+mgmt1  Up       Forward      100M  Yes cc4e.24ff.8242
+lb1    Up       N/A          N/A   N/A N/A
+tn30   Down     N/A          N/A   N/A N/A

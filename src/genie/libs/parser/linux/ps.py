@@ -77,7 +77,7 @@ class Ps(PsSchema):
                 del groups['pid']
                 parsed_dict.setdefault('pid', {}).setdefault(pid, groups)
 
-        if len(parsed_dict) == 0:
-            parsed_dict.setdefault('pid', {})
+        #if len(parsed_dict) == 0:
+        #    parsed_dict.setdefault('pid', {})
 
         return parsed_dict

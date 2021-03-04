@@ -2,9 +2,9 @@
     supported commands:
         *show lldp all
         *show lldp timers
-        *show lldp tlv-select 
+        *show lldp tlv-select 
         *show lldp neighbors detail
-        *show lldp traffic 
+        *show lldp traffic 
 """
 import re
 
@@ -47,7 +47,7 @@ class ShowLldpAll(ShowLldpAllSchema):
         parsed_dict = {}
 
         # Interface Information: Eth1/64 Enable (tx/rx/dcbx): Y/Y/Y
-        # Interface Information: mgmt0 Enable (tx/rx/dcbx): Y/Y/N  
+        # Interface Information: mgmt0 Enable (tx/rx/dcbx): Y/Y/N  
         p1 = re.compile(
             r'^Interface Information: +(?P<interface>[\S]+) +('
             r'?P<enabled>[a-zA-Z]+) +\(tx/rx/dcbx\): +(?P<tx>[YN])/('
@@ -105,9 +105,9 @@ class ShowLldpTimers(ShowLldpTimersSchema):
         '''
          LLDP Timers:
         
-            Holdtime in seconds: 120
-            Reinit-time in seconds: 2
-            Transmit interval in seconds: 30
+            Holdtime in seconds: 120
+            Reinit-time in seconds: 2
+            Transmit interval in seconds: 30
             Transmit delay in seconds: 2
             Hold multiplier in seconds: 4
             Notification interval in seconds: 5
@@ -489,14 +489,14 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
         # init return dictionary
         parsed_dict = {}
 
-        #     LLDP traffic statistics: 
+        #     LLDP traffic statistics: 
         #
-        #         Total frames transmitted: 349
-        #         Total entries aged: 0
-        #         Total frames received: 209
-        #         Total frames received in error: 0
-        #         Total frames discarded: 0
-        #         Total unrecognized TLVs: 0
+        #         Total frames transmitted: 349
+        #         Total entries aged: 0
+        #         Total frames received: 209
+        #         Total frames received in error: 0
+        #         Total frames discarded: 0
+        #         Total unrecognized TLVs: 0
         p1 = re.compile(r'^(?P<pattern>[\w\s]+): +(?P<value>\d+)$')
         for line in out.splitlines():
             line = line.strip()

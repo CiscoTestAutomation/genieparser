@@ -1,4 +1,4 @@
-expected_output = {
+expected_output = { 
     "power_stack": {
         "Powerstack-1": {
             "switch_num": 1,

@@ -84,8 +84,8 @@ class VimCmdVmsvcGetAllVms(VimCmdVmsvcGetAllVmsSchema):
                 ret_dict.setdefault('vmid', {}).setdefault(vm_id, groups)
                 continue
         
-        if len(ret_dict) == 0:
-            ret_dict.setdefault('vmid', {})
+        #if len(ret_dict) == 0:
+        #    ret_dict.setdefault('vmid', {})
 
         return ret_dict
     

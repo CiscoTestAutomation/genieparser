@@ -1,0 +1,5 @@
+show bootvar
+BOOT variable = bootflash:packages.conf;
+BOOTMODE variable does not exist
+IPXE_TIMEOUT variable does not exist
+CONFIG_FILE variable =
