@@ -37,7 +37,7 @@ expected_output = {
             "client": {
                 "0014.bfff.30ca": {
                     "client": "0014.bfff.30ca",
-                    "method": "dot1x",
+                    "method": "N/A",
                     "domain": "DATA",
                     "status": "Authz Success",
                     "session": {

@@ -1,0 +1,31 @@
+--- show platform ---
+
+Chassis type: ASR-903            
+
+ 
+
+Slot      Type                State                 Insert time (ago)
+
+--------- ------------------- --------------------- -----------------
+
+ 0/2      A900-IMA8Z          ok                    1w4d         
+
+R0        A900-RSP3C-400-S    ok, active            1w4d         
+
+F0                            ok, active            1w4d         
+
+P0        A900-PWR550-A       ok                    1w4d         
+
+P1        Unknown             N/A                   never        
+
+P2        A903-FAN-E          ok                    1w4d         
+
+ 
+
+Slot      CPLD Version        Firmware Version                       
+
+--------- ------------------- ---------------------------------------
+
+R0        19052734            15.6(42r)S                         
+
+F0        19052734            15.6(42r)S

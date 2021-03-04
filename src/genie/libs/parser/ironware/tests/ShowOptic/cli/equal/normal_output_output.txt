@@ -1,0 +1,48 @@
+1/1   30.9179 C  -040.0000 dBm -040.0000 dBm    0.000 mA
+       Normal      Low-Alarm      Low-Alarm     Low-Warn
+1/2   34.4335 C  -006.3638 dBm -006.7141 dBm   14.750 mA
+       Normal       Normal           Normal      Normal
+1/3   38.9765 C  -006.9271 dBm -007.6980 dBm   20.800 mA
+       Normal       Normal           Normal      Normal
+1/4   38.9492 C  -006.2324 dBm -007.1760 dBm   27.468 mA
+       Normal       Normal           Normal      Normal
+1/5   50.5156 C  -005.8720 dBm -008.0106 dBm   41.600 mA
+       Normal       Normal           Normal      Normal
+1/6   43.5234 C  -006.5619 dBm -004.4696 dBm   23.000 mA
+       Normal       Normal        High-Warn      Normal
+1/7   41.7734 C  -005.5877 dBm -006.7551 dBm   20.650 mA
+       Normal       Normal           Normal      Normal
+1/8   36.5312 C  -007.0509 dBm -007.1534 dBm   16.550 mA
+       Normal       Normal           Normal      Normal
+1/9   44.9218 C  -006.0959 dBm -008.3564 dBm   28.600 mA
+       Normal       Normal           Normal      Normal
+1/10   48.4179 C  -005.8888 dBm       NONE       37.400 mA
+       Normal       Normal        Low-Alarm      Normal
+1/11   35.8320 C  -005.7154 dBm       NONE       14.850 mA
+       Normal       Normal        Low-Alarm      Normal
+1/12   34.7812 C  -005.7626 dBm -006.8486 dBm   15.850 mA
+       Normal       Normal           Normal      Normal
+1/13   32.3359 C  -006.5876 dBm -006.2598 dBm   11.600 mA
+       Normal       Normal           Normal      Normal
+1/14   36.5312 C  -005.4729 dBm       NONE       21.650 mA
+       Normal       Normal        Low-Alarm      Normal
+1/15   36.8789 C  -006.7448 dBm -006.6655 dBm   18.150 mA
+       Normal       Normal           Normal      Normal
+1/16   33.3828 C  -005.9465 dBm -006.7019 dBm   12.800 mA
+       Normal       Normal           Normal      Normal
+1/17   34.7812 C  -006.4550 dBm -007.0399 dBm   13.600 mA
+       Normal       Normal           Normal      Normal
+1/18   31.6367 C  -005.6240 dBm -006.0067 dBm    9.500 mA
+       Normal       Normal           Normal      Normal
+1/19   38.6289 C  -006.2837 dBm -005.0962 dBm   20.650 mA
+       Normal       Normal           Normal      Normal
+1/20   36.1796 C  -006.7489 dBm -006.3638 dBm   14.250 mA
+       Normal       Normal           Normal      Normal
+1/21   34.0820 C  -006.2727 dBm -005.9209 dBm   13.600 mA
+       Normal       Normal           Normal      Normal
+1/22   38.6289 C  -006.5325 dBm -004.8056 dBm   21.700 mA
+       Normal       Normal        High-Warn      Normal
+1/23   35.1328 C  -006.5188 dBm -006.8381 dBm   15.450 mA
+       Normal       Normal           Normal      Normal
+1/24   50.1640 C  -006.1636 dBm       NONE       45.000 mA
+       Normal       Normal        Low-Alarm      Normal

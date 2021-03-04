@@ -184,6 +184,9 @@ class ShowLogging(ShowLoggingSchema):
         log_lines = []
         no_logs_read = True
 
+        # Wed Feb 10 16:49:33.170 UTC
+        p0 = re.compile(r'^[a-zA-Z]+\s+[a-zA-Z]+\s+\d+\s+\d+:\d+:\d+(\.\d+)?\s+[a-zA-Z]+')
+
         #Syslog logging: enabled (0 messages dropped, 0 messages rate-limited, 0 flushes, 0 overruns, xml disabled, filtering disabled)
         p1 = re.compile(r'Syslog +logging: +(?P<enable_disable>\S+) '
                         r'+\(+(?P<messages_dropped>\d+) +messages +dropped, '
@@ -262,6 +265,11 @@ class ShowLogging(ShowLoggingSchema):
         for line in out.splitlines():
 
             line = line.strip()
+
+            # Wed Feb 10 16:49:33.170 UTC
+            m = p0.match(line)
+            if m:
+                continue
 
             #Syslog logging: enabled (0 messages dropped, 0 messages rate-limited, 0 flushes, 0 overruns, xml disabled, filtering disabled)
             #Syslog logging: enabled (0 messages dropped, 0 flushes, 0 overruns)
@@ -478,10 +486,9 @@ class ShowLogging(ShowLoggingSchema):
             if m:
                 group = m.groupdict()
                 ret_dict['log_buffer_bytes'] = int(group['vrf'])
-                read_logs_in_list = True
                 continue
 
-            if line and read_logs_in_list:
+            if line:
                 if line.lower().startswith('no active') or line.lower().startswith('no inactive'):
                     continue
                 else:

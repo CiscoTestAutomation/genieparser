@@ -16,7 +16,8 @@ from genie.libs.parser.iosxr.show_interface import (ShowInterfacesDetail,
                                                     ShowIpInterfaceBrief,
                                                     ShowIpv4InterfaceBrief,
                                                     ShowInterfaces,
-                                                    ShowInterfacesDescription)
+                                                    ShowInterfacesDescription,
+                                                    ShowIpv6Interface)
 
 #############################################################################
 # unitest For Show Interfaces Detail
@@ -1612,155 +1613,155 @@ class test_show_ipv6_vrf_all_interface(unittest.TestCase):
             'vrf_id': '0x60000000'}}
 
     golden_output1 = {'execute.return_value': '''
-            RP/0/RP0/CPU0:xr9kv-2#show ipv6 vrf all interface 
+            RP/0/RP0/CPU0:xr9kv-2#show ipv6 vrf all interface 
             Thu Apr 26 13:10:00.784 UTC
             Loopback0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
-                IPv6 is enabled, link-local address is fe80::6983:ecff:febd:853e 
-                Global unicast address(es):
-                  2001:2:2::2, subnet is 2001:2:2::2/128 
-                Joined group address(es): ff02::1:ff00:2 ff02::1:ffbd:853e ff02::2
-                    ff02::1
-                MTU is 1500 (1500 is available to IPv6)
-                ICMP redirects are disabled
-                ICMP unreachables are always on
-                ND DAD is disabled, number of DAD attempts 0
-                ND reachable time is 0 milliseconds
-                ND cache entry limit is 0
-                ND advertised retransmit interval is 0 milliseconds
-                Hosts use stateless autoconfig for addresses.
-                Outgoing access list is not set
-                Inbound  common access list is not set, access list is not set
-                Table Id is 0xe0800000
-                Complete protocol adjacency: 0
-                Complete glean adjacency: 0
-                Incomplete protocol adjacency: 0
-                Incomplete glean adjacency: 0
-                Dropped protocol request: 0
-                Dropped glean request: 0
+                IPv6 is enabled, link-local address is fe80::6983:ecff:febd:853e 
+                Global unicast address(es):
+                  2001:2:2::2, subnet is 2001:2:2::2/128 
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ffbd:853e ff02::2
+                    ff02::1
+                MTU is 1500 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are always on
+                ND DAD is disabled, number of DAD attempts 0
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 0
+                ND advertised retransmit interval is 0 milliseconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800000
+                Complete protocol adjacency: 0
+                Complete glean adjacency: 0
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
             Loopback1 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
-                IPv6 is enabled, link-local address is fe80::6983:ecff:febd:853e 
-                Global unicast address(es):
-                  2001:22:22::22, subnet is 2001:22:22::22/128 
-                Joined group address(es): ff02::1:ff00:22 ff02::1:ffbd:853e ff02::2
-                    ff02::1
-                MTU is 1500 (1500 is available to IPv6)
-                ICMP redirects are disabled
-                ICMP unreachables are always on
-                ND DAD is disabled, number of DAD attempts 0
-                ND reachable time is 0 milliseconds
-                ND cache entry limit is 0
-                ND advertised retransmit interval is 0 milliseconds
-                Hosts use stateless autoconfig for addresses.
-                Outgoing access list is not set
-                Inbound  common access list is not set, access list is not set
-                Table Id is 0xe0800000
-                Complete protocol adjacency: 0
-                Complete glean adjacency: 0
-                Incomplete protocol adjacency: 0
-                Incomplete glean adjacency: 0
-                Dropped protocol request: 0
-                Dropped glean request: 0
+                IPv6 is enabled, link-local address is fe80::6983:ecff:febd:853e 
+                Global unicast address(es):
+                  2001:22:22::22, subnet is 2001:22:22::22/128 
+                Joined group address(es): ff02::1:ff00:22 ff02::1:ffbd:853e ff02::2
+                    ff02::1
+                MTU is 1500 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are always on
+                ND DAD is disabled, number of DAD attempts 0
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 0
+                ND advertised retransmit interval is 0 milliseconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800000
+                Complete protocol adjacency: 0
+                Complete glean adjacency: 0
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
             MgmtEth0/RP0/CPU0/0 is Shutdown, ipv6 protocol is Down, Vrfid is default (0x60000000)
-                IPv6 is disabled, link-local address unassigned
-                No global unicast address is configured
+                IPv6 is disabled, link-local address unassigned
+                No global unicast address is configured
             GigabitEthernet0/0/0/0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
-                IPv6 is enabled, link-local address is fe80::f816:3eff:feca:3efd 
-                Global unicast address(es):
-                    2001:db8:8548:1::2, subnet is 2001:db8:8548:1::/64 
-                Joined group address(es): ff02::1:ff00:2 ff02::1:ffca:3efd ff02::2
-                    ff02::1 ff02::5 ff02::6
-                MTU is 1514 (1500 is available to IPv6)
-                ICMP redirects are disabled
-                ICMP unreachables are enabled
-                ND DAD is enabled, number of DAD attempts 1
-                ND reachable time is 0 milliseconds
-                ND cache entry limit is 1000000000
-                ND advertised retransmit interval is 0 milliseconds
-                Hosts use stateless autoconfig for addresses.
-                Outgoing access list is not set
-                Inbound  common access list is not set, access list is not set
-                Table Id is 0xe0800000
-                Complete protocol adjacency: 1
-                Complete glean adjacency: 1
-                Incomplete protocol adjacency: 0
-                Incomplete glean adjacency: 0
-                Dropped protocol request: 0
-                Dropped glean request: 0
+                IPv6 is enabled, link-local address is fe80::f816:3eff:feca:3efd 
+                Global unicast address(es):
+                    2001:db8:8548:1::2, subnet is 2001:db8:8548:1::/64 
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ffca:3efd ff02::2
+                    ff02::1 ff02::5 ff02::6
+                MTU is 1514 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are enabled
+                ND DAD is enabled, number of DAD attempts 1
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 1000000000
+                ND advertised retransmit interval is 0 milliseconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800000
+                Complete protocol adjacency: 1
+                Complete glean adjacency: 1
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
             GigabitEthernet0/0/0/1 is Up, ipv6 protocol is Up, Vrfid is VRF1 (0x60000001)
-                IPv6 is enabled, link-local address is fe80::f816:3eff:fe20:fa5b 
-                Global unicast address(es):
-                  2001:db8:888c:1::2, subnet is 2001:db8:888c:1::/64 
-                Joined group address(es): ff02::1:ff00:2 ff02::1:ff20:fa5b ff02::2
-                    ff02::1 ff02::5 ff02::6
-                MTU is 1514 (1500 is available to IPv6)
-                ICMP redirects are disabled
-                ICMP unreachables are enabled
-                ND DAD is enabled, number of DAD attempts 1
-                ND reachable time is 0 milliseconds
-                ND cache entry limit is 1000000000
-                ND advertised retransmit interval is 0 milliseconds
-                ND router advertisements are sent every 160 to 240 seconds
-                ND router advertisements live for 1800 seconds
-                Hosts use stateless autoconfig for addresses.
-                Outgoing access list is not set
-                Inbound  common access list is not set, access list is not set
-                Table Id is 0xe0800001
-                Complete protocol adjacency: 0
-                Complete glean adjacency: 2
-                Incomplete protocol adjacency: 0
-                Incomplete glean adjacency: 0
-                Dropped protocol request: 0
-                Dropped glean request: 0
+                IPv6 is enabled, link-local address is fe80::f816:3eff:fe20:fa5b 
+                Global unicast address(es):
+                  2001:db8:888c:1::2, subnet is 2001:db8:888c:1::/64 
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ff20:fa5b ff02::2
+                    ff02::1 ff02::5 ff02::6
+                MTU is 1514 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are enabled
+                ND DAD is enabled, number of DAD attempts 1
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 1000000000
+                ND advertised retransmit interval is 0 milliseconds
+                ND router advertisements are sent every 160 to 240 seconds
+                ND router advertisements live for 1800 seconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800001
+                Complete protocol adjacency: 0
+                Complete glean adjacency: 2
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
             GigabitEthernet0/0/0/2 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
-                IPv6 is enabled, link-local address is fe80::f816:3eff:fe82:6320 
-                Global unicast address(es):
-                  2001:db8:c56d:4::2, subnet is 2001:db8:c56d:4::/64 
-                Joined group address(es): ff02::1:ff00:2 ff02::1:ff82:6320 ff02::2
-                    ff02::1 ff02::5 ff02::6
-                MTU is 1514 (1500 is available to IPv6)
-                ICMP redirects are disabled
-                ICMP unreachables are enabled
-                ND DAD is enabled, number of DAD attempts 1
-                ND reachable time is 0 milliseconds
-                ND cache entry limit is 1000000000
-                ND advertised retransmit interval is 0 milliseconds
-                ND router advertisements are sent every 160 to 240 seconds
-                ND router advertisements live for 1800 seconds
-                Hosts use stateless autoconfig for addresses.
-                Outgoing access list is not set
-                Inbound  common access list is not set, access list is not set
-                Table Id is 0xe0800000
-                Complete protocol adjacency: 1
-                Complete glean adjacency: 1
-                Incomplete protocol adjacency: 0
-                Incomplete glean adjacency: 0
-                Dropped protocol request: 0
-                Dropped glean request: 0
+                IPv6 is enabled, link-local address is fe80::f816:3eff:fe82:6320 
+                Global unicast address(es):
+                  2001:db8:c56d:4::2, subnet is 2001:db8:c56d:4::/64 
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ff82:6320 ff02::2
+                    ff02::1 ff02::5 ff02::6
+                MTU is 1514 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are enabled
+                ND DAD is enabled, number of DAD attempts 1
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 1000000000
+                ND advertised retransmit interval is 0 milliseconds
+                ND router advertisements are sent every 160 to 240 seconds
+                ND router advertisements live for 1800 seconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800000
+                Complete protocol adjacency: 1
+                Complete glean adjacency: 1
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
             GigabitEthernet0/0/0/3 is Up, ipv6 protocol is Up, Vrfid is VRF1 (0x60000001)
-                IPv6 is enabled, link-local address is fe80::f816:3eff:fe8b:59c9 
-                Global unicast address(es):
-                  2001:db8:c8d1:4::2, subnet is 2001:db8:c8d1:4::/64 
-                Joined group address(es): ff02::1:ff00:2 ff02::1:ff8b:59c9 ff02::2
-                    ff02::1 ff02::5 ff02::6
-                MTU is 1514 (1500 is available to IPv6)
-                ICMP redirects are disabled
-                ICMP unreachables are enabled
-                ND DAD is enabled, number of DAD attempts 1
-                ND reachable time is 0 milliseconds
-                ND cache entry limit is 1000000000
-                ND advertised retransmit interval is 0 milliseconds
-                ND router advertisements are sent every 160 to 240 seconds
-                ND router advertisements live for 1800 seconds
-                Hosts use stateless autoconfig for addresses.
-                Outgoing access list is not set
-                Inbound  common access list is not set, access list is not set
-                Table Id is 0xe0800001
-                Complete protocol adjacency: 1
-                Complete glean adjacency: 1
-                Incomplete protocol adjacency: 0
-                Incomplete glean adjacency: 0
-                Dropped protocol request: 0
-                Dropped glean request: 0
+                IPv6 is enabled, link-local address is fe80::f816:3eff:fe8b:59c9 
+                Global unicast address(es):
+                  2001:db8:c8d1:4::2, subnet is 2001:db8:c8d1:4::/64 
+                Joined group address(es): ff02::1:ff00:2 ff02::1:ff8b:59c9 ff02::2
+                    ff02::1 ff02::5 ff02::6
+                MTU is 1514 (1500 is available to IPv6)
+                ICMP redirects are disabled
+                ICMP unreachables are enabled
+                ND DAD is enabled, number of DAD attempts 1
+                ND reachable time is 0 milliseconds
+                ND cache entry limit is 1000000000
+                ND advertised retransmit interval is 0 milliseconds
+                ND router advertisements are sent every 160 to 240 seconds
+                ND router advertisements live for 1800 seconds
+                Hosts use stateless autoconfig for addresses.
+                Outgoing access list is not set
+                Inbound  common access list is not set, access list is not set
+                Table Id is 0xe0800001
+                Complete protocol adjacency: 1
+                Complete glean adjacency: 1
+                Incomplete protocol adjacency: 0
+                Incomplete glean adjacency: 0
+                Dropped protocol request: 0
+                Dropped glean request: 0
         '''}
     golden_parsed_output_custom={'GigabitEthernet0/0/0/1': {'enabled': True,
                                    'int_status': 'up',
@@ -3318,6 +3319,22 @@ class test_show_ip_interface_brief(unittest.TestCase):
       MgmtEth0/RP0/CPU0/0            10.1.17.179     Up              Up       default 
     '''}
 
+    golden_parsed_output_1 = {
+        'interface': {
+            'BVI123': {
+                'interface_status': 'Up',
+                'ip_address': '10.12.34.56',
+                'protocol_status': 'Up',
+                'vrf_name': 'MyOrg-MyGroup_Channel_Zone'
+            }
+        }
+    }
+
+    golden_output_1 = {'execute.return_value': '''
+        RP/0/RP0/CPU0:PE1#show ip interface brief
+        BVI123        10.12.34.56        Up     Up      MyOrg-MyGroup_Channel_Zone
+    '''}
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowIpInterfaceBrief(device=self.device)
@@ -3331,6 +3348,12 @@ class test_show_ip_interface_brief(unittest.TestCase):
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
     def test_golden1(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowIpInterfaceBrief(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_1)
+
+    def test_golden_pip(self):
         self.device = Mock(**self.golden_output_pipe_ip)
         obj = ShowIpInterfaceBrief(device=self.device)
         parsed_output = obj.parse(ip='10.1.17.179')
@@ -5592,7 +5615,95 @@ class test_show_interfaces_description(unittest.TestCase):
         self.maxDiff = None
         self.assertEqual(parsed_output,self.golden_parsed_interface_output)
 
+#############################################################################
+# unitest For show ipv6 interface {interface}
+#############################################################################
+class test_show_ipv6_interface(unittest.TestCase):
+    device = Device(name='aDevice')
+    
+    empty_output = {'execute.return_value': ''}
 
+    golden_output = {'execute.return_value':'''
+        genie_device#show ipv6 interface gigabitEthernet 0/0/0/0.1
+        Wed Oct 28 02:37:35.972 UTC
+        GigabitEthernet0/0/0/0 is Up, ipv6 protocol is Up, Vrfid is default (0x60000000)
+        IPv6 is enabled, link-local address is fe80::250:56ff:fe8d:8d58
+        Global unicast address(es):
+            2001:112::1, subnet is 2001:112::/64
+        Joined group address(es): ff02::1:ff00:1 ff02::1:ff8d:8d58 ff02::2
+            ff02::1
+        MTU is 1514 (1500 is available to IPv6)
+        ICMP redirects are disabled
+        ICMP unreachables are enabled
+        ND DAD is enabled, number of DAD attempts 1
+        ND reachable time is 0 milliseconds
+        ND cache entry limit is 1000000000
+        ND advertised retransmit interval is 0 milliseconds
+        ND router advertisements are sent every 160 to 240 seconds
+        ND router advertisements live for 1800 seconds
+        Hosts use stateless autoconfig for addresses.
+        Outgoing access list is not set
+        Inbound  common access list is not set, access list is not set
+        Table Id is 0xe0800000
+        Complete protocol adjacency: 0
+        Complete glean adjacency: 0
+        Incomplete protocol adjacency: 0
+        Incomplete glean adjacency: 0
+        Dropped protocol request: 0
+        Dropped glean request: 0    
+    '''}
+
+    golden_parsed_output = {
+        'GigabitEthernet0/0/0/0': {
+            'enabled': True,
+            'oper_status': 'up',
+            'vrf': 'default',
+            'int_status': 'up',
+            'ipv6': {
+                'incomplete_protocol_adj': '0',
+                'complete_glean_adj': '0',
+                'dropped_protocol_req': '0',
+                'dropped_glean_req': '0',
+                'nd_router_adv': '1800',
+                'complete_protocol_adj': '0',
+                'icmp_unreachables': 'enabled',
+                'ipv6_link_local': 'fe80::250:56ff:fe8d:8d58',
+                'incomplete_glean_adj': '0',
+                'nd_adv_duration': '160-240',
+                'ipv6_groups': ['ff02::1:ff00:1', 'ff02::1:ff8d:8d58', 'ff02::2', 'ff02::1'],
+                'nd_adv_retrans_int': '0',
+                'nd_cache_limit': '1000000000',
+                'stateless_autoconfig': True,
+                'icmp_redirects': 'disabled',
+                'dad_attempts': '1',
+                'ipv6_mtu': '1514',
+                'ipv6_mtu_available': '1500',
+                '2001:112::1/64': {
+                    'ipv6_subnet': '2001:112::',
+                    'ipv6_prefix_length': '64',
+                    'ipv6': '2001:112::1',
+                },
+                'nd_dad': 'enabled',
+                'nd_reachable_time': '0',
+                'table_id': '0xe0800000',
+            },
+            'vrf_id': '0x60000000',
+            'ipv6_enabled': True,
+        },
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowIpv6VrfAllInterface(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowIpv6VrfAllInterface(device=self.device)
+        parsed_output = obj.parse(interface='gigabitEthernet 0/0/0/0.1')
+        self.maxDiff = None
+        self.assertEqual(parsed_output,self.golden_parsed_output)    
 if __name__ == '__main__':
     unittest.main()
 

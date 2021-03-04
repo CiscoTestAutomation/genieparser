@@ -30,6 +30,7 @@ JunOs parsers for the following show commands:
     * show ospf route network extensive
     * show ospf database advertising-router {ipaddress} extensive
     * show ospf neighbor instance all
+    * show ospf statistics
 """
 
 # Python
@@ -440,11 +441,14 @@ Parser for:
 
 
 class ShowOspfNeighbor(ShowOspfNeighborSchema):
-    cli_command = 'show ospf neighbor'
+    cli_command = ['show ospf neighbor', 'show ospf neighbor instance {name}']
 
-    def cli(self, output=None):
+    def cli(self, name=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if name:
+                out = self.device.execute(self.cli_command[1].format(name=name))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -4563,6 +4567,53 @@ class ShowOspfDatabaseOpaqueArea(ShowOspfDatabaseOpaqueAreaSchema):
 
 
 class ShowOspfRoutePrefixSchema(MetaParser):
+
+    # schema = {
+    #     "ospf-route-information": {
+    #         "ospf-topology-route-table": {
+    #             "ospf-route": {
+    #                 "ospf-route-entry": {
+    #                     "address-prefix": str,
+    #                     "interface-cost": str,
+    #                     "next-hop-type": str,
+    #                     "ospf-next-hop": [
+    #                         {
+    #                             "next-hop-address": {
+    #                                 "interface-address": str
+    #                             },
+    #                             "next-hop-name": {
+    #                                 "interface-name": str
+    #                             }
+    #                         }
+    #                     ],
+    #                     "route-path-type": str,
+    #                     "route-type": str
+    #                 }
+    #             },
+    #             "ospf-topology-name": str
+    #         }
+    #     }
+    # }
+
+    def validate_ospf_next_hop_list(value):
+        ''' Validates each entry in ospf-next-hop '''
+        if not isinstance(value, list):
+            raise SchemaError('ospf-next-hop is not a list')
+        
+        ospf_next_hop_schema = Schema({
+            "next-hop-address": {
+                "interface-address": str,
+            },
+            "next-hop-name": {
+                "interface-name": str,
+            }
+        })
+
+        for entry in value:
+            ospf_next_hop_schema.validate(entry)    
+        return value
+
+
     schema = {
         "ospf-route-information": {
             "ospf-topology-route-table": {
@@ -4571,14 +4622,7 @@ class ShowOspfRoutePrefixSchema(MetaParser):
                         "address-prefix": str,
                         "interface-cost": str,
                         "next-hop-type": str,
-                        "ospf-next-hop": {
-                            "next-hop-address": {
-                                "interface-address": str
-                            },
-                            "next-hop-name": {
-                                "interface-name": str
-                            }
-                        },
+                        "ospf-next-hop": Use(validate_ospf_next_hop_list),
                         "route-path-type": str,
                         "route-type": str
                     }
@@ -4618,10 +4662,15 @@ class ShowOspfRoutePrefix(ShowOspfRoutePrefixSchema):
                         r'(?P<interface_cost>\d+) +(?P<interface_name>\S+)'
                         r'( +(?P<interface_address>\S+))?$')
 
+        #                                                    ge-0/0/4.0    10.0.0.2
+        p2_1 = re.compile(r'^(?P<interface_name>[a-z]{2}-\d+/\d+/\d+(\.\d+))?\s+(?P<interface_address>\d+.\d+\.\d+\.\d+)$')
+
         #area 0.0.0.0, origin 10.64.4.4, priority medium
         p3 = re.compile(r'^area +(?P<ospf_area>[\d\.]+)+, +origin '
                         r'+(?P<route_origin>[\d\.]+), +priority +'
                         r'(?P<route_priority>\w+)$')
+
+        ospf_topology_name = ''
 
         for line in out.splitlines():
             line = line.strip()
@@ -4630,14 +4679,18 @@ class ShowOspfRoutePrefix(ShowOspfRoutePrefixSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ospf_topology_route_table = ret_dict.setdefault(
-                    'ospf-route-information', {}).setdefault('ospf-topology-route-table', {})
-
-                ospf_topology_route_table['ospf-topology-name'] = group['ospf_topology_name']
+                ospf_topology_name = group['ospf_topology_name']
 
             #10.1.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    10.70.0.4
             m = p2.match(line)
             if m:
+                if ospf_topology_name:
+
+                    ospf_topology_route_table = ret_dict.setdefault(
+                        'ospf-route-information', {}).setdefault('ospf-topology-route-table', {})
+                    ospf_topology_route_table['ospf-topology-name'] = ospf_topology_name
+                    ospf_topology_name = ''
+
                 group = m.groupdict()
 
                 ospf_route_entry_dict = {}
@@ -4659,10 +4712,288 @@ class ShowOspfRoutePrefix(ShowOspfRoutePrefixSchema):
                             entry_key = group_key.replace('_', '-')
                             ospf_route_entry_dict[entry_key] = group_value
 
-                ospf_route_entry_dict.update({'ospf-next-hop': ospf_next_hop_dict})
+                ospf_route_entry_dict.update({'ospf-next-hop': [ospf_next_hop_dict]})
                 ospf_parent_route_dict = {}
                 ospf_parent_route_dict['ospf-route-entry'] = ospf_route_entry_dict
                 ospf_topology_route_table['ospf-route'] = ospf_parent_route_dict
+                continue
+
+            #                                                    ge-0/0/4.0    10.0.0.2
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_next_hop_dict = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    if entry_key == 'interface-address':
+                        ospf_next_hop_dict.setdefault('next-hop-address', {}).setdefault(entry_key, group_value)
+                    if entry_key == 'interface-name':
+                        ospf_next_hop_dict.setdefault('next-hop-name', {}).setdefault(entry_key, group_value)
+                ospf_route_entry_dict['ospf-next-hop'].append(ospf_next_hop_dict)
+                continue
+
+        return ret_dict
+
+
+class ShowOspfStatisticsSchema(MetaParser):
+    """ Schema for:
+            * show ospf statistics
+    """
+
+    '''schema = {
+    Optional("@xmlns:junos"): str,
+    "ospf-statistics-information": {
+        Optional("@xmlns"): str,
+        "ospf-statistics": {
+            "dbds-retransmit": str,
+            "dbds-retransmit-5seconds": str,
+            "flood-queue-depth": str,
+            "lsas-acknowledged": str,
+            "lsas-acknowledged-5seconds": str,
+            "lsas-flooded": str,
+            "lsas-flooded-5seconds": str,
+            "lsas-high-prio-flooded": str,
+            "lsas-high-prio-flooded-5seconds": str,
+            "lsas-nbr-transmit": str,
+            "lsas-nbr-transmit-5seconds": str,
+            "lsas-requested": str,
+            "lsas-requested-5seconds": str,
+            "lsas-retransmit": str,
+            "lsas-retransmit-5seconds": str,
+            "ospf-errors": {
+                "subnet-mismatch-error": str
+            },
+            "packet-statistics": [
+                {
+                    "ospf-packet-type": str,
+                    "packets-received": str,
+                    "packets-received-5seconds": str,
+                    "packets-sent": str,
+                    "packets-sent-5seconds": str
+                }
+            ],
+            "total-database-summaries": str,
+            "total-linkstate-request": str,
+            "total-retransmits": str
+        }
+    }
+}'''
+
+    def validate_packet_statistic_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('packet_statistic is not a list')
+        packet_schema = Schema({
+            "ospf-packet-type": str,
+            "packets-received": str,
+            "packets-received-5seconds": str,
+            "packets-sent": str,
+            "packets-sent-5seconds": str
+        })
+        for item in value:
+            packet_schema.validate(item)
+        return value
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "ospf-statistics-information": {
+            Optional("@xmlns"): str,
+            "ospf-statistics": {
+                "dbds-retransmit": str,
+                "dbds-retransmit-5seconds": str,
+                "flood-queue-depth": str,
+                "lsas-acknowledged": str,
+                "lsas-acknowledged-5seconds": str,
+                "lsas-flooded": str,
+                "lsas-flooded-5seconds": str,
+                "lsas-high-prio-flooded": str,
+                "lsas-high-prio-flooded-5seconds": str,
+                "lsas-nbr-transmit": str,
+                "lsas-nbr-transmit-5seconds": str,
+                "lsas-requested": str,
+                "lsas-requested-5seconds": str,
+                "lsas-retransmit": str,
+                "lsas-retransmit-5seconds": str,
+                "ospf-errors": {
+                    "subnet-mismatch-error": str
+                },
+                "packet-statistics": Use(validate_packet_statistic_list),
+                "total-database-summaries": str,
+                "total-linkstate-request": str,
+                "total-retransmits": str
+                }
+        }
+    }
+
+
+class ShowOspfStatistics(ShowOspfStatisticsSchema):
+    """ Parser for:
+            * show ospf statistics
+    """
+    cli_command = 'show ospf statistics'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        #Packet type             Total                  Last 5 seconds
+        p0 = re.compile(r'^(?P<heading>\APacket +type[\S\s]+)$')
+
+        #Hello        6202169       5703920           0             3
+        p1 = re.compile(r'^(?P<ospf_packet_type>\S+) +(?P<packets_sent>\d+) '
+                        r'+(?P<packets_received>\d+) +'
+                        r'(?P<packets_sent_5seconds>\d+) '
+                        r'+(?P<packets_received_5seconds>\d+)$')
+
+        #DBDs retransmitted     :               203656, last 5 seconds :          0
+        p2 = re.compile(r'^DBDs retransmitted +: +(?P<dbds_retransmit>\d+), '
+                        r'+last +5 +seconds +: +(?P<dbds_retransmit_5seconds>\d+)$')
+  
+        #LSAs flooded           :             66582263, last 5 seconds :          0
+        p3 = re.compile(r'^LSAs flooded +: +(?P<lsas_flooded>\d+), '
+                        r'+last +5 +seconds +: +(?P<lsas_flooded_5seconds>\d+)$')
+
+        #LSAs flooded high-prio :            375568998, last 5 seconds :          0
+        p4 = re.compile(r'^LSAs flooded high-prio +: +(?P<lsas_high_prio_flooded>\d+), '
+                        r'+last +5 +seconds +: +(?P<lsas_high_prio_flooded_5seconds>\d+)$')
+
+        #LSAs retransmitted     :              8064643, last 5 seconds :          0
+        p5 = re.compile(r'^LSAs retransmitted +: +(?P<lsas_retransmit>\d+), '
+                        r'+last +5 +seconds +: +(?P<lsas_retransmit_5seconds>\d+)$')
+
+        #LSAs transmitted to nbr:              3423982, last 5 seconds :          0
+        p6 = re.compile(r'^LSAs transmitted to nbr+: +(?P<lsas_nbr_transmit>\d+), '
+                        r'+last +5 +seconds +: +(?P<lsas_nbr_transmit_5seconds>\d+)$')
+
+        #LSAs requested         :                 3517, last 5 seconds :          0
+        p7 = re.compile(r'^LSAs requested +: +(?P<lsas_requested>\d+), '
+                        r'+last +5 +seconds +: +(?P<lsas_requested_5seconds>\d+)$')
+
+        #LSAs acknowledged      :            225554974, last 5 seconds :          0
+        p8 = re.compile(r'^LSAs acknowledged +: +(?P<lsas_acknowledged>\d+), +last '
+                        r'+5 +seconds +: +(?P<lsas_acknowledged_5seconds>\d+)$')
+
+        #Flood queue depth      :               0
+        #Total rexmit entries   :               0
+        #db summaries           :               0
+        #lsreq entries          :               0
+        p9 = re.compile(r'^(?P<pattern>[\w\s]+): +(?P<value>\d+)$')
+        
+        #12 subnet mismatches
+        p10 = re.compile(r'^(?P<subnet_mismatch_error>\d+) +subnet +mismatches$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Packet type             Total                  Last 5 seconds
+            m = p0.match(line)
+            if m:
+                ospf_area = ret_dict.setdefault("ospf-statistics-information", \
+                                                {}).setdefault("ospf-statistics", {})
+                group = m.groupdict()
+                packet_list = []
+                continue
+
+            #Hello        6202169       5703920           0             3
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                inner_packet_dict = {}
+                inner_packet_dict["ospf-packet-type"] = group["ospf_packet_type"]
+                inner_packet_dict["packets-sent"] = group["packets_sent"]
+                inner_packet_dict["packets-received"] = group["packets_received"]
+                inner_packet_dict["packets-sent-5seconds"] = group["packets_sent_5seconds"]
+                inner_packet_dict["packets-received-5seconds"] = group["packets_received_5seconds"]
+
+                packet_list.append(inner_packet_dict)
+                ospf_area["packet-statistics"] = packet_list
+                continue
+
+            #DBDs retransmitted     :               203656, last 5 seconds :          0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["dbds-retransmit"] = group["dbds_retransmit"]
+                ospf_area["dbds-retransmit-5seconds"] = group["dbds_retransmit_5seconds"]
+                continue
+
+            #LSAs flooded           :             66582263, last 5 seconds :          0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-flooded"] = group["lsas_flooded"]
+                ospf_area["lsas-flooded-5seconds"] = group["lsas_flooded_5seconds"]
+                continue
+
+            #LSAs flooded high-prio :            375568998, last 5 seconds :          0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-high-prio-flooded"] = group["lsas_high_prio_flooded"]
+                ospf_area["lsas-high-prio-flooded-5seconds"] = group["lsas_high_prio_flooded_5seconds"]
+                continue
+
+            #LSAs retransmitted     :              8064643, last 5 seconds :          0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-retransmit"] = group["lsas_retransmit"]
+                ospf_area["lsas-retransmit-5seconds"] = group["lsas_retransmit_5seconds"]
+                continue
+
+            #LSAs transmitted to nbr:              3423982, last 5 seconds :          0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-nbr-transmit"] = group["lsas_nbr_transmit"]
+                ospf_area["lsas-nbr-transmit-5seconds"] = group["lsas_nbr_transmit_5seconds"]
+                continue
+
+            #LSAs requested         :                 3517, last 5 seconds :          0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-requested"] = group["lsas_requested"]
+                ospf_area["lsas-requested-5seconds"] = group["lsas_requested_5seconds"]
+                continue
+
+            #LSAs acknowledged      :            225554974, last 5 seconds :          0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-acknowledged"] = group["lsas_acknowledged"]
+                ospf_area["lsas-acknowledged-5seconds"] = group["lsas_acknowledged_5seconds"]
+                continue
+
+            #Flood queue depth      :               0
+            #Total rexmit entries   :               0
+            #db summaries           :               0
+            #lsreq entries          :               0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if re.search('(Flood +queue +depth)', group['pattern'].strip()):
+                    key = 'flood-queue-depth'
+                elif re.search('(Total +rexmit +entries)', group['pattern'].strip()):
+                    key = 'total-retransmits'
+                elif re.search('(db +summaries)', group['pattern'].strip()):
+                    key = 'total-database-summaries'
+                elif re.search('(lsreq +entries)', group['pattern'].strip()):
+                    key = 'total-linkstate-request'
+                else:
+                    continue
+                ospf_area[key] = group["value"]
+                continue
+
+            #12 subnet mismatches
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                inner_dict = {}
+                inner_dict["subnet-mismatch-error"] = group["subnet_mismatch_error"]
+                ospf_area["ospf-errors"] = inner_dict
                 continue
 
         return ret_dict

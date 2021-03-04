@@ -1,0 +1,30 @@
+show ddos-protection protocols arp
+Packet types: 1, Modified: 0, Received traffic: 0, Currently violated: 0
+Currently tracked flows: 0, Total detected flows: 0
+* = User configured value
+Protocol Group: ARP
+  Packet type: aggregate (Aggregate for all arp traffic)
+    Aggregate policer configuration:
+      Bandwidth:        20000 pps
+      Burst:            20000 packets
+      Recover time:     300 seconds
+      Enabled:          Yes
+    Flow detection configuration:
+      Detection mode: Automatic  Detect time:  3 seconds
+      Log flows:      Yes        Recover time: 60 seconds
+      Timeout flows:  No         Timeout time: 300 seconds
+      Flow aggregation level configuration:
+        Aggregation level   Detection mode  Control mode  Flow rate
+        Subscriber          Automatic       Drop          10 pps
+        Logical interface   Automatic       Drop          10 pps
+        Physical interface  Automatic       Drop          20000 pps
+    System-wide information:
+      Aggregate bandwidth is never violated
+      Received:  0                   Arrival rate:     0 pps
+      Dropped:   0                   Max arrival rate: 0 pps
+    Routing Engine information:
+      Bandwidth: 20000 pps, Burst: 20000 packets, enabled
+      Aggregate policer is never violated
+      Received:  0                   Arrival rate:     0 pps
+      Dropped:   0                   Max arrival rate: 0 pps
+    Dropped by individual policers: 0

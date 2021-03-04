@@ -28469,10 +28469,10 @@ BGP neighbor is 172.16.205.8, remote AS 200, ebgp link, Peer index 3
 
     golden_output_2 = {'execute.return_value': '''
         S1-AG-01# show bgp l2vpn evpn neighbors
-        BGP neighbor is 17.16.10.1, remote AS 1, ibgp link, Peer index 3
+        BGP neighbor is 10.69.10.1, remote AS 1, ibgp link, Peer index 3
         Inherits peer configuration from peer-template LEAF-PEERS
         Description: site1-leaf1
-        BGP version 4, remote router ID 17.16.10.1
+        BGP version 4, remote router ID 10.69.10.1
         Neighbor previous state = OpenConfirm
         BGP state = Established, up for 00:58:46
         Neighbor vrf: default
@@ -28544,8 +28544,8 @@ BGP neighbor is 172.16.205.8, remote AS 200, ebgp link, Peer index 3
         Last End-of-RIB sent 00:00:06 after session start
         First convergence 00:00:06 after session start with 18810 routes sent
 
-        Local host: 17.16.10.11, Local port: 29478
-        Foreign host: 17.16.10.1, Foreign port: 179
+        Local host: 10.69.10.11, Local port: 29478
+        Foreign host: 10.69.10.1, Foreign port: 179
         fd = 1583
     '''
     }
@@ -28557,7 +28557,7 @@ BGP neighbor is 172.16.205.8, remote AS 200, ebgp link, Peer index 3
                         'address_family': {
                             'l2vpn evpn': {
                                 'neighbor': {
-                                    '17.16.10.1': {
+                                    '10.69.10.1': {
                                         'accepted_prefixes': 10,
                                         'af': {
                                             'l2vpn evpn': {
@@ -28613,12 +28613,12 @@ BGP neighbor is 172.16.205.8, remote AS 200, ebgp link, Peer index 3
                                         'lastread': '00:00:34',
                                         'lastwrite': '00:00:14',
                                         'link': 'ibgp',
-                                        'localaddr': '17.16.10.11',
+                                        'localaddr': '10.69.10.11',
                                         'localport': 29478,
                                         'memory_consumed_in_bytes': 2360,
                                         'msgrecvd': 75,
                                         'msgsent': 64,
-                                        'neighbor': '17.16.10.1',
+                                        'neighbor': '10.69.10.1',
                                         'notificationsrcvd': 0,
                                         'notificationssent': 0,
                                         'opensrecvd': 1,
@@ -28637,8 +28637,8 @@ BGP neighbor is 172.16.205.8, remote AS 200, ebgp link, Peer index 3
                                         },
                                         'received_prefixes': 0,
                                         'recvbufbytes': 0,
-                                        'remote_id': '17.16.10.1',
-                                        'remoteaddr': '17.16.10.1',
+                                        'remote_id': '10.69.10.1',
+                                        'remoteaddr': '10.69.10.1',
                                         'remoteas': 1,
                                         'remoteport': 179,
                                         'reset_error_received_major': 0,
@@ -29248,7 +29248,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-   10.64.4.4         10.100.5.5        
+   10.64.4.4         10.100.5.5        
 BGP routing table entry for [5][10.4.1.3][238.8.4.102]/64, version 409
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29261,7 +29261,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4        10.100.5.5        
+    10.64.4.4        10.100.5.5        
 BGP routing table entry for [5][10.111.2.3][238.8.4.101]/64, version 24
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29274,7 +29274,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4        10.100.5.5        
+    10.64.4.4        10.100.5.5        
 BGP routing table entry for [5][10.4.2.3][238.8.4.102]/64, version 58
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29287,7 +29287,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
      Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-   10.64.4.4         10.100.5.5        
+   10.64.4.4         10.100.5.5        
 BGP routing table entry for [5][10.111.1.4][238.8.4.101]/64, version 410
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29300,7 +29300,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4            10.100.5.5        
+    10.64.4.4            10.100.5.5        
 BGP routing table entry for [5][10.111.2.4][238.8.4.101]/64, version 7
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29313,7 +29313,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4            10.100.5.5        
+    10.64.4.4            10.100.5.5        
 
 Route Distinguisher: 10.144.6.6:3
 BGP routing table entry for [5][10.111.6.3][238.8.4.101]/64, version 454
@@ -29325,14 +29325,14 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn, is not in HW
     10.144.6.6 (inaccessible, metric 4294967295) from 10.100.5.5 (10.100.5.5)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
+      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
 
   Path type: internal, path is invalid(rnh not resolved), no labeled nexthop
   AS-Path: NONE, path sourced internal to AS
     10.144.6.6 (inaccessible, metric 4294967295) from 10.64.4.4 (10.64.4.4)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
+      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
 
 BGP routing table entry for [5][10.4.6.3][238.8.4.102]/64, version 456
 Paths: (2 available, best #0)
@@ -29343,14 +29343,14 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn, is not in HW
     10.144.6.6 (inaccessible, metric 4294967295) from 10.100.5.5 (10.100.5.5)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
+      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
 
   Path type: internal, path is invalid(rnh not resolved), no labeled nexthop
   AS-Path: NONE, path sourced internal to AS
     10.144.6.6 (inaccessible, metric 4294967295) from 10.64.4.4 (10.64.4.4)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
+      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
 
 '''}
 

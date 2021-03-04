@@ -1,0 +1,23 @@
+Switch   FAN     Speed   State
+---------------------------------------------------
+  1       1     5130      OK
+  1       2     5100      OK
+Switch 1: SYSTEM TEMPERATURE is OK
+Inlet Temperature Value: 22 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 46 Degree Celsius
+Red Threshold    : 56 Degree Celsius
+
+Outlet Temperature Value: 27 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold : 125 Degree Celsius
+
+Hotspot Temperature Value: 36 Degree Celsius
+Temperature State: GREEN
+Yellow Threshold : 105 Degree Celsius
+Red Threshold    : 125 Degree Celsius
+SW  PID                 Serial#     Status           Sys Pwr  PoE Pwr  Watts
+--  ------------------  ----------  ---------------  -------  -------  -----
+1A  PWR-C5-125WAC       LIT23083E9Q  OK              Good     n/a      125 
+1B  Not Present

@@ -12,6 +12,6 @@ Cisco Internetwork Operating System Software IOS (tm) 3600 Software (C3640-A2IS-
 advertisement version: 2
 Duplex Mode: half
 Native VLAN: 42
-VTP Management Domain: ‘Accounting Group’
+VTP Management Domain: 'Accounting Group'
 
     
