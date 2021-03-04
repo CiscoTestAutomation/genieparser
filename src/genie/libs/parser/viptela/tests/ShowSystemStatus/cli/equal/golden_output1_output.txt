@@ -1,5 +1,5 @@
 
-srp_vedge# show system status
+        srp_vedge# show system status
 
         Viptela (tm) vedge Operating System Software
         Copyright (c) 2013-2020 by Viptela, Inc.
@@ -30,13 +30,15 @@ srp_vedge# show system status
                                 0K buffers,  0K cache
 
         Disk usage:              Filesystem      Size   Used  Avail   Use %  Mounted on
-                                /dev/root       7615M  447M  6741M   6%   /
+                                 /dev/disk/by-label/fs-bootflash       11039M  1240M  9219M   12%   /bootflash
 
 
         Personality:             vedge
         Model name:              vedge-cloud
         Services:                None
         vManaged:                true
+        Device role:             cEdge-SDWAN
         Commit pending:          false
         Configuration template:  CLItemplate_srp_vedge
         Chassis serial number:   None
+    
