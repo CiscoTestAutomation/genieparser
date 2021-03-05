@@ -560,10 +560,15 @@ class Common():
                    'M-E': 'M-Ethernet',             # comware
                    'BAGG' : 'Bridge-Aggregation'    # comware
                    }
-        m = re.search(r'([a-zA-Z|-]+)', intf) 
+        m = re.search(r'([a-zA-Z]+)', intf) 
         m1 = re.search(r'([\d\/\.]+)', intf)
+        m2 = re.search(r'(M-E)', intf)
         if hasattr(m, 'group') and hasattr(m1, 'group'):
-            int_type = m.group(0)
+            if hasattr(m2, 'group'):
+                int_type = m2.group(0)
+                print(f"encontrei {int_type}")
+            else:
+                int_type = m.group(0)
             int_port = m1.group(0)
             if int_type in convert.keys():
                 return(convert[int_type] + int_port)
