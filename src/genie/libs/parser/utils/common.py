@@ -590,7 +590,6 @@ class Common():
         if hasattr(m, 'group') and hasattr(m1, 'group'):
             if hasattr(m2, 'group'):
                 int_type = m2.group(0)
-                print(f"encontrei {int_type}")
             else:
                 int_type = m.group(0)
             int_port = m1.group(0)
