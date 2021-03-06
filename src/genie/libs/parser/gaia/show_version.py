@@ -34,6 +34,11 @@ class ShowVersion(ShowVersionSchema):
         else:
             out = output
 
+        result_dict = {}
+
+        if out is '':
+            return result_dict
+
         result_dict = {
             'version': {
                 'product': '',   
