@@ -1,0 +1,29 @@
+expected_output = {
+   'vrfs':{
+      'VRF':{
+         'reason':'--',
+         'vrf_id':5,
+         'vrf_state':'Up'
+      },
+      'VRF1':{
+         'reason':'--',
+         'vrf_id':3,
+         'vrf_state':'Up'
+      },
+      'VRF2':{
+         'reason':'--',
+         'vrf_id':4,
+         'vrf_state':'Up'
+      },
+      'default':{
+         'reason':'--',
+         'vrf_id':1,
+         'vrf_state':'Up'
+      },
+      'management':{
+         'reason':'--',
+         'vrf_id':2,
+         'vrf_state':'Up'
+      }
+   }
+}
