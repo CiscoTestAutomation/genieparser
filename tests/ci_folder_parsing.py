@@ -521,7 +521,7 @@ CLASS_SKIP = {
         "ShowIpStaticRouteMulticast": True, # Not migrated
         "ShowIpv6MrouteVrfAll": True, # Not migrated
         "ShowIpv6StaticRouteMulticast": True, # Not migrated
-        "ShowVrf": True, # Not migrated
+        # "ShowVrf": True, # Not migrated
         "ShowIpv6MldGroups": True, # Not migrated
         "ShowIpv6MldInterface": True, # Not migrated
         "ShowIpMsdpPeerVrf": True, # Not migrated
@@ -623,7 +623,6 @@ CLASS_SKIP = {
         "ShowVxlan": True, # Not migrated
         "ShowVpc": True, # Not migrated
         "ShowRunningConfigVrf": True, # Not migrated
-        # "ShowVrf": True, # Not migrated
         "ShowVrfDetail": True, # Not migrated
         "ShowVrfInterface": True, # Not migrated
         "ShowFabricMulticastGlobals": True, # Not migrated

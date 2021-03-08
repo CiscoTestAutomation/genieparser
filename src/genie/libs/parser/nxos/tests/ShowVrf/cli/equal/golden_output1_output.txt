@@ -1,6 +1,5 @@
-N7k# show vrf
-VRF-Name                           VRF-ID State   Reason                        
-VRF                                     5 Up      --                            
-VRF1                                    3 Up      --                            
-VRF2                                    4 Up      --                            
-default                                 1 Up      --   
+VRF-Name                           VRF-ID State   Reason
+VRF                                     5 Up      --
+VRF1                                    3 Up      --
+VRF2                                    4 Up      --
+default                                 1 Up      --
