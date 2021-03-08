@@ -550,16 +550,6 @@ def main(**kwargs):
         _number=_number
     )
 
-def run_tests(**kwargs):
-    _os, _class, _token, _display_only_failed, _number = _parse_args(**kwargs)
-    aetest.main(
-        testable=__file__,
-        _os=_os,
-        _class=_class,
-        _token=_token,
-        _display_only_failed=_display_only_failed,
-        _number=_number)
-
 
 if __name__ == "__main__":
     main()
