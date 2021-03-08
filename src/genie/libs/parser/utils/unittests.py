@@ -113,15 +113,7 @@ class FileBasedTest(aetest.Testcase):
 
     # setup portion used to define command line options
     @aetest.setup
-    def setup(self, **kwargs):
-
-        _os, _class, _token, _display_only_failed, _number = _parse_args(**kwargs)
-
-        self.parameters['_os'] = _os
-        self.parameters['_class'] = _class
-        self.parameters['_token'] = _token
-        self.parameters['_display_only_failed'] = _display_only_failed
-        self.parameters['_number'] = _number
+    def setup(self, _os, _class, _token, _display_only_failed, _number):
 
         # removes screenhandler from root if _display_only_failed 
         # flag is passed
