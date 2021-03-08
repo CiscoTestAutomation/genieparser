@@ -658,7 +658,6 @@ CLASS_SKIP = {
         "ShowIpv6NeighborDetail": True, # Not migrated
         "ShowL2routeEvpnMacIpAll": True, # Not migrated
         "ShowNveEthernetSegment": True, # Not migrated
-        "Token": True, # Not migrated
         "aci":{
             "ShowPlatformInternalHalPolicyRedirdst": True, # Not migrated
             "ShowServiceRedirInfoGroup": True, # Not migrated
