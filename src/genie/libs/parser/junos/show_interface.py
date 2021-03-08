@@ -252,7 +252,8 @@ class ShowInterfacesDescriptions(ShowInterfacesDescriptionsSchema):
         p1 = re.compile(r'^Interface +Admin +Link +Description$')
 
         # ge-0/0/0        up    up   none/100G/in/hktGCS002_ge-0/0/0
-        p2 = re.compile(r'^(?P<name>\S+) +(?P<admin_status>\S+) +(?P<oper_status>\S+) +(?P<description>\S+)$')
+        # p2 = re.compile(r'^(?P<name>\S+) +(?P<admin_status>\S+) +(?P<oper_status>\S+) +(?P<description>\S+)$')
+        p2 = re.compile(r'^(?P<name>\S+)\s+(?P<admin_status>\S+)\s+(?P<oper_status>\S+)\s+(?P<description>.*?)$')
 
         for line in out.splitlines():
             line = line.strip()
