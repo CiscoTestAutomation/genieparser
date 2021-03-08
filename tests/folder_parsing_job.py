@@ -4,6 +4,7 @@ import argparse
 from ats.datastructures.logic import And, Not, Or
 
 from pyats.easypy import run
+import genie.libs.parser.utils.unittests as unittests
 
 
 def main(runtime):
@@ -40,10 +41,13 @@ def main(runtime):
     _display_only_failed = args.display_failed
 
     _number = args.number
-    run(testscript = 'ci_folder_parsing.py',
+    run(testscript = unittests.__file__,
         runtime = runtime,
         _os=_os,
         _class=_class,
         _token=_token,
         _display_only_failed=_display_only_failed,
         _number=_number)
+
+if __name__ == '__main__':
+    unittests.run_tests()

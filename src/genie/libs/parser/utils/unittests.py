@@ -477,37 +477,50 @@ EMPTY_SKIP = {
     },
 }
 
-if __name__ == "__main__":
-
+def _parse_args(
+        operating_system=None,
+        class_name=None,
+        token=None,
+        display_only_failed=None,
+        number=None,
+        o=None,c=None,t=None,f=None,n=None,):
+    
     # Create the parser
     my_parser = argparse.ArgumentParser(description="Optional arguments for 'nose'-like tests")
 
     my_parser.add_argument('-o', "--operating_system",
                         type=str,
                         help='The OS you wish to filter on',
-                        default=None)
+                        default=None or operating_system or o)
     my_parser.add_argument('-c', "--class_name",
                         type=str,
                         help="The Class you wish to filter on, (not the Test File)",
-                        default=None)
+                        default=None or class_name or c)
     my_parser.add_argument('-t', "--token",
                         type=str,
                         help="The Token associated with the class, such as 'asr1k'",
-                        default=None)
+                        default=None or token or t)
     my_parser.add_argument('-f', "--display_only_failed",
                         help="Displaying only failed classes",
-                        action='store_true')
+                        action='store_true',
+                        default=False or display_only_failed or f)
     my_parser.add_argument('-n', "--number",
                         type=int,
                         help="The specific unittest we want to run, such as '25'",
-                        default=None)
-    args = my_parser.parse_args()
+                        default=None or number or n)
+    args = my_parser.parse_known_args()[0]
 
     _os = args.operating_system
     _class = args.class_name
     _token = args.token
     _display_only_failed = args.display_only_failed
     _number = args.number
+
+    return _os, _class, _token, _display_only_failed, _number
+
+def main(**kwargs):
+    
+    _os, _class, _token, _display_only_failed, _number = _parse_args(**kwargs)
 
     if _number and (not _class or not _number):
         sys.exit("Unittest number provided but missing supporting arguments:"
@@ -527,6 +540,15 @@ if __name__ == "__main__":
         _number=_number
     )
 
-else:
-    aetest.main() 
-    
+def run_tests(**kwargs):
+    _os, _class, _token, _display_only_failed, _number = _parse_args(**kwargs)
+    aetest.main(
+        testable=__file__,
+        _os=_os,
+        _class=_class,
+        _token=_token,
+        _display_only_failed=_display_only_failed,
+        _number=_number)
+
+if __name__ == "__main__":
+    main()
