@@ -2,5 +2,5 @@
                                 New
 --------------------------------------------------------------------------------
 * IOSXE
-    * Added ShowSdwanZbfwStatistics:
-      * show sdwan zbfw zonepair-statistics
+    * Added ShowSwitchStackPortsSummary:
+      * 'show switch stack-ports summary'

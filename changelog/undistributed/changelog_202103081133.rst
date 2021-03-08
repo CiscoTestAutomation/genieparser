@@ -3,3 +3,6 @@
 --------------------------------------------------------------------------------
 * Utils
     * Turn the unittest code into a standalone importable
+* NXOS
+    * Modify ShowIpInterfaceVrfAll
+        * Fix regex

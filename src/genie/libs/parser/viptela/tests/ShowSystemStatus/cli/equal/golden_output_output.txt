@@ -39,4 +39,9 @@ srp_vedge# show system status
         vManaged:                true
         Commit pending:          false
         Configuration template:  CLItemplate_srp_vedge
+<<<<<<< HEAD
         Chassis serial number:   None
+=======
+        Chassis serial number:   None
+    
+>>>>>>> afbffe28f69c12d198b4852dabc906afccab212d

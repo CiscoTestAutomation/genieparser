@@ -1,0 +1,9 @@
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* Junos
+    * Updated ShowOspf3InterfaceExtensive
+        * Updated regex to capture Capture BDR addr
+* IOSXE
+    * Modified ShowEnvironmentAll:
+        * Handling for tab characters in output
