@@ -1,0 +1,3 @@
+N7k# show vrf
+VRF-Name                           VRF-ID State   Reason                        
+VRF                                     5 Down    Admin Down
