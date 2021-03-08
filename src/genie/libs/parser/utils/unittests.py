@@ -113,7 +113,15 @@ class FileBasedTest(aetest.Testcase):
 
     # setup portion used to define command line options
     @aetest.setup
-    def setup(self, _os, _class, _token, _number, _display_only_failed):
+    def setup(self, **kwargs):
+
+        _os, _class, _token, _display_only_failed, _number = _parse_args(**kwargs)
+
+        self.parameters['_os'] = _os
+        self.parameters['_class'] = _class
+        self.parameters['_token'] = _token
+        self.parameters['_display_only_failed'] = _display_only_failed
+        self.parameters['_number'] = _number
 
         # removes screenhandler from root if _display_only_failed 
         # flag is passed
@@ -202,7 +210,7 @@ class FileBasedTest(aetest.Testcase):
 
 
     @screen_log_handling
-    def test_golden(self, steps, local_class, operating_system,_display_only_failed=None, token=None, number=None):
+    def test_golden(self, steps, local_class, operating_system, display_only_failed=None, token=None, number=None):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/equal"
@@ -261,7 +269,7 @@ class FileBasedTest(aetest.Testcase):
                     # the root.handlers to displayed failed tests. Decorator removes
                     # screen handler from root.handlers after failed tests are displayed
                     # to stdout
-                    if _display_only_failed:
+                    if display_only_failed:
                         self.add_logger()
                         log.info(banner(msg))
                     # Format expected and parsed output in a nice format
@@ -292,7 +300,7 @@ class FileBasedTest(aetest.Testcase):
 
 
     @screen_log_handling
-    def test_empty(self, steps, local_class, operating_system, token=None):
+    def test_empty(self, steps, local_class, operating_system, token=None, display_only_failed=None):
         """Test step that looks for empty output."""
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/empty"
@@ -332,7 +340,7 @@ class FileBasedTest(aetest.Testcase):
                     # the root.handlers to display failed tests. Decorator removes
                     # screen handler from root.handlers after failed tests are displayed
                     # to stdout
-                    if _display_only_failed:
+                    if display_only_failed:
                         self.add_logger()
                     step_within.failed(f"File parsed, when expected not to for {local_class}")
                 except SchemaEmptyParserError:
@@ -483,7 +491,8 @@ def _parse_args(
         token=None,
         display_only_failed=None,
         number=None,
-        o=None,c=None,t=None,f=None,n=None,):
+        o=None,c=None,t=None,f=None,n=None,
+        **kwargs):
     
     # Create the parser
     my_parser = argparse.ArgumentParser(description="Optional arguments for 'nose'-like tests")
@@ -533,6 +542,7 @@ def main(**kwargs):
     
 
     aetest.main(
+        testable=__file__,
         _os=_os,
         _class=_class,
         _token=_token,
@@ -549,6 +559,7 @@ def run_tests(**kwargs):
         _token=_token,
         _display_only_failed=_display_only_failed,
         _number=_number)
+
 
 if __name__ == "__main__":
     main()
