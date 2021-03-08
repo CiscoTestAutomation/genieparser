@@ -113,7 +113,7 @@ class FileBasedTest(aetest.Testcase):
 
     # setup portion used to define command line options
     @aetest.setup
-    def setup(self, _os, _class, _token, _number, _display_only_failed):
+    def setup(self, _os, _class, _token, _display_only_failed, _number):
 
         # removes screenhandler from root if _display_only_failed 
         # flag is passed
@@ -202,7 +202,7 @@ class FileBasedTest(aetest.Testcase):
 
 
     @screen_log_handling
-    def test_golden(self, steps, local_class, operating_system,_display_only_failed=None, token=None, number=None):
+    def test_golden(self, steps, local_class, operating_system, display_only_failed=None, token=None, number=None):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/equal"
@@ -261,7 +261,7 @@ class FileBasedTest(aetest.Testcase):
                     # the root.handlers to displayed failed tests. Decorator removes
                     # screen handler from root.handlers after failed tests are displayed
                     # to stdout
-                    if _display_only_failed:
+                    if display_only_failed:
                         self.add_logger()
                         log.info(banner(msg))
                     # Format expected and parsed output in a nice format
@@ -292,7 +292,7 @@ class FileBasedTest(aetest.Testcase):
 
 
     @screen_log_handling
-    def test_empty(self, steps, local_class, operating_system, token=None):
+    def test_empty(self, steps, local_class, operating_system, token=None, display_only_failed=None):
         """Test step that looks for empty output."""
         if token:
             folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/empty"
@@ -332,7 +332,7 @@ class FileBasedTest(aetest.Testcase):
                     # the root.handlers to display failed tests. Decorator removes
                     # screen handler from root.handlers after failed tests are displayed
                     # to stdout
-                    if _display_only_failed:
+                    if display_only_failed:
                         self.add_logger()
                     step_within.failed(f"File parsed, when expected not to for {local_class}")
                 except SchemaEmptyParserError:
@@ -477,37 +477,51 @@ EMPTY_SKIP = {
     },
 }
 
-if __name__ == "__main__":
-
+def _parse_args(
+        operating_system=None,
+        class_name=None,
+        token=None,
+        display_only_failed=None,
+        number=None,
+        o=None,c=None,t=None,f=None,n=None,
+        **kwargs):
+    
     # Create the parser
     my_parser = argparse.ArgumentParser(description="Optional arguments for 'nose'-like tests")
 
     my_parser.add_argument('-o', "--operating_system",
                         type=str,
                         help='The OS you wish to filter on',
-                        default=None)
+                        default=None or operating_system or o)
     my_parser.add_argument('-c', "--class_name",
                         type=str,
                         help="The Class you wish to filter on, (not the Test File)",
-                        default=None)
+                        default=None or class_name or c)
     my_parser.add_argument('-t', "--token",
                         type=str,
                         help="The Token associated with the class, such as 'asr1k'",
-                        default=None)
+                        default=None or token or t)
     my_parser.add_argument('-f', "--display_only_failed",
                         help="Displaying only failed classes",
-                        action='store_true')
+                        action='store_true',
+                        default=False or display_only_failed or f)
     my_parser.add_argument('-n', "--number",
                         type=int,
                         help="The specific unittest we want to run, such as '25'",
-                        default=None)
-    args = my_parser.parse_args()
+                        default=None or number or n)
+    args = my_parser.parse_known_args()[0]
 
     _os = args.operating_system
     _class = args.class_name
     _token = args.token
     _display_only_failed = args.display_only_failed
     _number = args.number
+
+    return _os, _class, _token, _display_only_failed, _number
+
+def main(**kwargs):
+    
+    _os, _class, _token, _display_only_failed, _number = _parse_args(**kwargs)
 
     if _number and (not _class or not _number):
         sys.exit("Unittest number provided but missing supporting arguments:"
@@ -520,6 +534,7 @@ if __name__ == "__main__":
     
 
     aetest.main(
+        testable=__file__,
         _os=_os,
         _class=_class,
         _token=_token,
@@ -527,6 +542,6 @@ if __name__ == "__main__":
         _number=_number
     )
 
-else:
-    aetest.main() 
-    
+
+if __name__ == "__main__":
+    main()
