@@ -623,7 +623,7 @@ CLASS_SKIP = {
         "ShowVxlan": True, # Not migrated
         "ShowVpc": True, # Not migrated
         "ShowRunningConfigVrf": True, # Not migrated
-        "ShowVrf": True, # Not migrated
+        # "ShowVrf": True, # Not migrated
         "ShowVrfDetail": True, # Not migrated
         "ShowVrfInterface": True, # Not migrated
         "ShowFabricMulticastGlobals": True, # Not migrated
