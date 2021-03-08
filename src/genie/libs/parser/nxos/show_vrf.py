@@ -54,8 +54,7 @@ class ShowVrf(ShowVrfSchema):
 
             # VRF2                                    4 Up      --
             # default                                 1 Up      --
-            # p1 = re.compile(r'^\s*(?P<vrf_name>(\S+)) +(?P<vrf_id>[0-9]+)'
-            #                  ' +(?P<vrf_state>(Up|Down)) +(?P<reason>(\S+))$')
+            # VRF                                     5 Down    Admin Down
             p1 = re.compile(r'^\s*(?P<vrf_name>(\S+))\s+(?P<vrf_id>[0-9]+)\s+'
                             r'(?P<vrf_state>(Up|Down))\s+(?P<reason>.*?)$')
             m = p1.match(line)
