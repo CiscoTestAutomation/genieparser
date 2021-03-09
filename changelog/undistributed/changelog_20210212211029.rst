@@ -1,0 +1,7 @@
+--------------------------------------------------------------------------------
+                                New
+--------------------------------------------------------------------------------
+* IOSXE
+    * Added 'show track' parser:
+        * Added schema and parser to iosxe/show_track.py
+        * Added test files in iosxe/tests/ShowTrack test directory
