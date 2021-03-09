@@ -1,0 +1,15 @@
+PING 10.1.1.2 (10.1.1.2) from 10.3.3.3: 101 data bytes
+Request 0 timed out
+Request 1 timed out
+Request 2 timed out
+Request 3 timed out
+Request 4 timed out
+Request 5 timed out
+Request 6 timed out
+Request 7 timed out
+Request 8 timed out
+Request 9 timed out
+Request 10 timed out
+
+--- 10.1.1.2 ping statistics ---
+11 packets transmitted, 0 packets received, 100.00% packet loss

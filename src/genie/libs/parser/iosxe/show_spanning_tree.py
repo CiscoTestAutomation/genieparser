@@ -315,7 +315,7 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
         p1 = re.compile(r'^(MST|VLAN)?(?P<inst>\w+) +is +executing +the +(?P<mode>[\w\-]+) +'
                         r'compatible +Spanning +Tree +protocol$')
 
-        # Bridge Identifier has priority 8192, sysid 0, address 5897.bd79.c1c0 
+        # Bridge Identifier has priority 8192, sysid 0, address 5897.bdff.3b3a 
         p2 = re.compile(r'^Bridge +Identifier +has +priority +(?P<bridge_priority>\d+), +'
                         r'sysid +(?P<bridge_sysid>\d+), +'
                         r'address +(?P<bridge_address>[\w\.]+)$')
@@ -364,11 +364,11 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                          r'Port +priority +(?P<port_priority>\d+), +'
                          r'Port +Identifier +(?P<port_identifier>[\w\.]+)$')
 
-        # Designated root has priority 8192, address 5897.bd79.c1c0 
+        # Designated root has priority 8192, address 5897.bdff.3b3a 
         p13 = re.compile(r'^Designated +root +has +priority +(?P<designated_root_priority>\d+), +'
                          r'address +(?P<designated_root_address>[\w\.]+)$')
 
-        # Designated bridge has priority 8192, address 5897.bd79.c1c0 
+        # Designated bridge has priority 8192, address 5897.bdff.3b3a 
         p14 = re.compile(r'^Designated +bridge +has +priority +(?P<designated_bridge_priority>\d+), +'
                          r'address +(?P<designated_bridge_address>[\w\.]+)$')
 

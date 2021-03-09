@@ -1,0 +1,19 @@
+VLL MY-QINQ-VLL, VC-ID 4567, VLL-INDEX 72
+
+  End-point        : tagged vlan 100 inner-vlan 45 e 2/1
+  End-Point state  : Up
+  MCT state        : None
+  IFL-ID           : --
+  Local VC type    : tag
+  Local VC MTU     : 9190
+  COS              : --
+  Extended Counters: Enabled
+
+  Vll-Peer         : 192.168.2.2
+    State          : UP
+    Remote VC type : --                Remote VC MTU  : --
+    Local label    : --                Remote label   : --
+    Local group-id : 0                 Remote group-id: --
+    Tunnel LSP     : my_qinq_tunnel_lsp (tnl3)
+    MCT Status TLV : --
+    LSPs assigned  : No LSPs assigned

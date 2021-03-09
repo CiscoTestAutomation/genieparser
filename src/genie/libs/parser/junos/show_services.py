@@ -75,9 +75,9 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
 
         ret_dict = {}
         
-        # Source address: 27.93.202.64, Destination address: 106.187.14.158, Top Label Address: 121
-        # Source address: 27.93.202.64, Destination address: 106.187.14.158
-        # Source address: 27.93.202.64
+        # Source address: 10.120.202.64, Destination address: 10.169.14.158, Top Label Address: 121
+        # Source address: 10.120.202.64, Destination address: 10.169.14.158
+        # Source address: 10.120.202.64
         p1 = re.compile(r'^Source +address: +(?P<source_address>\S+)(, +Destination +address: '
                         r'+(?P<destination_address>\S+))?(, Top +Label +Address: +'
                         r'(?P<top_label_address>\S+))?$')
@@ -118,7 +118,7 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
             line = line.strip()
             
 
-            # Source address: 27.93.202.64, Destination address: 106.187.14.158
+            # Source address: 10.120.202.64, Destination address: 10.169.14.158
             m = p1.match(line)
             if m:
                 group = m.groupdict()

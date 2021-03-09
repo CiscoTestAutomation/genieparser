@@ -1,0 +1,19 @@
+VLL MY-UNTAGGED-VLL, VC-ID 3566, VLL-INDEX 37
+
+  End-point        : untagged  e 2/8
+  End-Point state  : Up
+  MCT state        : None
+  IFL-ID           : --
+  Local VC type    : tag
+  Local VC MTU     : 9190
+  COS              : --
+  Extended Counters: Enabled
+
+  Vll-Peer         : 192.168.1.2
+    State          : UP
+    Remote VC type : tag               Remote VC MTU  : 9190
+    Local label    : 851974            Remote label   : 852059
+    Local group-id : 0                 Remote group-id: 0
+    Tunnel LSP     : my_untagged-lsp (tnl32)
+    MCT Status TLV : --
+    LSPs assigned  : No LSPs assigned

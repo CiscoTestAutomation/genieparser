@@ -1,0 +1,7 @@
+Number of Interfaces is 4
+
+Interface       Area            IP Addr/Mask       Cost  State    Nbrs(F/C)
+eth 1/1         0               10.254.32.221/30  410   down     0/0
+eth 5/1         0               10.254.32.3/31    21    ptpt     1/1
+eth 7/1         0               10.254.32.109/31  20    ptpt     1/1
+loopback 1      0               10.76.33.22/32  1     DR       0/0

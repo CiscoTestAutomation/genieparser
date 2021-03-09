@@ -91,3 +91,26 @@ class ShowLogFilenameMatchExcept(ShowLogFilenameSchema):
                 ret_dict['file-content'].append(line)
 
         return ret_dict
+
+class ShowLogFilenameMatchExcept(ShowLogFilenameSchema):
+    """ Parser for:
+            * show log {filename} | match {match} | except {except}
+    """
+    cli_command = ['show log {filename} | match {match} | except {except_}']
+
+    def cli(self, filename, except_, match, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command[0].format(
+                filename=filename,
+                except_=except_,
+                match=match))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        lines = out.splitlines()
+        if len(lines) > 1:
+            ret_dict['file-content'] = out.splitlines()[1:]
+
+        return ret_dict

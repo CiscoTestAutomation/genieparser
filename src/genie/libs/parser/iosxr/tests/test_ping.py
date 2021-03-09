@@ -17,14 +17,14 @@ class TestShowBfdSessionDestinationDetailss(unittest.TestCase):
 
     expected_parsed_output = {
                   'ping': {
-                     'address': '31.1.1.1',
+                     'address': '10.4.1.1',
                      'data_bytes': 100,
                      'repeat': 100,
                       'result_per_line': ['!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!',
                                           '!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!'],
                      'statistics': {
                         'received': 100,
-                        'round-trip': {
+                        'round_trip': {
                         'avg_ms': 14,
                         'max_ms': 2,
                         'min_ms': 1
@@ -38,7 +38,7 @@ class TestShowBfdSessionDestinationDetailss(unittest.TestCase):
 
     device_output = {'execute.return_value': '''
       Type escape sequence to abort.
-      Sending 100, 100-byte ICMP Echos to 31.1.1.1, timeout is 2 seconds:
+      Sending 100, 100-byte ICMP Echos to 10.4.1.1, timeout is 2 seconds:
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       Success rate is 100 percent (100/100), round-trip min/avg/max = 1/2/14 ms
@@ -52,7 +52,7 @@ class TestShowBfdSessionDestinationDetailss(unittest.TestCase):
 
         self.device = Mock(**self.device_output)
         obj = Ping(device=self.device)
-        parsed_output = obj.parse(addr='31.1.1.1', source='31.1.1.2', count=100)
+        parsed_output = obj.parse(addr='10.4.1.1', source='10.4.1.2', count=100)
         self.assertEqual(parsed_output, self.expected_parsed_output)
 
     def test_show_bfd_destination_details_empty_output(self):

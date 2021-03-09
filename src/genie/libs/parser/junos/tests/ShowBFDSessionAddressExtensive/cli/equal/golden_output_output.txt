@@ -1,7 +1,7 @@
-show bfd session address 12.0.0.2 extensive 
+show bfd session address 10.144.0.2 extensive 
                                                   Detect   Transmit
 Address                  State     Interface      Time     Interval  Multiplier
-12.0.0.2                 Up        ge-0/0/0.0     3.000     1.000        3   
+10.144.0.2                 Up        ge-0/0/0.0     3.000     1.000        3   
  Client OSPF realm ospf-v2 Area 0.0.0.0, TX interval 1.000, RX interval 1.000
  Session up time 09:27:10
  Local diagnostic None, remote diagnostic None

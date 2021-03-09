@@ -1,0 +1,12 @@
+Sw#/Port#  Port Status  Neighbor  Cable Length   Link OK   Link Active   Sync OK   #Changes to LinkOK  In Loopback
+-------------------------------------------------------------------------------------------------------------------
+1/1        OK           5         100cm          Yes       Yes           Yes       1                   No
+1/2        OK           2         50cm           Yes       Yes           Yes       1                   No
+2/1        OK           1         50cm           Yes       Yes           Yes       1                   No
+2/2        OK           3         50cm           Yes       Yes           Yes       1                   No
+3/1        OK           2         50cm           Yes       Yes           Yes       1                   No
+3/2        OK           4         50cm           Yes       Yes           Yes       1                   No
+4/1        OK           3         50cm           Yes       Yes           Yes       1                   No
+4/2        OK           5         50cm           Yes       Yes           Yes       1                   No
+5/1        OK           4         50cm           Yes       Yes           Yes       1                   No
+5/2        OK           1         100cm          Yes       Yes           Yes       1                   No
