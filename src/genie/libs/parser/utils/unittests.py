@@ -533,8 +533,8 @@ def main(**kwargs):
     if _display_only_failed and log.root.handlers:
         temporary_screen_handler = log.root.handlers.pop(0)
     
-
-    try:
+    if runtime.job:
+        # Used for `pyats run job folder_parsing_job.py`
         run(
             testscript=__file__,
             runtime=runtime,
@@ -544,7 +544,8 @@ def main(**kwargs):
             _display_only_failed=_display_only_failed,
             _number=_number
         )
-    except RuntimeError:
+    else:
+        # Used for `python folder_parsing_job.py`
         aetest.main(
             testable=__file__,
             runtime=runtime,
