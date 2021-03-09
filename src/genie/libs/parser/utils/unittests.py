@@ -14,6 +14,7 @@ from unittest.mock import Mock
 
 # pyATS
 from pyats import aetest
+from ats.easypy import run
 from ats.easypy import runtime
 from pyats.topology import Device
 from pyats.log.utils import banner
@@ -532,15 +533,28 @@ def main(**kwargs):
     if _display_only_failed and log.root.handlers:
         temporary_screen_handler = log.root.handlers.pop(0)
     
-
-    aetest.main(
-        testable=__file__,
-        _os=_os,
-        _class=_class,
-        _token=_token,
-        _display_only_failed=_display_only_failed,
-        _number=_number
-    )
+    if runtime.job:
+        # Used for `pyats run job folder_parsing_job.py`
+        run(
+            testscript=__file__,
+            runtime=runtime,
+            _os=_os,
+            _class=_class,
+            _token=_token,
+            _display_only_failed=_display_only_failed,
+            _number=_number
+        )
+    else:
+        # Used for `python folder_parsing_job.py`
+        aetest.main(
+            testable=__file__,
+            runtime=runtime,
+            _os=_os,
+            _class=_class,
+            _token=_token,
+            _display_only_failed=_display_only_failed,
+            _number=_number
+        )
 
 
 if __name__ == "__main__":
