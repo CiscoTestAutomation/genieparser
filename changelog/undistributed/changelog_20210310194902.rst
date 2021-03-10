@@ -3,5 +3,5 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Modified ShowIpRoute:
-      * Updated regex pattern <next_hop> to accommodate various outputs.
+        * Updated regex pattern <next_hop> to accommodate various outputs.
       
