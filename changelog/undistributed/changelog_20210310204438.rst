@@ -2,5 +2,5 @@
                                 Fix
 --------------------------------------------------------------------------------
 * IOS-XR
-  * Modified ShowCdpNeighborsDetail:
-    * Updated regex pattern <platform> to accommodate various outputs.
+    * Modified ShowCdpNeighborsDetail:
+        * Updated regex pattern <platform> to accommodate various outputs.
