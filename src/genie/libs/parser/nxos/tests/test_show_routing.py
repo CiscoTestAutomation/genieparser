@@ -3049,6 +3049,147 @@ class test_show_ip_route(unittest.TestCase):
     },
 }
 
+    golden_output_13 = {'execute.return_value':
+        ''' 
+        IP Route Table for VRF "User-VLAN"
+        '*' denotes best ucast next-hop
+        '**' denotes best mcast next-hop
+        '[x/y]' denotes [preference/metric]
+        '%<string>' in via output denotes VRF <string>
+
+        0.0.0.0/0, ubest/mbest: 1/0
+            *via 192.168.1.1%Internet_VLAN, [20/0], 38w2d, bgp-64512, external, tag 65000
+        10.0.0.0/24, ubest/mbest: 1/0
+            *via 169.254.0.1%Server*VLAN, [20/0], 38w2d, bgp-64512, external, tag 65001
+        10.0.0.10/32, ubest/mbest: 1/0
+            *via 169.254.1.1%LegacyLAN:{101}, [20/0], 38w2d, bgp-64512, external, tag 65002
+        10.2.0.0/24, ubest/mbest: 1/0
+            *via 172.16.0.1%default-VLAN, [200/0], 02:46:06, bgp-64512, internal, tag 64513 (mpls-vpn)
+        '''
+    }
+
+    golden_parsed_output_13 = {
+        'vrf': {
+            'User-VLAN': {
+                'address_family': {
+                    'ipv4': {
+                        'routes': {
+                            '0.0.0.0/0': {
+                                'active': True,
+                                'mbest': 0,
+                                'metric': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'best_ucast_nexthop': True,
+                                            'index': 1,
+                                            'metric': 0,
+                                            'next_hop': '192.168.1.1',
+                                            'next_hop_vrf': 'Internet_VLAN',
+                                            'route_preference': 20,
+                                            'source_protocol': 'bgp',
+                                            'source_protocol_status': 'external',
+                                            'updated': '38w2d',                                            
+                                        },
+                                    },
+                                },
+                                'process_id': '64512',
+                                'route': '0.0.0.0/0',
+                                'route_preference': 20,
+                                'source_protocol': 'bgp',
+                                'source_protocol_status': 'external',
+                                'tag': 65000,
+                                'ubest': 1,
+                            },
+                            '10.0.0.0/24': {
+                                'active': True,
+                                'mbest': 0,
+                                'metric': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'best_ucast_nexthop': True,
+                                            'index': 1,
+                                            'metric': 0,
+                                            'next_hop': '169.254.0.1',
+                                            'next_hop_vrf': 'Server*VLAN',
+                                            'route_preference': 20,
+                                            'source_protocol': 'bgp',
+                                            'source_protocol_status': 'external',
+                                            'updated': '38w2d',                                            
+                                        },
+                                    },
+                                },
+                                'process_id': '64512',
+                                'route': '10.0.0.0/24',
+                                'route_preference': 20,
+                                'source_protocol': 'bgp',
+                                'source_protocol_status': 'external',
+                                'tag': 65001,
+                                'ubest': 1,
+                            },
+                            '10.0.0.10/32': {
+                                'active': True,
+                                'mbest': 0,
+                                'metric': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'best_ucast_nexthop': True,
+                                            'index': 1,
+                                            'metric': 0,
+                                            'next_hop': '169.254.1.1',
+                                            'next_hop_af': '{101}',
+                                            'next_hop_vrf': 'LegacyLAN',
+                                            'route_preference': 20,
+                                            'source_protocol': 'bgp',
+                                            'source_protocol_status': 'external',
+                                            'updated': '38w2d',                                            
+                                        },
+                                    },
+                                },
+                                'process_id': '64512',
+                                'route': '10.0.0.10/32',
+                                'route_preference': 20,
+                                'source_protocol': 'bgp',
+                                'source_protocol_status': 'external',
+                                'tag': 65002,
+                                'ubest': 1,
+                            },
+                            '10.2.0.0/24': {
+                                'active': True,
+                                'mbest': 0,
+                                'metric': 0,
+                                'next_hop': {
+                                    'next_hop_list': {
+                                        1: {
+                                            'best_ucast_nexthop': True,
+                                            'index': 1,
+                                            'metric': 0,
+                                            'next_hop': '172.16.0.1',
+                                            'next_hop_vrf': 'default-VLAN',
+                                            'route_preference': 200,
+                                            'source_protocol': 'bgp',
+                                            'source_protocol_status': 'internal',
+                                            'updated': '02:46:06',
+                                            'mpls_vpn': True,                                            
+                                        },
+                                    },
+                                },
+                                'process_id': '64512',
+                                'route': '10.2.0.0/24',
+                                'route_preference': 200,
+                                'source_protocol': 'bgp',
+                                'source_protocol_status': 'internal',
+                                'tag': 64513,
+                                'ubest': 1,
+                            },                                                               
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     golden_output_00 = {'execute.return_value': '''
          show ip route ospf-100 vrf default
@@ -3244,6 +3385,13 @@ class test_show_ip_route(unittest.TestCase):
         obj = ShowIpRoute(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_12)
+
+    def test_show_ip_route_13(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_13)
+        obj = ShowIpRoute(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_13)
 
     def test_show_ip_route_00(self):
         self.maxDiff = None
