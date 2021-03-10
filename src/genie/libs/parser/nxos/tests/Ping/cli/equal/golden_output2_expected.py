@@ -23,6 +23,6 @@ expected_output = {
             "send": 11,
             "success_rate_percent": 0.0
         },
-        "timeout_secs": 1
+        # "timeout_secs": 1
     }
 } 
