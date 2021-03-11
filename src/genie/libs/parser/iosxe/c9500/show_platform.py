@@ -105,7 +105,7 @@ class ShowVersion(ShowVersionSchema):
         p1 = re.compile(
             r'^Cisco +IOS +Software +\[(?P<code_name>([\S]+))\], +(?P<platform>([\S\s]+)) '
             r'+Software +\((?P<image_id>.+)\),( +Experimental)? +Version +(?P<version>\S+) '
-            r'+(?P<label>(RELEASE SOFTWARE \(.+\)|(\[(.+?BLD-|.+/)?(?P<build_label>\S+) \d+\])))$')
+            r'+(?P<label>(RELEASE SOFTWARE \(.+\)|(\[.+(?P<build_label>BLD_\S+)? \d+\])))$')
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
         p2 = re.compile(r'^Copyright +(.*)$')

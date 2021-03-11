@@ -11,7 +11,6 @@ expected_output = {
             "compiled_by": "makale",
             "rom": "IOS-XE ROMMON",
             "bootldr_version": "System Bootstrap, Version 17.1.1[FC2], RELEASE SOFTWARE (P)",
-            "build_label": "polaris",
             "hostname": "SF2",
             "uptime": "1 day, 18 hours, 48 minutes",
             "returned_to_rom_by": "Reload Command",
