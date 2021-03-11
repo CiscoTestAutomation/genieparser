@@ -30,8 +30,8 @@ class ShowVersionSchema(MetaParser):
                     Optional('code_name'): str,
                     'platform': str,
                     'version': str,
-                    'label': str,
-                    'build_label': str,
+                    Optional('label'): str,
+                    Optional('build_label'): str,
                     'image_id': str,
                     'rom': str,
                     'bootldr_version': str,
@@ -105,7 +105,7 @@ class ShowVersion(ShowVersionSchema):
         p1 = re.compile(
             r'^Cisco +IOS +Software +\[(?P<code_name>([\S]+))\], +(?P<platform>([\S\s]+)) '
             r'+Software +\((?P<image_id>.+)\),( +Experimental)? +Version +(?P<version>\S+) '
-            r'+(?P<label>(RELEASE SOFTWARE \(.+\)|(\[.+\/(BLD-)?(?P<build_label>\S+) \d+\])))$')
+            r'+(?P<label>(RELEASE SOFTWARE \(.+\)|(\[(.+?BLD-|.+/)?(?P<build_label>\S+) \d+\])))$')
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
         p2 = re.compile(r'^Copyright +(.*)$')
@@ -233,7 +233,8 @@ class ShowVersion(ShowVersionSchema):
                 if 'version' not in ver_dict:
                     version_dict = ver_dict.setdefault('version', {})
                 version_dict['version_short'] = version_short
-                version_dict['build_label'] = m.groupdict()['build_label']
+                if m.groupdict()['build_label']:
+                    version_dict['build_label'] = m.groupdict()['build_label']
                 continue
 
             # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.2.20191101:003833 [HEAD-/nobackup/makale/puntject2/polaris 106]
@@ -243,8 +244,10 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['platform'] = m.groupdict()['platform']
                 version_dict['image_id'] = m.groupdict()['image_id']
                 version_dict['version'] = m.groupdict()['version']
-                version_dict['label'] = m.groupdict()['label']
-                version_dict['build_label'] = m.groupdict()['build_label']
+                if m.groupdict()['label']:
+                    version_dict['label'] = m.groupdict()['label']
+                if m.groupdict()['build_label']:
+                    version_dict['build_label'] = m.groupdict()['build_label']
                 continue
 
             # Copyright (c) 1986-2016 by Cisco Systems, Inc.

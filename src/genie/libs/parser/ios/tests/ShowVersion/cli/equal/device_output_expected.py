@@ -6,6 +6,7 @@ expected_output = {
     'image_id': 'C3900-UNIVERSALK9-M',
     'os': 'IOS',
     'image_type': 'production image',
+    "label": "RELEASE SOFTWARE (fc2)",
     'compiled_date': 'Fri 05-Aug-11 00:32',
     'compiled_by': 'prod_rel_team',
     'rom': 'System Bootstrap, Version 15.0(1r)M13, RELEASE SOFTWARE (fc1)',

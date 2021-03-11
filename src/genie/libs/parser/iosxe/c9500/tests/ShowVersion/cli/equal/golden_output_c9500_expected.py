@@ -5,6 +5,8 @@ expected_output = {
         "code_name": "Amsterdam",
         "platform": "Catalyst L3 Switch",
         "image_id": "CAT9K_IOSXE",
+        "build_label": "polaris",
+        "label": "[HEAD-/nobackup/makale/puntject2/polaris 106]",
         "version": "17.2.20191101:003833",
         "compiled_date": "Thu 31-Oct-19 17:43",
         "compiled_by": "makale",

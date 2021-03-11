@@ -55,6 +55,7 @@ expected_output = {
         "hostname": "isr4k",
         "image_id": "X86_64_LINUX_IOSD-UNIVERSALK9-M",
         "image_type": "production image",
+        "label": "RELEASE SOFTWARE (fc3)",
         "last_reload_reason": "Reload Command",
         "main_mem": "1795979",
         "mem_size": {"non-volatile configuration": "32768", "physical": "4194304"},

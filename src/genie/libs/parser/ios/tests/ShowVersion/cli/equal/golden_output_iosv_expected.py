@@ -15,6 +15,7 @@ expected_output = {
         "processor_type": "revision 1.0",
         "platform": "IOSv",
         "image_type": "production image",
+        "label": "RELEASE SOFTWARE (fc2)",
         "processor_board_flash": "10080K",
         "returned_to_rom_by": "reload",
         "main_mem": "435457",

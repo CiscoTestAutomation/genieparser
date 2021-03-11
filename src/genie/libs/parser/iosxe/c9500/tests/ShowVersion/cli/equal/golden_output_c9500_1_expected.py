@@ -15,6 +15,7 @@ expected_output = {
         },
         'hostname': 'Switch',
         'image_id': 'CAT9K_IOSXE',
+        "label": "RELEASE SOFTWARE (fc5)",
         'last_reload_reason': 'SMU Install',
         'license_level': 'AIR DNA Advantage',
         'mac_address': '00:a7:42:ff:bf:37',
