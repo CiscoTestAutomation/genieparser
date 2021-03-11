@@ -171,6 +171,8 @@ class ShowVersionSchema(MetaParser):
             'version_short': str,
             'platform': str,
             'version': str,
+            'label': str,
+            'build_label': str,
             'image_id': str,
             'rom': str,
             'image_type': str,
@@ -345,7 +347,8 @@ class ShowVersion(ShowVersionSchema):
         p3 = re.compile(r'^[Cc]isco +(?P<os>[A-Z]+) +[Ss]oftware(.+)?\, '
                         r'+(?P<platform>.+) +Software +\((?P<image_id>.+)\).+( '
                         r'+Experimental)? +[Vv]ersion '
-                        r'+(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,?.*')
+                        r'+(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,? '
+                        r'(?P<label>(RELEASE SOFTWARE \(.+\)|(\[.+\/(BLD-)?(?P<build_label>\S+) \d+\])))')
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
         p4 = re.compile(r'^Copyright +(.*)$')
@@ -616,6 +619,7 @@ class ShowVersion(ShowVersionSchema):
             # Cisco IOS Software [Fuji], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.7.1prd4, RELEASE SOFTWARE (fc1)
             # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
             # Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
+            # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.4.20200702:124009 [S2C-build-polaris_dev-116872-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20200702_122021 243]
             m = p3.match(line)
             if m:
                 version = m.groupdict()['version']
@@ -634,6 +638,10 @@ class ShowVersion(ShowVersionSchema):
                         m.groupdict()['version']
                     version_dict['version']['image_id'] = \
                         m.groupdict()['image_id']
+                    version_dict['version']['label'] = \
+                        m.groupdict()['label']
+                    version_dict['version']['build_label'] = \
+                        m.groupdict()['build_label']
                     if m.groupdict()['os']:
                         version_dict['version']['os'] = m.groupdict()['os']
                     continue
