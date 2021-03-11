@@ -1,0 +1,66 @@
+def project = 'genieparser'
+  
+ 
+pipeline {
+    agent {
+        label 'linux'
+    }
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+    }
+    stages {
+        stage("Build pyATS and make develop") {
+            steps {
+                sh """
+                    export PIP_DOWNLOAD_CACHE=/scratch/pip_download_cache
+                    rm -rf /scratch/genieparser-env
+                    cd /scratch
+                    /usr/bin/python3.6 -m venv genieparser-env
+                    . /scratch/genieparser-env/bin/activate
+                    pip install --upgrade pip
+                    pip3 install wheel asyncssh cryptography==3.3.1 pytest pytest-xdist
+                    pip3 install -i http://pyats-pypi.cisco.com/simple --trusted-host pyats-pypi.cisco.com cisco-distutils ats[full]
+                    cd $WORKSPACE
+                    make develop
+                """
+            }
+        }
+
+        stage("Run compileAll") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                compileAll 
+                """
+            }
+        }
+
+
+        stage("Run runAll") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                cd tests
+                runAll --no-refresh
+                """
+            }
+        }
+
+
+        stage("Run folder_parsing_job") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                cd tests
+                pyats run job folder_parsing_job.py
+                """
+            }
+        }
+
+    }
+    post {
+        cleanup {
+            cleanWs()
+        }
+    }
+} 
