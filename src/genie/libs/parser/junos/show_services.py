@@ -27,11 +27,11 @@ class ShowServicesAccountingAggregationTemplateSchema(MetaParser):
             * show services accounting aggregation template template-name {name} extensive
     """
 
-    schema = {
-                "services-accounting-information": {
-                    "flow-aggregate-template-detail": {
-                        "flow-aggregate-template-detail-ipv4": {
-                            "detail-entry": {
+    def validate_detail_entry(value):
+        if not isinstance(value, list):
+            raise SchemaError('Detail entry not a list')
+    
+        detail_entry = Schema({
                                 Optional("source-address"): str,
                                 Optional("destination-address"): str,
                                 Optional("source-port"): str,
@@ -52,7 +52,17 @@ class ShowServicesAccountingAggregationTemplateSchema(MetaParser):
                                 Optional("end-time"): str,
                                 "packet-count": str,
                                 "byte-count": str,
-                            },
+                            })
+    
+        for item in value:
+            detail_entry.validate(item)
+        return value
+
+    schema = {
+                "services-accounting-information": {
+                    "flow-aggregate-template-detail": {
+                        "flow-aggregate-template-detail-ipv4": {
+                            "detail-entry": Use(validate_detail_entry),
                         }
                     },
                 }
@@ -74,6 +84,8 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
             out = output
 
         ret_dict = {}
+
+        mpls = False
         
         # Source address: 10.120.202.64, Destination address: 10.169.14.158, Top Label Address: 121
         # Source address: 10.120.202.64, Destination address: 10.169.14.158
@@ -122,11 +134,16 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                entry_dict = ret_dict.setdefault(
-                    "services-accounting-information", {}).setdefault(
-                        "flow-aggregate-template-detail", {}).setdefault(
-                            "flow-aggregate-template-detail-ipv4", {}).setdefault(
-                                "detail-entry", {})
+                if not mpls:
+                    entry_dicts = ret_dict.setdefault(
+                        "services-accounting-information", {}).setdefault(
+                            "flow-aggregate-template-detail", {}).setdefault(
+                                "flow-aggregate-template-detail-ipv4", {}).setdefault(
+                                    "detail-entry", [])
+                    entry_dict = dict()
+                    entry_dicts.append(entry_dict)
+                else:
+                    mpls = False
                 entry_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
 
@@ -187,11 +204,14 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                entry_dict = ret_dict.setdefault(
+                mpls = True
+                entry_dicts = ret_dict.setdefault(
                     "services-accounting-information", {}).setdefault(
                         "flow-aggregate-template-detail", {}).setdefault(
                             "flow-aggregate-template-detail-ipv4", {}).setdefault(
-                                "detail-entry", {})
+                                "detail-entry", [])
+                entry_dict = dict()
+                entry_dicts.append(entry_dict)
                 entry_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
 
