@@ -251,9 +251,14 @@ class ShowInterfacesDescriptions(ShowInterfacesDescriptionsSchema):
         # Interface       Admin Link Description
         p1 = re.compile(r'^Interface +Admin +Link +Description$')
 
+        # resolving parser issue to display Interface when Description contains spaces
         # ge-0/0/0        up    up   none/100G/in/hktGCS002_ge-0/0/0
-        # p2 = re.compile(r'^(?P<name>\S+) +(?P<admin_status>\S+) +(?P<oper_status>\S+) +(?P<description>\S+)$')
-        p2 = re.compile(r'^(?P<name>\S+)\s+(?P<admin_status>\S+)\s+(?P<oper_status>\S+)\s+(?P<description>.*?)$')
+        # ge-0/0/0        up    up   none/100G/in/hktGCS002_ge-0/0/0
+        # ge-0/0/0        up    up   BBT link to LABJ2 (ge-0/0/0) - backbone
+        # ge-0/0/0.0      up    up   BBT link to LABJ2 (ge-0/0/0.0) - backbone
+        # ge-0/0/1        up    up   LBT0 link to LABP1 (GigabitEthernet0/0/0/0) - backbone
+        # ge-0/0/1.0      up    up   LBT0 link to LABP1 (GigabitEthernet0/0/0/0) - backbone
+        p2 = re.compile(r'^(?P<name>\S+)\s+(?P<admin_status>\S+)\s+(?P<oper_status>\S+)\s+(?P<description>.*)$')
 
         for line in out.splitlines():
             line = line.strip()
