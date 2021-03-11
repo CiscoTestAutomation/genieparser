@@ -522,7 +522,6 @@ CLASS_SKIP = {
         "ShowIpStaticRouteMulticast": True, # Not migrated
         "ShowIpv6MrouteVrfAll": True, # Not migrated
         "ShowIpv6StaticRouteMulticast": True, # Not migrated
-        # "ShowVrf": True, # Not migrated
         "ShowIpv6MldGroups": True, # Not migrated
         "ShowIpv6MldInterface": True, # Not migrated
         "ShowIpMsdpPeerVrf": True, # Not migrated
@@ -737,17 +736,8 @@ CLASS_SKIP = {
         "ShowIgmpGroupsSummary": True, # Not migrated
         "ShowIgmpInterface": True, # Not migrated
         "ShowIgmpSummary": True, # Not migrated
-        "ShowEthernetTags": True, # Not migrated
         "ShowInterfaceBrief": True, # Not migrated
-        "ShowInterfaces": True, # Not migrated
-        "ShowInterfacesAccounting": True, # Not migrated
-        # "ShowInterfacesDescription": True, # Not migrated
-        "ShowInterfacesDetail": True, # Not migrated
         "ShowIpv4InterfaceBrief": True, # Not migrated
-        "ShowIpv4VrfAllInterface": True, # Not migrated
-        "ShowIpv6Interface": True, # Not migrated
-        "ShowIpv6VrfAllInterface": True, # Not migrated
-        "ShowVlanInterface": True, # Not migrated
         "ShowIpv6Neighbors": True, # Not migrated
         "ShowIpv6NeighborsDetail": True, # Not migrated
         "ShowIsis": True, # Not migrated
@@ -842,7 +832,6 @@ CLASS_SKIP = {
         "ShowProtocolsAfiAllAll": True, # Not migrated
         "ShowRibTables": True, # Not migrated
         "ShowImDampeningIntf": True, # Not migrated
-        "ShowIpInterfaceBrief": True, # Not migrated
         "ShowIpInterfaceBriefPipeVlan": True, # Not migrated
         "ShowL2vpnForwardingBridgeDomainMacAddress": True, # Not migrated
         "ShowL2vpnForwardingProtectionMainInter": True, # Not migrated
