@@ -348,8 +348,8 @@ class ShowVersion(ShowVersionSchema):
         p3 = re.compile(r'^[Cc]isco +(?P<os>[A-Z]+) +[Ss]oftware(.+)?\, '
                         r'+(?P<platform>.+) +Software +\((?P<image_id>.+)\).+( '
                         r'+Experimental)? +[Vv]ersion '
-                        r'+(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,? '
-                        r'(?P<label>(RELEASE SOFTWARE \(.+\)|\[.+?(?P<build_label>BLD_\S+)? \d+\]))')
+                        r'+(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,? *'
+                        r'(?P<label>(\[.+?(?P<build_label>BLD_\S+)? \d+\])|.*)$')
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
         p4 = re.compile(r'^Copyright +(.*)$')

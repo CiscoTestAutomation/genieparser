@@ -104,8 +104,8 @@ class ShowVersion(ShowVersionSchema):
         # Cisco IOS Software [Bengaluru], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.6.20210302:012459 [S2C-build-polaris_dev-132831-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20210302_012043 149]
         p1 = re.compile(
             r'^Cisco +IOS +Software +\[(?P<code_name>([\S]+))\], +(?P<platform>([\S\s]+)) '
-            r'+Software +\((?P<image_id>.+)\),( +Experimental)? +Version +(?P<version>\S+) '
-            r'+(?P<label>(RELEASE SOFTWARE \(.+\)|\[.+?(?P<build_label>BLD_\S+)? \d+\]))$')
+            r'+Software +\((?P<image_id>.+)\),( +Experimental)? +Version +(?P<version>\S+) *'
+            r'(?P<label>(\[.+?(?P<build_label>BLD_\S+)? \d+\])|.*)$')
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
         p2 = re.compile(r'^Copyright +(.*)$')
