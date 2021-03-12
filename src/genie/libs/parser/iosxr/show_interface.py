@@ -2986,9 +2986,6 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
         index = 1
 
         # Interface 		Status 		Protocol 	Description
-        # Et0/0 			up	 		up
-        # Gi0/0/0/0.90      up          up
-        # Gi0/1 			admin down  down  		To router2
         # PO0/0     		admin down  down 		First POS interface
         p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<status>\S+([\s+](\S+))?)\s+'
                         r'(?P<protocol>\S+)\s*(?: +(?P<description>.*))?$')
