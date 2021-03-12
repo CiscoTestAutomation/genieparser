@@ -12,16 +12,22 @@ pipeline {
         stage("Build pyATS and make develop") {
             steps {
                 sh """
+                    env
+                    pip list
+                    pip freeze
                     export PIP_DOWNLOAD_CACHE=/scratch/pip_download_cache
                     rm -rf /scratch/genieparser-env
                     cd /scratch
                     /usr/bin/python3.6 -m venv genieparser-env
                     . /scratch/genieparser-env/bin/activate
-                    pip install --upgrade pip
-                    pip3 install wheel asyncssh cryptography==3.3.1 pytest pytest-xdist
-                    pip3 install -i http://pyats-pypi.cisco.com/simple --trusted-host pyats-pypi.cisco.com cisco-distutils ats[full]
+                    pip install --upgrade pip setuptools
+                    pip3 install --no-cache-dir wheel pytest pytest-xdist
+                    pip3 install --no-cache-dir -i http://pyats-pypi.cisco.com/simple --trusted-host pyats-pypi.cisco.com cisco-distutils ats[full]
                     cd $WORKSPACE
                     make develop
+                    env
+                    pip list
+                    pip freeze
                 """
             }
         }
@@ -52,7 +58,7 @@ pipeline {
                 sh """
                 . /scratch/genieparser-env/bin/activate
                 cd tests
-                pyats run job folder_parsing_job.py
+                pyats run job folder_parsing_job.py --no-mail --no-archive
                 """
             }
         }
