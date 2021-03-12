@@ -2774,6 +2774,13 @@ class ShowInterfaceBriefSchema(MetaParser):
                     Optional('reason'): str,
                 },
             },
+            Optional('nve'): {
+                Any(): {
+                    Optional('mtu'): str,
+                    Optional('status'): str,
+                    Optional('reason'): str,
+                },
+            },
         }
     }
 
@@ -2851,6 +2858,11 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         p10 = re.compile(r'^(?P<interface>[\S]+) +(?P<type>[\w\-]+) +(?P<status>[\w]+)'
                          r' +(?P<reason>[\w\s\-]+)$')
 
+        # Port           Status Reason          MTU
+        p11 = re.compile(r'^Port +Status +Reason + MTU$')
+        # nve1           up     none            9216
+        p12 = re.compile(r'^(?P<interface>[a-zA-Z0-9]+) +(?P<status>[a-z]+)'
+                         r' +(?P<reason>[a-zA-Z\s\-]+) +(?P<mtu>[0-9]+)$')
         for line in output.splitlines():
             line = line.strip()
 
@@ -2952,6 +2964,42 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                 intf_dict['type'] = group['type']
                 intf_dict['status'] = group['status']
                 intf_dict['reason'] = group['reason']
+                continue
+            # Interface Secondary VLAN(Type)                    Status Reason
+            m = p9.match(line)
+            if m:
+                vlan_flag = True
+                vlan_dict = parsed_dict.setdefault('interface', {}).\
+                                        setdefault('vlan', {})
+                continue
+
+            # Vlan1     --                                      down   Administratively down
+            m = p10.match(line)
+            if m and vlan_flag:
+                group = m.groupdict()
+                intf_dict = vlan_dict.\
+                    setdefault(Common.convert_intf_name(group['interface']), {})
+                intf_dict['type'] = group['type']
+                intf_dict['status'] = group['status']
+                intf_dict['reason'] = group['reason']
+                continue
+
+            # Port           Status Reason          MTU
+            m = p11.match(line)
+            if m:
+                nve_dict = parsed_dict.setdefault('interface', {}).\
+                                        setdefault('nve', {})
+                continue
+
+            # nve1           up     none            9216
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = nve_dict.\
+                    setdefault(group['interface'], {})
+                intf_dict['status'] = group['status']
+                intf_dict['reason'] = group['reason'].strip()
+                intf_dict['mtu'] = group['mtu']
                 continue
 
         return parsed_dict

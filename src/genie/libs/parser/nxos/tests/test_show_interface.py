@@ -2,11 +2,9 @@
 import unittest
 from unittest.mock import Mock
 
-from pyats.topology import Device
-
 # Genie
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-                                             SchemaMissingKeyError
+from genie.metaparser.util.exceptions import SchemaEmptyParserError
+from pyats.topology import Device
 
 from genie.libs.parser.nxos.show_interface import (ShowInterface,
                                                    ShowVrfAllInterface,
@@ -21,6 +19,7 @@ from genie.libs.parser.nxos.show_interface import (ShowInterface,
                                                    ShowIpInterfaceBriefVrfAll,
                                                    ShowInterfaceDescription,
                                                    ShowInterfaceStatus)
+
 
 #############################################################################
 # unitest For Show Interface
@@ -6510,52 +6509,75 @@ class TestShowInterfaceBrief(unittest.TestCase):
 
     empty_output = {'execute.return_value': ''}
 
-    golden_parsed_output = {'interface':
-                              {'ethernet':
-                                {'Ethernet1/1': {'mode': 'routed',
-                                            'port_ch': '--',
-                                            'reason': 'none',
-                                            'speed': '1000(D)',
-                                            'status': 'up',
-                                            'type': 'eth',
-                                            'vlan': '--'},
-                                 'Ethernet1/3': {'mode': 'access',
-                                            'port_ch': '--',
-                                            'reason': 'Administratively '
-                                                      'down',
-                                            'speed': 'auto(D)',
-                                            'status': 'down',
-                                            'type': 'eth',
-                                            'vlan': '1'},
-                                 'Ethernet1/6': {'mode': 'access',
-                                            'port_ch': '--',
-                                            'reason': 'Link not '
-                                                      'connected',
-                                            'speed': 'auto(D)',
-                                            'status': 'down',
-                                            'type': 'eth',
-                                            'vlan': '1'}},
-                              'loopback':
-                                {'Loopback0':
-                                  {'description': '--',
-                                   'status': 'up'}},
-                              'port':
-                                {'mgmt0':
-                                  {'ip_address': '172.25.143.76',
-                                   'mtu': 1500,
-                                   'speed': '1000',
-                                   'status': 'up',
-                                   'vrf': '--'}},
-                              'port_channel':
-                                {'Port-channel8':
-                                  {'mode': 'access',
-                                   'protocol': 'none',
-                                   'reason': 'No operational '
-                                             'members',
-                                   'speed': 'auto(I)',
-                                   'status': 'down',
-                                   'type': 'eth',
-                                   'vlan': '1'}}}}
+    golden_parsed_output = {
+        'interface': {
+            'ethernet': {
+                'Ethernet1/1': {
+                    'mode': 'routed',
+                    'port_ch': '--',
+                    'reason': 'none',
+                    'speed': '1000(D)',
+                    'status': 'up',
+                    'type': 'eth',
+                    'vlan': '--'
+                },
+                'Ethernet1/3': {
+                    'mode': 'access',
+                    'port_ch': '--',
+                    'reason': 'Administratively '
+                              'down',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '1'
+                },
+                'Ethernet1/6': {
+                    'mode': 'access',
+                    'port_ch': '--',
+                    'reason': 'Link not '
+                              'connected',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '1'
+                }
+            },
+            'loopback': {
+                'Loopback0': {
+                    'description': '--',
+                    'status': 'up'
+                }
+            },
+            'port': {
+                'mgmt0': {
+                    'ip_address': '172.25.143.76',
+                    'mtu': 1500,
+                    'speed': '1000',
+                    'status': 'up',
+                    'vrf': '--'
+                }
+            },
+            'nve': {
+                'nve1': {
+                    'mtu': '9216',
+                    'reason': 'none',
+                    'status': 'up'
+                }
+            },
+            'port_channel': {
+                'Port-channel8': {
+                    'mode': 'access',
+                    'protocol': 'none',
+                    'reason': 'No operational '
+                              'members',
+                    'speed': 'auto(I)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '1'
+                }
+            }
+        }
+    }
 
     golden_output = {'execute.return_value': '''
         pinxdt-n9kv-3 # show interface brief
@@ -6584,7 +6606,11 @@ class TestShowInterfaceBrief(unittest.TestCase):
         Interface     Status     Description
         --------------------------------------------------------------------------------
         Lo0           up         --
-
+        
+        --------------------------------------------------------------------------------
+        Port           Status Reason          MTU
+        --------------------------------------------------------------------------------
+        nve1           up     none            9216
         '''}
 
     golden_output2 = {'execute.return_value': '''
@@ -6918,7 +6944,7 @@ class TestShowInterfaceBrief(unittest.TestCase):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfaceBrief(device=self.device)
         parsed_output = intf_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
     def test_golden2(self):
         self.device = Mock(**self.golden_output2)
