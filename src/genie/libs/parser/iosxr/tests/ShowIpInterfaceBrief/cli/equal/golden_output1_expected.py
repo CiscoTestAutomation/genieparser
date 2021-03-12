@@ -1,0 +1,136 @@
+expected_output = {
+    "interface": {
+        "GigabitEthernet0/0/0/0": {
+            "interface_status": "Up",
+            "ip_address": "unassigned",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "GigabitEthernet0/0/0/0.501": {
+            "interface_status": "Up",
+            "ip_address": "192.168.4.1",
+            "protocol_status": "Up",
+            "vrf_name": "VRF501",
+        },
+        "GigabitEthernet0/0/0/0.502": {
+            "interface_status": "Up",
+            "ip_address": "192.168.154.1",
+            "protocol_status": "Up",
+            "vrf_name": "VRF502",
+        },
+        "GigabitEthernet0/0/0/0.503": {
+            "interface_status": "Up",
+            "ip_address": "192.168.51.1",
+            "protocol_status": "Up",
+            "vrf_name": "VRF503",
+        },
+        "GigabitEthernet0/0/0/0.504": {
+            "interface_status": "Up",
+            "ip_address": "192.168.205.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "GigabitEthernet0/0/0/0.505": {
+            "interface_status": "Up",
+            "ip_address": "192.168.106.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "GigabitEthernet0/0/0/0.510": {
+            "interface_status": "Up",
+            "ip_address": "192.168.151.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "GigabitEthernet0/0/0/0.511": {
+            "interface_status": "Up",
+            "ip_address": "192.168.64.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "GigabitEthernet0/0/0/1": {
+            "interface_status": "Up",
+            "ip_address": "unassigned",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "GigabitEthernet0/0/0/1.501": {
+            "interface_status": "Up",
+            "ip_address": "192.168.51.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "GigabitEthernet0/0/0/2": {
+            "interface_status": "Up",
+            "ip_address": "unassigned",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "Loopback500": {
+            "interface_status": "Up",
+            "ip_address": "192.168.220.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "Loopback501": {
+            "interface_status": "Up",
+            "ip_address": "192.168.111.1",
+            "protocol_status": "Up",
+            "vrf_name": "VRF501",
+        },
+        "Loopback502": {
+            "interface_status": "Up",
+            "ip_address": "192.168.4.1",
+            "protocol_status": "Up",
+            "vrf_name": "VRF502",
+        },
+        "Loopback503": {
+            "interface_status": "Up",
+            "ip_address": "192.168.154.1",
+            "protocol_status": "Up",
+            "vrf_name": "VRF503",
+        },
+        "Loopback505": {
+            "interface_status": "Up",
+            "ip_address": "192.168.205.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "Loopback506": {
+            "interface_status": "Up",
+            "ip_address": "192.168.106.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "Loopback510": {
+            "interface_status": "Up",
+            "ip_address": "192.168.240.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "Loopback511": {
+            "interface_status": "Up",
+            "ip_address": "192.168.151.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "Loopback512": {
+            "interface_status": "Up",
+            "ip_address": "192.168.64.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "Loopback513": {
+            "interface_status": "Up",
+            "ip_address": "192.168.234.1",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+        "MgmtEth0/RP0/CPU0/0": {
+            "interface_status": "Up",
+            "ip_address": "10.1.17.179",
+            "protocol_status": "Up",
+            "vrf_name": "default",
+        },
+    }
+}

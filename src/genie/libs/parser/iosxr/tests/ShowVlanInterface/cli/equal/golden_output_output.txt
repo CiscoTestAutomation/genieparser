@@ -1,0 +1,4 @@
+    Interface               Encapsulation    Outer 2nd   Service  MTU    LineP
+                                         VLAN  VLAN                  State
+    Gi0/0/0/0.10            Double 802.1Q       10   10  L3        1608  admin-down
+    Gi0/0/0/0.20            802.1Q              20       L3        1604  admin-down
