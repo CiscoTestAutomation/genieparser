@@ -1,5 +1,7 @@
 
-        Address                  State     Interface      Time     Interval  Multiplier
-        10.0.0.1             Up                       1.500     0.500        3
-        10.0.0.2               Up        ge-0/0/0.0     1.500     0.500        3
-        
+Address                  State     Interface      Time     Interval  Multiplier
+10.0.0.1             Up                       1.500     0.500        3
+10.0.0.2               Up        ge-0/0/0.0     1.500     0.500        3
+
+2 sessions, 2 clients
+Cumulative transmit rate 4.0 pps, cumulative receive rate 4.0 pps

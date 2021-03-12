@@ -11,37 +11,37 @@ expected_output = {
                         "who_last_registered": "--",
                         "inst_id": 8188,
                     },
-                    "1416.9d28.c100/48": {
+                    "1416.9dff.e928/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
                         "inst_id": 8188,
                     },
-                    "1416.9d28.c2c0/48": {
+                    "1416.9dff.eae8/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
                         "inst_id": 8188,
                     },
-                    "1416.9d28.c300/48": {
+                    "1416.9dff.eb28/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
                         "inst_id": 8188,
                     },
-                    "1416.9d28.c3a0/48": {
+                    "1416.9dff.ebc8/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
                         "inst_id": 8188,
                     },
-                    "1416.9d28.ea00/48": {
+                    "1416.9dff.1328/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
                         "inst_id": 8188,
                     },
-                    "1416.9d28.eac0/48": {
+                    "1416.9dff.13e8/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
@@ -49,31 +49,31 @@ expected_output = {
                     },
                 },
                 "site_uci2": {
-                    "1416.9d28.eda0/48": {
+                    "1416.9dff.16c8/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
                         "inst_id": 8188,
                     },
-                    "1416.9d28.fb00/48": {
+                    "1416.9dff.2428/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
                         "inst_id": 8188,
                     },
-                    "1416.9d29.e680/48": {
+                    "1416.9dff.10a9/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
                         "inst_id": 8188,
                     },
-                    "1416.9d2b.d5c0/48": {
+                    "1416.9dff.01eb/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
                         "inst_id": 8188,
                     },
-                    "1416.9d2b.efa0/48": {
+                    "1416.9dff.1bcb/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
@@ -81,19 +81,19 @@ expected_output = {
                     },
                 },
                 "site_uci3": {
-                    "1416.9d2b.f860/48": {
+                    "1416.9dff.248b/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
                         "inst_id": 8188,
                     },
-                    "1416.9d2b.f920/48": {
+                    "1416.9dff.254b/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",
                         "inst_id": 8188,
                     },
-                    "1416.9d2b.fa20/48": {
+                    "1416.9dff.264b/48": {
                         "last_register": "2w1d",
                         "up": "yes#",
                         "who_last_registered": "10.8.130.4:61275",

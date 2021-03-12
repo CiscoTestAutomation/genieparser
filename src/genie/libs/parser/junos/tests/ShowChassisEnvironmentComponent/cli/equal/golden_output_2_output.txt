@@ -1,0 +1,164 @@
+show chassis environment psm
+PSM 0 status:
+  State                      Online
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         50.00       11.20     560.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               51.50      9.50       489.25     23.30
+  Hours Used                 45557
+PSM 1 status:
+  State                      Online
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         50.00       11.20     560.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               51.50      9.50       489.25     23.30
+  Hours Used                 45551
+PSM 2 status:
+  State                      Online
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         50.00       11.20     560.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               51.75      9.75       504.56     24.03
+  Hours Used                 45695
+PSM 3 status:
+  State                      Online
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         50.00       11.20     560.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               51.75      9.50       491.62     23.41
+  Hours Used                 45556
+PSM 4 status:
+  State                      Present
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         0.00        0.00      0.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               0.00       0.00       0.00       0.00
+  Hours Used                 45535
+PSM 5 status:
+  State                      Present
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         0.00        0.00      0.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               0.00       0.00       0.00       0.00
+  Hours Used                 45991
+PSM 6 status:
+  State                      Present
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         0.00        0.00      0.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               0.00       0.00       0.00       0.00
+  Hours Used                 45581
+PSM 7 status:
+  State                      Present
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         0.00        0.00      0.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               0.00       0.00       0.00       0.00
+  Hours Used                 45534
+PSM 8 status:
+  State                      Present
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         0.00        0.00      0.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               0.00       0.00       0.00       0.00
+  Hours Used                 45535
+PSM 9 status:
+  State                      Online
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         50.40       7.00      352.80
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               51.50      5.75       296.12     14.10
+  Hours Used                 45556
+PSM 10 status:
+  State                      Online
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         50.40       7.00      352.80
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               51.25      6.00       307.50     14.64
+  Hours Used                 46204
+PSM 11 status:
+  State                      Online
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         50.40       7.35      370.44
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               51.50      6.00       309.00     14.71
+  Hours Used                 45556
+PSM 12 status:
+  State                      Present
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         0.00        0.00      0.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               0.00       0.00       0.00       0.00
+  Hours Used                 45775
+PSM 13 status:
+  State                      Present
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         0.00        0.00      0.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               0.00       0.00       0.00       0.00
+  Hours Used                 45534
+PSM 14 status:
+  State                      Present
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         0.00        0.00      0.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               0.00       0.00       0.00       0.00
+  Hours Used                 45559
+PSM 15 status:
+  State                      Present
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         0.00        0.00      0.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               0.00       0.00       0.00       0.00
+  Hours Used                 30482
+PSM 16 status:
+  State                      Present
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         0.00        0.00      0.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               0.00       0.00       0.00       0.00
+  Hours Used                 45535
+PSM 17 status:
+  State                      Present
+  Temperature                OK
+  DC Input                   Feed       Voltage(V)  Current(A) Power(W)
+                             INP0         0.00        0.00      0.00
+                             INP1         0.00        0.00      0.00
+  DC Output                  Voltage(V) Current(A)  Power(W)   Load(%)
+                               0.00       0.00       0.00       0.00
+  Hours Used                 45607
+{master}

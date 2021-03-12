@@ -1,0 +1,7 @@
+Vll MY-QINQ-VLL-LOCAL VLL-ID 4 IFL-ID 4096
+ State: UP
+ End-point 1: tagged vlan 100 inner-vlan 45 e 2/1
+ COS: --
+ End-point 2: tagged vlan 100 e 2/3
+ COS: --
+Extended Counters: Enabled

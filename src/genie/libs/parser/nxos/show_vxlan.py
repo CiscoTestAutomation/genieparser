@@ -1797,7 +1797,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         p6 = re.compile(r'^\s*advertise virtual-rmac$')
         #   source-interface loopback1
         p7 = re.compile(r'^\s*source-interface +(?P<source_if>[\w]+)$')
-        #   multisite border-gateway interface loopback3
+        #   multisite border-gateway interface loopback3
         p8 = re.compile(r'^\s*multisite +border\-gateway +interface +(?P<multisite_bgw_if>[\w]+)$')
         #   member vni 10100 associate-vrf
         #   member vni 10100-10105 associate-vrf
@@ -1807,7 +1807,8 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         #   mcast-group 231.100.1.1
         p11 = re.compile(r'^\s*mcast-group +(?P<mcast_group>[\d\.]+)$')
         #   interface Ethernet1/1
-        p12 = re.compile(r'^\s*interface +(?P<interface>(?!nve)[\w\/]+)$')
+        #   interface port-channel11
+        p12 = re.compile(r'^\s*interface +(?P<interface>(?!nve)[\w\/\-]+)$')
         #   evpn multisite fabric-tracking
         #   evpn multisite dci-tracking
         p13 = re.compile(r'^\s*evpn multisite +(?P<fabric_dci_tracking>[\w\-]+)$')
@@ -1921,7 +1922,9 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
             if m:
                 interface = m.groupdict().pop('interface')
                 continue
-
+            
+            # interface port-channel11
+            # interface Ethernet1/1
             m = p13.match(line)
             if m:
                 tracking = m.groupdict().pop('fabric_dci_tracking')

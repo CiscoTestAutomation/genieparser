@@ -215,6 +215,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('authentication_timer_reauthenticate_server'): bool,
                 Optional('authentication_violation'): str,
 				Optional('carrier_delay'): list,
+				Optional('shutdown'): bool,
 				Optional('encapsulation_dot1q'): str,
                 Optional('description'): str,
                 Optional('dot1x_pae_authenticator'): bool,

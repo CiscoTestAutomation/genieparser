@@ -1,0 +1,10 @@
+Cache type: Normal (Platform cache)
+Cache size: 200000
+Current entries: 12534
+High Watermark: 16030
+
+Flows added: 197808242
+Flows aged: 197795708
+- Active timeout ( 60 secs) 11897289
+- Inactive timeout ( 10 secs) 185898419
+

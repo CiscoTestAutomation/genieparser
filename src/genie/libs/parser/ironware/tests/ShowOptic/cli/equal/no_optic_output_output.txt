@@ -1,0 +1,29 @@
+3/1   26.2343 C  -006.0906 dBm -005.1215 dBm   17.708 mA
+       Normal       Normal           Normal      Normal
+3/2   26.9648 C  -005.6719 dBm -008.2681 dBm   15.450 mA
+       Normal       Normal           Normal      Normal
+3/3   38.0703 C  -006.1278 dBm -006.5757 dBm   14.736 mA
+       Normal       Normal           Normal      Normal
+3/4      N/A           N/A           N/A           N/A
+3/5   37.4921 C  -006.2160 dBm -006.9186 dBm   15.440 mA
+       Normal       Normal           Normal      Normal
+3/6      N/A           N/A           N/A           N/A
+3/7   23.3632 C        NONE          NONE        0.196 mA
+       Normal      Low-Alarm      Low-Alarm      Normal
+3/8      N/A           N/A           N/A           N/A
+3/9      N/A           N/A           N/A           N/A
+3/10      N/A           N/A           N/A           N/A
+3/11      N/A           N/A           N/A           N/A
+3/12      N/A           N/A           N/A           N/A
+3/13      N/A           N/A           N/A           N/A
+3/14      N/A           N/A           N/A           N/A
+3/15      N/A           N/A           N/A           N/A
+3/16      N/A           N/A           N/A           N/A
+3/17      N/A           N/A           N/A           N/A
+3/18      N/A           N/A           N/A           N/A
+3/19      N/A           N/A           N/A           N/A
+3/20      N/A           N/A           N/A           N/A
+3/21      N/A           N/A           N/A           N/A
+3/22      N/A           N/A           N/A           N/A
+3/23      N/A           N/A           N/A           N/A
+3/24      N/A           N/A           N/A           N/A

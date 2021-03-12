@@ -1,0 +1,47 @@
+RP/0/RSP0/CPU0:Router#show route afi-all safi-all summary 
+Mon Dec  7 12:28:32.786 UTC
+
+IPv4 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        45         8          0           8480         
+local                            53         0          0           8480         
+static                           125        0          0           20072        
+application Service-layer        0          0          0           0            
+ospf 10                          0          0          0           0            
+ospf ID_001                      1218       18         0           204168       
+ospf ID_Zero                     13         2          0           2400         
+ospf 101                         47         0          0           7520         
+ospf 1                           0          0          0           0            
+dagr                             0          0          0           0            
+bgp 1                            16         0          0           2560         
+isis IGP                         199        1          0           32000        
+Total                            1716       29         0           285680       
+
+
+IPv4 Multicast:
+---------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+connected                        0          0          0           0            
+local                            0          0          0           0            
+isis IGP                         0          0          0           0            
+Total                            0          0          0           0            
+
+
+IPv6 Unicast:
+-------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+local                            0          0          0           0            
+connected                        0          0          0           0            
+connected l2tpv3_xconnect        0          0          0           0            
+local-srv6 isis-IGP              0          0          0           0            
+local-srv6 bgp-177               0          0          0           0            
+Total                            0          0          0           0            
+
+
+IPv6 Multicast:
+---------------
+Route Source                     Routes     Backup     Deleted     Memory(bytes)
+local                            0          0          0           0            
+connected                        0          0          0           0            
+Total                            0          0          0           0            
