@@ -1,0 +1,27 @@
+      RP/0/RP0/CPU0:PE1#show ip interface brief
+
+      Interface                      IP-Address      Status          Protocol Vrf-Name
+      Loopback500                    192.168.220.1       Up              Up       default 
+      Loopback501                    192.168.111.1       Up              Up       VRF501  
+      Loopback502                    192.168.4.1       Up              Up       VRF502  
+      Loopback503                    192.168.154.1       Up              Up       VRF503  
+      Loopback505                    192.168.205.1       Up              Up       default 
+      Loopback506                    192.168.106.1       Up              Up       default 
+      Loopback510                    192.168.240.1      Up              Up       default 
+      Loopback511                    192.168.151.1      Up              Up       default 
+      Loopback512                    192.168.64.1      Up              Up       default 
+      Loopback513                    192.168.234.1      Up              Up       default 
+      MgmtEth0/RP0/CPU0/0            10.1.17.179     Up              Up       default 
+      GigabitEthernet0/0/0/0         unassigned      Up              Up       default 
+      GigabitEthernet0/0/0/0.501     192.168.4.1       Up              Up       VRF501  
+      GigabitEthernet0/0/0/0.502     192.168.154.1       Up              Up       VRF502  
+      GigabitEthernet0/0/0/0.503     192.168.51.1       Up              Up       VRF503  
+      GigabitEthernet0/0/0/0.504     192.168.205.1       Up              Up       default 
+      GigabitEthernet0/0/0/0.505     192.168.106.1       Up              Up       default 
+      GigabitEthernet0/0/0/0.510     192.168.151.1      Up              Up       default 
+      GigabitEthernet0/0/0/0.511     192.168.64.1      Up              Up       default 
+      GigabitEthernet0/0/0/1         unassigned      Up              Up       default 
+      GigabitEthernet0/0/0/1.501     192.168.51.1       Up              Up       default 
+      GigabitEthernet0/0/0/2         unassigned      Up              Up       default 
+      RP/0/RP0/CPU0:PE1#show ip interface brief | i 10.1.17.179
+      MgmtEth0/RP0/CPU0/0            10.1.17.179     Up              Up       default 

@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
-                                New
+                                FIX
 --------------------------------------------------------------------------------
-* IOSXE
-    * Added ShowSdwanZbfwStatistics:
-      * show sdwan zbfw zonepair-statistics
+* NXOS
+    * Modified ShowRunningConfigNvOverlay:
+        * fixed regex to support more output

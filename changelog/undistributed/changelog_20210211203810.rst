@@ -1,4 +1,4 @@
-* IOS-XE
+* IOSXE
     * Modified ShowVrrp:
        * Changed schema to allow track_group to optionally be nested level with most other key/value pairs.
            * Added regex pattern <track> to accommodate various outputs.

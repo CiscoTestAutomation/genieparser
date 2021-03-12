@@ -1,0 +1,147 @@
+        Null0 is up, line protocol is up 
+      Interface state transitions: 
+      Hardware is Null interface
+      Internet address is Unknown
+      MTU 1500 bytes, BW 0 Kbit
+         reliability 255/255, txload Unknown, rxload Unknown
+      Encapsulation Null,  loopback not set,
+      Last input never, output never
+      Last clearing of "show interface" counters never
+      5 minute input rate 0 bits/sec, 0 packets/sec
+      5 minute output rate 0 bits/sec, 0 packets/sec
+         0 packets input, 0 bytes, 0 total input drops
+         0 drops for unrecognized upper-level protocol
+         Received 0 broadcast packets, 0 multicast packets
+         0 packets output, 0 bytes, 0 total output drops
+         Output 0 broadcast packets, 0 multicast packets
+
+    MgmtEth0/0/CPU0/0 is administratively down, line protocol is administratively down 
+      Interface state transitions: 0
+      Hardware is Management Ethernet, address is 5254.00ff.3007 (bia 5254.00ff.3007)
+      Internet address is Unknown
+      MTU 1514 bytes, BW 0 Kbit
+         reliability 255/255, txload Unknown, rxload Unknown
+      Encapsulation ARPA,
+      Duplex unknown, 0Kb/s, unknown, link type is autonegotiation
+      output flow control is off, input flow control is off
+      Carrier delay (up) is 10 msec
+      loopback not set,
+      Last input never, output never
+      Last clearing of "show interface" counters never
+      5 minute input rate 0 bits/sec, 0 packets/sec
+      5 minute output rate 0 bits/sec, 0 packets/sec
+         0 packets input, 0 bytes, 0 total input drops
+         0 drops for unrecognized upper-level protocol
+         Received 0 broadcast packets, 0 multicast packets
+                  0 runts, 0 giants, 0 throttles, 0 parity
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+         0 packets output, 0 bytes, 0 total output drops
+         Output 0 broadcast packets, 0 multicast packets
+         0 output errors, 0 underruns, 0 applique, 0 resets
+         0 output buffer failures, 0 output buffers swapped out
+         0 carrier transitions
+
+    GigabitEthernet0/0/0/0 is administratively down, line protocol is administratively down 
+      Interface state transitions: 0
+      Hardware is GigabitEthernet, address is aaaa.bbff.8888 (bia 5254.00ff.0c7e)
+      Description: desc
+      Internet address is 10.1.1.1/24
+      MTU 1600 bytes, BW 768 Kbit (Max: 1000000 Kbit)
+         reliability 255/255, txload 0/255, rxload 0/255
+      Encapsulation ARPA,
+      Full-duplex, 1000Mb/s, unknown, link type is force-up
+      output flow control is off, input flow control is off
+      Carrier delay (up) is 10 msec
+      loopback not set,
+      Last input never, output never
+      Last clearing of "show interface" counters never
+      30 second input rate 0 bits/sec, 0 packets/sec
+      30 second output rate 0 bits/sec, 0 packets/sec
+         0 packets input, 0 bytes, 0 total input drops
+         0 drops for unrecognized upper-level protocol
+
+         Received 0 broadcast packets, 0 multicast packets
+                  0 runts, 0 giants, 0 throttles, 0 parity
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+         
+         0 packets output, 0 bytes, 0 total output drops 
+         Output 0 broadcast packets, 0 multicast packets
+         0 output errors, 0 underruns, 0 applique, 0 resets
+         0 output buffer failures, 0 output buffers swapped out
+         0 carrier transitions
+
+    GigabitEthernet0/0/0/0.10 is administratively down, line protocol is administratively down 
+      Interface state transitions: 0
+      Hardware is VLAN sub-interface(s), address is aaaa.bbff.8888
+      Internet address is Unknown
+      MTU 1608 bytes, BW 768 Kbit (Max: 1000000 Kbit)
+         reliability 255/255, txload 0/255, rxload 0/255
+      Encapsulation 802.1Q Virtual LAN, VLAN Id 10, 2nd VLAN Id 10,
+      loopback not set,
+      Last input never, output never
+      Last clearing of "show interface" counters never
+      5 minute input rate 0 bits/sec, 0 packets/sec
+      5 minute output rate 0 bits/sec, 0 packets/sec
+         0 packets input, 0 bytes, 0 total input drops
+         0 drops for unrecognized upper-level protocol
+         Received 0 broadcast packets, 0 multicast packets
+         0 packets output, 0 bytes, 0 total output drops
+         Output 0 broadcast packets, 0 multicast packets
+
+    GigabitEthernet0/0/0/0.20 is administratively down, line protocol is administratively down 
+      Interface state transitions: 0
+      Hardware is VLAN sub-interface(s), address is aaaa.bbff.8888
+      Internet address is Unknown
+      MTU 1604 bytes, BW 768 Kbit (Max: 1000000 Kbit)
+         reliability 255/255, txload 0/255, rxload 0/255
+      Encapsulation 802.1Q Virtual LAN, VLAN Id 20,  loopback not set,
+      Last input never, output never
+      Last clearing of "show interface" counters never
+      5 minute input rate 0 bits/sec, 0 packets/sec
+      5 minute output rate 0 bits/sec, 0 packets/sec
+         0 packets input, 0 bytes, 0 total input drops
+         0 drops for unrecognized upper-level protocol
+         Received 0 broadcast packets, 0 multicast packets
+         0 packets output, 0 bytes, 0 total output drops
+         Output 0 broadcast packets, 0 multicast packets
+
+    GigabitEthernet0/0/0/1 is up, line protocol is up 
+        Interface state transitions: 1
+        Hardware is GigabitEthernet, address is 5254.00ff.6459 (bia 5254.00ff.6459)
+        Internet address is 10.1.5.1/24
+        MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
+         reliability 255/255, txload 0/255, rxload 0/255
+        Encapsulation ARPA,
+        Full-duplex, 1000Mb/s, unknown, link type is force-up
+        output flow control is off, input flow control is off
+        Carrier delay (up) is 10 msec
+        loopback not set,
+        Last link flapped 1w5d
+        ARP type ARPA, ARP timeout 04:00:00
+        Last input 00:01:09, output 00:01:09
+        Last clearing of "show interface" counters never
+        5 minute input rate 0 bits/sec, 0 packets/sec
+        5 minute output rate 0 bits/sec, 0 packets/sec
+         146164 packets input, 18221418 bytes, 0 total input drops
+         0 drops for unrecognized upper-level protocol
+         Received 0 broadcast packets, 29056 multicast packets
+                  0 runts, 0 giants, 0 throttles, 0 parity
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+         123696 packets output, 10777610 bytes, 0 total output drops
+         Output 2 broadcast packets, 6246 multicast packets
+         0 output errors, 0 underruns, 0 applique, 0 resets
+         0 output buffer failures, 0 output buffers swapped out
+         1 carrier transitions
+
+    Loopback0 is up, line protocol is up 
+      Interface state transitions: 1
+      Hardware is Loopback interface(s)
+      Description: loopback0 BGP test
+      Internet address is 10.255.20.81/32
+      MTU 1500 bytes, BW 0 Kbit
+         reliability Unknown, txload Unknown, rxload Unknown
+      Encapsulation Loopback,  loopback not set,
+      Last link flapped 13:45:11
+      Last input Unknown, output Unknown
+      Last clearing of "show interface" counters Unknown
+      Input/output data rate is disabled.

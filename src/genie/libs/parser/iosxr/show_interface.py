@@ -2985,9 +2985,13 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
         result_dict = {}
         index = 1
 
-        # Interface Status Protocol Description
-        # Et0/0 		up	 up
-        p1 = re.compile(r'(?P<interface>(\S+)[^-]) +(?P<status>(\S+)) +(?P<protocol>(\S+))(?: +(?P<description>(\S+)))?$')
+        # Interface 		Status 		Protocol 	Description
+        # Et0/0 			up	 		up
+        # Gi0/0/0/0.90      up          up
+        # Gi0/1 			admin down  down  		To router2
+        # PO0/0     		admin down  down 		First POS interface
+        p1 = re.compile(r'(?P<interface>\S+)\s+(?P<status>\S+([\s+](\S+))?)\s+'
+                        r'(?P<protocol>\S+)\s*(?: +(?P<description>.*))?$')
 
         for line in out.splitlines():
             line = line.strip()

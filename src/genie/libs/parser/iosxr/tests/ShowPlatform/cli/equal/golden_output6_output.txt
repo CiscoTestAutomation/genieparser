@@ -1,0 +1,12 @@
+Node              Type                       State             Config state
+--------------------------------------------------------------------------------
+0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
+0/1               NCS1K4-1.2T-K9             OPERATIONAL       NSHUT
+0/3               NCS1K4-OTN-XPL             OPERATIONAL       NSHUT
+0/RP0/CPU0        NCS1K4-CNTLR-K9(Active)    IOS XR RUN        NSHUT
+0/FT0             NCS1K4-FAN                 OPERATIONAL       NSHUT
+0/FT1             NCS1K4-FAN                 OPERATIONAL       NSHUT
+0/FT2             NCS1K4-FAN                 OPERATIONAL       NSHUT
+0/PM0             NCS1K4-AC-PSU              OPERATIONAL       NSHUT
+0/SC0             NCS1004                    OPERATIONAL       NSHUT
+

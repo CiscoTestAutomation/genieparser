@@ -14,6 +14,7 @@ from unittest.mock import Mock
 
 # pyATS
 from pyats import aetest
+from ats.easypy import run
 from ats.easypy import runtime
 from pyats.topology import Device
 from pyats.log.utils import banner
@@ -52,7 +53,7 @@ def get_operating_systems(_os):
     # Update and fix as more OS's converted to folder based tests
     if _os:
         return [_os]
-    return ["asa", "ios", "iosxe", "junos"]
+    return ["asa", "ios", "iosxe", "junos", "iosxr", "nxos"]
     # operating_system = []
     # for folder in os.listdir("./"):
     #    if os.path.islink("./" + folder):
@@ -421,6 +422,470 @@ CLASS_SKIP = {
         "ShowOmpTlocs_viptela": True,
         "genie": True, # need to check
     },
+    "nxos": {
+        "ShowAccessLists": True, # Not migrated
+        "ShowAccessListsSummary": True, # Not migrated
+        "ShowIpArp": True, # Not migrated
+        "ShowIpArpDetailVrfAll": True, # Not migrated
+        "ShowIpArpSummaryVrfAll": True, # Not migrated
+        "ShowIpArpstatisticsVrfAll": True, # Not migrated
+        "ShowBgpAllDampeningFlapStatistics": True, # Not migrated
+        "ShowBgpAllNexthopDatabase": True, # Not migrated
+        "ShowBgpIpMvpn": True, # Not migrated
+        "ShowBgpIpMvpnSaadDetail": True, # Not migrated
+        "ShowBgpIpMvpnRouteType": True, # Not migrated
+        "ShowBgpL2vpnEvpn": True, # Not migrated
+        "ShowBgpL2vpnEvpnNeighbors": True, # Not migrated
+        "ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes": True, # Not migrated
+        "ShowBgpL2vpnEvpnRouteType": True, # Not migrated
+        "ShowBgpL2vpnEvpnSummary": True, # Not migrated
+        "ShowBgpL2vpnEvpnWord": True, # Not migrated
+        "ShowBgpLabels": True, # Not migrated
+        "ShowBgpPeerPolicy": True, # Not migrated
+        "ShowBgpPeerSession": True, # Not migrated
+        "ShowBgpPeerTemplate": True, # Not migrated
+        "ShowBgpPeerTemplateCmd": True, # Not migrated
+        "ShowBgpPolicyStatisticsDampening": True, # Not migrated
+        "ShowBgpPolicyStatisticsNeighbor": True, # Not migrated
+        "ShowBgpPolicyStatisticsParser": True, # Not migrated
+        "ShowBgpPolicyStatisticsRedistribute": True, # Not migrated
+        "ShowBgpProcessVrfAll": True, # Not migrated
+        "ShowBgpSessions": True, # Not migrated
+        "ShowBgpVrfAllAll": True, # Not migrated
+        "ShowBgpVrfAllAllDampeningParameters": True, # Not migrated
+        "ShowBgpVrfAllAllNextHopDatabase": True, # Not migrated
+        "ShowBgpVrfAllAllSummary": True, # Not migrated
+        "ShowBgpVrfAllNeighbors": True, # Not migrated
+        "ShowBgpVrfAllNeighborsAdvertisedRoutes": True, # Not migrated
+        "ShowBgpVrfAllNeighborsReceivedRoutes": True, # Not migrated
+        "ShowBgpVrfAllNeighborsRoutes": True, # Not migrated
+        "ShowBgpVrfIpv4Unicast": True, # Not migrated
+        "ShowRunningConfigBgp": True, # Not migrated
+        "ShowCdpNeighbors": True, # Not migrated
+        "ShowCheckpointSummary": True, # Not migrated
+        "ShowDot1xAllDetails": True, # Not migrated
+        "ShowDot1xAllStatistics": True, # Not migrated
+        "ShowDot1xAllSummary": True, # Not migrated
+        "ShowEigrpNeighborsDetailSuperParser": True, # Not migrated
+        "ShowEigrpNeighborsSuperParser": True, # Not migrated
+        "ShowEigrpTopology": True, # Not migrated
+        "ShowIpv4EigrpNeighbors": True, # Not migrated
+        "ShowIpv4EigrpNeighborsDetail": True, # Not migrated
+        "ShowIpv6EigrpNeighbors": True, # Not migrated
+        "ShowIpv6EigrpNeighborsDetail": True, # Not migrated
+        "ShowFabricpathIsisAdjacency": True, # Not migrated
+        "ShowMacAddressTable": True, # Not migrated
+        "ShowMacAddressTableAgingTime": True, # Not migrated
+        "ShowMacAddressTableBase": True, # Not migrated
+        "ShowMacAddressTableLimit": True, # Not migrated
+        "ShowMacAddressTableVni": True, # Not migrated
+        "ShowFeature": True, # Not migrated
+        "ShowFeatureSet": True, # Not migrated
+        "ShowForwardingIpv4": True, # Not migrated
+        "ShowHsrpAll": True, # Not migrated
+        "ShowHsrpDelay": True, # Not migrated
+        "ShowHsrpSummary": True, # Not migrated
+        "ShowIpIgmpGroups": True, # Not migrated
+        "ShowIpIgmpInterface": True, # Not migrated
+        "ShowIpIgmpLocalGroups": True, # Not migrated
+        "ShowIpIgmpSnooping": True, # Not migrated
+        "ShowInterface": True, # Not migrated
+        "ShowInterfaceBrief": True, # Not migrated
+        "ShowInterfaceSwitchport": True, # Not migrated
+        "ShowIpInterfaceBrief": True, # Not migrated
+        "ShowIpInterfaceBriefPipeVlan": True, # Not migrated
+        "ShowIpInterfaceBriefVrfAll": True, # Not migrated
+        "ShowIpv6InterfaceVrfAll": True, # Not migrated
+        "ShowNveInterface": True, # Not migrated
+        "ShowRunningConfigInterface": True, # Not migrated
+        "ShowVrfAllInterface": True, # Not migrated
+        "ShowIsis": True, # Not migrated
+        "ShowIsisAdjacency": True, # Not migrated
+        "ShowIsisHostname": True, # Not migrated
+        "ShowIsisHostnameDetail": True, # Not migrated
+        "ShowIsisInterface": True, # Not migrated
+        "ShowIsisSpfLogDetail": True, # Not migrated
+        "ShowL2routeEvpnMac": True, # Not migrated
+        "ShowL2routeEvpnMacEvi": True, # Not migrated
+        "ShowLacpCounters": True, # Not migrated
+        "ShowLacpNeighbor": True, # Not migrated
+        "ShowLacpSystemIdentifier": True, # Not migrated
+        "ShowPortChannelDatabase": True, # Not migrated
+        "ShowPortChannelSummary": True, # Not migrated
+        "ShowLldpAll": True, # Not migrated
+        "ShowLldpTimers": True, # Not migrated
+        "ShowLldpTlvSelect": True, # Not migrated
+        "ShowLldpTraffic": True, # Not migrated
+        "ShowLoggingLogfile": True, # Not migrated
+        "ShowForwardingDistributionMulticastRoute": True, # Not migrated
+        "ShowIpMrouteVrfAll": True, # Not migrated
+        "ShowIpStaticRouteMulticast": True, # Not migrated
+        "ShowIpv6MrouteVrfAll": True, # Not migrated
+        "ShowIpv6StaticRouteMulticast": True, # Not migrated
+        "ShowIpv6MldGroups": True, # Not migrated
+        "ShowIpv6MldInterface": True, # Not migrated
+        "ShowIpMsdpPeerVrf": True, # Not migrated
+        "ShowIpMsdpPolicyStatisticsSaPolicyIn": True, # Not migrated
+        "ShowIpMsdpPolicyStatisticsSaPolicyInOut": True, # Not migrated
+        "ShowIpMsdpPolicyStatisticsSaPolicyOut": True, # Not migrated
+        "ShowIpMsdpSaCacheDetailVrf": True, # Not migrated
+        "ShowIpv6IcmpNeighborDetail": True, # Not migrated
+        "ShowIpv6NdInterface": True, # Not migrated
+        "ShowIpv6Routers": True, # Not migrated
+        "ShowNtpPeerStatus": True, # Not migrated
+        "ShowNtpPeers": True, # Not migrated
+        "ShowIpOspf": True, # Not migrated
+        "ShowIpOspfDatabaseDetailParser": True, # Not migrated
+        "ShowIpOspfDatabaseExternalDetail": True, # Not migrated
+        "ShowIpOspfDatabaseNetworkDetail": True, # Not migrated
+        "ShowIpOspfDatabaseOpaqueAreaDetail": True, # Not migrated
+        "ShowIpOspfDatabaseRouterDetail": True, # Not migrated
+        "ShowIpOspfDatabaseSummaryDetail": True, # Not migrated
+        "ShowIpOspfInterface": True, # Not migrated
+        "ShowIpOspfLinksParser": True, # Not migrated
+        "ShowIpOspfMplsLdpInterface": True, # Not migrated
+        "ShowIpOspfNeighborDetail": True, # Not migrated
+        "ShowIpOspfShamLinks": True, # Not migrated
+        "ShowIpOspfVirtualLinks": True, # Not migrated
+        "ShowIpPimDf": True, # Not migrated
+        "ShowIpPimGroupRange": True, # Not migrated
+        "ShowIpPimInterface": True, # Not migrated
+        "ShowIpPimNeighbor": True, # Not migrated
+        "ShowIpPimPolicyStaticticsRegisterPolicy": True, # Not migrated
+        "ShowIpPimRoute": True, # Not migrated
+        "ShowIpPimRp": True, # Not migrated
+        "ShowIpPimVrfDetail": True, # Not migrated
+        "ShowIpv6PimDf": True, # Not migrated
+        "ShowIpv6PimGroupRange": True, # Not migrated
+        "ShowIpv6PimInterface": True, # Not migrated
+        "ShowIpv6PimNeighbor": True, # Not migrated
+        "ShowIpv6PimRoute": True, # Not migrated
+        "ShowIpv6PimRp": True, # Not migrated
+        "ShowIpv6PimVrfAllDetail": True, # Not migrated
+        "ShowPimRp": True, # Not migrated
+        "ShowRunningConfigPim": True, # Not migrated
+        "Dir": True, # Not migrated
+        "ShowBoot": True, # Not migrated
+        "ShowCores": True, # Not migrated
+        "ShowInstallActive": True, # Not migrated
+        "ShowInventory": True, # Not migrated
+        "ShowModule": True, # Not migrated
+        "ShowProcessesCpu": True, # Not migrated
+        "ShowProcessesMemory": True, # Not migrated
+        "ShowRedundancyStatus": True, # Not migrated
+        "ShowSystemRedundancyStatus": True, # Not migrated
+        "ShowVdcCurrent": True, # Not migrated
+        "ShowVdcDetail": True, # Not migrated
+        "ShowVdcMembershipStatus": True, # Not migrated
+        "ShowVersion": True, # Not migrated
+        "ShowIpPrefixList": True, # Not migrated
+        "ShowIpv6PrefixList": True, # Not migrated
+        "ShowProcesses": True, # Not migrated
+        "ShowIpRipInterfaceVrfAll": True, # Not migrated
+        "ShowIpRipNeighborVrfAll": True, # Not migrated
+        "ShowIpRipRouteVrfAll": True, # Not migrated
+        "ShowIpRipStatistics": True, # Not migrated
+        "ShowIpRipVrfAll": True, # Not migrated
+        "ShowIpv6RipInterfaceVrfAll": True, # Not migrated
+        "ShowIpv6RipNeighborVrfAll": True, # Not migrated
+        "ShowIpv6RipRouteVrfAll": True, # Not migrated
+        "ShowIpv6RipStatistics": True, # Not migrated
+        "ShowIpv6RipVrfAll": True, # Not migrated
+        "ShowRunRip": True, # Not migrated
+        "ShowRouteMap": True, # Not migrated
+        "ShowIpRoute": True, # Not migrated
+        "ShowIpRouteSummary": True, # Not migrated
+        "ShowIpv6Route": True, # Not migrated
+        "ShowRouting": True, # Not migrated
+        "ShowRoutingIpv6VrfAll": True, # Not migrated
+        "ShowRoutingVrfAll": True, # Not migrated
+        "ShowErrdisableRecovery": True, # Not migrated
+        "ShowSpanningTreeDetail": True, # Not migrated
+        "ShowSpanningTreeMst": True, # Not migrated
+        "ShowSpanningTreeSummary": True, # Not migrated
+        "ShowIpStaticRoute": True, # Not migrated
+        "ShowIpv6StaticRoute": True, # Not migrated
+        "ShowSystemInternalL2fwderMac": True, # Not migrated
+        "ShowSystemInternalSysmgrServiceName": True, # Not migrated
+        "ShowRunningConfigTrm": True, # Not migrated
+        "ShowVdcResourceDetail": True, # Not migrated
+        "ShowGuestshell": True, # Not migrated
+        "ShowVirtualServiceCore": True, # Not migrated
+        "ShowVirtualServiceDetail": True, # Not migrated
+        "ShowVirtualServiceGlobal": True, # Not migrated
+        "ShowVirtualServiceList": True, # Not migrated
+        "ShowVirtualServiceUtilization": True, # Not migrated
+        "ShowVlan": True, # Not migrated
+        "ShowVlanAccessMap": True, # Not migrated
+        "ShowVlanFilter": True, # Not migrated
+        "ShowVlanIdVnSegment": True, # Not migrated
+        "ShowVlanInternalInfo": True, # Not migrated
+        "ShowVxlan": True, # Not migrated
+        "ShowVpc": True, # Not migrated
+        "ShowRunningConfigVrf": True, # Not migrated
+        "ShowVrfDetail": True, # Not migrated
+        "ShowVrfInterface": True, # Not migrated
+        "ShowFabricMulticastGlobals": True, # Not migrated
+        "ShowFabricMulticastIpL2Mroute": True, # Not migrated
+        "ShowFabricMulticastIpSaAdRoute": True, # Not migrated
+        "ShowL2routeEvpnEternetSegmentAll": True, # Not migrated
+        "ShowL2routeEvpnImetAllDetail": True, # Not migrated
+        "ShowL2routeFlAll": True, # Not migrated
+        "ShowL2routeEvpnMacIpEvi": True, # Not migrated
+        "ShowL2routeMacAllDetail": True, # Not migrated
+        "ShowL2routeMacIpAllDetail": True, # Not migrated
+        "ShowL2routeSummary": True, # Not migrated
+        "ShowL2routeTopologyDetail": True, # Not migrated
+        "ShowNveInterface": True, # Not migrated
+        "ShowNveInterfaceDetail": True, # Not migrated
+        "ShowNveMultisiteDciLinks": True, # Not migrated
+        "ShowNveMultisiteFabricLinks": True, # Not migrated
+        "ShowNvePeers": True, # Not migrated
+        "ShowNveVni": True, # Not migrated
+        "ShowNveVniIngressReplication": True, # Not migrated
+        "ShowNveVniSummary": True, # Not migrated
+        "ShowRunningConfigNvOverlay": True, # Not migrated
+        "ShowCdpNeighborsDetail": True, # Not migrated
+        "ShowInterfaceDescription": True, # Not migrated
+        "ShowInterfaceStatus": True, # Not migrated
+        "ShowIpInterfaceVrfAll": True, # Not migrated
+        "ShowIsisDatabaseDetail": True, # Not migrated
+        "ShowLldpNeighborsDetail": True, # Not migrated
+        "ShowIpv6MldLocalGroups": True, # Not migrated
+        "ShowIpMsdpSummary": True, # Not migrated
+        "ShowRunningConfigMsdp": True, # Not migrated
+        "ShowIpv6NeighborDetail": True, # Not migrated
+        "ShowL2routeEvpnMacIpAll": True, # Not migrated
+        "ShowNveEthernetSegment": True, # Not migrated
+        "aci":{
+            "ShowPlatformInternalHalPolicyRedirdst": True, # Not migrated
+            "ShowServiceRedirInfoGroup": True, # Not migrated
+        },
+    },
+    "iosxr": {
+        "Ping": True, # Not migrated
+        "ShowAclAfiAll": True, # Not migrated
+        "ShowAclEthernetServices": True, # Not migrated
+        "ShowArpDetail": True, # Not migrated
+        "ShowArpTrafficDetail": True, # Not migrated
+        "ShowBfdSessionDestinationDetails": True, # Not migrated
+        "ShowBfdSession": True, # Not migrated
+        "ShowBgpEgressEngineering": True, # Not migrated
+        "ShowBgpInstanceAfGroupConfiguration": True, # Not migrated
+        "ShowBgpInstanceAllAll": True, # Not migrated
+        "ShowBgpInstanceAllSessions": True, # Not migrated
+        "ShowBgpInstanceNeighborsAdvertisedRoutes": True, # Not migrated
+        "ShowBgpInstanceNeighborsDetail": True, # Not migrated
+        "ShowBgpInstanceNeighborsReceivedRoutes": True, # Not migrated
+        "ShowBgpInstanceNeighborsRoutes": True, # Not migrated
+        "ShowBgpInstanceProcessDetail": True, # Not migrated
+        "ShowBgpInstanceSessionGroupConfiguration": True, # Not migrated
+        "ShowBgpInstanceSessions": True, # Not migrated
+        "ShowBgpInstanceSummary": True, # Not migrated
+        "ShowBgpL2vpnEvpn": True, # Not migrated
+        "ShowBgpL2vpnEvpnAdvertised": True, # Not migrated
+        "ShowBgpL2vpnEvpnNeighbors": True, # Not migrated
+        "ShowBgpNeighbors": True, # Not migrated
+        "ShowBgpSummary": True, # Not migrated
+        "ShowBgpVrfDbVrfAll": True, # Not migrated
+        "ShowPlacementProgramAll": True, # Not migrated
+        "ShowL2VpnBridgeDomainBrief": True, # Not migrated
+        "ShowL2VpnBridgeDomainDetail": True, # Not migrated
+        "ShowL2VpnBridgeDomainSummary": True, # Not migrated
+        "ShowCdpNeighbors": True, # Not migrated
+        "ShowCdpNeighborsDetail": True, # Not migrated
+        "ShowControllersCoherentDSP": True, # Not migrated
+        "ShowControllersFiaDiagshellDiagCosqQp": True, # Not migrated
+        "ShowControllersFiaDiagshellDiagEgrCal": True, # Not migrated
+        "ShowControllersFiaDiagshellL2showLoca": True, # Not migrated
+        "ShowControllersNpuInterfaceInstanceLo": True, # Not migrated
+        "ShowControllersOptics": True, # Not migrated
+        "ShowImDampening": True, # Not migrated
+        "ShowImDampeningIntf": True, # Not migrated
+        "ShowBgpInstances": True, # Not migrated
+        "ShowSegmentRoutingLocalBlockInconsistencies": True, # Not migrated
+        "ShowSegmentRoutingMappingServerPrefixSidMapIPV4": True, # Not migrated
+        "ShowSegmentRoutingMappingServerPrefixSidMapIPV4Detail": True, # Not migrated
+        "ShowControllersFiaDiagshellDiagCosqQpairEgpMap": True, # Not migrated
+        "ShowControllersFiaDiagshellDiagEgrCalendarsLocation": True, # Not migrated
+        "ShowControllersFiaDiagshellL2showLocation": True, # Not migrated
+        "ShowControllersNpuInterfaceInstanceLocation": True, # Not migrated
+        "ShowL2vpnForwardingProtectionMainInterface": True, # Not migrated
+        "ShowEigrpIpv4Neighbors": True, # Not migrated
+        "ShowEigrpIpv4NeighborsDetail": True, # Not migrated
+        "ShowEigrpIpv6Neighbors": True, # Not migrated
+        "ShowEigrpIpv6NeighborsDetail": True, # Not migrated
+        "ShowEigrpNeighborsDetailSuperParser": True, # Not migrated
+        "ShowEigrpNeighborsSuperParser": True, # Not migrated
+        "ShowEthernetCfmMeps": True, # Not migrated
+        "ShowEthernetTags": True, # Not migrated
+        "ShowEthernetTrunkDetail": True, # Not migrated
+        "ShowEvpnEthernetSegment": True, # Not migrated
+        "ShowEvpnEthernetSegmentDetail": True, # Not migrated
+        "ShowEvpnEthernetSegmentEsiDetail": True, # Not migrated
+        "ShowEvpnEthernetSegmentPrivate": True, # Not migrated
+        "ShowEvpnEvi": True, # Not migrated
+        "ShowEvpnEviDetail": True, # Not migrated
+        "ShowEvpnEviMac": True, # Not migrated
+        "ShowEvpnEviMacPrivate": True, # Not migrated
+        "ShowEvpnInternalLabel": True, # Not migrated
+        "ShowEvpnInternalLabelDetail": True, # Not migrated
+        "ShowHsrpDetail": True, # Not migrated
+        "ShowHsrpSummary": True, # Not migrated
+        "ShowIgmpGroupsDetail": True, # Not migrated
+        "ShowIgmpGroupsSummary": True, # Not migrated
+        "ShowIgmpInterface": True, # Not migrated
+        "ShowIgmpSummary": True, # Not migrated
+        "ShowInterfaceBrief": True, # Not migrated
+        "ShowIpv4InterfaceBrief": True, # Not migrated
+        "ShowIpv6Neighbors": True, # Not migrated
+        "ShowIpv6NeighborsDetail": True, # Not migrated
+        "ShowIsis": True, # Not migrated
+        "ShowIsisAdjacency": True, # Not migrated
+        "ShowIsisDatabaseDetail": True, # Not migrated
+        "ShowIsisFastRerouteSummary": True, # Not migrated
+        "ShowIsisHostname": True, # Not migrated
+        "ShowIsisInterface": True, # Not migrated
+        "ShowIsisLspLog": True, # Not migrated
+        "ShowIsisNeighbors": True, # Not migrated
+        "ShowIsisPrivateAll": True, # Not migrated
+        "ShowIsisProtocol": True, # Not migrated
+        "ShowIsisSegmentRoutingLabelTable": True, # Not migrated
+        "ShowIsisSpfLog": True, # Not migrated
+        "ShowIsisSpfLogDetail": True, # Not migrated
+        "ShowIsisStatistics": True, # Not migrated
+        "ShowL2routeEvpnMacAll": True, # Not migrated
+        "ShowL2routeEvpnMacIpAll": True, # Not migrated
+        "ShowL2routeTopology": True, # Not migrated
+        "ShowL2vpnBridgeDomain": True, # Not migrated
+        "ShowL2vpnBridgeDomainBrief": True, # Not migrated
+        "ShowL2vpnBridgeDomainDetail": True, # Not migrated
+        "ShowL2vpnBridgeDomainSummary": True, # Not migrated
+        "ShowL2vpnForwardingBridgeDomainMacAdd": True, # Not migrated
+        "ShowL2vpnForwardingProtectionMainInte": True, # Not migrated
+        "ShowL2vpnMacLearning": True, # Not migrated
+        "ShowBundle": True, # Not migrated
+        "ShowBundleReasons": True, # Not migrated
+        "ShowLacp": True, # Not migrated
+        "ShowLacpSystemId": True, # Not migrated
+        "ShowLldp": True, # Not migrated
+        "ShowLldpEntry": True, # Not migrated
+        "ShowLldpNeighborsDetail": True, # Not migrated
+        "ShowLldpTraffic": True, # Not migrated
+        "ShowLogging": True, # Not migrated
+        "ShowMfibPlatformEvpnBucketLocation": True, # Not migrated
+        "ShowMldGroupsDetail": True, # Not migrated
+        "ShowMldGroupsGroupDetail": True, # Not migrated
+        "ShowMldInterface": True, # Not migrated
+        "ShowMldSummaryInternal": True, # Not migrated
+        "ShowMplsForwarding": True, # Not migrated
+        "ShowMplsForwardingVrf": True, # Not migrated
+        "ShowMplsInterfaces": True, # Not migrated
+        "ShowMplsLabelRange": True, # Not migrated
+        "ShowMplsLabelTableDetail": True, # Not migrated
+        "ShowMplsLabelTablePrivate": True, # Not migrated
+        "ShowMplsLdpDiscovery": True, # Not migrated
+        "ShowMplsLdpNeighbor": True, # Not migrated
+        "ShowMplsLdpNeighborBrief": True, # Not migrated
+        "ShowMplsLdpNeighborDetail": True, # Not migrated
+        "ShowMribEvpnBucketDb": True, # Not migrated
+        "ShowMribVrfRoute": True, # Not migrated
+        "ShowMribVrfRouteSummary": True, # Not migrated
+        "ShowMsdpContext": True, # Not migrated
+        "ShowMsdpPeer": True, # Not migrated
+        "ShowMsdpSaCache": True, # Not migrated
+        "ShowMsdpStatisticsPeer": True, # Not migrated
+        "ShowMsdpSummary": True, # Not migrated
+        "ShowNtpStatus": True, # Not migrated
+        "ShowRunningConfigNtp": True, # Not migrated
+        "ShowOspfMplsTrafficEngLink": True, # Not migrated
+        "ShowOspfVrfAllInclusive": True, # Not migrated
+        "ShowOspfVrfAllInclusiveDatabaseExternal": True, # Not migrated
+        "ShowOspfVrfAllInclusiveDatabaseNetwork": True, # Not migrated
+        "ShowOspfVrfAllInclusiveDatabaseOpaqu": True, # Not migrated
+        "ShowOspfVrfAllInclusiveDatabaseParser": True, # Not migrated
+        "ShowOspfVrfAllInclusiveDatabaseRouter": True, # Not migrated
+        "ShowOspfVrfAllInclusiveDatabaseSummary": True, # Not migrated
+        "ShowOspfVrfAllInclusiveInterface": True, # Not migrated
+        "ShowOspfVrfAllInclusiveLinksParser": True, # Not migrated
+        "ShowOspfVrfAllInclusiveNeighborDetail": True, # Not migrated
+        "ShowOspfVrfAllInclusiveShamLinks": True, # Not migrated
+        "ShowOspfVrfAllInclusiveVirtualLinks": True, # Not migrated
+        "ShowPimTopologySummary": True, # Not migrated
+        "ShowPimVrfInterfaceDetail": True, # Not migrated
+        "ShowPimVrfMstatic": True, # Not migrated
+        "ShowPimVrfRpfSummary": True, # Not migrated
+        "AdminShowDiagChassis": True, # Not migrated
+        "Dir": True, # Not migrated
+        "ShowInstallActiveSummary": True, # Not migrated
+        "ShowInstallCommitSummary": True, # Not migrated
+        "ShowInstallInactiveSummary": True, # Not migrated
+        "ShowPlatformVm": True, # Not migrated
+        "ShowProcessesMemory": True, # Not migrated
+        "ShowRedundancy": True, # Not migrated
+        "ShowRedundancySummary": True, # Not migrated
+        "ShowSdrDetail": True, # Not migrated
+        "ShowVersion": True, # Not migrated
+        "ShowRplPrefixSet": True, # Not migrated
+        "ShowProcesses": True, # Not migrated
+        "ShowProcessesCpu": True, # Not migrated
+        "ShowProtocolsAfiAllAll": True, # Not migrated
+        "ShowRibTables": True, # Not migrated
+        "ShowImDampeningIntf": True, # Not migrated
+        "ShowIpInterfaceBriefPipeVlan": True, # Not migrated
+        "ShowL2vpnForwardingBridgeDomainMacAddress": True, # Not migrated
+        "ShowL2vpnForwardingProtectionMainInter": True, # Not migrated
+        "ShowLldpInterface": True, # Not migrated
+        "ShowMfibRouteSummary": True, # Not migrated
+        "ShowNtpAssociations": True, # Not migrated
+        "ShowOspfVrfAllInclusiveDatabaseOpaque": True, # Not migrated
+        "ShowInventory": True, # Not migrated
+        "ShowProcessesMemoryDetail": True, # Not migrated
+        "ShowRibTablesSummary": True, # Not migrated
+        "ShowOspfVrfAllInclusiveDatabaseOpaqueArea": True, # Not migrated
+        "ShowRip": True, # Not migrated
+        "ShowRipDatabase": True, # Not migrated
+        "ShowRipInterface": True, # Not migrated
+        "ShowRipStatistics": True, # Not migrated
+        "ShowRouteIpv4": True, # Not migrated
+        "ShowRouteIpv6": True, # Not migrated
+        "ShowRplRoutePolicy": True, # Not migrated
+        "ShowRunKeyChain": True, # Not migrated
+        "ShowRunRouterIsis": True, # Not migrated
+        "ShowIsisSegmentRoutingPrefixSidMap": True, # Not migrated
+        "ShowOspfSegmentRoutingPrefixSidMap": True, # Not migrated
+        "ShowPceIPV4Peer": True, # Not migrated
+        "ShowPceIPV4PeerDetail": True, # Not migrated
+        "ShowPceIPV4PeerPrefix": True, # Not migrated
+        "ShowPceIpv4TopologySummary": True, # Not migrated
+        "ShowPceLsp": True, # Not migrated
+        "ShowPceLspDetail": True, # Not migrated
+        "ShowSegmentRoutingLocalBlockInconsist": True, # Not migrated
+        "ShowSegmentRoutingMappingServerPrefix": True, # Not migrated
+        "ShowSpanningTreeMst": True, # Not migrated
+        "ShowSpanningTreeMstag": True, # Not migrated
+        "ShowSpanningTreePvrsTag": True, # Not migrated
+        "ShowSpanningTreePvrst": True, # Not migrated
+        "ShowSpanningTreePvsTag": True, # Not migrated
+        "ShowSsh": True, # Not migrated
+        "ShowSshHistory": True, # Not migrated
+        "ShowStaticTopologyDetail": True, # Not migrated
+        "ShowTrafficCollecterExternalInterface": True, # Not migrated
+        "ShowTrafficCollecterIpv4CountersPrefi": True, # Not migrated
+        "ShowVrfAllDetail": True, # Not migrated
+        "ShowL2VpnXconnectBrief": True, # Not migrated
+        "ShowL2VpnXconnectSummary": True, # Not migrated
+        "ShowL2vpnXconnect": True, # Not migrated
+        "ShowL2vpnXconnectDetail": True, # Not migrated
+        "ShowL2vpnXconnectMp2mpDetail": True, # Not migrated
+        "Traceroute": True, # Not migrated
+        "ShowRouteAllSummary": True, # Not migrated
+        "ShowSegmentRoutingLocalBlockInconsiste": True, # Not migrated
+        "ShowSegmentRoutingMappingServerPrefixS": True, # Not migrated
+        "ShowBgpSessions": True, # Not migrated
+        "ShowTrafficCollecterIpv4CountersPrefixDetail": True, # Not migrated
+        "ShowL2vpnXconnectSummary": True, # Not migrated
+    },
     "ios": {
         "ShowPimNeighbor": True,
         "ShowInterfacesTrunk": True,
@@ -532,15 +997,28 @@ def main(**kwargs):
     if _display_only_failed and log.root.handlers:
         temporary_screen_handler = log.root.handlers.pop(0)
     
-
-    aetest.main(
-        testable=__file__,
-        _os=_os,
-        _class=_class,
-        _token=_token,
-        _display_only_failed=_display_only_failed,
-        _number=_number
-    )
+    if runtime.job:
+        # Used for `pyats run job folder_parsing_job.py`
+        run(
+            testscript=__file__,
+            runtime=runtime,
+            _os=_os,
+            _class=_class,
+            _token=_token,
+            _display_only_failed=_display_only_failed,
+            _number=_number
+        )
+    else:
+        # Used for `python folder_parsing_job.py`
+        aetest.main(
+            testable=__file__,
+            runtime=runtime,
+            _os=_os,
+            _class=_class,
+            _token=_token,
+            _display_only_failed=_display_only_failed,
+            _number=_number
+        )
 
 
 if __name__ == "__main__":
