@@ -2965,25 +2965,6 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                 intf_dict['status'] = group['status']
                 intf_dict['reason'] = group['reason']
                 continue
-            # Interface Secondary VLAN(Type)                    Status Reason
-            m = p9.match(line)
-            if m:
-                vlan_flag = True
-                vlan_dict = parsed_dict.setdefault('interface', {}).\
-                                        setdefault('vlan', {})
-                continue
-
-            # Vlan1     --                                      down   Administratively down
-            m = p10.match(line)
-            if m and vlan_flag:
-                group = m.groupdict()
-                intf_dict = vlan_dict.\
-                    setdefault(Common.convert_intf_name(group['interface']), {})
-                intf_dict['type'] = group['type']
-                intf_dict['status'] = group['status']
-                intf_dict['reason'] = group['reason']
-                continue
-
             # Port           Status Reason          MTU
             m = p11.match(line)
             if m:
