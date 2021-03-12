@@ -1,5 +1,6 @@
 expected_output = {
     "version": {
+        "xe_version": "BLD_V163_MR_THROTTLE_LATEST_20170410_093453_V16_3_3_24",
         "version_short": "16.3",
         "platform": "ASR1000",
         "compiled_by": "mcpre",

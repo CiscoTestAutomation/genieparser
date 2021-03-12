@@ -168,6 +168,7 @@ class ShowVersionSchema(MetaParser):
     """Schema for show version"""
     schema = {
         'version': {
+            Optional('xe_version'): str,
             'version_short': str,
             'platform': str,
             'version': str,
@@ -323,6 +324,10 @@ class ShowVersion(ShowVersionSchema):
         rtr_type = ''
         suite_flag = False
         license_flag = False
+
+        # Cisco IOS XE Software, Version BLD_POLARIS_DEV_LATEST_20200702_122021_V17_4_0_67_2
+        p0 = re.compile(
+            r'^Cisco +([\S\s]+) +Software, +Version +(?P<xe_version>.*)$')
 
         # version
         # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
@@ -592,6 +597,15 @@ class ShowVersion(ShowVersionSchema):
 
         for line in out.splitlines():
             line = line.strip()
+
+            # Cisco IOS XE Software, Version BLD_POLARIS_DEV_LATEST_20200702_122021_V17_4_0_67_2
+            m = p0.match(line)
+            if m:
+                if 'version' not in version_dict:
+                    version_dict['version'] = {}
+                xe_version = m.groupdict()['xe_version']
+                version_dict['version']['xe_version'] = xe_version
+                continue
 
             # version
             # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)

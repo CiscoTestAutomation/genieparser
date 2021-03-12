@@ -71,5 +71,6 @@ expected_output = {
         "uptime_this_cp": "2 days, 3 hours, 19 minutes",
         "version": "16.6.5",
         "version_short": "16.6",
+        "xe_version": "16.06.05"
     }
 }
