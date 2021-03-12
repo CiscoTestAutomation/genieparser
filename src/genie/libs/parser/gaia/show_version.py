@@ -15,15 +15,6 @@ class ShowVersionSchema(MetaParser):
         }
     }
 
-"""
-    gw-a> show version all
-    Product version Check Point Gaia R80.40
-    OS build 294
-    OS kernel version 3.10.0-957.21.3cpx86_64
-    OS edition 64-bit
-    gw-a>
-"""
-
 class ShowVersion(ShowVersionSchema):
 
     cli_command = ['show version all']

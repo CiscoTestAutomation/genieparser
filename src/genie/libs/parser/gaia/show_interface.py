@@ -4,7 +4,8 @@ from genie.metaparser.util.schemaengine import Any, Or, Optional
 import re
 
 class ShowInterfaceSchema(MetaParser):
-    schema = {
+    schema = { 
+        Any(): {
             'state': str,
             'mac-addr': str,
             'type': str,
@@ -39,11 +40,13 @@ class ShowInterfaceSchema(MetaParser):
                 },
             }
         }
+    }
 
 class ShowInterface(ShowInterfaceSchema):
-    """parser for show interface <interface>"""
+    """parser for   show interface <interface>
+                    show interfaces all"""
 
-    cli_command = ['show interface {interface}']
+    cli_command = ['show interface {interface}','show interfaces all']
 
     def cli(self,interface="",output=None):
         if output is None:
@@ -51,114 +54,134 @@ class ShowInterface(ShowInterfaceSchema):
                 cmd = self.cli_command[0].format(interface=interface)
                 out = self.device.execute(cmd)
             else:
-                out = output
+                cmd = self.cli_command[1]
+                out = self.device.execute(cmd)
         else:
             out = output
 
-        ret_dict = {
-            'statistics': {
-                'TX':{},
-                'RX':{}
-                }
-            }
+        ret_dict = {}
+        current_interface = ''
+
+        if interface != "":
+            current_interface = interface
+            ret_dict.update({
+                interface:{
+                    'statistics': {
+                        'TX':{},
+                        'RX':{}
+                        }
+                    }
+                })
         
         for line in out.splitlines():
             line = line.strip()
 
+            p0 = re.compile(r'^Interface (?P<interface_name>.*)$')
+            m = p0.match(line)
+            if m:
+                current_interface = m.groupdict()['interface_name']
+                ret_dict.update({current_interface:{
+                    'statistics': {
+                        'TX':{},
+                        'RX':{}
+                        }
+                    }})
+                continue
+
             p1 = re.compile(r'^state (?P<state>.*)$')
             m = p1.match(line)
             if m:
-                ret_dict['state'] = m.groupdict()['state']
+                ret_dict[current_interface]['state'] = m.groupdict()['state']
                 continue
             
             p2 = re.compile(r'^mac-addr (?P<mac_addr>.*)$')
             m = p2.match(line)
             if m:
-                ret_dict['mac-addr'] = m.groupdict()['mac_addr']
+                ret_dict[current_interface]['mac-addr'] = m.groupdict()['mac_addr']
                 continue
 
             p3 = re.compile(r'^type (?P<type>.*)$')
             m = p3.match(line)
             if m:
-                ret_dict['type'] = m.groupdict()['type']
+                ret_dict[current_interface]['type'] = m.groupdict()['type']
                 continue
 
             p4 = re.compile(r'^link-state (?P<link_state>.*)$')
             m = p4.match(line)
             if m:
-                ret_dict['link-state'] = m.groupdict()['link_state']
+                ret_dict[current_interface]['link-state'] = m.groupdict()['link_state']
                 continue
 
             p5 = re.compile(r'^mtu (?P<mtu>.*)$')
             m = p5.match(line)
             if m:
-                ret_dict['mtu'] = int(m.groupdict()['mtu'])
+                ret_dict[current_interface]['mtu'] = int(m.groupdict()['mtu'])
                 continue
 
             p6 = re.compile(r'^auto-negotiation (?P<auto_negotiation>.*)$')
             m = p6.match(line)
             if m:
-                ret_dict['auto-negotiation'] = m.groupdict()['auto_negotiation']
+                ret_dict[current_interface]['auto-negotiation'] = m.groupdict()['auto_negotiation']
                 continue
             
             p7 = re.compile(r'^speed (?P<speed>.*)$')
             m = p7.match(line)
             if m:
-                ret_dict['speed'] = m.groupdict()['speed']
+                ret_dict[current_interface]['speed'] = m.groupdict()['speed']
                 continue
 
             p8 = re.compile(r'^ipv6-autoconfig (?P<ipv6_autoconfig>.*)$')
             m = p8.match(line)
             if m:
-                ret_dict['ipv6-autoconfig'] = m.groupdict()['ipv6_autoconfig']
+                ret_dict[current_interface]['ipv6-autoconfig'] = m.groupdict()['ipv6_autoconfig']
                 continue
 
             p9 = re.compile(r'^duplex (?P<duplex>.*)$')
             m = p9.match(line)
             if m:
-                ret_dict['duplex'] = m.groupdict()['duplex']
+                ret_dict[current_interface]['duplex'] = m.groupdict()['duplex']
                 continue
 
             p10 = re.compile(r'^monitor-mode (?P<monitor_mode>.*)$')
             m = p10.match(line)
             if m:
-                ret_dict['monitor-mode'] = m.groupdict()['monitor_mode']
+                ret_dict[current_interface]['monitor-mode'] = m.groupdict()['monitor_mode']
                 continue
             
             p11 = re.compile(r'^link-speed (?P<link_speed>.*)$')
             m = p11.match(line)
             if m:
-                ret_dict['link-speed'] = m.groupdict()['link_speed']
+                ret_dict[current_interface]['link-speed'] = m.groupdict()['link_speed']
                 continue
 
             p12 = re.compile(r'^comments\s*(?P<comments>.*)$')
             m = p12.match(line)
             if m:
-                ret_dict['comments'] = m.groupdict()['comments']
+                ret_dict[current_interface]['comments'] = m.groupdict()['comments']
                 continue
             
             p13 = re.compile(r'^ipv4-address (?P<ipv4_address>.*)$')
             m = p13.match(line)
             if m:
-                ret_dict['ipv4-address'] = m.groupdict()['ipv4_address']
+                ret_dict[current_interface]['ipv4-address'] = m.groupdict()['ipv4_address']
                 continue
 
             p14 = re.compile(r'^ipv6-address (?P<ipv6_address>.*)$')
             m = p14.match(line)
             if m:
-                ret_dict['ipv6-address'] = m.groupdict()['ipv6_address']
+                ret_dict[current_interface]['ipv6-address'] = m.groupdict()['ipv6_address']
                 continue
 
             p15 = re.compile(r'^ipv6-local-link-address (?P<ipv6_local_link_address>.*)$')
             m = p15.match(line)
             if m:
-                ret_dict['ipv6-local-link-address'] = m.groupdict()['ipv6_local_link_address']
+                ret_dict[current_interface]['ipv6-local-link-address'] = m.groupdict()['ipv6_local_link_address']
                 continue
 
             p16 = re.compile(r'^TX bytes:(?P<tx_bytes>\d+) packets:(?P<tx_packets>\d+) errors:(?P<tx_errors>\d+) dropped:(?P<tx_dropped>\d+) overruns:(?P<tx_overruns>\d+) carrier:(?P<tx_carrier>\d+)$')
             m = p16.match(line)
             if m:
-                ret_dict['statistics']['TX'] = {
+                ret_dict[current_interface]['statistics']['TX'] = {
                     'bytes': int(m.groupdict()['tx_bytes']),
                     'packets': int(m.groupdict()['tx_packets']),
                     'errors': int(m.groupdict()['tx_errors']),
@@ -171,7 +194,7 @@ class ShowInterface(ShowInterfaceSchema):
             p17 = re.compile(r'^RX bytes:(?P<rx_bytes>\d+) packets:(?P<rx_packets>\d+) errors:(?P<rx_errors>\d+) dropped:(?P<rx_dropped>\d+) overruns:(?P<rx_overruns>\d+) frame:(?P<rx_frame>\d+)$')
             m = p17.match(line)
             if m:
-                ret_dict['statistics']['RX'] = {
+                ret_dict[current_interface]['statistics']['RX'] = {
                     'bytes':    int(m.groupdict()['rx_bytes']),
                     'packets':  int(m.groupdict()['rx_packets']),
                     'errors':   int(m.groupdict()['rx_errors']),
