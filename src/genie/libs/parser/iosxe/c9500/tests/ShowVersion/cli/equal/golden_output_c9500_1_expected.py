@@ -44,7 +44,8 @@ expected_output = {
         'system_sn': 'CAT2136L3NG',
         'uptime': '1 day, 3 hours, 39 minutes',
         'uptime_this_cp': '1 day, 3 hours, 41 minutes',
-        'version': '17.3.1,',
-        'version_short': '17.03.01',
+        'version': '17.3.1',
+        'version_short': '17.3',
+        'xe_version': '17.03.01',
     },
 }

@@ -25,6 +25,7 @@ class ShowVersionSchema(MetaParser):
 
     schema = {
                 'version': {
+                    Optional('xe_version'): str,
                     'version_short': str,
                     'os': str,
                     Optional('code_name'): str,
@@ -98,14 +99,17 @@ class ShowVersion(ShowVersionSchema):
         # Cisco IOS XE Software, Version 2019-10-31_17.49_makale
         # Cisco IOS XE Software, Version BLD_POLARIS_DEV_LATEST_20210302_012043
         p0 = re.compile(
-            r'^Cisco +([\S\s]+) +Software, +Version +((?P<build_label>BLD_.*)|(?P<ver_short>.*))$')
+            r'^Cisco +([\S\s]+) +Software, +Version +(?P<xe_version>.*)$')
 
         # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.2.20191101:003833 [HEAD-/nobackup/makale/puntject2/polaris 106]
         # Cisco IOS Software [Bengaluru], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.6.20210302:012459 [S2C-build-polaris_dev-132831-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20210302_012043 149]
         p1 = re.compile(
             r'^Cisco +IOS +Software +\[(?P<code_name>([\S]+))\], +(?P<platform>([\S\s]+)) '
-            r'+Software +\((?P<image_id>.+)\),( +Experimental)? +Version +(?P<version>\S+) *'
+            r'+Software +\((?P<image_id>.+)\),( +Experimental)? +Version +(?P<version>[\d\.:]+),? *'
             r'(?P<label>(\[.+?(?P<build_label>BLD_\S+)? \d+\])|.*)$')
+
+        # 16.6.5
+        p1_1 = re.compile(r'^(?P<ver_short>\d+\.\d+).*')
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
         p2 = re.compile(r'^Copyright +(.*)$')
@@ -229,17 +233,24 @@ class ShowVersion(ShowVersionSchema):
             # Cisco IOS XE Software, Version BLD_POLARIS_DEV_LATEST_20210302_012043
             m = p0.match(line)
             if m:
-                version_short = m.groupdict()['ver_short']
                 if 'version' not in ver_dict:
                     version_dict = ver_dict.setdefault('version', {})
-                version_dict['version_short'] = version_short
-                if m.groupdict()['build_label']:
-                    version_dict['build_label'] = m.groupdict()['build_label']
+                xe_version = m.groupdict()['xe_version']
+                version_dict['xe_version'] = xe_version
                 continue
 
             # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.2.20191101:003833 [HEAD-/nobackup/makale/puntject2/polaris 106]
             m = p1.match(line)
             if m:
+                if 'version' not in ver_dict:
+                    version_dict = ver_dict.setdefault('version', {})
+
+                version = m.groupdict()['version']
+                m1_1 = p1_1.match(version)
+                if m1_1:
+                    version_dict['version_short'] = \
+                        m1_1.groupdict()['ver_short']
+
                 version_dict['code_name'] = m.groupdict()['code_name']
                 version_dict['platform'] = m.groupdict()['platform']
                 version_dict['image_id'] = m.groupdict()['image_id']
