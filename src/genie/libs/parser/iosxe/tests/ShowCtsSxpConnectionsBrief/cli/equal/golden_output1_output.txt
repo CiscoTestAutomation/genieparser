@@ -8,7 +8,7 @@
 Connection retry open period: 120 secs
 Reconcile period: 120 secs
 Retry open timer is not running
-Peer-Sequence traverse limit for export: Not Set
+Peer-Sequence traverse limit for export: 2
 Peer-Sequence traverse limit for import: Not Set
 
 ----------------------------------------------------------------------------------------------------------------------------------

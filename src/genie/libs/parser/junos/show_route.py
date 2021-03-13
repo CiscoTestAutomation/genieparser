@@ -48,17 +48,20 @@ class ShowRouteTableSchema(MetaParser):
                 'hidden_route_count': int,
                 'routes': {                            
                         Any(): {
-                            'active_tag': str,
-                            'protocol_name': str,
-                            'preference': str,
+                            Optional('active_tag'): str,
+                            Optional('protocol_name'): str,
+                            Optional('preference'): str,
                             Optional('preference2'): str,
-                            'age': str,
+                            Optional('age'): str,
                             Optional('metric'): str,
                             Optional('rt-tag'): str,
-                            'next_hop': {
+                            Optional('learned_from'): str,
+                            Optional('local_preference'): str,
+                            Optional('nh_type'): str,
+                            Optional('next_hop'): {
                                 'next_hop_list': {
                                     Any(): {
-                                        'to': str,
+                                        Optional('to'): str,
                                         'via': str,
                                         Optional('mpls_label'): str,
                                         Optional('best_route'): str
@@ -70,6 +73,7 @@ class ShowRouteTableSchema(MetaParser):
                 }
             }
         }
+        
        
 '''
 Parser for:
@@ -104,22 +108,37 @@ class ShowRouteTable(ShowRouteTableSchema):
 
         # inet.3: 3 destinations, 3 routes (3 active, 0 holddown, 0 hidden)
         r1 = re.compile(r'(?P<table_name>\S+):\s+(?P<destination_count>\d+)\s+'
-                         'destinations\,\s+(?P<total_route_count>\d+)\s+routes\s+'
-                         '\((?P<active_route_count>\d+)\s+active\,\s+(?P<holddown_route_count>\d+)'
-                         '\s+holddown\,\s+(?P<hidden_route_count>\d+)\s+hidden\)')
+                        r'destinations\,\s+(?P<total_route_count>\d+)\s+routes\s+'
+                        r'\((?P<active_route_count>\d+)\s+active\,\s+(?P<holddown_route_count>\d+)'
+                        r'\s+holddown\,\s+(?P<hidden_route_count>\d+)\s+hidden\)')
 
+        # 192.168.51.1/32    *[Local/0] 00:02:35
         # 10.64.4.4/32         *[LDP/9] 03:40:50, metric 110
         # 10.64.4.4/32   *[L-OSPF/9/5] 1d 02:16:51, metric 110
         # 118420             *[VPN/170] 31w3d 20:13:54
-        r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?'
-                        r'\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)\/?(?P<preference2>\d+)?\]'
-                        r' +(?P<age>[^,]+)(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
+        # ff02::2/128 *[INET6/0] 00:05:35
+        r2 = re.compile(r'^ *(?P<rt_destination>\S+) +(?P<active_tag>\*)?\[(?P<protocol_name>[\w\-]+)\/(?P<preference>\d+)\/?(?P<preference2>\d+)?\] +(?P<age>[\d\:wd ]+)(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?(, +localpref +(?P<local_preference>\d+))?(, +from +(?P<learned_from>\S+))?$')
 
         # > to 192.168.220.6 via ge-0/0/1.0
         # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
         # > to 192.168.220.6 via ge-0/0/1.0, Pop
-        r3 = re.compile(r'(?:(?P<best_route>\>*))?\s*to\s+(?P<to>\S+)\s+via\s+'
-                         '(?P<via>[\w\d\/\-\.]+)\,*\s*(?:(?P<mpls_label>[\S\s]+))?')
+        # Local via ge-0/0/4.11
+        # >  via ge-0/0/2.1
+        r3 = re.compile(r'^(?P<best_route>>)?(Local)? *(to +(?P<to>\S+))? *via +(?P<via>[^,\s]+)(, +(?P<mpls_label>[\S ]+))?')
+
+        # fe80::250:5600:b8d:fea3/128
+        # this regex widely match other pattern. intendedly exclude below `Reject`
+        # 192.168.51.1/32    *[Local/0] 00:02:35
+        #                Reject # <-----
+        r4 = re.compile(r'^(?!.*Reject)(?P<rt_destination>[\w\:\/]+)$')
+
+        # *[Local/0] 00:26:06
+        r5 = re.compile(r'^(?P<active_tag>\*)?\[(?P<protocol_name>[\w\-]+)\/'
+            r'(?P<preference>\d+)\/?(?P<preference2>\d+)?\] +(?P<age>[\d\:wd ]+)'
+            r'(, +metric +(?P<metric>\d+))?(, +tag +(?P<rt_tag>\d+))?$')
+
+        # Reject
+        r6 = re.compile(r'^(?P<nh_type>Reject)$')
 
         parsed_output = {}
 
@@ -161,6 +180,7 @@ class ShowRouteTable(ShowRouteTableSchema):
             # > to 192.168.220.6 via ge-0/0/1.0
             # > to 192.168.220.6 via ge-0/0/1.0, Push 305550
             # to 10.2.94.2 via lt-1/2/0.49
+            # 
             result = r3.match(line)
             if result:
 
@@ -179,7 +199,9 @@ class ShowRouteTable(ShowRouteTableSchema):
                                     .setdefault('next_hop_list', {})\
                                     .setdefault(max_index, {})
 
-                nh_dict['to'] = group['to']
+                if group['to']:
+                    nh_dict['to'] = group['to']
+
                 nh_dict['via'] = group['via']
 
                 mpls_label = group['mpls_label']
@@ -192,6 +214,35 @@ class ShowRouteTable(ShowRouteTableSchema):
 
                 continue
         
+            # fe80::250:5600:b8d:fea3/128
+            result = r4.match(line)
+            if result:
+                group = result.groupdict()
+                rt_destination = group.pop('rt_destination', None)
+
+                route_dict = table_dict.setdefault('routes', {})\
+                                       .setdefault(rt_destination, {})
+                continue
+
+            result = r5.match(line)
+            if result:
+                group = result.groupdict()
+                rt_tag = group.pop('rt_tag', None)
+
+                route_dict = table_dict.setdefault('routes', {})\
+                                       .setdefault(rt_destination, {})
+
+                route_dict.update({k: v for k, v in group.items() if v})
+                if rt_tag:
+                    route_dict.update({'rt-tag': rt_tag})
+                continue
+
+            result = r6.match(line)
+            if result:
+                group = result.groupdict()
+                route_dict.update({k: v for k, v in group.items() if v})
+                continue
+
         return parsed_output
 
 class ShowRouteSchema(MetaParser):
@@ -387,13 +438,7 @@ class ShowRoute(ShowRouteSchema):
         # 0.0.0.0/0          *[OSPF/150/10] 3w3d 03:24:58, metric 101, tag 0
         # 167963             *[LDP/9] 1w6d 20:41:01, metric 1, metric2 100, tag 65000500
         # 10.16.2.2/32         *[Static/5] 00:00:02
-        p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?'
-                        r'\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)'
-                        r'(\/(?P<preference2>\d+))?\] +(?P<text>\S+( +\S+)?)'
-                        r'(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?'
-                        r'(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?'
-                        r'(, +localpref +(?P<local_preference>\d+))?'
-                        r'(, +from +(?P<learned_from>\S+))?$')
+        p2 = re.compile(r'^((?P<rt_destination>\S+) +)?(?P<active_tag>[\*\+\-])?\[(?P<protocol>[\w\-]+)\/(?P<preference>\d+)(\/(?P<preference2>\d+))?\] +(?P<text>\S+( +\S+)?)(, +metric +(?P<metric>\d+))?(, +metric2 +(?P<metric2>\d+))?(, +tag +(?P<rt_tag>\d+))?(, +MED +(?P<med>\w+))?(, +localpref +(?P<local_preference>\d+))?(, +from +(?P<learned_from>\S+))?$')
 
         # MultiRecv
         p2_1 = re.compile(r'^(?P<nh_type>MultiRecv)$')
@@ -3636,5 +3681,89 @@ class ShowRouteReceiveProtocolPeerAddressExtensive(ShowRouteReceiveProtocolPeerA
                         'attr-value': group['attr_value']})
 
                     continue 
+
+        return ret_dict       
+
+
+class ShowRouteInstanceNameSchema(MetaParser):
+    """ Schema for:
+            * show route instance {name}
+    """
+    
+    def validate_instance_rib(value):
+        if not isinstance(value, list):
+            raise SchemaError('Instance rib is not a list')
+    
+        instance_rib = Schema({
+            "irib-name": str,
+            "irib-active-count": str,
+            "irib-holddown-count": str,
+            "irib-hidden-count": str,
+        })
+    
+        for item in value:
+            instance_rib.validate(item)
+        return value
+
+    # Main Schema
+    schema = {
+        "instance-information": {
+            "instance-core": {
+                "instance-name": str,
+                "instance-type": str,
+                Optional("instance-ribs"): Use(validate_instance_rib)
+            }
+        }
+    }        
+
+class ShowRouteInstanceName(ShowRouteInstanceNameSchema):
+    """Parser for
+        * show route instance {name}
+    """
+    cli_command = 'show route instance {name}'
+
+    def cli(self, name, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                name=name
+            ))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # NF-TEST              non-forwarding 
+        # VR-TEST001           virtual-router
+        # VRF-TEST001          vrf
+        p1 = re.compile(r'^(?P<instance_name>\S+) +(?P<instance_type>(non-forwarding|virtual-router|vrf))$')  
+
+        # NF-TEST.inet.0                                  106/0/0
+        p2 = re.compile(r'^(?P<irib_name>\S+) +(?P<irib_active_count>\d+)/'
+                        r'(?P<irib_holddown_count>\d+)/(?P<irib_hidden_count>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # NF-TEST              non-forwarding 
+            # VR-TEST001           virtual-router
+            # VRF-TEST001          vrf
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                instance_core = ret_dict.setdefault('instance-information', {}).setdefault('instance-core', {})
+                instance_core.update({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
+            # NF-TEST.inet.0                                  106/0/0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                instance_rib_list = instance_core.setdefault('instance-ribs', [])
+                instance_rib_list.append({k.replace('_','-'):
+                    v for k, v in group.items() if v is not None})
+                continue
+
 
         return ret_dict       

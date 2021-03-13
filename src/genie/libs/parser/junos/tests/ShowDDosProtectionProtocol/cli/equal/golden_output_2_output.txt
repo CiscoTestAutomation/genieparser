@@ -1,0 +1,39 @@
+show ddos-protection protocols unclassified host-route-v4 
+Currently tracked flows: 0, Total detected flows: 0
+* = User configured value
+Protocol Group: Unclassified
+  Packet type: host-route-v4 (unclassified v4 hostbound packets)
+    Individual policer configuration:
+      Bandwidth:        2000 pps
+      Burst:            10000 packets
+      Priority:         Low
+      Recover time:     300 seconds
+      Enabled:          Yes
+      Bypass aggregate: No
+    Flow detection configuration:
+      Detection mode: Automatic  Detect time:  3 seconds
+      Log flows:      Yes        Recover time: 60 seconds
+      Timeout flows:  No         Timeout time: 300 seconds
+      Flow aggregation level configuration:
+        Aggregation level   Detection mode  Control mode  Flow rate
+        Subscriber          Automatic       Drop          10 pps
+        Logical interface   Automatic       Drop          10 pps
+        Physical interface  Automatic       Drop          2000 pps
+    System-wide information:
+      Bandwidth is never violated
+      Received:  3                   Arrival rate:     0 pps
+      Dropped:   0                   Max arrival rate: 0 pps
+    Routing Engine information:
+      Bandwidth: 2000 pps, Burst: 10000 packets, enabled
+      Policer is never violated
+      Received:  3                   Arrival rate:     0 pps
+      Dropped:   0                   Max arrival rate: 0 pps
+	Dropped by aggregate policer: 0
+    FPC slot 0 information:
+      Bandwidth: 100% (2000 pps), Burst: 100% (10000 packets), enabled
+      Hostbound queue 0
+      Policer is never violated
+      Received:  3                   Arrival rate:     0 pps
+      Dropped:   0                   Max arrival rate: 0 pps
+	Dropped by aggregate policer: 0
+	Dropped by flow suppression:  0

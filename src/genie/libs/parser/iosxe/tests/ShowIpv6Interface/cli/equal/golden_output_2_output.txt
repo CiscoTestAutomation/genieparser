@@ -1,0 +1,18 @@
+# show ipv6 interface gigabitEthernet 2.1
+
+GigabitEthernet2 is up, line protocol is up
+  IPv6 is enabled, link-local address is FE80::250:56FF:FE8D:EF3D
+  No Virtual link-local address(es):
+  Global unicast address(es):
+    2001:111::1, subnet is 2001:111::/64
+  Joined group address(es):
+    FF02::1
+    FF02::1:FF00:1
+    FF02::1:FF8D:EF3D
+  MTU is 1500 bytes
+  ICMP error messages limited to one every 100 milliseconds
+  ICMP redirects are enabled
+  ICMP unreachables are sent
+  ND DAD is enabled, number of DAD attempts: 1
+  ND reachable time is 30000 milliseconds (using 30000)
+  ND NS retransmit interval is 1000 milliseconds

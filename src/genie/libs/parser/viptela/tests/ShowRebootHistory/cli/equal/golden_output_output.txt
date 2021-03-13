@@ -1,0 +1,9 @@
+
+        srp_vedge# show reboot history
+
+        REBOOT DATE TIME           REBOOT REASON                                 
+        -------------------------------------------------------------------------
+        2020-06-04T04:54:36+00:00  Initiated by user                             
+        2020-06-16T09:19:57+00:00  Initiated by user                             
+        2020-06-18T13:28:53+00:00  Initiated by user - activate 99.99.999-4542  
+    

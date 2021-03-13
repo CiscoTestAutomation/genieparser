@@ -62,7 +62,7 @@ class ShowIpv6NeighborsSchema(MetaParser):
             Optional("@junos:style"): str,
             Optional("@xmlns"): str,
             "ipv6-nd-entry": Use(validate_ipv6_entry_list),
-            "ipv6-nd-total": str
+            Optional("ipv6-nd-total"): str
         }
     }
 

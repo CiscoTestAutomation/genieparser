@@ -48,7 +48,7 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
-                                         
+
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
@@ -85,7 +85,7 @@ class ShowRoutingVrfAllSchema(MetaParser):
                                                         Optional('metric'): str,
                                                         Optional('protocol_id'): str,
                                                         Optional('attribute'): str,
-                                                        Optional('tag'): str, 
+                                                        Optional('tag'): str,
                                                         Optional('mpls'): bool,
                                                         Optional('mpls_vpn'): bool,
                                                         Optional('evpn'): bool,
@@ -110,7 +110,7 @@ class ShowRoutingVrfAllSchema(MetaParser):
                                                     Optional('metric'): str,
                                                     Optional('protocol_id'): str,
                                                     Optional('attribute'): str,
-                                                    Optional('tag'): str, 
+                                                    Optional('tag'): str,
                                                     Optional('mpls'): bool,
                                                     Optional('mpls_vpn'): bool,
                                                     Optional('evpn'): bool,
@@ -198,7 +198,7 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                 # Init ip dict
                 ip_mask = m.groupdict()['ip_mask']
                 ip_dict = af_dict.setdefault('ip', {}).setdefault(ip_mask, {})
-                
+
                 ip_dict['ubest_num'] = m.groupdict()['ubest']
                 ip_dict['mbest_num'] = m.groupdict()['mbest']
                 if m.groupdict()['attach']:
@@ -269,11 +269,11 @@ class ShowRoutingVrfAll(ShowRoutingVrfAllSchema):
                 attribute = m.groupdict()['attribute']
                 if attribute:
                     prot_dict['attribute'] = attribute
-                
+
                 tag = m.groupdict()['tag']
                 if tag:
                     prot_dict['tag'] = tag.strip()
-                
+
                 segid = m.groupdict()['segid']
                 if segid:
                     prot_dict['segid'] = int(segid)
@@ -685,7 +685,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         # IP Route Table for Context "default"
         # IPv6 Routing Table for VRF "default"
         # IP Route Table for VRF "default"
-        p1 = re.compile(r'^\s*IP(?:v6)? +Rout(?:e|ing) +Table +for (VRF|Context) +\"(?P<vrf>\S+)\"$')
+        p1 = re.compile(r'^\s*(?P<af>IPv6|IP) +Rout(?:e|ing) +Table +for (VRF|Context) +\"(?P<vrf>\S+)\"$')
 
         # 10.4.1.1/32, ubest/mbest: 2/0
         # 10.36.3.3/32, ubest/mbest: 2/0, attached
@@ -736,6 +736,8 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                 group = m.groupdict()
                 vrf = group['vrf']
+                af = 'ipv6' if 'v6' in group['af'] else 'ipv4'
+
                 routes_dict = vrfs_dict.setdefault(vrf, {}).setdefault('address_family', {}). \
                                         setdefault(af, {}).setdefault('routes', {})
                 continue
@@ -757,7 +759,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
                 if groups['ubest_mbest']:
                     ubest_mbest = groups['ubest_mbest']
-                    
+
                     if '/' in ubest_mbest:
                         ubest_mbest = ubest_mbest.split('/')
                         ubest = ubest_mbest[0]
@@ -949,7 +951,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 groups = m.groupdict()
                 if groups['tag']:
                     route_dict.update({'tag': int(groups['tag'])})
-                    
+
         return result_dict
 
 
@@ -993,7 +995,7 @@ class ShowIpv6Route(ShowIpRoute):
         'show ipv6 route vrf all',
         'show ipv6 route'
        """
-    
+
     cli_command = [ 'show ipv6 route {route} {protocol} interface {interface} vrf {vrf}',
                     'show ipv6 route {route} {protocol} interface {interface}',
                     'show ipv6 route {route} {protocol} vrf {vrf}',

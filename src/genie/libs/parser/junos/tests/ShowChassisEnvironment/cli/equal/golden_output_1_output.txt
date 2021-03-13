@@ -1,0 +1,173 @@
+Class Item                           Status     Measurement
+Temp  PSM 0                          OK         28 degrees C / 82 degrees F
+      PSM 1                          OK         27 degrees C / 80 degrees F
+      PSM 2                          OK         27 degrees C / 80 degrees F
+      PSM 3                          OK         25 degrees C / 77 degrees F
+      PSM 4                          Check
+      PSM 5                          Check
+      PSM 6                          Check
+      PSM 7                          Check
+      PSM 8                          Check
+      PSM 9                          OK         29 degrees C / 84 degrees F
+      PSM 10                         OK         29 degrees C / 84 degrees F
+      PSM 11                         OK         29 degrees C / 84 degrees F
+      PSM 12                         Check
+      PSM 13                         Check
+      PSM 14                         Check
+      PSM 15                         Check
+      PSM 16                         Check
+      PSM 17                         Check
+      PDM 0                          OK
+      PDM 1                          OK
+      PDM 2                          OK
+      PDM 3                          OK
+      CB 0 IntakeA-Zone0             OK         38 degrees C / 100 degrees F
+      CB 0 IntakeB-Zone1             OK         36 degrees C / 96 degrees F
+      CB 0 IntakeC-Zone0             OK         50 degrees C / 122 degrees F
+      CB 0 ExhaustA-Zone0            OK         39 degrees C / 102 degrees F
+      CB 0 ExhaustB-Zone1            OK         35 degrees C / 95 degrees F
+      CB 0 TCBC-Zone0                OK         45 degrees C / 113 degrees F
+      CB 1 IntakeA-Zone0             OK         29 degrees C / 84 degrees F
+      CB 1 IntakeB-Zone1             OK         32 degrees C / 89 degrees F
+      CB 1 IntakeC-Zone0             OK         33 degrees C / 91 degrees F
+      CB 1 ExhaustA-Zone0            OK         32 degrees C / 89 degrees F
+      CB 1 ExhaustB-Zone1            OK         32 degrees C / 89 degrees F
+      CB 1 TCBC-Zone0                OK         39 degrees C / 102 degrees F
+      SPMB 0 Intake                  OK         35 degrees C / 95 degrees F
+      SPMB 1 Intake                  OK         33 degrees C / 91 degrees F
+      Routing Engine 0               OK         42 degrees C / 107 degrees F
+      Routing Engine 0 CPU           OK         38 degrees C / 100 degrees F
+      Routing Engine 1               OK         40 degrees C / 104 degrees F
+      Routing Engine 1 CPU           OK         35 degrees C / 95 degrees F
+      SFB 0 Intake-Zone0             OK         36 degrees C / 96 degrees F
+      SFB 0 Exhaust-Zone1            OK         44 degrees C / 111 degrees F
+      SFB 0 IntakeA-Zone0            OK         31 degrees C / 87 degrees F
+      SFB 0 IntakeB-Zone1            OK         33 degrees C / 91 degrees F
+      SFB 0 Exhaust-Zone0            OK         35 degrees C / 95 degrees F
+      SFB 0 SFB-XF2-Zone1            OK         63 degrees C / 145 degrees F
+      SFB 0 SFB-XF1-Zone0            OK         54 degrees C / 129 degrees F
+      SFB 0 SFB-XF0-Zone0            OK         52 degrees C / 125 degrees F
+      SFB 1 Intake-Zone0             OK         34 degrees C / 93 degrees F
+      SFB 1 Exhaust-Zone1            OK         42 degrees C / 107 degrees F
+      SFB 1 IntakeA-Zone0            OK         29 degrees C / 84 degrees F
+      SFB 1 IntakeB-Zone1            OK         31 degrees C / 87 degrees F
+      SFB 1 Exhaust-Zone0            OK         34 degrees C / 93 degrees F
+      SFB 1 SFB-XF2-Zone1            OK         63 degrees C / 145 degrees F
+      SFB 1 SFB-XF1-Zone0            OK         53 degrees C / 127 degrees F
+      SFB 1 SFB-XF0-Zone0            OK         50 degrees C / 122 degrees F
+      SFB 2 Intake-Zone0             OK         35 degrees C / 95 degrees F
+      SFB 2 Exhaust-Zone1            OK         41 degrees C / 105 degrees F
+      SFB 2 IntakeA-Zone0            OK         29 degrees C / 84 degrees F
+      SFB 2 IntakeB-Zone1            OK         31 degrees C / 87 degrees F
+      SFB 2 Exhaust-Zone0            OK         34 degrees C / 93 degrees F
+      SFB 2 SFB-XF2-Zone1            OK         60 degrees C / 140 degrees F
+      SFB 2 SFB-XF1-Zone0            OK         52 degrees C / 125 degrees F
+      SFB 2 SFB-XF0-Zone0            OK         56 degrees C / 132 degrees F
+      SFB 3 Intake-Zone0             OK         34 degrees C / 93 degrees F
+      SFB 3 Exhaust-Zone1            OK         41 degrees C / 105 degrees F
+      SFB 3 IntakeA-Zone0            OK         29 degrees C / 84 degrees F
+      SFB 3 IntakeB-Zone1            OK         31 degrees C / 87 degrees F
+      SFB 3 Exhaust-Zone0            OK         33 degrees C / 91 degrees F
+      SFB 3 SFB-XF2-Zone1            OK         60 degrees C / 140 degrees F
+      SFB 3 SFB-XF1-Zone0            OK         52 degrees C / 125 degrees F
+      SFB 3 SFB-XF0-Zone0            OK         50 degrees C / 122 degrees F
+      SFB 4 Intake-Zone0             OK         34 degrees C / 93 degrees F
+      SFB 4 Exhaust-Zone1            OK         41 degrees C / 105 degrees F
+      SFB 4 IntakeA-Zone0            OK         29 degrees C / 84 degrees F
+      SFB 4 IntakeB-Zone1            OK         31 degrees C / 87 degrees F
+      SFB 4 Exhaust-Zone0            OK         34 degrees C / 93 degrees F
+      SFB 4 SFB-XF2-Zone1            OK         63 degrees C / 145 degrees F
+      SFB 4 SFB-XF1-Zone0            OK         52 degrees C / 125 degrees F
+      SFB 4 SFB-XF0-Zone0            OK         50 degrees C / 122 degrees F
+      SFB 5 Intake-Zone0             OK         35 degrees C / 95 degrees F
+      SFB 5 Exhaust-Zone1            OK         40 degrees C / 104 degrees F
+      SFB 5 IntakeA-Zone0            OK         29 degrees C / 84 degrees F
+      SFB 5 IntakeB-Zone1            OK         31 degrees C / 87 degrees F
+      SFB 5 Exhaust-Zone0            OK         34 degrees C / 93 degrees F
+      SFB 5 SFB-XF2-Zone1            OK         62 degrees C / 143 degrees F
+      SFB 5 SFB-XF1-Zone0            OK         53 degrees C / 127 degrees F
+      SFB 5 SFB-XF0-Zone0            OK         50 degrees C / 122 degrees F
+      SFB 6 Intake-Zone0             OK         34 degrees C / 93 degrees F
+      SFB 6 Exhaust-Zone1            OK         41 degrees C / 105 degrees F
+      SFB 6 IntakeA-Zone0            OK         30 degrees C / 86 degrees F
+      SFB 6 IntakeB-Zone1            OK         31 degrees C / 87 degrees F
+      SFB 6 Exhaust-Zone0            OK         34 degrees C / 93 degrees F
+      SFB 6 SFB-XF2-Zone1            OK         60 degrees C / 140 degrees F
+      SFB 6 SFB-XF1-Zone0            OK         53 degrees C / 127 degrees F
+      SFB 6 SFB-XF0-Zone0            OK         49 degrees C / 120 degrees F
+      SFB 7 Intake-Zone0             OK         35 degrees C / 95 degrees F
+      SFB 7 Exhaust-Zone1            OK         42 degrees C / 107 degrees F
+      SFB 7 IntakeA-Zone0            OK         31 degrees C / 87 degrees F
+      SFB 7 IntakeB-Zone1            OK         32 degrees C / 89 degrees F
+      SFB 7 Exhaust-Zone0            OK         35 degrees C / 95 degrees F
+      SFB 7 SFB-XF2-Zone1            OK         64 degrees C / 147 degrees F
+      SFB 7 SFB-XF1-Zone0            OK         56 degrees C / 132 degrees F
+      SFB 7 SFB-XF0-Zone0            OK         52 degrees C / 125 degrees F
+      FPC 0 Intake                   Testing
+      FPC 0 Exhaust A                OK         52 degrees C / 125 degrees F
+      FPC 0 Exhaust B                OK         54 degrees C / 129 degrees F
+      FPC 0 XL 0 TSen                OK         49 degrees C / 120 degrees F
+      FPC 0 XL 0 Chip                OK         63 degrees C / 145 degrees F
+      FPC 0 XL 0 XR2 0 TSen          OK         49 degrees C / 120 degrees F
+      FPC 0 XL 0 XR2 0 Chip          OK         79 degrees C / 174 degrees F
+      FPC 0 XL 0 XR2 1 TSen          OK         49 degrees C / 120 degrees F
+      FPC 0 XL 0 XR2 1 Chip          OK         79 degrees C / 174 degrees F
+      FPC 0 XL 1 TSen                OK         35 degrees C / 95 degrees F
+      FPC 0 XL 1 Chip                OK         43 degrees C / 109 degrees F
+      FPC 0 XL 1 XR2 0 TSen          OK         35 degrees C / 95 degrees F
+      FPC 0 XL 1 XR2 0 Chip          OK         59 degrees C / 138 degrees F
+      FPC 0 XL 1 XR2 1 TSen          OK         35 degrees C / 95 degrees F
+      FPC 0 XL 1 XR2 1 Chip          OK         58 degrees C / 136 degrees F
+      FPC 0 XM 0 TSen                OK         52 degrees C / 125 degrees F
+      FPC 0 XM 0 Chip                OK         63 degrees C / 145 degrees F
+      FPC 0 XM 1 TSen                OK         52 degrees C / 125 degrees F
+      FPC 0 XM 1 Chip                OK         58 degrees C / 136 degrees F
+      FPC 0 XM 2 TSen                OK         52 degrees C / 125 degrees F
+      FPC 0 XM 2 Chip                OK         51 degrees C / 123 degrees F
+      FPC 0 XM 3 TSen                OK         52 degrees C / 125 degrees F
+      FPC 0 XM 3 Chip                OK         46 degrees C / 114 degrees F
+      FPC 0 PCIe Switch TSen         OK         52 degrees C / 125 degrees F
+      FPC 0 PCIe Switch Chip         OK         30 degrees C / 86 degrees F
+      FPC 9 Intake                   OK         31 degrees C / 87 degrees F
+      FPC 9 Exhaust A                OK         48 degrees C / 118 degrees F
+      FPC 9 Exhaust B                OK         41 degrees C / 105 degrees F
+      FPC 9 LU 0 TCAM TSen           OK         45 degrees C / 113 degrees F
+      FPC 9 LU 0 TCAM Chip           OK         55 degrees C / 131 degrees F
+      FPC 9 LU 0 TSen                OK         45 degrees C / 113 degrees F
+      FPC 9 LU 0 Chip                OK         55 degrees C / 131 degrees F
+      FPC 9 MQ 0 TSen                OK         45 degrees C / 113 degrees F
+      FPC 9 MQ 0 Chip                OK         57 degrees C / 134 degrees F
+      FPC 9 LU 1 TCAM TSen           OK         41 degrees C / 105 degrees F
+      FPC 9 LU 1 TCAM Chip           OK         46 degrees C / 114 degrees F
+      FPC 9 LU 1 TSen                OK         41 degrees C / 105 degrees F
+      FPC 9 LU 1 Chip                OK         47 degrees C / 116 degrees F
+      FPC 9 MQ 1 TSen                OK         41 degrees C / 105 degrees F
+      FPC 9 MQ 1 Chip                OK         47 degrees C / 116 degrees F
+      ADC 9 Intake                   OK         32 degrees C / 89 degrees F
+      ADC 9 Exhaust                  OK         43 degrees C / 109 degrees F
+      ADC 9 ADC-XF1                  OK         50 degrees C / 122 degrees F
+      ADC 9 ADC-XF0                  OK         60 degrees C / 140 degrees F
+Fans  Fan Tray 0 Fan 1               OK         2760 RPM
+      Fan Tray 0 Fan 2               OK         2520 RPM
+      Fan Tray 0 Fan 3               OK         2520 RPM
+      Fan Tray 0 Fan 4               OK         2640 RPM
+      Fan Tray 0 Fan 5               OK         2640 RPM
+      Fan Tray 0 Fan 6               OK         2520 RPM
+      Fan Tray 1 Fan 1               OK         2520 RPM
+      Fan Tray 1 Fan 2               OK         2640 RPM
+      Fan Tray 1 Fan 3               OK         2520 RPM
+      Fan Tray 1 Fan 4               OK         2640 RPM
+      Fan Tray 1 Fan 5               OK         2520 RPM
+      Fan Tray 1 Fan 6               OK         2520 RPM
+      Fan Tray 2 Fan 1               OK         2640 RPM
+      Fan Tray 2 Fan 2               OK         2520 RPM
+      Fan Tray 2 Fan 3               OK         2520 RPM
+      Fan Tray 2 Fan 4               OK         2640 RPM
+      Fan Tray 2 Fan 5               OK         2640 RPM
+      Fan Tray 2 Fan 6               OK         2640 RPM
+      Fan Tray 3 Fan 1               OK         2520 RPM
+      Fan Tray 3 Fan 2               OK         2520 RPM
+      Fan Tray 3 Fan 3               OK         2520 RPM
+      Fan Tray 3 Fan 4               OK         2520 RPM
+      Fan Tray 3 Fan 5               OK         2520 RPM
+      Fan Tray 3 Fan 6               OK         2520 RPM

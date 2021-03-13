@@ -64,7 +64,7 @@ class ShowDot1xAllStatistics(ShowDot1xAllStatisticsSchema):
         p2 = re.compile(r'(\w+) *\= *(\d+)+ *')
 
         p3 = re.compile(r'^([Rr]x[Vv]ersion) \= *(?P<rxversion>\d+)' +
-                        '   ([Ll]ast[Rr]x[Ss]rc[Mm][Aa][Cc]) = (?P<lastrxsrcmac>\w+:\w+:\w+:\w+:\w+:\w+)$')
+                        '   ([Ll]ast[Rr]x[Ss]rc[Mm][Aa][Cc]) = (?P<lastrxsrcmac>\w+:\w+:\w+:\w+:\w+:\w+)$')
 
 
 
@@ -83,16 +83,16 @@ class ShowDot1xAllStatistics(ShowDot1xAllStatisticsSchema):
                     'statistics', {})
                 continue
 
-            # RxVersion = 0   LastRxSrcMAC = 00: 00: 00: 00: 00: 00
+            # RxVersion = 0   LastRxSrcMAC = 00: 00: 00: 00: 00: 00
             m = p3.match(line)
             if m:
                 stats.update({'rxversion': int(m.groupdict()['rxversion'])})
                 stats.update({'lastrxsrcmac': m.groupdict()['lastrxsrcmac']})
                 continue
 
-            # RxStart = 0     RxLogoff = 0    RxResp = 0      RxRespID = 0
-            # RxInvalid = 0   RxLenErr = 0    RxTotal = 0
-            # TxReq = 0       TxReqID = 0     TxTotal = 3
+            # RxStart = 0     RxLogoff = 0    RxResp = 0      RxRespID = 0
+            # RxInvalid = 0   RxLenErr = 0    RxTotal = 0
+            # TxReq = 0       TxReqID = 0     TxTotal = 3
             m = p2.findall(line)
             if m:
                 for item in m:
@@ -140,14 +140,14 @@ class ShowDot1xAllSummary(ShowDot1xAllSummarySchema):
         
         ret_dict = {}
 
-        p1 = re.compile(r'^(?P<intf>((\w+\d+)(\/\d+)*)) + +(?P<pae>\w+) + +' +
-                        '(?P<client>(\w+\:\w+\:\w+\:\w+\:\w+\:\w+)|\w+) + +(?P<status>\w+)$')
+        p1 = re.compile(r'^(?P<intf>((\w+\d+)(\/\d+)*)) + +(?P<pae>\w+) + +' +
+                        '(?P<client>(\w+\:\w+\:\w+\:\w+\:\w+\:\w+)|\w+) + +(?P<status>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # Ethernet1/1    AUTH                none      AUTHORIZED
-            # Ethernet102/1/6    AUTH   0E:BE:EF:FF:3F:3F      AUTHORIZED
+            # Ethernet1/1    AUTH                none      AUTHORIZED
+            # Ethernet102/1/6    AUTH   0E:BE:EF:FF:3F:3F      AUTHORIZED
             m = p1.match(line)
             if m:
                 intf = m.groupdict()['intf']

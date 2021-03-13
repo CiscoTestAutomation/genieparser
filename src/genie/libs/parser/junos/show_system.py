@@ -1079,15 +1079,14 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
                         r'[A-Za-z\t .\d\-\:]+)+\((?P<time_length>'
                         r'[\w+\s\d+\:\d]+) ago\) by (?P<user>\S+)$')
 
-        #8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
+        # 8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
         # 2:08PM  up 11:03, 1 users, load averages: 0.31, 0.48, 0.50
         # 3:57AM  up 1 day, 16:57, 1 users, load averages: 0.55, 0.46, 0.44
-        p6 = re.compile(r'^(?P<date_time>\d+\:\w+)\s+up\s+'
-                        r'((?P<days>\d+)\s+day(s)?,\s+)?(?P<mins>'
-                        r'[\w\:]+)[^,]*,\s+(?P<user_count>\d+)'
-                        r'\s+users,\s+load\s+averages:\s+'
-                        r'(?P<avg1>[\d\.]+),\s+(?P<avg2>[\d\.]+),'
-                        r'\s+(?P<avg3>[\d\.]+)$')
+        # 12:31PM  up 15 days, 5 mins, 1 user, load averages: 0.07, 0.09, 0.04
+        p6 = re.compile(r'^(?P<date_time>\d+\:\w+)\s+up\s+((?P<days>\d+)\s+day(s)?,\s+)?'
+                        r'(?P<mins>((\d+ mins|[\w\:]+)))[^,]*,\s+(?P<user_count>\d+)\s+user(s)?'
+                        r',\s+load\s+averages:\s+(?P<avg1>[\d\.]+),\s+(?P<avg2>[\d\.]+)'
+                        r',\s+(?P<avg3>[\d\.]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1193,22 +1192,35 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
 
                 # 8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
                 if group["days"]:
-                    current_up_time_dict["#text"] = group[
-                        "days"] + " days," + " " + group["mins"] + " mins,"
-                    current_up_time_dict["@junos:seconds"] = str(
-                        (int(group['days']) * 86400) + \
-                        (int(group['mins'].split(':')[0]) * 3600) + \
-                        ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
-                    )
+                    if "min" in group["mins"]:
+                        current_up_time_dict["#text"] = group[
+                            "days"] + " days," + " " + group["mins"]
+                        current_up_time_dict["@junos:seconds"] = str(
+                            (int(group['days']) * 86400) +
+                            (int(group['mins'].split(' ')[0]) * 60)
+                            )
+                    else:
+                        current_up_time_dict["#text"] = group[
+                            "days"] + " days," + " " + group["mins"] + " mins,"
+                        current_up_time_dict["@junos:seconds"] = str(
+                            (int(group['days']) * 86400) + \
+                            (int(group['mins'].split(':')[0]) * 3600) + \
+                            ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
+                        )
 
                 # 2:08PM  up 11:03, 1 users, load averages: 0.31, 0.48, 0.50
                 else:
-                    current_up_time_dict["#text"] = group["mins"] + " mins,"
-
-                    current_up_time_dict["@junos:seconds"] = str(
-                        (int(group['mins'].split(':')[0]) * 3600) + \
-                        ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
-                    )
+                    if "min" in group["mins"]:
+                        current_up_time_dict["#text"] = group["mins"]
+                        current_up_time_dict["@junos:seconds"] = str(
+                            int(group['mins'].split(' ')[0]) * 60
+                            )
+                    else:
+                        current_up_time_dict["#text"] = group["mins"] + " mins,"
+                        current_up_time_dict["@junos:seconds"] = str(
+                            (int(group['mins'].split(':')[0]) * 3600) + \
+                            ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
+                        )
 
                 current_active_dict = {}
                 current_active_dict["#text"] = group["user_count"]

@@ -2012,9 +2012,16 @@ class ShowBgpSummarySuperParser(ShowBgpSummarySchema):
             m = p2.match(line)
             if m:
                 route_identifier = m.groupdict()['route_identifier']
-                local_as = int(m.groupdict()['local_as'])
 
+                local_as = str(m.groupdict()['local_as'])
+                # Coversion to BGP ASN 4260036636(AS-PLAIN) from 65003.28(AS-COLON)
+                if '.' in local_as:
+                    val = local_as.split('.')
+                    local_as = 65536*int(val[0])+int(val[1])
+                else:
+                    local_as = int(local_as)
                 sum_dict['bgp_id'] = local_as
+                
                 continue
 
             # BGP table version is 28, main routing table version 28
