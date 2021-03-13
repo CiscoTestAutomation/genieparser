@@ -1,11 +1,11 @@
 expected_output = {
-    'users': { 
+    'users': {
         'admin': {
             'uid': '0',
             'gid': '0',
             'home': '/home/admin',
             'shell': '/etc/cli.sh',
-            'name': 'Admin ',
+            'name': 'Admin',
             'privileges': 'Access to Expert features'
         },
         'monitor': {
@@ -13,8 +13,8 @@ expected_output = {
             'gid': '100',
             'home': '/home/monitor',
             'shell': '/etc/cli.sh',
-            'name': 'Monitor ',
-            'privileges': 'None' 
+            'name': 'Monitor',
+            'privileges': 'None'
         },
         'somedude': {
             'uid': '10',
@@ -22,7 +22,7 @@ expected_output = {
             'home': '/home/somewhere',
             'shell': '/bin/bash',
             'name': 'Some Dude',
-            'privileges': 'None' 
+            'privileges': 'None'
         }
     }
 }

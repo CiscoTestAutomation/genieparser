@@ -1,6 +1,17 @@
-from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Or, Optional
+""" show_ntp.py
+
+Check Point Gaia parsers for the following show commands:
+    * show ntp active
+    * show ntp current
+    * show ntp servers
+
+"""
+
 import re
+
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any
+
 
 class ShowNtpActiveSchema(MetaParser):
     schema = {
@@ -35,7 +46,7 @@ class ShowNtpActive(ShowNtpActiveSchema):
 
         if len(out.splitlines()) != 1:
            # something is wrong
-           return ret_dict
+            return ret_dict
 
         ret_dict = {
             'active': out.splitlines()[0].strip()
@@ -57,8 +68,8 @@ class ShowNtpCurrent(ShowNtpCurrentSchema):
         ret_dict = {}
 
         if len(out.splitlines()) != 1:
-           # something is wrong
-           return ret_dict
+            # something is wrong
+            return ret_dict
 
         ret_dict = {
             'current': out.splitlines()[0].strip()
@@ -90,5 +101,7 @@ class ShowNtpServers(ShowNtpServersSchema):
                 ret_dict[ip_address]['type'] = m.groupdict()['type']
                 ret_dict[ip_address]['version'] = m.groupdict()['version']
                 continue
+
+
 
         return ret_dict

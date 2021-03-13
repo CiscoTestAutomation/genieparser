@@ -1,4 +1,4 @@
-expected_output = { 
+expected_output = {
     'eth0': {
         'state': 'on',
         'mac-addr': '50:00:00:01:00:00',

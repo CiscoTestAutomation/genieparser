@@ -1,10 +1,19 @@
+""" show_interface.py
 
-from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Or, Optional
+Check Point Gaia parsers for the following show commands:
+    * show interface {interface}
+    * show interfaces all
+
+"""
+
 import re
 
+from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Any
+
+
 class ShowInterfaceSchema(MetaParser):
-    schema = { 
+    schema = {
         Any(): {
             'state': str,
             'mac-addr': str,
@@ -72,7 +81,7 @@ class ShowInterface(ShowInterfaceSchema):
                         }
                     }
                 })
-        
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -93,7 +102,7 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 ret_dict[current_interface]['state'] = m.groupdict()['state']
                 continue
-            
+
             p2 = re.compile(r'^mac-addr (?P<mac_addr>.*)$')
             m = p2.match(line)
             if m:
@@ -123,7 +132,7 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 ret_dict[current_interface]['auto-negotiation'] = m.groupdict()['auto_negotiation']
                 continue
-            
+
             p7 = re.compile(r'^speed (?P<speed>.*)$')
             m = p7.match(line)
             if m:
@@ -147,7 +156,7 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 ret_dict[current_interface]['monitor-mode'] = m.groupdict()['monitor_mode']
                 continue
-            
+
             p11 = re.compile(r'^link-speed (?P<link_speed>.*)$')
             m = p11.match(line)
             if m:
@@ -159,7 +168,7 @@ class ShowInterface(ShowInterfaceSchema):
             if m:
                 ret_dict[current_interface]['comments'] = m.groupdict()['comments']
                 continue
-            
+
             p13 = re.compile(r'^ipv4-address (?P<ipv4_address>.*)$')
             m = p13.match(line)
             if m:
@@ -190,7 +199,7 @@ class ShowInterface(ShowInterfaceSchema):
                     'carrier': int(m.groupdict()['tx_carrier'])
                 }
                 continue
-            
+
             p17 = re.compile(r'^RX bytes:(?P<rx_bytes>\d+) packets:(?P<rx_packets>\d+) errors:(?P<rx_errors>\d+) dropped:(?P<rx_dropped>\d+) overruns:(?P<rx_overruns>\d+) frame:(?P<rx_frame>\d+)$')
             m = p17.match(line)
             if m:

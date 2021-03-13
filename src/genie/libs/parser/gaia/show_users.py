@@ -1,7 +1,15 @@
+""" show_users.py
+
+Check Point Gaia parsers for the following show commands:
+    * show users
+
+"""
+
+import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Or, Optional
-import re
+from genie.metaparser.util.schemaengine import Any
+
 
 class ShowUsersSchema(MetaParser):
     schema = {
@@ -25,7 +33,7 @@ class ShowUsersSchema(MetaParser):
     """
 
 class ShowUsers(ShowUsersSchema):
-    
+
     cli_command = ['show users']
 
     def cli(self, output=None):
@@ -36,8 +44,8 @@ class ShowUsers(ShowUsersSchema):
 
         result_dict = {}
 
-        pattern_users = re.compile(r'^(?P<username>[A-z0-9_-]{1,30})\s+(?P<uid>\d+)\s+(?P<gid>\d+)\s+(?P<home>\S+)\s+(?P<shell>\S+)\s+(?P<name>[A-z0-9_-]{1,30}\s[A-z0-9_-]{0,30})\s+(?P<privileges>.*$)')
-    
+        pattern_users = re.compile(r'^(?P<username>[A-z0-9_-]{1,30})\s+(?P<uid>\d+)\s+(?P<gid>\d+)\s+(?P<home>\S+)\s+(?P<shell>\S+)\s+(?P<name>[A-z0-9_-]{1,30}\s?[A-z0-9_-]{1,30})\s+(?P<privileges>.*$)')
+
         for line in out.splitlines():
             line = line.strip()
 
@@ -46,10 +54,8 @@ class ShowUsers(ShowUsersSchema):
             if m:
                 new_user = m.groupdict()
                 user = new_user['username']
-                
+
                 del new_user['username'] # username is used for top level key
                 result_dict.setdefault('users',{}).setdefault(user, new_user)
-        
-        print(result_dict)
 
         return result_dict

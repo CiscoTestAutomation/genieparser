@@ -6,6 +6,3 @@ expected_output = {
     'type': 'Primary',
     'version': '4'},
 }
-
-
-

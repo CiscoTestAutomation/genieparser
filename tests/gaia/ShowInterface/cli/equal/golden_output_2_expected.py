@@ -1,4 +1,4 @@
-expected_output = { 
+expected_output = {
     'eth0': {
         'state': 'on',
         'mac-addr': '50:00:00:01:00:00',
@@ -35,7 +35,7 @@ expected_output = {
         }
     },
     'eth1': {
-        'state': 'on',
+        'state': 'off',
         'mac-addr': '50:00:00:01:00:01',
         'type': 'ethernet',
         "link-state": 'link down',
@@ -70,7 +70,7 @@ expected_output = {
         }
     },
     'eth2': {
-        'state': 'on',
+        'state': 'off',
         'mac-addr': '50:00:00:01:00:02',
         'type': 'ethernet',
         "link-state": 'link down',
@@ -82,7 +82,7 @@ expected_output = {
         'monitor-mode': 'Not configured',
         'link-speed': 'Not configured',
         'comments': '',
-        'ipv4-address': '10.10.1.1/24',
+        'ipv4-address': 'Not Configured',
         'ipv6-address': 'Not Configured',
         'ipv6-local-link-address': 'Not Configured',
         'statistics' :{
@@ -105,7 +105,7 @@ expected_output = {
         }
     },
         'eth3': {
-        'state': 'on',
+        'state': 'off',
         'mac-addr': '50:00:00:01:00:03',
         'type': 'ethernet',
         "link-state": 'link down',
@@ -117,7 +117,7 @@ expected_output = {
         'monitor-mode': 'Not configured',
         'link-speed': 'Not configured',
         'comments': '',
-        'ipv4-address': '10.10.1.1/24',
+        'ipv4-address': 'Not Configured',
         'ipv6-address': 'Not Configured',
         'ipv6-local-link-address': 'Not Configured',
         'statistics' :{
@@ -141,32 +141,32 @@ expected_output = {
     },
         'lo': {
         'state': 'on',
-        'mac-addr': 'Not configured:01',
-        'type': 'ethernet',
-        "link-state": 'link down',
-        'mtu': 1500,
+        'mac-addr': 'Not configured',
+        'type': 'loopback',
+        "link-state": 'not available',
+        'mtu': 65536,
         'auto-negotiation': 'Not configured',
-        'speed': '1000M',
+        'speed': 'N/A',
         'ipv6-autoconfig': 'Not configured',
-        'duplex': 'full',
+        'duplex': 'N/A',
         'monitor-mode': 'Not configured',
         'link-speed': 'Not configured',
         'comments': '',
-        'ipv4-address': '10.10.1.1/24',
+        'ipv4-address': '127.0.0.1/8',
         'ipv6-address': 'Not Configured',
         'ipv6-local-link-address': 'Not Configured',
         'statistics' :{
             'TX' : {
-                'bytes': 0,
-                'packets': 0,
+                'bytes': 697645950,
+                'packets': 4311173,
                 'errors' : 0,
                 'dropped': 0,
                 'overruns': 0,
                 'carrier': 0,
             },
             'RX' : {
-                'bytes': 0,
-                'packets': 0,
+                'bytes': 697645950,
+                'packets': 4311173,
                 'errors' : 0,
                 'dropped': 0,
                 'overruns': 0,
