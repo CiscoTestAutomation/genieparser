@@ -580,9 +580,8 @@ class ShowBgpAll(ShowBgpSuperParser, ShowBgpSchema):
         * 'show bgp {address_family} all'
     '''
 
-    cli_command = ['show bgp {address_family} all',
-                   'show bgp all',
-                   ]
+    cli_command = ['show bgp {address_family} all', 'show bgp all']
+                   
     exclude = ['bgp_table_version']
 
     def cli(self, address_family='', output=None):
