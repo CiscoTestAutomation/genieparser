@@ -2,4 +2,5 @@
                                 Fix
 --------------------------------------------------------------------------------
 * NXOS
+    * Modified ShowForwardingIpv4:
         * Updated regex patterns p3 and, p3_1 to accommodate various outputs.
