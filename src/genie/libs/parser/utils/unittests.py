@@ -490,7 +490,6 @@ CLASS_SKIP = {
         "ShowIpIgmpLocalGroups": True, # Not migrated
         "ShowIpIgmpSnooping": True, # Not migrated
         "ShowInterface": True, # Not migrated
-        "ShowInterfaceBrief": True, # Not migrated
         "ShowInterfaceSwitchport": True, # Not migrated
         "ShowIpInterfaceBrief": True, # Not migrated
         "ShowIpInterfaceBriefPipeVlan": True, # Not migrated
