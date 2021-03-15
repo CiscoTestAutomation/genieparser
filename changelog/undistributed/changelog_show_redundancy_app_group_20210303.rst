@@ -1,8 +1,4 @@
-******************************************************************
-Parser for show redundancy application group {group_id}
-
-******************************************************************
-
 * IOSXE
-  * Added Parser for show redundancy application group {group_id}
+  * Added Parser for ShowRedundancyApplicationGroup
+    *show redundancy application group {group_id}
 
