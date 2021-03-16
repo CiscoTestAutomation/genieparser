@@ -425,6 +425,18 @@ CLASS_SKIP = {
     "nxos": {
         "ShowAccessLists": True, # Not migrated
         "ShowAccessListsSummary": True, # Not migrated
+        "ShowEnvironment": True, # Not migrated
+        "ShowEnvironmentFan": True, # Not migrated
+        "ShowEnvironmentFanDetail": True, # Not migrated
+        "ShowEnvironmentPower": True, # Not migrated
+        "ShowEnvironmentPowerDetail": True, # Not migrated
+        "ShowEnvironmentTemperature": True, # Not migrated
+        "ShowInterfaceCapabilities": True, # Not migrated
+        "ShowInterfaceFec": True, # Not migrated
+        "ShowInterfaceHardwareMap": True, # Not migrated
+        "ShowEnvironmentTemperature": True, # Not migrated
+        "ShowInterfaceTransceiver": True, # Not migrated
+        "ShowInterfaceTransceiverDetails": True, # Not migrated
         "ShowIpArp": True, # Not migrated
         "ShowIpArpDetailVrfAll": True, # Not migrated
         "ShowIpArpSummaryVrfAll": True, # Not migrated
@@ -490,7 +502,6 @@ CLASS_SKIP = {
         "ShowIpIgmpLocalGroups": True, # Not migrated
         "ShowIpIgmpSnooping": True, # Not migrated
         "ShowInterface": True, # Not migrated
-        "ShowInterfaceBrief": True, # Not migrated
         "ShowInterfaceSwitchport": True, # Not migrated
         "ShowIpInterfaceBrief": True, # Not migrated
         "ShowIpInterfaceBriefPipeVlan": True, # Not migrated
