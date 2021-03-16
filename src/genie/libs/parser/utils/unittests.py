@@ -381,7 +381,7 @@ CLASS_SKIP = {
         "ShowControlLocalProperties_viptela": True,
         "ShowControlLocalProperties": True,
         "ShowVrfDetailSuperParser": True,
-        "ShowBgp": True,
+        # "ShowBgp": True,
         "ShowBgpAllNeighborsRoutesSuperParser": True,
         "ShowBgpDetailSuperParser": True,
         "ShowBgpNeighborSuperParser": True,
