@@ -1360,6 +1360,9 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Addresses, Flags: Is-Preferred Is-Primary
         p32 = re.compile(r'^Addresses, +Flags: +(?P<flags>[\S\s]+)$')
 
+        # Addresses
+        p32_1 = re.compile(r'^Addresses$')
+
         # Destination: 10.189.5.92/30, Local: 10.189.5.93, Broadcast: 10.189.5.95
         p33 = re.compile(r'^Destination: +(?P<ifa_destination>\S+), +Local: +(?P<ifa_local>\S+)(, +Broadcast: +(?P<ifa_broadcast>\S+))?(, +Generation: +(?P<generation>\S+))?$')
 
@@ -2125,6 +2128,16 @@ class ShowInterfaces(ShowInterfacesSchema):
                     address_family_dict.setdefault('interface-address', interface_address_dict)
                 continue
 
+            # Addresses
+            m = p32_1.match(line)
+            if m:
+                group = m.groupdict()
+                interface_address_dict = {}
+                interface_address_list = address_family_dict.setdefault('interface-address', [])
+                interface_address_list.append(interface_address_dict)
+                address_family_dict.setdefault('interface-address', interface_address_dict)
+
+
             # Destination: 10.189.5.92/30, Local: 10.189.5.93, Broadcast: 10.189.5.95
             m = p33.match(line)
             if m:
@@ -2153,6 +2166,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = p35.match(line)
             if m:
                 group = m.groupdict()
+
                 interface_address_dict.update({k.replace('_','-'):
                     v for k, v in group.items() if v is not None})
                 continue
