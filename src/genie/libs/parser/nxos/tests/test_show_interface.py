@@ -20,7 +20,12 @@ from genie.libs.parser.nxos.show_interface import (ShowInterface,
                                                    ShowNveInterface,
                                                    ShowIpInterfaceBriefVrfAll,
                                                    ShowInterfaceDescription,
-                                                   ShowInterfaceStatus)
+                                                   ShowInterfaceStatus,
+                                                   ShowInterfaceCapabilities, 
+                                                   ShowInterfaceTransceiver, 
+                                                   ShowInterfaceTransceiverDetails,
+                                                   ShowInterfaceFec,
+                                                   ShowInterfaceHardwareMap)
 
 #############################################################################
 # unitest For Show Interface
@@ -7846,6 +7851,2273 @@ class test_show_interface_status(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+# ===========================================
+# Unit test for 'show interface capabilities'
+# ===========================================
+class TestShowInterfaceCapabilities(unittest.TestCase):
+    '''unit test for "show lldp all'''
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output={'execute.return_value': '''
+        Ethernet1/4
+            Model:                 N9K-C93108TC-EX
+            Type (Non SFP):        10g
+            Speed:                 100,1000,10000
+            Duplex:                full
+            Trunk encap. type:     802.1Q
+            Channel:               yes
+            Broadcast suppression: percentage(0-100)
+            Flowcontrol:           rx-(off/on),tx-(off/on)
+            Rate mode:             dedicated
+            Port mode:             Routed,Switched
+            QOS scheduling:        rx-(8q2t),tx-(7q)
+            CoS rewrite:           yes
+            ToS rewrite:           yes
+            SPAN:                  yes
+            UDLD:                  yes
+            MDIX:                  yes
+            TDR capable:           no
+            Link Debounce:         yes
+            Link Debounce Time:    yes
+            FEX Fabric:            yes
+            dot1Q-tunnel mode:     yes
+            Pvlan Trunk capable:   no
+            Port Group Members:    4
+            EEE (efficient-eth):   no
+            PFC capable:           yes
+            Buffer Boost capable:  no
+            Breakout capable:      no
+            MACSEC capable:        no
+        '''
+    }
+
+    golden_parsed_output= {
+        "Ethernet1/4": {
+            "model": "N9K-C93108TC-EX",
+            "sfp": False,
+            "type": "10g",
+            "speed": [100,1000,10000],
+            "duplex": "full",
+            "trunk_encap_type": "802.1Q",
+            "channel": "yes",
+            "broadcast_suppression": {"type": "percentage", "value": "0-100"},
+            "flowcontrol": {"rx": "off/on", "tx": "off/on"},
+            "rate_mode": "dedicated",
+            "port_mode": "Routed,Switched",
+            "qos_scheduling": {"rx": "8q2t", "tx": "7q"},
+            "cos_rewrite": "yes",
+            "tos_rewrite": "yes",
+            "span": "yes",
+            "udld": "yes",
+            "mdix": "yes",
+            "tdr_capable": "no",
+            "link_debounce": "yes",
+            "link_debounce_time": "yes",
+            "fex_fabric": "yes",
+            "dot1q_tunnel_mode": "yes",
+            "pvlan_trunk_capable": "no",
+            "port_group_members": 4,
+            "eee_efficient_eth": "no",
+            "pfc_capable": "yes",
+            "buffer_boost_capable": "no",
+            "breakout_capable": "no",
+            "macsec_capable": "no",
+        }
+    }
+
+
+
+    golden_output_1 = {'execute.return_value': '''
+        Ethernet1/1/1
+            Model:                 N9K-C9236C
+            Type (SFP capable):    QSFP-100G-CR4
+            Speed:                 1000,10000
+            Duplex:                full
+            Trunk encap. type:     802.1Q
+            Channel:               yes
+            Broadcast suppression: percentage(0-100)
+            Flowcontrol:           rx-(off/on),tx-(off/on)
+            Rate mode:             dedicated
+            Port mode:             Routed,Switched
+            QOS scheduling:        rx-(8q2t),tx-(7q)
+            CoS rewrite:           yes
+            ToS rewrite:           yes
+            SPAN:                  yes
+            UDLD:                  yes
+            MDIX:                  no
+            TDR capable:           no
+            Link Debounce:         yes
+            Link Debounce Time:    yes
+            FEX Fabric:            no
+            dot1Q-tunnel mode:     no
+            Pvlan Trunk capable:   no
+            Port Group Members:    1
+            EEE (efficient-eth):   no
+            PFC capable:           yes
+            Buffer Boost capable:  no
+            Breakout capable:      no
+            MACSEC capable:        no
+
+        Ethernet1/3
+            Model:                 N9K-C93108TC-EX
+            Type (Non SFP):        10g
+            Speed:                 100,1000,10000
+            Duplex:                full
+            Trunk encap. type:     802.1Q
+            Channel:               yes
+            Broadcast suppression: percentage(0-100)
+            Flowcontrol:           rx-(off/on),tx-(off/on)
+            Rate mode:             dedicated
+            Port mode:             Routed,Switched
+            QOS scheduling:        rx-(8q2t),tx-(7q)
+            CoS rewrite:           yes
+            ToS rewrite:           yes
+            SPAN:                  yes
+            UDLD:                  yes
+            MDIX:                  yes
+            TDR capable:           no
+            Link Debounce:         yes
+            Link Debounce Time:    yes
+            FEX Fabric:            yes
+            dot1Q-tunnel mode:     yes
+            Pvlan Trunk capable:   no
+            Port Group Members:    3
+            EEE (efficient-eth):   no
+            PFC capable:           yes
+            Buffer Boost capable:  no
+            Breakout capable:      no
+            MACSEC capable:        no
+          
+        Ethernet1/17
+            Model:                 N9K-C9236C
+            Type (SFP capable):    QSFP-100G-AOC1M
+            Speed:                 1000,10000,25000,40000,50000,100000
+            Duplex:                full
+            Trunk encap. type:     802.1Q
+            Channel:               yes
+            Broadcast suppression: percentage(0-100)
+            Flowcontrol:           rx-(off/on),tx-(off/on)
+            Rate mode:             dedicated
+            Port mode:             Routed,Switched
+            QOS scheduling:        rx-(8q2t),tx-(7q)
+            CoS rewrite:           yes
+            ToS rewrite:           yes
+            SPAN:                  yes
+            UDLD:                  yes
+            MDIX:                  no
+            TDR capable:           no
+            Link Debounce:         yes
+            Link Debounce Time:    yes
+            FEX Fabric:            no
+            dot1Q-tunnel mode:     no
+            Pvlan Trunk capable:   no
+            Port Group Members:    17
+            EEE (efficient-eth):   no
+            PFC capable:           yes
+            Buffer Boost capable:  no
+            Breakout capable:      yes
+            MACSEC capable:        no
+        '''
+    }
+
+    golden_parsed_output_1 = {
+        "Ethernet1/1/1": {
+            "model": "N9K-C9236C",
+            "sfp": True,
+            "type": "QSFP-100G-CR4",
+            "speed": [1000,10000],
+            "duplex": "full",
+            "trunk_encap_type": "802.1Q",
+            "channel": "yes",
+            "broadcast_suppression": {"type": "percentage", "value": "0-100"},
+            "flowcontrol": {"rx": "off/on", "tx": "off/on"},
+            "rate_mode": "dedicated",
+            "port_mode": "Routed,Switched",
+            "qos_scheduling": {"rx": "8q2t", "tx": "7q"},
+            "cos_rewrite": "yes",
+            "tos_rewrite": "yes",
+            "span": "yes",
+            "udld": "yes",
+            "mdix": "no",
+            "tdr_capable": "no",
+            "link_debounce": "yes",
+            "link_debounce_time": "yes",
+            "fex_fabric": "no",
+            "dot1q_tunnel_mode": "no",
+            "pvlan_trunk_capable": "no",
+            "port_group_members": 1,
+            "eee_efficient_eth": "no",
+            "pfc_capable": "yes",
+            "buffer_boost_capable": "no",
+            "breakout_capable": "no",
+            "macsec_capable": "no",
+        },
+        "Ethernet1/3": {
+            "model": "N9K-C93108TC-EX",
+            "sfp": False,
+            "type": "10g",
+            "speed": [100,1000,10000],
+            "duplex": "full",
+            "trunk_encap_type": "802.1Q",
+            "channel": "yes",
+            "broadcast_suppression": {"type": "percentage", "value": "0-100"},
+            "flowcontrol": {"rx": "off/on", "tx": "off/on"},
+            "rate_mode": "dedicated",
+            "port_mode": "Routed,Switched",
+            "qos_scheduling": {"rx": "8q2t", "tx": "7q"},
+            "cos_rewrite": "yes",
+            "tos_rewrite": "yes",
+            "span": "yes",
+            "udld": "yes",
+            "mdix": "yes",
+            "tdr_capable": "no",
+            "link_debounce": "yes",
+            "link_debounce_time": "yes",
+            "fex_fabric": "yes",
+            "dot1q_tunnel_mode": "yes",
+            "pvlan_trunk_capable": "no",
+            "port_group_members": 3,
+            "eee_efficient_eth": "no",
+            "pfc_capable": "yes",
+            "buffer_boost_capable": "no",
+            "breakout_capable": "no",
+            "macsec_capable": "no",
+        },
+        "Ethernet1/17": {
+            "model": "N9K-C9236C",
+            "sfp": True,
+            "type": "QSFP-100G-AOC1M",
+            "speed": [1000,10000,25000,40000,50000,100000],
+            "duplex": "full",
+            "trunk_encap_type": "802.1Q",
+            "channel": "yes",
+            "broadcast_suppression": {"type": "percentage", "value": "0-100"},
+            "flowcontrol": {"rx": "off/on", "tx": "off/on"},
+            "rate_mode": "dedicated",
+            "port_mode": "Routed,Switched",
+            "qos_scheduling": {"rx": "8q2t", "tx": "7q"},
+            "cos_rewrite": "yes",
+            "tos_rewrite": "yes",
+            "span": "yes",
+            "udld": "yes",
+            "mdix": "no",
+            "tdr_capable": "no",
+            "link_debounce": "yes",
+            "link_debounce_time": "yes",
+            "fex_fabric": "no",
+            "dot1q_tunnel_mode": "no",
+            "pvlan_trunk_capable": "no",
+            "port_group_members": 17,
+            "eee_efficient_eth": "no",
+            "pfc_capable": "yes",
+            "buffer_boost_capable": "no",
+            "breakout_capable": "yes",
+            "macsec_capable": "no",
+        },
+    }
+
+
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceCapabilities(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceCapabilities(device=self.device)
+        parsed_output = obj.parse(interface='Ethernet1/4')
+
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowInterfaceCapabilities(device=self.device)
+        parsed_output = obj.parse()
+
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+# ===========================================
+# Unit test for 'show interface transceiver'
+# ===========================================
+class TestShowInterfaceTransceiver(unittest.TestCase):
+    '''unit test for "show interface transceiver'''
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output={'execute.return_value': '''
+        Ethernet1/4
+            transceiver is present
+            type is QSFP-40G-CR4
+            name is CISCO-TYCO
+            part number is 2821248-5
+            revision is D
+            serial number is TED2318K229-B
+            nominal bitrate is 10300 MBit/sec per channel
+            Link length supported for copper is 3 m
+            cisco id is 13
+            cisco extended id number is 16
+            cisco part number is 37-1317-03
+            cisco product id is QSFP-H40G-CU3M
+            cisco version id is V03
+        '''
+    }
+
+    golden_parsed_output= {
+            'Ethernet1/4': {'cis_part_number': '37-1317-03',
+                 'cis_product_id': 'QSFP-H40G-CU3M',
+                 'cis_version_id': 'V03',
+                 'cisco_id': '13',
+                 'name': 'CISCO-TYCO',
+                 'nominal_bitrate': 10300,
+                 'part_number': '2821248-5',
+                 'revision': 'D',
+                 'serial_number': 'TED2318K229-B',
+                 'transceiver_present': True,
+                 'transceiver_type': 'QSFP-40G-CR4'
+            }
+        }
+
+    golden_output_1 = {'execute.return_value': '''
+        Ethernet1/2
+            transceiver is present
+            type is QSFP-DD-400G-COPPER
+            name is CISCO-LEONI
+            part number is L45593-K218-C20
+            revision is 00
+            serial number is LCC2411GC93-A
+            nominal bitrate is 425000 MBit/sec per channel
+            cisco id is 0x18
+            cisco part number is 37-1843-01
+            cisco product id is QDD-400-CU2M
+            cisco version id is V01
+            vendor OUI is a8b0ae
+            date code is 20031400
+            clei code is CMPQAGSCAA
+            power class is 1 (1.5 W maximum)
+            max power is 1.50 W
+            cable attenuation is 0/0/0/0/0 dB for bands 5/7/12.9/25.8/56 GHz
+            near-end lanes used none
+            far-end lane code for 8 lanes aaaaaaaa
+            media interface is copper cable unequalized
+            Advertising code is Passive Cu
+            Host electrical interface code is 200GAUI-4 C2M (Annex 120E)
+            Cable Length is   2.0 M
+            CMIS version is  4
+        
+        '''
+    }
+
+    golden_parsed_output_1 = {
+            'Ethernet1/2': {'advertising_code': 'Passive Cu',
+                 'cable_attenuation': '0/0/0/0/0 dB for bands 5/7/12.9/25.8/56 '
+                                      'GHz',
+                 'cable_length': 2.0,
+                 'cis_part_number': '37-1843-01',
+                 'cis_product_id': 'QDD-400-CU2M',
+                 'cis_version_id': 'V01',
+                 'cisco_id': '0x18',
+                 'clei': 'CMPQAGSCAA',
+                 'cmis_ver': 4,
+                 'date_code': '20031400',
+                 'far_end_lanes': '8 lanes aaaaaaaa',
+                 'host_electrical_intf': '200GAUI-4 C2M (Annex 120E)',
+                 'max_power': 1.5,
+                 'media_interface': 'copper cable unequalized',
+                 'name': 'CISCO-LEONI',
+                 'near_end_lanes': 'none',
+                 'nominal_bitrate': 425000,
+                 'part_number': 'L45593-K218-C20',
+                 'power_class': '1 (1.5 W maximum)',
+                 'revision': '00',
+                 'serial_number': 'LCC2411GC93-A',
+                 'vendor_oui': 'a8b0ae',
+                 'transceiver_present': True,
+                 'transceiver_type': 'QSFP-DD-400G-COPPER'
+            }
+    }
+
+    golden_output_2={'execute.return_value': '''
+        Ethernet1/1
+            transceiver is present
+            type is QSFP-DD-400G-COPPER
+            name is CISCO-LEONI
+            part number is L45593-K218-C20
+            revision is 00
+            serial number is LCC2411GG1W-A
+            nominal bitrate is 425000 MBit/sec per channel
+            cisco id is 0x18
+            cisco part number is 37-1843-01
+            cisco product id is QDD-400-CU2M
+            cisco version id is V01
+            vendor OUI is a8b0ae
+            date code is 20031400
+            clei code is CMPQAGSCAA
+            power class is 1 (1.5 W maximum)
+            max power is 1.50 W
+            cable attenuation is 0/0/0/0/0 dB for bands 5/7/12.9/25.8/56 GHz
+            near-end lanes used none
+            far-end lane code for 8 lanes aaaaaaaa
+            media interface is copper cable unequalized
+            Advertising code is Passive Cu
+            Host electrical interface code is 200GAUI-4 C2M (Annex 120E)
+            Cable Length is   2.0 M
+            CMIS version is  4
+
+        Ethernet1/30
+            transceiver is present
+            type is QSFP-40G-CR4
+            name is CISCO-TYCO
+            part number is 2821248-5
+            revision is D
+            serial number is TED2318K1QR-B
+            nominal bitrate is 10300 MBit/sec per channel
+            Link length supported for copper is 3 m
+            cisco id is 13
+            cisco extended id number is 16
+            cisco part number is 37-1317-03
+            cisco product id is QSFP-H40G-CU3M
+            cisco version id is V03
+
+        Ethernet1/52
+            transceiver is present
+            type is QSFP-DD-400G-FR4
+            name is CISCO-INNOLIGHT
+            part number is T-DQ4CNT-NCI
+            revision is 2B
+            serial number is INL24265523
+            nominal bitrate is 425000 MBit/sec per channel
+            cisco id is 0x18
+            cisco part number is 10-3321-01
+            cisco product id is QDD-400G-FR4-S
+            cisco version id is V01
+            firmware version is 204.154
+            Link length SMF is 2 km
+            Nominal transmitter wavelength is 1301.00 nm
+            Wavelength tolerance is 6.500 nm
+            host lane count is 8
+            media lane count is 4
+            max module temperature is 75 deg C
+            min module temperature is 0 deg C
+            min operational voltage is 3.14 V
+            vendor OUI is 447c7f
+            date code is 200627
+            clei code is CMUIAUNCAA
+            power class is 6 (12.0 W maximum)
+            max power is 12.00 W
+            near-end lanes used none
+            far-end lane code for 8 lanes Undefined
+            media interface is 1310 nm EML
+            Advertising code is Optical Interfaces: SMF
+            Host electrical interface code is 400GAUI-8 C2M (Annex 120E)
+            media interface advertising code is 400G-FR4
+
+        Ethernet1/56
+            transceiver is not present
+
+        Ethernet1/63
+            transceiver is present
+            type is QSFP-DD-400G-DR4
+            name is CISCO-INNOLIGHT
+            part number is T-DP4CNH-NCI
+            revision is 2B
+            serial number is INL24173669
+            nominal bitrate is 425000 MBit/sec per channel
+            cisco id is 0x18
+            cisco part number is 10-3320-01
+            cisco product id is QDD-400G-DR4-S
+            cisco version id is V01
+            firmware version is 204.154
+            Link length SMF is 0.5 km
+            Nominal transmitter wavelength is 1311.00 nm
+            Wavelength tolerance is 6.500 nm
+            host lane count is 8
+            media lane count is 4
+            max module temperature is 75 deg C
+            min module temperature is 0 deg C
+            min operational voltage is 3.14 V
+            vendor OUI is 447c7f
+            date code is 200422
+            clei code is CMUIAUPCAA
+            power class is 6 (12.0 W maximum)
+            max power is 12.00 W
+            near-end lanes used none
+            far-end lane code for 8 lanes Undefined
+            media interface is 1310 nm EML
+            Advertising code is Optical Interfaces: SMF
+            Host electrical interface code is 400GAUI-8 C2M (Annex 120E)
+            media interface advertising code is 400GBASE-DR4 (Cl 124)
+        '''
+    }
+
+    golden_parsed_output_2 = {
+        "Ethernet1/1": {
+            "advertising_code": "Passive Cu",
+            "cable_attenuation": "0/0/0/0/0 dB for bands 5/7/12.9/25.8/56 " "GHz",
+            "cable_length": 2.0,
+            "cis_part_number": "37-1843-01",
+            "cis_product_id": "QDD-400-CU2M",
+            "cis_version_id": "V01",
+            "cisco_id": "0x18",
+            "clei": "CMPQAGSCAA",
+            "cmis_ver": 4,
+            "date_code": "20031400",
+            "far_end_lanes": "8 lanes aaaaaaaa",
+            "host_electrical_intf": "200GAUI-4 C2M (Annex 120E)",
+            "max_power": 1.5,
+            "media_interface": "copper cable unequalized",
+            "name": "CISCO-LEONI",
+            "near_end_lanes": "none",
+            "nominal_bitrate": 425000,
+            "part_number": "L45593-K218-C20",
+            "power_class": "1 (1.5 W maximum)",
+            "revision": "00",
+            "serial_number": "LCC2411GG1W-A",
+            "vendor_oui": "a8b0ae",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-COPPER",
+        },
+        "Ethernet1/30": {
+            "cis_part_number": "37-1317-03",
+            "cis_product_id": "QSFP-H40G-CU3M",
+            "cis_version_id": "V03",
+            "cisco_id": "13",
+            "name": "CISCO-TYCO",
+            "nominal_bitrate": 10300,
+            "part_number": "2821248-5",
+            "revision": "D",
+            "serial_number": "TED2318K1QR-B",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-40G-CR4",
+        },
+        "Ethernet1/52": {
+            "advertising_code": "Optical Interfaces: SMF",
+            "cis_part_number": "10-3321-01",
+            "cis_product_id": "QDD-400G-FR4-S",
+            "cis_version_id": "V01",
+            "cisco_id": "0x18",
+            "clei": "CMUIAUNCAA",
+            "date_code": "200627",
+            "far_end_lanes": "8 lanes Undefined",
+            "firmware_ver": "204.154",
+            "host_electrical_intf": "400GAUI-8 C2M (Annex 120E)",
+            "host_lane_count": 8,
+            "link_length": "2 km",
+            "max_mod_temp": 75,
+            "max_power": 12.0,
+            "media_interface": "1310 nm EML",
+            "media_interface_advert_code": "400G-FR4",
+            "media_lane_count": 4,
+            "min_mod_temp": 0,
+            "min_oper_volt": "3.14 V",
+            "name": "CISCO-INNOLIGHT",
+            "near_end_lanes": "none",
+            "nominal_bitrate": 425000,
+            "nominal_trans_wavelength": "1301.00 nm",
+            "part_number": "T-DQ4CNT-NCI",
+            "power_class": "6 (12.0 W maximum)",
+            "revision": "2B",
+            "serial_number": "INL24265523",
+            "vendor_oui": "447c7f",
+            "wavelength_tolerance": "6.500 nm",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-FR4",
+        },
+        "Ethernet1/56": {
+            "transceiver_present": False
+        },
+        "Ethernet1/63": {
+            "advertising_code": "Optical Interfaces: SMF",
+            "cis_part_number": "10-3320-01",
+            "cis_product_id": "QDD-400G-DR4-S",
+            "cis_version_id": "V01",
+            "cisco_id": "0x18",
+            "clei": "CMUIAUPCAA",
+            "date_code": "200422",
+            "far_end_lanes": "8 lanes Undefined",
+            "firmware_ver": "204.154",
+            "host_electrical_intf": "400GAUI-8 C2M (Annex 120E)",
+            "host_lane_count": 8,
+            "link_length": "0.5 km",
+            "max_mod_temp": 75,
+            "max_power": 12.0,
+            "media_interface": "1310 nm EML",
+            "media_interface_advert_code": "400GBASE-DR4 (Cl 124)",
+            "media_lane_count": 4,
+            "min_mod_temp": 0,
+            "min_oper_volt": "3.14 V",
+            "name": "CISCO-INNOLIGHT",
+            "near_end_lanes": "none",
+            "nominal_bitrate": 425000,
+            "nominal_trans_wavelength": "1311.00 nm",
+            "part_number": "T-DP4CNH-NCI",
+            "power_class": "6 (12.0 W maximum)",
+            "revision": "2B",
+            "serial_number": "INL24173669",
+            "vendor_oui": "447c7f",
+            "wavelength_tolerance": "6.500 nm",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-DR4",
+        },
+    }
+
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceTransceiver(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceTransceiver(device=self.device)
+        parsed_output = obj.parse(interface='Ethernet1/4')
+
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowInterfaceTransceiver(device=self.device)
+        parsed_output = obj.parse(interface='Ethernet1/2')
+
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowInterfaceTransceiver(device=self.device)
+        parsed_output = obj.parse()
+
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+# ==================================================
+# Unit test for 'show interface transceiver details'
+# ==================================================
+class TestShowInterfaceTransceiverDetails(unittest.TestCase):
+    '''unit test for "show interface transceiver details'''
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output={'execute.return_value': '''
+        Ethernet1/1
+            transceiver is present
+            type is QSFP-DD-400G-COPPER
+            name is CISCO-LEONI
+            part number is L45593-K218-C20
+            revision is 00
+            serial number is LCC2411GG1W-A
+            nominal bitrate is 425000 MBit/sec per channel
+            cisco id is 0x18
+            cisco part number is 37-1843-01
+            cisco product id is QDD-400-CU2M
+            cisco version id is V01
+            vendor OUI is a8b0ae
+            date code is 20031400
+            clei code is CMPQAGSCAA
+            power class is 1 (1.5 W maximum)
+            max power is 1.50 W
+            cable attenuation is 0/0/0/0/0 dB for bands 5/7/12.9/25.8/56 GHz
+            near-end lanes used none
+            far-end lane code for 8 lanes aaaaaaaa
+            media interface is copper cable unequalized
+            Advertising code is Passive Cu
+            Host electrical interface code is Undefined
+            Cable Length is   2.0 M
+            CMIS version is  4
+
+        DOM is not supported
+        '''
+    }
+
+    golden_parsed_output= {
+        "Ethernet1/1": {
+            "advertising_code": "Passive Cu",
+            "cable_attenuation": "0/0/0/0/0 dB for bands 5/7/12.9/25.8/56 " "GHz",
+            "cable_length": 2.0,
+            "cis_part_number": "37-1843-01",
+            "cis_product_id": "QDD-400-CU2M",
+            "cis_version_id": "V01",
+            "cisco_id": "0x18",
+            "clei": "CMPQAGSCAA",
+            "cmis_ver": 4,
+            "date_code": "20031400",
+            "dom_supported": False,
+            "far_end_lanes": "8 lanes aaaaaaaa",
+            "host_electrical_intf": "Undefined",
+            "max_power": 1.5,
+            "media_interface": "copper cable unequalized",
+            "name": "CISCO-LEONI",
+            "near_end_lanes": "none",
+            "nominal_bitrate": 425000,
+            "part_number": "L45593-K218-C20",
+            "power_class": "1 (1.5 W maximum)",
+            "revision": "00",
+            "serial_number": "LCC2411GG1W-A",
+            "vendor_oui": "a8b0ae",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-COPPER",
+        }
+    }
+
+
+    golden_output_1 = {'execute.return_value': '''
+        Ethernet1/63
+            transceiver is present
+            type is QSFP-DD-400G-DR4
+            name is CISCO-INNOLIGHT
+            part number is T-DP4CNH-NCI
+            revision is 2B
+            serial number is INL24173669
+            nominal bitrate is 425000 MBit/sec per channel
+            cisco id is 0x18
+            cisco part number is 10-3320-01
+            cisco product id is QDD-400G-DR4-S
+            cisco version id is V01
+            firmware version is 204.154
+            Link length SMF is 0.5 km
+            Nominal transmitter wavelength is 1311.00 nm
+            Wavelength tolerance is 6.500 nm
+            host lane count is 8
+            media lane count is 4
+            max module temperature is 75 deg C
+            min module temperature is 0 deg C
+            min operational voltage is 3.14 V
+            vendor OUI is 447c7f
+            date code is 200422
+            clei code is CMUIAUPCAA
+            power class is 6 (12.0 W maximum)
+            max power is 12.00 W
+            near-end lanes used none
+            far-end lane code for 8 lanes Undefined
+            media interface is 1310 nm EML
+            Advertising code is Optical Interfaces: SMF
+            Host electrical interface code is 400GAUI-8 C2M (Annex 120E)
+            media interface advertising code is 400GBASE-DR4 (Cl 124)
+
+        Lane Number:1 Network Lane
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   21.02 C        80.00 C     -5.00 C     75.00 C        0.00 C
+          Voltage        3.33 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+          Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+          Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+        Lane Number:2 Network Lane
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   21.02 C        80.00 C     -5.00 C     75.00 C        0.00 C
+          Voltage        3.33 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+          Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+          Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+        Lane Number:3 Network Lane
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   21.02 C        80.00 C     -5.00 C     75.00 C        0.00 C
+          Voltage        3.33 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+          Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+          Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+        Lane Number:4 Network Lane
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   21.02 C        80.00 C     -5.00 C     75.00 C        0.00 C
+          Voltage        3.33 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+          Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+          Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+                
+        '''
+    }
+
+    golden_parsed_output_1 = {
+        "Ethernet1/63": {
+            "lane_number" : {
+                "1 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "120.00",
+                        "high_warning": "110.00",
+                        "low_alarm": "20.00",
+                        "low_warning": "30.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-9.91",
+                        "low_warning": "-5.90",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "21.02",
+                        "high_alarm": "80.00",
+                        "high_warning": "75.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-6.90",
+                        "low_warning": "-2.90",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.33",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+                "2 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "120.00",
+                        "high_warning": "110.00",
+                        "low_alarm": "20.00",
+                        "low_warning": "30.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-9.91",
+                        "low_warning": "-5.90",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "21.02",
+                        "high_alarm": "80.00",
+                        "high_warning": "75.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-6.90",
+                        "low_warning": "-2.90",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.33",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+                "3 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "120.00",
+                        "high_warning": "110.00",
+                        "low_alarm": "20.00",
+                        "low_warning": "30.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-9.91",
+                        "low_warning": "-5.90",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "21.02",
+                        "high_alarm": "80.00",
+                        "high_warning": "75.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-6.90",
+                        "low_warning": "-2.90",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.33",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+                "4 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "120.00",
+                        "high_warning": "110.00",
+                        "low_alarm": "20.00",
+                        "low_warning": "30.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-9.91",
+                        "low_warning": "-5.90",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "21.02",
+                        "high_alarm": "80.00",
+                        "high_warning": "75.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-6.90",
+                        "low_warning": "-2.90",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.33",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+            },
+            "advertising_code": "Optical Interfaces: SMF",
+            "cis_part_number": "10-3320-01",
+            "cis_product_id": "QDD-400G-DR4-S",
+            "cis_version_id": "V01",
+            "cisco_id": "0x18",
+            "clei": "CMUIAUPCAA",
+            "date_code": "200422",
+            "dom_supported": True,
+            "far_end_lanes": "8 lanes Undefined",
+            "firmware_ver": "204.154",
+            "host_electrical_intf": "400GAUI-8 C2M (Annex 120E)",
+            "host_lane_count": 8,
+            "link_length": "0.5 km",
+            "max_mod_temp": 75,
+            "max_power": 12.0,
+            "media_interface": "1310 nm EML",
+            "media_interface_advert_code": "400GBASE-DR4 (Cl 124)",
+            "media_lane_count": 4,
+            "min_mod_temp": 0,
+            "min_oper_volt": "3.14 V",
+            "name": "CISCO-INNOLIGHT",
+            "near_end_lanes": "none",
+            "nominal_bitrate": 425000,
+            "nominal_trans_wavelength": "1311.00 nm",
+            "part_number": "T-DP4CNH-NCI",
+            "power_class": "6 (12.0 W maximum)",
+            "revision": "2B",
+            "serial_number": "INL24173669",
+            "vendor_oui": "447c7f",
+            "wavelength_tolerance": "6.500 nm",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-DR4",
+        }
+    }
+
+
+    golden_output_2={'execute.return_value': '''
+        Ethernet1/44
+            transceiver is present
+            type is QSFP-100G-AOC2M
+            name is CISCO-DELTA
+            part number is QAOC-100G4F1A02C
+            revision is A
+            serial number is DTS2419B340-B
+            nominal bitrate is 25500 MBit/sec
+            cisco id is 17
+            cisco extended id number is 156
+            cisco part number is 10-3173-03
+            cisco product id is QSFP-100G-AOC2M
+            cisco version id is V03
+
+        DOM is not supported
+
+        Ethernet1/45
+            transceiver is present
+            type is QSFP-40G-CR4
+            name is CISCO-TYCO
+            part number is 2821248-3
+            revision is D
+            serial number is TED2027JJ2T-B
+            nominal bitrate is 10300 MBit/sec per channel
+            Link length supported for copper is 1 m
+            cisco id is 13
+            cisco extended id number is 16
+            cisco part number is 37-1322-03
+            cisco product id is QSFP-H40G-CU1M
+            cisco version id is V03
+
+        DOM is not supported
+
+        Ethernet1/46
+            transceiver is present
+            type is QSFP-40G-CR4
+            name is CISCO-TYCO
+            part number is 2821248-3
+            revision is D
+            serial number is TED2027JJ2T-A
+            nominal bitrate is 10300 MBit/sec per channel
+            Link length supported for copper is 1 m
+            cisco id is 13
+            cisco extended id number is 16
+            cisco part number is 37-1322-03
+            cisco product id is QSFP-H40G-CU1M
+            cisco version id is V03
+
+        DOM is not supported
+
+        Ethernet1/47
+            transceiver is present
+            type is QSFP-DD-400G-DR4
+            name is CISCO-INNOLIGHT
+            part number is T-DP4CNH-NCI
+            revision is 2B
+            serial number is INL24173686
+            nominal bitrate is 425000 MBit/sec per channel
+            cisco id is 0x18
+            cisco part number is 10-3320-01
+            cisco product id is QDD-400G-DR4-S
+            cisco version id is V01
+            firmware version is 204.154
+            Link length SMF is 0.5 km
+            Nominal transmitter wavelength is 1311.00 nm
+            Wavelength tolerance is 6.500 nm
+            host lane count is 8
+            media lane count is 4
+            max module temperature is 75 deg C
+            min module temperature is 0 deg C
+            min operational voltage is 3.14 V
+            vendor OUI is 447c7f
+            date code is 200422
+            clei code is CMUIAUPCAA
+            power class is 6 (12.0 W maximum)
+            max power is 12.00 W
+            near-end lanes used none
+            far-end lane code for 8 lanes Undefined
+            media interface is 1310 nm EML
+            Advertising code is Optical Interfaces: SMF
+            Host electrical interface code is 400GAUI-8 C2M (Annex 120E)
+            media interface advertising code is 400GBASE-DR4 (Cl 124)
+
+        Lane Number:1 Network Lane
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   22.99 C        80.00 C     -5.00 C     75.00 C        0.00 C
+          Voltage        3.34 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+          Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+          Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+        Lane Number:2 Network Lane
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   22.99 C        80.00 C     -5.00 C     75.00 C        0.00 C
+          Voltage        3.34 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+          Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+          Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+        Lane Number:3 Network Lane
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   22.99 C        80.00 C     -5.00 C     75.00 C        0.00 C
+          Voltage        3.34 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+          Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+          Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+        Lane Number:4 Network Lane
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   22.99 C        80.00 C     -5.00 C     75.00 C        0.00 C
+          Voltage        3.34 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+          Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+          Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+        Ethernet1/48
+            transceiver is present
+            type is QSFP-H40G-AOC7M
+            name is CISCO-FINISAR
+            part number is FCBN410QE2C07-C3
+            revision is A
+            serial number is FIW234501JT-B
+            nominal bitrate is 10300 MBit/sec per channel
+            cisco id is 13
+            cisco extended id number is 16
+            cisco part number is 10-2930-03
+            cisco product id is QSFP-H40G-AOC7M
+            cisco version id is V03
+
+        DOM is not supported
+
+        Ethernet1/49
+            transceiver is present
+            type is QSFP-H40G-AOC3M
+            name is CISCO-FINISAR
+            part number is FCBN410QE2C03-C2
+            revision is A
+            serial number is FIW232200C5-A
+            nominal bitrate is 10300 MBit/sec per channel
+            cisco id is 13
+            cisco extended id number is 16
+            cisco part number is 10-2927-02
+            cisco product id is QSFP-H40G-AOC3M
+            cisco version id is V02
+
+        DOM is not supported
+
+        Ethernet1/50
+            transceiver is present
+            type is QSFP-100G-PSM4
+            name is CISCO-LUXTERA
+            part number is LUX42604BO
+            revision is B
+            serial number is CVR2225001K
+            nominal bitrate is 25500 MBit/sec
+            Link length supported for 9/125um fiber is 500 m
+            cisco id is 17
+            cisco extended id number is 220
+            cisco part number is 10-3144-01
+            cisco product id is QSFP-100G-PSM4-S
+            cisco version id is V01
+
+        Lane Number:1 Network Lane
+                   SFP Detail Diagnostics Information (internal calibration)
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   16.58 C        75.00 C     -5.00 C     70.00 C        0.00 C
+          Voltage        3.27 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current       47.25 mA      125.30 mA    10.50 mA   120.00 mA      14.00 mA
+          Tx Power          N/A         4.99 dBm  -13.46 dBm    1.99 dBm     -9.43 dBm
+          Rx Power     -13.97 dBm  -    4.99 dBm  -16.77 dBm    1.99 dBm    -12.67 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+        Lane Number:2 Network Lane
+                   SFP Detail Diagnostics Information (internal calibration)
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   16.58 C        75.00 C     -5.00 C     70.00 C        0.00 C
+          Voltage        3.27 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current       47.25 mA      125.30 mA    10.50 mA   120.00 mA      14.00 mA
+          Tx Power          N/A         4.99 dBm  -13.46 dBm    1.99 dBm     -9.43 dBm
+          Rx Power     -14.68 dBm  -    4.99 dBm  -16.77 dBm    1.99 dBm    -12.67 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+        Lane Number:3 Network Lane
+                   SFP Detail Diagnostics Information (internal calibration)
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   16.58 C        75.00 C     -5.00 C     70.00 C        0.00 C
+          Voltage        3.27 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current       47.25 mA      125.30 mA    10.50 mA   120.00 mA      14.00 mA
+          Tx Power          N/A         4.99 dBm  -13.46 dBm    1.99 dBm     -9.43 dBm
+          Rx Power     -15.08 dBm  -    4.99 dBm  -16.77 dBm    1.99 dBm    -12.67 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+        Lane Number:4 Network Lane
+                   SFP Detail Diagnostics Information (internal calibration)
+          ----------------------------------------------------------------------------
+                        Current              Alarms                  Warnings
+                        Measurement     High        Low         High          Low
+          ----------------------------------------------------------------------------
+          Temperature   16.58 C        75.00 C     -5.00 C     70.00 C        0.00 C
+          Voltage        3.27 V         3.63 V      2.97 V      3.46 V        3.13 V
+          Current       47.25 mA      125.30 mA    10.50 mA   120.00 mA      14.00 mA
+          Tx Power          N/A         4.99 dBm  -13.46 dBm    1.99 dBm     -9.43 dBm
+          Rx Power     -13.66 dBm  -    4.99 dBm  -16.77 dBm    1.99 dBm    -12.67 dBm
+          Transmit Fault Count = 0
+          ----------------------------------------------------------------------------
+          Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+        '''
+    }
+
+    golden_parsed_output_2 = {
+        "Ethernet1/44": {
+            "cis_part_number": "10-3173-03",
+            "cis_product_id": "QSFP-100G-AOC2M",
+            "cis_version_id": "V03",
+            "cisco_id": "17",
+            "dom_supported": False,
+            "name": "CISCO-DELTA",
+            "nominal_bitrate": 25500,
+            "part_number": "QAOC-100G4F1A02C",
+            "revision": "A",
+            "serial_number": "DTS2419B340-B",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-100G-AOC2M",
+        },
+        "Ethernet1/45": {
+            "cis_part_number": "37-1322-03",
+            "cis_product_id": "QSFP-H40G-CU1M",
+            "cis_version_id": "V03",
+            "cisco_id": "13",
+            "dom_supported": False,
+            "name": "CISCO-TYCO",
+            "nominal_bitrate": 10300,
+            "part_number": "2821248-3",
+            "revision": "D",
+            "serial_number": "TED2027JJ2T-B",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-40G-CR4",
+        },
+        "Ethernet1/46": {
+            "cis_part_number": "37-1322-03",
+            "cis_product_id": "QSFP-H40G-CU1M",
+            "cis_version_id": "V03",
+            "cisco_id": "13",
+            "dom_supported": False,
+            "name": "CISCO-TYCO",
+            "nominal_bitrate": 10300,
+            "part_number": "2821248-3",
+            "revision": "D",
+            "serial_number": "TED2027JJ2T-A",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-40G-CR4",
+        },
+        "Ethernet1/47": {
+            "lane_number": {
+                "1 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "120.00",
+                        "high_warning": "110.00",
+                        "low_alarm": "20.00",
+                        "low_warning": "30.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-9.91",
+                        "low_warning": "-5.90",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "22.99",
+                        "high_alarm": "80.00",
+                        "high_warning": "75.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-6.90",
+                        "low_warning": "-2.90",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.34",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+                "2 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "120.00",
+                        "high_warning": "110.00",
+                        "low_alarm": "20.00",
+                        "low_warning": "30.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-9.91",
+                        "low_warning": "-5.90",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "22.99",
+                        "high_alarm": "80.00",
+                        "high_warning": "75.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-6.90",
+                        "low_warning": "-2.90",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.34",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+                "3 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "120.00",
+                        "high_warning": "110.00",
+                        "low_alarm": "20.00",
+                        "low_warning": "30.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-9.91",
+                        "low_warning": "-5.90",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "22.99",
+                        "high_alarm": "80.00",
+                        "high_warning": "75.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-6.90",
+                        "low_warning": "-2.90",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.34",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+                "4 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "120.00",
+                        "high_warning": "110.00",
+                        "low_alarm": "20.00",
+                        "low_warning": "30.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-9.91",
+                        "low_warning": "-5.90",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "22.99",
+                        "high_alarm": "80.00",
+                        "high_warning": "75.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "6.99",
+                        "high_warning": "3.99",
+                        "low_alarm": "-6.90",
+                        "low_warning": "-2.90",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.34",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+            },
+            "advertising_code": "Optical Interfaces: SMF",
+            "cis_part_number": "10-3320-01",
+            "cis_product_id": "QDD-400G-DR4-S",
+            "cis_version_id": "V01",
+            "cisco_id": "0x18",
+            "clei": "CMUIAUPCAA",
+            "date_code": "200422",
+            "dom_supported": True,
+            "far_end_lanes": "8 lanes Undefined",
+            "firmware_ver": "204.154",
+            "host_electrical_intf": "400GAUI-8 C2M (Annex 120E)",
+            "host_lane_count": 8,
+            "link_length": "0.5 km",
+            "max_mod_temp": 75,
+            "max_power": 12.0,
+            "media_interface": "1310 nm EML",
+            "media_interface_advert_code": "400GBASE-DR4 (Cl 124)",
+            "media_lane_count": 4,
+            "min_mod_temp": 0,
+            "min_oper_volt": "3.14 V",
+            "name": "CISCO-INNOLIGHT",
+            "near_end_lanes": "none",
+            "nominal_bitrate": 425000,
+            "nominal_trans_wavelength": "1311.00 nm",
+            "part_number": "T-DP4CNH-NCI",
+            "power_class": "6 (12.0 W maximum)",
+            "revision": "2B",
+            "serial_number": "INL24173686",
+            "vendor_oui": "447c7f",
+            "wavelength_tolerance": "6.500 nm",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-DD-400G-DR4",
+        },
+        "Ethernet1/48": {
+            "cis_part_number": "10-2930-03",
+            "cis_product_id": "QSFP-H40G-AOC7M",
+            "cis_version_id": "V03",
+            "cisco_id": "13",
+            "dom_supported": False,
+            "name": "CISCO-FINISAR",
+            "nominal_bitrate": 10300,
+            "part_number": "FCBN410QE2C07-C3",
+            "revision": "A",
+            "serial_number": "FIW234501JT-B",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-H40G-AOC7M",
+        },
+        "Ethernet1/49": {
+            "cis_part_number": "10-2927-02",
+            "cis_product_id": "QSFP-H40G-AOC3M",
+            "cis_version_id": "V02",
+            "cisco_id": "13",
+            "dom_supported": False,
+            "name": "CISCO-FINISAR",
+            "nominal_bitrate": 10300,
+            "part_number": "FCBN410QE2C03-C2",
+            "revision": "A",
+            "serial_number": "FIW232200C5-A",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-H40G-AOC3M",
+        },
+        "Ethernet1/50": {
+            "lane_number": {
+                "1 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "47.25",
+                        "high_alarm": "125.30",
+                        "high_warning": "120.00",
+                        "low_alarm": "10.50",
+                        "low_warning": "14.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "-",
+                        "current": "-13.97",
+                        "high_alarm": "4.99",
+                        "high_warning": "1.99",
+                        "low_alarm": "-16.77",
+                        "low_warning": "-12.67",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "16.58",
+                        "high_alarm": "75.00",
+                        "high_warning": "70.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "4.99",
+                        "high_warning": "1.99",
+                        "low_alarm": "-13.46",
+                        "low_warning": "-9.43",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.27",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+                "2 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "47.25",
+                        "high_alarm": "125.30",
+                        "high_warning": "120.00",
+                        "low_alarm": "10.50",
+                        "low_warning": "14.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "-",
+                        "current": "-14.68",
+                        "high_alarm": "4.99",
+                        "high_warning": "1.99",
+                        "low_alarm": "-16.77",
+                        "low_warning": "-12.67",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "16.58",
+                        "high_alarm": "75.00",
+                        "high_warning": "70.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "4.99",
+                        "high_warning": "1.99",
+                        "low_alarm": "-13.46",
+                        "low_warning": "-9.43",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.27",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+                "3 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "47.25",
+                        "high_alarm": "125.30",
+                        "high_warning": "120.00",
+                        "low_alarm": "10.50",
+                        "low_warning": "14.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "-",
+                        "current": "-15.08",
+                        "high_alarm": "4.99",
+                        "high_warning": "1.99",
+                        "low_alarm": "-16.77",
+                        "low_warning": "-12.67",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "16.58",
+                        "high_alarm": "75.00",
+                        "high_warning": "70.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "4.99",
+                        "high_warning": "1.99",
+                        "low_alarm": "-13.46",
+                        "low_warning": "-9.43",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.27",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+                "4 Network Lane": {
+                    "Current": {
+                        "alarm": "None",
+                        "current": "47.25",
+                        "high_alarm": "125.30",
+                        "high_warning": "120.00",
+                        "low_alarm": "10.50",
+                        "low_warning": "14.00",
+                    },
+                    "Rx Power": {
+                        "alarm": "-",
+                        "current": "-13.66",
+                        "high_alarm": "4.99",
+                        "high_warning": "1.99",
+                        "low_alarm": "-16.77",
+                        "low_warning": "-12.67",
+                    },
+                    "Temperature": {
+                        "alarm": "None",
+                        "current": "16.58",
+                        "high_alarm": "75.00",
+                        "high_warning": "70.00",
+                        "low_alarm": "-5.00",
+                        "low_warning": "0.00",
+                    },
+                    "Tx Power": {
+                        "alarm": "None",
+                        "current": "N/A",
+                        "high_alarm": "4.99",
+                        "high_warning": "1.99",
+                        "low_alarm": "-13.46",
+                        "low_warning": "-9.43",
+                    },
+                    "Voltage": {
+                        "alarm": "None",
+                        "current": "3.27",
+                        "high_alarm": "3.63",
+                        "high_warning": "3.46",
+                        "low_alarm": "2.97",
+                        "low_warning": "3.13",
+                    },
+                    "tx_fault_count": 0,
+                },
+            },
+            "cis_part_number": "10-3144-01",
+            "cis_product_id": "QSFP-100G-PSM4-S",
+            "cis_version_id": "V01",
+            "cisco_id": "17",
+            "dom_supported": True,
+            "name": "CISCO-LUXTERA",
+            "nominal_bitrate": 25500,
+            "part_number": "LUX42604BO",
+            "revision": "B",
+            "serial_number": "CVR2225001K",
+            "transceiver_present": True,
+            "transceiver_type": "QSFP-100G-PSM4",
+        },
+    }
+
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceTransceiverDetails(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceTransceiverDetails(device=self.device)
+        parsed_output = obj.parse(interface='Ethernet1/1')
+        
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowInterfaceTransceiverDetails(device=self.device)
+        parsed_output = obj.parse(interface='Ethernet1/63')
+        
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_golden3(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowInterfaceTransceiverDetails(device=self.device)
+        parsed_output = obj.parse()
+        
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
+
+# ===========================================
+# Unit test for 'show interface fec'
+# ===========================================
+class TestShowInterfaceFec(unittest.TestCase):
+    '''unit test for "show interface fec'''
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output={'execute.return_value': '''
+        --------------------------------------------------------------------------------
+        Name          Ifindex       Admin-fec Oper-fec  Status    Speed   Type
+        --------------------------------------------------------------------------------
+        Eth1/1        0x1a000000    auto      auto      disabled  auto    QSFP-DD-400G-COPPER
+        Eth1/2        0x1a000200    auto      auto      disabled  auto    QSFP-DD-400G-COPPER
+        Eth1/3        0x1a000400    auto      auto      disabled  auto    QSFP-40G-CR4
+        Eth1/4        0x1a000600    auto      auto      disabled  auto    QSFP-40G-CR4
+        Eth1/5        0x1a000800    auto      auto      disabled  auto    QSFP-100G-CR4
+        Eth1/6        0x1a000a00    auto      auto      disabled  auto    QSFP-100G-AOC15M
+        Eth1/7        0x1a000c00    auto      auto      disabled  auto    QSFP-40G-CR4
+        Eth1/8        0x1a000e00    auto      auto      disabled  auto    QSFP-40G-CR4
+        Eth1/9        0x1a001000    auto      auto      disabled  auto    QSFP-40G-CR4
+        Eth1/10       0x1a001200    auto      auto      disabled  auto    QSFP-40G-CR4
+        '''
+    }
+
+    golden_parsed_output = {
+        "Eth1/1": {
+            "admin-fec": "auto",
+            "ifindex": "0x1a000000",
+            "oper-fec": "auto",
+            "speed": "auto",
+            "status": "disabled",
+            "type": "QSFP-DD-400G-COPPER",
+        },
+        "Eth1/10": {
+            "admin-fec": "auto",
+            "ifindex": "0x1a001200",
+            "oper-fec": "auto",
+            "speed": "auto",
+            "status": "disabled",
+            "type": "QSFP-40G-CR4",
+        },
+        "Eth1/2": {
+            "admin-fec": "auto",
+            "ifindex": "0x1a000200",
+            "oper-fec": "auto",
+            "speed": "auto",
+            "status": "disabled",
+            "type": "QSFP-DD-400G-COPPER",
+        },
+        "Eth1/3": {
+            "admin-fec": "auto",
+            "ifindex": "0x1a000400",
+            "oper-fec": "auto",
+            "speed": "auto",
+            "status": "disabled",
+            "type": "QSFP-40G-CR4",
+        },
+        "Eth1/4": {
+            "admin-fec": "auto",
+            "ifindex": "0x1a000600",
+            "oper-fec": "auto",
+            "speed": "auto",
+            "status": "disabled",
+            "type": "QSFP-40G-CR4",
+        },
+        "Eth1/5": {
+            "admin-fec": "auto",
+            "ifindex": "0x1a000800",
+            "oper-fec": "auto",
+            "speed": "auto",
+            "status": "disabled",
+            "type": "QSFP-100G-CR4",
+        },
+        "Eth1/6": {
+            "admin-fec": "auto",
+            "ifindex": "0x1a000a00",
+            "oper-fec": "auto",
+            "speed": "auto",
+            "status": "disabled",
+            "type": "QSFP-100G-AOC15M",
+        },
+        "Eth1/7": {
+            "admin-fec": "auto",
+            "ifindex": "0x1a000c00",
+            "oper-fec": "auto",
+            "speed": "auto",
+            "status": "disabled",
+            "type": "QSFP-40G-CR4",
+        },
+        "Eth1/8": {
+            "admin-fec": "auto",
+            "ifindex": "0x1a000e00",
+            "oper-fec": "auto",
+            "speed": "auto",
+            "status": "disabled",
+            "type": "QSFP-40G-CR4",
+        },
+        "Eth1/9": {
+            "admin-fec": "auto",
+            "ifindex": "0x1a001000",
+            "oper-fec": "auto",
+            "speed": "auto",
+            "status": "disabled",
+            "type": "QSFP-40G-CR4",
+        },
+    }
+
+
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceTransceiverDetails(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceFec(device=self.device)
+        parsed_output = obj.parse()
+        
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
+
+# ===========================================
+# Unit test for 'show interface hardware-mappings'
+# ===========================================
+class TestShowInterfaceHardwareMap(unittest.TestCase):
+    '''unit test for "show interface hardware-mappings'''
+    device = Device(name='aDevice')
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output={'execute.return_value': '''
+        -------------------------------------------------------------------------------------------------------
+        Name       Ifindex  Smod Unit HPort FPort NPort VPort Slice SPort SrcId MacId MacSP VIF  Block BlkSrcID
+        -------------------------------------------------------------------------------------------------------
+        Eth1/1/1   38000000 1    0    16    255   0     -1    0     16    32    4     0     1544 0     32
+        Eth1/1/2   38001000 1    0    17    255   1     -1    0     17    34    4     2     1544 0     34
+        Eth1/1/3   38002000 1    0    18    255   2     -1    0     18    36    4     4     3    0     36
+        Eth1/1/4   38003000 1    0    19    255   3     -1    0     19    38    4     6     4    0     38
+        Eth1/2/1   3800a000 1    0    12    255   4     -1    0     12    24    3     0     1544 0     24
+        Eth1/2/2   3800b000 1    0    13    255   5     -1    0     13    26    3     2     6    0     26
+        Eth1/2/3   3800c000 1    0    14    255   6     -1    0     14    28    3     4     7    0     28
+        Eth1/2/4   3800d000 1    0    15    255   7     -1    0     15    30    3     6     8    0     30
+        Eth1/3     1a000400 1    0    20    255   8     -1    0     20    40    5     0     9    0     40
+        Eth1/4     1a000600 1    0    8     255   12    -1    0     8     16    2     0     13   0     16
+
+        -------------------------------------------------------------------------------------------------------
+        Name       Ifindex  Smod Unit HPort FPort NPort VPort Slice SPort SrcId MacId MacSP VIF  Block BlkSrcID
+        -------------------------------------------------------------------------------------------------------
+        Po1        16000000 0    0    1     0     54914 2     0     0     0     -1    -1    1537 0     0
+        Po48       1600002f 0    0    2     0     54914 3     0     0     0     -1    -1    1538 0     0
+        Po50       16000031 0    0    3     0     54914 4     0     0     0     -1    -1    1539 0     0
+        Po52       16000033 0    0    4     0     54914 5     0     0     0     -1    -1    1540 0     0
+        Po101      16000064 0    0    5     0     54914 6     0     0     0     -1    -1    1541 0     0
+        Po102      16000065 0    0    6     0     54914 7     0     0     0     -1    -1    1542 0     0
+        Po105      16000068 0    0    7     0     54914 8     0     0     0     -1    -1    1543 0     0
+        Po130      16000081 0    0    8     0     54914 9     0     0     0     -1    -1    1544 0     0
+        '''
+    }
+
+    golden_parsed_output = {
+        "Ethernet1/1/1": {
+            "blksrcid": 32,
+            "block": 0,
+            "fport": 255,
+            "hport": 16,
+            "ifindex": "38000000",
+            "macid": 4,
+            "macsp": 0,
+            "nport": 0,
+            "slice": 0,
+            "smod": 1,
+            "sport": 16,
+            "srcid": 32,
+            "unit": 0,
+            "vif": 1544,
+            "vport": -1,
+        },
+        "Ethernet1/1/2": {
+            "blksrcid": 34,
+            "block": 0,
+            "fport": 255,
+            "hport": 17,
+            "ifindex": "38001000",
+            "macid": 4,
+            "macsp": 2,
+            "nport": 1,
+            "slice": 0,
+            "smod": 1,
+            "sport": 17,
+            "srcid": 34,
+            "unit": 0,
+            "vif": 1544,
+            "vport": -1,
+        },
+        "Ethernet1/1/3": {
+            "blksrcid": 36,
+            "block": 0,
+            "fport": 255,
+            "hport": 18,
+            "ifindex": "38002000",
+            "macid": 4,
+            "macsp": 4,
+            "nport": 2,
+            "slice": 0,
+            "smod": 1,
+            "sport": 18,
+            "srcid": 36,
+            "unit": 0,
+            "vif": 3,
+            "vport": -1,
+        },
+        "Ethernet1/1/4": {
+            "blksrcid": 38,
+            "block": 0,
+            "fport": 255,
+            "hport": 19,
+            "ifindex": "38003000",
+            "macid": 4,
+            "macsp": 6,
+            "nport": 3,
+            "slice": 0,
+            "smod": 1,
+            "sport": 19,
+            "srcid": 38,
+            "unit": 0,
+            "vif": 4,
+            "vport": -1,
+        },
+        "Ethernet1/2/1": {
+            "blksrcid": 24,
+            "block": 0,
+            "fport": 255,
+            "hport": 12,
+            "ifindex": "3800a000",
+            "macid": 3,
+            "macsp": 0,
+            "nport": 4,
+            "slice": 0,
+            "smod": 1,
+            "sport": 12,
+            "srcid": 24,
+            "unit": 0,
+            "vif": 1544,
+            "vport": -1,
+        },
+        "Ethernet1/2/2": {
+            "blksrcid": 26,
+            "block": 0,
+            "fport": 255,
+            "hport": 13,
+            "ifindex": "3800b000",
+            "macid": 3,
+            "macsp": 2,
+            "nport": 5,
+            "slice": 0,
+            "smod": 1,
+            "sport": 13,
+            "srcid": 26,
+            "unit": 0,
+            "vif": 6,
+            "vport": -1,
+        },
+        "Ethernet1/2/3": {
+            "blksrcid": 28,
+            "block": 0,
+            "fport": 255,
+            "hport": 14,
+            "ifindex": "3800c000",
+            "macid": 3,
+            "macsp": 4,
+            "nport": 6,
+            "slice": 0,
+            "smod": 1,
+            "sport": 14,
+            "srcid": 28,
+            "unit": 0,
+            "vif": 7,
+            "vport": -1,
+        },
+        "Ethernet1/2/4": {
+            "blksrcid": 30,
+            "block": 0,
+            "fport": 255,
+            "hport": 15,
+            "ifindex": "3800d000",
+            "macid": 3,
+            "macsp": 6,
+            "nport": 7,
+            "slice": 0,
+            "smod": 1,
+            "sport": 15,
+            "srcid": 30,
+            "unit": 0,
+            "vif": 8,
+            "vport": -1,
+        },
+        "Ethernet1/3": {
+            "blksrcid": 40,
+            "block": 0,
+            "fport": 255,
+            "hport": 20,
+            "ifindex": "1a000400",
+            "macid": 5,
+            "macsp": 0,
+            "nport": 8,
+            "slice": 0,
+            "smod": 1,
+            "sport": 20,
+            "srcid": 40,
+            "unit": 0,
+            "vif": 9,
+            "vport": -1,
+        },
+        "Ethernet1/4": {
+            "blksrcid": 16,
+            "block": 0,
+            "fport": 255,
+            "hport": 8,
+            "ifindex": "1a000600",
+            "macid": 2,
+            "macsp": 0,
+            "nport": 12,
+            "slice": 0,
+            "smod": 1,
+            "sport": 8,
+            "srcid": 16,
+            "unit": 0,
+            "vif": 13,
+            "vport": -1,
+        },
+        "Port-channel1": {
+            "blksrcid": 0,
+            "block": 0,
+            "fport": 0,
+            "hport": 1,
+            "ifindex": "16000000",
+            "macid": -1,
+            "macsp": -1,
+            "nport": 54914,
+            "slice": 0,
+            "smod": 0,
+            "sport": 0,
+            "srcid": 0,
+            "unit": 0,
+            "vif": 1537,
+            "vport": 2,
+        },
+        "Port-channel101": {
+            "blksrcid": 0,
+            "block": 0,
+            "fport": 0,
+            "hport": 5,
+            "ifindex": "16000064",
+            "macid": -1,
+            "macsp": -1,
+            "nport": 54914,
+            "slice": 0,
+            "smod": 0,
+            "sport": 0,
+            "srcid": 0,
+            "unit": 0,
+            "vif": 1541,
+            "vport": 6,
+        },
+        "Port-channel102": {
+            "blksrcid": 0,
+            "block": 0,
+            "fport": 0,
+            "hport": 6,
+            "ifindex": "16000065",
+            "macid": -1,
+            "macsp": -1,
+            "nport": 54914,
+            "slice": 0,
+            "smod": 0,
+            "sport": 0,
+            "srcid": 0,
+            "unit": 0,
+            "vif": 1542,
+            "vport": 7,
+        },
+        "Port-channel105": {
+            "blksrcid": 0,
+            "block": 0,
+            "fport": 0,
+            "hport": 7,
+            "ifindex": "16000068",
+            "macid": -1,
+            "macsp": -1,
+            "nport": 54914,
+            "slice": 0,
+            "smod": 0,
+            "sport": 0,
+            "srcid": 0,
+            "unit": 0,
+            "vif": 1543,
+            "vport": 8,
+        },
+        "Port-channel130": {
+            "blksrcid": 0,
+            "block": 0,
+            "fport": 0,
+            "hport": 8,
+            "ifindex": "16000081",
+            "macid": -1,
+            "macsp": -1,
+            "nport": 54914,
+            "slice": 0,
+            "smod": 0,
+            "sport": 0,
+            "srcid": 0,
+            "unit": 0,
+            "vif": 1544,
+            "vport": 9,
+        },
+        "Port-channel48": {
+            "blksrcid": 0,
+            "block": 0,
+            "fport": 0,
+            "hport": 2,
+            "ifindex": "1600002f",
+            "macid": -1,
+            "macsp": -1,
+            "nport": 54914,
+            "slice": 0,
+            "smod": 0,
+            "sport": 0,
+            "srcid": 0,
+            "unit": 0,
+            "vif": 1538,
+            "vport": 3,
+        },
+        "Port-channel50": {
+            "blksrcid": 0,
+            "block": 0,
+            "fport": 0,
+            "hport": 3,
+            "ifindex": "16000031",
+            "macid": -1,
+            "macsp": -1,
+            "nport": 54914,
+            "slice": 0,
+            "smod": 0,
+            "sport": 0,
+            "srcid": 0,
+            "unit": 0,
+            "vif": 1539,
+            "vport": 4,
+        },
+        "Port-channel52": {
+            "blksrcid": 0,
+            "block": 0,
+            "fport": 0,
+            "hport": 4,
+            "ifindex": "16000033",
+            "macid": -1,
+            "macsp": -1,
+            "nport": 54914,
+            "slice": 0,
+            "smod": 0,
+            "sport": 0,
+            "srcid": 0,
+            "unit": 0,
+            "vif": 1540,
+            "vport": 5,
+        },
+    }
+
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceHardwareMap(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceHardwareMap(device=self.device)
+        parsed_output = obj.parse()
+        #import pprint 
+        #pprint.pprint(parsed_output)
+        
+        self.assertEqual(parsed_output, self.golden_parsed_output)
 
 
 if __name__ == '__main__':
