@@ -3,7 +3,7 @@ import re
 
 # Genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema
+from genie.metaparser.util.schemaengine import Schema, Optional
 
 
 class ShowSdwanAppqoeTcpoptStatusSchema(MetaParser):
@@ -19,7 +19,7 @@ class ShowSdwanAppqoeTcpoptStatusSchema(MetaParser):
 class ShowSdwanAppqoeTcpoptStatus(ShowSdwanAppqoeTcpoptStatusSchema):
 
     """ Parser for "show sdwan appqoe tcpopt status" """
-    
+
     cli_command = "show sdwan appqoe tcpopt status"
 
     def cli(self, output=None):
@@ -32,7 +32,7 @@ class ShowSdwanAppqoeTcpoptStatus(ShowSdwanAppqoeTcpoptStatusSchema):
 
         # Status
         p1 = re.compile(r'^Status$')
-                                                                                                              
+
         # TCP OPT Operational State      : RUNNING
         # TCP Proxy Operational State    : RUNNING
         p2 = re.compile(r'^(?P<key>[\s\S]+\w) +: +(?P<value>[\s\S]+)$')
@@ -79,7 +79,7 @@ class ShowSdwanAppqoeNatStatisticsSchema(MetaParser):
 class ShowSdwanAppqoeNatStatistics(ShowSdwanAppqoeNatStatisticsSchema):
 
     """ Parser for "show sdwan appqoe nat-statistics" """
-    
+
     cli_command = "show sdwan appqoe nat-statistics"
 
     def cli(self, output=None):
@@ -167,7 +167,7 @@ class ShowSdwanAppqoeRmResourcesSchema(MetaParser):
 class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
 
     """ Parser for "show sdwan appqoe rm-resources" """
-    
+
     cli_command = "show sdwan appqoe rm-resources"
 
     def cli(self, output=None):
@@ -268,3 +268,68 @@ class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
                 last_dict_ptr.update({key: value})
 
         return ret_dict
+
+
+class ShowSdwanAppqoeFlowAllSchema(MetaParser):
+    ''' Schema for show sdwan appqoe flow all'''
+    schema = {
+        'active_flows': int,
+        Optional('flows'):{
+            int: {
+                'flow_id': int,
+                'vpn': int,
+                'source_ip': str,
+                'source_port': int,
+                'destination_ip': str,
+                'destination_port': int,
+                'service': str,
+                }
+            }
+        }
+
+
+class ShowSdwanAppqoeFlowAll(ShowSdwanAppqoeFlowAllSchema):
+
+    """ Parser for "show sdwan appqoe flow all" """
+
+    cli_command = "show sdwan appqoe flow all"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        parsed_dict = {}
+        index = 0
+        # Active Flows: 2139
+        p1 = re.compile(r'^(?P<key>[\s\S]+\w):+\s+(?P<value>[\d]+)$')
+
+        # Flow ID      VPN  Source IP:Port        Destination IP:Port   Service
+        # 171064589848875728 1    17.0.0.2:53350        40.119.211.203:443    TSU
+        p2 = re.compile(r'^(?P<flow_id>[\d]+)[\s]+(?P<vpn>[\d]+)[\s]+(?P<source_ip>[\S]+\w):(?P<source_port>[\d]+)[\s]+(?P<destination_ip>[\S]+\w):(?P<destination_port>[\d]+)[\s]+(?P<service>[\s\S]+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Active Flows: 2139
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                key = groups['key'].replace(' ', '_').lower()
+                value = int(groups['value'])
+                parsed_dict.update({key: value})
+                continue
+
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                index += 1
+                flows_dict = parsed_dict.setdefault('flows', {}).setdefault(index, {})
+                keys = ['flow_id', 'vpn', 'source_ip', 'source_port', 'destination_ip', 'destination_port', 'service']
+                for k in keys:
+                    try:
+                        flows_dict[k] = int(group[k])
+                    except ValueError:
+                        flows_dict[k] = group[k]
+        return parsed_dict
