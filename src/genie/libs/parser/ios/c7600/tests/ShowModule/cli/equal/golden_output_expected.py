@@ -10,6 +10,7 @@ expected_output = {
                     'model': 'WS-X6748-GE-TX',
                     'online_diag_status': 'Pass',
                     'ports': 48,
+                    'slot': 1,
                     'serial_number': 'SAL1209HMW3',
                     'status': 'Ok',
                     'subslot': {
@@ -33,6 +34,7 @@ expected_output = {
                     'model': 'WS-X6582-2PA',
                     'online_diag_status': 'Pass',
                     'ports': 0,
+                    'slot': 2,
                     'serial_number': 'JAE0939LYNQ',
                     'status': 'Ok',
                     'sw_ver': '15.4(0.10)S',
@@ -48,6 +50,7 @@ expected_output = {
                     'model': 'WS-SUP720-3BXL',
                     'online_diag_status': 'Pass',
                     'ports': 2,
+                    'slot': 5,
                     'serial_number': 'SAD09020BF8',
                     'status': 'Ok',
                     'subslot': {
@@ -77,6 +80,7 @@ expected_output = {
                     'model': 'WS-SUP720-3BXL',
                     'online_diag_status': 'Pass',
                     'ports': 2,
+                    'slot': 6,
                     'serial_number': 'SAL15129MRC',
                     'status': 'Ok',
                     'subslot': {
