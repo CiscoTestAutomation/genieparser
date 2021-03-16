@@ -1181,7 +1181,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Interface index: 148, SNMP ifIndex: 526
         p2 = re.compile(r'^Interface +index: +(?P<local_index>\d+), +'
             r'SNMP +ifIndex: +(?P<snmp_index>\d+)'
-            r'(, +Generation: +\S+)$')
+            r'(, +Generation: +\S+)?$')
 
         # Description: none/100G/in/hktGCS002_ge-0/0/0
         # Description: TEST-DESC:1|TEST#1234 DEV
