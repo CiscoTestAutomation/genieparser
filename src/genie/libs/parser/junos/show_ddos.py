@@ -271,8 +271,13 @@ class ShowDDosProtectionProtocol(ShowDDosProtectionProtocolSchema):
         # Routing Engine information:
         p18 = re.compile(r'^Routing +Engine +information:$')
 
+        # FPC slot 0 information:
+        # FPC slot 9 information:
+        p18_1 = re.compile(r'^FPC +slot +\d+ +information:$')
+
         # Bandwidth: 20000 pps, Burst: 20000 packets, enabled
-        p19 = re.compile(r'^Bandwidth: +(?P<policer_bandwidth>\d+) +pps, +Burst: +(?P<policer_burst>\d+) +packets, +(?P<policer_enable>\S+)$')
+        # Bandwidth: 100% (20000 pps), Burst: 100% (20000 packets), enabled
+        p19 = re.compile(r'^Bandwidth: +((?P<policer_bandwidth_scale>\d+)% +\()?(?P<policer_bandwidth>\d+) +pps\)?, +Burst: +((?P<policer_burst_scale>\d+)% +\()?(?P<policer_burst>\d+) +packets\)?, +(?P<policer_enable>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -434,7 +439,20 @@ class ShowDDosProtectionProtocol(ShowDDosProtectionProtocolSchema):
                 ddos_instance_statistics_dict = ddos_instance_dict.setdefault('ddos-instance-statistics', {})
                 continue
 
+            # FPC slot 0 information:
+            # FPC slot 9 information:
+            m = p18_1.match(line)
+            if m:
+                system_wide_info = False
+                group = m.groupdict()
+                ddos_instance_list = ddos_protocol_dict.setdefault('ddos-instance', [])
+                ddos_instance_dict = {'protocol-states-locale': line.replace(' information:', '')}
+                ddos_instance_list.append(ddos_instance_dict)
+                ddos_instance_statistics_dict = ddos_instance_dict.setdefault('ddos-instance-statistics', {})
+                continue
+
             # Bandwidth: 20000 pps, Burst: 20000 packets, enabled
+            # Bandwidth: 100% (20000 pps), Burst: 100% (20000 packets), enabled
             m = p19.match(line)
             if m:
                 group = m.groupdict()

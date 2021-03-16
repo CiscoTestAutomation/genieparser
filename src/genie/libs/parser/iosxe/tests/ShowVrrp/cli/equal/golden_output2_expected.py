@@ -13,7 +13,7 @@ expected_output = {
                     "priority": 115,
                     "state": "Init",
                     "virtual_ip_address": "192.168.10.1",
-                    "virtual_mac_address": "0000.5e00.0164",
+                    "virtual_mac_address": "0000.5eff.0164",
                 }
             }
         }

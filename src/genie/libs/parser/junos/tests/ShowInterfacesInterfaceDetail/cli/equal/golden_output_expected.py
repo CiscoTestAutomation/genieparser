@@ -2,11 +2,11 @@ expected_output = {'interface-information': {'physical-interface': [{'active-ala
                                                    'active-defects': {'interface-alarms': {'alarm-not-present': True}},
                                                    'admin-status': {'@junos:format': 'Enabled'},
                                                    'bpdu-error': 'None',
-                                                   'current-physical-address': '0c:86:10:22:41:00',
+                                                   'current-physical-address': '0c:86:10:ff:63:22',
                                                    'down-hold-time': '0',
                                                    'ethernet-pcs-statistics': {'bit-error-seconds': '0',
                                                                                'errored-blocks-seconds': '0'},
-                                                   'hardware-physical-address': '0c:86:10:22:41:00',
+                                                   'hardware-physical-address': '0c:86:10:ff:63:22',
                                                    'if-config-flags': {'iff-snmp-traps': True,
                                                                        'internal-flags': '0x4000'},
                                                    'if-device-flags': {'ifdf-present': True,
@@ -15,7 +15,7 @@ expected_output = {'interface-information': {'physical-interface': [{'active-ala
                                                    'if-media-flags': {'ifmf-none': True},
                                                    'interface-flapped': {'#text': '2021-01-12 '
                                                                                   '13:06:13 '
-                                                                                  'JST '
+                                                                                  'EST '
                                                                                   '(02:36:21 '
                                                                                   'ago)'},
                                                    'interface-transmit-statistics': 'Disabled',
@@ -58,7 +58,7 @@ expected_output = {'interface-information': {'physical-interface': [{'active-ala
                                                    'speed': '100Gbps',
                                                    'statistics-cleared': '2021-01-12 '
                                                                          '15:17:22 '
-                                                                         'JST '
+                                                                         'EST '
                                                                          '(00:25:12 '
                                                                          'ago)',
                                                    'traffic-statistics': {'input-bps': '0',

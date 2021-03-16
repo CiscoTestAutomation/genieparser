@@ -67,7 +67,7 @@ class ShowArpDetail(ShowArpDetailSchema):
 
         # 10.1.2.1        02:55:43   fa16.3eff.06af  Dynamic    Dynamic ARPA GigabitEthernet0/0/0/0
         # 10.1.2.2        -          fa16.3eff.f847  Interface  Unknown ARPA GigabitEthernet0/0/0/0
-        # 10.1.2.3        01:42:59   0896.ad50.16a2  Dynamic    Dynamic ARPA Bundle-Ether1
+        # 10.1.2.3        01:42:59   0896.adff.66f2  Dynamic    Dynamic ARPA Bundle-Ether1
         p1 = re.compile(r'^(?P<ip_address>[\w\.]+) +(?P<age>[\w\:\-]+)'
             ' +(?P<mac_address>[\w\.]+) +(?P<state>\w+) +(?P<flag>\w+)'
             ' +(?P<type>[\w\.]+) +(?P<interface>[\w\.\/\-]+)$')

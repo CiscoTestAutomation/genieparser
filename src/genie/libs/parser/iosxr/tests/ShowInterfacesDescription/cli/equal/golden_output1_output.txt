@@ -1,0 +1,11 @@
+BE12               up          up
+BE23               up          up
+Lo0                up          up
+Lo300              up          up
+Nu0                up          up
+Mg0/RP0/CPU0/0     up          up
+Gi0/0/0/0          up          up
+Gi0/0/0/0.90       up          up
+Gi0/0/0/1          up          up
+Gi0/0/0/1.90       up          up
+Gi0/0/0/2          up          up

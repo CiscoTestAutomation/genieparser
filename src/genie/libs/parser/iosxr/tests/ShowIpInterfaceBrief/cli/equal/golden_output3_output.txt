@@ -1,0 +1,2 @@
+        RP/0/RP0/CPU0:PE1#show ip interface brief
+        BVI123        10.12.34.56        Up     Up      MyOrg-MyGroup_Channel_Zone

@@ -77,20 +77,21 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
                          ' +routes +for +table +(?P<route_table>(\w+\/+\w+)|(0x[0-5a-fA-F]+))')
         
         #0.0.0.0/32           Drop                                      Null0
-        #*3.3.3.2/32          10.2.1.2                                  Ethernet1/1
-        #3.3.3.2/32          10.2.1.2                                  Ethernet1/1       vni: 501003
+        #*10.36.3.2/32          10.2.1.2                                  Ethernet1/1
+        #10.36.3.2/32          10.2.1.2                                  Ethernet1/1       vni: 501003
+        #1.1.1.1/32           10.2.1.2                                  Ethernet1/1           PUSH 16001
         p3 = re.compile(r'^(?P<is_best_next_hop>\*)?'
                           '(?P<prefix>[0-9\.]+\/[0-9]+)?'
                           ' +(?P<next_hop>[0-9A-Za-z.]+)'  
                           ' +(?P<interface>[\w\-\/\.]+)'                     
-                          ' {0,8}(?P<label>[\w\:\ \w]+)?'
+                          '\s*(?P<label>[\w\:\ \w]+)?'
                           )
         
         #10.2.1.2                                  Ethernet1/1
         #10.2.1.2                                  Ethernet1/1       vn: 501003
         p3_1 = re.compile(r'^(?P<next_hop>[0-9A-Za-z.]+)'  
                           ' +(?P<interface>[\w\-\/\.]+)'                     
-                          ' {0,8}(?P<label>[\w\:\ \w]+)?'
+                          '\s*(?P<label>[\w\:\ \w]+)?'
                           )
          
         for line in out.splitlines():
@@ -122,8 +123,8 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
                 continue
         
             #0.0.0.0/32           Drop                                      Null0
-            #*3.3.3.2/32          10.2.1.2                                  Ethernet1/1
-            #3.3.3.2/32          10.2.1.2                                  Ethernet1/1       vni: 501003
+            #*10.36.3.2/32          10.2.1.2                                  Ethernet1/1
+            #10.36.3.2/32          10.2.1.2                                  Ethernet1/1       vni: 501003
             m = p3.match(line)
             if m:
                 group = m.groupdict()

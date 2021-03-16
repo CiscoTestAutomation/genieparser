@@ -8,6 +8,7 @@ expected_output = {
     "hostname": "C1900",
     "image_id": "C1900-UNIVERSALK9-M",
     "image_type": "production image",
+    "label": "RELEASE SOFTWARE (fc2)",
     "last_reload_reason": "Reload Command",
     "last_reload_type": "Normal Reload",
     "license_package": {

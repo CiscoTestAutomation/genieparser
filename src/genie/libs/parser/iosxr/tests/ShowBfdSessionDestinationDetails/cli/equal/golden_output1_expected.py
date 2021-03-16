@@ -1,8 +1,8 @@
 expected_output = {
          "src":{
-            "31.1.1.2":{
+            "10.4.1.2":{
                "dest":{
-                  "31.1.1.1":{
+                  "10.4.1.1":{
                      "interface":"GigabitEthernet0/0/0/0",
                      "location":"0/0/CPU0",
                      "session":{

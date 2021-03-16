@@ -205,7 +205,7 @@ changelogs:
 	@echo "--------------------------------------------------------------------"
 	@echo "Generating changelog file"
 	@echo ""
-	@python "./tools/changelog_script.py" "./changelog/undistributed" --output "./changelog/undistributed.rst"
+	@python -c "from genie.utils.make_changelog import main; main('./changelog/undistributed', './changelog/undistributed.rst')"
 	@echo ""
 	@echo "Done."
 	@echo ""

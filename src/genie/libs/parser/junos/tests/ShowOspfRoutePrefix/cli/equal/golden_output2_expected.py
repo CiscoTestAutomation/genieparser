@@ -3,7 +3,7 @@ expected_output = {
         "ospf-topology-route-table": {
             "ospf-route": {
                 "ospf-route-entry": {
-                    "address-prefix": "30.0.0.0/24",
+                    "address-prefix": "10.135.0.0/24",
                     "interface-cost": "2",
                     "next-hop-type": "IP",
                     "ospf-next-hop": [

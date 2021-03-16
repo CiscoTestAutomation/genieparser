@@ -2,9 +2,9 @@ expected_output = {
 'services-accounting-information': {
     'flow-aggregate-template-detail': {
         'flow-aggregate-template-detail-ipv4': {
-            'detail-entry': {
+            'detail-entry': [{
                 'byte-count': '3116',
-                'destination-address': '200:0:0:0:0:0:0:2',
+                'destination-address': '2001:db8:4::2',
                 'destination-mask': '64',
                 'destination-port': '0',
                 'end-time': '58418928',
@@ -18,7 +18,7 @@ expected_output = {
                 'start-time': '58268748',
                 'tcp-flags': '0',
                 'tos': '0'
-                }
+                }]
             }
         }
     }
