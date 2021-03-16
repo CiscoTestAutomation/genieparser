@@ -3,4 +3,4 @@
 --------------------------------------------------------------------------------
 * Junos
     * Updated ShowInterfaces
-        * Updated p2 regex
+        * Updated p2 regex. Added ? to `(, +Generation: +\S+)`
