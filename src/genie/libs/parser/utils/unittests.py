@@ -747,9 +747,6 @@ CLASS_SKIP = {
         "ShowIgmpInterface": True, # Not migrated
         "ShowIgmpSummary": True, # Not migrated
         "ShowInterfaceBrief": True, # Not migrated
-        "ShowInterfaces": True, # Not migrated
-        "ShowInterfacesAccounting": True, # Not migrated
-        "ShowInterfacesDetail": True, # Not migrated
         "ShowIpv4InterfaceBrief": True, # Not migrated
         "ShowIpv6Neighbors": True, # Not migrated
         "ShowIpv6NeighborsDetail": True, # Not migrated
