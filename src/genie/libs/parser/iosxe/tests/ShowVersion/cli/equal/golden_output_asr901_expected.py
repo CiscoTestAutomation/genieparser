@@ -12,6 +12,7 @@ expected_output = {
         "hostname": "LAB-ASR901T",
         "image_id": "ASR901-UNIVERSALK9-M",
         "image_type": "production image",
+        "label": "RELEASE SOFTWARE (fc3)",
         "last_reload_reason": "Reload Command",
         "license_level": "AdvancedMetroIPAccess",
         "license_type": "Smart License",

@@ -181,7 +181,7 @@ class ShowIpRoute(ShowIpRouteSchema):
         show ip route
         show ip route vrf <vrf>"""
     # not using name 'cli_command' because dont want find_parsers() to discover them
-    command = ['show ip route vrf {vrf}', 'show ip route vrf {vrf} {protocol}',
+    parser_command = ['show ip route vrf {vrf}', 'show ip route vrf {vrf} {protocol}',
                    'show ip route', 'show ip route {protocol}']
     exclude = ['updated']
     IP_VER='ipv4'
@@ -190,13 +190,13 @@ class ShowIpRoute(ShowIpRouteSchema):
 
         if output is None:
             if vrf and protocol:
-                cmd = self.command[1].format(vrf=vrf, protocol=protocol)
+                cmd = self.parser_command[1].format(vrf=vrf, protocol=protocol)
             elif vrf:
-                cmd = self.command[0].format(vrf=vrf)
+                cmd = self.parser_command[0].format(vrf=vrf)
             elif protocol:
-                cmd = self.command[3].format(protocol=protocol)
+                cmd = self.parser_command[3].format(protocol=protocol)
             else:
-                cmd = self.command[2]
+                cmd = self.parser_command[2]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -632,7 +632,7 @@ class ShowIpv6Route(ShowIpRoute):
     """Parser for:
         show ipv6 route
         show ipv6 route vrf <vrf>"""
-    command = ['show ipv6 route vrf {vrf}', 
+    parser_command = ['show ipv6 route vrf {vrf}',
                 'show ipv6 route vrf {vrf} {protocol}',
                'show ipv6 route', 
                'show ipv6 route {protocol}',
@@ -644,15 +644,15 @@ class ShowIpv6Route(ShowIpRoute):
         
         if output is None:
             if vrf and protocol:
-                cmd = self.command[1].format(vrf=vrf, protocol=protocol)
+                cmd = self.parser_command[1].format(vrf=vrf, protocol=protocol)
             elif vrf:
-                cmd = self.command[0].format(vrf=vrf)
+                cmd = self.parser_command[0].format(vrf=vrf)
             elif protocol:
-                cmd = self.command[3].format(protocol=protocol)
+                cmd = self.parser_command[3].format(protocol=protocol)
             elif interface:
-                cmd = self.command[4].format(interface=interface)
+                cmd = self.parser_command[4].format(interface=interface)
             else:
-                cmd = self.command[2]
+                cmd = self.parser_command[2]
             out = self.device.execute(cmd)
         else:
             out = output
@@ -1073,7 +1073,7 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
     """Parser for :
        show ip route <Hostname or A.B.C.D>
        show ip route vrf <vrf> <Hostname or A.B.C.D>"""
-    command = ['show ip route vrf {vrf}', 
+    parser_command = ['show ip route vrf {vrf}',
                 'show ip route vrf {vrf} {route}',
                 'show ip route', 
                 'show ip route {route}',
@@ -1084,15 +1084,15 @@ class ShowIpRouteWord(ShowIpRouteWordSchema):
 
         if output is None:
             if vrf and route:
-                cmd = self.command[1].format(vrf=vrf, route=route)
+                cmd = self.parser_command[1].format(vrf=vrf, route=route)
             elif route:
-                cmd = self.command[3].format(route=route)
+                cmd = self.parser_command[3].format(route=route)
             elif vrf:
-                cmd = self.command[0].format(vrf=vrf)
+                cmd = self.parser_command[0].format(vrf=vrf)
             elif interface:
-                cmd = self.command[4].format(interface=interface)
+                cmd = self.parser_command[4].format(interface=interface)
             else:
-                cmd = self.command[2].format()
+                cmd = self.parser_command[2].format()
             out = self.device.execute(cmd)
         else:
             out = output
@@ -1423,7 +1423,7 @@ class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
     """Parser for :
        show ipv6 route <Hostname or A.B.C.D>
        show ipv6 route vrf <vrf> <Hostname or A.B.C.D>"""
-    command = ['show ipv6 route vrf {vrf}', 
+    parser_command = ['show ipv6 route vrf {vrf}',
                 'show ipv6 route vrf {vrf} {route}',
                 'show ipv6 route', 
                 'show ipv6 route {route}',
@@ -1434,15 +1434,15 @@ class ShowIpv6RouteWord(ShowIpv6RouteWordSchema, ShowIpRouteWord):
         
         if output is None:
             if vrf and route:
-                cmd = self.command[1].format(vrf=vrf, route=route)
+                cmd = self.parser_command[1].format(vrf=vrf, route=route)
             elif vrf:
-                cmd = self.command[0].format(vrf=vrf)
+                cmd = self.parser_command[0].format(vrf=vrf)
             elif route:
-                cmd = self.command[3].format(route=route)
+                cmd = self.parser_command[3].format(route=route)
             elif interface:
-                cmd = self.command[4].format(interface=interface)
+                cmd = self.parser_command[4].format(interface=interface)
             else:
-                cmd = self.command[2]
+                cmd = self.parser_command[2]
             out = self.device.execute(cmd)
         else:
             out = output
