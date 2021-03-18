@@ -30,7 +30,7 @@ import re
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, Schema, Or)
+        Optional, Use, Schema, Or, ListOf)
 
 class ShowChassisFpcDetailSchema(MetaParser):
 
@@ -273,26 +273,16 @@ class ShowChassisFirmwareSchema(MetaParser):
     }
 } """
 
-    def validate_chassis_firmware_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('firmware is not a list')
-        chassis_firmware_schema = Schema({
-            "firmware-version": str,
-                        "type": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            chassis_firmware_schema.validate(item)
-        return value
-
     schema = {
         "firmware-information": {
         Optional("@xmlns"): str,
         "chassis": {
             Optional("@junos:style"): str,
             "chassis-module": {
-                "firmware": Use(validate_chassis_firmware_list),
+                "firmware": ListOf({
+                    "firmware-version": str,
+                                "type": str
+                }),
                 "name": str
                 }
             }
@@ -2803,10 +2793,9 @@ class ShowChassisAlarmsSchema(MetaParser):
     #     },
     # }
 
-    def validate_alarm_detail(value):
-        if not isinstance(value, list):
-            raise SchemaError('alarm-detail is not a list')
-        alarm_detail_schema = Schema({
+    schema = {
+        "alarm-information": {
+            Optional("alarm-detail"): ListOf({
                 "alarm-class": str,
                 "alarm-description": str,
                 "alarm-short-description": str,
@@ -2814,15 +2803,7 @@ class ShowChassisAlarmsSchema(MetaParser):
                     "#text": str,
                 },
                 "alarm-type": str
-            })
-
-        for item in value:
-            alarm_detail_schema.validate(item)
-        return value
-
-    schema = {
-        "alarm-information": {
-            Optional("alarm-detail"): Use(validate_alarm_detail),
+            }),
             "alarm-summary": {
                 Optional("active-alarm-count"): str,
                 Optional("no-active-alarms"): bool

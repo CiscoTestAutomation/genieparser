@@ -12,32 +12,24 @@ import re
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, Schema)
+        Optional, Use, Schema, ListOf)
 
 
+    # Sub Schema snmp-object
 class ShowSnmpMibWalkSystemSchema(MetaParser):
     """ Schema for:
             * show snmp mib walk system
     """
 
-    # Sub Schema snmp-object
-    def validate_snmp_object_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('snmp-object is not a list')
-        snmp_object_schema = Schema({
+    schema = {
+        "snmp-object-information": {
+            "snmp-object": ListOf({
                     "name": str,
                     "object-value": str,
                     Optional("object-value-type"): str,
                     Optional("oid"): str
-                })
-        # Validate each dictionary in list
-        for item in value:
-            snmp_object_schema.validate(item)
-        return value
-
-    schema = {
-        "snmp-object-information": {
-            "snmp-object": Use(validate_snmp_object_list),
+                }
+            ),
         }
     }
 
@@ -120,60 +112,32 @@ class ShowSnmpConfigurationSchema(MetaParser):
         },
     }
     '''
-    # Sub Schema snmp community
-    def validate_community_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('snmp community is not a list')
-
-        def validate_clients_list(value):
-            if not isinstance(value, list):
-                raise SchemaError('snmp clients is not a list')
-            snmp_clients_schema = Schema({
-                "name": str,
-                Optional("restrict"): bool
-            })
-            # Validate each dictionary in list
-            for item in value:
-                snmp_clients_schema.validate(item)
-            return value
-
-        snmp_community_schema = Schema({
-                    "name": str,
-                    Optional("authorization"): str,
-                    Optional("clients"): Use(validate_clients_list),
-                })
-        # Validate each dictionary in list
-        for item in value:
-            snmp_community_schema.validate(item)
-        return value
-
-    # Sub Schema snmp categories and targets
-    def validate_categories_or_targets_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('snmp categories/targets is not a list')
-
-        snmp_categories_or_targets_schema = Schema({
-            "name": str,
-        })
-        # Validate each dictionary in list
-        for item in value:
-            snmp_categories_or_targets_schema.validate(item)
-        return value
 
     schema = {
         "configuration": {
             "snmp": {
                 Optional("location"): str,
                 Optional("contact"): str,
-                Optional("community"): Use(validate_community_list),
+                Optional("community"): ListOf({
+                    "name": str,
+                    Optional("authorization"): str,
+                    Optional("clients"): ListOf({
+                        "name": str,
+                        Optional("restrict"): bool
+                    }),
+                }),
                 Optional("trap-options"): {
                     "source-address": str
                 },
                 Optional("trap-group"): {
                     "name": str,
                     Optional("version"): str,
-                    Optional("categories"): Use(validate_categories_or_targets_list),
-                    Optional("targets"): Use(validate_categories_or_targets_list),
+                    Optional("categories"): ListOf({
+                        "name": str,
+                    }),
+                    Optional("targets"): ListOf({
+                        "name": str,
+                    }),
                 }
             }
         }
