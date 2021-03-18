@@ -694,7 +694,6 @@ CLASS_SKIP = {
         "ShowBgpInstanceProcessDetail": True, # Not migrated
         "ShowBgpInstanceSessionGroupConfiguration": True, # Not migrated
         "ShowBgpInstanceSessions": True, # Not migrated
-        "ShowBgpInstanceSummary": True, # Not migrated
         "ShowBgpL2vpnEvpn": True, # Not migrated
         "ShowBgpL2vpnEvpnAdvertised": True, # Not migrated
         "ShowBgpL2vpnEvpnNeighbors": True, # Not migrated
