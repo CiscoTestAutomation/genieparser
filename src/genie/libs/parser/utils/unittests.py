@@ -68,8 +68,8 @@ def get_operating_systems(_os):
 # the .py via [-2], there is now a list of files to import from.
 def get_tokens(folder):
     tokens = []
-    for path in glob.glob(str(folder / '*')):
-        tokens.append(path.split("/")[-1])
+    for path in glob.glob(str(folder / '*' / 'tests')):
+        tokens.append(path.split("/")[-2])
     return tokens
 
 
@@ -152,7 +152,6 @@ class FileBasedTest(aetest.Testcase):
             _module = importlib.machinery.SourceFileLoader(
                 module_name, parse_file
             ).load_module()
-
             for name, local_class in inspect.getmembers(_module):
                 # The following methods determin when a test is not warranted, further detail will be provided for each method.
 
