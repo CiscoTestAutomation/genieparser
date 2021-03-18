@@ -25,6 +25,7 @@ pipeline {
                     pip3 install --no-cache-dir -i http://pyats-pypi.cisco.com/simple --trusted-host pyats-pypi.cisco.com cisco-distutils ats[full]
                     cd $WORKSPACE
                     make develop
+                    make json
                     env
                     pip list
                     pip freeze
