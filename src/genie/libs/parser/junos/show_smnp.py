@@ -409,25 +409,16 @@ class ShowSnmpStatisticsSchema(MetaParser):
     '''
     # Sub Schema snmp community
     def validate_community_list(value):
+
         if not isinstance(value, list):
             raise SchemaError('snmp community is not a list')
-
-        def validate_clients_list(value):
-            if not isinstance(value, list):
-                raise SchemaError('snmp clients is not a list')
-            snmp_clients_schema = Schema({
-                "name": str,
-                Optional("restrict"): bool
-            })
-            # Validate each dictionary in list
-            for item in value:
-                snmp_clients_schema.validate(item)
-            return value
-
         snmp_community_schema = Schema({
                     "name": str,
                     "authorization": str,
-                    "clients": Use(validate_clients_list),
+                    "clients": ListOf({
+                        "name": str,
+                        Optional("restrict"): bool
+                    }),
                 })
         # Validate each dictionary in list
         for item in value:
