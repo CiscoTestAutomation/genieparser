@@ -3,4 +3,5 @@
 --------------------------------------------------------------------------------
 * Junos
     * Updated ShowInterfaces
-        * Updated p2 regex
+        * Updated p2 regex. Added ? to `(, +Generation: +\S+)`
+        * Added p32_1. Checks for `Addresses`
