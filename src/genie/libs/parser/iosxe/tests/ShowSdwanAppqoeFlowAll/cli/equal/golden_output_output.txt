@@ -1,5 +1,3 @@
-Msn1002HxSn1#show sdwan appqoe flow all
-
 Active Flows: 17
 
 T:TCP, S:SSL, U:UTD, D:DRE
