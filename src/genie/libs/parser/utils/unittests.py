@@ -8,6 +8,7 @@ import glob
 import json
 import logging
 import inspect
+import pathlib
 import argparse
 import importlib
 from unittest.mock import Mock
@@ -67,14 +68,14 @@ def get_operating_systems(_os):
 # the .py via [-2], there is now a list of files to import from.
 def get_tokens(folder):
     tokens = []
-    for path in glob.glob(f"{folder}/*/tests"):
+    for path in glob.glob(str(folder / '*' / 'tests')):
         tokens.append(path.split("/")[-2])
     return tokens
 
 
 def get_files(folder, token=None):
     files = []
-    for parse_file in glob.glob(f"{folder}/*.py"):
+    for parse_file in glob.glob(str(folder / "*.py")):
         if parse_file.endswith("__init__.py"):
             continue
         files.append({"parse_file": parse_file, "token": token})
@@ -127,14 +128,14 @@ class FileBasedTest(aetest.Testcase):
     def test(self,operating_system, steps, _os, _class, _token, _number, _display_only_failed):
 
         """Loop through OS's and run appropriate tests."""
-        base_folder = f"../src/genie/libs/parser/{operating_system}"
+        base_folder = pathlib.Path(f"{pathlib.Path(_parser.__file__).parent}/{operating_system}")
         # Please refer to get_tokens comments for the how, the what is a genie token, such as
         # "asr1k" or "c3850" to provide namespaced parsing.
         tokens = get_tokens(base_folder)
         parse_files = []
         parse_files.extend(get_files(base_folder))
         for token in tokens:
-            parse_files.extend(get_files(f"{base_folder}/{token}", token))
+            parse_files.extend(get_files(base_folder / token, token))
         start = False
         # Get all of the root level files
         for details in parse_files:
@@ -151,7 +152,6 @@ class FileBasedTest(aetest.Testcase):
             _module = importlib.machinery.SourceFileLoader(
                 module_name, parse_file
             ).load_module()
-
             for name, local_class in inspect.getmembers(_module):
                 # The following methods determin when a test is not warranted, further detail will be provided for each method.
 
@@ -206,9 +206,9 @@ class FileBasedTest(aetest.Testcase):
     def test_golden(self, steps, local_class, operating_system, display_only_failed=None, token=None, number=None):
         """Test step that finds any output named with _output.txt, and compares to similar named .py file."""
         if token:
-            folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/equal"
+            folder_root = pathlib.Path(f"{operating_system}/{token}/{local_class.__name__}/cli/equal")
         else:
-            folder_root = f"{operating_system}/{local_class.__name__}/cli/equal"
+            folder_root = pathlib.Path(f"{operating_system}/{local_class.__name__}/cli/equal")
 
         # Get list of output files to parse and sort
         convert = lambda text: int(text) if text.isdigit() else text
