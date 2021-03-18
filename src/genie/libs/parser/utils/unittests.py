@@ -125,10 +125,13 @@ class FileBasedTest(aetest.Testcase):
         aetest.loop.mark(self.test, operating_system=get_operating_systems(_os))
 
     @aetest.test
-    def test(self,operating_system, steps, _os, _class, _token, _number, _display_only_failed):
+    def test(self,operating_system, steps, _os, _class, _token, _number, _display_only_failed, _external_folder):
 
         """Loop through OS's and run appropriate tests."""
-        base_folder = pathlib.Path(f"{pathlib.Path(_parser.__file__).parent}/{operating_system}")
+        if _external_folder:
+            base_folder = _external_folder / operating_system
+        else:
+            base_folder = pathlib.Path(f"{pathlib.Path(_parser.__file__).parent}/{operating_system}")
         # Please refer to get_tokens comments for the how, the what is a genie token, such as
         # "asr1k" or "c3850" to provide namespaced parsing.
         tokens = get_tokens(base_folder)
@@ -958,7 +961,8 @@ def _parse_args(
         token=None,
         display_only_failed=None,
         number=None,
-        o=None,c=None,t=None,f=None,n=None,
+        external_folder=None,
+        o=None,c=None,t=None,f=None,n=None,e=None,
         **kwargs):
     
     # Create the parser
@@ -984,6 +988,10 @@ def _parse_args(
                         type=int,
                         help="The specific unittest we want to run, such as '25'",
                         default=None or number or n)
+    my_parser.add_argument('-e', "--external-folder",
+                        type=pathlib.Path,
+                        help="An external parser folder to work with",
+                        default=None or external_folder or e)
     args = my_parser.parse_known_args()[0]
 
     _os = args.operating_system
@@ -991,12 +999,13 @@ def _parse_args(
     _token = args.token
     _display_only_failed = args.display_only_failed
     _number = args.number
+    _external_folder = args.external_folder
 
-    return _os, _class, _token, _display_only_failed, _number
+    return _os, _class, _token, _display_only_failed, _number, _external_folder
 
 def main(**kwargs):
     
-    _os, _class, _token, _display_only_failed, _number = _parse_args(**kwargs)
+    _os, _class, _token, _display_only_failed, _number, _external_folder = _parse_args(**kwargs)
 
     if _number and (not _class or not _number):
         sys.exit("Unittest number provided but missing supporting arguments:"
@@ -1016,7 +1025,8 @@ def main(**kwargs):
             _class=_class,
             _token=_token,
             _display_only_failed=_display_only_failed,
-            _number=_number
+            _number=_number,
+            _external_folder=_external_folder,
         )
     else:
         # Used for `python folder_parsing_job.py`
@@ -1027,7 +1037,8 @@ def main(**kwargs):
             _class=_class,
             _token=_token,
             _display_only_failed=_display_only_failed,
-            _number=_number
+            _number=_number,
+            _external_folder=_external_folder,
         )
 
 
