@@ -1,0 +1,10 @@
+Interface            IP-Address        OK? Method Status                Protocol
+GigabitEthernet0/0   unassigned        YES unset  administratively down up
+GigabitEthernet0/1   unassigned        YES unset  administratively down up
+GigabitEthernet0/2   unassigned        YES unset  administratively down up
+GigabitEthernet0/3   unassigned        YES unset  administratively down up
+GigabitEthernet0/4   unassigned        YES unset  administratively down up
+GigabitEthernet0/5   unassigned        YES unset  administratively down up
+GigabitEthernet0/6   unassigned        YES unset  administratively down up
+Internal-Data0/0     169.254.1.1       YES unset  up                    up
+Management0/0        10.224.128.27     YES CONFIG up                    up
