@@ -1720,10 +1720,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
                             "ospf-lsa-topology-link-node-id": str,
                             "ospf-lsa-topology-link-state": str
                         }),
-                        "ospf-topology-id":
-                        str,
-                        "ospf-topology-name":
-                        str
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str
                     }
                 },
                 "sequence-number": str
