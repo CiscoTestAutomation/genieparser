@@ -259,7 +259,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         # System Name: R2_xrv9000
         p5 = re.compile(r'^System +Name: +(?P<system_name>.+?)\s*$')
         # System Description:  6.2.2, IOS-XRv 9000
-        p6 = re.compile(r'^System +Description: +(?P<system_description>.+?)\s*$')
+        p6 = re.compile(r'^System +Description: +(?P<system_description>.+?)$')
         # Copyright (c) 1986-2017 by Cisco Systems, Inc.
         p6_1 = re.compile(r'^(?P<copyright>Copyright +\([c|C]\) +.+)$')
         # Compiled Sat 22-Jul-17 05:51 by
