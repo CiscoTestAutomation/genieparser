@@ -1,0 +1,1 @@
+allow the regex to accept reset reason output of '  Reason: Reset due to non-disruptive upgrade' by adding - as an accepted char.
