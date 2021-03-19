@@ -104,9 +104,7 @@ expected_output = {
             "GigabitEthernet0/0/0/26.120": {
                 "dest_ip_address": {
                     "10.0.221.98": {
-                        "async_total_msec": 0,
                         "dampening": "DAMP",
-                        "echo_total_msec": 0,
                         "hardware": "No",
                         "npu": "n/a",
                         "state": "DOWN",
@@ -161,8 +159,8 @@ expected_output = {
             "TenGigabitEthernet0/5/0/1.400": {
                 "dest_ip_address": {
                     "10.150.100.1": {
-                        "async_total_msec": 'n/a',
-                        "echo_total_msec": 'n/a',
+                        "async_total_msec": 0,
+                        "echo_total_msec": 0,
                         "hardware": "No",
                         "npu": "n/a",
                         "state": "DOWN",

@@ -679,7 +679,6 @@ CLASS_SKIP = {
         "ShowArpDetail": True, # Not migrated
         "ShowArpTrafficDetail": True, # Not migrated
         "ShowBfdSessionDestinationDetails": True, # Not migrated
-        "ShowBfdSession": True, # Not migrated
         "ShowBgpEgressEngineering": True, # Not migrated
         "ShowBgpInstanceAfGroupConfiguration": True, # Not migrated
         "ShowBgpInstanceAllAll": True, # Not migrated
