@@ -337,6 +337,77 @@ Active Package(s):
                                  'system_compile_time': '3/30/2017 9:00:00 [03/30/2017 20:04:06]'}
                               }
                             }
+    
+    golden_output5 = {'execute.return_value': """
+        Cisco Nexus Operating System (NX-OS) Software
+        TAC support: http://www.cisco.com/tac
+        Copyright (C) 2002-2020, Cisco and/or its affiliates.
+        All rights reserved.
+        The copyrights to certain works contained in this software are
+        owned by other third parties and used and distributed under their own
+        licenses, such as open source.  This software is provided "as is," and unless
+        otherwise stated, there is no warranty, express or implied, including but not
+        limited to warranties of merchantability and fitness for a particular purpose.
+        Certain components of this software are licensed under
+        the GNU General Public License (GPL) version 2.0 or 
+        GNU General Public License (GPL) version 3.0  or the GNU
+        Lesser General Public License (LGPL) Version 2.1 or 
+        Lesser General Public License (LGPL) Version 2.0. 
+        A copy of each such license is available at
+        http://www.opensource.org/licenses/gpl-2.0.php and
+        http://opensource.org/licenses/gpl-3.0.html and
+        http://www.opensource.org/licenses/lgpl-2.1.php and
+        http://www.gnu.org/licenses/old-licenses/library.txt.
+        Software
+          BIOS: version 07.68
+         NXOS: version 9.3(6uu)I9(1uu) [build 9.3(6)]
+          BIOS compile time:  05/26/2020
+          NXOS image file is: bootflash:///nxos.9.3.6.bin.upg
+          NXOS compile time:  12/25/2020 12:00:00 [11/10/2020 04:00:21]
+        Hardware
+          cisco Nexus9000 C9396PX Chassis 
+          Intel(R) Core(TM) i3- CPU @ 2.50GHz with 16399572 kB of memory.
+          Processor Board ID SAL18432P5N
+          Device name: N9K-ACC-2
+          bootflash:   51496280 kB
+        Kernel uptime is 0 day(s), 0 hour(s), 1 minute(s), 33 second(s)
+        Last reset at 550761 usecs after Thu Mar 18 16:34:13 2021
+          Reason: Reset due to non-disruptive upgrade
+          System version: 9.3(6)
+          Service: Installer
+        plugin
+          Core Plugin, Ethernet Plugin
+        Active Package(s):
+
+        """}
+    
+    golden_parsed_output5 = {'platform': {
+                                'name': 'Nexus',
+                                'os': 'NX-OS',
+                                'software': {
+                                    'bios_version': '07.68',
+                                    'system_version': '9.3(6uu)I9(1uu) [build 9.3(6)]',
+                                    'bios_compile_time': '05/26/2020',
+                                    'system_image_file': 'bootflash:///nxos.9.3.6.bin.upg',
+                                    'system_compile_time': '12/25/2020 12:00:00 [11/10/2020 04:00:21]'},
+                                'hardware': {
+                                    'model': 'Nexus9000 C9396PX',
+                                    'chassis': 'Nexus9000 C9396PX',
+                                    'slots': 'None',
+                                    'rp': 'None',
+                                    'cpu': 'Intel(R) Core(TM) i3- CPU @ 2.50GHz',
+                                    'memory': '16399572 kB',
+                                    'processor_board_id': 'SAL18432P5N',
+                                    'device_name': 'N9K-ACC-2',
+                                    'bootflash': '51496280 kB'},
+                                'kernel_uptime': {
+                                    'days': 0, 
+                                    'hours': 0, 
+                                    'minutes': 1, 
+                                    'seconds': 33},
+                                'system_version': '9.3(6)',
+                                'reason': 'Reset due to non-disruptive upgrade'}
+                            }
 
     ats_mock.tcl.eval.return_value = 'nxos'
 
@@ -367,6 +438,13 @@ Active Package(s):
         version_obj = ShowVersion(device=self.device)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output4)
+        
+    def test_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        version_obj = ShowVersion(device=self.device)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output5)
 
     def test_empty(self):
         self.device2 = Mock(**self.empty_output)

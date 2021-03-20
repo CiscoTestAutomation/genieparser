@@ -348,7 +348,7 @@ class ShowVersion(ShowVersionSchema):
 
                 continue
 
-            p22 = re.compile(r'^\s*Reason: +(?P<reason>[a-zA-Z0-9\s]+)$')
+            p22 = re.compile(r'^\s*Reason: +(?P<reason>[a-zA-Z0-9\s-]+)$')
             m = p22.match(line)
             if m:
 
