@@ -9,6 +9,49 @@ pipeline {
         timeout(time: 30, unit: 'MINUTES')
     }
     stages {
+        stage('Clone repos') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genie']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genie.git']]])
+                script {
+                    sh """
+                    ls -l
+                    cd genie
+                    git remote -v
+                    """
+                }
+            }
+        }
+
+
+        stage('Checkout branches') {
+            when { not { changeRequest() } }
+            steps {
+                script {
+                    sh """
+                    cd genie
+                    # checkout same branch on genie, if it exists
+                    git checkout ${BRANCH_NAME} || true
+                    """
+                }
+            }
+        }
+
+        stage('Checkout branches (PR)') {
+            when {
+                changeRequest()
+            }
+            steps {
+                script {
+                    sh """
+                    cd genie
+                    # checkout same branch on genie, if it exists
+                    git checkout origin/${CHANGE_BRANCH} || true
+                    git status
+                    """
+                }
+            }
+        }
+
         stage("Build pyATS and make develop") {
             steps {
                 sh """
@@ -23,6 +66,8 @@ pipeline {
                     pip install --upgrade pip setuptools
                     pip3 install --no-cache-dir wheel pytest pytest-xdist
                     pip3 install --no-cache-dir -i http://pyats-pypi.cisco.com/simple --trusted-host pyats-pypi.cisco.com cisco-distutils ats[full]
+                    cd $WORKSPACE/genie
+                    make develop
                     cd $WORKSPACE
                     make develop
                     env
@@ -36,7 +81,7 @@ pipeline {
             steps {
                 sh """
                 . /scratch/genieparser-env/bin/activate
-                compileAll 
+                compileAll
                 """
             }
         }
@@ -69,4 +114,4 @@ pipeline {
             cleanWs()
         }
     }
-} 
+}

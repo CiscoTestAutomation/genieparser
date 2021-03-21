@@ -10,7 +10,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
+from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema, ListOf
 
 class ShowDdosProtectionStatisticsSchema(MetaParser):
     """
@@ -111,34 +111,6 @@ class ShowDDosProtectionProtocolSchema(MetaParser):
     """ Schema for:
             * show ddos-protection protocols {protocol}  
     """
-    def validate_ddos_instance_list(value):
-        # Pass ddos instance list
-        if not isinstance(value, list):
-            raise SchemaError('ddos-instance is not a list')
-        ddos_instance_schema = Schema({
-            Optional("@junos:style"): str,
-            "ddos-instance-parameters": {
-                Optional("@junos:style"): str,
-                Optional("hostbound-queue"): str,
-                "policer-bandwidth": str,
-                Optional("policer-bandwidth-scale"): str,
-                "policer-burst": str,
-                Optional("policer-burst-scale"): str,
-                Optional("policer-enable"): str
-            },
-            "ddos-instance-statistics": {
-                Optional("@junos:style"): str,
-                "packet-arrival-rate": str,
-                "packet-arrival-rate-max": str,
-                "packet-dropped": str,
-                "packet-received": str
-            },
-            "protocol-states-locale": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            ddos_instance_schema.validate(item)
-        return value
 
     schema = {
         Optional("@xmlns:junos"): str,
@@ -174,7 +146,26 @@ class ShowDDosProtectionProtocolSchema(MetaParser):
                         "timeout-active-flows": str,
                         "timeout-time": str
                     },
-                    "ddos-instance": Use(validate_ddos_instance_list),
+                    "ddos-instance": ListOf({
+                        Optional("@junos:style"): str,
+                        "ddos-instance-parameters": {
+                            Optional("@junos:style"): str,
+                            Optional("hostbound-queue"): str,
+                            "policer-bandwidth": str,
+                            Optional("policer-bandwidth-scale"): str,
+                            "policer-burst": str,
+                            Optional("policer-burst-scale"): str,
+                            Optional("policer-enable"): str
+                        },
+                        "ddos-instance-statistics": {
+                            Optional("@junos:style"): str,
+                            "packet-arrival-rate": str,
+                            "packet-arrival-rate-max": str,
+                            "packet-dropped": str,
+                            "packet-received": str
+                        },
+                        "protocol-states-locale": str
+                    }),
                     "ddos-system-statistics": {
                         Optional("@junos:style"): str,
                         "packet-arrival-rate": str,

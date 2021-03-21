@@ -12,46 +12,13 @@ import re
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, Schema)
+        Optional, Use, Schema, ListOf)
 
 
 class ShowLacpInterfacesInterfaceSchema(MetaParser):
     """ Schema for:
             * show lacp interfaces {interface}
     """
-    def validate_lag_lacp_state_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('lag-lacp-state is not a list')
-        entry_schema = Schema({
-            "lacp-activity": str,
-            "lacp-aggregation": str,
-            "lacp-collecting": str,
-            "lacp-defaulted": str,
-            "lacp-distributing": str,
-            "lacp-expired": str,
-            "lacp-role": str,
-            "lacp-synchronization": str,
-            "lacp-timeout": str,
-            "name": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            entry_schema.validate(item)
-        return value
-
-    def validate_lag_lacp_protocol_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('lag-lacp-protocol is not a list')
-        entry_schema = Schema({
-                "lacp-mux-state": str,
-                "lacp-receive-state": str,
-                "lacp-transmit-state": str,
-                "name": str
-            })
-        # Validate each dictionary in list
-        for item in value:
-            entry_schema.validate(item)
-        return value
 
     schema = {
         "lacp-interface-information-list": {
@@ -59,8 +26,24 @@ class ShowLacpInterfacesInterfaceSchema(MetaParser):
                 "lag-lacp-header": {
                     "aggregate-name": str
                 },
-                "lag-lacp-protocol": Use(validate_lag_lacp_protocol_list),
-                "lag-lacp-state": Use(validate_lag_lacp_state_list)
+                "lag-lacp-protocol": ListOf({
+                    "lacp-mux-state": str,
+                    "lacp-receive-state": str,
+                    "lacp-transmit-state": str,
+                    "name": str
+                }),
+                "lag-lacp-state": ListOf({
+                    "lacp-activity": str,
+                    "lacp-aggregation": str,
+                    "lacp-collecting": str,
+                    "lacp-defaulted": str,
+                    "lacp-distributing": str,
+                    "lacp-expired": str,
+                    "lacp-role": str,
+                    "lacp-synchronization": str,
+                    "lacp-timeout": str,
+                    "name": str
+                })
             }
         }
     }
@@ -167,20 +150,6 @@ class ShowLacpStatisticsInterfacesInterfaceSchema(MetaParser):
         }
     }
     """
-    def lag_lacp_statistics_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('lag-lacp-statistics is not a list')
-        entry_schema = Schema({
-            "illegal-rx-packets": str,
-            "lacp-rx-packets": str,
-            "lacp-tx-packets": str,
-            "name": str,
-            "unknown-rx-packets": str,
-        })
-        # Validate each dictionary in list
-        for item in value:
-            entry_schema.validate(item)
-        return value
 
     schema = {
         "lacp-interface-statistics-list": {
@@ -188,7 +157,13 @@ class ShowLacpStatisticsInterfacesInterfaceSchema(MetaParser):
                 "lag-lacp-header": {
                     "aggregate-name": str
                 },
-                "lag-lacp-statistics": Use(lag_lacp_statistics_list),
+                "lag-lacp-statistics": ListOf({
+                    "illegal-rx-packets": str,
+                    "lacp-rx-packets": str,
+                    "lacp-tx-packets": str,
+                    "name": str,
+                    "unknown-rx-packets": str,
+                }),
             }
         }
     }
