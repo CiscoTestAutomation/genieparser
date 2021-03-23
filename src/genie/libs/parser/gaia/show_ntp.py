@@ -63,13 +63,13 @@ class ShowNtpCurrent(ShowNtpCurrentSchema):
 
     # Possible responses to this command are:
     #   'primary and secondary servers are not synchronized'
-    #       - This occurs when only a single ntp server is configured, or two are configured and not synchronized
+    #       - This occurs when only a single ntp server is configured, or two are configured and are not synchronized
     #       - return value: {'active': 'unsynchronized'}
     #   'The NTP service is inactive'
     #       - This occurs if the command "set ntp service active on" is missing from the config
     #       - return value: {'active': 'inactive'}
     #   '<ip_address>'
-    #       - The IP Address of the NTP server that the clock is currently synchornized to
+    #       - The IP Address of the NTP server that the clock is currently synchronized to
     #       - return value: {'active': '{ip_address}'}
 
     def cli(self,output=None):
