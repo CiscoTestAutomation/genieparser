@@ -1,0 +1,12 @@
+Crypto session current status
+Interface: Virtual-Access2
+Username: cisco
+Profile: prof
+Group: easy
+Assigned address: 10.3.3.4
+Session status: UP-ACTIVE     
+Peer: 10.1.1.2 port 500 
+  IKE SA: local 10.1.1.1/500 remote 10.1.1.2/500 Active 
+  IKE SA: local 10.1.1.1/500 remote 10.1.1.2/500 Inactive 
+  IPSEC FLOW: permit ip 0.0.0.0/0.0.0.0 host 3.3.3.4 
+        Active SAs: 2, origin: crypto map
