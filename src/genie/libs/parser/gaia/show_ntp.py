@@ -25,9 +25,11 @@ class ShowNtpCurrentSchema(MetaParser):
 
 class ShowNtpServersSchema(MetaParser):
     schema = {
-        Any(): {
-            'type': str,
-            'version': str
+        'ip_address': {
+            Any(): {
+                'type': str,
+                'version': str
+            }
         }
     }
 
@@ -59,6 +61,17 @@ class ShowNtpCurrent(ShowNtpCurrentSchema):
 
     cli_command = 'show ntp current'
 
+    # Possible responses to this command are:
+    #   'primary and secondary servers are not synchronized'
+    #       - This occurs when only a single ntp server is configured, or two are configured and not synchronized
+    #       - return value: {'active': 'unsynchronized'}
+    #   'The NTP service is inactive'
+    #       - This occurs if the command "set ntp service active on" is missing from the config
+    #       - return value: {'active': 'inactive'}
+    #   '<ip_address>'
+    #       - The IP Address of the NTP server that the clock is currently synchornized to
+    #       - return value: {'active': '{ip_address}'}
+
     def cli(self,output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
@@ -71,9 +84,24 @@ class ShowNtpCurrent(ShowNtpCurrentSchema):
             # something is wrong
             return ret_dict
 
-        ret_dict = {
-            'current': out.splitlines()[0].strip()
-        }
+        p0 = re.compile(r'^The NTP service is inactive')
+        p1 = re.compile(r'^primary and secondary servers are not synchronized')
+        p2 = re.compile(r'^(?P<ip_address>(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})')
+
+        for line in out.splitlines():
+            m = p0.match(line)
+            if m:
+                ret_dict['current'] = 'inactive'
+                continue
+
+            m = p1.match(line)
+            if m:
+                ret_dict['current'] = 'unsynchronized'
+                continue
+
+            m = p2.match(line)
+            if m:
+                ret_dict['current'] = m.groupdict()['ip_address']
 
         return ret_dict
 
@@ -90,18 +118,28 @@ class ShowNtpServers(ShowNtpServersSchema):
 
         ret_dict = {}
 
+        ''' Sample Output
+        gw-a> show ntp servers
+        IP Address               Type              Version
+        0.pool.ntp.org           Secondary         4
+        162.159.200.123          Primary           4
+        '''
+
+        p1 = re.compile(r'^(?P<ip_address>.*)\s+(?P<type>\w+)\s+(?P<version>\d)$')
+
         for line in out.splitlines():
+            if 'ip_address' not in ret_dict:
+                ret_dict['ip_address']={}
+
             line = line.strip()
 
-            p1 = re.compile(r'^(?P<ip_address>.*)\s+(?P<type>\w+)\s+(?P<version>\d)$')
+            # 162.159.200.123          Primary           4
             m = p1.match(line)
             if m:
                 ip_address = m.groupdict()['ip_address'].strip()
-                ret_dict[ip_address] = {'type':'', 'version':''}
-                ret_dict[ip_address]['type'] = m.groupdict()['type']
-                ret_dict[ip_address]['version'] = m.groupdict()['version']
+                ret_dict['ip_address'][ip_address] = {'type':'', 'version':''}
+                ret_dict['ip_address'][ip_address]['type'] = m.groupdict()['type']
+                ret_dict['ip_address'][ip_address]['version'] = m.groupdict()['version']
                 continue
-
-
 
         return ret_dict

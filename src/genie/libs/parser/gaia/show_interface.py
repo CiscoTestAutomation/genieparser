@@ -16,37 +16,33 @@ class ShowInterfaceSchema(MetaParser):
     schema = {
         Any(): {
             'state': str,
-            'mac-addr': str,
+            'mac_addr': str,
             'type': str,
-            "link-state": str,
+            "link_state": str,
             'mtu': int,
-            'auto-negotiation': str,
+            'auto_negotiation': str,
             'speed': str,
-            'ipv6-autoconfig': str,
+            'ipv6_autoconfig': str,
             'duplex': str,
-            'monitor-mode': str,
-            'link-speed': str,
+            'monitor_mode': str,
+            'link_speed': str,
             'comments': str,
-            'ipv4-address': str,
-            'ipv6-address': str,
-            'ipv6-local-link-address': str,
+            'ipv4_address': str,
+            'ipv6_address': str,
+            'ipv6_local_link_address': str,
             'statistics' :{
-                'TX' : {
-                    'bytes': int,
-                    'packets': int,
-                    'errors' : int,
-                    'dropped': int,
-                    'overruns': int,
-                    'carrier': int,
-                },
-                'RX' : {
-                    'bytes': int,
-                    'packets': int,
-                    'errors' : int,
-                    'dropped': int,
-                    'overruns': int,
-                    'frame': int,
-                },
+                'tx_bytes': int,
+                'tx_packets': int,
+                'tx_errors' : int,
+                'tx_dropped': int,
+                'tx_overruns': int,
+                'tx_carrier': int,
+                'rx_bytes': int,
+                'rx_packets': int,
+                'rx_errors' : int,
+                'rx_dropped': int,
+                'rx_overruns': int,
+                'rx_frame': int,
             }
         }
     }
@@ -76,141 +72,179 @@ class ShowInterface(ShowInterfaceSchema):
             ret_dict.update({
                 interface:{
                     'statistics': {
-                        'TX':{},
-                        'RX':{}
                         }
                     }
                 })
 
+        ''' Sample Output
+        gw-a> show interfaces all
+        Interface eth0
+            state on
+            mac-addr 50:00:00:01:00:00
+            type ethernet
+            link-state link up
+            mtu 1500
+            auto-negotiation on
+            speed 1000M
+            ipv6-autoconfig Not configured
+            duplex full
+            monitor-mode Not configured
+            link-speed 1000M/full
+            comments
+            ipv4-address 10.1.1.3/24
+            ipv6-address Not Configured
+            ipv6-local-link-address Not Configured
+
+        Statistics:
+            TX bytes:29871552 packets:80540 errors:0 dropped:0 overruns:0 carrier:0
+            RX bytes:106812763 packets:88415 errors:0 dropped:0 overruns:0 frame:0
+        '''
+
+        p0 = re.compile(r'^Interface (?P<interface_name>.*)$')
+        p1 = re.compile(r'^state (?P<state>.*)$')
+        p2 = re.compile(r'^mac-addr (?P<mac_addr>.*)$')
+        p3 = re.compile(r'^type (?P<type>.*)$')
+        p4 = re.compile(r'^link-state (?P<link_state>.*)$')
+        p5 = re.compile(r'^mtu (?P<mtu>.*)$')
+        p6 = re.compile(r'^auto-negotiation (?P<auto_negotiation>.*)$')
+        p7 = re.compile(r'^speed (?P<speed>.*)$')
+        p8 = re.compile(r'^ipv6-autoconfig (?P<ipv6_autoconfig>.*)$')
+        p9 = re.compile(r'^duplex (?P<duplex>.*)$')
+        p10 = re.compile(r'^monitor-mode (?P<monitor_mode>.*)$')
+        p11 = re.compile(r'^link-speed (?P<link_speed>.*)$')
+        p12 = re.compile(r'^comments\s*(?P<comments>.*)$')
+        p13 = re.compile(r'^ipv4-address (?P<ipv4_address>.*)$')
+        p14 = re.compile(r'^ipv6-address (?P<ipv6_address>.*)$')
+        p15 = re.compile(r'^ipv6-local-link-address (?P<ipv6_local_link_address>.*)$')
+        p16 = re.compile(r'^TX bytes:(?P<tx_bytes>\d+) packets:(?P<tx_packets>\d+) errors:(?P<tx_errors>\d+) dropped:(?P<tx_dropped>\d+) overruns:(?P<tx_overruns>\d+) carrier:(?P<tx_carrier>\d+)$')
+        p17 = re.compile(r'^RX bytes:(?P<rx_bytes>\d+) packets:(?P<rx_packets>\d+) errors:(?P<rx_errors>\d+) dropped:(?P<rx_dropped>\d+) overruns:(?P<rx_overruns>\d+) frame:(?P<rx_frame>\d+)$')
+
         for line in out.splitlines():
             line = line.strip()
 
-            p0 = re.compile(r'^Interface (?P<interface_name>.*)$')
             m = p0.match(line)
             if m:
                 current_interface = m.groupdict()['interface_name']
                 ret_dict.update({current_interface:{
                     'statistics': {
-                        'TX':{},
-                        'RX':{}
                         }
                     }})
                 continue
-
-            p1 = re.compile(r'^state (?P<state>.*)$')
+            
+            # Interface eth0
             m = p1.match(line)
             if m:
                 ret_dict[current_interface]['state'] = m.groupdict()['state']
                 continue
 
-            p2 = re.compile(r'^mac-addr (?P<mac_addr>.*)$')
+            # state on
             m = p2.match(line)
             if m:
-                ret_dict[current_interface]['mac-addr'] = m.groupdict()['mac_addr']
+                ret_dict[current_interface]['mac_addr'] = m.groupdict()['mac_addr']
                 continue
 
-            p3 = re.compile(r'^type (?P<type>.*)$')
+            # type ethernet
             m = p3.match(line)
             if m:
                 ret_dict[current_interface]['type'] = m.groupdict()['type']
                 continue
 
-            p4 = re.compile(r'^link-state (?P<link_state>.*)$')
+            # link-state link up
             m = p4.match(line)
             if m:
-                ret_dict[current_interface]['link-state'] = m.groupdict()['link_state']
+                ret_dict[current_interface]['link_state'] = m.groupdict()['link_state']
                 continue
 
-            p5 = re.compile(r'^mtu (?P<mtu>.*)$')
+            # mtu 1500
             m = p5.match(line)
             if m:
                 ret_dict[current_interface]['mtu'] = int(m.groupdict()['mtu'])
                 continue
-
-            p6 = re.compile(r'^auto-negotiation (?P<auto_negotiation>.*)$')
+            
+            # auto-negotiation on
             m = p6.match(line)
             if m:
-                ret_dict[current_interface]['auto-negotiation'] = m.groupdict()['auto_negotiation']
+                ret_dict[current_interface]['auto_negotiation'] = m.groupdict()['auto_negotiation']
                 continue
 
-            p7 = re.compile(r'^speed (?P<speed>.*)$')
+            # speed 1000M
             m = p7.match(line)
             if m:
                 ret_dict[current_interface]['speed'] = m.groupdict()['speed']
                 continue
 
-            p8 = re.compile(r'^ipv6-autoconfig (?P<ipv6_autoconfig>.*)$')
+            # ipv6-autoconfig Not configured
             m = p8.match(line)
             if m:
-                ret_dict[current_interface]['ipv6-autoconfig'] = m.groupdict()['ipv6_autoconfig']
+                ret_dict[current_interface]['ipv6_autoconfig'] = m.groupdict()['ipv6_autoconfig']
                 continue
 
-            p9 = re.compile(r'^duplex (?P<duplex>.*)$')
+            # duplex full
             m = p9.match(line)
             if m:
                 ret_dict[current_interface]['duplex'] = m.groupdict()['duplex']
                 continue
 
-            p10 = re.compile(r'^monitor-mode (?P<monitor_mode>.*)$')
+            # monitor-mode Not configured
             m = p10.match(line)
             if m:
-                ret_dict[current_interface]['monitor-mode'] = m.groupdict()['monitor_mode']
+                ret_dict[current_interface]['monitor_mode'] = m.groupdict()['monitor_mode']
                 continue
 
-            p11 = re.compile(r'^link-speed (?P<link_speed>.*)$')
+            # link-speed 1000M/full
             m = p11.match(line)
             if m:
-                ret_dict[current_interface]['link-speed'] = m.groupdict()['link_speed']
+                ret_dict[current_interface]['link_speed'] = m.groupdict()['link_speed']
                 continue
 
-            p12 = re.compile(r'^comments\s*(?P<comments>.*)$')
+            # comments This is an interface comment
             m = p12.match(line)
             if m:
                 ret_dict[current_interface]['comments'] = m.groupdict()['comments']
                 continue
 
-            p13 = re.compile(r'^ipv4-address (?P<ipv4_address>.*)$')
+            # ipv4-address 10.1.1.3/24
             m = p13.match(line)
             if m:
-                ret_dict[current_interface]['ipv4-address'] = m.groupdict()['ipv4_address']
+                ret_dict[current_interface]['ipv4_address'] = m.groupdict()['ipv4_address']
                 continue
 
-            p14 = re.compile(r'^ipv6-address (?P<ipv6_address>.*)$')
+            # ipv6-address Not Configured
             m = p14.match(line)
             if m:
-                ret_dict[current_interface]['ipv6-address'] = m.groupdict()['ipv6_address']
+                ret_dict[current_interface]['ipv6_address'] = m.groupdict()['ipv6_address']
                 continue
 
-            p15 = re.compile(r'^ipv6-local-link-address (?P<ipv6_local_link_address>.*)$')
+            # ipv6-local-link-address Not Configured
             m = p15.match(line)
             if m:
-                ret_dict[current_interface]['ipv6-local-link-address'] = m.groupdict()['ipv6_local_link_address']
+                ret_dict[current_interface]['ipv6_local_link_address'] = m.groupdict()['ipv6_local_link_address']
                 continue
 
-            p16 = re.compile(r'^TX bytes:(?P<tx_bytes>\d+) packets:(?P<tx_packets>\d+) errors:(?P<tx_errors>\d+) dropped:(?P<tx_dropped>\d+) overruns:(?P<tx_overruns>\d+) carrier:(?P<tx_carrier>\d+)$')
+            # TX bytes:29871552 packets:80540 errors:0 dropped:0 overruns:0 carrier:0
             m = p16.match(line)
             if m:
-                ret_dict[current_interface]['statistics']['TX'] = {
-                    'bytes': int(m.groupdict()['tx_bytes']),
-                    'packets': int(m.groupdict()['tx_packets']),
-                    'errors': int(m.groupdict()['tx_errors']),
-                    'dropped': int(m.groupdict()['tx_dropped']),
-                    'overruns': int(m.groupdict()['tx_overruns']),
-                    'carrier': int(m.groupdict()['tx_carrier'])
-                }
+                ret_dict[current_interface]['statistics'].update({
+                    'tx_bytes': int(m.groupdict()['tx_bytes']),
+                    'tx_packets': int(m.groupdict()['tx_packets']),
+                    'tx_errors': int(m.groupdict()['tx_errors']),
+                    'tx_dropped': int(m.groupdict()['tx_dropped']),
+                    'tx_overruns': int(m.groupdict()['tx_overruns']),
+                    'tx_carrier': int(m.groupdict()['tx_carrier'])
+                })
                 continue
 
-            p17 = re.compile(r'^RX bytes:(?P<rx_bytes>\d+) packets:(?P<rx_packets>\d+) errors:(?P<rx_errors>\d+) dropped:(?P<rx_dropped>\d+) overruns:(?P<rx_overruns>\d+) frame:(?P<rx_frame>\d+)$')
+            # RX bytes:106812763 packets:88415 errors:0 dropped:0 overruns:0 frame:0
             m = p17.match(line)
             if m:
-                ret_dict[current_interface]['statistics']['RX'] = {
-                    'bytes':    int(m.groupdict()['rx_bytes']),
-                    'packets':  int(m.groupdict()['rx_packets']),
-                    'errors':   int(m.groupdict()['rx_errors']),
-                    'dropped':  int(m.groupdict()['rx_dropped']),
-                    'overruns': int(m.groupdict()['rx_overruns']),
-                    'frame':    int(m.groupdict()['rx_frame'])
-                }
+                ret_dict[current_interface]['statistics'].update({
+                    'rx_bytes':    int(m.groupdict()['rx_bytes']),
+                    'rx_packets':  int(m.groupdict()['rx_packets']),
+                    'rx_errors':   int(m.groupdict()['rx_errors']),
+                    'rx_dropped':  int(m.groupdict()['rx_dropped']),
+                    'rx_overruns': int(m.groupdict()['rx_overruns']),
+                    'rx_frame':    int(m.groupdict()['rx_frame'])
+                })
                 continue
 
         return ret_dict

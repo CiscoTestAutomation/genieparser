@@ -25,13 +25,6 @@ class ShowUsersSchema(MetaParser):
         }
     }
 
-    """
-    User             Uid       Gid       Home Dir.        Shell            Real Name               Privileges
-    admin            0         0         /home/admin      /etc/cli.sh      Admin                   Access to Expert features
-    monitor          102       100       /home/monitor    /etc/cli.sh      Monitor                 None
-    somedude         10        20        /home/somewhere  /bin/bash        Some Dude               None
-    """
-
 class ShowUsers(ShowUsersSchema):
 
     cli_command = ['show users']
@@ -44,13 +37,20 @@ class ShowUsers(ShowUsersSchema):
 
         result_dict = {}
 
-        pattern_users = re.compile(r'^(?P<username>[A-z0-9_-]{1,30})\s+(?P<uid>\d+)\s+(?P<gid>\d+)\s+(?P<home>\S+)\s+(?P<shell>\S+)\s+(?P<name>[A-z0-9_-]{1,30}\s?[A-z0-9_-]{1,30})\s+(?P<privileges>.*$)')
+        ''' Sample Output
+        User             Uid       Gid       Home Dir.        Shell            Real Name               Privileges
+        admin            0         0         /home/admin      /etc/cli.sh      Admin                   Access to Expert features
+        monitor          102       100       /home/monitor    /etc/cli.sh      Monitor                 None
+        somedude         10        20        /home/somewhere  /bin/bash        Some Dude               None
+        '''
+
+        p0 = re.compile(r'^(?P<username>[A-z0-9_-]{1,30})\s+(?P<uid>\d+)\s+(?P<gid>\d+)\s+(?P<home>\S+)\s+(?P<shell>\S+)\s+(?P<name>[A-z0-9_-]{1,30}\s?[A-z0-9_-]{1,30})\s+(?P<privileges>.*$)')
 
         for line in out.splitlines():
             line = line.strip()
 
-            m = pattern_users.match(line)
-
+            # admin            0         0         /home/admin      /etc/cli.sh      Admin                   Access to Expert features
+            m = p0.match(line)
             if m:
                 new_user = m.groupdict()
                 user = new_user['username']

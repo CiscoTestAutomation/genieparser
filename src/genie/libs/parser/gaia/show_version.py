@@ -6,19 +6,17 @@ import re
 class ShowVersionSchema(MetaParser):
     schema = {
         'version': {
-            'os' : {
-                'build': str,
-                'edition': str,
-                'kernel': str
+            'product': str,
+            'os_build': str,
+            'os_edition': str,
+            'os_kernel': str
             },
-            'product': str
         }
-    }
 
 class ShowVersion(ShowVersionSchema):
 
     cli_command = ['show version all']
-    
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
@@ -32,14 +30,20 @@ class ShowVersion(ShowVersionSchema):
 
         result_dict = {
             'version': {
-                'product': '',   
-                'os': {
-                    'build': '',
-                    'kernel': '',
-                    'edition': ''
-                    }
+                'product': '',
+                'os_build': '',
+                'os_kernel': '',
+                'os_edition': '',
                 }
             }
+
+        ''' Sample Output
+        gw-a> show version all
+        Product version Check Point Gaia R80.40
+        OS build 294
+        OS kernel version 3.10.0-957.21.3cpx86_64
+        OS edition 64-bit
+        '''
 
         p_version = re.compile(r'^Product version Check Point Gaia (?P<version>.*)$')
         p_build = re.compile(r'^OS build (?P<build>.*)$')
@@ -49,33 +53,32 @@ class ShowVersion(ShowVersionSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            # Product version Check Point Gaia R80.40
             m = p_version.match(line)
             if m:
                 version = m.groupdict()['version']
                 result_dict['version']['product'] = version
                 continue
-            
+
+            # OS build 294
             m = p_build.match(line)
             if m:
                 build = m.groupdict()['build']
-                result_dict['version']['os']['build'] = build
+                result_dict['version']['os_build'] = build
                 continue
-            
+
+            # OS kernel version 3.10.0-957.21.3cpx86_64
             m = p_kernel.match(line)
             if m:
                 kernel = m.groupdict()['kernel']
-                result_dict['version']['os']['kernel'] = kernel
+                result_dict['version']['os_kernel'] = kernel
                 continue
 
+            # OS edition 64-bit
             m = p_edition.match(line)
             if m:
                 edition = m.groupdict()['edition']
-                result_dict['version']['os']['edition'] = edition
+                result_dict['version']['os_edition'] = edition
                 continue
-            
-        return result_dict 
 
-
-
-    
-
+        return result_dict
