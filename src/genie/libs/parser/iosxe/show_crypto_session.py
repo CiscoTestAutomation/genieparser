@@ -314,7 +314,6 @@ class ShowCryptoSession(ShowCryptoSessionSchema):
                 cur_dict10['outbound_pkts_drop']=int(groups['outbound_drop'])
                 cur_dict10['outbound_life_kb']=groups['outbound_life_kb']
                 cur_dict10['outbound_life_secs']=groups['outbound_life_secs']
-        print(json.dumps(parsed_dict,indent=4))
         return parsed_dict
 
 
