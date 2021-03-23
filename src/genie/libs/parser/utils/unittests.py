@@ -140,7 +140,6 @@ class FailedReporter(StandaloneReporter):
 
     def __init__(self):
         super().__init__()
-        self.missingCount = 0
     
     def log_summary(self):
         log.root.setLevel(0)
@@ -173,10 +172,11 @@ class FailedReporter(StandaloneReporter):
                                         name = 'Success Rate',
                                         num = self.summary.success_rate))
             log.info('-'*80)
-            log.info(' {name:<58}{num:>20} '.format(
-                                        name = 'Total Parsers Missing Unittests',
-                                        num = self.missingCount))
-            log.info('-'*80)
+            if runtime.missingCount > 0:
+                log.info(' {name:<58}{num:>20} '.format(
+                                            name = 'Total Parsers Missing Unittests',
+                                            num = runtime.missingCount))
+                log.info('-'*80)
 
         else:
             log.info(banner('No Results To Show'))
@@ -218,13 +218,12 @@ def generate_email_reports():
     if str(task_details) == 'Task-1: unittests':
                 task_details = ' %-70s%10s ' % ('ALL UNITTESTS', 'PASSED'.center(10))
 
-    import pdb; pdb.set_trace()
 
     # Add details to email contents
     if runtime.mail_report:
         runtime.mail_report.contents['Task Result Summary'] = task_summary
         runtime.mail_report.contents['Task Result Details'] = task_details
-        runtime.mail_report.contents['Total Parsers Missing Unittests'] = 'Test'
+        # runtime.mail_report.contents['Total Parsers Missing Unittests'] = f"{runtime.missingCount}\n{'-'*80}"
 
 class FileBasedTest(aetest.Testcase):
     """Standard pyats testcase class."""
@@ -256,6 +255,7 @@ class FileBasedTest(aetest.Testcase):
         # init parent
         super().__init__(*args, **kwargs)
         self.temporary_screen_handler = None
+        runtime.missingCount = 0
 
     # setup portion used to define command line options
     @aetest.setup
@@ -265,7 +265,7 @@ class FileBasedTest(aetest.Testcase):
         # flag is passed
         if _display_only_failed and log.root.handlers:
             self.temporary_screen_handler = log.root.handlers.pop(0)
-
+        
         aetest.loop.mark(self.test, operating_system=get_operating_systems(_os))
 
     @aetest.test
@@ -337,11 +337,11 @@ class FileBasedTest(aetest.Testcase):
                     #    continue
                     if not folder_root_equal.exists():
                         # log.warning(f'Equal unittests for {name} don\'t exist')
-                        self.reporter.parent.parent.missingCount += 1
+                        runtime.missingCount += 1
                         continue
                     if not folder_root_eqmpty.exists():
                         # log.warning(f'Empty nittests for {name} don\'t exist')
-                        self.reporter.parent.parent.missingCount += 1
+                        runtime.missingCount += 1
                         continue
                     if token:
                         msg = f"{operating_system} -> Token -> {token} -> {name}"
