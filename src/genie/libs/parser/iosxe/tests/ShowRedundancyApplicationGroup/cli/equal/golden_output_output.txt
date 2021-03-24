@@ -3,12 +3,12 @@ Group Name:group1
 
 Administrative State: No Shutdown
 Aggregate operational state : Up
-My Role: ACTIVE
-Peer Role: STANDBY
+My Role: STANDBY
+Peer Role: ACTIVE
 Peer Presence: Yes
 Peer Comm: Yes
 Peer Progression Started: Yes
 
 RF Domain: btob-one
-	 RF state: ACTIVE
-	 Peer RF state: STANDBY HOT
+	 RF state: STANDBY HOT
+	 Peer RF state: ACTIVE
