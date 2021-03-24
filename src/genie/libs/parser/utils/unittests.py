@@ -21,6 +21,7 @@ from pyats.topology import Device
 from pyats.log.utils import banner
 from pyats.aetest.steps import Steps
 from pyats.datastructures import TreeNode
+from pyats.datastructures import AttrDict
 from pyats.easypy.email import TEST_RESULT_ROW
 from pyats.log.utils import banner, str_shortener
 from pyats.aetest.reporter import StandaloneReporter
@@ -34,6 +35,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 
 log = logging.getLogger(__name__)
+glo_values = AttrDict
 
 def read_from_file(file_path):
     """Helper function to read from a file."""
@@ -59,7 +61,10 @@ def get_operating_systems(_os):
     # Update and fix as more OS's converted to folder based tests
     if _os:
         return [_os]
-    return ["asa", "ios", "iosxe", "junos", "iosxr", "nxos"]
+    EXCLUDED_FOLDERS = ['__pycache__', 'utils']
+    return [f.path.replace('./', '') for f in os.scandir('.') if f.is_dir() and f.path.replace('./', '') not in EXCLUDED_FOLDERS]
+    # ! Deprecated in favour of the above line
+    # return ["asa", "ios", "iosxe", "junos", "iosxr", "nxos"]
     # operating_system = []
     # for folder in os.listdir("./"):
     #    if os.path.islink("./" + folder):
@@ -172,11 +177,17 @@ class FailedReporter(StandaloneReporter):
                                         name = 'Success Rate',
                                         num = self.summary.success_rate))
             log.info('-'*80)
-            if runtime.missingCount > 0:
+            if glo_values.missingCount > 0:
                 log.info(' {name:<58}{num:>20} '.format(
                                             name = 'Total Parsers Missing Unittests',
-                                            num = runtime.missingCount))
+                                            num = glo_values.missingCount))
                 log.info('-'*80)
+
+            if hasattr(glo_values, '_class_exists'):
+                if not glo_values._class_exists:
+                    parsed_args = _parse_args()
+                    log.warning(f'`{parsed_args["_class"]}` does not exist')
+                    log.info('-'*80)
 
         else:
             log.info(banner('No Results To Show'))
@@ -218,12 +229,12 @@ def generate_email_reports():
     if str(task_details) == 'Task-1: unittests':
                 task_details = ' %-70s%10s ' % ('ALL UNITTESTS', 'PASSED'.center(10))
 
-
     # Add details to email contents
     if runtime.mail_report:
         runtime.mail_report.contents['Task Result Summary'] = task_summary
         runtime.mail_report.contents['Task Result Details'] = task_details
-        # runtime.mail_report.contents['Total Parsers Missing Unittests'] = f"{runtime.missingCount}\n{'-'*80}"
+        # runtime.mail_report.contents['Total Parsers Missing Unittests'] = f"{glo_values.missingCount}\n{'-'*80}"
+        # runtime.mail_report.contents['Total Parsers Missing Unittests'] = f"{glo_values._class_exists}\n{'-'*80}"
 
 class FileBasedTest(aetest.Testcase):
     """Standard pyats testcase class."""
@@ -255,26 +266,33 @@ class FileBasedTest(aetest.Testcase):
         # init parent
         super().__init__(*args, **kwargs)
         self.temporary_screen_handler = None
-        runtime.missingCount = 0
+        glo_values.missingCount = 0
 
     # setup portion used to define command line options
     @aetest.setup
-    def setup(self, _os, _class, _token, _display_only_failed, _number):
+    def setup(self, _os, _class, _token, _display_only_failed, _number, _external_folder):
 
         # removes screenhandler from root if _display_only_failed 
         # flag is passed
         if _display_only_failed and log.root.handlers:
             self.temporary_screen_handler = log.root.handlers.pop(0)
+
+        # If _class is passed then check to see if it even exists
+        if _class:
+            glo_values._class_exists = False
         
-        aetest.loop.mark(self.test, operating_system=get_operating_systems(_os))
+        aetest.loop.mark(self.operating_system_test, operating_system=get_operating_systems(_os))
+
+        
 
     @aetest.test
-    def test(self,operating_system, steps, _os, _class, _token, _number, _display_only_failed, _external_folder):
+    def operating_system_test(self,operating_system, steps, _os, _class, _token, _number, _display_only_failed, _external_folder):
         """Loop through OS's and run appropriate tests."""
         if _external_folder:
             base_folder = _external_folder / operating_system
         else:
             base_folder = pathlib.Path(f"{pathlib.Path(_parser.__file__).parent}/{operating_system}")
+
         # Please refer to get_tokens comments for the how, the what is a genie token, such as
         # "asr1k" or "c3850" to provide namespaced parsing.
         tokens = get_tokens(base_folder)
@@ -314,10 +332,10 @@ class FileBasedTest(aetest.Testcase):
 
                 if token:
                     folder_root_equal = pathlib.Path(f"{operating_system}/{token}/{name}/cli/equal")
-                    folder_root_eqmpty = pathlib.Path(f"{operating_system}/{token}/{name}/cli/empty")
+                    folder_root_empty = pathlib.Path(f"{operating_system}/{token}/{name}/cli/empty")
                 else:
                     folder_root_equal = pathlib.Path(f"{operating_system}/{name}/cli/equal")
-                    folder_root_eqmpty = pathlib.Path(f"{operating_system}/{name}/cli/empty")
+                    folder_root_empty = pathlib.Path(f"{operating_system}/{name}/cli/empty")
 
 
                 # This is used in conjunction with the arguments that are run at command line, to skip over all tests you are
@@ -328,6 +346,8 @@ class FileBasedTest(aetest.Testcase):
                 # Same as previous, however, for class
                 if _class and _class != name:
                     continue
+                if _class and _class == name:
+                    glo_values._class_exists = True
                 # Each "globals()" is checked to see if it has a cli attribute, if so, assumed to be a parser. The _osxe, is
                 # since the ios module often refers to the iosxe parser, leveraging this naming convention.
                 if hasattr(local_class, "cli") and not name.endswith("_iosxe"):
@@ -336,12 +356,14 @@ class FileBasedTest(aetest.Testcase):
                     # if not start:
                     #    continue
                     if not folder_root_equal.exists():
-                        # log.warning(f'Equal unittests for {name} don\'t exist')
-                        runtime.missingCount += 1
+                        if _class:
+                            log.warning(f'Equal unittests for {_class} don\'t exist')
+                        glo_values.missingCount += 1
                         continue
-                    if not folder_root_eqmpty.exists():
-                        # log.warning(f'Empty nittests for {name} don\'t exist')
-                        runtime.missingCount += 1
+                    if not folder_root_empty.exists():
+                        if _class:
+                            log.warning(f'Empty unittests for {_class} don\'t exist')
+                        glo_values.missingCount += 1
                         continue
                     if token:
                         msg = f"{operating_system} -> Token -> {token} -> {name}"
@@ -460,7 +482,6 @@ class FileBasedTest(aetest.Testcase):
         """Test step that looks for empty output."""
         if token:
             folder_root = pathlib.Path(f"{operating_system}/{token}/{local_class.__name__}/cli/empty")
-
         else:
             folder_root = pathlib.Path(f"{operating_system}/{local_class.__name__}/cli/empty")
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
@@ -480,9 +501,13 @@ class FileBasedTest(aetest.Testcase):
             else:
                 msg = f"Empty -> {operating_system} -> {local_class.__name__} -> {user_test}"
             with steps.start(msg, continue_=True) as step_within:
-                empty_output_str = read_from_file(
-                    f"{folder_root}/{user_test}_output.txt"
-                )
+
+                try:
+                    empty_output_str = read_from_file(
+                        f"{folder_root}/{user_test}_output.txt"
+                    )
+                except Exception:
+                    empty_output_str = ""
                 empty_output = {"execute.return_value": empty_output_str}
                 arguments = {}
                 if os.path.exists(f"{folder_root}/{user_test}_arguments.json"):
@@ -510,6 +535,7 @@ class FileBasedTest(aetest.Testcase):
         if _display_only_failed:
             self.add_logger()
 
+# ! Deprecated in favour of checking to see if it exists or not
 # CLASS_SKIP = {
 #     "asa": {
 #         "ShowVpnSessiondbSuper": True,
