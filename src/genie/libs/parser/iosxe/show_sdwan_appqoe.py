@@ -273,18 +273,20 @@ class ShowSdwanAppqoeRmResources(ShowSdwanAppqoeRmResourcesSchema):
 class ShowSdwanAppqoeFlowAllSchema(MetaParser):
     ''' Schema for show sdwan appqoe flow all'''
     schema = {
-        'active_flows': int,
-        Optional('flows'):{
+        "active_flows": int,
+        "vpn": {
             int: {
-                'flow_id': int,
-                'vpn': int,
-                'source_ip': str,
-                'source_port': int,
-                'destination_ip': str,
-                'destination_port': int,
-                'service': str,
+                "flow_id": {
+                    int: {
+                        "source_ip": str,
+                        "source_port": int,
+                        "destination_ip": str,
+                        "destination_port": int,
+                        "service": str,
+                        }
+                    },
                 }
-            }
+            },
         }
 
 
@@ -301,7 +303,6 @@ class ShowSdwanAppqoeFlowAll(ShowSdwanAppqoeFlowAllSchema):
             out = output
 
         parsed_dict = {}
-        index = 0
         # Active Flows: 2139
         p1 = re.compile(r'^(?P<key>[\s\S]+\w):+\s+(?P<value>[\d]+)$')
 
@@ -324,12 +325,12 @@ class ShowSdwanAppqoeFlowAll(ShowSdwanAppqoeFlowAllSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                index += 1
-                flows_dict = parsed_dict.setdefault('flows', {}).setdefault(index, {})
-                keys = ['flow_id', 'vpn', 'source_ip', 'source_port', 'destination_ip', 'destination_port', 'service']
+                vpn_dict = parsed_dict.setdefault('vpn', {}).setdefault(int(group['vpn']), {})
+                flow_id_dict = vpn_dict.setdefault('flow_id', {}).setdefault(int(group['flow_id']), {})
+                keys = ['source_ip', 'source_port', 'destination_ip', 'destination_port', 'service']
                 for k in keys:
                     try:
-                        flows_dict[k] = int(group[k])
+                        flow_id_dict[k] = int(group[k])
                     except ValueError:
-                        flows_dict[k] = group[k]
+                        flow_id_dict[k] = group[k]
         return parsed_dict
