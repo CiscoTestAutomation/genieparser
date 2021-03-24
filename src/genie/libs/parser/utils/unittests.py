@@ -729,7 +729,7 @@ CLASS_SKIP = {
         "ShowEigrpNeighborsDetailSuperParser": True, # Not migrated
         "ShowEigrpNeighborsSuperParser": True, # Not migrated
         "ShowEthernetCfmMeps": True, # Not migrated
-        "ShowEthernetTags": True, # Not migrated
+        # "ShowEthernetTags": True, # Not migrated
         "ShowEthernetTrunkDetail": True, # Not migrated
         "ShowEvpnEthernetSegment": True, # Not migrated
         "ShowEvpnEthernetSegmentDetail": True, # Not migrated
