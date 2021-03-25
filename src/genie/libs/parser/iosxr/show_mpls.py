@@ -25,6 +25,98 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
+# ======================================================
+# Parser for 'show mpls ldp interface'
+# ======================================================
+class ShowMplsLdpInterfaceSchema(MetaParser):
+
+    """Schema for show mpls ldp interface"""
+
+    schema =  {
+        'interface': {
+            Any(): {
+                'interface': str,
+                'vrf': str,
+                Optional ('enabled'): str,
+                Optional ('disabled'): str,
+            },
+        },
+	}
+
+
+class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
+
+    '''Parser for show mpls ldp interface'''
+
+    cli_command = ['show mpls ldp interface']
+
+    """
+    Interface HundredGigE0/5/0/0 (0xe0000c0)
+        VRF: 'default' (0x60000000)
+        Disabled: 
+    Interface HundredGigE0/5/0/0.100 (0xe0001c0)
+        VRF: 'default' (0x60000000)
+        Disabled: 
+    Interface TenGigE0/3/0/0 (0xa0004c0)
+        VRF: 'default' (0x60000000)
+        Enabled via config: LDP interface
+    Interface TenGigE0/3/0/1.100 (0xa001940)
+        VRF: 'default' (0x60000000)
+        Disabled: 
+    """
+
+    def cli (self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        # Init vars        
+        ret_dict = {}
+
+        # Interface HundredGigE0/5/0/0.100 (0xe0001c0)
+        p1 = re.compile(r'^(?P<interface>.*?)$') 
+
+        # VRF: 'default' (0x60000000)
+        p2_1 = re.compile(r'^(?P<vrf>.*?)$') 
+
+        # Enabled via config: LDP interface
+        p2_2 = re.compile(r'^(?P<enabled>.*?)$') 
+
+        # Disabled:
+        p2_3 = re.compile(r'^(?P<disabled>.*?)$')                 
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Range for dynamic labels: Min/Max: 24000/1048575
+            m1 = p1.match(line)
+            if m1:
+                result_dict = ret_dict.setdefault('interface', {})
+                group = m1.groupdict()
+                interface = group['interface']
+                result_dict[interface] = {}
+                result_dict[interface]['interface'] = interface
+                continue
+
+            m2_1 = p2_1.match(line)
+            if m2_1:
+                result_dict[interface]['vrf'] = vrf
+                continue                
+
+            m2_2 = p2_2.match(line)
+            if m2_2:
+                result_dict[interface]['enabled'] = enabled
+                continue                
+
+            m2_3 = p2_3.match(line)
+            if m2_3:
+                result_dict[interface]['disabled'] = disabled
+                continue                
+            
+        return ret_dict
+
 
 # ======================================================
 # Parser for 'show mpls label range'
