@@ -307,8 +307,11 @@ class ShowSdwanAppqoeFlowAll(ShowSdwanAppqoeFlowAllSchema):
         p1 = re.compile(r'^(?P<key>[\s\S]+\w):+\s+(?P<value>[\d]+)$')
 
         # Flow ID      VPN  Source IP:Port        Destination IP:Port   Service
-        # 171064589848875728 1    17.0.0.2:53350        40.119.211.203:443    TSU
-        p2 = re.compile(r'^(?P<flow_id>[\d]+)[\s]+(?P<vpn>[\d]+)[\s]+(?P<source_ip>[\S]+\w):(?P<source_port>[\d]+)[\s]+(?P<destination_ip>[\S]+\w):(?P<destination_port>[\d]+)[\s]+(?P<service>[\s\S]+)$')
+        # 171064589     1    17.0.0.2:53350       40.119.211.203:443    TSU
+        p2 = re.compile(
+            r'^(?P<flow_id>[\d]+)[\s]+(?P<vpn>[\d]+)[\s]+(?P<source_ip>[\S]+\w)'
+            r':(?P<source_port>[\d]+)[\s]+(?P<destination_ip>[\S]+\w)'
+            r':(?P<destination_port>[\d]+)[\s]+(?P<service>[\s\S]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -325,9 +328,12 @@ class ShowSdwanAppqoeFlowAll(ShowSdwanAppqoeFlowAllSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                vpn_dict = parsed_dict.setdefault('vpn', {}).setdefault(int(group['vpn']), {})
-                flow_id_dict = vpn_dict.setdefault('flow_id', {}).setdefault(int(group['flow_id']), {})
-                keys = ['source_ip', 'source_port', 'destination_ip', 'destination_port', 'service']
+                vpn_dict = parsed_dict.setdefault(
+                            'vpn', {}).setdefault(int(group['vpn']), {})
+                flow_id_dict = vpn_dict.setdefault(
+                            'flow_id', {}).setdefault(int(group['flow_id']), {})
+                keys = ['source_ip', 'source_port', 'destination_ip',
+                        'destination_port', 'service']
                 for k in keys:
                     try:
                         flow_id_dict[k] = int(group[k])
