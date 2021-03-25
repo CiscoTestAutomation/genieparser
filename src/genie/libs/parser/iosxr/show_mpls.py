@@ -90,7 +90,7 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            #Range for dynamic labels: Min/Max: 24000/1048575
+            # Interface HundredGigE0/5/0/0.100 (0xe0001c0)
             m1 = p1.match(line)
             if m1:
                 result_dict = ret_dict.setdefault('interface', {})
@@ -99,19 +99,28 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
                 result_dict[interface] = {}
                 result_dict[interface]['interface'] = interface
                 continue
-
+            
+            # VRF: 'default' (0x60000000)
             m2_1 = p2_1.match(line)
             if m2_1:
+                group = m2_1.groupdict()
+                vrf = group['vrf']
                 result_dict[interface]['vrf'] = vrf
                 continue                
-
+            
+            # Enabled via config: LDP interface
             m2_2 = p2_2.match(line)
             if m2_2:
+                group = m2_1.groupdict()
+                enabled = group['enabled']                
                 result_dict[interface]['enabled'] = enabled
                 continue                
 
+            # Disabled:
             m2_3 = p2_3.match(line)
             if m2_3:
+                group = m2_1.groupdict()
+                disabled = group['disabled']                
                 result_dict[interface]['disabled'] = disabled
                 continue                
             
