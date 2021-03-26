@@ -582,7 +582,6 @@ CLASS_SKIP = {
         "ShowCores": True, # Not migrated
         "ShowInstallActive": True, # Not migrated
         "ShowInventory": True, # Not migrated
-        "ShowModule": True, # Not migrated
         "ShowProcessesCpu": True, # Not migrated
         "ShowProcessesMemory": True, # Not migrated
         "ShowRedundancyStatus": True, # Not migrated
@@ -728,7 +727,6 @@ CLASS_SKIP = {
         "ShowEigrpNeighborsDetailSuperParser": True, # Not migrated
         "ShowEigrpNeighborsSuperParser": True, # Not migrated
         "ShowEthernetCfmMeps": True, # Not migrated
-        "ShowEthernetTags": True, # Not migrated
         "ShowEthernetTrunkDetail": True, # Not migrated
         "ShowEvpnEthernetSegment": True, # Not migrated
         "ShowEvpnEthernetSegmentDetail": True, # Not migrated

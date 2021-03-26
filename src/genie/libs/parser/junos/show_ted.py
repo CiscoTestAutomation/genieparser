@@ -12,7 +12,7 @@ import re
 # metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, ListOf
 
 
 class ShowTedDatabaseExtensiveSchema(MetaParser):
@@ -385,25 +385,7 @@ class ShowTedDatabaseIpAddressSchema(MetaParser):
         }
     }
     """
-    # Subschema ted link
-    def validate_ted_link(val):
-        ''' Validates each value in ted link '''
-        if not isinstance(val, list):
-            raise SchemaError('ted link is not a list')
-        
-        ted_link_schema = Schema({
-            "ted-link-local-address": str,
-            "ted-link-local-ifindex": str,
-            "ted-link-protocol": str,
-            "ted-link-remote-address": str,
-            "ted-link-remote-ifindex": str,
-            "ted-link-to": str
-        })
 
-        for item in val:
-            ted_link_schema.validate(item)
-        return val
-    
     schema = {
         "ted-database-information": {
             "ted-database": {
@@ -413,7 +395,14 @@ class ShowTedDatabaseIpAddressSchema(MetaParser):
                 "ted-database-link-out": str,
                 "ted-database-protocol": str,
                 "ted-database-type": str,
-                "ted-link": Use(validate_ted_link)
+                "ted-link": ListOf({
+                    "ted-link-local-address": str,
+                    "ted-link-local-ifindex": str,
+                    "ted-link-protocol": str,
+                    "ted-link-remote-address": str,
+                    "ted-link-remote-ifindex": str,
+                    "ted-link-to": str
+                })
             },
             "ted-database-summary": {
                 "ted-database-inet-count": str,

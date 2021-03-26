@@ -9,6 +9,7 @@ expected_output = {
                     "mac_address_to": "0001.64ff.1959",
                     "model": "WS-X6K-S2U-MSFC2",
                     "ports": 2,
+                    "slot": 1,
                     "serial_number": "SAD0628035C",
                     "status": "Ok",
                     "subslot": {
@@ -37,6 +38,7 @@ expected_output = {
                     "mac_address_to": "0000.0000.0000",
                     "model": "unknown",
                     "ports": 0,
+                    "slot": 2,
                     "serial_number": "unknown",
                     "status": "Unknown",
                     "sw_ver": "Unknown",
@@ -51,6 +53,7 @@ expected_output = {
                     "mac_address_to": "0005.74ff.1bac",
                     "model": "WS-X6816-GBIC",
                     "ports": 16,
+                    "slot": 3,
                     "serial_number": "SAL061218K3",
                     "status": "Ok",
                     "subslot": {
@@ -73,6 +76,7 @@ expected_output = {
                     "mac_address_to": "0005.74ff.1bdc",
                     "model": "WS-X6816-GBIC",
                     "ports": 16,
+                    "slot": 4,
                     "serial_number": "SAL061218K8",
                     "status": "Ok",
                     "subslot": {
@@ -95,6 +99,7 @@ expected_output = {
                     "mac_address_to": "0001.00ff.0205",
                     "model": "WS-X6500-SFM2",
                     "ports": 0,
+                    "slot": 5,
                     "serial_number": "SAD061701YC",
                     "status": "Ok",
                     "sw_ver": "7.5(0.6)HUB9",
@@ -109,6 +114,7 @@ expected_output = {
                     "mac_address_to": "0002.7eff.58b5",
                     "model": "WS-X6502-10GE",
                     "ports": 1,
+                    "slot": 6,
                     "serial_number": "SAD062003CM",
                     "status": "Ok",
                     "subslot": {
