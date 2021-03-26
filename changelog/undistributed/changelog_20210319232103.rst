@@ -1,0 +1,6 @@
+--------------------------------------------------------------------------------
+                                FIX
+--------------------------------------------------------------------------------
+* ASA
+    * Modified ShowInterfaceIpBrief:
+        * Updated regex patterns <method> and <link_status> to properly capture device output      

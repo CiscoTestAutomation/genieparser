@@ -23,7 +23,7 @@ import re
 # metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, Or
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, Or, ListOf
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -207,24 +207,15 @@ class ShowInterfacesDescriptionsSchema(MetaParser):
             * show interfaces descriptions
             * show interfaces descriptions {interface}
     """
-    def validate_physical_interface_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('physical-interface is not a list')
-        entry_schema = Schema(
-            {
+
+    schema = {
+        "interface-information": {
+            "physical-interface": ListOf({
                 "admin-status": str,
                 "description": str,
                 "name": str,
                 "oper-status": str
-            }
-        )
-        for item in value:
-            entry_schema.validate(item)
-        return value
-
-    schema = {
-        "interface-information": {
-            "physical-interface": Use(validate_physical_interface_list)
+            })
         }
     }
 
@@ -565,544 +556,180 @@ class ShowInterfacesSchema(MetaParser):
         # Pass physical-interface list of dict in value
         if not isinstance(value, list):
             raise SchemaError('physical interface is not a list')
-        def verify_logical_interface_list(value):
-            # Pass logical-interface list of dict in value
-            if not isinstance(value, list):
-                raise SchemaError('logical-interface is not a list')
 
-            def verify_address_family_list(value):
-                # Pass address-family list of dict in value
-                if not isinstance(value, list):
-                    raise SchemaError('address-family is not a list')
+    interface_address_schema = {
+        Optional("ifa-broadcast"): str,
+        Optional("ifa-destination"): str,
+        Optional("generation"): str,
+        "ifa-flags": {
+            Optional("ifaf-current-default"): bool,
+            Optional("ifaf-current-preferred"): bool,
+            Optional("ifaf-current-primary"): bool,
+            Optional("ifaf-is-primary"): bool,
+            Optional("ifaf-is-preferred"): bool,
+            Optional("ifaf-kernel"): bool,
+            Optional("ifaf-preferred"): bool,
+            Optional("ifaf-primary"): bool,
+            Optional("ifaf-is-default"): bool,
+            Optional("ifaf-none"): bool,
+            Optional("ifaf-dest-route-down"): bool,
+        },
+        Optional("ifa-local"): str
+    }
 
-                def verify_interface_address_list(value):
-                    # Pass interface-address list of dict in value
-                    if not isinstance(value, list) and not isinstance(value, dict):
-                        raise SchemaError('interface-address is not a list/dict')
+    af_schema = Schema({
+        Optional("address-family-flags"): {
+            Optional("ifff-is-primary"): bool,
+            Optional("ifff-no-redirects"): bool,
+            Optional("ifff-none"): bool,
+            Optional("ifff-sendbcast-pkt-to-re"): bool,
+            Optional("internal-flags"): bool,
+            Optional("ifff-primary"): bool,
+            Optional("ifff-receive-ttl-exceeded"): bool,
+            Optional("ifff-receive-options"): bool,
+            Optional("ifff-encapsulation"): str,
+            Optional("ifff-user-mtu"): bool,
+        },
+        Optional("address-family-name"): str,
+        Optional("filter-information"): str,
+        Optional("generation"): str,
+        Optional("interface-address"): Or(
+            interface_address_schema,
+            ListOf(interface_address_schema)
+        ),
+        Optional("intf-curr-cnt"): str,
+        Optional("intf-dropcnt"): str,
+        Optional("intf-unresolved-cnt"): str,
+        Optional("generation"): str,
+        Optional("route-table"): str,
+        Optional("max-local-cache"): str,
+        Optional("maximum-labels"): str,
+        Optional("mtu"): str,
+        Optional("new-hold-limit"): str,
+        Optional("policer-information"): {
+            Optional("policer-input"): str,
+            Optional("policer-output"): str,
+        }
+    })
 
-                    interface_address_schema = Schema({
-                        Optional("ifa-broadcast"): str,
-                        Optional("ifa-destination"): str,
-                        Optional("generation"): str,
-                        "ifa-flags": {
-                            Optional("ifaf-current-default"): bool,
-                            Optional("ifaf-current-preferred"): bool,
-                            Optional("ifaf-current-primary"): bool,
-                            Optional("ifaf-is-primary"): bool,
-                            Optional("ifaf-is-preferred"): bool,
-                            Optional("ifaf-kernel"): bool,
-                            Optional("ifaf-preferred"): bool,
-                            Optional("ifaf-primary"): bool,
-                            Optional("ifaf-is-default"): bool,
-                            Optional("ifaf-none"): bool,
-                            Optional("ifaf-dest-route-down"): bool,
-                        },
-                        Optional("ifa-local"): str
-                    })
+    lag_bundle_list_schema = Schema({
+        Optional("input-bps"): str,
+        Optional("input-bytes"): str,
+        Optional("input-packets"): str,
+        Optional("input-pps"): str,
+        Optional("output-bps"): str,
+        Optional("output-bytes"): str,
+        Optional("output-packets"): str,
+        Optional("output-pps"): str
+    })
 
-                    # Validate each dictionary in list
-                    if isinstance(value, dict):
-                        value = [value]
-                    for item in value:
-                        interface_address_schema.validate(item)
-                    return value
+    lag_lacp_info_list_schema = Schema({
+        Optional("lacp-port-key"): str,
+        Optional("lacp-port-number"): str,
+        Optional("lacp-port-priority"): str,
+        Optional("lacp-role"): str,
+        Optional("lacp-sys-priority"): str,
+        Optional("lacp-system-id"): str,
+        Optional("name"): str
+    })
 
-                af_schema = Schema({
-                    Optional("address-family-flags"): {
-                        Optional("ifff-is-primary"): bool,
-                        Optional("ifff-no-redirects"): bool,
-                        Optional("ifff-none"): bool,
-                        Optional("ifff-sendbcast-pkt-to-re"): bool,
-                        Optional("internal-flags"): bool,
-                        Optional("ifff-primary"): bool,
-                        Optional("ifff-receive-ttl-exceeded"): bool,
-                        Optional("ifff-receive-options"): bool,
-                        Optional("ifff-encapsulation"): str,
-                        Optional("ifff-user-mtu"): bool,
-                    },
-                    Optional("address-family-name"): str,
-                    Optional("filter-information"): str,
-                    Optional("generation"): str,
-                    Optional("interface-address"): Use(verify_interface_address_list),
-                    Optional("intf-curr-cnt"): str,
-                    Optional("intf-dropcnt"): str,
-                    Optional("intf-unresolved-cnt"): str,
-                    Optional("generation"): str,
-                    Optional("route-table"): str,
-                    Optional("max-local-cache"): str,
-                    Optional("maximum-labels"): str,
-                    Optional("mtu"): str,
-                    Optional("new-hold-limit"): str,
-                    Optional("policer-information"): {
-                        Optional("policer-input"): str,
-                        Optional("policer-output"): str,
-                    }
-                })
-                # Validate each dictionary in list
-                for item in value:
-                    af_schema.validate(item)
-                return value
+    lag_lacp_statistics_list_schema = Schema({
+        Optional("illegal-rx-packets"): str,
+        Optional("lacp-rx-packets"): str,
+        Optional("lacp-tx-packets"): str,
+        Optional("name"): str,
+        Optional("unknown-rx-packets"): str
+    })
 
-            def verify_if_distribution_list_information_list(value):
-                # Pass if_distribution_list_information list of dict in value
-                if not isinstance(value, list) and not isinstance(value, dict):
-                    raise SchemaError('if-distribution-list-information is not a list/dict')
+    lag_link_list_schema = Schema({
+        Optional("input-bps"): str,
+        Optional("input-bytes"): str,
+        Optional("input-packets"): str,
+        Optional("input-pps"): str,
+        Optional("name"): str,
+        Optional("output-bps"): str,
+        Optional("output-bytes"): str,
+        Optional("output-packets"): str,
+        Optional("output-pps"): str
+    })
 
-                def verify_if_list_list(value):
-                    # Pass if-list list of dict in value
-                    if not isinstance(value, list) and not isinstance(value, dict):
-                        raise SchemaError('if-list is not a list/dict')
-                    
-                    if_list_list_schema = Schema({
-                        Optional("if-child-name"): str,
-                        Optional("if-status"): str,
-                    })
-                    # Validate each dictionary in list
-                    if isinstance(value, dict):
-                        value = [value]
-                    for item in value:
-                        if_list_list_schema.validate(item)
-                    return value
+    lag_marker_list_schema = Schema({
+        Optional("illegal-rx-packets"): str,
+        Optional("lacp-rx-packets"): str,
+        Optional("lacp-tx-packets"): str,
+        Optional("marker-response-tx-packets"): str,
+        Optional("marker-rx-packets"): str,
+        Optional("name"): str,
+        Optional("unknown-rx-packets"): str
+    })
 
-                if_distribution_list_information_list_schema = Schema({
-                    Optional("if-list"): Use(verify_if_list_list),
-                    Optional("list-status"): str,
-                    Optional("list-type"): str
-                })
-                # Validate each dictionary in list
-                if isinstance(value, dict):
-                    value = [value]
-                for item in value:
-                    if_distribution_list_information_list_schema.validate(item)
-                return value
-
-            def verify_lag_bundle_list(value):
-                # Pass lag_bundle list of dict in value
-                if not isinstance(value, list) and not isinstance(value, dict):
-                    raise SchemaError('lag_bundle is not a list/dict')
-
-                lag_bundle_list_schema = Schema({
-                    Optional("input-bps"): str,
-                    Optional("input-bytes"): str,
-                    Optional("input-packets"): str,
-                    Optional("input-pps"): str,
-                    Optional("output-bps"): str,
-                    Optional("output-bytes"): str,
-                    Optional("output-packets"): str,
-                    Optional("output-pps"): str
-                })
-                # Validate each dictionary in list
-                if isinstance(value, dict):
-                    value = [value]
-                for item in value:
-                    lag_bundle_list_schema.validate(item)
-                return value
-
-            def verify_lag_lacp_info_list(value):
-                # Pass lag_lacp_info list of dict in value
-                if not isinstance(value, list) and not isinstance(value, dict):
-                    raise SchemaError('lag_lacp_info is not a list/dict')
-
-                lag_lacp_info_list_schema = Schema({
-                    Optional("lacp-port-key"): str,
-                    Optional("lacp-port-number"): str,
-                    Optional("lacp-port-priority"): str,
-                    Optional("lacp-role"): str,
-                    Optional("lacp-sys-priority"): str,
-                    Optional("lacp-system-id"): str,
-                    Optional("name"): str
-                })
-                # Validate each dictionary in list
-                if isinstance(value, dict):
-                    value = [value]
-                for item in value:
-                    lag_lacp_info_list_schema.validate(item)
-                return value
-
-            def verify_lag_lacp_statistics_list(value):
-                # Pass lag_lacp_statistics list of dict in value
-                if not isinstance(value, list) and not isinstance(value, dict):
-                    raise SchemaError('lag_lacp_statistics is not a list/dict')
-
-                lag_lacp_statistics_list_schema = Schema({
-                    Optional("illegal-rx-packets"): str,
-                    Optional("lacp-rx-packets"): str,
-                    Optional("lacp-tx-packets"): str,
-                    Optional("name"): str,
-                    Optional("unknown-rx-packets"): str
-                })
-                # Validate each dictionary in list
-                if isinstance(value, dict):
-                    value = [value]
-                for item in value:
-                    lag_lacp_statistics_list_schema.validate(item)
-                return value
-
-            def verify_lag_link_list(value):
-                # Pass lag_link list of dict in value
-                if not isinstance(value, list) and not isinstance(value, dict):
-                    raise SchemaError('lag_link is not a list/dict')
-
-                lag_link_list_schema = Schema({
-                    Optional("input-bps"): str,
-                    Optional("input-bytes"): str,
-                    Optional("input-packets"): str,
-                    Optional("input-pps"): str,
-                    Optional("name"): str,
-                    Optional("output-bps"): str,
-                    Optional("output-bytes"): str,
-                    Optional("output-packets"): str,
-                    Optional("output-pps"): str
-                })
-                # Validate each dictionary in list
-                if isinstance(value, dict):
-                    value = [value]
-                for item in value:
-                    lag_link_list_schema.validate(item)
-                return value
-
-            def verify_lag_marker_list(value):
-                # Pass lag_marker list of dict in value
-                if not isinstance(value, list) and not isinstance(value, dict):
-                    raise SchemaError('lag_marker is not a list/dict')
-
-                lag_marker_list_schema = Schema({
-                    Optional("illegal-rx-packets"): str,
-                    Optional("lacp-rx-packets"): str,
-                    Optional("lacp-tx-packets"): str,
-                    Optional("marker-response-tx-packets"): str,
-                    Optional("marker-rx-packets"): str,
-                    Optional("name"): str,
-                    Optional("unknown-rx-packets"): str
-                })
-                # Validate each dictionary in list
-                if isinstance(value, dict):
-                    value = [value]
-                for item in value:
-                    lag_marker_list_schema.validate(item)
-                return value
-
-            l_i_schema = Schema({
-                Optional("address-family"): Use(verify_address_family_list),
-                Optional("encapsulation"): str,
-                Optional("filter-information"): str,
-                "if-config-flags": {
-                    "iff-snmp-traps": bool,
-                    "iff-up": bool,
-                    Optional("internal-flags"): str
-                },
-                Optional("lag-traffic-statistics"): {
-                    Optional("aggregate-member-info"): {
-                        "aggregate-member-count": str
-                    },
-                    Optional("if-distribution-list-information"): Use(verify_if_distribution_list_information_list),
-                    Optional("lag-adaptive-statistics"): {
-                        "adaptive-adjusts": str,
-                        "adaptive-scans": str,
-                        "adaptive-updates": str
-                    },
-                    Optional("lag-bundle"): Use(verify_lag_bundle_list),
-                    Optional("lag-lacp-info"): Use(verify_lag_lacp_info_list),
-                    Optional("lag-lacp-statistics"): Use(verify_lag_lacp_statistics_list),
-                    Optional("lag-link"): Use(verify_lag_link_list),
-                    Optional("lag-marker"): Use(verify_lag_marker_list),
-                },
-                "local-index": str,
-                Optional("logical-interface-bandwidth"): str,
-                "name": str,
-                Optional("description"): str,
-                Optional("policer-overhead"): str,
-                Optional("snmp-index"): str,
-                Optional("traffic-statistics"): {
-                    Optional("@junos:style"): str,
-                    "input-packets": str,
-                    Optional("input-bytes"): str,
-                    "output-packets": str,
-                    Optional("output-bytes"): str,
-                    Optional("ipv6-transit-statistics"): {
-                        "input-bytes": str,
-                        "input-packets": str,
-                        "output-bytes": str,
-                        "output-packets": str,
-                    },
-                },
-                Optional("transit-traffic-statistics"): {
-                        "input-bps": str,
-                        "input-bytes": str,
-                        "input-packets": str,
-                        "input-pps": str,
-                        Optional("ipv6-transit-statistics"): {
-                            Optional("input-bps"): str,
-                            "input-bytes": str,
-                            "input-packets": str,
-                            Optional("input-pps"): str,
-                            Optional("output-bps"): str,
-                            "output-bytes": str,
-                            "output-packets": str,
-                            Optional("output-pps"): str
-                        },
-                        "output-bps": str,
-                        "output-bytes": str,
-                        "output-packets": str,
-                        "output-pps": str
-                    }
-            })
-            # Validate each dictionary in list
-            for item in value:
-                l_i_schema.validate(item)
-            return value
-
-        def verify_cos_queue_configuration(value):
-            # Pass address-family list of dict in value
-            if not isinstance(value, list):
-                raise SchemaError('cos-queue-configuration is not a list')
-            
-            queue_schema = Schema({
-                "cos-queue-bandwidth": str,
-                "cos-queue-bandwidth-bps": str,
-                "cos-queue-buffer": str,
-                "cos-queue-buffer-bytes": str,
-                "cos-queue-forwarding-class": str,
-                "cos-queue-limit": str,
-                "cos-queue-number": str,
-                "cos-queue-priority": str,
-            })
-            # Validate each dictionary in list
-            for item in value:
-                queue_schema.validate(item)
-            return value
-
-        def verify_queue_list(value):
-            # Pass address-family list of dict in value
-            if not isinstance(value, list):
-                raise SchemaError('queue is not a list')
-            
-            queue_schema = Schema({
-                Optional("forwarding-class-name"): str,
-                "queue-counters-queued-packets": str,
-                "queue-counters-total-drop-packets": str,
-                "queue-counters-trans-packets": str,
-                "queue-number": str,
-                Optional("forwarding-class-name"): str
-            })
-            # Validate each dictionary in list
-            for item in value:
-                queue_schema.validate(item)
-            return value
-
-        def verify_queue_num_forwarding_class_name_map_list(value):
-            # Pass address-family list of dict in value
-            if not isinstance(value, list):
-                raise SchemaError('queue_num_forwarding_class_map is not a list')
-            
-            queue_num_forwarding_class_map_schema = Schema({
-                "forwarding-class-name": str,
-                "queue-number": str,
-            })
-            # validate each dictionary in list
-            for item in value:
-                queue_num_forwarding_class_map_schema.validate(item)
-            return value
-
-        # Create physical-interface Schema
-        physical_interface_schema = Schema({
-            Optional("down-hold-time"): str,
-            Optional("up-hold-time"): str,
-            Optional("statistics-cleared"): str,
-            Optional("active-alarms"): {
-                Optional("interface-alarms"): {
-                    Optional("alarm-not-present"): bool,
-                    Optional("ethernet-alarm-link-down"): bool,
-                }
+    l_i_schema = Schema({
+        Optional("address-family"): ListOf(af_schema),
+        Optional("encapsulation"): str,
+        Optional("filter-information"): str,
+        "if-config-flags": {
+            "iff-snmp-traps": bool,
+            "iff-up": bool,
+            Optional("internal-flags"): str
+        },
+        Optional("lag-traffic-statistics"): {
+            Optional("aggregate-member-info"): {
+                "aggregate-member-count": str
             },
-            Optional("active-defects"): {
-                Optional("interface-alarms"): {
-                    Optional("alarm-not-present"): bool,
-                    Optional("ethernet-alarm-link-down"): bool
-                }
+            Optional("if-distribution-list-information"): ListOf({
+                Optional("if-list"): ListOf({
+                    Optional("if-child-name"): str,
+                    Optional("if-status"): str,
+                }),
+                Optional("list-status"): str,
+                Optional("list-type"): str
+            }),
+            Optional("lag-adaptive-statistics"): {
+                "adaptive-adjusts": str,
+                "adaptive-scans": str,
+                "adaptive-updates": str
             },
-            Optional("admin-status"): {
-                Optional("#text"): str,
-                Optional("@junos:format"): str
-            },
-            Optional("bpdu-error"): str,
-            Optional("clocking"): str,
-            Optional("current-physical-address"): str,
-            Optional("description"): str,
-            Optional("eth-switch-error"): str,
-            Optional("ethernet-fec-mode"): {
-                Optional("@junos:style"): str,
-                "enabled_fec_mode": str
-            },
-            Optional("ethernet-fec-statistics"): {
-                Optional("@junos:style"): str,
-                "fec_ccw_count": str,
-                "fec_ccw_error_rate": str,
-                "fec_nccw_count": str,
-                "fec_nccw_error_rate": str
-            },
-            Optional("ethernet-pcs-statistics"): {
-                Optional("@junos:style"): str,
-                "bit-error-seconds": str,
-                "errored-blocks-seconds": str
-            },
-            Optional("hardware-physical-address"): str,
-            Optional("if-config-flags"): {
-                Optional("internal-flags"): str,
-                "iff-snmp-traps": bool,
-                Optional("iff-hardware-down"): bool,
-            },
-            Optional("if-auto-negotiation"): str,
-            Optional("if-device-flags"): {
-                "ifdf-present": bool,
-                "ifdf-running": bool,
-                Optional("ifdf-loopback"): bool,
-                Optional("ifdf-down"): bool,
-            },
-            Optional("if-flow-control"): str,
-            Optional("if-media-flags"): {
-                "ifmf-none": bool
-            },
-            Optional("if-remote-fault"): str,
-            Optional("if-type"): str,
-            Optional("ifd-specific-config-flags"): {
-                Optional("internal-flags"): str
-            },
-            Optional("interface-flapped"): {
-                "#text": str,
-                Optional("@junos:seconds"): str
-            },
-            Optional("interface-transmit-statistics"): str,
-            Optional("l2pt-error"): str,
-            Optional("ld-pdu-error"): str,
-            Optional("link-level-type"): str,
-            Optional("link-type"): str,
-            Optional("link-mode"): str,
-            Optional("local-index"): str,
-            Optional("logical-interface"): Use(verify_logical_interface_list),
-            Optional("loopback"): str,
-            Optional("minimum-links-in-aggregate"): str,
-            Optional("minimum-bandwidth-in-aggregate"): str,
-            Optional("lsi-traffic-statistics"): {
-                Optional("@junos:style"): str,
-                "input-bps": str,
+            Optional("lag-bundle"): Or(
+                lag_bundle_list_schema,
+                ListOf(lag_bundle_list_schema)
+            ),
+            Optional("lag-lacp-info"): Or(
+                lag_lacp_info_list_schema,
+                ListOf(lag_lacp_info_list_schema)
+            ),
+            Optional("lag-lacp-statistics"): Or(
+                lag_lacp_statistics_list_schema,
+                ListOf(lag_lacp_statistics_list_schema)
+            ),
+            Optional("lag-link"): Or(
+                lag_link_list_schema,
+                ListOf(lag_link_list_schema)
+            ),
+            Optional("lag-marker"): Or(
+                lag_marker_list_schema,
+                ListOf(lag_marker_list_schema)
+            ),
+        },
+        "local-index": str,
+        Optional("logical-interface-bandwidth"): str,
+        "name": str,
+        Optional("description"): str,
+        Optional("policer-overhead"): str,
+        Optional("snmp-index"): str,
+        Optional("traffic-statistics"): {
+            Optional("@junos:style"): str,
+            "input-packets": str,
+            Optional("input-bytes"): str,
+            "output-packets": str,
+            Optional("output-bytes"): str,
+            Optional("ipv6-transit-statistics"): {
                 "input-bytes": str,
                 "input-packets": str,
-                "input-pps": str
-            },
-            Optional("mru"): str,
-            Optional("mtu"): str,
-            Optional("mac-rewrite-error"): str,
-            "name": str,
-            Optional("oper-status"): str,
-            Optional("pad-to-minimum-frame-size"): str,
-            Optional("physical-interface-cos-information"): {
-                "physical-interface-cos-hw-max-queues": str,
-                "physical-interface-cos-use-max-queues": str
-            },
-            Optional("snmp-index"): str,
-            Optional("sonet-mode"): str,
-            Optional("source-filtering"): str,
-            Optional("speed"): str,
-            Optional("stp-traffic-statistics"): {
-                Optional("@junos:style"): str,
-                Optional("stp-input-bytes-dropped"): str,
-                Optional("stp-input-packets-dropped"): str,
-                Optional("stp-output-bytes-dropped"): str,
-                Optional("stp-output-packets-dropped"): str
-            },
-            Optional("traffic-statistics"): {
-                Optional("@junos:style"): str,
-                Optional("input-bps"): str,
-                Optional("output-bytes"): str,
-                Optional("input-bytes"): str,
-                Optional("input-packets"): str,
-                Optional("input-pps"): str,
-                Optional("output-bps"): str,
-                Optional("output-packets"): str,
-                Optional("output-pps"): str,
-                Optional("ipv6-transit-statistics"): {
-                    Optional("input-bps"): str,
-                    Optional("input-bytes"): str,
-                    Optional("input-packets"): str,
-                    Optional("input-pps"): str,
-                    Optional("output-bps"): str,
-                    Optional("output-bytes"): str,
-                    Optional("output-packets"): str,
-                    Optional("output-pps"): str
-                },
-            },
-            Optional("output-error-list"): {
-                Optional("aged-packets"): str,
-                Optional("carrier-transitions"): str,
-                Optional("hs-link-crc-errors"): str,
-                Optional("mtu-errors"): str,
-                Optional("output-collisions"): str,
-                Optional("output-drops"): str,
-                Optional("output-errors"): str,
-                Optional("output-fifo-errors"): str,
-                Optional("output-resource-errors"): str
-            },
-            Optional("ethernet-mac-statistics"): {
-                    Optional("@junos:style"): str,
-                    Optional("input-broadcasts"): str,
-                    Optional("input-bytes"): str,
-                    Optional("input-code-violations"): str,
-                    Optional("input-crc-errors"): str,
-                    Optional("input-fifo-errors"): str,
-                    Optional("input-fragment-frames"): str,
-                    Optional("input-jabber-frames"): str,
-                    Optional("input-mac-control-frames"): str,
-                    Optional("input-mac-pause-frames"): str,
-                    Optional("input-multicasts"): str,
-                    Optional("input-oversized-frames"): str,
-                    Optional("input-packets"): str,
-                    Optional("input-total-errors"): str,
-                    Optional("input-unicasts"): str,
-                    Optional("input-vlan-tagged-frames"): str,
-                    Optional("output-broadcasts"): str,
-                    Optional("input-multicasts"): str,
-                    Optional("output-bytes"): str,
-                    Optional("output-crc-errors"): str,
-                    Optional("output-fifo-errors"): str,
-                    Optional("output-mac-control-frames"): str,
-                    Optional("output-mac-pause-frames"): str,
-                    Optional("output-multicasts"): str,
-                    Optional("output-packets"): str,
-                    Optional("output-total-errors"): str,
-                    Optional("output-unicasts"): str,
-            },
-            Optional("ethernet-filter-statistics"): {
-                "input-packets": str,
-                "input-reject-count": str,
-                "input-reject-destination-address-count": str,
-                "input-reject-source-address-count": str,
-                "output-packet-error-count": str,
-                "output-packet-pad-count": str,
+                "output-bytes": str,
                 "output-packets": str,
-                "cam-destination-filter-count": str,
-                "cam-source-filter-count": str,
             },
-            Optional("cos-information"): {
-                Optional("cos-stream-information"): {
-                    "cos-direction": str,
-                    Optional("cos-queue-configuration"): Use(verify_cos_queue_configuration)
-                }
-            },
-            Optional("input-error-list"): {
-                    Optional("framing-errors"): str,
-                    Optional("input-discards"): str,
-                    Optional("input-drops"): str,
-                    Optional("input-errors"): str,
-                    Optional("input-fifo-errors"): str,
-                    Optional("input-giants"): str,
-                    Optional("input-l2-channel-errors"): str,
-                    Optional("input-l2-mismatch-timeouts"): str,
-                    Optional("input-l3-incompletes"): str,
-                    Optional("input-resource-errors"): str,
-                    Optional("input-runts"): str
-            },
-            Optional("transit-traffic-statistics"): {
+        },
+        Optional("transit-traffic-statistics"): {
                 "input-bps": str,
                 "input-bytes": str,
                 "input-packets": str,
@@ -1121,40 +748,277 @@ class ShowInterfacesSchema(MetaParser):
                 "output-bytes": str,
                 "output-packets": str,
                 "output-pps": str
+            }
+    })
+
+    queue_schema = Schema({
+        Optional("forwarding-class-name"): str,
+        "queue-counters-queued-packets": str,
+        "queue-counters-total-drop-packets": str,
+        "queue-counters-trans-packets": str,
+        "queue-number": str,
+        Optional("forwarding-class-name"): str
+    })
+
+    # Create physical-interface Schema
+    physical_interface_schema = Schema({
+        Optional("down-hold-time"): str,
+        Optional("up-hold-time"): str,
+        Optional("statistics-cleared"): str,
+        Optional("active-alarms"): {
+            Optional("interface-alarms"): {
+                Optional("alarm-not-present"): bool,
+                Optional("ethernet-alarm-link-down"): bool,
+            }
+        },
+        Optional("active-defects"): {
+            Optional("interface-alarms"): {
+                Optional("alarm-not-present"): bool,
+                Optional("ethernet-alarm-link-down"): bool
+            }
+        },
+        Optional("admin-status"): {
+            Optional("#text"): str,
+            Optional("@junos:format"): str
+        },
+        Optional("bpdu-error"): str,
+        Optional("clocking"): str,
+        Optional("current-physical-address"): str,
+        Optional("description"): str,
+        Optional("eth-switch-error"): str,
+        Optional("ethernet-fec-mode"): {
+            Optional("@junos:style"): str,
+            "enabled_fec_mode": str
+        },
+        Optional("ethernet-fec-statistics"): {
+            Optional("@junos:style"): str,
+            "fec_ccw_count": str,
+            "fec_ccw_error_rate": str,
+            "fec_nccw_count": str,
+            "fec_nccw_error_rate": str
+        },
+        Optional("ethernet-pcs-statistics"): {
+            Optional("@junos:style"): str,
+            "bit-error-seconds": str,
+            "errored-blocks-seconds": str
+        },
+        Optional("hardware-physical-address"): str,
+        Optional("if-config-flags"): {
+            Optional("internal-flags"): str,
+            "iff-snmp-traps": bool,
+            Optional("iff-hardware-down"): bool,
+        },
+        Optional("if-auto-negotiation"): str,
+        Optional("if-device-flags"): {
+            "ifdf-present": bool,
+            "ifdf-running": bool,
+            Optional("ifdf-loopback"): bool,
+            Optional("ifdf-down"): bool,
+        },
+        Optional("if-flow-control"): str,
+        Optional("if-media-flags"): {
+            "ifmf-none": bool
+        },
+        Optional("if-remote-fault"): str,
+        Optional("if-type"): str,
+        Optional("ifd-specific-config-flags"): {
+            Optional("internal-flags"): str
+        },
+        Optional("interface-flapped"): {
+            "#text": str,
+            Optional("@junos:seconds"): str
+        },
+        Optional("interface-transmit-statistics"): str,
+        Optional("l2pt-error"): str,
+        Optional("ld-pdu-error"): str,
+        Optional("link-level-type"): str,
+        Optional("link-type"): str,
+        Optional("link-mode"): str,
+        Optional("local-index"): str,
+        Optional("logical-interface"): ListOf(l_i_schema),
+        Optional("loopback"): str,
+        Optional("minimum-links-in-aggregate"): str,
+        Optional("minimum-bandwidth-in-aggregate"): str,
+        Optional("lsi-traffic-statistics"): {
+            Optional("@junos:style"): str,
+            "input-bps": str,
+            "input-bytes": str,
+            "input-packets": str,
+            "input-pps": str
+        },
+        Optional("mru"): str,
+        Optional("mtu"): str,
+        Optional("mac-rewrite-error"): str,
+        "name": str,
+        Optional("oper-status"): str,
+        Optional("pad-to-minimum-frame-size"): str,
+        Optional("physical-interface-cos-information"): {
+            "physical-interface-cos-hw-max-queues": str,
+            "physical-interface-cos-use-max-queues": str
+        },
+        Optional("snmp-index"): str,
+        Optional("sonet-mode"): str,
+        Optional("source-filtering"): str,
+        Optional("speed"): str,
+        Optional("stp-traffic-statistics"): {
+            Optional("@junos:style"): str,
+            Optional("stp-input-bytes-dropped"): str,
+            Optional("stp-input-packets-dropped"): str,
+            Optional("stp-output-bytes-dropped"): str,
+            Optional("stp-output-packets-dropped"): str
+        },
+        Optional("traffic-statistics"): {
+            Optional("@junos:style"): str,
+            Optional("input-bps"): str,
+            Optional("output-bytes"): str,
+            Optional("input-bytes"): str,
+            Optional("input-packets"): str,
+            Optional("input-pps"): str,
+            Optional("output-bps"): str,
+            Optional("output-packets"): str,
+            Optional("output-pps"): str,
+            Optional("ipv6-transit-statistics"): {
+                Optional("input-bps"): str,
+                Optional("input-bytes"): str,
+                Optional("input-packets"): str,
+                Optional("input-pps"): str,
+                Optional("output-bps"): str,
+                Optional("output-bytes"): str,
+                Optional("output-packets"): str,
+                Optional("output-pps"): str
             },
-            Optional("pfe-information"): {
-                "destination-mask": str,
-                "destination-slot": str
+        },
+        Optional("output-error-list"): {
+            Optional("aged-packets"): str,
+            Optional("carrier-transitions"): str,
+            Optional("hs-link-crc-errors"): str,
+            Optional("mtu-errors"): str,
+            Optional("output-collisions"): str,
+            Optional("output-drops"): str,
+            Optional("output-errors"): str,
+            Optional("output-fifo-errors"): str,
+            Optional("output-resource-errors"): str
+        },
+        Optional("ethernet-mac-statistics"): {
+                Optional("@junos:style"): str,
+                Optional("input-broadcasts"): str,
+                Optional("input-bytes"): str,
+                Optional("input-code-violations"): str,
+                Optional("input-crc-errors"): str,
+                Optional("input-fifo-errors"): str,
+                Optional("input-fragment-frames"): str,
+                Optional("input-jabber-frames"): str,
+                Optional("input-mac-control-frames"): str,
+                Optional("input-mac-pause-frames"): str,
+                Optional("input-multicasts"): str,
+                Optional("input-oversized-frames"): str,
+                Optional("input-packets"): str,
+                Optional("input-total-errors"): str,
+                Optional("input-unicasts"): str,
+                Optional("input-vlan-tagged-frames"): str,
+                Optional("output-broadcasts"): str,
+                Optional("input-multicasts"): str,
+                Optional("output-bytes"): str,
+                Optional("output-crc-errors"): str,
+                Optional("output-fifo-errors"): str,
+                Optional("output-mac-control-frames"): str,
+                Optional("output-mac-pause-frames"): str,
+                Optional("output-multicasts"): str,
+                Optional("output-packets"): str,
+                Optional("output-total-errors"): str,
+                Optional("output-unicasts"): str,
+        },
+        Optional("ethernet-filter-statistics"): {
+            "input-packets": str,
+            "input-reject-count": str,
+            "input-reject-destination-address-count": str,
+            "input-reject-source-address-count": str,
+            "output-packet-error-count": str,
+            "output-packet-pad-count": str,
+            "output-packets": str,
+            "cam-destination-filter-count": str,
+            "cam-source-filter-count": str,
+        },
+        Optional("cos-information"): {
+            Optional("cos-stream-information"): {
+                "cos-direction": str,
+                Optional("cos-queue-configuration"): ListOf({
+                    "cos-queue-bandwidth": str,
+                    "cos-queue-bandwidth-bps": str,
+                    "cos-queue-buffer": str,
+                    "cos-queue-buffer-bytes": str,
+                    "cos-queue-forwarding-class": str,
+                    "cos-queue-limit": str,
+                    "cos-queue-number": str,
+                    "cos-queue-priority": str,
+                })
+            }
+        },
+        Optional("input-error-list"): {
+                Optional("framing-errors"): str,
+                Optional("input-discards"): str,
+                Optional("input-drops"): str,
+                Optional("input-errors"): str,
+                Optional("input-fifo-errors"): str,
+                Optional("input-giants"): str,
+                Optional("input-l2-channel-errors"): str,
+                Optional("input-l2-mismatch-timeouts"): str,
+                Optional("input-l3-incompletes"): str,
+                Optional("input-resource-errors"): str,
+                Optional("input-runts"): str
+        },
+        Optional("transit-traffic-statistics"): {
+            "input-bps": str,
+            "input-bytes": str,
+            "input-packets": str,
+            "input-pps": str,
+            Optional("ipv6-transit-statistics"): {
+                Optional("input-bps"): str,
+                "input-bytes": str,
+                "input-packets": str,
+                Optional("input-pps"): str,
+                Optional("output-bps"): str,
+                "output-bytes": str,
+                "output-packets": str,
+                Optional("output-pps"): str
             },
-            Optional("ingress-queue-counters"): {
-                "interface-cos-short-summary": {
-                    "intf-cos-num-queues-in-use": str,
-                    "intf-cos-num-queues-supported": str,
-                    "intf-cos-queue-type": str,
-                },
-                "queue": Use(verify_queue_list),
+            "output-bps": str,
+            "output-bytes": str,
+            "output-packets": str,
+            "output-pps": str
+        },
+        Optional("pfe-information"): {
+            "destination-mask": str,
+            "destination-slot": str
+        },
+        Optional("ingress-queue-counters"): {
+            "interface-cos-short-summary": {
+                "intf-cos-num-queues-in-use": str,
+                "intf-cos-num-queues-supported": str,
+                "intf-cos-queue-type": str,
             },
-            Optional("queue-counters"): {
-                "interface-cos-short-summary": {
-                    "intf-cos-num-queues-in-use": str,
-                    "intf-cos-num-queues-supported": str,
-                    "intf-cos-queue-type": str,
-                },
-                "queue": Use(verify_queue_list)
+            "queue": ListOf(queue_schema),
+        },
+        Optional("queue-counters"): {
+            "interface-cos-short-summary": {
+                "intf-cos-num-queues-in-use": str,
+                "intf-cos-num-queues-supported": str,
+                "intf-cos-queue-type": str,
             },
-            Optional("queue-num-forwarding-class-name-map"): Use(verify_queue_num_forwarding_class_name_map_list)
+            "queue": ListOf(queue_schema)
+        },
+        Optional("queue-num-forwarding-class-name-map"): ListOf({
+            "forwarding-class-name": str,
+            "queue-number": str,
         })
-        # Validate each dictionary in list
-        for item in value:
-            physical_interface_schema.validate(item)
-        return value
-    
+    })
+
     schema = {
         Optional("@xmlns:junos"): str,
         "interface-information": {
             Optional("@junos:style"): str,
             Optional("@xmlns"): str,
-            "physical-interface": Use(verify_physical_interface_list)
+            "physical-interface": ListOf(physical_interface_schema)
         }
     }
 
@@ -2702,87 +2566,9 @@ class ShowInterfacesStatisticsSchema(MetaParser):
             * show interfaces statistics {interface}
     """
 
-    
-
-    def validate_physical_interface_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('physical-interface is not a list')
-
-        def validate_logical_interface_list(value):
-            if not isinstance(value, list):
-                raise SchemaError('logical-interface is not a list')
-
-            def validate_address_family_list(value):
-                if not isinstance(value, list):
-                    raise SchemaError('address-family is not a list')
-
-                def validate_interface_address_list(value):
-                    if not isinstance(value, list):
-                        raise SchemaError('interface-address is not a list')
-
-                    interface_address_schema = Schema ({
-                            "ifa-flags": {
-                                Optional("ifaf-current-preferred"): bool,
-                                Optional("ifaf-current-primary"): bool,
-                                Optional("ifaf-current-default"): bool,
-                            },
-                            Optional("ifa-destination"): str,
-                            Optional("ifa-local"): str,
-                            Optional("ifa-broadcast"): str,
-                        })
-
-                    for item in value:
-                        interface_address_schema.validate(item)
-                    return value
-
-                address_family_schema = Schema({
-                        "address-family-name": str,
-                        "mtu": str,
-                        Optional("address-family-flags"): {
-                            Optional("ifff-is-primary"): bool,
-                            Optional("ifff-sendbcast-pkt-to-re"): bool,
-                        },
-                        Optional("interface-address"): Use(validate_interface_address_list),
-                    })
-
-                for item in value:
-                    address_family_schema.validate(item)
-                return value
-                    
-
-            logical_interface_schema = Schema (
-                {
-                        "name": str,
-                        Optional("local-index"): str,
-                        Optional("snmp-index"): str,
-                        Optional("if-config-flags"): {
-                            "iff-snmp-traps": bool,
-                            "internal-flags": str,
-                        },
-                        Optional("encapsulation"): str,
-                        "traffic-statistics": {
-                            "input-packets": str,
-                            "output-packets": str,
-                        },
-                        Optional("filter-information"): str,
-                        Optional("logical-interface-zone-name"): str,
-                        Optional("allowed-host-inbound-traffic"): {
-                            Optional("inbound-dhcp"): bool,
-                            Optional("inbound-http"): bool,
-                            Optional("inbound-https"): bool,
-                            Optional("inbound-ssh"): bool,
-                            Optional("inbound-telnet"): bool,
-                        },
-                        Optional("address-family"): Use(validate_address_family_list),
-                    }
-            )
-
-            for item in value:
-                logical_interface_schema.validate(item)
-            return value
-
-        physical_interface_schema = Schema(
-            {
+    schema = {
+        "interface-information": {
+            "physical-interface": ListOf({
                 "name": str,
                 "admin-status": str,
                 "oper-status": str,
@@ -2844,18 +2630,48 @@ class ShowInterfacesStatisticsSchema(MetaParser):
                     },
                 },
                 Optional("interface-transmit-statistics"): str,
-                Optional("logical-interface"): Use(validate_logical_interface_list)
-            }
-        )
-
-        for item in value:
-            physical_interface_schema.validate(item)
-        return value
-
-    schema = {
-        "interface-information": {
-
-            "physical-interface": Use(validate_physical_interface_list)
+                Optional("logical-interface"): ListOf({
+                    "name": str,
+                    Optional("local-index"): str,
+                    Optional("snmp-index"): str,
+                    Optional("if-config-flags"): {
+                        "iff-snmp-traps": bool,
+                        "internal-flags": str,
+                    },
+                    Optional("encapsulation"): str,
+                    "traffic-statistics": {
+                        "input-packets": str,
+                        "output-packets": str,
+                    },
+                    Optional("filter-information"): str,
+                    Optional("logical-interface-zone-name"): str,
+                    Optional("allowed-host-inbound-traffic"): {
+                        Optional("inbound-dhcp"): bool,
+                        Optional("inbound-http"): bool,
+                        Optional("inbound-https"): bool,
+                        Optional("inbound-ssh"): bool,
+                        Optional("inbound-telnet"): bool,
+                    },
+                    Optional("address-family"): ListOf({
+                        "address-family-name": str,
+                        "mtu": str,
+                        Optional("address-family-flags"): {
+                            Optional("ifff-is-primary"): bool,
+                            Optional("ifff-sendbcast-pkt-to-re"): bool,
+                        },
+                        Optional("interface-address"): ListOf({
+                            "ifa-flags": {
+                                Optional("ifaf-current-preferred"): bool,
+                                Optional("ifaf-current-primary"): bool,
+                                Optional("ifaf-current-default"): bool,
+                            },
+                            Optional("ifa-destination"): str,
+                            Optional("ifa-local"): str,
+                            Optional("ifa-broadcast"): str,
+                        }),
+                    }),
+                })
+            })
         }
     }
 
@@ -3281,59 +3097,26 @@ class ShowInterfacesPolicersInterfaceSchema(MetaParser):
     }
 }'''
 
-    def validate_policer_information_list(value):
-        # Pass ospf3-interface list as value
-        if not isinstance(value, list):
-            raise SchemaError('policer-information is not a list')
-        policer_information_schema = Schema({
-            "policer-family": str,
-            "policer-input": str,
-            Optional("policer-output"): Or(str,None)
-        })
-        # Validate each dictionary in list
-        for item in value:
-            policer_information_schema.validate(item)
-        return value
-
-
-    def validate_logical_interface_list(value):
-        # Pass ospf3-interface list as value
-        if not isinstance(value, list):
-            raise SchemaError('logical-interface is not a list')
-        logical_interface_schema = Schema({
-            "admin-status": str,
-            "name": str,
-            "oper-status": str,
-            "policer-information": Use(ShowInterfacesPolicersInterface.validate_policer_information_list)
-        })
-        # Validate each dictionary in list
-        for item in value:
-            logical_interface_schema.validate(item)
-        return value
-
-
-    def validate_physical_interface_list(value):
-        # Pass ospf3-interface list as value
-        if not isinstance(value, list):
-            raise SchemaError('physical-interface is not a list')
-        physical_interface_schema = Schema({
-            "admin-status": str,
-            "logical-interface": Use(ShowInterfacesPolicersInterface.validate_logical_interface_list),
-            "name": str,
-            "oper-status": str
-        })
-        # Validate each dictionary in list
-
-        for item in value:
-            physical_interface_schema.validate(item)
-        return value
-
     schema = {
     Optional("@xmlns:junos"): str,
     "interface-policer-information": {
         Optional("@junos:style"): str,
         Optional("@xmlns"): str,
-        "physical-interface": Use(validate_physical_interface_list)
+        "physical-interface": ListOf({
+            "admin-status": str,
+            "logical-interface": ListOf({
+                "admin-status": str,
+                "name": str,
+                "oper-status": str,
+                "policer-information": ListOf({
+                    "policer-family": str,
+                    "policer-input": str,
+                    Optional("policer-output"): Or(str,None)
+                })
+            }),
+            "name": str,
+            "oper-status": str
+        })
     }
 }
 
@@ -3435,52 +3218,6 @@ class ShowInterfacesQueueSchema(MetaParser):
     Schema for:
         * show interfaces queue {interface}
     """
-    def validate_queue(value):
-        if not isinstance(value, list):
-            raise SchemaError('queue is not a list')
-        queue_schema = Schema(
-            {
-                "forwarding-class-name": str,
-                "queue-counters-queued-bytes": str,
-                "queue-counters-queued-bytes-rate": str,
-                "queue-counters-queued-packets": str,
-                "queue-counters-queued-packets-rate": str,
-                "queue-counters-red-bytes": str,
-                "queue-counters-red-bytes-high": str,
-                "queue-counters-red-bytes-low": str,
-                "queue-counters-red-bytes-medium-high": str,
-                "queue-counters-red-bytes-medium-low": str,
-                "queue-counters-red-bytes-rate": str,
-                "queue-counters-red-bytes-rate-high": str,
-                "queue-counters-red-bytes-rate-low": str,
-                "queue-counters-red-bytes-rate-medium-high": str,
-                "queue-counters-red-bytes-rate-medium-low": str,
-                "queue-counters-red-packets": str,
-                "queue-counters-red-packets-high": str,
-                "queue-counters-red-packets-low": str,
-                "queue-counters-red-packets-medium-high": str,
-                "queue-counters-red-packets-medium-low": str,
-                "queue-counters-red-packets-rate": str,
-                "queue-counters-red-packets-rate-high": str,
-                "queue-counters-red-packets-rate-low": str,
-                "queue-counters-red-packets-rate-medium-high": str,
-                "queue-counters-red-packets-rate-medium-low": str,
-                "queue-counters-tail-drop-packets": str,
-                "queue-counters-tail-drop-packets-rate": str,
-                Optional("queue-counters-rl-drop-packets"): str,
-                Optional("queue-counters-rl-drop-packets-rate"): str,
-                Optional("queue-counters-rl-drop-bytes"): str,
-                Optional("queue-counters-rl-drop-bytes-rate"): str,
-                "queue-counters-trans-bytes": str,
-                "queue-counters-trans-bytes-rate": str,
-                "queue-counters-trans-packets": str,
-                "queue-counters-trans-packets-rate": str,
-                "queue-number": str
-            }
-        )
-        for item in value:
-            queue_schema.validate(item)
-        return value
 
     schema = {
         "interface-information": {
@@ -3498,7 +3235,44 @@ class ShowInterfacesQueueSchema(MetaParser):
                         "intf-cos-num-queues-supported": str,
                         "intf-cos-queue-type": str
                     },
-                    "queue": Use(validate_queue)
+                    "queue": ListOf({
+                        "forwarding-class-name": str,
+                        "queue-counters-queued-bytes": str,
+                        "queue-counters-queued-bytes-rate": str,
+                        "queue-counters-queued-packets": str,
+                        "queue-counters-queued-packets-rate": str,
+                        "queue-counters-red-bytes": str,
+                        "queue-counters-red-bytes-high": str,
+                        "queue-counters-red-bytes-low": str,
+                        "queue-counters-red-bytes-medium-high": str,
+                        "queue-counters-red-bytes-medium-low": str,
+                        "queue-counters-red-bytes-rate": str,
+                        "queue-counters-red-bytes-rate-high": str,
+                        "queue-counters-red-bytes-rate-low": str,
+                        "queue-counters-red-bytes-rate-medium-high": str,
+                        "queue-counters-red-bytes-rate-medium-low": str,
+                        "queue-counters-red-packets": str,
+                        "queue-counters-red-packets-high": str,
+                        "queue-counters-red-packets-low": str,
+                        "queue-counters-red-packets-medium-high": str,
+                        "queue-counters-red-packets-medium-low": str,
+                        "queue-counters-red-packets-rate": str,
+                        "queue-counters-red-packets-rate-high": str,
+                        "queue-counters-red-packets-rate-low": str,
+                        "queue-counters-red-packets-rate-medium-high": str,
+                        "queue-counters-red-packets-rate-medium-low": str,
+                        "queue-counters-tail-drop-packets": str,
+                        "queue-counters-tail-drop-packets-rate": str,
+                        Optional("queue-counters-rl-drop-packets"): str,
+                        Optional("queue-counters-rl-drop-packets-rate"): str,
+                        Optional("queue-counters-rl-drop-bytes"): str,
+                        Optional("queue-counters-rl-drop-bytes-rate"): str,
+                        "queue-counters-trans-bytes": str,
+                        "queue-counters-trans-bytes-rate": str,
+                        "queue-counters-trans-packets": str,
+                        "queue-counters-trans-packets-rate": str,
+                        "queue-number": str
+                    })
                 }
             }
             }
@@ -3758,124 +3532,104 @@ class ShowInterfacesDiagnosticsOpticsSchema(MetaParser):
         * show interfaces diagnostics optics
     """
 
-    def validate_interface(value):
-        if not isinstance(value, list):
-            raise SchemaError('Interface not a list')
-
-        def validate_lanes(value):
-            if not isinstance(value, list):
-                raise SchemaError('Lanes are not a list')
-        
-            lanes = Schema({
-                "lane-number": str,
-                "laser-bias-current": str,
-                "laser-output-power": str,
-                "laser-temperature": str,
-                "laser-receiver-power": str,
-                "laser-bias-current-high-alarm": str,
-                "laser-bias-current-low-alarm": str,
-                "laser-bias-current-high-warning": str,
-                "laser-bias-current-low-warning": str,
-                "laser-output-power-high-alarm": str,
-                "laser-output-power-low-alarm": str,
-                "laser-output-power-high-warning": str,
-                "laser-output-power-low-warning": str,
-                "laser-temperature-high-alarm": str,
-                "laser-temperature-low-alarm": str,
-                "laser-temperature-high-warning": str,
-                "laser-temperature-low-warning": str,
-                "laser-receiver-power-high-alarm": str,
-                "laser-receiver-power-low-alarm": str,
-                "laser-receiver-power-high-warning": str,
-                "laser-receiver-power-low-warning": str,
-                "tx-loss-of-signal-functionality-alarm": str,
-                "tx-cdr-loss-of-lock-alarm": str,
-                "rx-loss-of-signal-alarm": str,
-                "rx-cdr-loss-of-lock-alarm": str,
-                "apd-supply-fault-alarm": str,
-                "tec-fault-alarm": str,
-                "wavelength-unlocked-alarm": str,
-            })
-        
-            for item in value:
-                lanes.validate(item)
-            return value
-    
-        interface = Schema({
-            'name': str,
-            'optics-diagnostics': {
-                Optional("laser-bias-current"): str,
-                Optional("laser-output-power"): str,
-                "module-temperature": str,
-                "module-voltage": str,
-                Optional("receiver-signal-average-optical-power"): str,
-                Optional("laser-bias-current-high-alarm"): str,
-                Optional("laser-bias-current-low-alarm"): str,
-                Optional("laser-bias-current-high-warning"): str,
-                Optional("laser-bias-current-low-warning"): str,
-                Optional("laser-output-power-high-alarm"): str,
-                Optional("laser-output-power-low-alarm"): str,
-                Optional("laser-output-power-high-warning"): str,
-                Optional("laser-output-power-low-warning"): str,
-                "module-temperature-high-alarm": str,
-                "module-temperature-low-alarm": str,
-                "module-temperature-high-warning": str,
-                "module-temperature-low-warning": str,
-                "module-voltage-high-alarm": str,
-                "module-voltage-low-alarm": str,
-                "module-voltage-high-warning": str,
-                "module-voltage-low-warning": str,
-                Optional("laser-rx-power-high-alarm"): str,
-                Optional("laser-rx-power-low-alarm"): str,
-                Optional("laser-rx-power-high-warning"): str,
-                Optional("laser-rx-power-low-warning"): str,
-                "laser-bias-current-high-alarm-threshold": str,
-                "laser-bias-current-low-alarm-threshold": str,
-                "laser-bias-current-high-warning-threshold": str,
-                "laser-bias-current-low-warning-threshold": str,
-                "laser-output-power-high-alarm-threshold": str,
-                "laser-output-power-low-alarm-threshold": str,
-                "laser-output-power-high-warning-threshold": str,
-                "laser-output-power-low-warning-threshold": str,
-                "module-temperature-high-alarm-threshold": str,
-                "module-temperature-low-alarm-threshold": str,
-                "module-temperature-high-warning-threshold": str,
-                "module-temperature-low-warning-threshold": str,
-                "module-voltage-high-alarm-threshold": str,
-                "module-voltage-low-alarm-threshold": str,
-                "module-voltage-high-warning-threshold": str,
-                "module-voltage-low-warning-threshold": str,
-                "laser-rx-power-high-alarm-threshold": str,
-                "laser-rx-power-low-alarm-threshold": str,
-                Optional("laser-rx-power-high-warning-threshold"): str,
-                Optional("laser-rx-power-low-warning-threshold"): str,
-                Optional("module-not-ready-alarm"): str,
-                Optional("module-low-power-alarm"): str,
-                Optional("module-initialization-incomplete-alarm"): str,
-                Optional("module-fault-alarm"): str,
-                Optional("pld-flash-initialization-fault-alarm"): str,
-                Optional("power-supply-fault-alarm"): str,
-                Optional("checksum-fault-alarm"): str,
-                Optional("tx-laser-disabled-alarm"): str,
-                Optional("tx-loss-of-signal-functionality-alarm"): str,
-                Optional("tx-cdr-loss-of-lock-alarm"): str,
-                Optional("rx-loss-of-signal-alarm"): str,
-                Optional("rx-cdr-loss-of-lock-alarm"): str,
-                Optional("laser-temperature-high-alarm-threshold"): str,
-                Optional("laser-temperature-low-alarm-threshold"): str,
-                Optional("laser-temperature-high-warning-threshold"): str,
-                Optional("laser-temperature-low-warning-threshold"): str,
-                Optional("lanes"): Use(validate_lanes)
-            }
-        })
-    
-        for item in value:
-            interface.validate(item)
-        return value
-
     schema = {
         'interface-information': {
-            'physical-interface': Use(validate_interface)
+            'physical-interface': ListOf({
+                'name': str,
+                'optics-diagnostics': {
+                    Optional("laser-bias-current"): str,
+                    Optional("laser-output-power"): str,
+                    "module-temperature": str,
+                    "module-voltage": str,
+                    Optional("receiver-signal-average-optical-power"): str,
+                    Optional("laser-bias-current-high-alarm"): str,
+                    Optional("laser-bias-current-low-alarm"): str,
+                    Optional("laser-bias-current-high-warning"): str,
+                    Optional("laser-bias-current-low-warning"): str,
+                    Optional("laser-output-power-high-alarm"): str,
+                    Optional("laser-output-power-low-alarm"): str,
+                    Optional("laser-output-power-high-warning"): str,
+                    Optional("laser-output-power-low-warning"): str,
+                    "module-temperature-high-alarm": str,
+                    "module-temperature-low-alarm": str,
+                    "module-temperature-high-warning": str,
+                    "module-temperature-low-warning": str,
+                    "module-voltage-high-alarm": str,
+                    "module-voltage-low-alarm": str,
+                    "module-voltage-high-warning": str,
+                    "module-voltage-low-warning": str,
+                    Optional("laser-rx-power-high-alarm"): str,
+                    Optional("laser-rx-power-low-alarm"): str,
+                    Optional("laser-rx-power-high-warning"): str,
+                    Optional("laser-rx-power-low-warning"): str,
+                    "laser-bias-current-high-alarm-threshold": str,
+                    "laser-bias-current-low-alarm-threshold": str,
+                    "laser-bias-current-high-warning-threshold": str,
+                    "laser-bias-current-low-warning-threshold": str,
+                    "laser-output-power-high-alarm-threshold": str,
+                    "laser-output-power-low-alarm-threshold": str,
+                    "laser-output-power-high-warning-threshold": str,
+                    "laser-output-power-low-warning-threshold": str,
+                    "module-temperature-high-alarm-threshold": str,
+                    "module-temperature-low-alarm-threshold": str,
+                    "module-temperature-high-warning-threshold": str,
+                    "module-temperature-low-warning-threshold": str,
+                    "module-voltage-high-alarm-threshold": str,
+                    "module-voltage-low-alarm-threshold": str,
+                    "module-voltage-high-warning-threshold": str,
+                    "module-voltage-low-warning-threshold": str,
+                    "laser-rx-power-high-alarm-threshold": str,
+                    "laser-rx-power-low-alarm-threshold": str,
+                    Optional("laser-rx-power-high-warning-threshold"): str,
+                    Optional("laser-rx-power-low-warning-threshold"): str,
+                    Optional("module-not-ready-alarm"): str,
+                    Optional("module-low-power-alarm"): str,
+                    Optional("module-initialization-incomplete-alarm"): str,
+                    Optional("module-fault-alarm"): str,
+                    Optional("pld-flash-initialization-fault-alarm"): str,
+                    Optional("power-supply-fault-alarm"): str,
+                    Optional("checksum-fault-alarm"): str,
+                    Optional("tx-laser-disabled-alarm"): str,
+                    Optional("tx-loss-of-signal-functionality-alarm"): str,
+                    Optional("tx-cdr-loss-of-lock-alarm"): str,
+                    Optional("rx-loss-of-signal-alarm"): str,
+                    Optional("rx-cdr-loss-of-lock-alarm"): str,
+                    Optional("laser-temperature-high-alarm-threshold"): str,
+                    Optional("laser-temperature-low-alarm-threshold"): str,
+                    Optional("laser-temperature-high-warning-threshold"): str,
+                    Optional("laser-temperature-low-warning-threshold"): str,
+                    Optional("lanes"): ListOf({
+                        "lane-number": str,
+                        "laser-bias-current": str,
+                        "laser-output-power": str,
+                        "laser-temperature": str,
+                        "laser-receiver-power": str,
+                        "laser-bias-current-high-alarm": str,
+                        "laser-bias-current-low-alarm": str,
+                        "laser-bias-current-high-warning": str,
+                        "laser-bias-current-low-warning": str,
+                        "laser-output-power-high-alarm": str,
+                        "laser-output-power-low-alarm": str,
+                        "laser-output-power-high-warning": str,
+                        "laser-output-power-low-warning": str,
+                        "laser-temperature-high-alarm": str,
+                        "laser-temperature-low-alarm": str,
+                        "laser-temperature-high-warning": str,
+                        "laser-temperature-low-warning": str,
+                        "laser-receiver-power-high-alarm": str,
+                        "laser-receiver-power-low-alarm": str,
+                        "laser-receiver-power-high-warning": str,
+                        "laser-receiver-power-low-warning": str,
+                        "tx-loss-of-signal-functionality-alarm": str,
+                        "tx-cdr-loss-of-lock-alarm": str,
+                        "rx-loss-of-signal-alarm": str,
+                        "rx-cdr-loss-of-lock-alarm": str,
+                        "apd-supply-fault-alarm": str,
+                        "tec-fault-alarm": str,
+                        "wavelength-unlocked-alarm": str,
+                    })
+                }
+            })
         }
     }
 

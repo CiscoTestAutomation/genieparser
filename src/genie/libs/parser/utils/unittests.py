@@ -582,7 +582,6 @@ CLASS_SKIP = {
         "ShowCores": True, # Not migrated
         "ShowInstallActive": True, # Not migrated
         "ShowInventory": True, # Not migrated
-        "ShowModule": True, # Not migrated
         "ShowProcessesCpu": True, # Not migrated
         "ShowProcessesMemory": True, # Not migrated
         "ShowRedundancyStatus": True, # Not migrated

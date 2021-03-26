@@ -14,6 +14,7 @@ class ShowModuleSchema(MetaParser):
         'power_consumed': str,
         'mod': {
             Any(): {
+                'slot': int,
                 'port': int,
                 'card_type': str,
                 'model': str,
@@ -61,7 +62,7 @@ class ShowModule(ShowModuleSchema):
 
         # 1 11a1.b2ff.ee55 to 11a1.b2ff.ee61 3.1                               Ok
         p4_1 = re.compile(r'^(?P<mod>\d+) +(?P<mac_address_from>[\w\.]+) +to +(?P<mac_address_to>[\w\.]+) +(?P<hw_ver>[\w\.\(\)]+) +(?P<status>\w+)$')
-        
+
         # 3   Active Supervisor   RPR                 Active
         p5 = re.compile(r'^(?P<mod>\d+) +(?P<redundancy_role>[\S\s]+) +(?P<operating_mode>\S+) +(?P<redundancy_status>\S+)$')
 
@@ -78,7 +79,7 @@ class ShowModule(ShowModuleSchema):
                 group = m.groupdict()
                 ret_dict.update({'chassis_type': group['chassis_type']})
                 continue
-                
+
             # Power consumed by backplane : 40 Watts
             m = p2.match(line)
             if m:
@@ -92,6 +93,7 @@ class ShowModule(ShowModuleSchema):
             if m:
                 group = m.groupdict()
                 mode_dict = ret_dict.setdefault('mod', {}).setdefault(int(group['mod']), {})
+                mode_dict.update({'slot': int(group['mod'])})
                 mode_dict.update({'port': int(group['port'])})
                 mode_dict.update({'card_type': group['card_type'].strip()})
                 mode_dict.update({'model': group['model']})
