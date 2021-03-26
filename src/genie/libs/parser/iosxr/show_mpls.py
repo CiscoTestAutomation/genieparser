@@ -33,15 +33,31 @@ class ShowMplsLdpInterfaceSchema(MetaParser):
     """Schema for show mpls ldp interface"""
 
     schema =  {
-        'interface': {
-            Any(): {
-                'interface': str,
-                'vrf': str,
-                Optional ('enabled'): str,
-                Optional ('disabled'): str,
-            },
-        },
-	}
+        'vrf': {
+            Any(): {  
+                'vrf_type': str,
+                'vrf_index': str,
+                'interfaces': {
+                    Any(): { 
+                    'interface_name': str,
+                    'interface_index': str,
+                        Optional('enabled'): {
+                            Any(): {
+                                'enabled': str,
+                                'via': str,
+                            }
+                        },
+                        Optional('disabled'): {
+                            Any(): {
+                                'disabled': str,					
+                                'via': str,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
 class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
@@ -73,18 +89,19 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
         
         # Init vars        
         ret_dict = {}
+        result_dict = {}
 
         # Interface HundredGigE0/5/0/0.100 (0xe0001c0)
-        p1 = re.compile(r'^(?P<interface>.*?)$') 
+        p1 = re.compile(r'Interface\s+(?P<interface_name>[\w\/\.]+)\s+(?P<interface_index>[\(\)\w]+)$') 
 
         # VRF: 'default' (0x60000000)
-        p2_1 = re.compile(r'^(?P<vrf>.*?)$') 
+        p2_1 = re.compile(r'^VRF\:\s+(?P<vrf_type>\'(\w)+\')\s+(?P<vrf_index>[\s\S]+$)') 
 
         # Enabled via config: LDP interface
-        p2_2 = re.compile(r'^(?P<enabled>.*?)$') 
+        p2_2 = re.compile(r'^Enabled\s+via\s+(?P<via>[\w]+):\s+(?P<disabled>.*?)$') 
 
-        # Disabled:
-        p2_3 = re.compile(r'^(?P<disabled>.*?)$')                 
+        # Disabled via config: LDP interface
+        p2_3 = re.compile(r'^via\s+(?P<via>[\w]+):\s+(?P<disabled>.*?)$')                 
 
 
         for line in out.splitlines():
@@ -92,36 +109,47 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
 
             # Interface HundredGigE0/5/0/0.100 (0xe0001c0)
             m1 = p1.match(line)
+            import pdb; pdb.set_trace()                
             if m1:
-                result_dict = ret_dict.setdefault('interface', {})
                 group = m1.groupdict()
-                interface = group['interface']
+                interface = group['interface_name']
+                index = group['interface_index']
+                result_dict = ret_dict.setdefault('interfaces', {})
                 result_dict[interface] = {}
-                result_dict[interface]['interface'] = interface
+                result_dict[interface]['interface_name'] = interface
+                result_dict[interface]['interface_index'] = index
                 continue
             
             # VRF: 'default' (0x60000000)
             m2_1 = p2_1.match(line)
             if m2_1:
                 group = m2_1.groupdict()
-                vrf = group['vrf']
-                result_dict[interface]['vrf'] = vrf
+                vrf = group['vrf_type']
+                index = group['vrf_index']
+                result_dict = ret_dict.setdefault('vrf', {})
+                result_dict[vrf] = {}
+                result_dict[vrf]['vrf_type'] = vrf
+                result_dict[vrf]['vrf_index'] = index
                 continue                
             
             # Enabled via config: LDP interface
             m2_2 = p2_2.match(line)
             if m2_2:
-                group = m2_1.groupdict()
-                enabled = group['enabled']                
-                result_dict[interface]['enabled'] = enabled
+                group = m2_2.groupdict()
+                enabled = group['enabled']
+                via = group['via']
+                result_dict = ret_dict.setdefault('enabled', {})
+                result_dict[enabled] = {}
+                result_dict[enabled]['enabled'] = enabled
+                result_dict[enabled]['via'] = via
                 continue                
 
             # Disabled:
             m2_3 = p2_3.match(line)
             if m2_3:
-                group = m2_1.groupdict()
+                group = m2_3.groupdict()
                 disabled = group['disabled']                
-                result_dict[interface]['disabled'] = disabled
+                result_dict['disabled'] = disabled
                 continue                
             
         return ret_dict
