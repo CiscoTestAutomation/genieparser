@@ -188,10 +188,28 @@ class FailedReporter(StandaloneReporter):
                                             num = glo_values.missingCount))
                 log.info('-'*80)
 
+                if glo_values.missingParsers:
+                    log.info("\n".join(glo_values.missingParsers), extra={'colour': 'yellow'})
+                    log.info('-'*80)
+            
+            log.info(' {name:<58}{num:>20} '.format(
+                                            name = 'Total Passing Unittests',
+                                            num = glo_values.parserPassed))
+            log.info(' {name:<58}{num:>20} '.format(
+                                            name = 'Total Failed Unittests',
+                                            num = glo_values.parserFailed))
+            log.info(' {name:<58}{num:>20} '.format(
+                                            name = 'Total Errored Unittests',
+                                            num = glo_values.parserErrored))
+            log.info(' {name:<58}{num:>20} '.format(
+                                            name = 'Total Unittests',
+                                            num = glo_values.parserTotal))                                            
+            log.info('-'*80)
+
             if hasattr(glo_values, '_class_exists'):
                 if not glo_values._class_exists:
                     parsed_args = _parse_args()
-                    log.warning(f'`{parsed_args["_class"]}` does not exist')
+                    log.info(f'`{parsed_args["_class"]}` does not exist', extra={'colour': 'yellow'})
                     log.info('-'*80)
 
         else:
@@ -277,9 +295,15 @@ class SuperFileBasedTesting(aetest.Testcase):
         # init parent
         super().__init__(*args, **kwargs)
         glo_values.missingCount = 0
+        glo_values.parserPassed = 0
+        glo_values.parserFailed = 0
+        glo_values.parserErrored = 0
+        glo_values.parserTotal = 0
+        glo_values.missingParsers = list()
+
 
     @aetest.setup
-    def setup(self, _os, _class, _token, _display_only_failed, _number, _external_folder):
+    def setup(self, _os, _class, _token, _display_only_failed, _number, _external_folder, _show_missing_unittests):
 
         # If _class is passed then check to see if it even exists
         if _class:
@@ -321,9 +345,6 @@ class SuperFileBasedTesting(aetest.Testcase):
                     module_name, parse_file
                 ).load_module()
                 for name, local_class in inspect.getmembers(_module):
-                    # The following methods determin when a test is not warranted, further detail will be provided for each method.
-
-
                     if token:
                         folder_root_equal = pathlib.Path(f"{operating_system}/{token}/{name}/cli/equal")
                         folder_root_empty = pathlib.Path(f"{operating_system}/{token}/{name}/cli/empty")
@@ -347,13 +368,13 @@ class SuperFileBasedTesting(aetest.Testcase):
                     if hasattr(local_class, "cli") and not name.endswith("_iosxe"):
      
                         if not folder_root_equal.exists():
-                            if _class:
-                                log.warning(f'Equal unittests for {_class} don\'t exist')
-                            glo_values.missingCount += 1
-                            continue
-                        if not folder_root_empty.exists():
-                            if _class:
-                                log.warning(f'Empty unittests for {_class} don\'t exist')
+                            if _show_missing_unittests or _class:
+                                if token:
+                                    log.warning(f'Equal unittests for {operating_system}-> {token} -> {name} don\'t exist')
+                                    glo_values.missingParsers.append(f"{operating_system} -> {token} -> {name}")
+                                else:
+                                    log.warning(f'Equal unittests for {operating_system} -> {name} don\'t exist')
+                                    glo_values.missingParsers.append(f"{operating_system} -> {name}")
                             glo_values.missingCount += 1
                             continue
 
@@ -396,13 +417,11 @@ class ParserTest(aetest.Testcase):
         self.temporary_screen_handler = None
         if self.parameters['_display_only_failed']:
                 self.remove_logger()
-        
 
     @aetest.setup
     def setup(self, operating_system):
         self.uid = operating_system[0]
         self.data = operating_system[1]
-        
 
         aetest.loop.mark(self.test, data=self.data, generator=ParserGenerator)
 
@@ -414,8 +433,6 @@ class ParserTest(aetest.Testcase):
         token = data['token']
         _number = data['number']
         name = local_class.__name__
-        # if _display_only_failed:
-        #     self.remove_logger()
         if token:
             msg = f"{operating_system} -> Token -> {token} -> {name}"
         else:
@@ -467,6 +484,7 @@ class ParserTest(aetest.Testcase):
         # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
         
         for user_defined in output_glob:
+            glo_values.parserTotal += 1
             user_test = os.path.basename(user_defined[: -len("_output.txt")])
             if token:
                 msg = f"Gold -> {operating_system} -> Token {token} -> {local_class.__name__} -> {user_test}"
@@ -490,13 +508,17 @@ class ParserTest(aetest.Testcase):
 
                 device = Mock(**golden_output)
                 obj = local_class(device=device)
-                parsed_output = obj.parse(**arguments)
+                try:
+                    parsed_output = obj.parse(**arguments)
+                except:
+                    glo_values.parserErrored += 1
                 
                 # Use Diff method to get the difference between 
                 # what is expected and the parsed output
                 dd = Diff(parsed_output,golden_parsed_output)
                 dd.findDiff()
                 if parsed_output != golden_parsed_output:
+                    glo_values.parserFailed += 1
                     # if -f flag provided, then add the screen handler back into
                     # the root.handlers to displayed failed tests. Decorator removes
                     # screen handler from root.handlers after failed tests are displayed
@@ -518,6 +540,7 @@ class ParserTest(aetest.Testcase):
                     log.info(str(dd), extra = {'colour': 'yellow'})
                     raise AssertionError("Device output and expected output do not match")
                 else:
+                    glo_values.parserPassed += 1
                     # If tests pass, display the device output in debug mode
                     # But first check if the screen handler is removed, if it is
                     # put it back into the root otherwise just display to stdout
@@ -553,7 +576,12 @@ class ParserTest(aetest.Testcase):
             folder_root = pathlib.Path(f"{operating_system}/{local_class.__name__}/cli/empty")
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
 
+        all_txt_glob = sorted(glob.glob(f"{folder_root}/*.txt"))
+        
+        unacceptable_filenames = [fil for fil in all_txt_glob if fil not in output_glob]
+
         for user_defined in output_glob:
+            glo_values.parserTotal += 1
             user_test = os.path.basename(user_defined[: -len("_output.txt")])
             if token:
                 msg = f"Empty -> {operating_system} -> {token} -> {local_class.__name__} -> {user_test}"
@@ -583,11 +611,30 @@ class ParserTest(aetest.Testcase):
                     # to stdout
                     if display_only_failed:
                         self.add_logger()
+                    glo_values.parserFailed += 1
                     step_within.failed(f"File parsed, when expected not to for {local_class}")
                 except SchemaEmptyParserError:
+                    glo_values.parserPassed += 1
                     return True
                 except AttributeError:
+                    glo_values.parserPassed += 1
                     return True
+                except Exception:
+                    glo_values.parserErrored += 1
+
+        if unacceptable_filenames:
+            for unacc_fil in unacceptable_filenames:
+                unacc_fil_name = pathlib.Path(unacc_fil).name
+                msg = f"{unacc_fil_name} does not follow the filename schema and will not be ran..."
+                with steps.start(msg, continue_ = True) as step:
+                    if self.temporary_screen_handler not in log.root.handlers and self.temporary_screen_handler != None:
+                        self.add_logger()
+                        log.info(msg, extra={'colour': 'yellow'})
+                        log.info(f"Filename should be `{unacc_fil_name.split('.')[0]}_expected.txt`", extra={'colour': 'yellow'})
+                        self.remove_logger()
+                    else:
+                        log.info(f"Filename should be `{unacc_fil_name.split('.')[0]}_expected.txt`", extra={'colour': 'yellow'})
+                    step.failed()
 
     @aetest.cleanup
     def cleanup(self, _display_only_failed=None):
@@ -606,6 +653,7 @@ def _parse_args(
         display_only_failed=None,
         number=None,
         external_folder=None,
+        show_missing_unittests=None,
         o=None,c=None,t=None,f=None,n=None,e=None,
         **kwargs):
     
@@ -636,6 +684,10 @@ def _parse_args(
                         type=pathlib.Path,
                         help="An external parser folder to work with",
                         default=None or external_folder or e)
+    my_parser.add_argument("--show-missing-unittests",
+                        action='store_true',
+                        help="Print out parsers that are missing unittests",
+                        default=None or show_missing_unittests)
     args = my_parser.parse_known_args()[0]
 
     _os = args.operating_system
@@ -644,6 +696,7 @@ def _parse_args(
     _display_only_failed = args.display_only_failed
     _number = args.number
     _external_folder = args.external_folder
+    _show_missing_unittests = args.show_missing_unittests
 
     return {
         "_os":_os, 
@@ -651,7 +704,8 @@ def _parse_args(
         "_token":_token, 
         "_display_only_failed":_display_only_failed, 
         "_number":_number, 
-        "_external_folder":_external_folder
+        "_external_folder":_external_folder,
+        "_show_missing_unittests":_show_missing_unittests,
     }
 
 def main(**kwargs):
