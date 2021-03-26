@@ -98,10 +98,10 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
         p2_1 = re.compile(r'^VRF\:\s+(?P<vrf_type>\'(\w)+\')\s+(?P<vrf_index>[\s\S]+$)') 
 
         # Enabled via config: LDP interface
-        p2_2 = re.compile(r'^Enabled\s+via\s+(?P<via>[\w]+):\s+(?P<disabled>.*?)$') 
+        p2_2 = re.compile(r'^Enabled\s+via\s+(?P<via>[\w]+):\s+(?P<enabled>.*?)$') 
 
         # Disabled via config: LDP interface
-        p2_3 = re.compile(r'^via\s+(?P<via>[\w]+):\s+(?P<disabled>.*?)$')                 
+        p2_3 = re.compile(r'^(?P<dis>Disabled\:)|Disabled\s+via\s+(?P<via>[\w]+):\s+(?P<disabled>.*?)$')                 
 
 
         for line in out.splitlines():
@@ -148,8 +148,23 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
             m2_3 = p2_3.match(line)
             if m2_3:
                 group = m2_3.groupdict()
-                disabled = group['disabled']                
-                result_dict['disabled'] = disabled
+
+                # Disabled via config: LDP interface | Disabled:
+                disabled = group['disabled']
+
+                # via:'config'  disable:'LDP interface'
+                if group['via']:
+                    via = group['via']
+                    result_dict = ret_dict.setdefault('disabled', {})
+                    result_dict[disabled] = {}
+                    result_dict[disabled]['disabled'] = disabled
+                    result_dict[disabled]['via'] = via
+                else:
+                    # dis:'Disabled:'
+                    dis = group['dis']
+                    result_dict = ret_dict.setdefault('disabled',{})
+                    result_dict[disabled] = {}
+                    result_dict[disabled]['disabled'] = dis
                 continue                
             
         return ret_dict
