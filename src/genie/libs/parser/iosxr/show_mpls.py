@@ -130,6 +130,7 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
                 result_dict[vrf] = {}
                 result_dict[vrf]['vrf_type'] = vrf
                 result_dict[vrf]['vrf_index'] = index
+                
                 continue                
             
             # Enabled via config: LDP interface
