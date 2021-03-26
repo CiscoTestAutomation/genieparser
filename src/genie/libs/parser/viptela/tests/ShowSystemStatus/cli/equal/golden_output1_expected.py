@@ -18,7 +18,7 @@ expected_output = {
       "use_pc":12,
       "used_mega":1240
    },
-   "engineering_signed":true,
+   "engineering_signed":True,
    "last_reboot":"Initiated by user - activate 99.99.999-4567.",
    "load_average":{"minute_1":3.2,"minute_15":3.1,"minute_5":3.13},
    "memory_usage":{
