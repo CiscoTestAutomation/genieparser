@@ -1,6 +1,5 @@
 def project = 'genieparser'
-  
- 
+
 pipeline {
     agent {
         label 'linux'
@@ -64,7 +63,7 @@ pipeline {
                     /usr/bin/python3.6 -m venv genieparser-env
                     . /scratch/genieparser-env/bin/activate
                     pip install --upgrade pip setuptools
-                    pip3 install --no-cache-dir wheel pytest pytest-xdist
+                    pip3 install --no-cache-dir wheel pytest pytest-xdist coverage
                     pip3 install --no-cache-dir -i http://pyats-pypi.cisco.com/simple --trusted-host pyats-pypi.cisco.com cisco-distutils ats[full]
                     cd $WORKSPACE/genie
                     make develop
@@ -103,8 +102,18 @@ pipeline {
                 sh """
                 . /scratch/genieparser-env/bin/activate
                 cd tests
-                pyats run job folder_parsing_job.py --no-mail --no-archive
+
+                coverage run folder_parsing_job.py --no-mail --no-archive
+                coverage html
                 """
+                publishHTML (target: [
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'tests/htmlcov',
+                    reportFiles: "index.html",
+                    reportName: 'Coverage report'
+                ])
             }
         }
 
