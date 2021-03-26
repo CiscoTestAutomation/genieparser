@@ -4222,14 +4222,12 @@ class TestShowIsisInterface(unittest.TestCase):
         self.device = Mock(**self.golden_parsed_output_1)
         obj = ShowIsisInterface(device=self.device)
         parsed_output = obj.parse()
-        print(parsed_output)
         self.assertEqual(parsed_output, self.parsed_output_1)
 
     def test_golden_output_2(self):
         self.device = Mock(**self.golden_parsed_output_2)
         obj = ShowIsisInterface(device=self.device)
         parsed_output = obj.parse()
-        print(parsed_output)
         self.assertEqual(parsed_output, self.parsed_output_2)
 
 class TestShowIsisDatabaseDetail(unittest.TestCase):
