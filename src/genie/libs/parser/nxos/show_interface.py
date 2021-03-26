@@ -2730,7 +2730,7 @@ class ShowInterfaceBriefSchema(MetaParser):
 
     schema = {
         'interface': {
-            'ethernet': {
+            Optional('ethernet'): {
                 Any(): {
                     'vlan': str,
                     'type': str,
@@ -2819,7 +2819,7 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 
         # Eth1/6        1       eth  access down    Link not connected         auto(D) --
         # Eth1/4.2      112     eth  routed down    Administratively down    auto(D) --
-        p4 = re.compile(r'^(?P<interface>[\S]+) +(?P<vlan>[a-zA-Z0-9\-]+)'
+        p4 = re.compile(r'^(?P<interface>(E|e)\S+) +(?P<vlan>[a-zA-Z0-9\-]+)'
                         r' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
                         r' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
                         r' +(?P<speed>[0-9a-zA-Z\(\)]+)'
@@ -2832,7 +2832,7 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         # Po8          1       eth  access down    No operational members      auto(I)  none
         # Po10         --      eth  routed up      none                                 a-40G(D)  lacp
         # Po10.1       2       eth  routed up      none                                 a-40G(D)    --
-        p6 = re.compile(r'^(?P<interface>\S+) +(?P<vlan>\S+) '
+        p6 = re.compile(r'^(?P<interface>(P|p)\S+) +(?P<vlan>\S+) '
                         r'+(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+) '
                         r'+(?P<status>[a-z]+) +(?P<reason>[\w\s]+) '
                         r'+(?P<speed>\S+) +(?P<protocol>[\w\-]+)$')
