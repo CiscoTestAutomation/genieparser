@@ -1,0 +1,10 @@
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* NXOS
+    * Modified ShowBgpPolicyStatisticsParser:
+        * Change xml.getChildren to list(item) because of Python 3.9 deprecation
+
+* Utils
+    * Modified Common():
+        * Change xml.getChildren to list(item) because of Python 3.9 deprecation
