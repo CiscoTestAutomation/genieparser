@@ -230,3 +230,96 @@ class ShowEthernetTrunkDetail(ShowEthernetTrunkDetailSchema):
             continue
 
         return trunk_dict
+
+
+class ShowEthernetTagsSchema(MetaParser):
+    """Schema for show ethernet tags"""
+    schema = {'interface':
+                {Any():
+                    {'sub_interface':
+                        {Any():
+                            {Optional('vlan_id'):
+                                {Any():
+                                    {Optional('status'): str,
+                                     'mtu': str,
+                                     Optional('layer'): str,
+                                     'outer_encapsulation_type': str,
+                                     Optional('inner_encapsulation_vlan_id'): str,
+                                     Optional('inner_encapsulation_type'): str}
+                                    },
+                            }
+                        },
+                    }
+                },
+            }
+
+class ShowEthernetTags(ShowEthernetTagsSchema):
+    """Parser for show ethernet tags
+    parser class - implements detail parsing mechanisms for cli and yang output.
+    """
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+
+    def cli(self,output=None):
+        """parsing mechanism: cli
+        Function cli() defines the cli type output parsing mechanism which
+        typically contains 3 steps: exe
+        cuting, transforming, returning
+        """
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        intf_dict = {}
+        stage = ''
+        for line in out.splitlines():
+            line = line.rstrip()
+            p1 = re.compile(r'^\s*Interface\s +St\s +MTU\s +Ly\s +Outer\s +Inner\s +Xtra\s +-,+$')
+            m = p1.match(line)
+            if m:
+                continue
+
+            p2 = re.compile(r'^\s*(?P<sub_interface>[A-Za-z0-9\/\.]+) +(?P<status>[A-Za-z]+) +(?P<mtu>[0-9]+) +(?P<layer>[A-Z0-9]+) +(\.)(?P<outer_encapsulation_type>[A-Za-z0-9]+)(\:)(?P<outer_encapsulation_value>[0-9]+) +((\.)(?P<inner_encapsulation_type>[A-Za-z0-9]+)(\:)(?P<inner_encapsulation_value>[0-9]+))?')
+            m = p2.match(line)
+            if m:
+                sub_interface = m.groupdict()['sub_interface']
+                stage = re.search('[A-Za-z0-9\/]+',sub_interface)
+                interface = stage.group()
+                if 'interface' not in intf_dict:
+                    intf_dict['interface'] = {}
+                if interface not in intf_dict['interface']:
+                    intf_dict['interface'][interface] = {}
+
+                if 'sub_interface' not in intf_dict['interface'][interface]:
+                    intf_dict['interface'][interface]['sub_interface'] = {}
+                if sub_interface not in intf_dict['interface'][interface]['sub_interface']:
+                    intf_dict['interface'][interface]['sub_interface'][sub_interface] = {}
+
+                vlan_id = m.groupdict()['outer_encapsulation_value']
+                if 'vlan_id' not in intf_dict['interface'][interface]['sub_interface'][sub_interface]:
+                    intf_dict['interface'][interface]['sub_interface'][sub_interface]['vlan_id'] = {}
+                if vlan_id not in intf_dict['interface'][interface]['sub_interface'][sub_interface]['vlan_id']:
+                    intf_dict['interface'][interface]['sub_interface'][sub_interface]['vlan_id'][vlan_id] = {}
+
+                intf_dict['interface'][interface]['sub_interface'][sub_interface]['vlan_id'][vlan_id]['status'] = \
+                    m.groupdict()['status']
+                intf_dict['interface'][interface]['sub_interface'][sub_interface]['vlan_id'][vlan_id]['mtu'] = \
+                    m.groupdict()['mtu']
+                intf_dict['interface'][interface]['sub_interface'][sub_interface]['vlan_id'][vlan_id]['layer'] = \
+                    m.groupdict()['layer']
+                intf_dict['interface'][interface]['sub_interface'][sub_interface]['vlan_id'][vlan_id]['outer_encapsulation_type'] = \
+                    'dot' + m.groupdict()['outer_encapsulation_type']
+                inner_encapsulation_type = m.groupdict()['inner_encapsulation_type']
+                if inner_encapsulation_type:
+                    intf_dict['interface'][interface]['sub_interface'][sub_interface]['vlan_id'][vlan_id]['inner_encapsulation_type'] = \
+                        'dot' + inner_encapsulation_type
+                    intf_dict['interface'][interface]['sub_interface'][sub_interface]['vlan_id'][vlan_id]['inner_encapsulation_vlan_id'] = \
+                        m.groupdict()['inner_encapsulation_value']
+                continue
+
+        return intf_dict

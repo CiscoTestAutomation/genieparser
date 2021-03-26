@@ -698,6 +698,7 @@ CLASS_SKIP = {
         "ShowBgpNeighbors": True, # Not migrated
         "ShowBgpSummary": True, # Not migrated
         "ShowBgpVrfDbVrfAll": True, # Not migrated
+        "ShowEthernetTags": True, # due to duplication
         "ShowPlacementProgramAll": True, # Not migrated
         "ShowL2VpnBridgeDomainBrief": True, # Not migrated
         "ShowL2VpnBridgeDomainDetail": True, # Not migrated
