@@ -2584,7 +2584,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         r19 = re.compile(r'Protocol\s+State\s*:\s*(?P<protocol_state>[\S\s]+)')
 
         # MTU:                    1500
-        r20 = re.compile(r'MTU\s*:\s*(?P<mtu>\d+)')
+        r20 = re.compile(r'MTU\s*:\s*(?P<mtu>\S+)')
 
         # IPv4 Unicast Topology:    Enabled
         # IPv6 Unicast Topology:    Enabled
@@ -2926,14 +2926,16 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                     topology_dict['protocol_state'] = protocol_state
                 else:
                     address_family_dict['protocol_state'] = protocol_state
-
                 continue
 
             # MTU:                    1500
             result = r20.match(line)
             if result:
                 group = result.groupdict()
-                mtu = int(group['mtu'])
+                if group['mtu'].isnumeric() is True:
+                    mtu = int(group['mtu'])
+                else:
+                    mtu = int(-1)
                 clns_dict['mtu'] = mtu
 
                 continue
@@ -2950,6 +2952,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                     .setdefault(topology, {})
                 topology_dict['state'] = topology_state
                 interface_flag = False
+                clns_flag = False
                 topology_falg = True
                 continue
 
@@ -3056,6 +3059,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                     .setdefault('address_family', {})\
                     .setdefault(address_family, {})
                 address_family_dict['state'] = address_family_state
+                topology_falg = False
                 continue
 
             # Forwarding Address(es): 0.0.0.0

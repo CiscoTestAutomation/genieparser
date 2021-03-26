@@ -2997,37 +2997,22 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "hello_multiplier": 3,
                             },
                         },
-                        "clns_io": {
-                            "protocol_state": "Up",
-                            "mtu": 1500},
+                        "clns_io": {"protocol_state": "Up", "mtu": 1500},
                         "topology": {
                             "ipv4 unicast": {
                                 "state": "Enabled",
                                 "adjacency_formation": "Running",
                                 "prefix_advertisement": "Running",
-                                "metric": {
-                                    "level": {
-                                        1: 10,
-                                        2: 10}},
-                                "weight": {
-                                    "level": {
-                                        1: 0,
-                                        2: 0}},
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
-                                    "ldp_sync": {
-                                        "level": {
-                                            1: "Disabled",
-                                            2: "Disabled"}},
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
-                                        1: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
-                                        2: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
                                     }
                                 },
                             },
@@ -3035,29 +3020,16 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "state": "Enabled",
                                 "adjacency_formation": "Running",
                                 "prefix_advertisement": "Running",
-                                "metric": {
-                                    "level": {
-                                        1: 10,
-                                        2: 10}},
-                                "weight": {
-                                    "level": {
-                                        1: 0,
-                                        2: 0}},
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
-                                    "ldp_sync": {
-                                        "level": {
-                                            1: "Disabled",
-                                            2: "Disabled"}},
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
-                                        1: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
-                                        2: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
                                     }
                                 },
                             },
@@ -3065,11 +3037,13 @@ class TestShowIsisInterface(unittest.TestCase):
                         "address_family": {
                             "IPv4": {
                                 "state": "Enabled",
+                                "protocol_state": "Up",
                                 "forwarding_address": ["0.0.0.0"],
                                 "global_prefix": ["10.36.3.0/24"],
                             },
                             "IPv6": {
                                 "state": "Enabled",
+                                "protocol_state": "Up",
                                 "forwarding_address": ["::"],
                                 "global_prefix": ["2001:db8:3:3:3::3/128"],
                             },
@@ -3097,9 +3071,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             1: {
                                 "adjacency_count": 0,
                                 "lan_id": "R3.07",
-                                "priority": {
-                                    "local": "64",
-                                    "dis": "none (no DIS elected)"},
+                                "priority": {"local": "64", "dis": "none (no DIS elected)"},
                                 "next_lan_iih_sec": 5,
                                 "lsp_pacing_interval_ms": 33,
                                 "psnp_entry_queue_size": 0,
@@ -3109,9 +3081,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             2: {
                                 "adjacency_count": 1,
                                 "lan_id": "R3.07",
-                                "priority": {
-                                    "local": "64",
-                                    "dis": "64"},
+                                "priority": {"local": "64", "dis": "64"},
                                 "next_lan_iih_sec": 3,
                                 "lsp_pacing_interval_ms": 33,
                                 "psnp_entry_queue_size": 0,
@@ -3133,29 +3103,16 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "state": "Enabled",
                                 "adjacency_formation": "Running",
                                 "prefix_advertisement": "Running",
-                                "metric": {
-                                    "level": {
-                                        1: 10,
-                                        2: 10}},
-                                "weight": {
-                                    "level": {
-                                        1: 0,
-                                        2: 0}},
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
-                                    "ldp_sync": {
-                                        "level": {
-                                            1: "Disabled",
-                                            2: "Disabled"}},
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
-                                        1: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
-                                        2: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
                                     }
                                 },
                             },
@@ -3163,29 +3120,16 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "state": "Enabled",
                                 "adjacency_formation": "Running",
                                 "prefix_advertisement": "Running",
-                                "metric": {
-                                    "level": {
-                                        1: 10,
-                                        2: 10}},
-                                "weight": {
-                                    "level": {
-                                        1: 0,
-                                        2: 0}},
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
-                                    "ldp_sync": {
-                                        "level": {
-                                            1: "Disabled",
-                                            2: "Disabled"}},
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
-                                        1: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
-                                        2: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
                                     }
                                 },
                             },
@@ -3193,11 +3137,13 @@ class TestShowIsisInterface(unittest.TestCase):
                         "address_family": {
                             "IPv4": {
                                 "state": "Enabled",
+                                "protocol_state": "Up",
                                 "forwarding_address": ["10.2.3.3"],
                                 "global_prefix": ["10.2.3.0/24"],
                             },
                             "IPv6": {
                                 "state": "Enabled",
+                                "protocol_state": "Up",
                                 "forwarding_address": ["fe80::f816:3eff:feff:52be"],
                                 "global_prefix": ["2001:db8:10:2::/64"],
                             },
@@ -3225,9 +3171,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             1: {
                                 "adjacency_count": 1,
                                 "lan_id": "R3.05",
-                                "priority": {
-                                    "local": "64",
-                                    "dis": "64"},
+                                "priority": {"local": "64", "dis": "64"},
                                 "next_lan_iih_sec": 2,
                                 "lsp_pacing_interval_ms": 33,
                                 "psnp_entry_queue_size": 0,
@@ -3237,9 +3181,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             2: {
                                 "adjacency_count": 0,
                                 "lan_id": "R3.05",
-                                "priority": {
-                                    "local": "64",
-                                    "dis": "none (no DIS elected)"},
+                                "priority": {"local": "64", "dis": "none (no DIS elected)"},
                                 "next_lan_iih_sec": 6,
                                 "lsp_pacing_interval_ms": 33,
                                 "psnp_entry_queue_size": 0,
@@ -3261,29 +3203,16 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "state": "Enabled",
                                 "adjacency_formation": "Running",
                                 "prefix_advertisement": "Running",
-                                "metric": {
-                                    "level": {
-                                        1: 10,
-                                        2: 10}},
-                                "weight": {
-                                    "level": {
-                                        1: 0,
-                                        2: 0}},
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
-                                    "ldp_sync": {
-                                        "level": {
-                                            1: "Disabled",
-                                            2: "Disabled"}},
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
-                                        1: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
-                                        2: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
                                     }
                                 },
                             },
@@ -3291,29 +3220,16 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "state": "Enabled",
                                 "adjacency_formation": "Running",
                                 "prefix_advertisement": "Running",
-                                "metric": {
-                                    "level": {
-                                        1: 10,
-                                        2: 10}},
-                                "weight": {
-                                    "level": {
-                                        1: 0,
-                                        2: 0}},
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
-                                    "ldp_sync": {
-                                        "level": {
-                                            1: "Disabled",
-                                            2: "Disabled"}},
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
-                                        1: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
-                                        2: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
                                     }
                                 },
                             },
@@ -3321,11 +3237,13 @@ class TestShowIsisInterface(unittest.TestCase):
                         "address_family": {
                             "IPv4": {
                                 "state": "Enabled",
+                                "protocol_state": "Up",
                                 "forwarding_address": ["10.3.6.3"],
                                 "global_prefix": ["10.3.6.0/24"],
                             },
                             "IPv6": {
                                 "state": "Enabled",
+                                "protocol_state": "Up",
                                 "forwarding_address": ["fe80::f816:3eff:feff:86bf"],
                                 "global_prefix": ["2001:db8:10:3::/64"],
                             },
@@ -3353,9 +3271,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             1: {
                                 "adjacency_count": 1,
                                 "lan_id": "R3.03",
-                                "priority": {
-                                    "local": "64",
-                                    "dis": "64"},
+                                "priority": {"local": "64", "dis": "64"},
                                 "next_lan_iih_sec": 1,
                                 "lsp_pacing_interval_ms": 33,
                                 "psnp_entry_queue_size": 0,
@@ -3365,9 +3281,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             2: {
                                 "adjacency_count": 0,
                                 "lan_id": "R3.03",
-                                "priority": {
-                                    "local": "64",
-                                    "dis": "none (no DIS elected)"},
+                                "priority": {"local": "64", "dis": "none (no DIS elected)"},
                                 "next_lan_iih_sec": 6,
                                 "lsp_pacing_interval_ms": 33,
                                 "psnp_entry_queue_size": 0,
@@ -3389,29 +3303,16 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "state": "Enabled",
                                 "adjacency_formation": "Running",
                                 "prefix_advertisement": "Running",
-                                "metric": {
-                                    "level": {
-                                        1: 10,
-                                        2: 10}},
-                                "weight": {
-                                    "level": {
-                                        1: 0,
-                                        2: 0}},
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
-                                    "ldp_sync": {
-                                        "level": {
-                                            1: "Disabled",
-                                            2: "Disabled"}},
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
-                                        1: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
-                                        2: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
                                     }
                                 },
                             },
@@ -3419,29 +3320,16 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "state": "Enabled",
                                 "adjacency_formation": "Running",
                                 "prefix_advertisement": "Running",
-                                "metric": {
-                                    "level": {
-                                        1: 10,
-                                        2: 10}},
-                                "weight": {
-                                    "level": {
-                                        1: 0,
-                                        2: 0}},
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
-                                    "ldp_sync": {
-                                        "level": {
-                                            1: "Disabled",
-                                            2: "Disabled"}},
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
-                                        1: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
-                                        2: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
                                     }
                                 },
                             },
@@ -3449,13 +3337,17 @@ class TestShowIsisInterface(unittest.TestCase):
                         "address_family": {
                             "IPv4": {
                                 "state": "Enabled",
+                                "protocol_state": "Up",
                                 "forwarding_address": ["10.3.4.3"],
                                 "global_prefix": ["10.3.4.0/24"],
                             },
                             "IPv6": {
                                 "state": "Enabled",
+                                "protocol_state": "Up",
                                 "forwarding_address": ["fe80::f816:3eff:feff:d6b3"],
-                                "global_prefix": ["None (No global addresses are configured)"],
+                                "global_prefix": [
+                                    "None (No global addresses are configured)"
+                                ],
                             },
                         },
                         "lsp": {
@@ -3481,9 +3373,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             1: {
                                 "adjacency_count": 1,
                                 "lan_id": "R5.01",
-                                "priority": {
-                                    "local": "64",
-                                    "dis": "64"},
+                                "priority": {"local": "64", "dis": "64"},
                                 "next_lan_iih_sec": 3,
                                 "lsp_pacing_interval_ms": 33,
                                 "psnp_entry_queue_size": 0,
@@ -3493,9 +3383,7 @@ class TestShowIsisInterface(unittest.TestCase):
                             2: {
                                 "adjacency_count": 1,
                                 "lan_id": "R5.01",
-                                "priority": {
-                                    "local": "64",
-                                    "dis": "64"},
+                                "priority": {"local": "64", "dis": "64"},
                                 "next_lan_iih_sec": 2,
                                 "lsp_pacing_interval_ms": 33,
                                 "psnp_entry_queue_size": 0,
@@ -3517,29 +3405,16 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "state": "Enabled",
                                 "adjacency_formation": "Running",
                                 "prefix_advertisement": "Running",
-                                "metric": {
-                                    "level": {
-                                        1: 10,
-                                        2: 10}},
-                                "weight": {
-                                    "level": {
-                                        1: 0,
-                                        2: 0}},
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
-                                    "ldp_sync": {
-                                        "level": {
-                                            1: "Disabled",
-                                            2: "Disabled"}},
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
-                                        1: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
-                                        2: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
                                     }
                                 },
                             },
@@ -3547,29 +3422,16 @@ class TestShowIsisInterface(unittest.TestCase):
                                 "state": "Enabled",
                                 "adjacency_formation": "Running",
                                 "prefix_advertisement": "Running",
-                                "metric": {
-                                    "level": {
-                                        1: 10,
-                                        2: 10}},
-                                "weight": {
-                                    "level": {
-                                        1: 0,
-                                        2: 0}},
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
                                 "mpls": {
                                     "mpls_max_label_stack": "1/3/10 (PRI/BKP/SRTE)",
-                                    "ldp_sync": {
-                                        "level": {
-                                            1: "Disabled",
-                                            2: "Disabled"}},
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
                                 },
                                 "frr": {
                                     "level": {
-                                        1: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
-                                        2: {
-                                            "state": "Not Enabled",
-                                            "type": "None"},
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
                                     }
                                 },
                             },
@@ -3577,13 +3439,17 @@ class TestShowIsisInterface(unittest.TestCase):
                         "address_family": {
                             "IPv4": {
                                 "state": "Enabled",
+                                "protocol_state": "Up",
                                 "forwarding_address": ["10.3.5.3"],
                                 "global_prefix": ["10.3.5.0/24"],
                             },
                             "IPv6": {
                                 "state": "Enabled",
+                                "protocol_state": "Up",
                                 "forwarding_address": ["fe80::f816:3eff:feff:f442"],
-                                "global_prefix": ["None (No global addresses are configured)"],
+                                "global_prefix": [
+                                    "None (No global addresses are configured)"
+                                ],
                             },
                         },
                         "lsp": {
@@ -3593,11 +3459,55 @@ class TestShowIsisInterface(unittest.TestCase):
                             "lsp_transmit_back_to_back_limit": 9,
                         },
                     },
+                    "tunnel-te105": {
+                        "state": "Enabled",
+                        "adjacency_formation": "Disabled",
+                        "prefix_advertisement": "Enabled",
+                        "ipv4_bfd": False,
+                        "ipv6_bfd": False,
+                        "bfd_min_interval": 150,
+                        "bfd_multiplier": 3,
+                        "rsi_srlg": "Registered",
+                        "bandwidth": 0,
+                        "circuit_type": "level-2-only",
+                        "media_type": "P2P",
+                        "circuit_number": 0,
+                        "clns_io": {
+                            "protocol_state": "Down (IMD did not notify that node exists)",
+                            "mtu": -1,
+                        },
+                        "topology": {
+                            "ipv4 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Disabled",
+                                "prefix_advertisement": "Running",
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "1/1/10/10 (PRI/BKP/SRTE/SRAT)",
+                                    "ldp_sync": {"level": {1: "Enabled", 2: "Enabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
+                                    }
+                                },
+                            }
+                        },
+                        "address_family": {
+                            "IPv4": {
+                                "state": "Enabled",
+                                "protocol_state": "Up",
+                                "forwarding_address": ["10.3.5.3"],
+                                "global_prefix": ["None (Interface is unnumbered)"],
+                            }
+                        },
+                    },
                 }
             }
         }
     }
-
 
     golden_parsed_output_1 = {'execute.return_value': '''
         IS-IS test Interfaces
@@ -3950,238 +3860,228 @@ class TestShowIsisInterface(unittest.TestCase):
           LSP transmit timer expires in 0 ms
           LSP transmission is idle
           Can send up to 9 back-to-back LSPs in the next 0 ms
+          
+        tunnel-te105                Enabled
+          Adjacency Formation:      Disabled (CLNS I/O unavailable/down on the intf)
+          Prefix Advertisement:     Enabled
+          IPv4 BFD:                 Disabled
+          IPv6 BFD:                 Disabled
+          BFD Min Interval:         150
+          BFD Multiplier:           3
+          RSI SRLG:                 Registered
+          Bandwidth:                0
+          
+          Circuit Type:             level-2-only (Interface circuit type is level-1-2)
+          Media Type:               P2P
+          Circuit Number:           0
+          CLNS I/O
+            Protocol State:         Down (IMD did not notify that node exists)
+            MTU:                    Invalid (MTU invalid or too small)
+          
+          IPv4 Unicast Topology:    Enabled
+            Adjacency Formation:    Disabled (CLNS I/O service unavailable on intf)
+            Prefix Advertisement:   Running
+            Metric (L1/L2):         10/10
+            Weight (L1/L2):         0/0
+            MPLS Max Label Stack:   1/1/10/10 (PRI/BKP/SRTE/SRAT)
+            MPLS LDP Sync (L1/L2):  Enabled/Enabled
+              LDPv4 Sync Status:    Achieved
+            FRR (L1/L2):            L1 Not Enabled     L2 Not Enabled 
+              FRR Type:             None               None           
+          
+          IPv4 Address Family:      Enabled
+            Protocol State:         Up
+            Forwarding Address(es): 10.3.5.3
+            Global Prefix(es):      None (Interface is unnumbered)
     '''}
 
     parsed_output_2 = {
-        'instance': {
-            'Genie': {
-                'interface': {
-                    'Bundle-Ether2': {
-                        'state': 'Enabled',
-                        'adjacency_formation': 'Enabled',
-                        'prefix_advertisement': 'Disabled (Suppressed in IS-IS cfg)',
-                        'ipv4_bfd': False,
-                        'ipv6_bfd': False,
-                        'bfd_min_interval': 150,
-                        'bfd_multiplier': 3,
-                        'rsi_srlg': 'Registered',
-                        'bandwidth': 100000000,
-                        'circuit_type': 'level-2-only',
-                        'media_type': 'P2P',
-                        'circuit_number': 0,
-                        'extended_circuit_number': 113,
-                        'next_p2p_iih_in': 4,
-                        'lsp_rexmit_queue_size': 1,
-                        'level': {
+        "instance": {
+            "Genie": {
+                "interface": {
+                    "Bundle-Ether2": {
+                        "state": "Enabled",
+                        "adjacency_formation": "Enabled",
+                        "prefix_advertisement": "Disabled (Suppressed in IS-IS cfg)",
+                        "ipv4_bfd": False,
+                        "ipv6_bfd": False,
+                        "bfd_min_interval": 150,
+                        "bfd_multiplier": 3,
+                        "rsi_srlg": "Registered",
+                        "bandwidth": 100000000,
+                        "circuit_type": "level-2-only",
+                        "media_type": "P2P",
+                        "circuit_number": 0,
+                        "extended_circuit_number": 113,
+                        "next_p2p_iih_in": 4,
+                        "lsp_rexmit_queue_size": 1,
+                        "level": {
                             2: {
-                                'adjacency_count': 1,
-                                'lsp_pacing_interval_ms': 33,
-                                'psnp_entry_queue_size': 0,
-                                'hello_interval_sec': 10,
-                                'hello_multiplier': 3,
+                                "adjacency_count": 1,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            }
+                        },
+                        "clns_io": {
+                            "protocol_state": "Up",
+                            "mtu": 9199,
+                            "snpa": "008a.96ff.1790",
+                            "layer2_mcast_groups_membership": {
+                                "all_level_1_iss": "Yes",
+                                "all_level_2_iss": "Yes",
                             },
                         },
-                        'clns_io': {
-                            'protocol_state': 'Up',
-                            'mtu': 9199,
-                            'snpa': '008a.96ff.1790',
-                            'layer2_mcast_groups_membership': {
-                                'all_level_1_iss': 'Yes',
-                                'all_level_2_iss': 'Yes',
-                            },
-                        },
-                        'topology': {
-                            'ipv4 unicast': {
-                                'state': 'Enabled',
-                                'adjacency_formation': 'Running',
-                                'prefix_advertisement': 'Disabled (Intf suppressed in IS-IS cfg)',
-                                'metric': {
-                                    'level': {
-                                        1: 10,
-                                        2: 10,
-                                    },
+                        "topology": {
+                            "ipv4 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Disabled (Intf suppressed in IS-IS cfg)",
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "3/3/12/0 (PRI/BKP/SRTE/SRAT)",
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
                                 },
-                                'weight': {
-                                    'level': {
-                                        1: 0,
-                                        2: 0,
-                                    },
-                                },
-                                'mpls': {
-                                    'mpls_max_label_stack': '3/3/12/0 (PRI/BKP/SRTE/SRAT)',
-                                    'ldp_sync': {
-                                        'level': {
-                                            1: 'Disabled',
-                                            2: 'Disabled',
-                                        },
-                                    },
-                                },
-                                'frr': {
-                                    'level': {
+                                "frr": {
+                                    "level": {
                                         1: {
-                                            'state': 'Enabled',
-                                            'type': 'per-prefix',
-                                            'direct_lfa': {
-                                                'state': 'Enabled',
+                                            "state": "Enabled",
+                                            "type": "per-prefix",
+                                            "direct_lfa": {"state": "Enabled"},
+                                            "remote_lfa": {
+                                                "state": "Not Enabled",
+                                                "tie_breaker": "Default",
+                                                "line_card_disjoint": "30",
+                                                "lowest_backup_metric": "20",
+                                                "node_protecting": "40",
+                                                "primary_path": "10",
                                             },
-                                            'remote_lfa': {
-                                                'state': 'Not Enabled',
-                                                'tie_breaker': 'Default',
-                                                'line_card_disjoint': '30',
-                                                'lowest_backup_metric': '20',
-                                                'node_protecting': '40',
-                                                'primary_path': '10',
-                                            },
-                                            'ti_lfa': {
-                                                'state': 'Enabled',
-                                                'tie_breaker': 'Default',
-                                                'link_protecting': 'Enabled',
-                                                'line_card_disjoint': '0',
-                                                'node_protecting': '100',
-                                                'srlg_disjoint': '0',
+                                            "ti_lfa": {
+                                                "state": "Enabled",
+                                                "tie_breaker": "Default",
+                                                "link_protecting": "Enabled",
+                                                "line_card_disjoint": "0",
+                                                "node_protecting": "100",
+                                                "srlg_disjoint": "0",
                                             },
                                         },
                                         2: {
-                                            'state': 'Enabled',
-                                            'type': 'per-prefix',
-                                            'direct_lfa': {
-                                                'state': 'Enabled',
+                                            "state": "Enabled",
+                                            "type": "per-prefix",
+                                            "direct_lfa": {"state": "Enabled"},
+                                            "remote_lfa": {
+                                                "state": "Not Enabled",
+                                                "tie_breaker": "Default",
+                                                "line_card_disjoint": "30",
+                                                "lowest_backup_metric": "20",
+                                                "node_protecting": "40",
+                                                "primary_path": "10",
                                             },
-                                            'remote_lfa': {
-                                                'state': 'Not Enabled',
-                                                'tie_breaker': 'Default',
-                                                'line_card_disjoint': '30',
-                                                'lowest_backup_metric': '20',
-                                                'node_protecting': '40',
-                                                'primary_path': '10',
-                                            },
-                                            'ti_lfa': {
-                                                'state': 'Enabled',
-                                                'tie_breaker': 'Default',
-                                                'link_protecting': 'Enabled',
-                                                'line_card_disjoint': '0',
-                                                'node_protecting': '100',
-                                                'srlg_disjoint': '0',
+                                            "ti_lfa": {
+                                                "state": "Enabled",
+                                                "tie_breaker": "Default",
+                                                "link_protecting": "Enabled",
+                                                "line_card_disjoint": "0",
+                                                "node_protecting": "100",
+                                                "srlg_disjoint": "0",
                                             },
                                         },
-                                    },
+                                    }
                                 },
-                            },
+                            }
                         },
-                        'address_family': {
-                            'IPv4': {
-                                'state': 'Enabled',
-                                'forwarding_address': ['172.18.0.1'],
-                                'global_prefix': ['Unknown (Intf suppressed in IS-IS cfg)'],
-                            },
+                        "address_family": {
+                            "IPv4": {
+                                "state": "Enabled",
+                                "protocol_state": "Up",
+                                "forwarding_address": ["172.18.0.1"],
+                                "global_prefix": ["Unknown (Intf suppressed in IS-IS cfg)"],
+                            }
                         },
-                        'lsp': {
-                            'transmit_timer_expires_ms': 0,
-                            'transmission_state': 'idle',
-                            'lsp_transmit_back_to_back_limit_window_msec': 0,
-                            'lsp_transmit_back_to_back_limit': 9,
+                        "lsp": {
+                            "transmit_timer_expires_ms": 0,
+                            "transmission_state": "idle",
+                            "lsp_transmit_back_to_back_limit_window_msec": 0,
+                            "lsp_transmit_back_to_back_limit": 9,
                         },
-                        'underlying_interface': {
-                            'HundredGigE0/0/0/1': {
-                                'index': '0x55',
-                            },
-                        },
+                        "underlying_interface": {"HundredGigE0/0/0/1": {"index": "0x55"}},
                     },
-                    'TenGigE0/0/0/0/0': {
-                        'state': 'Disabled',
-                    },
-                    'TenGigE0/0/0/4/0': {
-                        'state': 'Enabled',
-                        'adjacency_formation': 'Enabled',
-                        'prefix_advertisement': 'Disabled (Suppressed in IS-IS cfg)',
-                        'ipv4_bfd': True,
-                        'ipv6_bfd': False,
-                        'bfd_min_interval': 250,
-                        'bfd_multiplier': 3,
-                        'rsi_srlg': 'Registered',
-                        'bandwidth': 10000000,
-                        'circuit_type': 'level-2-only',
-                        'media_type': 'P2P',
-                        'circuit_number': 0,
-                        'extended_circuit_number': 27,
-                        'next_p2p_iih_in': 5,
-                        'lsp_rexmit_queue_size': 0,
-                        'level': {
+                    "TenGigE0/0/0/0/0": {"state": "Disabled"},
+                    "TenGigE0/0/0/4/0": {
+                        "state": "Enabled",
+                        "adjacency_formation": "Enabled",
+                        "prefix_advertisement": "Disabled (Suppressed in IS-IS cfg)",
+                        "ipv4_bfd": True,
+                        "ipv6_bfd": False,
+                        "bfd_min_interval": 250,
+                        "bfd_multiplier": 3,
+                        "rsi_srlg": "Registered",
+                        "bandwidth": 10000000,
+                        "circuit_type": "level-2-only",
+                        "media_type": "P2P",
+                        "circuit_number": 0,
+                        "extended_circuit_number": 27,
+                        "next_p2p_iih_in": 5,
+                        "lsp_rexmit_queue_size": 0,
+                        "level": {
                             2: {
-                                'adjacency_count': 1,
-                                'lsp_pacing_interval_ms': 33,
-                                'psnp_entry_queue_size': 0,
-                                'hello_interval_sec': 10,
-                                'hello_multiplier': 3,
+                                "adjacency_count": 1,
+                                "lsp_pacing_interval_ms": 33,
+                                "psnp_entry_queue_size": 0,
+                                "hello_interval_sec": 10,
+                                "hello_multiplier": 3,
+                            }
+                        },
+                        "clns_io": {
+                            "protocol_state": "Up",
+                            "mtu": 9199,
+                            "snpa": "008a.96ff.131b",
+                            "layer2_mcast_groups_membership": {
+                                "all_level_1_iss": "Yes",
+                                "all_level_2_iss": "Yes",
                             },
                         },
-                        'clns_io': {
-                            'protocol_state': 'Up',
-                            'mtu': 9199,
-                            'snpa': '008a.96ff.131b',
-                            'layer2_mcast_groups_membership': {
-                                'all_level_1_iss': 'Yes',
-                                'all_level_2_iss': 'Yes',
-                            },
+                        "topology": {
+                            "ipv4 unicast": {
+                                "state": "Enabled",
+                                "adjacency_formation": "Running",
+                                "prefix_advertisement": "Disabled (Intf suppressed in IS-IS cfg)",
+                                "metric": {"level": {1: 10, 2: 10}},
+                                "weight": {"level": {1: 0, 2: 0}},
+                                "mpls": {
+                                    "mpls_max_label_stack": "3/3/12/0 (PRI/BKP/SRTE/SRAT)",
+                                    "ldp_sync": {"level": {1: "Disabled", 2: "Disabled"}},
+                                },
+                                "frr": {
+                                    "level": {
+                                        1: {"state": "Not Enabled", "type": "None"},
+                                        2: {"state": "Not Enabled", "type": "None"},
+                                    }
+                                },
+                            }
                         },
-                        'topology': {
-                            'ipv4 unicast': {
-                                'state': 'Enabled',
-                                'adjacency_formation': 'Running',
-                                'prefix_advertisement': 'Disabled (Intf suppressed in IS-IS cfg)',
-                                'metric': {
-                                    'level': {
-                                        1: 10,
-                                        2: 10,
-                                    },
-                                },
-                                'weight': {
-                                    'level': {
-                                        1: 0,
-                                        2: 0,
-                                    },
-                                },
-                                'mpls': {
-                                    'mpls_max_label_stack': '3/3/12/0 (PRI/BKP/SRTE/SRAT)',
-                                    'ldp_sync': {
-                                        'level': {
-                                            1: 'Disabled',
-                                            2: 'Disabled',
-                                        },
-                                    },
-                                },
-                                'frr': {
-                                    'level': {
-                                        1: {
-                                            'state': 'Not Enabled',
-                                            'type': 'None',
-                                        },
-                                        2: {
-                                            'state': 'Not Enabled',
-                                            'type': 'None',
-                                        },
-                                    },
-                                },
-                            },
+                        "address_family": {
+                            "IPv4": {
+                                "state": "Enabled",
+                                "protocol_state": "Up",
+                                "forwarding_address": ["172.16.2.133"],
+                                "global_prefix": ["Unknown (Intf suppressed in IS-IS cfg)"],
+                            }
                         },
-                        'address_family': {
-                            'IPv4': {
-                                'state': 'Enabled',
-                                'forwarding_address': ['172.16.2.133'],
-                                'global_prefix': ['Unknown (Intf suppressed in IS-IS cfg)'],
-                            },
-                        },
-                        'lsp': {
-                            'transmit_timer_expires_ms': 0,
-                            'transmission_state': 'idle',
-                            'lsp_transmit_back_to_back_limit_window_msec': 0,
-                            'lsp_transmit_back_to_back_limit': 9,
+                        "lsp": {
+                            "transmit_timer_expires_ms": 0,
+                            "transmission_state": "idle",
+                            "lsp_transmit_back_to_back_limit_window_msec": 0,
+                            "lsp_transmit_back_to_back_limit": 9,
                         },
                     },
-                },
-            },
-        },
+                }
+            }
+        }
     }
+
 
     golden_parsed_output_2 = {'execute.return_value': '''
         +++ genie-Router: executing command 'show isis interface' +++
@@ -4322,12 +4222,14 @@ class TestShowIsisInterface(unittest.TestCase):
         self.device = Mock(**self.golden_parsed_output_1)
         obj = ShowIsisInterface(device=self.device)
         parsed_output = obj.parse()
+        print(parsed_output)
         self.assertEqual(parsed_output, self.parsed_output_1)
 
     def test_golden_output_2(self):
         self.device = Mock(**self.golden_parsed_output_2)
         obj = ShowIsisInterface(device=self.device)
         parsed_output = obj.parse()
+        print(parsed_output)
         self.assertEqual(parsed_output, self.parsed_output_2)
 
 class TestShowIsisDatabaseDetail(unittest.TestCase):
