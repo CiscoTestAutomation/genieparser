@@ -8,7 +8,7 @@ Check Point Gaia parsers for the following show commands:
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
 class ShowUsersSchema(MetaParser):
@@ -20,7 +20,7 @@ class ShowUsersSchema(MetaParser):
                 'home': str,
                 'shell': str,
                 'name': str,
-                'privileges': str
+                Optional('privileges'): str
             }
         }
     }
@@ -42,20 +42,27 @@ class ShowUsers(ShowUsersSchema):
         admin            0         0         /home/admin      /etc/cli.sh      Admin                   Access to Expert features
         monitor          102       100       /home/monitor    /etc/cli.sh      Monitor                 None
         somedude         10        20        /home/somewhere  /bin/bash        Some Dude               None
+        admin1            0        0         /home/admin      /bin/bash        n/a                                       
+        monitor1          102      100       /home/monitor    /etc/cli.sh      Monitor  
         '''
 
-        p0 = re.compile(r'^(?P<username>[A-z0-9_-]{1,30})\s+(?P<uid>\d+)\s+(?P<gid>\d+)\s+(?P<home>\S+)\s+(?P<shell>\S+)\s+(?P<name>[A-z0-9_-]{1,30}\s?[A-z0-9_-]{1,30})\s+(?P<privileges>.*$)')
-
+        #p0 = re.compile(r'^(?P<username>[A-z0-9_-]{1,30})\s+(?P<uid>\d+)\s+(?P<gid>\d+)\s+(?P<home>\S+)\s+(?P<shell>\S+)\s+(?P<name>[A-z0-9_-]{1,30}\s?[A-z0-9_-]{1,30})\s+(?P<privileges>.*$)')
+        p0 = re.compile(r'^(?P<username>[A-z0-9_-]{1,30})\s+(?P<uid>\d+)\s+(?P<gid>\d+)\s+(?P<home>\S+)\s+(?P<shell>\S+)\s+(?P<name>\S{1,30}\s?\S{1,30})[\ t]+(?P<privileges>\w+.*)?$')
+        
         for line in out.splitlines():
             line = line.strip()
-
+            print("stripped line: %s" % line)
             # admin            0         0         /home/admin      /etc/cli.sh      Admin                   Access to Expert features
             m = p0.match(line)
             if m:
+                result_dict.setdefault('users',{})                
                 new_user = m.groupdict()
                 user = new_user['username']
 
                 del new_user['username'] # username is used for top level key
-                result_dict.setdefault('users',{}).setdefault(user, new_user)
+                result_dict['users'][user] = new_user
+
+                if result_dict['users'][user]['privileges'] is None:
+                    del result_dict['users'][user]['privileges']
 
         return result_dict

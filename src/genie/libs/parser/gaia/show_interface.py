@@ -7,42 +7,51 @@ Check Point Gaia parsers for the following show commands:
 """
 
 import re
+from collections import defaultdict
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
 class ShowInterfaceSchema(MetaParser):
     schema = {
-        Any(): {
-            'state': str,
-            'mac_addr': str,
-            'type': str,
-            "link_state": str,
-            'mtu': int,
-            'auto_negotiation': str,
-            'speed': str,
-            'ipv6_autoconfig': str,
-            'duplex': str,
-            'monitor_mode': str,
-            'link_speed': str,
-            'comments': str,
-            'ipv4_address': str,
-            'ipv6_address': str,
-            'ipv6_local_link_address': str,
-            'statistics' :{
-                'tx_bytes': int,
-                'tx_packets': int,
-                'tx_errors' : int,
-                'tx_dropped': int,
-                'tx_overruns': int,
-                'tx_carrier': int,
-                'rx_bytes': int,
-                'rx_packets': int,
-                'rx_errors' : int,
-                'rx_dropped': int,
-                'rx_overruns': int,
-                'rx_frame': int,
+        'interfaces': {
+            Any(): {
+                'state': str,
+                'mac_addr': str,
+                'type': str,
+                "link_state": str,
+                'mtu': int,
+                'auto_negotiation': str,
+                'speed': str,
+                'ipv6_autoconfig': str,
+                'duplex': str,
+                'monitor_mode': str,
+                'link_speed': str,
+                'comments': str,
+                'ipv4_address': str,
+                'ipv6_address': str,
+                'ipv6_local_link_address': str,
+                Optional('alias'): {     # 
+                    Any(): {             # 'eth1:1': {
+                    'state': str,        #     'state': on
+                    'ipv4_address': str  #     'ipv4_address': '192.168.1.1'
+                    }
+                },
+                'statistics' :{
+                    'tx_bytes': int,
+                    'tx_packets': int,
+                    'tx_errors' : int,
+                    'tx_dropped': int,
+                    'tx_overruns': int,
+                    'tx_carrier': int,
+                    'rx_bytes': int,
+                    'rx_packets': int,
+                    'rx_errors' : int,
+                    'rx_dropped': int,
+                    'rx_overruns': int,
+                    'rx_frame': int,
+                }
             }
         }
     }
@@ -64,17 +73,17 @@ class ShowInterface(ShowInterfaceSchema):
         else:
             out = output
 
-        ret_dict = {}
+        ret_dict = defaultdict(dict)
+        interfaces = defaultdict(dict)
+
         current_interface = ''
+        current_alias = ''
 
         if interface != "":
             current_interface = interface
-            ret_dict.update({
-                interface:{
-                    'statistics': {
-                        }
-                    }
-                })
+            current_interface_is_alias = False
+            interfaces[interface] = defaultdict(dict)
+
 
         ''' Sample Output
         gw-a> show interfaces all
@@ -98,9 +107,12 @@ class ShowInterface(ShowInterfaceSchema):
         Statistics:
             TX bytes:29871552 packets:80540 errors:0 dropped:0 overruns:0 carrier:0
             RX bytes:106812763 packets:88415 errors:0 dropped:0 overruns:0 frame:0
+        Interface eth0:1
+            ipv4-address 10.1.1.1/24
+            state on
         '''
 
-        p0 = re.compile(r'^Interface (?P<interface_name>.*)$')
+        p0 = re.compile(r'^Interface (?P<interface_name>(?!.*:).*)$') # Does not match alias (eth1:1)  
         p1 = re.compile(r'^state (?P<state>.*)$')
         p2 = re.compile(r'^mac-addr (?P<mac_addr>.*)$')
         p3 = re.compile(r'^type (?P<type>.*)$')
@@ -118,113 +130,126 @@ class ShowInterface(ShowInterfaceSchema):
         p15 = re.compile(r'^ipv6-local-link-address (?P<ipv6_local_link_address>.*)$')
         p16 = re.compile(r'^TX bytes:(?P<tx_bytes>\d+) packets:(?P<tx_packets>\d+) errors:(?P<tx_errors>\d+) dropped:(?P<tx_dropped>\d+) overruns:(?P<tx_overruns>\d+) carrier:(?P<tx_carrier>\d+)$')
         p17 = re.compile(r'^RX bytes:(?P<rx_bytes>\d+) packets:(?P<rx_packets>\d+) errors:(?P<rx_errors>\d+) dropped:(?P<rx_dropped>\d+) overruns:(?P<rx_overruns>\d+) frame:(?P<rx_frame>\d+)$')
+        p18 = re.compile(r'^Interface (?P<alias_name>\w+[:]\.?\d+)') # Matches alias interfaces (eth1:1)
 
         for line in out.splitlines():
-            line = line.strip()
+            line = line.strip()       
 
+            # Interface eth0
             m = p0.match(line)
             if m:
                 current_interface = m.groupdict()['interface_name']
-                ret_dict.update({current_interface:{
-                    'statistics': {
-                        }
-                    }})
+                current_interface_is_alias = False # Moved onto a new Interface
+
+                interfaces[current_interface] = defaultdict(dict)
                 continue
             
-            # Interface eth0
+            # state on
             m = p1.match(line)
             if m:
-                ret_dict[current_interface]['state'] = m.groupdict()['state']
-                continue
+                state = m.groupdict()['state']
+                
+                if not current_interface_is_alias:
+                    interfaces[current_interface]['state'] = state
+                    continue
+                else:
+                    interfaces[current_interface]['alias'][current_alias]['state'] = state
+                    continue
 
-            # state on
+            # mac-addr 50:00:00:01:00:00
             m = p2.match(line)
             if m:
-                ret_dict[current_interface]['mac_addr'] = m.groupdict()['mac_addr']
+                interfaces[current_interface]['mac_addr'] = m.groupdict()['mac_addr']
                 continue
 
             # type ethernet
             m = p3.match(line)
             if m:
-                ret_dict[current_interface]['type'] = m.groupdict()['type']
+                interfaces[current_interface]['type'] = m.groupdict()['type']
                 continue
 
             # link-state link up
             m = p4.match(line)
             if m:
-                ret_dict[current_interface]['link_state'] = m.groupdict()['link_state']
+                interfaces[current_interface]['link_state'] = m.groupdict()['link_state']
                 continue
 
             # mtu 1500
             m = p5.match(line)
             if m:
-                ret_dict[current_interface]['mtu'] = int(m.groupdict()['mtu'])
+                interfaces[current_interface]['mtu'] = int(m.groupdict()['mtu'])
                 continue
             
             # auto-negotiation on
             m = p6.match(line)
             if m:
-                ret_dict[current_interface]['auto_negotiation'] = m.groupdict()['auto_negotiation']
+                interfaces[current_interface]['auto_negotiation'] = m.groupdict()['auto_negotiation']
                 continue
 
             # speed 1000M
             m = p7.match(line)
             if m:
-                ret_dict[current_interface]['speed'] = m.groupdict()['speed']
+                interfaces[current_interface]['speed'] = m.groupdict()['speed']
                 continue
 
             # ipv6-autoconfig Not configured
             m = p8.match(line)
             if m:
-                ret_dict[current_interface]['ipv6_autoconfig'] = m.groupdict()['ipv6_autoconfig']
+                interfaces[current_interface]['ipv6_autoconfig'] = m.groupdict()['ipv6_autoconfig']
                 continue
 
             # duplex full
             m = p9.match(line)
             if m:
-                ret_dict[current_interface]['duplex'] = m.groupdict()['duplex']
+                interfaces[current_interface]['duplex'] = m.groupdict()['duplex']
                 continue
 
             # monitor-mode Not configured
             m = p10.match(line)
             if m:
-                ret_dict[current_interface]['monitor_mode'] = m.groupdict()['monitor_mode']
+                interfaces[current_interface]['monitor_mode'] = m.groupdict()['monitor_mode']
                 continue
 
             # link-speed 1000M/full
             m = p11.match(line)
             if m:
-                ret_dict[current_interface]['link_speed'] = m.groupdict()['link_speed']
+                interfaces[current_interface]['link_speed'] = m.groupdict()['link_speed']
                 continue
 
             # comments This is an interface comment
             m = p12.match(line)
             if m:
-                ret_dict[current_interface]['comments'] = m.groupdict()['comments']
+                interfaces[current_interface]['comments'] = m.groupdict()['comments']
                 continue
 
             # ipv4-address 10.1.1.3/24
             m = p13.match(line)
             if m:
-                ret_dict[current_interface]['ipv4_address'] = m.groupdict()['ipv4_address']
-                continue
+                ipv4_address = m.groupdict()['ipv4_address']
+
+                if not current_interface_is_alias:
+                    interfaces[current_interface]['ipv4_address'] = ipv4_address
+                    continue
+                else:
+                    interfaces[current_interface]['alias'][current_alias]['ipv4_address'] = ipv4_address
+                    continue
 
             # ipv6-address Not Configured
             m = p14.match(line)
             if m:
-                ret_dict[current_interface]['ipv6_address'] = m.groupdict()['ipv6_address']
+                interfaces[current_interface]['ipv6_address'] = m.groupdict()['ipv6_address']
                 continue
 
             # ipv6-local-link-address Not Configured
             m = p15.match(line)
             if m:
-                ret_dict[current_interface]['ipv6_local_link_address'] = m.groupdict()['ipv6_local_link_address']
+                interfaces[current_interface]['ipv6_local_link_address'] = m.groupdict()['ipv6_local_link_address']
                 continue
 
             # TX bytes:29871552 packets:80540 errors:0 dropped:0 overruns:0 carrier:0
             m = p16.match(line)
             if m:
-                ret_dict[current_interface]['statistics'].update({
+                interfaces[current_interface]['statistics'].update({
                     'tx_bytes': int(m.groupdict()['tx_bytes']),
                     'tx_packets': int(m.groupdict()['tx_packets']),
                     'tx_errors': int(m.groupdict()['tx_errors']),
@@ -237,7 +262,7 @@ class ShowInterface(ShowInterfaceSchema):
             # RX bytes:106812763 packets:88415 errors:0 dropped:0 overruns:0 frame:0
             m = p17.match(line)
             if m:
-                ret_dict[current_interface]['statistics'].update({
+                interfaces[current_interface]['statistics'].update({
                     'rx_bytes':    int(m.groupdict()['rx_bytes']),
                     'rx_packets':  int(m.groupdict()['rx_packets']),
                     'rx_errors':   int(m.groupdict()['rx_errors']),
@@ -246,5 +271,18 @@ class ShowInterface(ShowInterfaceSchema):
                     'rx_frame':    int(m.groupdict()['rx_frame'])
                 })
                 continue
+            
+            # eth1:1  This matches interface aliases
+            m = p18.match(line)
+            if m:
+                # Set to True until a new interface is matched by p0
+                current_interface_is_alias = True
+                current_alias = m.groupdict()['alias_name']
+                interfaces[current_interface]['alias'] = {}
+                interfaces[current_interface]['alias'][current_alias] = {}
+                continue
 
+        if len(interfaces.keys()) != 0:
+            ret_dict = {"interfaces": interfaces}
+        
         return ret_dict

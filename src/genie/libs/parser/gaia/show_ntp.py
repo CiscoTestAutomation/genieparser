@@ -63,14 +63,15 @@ class ShowNtpCurrent(ShowNtpCurrentSchema):
 
     # Possible responses to this command are:
     #   'primary and secondary servers are not synchronized'
-    #       - This occurs when only a single ntp server is configured, or two are configured and are not synchronized
-    #       - return value: {'active': 'unsynchronized'}
+    #   'No server has yet to be synchronized' 
+    #       - These occur when only a single ntp server is configured, or two are configured and are not synchronized
+    #       - return value: {'current': 'unsynchronized'}
     #   'The NTP service is inactive'
     #       - This occurs if the command "set ntp service active on" is missing from the config
-    #       - return value: {'active': 'inactive'}
+    #       - return value: {'current': 'inactive'}
     #   '<ip_address>'
     #       - The IP Address of the NTP server that the clock is currently synchronized to
-    #       - return value: {'active': '{ip_address}'}
+    #       - return value: {'current': '{ip_address}'}
 
     def cli(self,output=None):
         if output is None:
@@ -84,22 +85,28 @@ class ShowNtpCurrent(ShowNtpCurrentSchema):
             # something is wrong
             return ret_dict
 
-        p0 = re.compile(r'^The NTP service is inactive')
-        p1 = re.compile(r'^primary and secondary servers are not synchronized')
-        p2 = re.compile(r'^(?P<ip_address>(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})')
+        p0  = re.compile(r'^The NTP service is inactive')
+        p1  = re.compile(r'^primary and secondary servers are not synchronized')
+        p2  = re.compile(r'^No server has yet to be synchronized') 
+        p3  = re.compile(r'^(?P<ip_address>(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)){3})')
 
         for line in out.splitlines():
+            
+            # The NTP service is inactive
             m = p0.match(line)
             if m:
                 ret_dict['current'] = 'inactive'
                 continue
-
-            m = p1.match(line)
+            
+            # primary and secondary servers are not synchronized
+            # no server has yet to be synchronized
+            m = (p1.match(line) or p2.match(line))
             if m:
                 ret_dict['current'] = 'unsynchronized'
                 continue
-
-            m = p2.match(line)
+            
+            # <ip_address>
+            m = p3.match(line)
             if m:
                 ret_dict['current'] = m.groupdict()['ip_address']
 

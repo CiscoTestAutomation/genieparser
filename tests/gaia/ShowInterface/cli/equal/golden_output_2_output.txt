@@ -33,13 +33,16 @@ Interface eth1
     monitor-mode Not configured
     link-speed Not configured
     comments
-    ipv4-address Not Configured
+    ipv4-address 192.168.1.1/24
     ipv6-address Not Configured
     ipv6-local-link-address Not Configured
 
 Statistics:
     TX bytes:0 packets:0 errors:0 dropped:0 overruns:0 carrier:0
     RX bytes:0 packets:0 errors:0 dropped:0 overruns:0 frame:0
+Interface eth1:1
+    state on
+    ipv4-address 192.168.1.254/24
 
 
 Interface eth2
