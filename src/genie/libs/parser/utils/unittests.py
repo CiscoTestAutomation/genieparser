@@ -582,7 +582,6 @@ CLASS_SKIP = {
         "ShowCores": True, # Not migrated
         "ShowInstallActive": True, # Not migrated
         "ShowInventory": True, # Not migrated
-        "ShowModule": True, # Not migrated
         "ShowProcessesCpu": True, # Not migrated
         "ShowProcessesMemory": True, # Not migrated
         "ShowRedundancyStatus": True, # Not migrated
@@ -663,7 +662,6 @@ CLASS_SKIP = {
         "ShowInterfaceStatus": True, # Not migrated
         "ShowIpInterfaceVrfAll": True, # Not migrated
         "ShowIsisDatabaseDetail": True, # Not migrated
-        "ShowLldpNeighborsDetail": True, # Not migrated
         "ShowIpv6MldLocalGroups": True, # Not migrated
         "ShowIpMsdpSummary": True, # Not migrated
         "ShowRunningConfigMsdp": True, # Not migrated
@@ -699,6 +697,7 @@ CLASS_SKIP = {
         "ShowBgpNeighbors": True, # Not migrated
         "ShowBgpSummary": True, # Not migrated
         "ShowBgpVrfDbVrfAll": True, # Not migrated
+        "ShowEthernetTags": True, # due to duplication
         "ShowPlacementProgramAll": True, # Not migrated
         "ShowL2VpnBridgeDomainBrief": True, # Not migrated
         "ShowL2VpnBridgeDomainDetail": True, # Not migrated
@@ -729,7 +728,6 @@ CLASS_SKIP = {
         "ShowEigrpNeighborsDetailSuperParser": True, # Not migrated
         "ShowEigrpNeighborsSuperParser": True, # Not migrated
         "ShowEthernetCfmMeps": True, # Not migrated
-        "ShowEthernetTags": True, # Not migrated
         "ShowEthernetTrunkDetail": True, # Not migrated
         "ShowEvpnEthernetSegment": True, # Not migrated
         "ShowEvpnEthernetSegmentDetail": True, # Not migrated

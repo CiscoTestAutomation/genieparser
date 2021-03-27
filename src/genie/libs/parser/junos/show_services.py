@@ -19,7 +19,7 @@ import re
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, Schema)
+        Optional, Use, Schema, ListOf)
 
 
 class ShowServicesAccountingAggregationTemplateSchema(MetaParser):
@@ -27,46 +27,37 @@ class ShowServicesAccountingAggregationTemplateSchema(MetaParser):
             * show services accounting aggregation template template-name {name} extensive
     """
 
-    def validate_detail_entry(value):
-        if not isinstance(value, list):
-            raise SchemaError('Detail entry not a list')
-    
-        detail_entry = Schema({
-                                Optional("source-address"): str,
-                                Optional("destination-address"): str,
-                                Optional("source-port"): str,
-                                Optional("destination-port"): str,
-                                Optional("mpls-label-1"): str,
-                                Optional("mpls-label-2"): str,
-                                Optional("mpls-label-3"): str,
-                                Optional("top-label-address"): str,
-                                Optional("protocol"): {
-                                    "#text": str},
-                                Optional("tos"): str,
-                                Optional("tcp-flags"): str,
-                                Optional("source-mask"): str,
-                                Optional("destination-mask"): str,
-                                "input-snmp-interface-index": str,
-                                "output-snmp-interface-index": str,
-                                Optional("start-time"): str,
-                                Optional("end-time"): str,
-                                "packet-count": str,
-                                "byte-count": str,
-                            })
-    
-        for item in value:
-            detail_entry.validate(item)
-        return value
-
     schema = {
-                "services-accounting-information": {
-                    "flow-aggregate-template-detail": {
-                        "flow-aggregate-template-detail-ipv4": {
-                            "detail-entry": Use(validate_detail_entry),
-                        }
-                    },
-                }
+            "services-accounting-information": {
+                "flow-aggregate-template-detail": {
+                    "flow-aggregate-template-detail-ipv4": {
+                        "detail-entry": ListOf({
+                            Optional("source-address"): str,
+                            Optional("destination-address"): str,
+                            Optional("source-port"): str,
+                            Optional("destination-port"): str,
+                            Optional("mpls-label-1"): str,
+                            Optional("mpls-label-2"): str,
+                            Optional("mpls-label-3"): str,
+                            Optional("top-label-address"): str,
+                            Optional("protocol"): {
+                                "#text": str},
+                            Optional("tos"): str,
+                            Optional("tcp-flags"): str,
+                            Optional("source-mask"): str,
+                            Optional("destination-mask"): str,
+                            "input-snmp-interface-index": str,
+                            "output-snmp-interface-index": str,
+                            Optional("start-time"): str,
+                            Optional("end-time"): str,
+                            "packet-count": str,
+                            "byte-count": str,
+                            }
+                        ),
+                    }
+                },
             }
+        }
 
 class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregationTemplateSchema):
     """ Parser for:
@@ -86,7 +77,7 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
         ret_dict = {}
 
         mpls = False
-        
+
         # Source address: 10.120.202.64, Destination address: 10.169.14.158, Top Label Address: 121
         # Source address: 10.120.202.64, Destination address: 10.169.14.158
         # Source address: 10.120.202.64
@@ -128,7 +119,6 @@ class ShowServicesAccountingAggregationTemplate(ShowServicesAccountingAggregatio
 
         for line in out.splitlines():
             line = line.strip()
-            
 
             # Source address: 10.120.202.64, Destination address: 10.169.14.158
             m = p1.match(line)
@@ -222,25 +212,16 @@ class ShowServicesAccountingUsageSchema(MetaParser):
             * show services accounting usage
     """
 
-    def validate_usage_information(value):
-        if not isinstance(value, list):
-            raise SchemaError('Usage information is not a list')
-    
-        usage_information = Schema({
+
+    schema = {
+                "services-accounting-information": {
+                    "usage-information": ListOf({
                         "interface-name": str,
                         "uptime": str,
                         "inttime": str,
                         "five-second-load": str,
                         "one-minute-load": str,
-                    })
-    
-        for item in value:
-            usage_information.validate(item)
-        return value
-
-    schema = {
-                "services-accounting-information": {
-                    "usage-information": Use(validate_usage_information),
+                    }),
                 }
             }
 
@@ -327,26 +308,16 @@ class ShowServicesAccountingErrorsSchema(MetaParser):
             * show services accounting errors
     """
 
-    def validate_error_information(value):
-        if not isinstance(value, list):
-            raise SchemaError('Error information is not a list')
-    
-        error_information = Schema({
+    schema = {
+                "services-accounting-information": {
+                    "v9-error-information": ListOf({
                         "interface-name": str,
                         "service-set-dropped": str,
                         "active-timeout-failures": str,
                         "export-packet-failures": str,
                         "flow-creation-failures": str,
                         "memory-overload": str,
-                    })
-    
-        for item in value:
-            error_information.validate(item)
-        return value
-
-    schema = {
-                "services-accounting-information": {
-                    "v9-error-information": Use(validate_error_information),
+                    }),
                 }
             }
 
@@ -391,7 +362,7 @@ class ShowServicesAccountingErrors(ShowServicesAccountingErrorsSchema):
             if m:
                 group = m.groupdict()
                 continue
-            
+
             # {master}
             m = p1_1.match(line)
             if m:
@@ -445,32 +416,10 @@ class ShowServicesAccountingFlowSchema(MetaParser):
             * show services accounting flow
     """
 
-    def validate_flow_information(value):
-        if not isinstance(value, list):
-            raise SchemaError('Flow information is not a list')
 
-        """schema
-            "services-accounting-information": {
-                "flow-information": [
-                    {
-                        "interface-name": str,
-                        "local-ifd-index": str,
-                        "flow-packets": str,
-                        "flow-bytes": str,
-                        "flow-packets-ten-second-rate": str,
-                        "flow-bytes-ten-second-rate": str,
-                        "active-flows": str,
-                        "flows": str,
-                        "flows-exported": str,
-                        "flow-packets-exported": str,
-                        "flows-expired": str,
-                        "flows-aged": str,
-                    }
-                ]
-            }   
-        """
-    
-        flow_information = Schema({
+    schema = {
+                "services-accounting-information": {
+                    "flow-information": ListOf({
                 "interface-name": str,
                 "local-ifd-index": str,
                 "flow-packets": str,
@@ -483,15 +432,7 @@ class ShowServicesAccountingFlowSchema(MetaParser):
                 "flow-packets-exported": str,
                 "flows-expired": str,
                 "flows-aged": str,
-            })
-    
-        for item in value:
-            flow_information.validate(item)
-        return value
-
-    schema = {
-                "services-accounting-information": {
-                    "flow-information": Use(validate_flow_information),
+            }),
                 }
             }
 
@@ -546,7 +487,7 @@ class ShowServicesAccountingFlow(ShowServicesAccountingFlowSchema):
             if m:
                 group = m.groupdict()
                 continue
-            
+
             # {master}
             m = p1_1.match(line)
             if m:
@@ -625,11 +566,10 @@ class ShowServicesAccountingMemorySchema(MetaParser):
             * show services accounting memory
     """
 
-    def validate_memory_information(value):
-        if not isinstance(value, list):
-            raise SchemaError('Memory information is not a list')
-    
-        memory_information = Schema({
+
+    schema = {
+                "services-accounting-information": {
+                    "memory-information": ListOf({
                     "interface-name": str,
                     "allocation-count": str,
                     "free-count": str,
@@ -638,15 +578,7 @@ class ShowServicesAccountingMemorySchema(MetaParser):
                     "memory-used": str,
                     "memory-free": str,
                     "v9-memory-used": str,
-                })
-    
-        for item in value:
-            memory_information.validate(item)
-        return value
-
-    schema = {
-                "services-accounting-information": {
-                    "memory-information": Use(validate_memory_information),
+                }),
                 }
             }
 
@@ -695,7 +627,7 @@ class ShowServicesAccountingMemory(ShowServicesAccountingMemorySchema):
             if m:
                 group = m.groupdict()
                 continue
-            
+
             # {master}
             m = p1_1.match(line)
             if m:
@@ -762,11 +694,10 @@ class ShowServicesAccountingStatusSchema(MetaParser):
             * show services accounting status
     """
 
-    def validate_status_information(value):
-        if not isinstance(value, list):
-            raise SchemaError('Status information is not a list')
-    
-        status_information = Schema({
+
+    schema = {
+                "services-accounting-information": {
+                    "status-information": ListOf({
                     "interface-name": str,
                     "status-export-format": str,
                     "status-route-record-count": str,
@@ -775,15 +706,7 @@ class ShowServicesAccountingStatusSchema(MetaParser):
                     "status-monitor-config-set": str,
                     "status-monitor-route-record-set": str,
                     "status-monitor-ifl-snmp-set": str,
-                })
-    
-        for item in value:
-            status_information.validate(item)
-        return value
-
-    schema = {
-                "services-accounting-information": {
-                    "status-information": Use(validate_status_information),
+                }),
                 }
             }
 

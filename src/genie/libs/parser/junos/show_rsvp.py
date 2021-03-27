@@ -11,37 +11,27 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
+from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema, ListOf
 
 class ShowRSVPNeighborSchema(MetaParser):
     """ Schema for:
         * show rsvp neighbor
     """
 
-    def validate_neighbor_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('RSVP Neighbor not a list')
-
-        rsvp_neighbor_list = Schema({
-                "rsvp-neighbor-address": str,
-                "neighbor-idle": str,
-                "neighbor-up-count": str,
-                "neighbor-down-count": str,
-                "last-changed-time": str,
-                "hello-interval": str,
-                "hellos-sent": str,
-                "hellos-received": str,
-                "messages-received": str,
-            })
-
-        for item in value:
-            rsvp_neighbor_list.validate(item)
-        return value
-
     schema = {
             "rsvp-neighbor-information": {
                 "rsvp-neighbor-count": str,
-                "rsvp-neighbor": Use(validate_neighbor_list)
+                "rsvp-neighbor": ListOf({
+                    "rsvp-neighbor-address": str,
+                    "neighbor-idle": str,
+                    "neighbor-up-count": str,
+                    "neighbor-down-count": str,
+                    "last-changed-time": str,
+                    "hello-interval": str,
+                    "hellos-sent": str,
+                    "hellos-received": str,
+                    "messages-received": str,
+                })
             }
         }
 
@@ -105,11 +95,10 @@ class ShowRSVPNeighborDetailSchema(MetaParser):
         * show rsvp neighbor detail
     """
 
-    def validate_neighbor_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('RSVP Neighbor not a list')
-
-        rsvp_neighbor_list = Schema({
+    schema = {
+            "rsvp-neighbor-information": {
+                "rsvp-neighbor-count": str,
+                "rsvp-neighbor": ListOf({
                     "rsvp-neighbor-address": str,
                     Optional("rsvp-neighbor-interface"): str,
                     "rsvp-neighbor-status": str,
@@ -136,16 +125,6 @@ class ShowRSVPNeighborDetailSchema(MetaParser):
                         Optional("rsvp-nbr-enh-lp-nnhop-lsp-count"): str,
                     }
                 })
-
-        for item in value:
-            rsvp_neighbor_list.validate(item)
-        return value
-
-
-    schema = {
-            "rsvp-neighbor-information": {
-                "rsvp-neighbor-count": str,
-                "rsvp-neighbor": Use(validate_neighbor_list)
             }
        	}
 
@@ -311,48 +290,29 @@ class ShowRSVPSessionSchema(MetaParser):
         * show rsvp session transit
     """
 
-    def validate_session_data_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('RSVP session data not a list')
-
-        def validate_session_list(value):
-            if not isinstance(value, list):
-                raise SchemaError('RSVP session not a list')
-
-            rsvp_session_list = Schema({
-                    "destination-address": str,
-                    "source-address": str,
-                    "lsp-state": str,
-                    "route-count": str,
-                    "rsb-count": str,
-                    "resv-style": str,
-                    "label-in": str,
-                    "label-out": str,
-                    "name": str,
-                })
-
-            for item in value:
-                rsvp_session_list.validate(item)
-            return value
-
-        rsvp_session_data_list = Schema({
-                "session-type": str,
-                "count": str,
-                Optional("rsvp-session"): Use(validate_session_list),
-                "display-count": str,
-                "up-count": str,
-                "down-count": str,
-            })
-
-        for item in value:
-            rsvp_session_data_list.validate(item)
-        return value
-
     schema = {
             "rsvp-session-information": {
-                "rsvp-session-data": Use(validate_session_data_list)
+                "rsvp-session-data": ListOf({
+                    "session-type": str,
+                    "count": str,
+                    Optional("rsvp-session"): ListOf({
+                        "destination-address": str,
+                        "source-address": str,
+                        "lsp-state": str,
+                        "route-count": str,
+                        "rsb-count": str,
+                        "resv-style": str,
+                        "label-in": str,
+                        "label-out": str,
+                        "name": str,
+                    }),
+                    "display-count": str,
+                    "up-count": str,
+                    "down-count": str,
+                })
             }
         }
+
 
 class ShowRSVPSession(ShowRSVPSessionSchema):
     """ Parser for:
