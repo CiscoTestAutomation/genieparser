@@ -29,23 +29,7 @@ pipeline {
                     sh """
                     cd genie
                     # checkout same branch on genie, if it exists
-                    git checkout ${BRANCH_NAME} || true
-                    """
-                }
-            }
-        }
-
-        stage('Checkout branches (PR)') {
-            when {
-                changeRequest()
-            }
-            steps {
-                script {
-                    sh """
-                    cd genie
-                    # checkout same branch on genie, if it exists
-                    git checkout origin/${CHANGE_BRANCH} || true
-                    git status
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
                     """
                 }
             }
