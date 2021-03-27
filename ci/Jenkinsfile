@@ -73,7 +73,6 @@ pipeline {
                 sh """
                 . /scratch/genieparser-env/bin/activate
                 runAll --path tests --no-refresh --coverage
-                coverage report -m
                 coverage html
                 """
                 publishHTML (target: [
