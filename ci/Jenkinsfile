@@ -72,8 +72,7 @@ pipeline {
             steps {
                 sh """
                 . /scratch/genieparser-env/bin/activate
-                cd tests
-                runAll --no-refresh --coverage
+                runAll --path tests --no-refresh --coverage
                 coverage report -m
                 coverage html
                 """
