@@ -21,9 +21,7 @@ pipeline {
             }
         }
 
-
         stage('Checkout branches') {
-            when { not { changeRequest() } }
             steps {
                 script {
                     sh """
