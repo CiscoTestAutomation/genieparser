@@ -73,16 +73,7 @@ pipeline {
                 sh """
                 . /scratch/genieparser-env/bin/activate
                 runAll --path tests --no-refresh --coverage
-                coverage html
                 """
-                publishHTML (target: [
-                    allowMissing: true,
-                    alwaysLinkToLastBuild: false,
-                    keepAll: true,
-                    reportDir: 'tests/htmlcov',
-                    reportFiles: "index.html",
-                    reportName: 'Coverage report (runAll)'
-                ])
             }
         }
 
