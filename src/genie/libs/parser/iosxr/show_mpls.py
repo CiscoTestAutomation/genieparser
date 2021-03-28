@@ -1,6 +1,7 @@
 ''' show_mpls.py
 
 IOSXR parsers for the following show commands:
+    * 'show mpls ldp interface'
     * 'show mpls label range'
     * 'show mpls ldp neighbor'
     * 'show mpls ldp neighbor {interface}'
@@ -111,61 +112,71 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
             m1 = p1.match(line)
             import pdb; pdb.set_trace()                
             if m1:
-                group = m1.groupdict()
-                interface = group['interface_name']
-                index = group['interface_index']
-                result_dict = ret_dict.setdefault('interfaces', {})
-                result_dict[interface] = {}
-                result_dict[interface]['interface_name'] = interface
-                result_dict[interface]['interface_index'] = index
+                interface_group = m1.groupdict()
+                inter_name = interface_group['interface_name']
+                inter_index = interface_group['interface_index']
+                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(inter_name,{})
+                # interface_dict[inter_name] = {}
+                interface_dict['inter_name']= inter_name
+                interface_dict['inter_index'] = inter_index
                 continue
             
             # VRF: 'default' (0x60000000)
             m2_1 = p2_1.match(line)
             if m2_1:
-                group = m2_1.groupdict()
-                vrf = group['vrf_type']
-                index = group['vrf_index']
-                result_dict = ret_dict.setdefault('vrf', {})
-                result_dict[vrf] = {}
-                result_dict[vrf]['vrf_type'] = vrf
-                result_dict[vrf]['vrf_index'] = index
-                
+                vrf_group = m2_1.groupdict()
+                vrf_type = vrf_group['vrf_type']
+                vrf_index = vrf_group['vrf_index']
+
+                vrf_dict = interface_dict.setdefault('vrf', {}).setdefault(vrf_type, {})
+                                    # setdefault('interfaces', {}).setdefault(inter_name, {})
+
+                # vrf_dict[vrf_tp] = {}
+                # vrf_dict['vrf']['vrf_tp'] = vrf_tp
+                vrf_dict['vrf_type'] = vrf_type
+                vrf_dict['vrf_index'] = vrf_index
+                # vrf_dict['vrf_type']['inter_name'] = inter_name
+                # vrf_dict['vrf_type']['inter_index'] = inter_index
+                import pdb; pdb.set_trace()
                 continue                
             
             # Enabled via config: LDP interface
             m2_2 = p2_2.match(line)
             if m2_2:
-                group = m2_2.groupdict()
-                enabled = group['enabled']
-                via = group['via']
-                result_dict = ret_dict.setdefault('enabled', {})
-                result_dict[enabled] = {}
-                result_dict[enabled]['enabled'] = enabled
-                result_dict[enabled]['via'] = via
+                enabled_group = m2_2.groupdict()
+                enabled = enabled_group['enabled']
+                via = enabled_group['via']
+                enabled_dict = vrf_dict.setdefault('enabled', {}).setdefault(enabled, {})
+                
+                # enabled_dict[enabled] = {}
+                enabled_dict['enabled'] = enabled
+                enabled_dict['via'] = via
+                # # vrf_dict[vrf][interface][enabled] = enabled_dict
                 continue                
 
             # Disabled:
             m2_3 = p2_3.match(line)
             if m2_3:
-                group = m2_3.groupdict()
+                disabled_group = m2_3.groupdict()
 
                 # Disabled via config: LDP interface | Disabled:
-                disabled = group['disabled']
+                disabled = disabled_group['disabled']
 
                 # via:'config'  disable:'LDP interface'
-                if group['via']:
-                    via = group['via']
-                    result_dict = ret_dict.setdefault('disabled', {})
-                    result_dict[disabled] = {}
-                    result_dict[disabled]['disabled'] = disabled
-                    result_dict[disabled]['via'] = via
+                if disabled_group['via']:
+                    via = disabled_group['via']
+                    disabled_dict = vrf_dict.setdefault('disabled', {}).setdefault(disabled, {})
+                    
+                    # result_dict[disabled] = {}
+                    disabled_dict['disabled'] = disabled
+                    disabled_dict['via'] = via
                 else:
                     # dis:'Disabled:'
-                    dis = group['dis']
-                    result_dict = ret_dict.setdefault('disabled',{})
-                    result_dict[disabled] = {}
-                    result_dict[disabled]['disabled'] = dis
+                    dis = disabled_group['dis']
+                    disabled_dict = vrf_dict.setdefault('dis',{}).setdefault(dis, {})
+                    
+                    # result_dict[disabled] = {}
+                    disabled_dict['dis'] = dis
                 continue                
             
         return ret_dict
