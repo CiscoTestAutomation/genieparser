@@ -23,6 +23,13 @@ expected_output = {
             'shell': '/bin/bash',
             'name': 'Some Dude',
             'privileges': 'None'
+        },
+        'user7730': {
+            'uid': '0',
+            'gid': '0',
+            'home': '/home/user7730',
+            'shell': '/bin/bash',
+            'name': 'n/a',
         }
     }
 }

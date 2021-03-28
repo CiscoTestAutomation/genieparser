@@ -42,16 +42,14 @@ class ShowUsers(ShowUsersSchema):
         admin            0         0         /home/admin      /etc/cli.sh      Admin                   Access to Expert features
         monitor          102       100       /home/monitor    /etc/cli.sh      Monitor                 None
         somedude         10        20        /home/somewhere  /bin/bash        Some Dude               None
-        admin1            0        0         /home/admin      /bin/bash        n/a                                       
-        monitor1          102      100       /home/monitor    /etc/cli.sh      Monitor  
+        user7730         0         0         /home/user7730   /bin/bash        n/a                                       
         '''
 
-        #p0 = re.compile(r'^(?P<username>[A-z0-9_-]{1,30})\s+(?P<uid>\d+)\s+(?P<gid>\d+)\s+(?P<home>\S+)\s+(?P<shell>\S+)\s+(?P<name>[A-z0-9_-]{1,30}\s?[A-z0-9_-]{1,30})\s+(?P<privileges>.*$)')
-        p0 = re.compile(r'^(?P<username>[A-z0-9_-]{1,30})\s+(?P<uid>\d+)\s+(?P<gid>\d+)\s+(?P<home>\S+)\s+(?P<shell>\S+)\s+(?P<name>\S{1,30}\s?\S{1,30})[\ t]+(?P<privileges>\w+.*)?$')
+        p0 = re.compile(r'^(?P<username>[A-z0-9_-]{1,30})\s+(?P<uid>\d+)\s+(?P<gid>\d+)\s+(?P<home>\S+)\s+(?P<shell>\S+)\s+(?P<name>\S{1,30}\s?\S{1,30})([\ t]+(?P<privileges>\w+.*))?')
         
         for line in out.splitlines():
             line = line.strip()
-            print("stripped line: %s" % line)
+
             # admin            0         0         /home/admin      /etc/cli.sh      Admin                   Access to Expert features
             m = p0.match(line)
             if m:

@@ -32,7 +32,7 @@ class ShowInterfaceSchema(MetaParser):
                 'ipv4_address': str,
                 'ipv6_address': str,
                 'ipv6_local_link_address': str,
-                Optional('alias'): {     # 
+                Optional('alias'): {     #
                     Any(): {             # 'eth1:1': {
                     'state': str,        #     'state': on
                     'ipv4_address': str  #     'ipv4_address': '192.168.1.1'
@@ -76,8 +76,8 @@ class ShowInterface(ShowInterfaceSchema):
         ret_dict = defaultdict(dict)
         interfaces = defaultdict(dict)
 
-        current_interface = ''
-        current_alias = ''
+        current_interface = '' # Track current interface in output
+        current_alias = '' # Track name of interface alias, if applicable
 
         if interface != "":
             current_interface = interface
@@ -112,7 +112,7 @@ class ShowInterface(ShowInterfaceSchema):
             state on
         '''
 
-        p0 = re.compile(r'^Interface (?P<interface_name>(?!.*:).*)$') # Does not match alias (eth1:1)  
+        p0 = re.compile(r'^Interface (?P<interface_name>(?!.*:).*)$') # Does not match alias interfaces (eth1:1)  
         p1 = re.compile(r'^state (?P<state>.*)$')
         p2 = re.compile(r'^mac-addr (?P<mac_addr>.*)$')
         p3 = re.compile(r'^type (?P<type>.*)$')
