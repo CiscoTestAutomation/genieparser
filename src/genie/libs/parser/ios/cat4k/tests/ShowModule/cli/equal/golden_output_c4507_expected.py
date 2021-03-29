@@ -10,7 +10,8 @@ expected_output = {
             "model": "WS-X4648-RJ45V+E",
             "port": 48,
             "serial_number": "ABCDE123456",
-            "status": "Ok",
+            "slot": 1,
+            "status": "Ok"
         },
         3: {
             "card_type": "Sup 7L-E 10GE (SFP+), 1000BaseX (SFP)",
@@ -24,8 +25,9 @@ expected_output = {
             "redundancy_role": "Active Supervisor",
             "redundancy_status": "Active",
             "serial_number": "QWERT987654",
+            "slot": 3,
             "status": "Ok",
-            "sw_ver": "03.06.07.E",
+            "sw_ver": "03.06.07.E"
         },
         6: {
             "card_type": "10/100/1000BaseT Premium POE E Series",
@@ -35,7 +37,8 @@ expected_output = {
             "model": "WS-X4648-RJ45V+E",
             "port": 48,
             "serial_number": "CDEFGH12345",
-            "status": "Ok",
+            "slot": 6,
+            "status": "Ok"
         },
         7: {
             "card_type": "10/100/1000BaseT Premium POE E Series",
@@ -45,8 +48,10 @@ expected_output = {
             "model": "WS-X4648-RJ45V+E",
             "port": 48,
             "serial_number": "ASDFGH56789",
-            "status": "Ok",
+            "slot": 7,
+            "status": "Ok"
         },
     },
     "system_failures": {"power_supply": "bad/off (see 'show power')"},
 }
+

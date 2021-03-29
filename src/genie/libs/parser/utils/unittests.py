@@ -495,7 +495,10 @@ class ParserTest(aetest.Testcase):
                 golden_output_str = read_from_file(
                     f"{folder_root}/{user_test}_output.txt"
                 )
-                golden_output = {"execute.return_value": golden_output_str}
+                golden_output = {
+                    "execute.return_value": golden_output_str,
+                    "expect.return_value": golden_output_str,
+                    }
 
                 golden_parsed_output = read_python_file(
                     f"{folder_root}/{user_test}_expected.py"
@@ -595,7 +598,10 @@ class ParserTest(aetest.Testcase):
                     )
                 except Exception:
                     empty_output_str = ""
-                empty_output = {"execute.return_value": empty_output_str}
+                empty_output = {
+                    "execute.return_value": empty_output_str,
+                    "expect.return_value": empty_output_str,
+                }
                 arguments = {}
                 if os.path.exists(f"{folder_root}/{user_test}_arguments.json"):
                     arguments = read_json_file(
@@ -621,6 +627,7 @@ class ParserTest(aetest.Testcase):
                     return True
                 except Exception:
                     glo_values.parserErrored += 1
+                    raise
 
         if unacceptable_filenames:
             for unacc_fil in unacceptable_filenames:
