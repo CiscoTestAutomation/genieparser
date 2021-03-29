@@ -36,21 +36,17 @@ class ShowMplsLdpInterfaceSchema(MetaParser):
     schema =  {
         'vrf': {
             Any(): {  
-                'vrf_type': str,
                 'vrf_index': str,
                 'interfaces': {
                     Any(): { 
-                    'interface_name': str,
                     'interface_index': str,
                         Optional('enabled'): {
                             Any(): {
-                                'enabled': str,
                                 'via': str,
                             }
                         },
                         Optional('disabled'): {
                             Any(): {
-                                'disabled': str,					
                                 'via': str,
                             }
                         }
@@ -92,10 +88,10 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
         ret_dict = {}
 
         #Interface HundredGigE0/5/0/0.100 (0xe0001c0)
-        p1 = re.compile(r'Interface\s+(?P<interface_name>[\w\/\.]+)\s+(?P<interface_index>[\(\)\w]+)$') 
+        p1 = re.compile(r'Interface\s+(?P<interface_name>[\w\/\.]+)\s+\((?P<interface_index>[\w]+)\)\s*$') 
 
         #VRF: 'default' (0x60000000)
-        p2_1 = re.compile(r'^VRF\:\s+(?P<vrf_type>\'(\w)+\')\s+(?P<vrf_index>[\s\S]+$)') 
+        p2_1 = re.compile(r'(^VRF\:\s+(?P<vrf_type>\'(\w)+\')\s+\((?P<vrf_index>[\s\S]+)\)\s*$)') 
 
         #Enabled via config: LDP interface
         p2_2 = re.compile(r'^Enabled\s+via\s+(?P<via>[\w]+):\s+(?P<enabled>.*?)$') 
@@ -121,27 +117,26 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
             if m2_1:
                 vrf_group = m2_1.groupdict()
                 #remove single code from 'default'
-                vrf_type = vrf_group['vrf_type'].replace("'","")
+                vrf = vrf_group['vrf_type'].replace("'","")
                 vrf_index = vrf_group['vrf_index']
                 
                 #define top level dictionary vrf and set to 'vrf'
                 top_dict = ret_dict.setdefault('vrf', {})
                 
                 #define sub-default dictionary and set to 'default'
-                def_dict = top_dict.setdefault(vrf_type, {})
+                def_dict = top_dict.setdefault(vrf, {})
                 
                 #set 'sub-default' dictionary
-                def_dict['vrf_type'] = vrf_type
                 def_dict['vrf_index'] = vrf_index  
 
                 #define sub-interface dictionary and set to 'interfaces'
                 int_dict = def_dict.setdefault('interfaces', {})
 
                 #set sub-interfaces dictionary
-                int_dict[inter_name] = {'interface_name':inter_name, 'interface_index':inter_index}
+                int_dict[inter_name] = {'interface_index':inter_index}
                 
                 #update top level dictionary 'sub-default dictionalry'                           
-                top_dict.update({vrf_type:def_dict})
+                top_dict.update({vrf:def_dict})
                 continue                
             
             #Enabled via config: LDP interface
@@ -155,7 +150,6 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
                 enabled_dict = int_dict[inter_name].setdefault('enabled', {}).setdefault(enabled, {})
 
                 #set enabled_dict
-                enabled_dict['enabled'] = enabled
                 enabled_dict['via'] = via                
                 continue                
 
@@ -173,7 +167,7 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
 
                     #define disabled_dic dictionary within interface dictionary and set to 'disabled'
                     disabled_dict = int_dict[inter_name].setdefault('disabled', {}).setdefault(disabled, {})
-                    disabled_dict['disabled'] = disabled
+                    # disabled_dict['disabled'] = disabled
                     disabled_dict['via'] = via 
                 
                 #Disabled:      
