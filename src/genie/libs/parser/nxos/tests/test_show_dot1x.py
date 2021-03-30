@@ -111,7 +111,7 @@ class TestShowDot1xAllStatistics(unittest.TestCase):
 #                     Summary                       #
 #   ============================================    #
 
-class TestShowDot1xAllDetails(unittest.TestCase):
+class TestShowDot1xAllSummary(unittest.TestCase):
     dev1 = Device(name = 'DeviceA')
     dev2 = Device(name = 'DeviceB')
 
@@ -187,7 +187,8 @@ class TestShowDot1xAllDetails(unittest.TestCase):
       Ethernet5    SUPP   0e:be:00:4g:e0:00      UNAUTHORIZED
     '''}
 
-    # Tests
+
+
     def test_golden_output_1(self):
         self.maxDiff = None
         self.dev1 = Mock(**self.golden_output)
@@ -209,10 +210,11 @@ class TestShowDot1xAllDetails(unittest.TestCase):
             parsed = obj.parse()
 
 
-#   ============================================    #
-#                     Details                       #
-#   ============================================    #
+class TestShowDot1xAllDetails(unittest.TestCase):
+    dev1 = Device(name = 'DeviceA')
+    dev2 = Device(name = 'DeviceB')
 
+    empty_output = {'execute.return_value' : '       '}
 
     golden_parsed_output_4 = {
         'system_auth_control': True,
@@ -400,8 +402,6 @@ class TestShowDot1xAllDetails(unittest.TestCase):
                  TimeToNextReauth = 16
     '''}
 
-    # empty_output = {'execute.return_value' : '          '}
-    
     golden_output_6 = {'execute.return_value': '''\
         Dot1x Info for GigabitEthernet1/6
         -----------------------------------
@@ -450,26 +450,19 @@ class TestShowDot1xAllDetails(unittest.TestCase):
             }
         }
     }
-    
-    def test_golden_output_1(self):
+    def test_golden_output_4(self):
         self.dev1 = Mock(**self.golden_output_4)
         obj = ShowDot1xAllDetails(device = self.dev1)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output_4)
 
-    def test_golden_output_2(self):
+    def test_golden_output_5(self):
         self.dev1 = Mock(**self.golden_output_5)
         obj = ShowDot1xAllDetails(device = self.dev1)
         parsed = obj.parse()
         self.assertEqual(parsed, self.golden_parsed_output_5)
 
-    # def test_empty_output(self):
-    #     self.dev2 = Mock(**self.empty_output)
-    #     obj = ShowDot1xAllDetails(device = self.dev2)
-    #     with self.assertRaises(SchemaEmptyParserError):
-    #         parsed = obj.parse()
-
-    def test_golden_output_3(self):
+    def test_golden_output_6(self):
         self.dev1 = Mock(**self.golden_output_6)
         obj = ShowDot1xAllDetails(device = self.dev1)
         parsed = obj.parse()

@@ -12,7 +12,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
 
     device = Device(name='aDevice')
 
-    golden_expected_parsed_output_1 = {
+    golden_parsed_output_1 = {
         'cdp': {
             'index': {
                 1: {
@@ -33,7 +33,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
                 }
             }
 
-    golden_device_output_1 = {'execute.return_value': '''
+    golden_output_1 = {'execute.return_value': '''
         switchA# show cdp neighbors
         Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
             S - Switch, H - Host, I - IGMP, r - Repeater,
@@ -44,7 +44,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
             switchA                Ethernet1/4     120     R S I    WS-C2960-24TC Ethernet2/3
     '''}
 
-    golden_expected_parsed_output_2 = {
+    golden_parsed_output_2 = {
         'cdp': {
             'index': {
                 1: {
@@ -65,7 +65,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
             }
         }
 
-    golden_device_output_2 = {'execute.return_value': '''
+    golden_output_2 = {'execute.return_value': '''
         switchA# show cdp neighbors
         Capability Codes:
                 R - Router, T - Trans-Bridge, B - Source-Route-Bridge
@@ -77,7 +77,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
         swordfish-6k-2 Eth3/2 149 R S I WS-C6506-E Gig1/38
     '''}
 
-    golden_expected_parsed_output_3 = {
+    golden_parsed_output_3 = {
         "cdp": {
             "index": {
                 1: {
@@ -108,7 +108,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
         }
     }
 
-    golden_device_output_3 = {'execute.return_value': '''
+    golden_output_3 = {'execute.return_value': '''
 
         Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
                           S - Switch, H - Host, I - IGMP, r - Repeater,
@@ -123,7 +123,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
                             Eth1/26           163    R S I s       N5K-C5596UP   Eth1/25
     '''}
 
-    golden_expected_parsed_output_4 = {
+    golden_parsed_output_4 = {
         'cdp': {
             'index': {
                 1: {
@@ -178,7 +178,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
         }   
     }
 
-    golden_device_output_4 = {'execute.return_value': '''
+    golden_output_4 = {'execute.return_value': '''
         +++ DDBUSXS105-DDBUSXS205: executing command 'show cdp neighbors' +++
         show cdp neighbors
 
@@ -203,7 +203,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
         
     '''}
 
-    empty_golden_device_output = {'execute.return_value': '''
+    empty_golden_output = {'execute.return_value': '''
         Device# show cdp neighbors
         Capability Codes:
                         R - Router, T - Trans-Bridge, B - Source-Route-Bridge
@@ -215,35 +215,35 @@ class test_show_cdp_neighbors(unittest.TestCase):
 
     def test_show_cdp_neighbors_1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_1)
+        self.device = Mock(**self.golden_output_1)
         obj = ShowCdpNeighbors(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_expected_parsed_output_1)
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_show_cdp_neighbors_2(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_2)
+        self.device = Mock(**self.golden_output_2)
         obj = ShowCdpNeighbors(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_expected_parsed_output_2)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_show_cdp_neighbors_3(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_3)
+        self.device = Mock(**self.golden_output_3)
         obj = ShowCdpNeighbors(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_expected_parsed_output_3)
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_show_cdp_neighbors_4(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_4)
+        self.device = Mock(**self.golden_output_4)
         obj = ShowCdpNeighbors(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_expected_parsed_output_4)
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
     def test_show_cdp_neighbors_empty_output(self):
         self.maxDiff = None
-        self.device = Mock(**self.empty_golden_device_output)
+        self.device = Mock(**self.empty_golden_output)
         obj = ShowCdpNeighbors(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
@@ -252,7 +252,7 @@ class test_show_cdp_neighbors(unittest.TestCase):
 class test_show_cdp_neighbors_detail(unittest.TestCase):
     device = Device(name='aDevice')
 
-    golden_expected_parsed_output_1 = {
+    golden_parsed_output_1 = {
         'index': {
             1: {'capabilities': 'Switch IGMP Filtering',
                 'device_id': 'savbu-qa-dist-120',
@@ -275,7 +275,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'vtp_management_domain': ''}},
         'total_entries_displayed': 1}
 
-    golden_device_output_1 = {'execute.return_value': """
+    golden_output_1 = {'execute.return_value': """
         Device# show cdp neighbors detail
 
         Device ID:savbu-qa-dist-120
@@ -300,7 +300,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
 
     """}
 
-    golden_expected_parsed_output_2 = {
+    golden_parsed_output_2 = {
         'index': {
             1: {'capabilities': 'Switch IGMP Filtering Supports-STP-Disput',
                 'device_id': 'swor96(SSI13110AAQ)',
@@ -322,7 +322,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         'total_entries_displayed': 1
     }
 
-    golden_device_output_2 = {'execute.return_value': """
+    golden_output_2 = {'execute.return_value': """
         Device# show cdp neighbors detail
 
         Device ID:swor96(SSI13110AAQ)
@@ -345,7 +345,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         IPv4 Address: 192.168.0.96
     """}
 
-    golden_expected_parsed_output_3 = {
+    golden_parsed_output_3 = {
         'index': {
             1: {'capabilities': 'Switch IGMP Filtering Supports-STP-Disput',
                 'device_id': 'swor96(SSI13110AAQ)',
@@ -365,7 +365,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         'total_entries_displayed': 1
     }
 
-    golden_device_output_3 = {'execute.return_value': """
+    golden_output_3 = {'execute.return_value': """
         Device# show cdp neighbors detail
 
         Device ID:swor96(SSI13110AAQ)
@@ -388,7 +388,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         IPv4 Address: 192.168.0.96
     """}
 
-    golden_expected_parsed_output_4 = {
+    golden_parsed_output_4 = {
         'index': {
             1: {'capabilities': 'Switch IGMP Filtering Supports-STP-Dispute',
                 'device_id': 'swor95(SSI13110AAS)',
@@ -407,7 +407,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
                 'vtp_management_domain': ''}},
         'total_entries_displayed': 1}
 
-    golden_device_output_4 = {'execute.return_value': """
+    golden_output_4 = {'execute.return_value': """
         Device# show cdp neighbors detail
 
         Device ID:swor95(SSI13110AAS)
@@ -429,7 +429,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         IPv4 Address: 192.168.0.95
     """}
 
-    golden_expected_parsed_output_5 = {
+    golden_parsed_output_5 = {
         'index': {
             1: {'capabilities': 'Switch IGMP Filtering Supports-STP-Dispute',
                 'device_id': 'swor95(SSI13110AAS)',
@@ -463,7 +463,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         'total_entries_displayed': 1
     }
 
-    golden_device_output_5 = {'execute.return_value': """
+    golden_output_5 = {'execute.return_value': """
         Device# show cdp neighbors detail
 
         Device ID:swor95(SSI13110AAS)
@@ -493,7 +493,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         IPv4 Address: 192.168.0.97
     """}
 
-    golden_expected_parsed_output_6 = {
+    golden_parsed_output_6 = {
         "index": {
             1: {
                 "advertisement_ver": 2,
@@ -520,7 +520,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         "total_entries_displayed": 1
     }
 
-    golden_device_output_6 = {'execute.return_value': """
+    golden_output_6 = {'execute.return_value': """
         Device ID:PYATS-4451-CUBE01.yourdomain.com
         VTP Management Domain Name: null
 
@@ -542,7 +542,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
             IPv4 Address: 172.16.3.2
     """}
 
-    golden_expected_parsed_output_7 = {
+    golden_parsed_output_7 = {
         "index": {
             1: {
                 "advertisement_ver": 2,
@@ -566,7 +566,7 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         "total_entries_displayed": 1
     }
 
-    golden_device_output_7 = {'execute.return_value': """
+    golden_output_7 = {'execute.return_value': """
         Device ID:PYATS-3850X-2SW-1-01.pyatscenter.com
         VTP Management Domain Name: PyatsCenter
 
@@ -582,61 +582,61 @@ class test_show_cdp_neighbors_detail(unittest.TestCase):
         Duplex: full
     """}
 
-    golden_device_output_empty = {'execute.return_value': """
+    golden_parsed_output_empty = {'execute.return_value': """
     """}
 
     def test_show_cdp_neighbors_detail_1(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_1)
+        self.device = Mock(**self.golden_output_1)
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_expected_parsed_output_1)
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
     def test_show_cdp_neighbors_detail_2(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_2)
+        self.device = Mock(**self.golden_output_2)
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_expected_parsed_output_2)
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
     def test_show_cdp_neighbors_detail_3(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_3)
+        self.device = Mock(**self.golden_output_3)
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_expected_parsed_output_3)
+        self.assertEqual(parsed_output, self.golden_parsed_output_3)
 
     def test_show_cdp_neighbors_detail_4(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_4)
+        self.device = Mock(**self.golden_output_4)
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_expected_parsed_output_4)
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
     def test_show_cdp_neighbors_detail_5(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_5)
+        self.device = Mock(**self.golden_output_5)
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_expected_parsed_output_5)
+        self.assertEqual(parsed_output, self.golden_parsed_output_5)
 
     def test_show_cdp_neighbors_detail_6(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_6)
+        self.device = Mock(**self.golden_output_6)
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_expected_parsed_output_6)
+        self.assertEqual(parsed_output, self.golden_parsed_output_6)
 
     def test_show_cdp_neighbors_detail_7(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_7)
+        self.device = Mock(**self.golden_output_7)
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_expected_parsed_output_7)
+        self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
     def test_show_cdp_neighbors_detail_empty(self):
         self.maxDiff = None
-        self.device = Mock(**self.golden_device_output_empty)
+        self.device = Mock(**self.golden_parsed_output_empty)
         obj = ShowCdpNeighborsDetail(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
