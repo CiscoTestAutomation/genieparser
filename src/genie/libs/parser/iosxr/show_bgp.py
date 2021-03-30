@@ -6677,51 +6677,51 @@ class ShowBgpNexthopsSchema(MetaParser):
     '''
 
     schema = {
-		'vrf': {
-			Any(): {
-				'address_family': {
-					Any(): {
-						'nexthop': {
-							Any(): {
-								'nexthop_id': str,
-								'version': str,
-								'nexthop_flags': str,
-								'nexthop_handle': str,
-								'rib_related_information': {
-									'first_interface_handle': {
-										Any(): {
-											'gateway_tbl_id': str,
-											'gateway_flags': str,
-											'gateway_handle': str,
-											'gateway': str,
-											'resolving_route': str,
-											'paths': int,
-											'rib_nexthop_id': str,
-											'status': str,
-											'metric': int,
-											'registration': str,
-											'completed': str,
-											'events': str,
-											'last_received': str,
-											'last_gw_update': str,
-											'reference_count': int,
-										},
-									}
-								},
-								'prefix_related_information': {
-									'active_tables': str,
-									'metrics': str,
-									'reference_counts': int,
-									'interface_handle': str,
-									'atter_ref_count': int,
-								},
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'nexthop': {
+                            Any(): {
+                                'nexthop_id': str,
+                                'version': str,
+                                'nexthop_flags': str,
+                                'nexthop_handle': str,
+                                'rib_related_information': {
+                                    'first_interface_handle': {
+                                        Any(): {
+                                            'gateway_tbl_id': str,
+                                            'gateway_flags': str,
+                                            'gateway_handle': str,
+                                            'gateway': str,
+                                            'resolving_route': str,
+                                            'paths': int,
+                                            'rib_nexthop_id': str,
+                                            'status': str,
+                                            'metric': int,
+                                            'registration': str,
+                                            'completed': str,
+                                            'events': str,
+                                            'last_received': str,
+                                            'last_gw_update': str,
+                                            'reference_count': int,
+                                        },
+                                    }
+                                },
+                                'prefix_related_information': {
+                                    'active_table': str,
+                                    'metric': str,
+                                    'reference_counts': int,
+                                },
+                                'interface_handle': str,
+                                'after_ref—count': int,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
 # ===========================================
@@ -6837,6 +6837,11 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
             if m:
                 group = m.groupdict()
                 vrf = group['vrf']
+
+                #define top level dictionary vrf and set to 'vrf'
+                top_dict = ret_dict.setdefault('vrf', {})
+                
+                vrf_dict = top_dict.setdefault(vrf,{})
 
 
                 continue
