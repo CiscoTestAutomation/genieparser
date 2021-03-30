@@ -1,0 +1,24 @@
+
+        +++ DDBUSXS105-DDBUSXS205: executing command 'show cdp neighbors' +++
+        show cdp neighbors
+
+        Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+                          S - Switch, H - Host, I - IGMP, r - Repeater,
+                          V - VoIP-Phone, D - Remotely-Managed-Device,
+                          s - Supports-STP-Dispute
+
+        Device-ID          Local Intrfce  Hldtme Capability  Platform      Port ID
+        CISCONXOS1.ctr.globedev.aac
+                            mgmt0          100    R S I     WS-C5000-E    Gig1/5       
+        CISCONXOS101-CISCOXR202.ctr.globeint.aac(ABCD1234567)
+                            Eth1/1         110    R S I s   N7K-C7010     Eth1/20       
+        llxde101.ctr.globeint.aac
+                            Eth1/5         120    S         VMware ESX    vmnic1
+        llxde102.ctr.globeint.aac
+                            Eth1/7         121    S         VMware ESX    vmnic2        
+        1111-2222-3333      Eth1/3         130    S         HPE 2200AF-48 
+                                                               Ten-GigabitEthernet1/0/10
+        4444-5555-6666      Eth1/5         125    S         HPE 2200AF-48 B
+                                                               Ten-GigabitEthernet2/0/20
+        
+    

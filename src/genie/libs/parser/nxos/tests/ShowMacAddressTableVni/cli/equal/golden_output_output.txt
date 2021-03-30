@@ -1,0 +1,3 @@
+      CH-P2-TOR-1# show mac address-table vni 2001001 | grep nve1 
+    C 1001     0000.04ff.b1b1   dynamic  0         F      F    nve1(10.9.0.101)
+    

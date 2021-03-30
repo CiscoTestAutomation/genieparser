@@ -450,6 +450,11 @@ CLASS_SKIP = {
         "ShowSdwanSoftware": True,
     },
     "nxos": {
+        "aci": {
+            "ShowPlatformInternalHalPolicyRedirdst": True,
+            "ShowServiceRedirInfoGroup": True,
+        },
+        "ShowMacAddressTableBase": True, # missing test
         "ShowBgpProcessVrfAll": True,
         "ShowBgpPeerSession": True,
         "ShowBgpPeerPolicy": True,
@@ -653,6 +658,18 @@ CLASS_SKIP = {
         "ShowFabricMulticastIpL2Mroute": True,
         "ShowL2routeEvpnMacIpAll": True,
         "ShowL2routeEvpnMacIpEvi": True,
+        "ShowHsrpAll": True,
+        "ShowHsrpDelay": True,
+        "ShowHsrpSummary": True,
+        "ShowIpOspfDatabaseDetailParser": True,
+        "ShowIpOspfLinksParser": True,
+        "Dir": True,
+        "ShowIpRipNeighborVrfAll": True,
+        "ShowIpRipStatistics": True,
+        "ShowIpv6RipInterfaceVrfAll": True,
+        "ShowIpv6RipNeighborVrfAll": True,
+        "ShowIpv6RipStatistics": True,
+        "ShowRunRip": True,
     },
     "junos": {
         "MonitorInterfaceTraffic": True, # issue with Mac
