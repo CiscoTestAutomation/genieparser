@@ -389,7 +389,7 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                             'num_vfi': int,
                             Any(): {
                                 Optional('state'): str,
-                                'neighbor': {
+                                Optional('neighbor'): {
                                     Any(): {
                                         'pw_id': {
                                             Any(): {
@@ -405,6 +405,16 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                             'num_pw': int,
                             'num_pw_up': int,
                         },
+                        Optional('neighbor'): {
+                            Any(): {
+                                'pw_id': {
+                                    Any(): {
+                                        'state': str,
+                                        'static_mac_address': int
+                                    }
+                                }
+                            }
+                        },                       
                         Optional('pbb'): {
                             'num_pbb': int,
                             'num_pbb_up': int,
@@ -465,7 +475,8 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
 
         # VFI 1
         # VFI vfi60 (up)
-        p6 = re.compile(r'^VFI +(?P<vfi>\S+)( +\((?P<state>\w+)\))?$')
+        # p6 = re.compile(r'^VFI +(?P<vfi>\S+)( +\((?P<state>\w+)\))?$')
+        p6 = re.compile(r'^VFI\s+(?P<vfi>\S+)(\s+(\((?P<state>[\w\s]+)\))?\s*)$')
 
         # Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
         p7 = re.compile(r'Neighbor +(?P<neighbor>\S+) +pw-id +(?P<pw_id>\d+), +state: +'
