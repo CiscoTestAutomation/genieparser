@@ -1,0 +1,26 @@
+show spanning-tree summary
+Switch is in rapid-pvst mode
+Root bridge for: VLAN0001, VLAN0002, VLAN0003, VLAN0004, VLAN0005, VLAN0006
+  VLAN0007, VLAN0008, VLAN0009
+Extended system ID           is enabled
+Portfast Default             is enabled
+PortFast BPDU Guard Default  is enabled
+Portfast BPDU Filter Default is disabled
+Loopguard Default            is disabled
+EtherChannel misconfig guard is enabled
+Configured Pathcost method used is short
+
+Name                   Blocking Listening Learning Forwarding STP Active
+---------------------- -------- --------- -------- ---------- ----------
+VLAN0001                     0         0        0          5          5
+VLAN0002                     0         0        0          5          5
+VLAN0003                     0         0        0          5          5
+VLAN0004                     0         0        0          6          6
+VLAN0005                     0         0        0          5          5
+VLAN0006                     0         0        0          5          5
+VLAN0007                     0         0        0          5          5
+VLAN0008                     0         0        0          5          5
+VLAN0009                     0         0        0          5          5
+---------------------- -------- --------- -------- ---------- ----------
+9 vlans                      0         0        0         46         46
+lab#
