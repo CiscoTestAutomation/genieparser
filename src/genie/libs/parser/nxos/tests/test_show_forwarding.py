@@ -17,7 +17,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 #  Unit test for 'show forwarding ipv4'
 # =========================
 
-class test_show_forwarding_ipv4(unittest.TestCase):
+class TestShowForwardingIpv4(unittest.TestCase):
 
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
@@ -221,28 +221,7 @@ class test_show_forwarding_ipv4(unittest.TestCase):
         192.168.195.1/32     10.2.1.2                                  Ethernet1/1         
     '''}
 
-    def test_show_forwarding_ipv4_golden(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        obj = ShowForwardingIpv4(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
-    def test_show_forwarding_ipv4_empty(self):
-        self.device = Mock(**self.empty_output)
-        obj = ShowForwardingIpv4(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
-
-# =========================
-#  Unit test for 'show forwarding ipv4 vrf all'
-# =========================
-
-class test_show_forwarding_ipv4_vrf_all(unittest.TestCase):
-    device = Device(name='aDevice')
-    empty_output = {'execute.return_value': ''}
-
-    golden_parsed_output = { 
+    golden_parsed_output_all = { 
         'slot': {'1': {'ip_version': {'IPv4': {'route_table': {'VRF_230/base': {'prefix': {'192.168.20.0/24': {'next_hop': {'Attached': {'interface': 'Vlan20',
                                                                                                                                           'is_best': False}}},
                                                                                             '192.168.20.0/32': {'next_hop': {'Drop': {'interface': 'Null0',
@@ -1421,7 +1400,7 @@ class test_show_forwarding_ipv4_vrf_all(unittest.TestCase):
                                                                                                                                           'is_best': False}}},
                                                                                              '10.189.99.99/32': {'next_hop': {'10.229.1.2': {'interface': 'Ethernet1/2',
                                                                                                                                           'is_best': False}}}}}}}}}}}
-    golden_output = {'execute.return_value':'''
+    golden_output_all = {'execute.return_value':'''
         #vtep1 show forwarding ipv4 vrf all 
         slot  1
         =======
@@ -1979,18 +1958,21 @@ class test_show_forwarding_ipv4_vrf_all(unittest.TestCase):
         '''}
 
 
-    def test_show_forwarding_ipv4_vrf_all_golden(self):
+    def test_show_forwarding_ipv4_golden(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
         obj = ShowForwardingIpv4(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output)
 
-    def test_show_forwarding_ipv4_vrf_all_empty(self):
-        self.device = Mock(**self.empty_output)
+
+    def test_show_forwarding_ipv4_vrf_all_golden(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_all)
         obj = ShowForwardingIpv4(device=self.device)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output_all)
+
         
 if __name__ == '__main__':
     unittest.main()
