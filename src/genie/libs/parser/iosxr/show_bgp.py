@@ -6666,3 +6666,80 @@ class ShowBgpSummary(ShowBgpInstanceSummary):
         return super().cli(output=out, address_family=address_family)
 
 # vim: ft=python ts=8 sw=4 et
+
+
+# ===========================================
+# Schema for 'show bgp nexthops {ipaddress}'
+# ===========================================
+class ShowBgpNexthopsSchema(MetaParser):
+    '''Schema for:
+        * 'show bgp nexthops {ipaddress}'
+    '''
+
+    schema = {
+		'vrf': {
+			Any(): {
+				'address_family': {
+					Any(): {
+						'nexthop': {
+							Any(): {
+								'nexthop_id': str,
+								'version': str,
+								'nexthop_flags': str,
+								'nexthop_handle': str,
+								'rib_related_information': {
+									'first_interface_handle': {
+										Any(): {
+											'gateway_tbl_id': str,
+											'gateway_flags': str,
+											'gateway_handle': str,
+											'gateway': str,
+											'resolving_route': str,
+											'paths': int,
+											'rib_nexthop_id': str,
+											'status': str,
+											'metric': int,
+											'registration': str,
+											'completed': str,
+											'events': str,
+											'last_received': str,
+											'last_gw_update': str,
+											'reference_count': int,
+										},
+									}
+								},
+								'prefix_related_information': {
+									'active_table': str,
+									'metric': str,
+									'reference_counts': int,
+									'interface_handle': str,
+									'after_ref—count': int,
+								},
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+# ===========================================
+# Parser for 'show bgp nexthops {ipaddress}'
+# ===========================================
+class ShowBgpNexthops(ShowBgpNexthopsSchema):
+    '''Parser for:
+        * 'show bgp nexthops {ipaddress}'
+    '''
+
+    cli_command = 'show bgp nexthops {ipaddress}'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init
+        ret_dict = {}
+
