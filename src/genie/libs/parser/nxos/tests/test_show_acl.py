@@ -12,7 +12,7 @@ class TestShowAccessLists(unittest.TestCase):
     dev = Device(name='device')
     empty_output = {'execute.return_value': ''}
 
-    device_output1 = {'execute.return_value': '''
+    golden_output1 = {'execute.return_value': '''
     R3_n9kv# show access-lists
 
     IP access list acl_name
@@ -40,7 +40,7 @@ class TestShowAccessLists(unittest.TestCase):
             30 deny ip any any
     '''}
 
-    parsed_output1 = {
+    golden_parsed_output1 = {
     'acl_name': {
         'aces': {
             '10': {
@@ -468,7 +468,7 @@ class TestShowAccessLists(unittest.TestCase):
     },
 }
 
-    device_output2 = {'execute.return_value': '''
+    golden_output2 = {'execute.return_value': '''
     Router# show access-list NTP-ACL
 
 IP access list NTP-ACL
@@ -477,7 +477,7 @@ IP access list NTP-ACL
         20 permit ip 172.18.106.1/32 any [match=4] 
         40 permit ip any any [match=4] '''}
 
-    parsed_output2 = {
+    golden_parsed_output2 = {
     'NTP-ACL': {
         'aces': {
             '10': {
@@ -564,14 +564,14 @@ IP access list NTP-ACL
     },
 }
 
-    device_output3 = {'execute.return_value': '''
+    golden_output3 = {'execute.return_value': '''
     IPV4 ACL 1
     10 remark NTP Access
     20 permit ip 10.1.1.39/32 any
     30 permit ip 172.16.154.23/32 any
     '''}
 
-    parsed_output3 = {
+    golden_parsed_output3 = {
         '1': {
             'aces': {
                 '30': {
@@ -630,34 +630,34 @@ IP access list NTP-ACL
         self.dev = Mock(**self.empty_output)
         obj = ShowAccessLists(device=self.dev)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            golden_parsed_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
-        self.dev = Mock(**self.device_output1)
+        self.dev = Mock(**self.golden_output1)
         obj = ShowAccessLists(device=self.dev)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.parsed_output1)
+        golden_parsed_output = obj.parse()
+        self.assertEqual(golden_parsed_output,self.golden_parsed_output1)
 
     def test_golden2(self):
         self.maxDiff = None
-        self.dev = Mock(**self.device_output2)
+        self.dev = Mock(**self.golden_output2)
         obj = ShowAccessLists(device=self.dev)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.parsed_output2)
+        golden_parsed_output = obj.parse()
+        self.assertEqual(golden_parsed_output,self.golden_parsed_output2)
 
     def test_golden3(self):
         self.maxDiff = None
-        self.dev = Mock(**self.device_output3)
+        self.dev = Mock(**self.golden_output3)
         obj = ShowAccessLists(device=self.dev)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.parsed_output3)
+        golden_parsed_output = obj.parse()
+        self.assertEqual(golden_parsed_output,self.golden_parsed_output3)
 
 class TestShowAccessListsSummary(unittest.TestCase):
     dev = Device(name='device')
     empty_output = {'execute.return_value': ''}
 
-    device_output = {'execute.return_value': '''
+    golden_output = {'execute.return_value': '''
     Device# show access-lists summary 
 IPV4 ACL acl_name
         Total ACEs Configured: 1
@@ -704,7 +704,7 @@ IPV4 ACL test22
                 Ethernet1/1 - ingress (Router ACL)
     '''}
 
-    parsed_output = {
+    golden_parsed_output = {
     'acl': {
         'acl_name': {
             'total_aces_configured': 1,
@@ -754,7 +754,7 @@ IPV4 ACL test22
     },
 }
 
-    device_output2 = {'execute.return_value': '''
+    golden_output2 = {'execute.return_value': '''
 +++ executing command 'show access-lists summary' +++
 show access-lists summary
 
@@ -1117,7 +1117,7 @@ IPV4 ACL sl_def_acl
     '''}
 
 
-    parsed_output2 = {
+    golden_parsed_output2 = {
         "acl": {
             "Deny-any": {
                 "total_aces_configured": 1
@@ -1406,18 +1406,18 @@ IPV4 ACL sl_def_acl
         self.dev = Mock(**self.empty_output)
         obj = ShowAccessListsSummary(device=self.dev)
         with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = obj.parse()
+            golden_parsed_output = obj.parse()
 
     def test_golden(self):
         self.maxDiff = None
-        self.dev = Mock(**self.device_output)
+        self.dev = Mock(**self.golden_output)
         obj = ShowAccessListsSummary(device=self.dev)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output,self.parsed_output)
+        golden_parsed_output = obj.parse()
+        self.assertEqual(golden_parsed_output,self.golden_parsed_output)
 
     def test_golden2(self):
         self.maxDiff = None
-        self.dev = Mock(**self.device_output2)
+        self.dev = Mock(**self.golden_output2)
         obj = ShowAccessListsSummary(device=self.dev)
-        parsed_output2 = obj.parse()
-        self.assertEqual(parsed_output2,self.parsed_output2)
+        golden_parsed_output2 = obj.parse()
+        self.assertEqual(golden_parsed_output2,self.golden_parsed_output2)

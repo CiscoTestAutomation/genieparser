@@ -14,13 +14,13 @@ from genie.libs.parser.nxos.show_dot1x import ShowDot1xAllStatistics, \
 #                    Statistics                     #
 #   ============================================    #
 
-class test_show_dot1x_all_statistics(unittest.TestCase):
+class TestShowDot1xAllStatistics(unittest.TestCase):
     dev1 = Device(name='DeviceA')
     dev2 = Device(name='DeviceB')
 
     empty_output = {'execute.return_value' : '          '}
 
-    parsed_output = {
+    golden_parsed_output = {
         'interfaces': {
             'Ethernet1/1': {
                 'interface': 'Ethernet1/1',
@@ -42,7 +42,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
         }
     }
 
-    output = {'execute.return_value': '''
+    golden_output = {'execute.return_value': '''
         Dot1x Authenticator Port Statistics for Ethernet1/1
         --------------------------------------------
         RxStart = 0     RxLogoff = 0    RxResp = 0      RxRespID = 0
@@ -53,7 +53,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
         RxVersion = 0   LastRxSrcMAC = 00:00:00:ff:00:00
     '''}
 
-    parsed_output_2 = {
+    golden_parsed_output_2 = {
         'interfaces': {
             'Ethernet1/1': {
                 'interface': 'Ethernet1/1',
@@ -75,7 +75,7 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
         }
     }
 
-    output_2 = {'execute.return_value': '''
+    golden_output_2 = {'execute.return_value': '''
         Dot1x Authenticator Port Statistics for Ethernet1/1
         --------------------------------------------
         RxStart = 111     RxLogoff = 25    RxResp = 224      RxRespID = 34
@@ -86,19 +86,19 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
         RxVersion = 78   LastRxSrcMAC = 02:45:44:ff:bb:cd 
     '''}
 
-    def test_output(self):
+    def test_golden_output(self):
         self.maxDiff = None
-        self.dev1 = Mock(**self.output)
+        self.dev1 = Mock(**self.golden_output)
         obj = ShowDot1xAllStatistics(device=self.dev1)
         parsed = obj.parse()
-        self.assertEqual(parsed, self.parsed_output)
+        self.assertEqual(parsed, self.golden_parsed_output)
 
-    def test_output_2(self):
+    def test_golden_output_2(self):
         self.maxDiff = None
-        self.dev1 = Mock(**self.output_2)
+        self.dev1 = Mock(**self.golden_output_2)
         obj = ShowDot1xAllStatistics(device=self.dev1)
         parsed = obj.parse()
-        self.assertEqual(parsed, self.parsed_output_2)
+        self.assertEqual(parsed, self.golden_parsed_output_2)
 
     def test_empty_output(self):
         self.dev2 = Mock(**self.empty_output)
@@ -111,13 +111,13 @@ class test_show_dot1x_all_statistics(unittest.TestCase):
 #                     Summary                       #
 #   ============================================    #
 
-class test_show_dot1x_all_summary(unittest.TestCase):
+class TestShowDot1xAllDetails(unittest.TestCase):
     dev1 = Device(name = 'DeviceA')
     dev2 = Device(name = 'DeviceB')
 
     empty_output = {'execute.return_value' : '       '}
 
-    parsed_output_1 = {
+    golden_parsed_output = {
         'interfaces': {
             'Ethernet102/1/6': {
                 'interface': 'Ethernet102/1/6',
@@ -142,7 +142,7 @@ class test_show_dot1x_all_summary(unittest.TestCase):
         }
     }
 
-    output = {'execute.return_value' : '''
+    golden_output = {'execute.return_value' : '''
                Interface     PAE              Client          Status
     ------------------------------------------------------------------
              Ethernet1/1    AUTH                none      AUTHORIZED
@@ -152,7 +152,7 @@ class test_show_dot1x_all_summary(unittest.TestCase):
       Ethernet102/1/6    AUTH   0E:BE:EF:FF:3F:3F      AUTHORIZED
     '''}
 
-    parsed_output_2 = {
+    golden_parsed_output_2 = {
         'interfaces': {
             'Ethernet5': {
                 'interface': 'Ethernet5',
@@ -177,7 +177,7 @@ class test_show_dot1x_all_summary(unittest.TestCase):
         }
     }
 
-    output_2 = {'execute.return_value' : '''
+    golden_output_2 = {'execute.return_value' : '''
                Interface     PAE              Client          Status
     ------------------------------------------------------------------
              Ethernet1/1    AUTH                none      AUTHORIZED
@@ -188,19 +188,19 @@ class test_show_dot1x_all_summary(unittest.TestCase):
     '''}
 
     # Tests
-    def test_output_1(self):
+    def test_golden_output_1(self):
         self.maxDiff = None
-        self.dev1 = Mock(**self.output)
+        self.dev1 = Mock(**self.golden_output)
         obj = ShowDot1xAllSummary(device = self.dev1)
         parsed = obj.parse()
-        self.assertEqual(parsed, self.parsed_output_1)
+        self.assertEqual(parsed, self.golden_parsed_output)
 
-    def test_output_2(self):
+    def test_golden_output_2(self):
         self.maxDiff = None
-        self.dev1 = Mock(**self.output_2)
+        self.dev1 = Mock(**self.golden_output_2)
         obj = ShowDot1xAllSummary(device = self.dev1)
         parsed = obj.parse()
-        self.assertEqual(parsed, self.parsed_output_2)
+        self.assertEqual(parsed, self.golden_parsed_output_2)
     
     def test_empty_output(self):
         self.dev2 = Mock(**self.empty_output)
@@ -213,10 +213,8 @@ class test_show_dot1x_all_summary(unittest.TestCase):
 #                     Details                       #
 #   ============================================    #
 
-class test_show_dot1x_all_details(unittest.TestCase):
-    maxDiff = None
 
-    parsed_output = {
+    golden_parsed_output_4 = {
         'system_auth_control': True,
         'version': 2,
         'interfaces': {
@@ -273,7 +271,7 @@ class test_show_dot1x_all_details(unittest.TestCase):
         }
     }
 
-    output =  {'execute.return_value': '''
+    golden_output_4 =  {'execute.return_value': '''
                    Sysauthcontrol Enabled   
            Dot1x Protocol Version 2         
 
@@ -330,7 +328,7 @@ class test_show_dot1x_all_details(unittest.TestCase):
     '''}
 
 
-    parsed_output_2 = {
+    golden_parsed_output_5 = {
         'system_auth_control': False,
         'version': 3,
         'interfaces': {
@@ -369,7 +367,7 @@ class test_show_dot1x_all_details(unittest.TestCase):
         }
     }
 
-    output_2 = {'execute.return_value':'''
+    golden_output_5 = {'execute.return_value':'''
                    Sysauthcontrol Disabled
            Dot1x Protocol Version 3 
 
@@ -402,9 +400,9 @@ class test_show_dot1x_all_details(unittest.TestCase):
                  TimeToNextReauth = 16
     '''}
 
-    empty_output = {'execute.return_value' : '          '}
+    # empty_output = {'execute.return_value' : '          '}
     
-    output_3 = {'execute.return_value': '''\
+    golden_output_6 = {'execute.return_value': '''\
         Dot1x Info for GigabitEthernet1/6
         -----------------------------------
         PAE                       = AUTHENTICATOR
@@ -425,7 +423,7 @@ class test_show_dot1x_all_details(unittest.TestCase):
         '''
     }
 
-    parsed_output_3 = {
+    golden_parsed_output_6 = {
         'interfaces': {
             'GigabitEthernet1/6': {
                 'interface': 'GigabitEthernet1/6',
@@ -453,29 +451,29 @@ class test_show_dot1x_all_details(unittest.TestCase):
         }
     }
     
-    def test_output_1(self):
-        self.dev1 = Mock(**self.output)
+    def test_golden_output_1(self):
+        self.dev1 = Mock(**self.golden_output_4)
         obj = ShowDot1xAllDetails(device = self.dev1)
         parsed = obj.parse()
-        self.assertEqual(parsed, self.parsed_output)
+        self.assertEqual(parsed, self.golden_parsed_output_4)
 
-    def test_output_2(self):
-        self.dev1 = Mock(**self.output_2)
+    def test_golden_output_2(self):
+        self.dev1 = Mock(**self.golden_output_5)
         obj = ShowDot1xAllDetails(device = self.dev1)
         parsed = obj.parse()
-        self.assertEqual(parsed, self.parsed_output_2)
+        self.assertEqual(parsed, self.golden_parsed_output_5)
 
-    def test_empty_output(self):
-        self.dev2 = Mock(**self.empty_output)
-        obj = ShowDot1xAllDetails(device = self.dev2)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed = obj.parse()
+    # def test_empty_output(self):
+    #     self.dev2 = Mock(**self.empty_output)
+    #     obj = ShowDot1xAllDetails(device = self.dev2)
+    #     with self.assertRaises(SchemaEmptyParserError):
+    #         parsed = obj.parse()
 
-    def test_output_3(self):
-        self.dev1 = Mock(**self.output_3)
+    def test_golden_output_3(self):
+        self.dev1 = Mock(**self.golden_output_6)
         obj = ShowDot1xAllDetails(device = self.dev1)
         parsed = obj.parse()
-        self.assertEqual(parsed, self.parsed_output_3)
+        self.assertEqual(parsed, self.golden_parsed_output_6)
         
 if __name__ == '__main__':
     unittest.main()

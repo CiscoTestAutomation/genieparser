@@ -358,7 +358,7 @@ class TestShowIpArpSummaryVrfAll(unittest.TestCase):
 #=========================================================
 # Unit test for show ip arp statistics vrf all
 #=========================================================
-class TestShowIpArpStatisticsVrfAll(unittest.TestCase):
+class TestShowIpArpstatisticsVrfAll(unittest.TestCase):
 	device = Device(name='aDevice')
 	empty_output = {'execute.return_value': ''}
 
