@@ -196,4 +196,6 @@ class ShowRibTablesSummary(ShowRibTablesSummarySchema):
                 group = m.groupdict()
                 result_dict['rib_table'][table_id].update({'total_multicast_prefixes': int(group['multi_pfx'])})
         
+        if result_dict == {'rib_table': {}}:
+            result_dict = dict()
         return result_dict           
