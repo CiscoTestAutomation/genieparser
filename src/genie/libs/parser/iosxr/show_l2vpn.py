@@ -405,16 +405,6 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                             'num_pw': int,
                             'num_pw_up': int,
                         },
-                        Optional('neighbor'): {
-                            Any(): {
-                                'pw_id': {
-                                    Any(): {
-                                        'state': str,
-                                        'static_mac_address': int
-                                    }
-                                }
-                            }
-                        },                       
                         Optional('pbb'): {
                             'num_pbb': int,
                             'num_pbb_up': int,
