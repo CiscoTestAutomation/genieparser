@@ -1118,5 +1118,6 @@ class ShowRouteAllSummary(ShowRouteAllSummarySchema):
                     protocol_dict.update(group)
                 continue
 
-        import pdb; pdb.set_trace()
+        if ret_dict == {'vrf': {'default': {}}}:
+            ret_dict = dict()
         return ret_dict
