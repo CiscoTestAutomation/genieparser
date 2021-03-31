@@ -106,6 +106,8 @@ class ShowRibTables(ShowRibTablesSchema):
                 elif group['tbl_conv']=='Y':
                     result_dict['table_id'][table_id].update({'table_reached_convergence': 'Yes'})                                
         
+        if result_dict == {'table_id': {}}:
+            result_dict = dict()
         return result_dict
 
 
