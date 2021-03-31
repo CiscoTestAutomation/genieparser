@@ -49,6 +49,7 @@ import re
 import logging
 import collections
 from ipaddress import ip_address, ip_network
+from sys import version
 
 # Metaparser
 from genie.libs.parser.base import *
@@ -6709,12 +6710,12 @@ class ShowBgpNexthopsSchema(MetaParser):
                                     }
                                 },
                                 'prefix_related_information': {
-                                    'active_table': str,
-                                    'metric': str,
+                                    'active_tables': str,
+                                    'metrics': str,
                                     'reference_counts': int,
                                 },
                                 'interface_handle': str,
-                                'after_ref—count': int,
+                                'attr_ref_count': int,
                             }
                         }
                     }
@@ -6744,22 +6745,19 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         ret_dict = {}
 
         # Nexthop: 16.16.16.16
-        p1 = re.compile(r'^Nexthop:\s+(?P<address_family>([\w\.]+)\s*)$')
+        p1 = re.compile(r'^Nexthop:\s+(?P<nexthop_address>([\w\.]+)\s*)$')
 
         # VRF: default
         p2 = re.compile(r'^VRF:\s+(?P<vrf>([\w]+)\s*)$')
 
         # Nexthop ID: 0x6000074, Version: 0x0
-        p3 = re.compile(r'^Nexthop ID:\s+(?P<nexthop_id>([\w]+)),\s+Version:\s+((?P<version>[\w]+)*\s)$')
+        p3 = re.compile(r'^Nexthop ID:\s+(?P<nexthop_id>([\w]+)),\s+Version:\s+((?P<version>[\w]+))$')
 
         # Nexthop Flags: 0x00000000
         p4 = re.compile(r'^Nexthop Flags:\s+((?P<nexthop_flags>[\w]+)\s*)$')
 
         # Nexthop Handle: 0x7fba00aafccc
         p5 = re.compile(r'^Nexthop Handle:\s+((?P<nexthop_handle>[\w]+)\s*)$')
-
-        # RIB Related Information:
-        p6 = re.compile(r'^((?P<rib_related_information>RIB Related Information:)\s*)$')
 
         # Firsthop interface handle 0x0c001cc0
         p7 = re.compile(r'^Firsthop interface handle\s+((?P<first_interface_handle>[\w]+)\s*)$')
@@ -6803,9 +6801,6 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         # Reference Count: 1
         p20 = re.compile(r'^Reference Count:\s+((?P<reference_count>[\d]+)\s*)$')
 
-        # Prefix Related Information
-        p21 = re.compile(r'^((?P<prefix_related_information>Prefix Related Information:?)\s*)$')
-
         # Active Tables: [IPv4 Unicast]
         p22 = re.compile(r'^Active Tables:\s+((?P<active_tables>[\s\S]+)\s*)$')
 
@@ -6813,13 +6808,13 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         p23 = re.compile(r'^Metrices:\s+((?P<metrics>[\s\S]+)\s*)$')
 
         # Reference Counts: [1]
-        p24 = re.compile(r'^^Reference Counts:\s+((?P<reference_counts>\[[\d]+\])\s*)$')
+        p24 = re.compile(r'^Reference Counts:\s+(\[(?P<reference_counts>[\d]+)\]\s*)$')
 
         # Interface Handle: 0x0
         p25 = re.compile(r'^Interface Handle:\s+((?P<interface_handle>[\w]+)\s*)$')                        
 
         # Attr ref-count: 4
-        p26 = re.compile(r'^Attr ref-count:\s+((?P<atter_ref_count>[\d]+)\s*)$')
+        p26 = re.compile(r'^Attr ref-count:\s+((?P<attr_ref_count>[\d]+)\s*)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -6828,7 +6823,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                address_family = group['address_family']
+                nexthop_address = group['nexthop_address']
                 continue
 
             # VRF: default
@@ -6837,16 +6832,201 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 group = m.groupdict()
                 vrf = group['vrf']
 
-                #define top level dictionary vrf and set to 'vrf'
+                #define vrf_dict dictionary and set to 'vrf'
                 vrf_dict = ret_dict.setdefault('vrf', {})
                 
+                #define def_dict dictionary and assigned to vrf_dict
                 def_dict = vrf_dict.setdefault(vrf,{})
 
-                def_dict['address_family'] = address_family
-
-
+                #define af_dict dictionary and set to 'address_family'
+                af_dict = def_dict.setdefault('address_family',{})
                 continue
 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                nexthop_id = group['nexthop_id']
+                version = group['version']
+
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                nexthop_flags = group['nexthop_flags']
+                continue
+
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                nexthop_handle = group['nexthop_handle']                
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                first_interface_handle = group['first_interface_handle']                
+                continue            
+
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                gateway_tbl_id = group['gateway_tbl_id']
+                gateway_flags = group['gateway_flags']
+                continue
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                gateway_handle = group['gateway_handle']
+                continue 
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                gateway = group['gateway']
+                continue         
+
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                resolving_route = group['resolving_route']
+                continue 
+
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                paths = int(group['paths'])
+                continue       
+
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                rib_nexthop_id = group['rib_nexthop_id']
+                continue 
+
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                status = group['status']
+                continue         
+
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                metric = int(group['metric'])
+                continue                      
+
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                registration = group['registration']
+                completed = group['completed']
+                continue   
+
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                events = group['events']
+                continue   
+
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                last_received = group['last_received']
+                continue   
+
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                last_gw_update = group['last_gw_update']
+                continue                                      
+
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                reference_count = int(group['reference_count'])
+                continue      
+
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                #remove [] from [IPv4]
+                active_tables = group['active_tables'].replace('[','').replace(']','')
+                
+                #define ipv4_dict dictionary and assigned to active_tables
+                ipv4_dict = af_dict.setdefault(active_tables,{})
+                
+                #define nexthop_dict dictionary and set to 'nexthop'
+                nexthop_dict = ipv4_dict.setdefault('nexthop',{})
+
+                #define nexthop_address_dict dictionary and assigned to nexthop_address
+                nexthop_address_dict = nexthop_dict.setdefault(nexthop_address,{})
+
+                #update nexthop_address_dict
+                nexthop_address_dict['nexthop_id'] = nexthop_id
+                nexthop_address_dict['version'] = version
+                nexthop_address_dict['nexthop_flags'] = nexthop_flags
+                nexthop_address_dict['nexthop_handle'] = nexthop_handle
+                continue  
+
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                metrics = group['metrics']
+                continue 
+
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                reference_counts = int(group['reference_counts'])
+                continue   
+
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                interface_handle = group['interface_handle']
+                continue   
+
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                attr_ref_count = int(group['attr_ref_count'])
+
+                #define rib_related_dict dictionary and set to 'rib_related_information'
+                rib_related_dict = nexthop_address_dict.setdefault('rib_related_information',{})
+
+                #define first_interface_dict dictionary and set to 'first_interface_handle'
+                first_interface_dict = rib_related_dict.setdefault('first_interface_handle',{})
+
+                #define first_interface_handle_dict dictionary and assigned to first_interface_handle
+                first_interface_handle_dict = first_interface_dict.setdefault(first_interface_handle,{})
+
+                #update first_interface_handle_dict
+                first_interface_handle_dict['gateway_tbl_id'] = gateway_tbl_id
+                first_interface_handle_dict['gateway_flags'] = gateway_flags
+                first_interface_handle_dict['gateway_handle'] = gateway_handle
+                first_interface_handle_dict['gateway'] = gateway
+                first_interface_handle_dict['resolving_route'] = resolving_route
+                first_interface_handle_dict['paths'] = paths
+                first_interface_handle_dict['rib_nexthop_id'] = rib_nexthop_id
+                first_interface_handle_dict['status'] = status
+                first_interface_handle_dict['metric'] = metric
+                first_interface_handle_dict['registration'] = registration
+                first_interface_handle_dict['completed'] = completed
+                first_interface_handle_dict['events'] = events
+                first_interface_handle_dict['last_received'] = last_received
+                first_interface_handle_dict['last_gw_update'] = last_gw_update
+                first_interface_handle_dict['reference_count'] = reference_count
+
+                #define rib_related_dict dictionary and set to 'prefix_related_information'
+                rib_related_dict = nexthop_address_dict.setdefault('prefix_related_information',{})
+                rib_related_dict['active_tables'] = active_tables
+                rib_related_dict['metrics'] = metrics
+                rib_related_dict['reference_counts'] = reference_counts
+
+                #update nexthop_address_dict
+                nexthop_address_dict['interface_handle'] = interface_handle
+                nexthop_address_dict['attr_ref_count'] = attr_ref_count
+                continue  
 
         return ret_dict
 
