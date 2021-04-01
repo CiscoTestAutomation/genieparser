@@ -88,6 +88,8 @@ def get_files(folder, token=None):
     for parse_file in glob.glob(str(folder / "*.py")):
         if parse_file.endswith("__init__.py"):
             continue
+        if parse_file.startswith("_"):
+            continue
         files.append({"parse_file": parse_file, "token": token})
     return files
 
@@ -258,7 +260,7 @@ def generate_email_reports():
     if runtime.mail_report:
         runtime.mail_report.contents['Task Result Summary'] = task_summary
         runtime.mail_report.contents['Task Result Details'] = task_details
-        # ? I've yet to find a way to make the work. Problem is this function gets called independent of the file
+        # ? I've yet to find a way to make this work. Problem is this function gets called independent of the file
         # runtime.mail_report.contents['Total Parsers Missing Unittests'] = f"{glo_values.missingCount}\n{'-'*80}"
         # runtime.mail_report.contents['Total Parsers Missing Unittests'] = f"{glo_values._class_exists}\n{'-'*80}"
 
@@ -281,6 +283,8 @@ class ParserGenerator(object):
     def __iter__(self):
         """Sets the uid of each parser step to its class name. Adds token if it exists"""
         for d in self.data:
+            if not re.match(f'{d["operating_system"]}_\S+', d['local_class'].__module__):
+                continue
             if d['token']:
                 yield Iteration(uid=f"{d['local_class'].__name__} -> {d['token']}", parameters={"data": d})
             else:
