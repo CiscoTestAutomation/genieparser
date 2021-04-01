@@ -6919,6 +6919,30 @@ class TestShowInterfaceBrief(unittest.TestCase):
         },
     }
 
+    golden_output5 = {'execute.return_value': '''
+     ------------------------------------------------------------------------------------------
+    Port-channel VLAN    Type Mode   Status  Reason                              Speed   Protocol
+    Interface
+    ------------------------------------------------------------------------------------------
+    Po403.1      1    eth  routed down    Administratively down                 auto(D)    --
+    '''}
+
+    golden_parsed_output5 = {
+        'interface': {
+            'port_channel': {
+                'Port-channel403.1': {
+                    'mode': 'routed',
+                    'protocol': '--',
+                    'reason': 'Administratively down',
+                    'speed': 'auto(D)',
+                    'status': 'down',
+                    'type': 'eth',
+                    'vlan': '1',
+                }
+            },
+        },
+    }
+
     def test_golden(self):
         self.device = Mock(**self.golden_output)
         intf_obj = ShowInterfaceBrief(device=self.device)
@@ -6948,6 +6972,12 @@ class TestShowInterfaceBrief(unittest.TestCase):
         intf_obj = ShowInterfaceBrief(device=self.device)
         parsed_output = intf_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_golden5(self):
+        self.device = Mock(**self.golden_output5)
+        intf_obj = ShowInterfaceBrief(device=self.device)
+        parsed_output = intf_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
 
 
 class TestShowRunInterface(unittest.TestCase):

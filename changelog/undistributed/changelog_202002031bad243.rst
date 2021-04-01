@@ -1,6 +1,0 @@
---------------------------------------------------------------------------------
-                                FIX
---------------------------------------------------------------------------------
-* iosxe
-    * Modified ShowSpanningTreeDetail:
-        * Optional interface issue for spanning tree output
