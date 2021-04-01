@@ -2,7 +2,7 @@ expected_output = {
     "vrf": {
         "default": {
             "neighbor": {
-                "10.186.0.2": {
+                "192.168.0.1": {
                     "address_family": {
                         "vpnv4 unicast": {
                             "bgp_table_version": 66,

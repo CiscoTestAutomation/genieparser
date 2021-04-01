@@ -10,6 +10,7 @@ import logging
 import inspect
 import pathlib
 import argparse
+import traceback
 import importlib
 from unittest.mock import Mock
 
@@ -371,10 +372,10 @@ class SuperFileBasedTesting(aetest.Testcase):
                             if _show_missing_unittests or _class:
                                 if token:
                                     log.warning(f'Equal unittests for {operating_system}-> {token} -> {name} don\'t exist')
-                                    glo_values.missingParsers.append(f"{operating_system} -> {token} -> {name}")
+                                    glo_values.missingParsers.append(f" {operating_system} -> {token} -> {name}")
                                 else:
                                     log.warning(f'Equal unittests for {operating_system} -> {name} don\'t exist')
-                                    glo_values.missingParsers.append(f"{operating_system} -> {name}")
+                                    glo_values.missingParsers.append(f" {operating_system} -> {name}")
                             glo_values.missingCount += 1
                             continue
 
@@ -500,9 +501,7 @@ class ParserTest(aetest.Testcase):
                     "expect.return_value": golden_output_str,
                     }
 
-                golden_parsed_output = read_python_file(
-                    f"{folder_root}/{user_test}_expected.py"
-                )
+                golden_parsed_output = read_python_file(f"{folder_root}/{user_test}_expected.py")
                 arguments = {}
                 if os.path.exists(f"{folder_root}/{user_test}_arguments.json"):
                     arguments = read_json_file(
@@ -513,7 +512,12 @@ class ParserTest(aetest.Testcase):
                 obj = local_class(device=device)
                 try:
                     parsed_output = obj.parse(**arguments)
-                except:
+                except Exception as e:
+                    parsed_output = dict()
+                    if display_only_failed:
+                        self.add_logger()
+                        log.error(traceback.format_exc(), extra={"colour": 'red'})
+                        self.remove_logger()
                     glo_values.parserErrored += 1
                 
                 # Use Diff method to get the difference between 
@@ -534,13 +538,15 @@ class ParserTest(aetest.Testcase):
                     golden_parsed_output_json_data = json.dumps(golden_parsed_output, indent=4, sort_keys=True)
                     
                     # Display device output, parsed output, and golden_output of failed tests
-                    log.info("\nThe following is the device output before it is parsed:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
+                    log.info("\nThe following is the device output before it is parsed:\n{}\n\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
                     log.info("The following is your device's parsed output:\n{}\n".format(parsed_json_data), extra = {'colour': 'yellow'})
                     log.info("The following is your expected output:\n{}\n".format(golden_parsed_output_json_data), extra = {'colour': 'yellow'})
                     log.info("The following is the difference between the two outputs:\n", extra = {'colour': 'yellow'})
 
                     # Display the diff between parsed output and golden_output
                     log.info(str(dd), extra = {'colour': 'yellow'})
+                    if display_only_failed:
+                        self.remove_logger()
                     raise AssertionError("Device output and expected output do not match")
                 else:
                     glo_values.parserPassed += 1
