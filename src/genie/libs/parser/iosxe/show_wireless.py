@@ -1982,7 +1982,7 @@ class ShowWirelessMobilitySummary(ShowWirelessMobilitySummarySchema):
             # N/A
             r"(?P<status>\S+)\s+"
             # N/A
-            r"(?P<pmtu>\S+)\s+$"
+            r"(?P<pmtu>\S+)\s*$"
         )
 
         mobility_info_obj = {}
