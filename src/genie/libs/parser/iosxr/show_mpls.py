@@ -1,6 +1,7 @@
 ''' show_mpls.py
 
 IOSXR parsers for the following show commands:
+    * 'show mpls ldp interface'
     * 'show mpls label range'
     * 'show mpls ldp neighbor'
     * 'show mpls ldp neighbor {interface}'
@@ -24,6 +25,159 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+# ======================================================
+# Parser for 'show mpls ldp interface'
+# ======================================================
+class ShowMplsLdpInterfaceSchema(MetaParser):
+
+    """Schema for show mpls ldp interface"""
+
+    schema =  {
+        'vrf': {
+            Any(): {  
+                'vrf_index': str,
+                'interfaces': {
+                    Any(): { 
+                    'interface_index': str,
+                        Optional('enabled'): {
+                            Any(): {
+                                'via': str,
+                            }
+                        },
+                        Optional('disabled'): {
+                            Any(): {
+                                'via': str,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
+
+    '''Parser for show mpls ldp interface'''
+
+    cli_command = ['show mpls ldp interface']
+
+    """
+    Interface HundredGigE0/5/0/0 (0xe0000c0)
+        VRF: 'default' (0x60000000)
+        Disabled: 
+    Interface HundredGigE0/5/0/0.100 (0xe0001c0)
+        VRF: 'default' (0x60000000)
+        Disabled: 
+    Interface TenGigE0/3/0/0 (0xa0004c0)
+        VRF: 'default' (0x60000000)
+        Enabled via config: LDP interface
+    Interface TenGigE0/3/0/1.100 (0xa001940)
+        VRF: 'default' (0x60000000)
+        Disabled: 
+    """
+
+    def cli (self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        #Init returned dictionary        
+        ret_dict = {}
+
+        #Interface HundredGigE0/5/0/0.100 (0xe0001c0)
+        p1 = re.compile(r'Interface\s+(?P<interface_name>[\w\/\.]+)\s+\((?P<interface_index>[\w]+)\)\s*$') 
+
+        #VRF: 'default' (0x60000000)
+        p2_1 = re.compile(r'(^VRF\:\s+(?P<vrf>\'(\w)+\')\s+\((?P<vrf_index>[\s\S]+)\)\s*$)') 
+
+        #Enabled via config: LDP interface
+        p2_2 = re.compile(r'^Enabled\s+via\s+(?P<via>[\w]+):\s+(?P<enabled>.*?)$') 
+
+        #Disabled:
+        #Disabled via config: LDP interface
+        p2_3 = re.compile(r'^(?P<dis>Disabled\:)|Disabled\s+via\s+(?P<via>[\w]+):\s+(?P<disabled>.*?)$')                 
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Interface HundredGigE0/5/0/0.100 (0xe0001c0)
+            m1 = p1.match(line)
+                           
+            if m1:
+                interface_group = m1.groupdict()
+                inter_name = interface_group['interface_name']
+                inter_index = interface_group['interface_index']
+                continue
+            
+            #VRF: 'default' (0x60000000)
+            m2_1 = p2_1.match(line)
+            if m2_1:
+                vrf_group = m2_1.groupdict()
+                #remove single code from 'default'
+                vrf = vrf_group['vrf'].replace("'","")
+                vrf_index = vrf_group['vrf_index']
+                
+                #define top level dictionary vrf and set to 'vrf'
+                top_dict = ret_dict.setdefault('vrf', {})
+                
+                #define sub-default dictionary and set to 'default'
+                def_dict = top_dict.setdefault(vrf, {})
+                
+                #set 'sub-default' dictionary
+                def_dict['vrf_index'] = vrf_index  
+
+                #define sub-interface dictionary and set to 'interfaces'
+                int_dict = def_dict.setdefault('interfaces', {})
+
+                #set sub-interfaces dictionary
+                int_dict[inter_name] = {'interface_index':inter_index}
+                
+                #update top level dictionary 'sub-default dictionalry'                           
+                top_dict.update({vrf:def_dict})
+                continue                
+            
+            #Enabled via config: LDP interface
+            m2_2 = p2_2.match(line)
+            if m2_2:
+                enabled_group = m2_2.groupdict()
+                enabled = enabled_group['enabled']
+                via = enabled_group['via']
+
+                #define enabled_dict sub-dictionary within interface dictionary and set to 'enabled'
+                enabled_dict = int_dict[inter_name].setdefault('enabled', {}).setdefault(enabled, {})
+
+                #set enabled_dict
+                enabled_dict['via'] = via                
+                continue                
+
+            #Disabled:
+            m2_3 = p2_3.match(line)
+            if m2_3:
+                disabled_group = m2_3.groupdict()
+
+                #Disabled via config: LDP interface | Disabled:
+                disabled = disabled_group['disabled']
+
+                #via:'config'  disable:'LDP interface'
+                if disabled_group['via']:
+                    via = disabled_group['via']
+
+                    #define disabled_dic dictionary within interface dictionary and set to 'disabled'
+                    disabled_dict = int_dict[inter_name].setdefault('disabled', {}).setdefault(disabled, {})
+                    # disabled_dict['disabled'] = disabled
+                    disabled_dict['via'] = via 
+                
+                #Disabled:      
+                else:
+                    disabled = disabled_group['disabled']
+
+                    #define disabled_dic dictionary within interface dictionary and set to 'disabled'
+                    disabled_dict = int_dict[inter_name].setdefault('disabled', {})
+                continue               
+        return ret_dict
 
 
 # ======================================================
