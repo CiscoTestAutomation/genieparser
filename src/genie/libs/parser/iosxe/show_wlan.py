@@ -129,6 +129,7 @@ class ShowWlanAllSchema(MetaParser):
                 "active_clients": int,
                 "chd_per_wlan": str,
                 "wmm": str,
+                Optional("wifi_direct_policy"): str,
                 "channel_scan_defer_priority": {
                     "priority": list
                 },
@@ -203,7 +204,8 @@ class ShowWlanAllSchema(MetaParser):
                 "band_select": str,
                 "load_balancing": str,
                 "multicast_buffer": str,
-                "multicast_buffer_size": int,
+                Optional("multicast_buffer_size"): int,
+                Optional("multicast_buffer_frames"): int,
                 "ip_source_guard": str,
                 "assisted_roaming": {
                     "neighbbor_list": str,
@@ -223,8 +225,8 @@ class ShowWlanAllSchema(MetaParser):
                             "disassociation_imminent_status": str,
                             "optimised_roaming_timer": int,
                             "timer": int,
-                        }
-
+                        },
+                        Optional("dual_neighbor_list"): str,
                 },
                     "wmn_sleep_mode": str
                 },
@@ -243,7 +245,11 @@ class ShowWlanAllSchema(MetaParser):
                     "advertise_support": str,
                     "share_data_with_client": str
                 },
-                Optional("wifi_to_cellular_steering"): str
+                Optional("client_scan_report_11k_beacon_radio_measurement"): {
+                    "request_on_association": str,
+                    "request_on_roam": str,
+                },
+                Optional("wifi_to_cellular_steering"): str,
             }
         }
     }
@@ -369,6 +375,10 @@ class ShowWlanAll(ShowWlanAllSchema):
         # Device Analytics
         #     Advertise Support                          : Enabled
         #     Share Data with Client                     : Disabled
+        # Client Scan Report (11k Beacon Radio Measurement)
+        #     Request on Association                     : Disabled
+        #     Request on Roam                            : Disabled
+        # WiFi to Cellular Steering                      : Disabled        
 
         # WLAN Profile Name     : north
         p_name = re.compile(r"^WLAN\s+Profile\s+Name\s+:\s+(?P<value>\S+)$")
@@ -612,7 +622,7 @@ class ShowWlanAll(ShowWlanAllSchema):
         p_multi_buffer = re.compile(r"^Multicast\s+Buffer\s+:\s+(?P<value>\S+)$")
 
         # Multicast Buffers (frames)                     : 0
-        p_multi_buffer_frames = re.compile(r"^Multicast\s+Buffer\s+\(frames\)\s+:\s+(?P<value>\d+)$")
+        p_multi_buffer_frames = re.compile(r"^Multicast\s+Buffers\s+\(frames\)\s+:\s+(?P<value>\d+)$")
 
         # Multicast Buffer Size                          : 0
         p_multi_buffer_size = re.compile(r"^Multicast\s+Buffer\s+Size\s+:\s+(?P<value>\d+)$")
