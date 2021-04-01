@@ -91,7 +91,7 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
         p1 = re.compile(r'Interface\s+(?P<interface_name>[\w\/\.]+)\s+\((?P<interface_index>[\w]+)\)\s*$') 
 
         #VRF: 'default' (0x60000000)
-        p2_1 = re.compile(r'(^VRF\:\s+(?P<vrf_type>\'(\w)+\')\s+\((?P<vrf_index>[\s\S]+)\)\s*$)') 
+        p2_1 = re.compile(r'(^VRF\:\s+(?P<vrf>\'(\w)+\')\s+\((?P<vrf_index>[\s\S]+)\)\s*$)') 
 
         #Enabled via config: LDP interface
         p2_2 = re.compile(r'^Enabled\s+via\s+(?P<via>[\w]+):\s+(?P<enabled>.*?)$') 
@@ -117,7 +117,7 @@ class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
             if m2_1:
                 vrf_group = m2_1.groupdict()
                 #remove single code from 'default'
-                vrf = vrf_group['vrf_type'].replace("'","")
+                vrf = vrf_group['vrf'].replace("'","")
                 vrf_index = vrf_group['vrf_index']
                 
                 #define top level dictionary vrf and set to 'vrf'
