@@ -50,6 +50,7 @@ expected_output = {
                 "interface-transmit-statistics": "Disabled",
                 "ld-pdu-error": "None",
                 "link-level-type": "Ethernet",
+                "local-index": "148",
                 "logical-interface": [
                     {
                         "address-family": [],
@@ -78,6 +79,7 @@ expected_output = {
                     "physical-interface-cos-hw-max-queues": "8",
                     "physical-interface-cos-use-max-queues": "8"
                 },
+                "snmp-index": "526",
                 "sonet-mode": "LAN-PHY",
                 "source-filtering": "Disabled",
                 "speed": "1000mbps",

@@ -10,7 +10,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
+from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema, ListOf
 
 class ShowDdosProtectionStatisticsSchema(MetaParser):
     """
@@ -111,34 +111,6 @@ class ShowDDosProtectionProtocolSchema(MetaParser):
     """ Schema for:
             * show ddos-protection protocols {protocol}  
     """
-    def validate_ddos_instance_list(value):
-        # Pass ddos instance list
-        if not isinstance(value, list):
-            raise SchemaError('ddos-instance is not a list')
-        ddos_instance_schema = Schema({
-            Optional("@junos:style"): str,
-            "ddos-instance-parameters": {
-                Optional("@junos:style"): str,
-                Optional("hostbound-queue"): str,
-                "policer-bandwidth": str,
-                Optional("policer-bandwidth-scale"): str,
-                "policer-burst": str,
-                Optional("policer-burst-scale"): str,
-                Optional("policer-enable"): str
-            },
-            "ddos-instance-statistics": {
-                Optional("@junos:style"): str,
-                "packet-arrival-rate": str,
-                "packet-arrival-rate-max": str,
-                "packet-dropped": str,
-                "packet-received": str
-            },
-            "protocol-states-locale": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            ddos_instance_schema.validate(item)
-        return value
 
     schema = {
         Optional("@xmlns:junos"): str,
@@ -174,7 +146,26 @@ class ShowDDosProtectionProtocolSchema(MetaParser):
                         "timeout-active-flows": str,
                         "timeout-time": str
                     },
-                    "ddos-instance": Use(validate_ddos_instance_list),
+                    "ddos-instance": ListOf({
+                        Optional("@junos:style"): str,
+                        "ddos-instance-parameters": {
+                            Optional("@junos:style"): str,
+                            Optional("hostbound-queue"): str,
+                            "policer-bandwidth": str,
+                            Optional("policer-bandwidth-scale"): str,
+                            "policer-burst": str,
+                            Optional("policer-burst-scale"): str,
+                            Optional("policer-enable"): str
+                        },
+                        "ddos-instance-statistics": {
+                            Optional("@junos:style"): str,
+                            "packet-arrival-rate": str,
+                            "packet-arrival-rate-max": str,
+                            "packet-dropped": str,
+                            "packet-received": str
+                        },
+                        "protocol-states-locale": str
+                    }),
                     "ddos-system-statistics": {
                         Optional("@junos:style"): str,
                         "packet-arrival-rate": str,
@@ -271,8 +262,13 @@ class ShowDDosProtectionProtocol(ShowDDosProtectionProtocolSchema):
         # Routing Engine information:
         p18 = re.compile(r'^Routing +Engine +information:$')
 
+        # FPC slot 0 information:
+        # FPC slot 9 information:
+        p18_1 = re.compile(r'^FPC +slot +\d+ +information:$')
+
         # Bandwidth: 20000 pps, Burst: 20000 packets, enabled
-        p19 = re.compile(r'^Bandwidth: +(?P<policer_bandwidth>\d+) +pps, +Burst: +(?P<policer_burst>\d+) +packets, +(?P<policer_enable>\S+)$')
+        # Bandwidth: 100% (20000 pps), Burst: 100% (20000 packets), enabled
+        p19 = re.compile(r'^Bandwidth: +((?P<policer_bandwidth_scale>\d+)% +\()?(?P<policer_bandwidth>\d+) +pps\)?, +Burst: +((?P<policer_burst_scale>\d+)% +\()?(?P<policer_burst>\d+) +packets\)?, +(?P<policer_enable>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -434,7 +430,20 @@ class ShowDDosProtectionProtocol(ShowDDosProtectionProtocolSchema):
                 ddos_instance_statistics_dict = ddos_instance_dict.setdefault('ddos-instance-statistics', {})
                 continue
 
+            # FPC slot 0 information:
+            # FPC slot 9 information:
+            m = p18_1.match(line)
+            if m:
+                system_wide_info = False
+                group = m.groupdict()
+                ddos_instance_list = ddos_protocol_dict.setdefault('ddos-instance', [])
+                ddos_instance_dict = {'protocol-states-locale': line.replace(' information:', '')}
+                ddos_instance_list.append(ddos_instance_dict)
+                ddos_instance_statistics_dict = ddos_instance_dict.setdefault('ddos-instance-statistics', {})
+                continue
+
             # Bandwidth: 20000 pps, Burst: 20000 packets, enabled
+            # Bandwidth: 100% (20000 pps), Burst: 100% (20000 packets), enabled
             m = p19.match(line)
             if m:
                 group = m.groupdict()

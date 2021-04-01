@@ -337,6 +337,77 @@ Active Package(s):
                                  'system_compile_time': '3/30/2017 9:00:00 [03/30/2017 20:04:06]'}
                               }
                             }
+    
+    golden_output5 = {'execute.return_value': """
+        Cisco Nexus Operating System (NX-OS) Software
+        TAC support: http://www.cisco.com/tac
+        Copyright (C) 2002-2020, Cisco and/or its affiliates.
+        All rights reserved.
+        The copyrights to certain works contained in this software are
+        owned by other third parties and used and distributed under their own
+        licenses, such as open source.  This software is provided "as is," and unless
+        otherwise stated, there is no warranty, express or implied, including but not
+        limited to warranties of merchantability and fitness for a particular purpose.
+        Certain components of this software are licensed under
+        the GNU General Public License (GPL) version 2.0 or 
+        GNU General Public License (GPL) version 3.0  or the GNU
+        Lesser General Public License (LGPL) Version 2.1 or 
+        Lesser General Public License (LGPL) Version 2.0. 
+        A copy of each such license is available at
+        http://www.opensource.org/licenses/gpl-2.0.php and
+        http://opensource.org/licenses/gpl-3.0.html and
+        http://www.opensource.org/licenses/lgpl-2.1.php and
+        http://www.gnu.org/licenses/old-licenses/library.txt.
+        Software
+          BIOS: version 07.68
+         NXOS: version 9.3(6uu)I9(1uu) [build 9.3(6)]
+          BIOS compile time:  05/26/2020
+          NXOS image file is: bootflash:///nxos.9.3.6.bin.upg
+          NXOS compile time:  12/25/2020 12:00:00 [11/10/2020 04:00:21]
+        Hardware
+          cisco Nexus9000 C9396PX Chassis 
+          Intel(R) Core(TM) i3- CPU @ 2.50GHz with 16399572 kB of memory.
+          Processor Board ID SAL18432P5N
+          Device name: N9K-ACC-2
+          bootflash:   51496280 kB
+        Kernel uptime is 0 day(s), 0 hour(s), 1 minute(s), 33 second(s)
+        Last reset at 550761 usecs after Thu Mar 18 16:34:13 2021
+          Reason: Reset due to non-disruptive upgrade
+          System version: 9.3(6)
+          Service: Installer
+        plugin
+          Core Plugin, Ethernet Plugin
+        Active Package(s):
+
+        """}
+    
+    golden_parsed_output5 = {'platform': {
+                                'name': 'Nexus',
+                                'os': 'NX-OS',
+                                'software': {
+                                    'bios_version': '07.68',
+                                    'system_version': '9.3(6uu)I9(1uu) [build 9.3(6)]',
+                                    'bios_compile_time': '05/26/2020',
+                                    'system_image_file': 'bootflash:///nxos.9.3.6.bin.upg',
+                                    'system_compile_time': '12/25/2020 12:00:00 [11/10/2020 04:00:21]'},
+                                'hardware': {
+                                    'model': 'Nexus9000 C9396PX',
+                                    'chassis': 'Nexus9000 C9396PX',
+                                    'slots': 'None',
+                                    'rp': 'None',
+                                    'cpu': 'Intel(R) Core(TM) i3- CPU @ 2.50GHz',
+                                    'memory': '16399572 kB',
+                                    'processor_board_id': 'SAL18432P5N',
+                                    'device_name': 'N9K-ACC-2',
+                                    'bootflash': '51496280 kB'},
+                                'kernel_uptime': {
+                                    'days': 0, 
+                                    'hours': 0, 
+                                    'minutes': 1, 
+                                    'seconds': 33},
+                                'system_version': '9.3(6)',
+                                'reason': 'Reset due to non-disruptive upgrade'}
+                            }
 
     ats_mock.tcl.eval.return_value = 'nxos'
 
@@ -367,6 +438,13 @@ Active Package(s):
         version_obj = ShowVersion(device=self.device)
         parsed_output = version_obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_output4)
+        
+    def test_golden5(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output5)
+        version_obj = ShowVersion(device=self.device)
+        parsed_output = version_obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output5)
 
     def test_empty(self):
         self.device2 = Mock(**self.empty_output)
@@ -861,606 +939,6 @@ class test_show_boot_without_sup(unittest.TestCase):
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = boot_obj.parse()
 
-class test_show_module(unittest.TestCase):
-    device = Device(name='aDevice')
-    device1 = Device(name='bDevice')
-    empty_output = {'execute.return_value': ''}
-    golden_parsed_output = {'slot':
-                                {'rp':
-                                  {'1':
-                                    {'Supervisor Module-2':
-                                      {'ports': '0',
-                                       'model': 'N7K-SUP2',
-                                       'status': 'active',
-                                       'software': '8.3(0)CV(0.658)',
-                                       'hardware': '1.0',
-                                       'mac_address': '84-78-ac-ff-d3-dc to 84-78-ac-ff-d3-ee',
-                                       'serial_number': 'JAF1708AGTH',
-                                       'online_diag_status': 'Pass'}
-                                    },
-                                  '2':
-                                    {'Supervisor Module-2':
-                                      {'ports': '0',
-                                       'model': 'N7K-SUP2',
-                                       'status': 'ha-standby',
-                                       'software': '8.3(0)CV(0.658)',
-                                       'hardware': '1.0',
-                                       'mac_address': '84-78-ac-ff-c8-0f to 84-78-ac-ff-c8-21',
-                                       'serial_number': 'JAF1708AGQH',
-                                       'online_diag_status': 'Pass'}
-                                    }
-                                  },
-                                'lc':
-                                  {'3':
-                                    {'1/10 Gbps Ethernet Module':
-                                      {'ports': '48',
-                                       'model': 'N7K-F248XP-25E',
-                                       'status': 'ok',
-                                       'software': '8.3(0)CV(0.658)',
-                                       'hardware': '1.0',
-                                       'mac_address': '84-78-ac-ff-f5-48 to 84-78-ac-ff-f5-7b',
-                                       'serial_number': 'JAF1717AAND',
-                                       'online_diag_status': 'Pass'}
-                                    },
-                                  '4':
-                                    {'10/40 Gbps Ethernet Module':
-                                      {'ports': '12',
-                                       'model': 'N7K-F312FQ-25',
-                                       'status': 'ok',
-                                       'software': '8.3(0)CV(0.658)',
-                                       'hardware': '1.0',
-                                       'mac_address': '54-4a-00-ff-c6-ed to 54-4a-00-ff-c6-29',
-                                       'serial_number': 'JAE18120FLU',
-                                       'online_diag_status': 'Pass'}
-                                    },
-                                  '6':
-                                    {'10 Gbps Ethernet XL Module':
-                                      {'ports': '32',
-                                       'model': 'N7K-M132XP-12L',
-                                       'status': 'ok',
-                                       'software': '8.3(0)CV(0.658)',
-                                       'hardware': '2.0',
-                                       'mac_address': 'bc-16-65-ff-04-b8 to bc-16-65-ff-04-db',
-                                       'serial_number': 'JAF1719AHMB',
-                                       'online_diag_status': 'Pass'}
-                                    },
-                                  '7':
-                                    {'10 Gbps Ethernet Module':
-                                      {'ports': '24',
-                                       'model': 'N7K-M224XP-23L',
-                                       'status': 'ok',
-                                       'software': '8.3(0)CV(0.658)',
-                                       'hardware': '1.0',
-                                       'mac_address': 'd8-67-d9-ff-9f-d6 to d8-67-d9-ff-9f-f1',
-                                       'serial_number': 'JAF1641APPF',
-                                       'online_diag_status': 'Pass'}
-                                    },
-                                  '8':
-                                    {'10/100/1000 Mbps Ethernet XL Module':
-                                      {'ports': '48',
-                                       'model': 'N7K-M148GT-11L',
-                                       'status': 'ok',
-                                       'software': '8.3(0)CV(0.658)',
-                                       'hardware': '2.1',
-                                       'mac_address': 'bc-16-65-ff-f2-0b to bc-16-65-ff-f3-3d',
-                                       'serial_number': 'JAF1717BEAT',
-                                       'online_diag_status': 'Pass'}
-                                    }
-                                  }
-                                },
-                            'xbar':
-                              {'1':
-                                  {'ports': '0',
-                                   'module_type': 'Fabric Module 2',
-                                   'model': 'N7K-C7009-FAB-2',
-                                   'status': 'ok',
-                                   'software': 'NA',
-                                   'hardware': '3.1',
-                                   'mac_address': 'NA',
-                                   'serial_number': 'JAF1705AEEF'},
-                              '2':
-                                  {'ports': '0',
-                                   'module_type': 'Fabric Module 2',
-                                   'model': 'N7K-C7009-FAB-2',
-                                   'status': 'ok',
-                                   'software': 'NA',
-                                   'hardware': '3.1',
-                                   'mac_address': 'NA',
-                                   'serial_number': 'JAF1705BFBM'},
-                              '3':
-                                  {'ports': '0',
-                                   'module_type': 'Fabric Module 2',
-                                   'model': 'N7K-C7009-FAB-2',
-                                   'status': 'ok',
-                                   'software': 'NA',
-                                   'hardware': '3.1',
-                                   'mac_address': 'NA',
-                                   'serial_number': 'JAF1705AELK'},
-                              '4':
-                                  {'ports': '0',
-                                   'module_type': 'Fabric Module 2',
-                                   'model': 'N7K-C7009-FAB-2',
-                                   'status': 'ok',
-                                   'software': 'NA',
-                                   'hardware': '3.1',
-                                   'mac_address': 'NA',
-                                   'serial_number': 'JAF1705BFCF'},
-                              '5':
-                                  {'ports': '0',
-                                   'module_type': 'Fabric Module 2',
-                                   'model': 'N7K-C7009-FAB-2',
-                                   'status': 'ok',
-                                   'software': 'NA',
-                                   'hardware': '3.1',
-                                   'mac_address': 'NA',
-                                   'serial_number': 'JAF1704APQH'}
-                              }
-                          }
-
-    golden_output = {'execute.return_value': '''
-
-    Mod  Ports  Module-Type                         Model              Status
-    ---  -----  ----------------------------------- ------------------ ----------
-    1    0      Supervisor Module-2                 N7K-SUP2           active *
-    2    0      Supervisor Module-2                 N7K-SUP2           ha-standby
-    3    48     1/10 Gbps Ethernet Module           N7K-F248XP-25E     ok
-    4    12     10/40 Gbps Ethernet Module          N7K-F312FQ-25      ok
-    6    32     10 Gbps Ethernet XL Module          N7K-M132XP-12L     ok
-    7    24     10 Gbps Ethernet Module             N7K-M224XP-23L     ok
-    8    48     10/100/1000 Mbps Ethernet XL Module N7K-M148GT-11L     ok
-
-    Mod  Sw               Hw
-    ---  ---------------  ------
-    1    8.3(0)CV(0.658)  1.0
-    2    8.3(0)CV(0.658)  1.0
-    3    8.3(0)CV(0.658)  1.0
-    4    8.3(0)CV(0.658)  1.0
-    6    8.3(0)CV(0.658)  2.0
-    7    8.3(0)CV(0.658)  1.0
-    8    8.3(0)CV(0.658)  2.1
-
-
-
-    Mod  MAC-Address(es)                         Serial-Num
-    ---  --------------------------------------  ----------
-    1    84-78-ac-ff-d3-dc to 84-78-ac-ff-d3-ee  JAF1708AGTH
-    2    84-78-ac-ff-c8-0f to 84-78-ac-ff-c8-21  JAF1708AGQH
-    3    84-78-ac-ff-f5-48 to 84-78-ac-ff-f5-7b  JAF1717AAND
-    4    54-4a-00-ff-c6-ed to 54-4a-00-ff-c6-29  JAE18120FLU
-    6    bc-16-65-ff-04-b8 to bc-16-65-ff-04-db  JAF1719AHMB
-    7    d8-67-d9-ff-9f-d6 to d8-67-d9-ff-9f-f1  JAF1641APPF
-    8    bc-16-65-ff-f2-0b to bc-16-65-ff-f3-3d  JAF1717BEAT
-
-    Mod  Online Diag Status
-    ---  ------------------
-    1    Pass
-    2    Pass
-    3    Pass
-    4    Pass
-    6    Pass
-    7    Pass
-    8    Pass
-
-    Xbar Ports  Module-Type                         Model              Status
-    ---  -----  ----------------------------------- ------------------ ----------
-    1    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
-    2    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
-    3    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
-    4    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
-    5    0      Fabric Module 2                     N7K-C7009-FAB-2    ok
-
-    Xbar Sw               Hw
-    ---  ---------------  ------
-    1    NA               3.1
-    2    NA               3.1
-    3    NA               3.1
-    4    NA               3.1
-    5    NA               3.1
-
-
-
-    Xbar MAC-Address(es)                         Serial-Num
-    ---  --------------------------------------  ----------
-    1    NA                                      JAF1705AEEF
-    2    NA                                      JAF1705BFBM
-    3    NA                                      JAF1705AELK
-    4    NA                                      JAF1705BFCF
-    5    NA                                      JAF1704APQH
-
-    * this terminal session
-
-
-'''}
-
-    output = {'execute.return_value': '''
-        Mod Ports             Module-Type                       Model          Status
-        --- ----- ------------------------------------- --------------------- ---------
-        1    52   48x1/10G SFP+ 4x40G Ethernet Module   N9K-X9564PX           ok
-        22   0    Fabric Module                         N9K-C9504-FM          ok
-        24   0    Fabric Module                         N9K-C9504-FM          ok
-        26   0    Fabric Module                         N9K-C9504-FM          ok
-        27   0    Supervisor Module                     N9K-SUP-A             ha-standby
-        28   0    Supervisor Module                     N9K-SUP-A             active *
-        29   0    System Controller                     N9K-SC-A              active
-        30   0    System Controller                     N9K-SC-A              standby
-
-        Mod  Sw                Hw     Slot
-        ---  ----------------  ------ ----
-        1    7.0(3)I5(0.125)   1.3    LC1
-        22   7.0(3)I5(0.125)   1.1    FM2
-        24   7.0(3)I5(0.125)   1.1    FM4
-        26   7.0(3)I5(0.125)   1.1    FM6
-        27   7.0(3)I5(0.125)   1.4    SUP1
-        28   7.0(3)I5(0.125)   1.4    SUP2
-        29   7.0(3)I5(0.125)   1.4    SC1
-        30   7.0(3)I5(0.125)   1.4    SC2
-
-
-        Mod  MAC-Address(es)                         Serial-Num
-        ---  --------------------------------------  ----------
-        1    88-1d-fc-ff-68-71 to 88-1d-fc-ff-69-b3  SAL18422J9D
-        22   NA                                      SAL18401T5J
-        24   NA                                      SAL18401T2L
-        26   NA                                      SAL18401T5S
-        27   e4-c7-22-ff-bf-ca to e4-c7-22-ff-bf-db  SAL18422LG1
-        28   e4-c7-22-ff-af-64 to e4-c7-22-ff-af-75  SAL18412064
-        29   NA                                      SAL18422HKT
-        30   NA                                      SAL18422HKA
-
-        Mod  Online Diag Status
-        ---  ------------------
-        1    Pass
-        22   Pass
-        24   Pass
-        26   Pass
-        27   Pass
-        28   Pass
-        29   Pass
-        30   Pass
-        '''
-    }
-
-    parsed_output_1 = {
-        "slot": {
-            "rp": {
-                 "28": {
-                      "Supervisor Module": {
-                           "online_diag_status": "Pass",
-                           "ports": "0",
-                           "model": "N9K-SUP-A",
-                           "software": "7.0(3)I5(0.125)",
-                           "serial_number": "SAL18412064",
-                           "hardware": "1.4",
-                           "status": "active",
-                           "slot/world_wide_name": "SUP2",
-                           "mac_address": "e4-c7-22-ff-af-64 to e4-c7-22-ff-af-75"
-                      }
-                 },
-                 "27": {
-                      "Supervisor Module": {
-                           "online_diag_status": "Pass",
-                           "ports": "0",
-                           "model": "N9K-SUP-A",
-                           "software": "7.0(3)I5(0.125)",
-                           "serial_number": "SAL18422LG1",
-                           "hardware": "1.4",
-                           "status": "ha-standby",
-                           "slot/world_wide_name": "SUP1",
-                           "mac_address": "e4-c7-22-ff-bf-ca to e4-c7-22-ff-bf-db"
-                      }
-                 }
-            },
-            "lc": {
-                 "1": {
-                      "48x1/10G SFP+ 4x40G Ethernet Module": {
-                           "online_diag_status": "Pass",
-                           "ports": "52",
-                           "model": "N9K-X9564PX",
-                           "software": "7.0(3)I5(0.125)",
-                           "serial_number": "SAL18422J9D",
-                           "hardware": "1.3",
-                           "status": "ok",
-                           "slot/world_wide_name": "LC1",
-                           "mac_address": "88-1d-fc-ff-68-71 to 88-1d-fc-ff-69-b3"
-                      }
-                 },
-                 "26": {
-                      "Fabric Module": {
-                           "online_diag_status": "Pass",
-                           "ports": "0",
-                           "model": "N9K-C9504-FM",
-                           "software": "7.0(3)I5(0.125)",
-                           "serial_number": "SAL18401T5S",
-                           "hardware": "1.1",
-                           "status": "ok",
-                           "slot/world_wide_name": "FM6",
-                           "mac_address": "NA"
-                      }
-                 },
-                 "30": {
-                      "System Controller": {
-                           "online_diag_status": "Pass",
-                           "ports": "0",
-                           "model": "N9K-SC-A",
-                           "software": "7.0(3)I5(0.125)",
-                           "serial_number": "SAL18422HKA",
-                           "hardware": "1.4",
-                           "status": "standby",
-                           "slot/world_wide_name": "SC2",
-                           "mac_address": "NA"
-                      }
-                 },
-                 "29": {
-                      "System Controller": {
-                           "online_diag_status": "Pass",
-                           "ports": "0",
-                           "model": "N9K-SC-A",
-                           "software": "7.0(3)I5(0.125)",
-                           "serial_number": "SAL18422HKT",
-                           "hardware": "1.4",
-                           "status": "active",
-                           "slot/world_wide_name": "SC1",
-                           "mac_address": "NA"
-                      }
-                 },
-                 "24": {
-                      "Fabric Module": {
-                           "online_diag_status": "Pass",
-                           "ports": "0",
-                           "model": "N9K-C9504-FM",
-                           "software": "7.0(3)I5(0.125)",
-                           "serial_number": "SAL18401T2L",
-                           "hardware": "1.1",
-                           "status": "ok",
-                           "slot/world_wide_name": "FM4",
-                           "mac_address": "NA"
-                      }
-                 },
-                 "22": {
-                      "Fabric Module": {
-                           "online_diag_status": "Pass",
-                           "ports": "0",
-                           "model": "N9K-C9504-FM",
-                           "software": "7.0(3)I5(0.125)",
-                           "serial_number": "SAL18401T5J",
-                           "hardware": "1.1",
-                           "status": "ok",
-                           "slot/world_wide_name": "FM2",
-                           "mac_address": "NA"
-                      }
-                 }
-            }
-       }
-    }
-
-    golden_output_2 = {'execute.return_value': '''
-        Mod Ports             Module-Type                      Model           Status
-        --- ----- ------------------------------------- --------------------- ---------
-        1    16   16x400G Ethernet Module               N9K-X9716D-GX         ok
-        2    36   36x40/100G Ethernet Module            N9K-X9736C-FX         ok
-        5    36   36x40G Ethernet Module                                      pwr-denied
-        6    52   48x10/25G + 4x40/100G Ethernet Module N9K-X97160YC-EX       ok
-        7    52   48x10G + 4x40/100G Ethernet Module                          pwr-denied
-        22   0    8-slot (100G) Fabric Module           N9K-C9508-FM-E2       ok
-        24   0    8-slot (100G) Fabric Module           N9K-C9508-FM-E2       ok
-        26   0    8-slot (100G) Fabric Module           N9K-C9508-FM-E2       ok
-        27   0    Supervisor Module                     N9K-SUP-A+            active *
-        29   0    System Controller                     N9K-SC-A              active
-        30   0    System Controller                     N9K-SC-A              standby
-
-        Mod  Sw                       Hw    Slot
-        ---  ----------------------- ------ ----
-        1    10.1(0.233)              3.1    LC1
-        2    10.1(0.233)              1.1    LC2
-        6    10.1(0.233)              2.3    LC6
-        22   10.1(0.233)              1.1    FM2
-        24   10.1(0.233)              1.1    FM4
-        26   10.1(0.233)              1.1    FM6
-        27   10.1(0.233)              1.1    SUP1
-        29   10.1(0.233)              2.0    SC1
-        30   10.1(0.233)              2.0    SC2
-
-
-        Mod  MAC-Address(es)                         Serial-Num
-        ---  --------------------------------------  ----------
-        1    bc-4a-56-ff-fa-5b to bc-4a-56-ff-fb-dd  FOC24322RBW
-        2    90-77-ee-ff-2d-b0 to 90-77-ee-ff-2e-43  FOC24294DJ8
-        6    24-16-9d-ff-9a-09 to 24-16-9d-ff-9a-4c  FOC24021CNU
-        22   NA                                      FOC24381TPG
-        24   NA                                      FOC24381TX1
-        26   NA                                      FOC24381TUV
-        27   54-88-de-ff-09-2f to 54-88-de-ff-09-40  FOC24362EGB
-        29   NA                                      FOC24362EU0
-        30   NA                                      FOC2435407P
-
-        Mod  Online Diag Status
-        ---  ------------------
-        1    Pass
-        2    Pass
-        6    Pass
-        22   Pass
-        24   Pass
-        26   Pass
-        27   Pass
-        29   Pass
-        30   Pass
-        '''
-    }
-
-    golden_parsed_output_2 = {
-        'slot': {
-            'lc': {
-                '1': {
-                    '16x400G Ethernet Module': {
-                        'hardware': '3.1',
-                        'mac_address': 'bc-4a-56-ff-fa-5b '
-                        'to '
-                        'bc-4a-56-ff-fb-dd',
-                        'model': 'N9K-X9716D-GX',
-                        'online_diag_status': 'Pass',
-                        'ports': '16',
-                        'serial_number': 'FOC24322RBW',
-                        'slot/world_wide_name': 'LC1',
-                        'software': '10.1(0.233)',
-                        'status': 'ok'
-                    }
-                },
-                '2': {
-                    '36x40/100G Ethernet Module': {
-                        'hardware': '1.1',
-                        'mac_address': '90-77-ee-ff-2d-b0 '
-                        'to '
-                        '90-77-ee-ff-2e-43',
-                        'model': 'N9K-X9736C-FX',
-                        'online_diag_status': 'Pass',
-                        'ports': '36',
-                        'serial_number': 'FOC24294DJ8',
-                        'slot/world_wide_name': 'LC2',
-                        'software': '10.1(0.233)',
-                        'status': 'ok'
-                    }
-                },
-                '22': {
-                    '8-slot (100G) Fabric Module': {
-                        'hardware': '1.1',
-                        'mac_address': 'NA',
-                        'model': 'N9K-C9508-FM-E2',
-                        'online_diag_status': 'Pass',
-                        'ports': '0',
-                        'serial_number': 'FOC24381TPG',
-                        'slot/world_wide_name': 'FM2',
-                        'software': '10.1(0.233)',
-                        'status': 'ok'
-                    }
-                },
-                '24': {
-                    '8-slot (100G) Fabric Module': {
-                        'hardware': '1.1',
-                        'mac_address': 'NA',
-                        'model': 'N9K-C9508-FM-E2',
-                        'online_diag_status': 'Pass',
-                        'ports': '0',
-                        'serial_number': 'FOC24381TX1',
-                        'slot/world_wide_name': 'FM4',
-                        'software': '10.1(0.233)',
-                        'status': 'ok'
-                    }
-                },
-                '26': {
-                    '8-slot (100G) Fabric Module': {
-                        'hardware': '1.1',
-                        'mac_address': 'NA',
-                        'model': 'N9K-C9508-FM-E2',
-                        'online_diag_status': 'Pass',
-                        'ports': '0',
-                        'serial_number': 'FOC24381TUV',
-                        'slot/world_wide_name': 'FM6',
-                        'software': '10.1(0.233)',
-                        'status': 'ok'
-                    }
-                },
-                '29': {
-                    'System Controller': {
-                        'hardware': '2.0',
-                        'mac_address': 'NA',
-                        'model': 'N9K-SC-A',
-                        'online_diag_status': 'Pass',
-                        'ports': '0',
-                        'serial_number': 'FOC24362EU0',
-                        'slot/world_wide_name': 'SC1',
-                        'software': '10.1(0.233)',
-                        'status': 'active'
-                    }
-                },
-                '30': {
-                    'System Controller': {
-                        'hardware': '2.0',
-                        'mac_address': 'NA',
-                        'model': 'N9K-SC-A',
-                        'online_diag_status': 'Pass',
-                        'ports': '0',
-                        'serial_number': 'FOC2435407P',
-                        'slot/world_wide_name': 'SC2',
-                        'software': '10.1(0.233)',
-                        'status': 'standby'
-                    }
-                },
-                '5': {
-                    '36x40G Ethernet': {
-                        'model': 'Module',
-                        'ports': '36',
-                        'status': 'pwr-denied'
-                    }
-                },
-                '6': {
-                    '48x10/25G + 4x40/100G Ethernet Module': {
-                        'hardware': '2.3',
-                        'mac_address': '24-16-9d-ff-9a-09 '
-                        'to '
-                        '24-16-9d-ff-9a-4c',
-                        'model': 'N9K-X97160YC-EX',
-                        'online_diag_status': 'Pass',
-                        'ports': '52',
-                        'serial_number': 'FOC24021CNU',
-                        'slot/world_wide_name': 'LC6',
-                        'software': '10.1(0.233)',
-                        'status': 'ok'
-                    }
-                },
-                '7': {
-                    '48x10G + 4x40/100G Ethernet': {
-                        'model': 'Module',
-                        'ports': '52',
-                        'status': 'pwr-denied'
-                    }
-                }
-            },
-            'rp': {
-                '27': {
-                    'Supervisor Module': {
-                        'hardware': '1.1',
-                        'mac_address': '54-88-de-ff-09-2f '
-                        'to '
-                        '54-88-de-ff-09-40',
-                        'model': 'N9K-SUP-A+',
-                        'online_diag_status': 'Pass',
-                        'ports': '0',
-                        'serial_number': 'FOC24362EGB',
-                        'slot/world_wide_name': 'SUP1',
-                        'software': '10.1(0.233)',
-                        'status': 'active'
-                    }
-                }
-            }
-        }
-    }
-
-    def test_golden(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        module_obj = ShowModule(device=self.device)
-        parsed_output = module_obj.parse()
-        self.assertEqual(parsed_output,self.golden_parsed_output)
-
-    def test_golden_1(self):
-        self.maxDiff = None
-        self.device = Mock(**self.output)
-        module_obj = ShowModule(device=self.device)
-        parsed_output = module_obj.parse()
-        self.assertEqual(parsed_output,self.parsed_output_1)
-
-    def test_golden_2(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output_2)
-        module_obj = ShowModule(device=self.device)
-        parsed_output = module_obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_2)
-
-    def test_empty(self):
-        self.device1 = Mock(**self.empty_output)
-        module_obj = ShowModule(device=self.device1)
-        with self.assertRaises(SchemaEmptyParserError):
-            parsed_output = module_obj.parse()
 
 class test_dir(unittest.TestCase):
     device = Device(name='aDevice')
