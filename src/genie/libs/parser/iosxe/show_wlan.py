@@ -622,7 +622,7 @@ class ShowWlanAll(ShowWlanAllSchema):
         p_multi_buffer = re.compile(r"^Multicast\s+Buffer\s+:\s+(?P<value>\S+)$")
 
         # Multicast Buffers (frames)                     : 0
-        p_multi_buffer_frames = re.compile(r"^Multicast\s+Buffers\s+\(frames\)\s+:\s+(?P<value>\d+)$")
+        p_multi_buffer_frames = re.compile(r"^Multicast\s+Buffers?\s+\(frames\)\s+:\s+(?P<value>\d+)$")
 
         # Multicast Buffer Size                          : 0
         p_multi_buffer_size = re.compile(r"^Multicast\s+Buffer\s+Size\s+:\s+(?P<value>\d+)$")
