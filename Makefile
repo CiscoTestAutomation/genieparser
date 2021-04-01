@@ -34,6 +34,7 @@ BUILD_DIR     = $(shell pwd)/__build__
 DIST_DIR      = $(BUILD_DIR)/dist
 PROD_USER     = pyadm@pyats-ci
 PROD_PKGS     = /auto/pyats/packages
+STAGING_PKGS  = /auto/pyats/staging/packages
 PYTHON        = python
 TESTCMD       = runAll --path=$(shell pwd)/tests
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
@@ -50,7 +51,7 @@ ifeq ($(MAKECMDGOALS), devnet)
 endif
 
 .PHONY: clean package distribute develop undevelop help devnet\
-        docs test install_build_deps uninstall_build_deps
+        docs test install_build_deps uninstall_build_deps distribute_staging
 
 help:
 	@echo "Please use 'make <target>' where <target> is one of"
@@ -58,6 +59,7 @@ help:
 	@echo "package               Build the package"
 	@echo "test                  Test the package"
 	@echo "distribute            Distribute the package to internal Cisco PyPi server"
+	@echo "distribute_staging    Distribute build pkgs to staging area"
 	@echo "clean                 Remove build artifacts"
 	@echo "develop               Build and install development package"
 	@echo "undevelop             Uninstall development package"
@@ -190,6 +192,17 @@ distribute:
 	@echo "Done."
 	@echo ""
 
+distribute_staging:
+	@echo ""
+	@echo "--------------------------------------------------------------------"
+	@echo "Copying all distributable to $(STAGING_PKGS)"
+	@test -d $(DIST_DIR) || { echo "Nothing to distribute! Exiting..."; exit 1; }
+	@ssh -q $(PROD_USER) 'test -e $(STAGING_PKGS)/$(PKG_NAME) || mkdir $(STAGING_PKGS)/$(PKG_NAME)'
+	@scp $(DIST_DIR)/* $(PROD_USER):$(STAGING_PKGS)/$(PKG_NAME)/
+	@echo ""
+	@echo "Done."
+	@echo ""
+
 json:
 	@echo ""
 	@echo "--------------------------------------------------------------------"
@@ -205,7 +218,7 @@ changelogs:
 	@echo "--------------------------------------------------------------------"
 	@echo "Generating changelog file"
 	@echo ""
-	@python "./tools/changelog_script.py" "./changelog/undistributed" --output "./changelog/undistributed.rst"
+	@python -c "from genie.utils.make_changelog import main; main('./changelog/undistributed', './changelog/undistributed.rst')"
 	@echo ""
 	@echo "Done."
 	@echo ""

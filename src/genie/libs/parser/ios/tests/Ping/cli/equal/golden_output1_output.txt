@@ -1,0 +1,5 @@
+Type escape sequence to abort.
+Sending 10, 100-byte ICMP Echos to 21.1.1.1, timeout is 2 seconds:
+Packet sent with a source address of 21.1.1.2
+!!!!!!!!!!
+Success rate is 100 percent (10/10), round-trip min/avg/max = 1/1/1 ms

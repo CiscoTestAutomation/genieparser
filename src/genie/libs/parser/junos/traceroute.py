@@ -11,7 +11,8 @@ import re
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, Schema)
+        Optional, Use, Schema, ListOf)
+
 
 class TracerouteNoResolveSchema(MetaParser):
     """ Schema for:
@@ -38,22 +39,6 @@ class TracerouteNoResolveSchema(MetaParser):
     }
     """
 
-    def validate_hops_list(value):
-        # Pass hops list of dict in value
-        if not isinstance(value, list):
-            raise SchemaError('hops is not a list')
-        # Create hop Schema
-        hop_schema = Schema({
-                       "hop-number": str,
-                       Optional("router-name"): str,
-                       "address": str,
-                       "round-trip-time": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            hop_schema.validate(item)
-        return value
-
     # Main Schema
     schema = {
         "traceroute": {
@@ -63,7 +48,12 @@ class TracerouteNoResolveSchema(MetaParser):
             },
             "max-hops": str,
             "packet-size": str,
-            Optional("hops"): Use(validate_hops_list)
+            Optional("hops"): ListOf({
+                "hop-number": str,
+                Optional("router-name"): str,
+                "address": str,
+                "round-trip-time": str
+            })
         }
     }
 
@@ -77,7 +67,7 @@ class TracerouteNoResolve(TracerouteNoResolveSchema):
 
     def cli(self, addr, addr2=None, output=None):
         if addr2:
-            cmd = self.cli_command[1].format(addr=addr, addr2=addr2)    
+            cmd = self.cli_command[1].format(addr=addr, addr2=addr2)
         else:
             cmd = self.cli_command[0].format(addr=addr)
 

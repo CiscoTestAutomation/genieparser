@@ -580,9 +580,8 @@ class ShowBgpAll(ShowBgpSuperParser, ShowBgpSchema):
         * 'show bgp {address_family} all'
     '''
 
-    cli_command = ['show bgp {address_family} all',
-                   'show bgp all',
-                   ]
+    cli_command = ['show bgp {address_family} all', 'show bgp all']
+                   
     exclude = ['bgp_table_version']
 
     def cli(self, address_family='', output=None):
@@ -644,20 +643,23 @@ class ShowIpBgpAll(ShowBgpSuperParser, ShowBgpSchema):
 # Parser for:
 #   * 'show bgp {address_family} rd {rd}'
 #   * 'show bgp {address_family} vrf {vrf}'
+#   * 'show bgp {address_family} unicast'
 # =============================================
 class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
 
     ''' Parser for:
         * 'show bgp {address_family} rd {rd}'
         * 'show bgp {address_family} vrf {vrf}'
+        * 'show bgp {address_family} unicast'
     '''
 
     cli_command = ['show bgp {address_family} vrf {vrf}',
                    'show bgp {address_family} rd {rd}',
+                   'show bgp {address_family} unicast',
                    ]
 
     def cli(self, address_family='', rd='', vrf='', output=None):
-
+        cmd = None
         if output is None:
             # Build command
             if address_family and vrf:
@@ -666,6 +668,9 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
             elif address_family and rd:
                 cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
+            elif address_family and not vrf and not rd:
+                cmd = self.cli_command[2].format(address_family=address_family)
+                                                                                                  
             # Execute command
             show_output = self.device.execute(cmd)
         else:

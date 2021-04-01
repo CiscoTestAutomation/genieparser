@@ -79,5 +79,6 @@ expected_output = {
             },
         },
         "curr_config_register": "0xF",
+        "label": "RELEASE SOFTWARE (fc3)",
     }
 }

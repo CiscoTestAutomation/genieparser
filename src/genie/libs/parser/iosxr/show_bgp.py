@@ -4538,11 +4538,11 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                          ' *(?P<importver>[0-9]+) *(?P<sendtblver>[0-9]+)'
                          ' *(?P<standbyver>[0-9]+)$')
         p17_1 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+)$')
-        p17_2 = re.compile(r'^\s*(?P<spk>[0-9]+) +(?P<remote_as>[0-9]+)'
-                           ' +(?P<msg_rcvd>[0-9]+) +(?P<msg_sent>[0-9]+)'
-                           ' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
-                           ' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
-                           ' +(?P<state_pfxrcd>.+)$')
+        p17_2 = re.compile(r'^\s*(?P<spk>[0-9]+)\s+(?P<remote_as>[0-9\.]+)'
+                           '\s+(?P<msg_rcvd>[0-9]+)\s+(?P<msg_sent>[0-9]+)'
+                           '\s+(?P<tbl_ver>[0-9]+)\s+(?P<input_queue>[0-9]+)'
+                           '\s+(?P<output_queue>[0-9]+)\s+(?P<up_down>[a-z0-9\:]+)'
+                           '\s+(?P<state_pfxrcd>.+)$')
         p17_3 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<spk>[0-9]+)'
                            ' +(?P<remote_as>[0-9\.]+) +(?P<msg_rcvd>[0-9]+)'
                            ' +(?P<msg_sent>[0-9]+)'
@@ -4779,9 +4779,10 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                     bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor] = {}
                     continue
             
-            # Neighbor        Spk    AS msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
-            #                   3   200       0       0        0    0    0 00:00:00 Idle
-            #                   0   200       0       0        0    0    0 00:00:00 Idle (Admin)!
+            # Neighbor        Spk    AS         msg_rcvd msg_sent   TblVer  InQ OutQ  Up/Down  St/PfxRcd
+            #                   3   200             0       0        0    0    0 00:00:00 Idle
+            #                   0   200             0       0        0    0    0 00:00:00 Idle (Admin)!
+            #                   0   60000.60001     0       0        0    0    0 00:00:00 Idle (Admin)!
 
             m = p17_2.match(line)
             if m and data_on_nextline:
