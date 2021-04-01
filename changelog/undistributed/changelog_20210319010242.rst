@@ -1,8 +1,0 @@
---------------------------------------------------------------------------------
-                                FIX
---------------------------------------------------------------------------------
-* IOSXR
-    * Modified ShowBfdSession:
-        * Changed <async_msec> and <echo_msec> from schema to Optional.
-        * Changed ShowBfdSession folder tests to reflect this change
-        * Removed ShowBfdSession from parser unittest ignore list

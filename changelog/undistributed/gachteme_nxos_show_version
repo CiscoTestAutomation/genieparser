@@ -1,7 +1,0 @@
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* NXOS
-    * Modified ShowVersion:
-        * show version
-            Recognize the 'reason' output of '  Reason: Reset due to non-disruptive upgrade' by adding - as an accepted char.
