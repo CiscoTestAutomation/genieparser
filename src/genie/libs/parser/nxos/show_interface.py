@@ -2512,8 +2512,6 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
 
             #IPv6 unicast reverse path forwarding: none
             #IPv6 unicast reverse path forwarding: loose allow default
-            # p14 = re.compile(r'^\s*IPv6 *unicast *reverse *path *forwarding:'
-            #                   ' *(?P<ipv6_unicast_rev_path_forwarding>\w+)$')
             p14 = re.compile(r'^\s*IPv6\s+unicast\s+reverse\s+path\s+forwarding:\s+'
                                 '(?P<ipv6_unicast_rev_path_forwarding>([\w\s]+)\s*)$')                              
             m = p14.match(line)
