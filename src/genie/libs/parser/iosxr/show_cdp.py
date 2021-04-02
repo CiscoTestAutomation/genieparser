@@ -223,7 +223,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
 
         # Platform: N9K-9000v,  Capabilities: Router Switch
         platf_cap_re = re.compile(
-            r'Platform:\s*(?P<platform>[a-zA-Z\d +\-]+)'
+            r'Platform:\s*(?P<platform>[a-zA-Z\d +\-\/]+)'
             r'\s*\,\s*Capabilities:\s*'
             '(?P<capabilities>[a-zA-Z\d\s*\-\/]+)')
 

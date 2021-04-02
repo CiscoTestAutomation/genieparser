@@ -1,0 +1,25 @@
+       GigabitEthernet0/0/0/1 is Up, ipv6 protocol is Up, Vrfid is VRF1 (0x60000001)
+      IPv6 is enabled, link-local address is fe80::5054:ff:fe78:ebe0 
+      Global unicast address(es):
+        2001:db8:1:5::1, subnet is 2001:db8:1:5::/64 
+      Joined group address(es): ff02::1:ff00:1 ff02::1:ff78:ebe0 ff02::2
+          ff02::1
+      MTU is 1514 (1500 is available to IPv6)
+      ICMP redirects are disabled
+      ICMP unreachables are enabled
+      ND DAD is enabled, number of DAD attempts 1
+      ND reachable time is 0 milliseconds
+      ND cache entry limit is 1000000000
+      ND advertised retransmit interval is 0 milliseconds
+      ND router advertisements are sent every 160 to 240 seconds
+      ND router advertisements live for 1800 seconds
+      Hosts use stateless autoconfig for addresses.
+      Outgoing access list is not set
+      Inbound  common access list is not set, access list is not set
+      Table Id is 0xe0800010
+      Complete protocol adjacency: 1
+      Complete glean adjacency: 1
+      Incomplete protocol adjacency: 0
+      Incomplete glean adjacency: 0
+      Dropped protocol request: 0
+      Dropped glean request: 0

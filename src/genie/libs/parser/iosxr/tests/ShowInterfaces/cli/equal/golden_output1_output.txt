@@ -1,0 +1,533 @@
+        #show interfaces 
+        Sat Aug  3 03:25:29.028 EST
+        BVI51 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0000.59ff.60b1
+          Description: NPON_Mcast_VLAN
+          Internet address is 192.168.166.9/30
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+
+        BVI100 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.01ff.0001
+          Description: au-hikari-mansion-100
+          Internet address is 192.168.36.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+
+        BVI301 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.03ff.0102
+          Internet address is 192.168.1.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+
+        BVI1401 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.14ff.0001
+          Description: au-hikari-home
+          Internet address is 192.168.1.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input never, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             0 packets input, 0 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 0 multicast packets
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+                  
+        BVI1403 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.14ff.0304
+          Description: UQ-BS  
+          Internet address is 192.168.169.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+                  
+        BVI1405 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.14ff.0506
+          Description: au-hikari-mansion-giga
+          Internet address is 192.168.36.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+                  
+        BVI1407 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.14ff.0708
+          Description: au-hikari-business
+          Internet address is 192.168.166.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 00:03:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+                  
+        BVI1410 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Bridge-Group Virtual Interface, address is 0059.14ff.1011
+          Description: JCOM  
+          Internet address is 192.168.121.254/24
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,  loopback not set,
+          ARP type ARPA, ARP timeout 00:03:00
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+                  
+        Bundle-Ether1 is up, line protocol is up 
+          Interface state transitions: 9
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.60ff.1119
+          Description: to-ML26-BE1
+          Internet address is 192.168.0.25/30
+          MTU 1514 bytes, BW 100000000 Kbit (Max: 100000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 100000Mb/s
+          loopback not set,
+          Last link flapped 3w3d
+          ARP type ARPA, ARP timeout 04:00:00
+            No. of members in this bundle: 1
+              HundredGigE0/0/1/2/0         Full-duplex  100000Mb/s   Active          
+          Last input 00:00:00, output 00:00:00
+          Last clearing of "show interface" counters never
+          30 second input rate 1000 bits/sec, 0 packets/sec
+          30 second output rate 2000 bits/sec, 1 packets/sec
+             1716386544 packets input, 751342403591 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 6 broadcast packets, 642898 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             1714349214 packets output, 754526715390 bytes, 0 total output drops
+             Output 12 broadcast packets, 642896 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             0 carrier transitions
+
+        Bundle-Ether100 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.60ff.1118
+          Internet address is Unknown
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 10000Mb/s
+          loopback not set,
+          Last link flapped 5w6d
+            No. of members in this bundle: 1
+              TenGigE0/0/0/1               Full-duplex  10000Mb/s    Active          
+          Last input 00:00:00, output 00:00:00
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             313163 packets input, 54531145 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 313163 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             178045 packets output, 22136962 bytes, 0 total output drops
+             Output 0 broadcast packets, 178045 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             0 carrier transitions
+                  
+        Bundle-Ether100.12 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1118
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 12
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last link flapped 5w6d
+          Last input never, output never
+          Last clearing of "show interface" counters never
+             0 packets input, 0 bytes
+             0 input drops, 0 queue drops, 0 input errors
+             0 packets output, 0 bytes
+             0 output drops, 0 queue drops, 0 output errors
+                  
+        Bundle-Ether100.22 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1118
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 22
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last link flapped 5w6d
+          Last input never, output never
+          Last clearing of "show interface" counters never
+             0 packets input, 0 bytes
+             0 input drops, 0 queue drops, 0 input errors
+             0 packets output, 0 bytes
+             0 output drops, 0 queue drops, 0 output errors
+                  
+        Bundle-Ether1001 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.60ff.1117
+          Internet address is Unknown
+          MTU 1514 bytes, BW 0 Kbit
+             reliability 255/255, txload Unknown, rxload Unknown
+          Encapsulation ARPA,
+          Full-duplex, 0Kb/s
+          loopback not set,
+            No. of members in this bundle: 0
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+                  
+        Bundle-Ether1001.100 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
+          Description: Down Mansion-100
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 300
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether1001.1400 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
+          Description: Home Downlink
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 3400
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether1001.1402 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
+          Description: UQ_BS Downlink
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 3402
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether1001.1404 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
+          Description: au-hikari-mansion-giga Downlink
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 3404
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether1001.1406 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
+          Description: au Hikari Business Downlink
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 3406
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether1001.1410 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is VLAN sub-interface(s), address is 00bc.60ff.1117
+          Description: JCOM Downlink
+          Layer 2 Transport Mode
+          MTU 1518 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation 802.1Q Virtual LAN,
+            Outer Match: Dot1Q VLAN 3410
+            Ethertype Any, MAC Match src any, dest any
+          loopback not set,
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Bundle-Ether3333 is down, line protocol is down 
+          Interface state transitions: 0
+          Hardware is Aggregated Ethernet interface(s), address is 00bc.60ff.1116
+          Internet address is Unknown
+          MTU 1514 bytes, BW 0 Kbit
+             reliability 255/255, txload Unknown, rxload Unknown
+          Encapsulation ARPA,
+          Full-duplex, 0Kb/s
+          loopback not set,
+            No. of members in this bundle: 1
+              TenGigE0/0/0/25              Full-duplex  10000Mb/s    Configured      
+          Last input never, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             0 packets input, 0 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 0 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             0 carrier transitions
+                  
+        Loopback0 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is Loopback interface(s)
+          Internet address is 192.168.99.25/32
+          MTU 1500 bytes, BW 0 Kbit
+             reliability Unknown, txload Unknown, rxload Unknown
+          Encapsulation Loopback,  loopback not set,
+          Last link flapped 5w6d
+          Last input Unknown, output Unknown
+          Last clearing of "show interface" counters Unknown
+          Input/output data rate is disabled.
+                  
+        Null0 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is Null interface
+          Internet address is Unknown
+          MTU 1500 bytes, BW 0 Kbit
+             reliability 255/255, txload Unknown, rxload Unknown
+          Encapsulation Null,  loopback not set,
+          Last link flapped 5w6d
+          Last input never, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             0 packets input, 0 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 0 multicast packets
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+                  
+        GigabitEthernet0/0/0/21 is administratively down, line protocol is administratively down 
+          Interface state transitions: 0
+          Hardware is GigabitEthernet, address is 00bc.60ff.1151 (bia 00bc.60ff.1151)
+          Internet address is Unknown
+          MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 1000Mb/s, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last input never, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             0 packets input, 0 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 0 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             0 carrier transitions
+                  
+        GigabitEthernet0/0/0/23 is up, line protocol is up 
+          Interface state transitions: 13
+          Hardware is GigabitEthernet, address is 00bc.60ff.1153 (bia 00bc.60ff.1153)
+          Internet address is Unknown
+          MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 1000Mb/s, TFD, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last link flapped 3w3d
+          Last input 00:03:58, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             209145 packets input, 40356542 bytes, 0 total input drops
+             209145 drops for unrecognized upper-level protocol
+             Received 85731 broadcast packets, 123414 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             11 carrier transitions
+                  
+        GigabitEthernet0/0/0/27 is administratively down, line protocol is administratively down 
+          Interface state transitions: 0
+          Hardware is GigabitEthernet, address is 00bc.60ff.1157 (bia 00bc.60ff.1157)
+          Internet address is Unknown
+          MTU 1514 bytes, BW 1000000 Kbit (Max: 1000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 1000Mb/s, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last input never, output never
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 0 packets/sec
+          5 minute output rate 0 bits/sec, 0 packets/sec
+             0 packets input, 0 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 0 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             0 packets output, 0 bytes, 0 total output drops
+             Output 0 broadcast packets, 0 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             0 carrier transitions
+                  
+        TenGigE0/0/0/0 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is TenGigE, address is 00bc.60ff.113c (bia 00bc.60ff.113c)
+          Description: to-ML24
+          Internet address is 192.168.0.22/30
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 10000Mb/s, SR, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last link flapped 5w6d
+          ARP type ARPA, ARP timeout 04:00:00
+          Last input 00:00:00, output 00:00:00
+          Last clearing of "show interface" counters never
+          5 minute input rate 2000 bits/sec, 1 packets/sec
+          5 minute output rate 1000 bits/sec, 0 packets/sec
+             858438357 packets input, 377844978719 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 6 broadcast packets, 761392 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             860493206 packets output, 374682459456 bytes, 0 total output drops
+             Output 6 broadcast packets, 524312 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             1 carrier transitions
+                  
+        TenGigE0/0/0/1 is up, line protocol is up 
+          Interface state transitions: 1
+          Hardware is TenGigE, address is 00bc.60ff.113d (bia 00bc.60ff.113d)
+          Description: L2SW Po12
+          Internet address is Unknown
+          MTU 1518 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 10000Mb/s, SR, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last link flapped 5w6d
+          Last input 00:00:00, output 00:00:00
+          Last clearing of "show interface" counters never
+          30 second input rate 0 bits/sec, 0 packets/sec
+          30 second output rate 0 bits/sec, 0 packets/sec
+             313163 packets input, 54531145 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 313163 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             178045 packets output, 22136962 bytes, 0 total output drops
+             Output 0 broadcast packets, 178045 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             1 carrier transitions
+                  
+        TenGigE0/0/0/2 is up, line protocol is up 
+          Interface state transitions: 3
+          Hardware is TenGigE, address is 00bc.60ff.113e (bia 00bc.60ff.113e)
+          Layer 2 Transport Mode
+          MTU 1514 bytes, BW 10000000 Kbit (Max: 10000000 Kbit)
+             reliability 255/255, txload 0/255, rxload 0/255
+          Encapsulation ARPA,
+          Full-duplex, 10000Mb/s, SR, link type is force-up
+          output flow control is off, input flow control is off
+          Carrier delay (up) is 10 msec
+          loopback not set,
+          Last link flapped 1w3d
+          Last input 00:00:00, output 00:00:00
+          Last clearing of "show interface" counters never
+          5 minute input rate 0 bits/sec, 1 packets/sec
+          5 minute output rate 0 bits/sec, 1 packets/sec
+             3800143 packets input, 231571320 bytes, 0 total input drops
+             0 drops for unrecognized upper-level protocol
+             Received 0 broadcast packets, 3800143 multicast packets
+                      0 runts, 0 giants, 0 throttles, 0 parity
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+             3562789 packets output, 213767340 bytes, 0 total output drops
+             Output 0 broadcast packets, 3562789 multicast packets
+             0 output errors, 0 underruns, 0 applique, 0 resets
+             0 output buffer failures, 0 output buffers swapped out
+             3 carrier transitions
