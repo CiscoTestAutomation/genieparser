@@ -1576,8 +1576,11 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                 continue
 
             #IP unicast reverse path forwarding: none
-            p16 = re.compile(r'^\s*IP *unicast *reverse *path *forwarding:'
-                              ' *(?P<unicast_reverse_path>\w+)$')
+            #IP unicast reverse path forwarding: loose allow default 
+            # p16 = re.compile(r'^\s*IP *unicast *reverse *path *forwarding:'
+            #                   ' *(?P<unicast_reverse_path>\w+)$')
+            p16 = re.compile(r'^\s*IP\s+unicast\s+reverse\s+path\s+forwarding:\s+'
+                              '(?P<unicast_reverse_path>([\w\s]+)\s*)$')            
             m = p16.match(line)
             if m:
                 unicast_reverse_path = m.groupdict()['unicast_reverse_path']
@@ -2508,8 +2511,11 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 continue
 
             #IPv6 unicast reverse path forwarding: none
-            p14 = re.compile(r'^\s*IPv6 *unicast *reverse *path *forwarding:'
-                              ' *(?P<ipv6_unicast_rev_path_forwarding>\w+)$')
+            #IPv6 unicast reverse path forwarding: loose allow default
+            # p14 = re.compile(r'^\s*IPv6 *unicast *reverse *path *forwarding:'
+            #                   ' *(?P<ipv6_unicast_rev_path_forwarding>\w+)$')
+            p14 = re.compile(r'^\s*IPv6\s+unicast\s+reverse\s+path\s+forwarding:\s+'
+                                '(?P<ipv6_unicast_rev_path_forwarding>([\w\s]+)\s*)$')                              
             m = p14.match(line)
             if m:
                 ipv6_unicast_rev_path_forwarding = m.groupdict()\

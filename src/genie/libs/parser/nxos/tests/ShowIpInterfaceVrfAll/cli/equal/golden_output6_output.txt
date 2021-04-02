@@ -1,0 +1,38 @@
+  show ip interface vrf all
+  IP Interface Status for VRF "test"
+  Vlan3, Interface status: protocol-up/link-up/admin-up, iod: 6,
+  IP address: none
+  IP broadcast address: 255.255.255.255
+  IP multicast groups locally joined: none
+  IP MTU: 1200 bytes (using link MTU)
+  IP proxy ARP : disabled
+  IP Local Proxy ARP : disabled
+  IP multicast routing: disabled
+  IP icmp redirects: enabled
+  IP directed-broadcast: disabled
+  IP Forwarding: enabled
+  IP icmp unreachables (except port): disabled
+  IP icmp port-unreachable: enabled
+  IP unicast reverse path forwarding: none
+  IP load sharing: none
+  IP interface statistics last reset: never
+  IP interface software stats: (sent/received/forwarded/originated/consumed)
+      Unicast packets    : 0/0/0/0/0
+      Unicast bytes      : 0/0/0/0/0
+      Multicast packets  : 0/0/0/0/0
+      Multicast bytes    : 0/0/0/0/0
+      Broadcast packets  : 0/0/0/0/0
+      Broadcast bytes    : 0/0/0/0/0
+      Labeled packets    : 0/0/0/0/0
+      Labeled bytes      : 0/0/0/0/0
+  WCCP Redirect outbound: disabled
+  WCCP Redirect inbound: disabled
+  WCCP Redirect exclude: disabled
+
+  IP Interface Status for VRF "test1"
+
+  IP Interface Status for VRF "test100"
+
+  IP Interface Status for VRF "test200"
+
+  IP Interface Status for VRF "test400"
