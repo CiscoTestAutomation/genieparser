@@ -1577,8 +1577,6 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
 
             #IP unicast reverse path forwarding: none
             #IP unicast reverse path forwarding: loose allow default 
-            # p16 = re.compile(r'^\s*IP *unicast *reverse *path *forwarding:'
-            #                   ' *(?P<unicast_reverse_path>\w+)$')
             p16 = re.compile(r'^\s*IP\s+unicast\s+reverse\s+path\s+forwarding:\s+'
                               '(?P<unicast_reverse_path>([\w\s]+)\s*)$')            
             m = p16.match(line)
