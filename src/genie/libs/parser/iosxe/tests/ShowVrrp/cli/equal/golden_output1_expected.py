@@ -18,9 +18,9 @@ expected_output = {
                     "virtual_mac_address": "0000.5eff.0164",  
                     "vrrs_name": {
                         "DC_LAN": {
-                            "track_object": 
-                               {1: 
-                                   {"decrement": 30, 
+                            "track_object":
+                               {1:
+                                   {"decrement": 30,
                                     "state": "Up"}}
                         }
                     },

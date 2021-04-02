@@ -1,0 +1,7 @@
+Vlan-interface805 current state: UP
+Line protocol current state: UP
+Description: ==VLAN INTERFACE ==
+The Maximum Transmit Unit is 1500
+Internet Address is 192.168.0.1/29 Primary
+IP Packet Frame Type: PKTFMT_ETHNT_2,  Hardware Address: cc3e-5f69-abcd
+IPv6 Packet Frame Type: PKTFMT_ETHNT_2,  Hardware Address: cc3e-5f69-abcd

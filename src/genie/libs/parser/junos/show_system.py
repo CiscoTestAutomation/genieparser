@@ -22,7 +22,7 @@ import re
 # metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, ListOf
 
 
 class ShowSystemBuffersSchema(MetaParser):
@@ -341,26 +341,6 @@ class ShowSystemUsersSchema(MetaParser):
         }
     }
 } """
-    def validate_system_user_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-neighbor is not a list')
-        neighbor_schema = Schema({
-            "command": str,
-            "from": str,
-            "idle-time": {
-                "#text": str,
-                Optional("@junos:seconds"): str
-            },
-            "login-time": {
-                "#text": str,
-                Optional("@junos:seconds"): str
-            },
-            "tty": str,
-            "user": str
-        })
-        for item in value:
-            neighbor_schema.validate(item)
-        return value
 
     schema = {
         Optional("@xmlns:junos"): str,
@@ -383,7 +363,20 @@ class ShowSystemUsersSchema(MetaParser):
                     Optional("@junos:seconds"): str
                 },
                 "user-table": {
-                    "user-entry": Use(validate_system_user_list)
+                    "user-entry": ListOf({
+                        "command": str,
+                        "from": str,
+                        "idle-time": {
+                            "#text": str,
+                            Optional("@junos:seconds"): str
+                        },
+                        "login-time": {
+                            "#text": str,
+                            Optional("@junos:seconds"): str
+                        },
+                        "tty": str,
+                        "user": str
+                    })
                 }
             }
         }
@@ -495,27 +488,16 @@ class ShowSystemCommitSchema(MetaParser):
             * show sysyem commit
     """
 
-    # Sub Schema commit-history
-    def validate_commit_history_list(value):
-        # Pass commit-history list as value
-        if not isinstance(value, list):
-            raise SchemaError('commit-history is not a list')
-        commit_history_schema = Schema({
-            "client": str,
-            "date-time": {
-                "#text": str
-            },
-            "sequence-number": str,
-            "user": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            commit_history_schema.validate(item)
-        return value
-
     schema = {
         "commit-information": {
-            "commit-history": Use(validate_commit_history_list)
+            "commit-history": ListOf({
+                "client": str,
+                "date-time": {
+                    "#text": str
+                },
+                "sequence-number": str,
+                "user": str
+            })
         }
     }
 
@@ -595,31 +577,27 @@ class ShowSystemQueuesSchema(MetaParser):
     }
     """
 
-    # Sub Schema interface-queue
-    def validate_interface_queue_list(value):
-        # Pass interface-queue list as value
-        if not isinstance(value, list):
-            raise SchemaError('commit-history is not a list')
-        interface_queue_schema = Schema({
-            "max-octets-allowed": str,
-            "max-packets-allowed": str,
-            "name": str,
-            "number-of-queue-drops": str,
-            "octets-in-queue": str,
-            "packets-in-queue": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            interface_queue_schema.validate(item)
-        return value
-
     schema = {
         "queues-statistics": {
             "interface-queues-statistics": {
-                "interface-queue": Use(validate_interface_queue_list)
+                "interface-queue": ListOf({
+                    "max-octets-allowed": str,
+                    "max-packets-allowed": str,
+                    "name": str,
+                    "number-of-queue-drops": str,
+                    "octets-in-queue": str,
+                    "packets-in-queue": str
+                })
             },
             "protocol-queues-statistics": {
-                "protocol-queue": Use(validate_interface_queue_list)
+                "protocol-queue": ListOf({
+                    "max-octets-allowed": str,
+                    "max-packets-allowed": str,
+                    "name": str,
+                    "number-of-queue-drops": str,
+                    "octets-in-queue": str,
+                    "packets-in-queue": str
+                })
             }
         }
     }
@@ -725,34 +703,23 @@ class ShowSystemStorageSchema(MetaParser):
     }
     """
 
-    # Sub Schema filesystem
-    def validate_filesystem_list(value):
-        # Pass filesystem list as value
-        if not isinstance(value, list):
-            raise SchemaError('filesystem is not a list')
-        filesystem_schema = Schema({
-            "available-blocks": {
-                "junos:format": str
-            },
-            "filesystem-name": str,
-            "mounted-on": str,
-            "total-blocks": {
-                Optional("#text"): str,
-                "junos:format": str
-            },
-            "used-blocks": {
-                "junos:format": str
-            },
-            "used-percent": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            filesystem_schema.validate(item)
-        return value
-
     schema = {
         "system-storage-information": {
-            "filesystem": Use(validate_filesystem_list)
+            "filesystem": ListOf({
+                "available-blocks": {
+                    "junos:format": str
+                },
+                "filesystem-name": str,
+                "mounted-on": str,
+                "total-blocks": {
+                    Optional("#text"): str,
+                    "junos:format": str
+                },
+                "used-blocks": {
+                    "junos:format": str
+                },
+                "used-percent": str
+            })
         }
     }
 
@@ -855,35 +822,24 @@ class ShowSystemCoreDumpsSchema(MetaParser):
     }
     '''
 
-    # Sub Schema file-information
-    def validate_file_information_list(value):
-        # Pass file-information list as value
-        if not isinstance(value, list):
-            raise SchemaError('ospf-interface is not a list')
-        file_information_schema = Schema({
-            "file-date": {
-                Optional("#text"): str,
-                "@junos:format": str
-            },
-            "file-group": str,
-            "file-links": str,
-            "file-name": str,
-            "file-owner": str,
-            "file-permissions": {
-                Optional("#text"): str,
-                "@junos:format": str
-            },
-            "file-size": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            file_information_schema.validate(item)
-        return value
-
     schema = {
         "directory-list": {
             "directory": {
-                "file-information": Use(validate_file_information_list),
+                "file-information": ListOf({
+                    "file-date": {
+                        Optional("#text"): str,
+                        "@junos:format": str
+                    },
+                    "file-group": str,
+                    "file-links": str,
+                    "file-name": str,
+                    "file-owner": str,
+                    "file-permissions": {
+                        Optional("#text"): str,
+                        "@junos:format": str
+                    },
+                    "file-size": str
+                }),
                 "output": list,
                 "total-files": str
             }
@@ -1939,40 +1895,9 @@ class ShowSystemStatisticsSchema(MetaParser):
         ]
     }
     """
-    def statistics_list(value):
-        if not isinstance(value, list):
-            raise SchemaError("statistics is not a list")
 
-        def icmp_histogram_list(value):
-            if not isinstance(value, list):
-                raise SchemaError("icmp-histogram is not a list")
-            icmp_histogram_schema = Schema({
-                "destination-unreachable": str,
-                "icmp-echo": str,
-                "icmp-echo-reply": str,
-                "time-exceeded": str,
-                "type-of-histogram": str,
-            })
-            for item in value:
-                icmp_histogram_schema.validate(item)
-            return value
-
-        def ip6_header_type(value):
-            if not isinstance(value, list):
-                raise SchemaError("statistics is not a list")
-            ip6_header_type_schema = Schema({
-                "globals":
-                str,
-                "header-for-source-address-selection":
-                str,
-                Optional("link-locals"):
-                str,
-            })
-            for item in value:
-                ip6_header_type_schema.validate(item)
-            return value
-
-        statistics_schema = Schema({
+    schema = {"statistics": ListOf(
+        {
             Optional("ah"): {
                 "bytes-in": str,
                 "bytes-out": str,
@@ -1995,128 +1920,67 @@ class ShowSystemStatisticsSchema(MetaParser):
                 "tunnel-sanity-check-failures": str,
             },
             Optional("arp"): {
-                "arp-iri-cnt":
-                str,
-                "arp-iri-drop":
-                str,
-                "arp-iri-max":
-                str,
-                "arp-mgt-cnt":
-                str,
-                "arp-mgt-drop":
-                str,
-                "arp-mgt-max":
-                str,
-                "arp-packets-are-dropped-as-driver-call-failed":
-                str,
-                "arp-packets-are-dropped-as-nexthop-allocation-failed":
-                str,
-                "arp-packets-are-dropped-as-source-is-not-validated":
-                str,
-                "arp-packets-are-dropped-from-peer-vrrp":
-                str,
-                "arp-packets-are-rejected-as-target-ip-arp-resolve-is-in-progress":
-                str,
-                "arp-packets-received-from-peer-vrrp-router-and-discarded":
-                str,
-                "arp-packets-rejected-as-family-is-configured-with-deny-arp":
-                str,
-                "arp-probe-for-proxy-address-reachable-from-the-incoming-interface":
-                str,
-                "arp-public-cnt":
-                str,
-                "arp-public-drop":
-                str,
-                "arp-public-max":
-                str,
-                "arp-replies-are-rejected-as-source-and-destination-is-same":
-                str,
-                "arp-replies-received":
-                str,
-                "arp-replies-sent":
-                str,
-                "arp-request-discarded-for-vrrp-source-address":
-                str,
-                "arp-requests-received":
-                str,
-                "arp-requests-sent":
-                str,
-                "arp-response-packets-are-rejected-on-mace-icl-interface":
-                str,
-                "arp-system-drop":
-                str,
-                "arp-system-max":
-                str,
-                "datagrams-for-an-address-not-on-the-interface":
-                str,
-                "datagrams-for-non-ip-protocol":
-                str,
-                "datagrams-received":
-                str,
-                "datagrams-which-were-not-for-me":
-                str,
-                "datagrams-with-a-broadcast-source-address":
-                str,
-                "datagrams-with-bad-hardware-address-length":
-                str,
-                "datagrams-with-bad-protocol-address-length":
-                str,
-                "datagrams-with-bogus-interface":
-                str,
-                "datagrams-with-incorrect-length":
-                str,
-                "datagrams-with-multicast-source-address":
-                str,
-                "datagrams-with-multicast-target-address":
-                str,
-                "datagrams-with-my-own-hardware-address":
-                str,
-                "datagrams-with-source-address-duplicate-to-mine":
-                str,
-                "datagrams-with-unsupported-opcode":
-                str,
-                "grat-arp-packets-are-ignored-as-mac-address-is-not-changed":
-                str,
-                "new-requests-on-unnumbered-interfaces":
-                str,
-                "packets-discarded-waiting-for-resolution":
-                str,
-                "packets-sent-after-waiting-for-resolution":
-                str,
-                "proxy-arp-request-discarded-as-source-ip-is-a-proxy-target":
-                str,
-                "proxy-requests-not-proxied":
-                str,
-                "received-proxy-requests":
-                str,
-                "replies-from-unnumbered-interface-with-non-subnetted-donor":
-                str,
-                "replies-from-unnumbered-interfaces":
-                str,
-                "requests-dropped-due-to-interface-deletion":
-                str,
-                "requests-dropped-during-retry":
-                str,
-                "requests-dropped-on-entry":
-                str,
-                "requests-for-memory-denied":
-                str,
-                "requests-on-unnumbered-interface-with-non-subnetted-donor":
-                str,
-                "requests-on-unnumbered-interfaces":
-                str,
-                "resolution-request-dropped":
-                str,
-                "resolution-request-received":
-                str,
-                "restricted-proxy-requests":
-                str,
-                "restricted-proxy-requests-not-proxied":
-                str,
-                "self-arp-request-packet-received-on-irb-interface":
-                str,
-                "unrestricted-proxy-requests":
-                str,
+                "arp-iri-cnt": str,
+                "arp-iri-drop": str,
+                "arp-iri-max": str,
+                "arp-mgt-cnt": str,
+                "arp-mgt-drop": str,
+                "arp-mgt-max": str,
+                "arp-packets-are-dropped-as-driver-call-failed": str,
+                "arp-packets-are-dropped-as-nexthop-allocation-failed": str,
+                "arp-packets-are-dropped-as-source-is-not-validated": str,
+                "arp-packets-are-dropped-from-peer-vrrp": str,
+                "arp-packets-are-rejected-as-target-ip-arp-resolve-is-in-progress": str,
+                "arp-packets-received-from-peer-vrrp-router-and-discarded": str,
+                "arp-packets-rejected-as-family-is-configured-with-deny-arp": str,
+                "arp-probe-for-proxy-address-reachable-from-the-incoming-interface": str,
+                "arp-public-cnt": str,
+                "arp-public-drop": str,
+                "arp-public-max": str,
+                "arp-replies-are-rejected-as-source-and-destination-is-same": str,
+                "arp-replies-received": str,
+                "arp-replies-sent": str,
+                "arp-request-discarded-for-vrrp-source-address": str,
+                "arp-requests-received": str,
+                "arp-requests-sent": str,
+                "arp-response-packets-are-rejected-on-mace-icl-interface": str,
+                "arp-system-drop": str,
+                "arp-system-max": str,
+                "datagrams-for-an-address-not-on-the-interface": str,
+                "datagrams-for-non-ip-protocol": str,
+                "datagrams-received": str,
+                "datagrams-which-were-not-for-me": str,
+                "datagrams-with-a-broadcast-source-address": str,
+                "datagrams-with-bad-hardware-address-length": str,
+                "datagrams-with-bad-protocol-address-length": str,
+                "datagrams-with-bogus-interface": str,
+                "datagrams-with-incorrect-length": str,
+                "datagrams-with-multicast-source-address": str,
+                "datagrams-with-multicast-target-address": str,
+                "datagrams-with-my-own-hardware-address": str,
+                "datagrams-with-source-address-duplicate-to-mine": str,
+                "datagrams-with-unsupported-opcode": str,
+                "grat-arp-packets-are-ignored-as-mac-address-is-not-changed": str,
+                "new-requests-on-unnumbered-interfaces": str,
+                "packets-discarded-waiting-for-resolution": str,
+                "packets-sent-after-waiting-for-resolution": str,
+                "proxy-arp-request-discarded-as-source-ip-is-a-proxy-target": str,
+                "proxy-requests-not-proxied": str,
+                "received-proxy-requests": str,
+                "replies-from-unnumbered-interface-with-non-subnetted-donor": str,
+                "replies-from-unnumbered-interfaces": str,
+                "requests-dropped-due-to-interface-deletion": str,
+                "requests-dropped-during-retry": str,
+                "requests-dropped-on-entry": str,
+                "requests-for-memory-denied": str,
+                "requests-on-unnumbered-interface-with-non-subnetted-donor": str,
+                "requests-on-unnumbered-interfaces": str,
+                "resolution-request-dropped": str,
+                "resolution-request-received": str,
+                "restricted-proxy-requests": str,
+                "restricted-proxy-requests-not-proxied": str,
+                "self-arp-request-packet-received-on-irb-interface": str,
+                "unrestricted-proxy-requests": str,
             },
             Optional("clnl"): {
                 "address-fields-were-not-reasonable": str,
@@ -2205,30 +2069,24 @@ class ShowSystemStatisticsSchema(MetaParser):
                 "total-packets-transmitted": str,
             },
             Optional("icmp"): {
-                "calls-to-icmp-error":
-                str,
-                "drops-due-to-rate-limit":
-                str,
-                "echo-drops-with-broadcast-or-multicast-destinaton-address":
-                str,
-                "errors-not-generated-because-old-message-was-icmp":
-                str,
-                "histogram":
-                Use(icmp_histogram_list),
-                "message-responses-generated":
-                str,
-                "messages-less-than-the-minimum-length":
-                str,
-                "messages-with-bad-checksum":
-                str,
-                "messages-with-bad-code-fields":
-                str,
-                "messages-with-bad-length":
-                str,
-                "messages-with-bad-source-address":
-                str,
-                "timestamp-drops-with-broadcast-or-multicast-destination-address":
-                str,
+                "calls-to-icmp-error": str,
+                "drops-due-to-rate-limit": str,
+                "echo-drops-with-broadcast-or-multicast-destinaton-address": str,
+                "errors-not-generated-because-old-message-was-icmp": str,
+                "histogram": ListOf({
+                    "destination-unreachable": str,
+                    "icmp-echo": str,
+                    "icmp-echo-reply": str,
+                    "time-exceeded": str,
+                    "type-of-histogram": str,
+                }),
+                "message-responses-generated": str,
+                "messages-less-than-the-minimum-length": str,
+                "messages-with-bad-checksum": str,
+                "messages-with-bad-code-fields": str,
+                "messages-with-bad-length": str,
+                "messages-with-bad-source-address": str,
+                "timestamp-drops-with-broadcast-or-multicast-destination-address": str,
             },
             Optional("icmp6"): {
                 "address-unreachable": str,
@@ -2297,8 +2155,7 @@ class ShowSystemStatisticsSchema(MetaParser):
                 "membership-queries-received": str,
                 "membership-queries-received-with-invalid-fields": str,
                 "membership-reports-received": str,
-                "membership-reports-received-for-groups-to-which-we-belong":
-                str,
+                "membership-reports-received-for-groups-to-which-we-belong": str,
                 "membership-reports-received-with-invalid-fields": str,
                 "membership-reports-sent": str,
                 "messages-received": str,
@@ -2359,7 +2216,11 @@ class ShowSystemStatisticsSchema(MetaParser):
                 "forward-cache-hit": str,
                 "forward-cache-miss": str,
                 "fragments-that-exceeded-limit": str,
-                "header-type": Use(ip6_header_type),
+                "header-type": ListOf({
+                    "globals": str,
+                    "header-for-source-address-selection": str,
+                    Optional("link-locals"): str,
+                }),
                 "histogram": str,
                 "ip6-datagrams-that-can-not-be-fragmented": str,
                 "ip6-fragments-created": str,
@@ -2554,8 +2415,7 @@ class ShowSystemStatisticsSchema(MetaParser):
                 "ack-header-predictions": str,
                 "acks-bytes": str,
                 "acks-sent-in-response-but-not-exact-rsts": str,
-                "acks-sent-in-response-to-syns-on-established-connections":
-                str,
+                "acks-sent-in-response-to-syns-on-established-connections": str,
                 "attempts": str,
                 "bad-connection-attempts": str,
                 "badack": str,
@@ -2713,8 +2573,7 @@ class ShowSystemStatisticsSchema(MetaParser):
                 "vpls-l3-packets-received": str,
             },
             Optional("tudp"): {
-                "broadcast-or-multicast-datagrams-dropped-due-to-no-socket":
-                str,
+                "broadcast-or-multicast-datagrams-dropped-due-to-no-socket": str,
                 "datagrams-dropped-due-to-full-socket-buffers": str,
                 "datagrams-dropped-due-to-no-socket": str,
                 "datagrams-output": str,
@@ -2725,8 +2584,7 @@ class ShowSystemStatisticsSchema(MetaParser):
                 "datagrams-received": str,
             },
             Optional("udp"): {
-                "broadcast-or-multicast-datagrams-dropped-due-to-no-socket":
-                str,
+                "broadcast-or-multicast-datagrams-dropped-due-to-no-socket": str,
                 "datagrams-delivered": str,
                 "datagrams-dropped-due-to-full-socket-buffers": str,
                 "datagrams-dropped-due-to-no-socket": str,
@@ -2807,12 +2665,8 @@ class ShowSystemStatisticsSchema(MetaParser):
                 "requests-to-re-ageout-aged-route": str,
                 "unsupported-platform": str,
             },
-        })
-        for item in value:
-            statistics_schema.validate(item)
-        return value
-
-    schema = {"statistics": Use(statistics_list)}
+        }
+    )}
 
 
 class ShowSystemStatistics(ShowSystemStatisticsSchema):
@@ -4921,7 +4775,7 @@ class ShowSystemStatisticsNoForwarding(ShowSystemStatistics):
             out = output
 
         return super().cli(output=out)
-    
+
 class ShowSystemInformationSchema(MetaParser):
     """ Schema for:
             * show system information
@@ -4954,19 +4808,19 @@ class ShowSystemInformation(ShowSystemInformationSchema):
 
         # Model: vmx
         p1 = re.compile(r'^Model: +(?P<hardware_model>\S+)$')
-        
+
         # Family: junos
         p2 = re.compile(r'^Family: +(?P<os_name>\S+)$')
-        
+
         # Junos: 19.2R1.8
         p3 = re.compile(r'^Junos: +(?P<os_version>\S+)$')
-        
+
         # Hostname: P4
         p4 = re.compile(r'^Hostname: +(?P<host_name>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
-    
+
             # Model: vmx
             m = p1.match(line)
             if m:
@@ -4976,7 +4830,7 @@ class ShowSystemInformation(ShowSystemInformationSchema):
                     entry_key = group_key.replace("_", "-")
                     entry[entry_key] = group_value
                 continue
-            
+
             # Family: junos
             m = p2.match(line)
             if m:
@@ -4986,7 +4840,7 @@ class ShowSystemInformation(ShowSystemInformationSchema):
                     entry_key = group_key.replace("_", "-")
                     entry[entry_key] = group_value
                 continue
-            
+
             # Junos: 19.2R1.8
             m = p3.match(line)
             if m:
@@ -4996,7 +4850,7 @@ class ShowSystemInformation(ShowSystemInformationSchema):
                     entry_key = group_key.replace("_", "-")
                     entry[entry_key] = group_value
                 continue
-            
+
             # Hostname: P4
             m = p4.match(line)
             if m:
@@ -5027,24 +4881,17 @@ class ShowSystemConnectionsSchema(MetaParser):
             ]
         }
     } """
-    def validate_system_connections_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('connections-table is not a list')
-        connections_schema = Schema({
-            "proto": str,
-            "recv-q": str,
-            "send-q": str,
-            "local-address": str,
-            "foreign-address": str,
-            "state": str,
-        })
-        for item in value:
-            connections_schema.validate(item)
-        return value
 
     schema = {
         "output": {
-            "connections-table": Use(validate_system_connections_list)
+            "connections-table": ListOf({
+                "proto": str,
+                "recv-q": str,
+                "send-q": str,
+                "local-address": str,
+                "foreign-address": str,
+                "state": str,
+            })
         }
     }
 
