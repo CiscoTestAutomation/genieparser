@@ -34,7 +34,6 @@ class ShowRedundancyApplicationGroupSchema(MetaParser):
                 Any():
                 {
                     "group_name": str,
-                    "group_name": str,
                     "administrative_state": str,
                     "aggregate_oper_state": str,
                     "my_role": str,
@@ -127,14 +126,18 @@ class ShowRedundancyApplicationGroup(ShowRedundancyApplicationGroupSchema):
 
     """ Parser for "show redundancy application group {group_id}" """
     
-    cli_command = "show redundancy application group {group_id}"
+    cli_command = ['show redundancy application group {group_id}','show redundancy application group all'] 
 
     def cli(self,group_id='',output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(group_id=group_id))
+            if group_id=="all":
+                out = self.device.execute(self.cli_command[1])
+            else:
+                out = self.device.execute(self.cli_command[0].format(group_id=group_id))
+                
         else:
             out = output
-
+    
         #Faults states Group 1 info:
         p1=re.compile(r'Faults+\s+states+\s+Group+\s+(?P<fault_group_id>\w+)+\s+info+\:')
 
@@ -694,5 +697,5 @@ class ShowRedundancyApplicationGroup(ShowRedundancyApplicationGroupSchema):
                     cur_dict19[active_peer_index]={}
                     cur_dict20=cur_dict19[active_peer_index]
                     active_peer_index+=1
-        print(json.dumps(parsed_dict,indent=4))
+        #print(json.dumps(parsed_dict,indent=4))
         return parsed_dict
