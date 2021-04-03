@@ -32,7 +32,7 @@ expected_output = {
                             },
                             "prefix_related_information": {
                                 "active_tables": "IPv4 Unicast",
-                                "metrics": "[0x0]",
+                                "metrics": "0x0",
                                 "reference_counts": 1,
                             },
                             "interface_handle": "0x0",

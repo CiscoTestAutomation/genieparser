@@ -6733,11 +6733,12 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         * 'show bgp nexthops {ipaddress}'
     '''
 
-    cli_command = 'show bgp nexthops {ipaddress}'
+    cli_command = ['show bgp nexthops {ipaddress}']
 
-    def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
+    def cli(self, ipaddress='', output=None):
+
+        if ipaddress:
+            out = self.device.execute(self.cli_command[0].format(ipaddress=ipaddress))
         else:
             out = output
 
@@ -6841,80 +6842,94 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 #define af_dict dictionary and set to 'address_family'
                 af_dict = def_dict.setdefault('address_family',{})
                 continue
-
+            
+            # Nexthop ID: 0x6000074, Version: 0x0
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 nexthop_id = group['nexthop_id']
                 version = group['version']
+                continue
 
+            # Nexthop Flags: 0x00000000
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 nexthop_flags = group['nexthop_flags']
                 continue
 
+            # Nexthop Handle: 0x7fba00aafccc
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 nexthop_handle = group['nexthop_handle']                
                 continue
 
+            # Firsthop interface handle 0x0c001cc0
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 first_interface_handle = group['first_interface_handle']                
                 continue            
 
+            # Gateway TBL Id: 0xe0000000    Gateway Flags: 0x00000080
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 gateway_tbl_id = group['gateway_tbl_id']
                 gateway_flags = group['gateway_flags']
                 continue
-
+            
+            # Gateway Handle: 0x7fba14059ce0
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 gateway_handle = group['gateway_handle']
                 continue 
-
+            
+            # Gateway: reachable, non-Connected route, prefix length 32
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 gateway = group['gateway']
                 continue         
-
+            
+            # Gateway: reachable, non-Connected route, prefix length 32
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 resolving_route = group['resolving_route']
                 continue 
 
+            # Paths: 0
             m = p12.match(line)
             if m:
                 group = m.groupdict()
                 paths = int(group['paths'])
                 continue       
 
+            # RIB Nexhop ID: 0x0
             m = p13.match(line)
             if m:
                 group = m.groupdict()
                 rib_nexthop_id = group['rib_nexthop_id']
                 continue 
-
+            
+            # Status: [Reachable][Not Connected][Not Local]
             m = p14.match(line)
             if m:
                 group = m.groupdict()
                 status = group['status']
                 continue         
-
+            
+            # Metric: 0
             m = p15.match(line)
             if m:
                 group = m.groupdict()
                 metric = int(group['metric'])
                 continue                      
 
+            # Registration: Asynchronous, Completed: 00:02:15
             m = p16.match(line)
             if m:
                 group = m.groupdict()
@@ -6922,30 +6937,35 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 completed = group['completed']
                 continue   
 
+            # Events: Critical (1)/Non-critical (0)
             m = p17.match(line)
             if m:
                 group = m.groupdict()
                 events = group['events']
                 continue   
 
+            # Last Received: 00:02:14 (Critical)
             m = p18.match(line)
             if m:
                 group = m.groupdict()
                 last_received = group['last_received']
                 continue   
 
+            # Last gw update: (Crit-notif) 00:02:14(rib)
             m = p19.match(line)
             if m:
                 group = m.groupdict()
                 last_gw_update = group['last_gw_update']
                 continue                                      
 
+            # Reference Count: 1
             m = p20.match(line)
             if m:
                 group = m.groupdict()
                 reference_count = int(group['reference_count'])
                 continue      
 
+            # Active Tables: [IPv4 Unicast]
             m = p22.match(line)
             if m:
                 group = m.groupdict()
@@ -6968,24 +6988,28 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 nexthop_address_dict['nexthop_handle'] = nexthop_handle
                 continue  
 
+            # Metrices: [0x0]
             m = p23.match(line)
             if m:
                 group = m.groupdict()
-                metrics = group['metrics']
+                metrics = group['metrics'].replace('[','').replace(']','')
                 continue 
 
+            # Reference Counts: [1]
             m = p24.match(line)
             if m:
                 group = m.groupdict()
                 reference_counts = int(group['reference_counts'])
                 continue   
 
+            # Interface Handle: 0x0
             m = p25.match(line)
             if m:
                 group = m.groupdict()
                 interface_handle = group['interface_handle']
                 continue   
 
+            # Attr ref-count: 4
             m = p26.match(line)
             if m:
                 group = m.groupdict()
