@@ -6735,10 +6735,11 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
 
     cli_command = ['show bgp nexthops {ipaddress}']
 
-    def cli(self, ipaddress='', output=None):
+    def cli(self, ipaddress, output=None):
 
-        if ipaddress:
-            out = self.device.execute(self.cli_command[0].format(ipaddress=ipaddress))
+        if output is None:
+            if ipaddress:
+                out = self.device.execute(self.cli_command[0].format(ipaddress=ipaddress))
         else:
             out = output
 
@@ -6820,12 +6821,16 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Nexthop: 16.16.16.16
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                nexthop_address = group['nexthop_address']
+            if ipaddress:
+                nexthop_address = ipaddress
                 continue
+            else:
+                # Nexthop: 16.16.16.16
+                m = p1.match(line)
+                if m:
+                    group = m.groupdict()
+                    nexthop_address = group['nexthop_address']
+                    continue
 
             # VRF: default
             m = p2.match(line)
