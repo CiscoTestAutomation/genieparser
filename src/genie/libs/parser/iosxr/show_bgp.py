@@ -6818,19 +6818,21 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         # Attr ref-count: 4
         p26 = re.compile(r'^Attr ref-count:\s+((?P<attr_ref_count>[\d]+)\s*)$')
 
-        if ipaddress:
-            nexthop_address = ipaddress
-
+        # if ipaddress:
+        #     nexthop_address = ipaddress
+        
+        nexthop_address = ipaddress
+        
         for line in out.splitlines():
             line = line.strip()
 
-            # Nexthop: 16.16.16.16
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                if not nexthop_address:
-                    nexthop_address = group['nexthop_address']
-                continue
+            # # Nexthop: 16.16.16.16
+            # m = p1.match(line)
+            # if m:
+            #     group = m.groupdict()
+            #     if not nexthop_address:
+            #         nexthop_address = group['nexthop_address']
+            #     continue
                 
             # VRF: default
             m = p2.match(line)
