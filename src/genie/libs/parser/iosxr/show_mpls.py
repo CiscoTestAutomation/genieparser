@@ -1528,27 +1528,29 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
 
     def cli (self, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command[0])
-        else:
-            out = output
+            output = self.device.execute(self.cli_command[0])
         
         # intialize bindings dictionary for parsed results
         result_dict = {}
 
         # 95.95.95.95/32, rev 20
-        p1 = re.compile(r'^(?P<lib_entry>[\d\.\/]+)[ ]?, +rev +(?P<rev>[\d]+)')
+        # 5.43.9.98/32 , rev 6 
+        p1 = re.compile(r'^(?P<lib_entry>[\d\.\/]+) ?, +rev +(?P<rev>\d+)')
         
         # Local binding: label: ImpNull
-        p2 = re.compile(r'^[lL]ocal +binding: +label:[ ]?(?P<local_label>\S+)')
+        # local binding: label:IMP-NULL
+        p2 = re.compile(r'^[lL]ocal +binding: +label: ?(?P<local_label>\S+)')
         
         # Remote bindings: (2 peers)
-        p3 = re.compile(r'^[rR]emote +bindings[ ]?:+(?: +\(+(?P<peer_count>\d+))?')
+        # remote bindings : 
+        p3 = re.compile(r'^[rR]emote +bindings ?:(?: +\((?P<peer_count>\d+) +peers\))?')
         
         # 95.95.95.95:0       16002
-        p4 = re.compile(r'^(?:lsr:)?(?P<lsr_id>[\d\.\:]+)[,]? +(?:label:)?(?P<remote_label>\S+)')
+        # lsr:10.255.255.255:0, label:16 
+        p4 = re.compile(r'^(?:lsr:)?(?P<lsr_id>[\d\.\:]+),? +(?:label:)?(?P<remote_label>\S+)')
         
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip() # strip whitespace from beginning and end
 
             # 95.95.95.95/32, rev 20
