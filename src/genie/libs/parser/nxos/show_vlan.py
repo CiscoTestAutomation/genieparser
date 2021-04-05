@@ -114,7 +114,7 @@ class ShowVlan(ShowVlanSchema):
 
             # VLAN Type         Vlan-mode
             # 1    enet         CE
-            p3 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<vlan_type>[\w]+)'
+            p3 = re.compile(r'^\s*(?P<vlan_id>[0-9]+) +(?P<vlan_type>[a-zA-Z]+)'
                             ' +(?P<vlan_mode>[\w]+)?$')
             m = p3.match(line)
             if m:
