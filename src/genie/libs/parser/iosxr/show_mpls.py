@@ -1487,3 +1487,113 @@ class ShowMplsForwarding(ShowMplsForwardingSchema, ShowMplsForwardingVrf):
                     'vrf', {}).get('default', {})
 
         return ret_dict
+
+
+# ======================================================
+# Parser for 'show mpls ldp bindings'
+# ======================================================
+class ShowMplsLdpBindingsSchema(MetaParser):
+
+    """Schema for 'show mpls ldp bindings' """
+
+    schema =  {
+        'lib_entry': {
+            Any(): {
+                'rev': int,
+                'local_binding': {
+                    'label': str
+                },
+                Optional('remote_bindings'): {
+                    Optional('peer_count'): int,
+                    'label': {
+                        Any(): { 
+                            'lsr_id': {
+                                Any(): {
+                                    'label': str,
+                                    'lsr_id': str
+                                }
+                            }
+                        }
+                    },
+                }
+            }
+        }
+    }
+
+class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
+
+    """ Parser for 'show mpls ldp bindings' """
+
+    cli_command = ['show mpls ldp bindings']
+
+    def cli (self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        # intialize bindings dictionary for parsed results
+        result_dict = {}
+
+        # 95.95.95.95/32, rev 20
+        p1 = re.compile(r'^(?P<lib_entry>[\d\.\/]+)[ ]?, +rev +(?P<rev>[\d]+)')
+        
+        # Local binding: label: ImpNull
+        p2 = re.compile(r'^[lL]ocal +binding: +label:[ ]?(?P<local_label>\S+)')
+        
+        # Remote bindings: (2 peers)
+        p3 = re.compile(r'^[rR]emote +bindings[ ]?:+(?: +\(+(?P<peer_count>\d+))?')
+        
+        # 95.95.95.95:0       16002
+        p4 = re.compile(r'^(?:lsr:)?(?P<lsr_id>[\d\.\:]+)[,]? +(?:label:)?(?P<remote_label>\S+)')
+        
+
+        for line in out.splitlines():
+            line = line.strip() # strip whitespace from beginning and end
+
+            # 95.95.95.95/32, rev 20
+            # 5.43.9.98/32 , rev 6 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lib_entry_dict = result_dict.setdefault('lib_entry', {}).setdefault(group['lib_entry'], {})
+                lib_entry_dict.update({'rev': int(group['rev'])})
+                continue
+            
+            # Local binding: label: ImpNull
+            # local binding: label:IMP-NULL
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                local_dict = lib_entry_dict.setdefault('local_binding', {})
+                local_dict.update({'label': group['local_label']})
+                continue
+                
+            # Remote bindings: (2 peers)
+            # remote bindings : 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                remote_dict = lib_entry_dict.setdefault('remote_bindings', {})
+                if group['peer_count']: 
+                    remote_dict.update({'peer_count': int(group['peer_count'])})
+                continue
+
+            # 95.95.95.95:0       16002
+            # lsr:10.255.255.255:0, label:16 
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                    
+                lsr_id = remote_dict.setdefault('label', {}).\
+                            setdefault(group['remote_label'],{}).\
+                            setdefault('lsr_id', {}).\
+                            setdefault(group['lsr_id'],{})
+                            
+                lsr_id.update({'label': group['remote_label']})
+                lsr_id.update({'lsr_id': group['lsr_id']})
+                continue
+                
+            
+        return result_dict
+
