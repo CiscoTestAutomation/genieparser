@@ -401,9 +401,19 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                                 }
                             }
                         },
-                        'pw': {
+                        'access_pw': {
                             'num_pw': int,
                             'num_pw_up': int,
+                            Optional("neighbor"): {
+                                Any(): {
+                                    "pw_id": {
+                                        Any(): {
+                                            "state": str, 
+                                            "static_mac_address": int
+                                        }
+                                    }
+                                }
+                            }
                         },
                         Optional('pbb'): {
                             'num_pbb': int,
@@ -538,7 +548,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 vfi_dict = bridge_domain_dict.setdefault('vfi', {})
                 vfi_dict.update({'num_vfi': vfi})
 
-                pw_dict = bridge_domain_dict.setdefault('pw', {})
+                pw_dict = bridge_domain_dict.setdefault('access_pw', {})
                 pw_dict.update({'num_pw': pw})
                 pw_dict.update({'num_pw_up': pw_up})
 
@@ -613,10 +623,17 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 state = group['state']
                 static_mac_address = int(group['static_mac_address'])
 
-                neighbor_dict = vfi_dict.setdefault('neighbor', {}). \
-                    setdefault(neighbor, {}). \
-                    setdefault('pw_id', {}). \
-                    setdefault(pw_id, {})
+                if vfi:
+                    neighbor_dict = vfi_dict.setdefault('neighbor', {}). \
+                        setdefault(neighbor, {}). \
+                        setdefault('pw_id', {}). \
+                        setdefault(pw_id, {})
+                else:
+                    neighbor_dict = pw_dict.setdefault('neighbor', {}). \
+                        setdefault(neighbor, {}). \
+                        setdefault('pw_id', {}). \
+                        setdefault(pw_id, {})                    
+
 
                 neighbor_dict.update({'state': state})
                 neighbor_dict.update({'static_mac_address': static_mac_address})
