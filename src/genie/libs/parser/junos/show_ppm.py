@@ -11,7 +11,7 @@ import re
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import Schema, Any, \
-                    Optional, Use
+                    Optional, Use, ListOf
 
 
 # ===========================
@@ -39,38 +39,28 @@ class ShowPPMTransmissionsProtocolBfdDetailSchema(MetaParser):
     }
     '''
 
-    def validate_transmission_data(value):
-        if not isinstance(value, list):
-            raise SchemaError('transmission data is not a list')
-
-        transmission_data = Schema({
-            "protocol": str,
-            Optional("transmission-count"): str,
-            Optional("transmission-delay-difference"): str,
-            Optional("transmission-delayed"): str,
-            Optional("transmission-delayed-count"): str,
-            "transmission-destination": str,
-            "transmission-distributed": str,
-            Optional("transmission-host"): str,
-            "transmission-interface-index": str,
-            "transmission-interval": str,
-            Optional("transmission-interval-threshold"): str,
-            Optional("transmission-jitter"): str,
-            Optional("transmission-largest-difference"): str,
-            Optional("transmission-last-interval"): str,
-            Optional("transmission-pfe-addr"): str,
-            Optional("transmission-pfe-handle"): str
-        })
-
-        for item in value:
-            transmission_data.validate(item)
-        return value
-
     schema = {
         "ppm-transmissions": {
             Optional("remote-transmissions"): str,
             Optional("total-transmissions"): str,
-            "transmission-data": Use(validate_transmission_data)
+            "transmission-data": ListOf({
+               "protocol": str,
+                Optional("transmission-count"): str,
+                Optional("transmission-delay-difference"): str,
+                Optional("transmission-delayed"): str,
+                Optional("transmission-delayed-count"): str,
+                "transmission-destination": str,
+                "transmission-distributed": str,
+                Optional("transmission-host"): str,
+                "transmission-interface-index": str,
+                "transmission-interval": str,
+                Optional("transmission-interval-threshold"): str,
+                Optional("transmission-jitter"): str,
+                Optional("transmission-largest-difference"): str,
+                Optional("transmission-last-interval"): str,
+                Optional("transmission-pfe-addr"): str,
+                Optional("transmission-pfe-handle"): str
+            })
         }
     }
 
@@ -131,7 +121,7 @@ class ShowPPMTransmissionsProtocolBfdDetail(ShowPPMTransmissionsProtocolBfdDetai
                 ppm_transmissions = ret_dict.setdefault('ppm-transmissions', {})
 
                 transmission_data_list = ppm_transmissions.setdefault('transmission-data', [])
-                
+
                 transmission_data_dict = {}
 
                 for key, value in group.items():

@@ -253,7 +253,6 @@ class ShowEthernetTagsSchema(MetaParser):
                 },
             }
 
-
 class ShowEthernetTags(ShowEthernetTagsSchema):
     """Parser for show ethernet tags
     parser class - implements detail parsing mechanisms for cli and yang output.
@@ -265,11 +264,8 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    cli_command = 'show ethernet tags'
-
     def cli(self,output=None):
         """parsing mechanism: cli
-
         Function cli() defines the cli type output parsing mechanism which
         typically contains 3 steps: exe
         cuting, transforming, returning
@@ -327,84 +323,3 @@ class ShowEthernetTags(ShowEthernetTagsSchema):
                 continue
 
         return intf_dict
-
-    def yang(self):
-        """parsing mechanism: yang
-
-        Function yang() defines the yang type output parsing mechanism which
-        typically contains 3 steps: executing, transforming, returning
-        """
-
-        ret = {}
-        cmd = '''<interfaces xmlns="http://cisco.com/ns/yang/Cisco-IOS-XR-pfi-im-cmd-oper"><interface-xr><interface/></interface-xr></interfaces>'''
-        output = self.device.get(('subtree', cmd))
-
-        for data in output.data:
-            for interfaces in data:
-                for interface_xr in interfaces:
-                    interface_name = None
-                    encapsulation_type = None
-                    sub_interface = None
-                    mtu = None
-                    outer_tag = None
-                    second_tag = None
-                    for interface in interface_xr:
-                        # Remove the namespace
-                        text = interface.tag[interface.tag.find('}')+1:]
-                        if text == 'interface-name':
-                            sub_interface = interface.text
-                            continue
-                        if text == 'encapsulation':
-                            encapsulation_type = interface.text
-                            continue
-                        if text == 'parent-interface-name':
-                            interface_name = interface.text
-                            continue
-                        if text == 'mtu':
-                            mtu = interface.text
-                            continue
-                        if encapsulation_type:
-                            for encapsulation_information in interface:
-                                for dot1q_information in encapsulation_information:
-                                    for encapsulation_details in dot1q_information:
-                                        for stack in encapsulation_details:
-                                            # Remove the namespace
-                                            text = stack.tag[stack.tag.find('}')+1:]
-                                            if text == 'outer-tag':
-                                                outer_tag = stack.text
-                                                continue
-                                            if text == 'second-tag':
-                                                second_tag = stack.text
-                                                continue
-
-                        # Let's build it now
-                        if 'interface' not in ret:
-                            ret['interface'] = {}
-                        if interface_name is not None:
-                            ret['interface'][interface_name] = {}
-                            if sub_interface is not None:
-                                if 'sub_interface' not in ret['interface'][interface_name]:
-                                    ret['interface'][interface_name]['sub_interface'] = {}
-                                ret['interface'][interface_name]['sub_interface'][sub_interface] = {}
-                                if outer_tag is not None:
-                                    if 'vlan_id' not in ret['interface'][interface_name]['sub_interface'][sub_interface]:
-                                        ret['interface'][interface_name]['sub_interface'][sub_interface]['vlan_id'] = {}
-                                    ret['interface'][interface_name]['sub_interface'][sub_interface]['vlan_id'][outer_tag] = {}
-                                    if encapsulation_type is not None:
-                                        ret['interface'][interface_name]['sub_interface'][sub_interface]['vlan_id'][outer_tag]['outer_encapsulation_type'] = \
-                                            encapsulation_type
-                                        ret['interface'][interface_name]['sub_interface'][sub_interface]['vlan_id'][outer_tag]['inner_encapsulation_type'] = \
-                                            encapsulation_type
-                                    if second_tag is not None:
-                                        ret['interface'][interface_name]['sub_interface'][sub_interface]['vlan_id'][outer_tag]['inner_encapsulation_vlan_id'] = \
-                                            second_tag
-                                    if mtu is not None:
-                                        ret['interface'][interface_name]['sub_interface'][sub_interface]['vlan_id'][outer_tag]['mtu'] = \
-                                            mtu
-        return ret
-
-    def yang_cli(self):
-        cli_output = self.cli()
-        yang_output = self.yang()
-        merged_output = merge_dict(yang_output,cli_output)
-        return merged_output

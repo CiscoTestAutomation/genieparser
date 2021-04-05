@@ -10,118 +10,79 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
+from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema, ListOf
 
 
 class ShowMPLSLSPNameDetailSchema(MetaParser):
     """ Schema for
         * show mpls lsp name {name} detail
     """
-    def validate_rsvp_session_data(value):
-        if not isinstance(value, list):
-            raise SchemaError('RSVP session data is not a list')
-
-        def validate_packet_information(value):
-            if not isinstance(value, list):
-                raise SchemaError('Packet information is not a list')
-
-            packet_information = Schema({
-                "heading": str,
-                Optional("next-hop"): str,
-                Optional("previous-hop"): str,
-                Optional("interface-name"): str,
-                Optional("count"): str,
-                Optional("entropy-label"): str,
-                Optional("in-epoch"): str,
-                Optional("in-message-handle"): str,
-                Optional("in-message-id"): str,
-                Optional("out-epoch"): str,
-                Optional("out-message-state"): str,
-                Optional("out-message-id"): str,
-            })
-
-            for item in value:
-                packet_information.validate(item)
-            return value
-
-        def validate_explicit_route(value):
-            if not isinstance(value, list):
-                raise SchemaError('Explicit route is not a list')
-
-            explicit_route = Schema({
-                "address": str,
-            })
-
-            for item in value:
-                explicit_route.validate(item)
-            return value
-
-        def validate_record_route(value):
-            if not isinstance(value, list):
-                raise SchemaError('Record route is not a list')
-
-            record_route = Schema({
-                "address": str,
-            })
-
-            for item in value:
-                record_route.validate(item)
-            return value
-
-        rsvp_session_data = Schema({
-            "session-type": str,
-            "count": str,
-            Optional("rsvp-session"): {
-                "destination-address": str,
-                "source-address": str,
-                "lsp-state": str,
-                "route-count": str,
-                "name": str,
-                "lsp-path-type": str,
-                "suggested-label-in": str,
-                "suggested-label-out": str,
-                "recovery-label-in": str,
-                "recovery-label-out": str,
-                "rsb-count": str,
-                "resv-style": str,
-                "label-in": str,
-                "label-out": str,
-                "psb-lifetime": str,
-                "psb-creation-time": str,
-                "sender-tspec": str,
-                "lsp-id": str,
-                "tunnel-id": str,
-                "proto-id": str,
-                "packet-information": Use(validate_packet_information),
-                "adspec": str,
-                "explicit-route": {
-                    "explicit-route-element": Use(validate_explicit_route)
-                },
-                "record-route": {
-                    Optional("record-route-element"): Use(validate_record_route),
-                    Optional("address"): list,
-                },
-                Optional("rsvp-lsp-enh-local-prot-downstream"): {
-                    "rsvp-lsp-enh-local-prot-refresh-interval": str,
-                    "rsvp-lsp-enh-lp-downstream-status": str
-                },
-                Optional("rsvp-lsp-enh-local-prot-upstream"): {
-                    "rsvp-lsp-enh-local-prot-refresh-interval": str,
-                    "rsvp-lsp-enh-lp-upstream-status": str
-                },
-            },
-            "display-count": str,
-            "up-count": str,
-            "down-count": str,
-        })
-
-        for item in value:
-            rsvp_session_data.validate(item)
-        return value
 
     schema = {
         "mpls-lsp-information": {
-            "rsvp-session-data": Use(validate_rsvp_session_data)
+            "rsvp-session-data": ListOf({
+                "session-type": str,
+                "count": str,
+                Optional("rsvp-session"): {
+                    "destination-address": str,
+                    "source-address": str,
+                    "lsp-state": str,
+                    "route-count": str,
+                    "name": str,
+                    "lsp-path-type": str,
+                    "suggested-label-in": str,
+                    "suggested-label-out": str,
+                    "recovery-label-in": str,
+                    "recovery-label-out": str,
+                    "rsb-count": str,
+                    "resv-style": str,
+                    "label-in": str,
+                    "label-out": str,
+                    "psb-lifetime": str,
+                    "psb-creation-time": str,
+                    "sender-tspec": str,
+                    "lsp-id": str,
+                    "tunnel-id": str,
+                    "proto-id": str,
+                    "packet-information": ListOf({
+                        "heading": str,
+                        Optional("next-hop"): str,
+                        Optional("previous-hop"): str,
+                        Optional("interface-name"): str,
+                        Optional("count"): str,
+                        Optional("entropy-label"): str,
+                        Optional("in-epoch"): str,
+                        Optional("in-message-handle"): str,
+                        Optional("in-message-id"): str,
+                        Optional("out-epoch"): str,
+                        Optional("out-message-state"): str,
+                        Optional("out-message-id"): str,
+                    }),
+                    "adspec": str,
+                    "explicit-route": {
+                        "explicit-route-element": ListOf({
+                            "address": str,
+                        })
+                    },
+                    "record-route": {
+                        Optional("record-route-element"): ListOf({
+                            "address": str,
+                        }),
+                        Optional("address"): list,
+                    },
+                    Optional("rsvp-lsp-enh-local-prot-downstream"): {
+                        "rsvp-lsp-enh-local-prot-refresh-interval": str,
+                        "rsvp-lsp-enh-lp-downstream-status": str
+                    },
+                    Optional("rsvp-lsp-enh-local-prot-upstream"): {
+                        "rsvp-lsp-enh-local-prot-refresh-interval": str,
+                        "rsvp-lsp-enh-lp-upstream-status": str
+                    },
+                },
+                "display-count": str,
+                "up-count": str,
+                "down-count": str,
+            })
         },
     }
 

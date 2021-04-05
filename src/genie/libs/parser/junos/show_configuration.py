@@ -11,7 +11,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
+from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema, ListOf
 
 
 class ShowConfigurationProtocolsMplsLabelSwitchedPathSchema(MetaParser):
@@ -125,25 +125,15 @@ class ShowConfigurationProtocolsMplsPathSchema(MetaParser):
         show configuration protocols mpls path {path}
     """
 
-    def validate_path_list_schema(value):
-        if not isinstance(value, list):
-            raise SchemaError('path list schema is not a list')
-    
-        path_list_schema = Schema({
-            'name': str,
-            'type': str,
-        })
-    
-        for item in value:
-            path_list_schema.validate(item)
-        return value
-
     schema = {
         "configuration": {
             "protocols": {
                 "mpls": {
                     "path": {
-                        "path-list": Use(validate_path_list_schema)
+                        "path-list": ListOf({
+                        'name': str,
+                        'type': str,
+                    })
                     }
                 }
             }

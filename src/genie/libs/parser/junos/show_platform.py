@@ -12,7 +12,7 @@ import re
 # Genie
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, \
-                    Optional, Use
+                    Optional, Use, ListOf
 
 
 # ===========================
@@ -139,20 +139,6 @@ class ShowVersionSchema(MetaParser):
             }
     """
 
-    def validate_package_info_list(value):
-        if not isinstance(value, list):
-            raise Exception('package infomation is not a list')
-        package_info_schema = Schema(
-            {
-                "comment": str,
-                "name": str,
-            }
-        )
-
-        for item in value:
-            package_info_schema.validate(item)
-        return value
-
     # main schema
     schema = {
             "software-information": {
@@ -160,7 +146,10 @@ class ShowVersionSchema(MetaParser):
             "junos-version": str,
             "product-model": str,
             "product-name": str,
-            "package-information": Use(validate_package_info_list)
+            "package-information": ListOf({
+                "comment": str,
+                "name": str,
+            })
         }
     }
 
@@ -253,36 +242,12 @@ class ShowVersion(ShowVersionSchema):
 
         return show_version_dict
 
+
 # ===================================
 # Schema for:
 #   * 'file list {directory} detail'
 # ===================================
 class FileListDetailSchema(MetaParser):
-
-    def validate_file_information_list(value):
-        # Pass file-information of dict in value
-        if not isinstance(value, list):
-            raise Exception('file-information is not a list')
-        # Create protocols Schema
-        file_information_schema = Schema({
-            "file-date": {
-                Optional("#text"): str,
-                Optional("@junos:format"): str
-            },
-            "file-group": str,
-            "file-links": str,
-            "file-name": str,
-            "file-owner": str,
-            "file-permissions": {
-                Optional("#text"): str,
-                Optional("@junos:format"): str
-            },
-            "file-size": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            file_information_schema.validate(item)
-        return value
 
     schema = {
         Optional("@xmlns:junos"): str,
@@ -292,7 +257,21 @@ class FileListDetailSchema(MetaParser):
             Optional("@root-path"): str,
             "directory": {
                 Optional("@name"): str,
-                "file-information": Use(validate_file_information_list),
+                "file-information": ListOf({
+                    "file-date": {
+                        Optional("#text"): str,
+                        Optional("@junos:format"): str
+                    },
+                    "file-group": str,
+                    "file-links": str,
+                    "file-name": str,
+                    "file-owner": str,
+                    "file-permissions": {
+                        Optional("#text"): str,
+                        Optional("@junos:format"): str
+                    },
+                    "file-size": str
+                }),
                 "total-files": str
             }
         }
@@ -311,14 +290,14 @@ class FileListDetail(FileListDetailSchema):
                 root_path=root_path))
         else:
             out = output
-        
+
         ret_dict = {}
 
         # -rw-r-----  1 root  wheel     525672 May 22 02:40 /var/log/trace-static
         p1 = re.compile(r'^(?P<file_permissions>\S+)\s+(?P<file_links>\d+)\s+'
             r'(?P<file_owner>\S+)\s+(?P<file_group>\S+)\s+(?P<file_size>\d+)\s+'
             r'(?P<file_date>[\S\s]+)\s+(?P<file_name>\S+)$')
-        
+
         # total files: 2
         p2 = re.compile(r'^total\s+files:\s+(?P<total_files>\d+)$')
 

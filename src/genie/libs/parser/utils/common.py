@@ -636,7 +636,7 @@ class Common():
                         expect_command='show bgp all dampening flap-statistics')
         '''
         # get to data node
-        cmd_node = root.getchildren()[0]
+        cmd_node = list(root)[0]
         # compose command from element tree
         # ex.  <nf:data>
         #        <show>
@@ -649,7 +649,7 @@ class Common():
         while True:
             # get next node
             try:
-                cmd_node = cmd_node.getchildren()
+                cmd_node = list(cmd_node)
                 if len(cmd_node) == 1:
 
                     # when only have one child

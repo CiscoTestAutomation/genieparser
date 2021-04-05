@@ -9,33 +9,24 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
+from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema, ListOf
 
 
 class ShowBFDSessionSchema(MetaParser):
     """ Schema for
         * show bfd session
     """
-    def validate_bfd_session(value):
-        if not isinstance(value, list):
-            raise SchemaError('BFD Session not a list')
-
-        bfd_session = Schema({
-            "session-neighbor": str,
-            "session-state": str,
-            Optional("session-interface"): str,
-            "session-detection-time": str,
-            "session-transmission-interval": str,
-            "session-adaptive-multiplier": str,
-        })
-
-        for item in value:
-            bfd_session.validate(item)
-        return value
 
     schema = {
         "bfd-session-information": {
-            Optional("bfd-session"): Use(validate_bfd_session),
+            Optional("bfd-session"): ListOf({
+                    "session-neighbor": str,
+                    "session-state": str,
+                    Optional("session-interface"): str,
+                    "session-detection-time": str,
+                    "session-transmission-interval": str,
+                    "session-adaptive-multiplier": str,
+                }),
             "clients": str,
             "cumulative-reception-rate": str,
             "cumulative-transmission-rate": str,
@@ -250,7 +241,7 @@ class ShowBFDSessionDetail(ShowBFDSessionDetailSchema):
                 continue
 
         return ret_dict
-        
+
 
 class ShowBFDSessionAddressExtensiveSchema(MetaParser):
     """
@@ -384,7 +375,7 @@ class ShowBFDSessionAddressExtensive(ShowBFDSessionAddressExtensiveSchema):
 
         #Session ID: 0x1b3
         p14 = re.compile(r'^(?P<no_refresh>Session+ ID:+[\s\S]+)$')
-        
+
         #     1 sessions, 1 clients
         p15 = re.compile(r'^(?P<sessions>\S+) +sessions, +(?P<clients>\S+) +clients$')
 
@@ -518,5 +509,5 @@ class ShowBFDSessionAddressExtensive(ShowBFDSessionAddressExtensiveSchema):
                     ret_dict['bfd-session-information'][k.replace('_', '-')] = v
 
                 continue
-        
+
         return ret_dict
