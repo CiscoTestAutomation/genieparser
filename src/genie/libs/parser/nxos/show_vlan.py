@@ -166,7 +166,7 @@ class ShowVlan(ShowVlanSchema):
             #          10        community
 
             p5 = re.compile(r'^\s*(?P<primary>\d+)? +(?P<secondary>\d+)'
-                            ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\s\,\/]+))?$')
+                            ' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\,\/ ]+))?$')
             m = p5.match(line)
 
             if m:

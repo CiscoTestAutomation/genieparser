@@ -627,7 +627,6 @@ CLASS_SKIP = {
         "ShowVirtualServiceGlobal": True, # Not migrated
         "ShowVirtualServiceList": True, # Not migrated
         "ShowVirtualServiceUtilization": True, # Not migrated
-        "ShowVlan": True, # Not migrated
         "ShowVlanAccessMap": True, # Not migrated
         "ShowVlanFilter": True, # Not migrated
         "ShowVlanIdVnSegment": True, # Not migrated
