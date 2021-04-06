@@ -48,9 +48,13 @@ def _load_parser_json():
                     'genie.libs.parsers')
         parser_data = {}
     else:
-        # Open all the parsers in json file
-        with open(parsers) as f:
-            parser_data = json.load(f)
+        try:
+            # Open all the parsers in json file
+            with open(parsers) as f:
+                parser_data = json.load(f)
+        except:
+            log.error(f'Could not load parser json from file {parsers}', exc_info=True)
+            return {}
 
         # check if provided external parser packages
         ext_parser_package = cfg.get(PYATS_EXT_PARSER, None) or \
