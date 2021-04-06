@@ -795,7 +795,6 @@ CLASS_SKIP = {
         "ShowMplsLabelTablePrivate": True, # Not migrated
         "ShowMplsLdpDiscovery": True, # Not migrated
         "ShowMplsLdpNeighbor": True, # Not migrated
-        "ShowMplsLdpNeighborBrief": True, # Not migrated
         "ShowMplsLdpNeighborDetail": True, # Not migrated
         "ShowMribEvpnBucketDb": True, # Not migrated
         "ShowMribVrfRoute": True, # Not migrated

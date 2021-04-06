@@ -1,0 +1,89 @@
+WLAN Profile Name     : MACFilter
+================================================
+Identifier                                     : 1
+Description                                    : 
+Network Name (SSID)                            : MACFilter2
+Status                                         : Enabled
+Broadcast SSID                                 : Enabled
+Advertise-Apname                               : Disabled
+Universal AP Admin                             : Disabled
+Max Associated Clients per WLAN                : 0
+Max Associated Clients per AP per WLAN         : 0
+Max Associated Clients per AP Radio per WLAN   : 200
+OKC                                            : Enabled
+Number of Active Clients                       : 0
+CHD per WLAN                                   : Enabled
+WMM                                            : Allowed
+WiFi Direct Policy                             : Disabled
+Channel Scan Defer Priority:
+  Priority (default)                           : 5
+  Priority (default)                           : 6
+Scan Defer Time (msecs)                        : 100
+Media Stream Multicast-direct                  : Disabled
+CCX - AironetIe Support                        : Disabled
+Peer-to-Peer Blocking Action                   : Disabled
+Radio Policy                                   : All
+DTIM period for 802.11a radio                  : 
+DTIM period for 802.11b radio                  : 
+Local EAP Authentication                       : Disabled
+Mac Filter Authorization list name             : default
+Mac Filter Override Authorization list name    : Disabled
+Accounting list name                           : 
+802.1x authentication list name                : default
+802.1x authorization list name                 : Disabled
+Security
+    802.11 Authentication                      : Open System
+    Static WEP Keys                            : Disabled
+    Wi-Fi Protected Access (WPA/WPA2/WPA3)     : Disabled
+    OWE Transition Mode                        : Disabled
+    OSEN                                       : Disabled
+    FT Support                                 : Adaptive
+        FT Reassociation Timeout (secs)        : 20
+        FT Over-The-DS mode                    : Disabled
+    PMF Support                                : Disabled
+        PMF Association Comeback Timeout (secs): 1
+        PMF SA Query Time (msecs)              : 200
+    Web Based Authentication                   : Disabled
+    Conditional Web Redirect                   : Disabled
+    Splash-Page Web Redirect                   : Disabled
+    Webauth On-mac-filter Failure              : Disabled
+    Webauth Authentication List Name           : Disabled
+    Webauth Authorization List Name            : Disabled
+    Webauth Parameter Map                      : Disabled
+Band Select                                    : Disabled
+Load Balancing                                 : Disabled
+Multicast Buffer                               : Disabled
+Multicast Buffers (frames)                     : 0
+IP Source Guard                                : Disabled
+Assisted-Roaming
+    Neighbor List                              : Enabled
+    Prediction List                            : Disabled
+    Dual Band Support                          : Disabled
+IEEE 802.11v parameters
+    Directed Multicast Service                 : Enabled
+    BSS Max Idle                               : Enabled
+        Protected Mode                         : Disabled
+    Traffic Filtering Service                  : Disabled
+    BSS Transition                             : Enabled
+        Disassociation Imminent                : Disabled
+            Optimised Roaming Timer (TBTTS)    : 40
+            Timer (TBTTS)                      : 200
+        Dual Neighbor List                     : Disabled
+    WNM Sleep Mode                             : Disabled
+802.11ac MU-MIMO                               : Enabled
+802.11ax parameters
+    OFDMA Downlink                             : Enabled
+    OFDMA Uplink                               : Enabled
+    MU-MIMO Downlink                           : Enabled
+    MU-MIMO Uplink                             : Enabled
+    BSS Target Wake Up Time                    : Enabled
+    BSS Target Wake Up Time Broadcast Support  : Enabled
+mDNS Gateway Status                            : Bridge
+WIFI Alliance Agile Multiband                  : Disabled
+Device Analytics
+    Advertise Support                          : Enabled
+    Share Data with Client                     : Disabled
+Client Scan Report (11k Beacon Radio Measurement)
+    Request on Association                     : Disabled
+    Request on Roam                            : Disabled
+WiFi to Cellular Steering                      : Disabled
