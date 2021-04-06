@@ -19,7 +19,8 @@ from genie.libs.parser.iosxr.show_mpls import (ShowMplsLabelRange,
                                                ShowMplsForwardingVrf,
                                                ShowMplsLdpNeighbor,
                                                ShowMplsLdpNeighborDetail,
-                                               ShowMplsLdpDiscovery)
+                                               ShowMplsLdpDiscovery,
+                                               ShowMplsLdpBindings)
 
 
 # ==================================================
