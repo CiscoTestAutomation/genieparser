@@ -446,7 +446,6 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         ret_dict = {}
         # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
         # Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
-        # p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\S+), +bridge\-domain: +'
         p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\S+), +bridge\-domain: +'
             '(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>[\w\s\(\)]+), +'
             'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')        
@@ -476,7 +475,6 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
 
         # VFI 1
         # VFI vfi60 (up)
-        # p6 = re.compile(r'^VFI +(?P<vfi>\S+)( +\((?P<state>\w+)\))?$')
         p6 = re.compile(r'^VFI\s+(?P<vfi>\S+)(\s*(\((?P<state>[\w\s]+)\))?\s*)$')
 
         # Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
