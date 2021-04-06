@@ -2,5 +2,5 @@
                                 New
 --------------------------------------------------------------------------------
 * IOSXR
-    * Added ShowMplsLdpBindings
+    * Added Showmplsldpbindings
       * Show Mpls Ldp Bindings
