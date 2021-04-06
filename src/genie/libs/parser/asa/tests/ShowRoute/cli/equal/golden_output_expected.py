@@ -383,6 +383,20 @@ expected_output = {
                             "source_protocol": "ospf",
                             "source_protocol_codes": "O",
                         },
+                        "11.0.0.0/8": {
+                            "active": True,
+                            "candidate_default": False,
+                            "metric": 0,
+                            "next_hop": {
+                                "outgoing_interface_name": {
+                                    "gig3": {"outgoing_interface_name": "gig3",}
+                                }
+                            },
+                            "route": "11.0.0.0/8",
+                            "route_preference": 1,
+                            "source_protocol": "static intervrf",
+                            "source_protocol_codes": "SI"        
+                        },
                     }
                 }
             }

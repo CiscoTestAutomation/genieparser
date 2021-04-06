@@ -65,6 +65,7 @@ class ShowRouteSchema(MetaParser):
            i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
            ia - IS-IS, * - candidate default, U - per-user static route
            o - ODR, P - periodic downloaded static route, + - replicated route
+           SI - Static InterVRF
     """
     source_protocol_dict = {
         'O': 'ospf',
@@ -93,6 +94,7 @@ class ShowRouteSchema(MetaParser):
         '+': 'replicated route',
         'V': 'VPN',
         'P': 'periodic downloaded static route',
+        'SI': 'Static InterVRF',
     }
 
 
@@ -121,7 +123,8 @@ class ShowRoute(ShowRouteSchema):
         # i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
         # * - candidate default, su - IS-IS summary, U - per-user static route, o - ODR
         # P - periodic downloaded static route, + - replicated route
-        p1 = re.sub(r'(?ms)(Codes:.+?)replicated\sroute', '', out, re.MULTILINE)
+        # SI - Static InterVRF
+        p1 = re.sub(r'(?ms)(Codes:.+?)Static\sInterVRF', '', out, re.MULTILINE)
 
         res = "\n".join([x.lstrip() for x in p1.splitlines()])
         entries = dict()
@@ -170,6 +173,11 @@ class ShowRoute(ShowRouteSchema):
 
         # L 10.10.1.5 255.255.255.255 is directly connected, pod2500
         p5 = re.compile(r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s(?:.*),\s(?P<context_name>\S+)')
+
+        # SI 11.0.0.0 255.0.0.0 [1/0] is directly connected, gig3
+        p5_1 = re.compile(
+            r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s(\[(?P<route_preference>[\d\/]+)\])?'
+            r'\s(?:.*),\s(?P<context_name>\S+)')
 
         # S 0.0.0.1 0.0.0.0 [10/5]
         p6 = re.compile(r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s\[(?P<route_preference>[\d\/]+)\]')
@@ -234,6 +242,12 @@ class ShowRoute(ShowRouteSchema):
             elif line.startswith('L') or line.startswith('V') or line.startswith('C'):
                 """ Local, Connected or VPN """
                 m = p5.match(line)
+                if m:
+                    groups = m.groupdict()
+
+            elif line.startswith('SI'):
+                """ Static InterVRF """
+                m = p5_1.match(line)
                 if m:
                     groups = m.groupdict()
 
