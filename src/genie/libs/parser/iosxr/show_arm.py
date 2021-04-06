@@ -82,11 +82,11 @@ class ShowArmIpv4Conflicts(ShowArmIpv4ConflictsSchema):
                 group = m.groupdict()
                                             
                 forced_down_dict = result_dict.setdefault('vrf', {}). \
-                                            setdefault('default', {}). \
-                                            setdefault('address_family', {}). \
-                                            setdefault('ipv4', {}). \
-                                            setdefault('forced_down', {}). \
-                                            setdefault(group['forced_down'], {})
+                                               setdefault('default', {}). \
+                                               setdefault('address_family', {}). \
+                                               setdefault('ipv4', {}). \
+                                               setdefault('forced_down', {}). \
+                                               setdefault(group['forced_down'], {})
                 continue
 
             # F Lo2 10.1.1.2/24                          Lo1 10.1.1.1/24
@@ -94,15 +94,19 @@ class ShowArmIpv4Conflicts(ShowArmIpv4ConflictsSchema):
             if m:
                 group = m.groupdict()
                 
-                down_interface = Common.convert_intf_name(group['down_interface']) # convert Lo2 to loopback2
+                # convert Lo2 to loopback2
+                down_interface = Common.convert_intf_name(group['down_interface'])
                 
-                down_interface_dict = forced_down_dict.setdefault('down_interface', {}).setdefault(down_interface, {})
+                down_interface_dict = forced_down_dict.setdefault('down_interface', {}). \
+                                                       setdefault(down_interface, {})
+                
                 down_interface_dict.update({'address': group['down_address']})
                 
                 # convert Lo1 to loopback1
                 up_interface = Common.convert_intf_name(group['up_interface'])
                 
-                up_interface_dict = down_interface_dict.setdefault('up_interface', {}).setdefault(up_interface, {})
+                up_interface_dict = down_interface_dict.setdefault('up_interface', {}). \
+                                                        setdefault(up_interface, {})
                 up_interface_dict.update({'address': group['up_address']})
                 continue
 
@@ -112,21 +116,26 @@ class ShowArmIpv4Conflicts(ShowArmIpv4ConflictsSchema):
             if m:
                 group = m.groupdict()
                 address_family_dict = result_dict.setdefault('vrf', {}). \
-                            setdefault('default', {}). \
-                            setdefault('address_family', {}). \
-                            setdefault('ipv4', {})
+                                                  setdefault('default', {}). \
+                                                  setdefault('address_family', {}). \
+                                                  setdefault('ipv4', {})
                 
-                unnumbered_down_interface = Common.convert_intf_name(group['unnumbered_down_interface']) # convert tu2 to Tunnel2
-                unnumbered_down_dict = address_family_dict.setdefault('unnumbered_down_interface', {}).setdefault(unnumbered_down_interface, {})
+                # convert tu2 to Tunnel2
+                unnumbered_down_interface = Common.convert_intf_name(group['unnumbered_down_interface'])
+                unnumbered_down_dict = address_family_dict.setdefault('unnumbered_down_interface', {}). \
+                                                           setdefault(unnumbered_down_interface, {})
                 
-                unnumbered_down_due = Common.convert_intf_name(group['unnum_down_due']) # convert tu1 to Tunnel1
+                # convert tu1 to Tunnel1
+                unnumbered_down_due = Common.convert_intf_name(group['unnum_down_due'])
                 unnumbered_down_dict.update({'due_to': unnumbered_down_due})
                 
-
-                unnumbered_up_interface = Common.convert_intf_name(group['unnumbered_up_interface']) # convert tu1 to Tunnel1
-                unnumbered_up_dict = unnumbered_down_dict.setdefault('up_interface', {}).setdefault(unnumbered_up_interface, {})
+                # convert tu1 to Tunnel1
+                unnumbered_up_interface = Common.convert_intf_name(group['unnumbered_up_interface'])
+                unnumbered_up_dict = unnumbered_down_dict.setdefault('up_interface', {}). \
+                                                          setdefault(unnumbered_up_interface, {})
                 
-                unnumbered_up_due = Common.convert_intf_name(group['unnum_up_due']) # convert Lo1 to Loopback1
+                # convert Lo1 to Loopback1
+                unnumbered_up_due = Common.convert_intf_name(group['unnum_up_due'])
                 unnumbered_up_dict.update({'due_to': unnumbered_up_due})
                 continue
             
