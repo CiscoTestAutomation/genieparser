@@ -585,8 +585,9 @@ class Common():
                    'vr': 'vasiright',
                    'BE': 'Bundle-Ether',
                    'tu': 'Tunnel'
-                   'M-E': 'M-Ethernet',
-                   'BAGG' : 'Bridge-Aggregation'
+                   'M-E': 'M-Ethernet',             # comware
+                   'BAGG' : 'Bridge-Aggregation',   # comware
+                   'Ten-GigabitEthernet': 'TenGigabitEthernet'  # HP
                    }
         m = re.search(r'([-a-zA-Z]+)', intf)
         m1 = re.search(r'([\d\/\.]+)', intf)
