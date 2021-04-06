@@ -446,9 +446,10 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         ret_dict = {}
         # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
         # Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
+        # p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\S+), +bridge\-domain: +'
         p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\S+), +bridge\-domain: +'
-            '(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>\w+), +'
-            'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')
+            '(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>[\w\s\(\)]+), +'
+            'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')        
 
         # Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
         # Aging: 300 s, MAC limit: 100, Action: limit, no-flood, Notification: syslog, trap
@@ -632,8 +633,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                     neighbor_dict = pw_dict.setdefault('neighbor', {}). \
                         setdefault(neighbor, {}). \
                         setdefault('pw_id', {}). \
-                        setdefault(pw_id, {})                    
-
+                        setdefault(pw_id, {})    
 
                 neighbor_dict.update({'state': state})
                 neighbor_dict.update({'static_mac_address': static_mac_address})
