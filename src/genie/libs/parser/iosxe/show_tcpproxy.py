@@ -94,6 +94,7 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
             'flow_entries_created': int,
             'flow_entries_deleted': int,
             'current_flow_entries': int,
+            Optional('current_valid_flow_entries'): int,
             'current_connections': int,
             'connections_in_progress': int,
             'failed_connections': int,
@@ -148,8 +149,13 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
             'ssl_resume_done': int,
             'snort_pause_done': int,
             'snort_resume_done': int,
+            Optional('dre_pause_done'): int,
+            Optional('dre_resume_done'): int,
+            Optional('dre_resume_msg_to_be_sent'): int,
+            Optional('dre_resume_msg_sent'): int,
             'ev_ssl_pause_process': int,
             'ev_snort_pause_process': int,
+            Optional('ev_dre_pause_process'): int,
             'ev_ssl_snort_resume_process': int,
             'socket_pause_done': int,
             'socket_resume_done': int,
@@ -163,6 +169,7 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
             'failed_send': int,
             'tcp_ssl_reset_initiated': int,
             'tcp_snort_reset_initiated': int,
+            Optional('tcp_dre_close_initiated'): int,
             'tcp_fin_received_from_clnt_svr': int,
             'tcp_reset_received_from_clnt_svr': int,
             'ssl_fin_received_sc': int,
@@ -177,7 +184,9 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
             'svc_reset_processed': int,
             'flow_cleaned_with_client_data': int,
             'flow_cleaned_with_server_data': int,
-            'buffers_dropped_in_tx_socket_close': int,
+            Optional('buffers_dropped_in_tx_sock_closed'): int,
+            Optional('buffers_dropped_in_tx_not_writable'): int,
+            Optional('buffers_dropped_in_tx_socket_close'): int,
             'tcp_4k_allocated_buffers': int,
             'tcp_16k_allocated_buffers': int,
             'tcp_32k_allocated_buffers': int,
@@ -205,6 +214,7 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
             'flows_dropped_snort_inst_health_yellow': int,
             'flows_dropped_wcapi_channel_health_yellow': int,
             'total_wcapi_snd_flow_create_svc_chain_failed': int,
+            Optional('total_wcapi_snd_flow_delete_svc_chain_failed'): int,
             'total_wcapi_send_data_svc_chain_failed': int,
             'total_wcapi_send_close_svc_chain_failed': int,
             'total_tx_enqueue_failed': int,
@@ -213,6 +223,7 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
             'total_cleanup_flow_msg_rcvd_in_wk_q': int,
             'total_cleanup_flow_ignored_already_done': int,
             'total_cleanup_ssl_msg_add_to_wk_q_failed': int,
+            Optional('total_ssl_trigger_reset_msg_to_wk_q_failed'): int,
             'total_uhi_mmap': int,
             'total_uhi_munmap': int,
             Optional('total_uhi_page_alloc'): int,
@@ -239,7 +250,6 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
             Optional('aoim_sync_errored'): int
             }
         }
-
 
 class ShowTcpProxyStatistics(ShowTcpProxyStatisticsSchema):
 
