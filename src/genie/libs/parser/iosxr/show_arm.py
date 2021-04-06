@@ -23,13 +23,14 @@ class ShowArmIpv4ConflictsSchema(MetaParser):
                 'address_family': {
                     Any(): {
                         'forced_down': {
-                            'F': {
+                            Any(): {
                                 Optional('down_interface'): {
                                     Any(): {
                                         'address': str,
-                                        Optional('up_interface'): {
-                                            Any():
+                                        'up_interface': {
+                                            Any(): {
                                                 'address': str
+                                            }
                                         }
                                     }
                                 }
@@ -38,7 +39,7 @@ class ShowArmIpv4ConflictsSchema(MetaParser):
                         Optional('unnumbered_down_interface'): {
                             Any(): {
                                 'due_to': str,
-                                Optional('up_interface'): {
+                                'up_interface': {
                                     Any(): {
                                         'due_to': str
                                     }
@@ -60,8 +61,8 @@ class ShowArmIpv4Conflicts(ShowArmIpv4ConflictsSchema):
         if not output:
             output = self.device.execute(self.cli_command[0])
             
-        # cli 
-        p0 = 'cli stuff'
+        # intialize vrf dictionary for parsed results
+        result_dict = {}    
         
         # F Forced down
         p1 = re.compile(r'^(?P<forced_down>\D) +Forced down')
@@ -70,7 +71,67 @@ class ShowArmIpv4Conflicts(ShowArmIpv4ConflictsSchema):
         p2 = re.compile(r'^(?:F +(?P<down_interface>\S+) +(?P<down_address>\S+))? +(?:(?P<up_interface>\S+) +(?P<up_address>\S+))?')
         
         # tu2->tu1                       tu1->Lo1
-        p3 = re.compile(r'^(?:(?P<forced_down>F) +(?P<interface>\S+) +(?P<address>\S+))?(?: +(?P<interface2>\S+) +(?P<address2>\S+)(?: +(?P<vrf>\w+))?)?$')
+        p3 = re.compile(r'^(?:(?P<unnumbered_down_interface>\w+)->(?P<unnum_down_due>\w+))? +(?:(?P<unnumbered_up_interface>\w+)->(?P<unnum_up_due>\w+))?')
         
         for line in output.splitlines():
             line = line.strip()
+
+            # F Forced down
+            m=p1.match(line)
+            if m:
+                group = m.groupdict()
+                                            
+                forced_down_dict = result_dict.setdefault('vrf', {}). \
+                                            setdefault('default', {}). \
+                                            setdefault('address_family', {}). \
+                                            setdefault('ipv4', {}). \
+                                            setdefault('forced_down', {}). \
+                                            setdefault(group['forced_down'], {})
+                continue
+
+            # F Lo2 10.1.1.2/24                          Lo1 10.1.1.1/24
+            m=p2.match(line)
+            if m:
+                group = m.groupdict()
+                
+                down_interface = Common.convert_intf_name(group['down_interface']) # convert Lo2 to loopback2
+                
+                down_interface_dict = forced_down_dict.setdefault('down_interface', {}).setdefault(down_interface, {})
+                down_interface_dict.update({'address': group['down_address']})
+                
+                # convert Lo1 to loopback1
+                up_interface = Common.convert_intf_name(group['up_interface'])
+                
+                up_interface_dict = down_interface_dict.setdefault('up_interface', {}).setdefault(up_interface, {})
+                up_interface_dict.update({'address': group['up_address']})
+                continue
+
+
+            # tu2->tu1                       tu1->Lo1
+            m=p3.match(line)
+            if m:
+                group = m.groupdict()
+                address_family_dict = result_dict.setdefault('vrf', {}). \
+                            setdefault('default', {}). \
+                            setdefault('address_family', {}). \
+                            setdefault('ipv4', {})
+                
+                unnumbered_down_interface = Common.convert_intf_name(group['unnumbered_down_interface']) # convert tu2 to Tunnel2
+                unnumbered_down_dict = address_family_dict.setdefault('unnumbered_down_interface', {}).setdefault(unnumbered_down_interface, {})
+                
+                unnumbered_down_due = Common.convert_intf_name(group['unnum_down_due']) # convert tu1 to Tunnel1
+                unnumbered_down_dict.update({'due_to': unnumbered_down_due})
+                
+
+                unnumbered_up_interface = Common.convert_intf_name(group['unnumbered_up_interface']) # convert tu1 to Tunnel1
+                unnumbered_up_dict = unnumbered_down_dict.setdefault('up_interface', {}).setdefault(unnumbered_up_interface, {})
+                
+                unnumbered_up_due = Common.convert_intf_name(group['unnum_up_due']) # convert Lo1 to Loopback1
+                unnumbered_up_dict.update({'due_to': unnumbered_up_due})
+                continue
+            
+        return result_dict
+            
+                                                    
+                                                    
+            
