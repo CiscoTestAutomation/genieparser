@@ -544,6 +544,7 @@ class Common():
                    'mgmt': 'mgmt',
                    'Vl': 'Vlan',
                    'Tu': 'Tunnel',
+                   'tu': 'Tunnel',
                    'Fe': '',
                    'Hs': 'HSSI',
                    'AT': 'ATM',
