@@ -1,8 +1,8 @@
 expected_output = {
     'vrf': {
-        'default': { # from output or CLI, defaults to 'default'
+        'default': {
             'address_family': {
-                'ipv4': {  # from CLI, defaults to 'ipv4'
+                'ipv4': { 
                     'forced_down': {
                         'F': {
                             'down_interface': {
