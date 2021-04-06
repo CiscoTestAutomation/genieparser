@@ -93,7 +93,6 @@ class ShowVlan(ShowVlanSchema):
         #  2       302       community
         #          10        community
         # 20       25         isolated
-
         p5 = re.compile(r'^\s*(?P<primary>\d+)? +(?P<secondary>\d+)'
                         r' +(?P<type>[\w\-]+)( +(?P<interfaces>[\w\,\/ ]+))?$')
 
