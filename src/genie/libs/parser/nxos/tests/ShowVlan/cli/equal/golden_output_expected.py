@@ -22,7 +22,11 @@ expected_output = {
             "shutdown": False,
             "state": "active",
             "type": "enet",
-            "vlan_id": "20"
+            "vlan_id": "20",
+            "private_vlan":{
+                "primary": True,
+                "association": ['25'],
+            },
         },
         "25": {
             "interfaces": [
@@ -34,7 +38,11 @@ expected_output = {
             "shutdown": False,
             "state": "active",
             "type": "enet",
-            "vlan_id": "25"
+            "vlan_id": "25",
+            "private_vlan":{
+                "primary": False,
+                "type": "isolated",
+            },
         }
     }
 }
