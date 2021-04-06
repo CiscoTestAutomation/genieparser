@@ -477,7 +477,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         # VFI 1
         # VFI vfi60 (up)
         # p6 = re.compile(r'^VFI +(?P<vfi>\S+)( +\((?P<state>\w+)\))?$')
-        p6 = re.compile(r'^VFI\s+(?P<vfi>\S+)(\s+(\((?P<state>[\w\s]+)\))?\s*)$')
+        p6 = re.compile(r'^VFI\s+(?P<vfi>\S+)(\s*(\((?P<state>[\w\s]+)\))?\s*)$')
 
         # Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
         p7 = re.compile(r'Neighbor +(?P<neighbor>\S+) +pw-id +(?P<pw_id>\d+), +state: +'
@@ -606,11 +606,14 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
             # VFI vfi60 (up)
             m = p6.match(line)
             if m:
+                #clear satate from earlier
+                state=''
                 group = m.groupdict()
                 vfi = group['vfi']
                 vfi_dict = bridge_domain_dict.setdefault('vfi', {}). \
                     setdefault(vfi, {})
-                state = group['state']
+                if group['state']:   
+                    state = group['state']
                 if state:
                     vfi_dict.update({'state': state})
                 continue

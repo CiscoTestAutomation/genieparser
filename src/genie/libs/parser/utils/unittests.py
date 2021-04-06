@@ -766,7 +766,7 @@ CLASS_SKIP = {
         "ShowL2routeEvpnMacAll": True, # Not migrated
         "ShowL2routeEvpnMacIpAll": True, # Not migrated
         "ShowL2routeTopology": True, # Not migrated
-        "ShowL2vpnBridgeDomain": True, # Not migrated
+        # "ShowL2vpnBridgeDomain": True, # Not migrated
         "ShowL2vpnBridgeDomainBrief": True, # Not migrated
         "ShowL2vpnBridgeDomainDetail": True, # Not migrated
         "ShowL2vpnBridgeDomainSummary": True, # Not migrated
