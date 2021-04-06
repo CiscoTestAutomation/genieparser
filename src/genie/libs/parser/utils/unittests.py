@@ -660,7 +660,6 @@ CLASS_SKIP = {
         "ShowCdpNeighborsDetail": True, # Not migrated
         "ShowInterfaceDescription": True, # Not migrated
         "ShowInterfaceStatus": True, # Not migrated
-        "ShowIpInterfaceVrfAll": True, # Not migrated
         "ShowIsisDatabaseDetail": True, # Not migrated
         "ShowIpv6MldLocalGroups": True, # Not migrated
         "ShowIpMsdpSummary": True, # Not migrated
