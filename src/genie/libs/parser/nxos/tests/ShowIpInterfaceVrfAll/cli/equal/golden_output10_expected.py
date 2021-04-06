@@ -89,7 +89,7 @@ expected_output = {
         "ip_forwarding": "disabled",
         "icmp_unreachable": "disabled",
         "icmp_port_unreachable": "enabled",
-        "unicast_reverse_path": "loose allow default",
+        "unicast_reverse_path": "none",
         "load_sharing": "none",
         "int_stat_last_reset": "never",
         "wccp_redirect_outbound": "disabled",
@@ -97,3 +97,4 @@ expected_output = {
         "wccp_redirect_exclude": "disabled",
     }
 }
+
