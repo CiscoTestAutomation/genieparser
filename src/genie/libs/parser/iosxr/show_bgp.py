@@ -6751,73 +6751,73 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
 
 
         # VRF: default
-        p2 = re.compile(r'^VRF:\s+(?P<vrf>([\w]+)\s*)$')
+        p2 = re.compile(r'^VRF:\s+(?P<vrf>([\w]+))$')
 
         # Nexthop ID: 0x6000074, Version: 0x0
         p3 = re.compile(r'^Nexthop ID:\s+(?P<nexthop_id>([\w]+)),\s+Version:\s+((?P<version>[\w]+))$')
 
         # Nexthop Flags: 0x00000000
-        p4 = re.compile(r'^Nexthop Flags:\s+((?P<nexthop_flags>[\w]+)\s*)$')
+        p4 = re.compile(r'^Nexthop Flags:\s+((?P<nexthop_flags>[\w]+))$')
 
         # Nexthop Handle: 0x7fba00aafccc
-        p5 = re.compile(r'^Nexthop Handle:\s+((?P<nexthop_handle>[\w]+)\s*)$')
+        p5 = re.compile(r'^Nexthop Handle:\s+((?P<nexthop_handle>[\w]+))$')
 
         # Firsthop interface handle 0x0c001cc0
-        p7 = re.compile(r'^Firsthop interface handle\s+((?P<first_interface_handle>[\w]+)\s*)$')
+        p7 = re.compile(r'^Firsthop interface handle\s+((?P<first_interface_handle>[\w]+))$')
 
         # Gateway TBL Id: 0xe0000000    Gateway Flags: 0x00000080
-        p8 = re.compile(r'^Gateway TBL Id:\s+((?P<gateway_tbl_id>[\w]+)\s+)Gateway Flags:\s+((?P<gateway_flags>[\w]+)\s*)$')
+        p8 = re.compile(r'^Gateway TBL Id:\s+((?P<gateway_tbl_id>[\w]+)\s+)Gateway Flags:\s+((?P<gateway_flags>[\w]+))$')
 
         # Gateway Handle: 0x7fba14059ce0
-        p9 = re.compile(r'^Gateway Handle:\s+((?P<gateway_handle>[\w]+)\s*)$')
+        p9 = re.compile(r'^Gateway Handle:\s+((?P<gateway_handle>[\w]+))$')
 
         # Gateway: reachable, non-Connected route, prefix length 32
-        p10 = re.compile(r'^Gateway:\s+((?P<gateway>[\s\S]+)\s*)$')
+        p10 = re.compile(r'^Gateway:\s+((?P<gateway>[\s\S]+))$')
 
         # Resolving Route: 16.16.16.16/32 (static)
-        p11 = re.compile(r'^Resolving Route:\s+((?P<resolving_route>[\s\S]+)\s*)$')        
+        p11 = re.compile(r'^Resolving Route:\s+((?P<resolving_route>[\s\S]+))$')        
 
         # Paths: 0
         p12 = re.compile(r'^Paths:\s+((?P<paths>[\d]+)\s*)$')
 
         # RIB Nexhop ID: 0x0
-        p13 = re.compile(r'^RIB Nexhop ID:\s+((?P<rib_nexthop_id>[\w]+)\s*)$')
+        p13 = re.compile(r'^RIB Nexhop ID:\s+((?P<rib_nexthop_id>[\w]+))$')
 
         # Status: [Reachable][Not Connected][Not Local]
-        p14 = re.compile(r'^Status:\s+((?P<status>[\s\S]+)\s*)$')
+        p14 = re.compile(r'^Status:\s+((?P<status>[\s\S]+))$')
 
         # Metric: 0
-        p15 = re.compile(r'^Metric:\s+((?P<metric>[\d]+)\s*)$')
+        p15 = re.compile(r'^Metric:\s+((?P<metric>[\d]+))$')
 
         # Registration: Asynchronous, Completed: 00:02:15
-        p16 = re.compile(r'^Registration:\s+(?P<registration>[\w]+),\s+Completed:\s+((?P<completed>[\w\:]+)\s*)$')
+        p16 = re.compile(r'^Registration:\s+(?P<registration>[\w]+),\s+Completed:\s+((?P<completed>[\w\:]+))$')
 
         # Events: Critical (1)/Non-critical (0)
-        p17 = re.compile(r'^Events:\s+((?P<events>[\s\S]+)\s*)$')
+        p17 = re.compile(r'^Events:\s+((?P<events>[\s\S]+))$')
 
         # Last Received: 00:02:14 (Critical)
-        p18 = re.compile(r'^Last Received:\s+((?P<last_received>[\s\S]+)\s*)$')
+        p18 = re.compile(r'^Last Received:\s+((?P<last_received>[\s\S]+))$')
 
         # Last gw update: (Crit-notif) 00:02:14(rib)
-        p19 = re.compile(r'^Last gw update:\s+((?P<last_gw_update>[\s\S]+)\s*)$')
+        p19 = re.compile(r'^Last gw update:\s+((?P<last_gw_update>[\s\S]+))$')
 
         # Reference Count: 1
-        p20 = re.compile(r'^Reference Count:\s+((?P<reference_count>[\d]+)\s*)$')
+        p20 = re.compile(r'^Reference Count:\s+((?P<reference_count>[\d]+))$')
 
         # Active Tables: [IPv4 Unicast]
-        p22 = re.compile(r'^Active Tables:\s+((?P<active_tables>[\s\S]+)\s*)$')
+        p22 = re.compile(r'^Active Tables:\s+((?P<active_tables>[\s\S]+))$')
 
         # Metrices: [0x0]
-        p23 = re.compile(r'^Metrices:\s+((?P<metrics>[\s\S]+)\s*)$')
+        p23 = re.compile(r'^Metrices:\s+((?P<metrics>[\s\S]+))$')
 
         # Reference Counts: [1]
-        p24 = re.compile(r'^Reference Counts:\s+(\[(?P<reference_counts>[\d]+)\]\s*)$')
+        p24 = re.compile(r'^Reference Counts:\s+(\[(?P<reference_counts>[\d]+)\])$')
 
         # Interface Handle: 0x0
-        p25 = re.compile(r'^Interface Handle:\s+((?P<interface_handle>[\w]+)\s*)$')                        
+        p25 = re.compile(r'^Interface Handle:\s+((?P<interface_handle>[\w]+))$')                        
 
         # Attr ref-count: 4
-        p26 = re.compile(r'^Attr ref-count:\s+((?P<attr_ref_count>[\d]+)\s*)$')
+        p26 = re.compile(r'^Attr ref-count:\s+((?P<attr_ref_count>[\d]+))$')
         
         for line in out.splitlines():
             line = line.strip()
