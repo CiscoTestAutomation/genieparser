@@ -6743,11 +6743,12 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         else:
             out = output
 
-        # Init
+        # Initialize dictionaries
         ret_dict = {}
+        ipaddress_dict = {}
+        nexthop_address_dict = {}
+        nexthop_dict = {}        
 
-        # Nexthop: 16.16.16.16
-        p1 = re.compile(r'^Nexthop:\s+(?P<nexthop_address>([\w\.]+)\s*)$')
 
         # VRF: default
         p2 = re.compile(r'^VRF:\s+(?P<vrf>([\w]+)\s*)$')
@@ -6817,23 +6818,9 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
 
         # Attr ref-count: 4
         p26 = re.compile(r'^Attr ref-count:\s+((?P<attr_ref_count>[\d]+)\s*)$')
-
-        # if ipaddress:
-        #     nexthop_address = ipaddress
-        
-        nexthop_address = ipaddress
-        nexthop_address_dict = {}
         
         for line in out.splitlines():
             line = line.strip()
-
-            # # Nexthop: 16.16.16.16
-            # m = p1.match(line)
-            # if m:
-            #     group = m.groupdict()
-            #     if not nexthop_address:
-            #         nexthop_address = group['nexthop_address']
-            #     continue
                 
             # VRF: default
             m = p2.match(line)
@@ -6848,27 +6835,24 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 def_dict = vrf_dict.setdefault(vrf,{})
 
                 #define af_dict dictionary and set to 'address_family'
-                af_dict = def_dict.setdefault('address_family',{})
+                af_dict = def_dict.setdefault('address_family',{})                
                 continue
             
             # Nexthop ID: 0x6000074, Version: 0x0
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                nexthop_address_dict = nexthop_address_dict.setdefault('nexthop_id',{})\
-                                                           .setdefault(group['nexthop_id'],{})
+                #update nexthop_address_dict               
                 nexthop_address_dict.update({'nexthop_id': group['nexthop_id']})
                 nexthop_address_dict.update({'version': group['version']})
-                # nexthop_id = group['nexthop_id']
-                # version = group['version']
                 continue
 
             # Nexthop Flags: 0x00000000
             m = p4.match(line)
             if m:
                 group = m.groupdict()
+                #update nexthop_address_dict
                 nexthop_address_dict.update({'nexthop_flags': group['nexthop_flags']})
-                # nexthop_flags = group['nexthop_flags']
                 continue
 
             # Nexthop Handle: 0x7fba00aafccc
@@ -6877,247 +6861,176 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 group = m.groupdict()
                 nexthop_address_dict.update({'nexthop_handle': group['nexthop_handle']})  
                 rib_related_dict = nexthop_address_dict.setdefault('rib_related_information',{})
-
-                # nexthop_handle = group['nexthop_handle']                
                 continue
 
             # Firsthop interface handle 0x0c001cc0
             m = p7.match(line)
             if m:
                 group = m.groupdict()
+                #set first_interface_handle_dict
                 first_interface_handle = group['first_interface_handle']
                 first_interface_handle_dict = rib_related_dict.setdefault('first_interface_handle',{})\
-                                                                    .setdefault(first_interface_handle,{})
-                                                                                   
+                                                                .setdefault(first_interface_handle,{})                                                                             
                 continue            
 
             # Gateway TBL Id: 0xe0000000    Gateway Flags: 0x00000080
             m = p8.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'gateway_tbl_id':group['gateway_tbl_id']})
                 first_interface_handle_dict.update({'gateway_flags':group['gateway_flags']})
-
-                # gateway_tbl_id = group['gateway_tbl_id']
-                # gateway_flags = group['gateway_flags']
                 continue
             
             # Gateway Handle: 0x7fba14059ce0
             m = p9.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'gateway_handle':group['gateway_handle']})
-
-                # gateway_handle = group['gateway_handle']
                 continue 
             
             # Gateway: reachable, non-Connected route, prefix length 32
             m = p10.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'gateway':group['gateway']})
-
-                # gateway = group['gateway']
                 continue         
             
             # Gateway: reachable, non-Connected route, prefix length 32
             m = p11.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'resolving_route':group['resolving_route']})
-
-                # resolving_route = group['resolving_route']
                 continue 
 
             # Paths: 0
             m = p12.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'paths':int(group['paths'])}) 
-
-                # paths = int(group['paths'])
                 continue       
 
             # RIB Nexhop ID: 0x0
             m = p13.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'rib_nexthop_id':group['rib_nexthop_id']})
-
-                # rib_nexthop_id = group['rib_nexthop_id']
                 continue 
             
             # Status: [Reachable][Not Connected][Not Local]
             m = p14.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'status':group['status']})
-
-                # status = group['status']
                 continue         
             
             # Metric: 0
             m = p15.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'metric':int(group['metric'])})
-
-                # metric = int(group['metric'])
                 continue                      
 
             # Registration: Asynchronous, Completed: 00:02:15
             m = p16.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'registration':group['registration']})
                 first_interface_handle_dict.update({'completed':group['completed']})
-
-                # registration = group['registration']
-                # completed = group['completed']
                 continue   
 
             # Events: Critical (1)/Non-critical (0)
             m = p17.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'events':group['events']})
-
-                # events = group['events']
                 continue   
 
             # Last Received: 00:02:14 (Critical)
             m = p18.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'last_received':group['last_received']})
-
-                # last_received = group['last_received']
                 continue   
 
             # Last gw update: (Crit-notif) 00:02:14(rib)
             m = p19.match(line)
             if m:
                 group = m.groupdict()
+                #update first_interface_handle_dict
                 first_interface_handle_dict.update({'last_gw_update':group['last_gw_update']})
-
-                # last_gw_update = group['last_gw_update']
                 continue                                      
 
             # Reference Count: 1
             m = p20.match(line)
             if m:
                 group = m.groupdict()
-                first_interface_handle_dict.update({'reference_count':int(group['reference_count'])})
-                
-                
-                # reference_count = int(group['reference_count'])
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'reference_count':int(group['reference_count'])})                
                 continue      
 
             # Active Tables: [IPv4 Unicast]
             m = p22.match(line)
             if m:
                 group = m.groupdict()
-
+                #set prefix_related_dict
                 prefix_related_dict = nexthop_address_dict.setdefault('prefix_related_information',{}) 
-                
                 #remove [] from [IPv4]
-                prefix_related_dict.update({'active_tables':group['active_tables'].replace('[','').replace(']','')})
-                  
-
                 active_tables = group['active_tables'].replace('[','').replace(']','')
-
+                #update prefix_related_dict
+                prefix_related_dict.update({'active_tables':active_tables})
                 
-                #define ipv4_dict dictionary and assigned to active_tables
-                af_dict.update({active_tables:nexthop_address_dict})
-                
-                #define nexthop_dict dictionary and set to 'nexthop'
-                # nexthop_dict = ipv4_dict.setdefault('nexthop',{})
+                #update top ipaddress_dict with child nexthop_address_dict dictionary
+                ipaddress_dict.update({ipaddress:nexthop_address_dict})
 
-                #define nexthop_address_dict dictionary and assigned to nexthop_address
-                # nexthop_address_dict = nexthop_dict.setdefault(nexthop_address,{})
+                #update top nexthop_dict with child ipaddress_dict dictionary
+                nexthop_dict.update({'nexthop':ipaddress_dict})
 
-                  
-
-                #update nexthop_address_dict
-                # nexthop_address_dict['nexthop_id'] = nexthop_id
-                # nexthop_address_dict['version'] = version
-                # nexthop_address_dict['nexthop_flags'] = nexthop_flags
-                # nexthop_address_dict['nexthop_handle'] = nexthop_handle
+                #update top af_dict with child nexthop_dict dictionary
+                af_dict.update({active_tables:nexthop_dict})
                 continue  
 
             # Metrices: [0x0]
             m = p23.match(line)
             if m:
                 group = m.groupdict()
-                prefix_related_dict.update({'metrics':group['metrics'].replace('[','').replace(']','')})
-
-                # metrics = group['metrics'].replace('[','').replace(']','')
+                metrics = group['metrics'].replace('[','').replace(']','')
+                #update prefix_related_dict
+                prefix_related_dict.update({'metrics':metrics})
                 continue 
 
             # Reference Counts: [1]
             m = p24.match(line)
             if m:
                 group = m.groupdict()
+                #update prefix_related_dict
                 prefix_related_dict.update({'reference_counts':int(group['reference_counts'])})
-
-                # reference_counts = int(group['reference_counts'])
-                
                 continue   
 
             # Interface Handle: 0x0
             m = p25.match(line)
             if m:
                 group = m.groupdict()
-                nexthop_address_dict.update({'interface_handle': group['interface_handle']})  
-
-                # interface_handle = group['interface_handle']
+                #update nexthop_address_dict
+                nexthop_address_dict.update({'interface_handle': group['interface_handle']})
                 continue   
 
             # Attr ref-count: 4
             m = p26.match(line)
             if m:
                 group = m.groupdict()
-                nexthop_address_dict.update({'attr_ref_count': int(group['attr_ref_count'])})  
-
-                import pdb; pdb.set_trace()
-
-                # attr_ref_count = int(group['attr_ref_count'])
-
-                #define rib_related_dict dictionary and set to 'rib_related_information'
-                rib_related_dict = nexthop_address_dict.setdefault('rib_related_information',{})
-
-                #define first_interface_dict dictionary and set to 'first_interface_handle'
-                first_interface_dict = rib_related_dict.setdefault('first_interface_handle',{})
-
-                #define first_interface_handle_dict dictionary and assigned to first_interface_handle
-                first_interface_handle_dict = first_interface_dict.setdefault(first_interface_handle,{})
-
-                #update first_interface_handle_dict
-                first_interface_handle_dict['gateway_tbl_id'] = gateway_tbl_id
-                first_interface_handle_dict['gateway_flags'] = gateway_flags
-                first_interface_handle_dict['gateway_handle'] = gateway_handle
-                first_interface_handle_dict['gateway'] = gateway
-                first_interface_handle_dict['resolving_route'] = resolving_route
-                first_interface_handle_dict['paths'] = paths
-                first_interface_handle_dict['rib_nexthop_id'] = rib_nexthop_id
-                first_interface_handle_dict['status'] = status
-                first_interface_handle_dict['metric'] = metric
-                first_interface_handle_dict['registration'] = registration
-                first_interface_handle_dict['completed'] = completed
-                first_interface_handle_dict['events'] = events
-                first_interface_handle_dict['last_received'] = last_received
-                first_interface_handle_dict['last_gw_update'] = last_gw_update
-                first_interface_handle_dict['reference_count'] = reference_count
-
-                #define rib_related_dict dictionary and set to 'prefix_related_information'
-                rib_related_dict = nexthop_address_dict.setdefault('prefix_related_information',{})
-                rib_related_dict['active_tables'] = active_tables
-                rib_related_dict['metrics'] = metrics
-                rib_related_dict['reference_counts'] = reference_counts
-
                 #update nexthop_address_dict
-                nexthop_address_dict['interface_handle'] = interface_handle
-                nexthop_address_dict['attr_ref_count'] = attr_ref_count
+                nexthop_address_dict.update({'attr_ref_count': int(group['attr_ref_count'])})  
                 continue  
 
         return ret_dict
