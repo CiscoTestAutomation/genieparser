@@ -13,7 +13,6 @@ class TestAddParser(unittest.TestCase):
             del common.parser_data
         except AttributeError as err:
             logging.warning(err)
-            pass
 
     def test_add_parser_command_string(self):
         cli_command = 'show test_add_parser_single_command_string'
