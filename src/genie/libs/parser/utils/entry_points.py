@@ -37,7 +37,7 @@ import sys
 import pkg_resources
 import logging
 
-from .common import parser_data
+from . import common
 
 log = logging.getLogger(__name__)
 
@@ -69,7 +69,13 @@ def add_parser(parser, os_name):
     if isinstance(cli_commands, str):
         cli_commands = [cli_commands]
 
+    try:
+        parser_data = common.parser_data
+    except AttributeError:
+        parser_data = common._load_parser_json()
+
     for cmd in cli_commands:
+        
         if cmd not in parser_data:
             parser_data[cmd] = {}
 
