@@ -1,6 +1,5 @@
 # Python
 import re
-import json
 
 # Genie
 from genie.metaparser import MetaParser
@@ -513,8 +512,8 @@ class ShowRedundancyApplicationGroup(ShowRedundancyApplicationGroupSchema):
                     cur_dict12['log_counters']= {}
                     cur_dict13= cur_dict12['log_counters']
                     log_counter_check=0
-                cur_dict13[log_index]= {}
-                cur_dict14= cur_dict13[log_index]
+                cur_dict13[str(log_index)]= {}
+                cur_dict14= cur_dict13[str(log_index)]
                 log_index+=1
             
             #role change to active: 0
@@ -630,8 +629,8 @@ class ShowRedundancyApplicationGroup(ShowRedundancyApplicationGroupSchema):
                     cur_dict17= cur_dict16['stats']
                     stats_check=0
                 
-                cur_dict17[stats_index]= {}
-                cur_dict18= cur_dict17[stats_index]
+                cur_dict17[str(stats_index)]= {}
+                cur_dict18= cur_dict17[str(stats_index)]
                 stats_index+=1
 
             #Pkts 108621, Bytes 6734502, HA Seq 0, Seq Number 108621, Pkt Loss 0
@@ -694,8 +693,7 @@ class ShowRedundancyApplicationGroup(ShowRedundancyApplicationGroupSchema):
                     cur_dict19= cur_dict16['active_peer_stats']
                     active_peer_check=0
                     active_peer_enabled=1
-                    cur_dict19[active_peer_index]={}
-                    cur_dict20=cur_dict19[active_peer_index]
+                    cur_dict19[str(active_peer_index)]={}
+                    cur_dict20=cur_dict19[str(active_peer_index)]
                     active_peer_index+=1
-        #print(json.dumps(parsed_dict,indent=4))
         return parsed_dict
