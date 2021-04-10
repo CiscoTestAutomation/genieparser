@@ -1,0 +1,7 @@
+        St:    AD - Administratively Down, Dn - Down, Up - Up
+        Ly:    L2 - Switched layer 2 service, L3 = Terminated layer 3 service,
+        Xtra   C - Match on Cos, E  - Match on Ethertype, M - Match on source MAC
+        -,+:   Ingress rewrite operation; number of tags to pop and push respectively
+
+        Interface               St  MTU  Ly Outer            Inner            Xtra -,+
+        Gi0/0/0/1.501           Up  1518 L3 .1Q:501          -                -    1 0

@@ -2,7 +2,7 @@ expected_output = {
     "services-accounting-information": {
         "flow-aggregate-template-detail": {
             "flow-aggregate-template-detail-ipv4": {
-                "detail-entry": {
+                "detail-entry": [{
                     "source-address": "10.120.202.64",
                     "destination-address": "10.169.14.158",
                     "source-port": "8",
@@ -18,7 +18,7 @@ expected_output = {
                     "end-time": "79167425",
                     "packet-count": "1",
                     "byte-count": "84",
-                }
+                }]
             }
         }
     }
