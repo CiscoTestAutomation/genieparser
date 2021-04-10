@@ -117,19 +117,19 @@ class test_show_lacp_counters(unittest.TestCase):
     }
     golden_output = {'execute.return_value': '''
         NOTE: Clear lacp counters to get accurate statistics
-    
+
         ------------------------------------------------------------------------------
                                      LACPDUs                      Markers/Resp LACPDUs
         Port              Sent                Recv                  Recv Sent  Pkts Err
         ------------------------------------------------------------------------------
         port-channel1
-        Ethernet1/1        92                   85                     0      0    0      
-        Ethernet1/2        79                   87                     0      0    0      
-        
+        Ethernet1/1        92                   85                     0      0    0
+        Ethernet1/2        79                   87                     0      0    0
+
         port-channel2
-        Ethernet1/3        136                  112                    0      0    0      
-        Ethernet1/4        95                   90                     0      0    0      
-        Ethernet1/5        118                  146                    0      0    0  
+        Ethernet1/3        136                  112                    0      0    0
+        Ethernet1/4        95                   90                     0      0    0
+        Ethernet1/5        118                  146                    0      0    0
     '''}
 
 
@@ -500,8 +500,93 @@ port-channel2
              Ethernet1/5     [passive] [hot-standy]
 '''}
 
+    golden_parsed_output2 = {
+        'interfaces': {
+            'Port-channel10': {
+                'first_oper_port': 'Ethernet1/26',
+                'last_bundled_member': 'Ethernet1/26',
+                'last_update_success': True,
+                'members': {
+                    'Ethernet1/25': {
+                        'activity': 'on',
+                        'is_first_oper_port': False,
+                        'status': 'up'
+                    },
+                    'Ethernet1/26': {
+                        'activity': 'on',
+                        'is_first_oper_port': True,
+                        'status': 'up'
+                    }
+                },
+                'port_channel_age': '0d:00h:13m:14s',
+                'time_last_bundle': '0d:00h:13m:10s',
+                'total_ports': 2,
+                'up_ports': 2
+            },
+            'Port-channel100': {
+                'first_oper_port': 'Ethernet1/5',
+                'last_bundled_member': 'Ethernet1/5',
+                'last_update_success': True,
+                'members': {
+                    'Ethernet1/5': {
+                        'activity': 'active',
+                        'is_first_oper_port': True,
+                        'status': 'up'
+                    }
+                },
+                'port_channel_age': '0d:00h:12m:30s',
+                'time_last_bundle': '0d:00h:12m:30s',
+                'total_ports': 1,
+                'up_ports': 1
+            },
+            'Port-channel200': {
+                'first_oper_port': 'Ethernet1/6',
+                'last_bundled_member': 'Ethernet1/6',
+                'last_update_success': True,
+                'members': {
+                    'Ethernet1/6': {
+                        'activity': 'active',
+                        'is_first_oper_port': True,
+                        'status': 'up'
+                    }
+                },
+                'port_channel_age': '0d:00h:12m:25s',
+                'time_last_bundle': '0d:00h:12m:25s',
+                'total_ports': 1,
+                'up_ports': 1
+            }
+        }
+    }
+    golden_output2 = {'execute.return_value': '''
+show port-channel database
+port-channel10
+    Last membership update is successful
+    2 ports in total, 2 ports up
+    First operational port is Ethernet1/26
+    Age of the port-channel is 0d:00h:13m:14s
+    Time since last bundle is 0d:00h:13m:10s
+    Last bundled member is Ethernet1/26
+    Ports:   Ethernet1/25    [on] [up]
+             Ethernet1/26    [on] [up] *
 
+port-channel100
+    Last membership update is successful
+    1 ports in total, 1 ports up
+    First operational port is Ethernet1/5
+    Age of the port-channel is 0d:00h:12m:30s
+    Time since last bundle is 0d:00h:12m:30s
+   Last bundled member is Ethernet1/5
+    Ports:   Ethernet1/5     [active ] [up] *
 
+port-channel200
+    Last membership update is successful
+    1 ports in total, 1 ports up
+    First operational port is Ethernet1/6
+    Age of the port-channel is 0d:00h:12m:25s
+    Time since last bundle is 0d:00h:12m:25s
+    Last bundled member is Ethernet1/6
+    Ports:   Ethernet1/6     [active ] [up] *
+ '''}
 
     def test_empty(self):
         self.device = Mock(**self.empty_output)
@@ -517,6 +602,12 @@ port-channel2
         parsed_output = obj.parse()
         self.assertDictEqual(parsed_output, self.golden_parsed_output)
 
+    def test_golden2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output2)
+        obj = ShowPortChannelDatabase(device=self.device)
+        parsed_output = obj.parse()
+        self.assertDictEqual(parsed_output, self.golden_parsed_output2)
 
 if __name__ == '__main__':
     unittest.main()
