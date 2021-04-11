@@ -1,6 +1,0 @@
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* IOS-XR
-    * Modified ShowCdpNeighborsDetail:
-        * Updated regex pattern <platform> to accommodate various outputs.

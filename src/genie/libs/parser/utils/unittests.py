@@ -660,7 +660,6 @@ CLASS_SKIP = {
         "ShowCdpNeighborsDetail": True, # Not migrated
         "ShowInterfaceDescription": True, # Not migrated
         "ShowInterfaceStatus": True, # Not migrated
-        "ShowIpInterfaceVrfAll": True, # Not migrated
         "ShowIsisDatabaseDetail": True, # Not migrated
         "ShowIpv6MldLocalGroups": True, # Not migrated
         "ShowIpMsdpSummary": True, # Not migrated
@@ -795,7 +794,6 @@ CLASS_SKIP = {
         "ShowMplsLabelTablePrivate": True, # Not migrated
         "ShowMplsLdpDiscovery": True, # Not migrated
         "ShowMplsLdpNeighbor": True, # Not migrated
-        "ShowMplsLdpNeighborBrief": True, # Not migrated
         "ShowMplsLdpNeighborDetail": True, # Not migrated
         "ShowMribEvpnBucketDb": True, # Not migrated
         "ShowMribVrfRoute": True, # Not migrated
