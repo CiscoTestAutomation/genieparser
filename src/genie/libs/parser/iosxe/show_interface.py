@@ -61,6 +61,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('line_protocol'): str,
                 Optional('enabled'): bool,
                 Optional('connected'): bool,
+                Optional('err_disabled'): bool,
                 Optional('description'): str,
                 Optional('type'): str,
                 Optional('link_state'): str,
@@ -476,6 +477,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             # Port-channel12 is up, line protocol is up (connected)
             # Vlan1 is administratively down, line protocol is down , Autostate Enabled
             # Dialer1 is up (spoofing), line protocol is up (spoofing)
+            
 
             m = p1.match(line)
             m1 = p1_1.match(line)
@@ -510,6 +512,7 @@ class ShowInterfaces(ShowInterfacesSchema):
 
                 if connected:
                     interface_dict[interface]['connected'] = True if connected == 'connected' else False
+                    interface_dict[interface]['err_disabled'] = True if connected == 'err-disabled' else False
 
                 if autostate:
                     interface_dict[interface]['autostate'] = True if autostate == 'enabled' else False
