@@ -1,0 +1,28 @@
+LENTRY:label:18 nobj:(EOS, 76) lentry_hdl:0x13000005
+   modify_cnt:1 backwalk_cnt:2
+   lspa_handle:0
+   AAL: id:318767109 lbl:18
+        eos0:[adj_hdl:0x76000024, hw_hdl:0x7ff7911bf758]
+        eos1:[adj_hdl:0xeb000022, hw_hdl:0x7ff7911bf548]
+        deagg_vrf_id = 0 lspa_handle:0
+   EOS:objid:76 local_label:0 flags:0:() pdflags:0
+      nobj0:(LABEL, 78), nobj1:(LABEL, 75) modify:1 bwalk:0
+      LABEL:objid:78 link_type:MPLS local_label:18 outlabel:(3, 0)
+          flags:0x18:(POP,PHP,) pdflags:0:(INSTALL_HW_OK,) adj_handle:0x76000024
+          unsupported recursion:0 olbl_changed 0 local_adj:0 modify_cnt:0
+          bwalk_cnt:0 subwalk_cnt:0 collapsed_oce:0
+          AAL: id:1979711524 lbl:0 smac:7486.0b05.0d46 dmac:5897.bd7a.6f80
+               sub_type:0 link_type:2 adj_flags:0 label_type:1 rewrite_type:POP2MPLS(138)
+               vlan_id:0 vrf_id:0 ri:0x7ff7911c7808, ri_id:0x22 phdl:0xe90000d3, ref_cnt:1
+               si:0x7ff7911c6098, si_id:0x4007, di_id:0x5378 
+      ADJ:objid:71 {link_type:MPLS ifnum:0x7c, adj:0x53000020, si: 0x7ff791190278  }
+      LABEL:objid:75 link_type:IP local_label:18 outlabel:(3, 0)
+          flags:0x18:(POP,PHP,) pdflags:0:(INSTALL_HW_OK,) adj_handle:0xeb000022
+          unsupported recursion:0 olbl_changed 0 local_adj:0 modify_cnt:1
+          bwalk_cnt:0 subwalk_cnt:0 collapsed_oce:0
+          AAL: id:3942645794 lbl:0 smac:7486.0b05.0d46 dmac:5897.bd7a.6f80
+               sub_type:0 link_type:0 adj_flags:0 label_type:1 rewrite_type:POP2IP(135)
+               vlan_id:0 vrf_id:0 ri:0x7ff7911bef48, ri_id:0x1e phdl:0xe90000d3, ref_cnt:1
+               si:0x7ff7911bf248, si_id:0x4005, di_id:0x5378 
+      ADJ:objid:69 {link_type:IP ifnum:0x7c, adj:0xa000001f, si: 0x7ff791190278  IPv4:       93.1.1.11 }
+
