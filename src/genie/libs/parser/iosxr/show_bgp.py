@@ -6751,79 +6751,79 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
 
 
         # VRF: default
-        p2 = re.compile(r'^VRF:\s+(?P<vrf>([\w]+))$')
+        p1 = re.compile(r'^VRF:\s+(?P<vrf>([\w]+))$')
 
         # Nexthop ID: 0x6000074, Version: 0x0
-        p3 = re.compile(r'^Nexthop ID:\s+(?P<nexthop_id>([\w]+)),\s+Version:\s+((?P<version>[\w]+))$')
+        p2 = re.compile(r'^Nexthop ID:\s+(?P<nexthop_id>([\w]+)),\s+Version:\s+((?P<version>[\w]+))$')
 
         # Nexthop Flags: 0x00000000
-        p4 = re.compile(r'^Nexthop Flags:\s+((?P<nexthop_flags>[\w]+))$')
+        p3 = re.compile(r'^Nexthop Flags:\s+((?P<nexthop_flags>[\w]+))$')
 
         # Nexthop Handle: 0x7fba00aafccc
-        p5 = re.compile(r'^Nexthop Handle:\s+((?P<nexthop_handle>[\w]+))$')
+        p4 = re.compile(r'^Nexthop Handle:\s+((?P<nexthop_handle>[\w]+))$')
 
         # Firsthop interface handle 0x0c001cc0
-        p7 = re.compile(r'^Firsthop interface handle\s+((?P<first_interface_handle>[\w]+))$')
+        p5 = re.compile(r'^Firsthop interface handle\s+((?P<first_interface_handle>[\w]+))$')
 
         # Gateway TBL Id: 0xe0000000    Gateway Flags: 0x00000080
-        p8 = re.compile(r'^Gateway TBL Id:\s+((?P<gateway_tbl_id>[\w]+)\s+)Gateway Flags:\s+((?P<gateway_flags>[\w]+))$')
+        p6 = re.compile(r'^Gateway TBL Id:\s+((?P<gateway_tbl_id>[\w]+)\s+)Gateway Flags:\s+((?P<gateway_flags>[\w]+))$')
 
         # Gateway Handle: 0x7fba14059ce0
-        p9 = re.compile(r'^Gateway Handle:\s+((?P<gateway_handle>[\w]+))$')
+        p7 = re.compile(r'^Gateway Handle:\s+((?P<gateway_handle>[\w]+))$')
 
         # Gateway: reachable, non-Connected route, prefix length 32
-        p10 = re.compile(r'^Gateway:\s+((?P<gateway>[\s\S]+))$')
+        p8 = re.compile(r'^Gateway:\s+((?P<gateway>[\s\S]+))$')
 
         # Resolving Route: 16.16.16.16/32 (static)
-        p11 = re.compile(r'^Resolving Route:\s+((?P<resolving_route>[\s\S]+))$')        
+        p9 = re.compile(r'^Resolving Route:\s+((?P<resolving_route>[\s\S]+))$')        
 
         # Paths: 0
-        p12 = re.compile(r'^Paths:\s+((?P<paths>[\d]+)\s*)$')
+        p10 = re.compile(r'^Paths:\s+((?P<paths>[\d]+)\s*)$')
 
         # RIB Nexhop ID: 0x0
-        p13 = re.compile(r'^RIB Nexhop ID:\s+((?P<rib_nexthop_id>[\w]+))$')
+        p11 = re.compile(r'^RIB Nexhop ID:\s+((?P<rib_nexthop_id>[\w]+))$')
 
         # Status: [Reachable][Not Connected][Not Local]
-        p14 = re.compile(r'^Status:\s+((?P<status>[\s\S]+))$')
+        p12 = re.compile(r'^Status:\s+((?P<status>[\s\S]+))$')
 
         # Metric: 0
-        p15 = re.compile(r'^Metric:\s+((?P<metric>[\d]+))$')
+        p13 = re.compile(r'^Metric:\s+((?P<metric>[\d]+))$')
 
         # Registration: Asynchronous, Completed: 00:02:15
-        p16 = re.compile(r'^Registration:\s+(?P<registration>[\w]+),\s+Completed:\s+((?P<completed>[\w\:]+))$')
+        p14 = re.compile(r'^Registration:\s+(?P<registration>[\w]+),\s+Completed:\s+((?P<completed>[\w\:]+))$')
 
         # Events: Critical (1)/Non-critical (0)
-        p17 = re.compile(r'^Events:\s+((?P<events>[\s\S]+))$')
+        p15 = re.compile(r'^Events:\s+((?P<events>[\s\S]+))$')
 
         # Last Received: 00:02:14 (Critical)
-        p18 = re.compile(r'^Last Received:\s+((?P<last_received>[\s\S]+))$')
+        p16 = re.compile(r'^Last Received:\s+((?P<last_received>[\s\S]+))$')
 
         # Last gw update: (Crit-notif) 00:02:14(rib)
-        p19 = re.compile(r'^Last gw update:\s+((?P<last_gw_update>[\s\S]+))$')
+        p17 = re.compile(r'^Last gw update:\s+((?P<last_gw_update>[\s\S]+))$')
 
         # Reference Count: 1
-        p20 = re.compile(r'^Reference Count:\s+((?P<reference_count>[\d]+))$')
+        p18 = re.compile(r'^Reference Count:\s+((?P<reference_count>[\d]+))$')
 
         # Active Tables: [IPv4 Unicast]
-        p22 = re.compile(r'^Active Tables:\s+((?P<active_tables>[\s\S]+))$')
+        p19 = re.compile(r'^Active Tables:\s+((?P<active_tables>[\s\S]+))$')
 
         # Metrices: [0x0]
-        p23 = re.compile(r'^Metrices:\s+((?P<metrics>[\s\S]+))$')
+        p20 = re.compile(r'^Metrices:\s+((?P<metrics>[\s\S]+))$')
 
         # Reference Counts: [1]
-        p24 = re.compile(r'^Reference Counts:\s+(\[(?P<reference_counts>[\d]+)\])$')
+        p21 = re.compile(r'^Reference Counts:\s+(\[(?P<reference_counts>[\d]+)\])$')
 
         # Interface Handle: 0x0
-        p25 = re.compile(r'^Interface Handle:\s+((?P<interface_handle>[\w]+))$')                        
+        p22 = re.compile(r'^Interface Handle:\s+((?P<interface_handle>[\w]+))$')                        
 
         # Attr ref-count: 4
-        p26 = re.compile(r'^Attr ref-count:\s+((?P<attr_ref_count>[\d]+))$')
+        p23 = re.compile(r'^Attr ref-count:\s+((?P<attr_ref_count>[\d]+))$')
         
         for line in out.splitlines():
             line = line.strip()
                 
             # VRF: default
-            m = p2.match(line)
+            m = p1.match(line)
             if m:
                 group = m.groupdict()
                 vrf = group['vrf']
@@ -6839,7 +6839,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue
             
             # Nexthop ID: 0x6000074, Version: 0x0
-            m = p3.match(line)
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
                 #update nexthop_address_dict               
@@ -6848,7 +6848,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue
 
             # Nexthop Flags: 0x00000000
-            m = p4.match(line)
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
                 #update nexthop_address_dict
@@ -6856,7 +6856,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue
 
             # Nexthop Handle: 0x7fba00aafccc
-            m = p5.match(line)
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
                 nexthop_address_dict.update({'nexthop_handle': group['nexthop_handle']})  
@@ -6864,7 +6864,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue
 
             # Firsthop interface handle 0x0c001cc0
-            m = p7.match(line)
+            m = p5.match(line)
             if m:
                 group = m.groupdict()
                 #set first_interface_handle_dict
@@ -6874,7 +6874,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue            
 
             # Gateway TBL Id: 0xe0000000    Gateway Flags: 0x00000080
-            m = p8.match(line)
+            m = p6.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6883,7 +6883,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue
             
             # Gateway Handle: 0x7fba14059ce0
-            m = p9.match(line)
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6891,15 +6891,15 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue 
             
             # Gateway: reachable, non-Connected route, prefix length 32
-            m = p10.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
                 first_interface_handle_dict.update({'gateway':group['gateway']})
                 continue         
             
-            # Gateway: reachable, non-Connected route, prefix length 32
-            m = p11.match(line)
+            # Resolving Route: 16.16.16.16/32 (static)
+            m = p9.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6907,7 +6907,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue 
 
             # Paths: 0
-            m = p12.match(line)
+            m = p10.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6915,7 +6915,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue       
 
             # RIB Nexhop ID: 0x0
-            m = p13.match(line)
+            m = p11.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6923,7 +6923,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue 
             
             # Status: [Reachable][Not Connected][Not Local]
-            m = p14.match(line)
+            m = p12.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6931,7 +6931,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue         
             
             # Metric: 0
-            m = p15.match(line)
+            m = p13.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6939,7 +6939,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue                      
 
             # Registration: Asynchronous, Completed: 00:02:15
-            m = p16.match(line)
+            m = p14.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6948,7 +6948,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue   
 
             # Events: Critical (1)/Non-critical (0)
-            m = p17.match(line)
+            m = p15.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6956,7 +6956,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue   
 
             # Last Received: 00:02:14 (Critical)
-            m = p18.match(line)
+            m = p16.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6964,7 +6964,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue   
 
             # Last gw update: (Crit-notif) 00:02:14(rib)
-            m = p19.match(line)
+            m = p17.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6972,7 +6972,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue                                      
 
             # Reference Count: 1
-            m = p20.match(line)
+            m = p18.match(line)
             if m:
                 group = m.groupdict()
                 #update first_interface_handle_dict
@@ -6980,7 +6980,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue      
 
             # Active Tables: [IPv4 Unicast]
-            m = p22.match(line)
+            m = p19.match(line)
             if m:
                 group = m.groupdict()
                 #set prefix_related_dict
@@ -7001,7 +7001,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue  
 
             # Metrices: [0x0]
-            m = p23.match(line)
+            m = p20.match(line)
             if m:
                 group = m.groupdict()
                 metrics = group['metrics'].replace('[','').replace(']','')
@@ -7010,7 +7010,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue 
 
             # Reference Counts: [1]
-            m = p24.match(line)
+            m = p21.match(line)
             if m:
                 group = m.groupdict()
                 #update prefix_related_dict
@@ -7018,7 +7018,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue   
 
             # Interface Handle: 0x0
-            m = p25.match(line)
+            m = p22.match(line)
             if m:
                 group = m.groupdict()
                 #update nexthop_address_dict
@@ -7026,7 +7026,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 continue   
 
             # Attr ref-count: 4
-            m = p26.match(line)
+            m = p23.match(line)
             if m:
                 group = m.groupdict()
                 #update nexthop_address_dict
