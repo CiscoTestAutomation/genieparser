@@ -187,6 +187,7 @@ class ShowTcpProxyStatisticsSchema(MetaParser):
             Optional('buffers_dropped_in_tx_sock_closed'): int,
             Optional('buffers_dropped_in_tx_not_writable'): int,
             Optional('buffers_dropped_in_tx_socket_close'): int,
+            Optional('buffers_dropped_in_tx_socket_closed'): int,
             'tcp_4k_allocated_buffers': int,
             'tcp_16k_allocated_buffers': int,
             'tcp_32k_allocated_buffers': int,

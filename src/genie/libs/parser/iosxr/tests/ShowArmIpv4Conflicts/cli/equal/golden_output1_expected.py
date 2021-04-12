@@ -18,10 +18,10 @@ expected_output = {
                         }
                     },
                     'unnumbered_down_interface': {
-                        'Tunnel2': {
-                            'due_to': 'Tunnel1',
+                        'Tu2': {
+                            'due_to': 'Tu1',
                             'up_interface': {
-                                'Tunnel1': {
+                                'Tu1': {
                                     'due_to': 'Loopback1'
                                 }
                             }
