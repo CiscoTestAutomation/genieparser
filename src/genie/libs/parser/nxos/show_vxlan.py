@@ -1818,7 +1818,7 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         # global mcast-group 192.168.0.1 L2
         p15 = re.compile(r'^global +mcast-group +(?P<address>[\d\.]+) +(?P<layer>L2|L3)')
         #   multisite ingress-replication optimized
-        p16 = re.compile(r'^\s*multisite ingress-replication optimized$')
+        p16 = re.compile(r'^\s+multisite +ingress-replication +optimized$')
 
         for line in out.splitlines():
             line = line.strip()
