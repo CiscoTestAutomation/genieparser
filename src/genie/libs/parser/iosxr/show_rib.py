@@ -53,7 +53,6 @@ class ShowRibTables(ShowRibTablesSchema):
             out = output
             
         result_dict = {}
-        result_dict.setdefault('table_id', {})
         
         # <vrf>   / <table>    <safi>  <table_id>  <prefix_limit>  <prefix_count> <table_ver>
         # default/default        uni   0xe0000000  10000000            12              13  
@@ -76,6 +75,7 @@ class ShowRibTables(ShowRibTablesSchema):
             
             if m:
                 group = m.groupdict()
+                result_dict.setdefault('table_id', {})
                 table_id=group['table_id']
                 result_dict['table_id'][table_id]={}
                 result_dict['table_id'][table_id].update({'vrf_name': group['vrf']})
@@ -106,8 +106,6 @@ class ShowRibTables(ShowRibTablesSchema):
                 elif group['tbl_conv']=='Y':
                     result_dict['table_id'][table_id].update({'table_reached_convergence': 'Yes'})                                
         
-        if result_dict == {'table_id': {}}:
-            result_dict = dict()
         return result_dict
 
 
