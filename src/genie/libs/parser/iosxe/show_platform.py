@@ -2286,10 +2286,11 @@ class ShowPlatform(ShowPlatformSchema):
         # ------  -----   ---------             -----------  --------------  -------       --------
         #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
         #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
+        #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           2021-03-03_18.
         p3 = re.compile(r'^(?P<switch>\d+) +(?P<ports>\d+) +'
                         r'(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
                         r'(?P<mac_address>[\w\.\:]+) +'
-                        r'(?P<hw_ver>\w+) +(?P<sw_ver>[\w\.]+)$')
+                        r'(?P<hw_ver>\w+) +(?P<sw_ver>[\s\S]+)$')
 
         #                                     Current
         # Switch#   Role        Priority      State
@@ -2344,6 +2345,7 @@ class ShowPlatform(ShowPlatformSchema):
             # ------  -----   ---------             -----------  --------------  -------       --------
             #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
             #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
+            #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           2021-03-03_18.
             m = p3.match(line)
             if m:
                 slot = m.groupdict()['switch']

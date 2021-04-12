@@ -143,7 +143,7 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
         # TenGigE 0/1/0/0 (0x01180020)
         # GigabitEthernet0/2/0/0 (0x080002c0)
         p1 = re.compile(
-            r'^(?P<interface>[a-zA-Z].+[\/\d]+) +\((?P<intf_hand>\S+)\)')
+            r'^(?P<interface>[a-zA-Z]+\s?[\/\d]+)( +\((?P<intf_hand>\S+)\))?$')
 
         # Dampening enabled: Penalty 1625, SUPPRESSED (42 secs remaining)
         p2 = re.compile(
@@ -191,8 +191,10 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
                 interface = group['interface']
                 interface_dict = result_dict.setdefault(
                     'interface', {}).setdefault(interface, {})
-                interface_dict.update(
-                    {'interface_handler': group['intf_hand']})
+                if group['intf_hand']:
+                    interface_dict.update(
+                        {'interface_handler': group['intf_hand']})
+                continue
 
             # Dampening enabled: Penalty 1625, SUPPRESSED (42 secs remaining)
 
@@ -208,6 +210,7 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
                     {'suppressed_secs_remaining': int(group['sup'])})
                 result_dict['interface'][interface].update(
                     {'currently_suppressed': 'yes'})
+                continue
 
             # Dampening enabled: Penalty 0, not suppressed
 
@@ -221,6 +224,7 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
                     {'penalty': int(group['pen_ns'])})
                 result_dict['interface'][interface].update(
                     {'currently_suppressed': 'no'})
+                continue
 
             # underlying-state:  Up
             # Underlying state: Down
@@ -231,6 +235,7 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
                 group = m.groupdict()
                 result_dict['interface'][interface].update(
                     {'underlying_state': group['und_stat']})
+                continue
 
             #  half-life: 1        reuse:             1000
             m = p5.match(line)
@@ -241,6 +246,7 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
                     {'half_life': int(group['half_life'])})
                 result_dict['interface'][interface].update(
                     {'reuse': int(group['reuse'])})
+                continue
 
             # suppress:  1500     max-suppress-time: 4
             m = p6.match(line)
@@ -251,6 +257,7 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
                     {'suppress': int(group['suppress'])})
                 result_dict['interface'][interface].update(
                     {'max_supress_time': int(group['max_suppress'])})
+                continue
 
             # ipv6           ipv6               1625  YES    42s  remaining        Down
             m = p7.match(line)
@@ -269,6 +276,7 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
                     protocol_dict.update({'protocol': group['prot']})
                 if group['prot_cap']:
                     protocol_dict.update({'capsulation': group['prot_cap']})
+                continue
 
             # Dampening not enabled
             m = p8.match(line)
@@ -279,5 +287,6 @@ class ShowImDampeningIntf(ShowImDampeningIntfSchema):
                     'interface', {}).setdefault(interface, {})
                 result_dict['interface'][interface].update(
                     {'dampening_status': 'dampening_not_enabled'})
+                continue
 
         return result_dict

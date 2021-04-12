@@ -1078,12 +1078,6 @@ class ShowRouteAllSummary(ShowRouteAllSummarySchema):
 
         ret_dict = {}
 
-        if vrf is None:
-            vrf = 'default'
-            vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
-        elif vrf != 'all':
-            vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
-
         for line in out.splitlines():
             line = line.strip()
 
@@ -1094,9 +1088,15 @@ class ShowRouteAllSummary(ShowRouteAllSummarySchema):
                     vrf_temp = m.groupdict()['vrf']
                     vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf_temp, {})
                     continue
+
             # IPv4 Unicast:
             m = p2.match(line)
             if m:
+                if vrf is None:
+                    vrf = 'default'
+                    vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
+                elif vrf != 'all':
+                    vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
                 addrs_fam = m.groupdict()['address_family']
                 addrs_fam_dict = vrf_dict.setdefault('address_family', {}).setdefault(addrs_fam, {})
                 vrf_rs_dict = addrs_fam_dict.setdefault('route_source', {})

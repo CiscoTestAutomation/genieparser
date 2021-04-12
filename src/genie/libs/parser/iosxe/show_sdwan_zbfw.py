@@ -231,7 +231,6 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
         last_dict_ptr = {}
         for line in out.splitlines():
             line = line.strip()
-            print(line)
 
             #zbfw zonepair-statistics ZP_lanZone_lanZone_Is_-902685811
             m = p1.match(line)      
