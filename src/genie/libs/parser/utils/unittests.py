@@ -389,6 +389,7 @@ class SuperFileBasedTesting(aetest.Testcase):
                             "display_only_failed": _display_only_failed,
                             "token": token,
                             "number": _number,
+                            "show_missing_unittests": _show_missing_unittests,
                         })
 
         aetest.loop.mark(ParserTest, operating_system=self.parsers.items(), generator=OSGenerator)
@@ -654,9 +655,11 @@ class ParserTest(aetest.Testcase):
                     step.failed()
 
     @aetest.cleanup
-    def cleanup(self, _display_only_failed=None):
+    def cleanup(self, _display_only_failed=None, _show_missing_unittests=None):
         if _display_only_failed:
             self.add_logger()
+        if _show_missing_unittests and glo_values.missingCount > 0:
+            self.failed('Unittests are missing')
 
 #===========================================================================
 #                            Main Section
