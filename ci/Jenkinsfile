@@ -1,6 +1,5 @@
 def project = 'genieparser'
-  
- 
+
 pipeline {
     agent {
         label 'linux'
@@ -22,31 +21,13 @@ pipeline {
             }
         }
 
-
         stage('Checkout branches') {
-            when { not { changeRequest() } }
             steps {
                 script {
                     sh """
                     cd genie
                     # checkout same branch on genie, if it exists
-                    git checkout ${BRANCH_NAME} || true
-                    """
-                }
-            }
-        }
-
-        stage('Checkout branches (PR)') {
-            when {
-                changeRequest()
-            }
-            steps {
-                script {
-                    sh """
-                    cd genie
-                    # checkout same branch on genie, if it exists
-                    git checkout origin/${CHANGE_BRANCH} || true
-                    git status
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
                     """
                 }
             }
@@ -64,7 +45,7 @@ pipeline {
                     /usr/bin/python3.6 -m venv genieparser-env
                     . /scratch/genieparser-env/bin/activate
                     pip install --upgrade pip setuptools
-                    pip3 install --no-cache-dir wheel pytest pytest-xdist
+                    pip3 install --no-cache-dir wheel pytest pytest-xdist coverage
                     pip3 install --no-cache-dir -i http://pyats-pypi.cisco.com/simple --trusted-host pyats-pypi.cisco.com cisco-distutils ats[full]
                     cd $WORKSPACE/genie
                     make develop
@@ -91,8 +72,7 @@ pipeline {
             steps {
                 sh """
                 . /scratch/genieparser-env/bin/activate
-                cd tests
-                runAll --no-refresh
+                runAll --path tests --no-refresh --coverage
                 """
             }
         }
@@ -103,8 +83,18 @@ pipeline {
                 sh """
                 . /scratch/genieparser-env/bin/activate
                 cd tests
-                pyats run job folder_parsing_job.py --no-mail --no-archive
+
+                coverage run --include '*/parser/*' --omit '*/tests/*' folder_parsing_job.py --no-mail --no-archive
+                coverage html
                 """
+                publishHTML (target: [
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'tests/htmlcov',
+                    reportFiles: "index.html",
+                    reportName: 'Coverage report'
+                ])
             }
         }
 

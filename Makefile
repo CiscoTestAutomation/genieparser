@@ -144,7 +144,7 @@ develop:
 	@echo "Building and installing $(PKG_NAME) development distributable: $@"
 	@echo ""
 
-	@pip uninstall -y $(RELATED_PKGS)
+	@pip uninstall -y $(RELATED_PKGS) || true
 	@pip install $(DEPENDENCIES)
 
 	@$(PYTHON) setup.py develop --no-deps
@@ -218,7 +218,7 @@ changelogs:
 	@echo "--------------------------------------------------------------------"
 	@echo "Generating changelog file"
 	@echo ""
-	@python -c "from genie.utils.make_changelog import main; main('./changelog/undistributed', './changelog/undistributed.rst')"
+	@python -c "from ciscodistutils.make_changelog import main; main('./changelog/undistributed', './changelog/undistributed.rst')"
 	@echo ""
 	@echo "Done."
 	@echo ""
