@@ -588,6 +588,25 @@ class ShowIpRoute(ShowIpRouteSchema):
     exclude = [
         'updated']
 
+    def sort_dict(self, obj: dict):
+        def _sort_next_hop_list(next_hop_list: dict) -> dict:
+            sort_list = []
+            for index, next_hop in next_hop_list.items():
+                sort_list.append((next_hop, next_hop['next_hop'], next_hop['source_protocol']))
+            sort_list = sorted(sort_list, key=lambda k: (k[1], k[2]), reverse=False)
+            sorted_next_hop_list = {}
+            for index, item in enumerate(sort_list):
+                item[0]['index'] = index+1
+                sorted_next_hop_list[index+1] = item[0]
+            return sorted_next_hop_list
+
+        for key, value in obj.items():
+            if isinstance(value, dict):
+                if key == 'next_hop_list':
+                    obj[key] = _sort_next_hop_list(value)
+                else:
+                    self.sort_dict(value)
+
     def cli(self, route=None, protocol=None, vrf=None, interface=None, output=None, cmd=None):
 
         # execute command to get output
@@ -952,6 +971,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if groups['tag']:
                     route_dict.update({'tag': int(groups['tag'])})
 
+        self.sort_dict(result_dict)
         return result_dict
 
 
