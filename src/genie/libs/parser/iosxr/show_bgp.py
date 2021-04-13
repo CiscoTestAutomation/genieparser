@@ -4793,7 +4793,11 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 if address_family not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family']:
                     bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family] = {}
 
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = int(m.groupdict()['remote_as'])
+                try:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = int(m.groupdict()['remote_as'])
+                except:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = m.groupdict()['remote_as']
+                
                 if route_distinguisher is not None:
                         bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['route_distinguisher'] =  route_distinguisher
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['spk'] = int(m.groupdict()['spk'])                
