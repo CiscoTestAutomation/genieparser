@@ -15,7 +15,7 @@ expected_output = {
                                  "desired_interval_ms":500,
                                  "desired_multiplier":6,
                                  "adjusted_interval_ms":500,
-                                 "adjustedmultiplier":6
+                                 "adjusted_multiplier":6
                               }
                            }
                         },

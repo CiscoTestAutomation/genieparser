@@ -1,5 +1,3 @@
-RP/0/0/CPU0:router# show im dampening interface TenGigaE 0/1/0/0
-
 TenGigE 0/1/0/0 (0x01180020)
 Dampening enabled: Penalty 1625, SUPPRESSED (42 secs remaining)
   Underlying state: Down

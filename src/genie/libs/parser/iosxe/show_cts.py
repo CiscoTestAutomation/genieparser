@@ -295,7 +295,6 @@ class ShowCtsPacs(ShowCtsPacsSchema):
             rendered_lines = []
             for clean_line in clean_lines:
                 clean_line_strip = clean_line.strip()
-                # print(clean_line)
                 # Remove lines unwanted lines from list of "remove_lines"
                 if not clean_line_strip.startswith(remove_lines):
                     rendered_lines.append(clean_line_strip)
@@ -429,7 +428,6 @@ class ShowCtsRoleBasedCounters(ShowCtsRoleBasedCountersSchema):
             rendered_lines = []
             for clean_line in clean_lines:
                 clean_line_strip = clean_line.strip()
-                # print(clean_line)
                 # Remove lines unwanted lines from list of "remove_lines"
                 if not clean_line_strip.startswith(remove_lines):
                     rendered_lines.append(clean_line_strip)
@@ -1467,7 +1465,6 @@ class ShowCtsEnvironmentData(ShowCtsEnvironmentDataSchema):
             rendered_lines = []
             for clean_line in clean_lines:
                 clean_line_strip = clean_line.strip()
-                # print(clean_line)
                 # Remove lines unwanted lines from list of "remove_lines"
                 if not clean_line_strip.startswith(remove_lines):
                     rendered_lines.append(clean_line_strip)
@@ -1863,7 +1860,6 @@ class ShowCtsRoleBasedPermissions(ShowCtsRoleBasedPermissionsSchema):
             rendered_lines = []
             for clean_line in clean_lines:
                 clean_line_strip = clean_line.strip()
-                # print(clean_line)
                 rendered_lines.append(clean_line_strip)
             return rendered_lines
 
