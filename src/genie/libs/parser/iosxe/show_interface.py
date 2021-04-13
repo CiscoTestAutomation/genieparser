@@ -911,6 +911,10 @@ class ShowInterfaces(ShowInterfacesSchema):
             # 5 minute output rate 0 bits/sec, 0 packets/sec
             m = p21.match(line)
             if m:
+                if 'counters' not in interface_dict[interface]:
+                    interface_dict[interface]['counters'] = {}   
+                    interface_dict[interface]['counters']['rate'] = {}
+
                 out_rate = int(m.groupdict()['out_rate'])
                 out_rate_pkts = int(m.groupdict()['out_rate_pkts'])
 
