@@ -1,0 +1,39 @@
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+1    default                          active    Po4, Po100, Eth1/2, Eth1/3
+                                                Eth1/4, Eth1/5, Eth1/6, Eth1/7
+                                                Eth1/8, Eth1/9, Eth1/10, Eth1/11
+                                                Eth1/12, Eth1/13, Eth1/14
+                                                Eth2/1, Eth2/2, Eth2/3, Eth2/4
+                                                Eth2/5, Eth2/6
+2    VLAN0002                         active    Po4, Po100, Eth1/7, Eth1/8
+                                                Eth1/28
+3    VLAN0003                         active    Po4, Po100, Eth1/7, Eth1/8
+                                                Eth1/28
+4    VLAN0004                         active    Po4, Po100, Eth1/7, Eth1/8
+                                                Eth1/28
+5    VLAN0005                         active    Po4, Po100, Eth1/7, Eth1/8
+                                                Eth1/28
+6    VLAN0006                         sus/lshut
+
+VLAN Type         Vlan-mode
+ ---- -----        ----------
+ 1    enet         CE
+ 23   enet         CE
+ 100  enet         CE
+ 101  enet         CE
+ 102  enet         CE
+ 103  enet         CE
+ 104  enet         CE
+ 105  enet         CE
+ 106  enet         CE
+ 107  enet         CE
+
+Remote SPAN VLANs
+-------------------------------------------------------------------------------
+10,20,30-33
+
+Primary  Secondary  Type             Ports
+-------  ---------  ---------------  -------------------------------------------
+         303        community        Fa2/3, Fa3/5
+403      500        non-operational
