@@ -124,7 +124,7 @@ class ShowRoute(ShowRouteSchema):
         # * - candidate default, su - IS-IS summary, U - per-user static route, o - ODR
         # P - periodic downloaded static route, + - replicated route
         # SI - Static InterVRF
-        p1 = re.sub(r'(?ms)(Codes:.+?)replicated\sroute(\nSI\s-\sStatic InterVRF)?', '', out, re.MULTILINE)
+        p1 = re.sub(r'(?ms)(Codes:.+?)replicated\sroute(\nSI\s-\sStatic\sInterVRF)?', '', out, re.MULTILINE)
 
         res = "\n".join([x.lstrip() for x in p1.splitlines()])
         entries = dict()
