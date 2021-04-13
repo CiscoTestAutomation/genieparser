@@ -24,8 +24,10 @@ class ShowMplsLdpDiscoveryDetailSchema(MetaParser):
     schema = {
         'vrf': {
             Optional('local_ldp_identifier'): str,
-            Any(): {
-                Any(): {
+            'vrfs': ListOf({
+                'vrf_name': str,
+                'interfaces': ListOf({
+                    Optional('interface'): str,
                     Optional('vrf_hex'): str,
                     Optional('source_ip_addr'): str,
                     Optional('transport_ip_addr'): str,
@@ -35,7 +37,8 @@ class ShowMplsLdpDiscoveryDetailSchema(MetaParser):
                     Optional('hello_due_time_ms'): str,
                     Optional('quick_start'): str,
                     Optional('ldp_id'): {
-                        Any(): {
+                        Optional('network_addr'): str,
+                        "ldp_entries": ListOf({
                             Optional('source_ip_addr'): str,
                             Optional('transport_ip_addr'): str,
                             Optional('holdtime_sec'): str,
@@ -44,17 +47,15 @@ class ShowMplsLdpDiscoveryDetailSchema(MetaParser):
                             Optional('expiring_in'): str,
                             Optional('established_date'): str,
                             Optional('established_elapsed'): str,
-                            Optional('last_session_connection_failures'): {
-                                Any(): {
-                                    Optional('timestamp'): str,
-                                    Optional('reason'): str,
-                                    Optional('last_up_for'): str,
-                                }
-                            }
-                        }
+                            Optional('last_session_connection_failures'): ListOf({
+                                Optional('timestamp'): str,
+                                Optional('reason'): str,
+                                Optional('last_up_for'): str,
+                            })
+                        })
                     }
-                }
-            }
+                })
+            })
         }
     }
 
@@ -93,22 +94,22 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
         # LDP Id: 96.96.96.96:0
         p5 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:\s*(?P<ldp_tdp_id>[\S]+)$')
 
+        # Source address: 100.20.0.1; Transport address: 25.97.1.1
+        p6 = re.compile(r'^Source +address: +(?P<source_ip_addr>[\d\.]+);'
+                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
+
         # Hold time: 15 sec (local:15 sec, peer:45 sec)
-        p6 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec '
+        p7 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec '
                         '\(local:(?P<proposed_local>\d+) +sec, '
                         'peer:(?P<proposed_peer>\d+) +sec\)$')
 
         # (expiring in 11 sec)
         # (expiring in 14.5 sec)
-        p7 = re.compile(r'^\(expiring +in +(?P<expiring_in>\d.*) +sec\)$')
+        p8 = re.compile(r'^\(expiring +in +(?P<expiring_in>\d.*) +sec\)$')
 
         # Established: Nov  6 14:39:26.164 (5w2d ago)
-        p8 = re.compile(r'^Established: +(?P<established_date>\S.*) '
+        p9 = re.compile(r'^Established: +(?P<established_date>\S.*) '
                         '+\((?P<established_elapsed>\S*) +ago\)$')
-
-        # Source address: 100.20.0.1; Transport address: 25.97.1.1
-        p9 = re.compile(r'^Source +address: +(?P<source_ip_addr>[\d\.]+);'
-                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
 
         # Hello interval: 5 sec (due in 563 msec)
         p10 = re.compile(r'^Hello +interval: +(?P<hello_interval>\d+) +sec'
@@ -153,7 +154,8 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
                 group = m.groupdict()
                 interface = group['interface'] if group['interface'] \
                     else "default"
-                interface_dict = {}
+
+                interface_dict = {'interface': interface}
                 interface_dict.update(
                     {'xmit': 'True' if group['xmit'] else 'False'})
                 interface_dict.update(
@@ -164,15 +166,21 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                vrf = group['vrf'] if group['vrf'] else "default"
-                # vrf_dict = ldp_dict.setdefault(vrf, {})
-                vrf_dict = result_dict.setdefault('vrf', {}).\
-                    setdefault(vrf, {})
+                vrf_name = group['vrf'] if group['vrf'] else "default"
+                vrf_list = result_dict.setdefault('vrf', {}).\
+                    setdefault('vrfs', [])
+
+                vrf = next(
+                    (i for i in vrf_list if i['vrf_name'] == vrf_name), None)
+
+                if vrf is None:
+                    vrf = {'vrf_name': vrf_name, 'interfaces': []}
+                    vrf_list.append(vrf)
 
                 if interface:
                     vrf_hex = group['vrf_hex']
                     interface_dict.update({'vrf_hex': vrf_hex})
-                    vrf_dict.update({interface: interface_dict})
+                    vrf['interfaces'].append(interface_dict)
 
                 continue
 
@@ -181,45 +189,58 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
             if m:
                 group = m.groupdict()
                 ldp_tdp = group['ldp_tdp'].lower()
+                ldp_tdp_id = group['ldp_tdp_id']
                 if discovery_flag:
                     ldp_dict = interface_dict.\
-                        setdefault('{}_id'.format(ldp_tdp), {}).\
-                        setdefault(group['ldp_tdp_id'], {})
+                        setdefault('{}_id'.format(ldp_tdp), {})
+
+                    net_addr = next((i for i in ldp_dict
+                                    if i['network_addr'] == ldp_tdp_id
+                                    ), None)
+
+                    if net_addr is None:
+                        net_addr = {
+                            'network_addr': ldp_tdp_id,
+                            'ldp_entries': []
+                        }
+                        ldp_dict.update(net_addr)
 
                 continue
 
-            # Hold time: 15 sec (local:15 sec, peer:45 sec)
+            # Source address: 10.166.0.57; Transport address: 10.52.31.247
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                ldp_dict.update({k: v for k, v in group.items() if v})
-                continue
-
-            # (expiring in 14.5 sec)
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                ldp_dict.update(
-                    {'expiring_in': group['expiring_in']})
-
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                ldp_dict.update(
-                    {'established_date': group['established_date']})
-                ldp_dict.update(
-                    {'established_elapsed': group['established_elapsed']})
-
-            # Source address: 10.166.0.57; Transport address: 10.52.31.247
-            m = p9.match(line)
-            if m:
-                group = m.groupdict()
                 if 'source_ip_addr' in interface_dict.keys():
-                    ldp_dict.update({k: v for k, v in group.items() if v})
+                    item_dict = {k: v for k, v in group.items() if v}
+                    net_addr['ldp_entries'].append(item_dict)
                 else:
                     interface_dict.update(
                         {k: v for k, v in group.items() if v})
                 continue
+
+            # Hold time: 15 sec (local:15 sec, peer:45 sec)
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                item_dict.update(
+                    {k: v for k, v in group.items() if v})
+                continue
+
+            # (expiring in 14.5 sec)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                item_dict.update(
+                    {'expiring_in': group['expiring_in']})
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                item_dict.update({
+                    'established_date': group['established_date'],
+                    'established_elapsed': group['established_elapsed']
+                })
 
             # Hello interval: 5 sec (due in 563 msec)
             m = p10.match(line)
@@ -247,18 +268,18 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
             # Last session connection failures:
             m = p12.match(line)
             if m:
-                connection_failure_id = 1
+                item_dict['last_session_connection_failures'] = []
 
             m = p13.match(line)
             if m:
                 group = m.groupdict()
-                connection_failure_dict = ldp_dict.\
-                    setdefault('last_session_connection_failures', {}).\
-                    setdefault(str(connection_failure_id), {})
-                connection_failure_dict.update(
-                    {'timestamp': group['timestamp']})
-                connection_failure_dict.update({'reason': group['reason']})
-                connection_failure_id += 1
+                connection_failure_dict = {
+                    'timestamp': group['timestamp'],
+                    'reason': group['reason']
+                }
+
+                item_dict['last_session_connection_failures'].append(
+                    connection_failure_dict)
                 continue
 
             m = p14.match(line)
