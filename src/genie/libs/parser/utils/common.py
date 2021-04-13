@@ -584,7 +584,7 @@ class Common():
                    'vl': 'vasileft',
                    'vr': 'vasiright',
                    'BE': 'Bundle-Ether',
-                   'tu': 'Tunnel'
+                   'tu': 'Tunnel',
                    'M-E': 'M-Ethernet',             # comware
                    'BAGG' : 'Bridge-Aggregation',   # comware
                    'Ten-GigabitEthernet': 'TenGigabitEthernet'  # HP
