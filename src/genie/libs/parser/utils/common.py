@@ -23,8 +23,8 @@ log = logging.getLogger(__name__)
 
 class ParserNotFound(Exception):
     '''raise exception if parser is not fond
-       first argument is the parser 
-       second argument is the ios '''
+       first argument is parser show command 
+       second argument is ios '''
     def __init__(self, *args):
         self.parser = args[0]
         self.token = args[1]
