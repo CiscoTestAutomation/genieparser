@@ -12,9 +12,9 @@ class ShowRouterArpDynamicSchema(MetaParser):
 		'router': {
 			Any(): {
 				"entries" : int,
-				'interfaces': {
+				'ip_address': {
 					Any(): {
-						'ip_add': str,
+						'interface': str,
 						'mac_add': str,
 						'expiry': str,
 						'type':str
@@ -36,33 +36,44 @@ class ShowRouterArpDynamic(ShowRouterArpDynamicSchema):
 			out = output
 		
 		parsed_dict = {}
+
+		#ARP Table Router: (Base)
 		p0 = re.compile(r'^ARP Table Router: \((?P<router>\S+)\)$')
+
+		#No. of ARP Entries: 4
 		p1 = re.compile(r'^No. of ARP Entries: (?P<entries>\d+)$')
-		p2 = re.compile(r'^(?P<ip_add>\S+) +(?P<mac_add>\S+) +(?P<expiry>\S+) +(?P<type>\S+) +(?P<interface>\S+)$')
+
+		#1.1.1.1         00:fe:c8:34:a7:39 02h34m12s Dyn[I] To-ASR5.5K
+		p2 = re.compile(r'^(?P<ip_address>\S+) +(?P<mac_add>\S+) +(?P<expiry>\S+) +(?P<type>\S+) +(?P<interface>\S+)$')
 		
 		for line in out.splitlines():
-			
+			line= line.strip()
+
+			#ARP Table Router: (Base)
 			m = p0.match(line)
 			if m:
 				router_dict = parsed_dict.setdefault('router', {}).setdefault(m.groupdict()['router'], {})
 				continue
+
+			#No. of ARP Entries: 4
 			m = p1.match(line)
 			if m:
 				router_dict["entries"] = int(m.groupdict()['entries'])
 				continue
 			
+			#1.1.1.1         00:fe:c8:34:a7:39 02h34m12s Dyn[I] To-ASR5.5K
 			m = p2.match(line)
 			if m:
 				group = m.groupdict()
-				ip_add = group['ip_add']
+				ip_address = group['ip_address']
 				mac_add = group['mac_add']
 				expiry = group['expiry']
 				type_mac = group['type']
 				interface = group['interface']
 				
-				interface_dict = router_dict.setdefault('interfaces', {}).setdefault(interface, {})
+				interface_dict = router_dict.setdefault('ip_address', {}).setdefault(ip_address, {})
 				
-				interface_dict["ip_add"] = ip_add
+				interface_dict["interface"] = interface
 				interface_dict["mac_add"] = mac_add
 				interface_dict["expiry"] = expiry
 				interface_dict["type"] = type_mac

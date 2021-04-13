@@ -23,35 +23,35 @@ class test_show_router_arp_dynamic(unittest.TestCase):
 
 	"router": {
 		"Base": {
-			"interfaces": {
-				"To-ASR5.5K": {
-					"ip_add": "1.1.1.1",
+			"ip_address": {
+				"1.1.1.1": {
+					"interface": "To-ASR5.5K",
 					"mac_add": "00:fe:c8:34:a7:39",
 					"expiry": "02h34m12s",
 					"type": "Dyn[I]"
 				},
-				"To-ASR5.5K_2": {
-					"ip_add": "2.2.2.2",
+				"2.2.2.2": {
+					"interface": "To-ASR5.5K_2",
 					"mac_add": "00:fe:c8:34:a9:39",
 					"expiry": "03h46m20s",
 					"type": "Dyn[I]"
 				},
-				"To-CENTRAL": {
-					"ip_add": "3.3.3.3",
+				"3.3.3.3": {
+					"interface": "To-CENTRAL",
 					"mac_add": "10:e8:78:a8:4e:a5",
 					"expiry": "02h29m13s",
 					"type": "Dyn[I]"
 				},
-				"To-MANAG": {
-					"ip_add": "4.4.4.4",
+				"4.4.4.4": {
+					"interface": "To-MANAG",
 					"mac_add": "00:04:96:98:7c:2e",
 					"expiry": "03h57m43s",
 					"type": "Dyn[I]"
 				}
 			},
-			"entries": 4,
+			"entries": 4
+			}
 		}
-	}
 	}
 
 	golden_output1 = {'execute.return_value': '''
