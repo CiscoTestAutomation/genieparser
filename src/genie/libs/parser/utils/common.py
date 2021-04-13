@@ -21,6 +21,14 @@ PYATS_EXT_PARSER = 'pyats.libs.external.parser'
 
 log = logging.getLogger(__name__)
 
+class ParserNotFound(Exception):
+    def __init__(self, *args):
+        self.parser = args[0]
+        self.ios = args[1]
+
+    def __str__(self):
+        return (f"Could not find parser for {self.parser} under {self.ios}")
+
 def _load_parser_json():
     '''get all parser data in json file'''
     try:
@@ -122,8 +130,7 @@ def get_parser(command, device, fuzzy=False):
             continue
 
     if not valid_results:
-        raise Exception("Could not find parser for "
-                        "'{c}' under {l}".format(c=command, l=lookup._tokens))
+        raise ParserNotFound(command, lookup._tokens)                        
 
     if not fuzzy:
         return valid_results[0][1], valid_results[0][2]
@@ -557,7 +564,8 @@ class Common():
                    'Hun': 'HundredGigE',
                    'vl': 'vasileft',
                    'vr': 'vasiright',
-                   'BE': 'Bundle-Ether'
+                   'BE': 'Bundle-Ether',
+                   'tu': 'Tunnel'
                    }
         m = re.search(r'([a-zA-Z]+)', intf) 
         m1 = re.search(r'([\d\/\.]+)', intf)
