@@ -2,5 +2,6 @@
                                 New
 --------------------------------------------------------------------------------
 * Junos
-    * Added: ShowMplsLdpDiscovery
-        * 'show mpls ldp discovery detail'
+    * Added: ShowMplsLdpDiscoveryDetail
+        * show mpls ldp discovery detail
+        * folder based unittests
