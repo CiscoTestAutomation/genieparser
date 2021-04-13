@@ -124,7 +124,7 @@ class ShowRoute(ShowRouteSchema):
         # * - candidate default, su - IS-IS summary, U - per-user static route, o - ODR
         # P - periodic downloaded static route, + - replicated route
         # SI - Static InterVRF
-        p1 = re.sub(r'(?ms)(Codes:.+?)replicated\sroute(\s*SI\s-\sStatic\sInterVRF)?', '')
+        p1 = re.sub(r'(?ms)(Codes:.+?)replicated\sroute(\s*SI\s-\sStatic\sInterVRF)?', '', out)
 
         res = "\n".join([x.lstrip() for x in p1.splitlines()])
         entries = dict()
@@ -176,8 +176,7 @@ class ShowRoute(ShowRouteSchema):
 
         # SI 11.0.0.0 255.0.0.0 [1/0] is directly connected, gig3
         p5_1 = re.compile(
-            r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s(\[(?P<route_preference>[\d\/]+)\])?'
-            r'\s(?:.*),\s(?P<context_name>\S+)')
+            r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s(\[(?P<route_preference>[\d\/]+)\])?\s(?:.*),\s(?P<context_name>\S+)')
 
         # S 0.0.0.1 0.0.0.0 [10/5]
         p6 = re.compile(r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s\[(?P<route_preference>[\d\/]+)\]')
