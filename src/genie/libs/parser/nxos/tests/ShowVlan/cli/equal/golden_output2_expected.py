@@ -50,7 +50,7 @@ expected_output = {
         '6': {
             'vlan_id': '6',
             'name': 'VLAN0006',
-            'state': 'shutdown',
+            'state': 'suspend',
             'shutdown': True,
         },
         '10': {'remote_span_vlan': True},
