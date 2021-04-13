@@ -806,3 +806,208 @@ class ShowIpEigrpInterfaces(ShowIpEigrpInterfacesSchema):
                 continue
 
         return parsed_dict
+
+class ShowIpEigrpTopologySchema(MetaParser):
+    ''' Schema for:
+        * 'show ip eigrp topology'
+        * 'show ip eigrp vrf <vrf> topology'
+        * 'show ipv6 eigrp topology'
+        * 'show ipv6 eigrp vrf <vrf> topology'
+    '''
+
+    schema = {
+        'eigrp_instance': {
+            Any(): {
+                'vrf': {
+                    Any(): {
+                        'address_family': {
+                            Any(): {
+                                'eigrp_id': {
+                                    Any(): {
+                                        'eigrp_routes': {
+                                            Any(): {
+                                                'route_code': str,
+                                                'route_type': str,
+                                                'route': str,
+                                                'successor_count': int,
+                                                'FD': int,
+                                                'known_via': str,
+                                                Optional('outgoing_interface'): str,
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
+    '''Parser for:
+    show ip eigrp topology
+    show ip eigrp vrf <vrf> topology
+    show ipv6 eigrp topology
+    show ipv6 eigrp vrf <vrf topology>
+    '''
+
+    def cli(self, address_family='', vrf='', output=None):
+        route_code_dict = {}
+        # Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply,
+        # r - reply Status, s - sia Status
+        route_code_dict['Passive'] = ['P']
+        route_code_dict['Active'] = ['A']
+        route_code_dict['Update'] = ['U']
+        route_code_dict['Query'] = ['Q']
+        route_code_dict['Reply'] = ['R']
+        route_code_dict['reply_Status'] = ['r']
+        route_code_dict['sia_Status'] = ['s']
+
+        # EIGRP-IPv4 Topology Table for AS(10)/ID(13.0.0.2)
+        # EIGRP-IPv4 Topology Table for AS(10)/ID(13.0.0.2) VRF(red)
+        r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s*'
+        'Topology\s*Table\s*for\s*\w+\(\s*(?P<as_num>\d+)\)\/\w+\(\s*(?P<eigrp_id>\S+)\)\s*'
+        '(?:VRF\((?P<vrf>\S+)\))?$')
+
+        # IPv6-EIGRP Topology Table for AS(1)/ID(2001:0DB8:10::/64)
+        # IPv6-EIGRP Topology Table for AS(1)/ID(2001:0DB8:10::/64) VRF(red)
+        r2 = re.compile(r'^(?P<address_family>IPv4|IPv6)\-EIGRP\s*'
+        'Topology\s*Table\s*for\s*\w+\(\s*(?P<as_num>\d+)\)\/\w+\(\s*(?P<eigrp_id>\S+)\)\s*'
+        '(?:VRF\((?P<vrf>\S+)\))?$')
+
+        # P 13.0.0.0/16, 1 successors, FD is 2816
+        # P 3.3.3.3/32, 1 successors, FD is 130816
+        # P 1.1.1.1/32, 1 successors, FD is 2816, tag is 900
+        # P 2001:0DB8:3::/64, 1 successors, FD is 281600
+        r3 = re.compile(r'^(?P<code>[\w\*]+)\s*'
+        '(?P<network>\S+),\s*'
+        '(?P<successor_count>[\d])\s*successors,\s*'
+        'FD\s*is\s*(?P<fd>[\d]+)?,?'
+        '( +tag\s*is\s*(?P<tag>[\S]+))?$')
+
+        # via Connected, GigabitEthernet0/0/0
+        # via 13.0.0.1 (130816/128256), GigabitEthernet0/0/0
+        # via +Redistributed (2816/0)
+        # via Connected, Ethernet1/0
+        r4 = re.compile(r'^\s*via\s*[+]?(?P<known_via>[\S]+).,*? *\(?(?P<route_preference>[\d\/]+)?\)?,?( +(?P<interface>[\S]+))?$')
+
+        parsed_dict = {}
+        eigrp_instance = vrf = as_num = eigrp_id = ''
+
+        # Get output
+        out = output
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            result = r1.match(line)
+            if result:
+                address_family = result.groupdict()['address_family']
+                as_num = result.groupdict()['as_num']
+                eigrp_id = result.groupdict()['eigrp_id']
+
+                if result.groupdict()['vrf']:
+                    vrf = result.groupdict()['vrf']
+                else:
+                    vrf = 'default'
+                continue
+
+
+            result = r2.match(line)
+            if result:
+                address_family = result.groupdict()['address_family']
+                as_num = result.groupdict()['as_num']
+                eigrp_id = result.groupdict()['eigrp_id']
+
+                if result.groupdict()['vrf']:
+                    vrf = result.groupdict()['vrf']
+                else:
+                    vrf = 'default'
+                continue
+
+            result = r3.match(line)
+            if result:
+                route_prefix = result.groupdict()['network']
+
+                route_dict = parsed_dict\
+                    .setdefault('eigrp_instance', {})\
+                    .setdefault(as_num, {})\
+                    .setdefault('vrf', {})\
+                    .setdefault(vrf, {})\
+                    .setdefault('address_family', {})\
+                    .setdefault(address_family, {})\
+                    .setdefault('eigrp_id', {})\
+                    .setdefault(eigrp_id, {})\
+                    .setdefault('eigrp_routes', {}).setdefault(route_prefix, {})
+                
+                route_code = result.groupdict()['code'].strip()
+                successor_count = int(result.groupdict()['successor_count'])
+                fd = int(result.groupdict()['fd'])
+                for key, value in route_code_dict.items():
+                    if route_code in value:
+                        route_type = key
+                
+                route_dict['route_code'] = route_code
+                route_dict['successor_count'] = successor_count
+                route_dict['FD'] = fd
+                route_dict['route_type'] = route_type
+                route_dict['route'] = route_prefix
+                continue
+            
+            result = r4.match(line)
+            if result:
+                known_via = result.groupdict()['known_via']
+                if result.groupdict()['interface']:
+                    outgoing_interface = result.groupdict()['interface']
+                else:
+                    outgoing_interface = ''
+
+                route_dict['known_via'] = known_via
+                route_dict['outgoing_interface'] = outgoing_interface
+                continue
+
+        return parsed_dict
+
+# ===============================================
+# Parser for:
+#   * 'show ip eigrp vrf {vrf} topology'
+#   * 'show ip eigrp topology'
+# ===============================================
+class ShowIpEigrpTopology(ShowEigrpTopologySuperParser, ShowIpEigrpTopologySchema):
+    cli_command = ['show ip eigrp vrf {vrf} topology',
+                    'show ip eigrp topology',]
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+        
+        return super().cli(output=show_output, address_family='ipv4', vrf=vrf)
+
+# ===============================================
+# Parser for:
+#   * 'show ipv6 eigrp vrf {vrf} neighbors'
+#   * 'show ipv6 eigrp neighbors'
+# ===============================================
+class ShowIpv6EigrpTopology(ShowEigrpTopologySuperParser, ShowIpEigrpTopologySchema):
+    cli_command = ['show ipv6 eigrp vrf {vrf} topology',
+                    'show ipv6 eigrp topology',]
+
+    def cli(self, vrf='', output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[0].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[1]
+            show_output = self.device.execute(cmd)
+        else:
+            show_output = output
+        
+        return super().cli(output=show_output, address_family='ipv4', vrf=vrf)
