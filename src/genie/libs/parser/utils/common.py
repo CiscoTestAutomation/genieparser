@@ -568,7 +568,8 @@ class Common():
                    'Hun': 'HundredGigE',
                    'vl': 'vasileft',
                    'vr': 'vasiright',
-                   'BE': 'Bundle-Ether'
+                   'BE': 'Bundle-Ether',
+                   'tu': 'Tunnel'
                    }
         m = re.search(r'([a-zA-Z]+)', intf) 
         m1 = re.search(r'([\d\/\.]+)', intf)
