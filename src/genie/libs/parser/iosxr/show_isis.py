@@ -2718,7 +2718,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
         parsed_output = {}
         interface_flag = False
         clns_flag = False
-        topology_falg = False
+        topology_flag = False
         instance = None
 
         for line in output.splitlines():
@@ -2922,7 +2922,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 protocol_state = group['protocol_state']
                 if clns_flag:
                     clns_dict['protocol_state'] = protocol_state
-                elif topology_falg:
+                elif topology_flag:
                     topology_dict['protocol_state'] = protocol_state
                 else:
                     address_family_dict['protocol_state'] = protocol_state
@@ -2953,7 +2953,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                 topology_dict['state'] = topology_state
                 interface_flag = False
                 clns_flag = False
-                topology_falg = True
+                topology_flag = True
                 continue
 
             # Metric (L1/L2):         10/10
@@ -3059,7 +3059,7 @@ class ShowIsisInterface(ShowIsisInterfaceSchema):
                     .setdefault('address_family', {})\
                     .setdefault(address_family, {})
                 address_family_dict['state'] = address_family_state
-                topology_falg = False
+                topology_flag = False
                 continue
 
             # Forwarding Address(es): 0.0.0.0
