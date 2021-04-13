@@ -1,0 +1,18 @@
+RP/0/RP0/CPU0:F11-sjkIAN103#show mpls ldp bindings
+        Mon Sep 14 19:08:39.424 JST
+
+        25.97.1.1/32, rev 2
+                Local binding: label: ImpNull
+                Remote bindings: (2 peers)
+                    Peer                Label    
+                    -----------------   ---------
+                    95.95.95.95:0       16002   
+                    96.96.96.96:0       16001   
+
+        95.95.95.95/32, rev 20
+                Local binding: label: 24001
+                Remote bindings: (2 peers)
+                    Peer                Label    
+                    -----------------   ---------
+                    95.95.95.95:0       ImpNull 
+                    96.96.96.96:0       16000   

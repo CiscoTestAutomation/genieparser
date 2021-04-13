@@ -24,13 +24,30 @@ datastructure.
 
 # Installation
 
-Installation guide can be found on [our website].
+The package is automatically installed when pyATS gets installed
 
+```
+$ pip install 'pyats[full]'
+```
+
+Detailed installation guide can be found on [our website].
 [our website]: https://developer.cisco.com/site/pyats/
 
+# Development
+
+To develop this package, assuming you have Genie already installed in your
+environment, follow the commands below:
+
+```bash
+# clone this repo
+bash$ git clone https://github.com/CiscoTestAutomation/genieparser.git
+
+# put all packages in dev mode
+bash$ cd genieparser
+bash$ make develop
 ```
-$ pip install genie.metaparser
-```
+
+Now you should be able to develop the files and see it reflected in your runs.
 
 # ChangeLog
 
