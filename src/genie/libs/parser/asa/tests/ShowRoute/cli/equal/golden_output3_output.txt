@@ -7,6 +7,7 @@ E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
 i - IS-IS, L1 - IS-IS level-1, L2 - IS-IS level-2, ia - IS-IS inter area
 * - candidate default, su - IS-IS summary, U - per-user static route, o - ODR
 P - periodic downloaded static route, + - replicated route
+SI - Static InterVRF
 
 Gateway of last resort is 10.16.251.1 to network 0.0.0.0
 
@@ -46,3 +47,4 @@ D EX     10.121.70.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
                                     [170/345856] via 10.9.193.98, 2w1d, esavpn
 D EX     10.121.71.0 255.255.255.0 [170/345856] via 10.9.193.99, 2w1d, esavpn
                                     [170/345856] via 10.9.193.98, 2w1d, esavpn            
+SI   11.0.0.0 255.0.0.0 [1/0] is directly connected, gig3
