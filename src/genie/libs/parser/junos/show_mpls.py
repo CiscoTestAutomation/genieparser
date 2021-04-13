@@ -113,7 +113,7 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
 
         # Hello interval: 5 sec (due in 563 msec)
         p10 = re.compile(r'^Hello +interval: +(?P<hello_interval>\d+) +sec'
-                        ' +\(due +in +(?P<hello_due_time>\S+ \S+)\)$')
+                        ' +\(due +in +(?P<hello_due_time>\S+ +\S+)\)$')
 
         # Quick-start: Enabled
         p11 = re.compile(r'^Quick-start: +(?P<quick_start>\S+)$')
@@ -128,7 +128,7 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
 
         #         (Last up for 00:06:56)
         #         (Last up for 00:08:05)
-        p14 = re.compile(r'\(Last +up +for (?P<last_up_for>[\d:]+)\)$')
+        p14 = re.compile(r'\(Last +up +for +(?P<last_up_for>[\d:]+)\)$')
 
         for line in out.splitlines():
             line = line.strip()
