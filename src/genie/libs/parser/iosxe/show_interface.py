@@ -3591,7 +3591,7 @@ class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
         for line in out.splitlines():
             print("8===D")
             line = line.strip()
-            print(line)
+            print(line + "||")
             m = p3.match(line)
             if m:
                 print("8====D")
