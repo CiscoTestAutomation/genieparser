@@ -130,3 +130,9 @@ class ShowInterfacesStatus(ShowInterfacesStatus_iosxe):
     """Parser for:
         show interfaces status"""
     pass
+
+
+class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetail_iosxe):
+    """Parser for:
+        show interface <interface> transceiver detail"""
+    pass
