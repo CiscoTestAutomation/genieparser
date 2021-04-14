@@ -881,11 +881,9 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
         # P 3.3.3.3/32, 1 successors, FD is 130816
         # P 1.1.1.1/32, 1 successors, FD is 2816, tag is 900
         # P 2001:0DB8:3::/64, 1 successors, FD is 281600
-        r3 = re.compile(r'^(?P<code>[\w\*]+)\s*'
-        '(?P<network>\S+),\s*'
-        '(?P<successor_count>[\d])\s*successors,\s*'
-        'FD\s*is\s*(?P<fd>[\d]+)?,?'
-        '( +tag\s*is\s*(?P<tag>[\S]+))?$')
+        r3 = re.compile(r'^(?P<code>[\w\*]+)\s*(?P<network>\S+),\s*'
+        '(?P<successor_count>[\d])\s*successors,\s*FD\s*is\s*(?P<fd>[\d]+)?,'
+        '?( +tag\s*is\s*(?P<tag>[\S]+))?$')
 
         # via Connected, GigabitEthernet0/0/0
         # via 13.0.0.1 (130816/128256), GigabitEthernet0/0/0
@@ -901,7 +899,9 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
 
         for line in out.splitlines():
             line = line.strip()
-
+            
+            # EIGRP-IPv4 Topology Table for AS(10)/ID(13.0.0.2)
+            # EIGRP-IPv4 Topology Table for AS(10)/ID(13.0.0.2) VRF(red)
             result = r1.match(line)
             if result:
                 address_family = result.groupdict()['address_family']
@@ -914,7 +914,8 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
                     vrf = 'default'
                 continue
 
-
+            # IPv6-EIGRP Topology Table for AS(1)/ID(2001:0DB8:10::/64)
+            # IPv6-EIGRP Topology Table for AS(1)/ID(2001:0DB8:10::/64) VRF(red)
             result = r2.match(line)
             if result:
                 address_family = result.groupdict()['address_family']
@@ -927,6 +928,10 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
                     vrf = 'default'
                 continue
 
+            # P 13.0.0.0/16, 1 successors, FD is 2816
+            # P 3.3.3.3/32, 1 successors, FD is 130816
+            # P 1.1.1.1/32, 1 successors, FD is 2816, tag is 900
+            # P 2001:0DB8:3::/64, 1 successors, FD is 281600
             result = r3.match(line)
             if result:
                 route_prefix = result.groupdict()['network']
@@ -956,6 +961,10 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
                 route_dict['route'] = route_prefix
                 continue
             
+            # via Connected, GigabitEthernet0/0/0
+            # via 13.0.0.1 (130816/128256), GigabitEthernet0/0/0
+            # via +Redistributed (2816/0)
+            # via Connected, Ethernet1/0
             result = r4.match(line)
             if result:
                 known_via = result.groupdict()['known_via']
