@@ -3586,16 +3586,13 @@ class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
         p2 = re.compile(r'^number +of +lanes +(?P<lanes>[\d]+)$')
 
         #transceiver info
-        p3 = re.compile(r'^(?P<port>\S+)\s+(?P<temp>[\-0-9][0-9\.]+[0-9])\s+(?P<voltage>[\-0-9][0-9\.]+[0-9])\s+(?P<current>[\-0-9][0-9\.]+[0-9])\s+(?P<opticaltx>[\-0-9][0-9\.]+[0-9])\s+(?P<opticalrx>[\-0-9][0-9\.]+[0-9])\s+$')
-        print("8==D")
+        p3 = re.compile(r'^(?P<port>\S+)\s+(?P<temp>[\-0-9][0-9\.]+[0-9])\s+(?P<voltage>[\-0-9][0-9\.]+[0-9])\s+(?P<current>[\-0-9][0-9\.]+[0-9])\s+(?P<opticaltx>[\-0-9][0-9\.]+[0-9])\s+(?P<opticalrx>[\-0-9][0-9\.]+[0-9])$')
         for line in out.splitlines():
-            print("8===D")
             line = line.strip()
-            print(line + "||")
+            m = p1.match(line)
             m = p3.match(line)
-            print(m)
+
             if m:
-                print("8====D")
                 group = m.groupdict()
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(group['port'], {})
                 intf_dict['temp'] = group['temp']
