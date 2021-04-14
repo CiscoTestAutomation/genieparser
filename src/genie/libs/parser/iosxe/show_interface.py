@@ -3593,6 +3593,7 @@ class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
             line = line.strip()
             print(line + "||")
             m = p3.match(line)
+            print(m)
             if m:
                 print("8====D")
                 group = m.groupdict()
