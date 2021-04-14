@@ -13,6 +13,7 @@
     * show interfaces accounting
     * show interfaces status
     * show interface {interface} transceiver detail
+    * show interface {interface} transceiver
 """
 
 import os
@@ -3537,3 +3538,70 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
                 continue
 
         return result_dict
+
+# ==========================================================
+#  Parser for show interface {interface} transceiver 
+# ==========================================================
+class ShowInterfaceTransceiverSchema(MetaParser):
+    """Schema for:
+        show interfaces {interface} transceiver"""
+
+    schema = {
+        'interfaces': {
+            Any(): {# interface name
+                Optional('port'): str,
+                Optional('temp'): str,
+                Optional('voltage'): str,
+                Optional('current'): str,
+                Optional('opticaltx'): str,
+                Optional('opticalrx'): str,
+            }
+        }
+    }
+
+class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
+
+    """parser for 
+            * show interfaces {interface} transceiver 
+        """
+
+    cli_command = 'show interfaces {interface} transceiver'
+    
+
+    def cli(self, interface, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
+
+        result_dict = {}
+
+        # transceiver is present
+        # type is 10Gbase-LR
+        # name is CISCO-FINISAR
+        # part number is FTLX1474D3BCL-CS
+        p1 = re.compile(r'^(?P<key>[\S\s]+) +is +(?P<value>[\S\s]+)$')
+
+        # number of lanes 1
+        p2 = re.compile(r'^number +of +lanes +(?P<lanes>[\d]+)$')
+
+        #transceiver info
+        p3 = re.compile(r'^(?P<port>\S+)\s+(?P<temp>[\-0-9][0-9\.]+[0-9])\s+(?P<voltage>[\-0-9][0-9\.]+[0-9])\s+(?P<current>[\-0-9][0-9\.]+[0-9])\s+(?P<opticaltx>[\-0-9][0-9\.]+[0-9])\s+(?P<opticalrx>[\-0-9][0-9\.]+[0-9])\s+$')
+        print("8==D")
+        for line in out.splitlines():
+            print("8===D")
+            line = line.strip()
+            m = p3.match(line)
+            if m:
+                print("8====D")
+                group = m.groupdict()
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(group['port'], {})
+                intf_dict['temp'] = group['temp']
+                intf_dict['voltage'] = group['voltage']
+                intf_dict['current'] = group['current']
+                intf_dict['opticaltx'] = group['opticaltx']
+                intf_dict['opticalrx'] = group['opticalrx']
+                continue
+                
+        return result_dict
+        
