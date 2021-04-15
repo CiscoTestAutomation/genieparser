@@ -1,0 +1,1 @@
+expected_output = {'Session-1': {'Interface': 'Hu2/6/0/39', 'Local-TxSCI': '70b3.171e.b282/0103', 'Policy-Name': 'defau', 'Inherited': 'NO', 'Key-Server': 'NO', 'Port-ID': '259', 'Peer-RxSCI': '00a7.42ce.d57f/0074', 'MACsec-Peers': '1', 'Status': 'Secured', 'CKN': '10'}}

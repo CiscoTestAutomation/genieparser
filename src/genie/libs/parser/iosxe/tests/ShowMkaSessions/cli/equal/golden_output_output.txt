@@ -1,0 +1,14 @@
+Total MKA Sessions....... 2
+      Secured Sessions... 0
+      Pending Sessions... 2
+
+====================================================================================================
+Interface      Local-TxSCI         Policy-Name      Inherited         Key-Server                                            
+Port-ID        Peer-RxSCI          MACsec-Peers     Status            CKN                                                   
+====================================================================================================
+Gi2/0/14       0cd0.f8ac.b68e/0058 *DEFAULT POLICY* NO                YES  
+88             0cd0.f8ac.b68e/0000 0                Init              10 
+Gi2/0/15       0cd0.f8ac.b68f/0058 *DEFAULT POLICY* NO                YES 
+89             0cd0.f8ac.b68f/0000 0                Init              10
+
+

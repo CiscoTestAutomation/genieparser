@@ -1,0 +1,101 @@
+show macsec interface Hu1/0/3.5
+ MACsec is enabled
+  Replay protect : enabled
+  Replay window : 0
+  Include SCI : yes
+  Use ES Enable : no
+  Use SCB Enable : no
+  Admin Pt2Pt MAC : forceTrue(1)
+  Pt2Pt MAC Operational : no
+  Cipher : GCM-AES-256
+  Confidentiality Offset : 30
+
+ Capabilities
+  ICV length : 16
+  Data length change supported: yes
+  Max. Rx SA : 16
+  Max. Tx SA : 16
+  Max. Rx SC : 8
+  Max. Tx SC : 8
+  Validate Frames : strict
+  PN threshold notification support : Yes
+  Ciphers supported : GCM-AES-128
+                      GCM-AES-256
+                      GCM-AES-XPN-128
+                      GCM-AES-XPN-256
+
+ Access control : must secure
+
+ Cleartag Details
+  Type    : one dot1q in clear
+  VlanId1 : 5
+
+ Transmit Secure Channels
+  SCI : F87A41252702008C
+  SC state : inUse(1)
+   Elapsed time : 7w0d
+   Start time : 7w0d
+   Current AN: 1
+   Previous AN: 0
+   Next PN: 558
+   SA State: inUse(1)
+   Confidentiality : yes
+   SAK Unchanged : no
+   SA Create time : 13:52:40
+   SA Start time : 7w0d
+   SC Statistics
+    Auth-only Pkts : 0
+    Auth-only Bytes : 0
+    Encrypted Pkts : 1776014411
+    Encrypted Bytes : 15955677965468
+   SA Statistics
+    Auth-only Pkts : 0
+    Auth-only Bytes : 0
+    Encrypted Pkts : 557
+    Encrypted Bytes : 78902
+
+  Port Statistics
+   Egress untag pkts  0
+   Egress long pkts  0
+
+ Receive Secure Channels
+  SCI : ECCE1346F902008C
+  SC state : inUse(1)
+   Elapsed time : 7w0d
+   Start time : 7w0d
+   Current AN: 1
+   Previous AN: 0
+   Next PN: 559
+   RX SA Count: 0
+   SA State: inUse(1)
+   SAK Unchanged : no
+   SA Create time : 13:52:38
+   SA Start time : 7w0d
+   SC Statistics
+    Notvalid pkts 0
+    Invalid pkts 0
+    Valid pkts 1776341980
+    Late pkts 0
+    Uncheck pkts 0
+    Delay pkts 0
+    UnusedSA pkts 0
+    NousingSA pkts 0
+    Validated Bytes 0
+    Decrypted Bytes 15958621376336
+   SA Statistics
+    Notvalid pkts 0
+    Invalid pkts 0
+    Valid pkts 557
+    UnusedSA pkts 0
+    NousingSA pkts 0
+    Validated Bytes 0
+    Decrypted Bytes 78974
+
+  Port Statistics
+   Ingress untag pkts  0
+   Ingress notag pkts  26328
+   Ingress badtag pkts  0
+   Ingress unknownSCI pkts  0
+   Ingress noSCI pkts  0
+   Ingress overrun pkts  0
+
