@@ -3485,6 +3485,13 @@ class ShowInterfaceTransceiverDetailSchema(MetaParser):
                 Optional('serial_number'): str,
                 Optional('transceiver'): str,
                 Optional('type'): str,
+                Any(): {
+                    Optional('Value'): float,
+                    Optional('HighAlarmThreshold'): float,
+                    Optional('HighWarnThreshold'): float,
+                    Optional('LowWarnThreshold'): float,
+                    Optional('LowAlarmThreshold'): float,
+                },
                 Any(): str,
             }
         }
@@ -3493,13 +3500,20 @@ class ShowInterfaceTransceiverDetailSchema(MetaParser):
 
 class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
     """parser for 
-            * show interface {interface} transceiver detail
+            * show interfaces {interface} transceiver detail
         """
 
-    cli_command = 'show interface {interface} transceiver detail'
+    cli_command = 'show interfaces {interface} transceiver detail'
 
     def cli(self, interface, output=None):
-
+        switcher = {
+          0: "Temp",
+          1: "Voltage",
+          2: "Current",
+          3: "OpticalTX",
+          4: "OpticalRX"
+        }
+        
         if output is None:
             out = self.device.execute(self.cli_command.format(interface=interface))
         else:
@@ -3515,7 +3529,10 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
 
         # number of lanes 1
         p2 = re.compile(r'^number +of +lanes +(?P<lanes>[\d]+)$')
-
+        
+        #transceiver info
+        p3 = re.compile(r'^(?P<port>\S+)\s+(?P<value>[\-0-9][0-9\.]+[0-9])\s+(?P<HAT>[\-0-9][0-9\.]+[0-9])\s+(?P<HWT>[\-0-9][0-9\.]+[0-9])\s+(?P<LWT>[\-0-9][0-9\.]+[0-9])\s+(?P<LAT>[\-0-9][0-9\.]+[0-9])$')
+        count = 0
         for line in out.splitlines():
             line = line.strip()
 
@@ -3536,6 +3553,17 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
             if m:
                 intf_dict['number_of_lanes'] = m.groupdict()['lanes']
                 continue
+                
+            m = p3.match(line)
+
+            if m:     
+                intf_dict[switcher.get(count)] = {}
+                intf_dict[switcher.get(count)]['Value'] = float(m.groupdict()['value'])
+                intf_dict[switcher.get(count)]['HighAlarmThreshold'] = float(m.groupdict()['HAT'])
+                intf_dict[switcher.get(count)]['HighWarnThreshold'] = float(m.groupdict()['HWT'])
+                intf_dict[switcher.get(count)]['LowWarnThreshold'] = float(m.groupdict()['LWT'])
+                intf_dict[switcher.get(count)]['LowAlarmThreshold'] = float(m.groupdict()['LAT'])
+                count += 1
 
         return result_dict
 
@@ -3587,6 +3615,7 @@ class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
 
         #transceiver info
         p3 = re.compile(r'^(?P<port>\S+)\s+(?P<temp>[\-0-9][0-9\.]+[0-9])\s+(?P<voltage>[\-0-9][0-9\.]+[0-9])\s+(?P<current>[\-0-9][0-9\.]+[0-9])\s+(?P<opticaltx>[\-0-9][0-9\.]+[0-9])\s+(?P<opticalrx>[\-0-9][0-9\.]+[0-9])$')
+        
         for line in out.splitlines():
             line = line.strip()
             m = p1.match(line)
