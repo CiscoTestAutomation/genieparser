@@ -588,24 +588,20 @@ class ShowIpRoute(ShowIpRouteSchema):
     exclude = [
         'updated']
 
-    def sort_dict(self, obj: dict):
-        def _sort_next_hop_list(next_hop_list: dict) -> dict:
-            sort_list = []
-            for index, next_hop in next_hop_list.items():
-                sort_list.append((next_hop, next_hop['next_hop'], next_hop['source_protocol']))
-            sort_list = sorted(sort_list, key=lambda k: (k[1], k[2]), reverse=False)
-            sorted_next_hop_list = {}
-            for index, item in enumerate(sort_list):
-                item[0]['index'] = index+1
-                sorted_next_hop_list[index+1] = item[0]
-            return sorted_next_hop_list
-
+    def sort_next_hop_list(self, obj: dict):
         for key, value in obj.items():
             if isinstance(value, dict):
                 if key == 'next_hop_list':
-                    obj[key] = _sort_next_hop_list(value)
+                    # sort based on next_hop then source_protocol
+                    sort_list = sorted(list(value.values()), \
+                            key=lambda k: (k['next_hop'], k['source_protocol']), reverse=False)
+                    sorted_next_hop_list = {}
+                    for index, item in enumerate(sort_list):
+                        item['index'] = index+1
+                        sorted_next_hop_list[index+1] = item
+                    obj[key] = sorted_next_hop_list
                 else:
-                    self.sort_dict(value)
+                    self.sort_next_hop_list(value)
 
     def cli(self, route=None, protocol=None, vrf=None, interface=None, output=None, cmd=None):
 
@@ -971,7 +967,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if groups['tag']:
                     route_dict.update({'tag': int(groups['tag'])})
 
-        self.sort_dict(result_dict)
+        self.sort_next_hop_list(result_dict)
         return result_dict
 
 
