@@ -709,7 +709,26 @@ class ShowIpEigrpInterfacesSchema(MetaParser):
                                                     'pacing_time_unreliable': int,
                                                     'pacing_time_reliable': int,
                                                     'mcast_flow_timer': int,
-                                                    'pend_routes': int
+                                                    'pend_routes': int,
+                                                    Optional('hello_interval'): int,
+                                                    Optional('hold_time'): int,
+                                                    Optional('split_horizon_enabled'): bool,
+                                                    Optional('packetized_sent'): int,
+                                                    Optional('packetized_expedited'): int,
+                                                    Optional('hello_sent'): int,
+                                                    Optional('hello_expedited'): int,
+                                                    Optional('unreliable_mcasts'): int,
+                                                    Optional('reliable_mcasts'): int,
+                                                    Optional('unreliable_ucasts'): int,
+                                                    Optional('reliable_ucasts'): int,
+                                                    Optional('mcast_exceptions'): int,
+                                                    Optional('cr_packets'): int,
+                                                    Optional('acks_suppressed'): int,
+                                                    Optional('retransmissions_sent'): int,
+                                                    Optional('out_of_sequence_rcvd'): int,
+                                                    Optional('topology_ids_on_interface'): int,
+                                                    Optional('authentication_mode'): str,
+                                                    Optional('key_chain'): str,
                                                     },
                                                },
                                           },
@@ -721,25 +740,23 @@ class ShowIpEigrpInterfacesSchema(MetaParser):
             }
 
 
-class ShowIpEigrpInterfaces(ShowIpEigrpInterfacesSchema):
+class ShowEigrpInterfacesSuperParser(ShowIpEigrpInterfacesSchema):
 
-    ''' Parser for "show ip eigrp interfaces"'''
-
-    cli_command = 'show ip eigrp interfaces'
+    ''' Parser for 
+        * "show ip eigrp interfaces"
+        * "show ipv6 eigrp interfaces"
+    '''
 
     # Defines a function to run the cli_command
     def cli(self, output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
+        out = output
 
         # Initializes the Python dictionary variable
         parsed_dict = {}
 
         # Defines the regex for the first line of device output. Example is:
         # EIGRP-IPv4 Interfaces for AS(1)
-        p1 = re.compile('EIGRP-IPv4 +Interfaces +for +AS\((?P<auto_sys>(\d+))\)$')
+        p1 = re.compile('EIGRP-(?P<address_family>IPv4|IPv6) +Interfaces +for +AS\((?P<auto_sys>(\d+))\)$')
 
         # Defines the regex for the second line of device output. Example is:
         # Xmit Queue   PeerQ        Mean   Pacing Time   Multicast    Pending
@@ -753,6 +770,39 @@ class ShowIpEigrpInterfaces(ShowIpEigrpInterfacesSchema):
         # Gi1                      1        0/0       0/0          20       0/0           84           0
         p4 = re.compile('(?P<interface>(\S+\d)) +(?P<peers>(\d+)) +(?P<xmit_q_unreliable>(\d+))/(?P<xmit_q_reliable>(\d+)) +(?P<peer_q_unreliable>(\d+))/(?P<peer_q_reliable>(\d+)) +(?P<mean_srtt>(\d+)) +(?P<pacing_t_unreliable>(\d+))/(?P<pacing_t_reliable>(\d+)) +(?P<mcast_flow_timer>(\d+)) +(?P<pend_routes>(\d+))$')
 
+        # Hello-interval is 5, Hold-time is 15
+        p5 = re.compile('^Hello\-interval +is\s+(?P<hello_interval>\d+), +Hold\-time +is\s(?P<hold_time>\d+)$')
+
+        # Split-horizon is enabled
+        p6 = re.compile('^Split-horizon is (?P<state>\w+)$')
+
+        # Packetized sent/expedited: 0/0
+        p7 = re.compile('^Packetized +sent\/expedited:\s+(?P<sent>\d+)\/(?P<expedited>\d+)$')
+
+        # Hello's sent/expedited: 597/1
+        p8 = re.compile("^Hello's +sent\/expedited:\s+(?P<sent>\d+)\/(?P<expedited>\d+)$")
+
+        #  Un/reliable mcasts: 0/0  Un/reliable ucasts: 0/0
+        p9 = re.compile(
+            '^Un\/reliable +mcasts:\s+(?P<unreliable_mcast>\d+)\/(?P<reliable_mcast>\d+)\s+'
+            'Un\/reliable +ucasts: (?P<unreliable_ucast>\d+)\/(?P<reliable_ucast>\d+)$'
+        )
+        # Mcast exceptions: 0  CR packets: 0  ACKs suppressed: 0
+        p10 = re.compile(
+            '^Mcast +exceptions:\s+(?P<mcast_exception>\d+)  +CR +packets:\s+'
+            '(?P<cr_packets>\d+) +ACKs +suppressed:\s+(?P<ack_suppressed>\d+)$'
+        )
+        #   Retransmissions sent: 0  Out-of-sequence rcvd: 0
+        p11 = re.compile(
+            '^Retransmissions +sent:\s+(?P<retransmission_sent>\d+)  +Out\-of\-sequence +rcvd:\s+'
+            '(?P<out_of_sequence_rcvd>\d+)$'
+        )
+
+        #   Authentication mode is not set
+        p12 = re.compile(
+            '^Authentication +mode +is\s+(?P<authentication>[A-Za-z0-9\-]+|not set)'
+            '(, +key\-chain +is\s+(")?(?P<key_chain>not set|[A-Za-z0-9\-]+))?(")?'
+        )
 
         # Defines the "for" loop, to pattern match each line of output
 
@@ -769,7 +819,7 @@ class ShowIpEigrpInterfaces(ShowIpEigrpInterfacesSchema):
                 instance_dict = parsed_dict.setdefault('vrf', {}). \
                     setdefault('default', {}).setdefault('eigrp_instance', {}). \
                     setdefault(auto_sys, {}).setdefault('address_family', {}). \
-                    setdefault('ipv4', {})
+                    setdefault(group['address_family'].lower(), {})
 
                 continue
 
@@ -805,4 +855,131 @@ class ShowIpEigrpInterfaces(ShowIpEigrpInterfacesSchema):
                 int_dict['pend_routes'] = int(group['pend_routes'])
                 continue
 
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict.update({'hello_interval': int(group['hello_interval'])})
+                int_dict.update({'hold_time': int(group['hold_time'])})
+                continue
+
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                if group['state'] == 'enabled':
+                    split_horizon_state = True
+                else:
+                    split_horizon_state = False
+                int_dict.update({'split_horizon_enabled': split_horizon_state})
+                continue
+
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict.update({'packetized_sent': int(group['sent'])}) 
+                int_dict.update({'packetized_expedited': int(group['expedited'])}) 
+                continue
+
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict.update({'hello_sent': int(group['sent'])}) 
+                int_dict.update({'hello_expedited': int(group['expedited'])}) 
+                continue
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict.update({'unreliable_mcasts': int(group['unreliable_mcast'])}) 
+                int_dict.update({'reliable_mcasts': int(group['reliable_mcast'])}) 
+                int_dict.update({'unreliable_ucasts': int(group['unreliable_ucast'])}) 
+                int_dict.update({'reliable_ucasts': int(group['reliable_ucast'])}) 
+                continue
+
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict.update({'mcast_exceptions': int(group['mcast_exception'])})
+                int_dict.update({'cr_packets': int(group['cr_packets'])}) 
+                int_dict.update({'acks_suppressed': int(group['ack_suppressed'])}) 
+                continue
+
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                int_dict.update({'retransmissions_sent': int(group['retransmission_sent'])}) 
+                int_dict.update({'out_of_sequence_rcvd': int(group['out_of_sequence_rcvd'])}) 
+                continue
+
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                if 'authentication' in group and group['authentication'] != 'not':
+                    int_dict.update({'authentication_mode': group['authentication']})
+                    if 'key_chain' in group and group['key_chain'] != 'not':
+                        int_dict.update({'key_chain': group['key_chain']}) 
+                continue
+
         return parsed_dict
+
+class ShowIpEigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowIpEigrpInterfacesSchema):
+
+    ''' Parser for "show ip eigrp interfaces"'''
+
+    cli_command = 'show ip eigrp interfaces'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
+
+
+class ShowIpv6EigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowIpEigrpInterfacesSchema):
+
+    ''' Parser for "show ipv6 eigrp interfaces"'''
+
+    cli_command = 'show ipv6 eigrp interfaces'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
+
+
+class ShowIpEigrpInterfacesDetail(ShowEigrpInterfacesSuperParser, ShowIpEigrpInterfacesSchema):
+
+    ''' Parser for "show ip eigrp interfaces detail"'''
+
+    cli_command = 'show ip eigrp interfaces detail'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
+
+
+class ShowIpv6EigrpInterfacesDetail(ShowEigrpInterfacesSuperParser, ShowIpEigrpInterfacesSchema):
+
+    ''' Parser for "show ipv6 eigrp interfaces detail"'''
+
+    cli_command = 'show ipv6 eigrp interfaces detail'
+
+    # Defines a function to run the cli_command
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        return super().cli(output=out)
