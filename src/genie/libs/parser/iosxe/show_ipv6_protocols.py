@@ -41,8 +41,14 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                                         Optional('default_redistribution_metric'): int,
                                         'redistribute': {
                                             Any(): {
+                                                Any(): {
+                                                    Optional('metric'): int,
+                                                    Optional('route_policy'): str,
+                                                    Optional('include_connected'): bool,
+                                                },
                                                 Optional('metric'): int,
                                                 Optional('route_policy'): str,
+                                                Optional('include_connected'): bool,
                                             }
                                         },
                                         Optional('timers'): {
@@ -99,6 +105,18 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                                             }
                                         },
                                         Optional('configured_interfaces'): list,
+                                        'redistribute': {
+                                            Any(): {
+                                                Any(): {
+                                                    Optional('metric'): int,
+                                                    Optional('route_policy'): str,
+                                                    Optional('include_connected'): bool,
+                                                },
+                                                Optional('metric'): int,
+                                                Optional('route_policy'): str,
+                                                Optional('include_connected'): bool,
+                                            }
+                                        },
                                     }
                                 }
                             }
@@ -139,6 +157,18 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                                                 Optional('configured_interfaces'): list
                                             }
                                         },
+                                        'redistribute': {
+                                            Any(): {
+                                                Any(): {
+                                                    Optional('metric'): int,
+                                                    Optional('route_policy'): str,
+                                                    Optional('include_connected'): bool,
+                                                },
+                                                Optional('metric'): int,
+                                                Optional('route_policy'): str,
+                                                Optional('include_connected'): bool,
+                                            }
+                                        },
                                     }
                                 }
                             }
@@ -168,6 +198,18 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                                         Optional('neighbors'): {
                                             Any(): {
                                                 Optional('route_map'): str,
+                                            }
+                                        },
+                                        'redistribute': {
+                                            Any(): {
+                                                Any(): {
+                                                    Optional('metric'): int,
+                                                    Optional('route_policy'): str,
+                                                    Optional('include_connected'): bool,
+                                                },
+                                                Optional('metric'): int,
+                                                Optional('route_policy'): str,
+                                                Optional('include_connected'): bool,
                                             }
                                         },
                                         Optional('routing_information_sources'): {
@@ -392,9 +434,9 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # Redistributing protocol bgp 65003 with metric 4 route-map test
         # Redistributing protocol eigrp 10 with metric 4 include-connected
         p109 = re.compile(
-            r'^\s*Redistributing +protocol +(?P<redistribute>\w+) +(?P<as_number>\d+) +with( +transparent)?'
-            ' +metric( +(?P<metric>\d+))?( +\([A-Za-z0-9\-,&\s]+\))?( +route-map +(?P<route_policy>[\w\-]+))?'
-            '( +(?P<included_connected>include\-connected))?$'
+            r'^\s*Redistributing +protocol +(?P<redistribute>\w+)( +(?P<instance>[A-Za-z0-9]+))?( +with( +transparent)?'
+            ' +metric( +(?P<metric>\d+))?)?( +\([A-Za-z0-9\-,&\s]+\))?( +route-map +(?P<route_policy>[\w\-]+))?'
+            '( +(?P<include_connected>include\-connected))?$'
         )
 
         # Neighbor(s):
@@ -460,6 +502,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                         setdefault('ipv6', {}). \
                         setdefault('instance', {}). \
                         setdefault(instance, {})
+                    redistribute_dict = ospf_dict.setdefault('redistribute', {})
                 elif protocol == 'bgp':
                     instance_dict = protocol_dict.setdefault('instance', {}). \
                         setdefault('default', {})
@@ -469,6 +512,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                         setdefault('default', {}). \
                         setdefault('address_family', {}). \
                         setdefault('ipv6', {})
+                    redistribute_dict = bgp_dict.setdefault('redistribute', {})
                 elif protocol == 'isis':
                     # Set isis_dict
                     if not group['pid']:
@@ -491,6 +535,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                                             setdefault(address_family, {}).\
                                             setdefault('instance', {}).\
                                             setdefault(instance, {})
+                    redistribute_dict = rip_dict.setdefault('redistribute', {})
                     continue
 
             m = p5.match(line)
@@ -516,18 +561,32 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                     eigrp_dict.update({'name': eigrp_name})
                 eigrp_dict.update({'named_mode': True if eigrp_name else False})
                 eigrp_dict.update({'eigrp_id': int(group['as_num'])})
+                redistribute_dict = eigrp_dict.setdefault('redistribute', {})
                 continue
 
             # Redistributing: connected, static, rip
             m = p109.match(line)
             if m:
                 group = m.groupdict()
-                redistribute_dict = rip_dict.setdefault('redistribute', {})
                 source_proto_dict = redistribute_dict.setdefault(group['redistribute'], {})
-                if group['metric']:
-                    source_proto_dict.update({'metric': int(group['metric'])})
-                if group['route_policy']:
-                    source_proto_dict.update({'route_policy': group['route_policy']})
+                redistribute_instance = group.get('instance', '')
+                if redistribute_instance:
+                    source_proto_instance_dict = source_proto_dict.setdefault(redistribute_instance, {})
+                    if group['metric']:
+                        source_proto_instance_dict.update({'metric': int(group['metric'])})
+                    if group['route_policy']:
+                        source_proto_instance_dict.update({'route_policy': group['route_policy']})
+                    source_proto_instance_dict.update({
+                        'include_connected': True if group['include_connected'] else False
+                    })
+                else:
+                    if group['metric']:
+                        source_proto_dict.update({'metric': int(group['metric'])})
+                    if group['route_policy']:
+                        source_proto_dict.update({'route_policy': group['route_policy']})
+                    source_proto_dict.update({
+                        'include_connected': True if group['include_connected'] else False
+                    })
                 continue
 
             m = p2.match(line)
