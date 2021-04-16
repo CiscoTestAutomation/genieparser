@@ -1,0 +1,26 @@
+expected_output={
+   "statistics":{
+      "Object_update":{
+         "pending_issue":0,
+         "pending_ack":0
+      },
+      "Batch_begin":{
+         "pending_issue":0,
+         "pending_ack":0
+      },
+      "Batch_end":{
+         "pending_issue":0,
+         "pending_ack":0
+      },
+      "Command":{
+         "pending_ack":0
+      },
+      "Total_objects":827,
+      "Stale_objects":0,
+      "Resolve_objects":0,
+      "Childless_delete_objects":0,
+      "Error-objects":0,
+      "num_of_bundles":0,
+      "paused_types":0
+   }
+}
