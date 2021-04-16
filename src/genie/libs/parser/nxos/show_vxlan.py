@@ -1950,13 +1950,14 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
             m = p15.match(line)
             if m:
                 global_mcast_group_flag = (m.groupdict()['address'], m.groupdict()['layer'])
+                continue
+
             m = p16.match(line)
             if m:
                 for vni in nve_vni_list:
                     vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
                     vni_dict.update({'multisite_ingress_replication_optimized': True})
                 continue
-
 
         return result_dict
 
