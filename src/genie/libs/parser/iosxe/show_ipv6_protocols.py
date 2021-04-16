@@ -67,7 +67,44 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                 }
             },
             Optional('eigrp'): {
-                'protocol_under_dev': bool
+                'vrf': {
+                    Any(): {
+                        'address_family': {
+                            Any(): {
+                                'eigrp_instance': {
+                                    Any(): {
+                                        'router_id': str,
+                                        'eigrp_id': int,
+                                        Optional('name'): str,
+                                        'named_mode': bool,
+                                        Optional('outgoing_filter_list'): str,
+                                        Optional('incoming_filter_list'): str,
+                                        Optional('passive_interfaces'): list,
+                                        'metric_weight': {
+                                            'k1': int,
+                                            'k2': int,
+                                            'k3': int,
+                                            'k4': int,
+                                            'k5': int,
+                                            Optional('k6'): int,
+                                        },
+                                        Optional('topology'): {
+                                            Any(): {
+                                                'active_timer': int,
+                                                'distance_internal': int,
+                                                'distance_external': int,
+                                                'max_path': int,
+                                                'max_hopcount': int,
+                                                'max_variance': int
+                                            }
+                                        },
+                                        Optional('configured_interfaces'): list,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             },
             Optional('ospf'): {
                 'vrf': {
@@ -252,8 +289,13 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                         r" +(?P<normal>(\d+)) +normal,"
                         r" +(?P<stub>(\d+)) +stub, +(?P<nssa>(\d+)) +nssa$")
 
-        # Maximum path: 4
-        p5 = re.compile(r"^Maximum +path: +(?P<max>(\d+))$")
+        # EIGRP-IPv6 VR(pyats) Address-Family Protocol for AS(20)
+        # EIGRP-IPv4 Neighbors for AS(100)
+        # EIGRP-IPv4 Neighbors for AS(100) VRF(VRF1)
+        p5 = re.compile(
+            r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s+(VR\((?P<name>\w+)\)\s+Address\-Family\s+)?'
+            'Protocol\s+for\s+AS\(\s*(?P<as_num>[\S]+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$'
+        )
 
         # Routing for Networks:
         p6_1 = re.compile(r"^Routing +for +Networks:$")
@@ -278,7 +320,10 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # TenGigabitEthernet0/0/26
         # Serial0
         # VoIP-Null0
-        p7 = re.compile(r"^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*))$")
+        p7 = re.compile(
+            r'^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*))'
+            '( +\((?P<passive>passive)\))?$'
+        )
 
         # Gateway         Distance      Last Update
         # 10.36.3.3            110      07:33:00
@@ -286,21 +331,33 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # 10.64.4.4            110      00:19:15
         p8 = re.compile(r"^(?P<gateway>([0-9\.]+)) +(?P<distance>(\d+))"
                          " +(?P<last_update>([a-zA-Z0-9\:\.]+))$")
+        # Metric weight K1=1, K2=0, K3=1, K4=0, K5=0 K6=0
+        # Metric weight K1=1, K2=0, K3=1, K4=0, K5=0
+        p9 = re.compile(
+            r'^Metric +weight +K1=(?P<k1>\d+), +K2=(?P<k2>\d+), +K3=(?P<k3>\d+), +K4=(?P<k4>\d+),'
+            ' +K5=(?P<k5>\d+)( +K6=(?P<k6>\d+))?$'
+        )
 
-        # Distance: (default is 110)
-        p9 = re.compile(r"^Distance: +\(default +is +(?P<num>(\d+))\)$")
+        # Router ID 10.4.1.1
+        p10 = re.compile(r"^Router\-ID: +(?P<router_id>(\S+))$")
 
-        # Distance: intra-area 112 inter-area 113 external 114
-        p10 = re.compile(r"^Distance: +intra-area +(?P<intra>(\d+)) +inter-area"
-                          " +(?P<inter>(\d+)) +external +(?P<external>(\d+))$")
+        # Topology : 0 (base)
+        p11 = re.compile(r'^Topology +:\s+(?P<topology_id>\d+)')
 
-        # Sending updates every 0 seconds
-        p11 = re.compile(r"^Sending +updates +every +(?P<update>(\d+)) +seconds$")
+        # Active Timer: 3 min
+        p11_1 = re.compile(r'^Active +Timer:\s+(?P<active_timer>\d+) +min$')
 
-        # Invalid after 0 seconds, hold down 0, flushed after 0
-        p12 = re.compile(r"^Invalid +after +(?P<invalid>(\d+)) +seconds, +hold"
-                          " +down +(?P<holddown>(\d+)), +flushed +after"
-                          " +(?P<flushed>(\d+))$")
+        # Distance: internal 90 external 170
+        p11_2 = re.compile(r'^Distance:\s+internal\s+(?P<internal>\d+)\s+external\s+(?P<external>\d+)$')
+
+        #  Maximum path: 16
+        p11_3 = re.compile(r'^Maximum +path:\s+(?P<max_path>\d+)$')
+
+        # Maximum hopcount 100
+        p11_4 = re.compile(r'^Maximum +hopcount\s+(?P<max_hop>\d+)$')
+
+        # Maximum metric variance 1
+        p11_5 = re.compile(r'^Maximum +metric +variance\s+(?P<max_variance>\d+)$')
 
         # IGP synchronization is disabled
         p13 = re.compile(r"^IGP +synchronization +is +(?P<igp>(enabled|disabled))$")
@@ -327,43 +384,11 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         routing_network_flag = False
         neighbors_flag = False
 
-        # Routing Protocol is "rip"
-        p100 = re.compile(r'^\s*Routing Protocol +is +\"(?P<protocol>[\w]+)\"$')
-
-        # Output delay 50 milliseconds between packets
-        p102 = re.compile(r'^\s*Output +delay +(?P<output_delay>[\d]+) +milliseconds +between +packets$')
-
-        # Outgoing update filter list for all interfaces is not set
-        # Outgoing update filter list for all interfaces is 150
-        p103 = re.compile(
-            r'^\s*Outgoing +update +filter +list +for all +interfaces +is +(?P<outgoing_update_filterlist>[\S\s]+)$')
-
-        # Incoming update filter list for all interfaces is not set
-        # Incoming update filter list for all interfaces is 100
-        p104 = re.compile(
-            r'^\s*Incoming +update +filter +list +for all +interfaces +is +(?P<incoming_update_filterlist>[\S\s]+)$')
-
-        # GigabitEthernet3.100 filtered by 130 (per-user), default is not set
-        p104_1 = re.compile(
-            r'^\s*(?P<interface>\S+) +filtered +by +(?P<filter>\d+)( +\((?P<per_user>\S+)\))?,'
-            ' +default +is +(?P<default>[\w\s]+)$')
-        # Incoming routes will have 10 added to metric if on list 21
-        p105 = re.compile(r'^\s*Incoming +routes +will +have +(?P<added>\S+) +added +to +metric'
-                          ' +if +on +list +(?P<list>\S+)$')
-
-        # Sending updates every 10 seconds, next due in 8 seconds
+		# Sending updates every 10 seconds, next due in 8 seconds
         p106 = re.compile(
             r'^\s*Sending +updates every +(?P<update_interval>\d+) +seconds, +next +due +in (?P<next_update>\d+) +(seconds|sec)$')
 
-        # Invalid after 21 seconds, hold down 22, flushed after 23
-        p107 = re.compile(
-            r'^\s*Invalid +after +(?P<invalid_interval>\d+) +seconds, +hold +down +(?P<holddown_interval>\d+)'
-            ', +flushed +after +(?P<flush_interval>\d+)$')
-
-        # Default redistribution metric is 3
-        p108 = re.compile(r'^\s*Default +redistribution +metric +is +(?P<default_redistribution_metric>\d+)$')
-
-        # Redistributing protocol ospf 1 with metric 5 (internal, external 1 & 2, nssa-external 1 & 2) include-connected
+		# Redistributing protocol ospf 1 with metric 5 (internal, external 1 & 2, nssa-external 1 & 2) include-connected
         # Redistributing protocol bgp 65003 with metric 4 route-map test
         # Redistributing protocol eigrp 10 with metric 4 include-connected
         p109 = re.compile(
@@ -371,9 +396,6 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
             ' +metric( +(?P<metric>\d+))?( +\([A-Za-z0-9\-,&\s]+\))?( +route-map +(?P<route_policy>[\w\-]+))?'
             '( +(?P<included_connected>include\-connected))?$'
         )
-        #   Redistributing protocol static with transparent metric route-map static-to-rip
-        p109_1 = re.compile(
-            r'^\s*Redistributing +protocol +(?P<redistribute>\w+) +with +transparent +metric( +route-map +(?P<route_policy>[\w\-]+))?$')
 
         # Neighbor(s):
         p110 = re.compile(r'^\s*Neighbor\(s\):$')
@@ -384,56 +406,11 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # 192.168.0.9
         p111 = re.compile(r'(?P<neighbor>[\d\.\:\w]+)\s*(?P<route_map>[\w]+)?')
 
-        # Default version control: send version 2, receive version 2
-        p112 = re.compile(r'^\s*Default +version +control: +send +version +(?P<send_version>\d+)'
-                          ', receive version +(?P<receive_version>\d+)$')
-
-        # Default version control: send version 1, receive any version
-        p112_1 = re.compile(r'^\s*Default +version +control: +send +version +(?P<send_version>\d+)'
-                          ', receive +(?P<receive_version>\w+) version$')
-
-        #   Interface                           Send  Recv  Triggered RIP  Key-chain
-        #   GigabitEthernet3.100                2     2          No        1
-        #   GigabitEthernet3.100                1 2   2          No        none
-        p113 = re.compile(r'^\s*(?P<interface>[\S]+) +(?P<send>\d( \d)?)'
-                          ' +(?P<receive>\d( \d)?)?'
-                          ' +(?P<triggered_rip>\S+) +(?P<key_chain>\S+)$')
-
-        # Automatic network summarization is not in effect
-        # Automatic network summarization is in effect
-        p114 = re.compile(
-            r'^\s*Automatic +network +summarization +is( +(?P<automatic_network_summarization>\S+))? +in +effect$')
-
-        # Address Summarization:
-        p115 = re.compile(r'^\s*Address +Summarization:$')
-
-        #   172.16.0.0/17 for GigabitEthernet3.100
-        p116 = re.compile(r'^\s*(?P<prefix>[\d\.\/]+) +for +(?P<interface>[\w\.]+)$')
-
-        # Maximum path: 4
-        p117 = re.compile(r'^\s*Maximum +path: +(?P<maximum_path>\d+)$')
-
-        # Routing for Networks:
-        p118 = re.compile(r'^\s*Routing +for +Networks:$')
-
-        #   10.0.0.0
-        p119 = re.compile(r'^\s*(?P<network>[\d\.]+)$')
-
         # Passive Interface(s):
-        p120 = re.compile(r'^\s*Passive +Interface\(s\):$')
+        p112 = re.compile(r'^\s*Passive +Interface\(s\):$')
 
         #   GigabitEthernet2.100
-        p121 = re.compile(r'^\s*(?P<passive_interface>[\w\.]+)$')
-
-        # Routing Information Sources:
-        p122 = re.compile(r'^\s*Routing +Information +Sources:$')
-
-        #   Gateway         Distance      Last Update
-        #   10.1.2.2             120      00:00:04
-        p123 = re.compile(r'^\s*(?P<gateway>[\d\.]+) +(?P<distance>\d+) +(?P<last_update>[\w\:]+)$')
-
-        # Distance: (default is 120)
-        p124 = re.compile(r'^\s*Distance: +\(default +is +(?P<distance>\d+)\)$')
+        p113 = re.compile(r'^\s*(?P<passive_interface>[\w\.]+)$')
 
         network_list = []
 
@@ -504,9 +481,6 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                         setdefault('ipv6', {}). \
                         setdefault('instance', {}). \
                         setdefault(instance, {})
-                elif protocol == 'eigrp':
-                    protocol_dict['protocol_under_dev'] = True
-                    eigrp_dict = protocol_dict
                 elif protocol == 'rip':
                     address_family = 'ipv6'
                     rip_dict = ret_dict.setdefault('protocols', {}).\
@@ -519,6 +493,30 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                                             setdefault(instance, {})
                     continue
 
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group.get('vrf', 'default')
+                eigrp_name = group.get('name', '')
+                if eigrp_name:
+                    instance = eigrp_name
+                else:
+                    instance = group['as_num']
+                eigrp_dict = protocol_dict.setdefault(
+                    'vrf', {}
+                ).setdefault(
+                    vrf, {}
+                ).setdefault(
+                    'address_family', {}
+                ).setdefault(
+                    group['address_family'].lower(), {}
+                ).setdefault('eigrp_instance', {}
+                ).setdefault(instance, {})
+                if eigrp_name:
+                    eigrp_dict.update({'name': eigrp_name})
+                eigrp_dict.update({'named_mode': True if eigrp_name else False})
+                eigrp_dict.update({'eigrp_id': int(group['as_num'])})
+                continue
 
             # Redistributing: connected, static, rip
             m = p109.match(line)
@@ -675,7 +673,8 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
             m = p7.match(line)
             if m:
                 if routing_networks:
-                    routing_network_intfs.append(str(m.groupdict()['interface']))
+                    group = m.groupdict()
+                    routing_network_intfs.append(str(group['interface']))
                     if protocol == 'ospf':
                         ospf_dict['areas'][area]['configured_interfaces'] = routing_network_intfs
                     elif protocol == 'isis':
@@ -683,11 +682,19 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                     elif protocol == 'rip':
                         rip_dict['configured_interfaces'] = routing_network_intfs
                 elif routing_on_interfaces:
-                    routing_on_interfaces_intfs.append(str(m.groupdict()['interface']))
+                    group = m.groupdict()
+                    routing_on_interfaces_intfs.append(str(group['interface']))
+                    is_passiv_intf = group.get('passive', '')
+                    if is_passiv_intf:
+                        passive_intfs.append(str(group['interface']))
                     if protocol == 'ospf':
                         ospf_dict['areas'][area]['configured_interfaces'] = routing_on_interfaces_intfs
                     elif protocol == 'rip':
                         rip_dict['configured_interfaces'] = routing_on_interfaces_intfs
+                    elif protocol == 'eigrp':
+                        eigrp_dict['configured_interfaces'] = routing_on_interfaces_intfs
+                        if is_passiv_intf:
+                            eigrp_dict['passive_interfaces'] = passive_intfs
                 elif passive_interfaces:
                     passive_intfs.append(str(m.groupdict()['interface']))
                     if protocol == 'ospf':
@@ -732,6 +739,81 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                         gateway_dict['last_update'] = last_update
 
                 continue
+
+            # Metric weight K1=1, K2=0, K3=1, K4=0, K5=0 K6=0
+            # Metric weight K1=1, K2=0, K3=1, K4=0, K5=0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                metric_weight = {
+                    'k1': int(group['k1']),
+                    'k2': int(group['k2']),
+                    'k3': int(group['k3']),
+                    'k4': int(group['k4']),
+                    'k5': int(group['k5'])
+                }
+                k6 = group.get('k6', '')
+                if k6:
+                    metric_weight['k6'] = int(k6)
+                eigrp_dict.update({'metric_weight': metric_weight})
+                continue
+
+            # Router ID 10.4.1.1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                if protocol == 'eigrp':
+                    eigrp_dict.update({'router_id': group['router_id']})
+                continue
+
+            # Topology : 0 (base)
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                eigrp_topology = eigrp_dict.setdefault(
+                    'topology', {}
+                ).setdefault(
+                    group['topology_id'], {}
+                )
+                continue
+
+            # Active Timer: 3 min
+            m = p11_1.match(line)
+            if m:
+                if protocol == 'eigrp':
+                    group = m.groupdict()
+                    eigrp_topology.update({'active_timer': int(group['active_timer'])})
+                continue
+
+            # Distance: internal 90 external 170
+            m = p11_2.match(line)
+            if m:
+                group = m.groupdict()
+                if protocol == 'eigrp':
+                    eigrp_topology.update({'distance_internal': int(group['internal'])})
+                    eigrp_topology.update({'distance_external': int(group['external'])})
+                continue
+
+            # Maximum path: 16
+            m = p11_3.match(line)
+            if m:
+                group = m.groupdict()
+                if protocol == 'eigrp':
+                    eigrp_topology.update({'max_path': int(group['max_path'])})
+                continue
+
+            #  Maximum hopcount 100
+            m = p11_4.match(line)
+            if m:
+                group = m.groupdict()
+                if protocol == 'eigrp':
+                    eigrp_topology.update({'max_hopcount': int(group['max_hop'])})
+                continue
+
+            m = p11_5.match(line)
+            if m:
+                group = m.groupdict()
+                eigrp_topology.update({'max_variance': int(group['max_variance'])})
 
 
             # IGP synchronization is disabled
@@ -824,6 +906,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                         if route_map:
                             bgp_neighbor_dict['route_map'] = route_map
                 continue
+
         return ret_dict
 
 
