@@ -23,74 +23,74 @@ class ShowCefDetailSchema(MetaParser):
                     Any(): {
                         'prefix': {
                             Any(): {
-                                Optional('LW-LDI-TS'): {
-                                    Optional('datetime'): str,
-                                    Optional('via_entries'): {
+                                'LW-LDI-TS': {
+                                    'datetime': str,
+                                    'via_entries': {
                                         Any(): {
-                                            Optional('dependencies'): int,
-                                            Optional('path'): {
-                                                Optional('nhid'): str,
-                                                Optional('path_idx'): int,
-                                                Optional('path_idx_nh'): {
-                                                    Optional('local_label_nh'): {
-                                                        Optional('local_label'): int,
-                                                        Optional('local_label_nh_address'): str,
-                                                        Optional('local_label_nh_interface'): str,
-                                                        Optional('local_label_nh_labels'): str
+                                            'dependencies': int,
+                                            'path': {
+                                                'nhid': str,
+                                                'path_idx': int,
+                                                'path_idx_nh': {
+                                                    'local_label_nh': {
+                                                        'local_label': int,
+                                                        'local_label_nh_address': str,
+                                                        'local_label_nh_interface': str,
+                                                        'local_label_nh_labels': str
                                                     },
-                                                    Optional('path_idx_address'): str,
-                                                    Optional('path_idx_via'): str,
+                                                    'path_idx_address': str,
+                                                    'path_idx_via': str,
                                                 },
                                             },
-                                            Optional('via_address'): str,
-                                            Optional('via_flags'): str,
+                                            'via_address': str,
+                                            'via_flags': str,
                                         },
                                     },
-                                    Optional('load_distribution'): {
+                                    'load_distribution': {
                                         Any(): {
-                                            Optional('address'): str,
-                                            Optional('hash'): int,
-                                            Optional('interface'): str,
-                                            Optional('ok'): str,
+                                            'address': str,
+                                            'hash': int,
+                                            'interface': str,
+                                            'ok': str,
                                         }
                                     },
-                                    Optional('weight_distribution'): {
+                                    'weight_distribution': {
                                         Any(): {
-                                            Optional('class'): int,
-                                            Optional('normalized_weight'): int,
-                                            Optional('slot'): int,
-                                            Optional('weight'): int,
+                                            'class': int,
+                                            'normalized_weight': int,
+                                            'slot': int,
+                                            'weight': int,
                                         }
                                     }
                                 },
-                                Optional('gateway_array'): {
-                                    Optional('LW-LDI'): {
-                                        Optional('ptr'): str,
-                                        Optional('refc'): int,
-                                        Optional('sh_ldi'): str,
-                                        Optional('type'): int,
+                                'gateway_array': {
+                                    'LW-LDI': {
+                                        'ptr': str,
+                                        'refc': int,
+                                        'sh_ldi': str,
+                                        'type': int,
                                     },
-                                    Optional('backups'): int,
-                                    Optional('flags'): {
-                                        Optional('flag_count'): int,
-                                        Optional('flag_internal'): str,
-                                        Optional('flag_type'): int,
+                                    'backups': int,
+                                    'flags': {
+                                        'flag_count': int,
+                                        'flag_internal': str,
+                                        'flag_type': int,
                                     },
-                                    Optional('reference_count'): int,
-                                    Optional('source_lsd'): int,
-                                    Optional('update'): {
-                                        Optional('type_time'): int,
-                                        Optional('updated_at'): str,
+                                    'reference_count': int,
+                                    'source_lsd': int,
+                                    'update': {
+                                        'type_time': int,
+                                        'updated_at': str,
                                     }
                                 },
-                                Optional('internal'): str,
-                                Optional('ldi_update_time'): str,
-                                Optional('length'): int,
-                                Optional('precedence'): str,
-                                Optional('priority'): int,
-                                Optional('traffic_index'): int,
-                                Optional('updated'): str,
-                                Optional('version'): int,
+                                'internal': str,
+                                'ldi_update_time': str,
+                                'length': int,
+                                'precedence': str,
+                                'priority': int,
+                                'traffic_index': int,
+                                'updated': str,
+                                'version': int,
                             }
                         }
                     }
