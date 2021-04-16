@@ -21,6 +21,17 @@ PYATS_EXT_PARSER = 'pyats.libs.external.parser'
 
 log = logging.getLogger(__name__)
 
+class ParserNotFound(Exception):
+    '''raise exception if parser command is not found
+       first argument is parser class 
+       second argument is token '''
+    def __init__(self, *args):
+        self.parser_command = args[0]
+        self.token = args[1]
+
+    def __str__(self):
+        return (f"Could not find parser for {self.parser_command} under {self.token}")
+
 def _load_parser_json():
     '''get all parser data in json file'''
 
@@ -128,8 +139,8 @@ def get_parser(command, device, fuzzy=False):
             continue
 
     if not valid_results:
-        raise Exception("Could not find parser for "
-                        "'{c}' under {l}".format(c=command, l=lookup._tokens))
+        '''result is not valid. raise custom ParserNotFound exception'''
+        raise ParserNotFound(command, lookup._tokens)                        
 
     if not fuzzy:
         return valid_results[0][1], valid_results[0][2]
