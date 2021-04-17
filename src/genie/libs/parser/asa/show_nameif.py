@@ -23,7 +23,7 @@ class ShowNameifSchema(MetaParser):
         }
     }
 
-class ShowNameIf(ShowNameifSchema):
+class ShowNameif(ShowNameifSchema):
     """ Parser for
         * show nameif
     """

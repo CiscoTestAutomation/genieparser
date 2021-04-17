@@ -367,6 +367,7 @@ CLASS_SKIP = {
         "ShowControlConnections_viptela": True,
         "ShowControlConnections": True,
         "ShowEigrpNeighborsSuperParser": True,
+        "ShowEigrpInterfacesSuperParser": True, # PR submitted
         "ShowIpEigrpNeighborsDetailSuperParser": True,
         "ShowIpOspfInterface": True,
         "ShowIpOspfNeighborDetail": True,
