@@ -1,0 +1,80 @@
+IPv6 Routing Protocol is "connected"
+IPv6 Routing Protocol is "application"
+IPv6 Routing Protocol is "ND"
+IPv6 Routing Protocol is "ospf 1"
+  Router ID 4.4.4.4
+  Autonomous system boundary router
+  Number of areas: 1 normal, 0 stub, 0 nssa
+  Interfaces (Area 0):
+    Loopback0
+    Loopback1
+    GigabitEthernet0/0
+  Redistribution:
+    Redistributing protocol rip worldskills include-connected
+    Redistributing protocol bgp 65003
+IPv6 Routing Protocol is "rip worldskills"
+  Interfaces:
+    Loopback2
+  Redistribution:
+    Redistributing protocol ospf 1 with metric 5 (internal, external 1 & 2, nssa-external 1 & 2) include-connected
+    Redistributing protocol bgp 65003 with metric 4 route-map test
+    Redistributing protocol eigrp 10 with metric 4 include-connected
+IPv6 Routing Protocol is "bgp 65003"
+  IGP synchronization is disabled
+  Redistribution:
+    Redistributing protocol connected
+    Redistributing protocol ospf 1 (internal) route-map test include-connected
+    Redistributing protocol rip worldskills route-map test include-connected
+    Redistributing protocol eigrp 10 route-map test include-connected
+    Redistributing protocol static route-map test
+  Neighbor(s):
+    Address                    FiltIn FiltOut Weight RoutemapIn RoutemapOut
+    1.1.1.1
+    2001:DB8:20:10::10
+  Distance:
+IPv6 Routing Protocol is "eigrp 10"
+EIGRP-IPv6 Protocol for AS(10)
+  Metric weight K1=1, K2=0, K3=1, K4=0, K5=0
+  Soft SIA disabled
+  NSF-aware route hold timer is 240
+  Router-ID: 4.4.4.4
+  Topology : 0 (base)
+    Active Timer: 3 min
+    Distance: internal 90 external 170
+    Maximum path: 16
+    Maximum hopcount 100
+    Maximum metric variance 1
+
+  Interfaces:
+    GigabitEthernet0/1
+    Loopback3
+    GigabitEthernet0/0 (passive)
+  Redistribution:
+    None
+IPv6 Routing Protocol is "eigrp 20"
+EIGRP-IPv6 VR(cisco) Address-Family Protocol for AS(20)
+  Metric weight K1=1, K2=0, K3=1, K4=0, K5=0 K6=0
+  Metric rib-scale 128
+  Metric version 64bit
+  Soft SIA disabled
+  NSF-aware route hold timer is 240
+  Router-ID: 4.4.4.4
+  Topology : 0 (base)
+    Active Timer: 3 min
+    Distance: internal 90 external 170
+    Maximum path: 16
+    Maximum hopcount 100
+    Maximum metric variance 1
+    Total Prefix Count: 4
+    Total Redist Count: 0
+
+  Interfaces:
+    GigabitEthernet0/0
+    GigabitEthernet0/1
+    Loopback0
+    Loopback1
+    Loopback2
+    Loopback3
+  Redistribution:
+    None
+IPv6 Routing Protocol is "static"

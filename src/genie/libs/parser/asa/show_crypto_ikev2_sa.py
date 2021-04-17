@@ -100,7 +100,11 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
             r'^ESP\sspi\sin\/out:\s+(?P<esp_in>\S+)\/(?P<esp_out>\S+)$'
         )
 
-        for line in out.splitlines():
+        out = out.splitlines()
+        if not out:
+            return
+
+        for line in out:
             line = line.strip()
 
             m = p1.match(line)
