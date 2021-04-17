@@ -360,9 +360,10 @@ class ShowPlatform(ShowPlatformSchema):
                              '\s+(?P<name>[a-zA-Z0-9\-\.]+)'
                              '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
                              '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
-                             '\s+(?P<state>(IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
+                             '\s+(?P<state>(UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
                              '\s+(?P<config_state>[a-zA-Z\,]+)$')
             m = p1.match(line)
+            # import pdb; pdb.set_trace()
             if m:
                 # Parse regexp
                 node = str(m.groupdict()['node']).strip()
@@ -380,7 +381,8 @@ class ShowPlatform(ShowPlatformSchema):
 
                 # Check if subslot/daughtercard
                 parse_subslot = re.compile(r'.*(0\/[0-9]\/[0-9]+).*').match(node)
-                if parse_subslot and last_entry.isdigit():
+                parse_subslot2 = re.compile(r'.*(1\/[0-9]\/[0-9]+).*').match(node)
+                if (parse_subslot or parse_subslot2 ) and last_entry.isdigit():
                     # This entry is a daughtercard/subslot
                     entry_is_daughter = True
                     subslot = last_entry
