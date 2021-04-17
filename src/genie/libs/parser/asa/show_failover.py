@@ -516,7 +516,7 @@ class ShowFailoverInterface(ShowFailoverInterfaceSchema):
 
     def cli(self, output=None):
         if output is None:
-            out = self.device.execute(cli_command)
+            out = self.device.execute(self.cli_command)
         else:
             out = output
         
