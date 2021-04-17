@@ -24,6 +24,9 @@ class ShowVersionSchema(MetaParser):
 
 
 class ShowVersion(ShowVersionSchema):
+    """ Parser class for:
+        * 'show version'
+    """
 
     cli_command = 'show version'
 
