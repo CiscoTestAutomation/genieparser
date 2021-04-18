@@ -701,8 +701,10 @@ class ShowEigrpInterfacesSchema(MetaParser):
                      {'eigrp_instance':
                           {Any():
                                {'address_family':
-                                    {Any():
-                                         {'interface':
+                                    {Any(): {
+                                        Optional('name'): str,
+                                        'named_mode': bool,
+                                        'interface':
                                               {Any():
                                                    {'peers': int,
                                                     'xmit_q_unreliable': int,
@@ -763,7 +765,10 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
 
         # Defines the regex for the first line of device output. Example is:
         # EIGRP-IPv4 Interfaces for AS(1)
-        p1 = re.compile(r'EIGRP-(?P<address_family>IPv4|IPv6) +Interfaces +for +AS\((?P<auto_sys>(\d+))\)$')
+        p1 = re.compile(
+            r'EIGRP\-(?P<address_family>IPv4|IPv6)\s+(VR\((?P<name>\w+)\)\s+Address\-Family\s+)?'
+            r'Interfaces\s+for\s+AS\(\s*(?P<auto_sys>[\S]+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$'
+        )
 
         # Defines the regex for the second line of device output. Example is:
         # Xmit Queue   PeerQ        Mean   Pacing Time   Multicast    Pending
@@ -831,6 +836,12 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                     setdefault('default', {}).setdefault('eigrp_instance', {}). \
                     setdefault(auto_sys, {}).setdefault('address_family', {}). \
                     setdefault(group['address_family'].lower(), {})
+                if 'name' in group and group['name']:
+                    instance_dict.update({'name': group['name']})
+                    instance_dict.update({'named_mode': True if group['name'] else False})
+                else:
+                    instance_dict.update({'named_mode': False})
+                    
 
                 continue
 

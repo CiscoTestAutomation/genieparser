@@ -369,7 +369,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # Serial0
         # VoIP-Null0
         p7 = re.compile(
-            r'^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*))'
+            r'^(?P<interface>(Lo\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*|Vlan\S*|Po\S*))'
             '( +\((?P<passive>passive)\))?$'
         )
 
@@ -548,7 +548,10 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                vrf = group.get('vrf', 'default')
+                if 'vrf' in group and group['vrf']:
+                    vrf = group['vrf']
+                else:
+                    vrf = 'default'
                 eigrp_name = group.get('name', '')
                 if eigrp_name:
                     instance = eigrp_name
