@@ -130,7 +130,7 @@ class ShowFailover(ShowFailoverSchema):
         else:
             out = output
 
-        # Failover On 
+        # Failover On
         # Failover Off
         p1 = re.compile(r'^Failover\s(?P<status>On|Off)$')
 
@@ -185,8 +185,8 @@ class ShowFailover(ShowFailoverSchema):
         # Last Failover at: 20:37:30 UTC Apr 11 2021
         p11 = re.compile(r'^Last +Failover +at:\s+(?P<failover>.*)$')
 
-        # This host: Primary - Active 
-        # Other host: Secondary - Standby Ready 
+        # This host: Primary - Active
+        # Other host: Secondary - Standby Ready
         # Other host: Secondary - Failed
         p12 = re.compile(
             r'^(?P<which>This|Other) +host:\s+(?P<is_primary>\w+)\s+\-\s+(?P<state>.*)$'
@@ -238,11 +238,13 @@ class ShowFailover(ShowFailoverSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Failover On 
+            # Failover On
             # Failover Off
             m = p1.match(line)
             if m:
-                parsed_dict.update({'failover_enabled': True if m.groupdict()['status'] == 'On' else False})
+                parsed_dict.update({
+                    'failover_enabled': True if m.groupdict()['status'] == 'On' else False
+                })
                 continue
 
             # Failover unit Secondary
@@ -293,7 +295,7 @@ class ShowFailover(ShowFailoverSchema):
                 })
                 continue
 
-            # Interface Poll frequency 800 milliseconds, holdtime 5 seconds 
+            # Interface Poll frequency 800 milliseconds, holdtime 5 seconds
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -316,7 +318,7 @@ class ShowFailover(ShowFailoverSchema):
             if m:
                 parsed_dict.update({'interface_policy': int(m.groupdict()['policy'])})
                 continue
-            
+
             # Monitored Interfaces 1 of 311 maximum
             m = p8.match(line)
             if m:
@@ -336,7 +338,7 @@ class ShowFailover(ShowFailoverSchema):
                     }
                 })
                 continue
-                
+
             # Serial Number: Ours 9AW2PSRETDT, Mate 9ASGGBEE416
             m = p10.match(line)
             if m:
@@ -363,14 +365,18 @@ class ShowFailover(ShowFailoverSchema):
                     this_host_dict = parsed_dict.setdefault('this_host', {})
                     this_host_interfaces_dict = this_host_dict.setdefault('interfaces', {})
                     this_host_slot_dict = this_host_dict.setdefault('slots', {})
-                    this_host_dict.update({'is_primary': True if group['is_primary'] == 'Primary' else False})
+                    this_host_dict.update({
+                        'is_primary': True if group['is_primary'] == 'Primary' else False
+                    })
                     this_host_dict.update({'state': group['state']})
                     is_this_host = True
                 if group['which'] == 'Other':
                     other_host_dict = parsed_dict.setdefault('other_host', {})
                     other_host_interfaces_dict = other_host_dict.setdefault('interfaces', {})
                     other_host_slot_dict = other_host_dict.setdefault('slots', {})
-                    other_host_dict.update({'is_primary': True if group['is_primary'] == 'Primary' else False})
+                    other_host_dict.update({
+                        'is_primary': True if group['is_primary'] == 'Primary' else False
+                    })
                     other_host_dict.update({'state': group['state']})
                     is_this_host = False
                 continue
@@ -458,10 +464,11 @@ class ShowFailover(ShowFailoverSchema):
                         'interface': group['interface'],
                         'status': group['status'],
                     }
-                    parsed_dict.update({'stateful_failover_interface': stateful_failover_interface})
+                    parsed_dict.update({
+                        'stateful_failover_interface': stateful_failover_interface
+                    })
                 continue
 
-        
         # Parse Stateful Failover Logical Update Statistics
         header = ['Stateful Obj', 'xmit', 'xerr', 'rcv', 'rerr']
 
@@ -492,7 +499,6 @@ class ShowFailover(ShowFailoverSchema):
             stat_dict.update({'rerr': rerr})
 
         return parsed_dict
-                    
 
 
 class ShowFailoverInterfaceSchema(MetaParser):
@@ -519,7 +525,7 @@ class ShowFailoverInterface(ShowFailoverInterfaceSchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        
+
         # interface folink GigabitEthernet0/1
         p1 = re.compile(r'^interface\s+(?P<name>\w+)\s+(?P<interface>[A-Za-z]+\s*[\.\d\/]+)$')
 
@@ -551,7 +557,7 @@ class ShowFailoverInterface(ShowFailoverInterfaceSchema):
                 group = m.groupdict()
                 interface_dict.update({'system_ip': group['ip']})
                 continue
-                
+
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -565,5 +571,3 @@ class ShowFailoverInterface(ShowFailoverInterfaceSchema):
                 continue
 
         return parsed_dict
-        
-

@@ -48,7 +48,10 @@ class ShowKeyChain(ShowKeyChainSchema):
         p1 = re.compile(r'^Key\-chain\s+(?P<name>[A-Za-z0-9\-_]+):$')
 
         # key 1 -- text "cisco123"
-        p2 = re.compile(r'^key\s+(?P<id>\d+)\s+\-\-\s+text\s+\"(?P<key_string>\S+)\"$')
+        p2 = re.compile(
+            r'^key\s+(?P<id>\d+)\s+\-\-\s+text\s+'
+            r'\"(?P<key_string>\S+)\"$'
+        )
 
         # accept lifetime (11:11:11 UTC Mar 1 2001) - (infinite) [valid now]
         # accept lifetime (always valid) - (always valid) [valid now]
@@ -56,7 +59,8 @@ class ShowKeyChain(ShowKeyChainSchema):
         # accept lifetime (10:10:10 UTC Jan 1 2002) - (06:01:00 UTC Jan 1 2010)
         p3 = re.compile(
             r'^accept\s+lifetime\s+\((?P<start>[A-Za-z0-9:\s\+\-_]+)\)\s+\-\s+'
-            '\((?P<end>[A-Za-z0-9:\s\+\-_]+)\)(\s+\[(?P<is_valid>[A-Za-z0-9\s\-_]+)\])?$'
+            '\((?P<end>[A-Za-z0-9:\s\+\-_]+)\)'
+            r'(\s+\[(?P<is_valid>[A-Za-z0-9\s\-_]+)\])?$'
         )
 
         # send lifetime (11:11:11 UTC Mar 1 2001) - (infinite) [valid now]
@@ -64,7 +68,8 @@ class ShowKeyChain(ShowKeyChainSchema):
         # send lifetime (always valid) - (always valid) [valid now]
         p4 = re.compile(
             r'^send\s+lifetime\s+\((?P<start>[A-Za-z0-9:\s\+\-_]+)\)\s+\-\s+'
-            '\((?P<end>[A-Za-z0-9:\s\+\-_]+)\)(\s+\[(?P<is_valid>[A-Za-z0-9\s\-_]+)\])?$'
+            '\((?P<end>[A-Za-z0-9:\s\+\-_]+)\)'
+            r'(\s+\[(?P<is_valid>[A-Za-z0-9\s\-_]+)\])?$'
         )
 
         parsed_dict = {}
@@ -116,7 +121,3 @@ class ShowKeyChain(ShowKeyChainSchema):
                 continue
 
         return parsed_dict
-                
-                
-
-

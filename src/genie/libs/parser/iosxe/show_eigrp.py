@@ -8,6 +8,10 @@ IOSXE parsers for the following commands
     * 'show ip eigrp neighbors detail'
     * 'show ip eigrp vrf <vrf> neighbors detail'
     * 'show ipv6 eigrp neighbors detail'
+    * 'show ip eigrp interfaces'
+    * 'show ipv6 eigrp interfaces'
+    * 'show ipv6 eigrp interfaces detail'
+    * 'show ip eigrp interfaces detail'
 '''
 
 # Python
@@ -686,7 +690,7 @@ class ShowIpv6EigrpNeighborsDetail(ShowIpEigrpNeighborsDetailSuperParser,
         return super().cli(output=show_output, vrf='default')
 
 
-class ShowIpEigrpInterfacesSchema(MetaParser):
+class ShowEigrpInterfacesSchema(MetaParser):
 
     ''' Schema for "show ip eigrp interfaces" '''
 
@@ -740,12 +744,15 @@ class ShowIpEigrpInterfacesSchema(MetaParser):
             }
 
 
-class ShowEigrpInterfacesSuperParser(ShowIpEigrpInterfacesSchema):
-
-    ''' Parser for 
-        * "show ip eigrp interfaces"
-        * "show ipv6 eigrp interfaces"
-    '''
+# ===========================================
+# Super parser for:
+#       'show ip eigrp interfaces detail'
+#       'show ip eigrp vrf <vrf> interfaces detail'
+#       'show ipv6 eigrp interfaces detail'
+#       'show ipv6 eigrp interfaces'
+#       'show ip eigrp interfaces'
+# ===========================================
+class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
 
     # Defines a function to run the cli_command
     def cli(self, output=None):
@@ -756,56 +763,60 @@ class ShowEigrpInterfacesSuperParser(ShowIpEigrpInterfacesSchema):
 
         # Defines the regex for the first line of device output. Example is:
         # EIGRP-IPv4 Interfaces for AS(1)
-        p1 = re.compile('EIGRP-(?P<address_family>IPv4|IPv6) +Interfaces +for +AS\((?P<auto_sys>(\d+))\)$')
+        p1 = re.compile(r'EIGRP-(?P<address_family>IPv4|IPv6) +Interfaces +for +AS\((?P<auto_sys>(\d+))\)$')
 
         # Defines the regex for the second line of device output. Example is:
         # Xmit Queue   PeerQ        Mean   Pacing Time   Multicast    Pending
-        p2 = re.compile('Xmit +Queue +PeerQ +Mean +Pacing +Time +Multicast +Pending$')
+        p2 = re.compile(r'Xmit +Queue +PeerQ +Mean +Pacing +Time +Multicast +Pending$')
 
         # Defines the regex for the third line of device output. Example is:
         # Interface              Peers  Un/Reliable  Un/Reliable  SRTT   Un/Reliable   Flow Timer   Routes
-        p3 = re.compile('Interface +Peers +Un/Reliable +Un/Reliable +SRTT +Un/Reliable +Flow +Timer +Routes$')
+        p3 = re.compile(r'Interface +Peers +Un/Reliable +Un/Reliable +SRTT +Un/Reliable +Flow +Timer +Routes$')
 
         # Defines the regex for the fourth, and repeating, lines of device output. Example is:
         # Gi1                      1        0/0       0/0          20       0/0           84           0
-        p4 = re.compile('(?P<interface>(\S+\d)) +(?P<peers>(\d+)) +(?P<xmit_q_unreliable>(\d+))/(?P<xmit_q_reliable>(\d+)) +(?P<peer_q_unreliable>(\d+))/(?P<peer_q_reliable>(\d+)) +(?P<mean_srtt>(\d+)) +(?P<pacing_t_unreliable>(\d+))/(?P<pacing_t_reliable>(\d+)) +(?P<mcast_flow_timer>(\d+)) +(?P<pend_routes>(\d+))$')
+        p4 = re.compile(
+            r'(?P<interface>(\S+\d)) +(?P<peers>(\d+)) +(?P<xmit_q_unreliable>(\d+))/(?P<xmit_q_reliable>(\d+))'
+            r' +(?P<peer_q_unreliable>(\d+))/(?P<peer_q_reliable>(\d+)) +(?P<mean_srtt>(\d+))'
+            r' +(?P<pacing_t_unreliable>(\d+))/(?P<pacing_t_reliable>(\d+)) +(?P<mcast_flow_timer>(\d+))'
+            r' +(?P<pend_routes>(\d+))$'
+        )
 
         # Hello-interval is 5, Hold-time is 15
-        p5 = re.compile('^Hello\-interval +is\s+(?P<hello_interval>\d+), +Hold\-time +is\s(?P<hold_time>\d+)$')
+        p5 = re.compile(r'^Hello\-interval +is\s+(?P<hello_interval>\d+), +Hold\-time +is\s(?P<hold_time>\d+)$')
 
         # Split-horizon is enabled
-        p6 = re.compile('^Split-horizon is (?P<state>\w+)$')
+        p6 = re.compile(r'^Split-horizon is (?P<state>\w+)$')
 
         # Packetized sent/expedited: 0/0
-        p7 = re.compile('^Packetized +sent\/expedited:\s+(?P<sent>\d+)\/(?P<expedited>\d+)$')
+        p7 = re.compile(r'^Packetized +sent\/expedited:\s+(?P<sent>\d+)\/(?P<expedited>\d+)$')
 
         # Hello's sent/expedited: 597/1
-        p8 = re.compile("^Hello's +sent\/expedited:\s+(?P<sent>\d+)\/(?P<expedited>\d+)$")
+        p8 = re.compile(r"^Hello's +sent\/expedited:\s+(?P<sent>\d+)\/(?P<expedited>\d+)$")
 
         #  Un/reliable mcasts: 0/0  Un/reliable ucasts: 0/0
         p9 = re.compile(
-            '^Un\/reliable +mcasts:\s+(?P<unreliable_mcast>\d+)\/(?P<reliable_mcast>\d+)\s+'
-            'Un\/reliable +ucasts: (?P<unreliable_ucast>\d+)\/(?P<reliable_ucast>\d+)$'
+            r'^Un\/reliable +mcasts:\s+(?P<unreliable_mcast>\d+)\/(?P<reliable_mcast>\d+)\s+'
+            r'Un\/reliable +ucasts: (?P<unreliable_ucast>\d+)\/(?P<reliable_ucast>\d+)$'
         )
         # Mcast exceptions: 0  CR packets: 0  ACKs suppressed: 0
         p10 = re.compile(
-            '^Mcast +exceptions:\s+(?P<mcast_exception>\d+)  +CR +packets:\s+'
-            '(?P<cr_packets>\d+) +ACKs +suppressed:\s+(?P<ack_suppressed>\d+)$'
+            r'^Mcast +exceptions:\s+(?P<mcast_exception>\d+)  +CR +packets:\s+'
+            r'(?P<cr_packets>\d+) +ACKs +suppressed:\s+(?P<ack_suppressed>\d+)$'
         )
         #   Retransmissions sent: 0  Out-of-sequence rcvd: 0
         p11 = re.compile(
-            '^Retransmissions +sent:\s+(?P<retransmission_sent>\d+)  +Out\-of\-sequence +rcvd:\s+'
-            '(?P<out_of_sequence_rcvd>\d+)$'
+            r'^Retransmissions +sent:\s+(?P<retransmission_sent>\d+)  +Out\-of\-sequence +rcvd:\s+'
+            r'(?P<out_of_sequence_rcvd>\d+)$'
         )
 
         #   Authentication mode is not set
         p12 = re.compile(
-            '^Authentication +mode +is\s+(?P<authentication>[A-Za-z0-9\-]+|not set)'
-            '(, +key\-chain +is\s+(")?(?P<key_chain>not set|[A-Za-z0-9\-]+))?(")?'
+            r'^Authentication +mode +is\s+(?P<authentication>[A-Za-z0-9\-]+|not set)'
+            r'(, +key\-chain +is\s+(")?(?P<key_chain>not set|[A-Za-z0-9\-]+))?(")?'
         )
 
         # Defines the "for" loop, to pattern match each line of output
-
         for line in out.splitlines():
             line = line.strip()
 
@@ -875,39 +886,39 @@ class ShowEigrpInterfacesSuperParser(ShowIpEigrpInterfacesSchema):
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                int_dict.update({'packetized_sent': int(group['sent'])}) 
-                int_dict.update({'packetized_expedited': int(group['expedited'])}) 
+                int_dict.update({'packetized_sent': int(group['sent'])})
+                int_dict.update({'packetized_expedited': int(group['expedited'])})
                 continue
 
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                int_dict.update({'hello_sent': int(group['sent'])}) 
-                int_dict.update({'hello_expedited': int(group['expedited'])}) 
+                int_dict.update({'hello_sent': int(group['sent'])})
+                int_dict.update({'hello_expedited': int(group['expedited'])})
                 continue
 
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                int_dict.update({'unreliable_mcasts': int(group['unreliable_mcast'])}) 
-                int_dict.update({'reliable_mcasts': int(group['reliable_mcast'])}) 
-                int_dict.update({'unreliable_ucasts': int(group['unreliable_ucast'])}) 
-                int_dict.update({'reliable_ucasts': int(group['reliable_ucast'])}) 
+                int_dict.update({'unreliable_mcasts': int(group['unreliable_mcast'])})
+                int_dict.update({'reliable_mcasts': int(group['reliable_mcast'])})
+                int_dict.update({'unreliable_ucasts': int(group['unreliable_ucast'])})
+                int_dict.update({'reliable_ucasts': int(group['reliable_ucast'])})
                 continue
 
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 int_dict.update({'mcast_exceptions': int(group['mcast_exception'])})
-                int_dict.update({'cr_packets': int(group['cr_packets'])}) 
-                int_dict.update({'acks_suppressed': int(group['ack_suppressed'])}) 
+                int_dict.update({'cr_packets': int(group['cr_packets'])})
+                int_dict.update({'acks_suppressed': int(group['ack_suppressed'])})
                 continue
 
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                int_dict.update({'retransmissions_sent': int(group['retransmission_sent'])}) 
-                int_dict.update({'out_of_sequence_rcvd': int(group['out_of_sequence_rcvd'])}) 
+                int_dict.update({'retransmissions_sent': int(group['retransmission_sent'])})
+                int_dict.update({'out_of_sequence_rcvd': int(group['out_of_sequence_rcvd'])})
                 continue
 
             m = p12.match(line)
@@ -916,12 +927,13 @@ class ShowEigrpInterfacesSuperParser(ShowIpEigrpInterfacesSchema):
                 if 'authentication' in group and group['authentication'] != 'not':
                     int_dict.update({'authentication_mode': group['authentication']})
                     if 'key_chain' in group and group['key_chain'] != 'not':
-                        int_dict.update({'key_chain': group['key_chain']}) 
+                        int_dict.update({'key_chain': group['key_chain']})
                 continue
 
         return parsed_dict
 
-class ShowIpEigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowIpEigrpInterfacesSchema):
+
+class ShowIpEigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowEigrpInterfacesSchema):
 
     ''' Parser for "show ip eigrp interfaces"'''
 
@@ -937,7 +949,7 @@ class ShowIpEigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowIpEigrpInterface
         return super().cli(output=out)
 
 
-class ShowIpv6EigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowIpEigrpInterfacesSchema):
+class ShowIpv6EigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowEigrpInterfacesSchema):
 
     ''' Parser for "show ipv6 eigrp interfaces"'''
 
@@ -953,7 +965,7 @@ class ShowIpv6EigrpInterfaces(ShowEigrpInterfacesSuperParser, ShowIpEigrpInterfa
         return super().cli(output=out)
 
 
-class ShowIpEigrpInterfacesDetail(ShowEigrpInterfacesSuperParser, ShowIpEigrpInterfacesSchema):
+class ShowIpEigrpInterfacesDetail(ShowEigrpInterfacesSuperParser, ShowEigrpInterfacesSchema):
 
     ''' Parser for "show ip eigrp interfaces detail"'''
 
@@ -969,7 +981,7 @@ class ShowIpEigrpInterfacesDetail(ShowEigrpInterfacesSuperParser, ShowIpEigrpInt
         return super().cli(output=out)
 
 
-class ShowIpv6EigrpInterfacesDetail(ShowEigrpInterfacesSuperParser, ShowIpEigrpInterfacesSchema):
+class ShowIpv6EigrpInterfacesDetail(ShowEigrpInterfacesSuperParser, ShowEigrpInterfacesSchema):
 
     ''' Parser for "show ipv6 eigrp interfaces detail"'''
 

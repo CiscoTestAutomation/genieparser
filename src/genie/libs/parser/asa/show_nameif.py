@@ -10,6 +10,7 @@ from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Schema, Any, Optional)
 from genie import parsergen
 
+
 class ShowNameifSchema(MetaParser):
     """ Schema for
         * show nameif
@@ -22,6 +23,7 @@ class ShowNameifSchema(MetaParser):
             'security_level': int
         }
     }
+
 
 class ShowNameif(ShowNameifSchema):
     """ Parser for
@@ -37,7 +39,12 @@ class ShowNameif(ShowNameifSchema):
 
         header = ['Interface', 'Name', 'Security']
 
-        result = parsergen.oper_fill_tabular(device_output=out, device_os='asa', header_fields=header, index=[0])
+        result = parsergen.oper_fill_tabular(
+            device_output=out,
+            device_os='asa',
+            header_fields=header,
+            index=[0]
+        )
         nameif_entries = result.entries
 
         line_dict = {}
@@ -48,6 +55,8 @@ class ShowNameif(ShowNameifSchema):
             interface_dict = line_dict.setdefault(k, {})
             interface_dict.update({'interface': curr_dict['Interface']})
             interface_dict.update({'name': curr_dict['Name']})
-            interface_dict.update({'security_level': int(curr_dict['Security'])})
+            interface_dict.update({
+                'security_level': int(curr_dict['Security'])
+            })
 
         return line_dict

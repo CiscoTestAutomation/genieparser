@@ -8,8 +8,9 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import (Schema, Any, Optional)
 
+
 class ShowCryptoIkev2SaSchema(MetaParser):
-    """Schema for 
+    """Schema for
         * show crypto ikev2 sa
     """
 
@@ -20,7 +21,7 @@ class ShowCryptoIkev2SaSchema(MetaParser):
                 'status': str,
                 'ike_count': int,
                 'child_sa_count': int,
-				'tunnels': {
+                'tunnels': {
                     Any(): {
                         'tunnel_id': int,
                         'local': str,
@@ -48,6 +49,7 @@ class ShowCryptoIkev2SaSchema(MetaParser):
         },
     }
 
+
 class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
     '''Parser for
         * show crypto ikev2 sa
@@ -65,6 +67,7 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
         dict_sessions = parsed_dict.setdefault('sessions', {})
         child_sa_index = 0
 
+        # Session-id:1, Status:UP-ACTIVE, IKE count:1, CHILD count:1
         p1 = re.compile(
             r'^Session-id:(?P<session_id>[\d]),\s'
             r'Status:(?P<status>[A-Za-z\-]{1,}),\s'
@@ -72,30 +75,39 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
             r'CHILD\scount:(?P<child_count>[\d])$'
         )
 
+        # 3752379 2001:db8:2:1::1/500 2001:db8:2:1::2/500 READY INITIATOR
         p2 = re.compile(
             r'^(?P<tunnel_id>\d+)\s+(?P<local>\S+)\s+'
             r'(?P<remote>\S+)\s+(?P<status>\w+)\s+(?P<role>\w+)$'
         )
 
+        # Encr: 3DES, Hash: SHA96, DH Grp:2, Auth sign: PSK, Auth verify: PSK
         p3 = re.compile(
             r'^Encr:\s+(?P<encr>\S+),\s+Hash:\s+(?P<hash>\S+),\s+'
-            r'DH\sGrp:(?P<dh_group>\d+),\s+Auth\ssign:\s+(?P<auth_sign>\S+),\s+'
-            r'Auth\sverify:\s+(?P<auth_verify>\S+)$'
+            r'DH\sGrp:(?P<dh_group>\d+),\s+Auth\ssign:\s+'
+            r'(?P<auth_sign>\S+),\s+Auth\sverify:\s+'
+            r'(?P<auth_verify>\S+)$'
         )
 
+        # Life/Active Time: 43200/53 sec
         p4 = re.compile(
             r'^Life\/Active\sTime:\s+'
             r'(?P<life_time>\d+)\/(?P<active_time>\d+)\s+sec$'
         )
 
+        # Child sa: local selector  2001:db8:1:1::/0 -
+        # 2001:db8:1:1:ffff:ffff:ffff:ffff/65535
         p5 = re.compile(
             r'^Child\ssa:\slocal\sselector\s+(?P<local_selector>.*)$'
         )
 
+        # remote selector 2001:db8:3:1::/0 -
+        # 2001:db8:3:1:ffff:ffff:ffff:ffff/65535
         p6 = re.compile(
             r'^remote\sselector\s+(?P<remote_selector>.*)$'
         )
 
+        # ESP spi in/out: 0x295bd35a/0x5755a09f
         p7 = re.compile(
             r'^ESP\sspi\sin\/out:\s+(?P<esp_in>\S+)\/(?P<esp_out>\S+)$'
         )
@@ -132,7 +144,9 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 remote = group['remote']
                 status = group['status']
                 role = group['role']
-                dict_tunnel = dict_tunnels.setdefault('{}-{}'.format(local, remote), {})
+                dict_tunnel = dict_tunnels.setdefault(
+                    '{}-{}'.format(local, remote), {}
+                )
                 dict_tunnel.update({'tunnel_id': tunnel_id})
                 dict_tunnel.update({'local': local})
                 dict_tunnel.update({'remote': remote})
@@ -178,7 +192,6 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 child_sa_index = child_sa_index + 1
                 continue
 
-
             m = p6.match(line)
 
             if m:
@@ -186,7 +199,6 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 remote_selector = group['remote_selector']
                 child_sa.update({'remote_selector': local_selector})
                 continue
-
 
             m = p7.match(line)
 
@@ -198,6 +210,5 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 child_sa.update({'esp_in': esp_in})
                 child_sa.update({'esp_out': esp_out})
                 continue
-                
-        return parsed_dict
 
+        return parsed_dict

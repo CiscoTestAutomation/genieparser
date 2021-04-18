@@ -30,8 +30,9 @@ class ShowIpEigrpNeighbors(ShowIpEigrpNeighbors_iosxe):
     #   * 'show ip eigrp neighbors'
     pass
 
+
 class ShowIpv6EigrpNeighbors(ShowIpv6EigrpNeighbors_iosxe):
-    # Parser for:    
+    # Parser for:
     #   * 'show ipv6 eigrp neighbors'
 
     cli_command = 'show ipv6 eigrp neighbors'
@@ -50,15 +51,18 @@ class ShowIpEigrpNeighborsDetail(ShowIpEigrpNeighborsDetail_iosxe):
     #   'show ip eigrp vrf {vrf} neighbors detail'
     pass
 
+
 class ShowIpv6EigrpNeighborsDetail(ShowIpv6EigrpNeighborsDetail_iosxe):
     # Parser for:
     #   'show ipv6 eigrp neighbors detail'
     pass
 
+
 class ShowIpEigrpInterfaces(ShowIpEigrpInterfaces_iosxe):
     # Parser for:
     #   'show ip eigrp interfaces'
     pass
+
 
 class ShowIpv6EigrpInterfaces(ShowIpv6EigrpInterfaces_iosxe):
     # Parser for:
@@ -70,6 +74,7 @@ class ShowIpEigrpInterfacesDetail(ShowIpEigrpInterfacesDetail_iosxe):
     # Parser for:
     #   'show ip eigrp interfaces detail'
     pass
+
 
 class ShowIpv6EigrpInterfacesDetail(ShowIpv6EigrpInterfacesDetail_iosxe):
     # Parser for:

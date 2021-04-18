@@ -61,7 +61,7 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                                         Optional('configured_interfaces'): list,
                                         Optional('neighbors'): {
                                             Any(): {
-                                                'last_update': str, 
+                                                'last_update': str,
                                                 'distance': int
                                             }
                                         },
@@ -147,7 +147,7 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                                         Optional('routing_information_sources'): {
                                             'gateway': {
                                                 Any(): {
-                                                    'distance': int, 
+                                                    'distance': int,
                                                     'last_update': str
                                                 }
                                             }
@@ -252,7 +252,7 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                                         Optional('routing_information_sources'): {
                                             'gateway': {
                                                 Any(): {
-                                                    'distance': int, 
+                                                    'distance': int,
                                                     'last_update': str
                                                 }
                                             }
@@ -267,6 +267,7 @@ class ShowIpv6ProtocolsSchema(MetaParser):
         }
     }
 
+
 # ==============================
 # Parser for 'show ipv6 protocols'
 # ==============================
@@ -274,13 +275,16 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
 
     ''' Parser for "show ip protocols" '''
 
-    cli_command = ['show ipv6 protocols',
-                  'show ipv6 protocols vrf {vrf}']
-    exclude = ['last_update', ' network' , 'next_update']
+    cli_command = [
+        'show ipv6 protocols',
+        'show ipv6 protocols vrf {vrf}'
+    ]
 
-    def cli(self, vrf="" ,cmd="", output=None):
+    exclude = ['last_update', ' network', 'next_update']
+
+    def cli(self, vrf="", cmd="", output=None):
         if output is None:
-            if not cmd :
+            if not cmd:
                 if vrf:
                     cmd = self.cli_command[1].format(vrf=vrf)
                 else:
@@ -343,9 +347,11 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         p6_1 = re.compile(r"^Routing +for +Networks:$")
 
         # Interfaces Configured Explicitly (Area 0):
-		# Interfaces:
-        p6_2 = re.compile(r"^Interfaces"
-                          r"( +\(Area +(?P<area>[\d\.]+)\))?\:$")
+        # Interfaces:
+        p6_2 = re.compile(
+            r"^Interfaces"
+            r"( +\(Area +(?P<area>[\d\.]+)\))?\:$"
+        )
 
         # Routing Information Sources:
         p6_3 = re.compile(r"^Routing +Information +Sources:$")
@@ -410,9 +416,10 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
 
         # Distance: external 20 internal 200 local 200
         # Distance:external 20 internal 200 local 200
-        p15 = re.compile(r"^Distance: *external +(?P<external>(\d+)) +internal"
-                          " +(?P<internal>(\d+)) +local +(?P<local>(\d+))$")
-
+        p15 = re.compile(
+            r"^Distance: *external +(?P<external>(\d+)) +internal"
+            r" +(?P<internal>(\d+)) +local +(?P<local>(\d+))$"
+        )
 
         # Redistributing: isis banana
         p16 = re.compile(r"^Redistributing: +(?P<redistributing>([a-zA-Z\_\s]+))$")
@@ -426,17 +433,17 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         routing_network_flag = False
         neighbors_flag = False
 
-		# Sending updates every 10 seconds, next due in 8 seconds
+        # Sending updates every 10 seconds, next due in 8 seconds
         p106 = re.compile(
             r'^\s*Sending +updates every +(?P<update_interval>\d+) +seconds, +next +due +in (?P<next_update>\d+) +(seconds|sec)$')
 
-		# Redistributing protocol ospf 1 with metric 5 (internal, external 1 & 2, nssa-external 1 & 2) include-connected
+        # Redistributing protocol ospf 1 with metric 5 (internal, external 1 & 2, nssa-external 1 & 2) include-connected
         # Redistributing protocol bgp 65003 with metric 4 route-map test
         # Redistributing protocol eigrp 10 with metric 4 include-connected
         p109 = re.compile(
             r'^\s*Redistributing +protocol +(?P<redistribute>\w+)( +(?P<instance>[A-Za-z0-9]+))?( +with( +transparent)?'
-            ' +metric( +(?P<metric>\d+))?)?( +\([A-Za-z0-9\-,&\s]+\))?( +route-map +(?P<route_policy>[\w\-]+))?'
-            '( +(?P<include_connected>include\-connected))?$'
+            r' +metric( +(?P<metric>\d+))?)?( +\([A-Za-z0-9\-,&\s]+\))?( +route-map +(?P<route_policy>[\w\-]+))?'
+            r'( +(?P<include_connected>include\-connected))?$'
         )
 
         # Neighbor(s):
@@ -529,7 +536,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                     address_family = 'ipv6'
                     rip_dict = ret_dict.setdefault('protocols', {}).\
                                             setdefault('rip', {}).\
-                                            setdefault('vrf',{}).\
+                                            setdefault('vrf', {}).\
                                             setdefault(vrf, {}).\
                                             setdefault('address_family', {}). \
                                             setdefault(address_family, {}).\
@@ -555,8 +562,11 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                     'address_family', {}
                 ).setdefault(
                     group['address_family'].lower(), {}
-                ).setdefault('eigrp_instance', {}
-                ).setdefault(instance, {})
+                ).setdefault(
+                    'eigrp_instance', {}
+                ).setdefault(
+                    instance, {}
+                )
                 if eigrp_name:
                     eigrp_dict.update({'name': eigrp_name})
                 eigrp_dict.update({'named_mode': True if eigrp_name else False})
@@ -874,7 +884,6 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                 group = m.groupdict()
                 eigrp_topology.update({'max_variance': int(group['max_variance'])})
 
-
             # IGP synchronization is disabled
             m = p13.match(line)
             if m:
@@ -911,7 +920,6 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                 timers_dict.update({'next_update': int(group['next_update'])})
                 continue
 
-            
             # Redistributing: isis banana
             m = p16.match(line)
             if m:
@@ -943,7 +951,6 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
 
                 continue
 
-            
             # 172.16.121.101                                        ACCEPT_SCI_RICHEMONT
             # 192.168.1.176                                         INTERNET_EDGE_IN
             # 192.168.1.177                                         INTERNET_EDGE_IN
@@ -969,7 +976,6 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         return ret_dict
 
 
-
 # ====================================================
 #  schema for show ipv6 protocols | sec rip
 # ====================================================
@@ -991,7 +997,7 @@ class ShowIpv6ProtocolsSectionRipSchema(MetaParser):
                                     },
                                 },
                                 Optional('interfaces'): {
-                                    Any():{},
+                                    Any(): {},
                                 },
                             },
                         },
@@ -1024,9 +1030,9 @@ class ShowIpv6ProtocolsSectionRip(ShowIpv6ProtocolsSectionRipSchema):
         else:
             out = output
 
-        address_family= "ipv6"
+        address_family = "ipv6"
 
-        #IPv6 Routing Protocol is "rip ripng"
+        # IPv6 Routing Protocol is "rip ripng"
         p1 = re.compile(r'^\s*IPv6 +Routing +Protocol +is +\"(?P<protocol>[\w\s]+)\"$')
 
         # Interfaces:
@@ -1056,7 +1062,7 @@ class ShowIpv6ProtocolsSectionRip(ShowIpv6ProtocolsSectionRipSchema):
             if m:
                 group = m.groupdict()
                 protocol = group['protocol']
-                rip_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family',{}). \
+                rip_dict = result_dict.setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {}). \
                     setdefault(address_family, {}).setdefault('instance', {}).setdefault(protocol, {})
                 continue
 
