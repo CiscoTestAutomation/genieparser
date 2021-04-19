@@ -12,6 +12,8 @@ IOSXR parsers for the following show commands:
     * show ospf vrf all-inclusive database summary
     * show ospf vrf all-inclusive database external
     * show ospf vrf all-inclusive database opaque-area
+    * show ospf database
+    * show ospf mpls1 database
 """
 
 # Python
@@ -5300,10 +5302,10 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(
 
 
 # =============================================================
-# Schema for 'show ospf database'
+# Schema for 'show ospf database', 'show ospf mpls1 database'
 # =============================================================
 class ShowOspfDatabaseSchema(MetaParser):
-    """Schema for show ospf database
+    """Schema for show ospf database, show ospf mpls1 database
     """
 
     schema = {
@@ -5359,12 +5361,12 @@ class ShowOspfDatabaseSchema(MetaParser):
     }
 
 
-# ==============================================
-#  Parser for show ospf database
-# ==============================================
+# =============================================================
+#  Parser for 'show ospf database', 'show ospf mpls1 database'
+# =============================================================
 
 class ShowOspfDatabase(ShowOspfDatabaseSchema):
-    """ Parser for show ospf database
+    """ Parser for show ospf database, show ospf mpls1 database
     """
     cli_command = ['show ospf database', 'show ospf {process} database']
 
@@ -5459,7 +5461,10 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 opaque_temp_dict = parsed_dict['router_id'][routerid]['process_id'][processid]
                 opaque_temp_dict.setdefault('type_10_opaque_link_states', {}). \
                     setdefault('area', {}).setdefault(opaque_areaid, {}).setdefault('link_id', {})
-                p3 = re.compile("updated")
+
+                #Since similar pattern is used in p3 and p5. Once p3 is done the value changed to avoid
+                #conflict.(After router link state is updated)
+                p3 = re.compile("router link states updated")
                 continue
 
             #To process the type_10_opaque_link_states
