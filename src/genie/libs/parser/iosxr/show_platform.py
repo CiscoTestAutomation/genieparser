@@ -342,6 +342,23 @@ class ShowPlatform(ShowPlatformSchema):
         else:
             out = output
 
+
+        # 0/RSP0/CPU0     A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
+        # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
+        # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
+        # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
+        # 0/1               NCS1K4-1.2T-K9             OPERATIONAL       NSHUT
+        # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
+        # 1/3/3         MSC(SPA)          OC192RPR-XFP       DISABLED        NPWR,SHUT,MON
+        # 1/10/CPU0     FP-X              N/A                UNPOWERED       NPWR,NSHUT,MON
+        
+        p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
+                            '\s+(?P<name>[a-zA-Z0-9\-\.]+)'
+                            '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
+                            '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
+                            '\s+(?P<state>(UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
+                            '\s+(?P<config_state>[a-zA-Z\,]+)$')            
+
         # Init vars
         show_platform = {}
         daughtercard_dict = {}
@@ -350,20 +367,8 @@ class ShowPlatform(ShowPlatformSchema):
             entry_is_daughter = False
             line = line.rstrip()
 
-            # 0/RSP0/CPU0     A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
-            # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
-            # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
-            # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
-            # 0/1               NCS1K4-1.2T-K9             OPERATIONAL       NSHUT
-            # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
-            p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
-                             '\s+(?P<name>[a-zA-Z0-9\-\.]+)'
-                             '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
-                             '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
-                             '\s+(?P<state>(UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
-                             '\s+(?P<config_state>[a-zA-Z\,]+)$')
+
             m = p1.match(line)
-            # import pdb; pdb.set_trace()
             if m:
                 # Parse regexp
                 node = str(m.groupdict()['node']).strip()
@@ -380,9 +385,11 @@ class ShowPlatform(ShowPlatformSchema):
                 last_entry = str(parse_node.groupdict()['last_entry'])
 
                 # Check if subslot/daughtercard
+                # 0/3/0 
+                # 1/3/0  
                 parse_subslot = re.compile(r'.*(0\/[0-9]\/[0-9]+).*').match(node)
                 parse_subslot2 = re.compile(r'.*(1\/[0-9]\/[0-9]+).*').match(node)
-                if (parse_subslot or parse_subslot2 ) and last_entry.isdigit():
+                if (parse_subslot or parse_subslot2) and last_entry.isdigit():
                     # This entry is a daughtercard/subslot
                     entry_is_daughter = True
                     subslot = last_entry
