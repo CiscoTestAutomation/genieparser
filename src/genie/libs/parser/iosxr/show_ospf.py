@@ -5383,7 +5383,8 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         parsed_dict = {}
 
         #OSPF Router with ID (25.97.1.1) (Process ID mpls1)
-        p1 = re.compile(r"^OSPF +Router +with +ID +\((?P<routerid>[\w\.]+)\) +\(Process ID (?P<processid>[\w]+)\)$")
+        p1 = re.compile(r"^OSPF +Router +with +ID +\((?P<routerid>[\w\.]+)\) "
+                        r"+\(Process ID (?P<processid>[\w]+)\)$")
 
         #Router Link States (Area 0)
         p2 = re.compile(r"^Router +Link +States +\(Area (?P<areaid>[\w]+)\)$")
@@ -5391,15 +5392,18 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         #Link ID         ADV Router      Age         Seq#       Checksum Link count
         #25.97.1.1       25.97.1.1       86          0x800080ff 0x0043de 5
         p3 = re.compile(
-            "^(?P<linkid>[\w\.]+)\s+(?P<advrouter>[\w\.]+)\s+(?P<age>[\w]+)\s+(?P<seq>[\w]+)\s+(?P<checksum>[\w]+)\s+(?P<linkcount>[\w]+)$")
+            "^(?P<linkid>[\w\.]+)\s+(?P<advrouter>[\w\.]+)\s+(?P<age>[\w]+)\s+"
+            "(?P<seq>[\w]+)\s+(?P<checksum>[\w]+)\s+(?P<linkcount>[\w]+)$")
 
         #Type-10 Opaque Link Area Link States (Area 0)
-        p4 = re.compile("^Type-10 +Opaque +Link +Area +Link +States +\(Area (?P<areaid>[\w]+)\)$")
+        p4 = re.compile("^Type-10 +Opaque +Link +Area +Link +States "
+                        "+\(Area (?P<areaid>[\w]+)\)$")
 
         #Link ID         ADV Router      Age         Seq#       Checksum Opaque ID
         #1.0.0.0         25.97.1.1       54          0x8003b136 0x009cb2        0
         p5 = re.compile(
-            "^(?P<linkid>[\w\.]+)\s+(?P<advrouter>[\w\.]+)\s+(?P<age>[\w]+)\s+(?P<seq>[\w]+)\s+(?P<checksum>[\w]+)\s+(?P<opaqueid>[\w]+)$")
+            "^(?P<linkid>[\w\.]+)\s+(?P<advrouter>[\w\.]+)\s+(?P<age>[\w]+)"
+            "\s+(?P<seq>[\w]+)\s+(?P<checksum>[\w]+)\s+(?P<opaqueid>[\w]+)$")
 
 
         for line in out.splitlines():
@@ -5488,8 +5492,9 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                     'opaque_id': opaqueid
                 }
 
-                opaque_temp_dict['type_10_opaque_link_states']['area'][opaque_areaid]['link_id']. \
-                    setdefault(linkid, {}).setdefault('adv_router', {}).setdefault(advrouter, opaque_id_innerdict)
+                opaque_temp_dict['type_10_opaque_link_states']['area'][opaque_areaid]['link_id'].\
+                    setdefault(linkid, {}).setdefault('adv_router', {}).\
+                    setdefault(advrouter, opaque_id_innerdict)
                 continue
 
 
