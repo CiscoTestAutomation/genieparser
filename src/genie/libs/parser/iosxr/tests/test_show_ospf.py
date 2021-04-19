@@ -7542,6 +7542,12 @@ Link ID         ADV Router      Age         Seq#       Checksum Opaque ID
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output)
 
+    def test_golden1(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowOspfDatabase(device=self.device)
+        parsed_output = obj.parse(process='mpls1')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == "__main__":
     unittest.main()

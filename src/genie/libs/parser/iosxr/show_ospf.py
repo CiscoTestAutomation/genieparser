@@ -5366,11 +5366,14 @@ class ShowOspfDatabaseSchema(MetaParser):
 class ShowOspfDatabase(ShowOspfDatabaseSchema):
     """ Parser for show ospf database
     """
-    cli_command = 'show ospf database'
+    cli_command = ['show ospf database', 'show ospf {process} database']
 
-    def cli(self, output=None):
+    def cli(self, process=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if process:
+                out = self.device.execute(self.cli_command[1].format(process=process))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
