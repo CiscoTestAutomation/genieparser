@@ -88,7 +88,7 @@ class ShowKeyChain(ShowKeyChainSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                key_dict = key_chain_dict.setdefault(group['id'], {})
+                key_dict = key_chain_dict.setdefault(int(group['id']), {})
                 key_dict.update({'key_string': group['key_string']})
                 continue
 
