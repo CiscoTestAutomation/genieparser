@@ -60,7 +60,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('oper_status'): str,
                 Optional('line_protocol'): str,
                 Optional('enabled'): bool,
-                Optional('line_attribute'): bool,
+                Optional('connected'): bool,
                 Optional('err_disabled'): bool,
                 Optional('description'): str,
                 Optional('type'): str,
@@ -514,7 +514,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                                 ['oper_status'] = line_protocol
 
                 if line_attribute:
-                    interface_dict[interface]['line_attribute'] = True if line_attribute == 'line_attribute' else False
+                    interface_dict[interface]['connected'] = True if line_attribute == 'connected' else False
                     interface_dict[interface]['err_disabled'] = True if line_attribute == 'err-disabled' else False
 
                 if autostate:
