@@ -50,6 +50,17 @@ expected_output = {
             "month": "Mar",
             "size": 11,
             "user": "root"
+        },
+        "nonaci": {
+            "day": 23,
+            "filename": "nonaci",
+            "group": "root",
+            "links": 1,
+            "mode": "lrwxrwxrwx",
+            "month": "Mar",
+            "size": 11,
+            "user": "root",
+            "year": 2009
         }
     },
     "total": 6894908

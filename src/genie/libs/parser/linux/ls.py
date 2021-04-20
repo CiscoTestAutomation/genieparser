@@ -15,10 +15,11 @@ class LsSchema(MetaParser):
                 'user': str,
                 'group': str,
                 'size': int,
+                Optional('year'): int,
                 'month': str,
                 'day': int,
-                'hour': int,
-                'minute': int,
+                Optional('hour'): int,
+                Optional('minute'): int,
                 'filename': str,
                 Optional('linked_filename'): str
             }
@@ -45,7 +46,8 @@ class Ls(LsSchema):
 
         # file mode, number of links, owner name, group name, number of bytes in the file
         # lrwxrwxrwx 1 root  root          12 Mar 23 23:36 aci -> /.aci/viewfs
-        p1 = re.compile(r'(?P<mode>\S+)\s+(?P<links>\d+)\s+(?P<user>\S+)\s+(?P<group>\S+)\s+(?P<size>\d+)\s+(?P<month>\w+)\s+(?P<day>\d+)\s+(?P<hour>\d+):(?P<minute>\d+)\s+(?P<filename>.*?)$')
+        # lrwxrwxrwx 1 root  root          12 Mar 23  2009 nonaci
+        p1 = re.compile(r'(?P<mode>\S+)\s+(?P<links>\d+)\s+(?P<user>\S+)\s+(?P<group>\S+)\s+(?P<size>\d+)\s+(?P<month>\w+)\s+(?P<day>\d+)\s+(?:(?:(?P<hour>\d+):(?P<minute>\d+))|(?P<year>\d+))\s+(?P<filename>.*?)$')
 
         ls_dict = {}
 
@@ -74,9 +76,13 @@ class Ls(LsSchema):
                 file_dict.update({'user': groups['user']})
                 file_dict.update({'group': groups['group']})
                 file_dict.update({'size': int(groups['size'])})
+                if groups['year']:
+                    file_dict.update({'year': int(groups['year'])})
                 file_dict.update({'month': groups['month']})
                 file_dict.update({'day': int(groups['day'])})
-                file_dict.update({'hour': int(groups['hour'])})
-                file_dict.update({'minute': int(groups['minute'])})
+                if groups['hour']:
+                    file_dict.update({'hour': int(groups['hour'])})
+                if groups['minute']:
+                    file_dict.update({'minute': int(groups['minute'])})
 
         return ls_dict
