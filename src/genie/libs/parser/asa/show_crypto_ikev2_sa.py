@@ -29,6 +29,7 @@ class ShowCryptoIkev2SaSchema(MetaParser):
                         'status': str,
                         'role': str,
                         'encryption_algorithm': str,
+                        Optional('key_size'): int,
                         'hashing_algorithm': str,
                         'dh_group': int,
                         'authentication_sign': str,
@@ -83,9 +84,9 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
 
         # Encr: 3DES, Hash: SHA96, DH Grp:2, Auth sign: PSK, Auth verify: PSK
         p3 = re.compile(
-            r'^Encr:\s+(?P<encr>\S+),\s+Hash:\s+(?P<hash>\S+),\s+'
-            r'DH\sGrp:(?P<dh_group>\d+),\s+Auth\ssign:\s+'
-            r'(?P<auth_sign>\S+),\s+Auth\sverify:\s+'
+            r'^Encr:\s+(?P<encr>\S+),( +keysize:\s+(?P<keysize>\d+),)?'
+            r' +Hash:\s+(?P<hash>\S+),\s+DH\sGrp:(?P<dh_group>\d+),\s+'
+            r'Auth\ssign:\s+(?P<auth_sign>\S+),\s+Auth\sverify:\s+'
             r'(?P<auth_verify>\S+)$'
         )
 
@@ -168,6 +169,10 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 dict_tunnel.update({'dh_group': dh_group})
                 dict_tunnel.update({'authentication_sign': auth_sign})
                 dict_tunnel.update({'authentication_verify': auth_verify})
+                if 'keysize' in group and group['keysize']:
+                    dict_tunnel.update({
+                        'key_size': int(group['keysize'])
+                    })
                 continue
 
             m = p4.match(line)
