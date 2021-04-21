@@ -7283,9 +7283,9 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
 
 
 # ============================================
-# Parser for 'show arp detail'
+# Parser for 'show ospf database'
 # ============================================
-class test_show_arp_detail(unittest.TestCase):
+class test_show_ospf_database(unittest.TestCase):
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
