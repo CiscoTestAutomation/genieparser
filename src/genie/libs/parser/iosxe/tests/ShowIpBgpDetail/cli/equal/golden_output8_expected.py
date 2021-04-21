@@ -1,0 +1,185 @@
+expected_output = {
+    "instance": {
+        "default": {
+            "vrf": {
+                "vrf_1": {
+                    "address_family": {
+                        "vpnv4": {
+                            "default_vrf": "vrf_1",
+                            "prefixes": {
+                                "10.64.4.0/22": {
+                                    "available_path": "1",
+                                    "best_path": "",
+                                    "index": {
+                                        1: {
+                                            "community": "65100:106 65100:500 65100:601 65361:3",
+                                            "ext_community": "RT:65000:31838",
+                                            "gateway": "10.9.3.4",
+                                            "localpref": 100,
+                                            "next_hop": "10.9.3.4",
+                                            "next_hop_via": "vrf vrf_1",
+                                            "origin_codes": "i",
+                                            "originator": "10.9.3.4",
+                                            "recipient_pathid": "0",
+                                            "refresh_epoch": 1,
+                                            "route_info": "65000 65201 4400004007 4400004507 4400004001 4400004505 4400004005 4400004504 1234 5678",
+                                            "route_status": "received-only",
+                                            "status_codes": "* ",
+                                            "transfer_pathid": "0",
+                                        }
+                                    },
+                                    "paths": "1 available, no best path",
+                                    "table_version": "0",
+                                },
+                                "10.64.4.0/24": {
+                                    "available_path": "4",
+                                    "best_path": "3",
+                                    "index": {
+                                        1: {
+                                            "community": "9:9 65100:106 65100:508 65100:704 65371:2",
+                                            "ext_community": "RT:65000:31838",
+                                            "gateway": "10.9.3.4",
+                                            "localpref": 100,
+                                            "next_hop": "10.9.3.4",
+                                            "next_hop_via": "vrf vrf_1",
+                                            "origin_codes": "i",
+                                            "originator": "10.9.3.4",
+                                            "recipient_pathid": "0",
+                                            "refresh_epoch": 1,
+                                            "route_info": "65000 65211 4400002007 4400002507 4400002001 4400002505 4400002005 4400002504 3456 5678 2345",
+                                            "route_status": "received-only",
+                                            "status_codes": "* ",
+                                            "transfer_pathid": "0",
+                                            "update_group": [2, 3, 47],
+                                        },
+                                        2: {
+                                            "community": "9:9 65100:106 65100:508 65100:700 65100:704 65371:2",
+                                            "gateway": "10.105.3.84",
+                                            "localpref": 100,
+                                            "next_hop": "10.105.3.84",
+                                            "next_hop_via": "vrf vrf_1",
+                                            "origin_codes": "i",
+                                            "originator": "10.105.2.27",
+                                            "recipient_pathid": "0",
+                                            "refresh_epoch": 1,
+                                            "route_info": "4400005007 4400005507 4400005001 4400065100 4400002001 4400002505 4400002005 4400002504 3456 5678 2345",
+                                            "route_status": "received & used",
+                                            "status_codes": "* ",
+                                            "transfer_pathid": "0",
+                                            "update_group": [2, 3, 47],
+                                        },
+                                        3: {
+                                            "community": "9:9 65100:106 65100:508 65100:700 65100:704 65371:2",
+                                            "gateway": "10.105.3.80",
+                                            "localpref": 100,
+                                            "next_hop": "10.105.3.80",
+                                            "next_hop_via": "vrf vrf_1",
+                                            "origin_codes": "i",
+                                            "originator": "10.105.2.26",
+                                            "recipient_pathid": "0",
+                                            "refresh_epoch": 1,
+                                            "route_info": "4400005007 4400005507 4400005001 4400065100 4400002001 4400002505 4400002005 4400002504 3456 5678 2345",
+                                            "route_status": "received & used",
+                                            "status_codes": "*>",
+                                            "transfer_pathid": "0x0",
+                                            "update_group": [2, 3, 47],
+                                        },
+                                        4: {
+                                            "community": "9:9 65100:106 65100:508 65100:700 65100:704 65371:2",
+                                            "gateway": "10.105.2.1",
+                                            "localpref": 100,
+                                            "metric": 0,
+                                            "next_hop": "10.105.2.1",
+                                            "next_hop_igp_metric": "2",
+                                            "next_hop_via": "vrf vrf_1",
+                                            "origin_codes": "i",
+                                            "originator": "10.105.2.1",
+                                            "recipient_pathid": "0",
+                                            "refresh_epoch": 2,
+                                            "route_info": "4400005007 4400005507 4400005001 4400065100 4400002001 4400002505 4400002005 4400002504 3456 5678 2345",
+                                            "route_status": "received & used",
+                                            "status_codes": "* i",
+                                            "transfer_pathid": "0",
+                                            "update_group": [2, 3, 47],
+                                        },
+                                    },
+                                    "paths": "4 available, best #3, table vrf_1",
+                                    "table_version": "1863365",
+                                },
+                            },
+                            "route_distinguisher": "101:101",
+                        }
+                    }
+                },
+                "vrf_2": {
+                    "address_family": {
+                        "vpnv4": {
+                            "default_vrf": "vrf_2",
+                            "prefixes": {
+                                "0.0.0.0/0": {
+                                    "available_path": "3",
+                                    "best_path": "2",
+                                    "index": {
+                                        1: {
+                                            "community": "65100:106 65100:500 65100:601 65351:1",
+                                            "gateway": "10.105.6.84",
+                                            "localpref": 100,
+                                            "next_hop": "10.105.6.84",
+                                            "next_hop_via": "vrf vrf_2",
+                                            "origin_codes": "i",
+                                            "originator": "10.105.5.17",
+                                            "recipient_pathid": "0",
+                                            "refresh_epoch": 1,
+                                            "route_info": "4400005002 4400005502 4400005001 4400005505 4400005005 4400005504 6789 5678",
+                                            "route_status": "received & used",
+                                            "status_codes": "* ",
+                                            "transfer_pathid": "0",
+                                            "update_group": [1, 29, 54],
+                                        },
+                                        2: {
+                                            "community": "65100:106 65100:500 65100:601 65351:1",
+                                            "gateway": "10.105.6.80",
+                                            "localpref": 100,
+                                            "next_hop": "10.105.6.80",
+                                            "next_hop_via": "vrf vrf_2",
+                                            "origin_codes": "i",
+                                            "originator": "10.105.5.16",
+                                            "recipient_pathid": "0",
+                                            "refresh_epoch": 1,
+                                            "route_info": "4400005002 4400005502 4400005001 4400005505 4400005005 4400005504 6789 5678",
+                                            "route_status": "received & used",
+                                            "status_codes": "*>",
+                                            "transfer_pathid": "0x0",
+                                            "update_group": [1, 29, 54],
+                                        },
+                                        3: {
+                                            "community": "65100:106 65100:500 65100:601 65351:1",
+                                            "gateway": "10.105.5.1",
+                                            "localpref": 100,
+                                            "metric": 0,
+                                            "next_hop": "10.105.5.1",
+                                            "next_hop_igp_metric": "2",
+                                            "next_hop_via": "vrf vrf_2",
+                                            "origin_codes": "i",
+                                            "originator": "10.105.5.1",
+                                            "recipient_pathid": "0",
+                                            "refresh_epoch": 3,
+                                            "route_info": "4400005002 4400005502 4400005001 4400005505 4400005005 4400005504 6789 5678",
+                                            "route_status": "received & used",
+                                            "status_codes": "* i",
+                                            "transfer_pathid": "0",
+                                            "update_group": [1, 29, 54],
+                                        },
+                                    },
+                                    "paths": "3 available, best #2, table vrf_2",
+                                    "table_version": "1814679",
+                                }
+                            },
+                            "route_distinguisher": "102:102",
+                        }
+                    }
+                },
+            }
+        }
+    }
+}

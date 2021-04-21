@@ -40,6 +40,7 @@ class ShowSpanningTreeSummarySchema(MetaParser):
         Optional('root_bridge_for'): str,
         Optional('pvst_simulation'): bool,
         Optional('pvst_simulation_status'): str,
+        Optional('platform_pvst_simulation'): bool,
         Optional("configured_pathcost"): {
             'method': str,
             Optional('operational_value'): str,
@@ -86,18 +87,18 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
         #p3 = re.compile(r'^(?P<name>\w+(?: \S+){,5}?) +is '
         #                 '+(?P<value>disabled|enabled)(?: +but +inactive +in (?P<simulation_value>\S+) +mode)?$')
         p3 = re.compile(r'^(?P<name>\w+(?: \S+){,5}?) +is +(?P<value>disable|disabled|enabled)'
-                         '(?: +but (?P<simulation_value>active|inactive) +in +rapid-pvst +mode)?$')
+                        r'(?: +but (?P<simulation_value>active|inactive) +in +rapid-pvst +mode)?$')
 
         p4 = re.compile(r'^(?P<id>(?!Total)\w+) +(?P<blocking>\d+) +(?P<listening>\d+)'
-                         ' +(?P<learning>\d+) +(?P<forwarding>\d+) +(?P<stp_active>\d+)$')
+                        r' +(?P<learning>\d+) +(?P<forwarding>\d+) +(?P<stp_active>\d+)$')
         p5 = re.compile(r'^(?P<num>\d+) +(msts?|vlans?) +(?P<blockings>\d+) +(?P<listenings>\d+)'
-                         ' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
+                        r' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
 
         p6 = re.compile(r'^(?:Configured +)?Pathcost +method +used +is '
-                         '+(?P<method>\w+)(?: +\(Operational +value +is +(?P<operational_value>\w+)\))?$')
+                        r'+(?P<method>\w+)(?: +\(Operational +value +is +(?P<operational_value>\w+)\))?$')
 
         p7 = re.compile(r'Total +(?P<blockings>\d+) +(?P<listenings>\d+)'
-                         ' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
+                        r' +(?P<learnings>\d+) +(?P<forwardings>\d+) +(?P<stp_actives>\d+)$')
 
         p8 = re.compile(r'^(?P<root_bridge_for>(?:(?:[\w-]+, +)+)?[\w-]+)$')
 
@@ -113,7 +114,8 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
                    'UplinkFast': 'uplink_fast',
                    'Bridge Assurance': 'bridge_assurance',
                    'BackboneFast': 'backbone_fast',
-                   'PVST Simulation': 'pvst_simulation'}
+                   'PVST Simulation': 'pvst_simulation',
+                   'Platform PVST Simulation': 'platform_pvst_simulation'}
 
         for line in out.splitlines():
             line = line.strip()
@@ -145,6 +147,7 @@ class ShowSpanningTreeSummary(ShowSpanningTreeSummarySchema):
             # BackboneFast                 is disabled
             # PVST Simulation              is enabled
             # PVST Simulation Default                 is enabled but inactive in rapid-pvst mode
+            # Platform PVST Simulation is enabled
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -250,7 +253,7 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                     'topology_change_timer': int,
                     'notification_timer': int,
                     Optional('aging_timer'): int,
-                    'interfaces': {
+                    Optional('interfaces'): {
                         Any(): {
                             'status': str,
                             'name': str,
@@ -269,6 +272,7 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                             'forward_delay': int,
                             'hold': int,
                             'link_type': str,
+                            Optional('internal'): bool,
                             Optional('boundary'): str,
                             Optional('peer'): str,
                             Optional('loop_guard'): bool,
@@ -307,70 +311,93 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
         ret_dict = {}
 
         # initial regexp pattern
+        # MST0 is executing the mstp compatible Spanning Tree protocol
         p1 = re.compile(r'^(MST|VLAN)?(?P<inst>\w+) +is +executing +the +(?P<mode>[\w\-]+) +'
-                         'compatible +Spanning +Tree +protocol$')
+                        r'compatible +Spanning +Tree +protocol$')
 
+        # Bridge Identifier has priority 8192, sysid 0, address 5897.bdff.3b3a 
         p2 = re.compile(r'^Bridge +Identifier +has +priority +(?P<bridge_priority>\d+), +'
-                         'sysid +(?P<bridge_sysid>\d+), +'
-                         'address +(?P<bridge_address>[\w\.]+)$')
+                        r'sysid +(?P<bridge_sysid>\d+), +'
+                        r'address +(?P<bridge_address>[\w\.]+)$')
 
+        # Configured hello time 2, max age 20, forward delay 15, transmit hold-count 6 
         p3 = re.compile(r'^Configured +hello +time +(?P<hello_time>\d+), +'
-                         'max +age +(?P<max_age>\d+), +forward +delay +(?P<forwarding_delay>\d+)(, +'
-                         '(transmit|tranmsit) +hold\-count +(?P<hold_count>\d+))?$')
+                        r'max +age +(?P<max_age>\d+), +forward +delay +(?P<forwarding_delay>\d+)(, +'
+                        r'(transmit|tranmsit) +hold\-count +(?P<hold_count>\d+))?$')
 
+        # We are the root of the spanning tree 
         p4 = re.compile(r'^We +are +the +root +of +the +spanning +tree$')
 
+        # Topology change flag not set, detected flag not set 
         p5 = re.compile(r'^Topology +change +flag +(?P<topology_change_flag>[\w\s]+), +'
-                         'detected +flag +(?P<topology_detected_flag>[\w\s]+)$')
+                        r'detected +flag +(?P<topology_detected_flag>[\w\s]+)$')
 
+        # Number of topology changes 471 last change occurred 16:02:38 ago 
         p6 = re.compile(r'^Number +of +topology +changes +(?P<topology_changes>\d+) +'
-                         'last +change +occurred +(?P<time_since_topology_change>[\w\.\:]+)( +ago)?$')
+                        r'last +change +occurred +(?P<time_since_topology_change>[\w\.\:]+)( +ago)?$')
 
+        # from TenGigabitEthernet2/3 
         p7 = re.compile(r'^from +(?P<topology_from_port>[\w\.\/\-]+)$')
 
+        # Times:  hold 1, topology change 35, notification 2
         p8 = re.compile(r'^Times: +hold +(?P<hold_time>\d+), +'
-                         'topology +change +(?P<topology_change_times>\d+), +'
-                         'notification +(?P<notification_times>\d+)$')
+                        r'topology +change +(?P<topology_change_times>\d+), +'
+                        r'notification +(?P<notification_times>\d+)$')
 
+        # hello 2, max age 20, forward delay 15 
         p9 = re.compile(r'^hello +(?P<hello_time>\d+), '
-                         'max +age +(?P<max_age>\d+), '
-                         '+forward +delay +(?P<forwarding_delay>\d+)$')
+                        r'max +age +(?P<max_age>\d+), '
+                        r'+forward +delay +(?P<forwarding_delay>\d+)$')
 
+        # Timers: hello 0, topology change 0, notification 0
         p10 = re.compile(r'^Timers: +hello +(?P<hello_timer>\d+), +'
-                          'topology +change +(?P<topology_change_timer>\d+), +'
-                          'notification +(?P<notification_timer>\d+)'
-                          '(, +aging +(?P<aging_timer>\d+))?$')
+                         r'topology +change +(?P<topology_change_timer>\d+), +'
+                         r'notification +(?P<notification_timer>\d+)'
+                         r'(, +aging +(?P<aging_timer>\d+))?$')
 
+        # Port 2 (GigabitEthernet1/2) of MST0 is designated forwarding
         p11 = re.compile(r'^Port +(?P<port_num>\d+) *\((?P<name>[\w\/\-\.]+)\) +'
-                          'of +(?P<inst>\w+) +is +(?P<status>.*)$')
+                         r'of +(?P<inst>\w+) +is +(?P<status>.*)$')
 
+        # Port path cost 20000, Port priority 128, Port Identifier 128.2. 
         p12 = re.compile(r'^Port +path +cost +(?P<cost>\d+), +'
-                         'Port +priority +(?P<port_priority>\d+), +'
-                         'Port +Identifier +(?P<port_identifier>[\w\.]+)$')
+                         r'Port +priority +(?P<port_priority>\d+), +'
+                         r'Port +Identifier +(?P<port_identifier>[\w\.]+)$')
 
+        # Designated root has priority 8192, address 5897.bdff.3b3a 
         p13 = re.compile(r'^Designated +root +has +priority +(?P<designated_root_priority>\d+), +'
-                          'address +(?P<designated_root_address>[\w\.]+)$')
+                         r'address +(?P<designated_root_address>[\w\.]+)$')
 
+        # Designated bridge has priority 8192, address 5897.bdff.3b3a 
         p14 = re.compile(r'^Designated +bridge +has +priority +(?P<designated_bridge_priority>\d+), +'
-                          'address +(?P<designated_bridge_address>[\w\.]+)$')
+                         r'address +(?P<designated_bridge_address>[\w\.]+)$')
 
+        # Designated port id is 128.2, designated path cost 0 
         p15 = re.compile(r'^Designated +port +id +is +(?P<designated_port_id>[\w\.]+), +'
-                          'designated +path +cost +(?P<designated_path_cost>\d+)'
-                          '( +[\w\s\,]+)?$')
+                         r'designated +path +cost +(?P<designated_path_cost>\d+)'
+                         r'( +[\w\s\,]+)?$')
 
+        # Timers: message age 0, forward delay 0, hold 0 
         p16 = re.compile(r'^Timers: +message +age +(?P<message_age>\d+), +'
-                          'forward +delay +(?P<forward_delay>\d+), +hold +(?P<hold>\d+)$')
+                         r'forward +delay +(?P<forward_delay>\d+), +hold +(?P<hold>\d+)$')
 
+        # Number of transitions to forwarding state: 0 
         p17 = re.compile(r'^Number +of +transitions +to +forwarding +'
-                          'state: +(?P<number_of_forward_transitions>\d+)$')
+                         r'state: +(?P<number_of_forward_transitions>\d+)$')
 
+        # Link type is point-to-point by default, Internal
+        # Link type is point-to-point by default, Internal Pre-STD
+        # Link type is point-to-point by default, Boundary PVST
         p18 = re.compile(r'^Link +type +is +(?P<link_type>[\w\-]+) +by +default'
-                          '(, *(Boundary +(?P<boundary>\w+)|Peer +is +(?P<peer>\w+)))?$')
+                         r'(, *(Boundary +(?P<boundary>\w+)|Peer +is +(?P<peer>\w+)))?'
+                         r'(?:, +(?P<internal>Internal( +\S+)?))?$')
 
+        # Loop guard is enabled by default on the port
         p19 = re.compile(r'^Loop +guard +is +(?P<loop_guard>\w+) +by +default +on +the +port$')
 
+        # BPDU: sent 2349185, received 0
         p20 = re.compile(r'^BPDU: +sent +(?P<bpdu_sent>\d+), +'
-                          'received +(?P<bpdu_received>\d+)$')
+                         r'received +(?P<bpdu_received>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -512,9 +539,16 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 continue
 
             # Link type is point-to-point by default, Boundary PVST
+            # Link type is point-to-point by default, Internal
+            # Link type is point-to-point by default, Internal Pre-STD
             m = p18.match(line)
             if m:
                 group = m.groupdict()
+                internal = group.pop('internal', None)
+                if internal:
+                    internal_bool = True
+                    intf_dict['internal'] = internal_bool
+
                 intf_dict.update({k:v for k, v in group.items() if v})
                 continue
 
@@ -546,7 +580,9 @@ class ShowSpanningTreeMstDetailSchema(MetaParser):
                 'bridge_address': str,
                 'bridge_priority': int,
                 'sysid': int,
-                'root': str,
+                Optional('root'): str,
+                Optional('root_address'): str,
+                Optional('root_priority'): int,
                 Optional('operational'): {
                     'hello_time': int,
                     'forward_delay': int,
@@ -607,55 +643,60 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
 
         # initial regexp pattern
         p1 = re.compile(r'^\#+ +MST(?P<inst>\d+) +'
-                         'vlans +mapped: +(?P<vlan>[\d\-\,\s]+)$')
+                        r'vlans +mapped: +(?P<vlan>[\d\-\,\s]+)$')
 
         p2 = re.compile(r'^Bridge +address +(?P<bridge_address>[\w\.]+) +'
-                         'priority +(?P<bridge_priority>\d+) +'
-                         '\((\d+) +sysid +(?P<sysid>\d+)\)$')
+                        r'priority +(?P<bridge_priority>\d+) +'
+                        r'\((\d+) +sysid +(?P<sysid>\d+)\)$')
         
         p3 = re.compile(r'^Root +this +switch +for +(the +)?(?P<root>[\w\.\s]+)$')
+
+        # Root          address 58ac.78ff.c3f5  priority      8198  (8192 sysid 6)
+        p3_1 = re.compile(r'^Root +address +(?P<root_address>[\w\.]+) +'
+                          r'priority +(?P<root_priority>\d+) +'
+                          r'\((\d+) +sysid +(?P<sysid>\d+)\)$')
         
         p4 = re.compile(r'^Operational +hello +time +(?P<hello_time>\d+), +'
-                         'forward +delay +(?P<forward_delay>\d+), +'
-                         'max +age +(?P<max_age>\d+), +'
-                         'txholdcount +(?P<tx_hold_count>\d+)$')
+                        r'forward +delay +(?P<forward_delay>\d+), +'
+                        r'max +age +(?P<max_age>\d+), +'
+                        r'txholdcount +(?P<tx_hold_count>\d+)$')
         
         p5 = re.compile(r'^Configured +hello +time +(?P<hello_time>\d+), +'
-                         'forward +delay +(?P<forward_delay>\d+), +'
-                         'max +age +(?P<max_age>\d+), +'
-                         'max +hops +(?P<max_hops>\d+)$')
+                        r'forward +delay +(?P<forward_delay>\d+), +'
+                        r'max +age +(?P<max_age>\d+), +'
+                        r'max +hops +(?P<max_hops>\d+)$')
         
         p6 = re.compile(r'^(?P<name>[\w\-\.\/]+) +of +'
-                         'MST(\d+) +is +(?P<status>[\w\s]+)'
-                         '( +\((?P<broken_reason>.*)\))?$')
+                        r'MST(\d+) +is +(?P<status>[\w\s]+)'
+                        r'( +\((?P<broken_reason>.*)\))?$')
         
         p7 = re.compile(r'^Port +info +port +id +'
-                         '(?P<port_id>[\d\.]+) +'
-                         'priority +(?P<port_priority>\d+) +'
-                         'cost +(?P<cost>\d+)$')
+                        r'(?P<port_id>[\d\.]+) +'
+                        r'priority +(?P<port_priority>\d+) +'
+                        r'cost +(?P<cost>\d+)$')
         
         p8 = re.compile(r'^Designated +root +address +'
-                         '(?P<designated_root_address>[\w\.]+) +'
-                         'priority +(?P<designated_root_priority>\d+) +'
-                         'cost +(?P<designated_root_cost>\d+)$')
+                        r'(?P<designated_root_address>[\w\.]+) +'
+                        r'priority +(?P<designated_root_priority>\d+) +'
+                        r'cost +(?P<designated_root_cost>\d+)$')
         
         p9 = re.compile(r'^Design\. +regional +root +address +'
-                         '(?P<designated_regional_root_address>[\w\.]+) +'
-                         'priority +(?P<designated_regional_root_priority>\d+) +'
-                         'cost +(?P<designated_regional_root_cost>\d+)$')
+                        r'(?P<designated_regional_root_address>[\w\.]+) +'
+                        r'priority +(?P<designated_regional_root_priority>\d+) +'
+                        r'cost +(?P<designated_regional_root_cost>\d+)$')
         
         p10 = re.compile(r'^Designated +bridge +address +'
-                         '(?P<designated_bridge_address>[\w\.]+) +'
-                         'priority +(?P<designated_bridge_priority>\d+) +'
-                         'port +id +(?P<designated_bridge_port_id>[\d\.]+)$')
+                         r'(?P<designated_bridge_address>[\w\.]+) +'
+                         r'priority +(?P<designated_bridge_priority>\d+) +'
+                         r'port +id +(?P<designated_bridge_port_id>[\d\.]+)$')
         
         p11 = re.compile(r'^Timers: +message +expires +in +(?P<message_expires>\d+) +sec, +'
-                          'forward +delay +(?P<forward_delay>\d+), '
-                          'forward +transitions +(?P<forward_transitions>\d+)$')
+                         r'forward +delay +(?P<forward_delay>\d+), '
+                         r'forward +transitions +(?P<forward_transitions>\d+)$')
         
         p12 = re.compile(r'^Bpdus +(\(\w+\) *)?'
-                          'sent +(?P<bpdu_sent>\d+), +'
-                          'received +(?P<bpdu_received>\d+)')
+                         r'sent +(?P<bpdu_sent>\d+), +'
+                         r'received +(?P<bpdu_received>\d+)')
 
 
         for line in out.splitlines():
@@ -683,6 +724,14 @@ class ShowSpanningTreeMstDetail(ShowSpanningTreeMstDetailSchema):
             m = p3.match(line)
             if m:
                 inst_dict['root'] = m.groupdict()['root']
+                continue
+
+            # Root          address 58ac.78ff.c3f5  priority      8198  (8192 sysid 6)
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                inst_dict['root_address'] = group.pop('root_address')
+                inst_dict.update({k:int(v) for k, v in group.items()})
                 continue
             
             # Operational   hello time 10, forward delay 30, max age 40, txholdcount 20

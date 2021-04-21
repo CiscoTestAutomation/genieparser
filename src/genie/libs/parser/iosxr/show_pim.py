@@ -4,6 +4,8 @@ IOSXR parsers for the following show commands:
     * 'show pim vrf <WORD> <WORD> mstatic'
     * 'show pim vrf <WORD> <WORD> interface detail'
     * 'show pim vrf <WORD> <WORD> rpf summary'
+    * 'show pim topology summary'
+    * 'show pim vrf <vrf> topology summary
 """
 
 # Python
@@ -24,12 +26,12 @@ class ShowPimVrfMstaticSchema(MetaParser):
     schema = {
         'vrf':
             {Any():
-                {'address_family': 
-                    {Any(): 
-                        {'mroute': 
-                            {Any(): 
-                                {'path': 
-                                    {Any(): 
+                {'address_family':
+                    {Any():
+                        {'mroute':
+                            {Any():
+                                {'path':
+                                    {Any():
                                         {'neighbor_address': str,
                                         'interface_name': str,
                                         'admin_distance': int,
@@ -58,14 +60,14 @@ class ShowPimVrfMstatic(ShowPimVrfMstaticSchema):
             out = self.device.execute(self.cli_command.format(vrf=vrf, af=af))
         else:
             out = output
-        
+
         # Init vars
         parsed_dict = {}
 
         for line in out.splitlines():
             line = line.rstrip()
 
-            # * 10.10.10.10/32 via GigabitEthernet0/0/0/0 with nexthop 192.168.1.1 and distance 0 
+            # * 10.10.10.10/32 via GigabitEthernet0/0/0/0 with nexthop 192.168.1.1 and distance 0
             p1 = re.compile(r'^\s*(?P<var>(\*))'
                              ' *(?P<address>(\S+))'
                              '\/(?P<prefix_mask>[0-9]+) +via'
@@ -126,10 +128,10 @@ class ShowPimVrfInterfaceDetailSchema(MetaParser):
     schema = {
         'vrf':
             {Any():
-                {'interfaces': 
-                    {Any(): 
-                        {'address_family': 
-                            {Any(): 
+                {'interfaces':
+                    {Any():
+                        {'address_family':
+                            {Any():
                                 {'oper_status': str,
                                 'nbr_count': int,
                                 'nbr_count': int,
@@ -138,7 +140,7 @@ class ShowPimVrfInterfaceDetailSchema(MetaParser):
                                 'primary_address': str,
                                 'address': list,
                                 'flags': str,
-                                'bfd': 
+                                'bfd':
                                     {'enable': bool,
                                     'interval': float,
                                     'detection_multiplier': int,
@@ -173,7 +175,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
             out = self.device.execute(self.cli_command.format(vrf=vrf, af=af))
         else:
             out = output
-        
+
         # Init vars
         parsed_dict = {}
 
@@ -250,7 +252,7 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                 sub_dict['primary_address'] = m.groupdict()['primary_address']
                 sub_dict['address'] = address_list
                 continue
-            
+
             # Address : 2001:db8:2:2::2
             p5 = re.compile(r'^Address *: +(?P<address>(\S+))$')
             m = p5.match(line)
@@ -288,8 +290,9 @@ class ShowPimVrfInterfaceDetail(ShowPimVrfInterfaceDetailSchema):
                     sub_dict['bfd']['detection_multiplier'] = dmultiplier
                     continue
 
+            # DR : 10.0.0.2
             # DR : this system
-            p8 = re.compile(r'^DR *: (?P<dr>[a-zA-Z\s]+)$')
+            p8 = re.compile(r'^DR *: (?P<dr>[\s\w\.\:]+)$')
             m = p8.match(line)
             if m:
                 sub_dict['dr'] = m.groupdict()['dr']
@@ -341,8 +344,8 @@ class ShowPimVrfRpfSummarySchema(MetaParser):
     schema = {
         'vrf':
             {Any():
-                {'address_family': 
-                    {Any(): 
+                {'address_family':
+                    {Any():
                         {Optional('isis_mcast_topology'): bool,
                         Optional('mo_frr_flow_based'): bool,
                         Optional('mo_frr_rib'): bool,
@@ -352,8 +355,8 @@ class ShowPimVrfRpfSummarySchema(MetaParser):
                         Optional('rib_convergence_timeout'): str,
                         Optional('rib_convergence_time_left'): str,
                         Optional('multipath'): bool,
-                        Optional('table'): 
-                            {Any(): 
+                        Optional('table'):
+                            {Any():
                                 {'pim_rpf_registrations': int,
                                 'rib_table_converged': bool,
                                 },
@@ -381,7 +384,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
             out = self.device.execute(self.cli_command.format(vrf=vrf, af=af))
         else:
             out = output
-        
+
         # Init vars
         parsed_dict = {}
         created = False
@@ -424,7 +427,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                 else:
                     sub_dict['mo_frr_flow_based'] = True
                 continue
-            
+
             # MoFRR RIB           Not configured
             p3 = re.compile(r'^\s*MoFRR +RIB +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p3.match(line)
@@ -435,7 +438,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                 else:
                     sub_dict['mo_frr_rib'] = True
                 continue
-            
+
             # RUMP MuRIB          Not enabled
             p4 = re.compile(r'^\s*RUMP +MuRIB +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
             m = p4.match(line)
@@ -465,7 +468,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                 if m.groupdict()['table']:
                     sub_dict['default_rpf_table'] = str(m.groupdict()['table'])
                 continue
-            
+
             # RIB Convergence Timeout Value: 00:30:00
             p7 = re.compile(r'^\s*RIB +Convergence +Timeout +Value:'
                              ' +(?P<time>(\S+))$')
@@ -475,7 +478,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                     sub_dict['rib_convergence_timeout'] = \
                         str(m.groupdict()['time'])
                 continue
-            
+
             # RIB Convergence Time Left:     00:00:00
             p8 = re.compile(r'^\s*RIB +Convergence +Time Left:'
                              ' +(?P<time>(\S+))$')
@@ -485,7 +488,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                     sub_dict['rib_convergence_time_left'] = \
                         str(m.groupdict()['time'])
                 continue
-            
+
             # Multipath RPF Selection is Enabled
             p9 = re.compile(r'^\s*Multipath +RPF +Selection +is'
                              ' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
@@ -509,7 +512,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                     if table not in sub_dict['table']:
                         sub_dict['table'][table] = {}
                     continue
-            
+
             # PIM RPF Registrations = 0
             p10 = re.compile(r'^\s*PIM +RPF +Registrations += (?P<var>[0-9]+)$')
             m = p10.match(line)
@@ -517,7 +520,7 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                 sub_dict['table'][table]['pim_rpf_registrations'] = \
                     int(m.groupdict()['var'])
                 continue
-            
+
             # RIB Table converged
             p11 = re.compile(r'^\s*RIB +Table'
                               ' +(?P<status>[a-zA-Z0-9\s\_\-]+)$')
@@ -528,6 +531,131 @@ class ShowPimVrfRpfSummary(ShowPimVrfRpfSummarySchema):
                     sub_dict['table'][table]['rib_table_converged'] = True
                 else:
                     sub_dict['table'][table]['rib_table_converged'] = False
+                continue
+
+        return parsed_dict
+
+
+# ==========================================================================
+# Schema for 'show pim topology summary'
+# ==========================================================================
+class ShowPimTopologySummarySchema(MetaParser):
+    """ Schema for show pim [vrf <vrf>] topology summary. """
+
+    schema = {
+        'vrf':
+            {Any():
+                {'active_group_ranges': int,
+                 'no_group_ranges': int,
+                 'no_g_routes': int,
+                 'no_sg_rpt_routes': int,
+                 'no_sg_routes': int
+                 },
+             },
+        }
+
+
+# ==========================================================================
+# Parser for 'show pim topology summary'
+# ==========================================================================
+class ShowPimTopologySummary(ShowPimTopologySummarySchema):
+    """
+    Parser for show pim [vrf <vrf>] topology summary.
+
+    Parameters
+    ----------
+    device : Router
+        Device to be parsed.
+    vrf : str, optional
+        Selected vrf to parse.
+
+    Returns
+    -------
+    parsed_dict : dict
+        Contains the CLI output parsed into a dictionary.
+
+    Examples
+    --------
+    >>> dev.parse('show pim topology summary')
+
+    {'vrf':
+        {'default':
+            {'active_group_ranges': 4,
+             'no_group_ranges': 5,
+             'no_g_routes': 2,
+             'no_sg_rpt_routes': 0,
+             'no_sg_routes': 1
+            }
+        }
+    }
+
+    """
+
+    cli_command = ["show pim topology summary",
+                   "show pim vrf {vrf} topology summary"]
+
+    def cli(self, vrf='', output=None):
+
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        parsed_dict = {}
+
+        # PIM Topology Summary for VRF vpn1
+        p1 = re.compile(r"PIM Topology Summary for VRF (?P<vrf>\S+)")
+
+        # No. of group ranges = 6 (Active group ranges = 5)
+        p2 = re.compile(r"No\. of group ranges = (?P<no_group_ranges>\d+) "
+                        r"\(Active group ranges = (?P<active_group_ranges>\d+)\)")
+
+        # No. of (*,G) routes = 1
+        p3 = re.compile(r"No\. of \(\*,G\) routes = (?P<no_g_routes>\d+)")
+
+        # No. of (S,G) routes = 1100
+        p4 = re.compile(r"No\. of \(S,G\) routes = (?P<no_sg_routes>\d+)")
+
+        # No. of (S,G)RPT routes = 0
+        p5 = re.compile(r"No\. of \(S,G\)RPT routes = (?P<no_sg_rpt_routes>\d+)")
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                vrf = group['vrf']
+                vrf_dict = parsed_dict.setdefault('vrf', {}).setdefault(vrf, {})
+                continue
+
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                vrf_dict['no_group_ranges'] = int(group['no_group_ranges'])
+                vrf_dict['active_group_ranges'] = int(group['active_group_ranges'])
+                continue
+
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                vrf_dict['no_g_routes'] = int(group['no_g_routes'])
+                continue
+
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                vrf_dict['no_sg_routes'] = int(group['no_sg_routes'])
+                continue
+
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                vrf_dict['no_sg_rpt_routes'] = int(group['no_sg_rpt_routes'])
                 continue
 
         return parsed_dict

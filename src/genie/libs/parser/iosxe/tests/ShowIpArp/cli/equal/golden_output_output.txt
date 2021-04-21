@@ -1,0 +1,6 @@
+
+Protocol  Address          Age (min)  Hardware Addr   Type   Interface
+Internet  10.12.90.1              -   fa16.3eff.9c9e  ARPA   GigabitEthernet2.390
+Internet  10.12.90.2            139   fa16.3eff.5a76  ARPA   GigabitEthernet2.390
+Internet  10.12.110.1             -   fa16.3eff.9c9e  ARPA   GigabitEthernet2.410
+            

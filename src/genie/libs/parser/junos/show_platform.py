@@ -12,7 +12,7 @@ import re
 # Genie
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, \
-                    Optional, Use, SchemaTypeError
+                    Optional, Use
 
 
 # ===========================
@@ -75,8 +75,10 @@ class FileList(FileListSchema):
         p2 = re.compile(r'^(?P<file>([a-zA-Z0-9\-\_\.\@]+))(?: +\-\> +(?P<path>(.*)))?$')
 
         # /root/filename999
+        # /root/filename999.cfg
         # /root/filename999: No such file or directory
-        p3 = re.compile(r'^\/(?P<dir>(\S+))\/(?P<file>([a-zA-Z0-9\-\_\/]+))'
+        # /root/filename999.cfg: No such file or directory
+        p3 = re.compile(r'^\/(?P<dir>(\S+))\/(?P<file>([a-zA-Z0-9\-\_\/\.]+))'
                          '(?P<missing>(?:\: +No +such +file +or +directory)?)$')
 
         for line in out.splitlines():
@@ -139,7 +141,7 @@ class ShowVersionSchema(MetaParser):
 
     def validate_package_info_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('package infomation is not a list')
+            raise Exception('package infomation is not a list')
         package_info_schema = Schema(
             {
                 "comment": str,
@@ -260,7 +262,7 @@ class FileListDetailSchema(MetaParser):
     def validate_file_information_list(value):
         # Pass file-information of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('file-information is not a list')
+            raise Exception('file-information is not a list')
         # Create protocols Schema
         file_information_schema = Schema({
             "file-date": {

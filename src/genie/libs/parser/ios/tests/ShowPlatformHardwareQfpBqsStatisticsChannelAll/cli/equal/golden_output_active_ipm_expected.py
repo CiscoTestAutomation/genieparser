@@ -1,0 +1,148 @@
+expected_output = {
+    "channel": {
+        1: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        2: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        3: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        4: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        5: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        6: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        7: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "016a5004b0",
+            "goodpkts": "0000c40f64",
+        },
+        8: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "00153685bd",
+            "goodpkts": "00000afbe9",
+        },
+        9: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0012139723",
+            "goodpkts": "0000288e4f",
+        },
+        10: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "00000b2184",
+            "goodpkts": "000000223f",
+        },
+        11: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0023f74c7a",
+            "goodpkts": "000053ff08",
+        },
+        12: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000305734",
+            "goodpkts": "0000009533",
+        },
+        13: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000010ce4",
+            "goodpkts": "0000000749",
+        },
+        14: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        15: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        16: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        17: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        18: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        19: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "000aba8f64",
+            "goodpkts": "00000d968e",
+        },
+        20: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        21: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        22: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        23: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+        24: {
+            "badbytes": "0000000000",
+            "badpkts": "0000000000",
+            "goodbytes": "0000000000",
+            "goodpkts": "0000000000",
+        },
+    }
+}

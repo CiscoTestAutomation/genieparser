@@ -15,23 +15,24 @@ with patch.dict('sys.modules',
     from genie.parsergen import oper_check
     from genie.parsergen import oper_fill_tabular
 
-import xml.etree.ElementTree as ET
-
 from pyats.topology import Device
 
 from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
-from genie.libs.parser.iosxe.show_interface import ShowInterfacesSwitchport,\
-                                        ShowIpInterfaceBriefPipeVlan,\
-                                        ShowInterfaces, ShowIpInterface,\
-                                        ShowIpv6Interface, \
-                                        ShowInterfacesTrunk, \
-                                        ShowInterfacesCounters, \
-                                        ShowInterfacesAccounting, \
-                                        ShowIpInterfaceBriefPipeIp,\
-                                        ShowInterfacesStats,\
-                                        ShowInterfacesDescription,\
-                                        ShowInterfacesStatus
+from genie.libs.parser.iosxe.show_interface import (
+                                        ShowInterfaces,
+                                        ShowIpInterface,
+                                        ShowIpv6Interface,
+                                        ShowInterfacesStats,
+                                        ShowInterfacesTrunk,
+                                        ShowInterfacesStatus,
+                                        ShowInterfacesCounters,
+                                        ShowInterfacesAccounting,
+                                        ShowInterfacesSwitchport,
+                                        ShowInterfacesDescription,
+                                        ShowIpInterfaceBriefPipeIp,
+                                        ShowIpInterfaceBriefPipeVlan,
+                                        ShowInterfaceTransceiverDetail)
 
 
 class TestShowInterfaceParsergen(unittest.TestCase):
@@ -142,7 +143,7 @@ class TestShowIpInterfacesBriefPipeIp(unittest.TestCase):
 #                   <name>1</name>
 #                   <ip>
 #                     <no-address>
-#                       <address>false</address>
+#                       <address>False</address>
 #                     </no-address>
 #                   </ip>
 #                   <shutdown/>
@@ -355,7 +356,7 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
         Capture Mode Disabled
         Capture VLANs Allowed: ALL
 
-        Protected: false
+        Protected: False
         Unknown unicast blocked: disabled
         Unknown multicast blocked: disabled
         Appliance trust: none
@@ -385,7 +386,7 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
         Capture Mode Disabled
         Capture VLANs Allowed: ALL
 
-        Protected: false
+        Protected: False
         Unknown unicast blocked: disabled
         Unknown multicast blocked: disabled
         Appliance trust: none
@@ -414,7 +415,7 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
         Capture Mode Disabled
         Capture VLANs Allowed: ALL
                   
-        Protected: false
+        Protected: False
         Unknown unicast blocked: disabled
         Unknown multicast blocked: disabled
         Appliance trust: none
@@ -443,7 +444,7 @@ class TestShowInterfacesSwitchport(unittest.TestCase):
             1111,1113,1200-1234,1400-1456,1567
         Pruning VLANs Enabled: 2-1001
 
-        Protected: false
+        Protected: False
         Unknown unicast blocked: disabled
         Unknown multicast blocked: disabled
         Appliance trust: none
@@ -15118,53 +15119,53 @@ Tunnel10 is up, line protocol is up
 
     golden_interface_output_4 = { 'execute.return_value': '''
         GigabitEthernet0/0/0 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
-          Description: Genie to Genie-next for L2 Fiber lines ***
-          MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
-             reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
-          Keepalive not supported
-          Full Duplex, 1000Mbps, link type is auto, media type is T
-          output flow-control is on, input flow-control is on
-          ARP type: ARPA, ARP Timeout 04:00:00
-          Last input 00:00:00, output 00:00:00, output hang never
-          Last clearing of "show interface" counters never
-          Input queue: 0/375/9483/6181 (size/max/drops/flushes); Total output drops: 85587314
-          Queueing strategy: Class-based queueing
-          Output queue: 0/40 (size/max)
-          5 minute input rate 10684000 bits/sec, 5031 packets/sec
-          5 minute output rate 28954000 bits/sec, 5003 packets/sec
-             37252955968 packets input, 25781698415464 bytes, 0 no buffer
-             Received 110594334 broadcasts (0 IP multicasts)
-             0 runts, 0 giants, 0 throttles
-             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
-             0 watchdog, 1050221981 multicast, 0 pause input
-             35433262342 packets output, 29981591557915 bytes, 0 underruns
-             0 output errors, 0 collisions, 2 interface resets
-             11976504 unknown protocol drops
-             0 babbles, 0 late collision, 0 deferred
-             0 lost carrier, 0 no carrier, 0 pause output
-             0 output buffer failures, 0 output buffers swapped out
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
+          Description: Genie to Genie-next for L2 Fiber lines ***
+          MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
+             reliability 255/255, txload 7/255, rxload 2/255
+          Encapsulation 802.1Q Virtual LAN, Vlan ID  1., loopback not set
+          Keepalive not supported
+          Full Duplex, 1000Mbps, link type is auto, media type is T
+          output flow-control is on, input flow-control is on
+          ARP type: ARPA, ARP Timeout 04:00:00
+          Last input 00:00:00, output 00:00:00, output hang never
+          Last clearing of "show interface" counters never
+          Input queue: 0/375/9483/6181 (size/max/drops/flushes); Total output drops: 85587314
+          Queueing strategy: Class-based queueing
+          Output queue: 0/40 (size/max)
+          5 minute input rate 10684000 bits/sec, 5031 packets/sec
+          5 minute output rate 28954000 bits/sec, 5003 packets/sec
+             37252955968 packets input, 25781698415464 bytes, 0 no buffer
+             Received 110594334 broadcasts (0 IP multicasts)
+             0 runts, 0 giants, 0 throttles
+             0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored
+             0 watchdog, 1050221981 multicast, 0 pause input
+             35433262342 packets output, 29981591557915 bytes, 0 underruns
+             0 output errors, 0 collisions, 2 interface resets
+             11976504 unknown protocol drops
+             0 babbles, 0 late collision, 0 deferred
+             0 lost carrier, 0 no carrier, 0 pause output
+             0 output buffer failures, 0 output buffers swapped out
         GigabitEthernet0/0/0.105 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
-          Description: Another Genie L2 connection
-          Internet address is 10.95.2.252/24
-          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
-             reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
-          ARP type: ARPA, ARP Timeout 04:00:00
-          Keepalive not supported
-          Last clearing of "show interface" counters never
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
+          Description: Another Genie L2 connection
+          Internet address is 10.95.2.252/24
+          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
+             reliability 255/255, txload 7/255, rxload 2/255
+          Encapsulation 802.1Q Virtual LAN, Vlan ID  105.
+          ARP type: ARPA, ARP Timeout 04:00:00
+          Keepalive not supported
+          Last clearing of "show interface" counters never
         GigabitEthernet0/0/0.1761524 is up, line protocol is up
-          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
-          Description: *** Genie VLAN  ***
-          Internet address is 10.121.113.98/27
-          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
-             reliability 255/255, txload 7/255, rxload 2/255
-          Encapsulation QinQ Virtual LAN, outer ID  176, inner ID 1524
-          ARP type: ARPA, ARP Timeout 04:00:00
-          Keepalive not supported
-          Last clearing of "show interface" counters never    
+          Hardware is BUILT-IN-EPA-8x1G, address is 1ca1.88ff.c119 (bia 1ca1.88ff.c119)
+          Description: *** Genie VLAN  ***
+          Internet address is 10.121.113.98/27
+          MTU 1500 bytes, BW 100000 Kbit/sec, DLY 10 usec,
+             reliability 255/255, txload 7/255, rxload 2/255
+          Encapsulation QinQ Virtual LAN, outer ID  176, inner ID 1524
+          ARP type: ARPA, ARP Timeout 04:00:00
+          Keepalive not supported
+          Last clearing of "show interface" counters never    
     '''
     }
 
@@ -17397,6 +17398,257 @@ class TestShowIpInterface(unittest.TestCase):
         IPv4 WCCP Redirect exclude is disabled
     '''}
 
+    golden_parsed_output4 = {
+ 'GigabitEthernet0/0/0': {'address_determined_by': 'non-volatile memory',
+                           'bgp_policy_mapping': False,
+                           'directed_broadcast_forwarding': False,
+                           'enabled': True,
+                           'icmp': {'mask_replies': 'never sent',
+                                    'redirects': 'always sent',
+                                    'unreachables': 'always sent'},
+                           'input_features': ['MCI Check'],
+                           'ip_access_violation_accounting': False,
+                           'ip_cef_switching': True,
+                           'ip_cef_switching_turbo_vector': True,
+                           'ip_fast_switching': True,
+                           'ip_flow_switching': False,
+                           'ip_multicast_distributed_fast_switching': False,
+                           'ip_multicast_fast_switching': True,
+                           'ip_null_turbo_vector': True,
+                           'ip_output_packet_accounting': False,
+                           'ip_route_cache_flags': ['CEF', 'Fast'],
+                           'ipv4': {'10.236.74.233/30': {'broadcast_address': '255.255.255.255',
+                                                         'ip': '10.236.74.233',
+                                                         'prefix_length': '30',
+                                                         'secondary': False}},
+                           'local_proxy_arp': False,
+                           'mtu': 1500,
+                           'network_address_translation': False,
+                           'oper_status': 'up',
+                           'policy_routing': False,
+                           'probe_proxy_name_replies': False,
+                           'proxy_arp': True,
+                           'router_discovery': False,
+                           'rtp_ip_header_compression': False,
+                           'security_level': 'default',
+                           'split_horizon': True,
+                           'tcp_ip_header_compression': False,
+                           'unicast_routing_topologies': {'topology': {'base': {
+'status': 'up'}}},
+                           'wccp': {'redirect_exclude': False,
+                                    'redirect_inbound': False,
+                                    'redirect_outbound': False}},
+  'GigabitEthernet0/0/1.110': {'address_determined_by': 'non-volatile memory',
+                               'bgp_policy_mapping': False,
+                               'directed_broadcast_forwarding': False,
+                               'enabled': True,
+                               'helper_address': ['10.212.2.37', '10.212.0.71'],
+                               'icmp': {'mask_replies': 'never sent',
+                                        'redirects': 'always sent',
+                                        'unreachables': 'always sent'},
+                               'input_features': ['MCI Check'],
+                               'ip_access_violation_accounting': False,
+                               'ip_cef_switching': True,
+                               'ip_cef_switching_turbo_vector': True,
+                               'ip_fast_switching': True,
+                               'ip_flow_switching': False,
+                               'ip_multicast_distributed_fast_switching': False,
+                               'ip_multicast_fast_switching': True,
+                               'ip_null_turbo_vector': True,
+                               'ip_output_packet_accounting': False,
+                               'ip_route_cache_flags': ['CEF', 'Fast'],
+                               'ipv4': {'10.99.235.1/25': {'broadcast_address':
+'255.255.255.255',
+                                                           'ip': '10.99.235.1',
+                                                           'prefix_length': '25'
+,
+                                                           'secondary': False}},
+                               'local_proxy_arp': False,
+                               'mtu': 1500,
+                               'network_address_translation': False,
+                               'oper_status': 'up',
+                               'policy_routing': False,
+                               'probe_proxy_name_replies': False,
+                               'proxy_arp': True,
+                               'router_discovery': False,
+                               'rtp_ip_header_compression': False,
+                               'security_level': 'default',
+                               'split_horizon': True,
+                               'tcp_ip_header_compression': False,
+                               'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                               'wccp': {'redirect_exclude': False,
+                                        'redirect_inbound': False,
+                                        'redirect_outbound': False}},
+  'GigabitEthernet0/0/1.304': {'address_determined_by': 'non-volatile memory',
+                               'bgp_policy_mapping': False,
+                               'directed_broadcast_forwarding': False,
+                               'enabled': True,
+                               'helper_address': ['10.99.216.4'],
+                               'icmp': {'mask_replies': 'never sent',
+                                        'redirects': 'always sent',
+                                        'unreachables': 'always sent'},
+                               'input_features': ['MCI Check'],
+                               'ip_access_violation_accounting': False,
+                               'ip_cef_switching': True,
+                               'ip_cef_switching_turbo_vector': True,
+                               'ip_fast_switching': True,
+                               'ip_flow_switching': False,
+                               'ip_multicast_distributed_fast_switching': False,
+                               'ip_multicast_fast_switching': True,
+                               'ip_null_turbo_vector': True,
+                               'ip_output_packet_accounting': False,
+                               'ip_route_cache_flags': ['CEF', 'Fast'],
+                               'ipv4': {'10.194.235.1/25': {'broadcast_address':'255.255.255.255',
+                                                            'ip': '10.194.235.1' ,
+                                                            'prefix_length': '25',
+                                                            'secondary': False}}
+,
+                               'local_proxy_arp': False,
+                               'mtu': 1500,
+                               'network_address_translation': False,
+                               'oper_status': 'up',
+                               'policy_routing': False,
+                               'probe_proxy_name_replies': False,
+                               'proxy_arp': True,
+                               'router_discovery': False,
+                               'rtp_ip_header_compression': False,
+                               'security_level': 'default',
+                               'split_horizon': True,
+                               'tcp_ip_header_compression': False,
+                               'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                               'wccp': {'redirect_exclude': False,
+                                        'redirect_inbound': False,
+                                        'redirect_outbound': False}}}
+
+
+    golden_output4 = {
+        "execute.return_value":
+        'GigabitEthernet0/0/0 is up, line protocol is up\n'
+'  Internet address is 10.236.74.233/30\n'
+'  Broadcast address is 255.255.255.255\n'
+'  Address determined by non-volatile memory\n'
+'  MTU is 1500 bytes\n'
+'  Helper address is not set\n'
+'  Directed broadcast forwarding is disabled\n'
+'  Outgoing Common access list is not set\n'
+'  Outgoing access list is not set\n'
+'  Inbound Common access list is not set\n'
+'  Inbound  access list is not set\n'
+'  Proxy ARP is enabled\n'
+'  Local Proxy ARP is disabled\n'
+'  Security level is default\n'
+'  Split horizon is enabled\n'
+'  ICMP redirects are always sent\n'
+'  ICMP unreachables are always sent\n'
+'  ICMP mask replies are never sent\n'
+'  IP fast switching is enabled\n'
+'  IP Flow switching is disabled\n'
+'  IP CEF switching is enabled\n'
+'  IP CEF switching turbo vector\n'
+'  IP Null turbo vector\n'
+'  Associated unicast routing topologies:\n'
+'        Topology "base", operation state is UP\n'
+'  IP multicast fast switching is enabled\n'
+'  IP multicast distributed fast switching is disabled\n'
+'  IP route-cache flags are Fast, CEF\n'
+'  Router Discovery is disabled\n'
+'  IP output packet accounting is disabled\n'
+'  IP access violation accounting is disabled\n'
+'  TCP/IP header compression is disabled\n'
+'  RTP/IP header compression is disabled\n'
+'  Probe proxy name replies are disabled\n'
+'  Policy routing is disabled\n'
+'  Network address translation is disabled\n'
+'  BGP Policy Mapping is disabled\n'
+'  Input features: MCI Check\n'
+'  IPv4 WCCP Redirect outbound is disabled\n'
+'  IPv4 WCCP Redirect inbound is disabled\n'
+'  IPv4 WCCP Redirect exclude is disabled\n'
+'GigabitEthernet0/0/1.110 is up, line protocol is up\n'
+'  Internet address is 10.99.235.1/25\n'
+'  Broadcast address is 255.255.255.255\n'
+'  Address determined by non-volatile memory\n'
+'  MTU is 1500 bytes\n'
+'  Helper addresses are 10.212.2.37\n'
+'                       10.212.0.71\n'
+'  Directed broadcast forwarding is disabled\n'
+'  Outgoing Common access list is not set\n'
+'  Outgoing access list is not set\n'
+'  Inbound Common access list is not set\n'
+'  Inbound  access list is not set\n'
+'  Proxy ARP is enabled\n'
+'  Local Proxy ARP is disabled\n'
+'  Security level is default\n'
+'  Split horizon is enabled\n'
+'  ICMP redirects are always sent\n'
+'  ICMP unreachables are always sent\n'
+'  ICMP mask replies are never sent\n'
+'  IP fast switching is enabled\n'
+'  IP Flow switching is disabled\n'
+'  IP CEF switching is enabled\n'
+'  IP CEF switching turbo vector\n'
+'  IP Null turbo vector\n'
+'  Associated unicast routing topologies:\n'
+'        Topology "base", operation state is UP\n'
+'  IP multicast fast switching is enabled\n'
+'  IP multicast distributed fast switching is disabled\n'
+'  IP route-cache flags are Fast, CEF\n'
+'  Router Discovery is disabled\n'
+'  IP output packet accounting is disabled\n'
+'  IP access violation accounting is disabled\n'
+'  TCP/IP header compression is disabled\n'
+'  RTP/IP header compression is disabled\n'
+'  Probe proxy name replies are disabled\n'
+'  Policy routing is disabled\n'
+'  Network address translation is disabled\n'
+'  BGP Policy Mapping is disabled\n'
+'  Input features: MCI Check\n'
+'  IPv4 WCCP Redirect outbound is disabled\n'
+'  IPv4 WCCP Redirect inbound is disabled\n'
+'  IPv4 WCCP Redirect exclude is disabled\n'
+'GigabitEthernet0/0/1.304 is up, line protocol is up\n'
+'  Internet address is 10.194.235.1/25\n'
+'  Broadcast address is 255.255.255.255\n'
+'  Address determined by non-volatile memory\n'
+'  MTU is 1500 bytes\n'
+'  Helper address is 10.99.216.4\n'
+'  Directed broadcast forwarding is disabled\n'
+'  Outgoing Common access list is not set\n'
+'  Outgoing access list is not set\n'
+'  Inbound Common access list is not set\n'
+'  Inbound  access list is not set\n'
+'  Proxy ARP is enabled\n'
+'  Local Proxy ARP is disabled\n'
+'  Security level is default\n'
+'  Split horizon is enabled\n'
+'  ICMP redirects are always sent\n'
+'  ICMP unreachables are always sent\n'
+'  ICMP mask replies are never sent\n'
+'  IP fast switching is enabled\n'
+'  IP Flow switching is disabled\n'
+'  IP CEF switching is enabled\n'
+'  IP CEF switching turbo vector\n'
+'  IP Null turbo vector\n'
+'  Associated unicast routing topologies:\n'
+'        Topology "base", operation state is UP\n'
+'  IP multicast fast switching is enabled\n'
+'  IP multicast distributed fast switching is disabled\n'
+'  IP route-cache flags are Fast, CEF\n'
+'  Router Discovery is disabled\n'
+'  IP output packet accounting is disabled\n'
+'  IP access violation accounting is disabled\n'
+'  TCP/IP header compression is disabled\n'
+'  RTP/IP header compression is disabled\n'
+'  Probe proxy name replies are disabled\n'
+'  Policy routing is disabled\n'
+'  Network address translation is disabled\n'
+'  BGP Policy Mapping is disabled\n'
+'  Input features: MCI Check\n'
+'  IPv4 WCCP Redirect outbound is disabled\n'
+'  IPv4 WCCP Redirect inbound is disabled\n'
+'  IPv4 WCCP Redirect exclude is disabled\n'
+    }
+
     golden_output_helper = {'execute.return_value':
     '''
         Vlan1 is administratively down, line protocol is down
@@ -17577,8 +17829,1044 @@ class TestShowIpInterface(unittest.TestCase):
                         'redirect_outbound': False}}
     }
 
+    golden_output5 = {'execute.return_value':
+    '''
+        GigabitEthernet0/0/0 is up, line protocol is up
+          Internet protocol processing disabled
+        GigabitEthernet0/0/1 is administratively down, line protocol is down
+          Internet protocol processing disabled
+        GigabitEthernet0/0/2 is administratively down, line protocol is down
+          Internet protocol processing disabled
+        GigabitEthernet0/1/0 is up, line protocol is up
+          Internet address is 10.70.8.18/29
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1500 bytes
+          Helper address is not set
+          Directed broadcast forwarding is disabled
+          Multicast reserved groups joined: 224.0.0.1 224.0.0.2 224.0.0.22 224.0.0.13
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is disabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are never sent
+          ICMP unreachables are never sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          Associated multicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: Virtual Fragment Reassembly, IPSec input classification, WCCP, MCI Check
+          Output features: IPSec output classification, QoS Classification, QoS Marking, IPSec: to crypto engine, Post-encryption output features, MFIB Adjacency
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is enabled
+          IPv4 WCCP Redirect exclude is disabled
+        GigabitEthernet0/1/1 is administratively down, line protocol is down
+          Internet protocol processing disabled
+        Service-Engine0/2/0 is up, line protocol is up
+          Internet protocol processing disabled
+        Service-Engine0/3/0 is up, line protocol is up
+          Internet protocol processing disabled
+        Service-Engine0/4/0 is up, line protocol is up
+          Internet protocol processing disabled
+        GigabitEthernet0 is administratively down, line protocol is down
+          Internet protocol processing disabled
+        Loopback0 is up, line protocol is up
+          Internet address is 10.1.1.188/32
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1514 bytes
+          Helper address is not set
+          Directed broadcast forwarding is disabled
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is enabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are always sent
+          ICMP unreachables are always sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: MCI Check
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is disabled
+          IPv4 WCCP Redirect exclude is disabled
+        Loopback1 is up, line protocol is up
+          Internet address is 172.16.186.198/32
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1514 bytes
+          Helper address is not set
+          Directed broadcast forwarding is disabled
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is enabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are always sent
+          ICMP unreachables are always sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: MCI Check
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is disabled
+          IPv4 WCCP Redirect exclude is disabled
+        Loopback2 is up, line protocol is up
+          Internet address is 172.16.186.199/32
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1514 bytes
+          Helper address is not set
+          Directed broadcast forwarding is disabled
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is enabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are always sent
+          ICMP unreachables are always sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: MCI Check
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is disabled
+          IPv4 WCCP Redirect exclude is disabled
+        Port-channel1 is up, line protocol is up
+          Internet protocol processing disabled
+        Port-channel1.100 is up, line protocol is up
+          Internet address is 10.1.1.10/24
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1500 bytes
+          Helper addresses are 10.1.2.129
+                               10.1.3.129
+          Directed broadcast forwarding is disabled
+          Multicast reserved groups joined: 224.0.0.1 224.0.0.2 224.0.0.22 224.0.0.13
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is enabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are always sent
+          ICMP unreachables are always sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          Associated multicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: WCCP, MCI Check
+          Output features: MFIB Adjacency
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is enabled
+          IPv4 WCCP Redirect exclude is disabled
+        Port-channel1.101 is up, line protocol is up
+          Internet address is 10.35.189.10/24
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1500 bytes
+          Helper addresses are 10.1.2.129
+                               10.1.3.129
+          Directed broadcast forwarding is disabled
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is enabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are always sent
+          ICMP unreachables are always sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: MCI Check
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is disabled
+          IPv4 WCCP Redirect exclude is disabled
+        Port-channel1.300 is up, line protocol is up
+          Internet address is 10.1.1.10/24
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1500 bytes
+          Helper addresses are 10.1.2.129
+                               10.1.3.129
+          Directed broadcast forwarding is disabled
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is enabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are always sent
+          ICMP unreachables are always sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: WCCP, MCI Check
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is enabled
+          IPv4 WCCP Redirect exclude is disabled
+        Port-channel1.308 is up, line protocol is up
+          Internet address is 10.1.1.10/24
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1500 bytes
+          Helper addresses are 10.1.2.129
+                               10.1.3.129
+          Directed broadcast forwarding is disabled
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is enabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are always sent
+          ICMP unreachables are always sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: MCI Check
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is disabled
+          IPv4 WCCP Redirect exclude is disabled
+        Port-channel1.324 is up, line protocol is up
+          Internet address is 10.1.1.10/24
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1500 bytes
+          Helper addresses are 10.1.2.129
+                               10.1.3.129
+          Directed broadcast forwarding is disabled
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is enabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are always sent
+          ICMP unreachables are always sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: MCI Check
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is disabled
+          IPv4 WCCP Redirect exclude is disabled
+        Port-channel1.398 is up, line protocol is up
+          Internet address is 10.1.1.10/24
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1500 bytes
+          Helper address is 10.1.2.129
+          Directed broadcast forwarding is disabled
+          Multicast reserved groups joined: 224.0.0.1 224.0.0.2 224.0.0.22 224.0.0.13
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is disabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are always sent
+          ICMP unreachables are always sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          Associated multicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: WCCP, MCI Check, TCP Adjust MSS
+          Output features: TCP Adjust MSS, MFIB Adjacency
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is enabled
+          IPv4 WCCP Redirect exclude is disabled
+        Tunnel10 is up, line protocol is up
+          Internet address is 172.16.186.198/30
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1420 bytes
+          Helper address is not set
+          Directed broadcast forwarding is disabled
+          Multicast reserved groups joined: 224.0.0.1 224.0.0.2 224.0.0.22 224.0.0.13
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is enabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are always sent
+          ICMP unreachables are always sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          Associated multicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: WCCP, MCI Check, TCP Adjust MSS
+          Output features: TCP Adjust MSS
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is enabled
+          IPv4 WCCP Redirect exclude is disabled
+        Tunnel20 is up, line protocol is up
+          Internet address is 172.16.186.198/30
+          Broadcast address is 255.255.255.255
+          Address determined by non-volatile memory
+          MTU is 1420 bytes
+          Helper address is not set
+          Directed broadcast forwarding is disabled
+          Multicast reserved groups joined: 224.0.0.1 224.0.0.2 224.0.0.22 224.0.0.13
+          Outgoing Common access list is not set 
+          Outgoing access list is not set
+          Inbound Common access list is not set 
+          Inbound  access list is not set
+          Proxy ARP is enabled
+          Local Proxy ARP is disabled
+          Security level is default
+          Split horizon is enabled
+          ICMP redirects are always sent
+          ICMP unreachables are always sent
+          ICMP mask replies are never sent
+          IP fast switching is enabled
+          IP Flow switching is disabled
+          IP CEF switching is enabled
+          IP CEF switching turbo vector
+          IP Null turbo vector
+          Associated unicast routing topologies:
+                Topology "base", operation state is UP
+          Associated multicast routing topologies:
+                Topology "base", operation state is UP
+          IP multicast fast switching is enabled
+          IP multicast distributed fast switching is disabled
+          IP route-cache flags are Fast, CEF
+          Router Discovery is disabled
+          IP output packet accounting is disabled
+          IP access violation accounting is disabled
+          TCP/IP header compression is disabled
+          RTP/IP header compression is disabled
+          Probe proxy name replies are disabled
+          Policy routing is disabled
+          Network address translation is disabled
+          BGP Policy Mapping is disabled
+          Input features: MCI Check, TCP Adjust MSS
+          Output features: TCP Adjust MSS
+          IPv4 WCCP Redirect outbound is disabled
+          IPv4 WCCP Redirect inbound is disabled
+          IPv4 WCCP Redirect exclude is disabled
+    '''
+    }
+    golden_parsed_output5 = {
+   'GigabitEthernet0': {'enabled': False, 'oper_status': 'down'},
+   'GigabitEthernet0/0/0': {'enabled': True, 'oper_status': 'up'},
+   'GigabitEthernet0/0/1': {'enabled': False, 'oper_status': 'down'},
+   'GigabitEthernet0/0/2': {'enabled': False, 'oper_status': 'down'},
+   'GigabitEthernet0/1/0': {'address_determined_by': 'non-volatile memory',
+                            'bgp_policy_mapping': False,
+                            'directed_broadcast_forwarding': False,
+                            'enabled': True,
+                            'icmp': {'mask_replies': 'never sent',
+                                     'redirects': 'never sent',
+                                     'unreachables': 'never sent'},
+                            'input_features': ['IPSec input classification',
+                                               'MCI Check',
+                                               'Virtual Fragment Reassembly',
+                                               'WCCP'],
+                            'ip_access_violation_accounting': False,
+                            'ip_cef_switching': True,
+                            'ip_cef_switching_turbo_vector': True,
+                            'ip_fast_switching': True,
+                            'ip_flow_switching': False,
+                            'ip_multicast_distributed_fast_switching': False,
+                            'ip_multicast_fast_switching': True,
+                            'ip_null_turbo_vector': True,
+                            'ip_output_packet_accounting': False,
+                            'ip_route_cache_flags': ['CEF', 'Fast'],
+                            'ipv4': {'10.70.8.18/29': {'broadcast_address': '255.255.255.255',
+                                                       'ip': '10.70.8.18',
+                                                       'prefix_length': '29',
+                                                       'secondary': False}},
+                            'local_proxy_arp': False,
+                            'mtu': 1500,
+                            'multicast_groups': ['224.0.0.1',
+                                                 '224.0.0.13',
+                                                 '224.0.0.2',
+                                                 '224.0.0.22'],
+                            'network_address_translation': False,
+                            'oper_status': 'up',
+                            'policy_routing': False,
+                            'probe_proxy_name_replies': False,
+                            'proxy_arp': False,
+                            'router_discovery': False,
+                            'rtp_ip_header_compression': False,
+                            'security_level': 'default',
+                            'split_horizon': True,
+                            'tcp_ip_header_compression': False,
+                            'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                            'wccp': {'redirect_exclude': False,
+                                     'redirect_inbound': True,
+                                     'redirect_outbound': False}},
+   'GigabitEthernet0/1/1': {'enabled': False, 'oper_status': 'down'},
+   'Loopback0': {'address_determined_by': 'non-volatile memory',
+                 'bgp_policy_mapping': False,
+                 'directed_broadcast_forwarding': False,
+                 'enabled': True,
+                 'icmp': {'mask_replies': 'never sent',
+                          'redirects': 'always sent',
+                          'unreachables': 'always sent'},
+                 'input_features': ['MCI Check'],
+                 'ip_access_violation_accounting': False,
+                 'ip_cef_switching': True,
+                 'ip_cef_switching_turbo_vector': True,
+                 'ip_fast_switching': True,
+                 'ip_flow_switching': False,
+                 'ip_multicast_distributed_fast_switching': False,
+                 'ip_multicast_fast_switching': True,
+                 'ip_null_turbo_vector': True,
+                 'ip_output_packet_accounting': False,
+                 'ip_route_cache_flags': ['CEF', 'Fast'],
+                 'ipv4': {'10.1.1.188/32': {'broadcast_address': '255.255.255.255',
+                                            'ip': '10.1.1.188',
+                                            'prefix_length': '32',
+                                            'secondary': False}},
+                 'local_proxy_arp': False,
+                 'mtu': 1514,
+                 'network_address_translation': False,
+                 'oper_status': 'up',
+                 'policy_routing': False,
+                 'probe_proxy_name_replies': False,
+                 'proxy_arp': True,
+                 'router_discovery': False,
+                 'rtp_ip_header_compression': False,
+                 'security_level': 'default',
+                 'split_horizon': True,
+                 'tcp_ip_header_compression': False,
+                 'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                 'wccp': {'redirect_exclude': False,
+                          'redirect_inbound': False,
+                          'redirect_outbound': False}},
+   'Loopback1': {'address_determined_by': 'non-volatile memory',
+                 'bgp_policy_mapping': False,
+                 'directed_broadcast_forwarding': False,
+                 'enabled': True,
+                 'icmp': {'mask_replies': 'never sent',
+                          'redirects': 'always sent',
+                          'unreachables': 'always sent'},
+                 'input_features': ['MCI Check'],
+                 'ip_access_violation_accounting': False,
+                 'ip_cef_switching': True,
+                 'ip_cef_switching_turbo_vector': True,
+                 'ip_fast_switching': True,
+                 'ip_flow_switching': False,
+                 'ip_multicast_distributed_fast_switching': False,
+                 'ip_multicast_fast_switching': True,
+                 'ip_null_turbo_vector': True,
+                 'ip_output_packet_accounting': False,
+                 'ip_route_cache_flags': ['CEF', 'Fast'],
+                 'ipv4': {'172.16.186.198/32': {'broadcast_address': '255.255.255.255',
+                                                'ip': '172.16.186.198',
+                                                'prefix_length': '32',
+                                                'secondary': False}},
+                 'local_proxy_arp': False,
+                 'mtu': 1514,
+                 'network_address_translation': False,
+                 'oper_status': 'up',
+                 'policy_routing': False,
+                 'probe_proxy_name_replies': False,
+                 'proxy_arp': True,
+                 'router_discovery': False,
+                 'rtp_ip_header_compression': False,
+                 'security_level': 'default',
+                 'split_horizon': True,
+                 'tcp_ip_header_compression': False,
+                 'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                 'wccp': {'redirect_exclude': False,
+                          'redirect_inbound': False,
+                          'redirect_outbound': False}},
+   'Loopback2': {'address_determined_by': 'non-volatile memory',
+                 'bgp_policy_mapping': False,
+                 'directed_broadcast_forwarding': False,
+                 'enabled': True,
+                 'icmp': {'mask_replies': 'never sent',
+                          'redirects': 'always sent',
+                          'unreachables': 'always sent'},
+                 'input_features': ['MCI Check'],
+                 'ip_access_violation_accounting': False,
+                 'ip_cef_switching': True,
+                 'ip_cef_switching_turbo_vector': True,
+                 'ip_fast_switching': True,
+                 'ip_flow_switching': False,
+                 'ip_multicast_distributed_fast_switching': False,
+                 'ip_multicast_fast_switching': True,
+                 'ip_null_turbo_vector': True,
+                 'ip_output_packet_accounting': False,
+                 'ip_route_cache_flags': ['CEF', 'Fast'],
+                 'ipv4': {'172.16.186.199/32': {'broadcast_address': '255.255.255.255',
+                                                'ip': '172.16.186.199',
+                                                'prefix_length': '32',
+                                                'secondary': False}},
+                 'local_proxy_arp': False,
+                 'mtu': 1514,
+                 'network_address_translation': False,
+                 'oper_status': 'up',
+                 'policy_routing': False,
+                 'probe_proxy_name_replies': False,
+                 'proxy_arp': True,
+                 'router_discovery': False,
+                 'rtp_ip_header_compression': False,
+                 'security_level': 'default',
+                 'split_horizon': True,
+                 'tcp_ip_header_compression': False,
+                 'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                 'wccp': {'redirect_exclude': False,
+                          'redirect_inbound': False,
+                          'redirect_outbound': False}},
+   'Port-channel1': {'enabled': True, 'oper_status': 'up'},
+   'Port-channel1.100': {'address_determined_by': 'non-volatile memory',
+                         'bgp_policy_mapping': False,
+                         'directed_broadcast_forwarding': False,
+                         'enabled': True,
+                         'helper_address': ['10.1.2.129', '10.1.3.129'],
+                         'icmp': {'mask_replies': 'never sent',
+                                  'redirects': 'always sent',
+                                  'unreachables': 'always sent'},
+                         'input_features': ['MCI Check', 'WCCP'],
+                         'ip_access_violation_accounting': False,
+                         'ip_cef_switching': True,
+                         'ip_cef_switching_turbo_vector': True,
+                         'ip_fast_switching': True,
+                         'ip_flow_switching': False,
+                         'ip_multicast_distributed_fast_switching': False,
+                         'ip_multicast_fast_switching': True,
+                         'ip_null_turbo_vector': True,
+                         'ip_output_packet_accounting': False,
+                         'ip_route_cache_flags': ['CEF', 'Fast'],
+                         'ipv4': {'10.1.1.10/24': {'broadcast_address': '255.255.255.255',
+                                                   'ip': '10.1.1.10',
+                                                   'prefix_length': '24',
+                                                   'secondary': False}},
+                         'local_proxy_arp': False,
+                         'mtu': 1500,
+                         'multicast_groups': ['224.0.0.1',
+                                              '224.0.0.13',
+                                              '224.0.0.2',
+                                              '224.0.0.22'],
+                         'network_address_translation': False,
+                         'oper_status': 'up',
+                         'policy_routing': False,
+                         'probe_proxy_name_replies': False,
+                         'proxy_arp': True,
+                         'router_discovery': False,
+                         'rtp_ip_header_compression': False,
+                         'security_level': 'default',
+                         'split_horizon': True,
+                         'tcp_ip_header_compression': False,
+                         'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                         'wccp': {'redirect_exclude': False,
+                                  'redirect_inbound': True,
+                                  'redirect_outbound': False}},
+   'Port-channel1.101': {'address_determined_by': 'non-volatile memory',
+                         'bgp_policy_mapping': False,
+                         'directed_broadcast_forwarding': False,
+                         'enabled': True,
+                         'helper_address': ['10.1.2.129', '10.1.3.129'],
+                         'icmp': {'mask_replies': 'never sent',
+                                  'redirects': 'always sent',
+                                  'unreachables': 'always sent'},
+                         'input_features': ['MCI Check'],
+                         'ip_access_violation_accounting': False,
+                         'ip_cef_switching': True,
+                         'ip_cef_switching_turbo_vector': True,
+                         'ip_fast_switching': True,
+                         'ip_flow_switching': False,
+                         'ip_multicast_distributed_fast_switching': False,
+                         'ip_multicast_fast_switching': True,
+                         'ip_null_turbo_vector': True,
+                         'ip_output_packet_accounting': False,
+                         'ip_route_cache_flags': ['CEF', 'Fast'],
+                         'ipv4': {'10.35.189.10/24': {'broadcast_address': '255.255.255.255',
+                                                      'ip': '10.35.189.10',
+                                                      'prefix_length': '24',
+                                                      'secondary': False}},
+                         'local_proxy_arp': False,
+                         'mtu': 1500,
+                         'network_address_translation': False,
+                         'oper_status': 'up',
+                         'policy_routing': False,
+                         'probe_proxy_name_replies': False,
+                         'proxy_arp': True,
+                         'router_discovery': False,
+                         'rtp_ip_header_compression': False,
+                         'security_level': 'default',
+                         'split_horizon': True,
+                         'tcp_ip_header_compression': False,
+                         'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                         'wccp': {'redirect_exclude': False,
+                                  'redirect_inbound': False,
+                                  'redirect_outbound': False}},
+   'Port-channel1.300': {'address_determined_by': 'non-volatile memory',
+                         'bgp_policy_mapping': False,
+                         'directed_broadcast_forwarding': False,
+                         'enabled': True,
+                         'helper_address': ['10.1.2.129', '10.1.3.129'],
+                         'icmp': {'mask_replies': 'never sent',
+                                  'redirects': 'always sent',
+                                  'unreachables': 'always sent'},
+                         'input_features': ['MCI Check', 'WCCP'],
+                         'ip_access_violation_accounting': False,
+                         'ip_cef_switching': True,
+                         'ip_cef_switching_turbo_vector': True,
+                         'ip_fast_switching': True,
+                         'ip_flow_switching': False,
+                         'ip_multicast_distributed_fast_switching': False,
+                         'ip_multicast_fast_switching': True,
+                         'ip_null_turbo_vector': True,
+                         'ip_output_packet_accounting': False,
+                         'ip_route_cache_flags': ['CEF', 'Fast'],
+                         'ipv4': {'10.1.1.10/24': {'broadcast_address': '255.255.255.255',
+                                                   'ip': '10.1.1.10',
+                                                   'prefix_length': '24',
+                                                   'secondary': False}},
+                         'local_proxy_arp': False,
+                         'mtu': 1500,
+                         'network_address_translation': False,
+                         'oper_status': 'up',
+                         'policy_routing': False,
+                         'probe_proxy_name_replies': False,
+                         'proxy_arp': True,
+                         'router_discovery': False,
+                         'rtp_ip_header_compression': False,
+                         'security_level': 'default',
+                         'split_horizon': True,
+                         'tcp_ip_header_compression': False,
+                         'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                         'wccp': {'redirect_exclude': False,
+                                  'redirect_inbound': True,
+                                  'redirect_outbound': False}},
+   'Port-channel1.308': {'address_determined_by': 'non-volatile memory',
+                         'bgp_policy_mapping': False,
+                         'directed_broadcast_forwarding': False,
+                         'enabled': True,
+                         'helper_address': ['10.1.2.129', '10.1.3.129'],
+                         'icmp': {'mask_replies': 'never sent',
+                                  'redirects': 'always sent',
+                                  'unreachables': 'always sent'},
+                         'input_features': ['MCI Check'],
+                         'ip_access_violation_accounting': False,
+                         'ip_cef_switching': True,
+                         'ip_cef_switching_turbo_vector': True,
+                         'ip_fast_switching': True,
+                         'ip_flow_switching': False,
+                         'ip_multicast_distributed_fast_switching': False,
+                         'ip_multicast_fast_switching': True,
+                         'ip_null_turbo_vector': True,
+                         'ip_output_packet_accounting': False,
+                         'ip_route_cache_flags': ['CEF', 'Fast'],
+                         'ipv4': {'10.1.1.10/24': {'broadcast_address': '255.255.255.255',
+                                                   'ip': '10.1.1.10',
+                                                   'prefix_length': '24',
+                                                   'secondary': False}},
+                         'local_proxy_arp': False,
+                         'mtu': 1500,
+                         'network_address_translation': False,
+                         'oper_status': 'up',
+                         'policy_routing': False,
+                         'probe_proxy_name_replies': False,
+                         'proxy_arp': True,
+                         'router_discovery': False,
+                         'rtp_ip_header_compression': False,
+                         'security_level': 'default',
+                         'split_horizon': True,
+                         'tcp_ip_header_compression': False,
+                         'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                         'wccp': {'redirect_exclude': False,
+                                  'redirect_inbound': False,
+                                  'redirect_outbound': False}},
+   'Port-channel1.324': {'address_determined_by': 'non-volatile memory',
+                         'bgp_policy_mapping': False,
+                         'directed_broadcast_forwarding': False,
+                         'enabled': True,
+                         'helper_address': ['10.1.2.129', '10.1.3.129'],
+                         'icmp': {'mask_replies': 'never sent',
+                                  'redirects': 'always sent',
+                                  'unreachables': 'always sent'},
+                         'input_features': ['MCI Check'],
+                         'ip_access_violation_accounting': False,
+                         'ip_cef_switching': True,
+                         'ip_cef_switching_turbo_vector': True,
+                         'ip_fast_switching': True,
+                         'ip_flow_switching': False,
+                         'ip_multicast_distributed_fast_switching': False,
+                         'ip_multicast_fast_switching': True,
+                         'ip_null_turbo_vector': True,
+                         'ip_output_packet_accounting': False,
+                         'ip_route_cache_flags': ['CEF', 'Fast'],
+                         'ipv4': {'10.1.1.10/24': {'broadcast_address': '255.255.255.255',
+                                                   'ip': '10.1.1.10',
+                                                   'prefix_length': '24',
+                                                   'secondary': False}},
+                         'local_proxy_arp': False,
+                         'mtu': 1500,
+                         'network_address_translation': False,
+                         'oper_status': 'up',
+                         'policy_routing': False,
+                         'probe_proxy_name_replies': False,
+                         'proxy_arp': True,
+                         'router_discovery': False,
+                         'rtp_ip_header_compression': False,
+                         'security_level': 'default',
+                         'split_horizon': True,
+                         'tcp_ip_header_compression': False,
+                         'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                         'wccp': {'redirect_exclude': False,
+                                  'redirect_inbound': False,
+                                  'redirect_outbound': False}},
+   'Port-channel1.398': {'address_determined_by': 'non-volatile memory',
+                         'bgp_policy_mapping': False,
+                         'directed_broadcast_forwarding': False,
+                         'enabled': True,
+                         'helper_address': ['10.1.2.129'],
+                         'icmp': {'mask_replies': 'never sent',
+                                  'redirects': 'always sent',
+                                  'unreachables': 'always sent'},
+                         'input_features': ['MCI Check',
+                                            'TCP Adjust MSS',
+                                            'WCCP'],
+                         'ip_access_violation_accounting': False,
+                         'ip_cef_switching': True,
+                         'ip_cef_switching_turbo_vector': True,
+                         'ip_fast_switching': True,
+                         'ip_flow_switching': False,
+                         'ip_multicast_distributed_fast_switching': False,
+                         'ip_multicast_fast_switching': True,
+                         'ip_null_turbo_vector': True,
+                         'ip_output_packet_accounting': False,
+                         'ip_route_cache_flags': ['CEF', 'Fast'],
+                         'ipv4': {'10.1.1.10/24': {'broadcast_address': '255.255.255.255',
+                                                   'ip': '10.1.1.10',
+                                                   'prefix_length': '24',
+                                                   'secondary': False}},
+                         'local_proxy_arp': False,
+                         'mtu': 1500,
+                         'multicast_groups': ['224.0.0.1',
+                                              '224.0.0.13',
+                                              '224.0.0.2',
+                                              '224.0.0.22'],
+                         'network_address_translation': False,
+                         'oper_status': 'up',
+                         'policy_routing': False,
+                         'probe_proxy_name_replies': False,
+                         'proxy_arp': False,
+                         'router_discovery': False,
+                         'rtp_ip_header_compression': False,
+                         'security_level': 'default',
+                         'split_horizon': True,
+                         'tcp_ip_header_compression': False,
+                         'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                         'wccp': {'redirect_exclude': False,
+                                  'redirect_inbound': True,
+                                  'redirect_outbound': False}},
+   'Service-Engine0/2/0': {'enabled': True, 'oper_status': 'up'},
+   'Service-Engine0/3/0': {'enabled': True, 'oper_status': 'up'},
+   'Service-Engine0/4/0': {'enabled': True, 'oper_status': 'up'},
+   'Tunnel10': {'address_determined_by': 'non-volatile memory',
+                'bgp_policy_mapping': False,
+                'directed_broadcast_forwarding': False,
+                'enabled': True,
+                'icmp': {'mask_replies': 'never sent',
+                         'redirects': 'always sent',
+                         'unreachables': 'always sent'},
+                'input_features': ['MCI Check', 'TCP Adjust MSS', 'WCCP'],
+                'ip_access_violation_accounting': False,
+                'ip_cef_switching': True,
+                'ip_cef_switching_turbo_vector': True,
+                'ip_fast_switching': True,
+                'ip_flow_switching': False,
+                'ip_multicast_distributed_fast_switching': False,
+                'ip_multicast_fast_switching': True,
+                'ip_null_turbo_vector': True,
+                'ip_output_packet_accounting': False,
+                'ip_route_cache_flags': ['CEF', 'Fast'],
+                'ipv4': {'172.16.186.198/30': {'broadcast_address': '255.255.255.255',
+                                               'ip': '172.16.186.198',
+                                               'prefix_length': '30',
+                                               'secondary': False}},
+                'local_proxy_arp': False,
+                'mtu': 1420,
+                'multicast_groups': ['224.0.0.1',
+                                     '224.0.0.13',
+                                     '224.0.0.2',
+                                     '224.0.0.22'],
+                'network_address_translation': False,
+                'oper_status': 'up',
+                'policy_routing': False,
+                'probe_proxy_name_replies': False,
+                'proxy_arp': True,
+                'router_discovery': False,
+                'rtp_ip_header_compression': False,
+                'security_level': 'default',
+                'split_horizon': True,
+                'tcp_ip_header_compression': False,
+                'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                'wccp': {'redirect_exclude': False,
+                         'redirect_inbound': True,
+                         'redirect_outbound': False}},
+   'Tunnel20': {'address_determined_by': 'non-volatile memory',
+                'bgp_policy_mapping': False,
+                'directed_broadcast_forwarding': False,
+                'enabled': True,
+                'icmp': {'mask_replies': 'never sent',
+                         'redirects': 'always sent',
+                         'unreachables': 'always sent'},
+                'input_features': ['MCI Check', 'TCP Adjust MSS'],
+                'ip_access_violation_accounting': False,
+                'ip_cef_switching': True,
+                'ip_cef_switching_turbo_vector': True,
+                'ip_fast_switching': True,
+                'ip_flow_switching': False,
+                'ip_multicast_distributed_fast_switching': False,
+                'ip_multicast_fast_switching': True,
+                'ip_null_turbo_vector': True,
+                'ip_output_packet_accounting': False,
+                'ip_route_cache_flags': ['CEF', 'Fast'],
+                'ipv4': {'172.16.186.198/30': {'broadcast_address': '255.255.255.255',
+                                               'ip': '172.16.186.198',
+                                               'prefix_length': '30',
+                                               'secondary': False}},
+                'local_proxy_arp': False,
+                'mtu': 1420,
+                'multicast_groups': ['224.0.0.1',
+                                     '224.0.0.13',
+                                     '224.0.0.2',
+                                     '224.0.0.22'],
+                'network_address_translation': False,
+                'oper_status': 'up',
+                'policy_routing': False,
+                'probe_proxy_name_replies': False,
+                'proxy_arp': True,
+                'router_discovery': False,
+                'rtp_ip_header_compression': False,
+                'security_level': 'default',
+                'split_horizon': True,
+                'tcp_ip_header_compression': False,
+                'unicast_routing_topologies': {'topology': {'base': {'status': 'up'}}},
+                'wccp': {'redirect_exclude': False,
+                         'redirect_inbound': False,
+                         'redirect_outbound': False}}}
 
-    
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         interface_obj = ShowIpInterface(device=self.device)
@@ -17612,6 +18900,21 @@ class TestShowIpInterface(unittest.TestCase):
         parsed_output = interface_obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_helper)
+
+    def test_golden4(self):
+        self.device = Mock(**self.golden_output4)
+        interface_obj = ShowIpInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output4)
+
+    def test_golden5(self):
+        self.device = Mock(**self.golden_output5)
+        interface_obj = ShowIpInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output5)
+
 
 #############################################################################
 # unitest For show ipv6 interface
@@ -18048,152 +19351,152 @@ class TestShowIpv6Interface(unittest.TestCase):
             'addresses_config_method': 'stateless autoconfig'}}
 
     golden_output1 = {'execute.return_value': '''
-        csr1kv-1#show ipv6 interface 
+        csr1kv-1#show ipv6 interface 
         GigabitEthernet2 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE19:ABBA 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-              2001:db8:8548:1::1, subnet is 2001:db8:8548:1::/64 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::6
-                FF02::1:FF00:1
-                FF02::1:FF19:ABBA
-            MTU is 1500 bytes
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is enabled, number of DAD attempts: 1
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements live for 1801 seconds
-            ND advertised default router preference is Medium
-            ND RAs are suppressed (periodic)
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE19:ABBA 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+              2001:db8:8548:1::1, subnet is 2001:db8:8548:1::/64 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::6
+                FF02::1:FF00:1
+                FF02::1:FF19:ABBA
+            MTU is 1500 bytes
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is enabled, number of DAD attempts: 1
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements live for 1801 seconds
+            ND advertised default router preference is Medium
+            ND RAs are suppressed (periodic)
+            Hosts use stateless autoconfig for addresses.
         GigabitEthernet3 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE72:8407 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-                2001:db8:888c:1::1, subnet is 2001:db8:888c:1::/64 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::6
-                FF02::1:FF00:1
-                FF02::1:FF72:8407
-            MTU is 1500 bytes
-            VPN Routing/Forwarding "vrf1"
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is enabled, number of DAD attempts: 1
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements are sent every 200 seconds
-            ND router advertisements live for 1800 seconds
-            ND advertised default router preference is Medium
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE72:8407 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+                2001:db8:888c:1::1, subnet is 2001:db8:888c:1::/64 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::6
+                FF02::1:FF00:1
+                FF02::1:FF72:8407
+            MTU is 1500 bytes
+            VPN Routing/Forwarding "vrf1"
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is enabled, number of DAD attempts: 1
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements are sent every 200 seconds
+            ND router advertisements live for 1800 seconds
+            ND advertised default router preference is Medium
+            Hosts use stateless autoconfig for addresses.
         GigabitEthernet4 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE19:8682 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-                2001:db8:c56d:1::1, subnet is 2001:db8:c56d:1::/64 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::6
-                FF02::1:FF00:1
-                FF02::1:FF19:8682
-            MTU is 1500 bytes
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is enabled, number of DAD attempts: 1
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements are sent every 200 seconds
-            ND router advertisements live for 1800 seconds
-            ND advertised default router preference is Medium
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::F816:3EFF:FE19:8682 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+                2001:db8:c56d:1::1, subnet is 2001:db8:c56d:1::/64 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::6
+                FF02::1:FF00:1
+                FF02::1:FF19:8682
+            MTU is 1500 bytes
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is enabled, number of DAD attempts: 1
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements are sent every 200 seconds
+            ND router advertisements live for 1800 seconds
+            ND advertised default router preference is Medium
+            Hosts use stateless autoconfig for addresses.
         GigabitEthernet5 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::F816:3EFF:FEC7:8140 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-                2001:db8:c8d1:1::1, subnet is 2001:db8:c8d1:1::/64 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::6
-                FF02::1:FF00:1
-                FF02::1:FFC7:8140
-            MTU is 1500 bytes
-            VPN Routing/Forwarding "vrf1"
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is enabled, number of DAD attempts: 1
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements are sent every 200 seconds
-            ND router advertisements live for 1800 seconds
-            ND advertised default router preference is Medium
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::F816:3EFF:FEC7:8140 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+                2001:db8:c8d1:1::1, subnet is 2001:db8:c8d1:1::/64 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::6
+                FF02::1:FF00:1
+                FF02::1:FFC7:8140
+            MTU is 1500 bytes
+            VPN Routing/Forwarding "vrf1"
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is enabled, number of DAD attempts: 1
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements are sent every 200 seconds
+            ND router advertisements live for 1800 seconds
+            ND advertised default router preference is Medium
+            Hosts use stateless autoconfig for addresses.
         Loopback0 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::21E:49FF:FE5D:CC00 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-                2001:1:1::1, subnet is 2001:1:1::1/128 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::1:FF00:1
-                FF02::1:FF5D:CC00
-            MTU is 1514 bytes
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is not supported
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements live for 1800 seconds
-            ND advertised default router preference is Medium
-            ND RAs are suppressed (periodic)
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::21E:49FF:FE5D:CC00 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+                2001:1:1::1, subnet is 2001:1:1::1/128 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::1:FF00:1
+                FF02::1:FF5D:CC00
+            MTU is 1514 bytes
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is not supported
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements live for 1800 seconds
+            ND advertised default router preference is Medium
+            ND RAs are suppressed (periodic)
+            Hosts use stateless autoconfig for addresses.
         Loopback1 is up, line protocol is up
-            IPv6 is enabled, link-local address is FE80::21E:49FF:FE5D:CC00 
-            No Virtual link-local address(es):
-            Global unicast address(es):
-                2001:11:11::11, subnet is 2001:11:11::11/128 
-            Joined group address(es):
-                FF02::1
-                FF02::2
-                FF02::5
-                FF02::1:FF00:11
-                FF02::1:FF5D:CC00
-            MTU is 1514 bytes
-            VPN Routing/Forwarding "vrf1"
-            ICMP error messages limited to one every 100 milliseconds
-            ICMP redirects are enabled
-            ICMP unreachables are sent
-            ND DAD is not supported
-            ND reachable time is 30000 milliseconds (using 30000)
-            ND advertised reachable time is 0 (unspecified)
-            ND advertised retransmit interval is 0 (unspecified)
-            ND router advertisements live for 1800 seconds
-            ND advertised default router preference is Medium
-            ND RAs are suppressed (periodic)
-            Hosts use stateless autoconfig for addresses.
+            IPv6 is enabled, link-local address is FE80::21E:49FF:FE5D:CC00 
+            No Virtual link-local address(es):
+            Global unicast address(es):
+                2001:11:11::11, subnet is 2001:11:11::11/128 
+            Joined group address(es):
+                FF02::1
+                FF02::2
+                FF02::5
+                FF02::1:FF00:11
+                FF02::1:FF5D:CC00
+            MTU is 1514 bytes
+            VPN Routing/Forwarding "vrf1"
+            ICMP error messages limited to one every 100 milliseconds
+            ICMP redirects are enabled
+            ICMP unreachables are sent
+            ND DAD is not supported
+            ND reachable time is 30000 milliseconds (using 30000)
+            ND advertised reachable time is 0 (unspecified)
+            ND advertised retransmit interval is 0 (unspecified)
+            ND router advertisements live for 1800 seconds
+            ND advertised default router preference is Medium
+            ND RAs are suppressed (periodic)
+            Hosts use stateless autoconfig for addresses.
     '''}
 
     def test_empty(self):
@@ -19433,6 +20736,66 @@ class TestShowInterfacesStatus(unittest.TestCase):
         obj = ShowInterfacesStatus(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output,self.golden_parsed_interface_output1)
+
+
+class TestShowInterfaceTransceiverDetail(unittest.TestCase):
+    """unit test for show interface {interface} transceiver detail """
+
+    maxDiff = None
+    empty_output = {'execute.return_value': ''}
+
+    golden_output = {'execute.return_value': '''
+        # show interface GigabitEthernet1/0/0 transceiver detail
+
+        transceiver is present
+        type is 10Gbase-LR
+        name is CISCO-FINISAR   
+        part number is FTLX1474D3BCL-CS
+        revision is A   
+        serial number is FNS17221JJZ     
+        nominal bitrate is 10300 MBit/sec
+        Link length supported for 9/125um fiber is 10 km
+        cisco id is --
+        cisco extended id number is 4
+        cisco part number is 10-2457-02
+        cisco product id is SFP-10G-LR          
+        cisco vendor id is V02 
+        number of lanes 1
+    '''}
+
+    golden_parsed_output = {
+        'interfaces': {
+            'GigabitEthernet1/0/0': {
+                'cisco_extended_id_number': '4',
+                'cisco_id': '--',
+                'cisco_part_number': '10-2457-02',
+                'cisco_product_id': 'SFP-10G-LR',
+                'cisco_vendor_id': 'V02',
+                'link_length_supported_for_9/125um_fiber': '10 km',
+                'name': 'CISCO-FINISAR',
+                'nominal_bitrate': '10300 MBit/sec',
+                'number_of_lanes': '1',
+                'part_number': 'FTLX1474D3BCL-CS',
+                'revision': 'A',
+                'serial_number': 'FNS17221JJZ',
+                'transceiver': 'present',
+                'type': '10Gbase-LR',
+            },
+        }
+    }
+
+    def test_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowInterfaceTransceiverDetail(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse(interface='GigabitEthernet1/0/0')
+
+    def test_golden_interface1(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowInterfaceTransceiverDetail(device=self.device)
+        parsed_output = obj.parse(interface='GigabitEthernet1/0/0')
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()

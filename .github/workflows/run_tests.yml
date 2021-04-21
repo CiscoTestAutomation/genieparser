@@ -34,4 +34,5 @@ jobs:
         make develop
         cd tests
         python -m unittest
+        pyats run job folder_parsing_job.py --no-mail --no-archive
     

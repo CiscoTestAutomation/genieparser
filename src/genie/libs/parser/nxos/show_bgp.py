@@ -6267,7 +6267,14 @@ class ShowRunningConfigBgp(ShowRunningConfigBgpSchema):
             # router bgp 333
             m = p1.match(line)
             if m:
-                bgp_id = int(m.groupdict()['bgp_id'])
+                # Coversion to BGP ASN 4260036636(AS-PLAIN) from 65003.28(AS-COLON)
+                bgp_id = m.groupdict()['bgp_id']
+                if '.' in bgp_id:
+                    val = bgp_id.split('.')
+                    bgp_id = 65536*int(val[0])+int(val[1])
+                else:
+                    bgp_id = int(bgp_id)
+
                 if 'bgp' not in bgp_dict:
                     bgp_dict['bgp'] = {}
                 if 'instance' not in bgp_dict['bgp']:
@@ -10719,6 +10726,28 @@ class ShowBgpL2vpnEvpnNeighborsSchema(MetaParser):
                                         Optional('remoteaddr'): str,
                                         Optional('remoteport'): int,
                                         Optional('fd'): int,
+                                        Optional('enhanced_error_processing'): {
+                                            Optional('error_processing'): bool,
+                                            Optional('discarded_attr'): int,
+                                        },
+                                        Optional('last_error_length_sent'): int,
+                                        Optional('reset_error_value_sent'): int,
+                                        Optional('reset_error_sent_major'): int,
+                                        Optional('reset_error_sent_minor'): int,
+                                        Optional('last_error_length_received'): int,
+                                        Optional('reset_error_value_received'): int,
+                                        Optional('reset_error_received_major'): int,
+                                        Optional('reset_error_received_minor'): int,
+                                        Optional('accepted_prefixes'): int,
+                                        Optional('memory_consumed_in_bytes'): int,
+                                        Optional('received_prefixes'): int,
+                                        Optional('sent_prefixes'): int,
+                                        Optional('advertise_gw_ip'): bool,
+                                        Optional('outbound_route_map'): str,
+                                        Optional('last_end_of_rib_sent'): str,
+                                        Optional('last_end_of_rib_received'): str,
+                                        Optional('first_convergence'): str,
+                                        Optional('convergence_routes_sent'): int,
                                     }
                                 }
                             }
@@ -10898,6 +10927,62 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
         p50 = re.compile(r'^\s*Foreign host: +(?P<remoteaddr>[\d\.]+), Foreign port: +(?P<remoteport>[\d]+)$')
         p51 = re.compile(r'^\s*fd = +(?P<fd>[\d]+)$')
 
+        # Enhanced error processing: On
+        p52 = re.compile(r'\s*Enhanced error processing\: +(?P<error_processing>\w+)$')
+
+        # 0 discarded attributes
+        p53 = re.compile(r'\s*(?P<discarded_attr>\d) +discarded +attributes$')
+        
+        # Last error length received: 0 
+        p54 = re.compile(r'\s*Last +error +length +received\: +(?P<last_error_length_sent>\d+)$')
+        
+        # Reset error value sent: 0
+        p55 = re.compile(r'\s*Reset +error +value +received(\:)? +(?P<reset_error_value_sent>\d+)$')
+
+        # Reset error sent major: 0 minor: 0
+        p56 = re.compile(r'\s*Reset +error +sent +major\: '
+                        r'+(?P<reset_error_sent_major>\d+) +minor\: '
+                        r'+(?P<reset_error_sent_minor>\d+)$')
+        
+        # Last error length received: 0
+        p57 = re.compile(r'\s*Last +error +length +received\: +(?P<last_error_length_received>\d+)$')
+
+        # Reset error value received 0
+        p58 = re.compile(r'\s*Reset error value received(\:)? +(?P<reset_error_value_received>\d+)$')
+
+        # Reset error received major: 0 minor: 0
+        p59 = re.compile(r'\s*Reset error received major\: '
+                        r'+(?P<reset_error_received_major>\d+) +minor\:'
+                        r' +(?P<reset_error_received_minor>\d+)$')
+
+        # 10 accepted prefixes (10 paths), consuming 2360 bytes of memory
+        p60 = re.compile(r'\s*(?P<accepted_prefixes>\d+) +accepted prefixes'
+                        r' +\(\d+ +paths\)\, +consuming '
+                        r'+(?P<memory_consumed_in_bytes>\d+) +bytes +of +memory$')
+
+        # 0 received prefixes treated as withdrawn
+        p61 = re.compile(r'\s*(?P<received_prefixes>\d+) +received '
+                        r'+prefixes +treated +as +withdrawn$')
+        
+        # 40541 sent prefixes (40541 paths)
+        p62 = re.compile(r'\s*(?P<sent_prefixes>\d+) +sent prefixes +\(\d+ paths\)$')
+
+        # Advertise GW IP is enabled
+        p63 = re.compile(r'\s*Advertise +GW +IP +is +(?P<advertise_gw_ip>\w+)$')
+
+        # Outbound route-map configured is GENIE_TEST, handle obtained
+        p64 = re.compile(r'\s*Outbound +route\-map +configured +is '
+                        r'+(?P<outbound_route_map>\w+)\, +handle +obtained$')
+
+        # Last End-of-RIB received 00:00:11 after session start
+        # Last End-of-RIB sent 00:00:06 after session start
+        p65 = re.compile(r'\s*Last +End\-of\-RIB +(?P<action>received|sent) '
+                        r'+(?P<time>[\w:]+) +after +session +start$')
+
+        # First convergence 00:00:06 after session start with 18810 routes sent
+        p66 = re.compile(r'\s*First +convergence +(?P<first_convergence>[\w:]+) '
+                        r'+after +session +start +with '
+                        r'+(?P<convergence_routes_sent>\d+) +routes +sent$')
 
         for line in out.splitlines():
             if line:
@@ -11193,6 +11278,155 @@ class ShowBgpL2vpnEvpnNeighbors(ShowBgpL2vpnEvpnNeighborsSchema):
                 group = m.groupdict()
                 neighbor_dict.update({'fd':int(group.pop('fd'))})
                 continue
+
+            # Enhanced error processing: On                
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()['error_processing']
+
+                if 'On' in group:
+                    group = bool(group)
+
+                processing_dict = neighbor_dict.setdefault\
+                    ('enhanced_error_processing', {})
+                
+                processing_dict.update({'error_processing': group})
+                continue
+                    
+            # 0 discarded attributes
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                processing_dict = neighbor_dict.setdefault\
+                    ('enhanced_error_processing', {})
+
+                processing_dict.update({'discarded_attr': \
+                        int(group.pop('discarded_attr'))})
+
+                continue
+
+            # Last error length received: 0 
+            m = p54.match(line)
+            if m:
+                neighbor_dict.update({'last_error_length_sent': \
+                        int(m.groupdict().pop('last_error_length_sent'))})
+                
+                continue
+
+            # Reset error value sent: 0
+            m = p55.match(line)
+            if m:
+                neighbor_dict.update({'reset_error_value_sent': \
+                        int(m.groupdict().pop('reset_error_value_sent'))})
+                
+                continue
+
+            # Reset error sent major: 0 minor: 0
+            m = p56.match(line)
+            if m:
+                neighbor_dict.update({'reset_error_sent_major': \
+                    int(m.groupdict().pop('reset_error_sent_major'))})
+                
+                neighbor_dict.update({'reset_error_sent_minor': \
+                    int(m.groupdict().pop('reset_error_sent_minor'))})
+                
+                continue
+
+            # Last error length received: 0
+            m = p57.match(line)
+            if m:
+                neighbor_dict.update({'last_error_length_received': \
+                    int(m.groupdict().pop('last_error_length_received'))})
+                continue
+
+            # Reset error value received 0
+            m = p58.match(line)
+            if m:
+                neighbor_dict.update({'reset_error_value_received': \
+                    int(m.groupdict().pop('reset_error_value_received'))})
+                
+                continue
+
+            # Reset error received major: 0 minor: 0
+            m = p59.match(line)
+            if m:
+                neighbor_dict.update({'reset_error_received_major': \
+                    int(m.groupdict().pop('reset_error_received_major'))})
+                
+                neighbor_dict.update({'reset_error_received_minor': \
+                    int(m.groupdict().pop('reset_error_received_minor'))})
+
+                continue
+
+            # 10 accepted prefixes (10 paths), consuming 2360 bytes of memory
+            m = p60.match(line)
+            if m:
+                neighbor_dict.update({'accepted_prefixes': \
+                    int(m.groupdict().pop('accepted_prefixes'))})
+                
+                neighbor_dict.update({'memory_consumed_in_bytes': \
+                    int(m.groupdict().pop('memory_consumed_in_bytes'))})
+                
+                continue
+
+            # 0 received prefixes treated as withdrawn
+            m = p61.match(line)
+            if m:
+                neighbor_dict.update({'received_prefixes': \
+                    int(m.groupdict().pop('received_prefixes'))})
+                
+                continue
+
+            # 40541 sent prefixes (40541 paths)
+            m = p62.match(line)
+            if m:
+                neighbor_dict.update({'sent_prefixes': \
+                    int(m.groupdict().pop('sent_prefixes'))})
+                
+                continue
+
+            # Advertise GW IP is enabled
+            m = p63.match(line)
+            if m:
+                if 'enabled' in m.groupdict('advertise_gw_ip'):
+                    neighbor_dict.update({'advertise_gw_ip': \
+                        bool(m.groupdict().pop('advertise_gw_ip'))})
+                
+                continue
+
+            # Outbound route-map configured is GENIE_TEST, handle obtained
+            m = p64.match(line)
+            if m:
+                neighbor_dict.update({'outbound_route_map': \
+                    m.groupdict().pop('outbound_route_map')})
+                
+                continue
+
+            # Last End-of-RIB received 00:00:11 after session start
+            # Last End-of-RIB sent 00:00:06 after session start
+            m = p65.match(line)
+            if m:
+                group = m.groupdict()
+                if 'received' in group['action']:
+                    neighbor_dict.update({'last_end_of_rib_received': \
+                        group.pop('time')})
+                
+                if 'sent' in group['action']:
+                    neighbor_dict.update({'last_end_of_rib_sent': \
+                        group.pop('time')})
+                
+                continue
+
+            # First convergence 00:00:06 after session start with 18810 routes sent
+            m = p66.match(line)
+            if m:
+                neighbor_dict.update({'first_convergence': \
+                    m.groupdict().pop('first_convergence')})
+                neighbor_dict.update({'convergence_routes_sent': \
+                    int(m.groupdict().pop('convergence_routes_sent'))})
+                
+                continue
+
         return result_dict
 
 # ==========================================================================
@@ -11301,6 +11535,7 @@ class ShowBgpIpMvpnRouteTypeSchema(MetaParser):
                                                         Optional('typecode'): str,
                                                         'ipnexthop': str,
                                                         'weight': str,
+                                                        Optional('path'): str,
                                                         'origin': str,
                                                         'localpref': str,
                                                     }
@@ -11371,10 +11606,11 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
         # *>i                   10.196.7.7                           100          0 i
         #                       10.64.4.4                                        0 200 100 i
         #                       0.0.0.0                  0        100      32768 ?
+        #                       10.64.4.4              219        0 10 3277 32768 36640 {27016} e
         p6 = re.compile(
             r'^\s*(?P<statuscode>[s|S|x|d|h|>|s|*\s]+)?(?P<typecode>('
             r'i|e|c|l|a|r|I)+)?\s+(?P<ipnexthop>[\d\.]+)?(?P<space1>\s+)?(?P<metric>['
-            r'\d]+)?\s+(?P<localpref>[\d]+)\s+?(?P<weight>[\d]+) +(?P<origin>[i|e|c|l|a|I|?]+)$')
+            r'\d]+)?\s+(?P<localpref>[\d]+)\s+?(?P<weight>[\d]+)( +(?P<path>[0-9\{\}\s]+))? +(?P<origin>[i|e|c|l|a|I|?]+)$')
 
         for line in out.splitlines():
             if line:
@@ -11477,6 +11713,8 @@ class ShowBgpIpMvpnRouteType(ShowBgpIpMvpnRouteTypeSchema):
                 path_dict.update({'weight': group['weight']})
                 path_dict.update({'origin': group['origin']})
                 path_dict.update({'localpref': group['localpref'] })
+                if group['path']:
+                    path_dict.update({'path': group['path']})
                 continue
 
         if not len(list(Common.find_keys('rd', result_dict))) :
@@ -11586,7 +11824,7 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
         p1 = re.compile(r'^\s*BGP +routing +table +information +for +VRF +(?P<vrf_name_out>\S+),'
                         ' +address +family +(?P<af_name>[\w\s]+)$')
 
-        # Route Distinguisher: 10.16.2.2:3    (L3VNI 10100)
+        # Route Distinguisher: 10.16.2.2:3    (L3VNI 10100)
         p2 = re.compile(r'^\s*Route Distinguisher: +(?P<rd>[\w\.\:]+)'
                         '( +\((L[2|3]VNI|Local VNI:) +(?P<rd_vrf>[\d]+)\))?$')
 
@@ -11604,7 +11842,7 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
         p5 = re.compile(r'^\s*Flags: (?P<flag_xmit>[\S\s]+) +on +xmit-list'
             '(, +(?P<flags_attr>[\w\s\/\,]+))?$')
 
-        #   Advertised path-id 1
+        #   Advertised path-id 1
         p7 = re.compile(r'^\s*Advertised path-id +(?P<path_id>[\d]+)$')
 
         # Path type: local, path is valid, is best path, no labeled nexthop
@@ -11613,32 +11851,32 @@ class ShowBgpIpMvpnSaadDetail(ShowBgpIpMvpnSaadDetailSchema):
         p8 = re.compile(r'^\s*Path type: +(?P<path_type>[\w\s\(\)]+),'
                         ' +(?P<pathtypes>[\S\s\,\:\/\(\)]+)?$')
 
-        #   AS-Path: NONE, path locally originated
+        #   AS-Path: NONE, path locally originated
         p9 = re.compile(
             r'^\s*AS-Path: +(?P<as_path>[\w]+)(, +path locally originated)?'
                 '(, +path sourced +(?P<internal_external>[\w]+) to AS)?$')
 
-        #     0.0.0.0 (metric 0) from 0.0.0.0 (10.16.2.2)
+        #     0.0.0.0 (metric 0) from 0.0.0.0 (10.16.2.2)
         #     10.144.6.6 (inaccessible, metric 4294967295) from 10.64.4.4 (10.64.4.4)
         p10 = re.compile(
             r'^\s*(?P<ipnexthop>[\d\.]+) +\(((?P<nexthop_status>[\w]+), )?metric +(?P<nexthopmetric>[\d]+)\)'
             ' +from +(?P<neighbor>[\d\.]+)'
             ' +\((?P<neighborid>[\d\.]+)\)$')
 
-        #       Origin IGP, MED not set, localpref 100, weight 32768
+        #       Origin IGP, MED not set, localpref 100, weight 32768
         p11 = re.compile(r'^\s*Origin +(?P<origin>[\w]+), +(MED +(?P<med>[\w\s]+),)?'
                          ' +localpref +(?P<localpref>[\d]+),'
                          ' +weight +(?P<weight>[\d]+)$')
 
-        #       Extcommunity: RT:100:10100
+        #       Extcommunity: RT:100:10100
         p12 = re.compile(r'^\s*Extcommunity: +(?P<extcommunity>[\w\s\:\.]+)$')
 
-        # Originator: 10.144.6.6 Cluster list: 10.100.5.5 
+        # Originator: 10.144.6.6 Cluster list: 10.100.5.5 
         p13 = re.compile(r'^\s*Originator: +(?P<originatorid>[\d\.]+)'
                          ' +Cluster +list: +(?P<clusterlist>[\d\.]+)$')
 
-        #   Path-id 1 advertised to peers:
-        #     10.64.4.4            10.100.5.5        
+        #   Path-id 1 advertised to peers:
+        #     10.64.4.4            10.100.5.5        
         p14 = re.compile(r'^\s*Path-id +(?P<path_id>[\d]+) +advertised to peers:$')
         p15 = re.compile(r'^\s*(?P<advertisedto>[\d\s\.]+)$')
 

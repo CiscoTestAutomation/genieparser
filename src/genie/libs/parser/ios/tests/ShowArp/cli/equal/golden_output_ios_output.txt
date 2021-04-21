@@ -1,0 +1,4 @@
+Protocol   Address       Age (min)   Hardware Addr    Type    Interface
+Internet   10.1.1.5           134    0005.00ff.3a86   ARPA    FastEthernet0/0/0
+Internet   10.1.1.7             -    0005.00ff.3232   ARPA    FastEthernet0/0/0
+        

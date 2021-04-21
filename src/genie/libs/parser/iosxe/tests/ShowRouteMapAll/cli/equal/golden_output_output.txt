@@ -1,0 +1,47 @@
+
+STATIC routemaps
+route-map test, permit, sequence 10
+  Match clauses:
+    interface GigabitEthernet1 
+    ipv6 next-hop test
+  Set clauses:
+    tag 10 
+    ipv6 next-hop 2001:DB8:1::1 2001:DB8:2::1
+  Policy routing matches: 0 packets, 0 bytes
+route-map test2, permit, sequence 10
+  Match clauses:
+    metric  100 
+  Set clauses:
+    metric 100
+    metric-type external
+    tag 10 
+    ip next-hop self
+    local-preference 111
+    comm-list test delete
+    community 6553700
+    extended community SoO:100:10
+    extended community RT:300:300 RT:400:400
+    extended community RT:100:10 RT:100:100 RT:200:200 additive
+    extended community VD:100:100
+    origin incomplete
+    ip next-hop 10.4.1.1 10.16.2.2
+     ipv6 next-hop 2001:DB8:1::1 2001:DB8:2::1
+  Policy routing matches: 0 packets, 0 bytes
+route-map test2, permit, sequence 20
+  Match clauses:
+    ip address prefix-lists: test test2 
+    route-type level-1 level-2 
+    interface GigabitEthernet1 GigabitEthernet2 
+    as-path (as-path filter): 100 
+    community (community-list filter): test 
+    extcommunity (extcommunity-list filter):test 
+  Set clauses:
+    metric -20
+    metric-type type-1
+    origin igp
+    ip next-hop 10.36.3.3
+     ipv6 next-hop 2001:DB8:3::1
+  Policy routing matches: 0 packets, 0 bytes
+DYNAMIC routemaps
+Current active dynamic routemaps = 0
+      

@@ -1,0 +1,23 @@
+
+Device# show ip nat statistics
+
+Total active translations: 3 (0 static, 3 dynamic; 3 extended) 
+Outside interfaces: 
+GigabitEthernet0/3/0 
+Inside interfaces: 
+GigabitEthernet0/3/1 
+Hits: 3228980 Misses: 3 
+CEF Translated packets: 0, CEF Punted packets: 0 
+Expired translations: 0 
+Dynamic mappings: 
+-- Inside Source 
+[Id: 1] access-list 1 pool pool1 refcount 3 
+pool pool1: netmask 255.255.255.0 
+start 192.168.49.1 end 192.168.115.254 
+type generic, total addresses 254, allocated 0 (0%), misses 0 
+longest chain in pool: pool1's addr-hash: 0, average len 0,chains 0/256 
+Pool stats drop: 0 Mapping stats drop: 0 
+Port block alloc fail: 0 
+IP alias add fail: 0 
+Limit entry add fail: 0 
+    

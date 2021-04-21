@@ -12,7 +12,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissi
 
 # iosxr show_pim
 from genie.libs.parser.iosxr.show_pim import ShowPimVrfMstatic, ShowPimVrfRpfSummary,\
-                                  ShowPimVrfInterfaceDetail
+                                  ShowPimVrfInterfaceDetail, ShowPimTopologySummary
 
 
 # ===================================================
@@ -22,61 +22,61 @@ from genie.libs.parser.iosxr.show_pim import ShowPimVrfMstatic, ShowPimVrfRpfSum
 class test_show_pim_vrf_mstatic(unittest.TestCase):
 
     '''Unit test for 'show pim vrf <WORD> <WORD> mstatic'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'vrf': 
-            {'default': 
-                {'address_family': 
-                    {'ipv4': 
-                        {'mroute': 
-                            {'10.10.10.10/32': 
-                                {'path': 
-                                    {'192.168.1.0 GigabitEthernet0/0/0/0 10': 
+        'vrf':
+            {'default':
+                {'address_family':
+                    {'ipv4':
+                        {'mroute':
+                            {'10.10.10.10/32':
+                                {'path':
+                                    {'192.168.1.0 GigabitEthernet0/0/0/0 10':
                                         {'admin_distance': 10,
                                         'interface_name': 'GigabitEthernet0/0/0/0',
                                         'neighbor_address': '192.168.1.0'}}},
-                            '10.10.10.11/32': 
-                                {'path': 
-                                    {'192.168.1.1 GigabitEthernet0/0/0/1 11': 
+                            '10.10.10.11/32':
+                                {'path':
+                                    {'192.168.1.1 GigabitEthernet0/0/0/1 11':
                                         {'admin_distance': 11,
                                         'interface_name': 'GigabitEthernet0/0/0/1',
                                         'neighbor_address': '192.168.1.1'}}},
-                            '10.10.10.12/32': 
-                                {'path': 
-                                    {'192.168.1.2 GigabitEthernet0/0/0/2 12': 
+                            '10.10.10.12/32':
+                                {'path':
+                                    {'192.168.1.2 GigabitEthernet0/0/0/2 12':
                                         {'admin_distance': 12,
                                         'interface_name': 'GigabitEthernet0/0/0/2',
                                         'neighbor_address': '192.168.1.2'}}},
-                            '10.10.10.13/32': 
-                                {'path': 
-                                    {'192.168.1.3 GigabitEthernet0/0/0/3 13': 
+                            '10.10.10.13/32':
+                                {'path':
+                                    {'192.168.1.3 GigabitEthernet0/0/0/3 13':
                                         {'admin_distance': 13,
                                         'interface_name': 'GigabitEthernet0/0/0/3',
                                         'neighbor_address': '192.168.1.3'}}},
-                            '10.10.10.14/32': 
-                                {'path': 
-                                    {'192.168.1.4 GigabitEthernet0/0/0/4 14': 
+                            '10.10.10.14/32':
+                                {'path':
+                                    {'192.168.1.4 GigabitEthernet0/0/0/4 14':
                                         {'admin_distance': 14,
                                         'interface_name': 'GigabitEthernet0/0/0/4',
                                         'neighbor_address': '192.168.1.4'}}},
-                            '10.10.10.15/32': 
-                                {'path': 
-                                    {'192.168.1.5 GigabitEthernet0/0/0/5 15': 
+                            '10.10.10.15/32':
+                                {'path':
+                                    {'192.168.1.5 GigabitEthernet0/0/0/5 15':
                                         {'admin_distance': 15,
                                         'interface_name': 'GigabitEthernet0/0/0/5',
                                         'neighbor_address': '192.168.1.5'}}},
-                            '10.10.10.16/32': 
-                                {'path': 
-                                    {'192.168.1.6 GigabitEthernet0/0/0/6 16': 
+                            '10.10.10.16/32':
+                                {'path':
+                                    {'192.168.1.6 GigabitEthernet0/0/0/6 16':
                                         {'admin_distance': 16,
                                         'interface_name': 'GigabitEthernet0/0/0/6',
                                         'neighbor_address': '192.168.1.6'}}},
-                            '10.10.10.17/32': 
-                                {'path': 
-                                    {'192.168.1.7 GigabitEthernet0/0/0/7 17': 
+                            '10.10.10.17/32':
+                                {'path':
+                                    {'192.168.1.7 GigabitEthernet0/0/0/7 17':
                                         {'admin_distance': 17,
                                         'interface_name': 'GigabitEthernet0/0/0/7',
                                         'neighbor_address': '192.168.1.7'}}}}}}}}}
@@ -97,44 +97,44 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'vrf': 
-            {'default': 
-                {'address_family': 
-                    {'ipv6': 
-                        {'mroute': 
-                            {'2001:10:10::10/128': 
-                                {'path': 
-                                    {'2001:11:11::10 GigabitEthernet0/0/0/0 10': 
+        'vrf':
+            {'default':
+                {'address_family':
+                    {'ipv6':
+                        {'mroute':
+                            {'2001:10:10::10/128':
+                                {'path':
+                                    {'2001:11:11::10 GigabitEthernet0/0/0/0 10':
                                         {'admin_distance': 10,
                                         'interface_name': 'GigabitEthernet0/0/0/0',
                                         'neighbor_address': '2001:11:11::10'}}},
-                                    '2001:10:10::11/128': 
-                                        {'path': 
-                                            {'2001:11:11::11 GigabitEthernet0/0/0/1 11': 
+                                    '2001:10:10::11/128':
+                                        {'path':
+                                            {'2001:11:11::11 GigabitEthernet0/0/0/1 11':
                                                 {'admin_distance': 11,
                                                 'interface_name': 'GigabitEthernet0/0/0/1',
                                                 'neighbor_address': '2001:11:11::11'}}},
-                                    '2001:10:10::12/128': 
-                                        {'path': 
-                                            {'2001:11:11::12 GigabitEthernet0/0/0/2 12': 
+                                    '2001:10:10::12/128':
+                                        {'path':
+                                            {'2001:11:11::12 GigabitEthernet0/0/0/2 12':
                                                 {'admin_distance': 12,
                                                 'interface_name': 'GigabitEthernet0/0/0/2',
                                                 'neighbor_address': '2001:11:11::12'}}},
-                                    '2001:10:10::13/128': 
-                                        {'path': 
-                                            {'2001:11:11::13 GigabitEthernet0/0/0/3 13': 
+                                    '2001:10:10::13/128':
+                                        {'path':
+                                            {'2001:11:11::13 GigabitEthernet0/0/0/3 13':
                                                 {'admin_distance': 13,
                                                 'interface_name': 'GigabitEthernet0/0/0/3',
                                                 'neighbor_address': '2001:11:11::13'}}},
-                                    '2001:10:10::14/128': 
-                                        {'path': 
-                                            {'2001:11:11::14 GigabitEthernet0/0/0/4 14': 
+                                    '2001:10:10::14/128':
+                                        {'path':
+                                            {'2001:11:11::14 GigabitEthernet0/0/0/4 14':
                                                 {'admin_distance': 14,
                                                 'interface_name': 'GigabitEthernet0/0/0/4',
                                                 'neighbor_address': '2001:11:11::14'}}},
-                                    '2001:10:10::15/128': 
-                                        {'path': 
-                                            {'2001:11:11::15 GigabitEthernet0/0/0/5 15': 
+                                    '2001:10:10::15/128':
+                                        {'path':
+                                            {'2001:11:11::15 GigabitEthernet0/0/0/5 15':
                                                 {'admin_distance': 15,
                                                 'interface_name': 'GigabitEthernet0/0/0/5',
                                                 'neighbor_address': '2001:11:11::15'}}}}}}}}}
@@ -144,8 +144,8 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
         Mon May 29 14:37:26.421 UTC
         IP Multicast Static Routes Information
 
-         * 2001:10:10::10/128 via GigabitEthernet0/0/0/0 with nexthop 2001:11:11::10 and distance 10 
-         * 2001:10:10::11/128 via GigabitEthernet0/0/0/1 with nexthop 2001:11:11::11 and distance 11 
+         * 2001:10:10::10/128 via GigabitEthernet0/0/0/0 with nexthop 2001:11:11::10 and distance 10
+         * 2001:10:10::11/128 via GigabitEthernet0/0/0/1 with nexthop 2001:11:11::11 and distance 11
          * 2001:10:10::12/128 via GigabitEthernet0/0/0/2 with nexthop 2001:11:11::12 and distance 12
          * 2001:10:10::13/128 via GigabitEthernet0/0/0/3 with nexthop 2001:11:11::13 and distance 13
          * 2001:10:10::14/128 via GigabitEthernet0/0/0/4 with nexthop 2001:11:11::14 and distance 14
@@ -180,19 +180,19 @@ class test_show_pim_vrf_mstatic(unittest.TestCase):
 class test_show_pim_vrf_interface_detail(unittest.TestCase):
 
     '''Unit test for 'show pim vrf <WORD> <WORD> interface detail'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'vrf': 
-            {'default': 
-                {'interfaces': 
-                    {'GigabitEthernet0/0/0/0': 
-                        {'address_family': 
-                            {'ipv4': 
+        'vrf':
+            {'default':
+                {'interfaces':
+                    {'GigabitEthernet0/0/0/0':
+                        {'address_family':
+                            {'ipv4':
                                 {'address': ['10.2.3.2'],
-                                'bfd': 
+                                'bfd':
                                     {'enable': False,
                                     'interval': 0.150,
                                     'detection_multiplier': 3,
@@ -208,16 +208,16 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'oper_status': 'on',
                                 'primary_address': '10.2.3.2',
                                 'propagation_delay': 500}}},
-                    'GigabitEthernet0/0/0/1': 
-                        {'address_family': 
-                            {'ipv4': 
+                    'GigabitEthernet0/0/0/1':
+                        {'address_family':
+                            {'ipv4':
                                 {'address': ['10.1.2.2'],
-                                'bfd': 
+                                'bfd':
                                     {'enable': False,
                                     'interval': 0.150,
                                     'detection_multiplier': 3,
                                     },
-                                'dr': 'this system',
+                                'dr': '10.1.2.3',
                                 'dr_priority': 1,
                                 'flags': 'NB P',
                                 'hello_interval': 30,
@@ -228,11 +228,11 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'oper_status': 'on',
                                 'primary_address': '10.1.2.2',
                                 'propagation_delay': 500}}},
-                    'Loopback0': 
-                        {'address_family': 
-                            {'ipv4': 
+                    'Loopback0':
+                        {'address_family':
+                            {'ipv4':
                                 {'address': ['10.16.2.2'],
-                                'bfd': 
+                                'bfd':
                                     {'enable': False,
                                     'interval': 0.150,
                                     'detection_multiplier': 3,
@@ -263,7 +263,7 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
         Interface                  PIM  Nbr   Hello  DR
                                         Count Intvl  Prior
 
-        Loopback0                   on   1     30     1     
+        Loopback0                   on   1     30     1
             Primary Address : 10.16.2.2
                       Flags : B P V
                         BFD : Off/150 ms/3
@@ -273,9 +273,9 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                 Hello Timer : 00:00:15
             Neighbor Filter : -
 
-        GigabitEthernet0/0/0/0      on   1     30     1     
+        GigabitEthernet0/0/0/0      on   1     30     1
             Primary Address : 10.2.3.2
-                      Flags : B P 
+                      Flags : B P
                         BFD : Off/150 ms/3
                          DR : this system
           Propagation delay : 500
@@ -283,11 +283,11 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                 Hello Timer : 00:00:01
             Neighbor Filter : -
 
-        GigabitEthernet0/0/0/1      on   2     30     1     
+        GigabitEthernet0/0/0/1      on   2     30     1
             Primary Address : 10.1.2.2
-                      Flags : NB P 
+                      Flags : NB P
                         BFD : Off/150 ms/3
-                         DR : this system
+                         DR : 10.1.2.3
           Propagation delay : 500
           Override Interval : 2500
                 Hello Timer : 00:00:07
@@ -295,14 +295,14 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'vrf': 
-            {'default': 
-                {'interfaces': 
-                    {'GigabitEthernet0/0/0/0': 
-                        {'address_family': 
-                            {'ipv6': 
+        'vrf':
+            {'default':
+                {'interfaces':
+                    {'GigabitEthernet0/0/0/0':
+                        {'address_family':
+                            {'ipv6':
                                 {'address': ['fe80::5054:ff:fee4:f669', '2001:db8:2:3::2'],
-                                'bfd': 
+                                'bfd':
                                     {'enable': False,
                                     'interval': 0.150,
                                     'detection_multiplier': 3,
@@ -318,11 +318,11 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'oper_status': 'on',
                                 'primary_address': 'fe80::5054:ff:fee4:f669',
                                 'propagation_delay': 500}}},
-                    'GigabitEthernet0/0/0/1': 
-                        {'address_family': 
-                            {'ipv6': 
+                    'GigabitEthernet0/0/0/1':
+                        {'address_family':
+                            {'ipv6':
                                 {'address': ['fe80::5054:ff:feac:64b3', '2001:db8:1:2::2'],
-                                'bfd': 
+                                'bfd':
                                     {'enable': False,
                                     'interval': 0.150,
                                     'detection_multiplier': 3,
@@ -338,11 +338,11 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                                 'oper_status': 'off',
                                 'primary_address': 'fe80::5054:ff:feac:64b3',
                                 'propagation_delay': 500}}},
-                    'Loopback0': 
-                        {'address_family': 
-                            {'ipv6': 
+                    'Loopback0':
+                        {'address_family':
+                            {'ipv6':
                                 {'address': ['fe80::85c6:bdff:fe62:61e', '2001:db8:2:2::2'],
-                                'bfd': 
+                                'bfd':
                                     {'enable': False,
                                     'interval': 0.150,
                                     'detection_multiplier': 3,
@@ -373,7 +373,7 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
         Interface                  PIM  Nbr   Hello  DR
                                         Count Intvl  Prior
 
-        Loopback0                   on   1     30     1     
+        Loopback0                   on   1     30     1
             Primary Address : fe80::85c6:bdff:fe62:61e
                     Address : 2001:db8:2:2::2
                       Flags : B P NA V
@@ -385,10 +385,10 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                 Hello Timer : 00:00:19
             Neighbor Filter : -
 
-        GigabitEthernet0/0/0/0      on   1     30     1     
+        GigabitEthernet0/0/0/0      on   1     30     1
             Primary Address : fe80::5054:ff:fee4:f669
                     Address : 2001:db8:2:3::2
-                      Flags : B P NA 
+                      Flags : B P NA
                         BFD : Off/150 ms/3
                          DR : this system
 
@@ -397,10 +397,10 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
                 Hello Timer : 00:00:22
             Neighbor Filter : -
 
-        GigabitEthernet0/0/0/1off         1     30     1     
+        GigabitEthernet0/0/0/1off         1     30     1
             Primary Address : fe80::5054:ff:feac:64b3
                     Address : 2001:db8:1:2::2
-                      Flags : B P NA 
+                      Flags : B P NA
                         BFD : Off/150 ms/3
                          DR : this system
 
@@ -438,15 +438,15 @@ class test_show_pim_vrf_interface_detail(unittest.TestCase):
 class test_show_pim_vrf_rpf_summary(unittest.TestCase):
 
     '''Unit test for 'show pim vrf <WORD> <WORD> rpf summary'''
-    
+
     device = Device(name='aDevice')
     empty_output = {'execute.return_value': ''}
 
     golden_parsed_output1 = {
-        'vrf': 
-            {'default': 
-                {'address_family': 
-                    {'ipv4': 
+        'vrf':
+            {'default':
+                {'address_family':
+                    {'ipv4':
                         {'default_rpf_table': 'IPv4-Unicast-default',
                         'isis_mcast_topology': False,
                         'mo_frr_flow_based': False,
@@ -456,13 +456,13 @@ class test_show_pim_vrf_rpf_summary(unittest.TestCase):
                         'rib_convergence_time_left': '00:00:00',
                         'rib_convergence_timeout': '00:30:00',
                         'rump_mu_rib': False,
-                        'table': 
-                            {'IPv4-Unicast-default': 
+                        'table':
+                            {'IPv4-Unicast-default':
                                 {'pim_rpf_registrations': 1,
                                 'rib_table_converged': True}}}}}}}
 
     golden_output1 = {'execute.return_value': '''
-        RP/0/0/CPU0:R2#show pim vrf default ipv4 rpf summary 
+        RP/0/0/CPU0:R2#show pim vrf default ipv4 rpf summary
         Mon May 29 14:42:47.569 UTC
             ISIS Mcast Topology Not configured
             MoFRR Flow-based    Not configured
@@ -482,10 +482,10 @@ class test_show_pim_vrf_rpf_summary(unittest.TestCase):
         '''}
 
     golden_parsed_output2 = {
-        'vrf': 
-            {'default': 
-                {'address_family': 
-                    {'ipv6': 
+        'vrf':
+            {'default':
+                {'address_family':
+                    {'ipv6':
                         {'default_rpf_table': 'IPv6-Unicast-default',
                         'isis_mcast_topology': False,
                         'mo_frr_flow_based': False,
@@ -495,13 +495,13 @@ class test_show_pim_vrf_rpf_summary(unittest.TestCase):
                         'rib_convergence_time_left': '00:00:00',
                         'rib_convergence_timeout': '00:30:00',
                         'rump_mu_rib': False,
-                        'table': 
-                            {'IPv6-Unicast-default': 
+                        'table':
+                            {'IPv6-Unicast-default':
                                 {'pim_rpf_registrations': 0,
                                 'rib_table_converged': True}}}}}}}
 
     golden_output2 = {'execute.return_value': '''
-        RP/0/0/CPU0:R2#show pim vrf default ipv6 rpf summary 
+        RP/0/0/CPU0:R2#show pim vrf default ipv6 rpf summary
         Mon May 29 14:42:53.538 UTC
             ISIS Mcast Topology Not configured
             MoFRR Flow-based    Not configured
@@ -539,6 +539,81 @@ class test_show_pim_vrf_rpf_summary(unittest.TestCase):
         obj = ShowPimVrfRpfSummary(device=self.device)
         parsed_output = obj.parse(vrf='default', af='ipv6')
         self.assertEqual(parsed_output,self.golden_parsed_output2)
+
+
+# ==========================================================================
+# Unittest for 'show pim topology summary'
+# ==========================================================================
+class test_show_pim_topology_summary(unittest.TestCase):
+    """ Unit test for show pim topology summary. """
+
+    empty_output = {'execute.return_value': ''}
+
+    golden_output_1 = {'execute.return_value': """
+        RP/0/RSP0/CPU0:PE5#show pim topology summary 
+        Tue Jan 26 04:06:02.148 UTC
+
+        PIM Topology Summary for VRF default
+          No. of group ranges = 5 (Active group ranges = 4)
+          No. of (*,G) routes = 1
+          No. of (S,G) routes = 200
+          No. of (S,G)RPT routes = 0
+        """}
+
+    golden_parsed_output_1 = {
+        'vrf':
+            {'default':
+                 {'active_group_ranges': 4,
+                  'no_group_ranges': 5,
+                  'no_sg_routes': 200,
+                  'no_sg_rpt_routes': 0,
+                  'no_g_routes': 1
+                  }
+             }
+    }
+
+    golden_output_2 = {'execute.return_value': """
+        RP/0/RSP0/CPU0:PE5#show pim vrf vpn101 topology summary 
+        Tue Jan 26 04:22:07.176 UTC
+
+        PIM Topology Summary for VRF vpn101
+          No. of group ranges = 5 (Active group ranges = 4)
+          No. of (*,G) routes = 1
+          No. of (S,G) routes = 150
+          No. of (S,G)RPT routes = 0
+        """}
+
+    golden_parsed_output_2 = {
+        'vrf':
+            {'vpn101':
+                 {'active_group_ranges': 4,
+                  'no_group_ranges': 5,
+                  'no_sg_routes': 150,
+                  'no_sg_rpt_routes': 0,
+                  'no_g_routes': 1
+                  }
+             }
+    }
+
+    maxDiff = None
+
+    def test_show_pim_topology_summary_empty(self):
+        self.device = Mock(**self.empty_output)
+        obj = ShowPimTopologySummary(device=self.device)
+        with self.assertRaises(SchemaEmptyParserError):
+            parsed_output = obj.parse()
+
+    def test_show_pim_topology_summary_full(self):
+        self.device = Mock(**self.golden_output_1)
+        obj = ShowPimTopologySummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+    def test_show_pim_topology_summary_full_custom_vrf(self):
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowPimTopologySummary(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 
 if __name__ == '__main__':

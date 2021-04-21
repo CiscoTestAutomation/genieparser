@@ -1,0 +1,7 @@
+Router# show access-lists 101
+Extended IP access list 101
+    10 permit ip host 10.3.3.3 host 10.5.5.34
+    20 permit icmp any any
+    30 permit ip host 10.34.2.2 host 10.2.54.2
+    40 permit ip host 10.3.4.31 host 10.3.32.3 log
+    

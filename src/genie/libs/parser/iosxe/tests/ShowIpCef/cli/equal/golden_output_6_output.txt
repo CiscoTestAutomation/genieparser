@@ -1,0 +1,7 @@
+
+show ip cef 10.169.196.241
+10.169.196.241/32
+    nexthop 10.19.198.25 GigabitEthernet0/1/6 label 16063(elc)-(local:17063)
+    nexthop 10.19.198.26 GigabitEthernet0/1/7 label [16063|16063]-(local:17063)
+        repair: attached-nexthop 10.19.198.29 GigabitEthernet0/1/8
+    

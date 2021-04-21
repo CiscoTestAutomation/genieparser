@@ -1,0 +1,11 @@
+
+asr-MIB-1#show bootvar
+BOOT variable =
+CONFIG_FILE variable =
+BOOTLDR variable does not exist
+Configuration register is 0x2 (will be 0x2102 at next reload)
+
+Standby not ready to show bootvar
+
+asr-MIB-1#
+        

@@ -1,0 +1,17 @@
+
+csr1000v-2#show lacp counters
+             LACPDUs         Marker      Marker Response    LACPDUs
+Port       Sent   Recv     Sent   Recv     Sent   Recv      Pkts Err
+---------------------------------------------------------------------
+Channel group: 1
+Gi2         27     22       0      0        0      0         0
+Gi3         24     21       0      0        0      0         0
+
+             LACPDUs         Marker      Marker Response    LACPDUs
+Port       Sent   Recv     Sent   Recv     Sent   Recv      Pkts Err
+---------------------------------------------------------------------
+Channel group: 2
+Gi4         24     31       0      0        0      0         0
+Gi5         14     10       0      0        0      0         0
+Gi6         13     11       0      0        0      0         0
+    

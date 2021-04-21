@@ -1,0 +1,34 @@
+
+        show krt queue
+        Routing table add queue: 0 queued
+        Interface add/delete/change queue: 0 queued
+        Top-priority deletion queue: 0 queued
+        Top-priority change queue: 0 queued
+        Top-priority add queue: 0 queued
+        high priority V4oV6 tcnh delete queue: 0 queued
+        high prioriy anchor gencfg delete queue: 0 queued
+        High-priority multicast add/change: 0 queued
+        Indirect next hop top priority add/change: 0 queued
+        Indirect next hop add/change: 0 queued
+        high prioriy anchor gencfg add-change queue: 0 queued
+        MPLS add queue: 0 queued
+        Indirect next hop delete: 0 queued
+        High-priority deletion queue: 0 queued
+        MPLS change queue: 0 queued
+        High-priority change queue: 0 queued
+        High-priority add queue: 0 queued
+        Normal-priority indirect next hop queue: 0 queued
+        Normal-priority deletion queue: 0 queued
+        Normal-priority composite next hop deletion queue: 0 queued
+        Low prioriy Statistics-id-group deletion queue: 0 queued
+        Normal-priority change queue: 0 queued
+        Normal-priority add queue: 0 queued
+        Least-priority delete queue: 0 queued
+        Least-priority change queue: 0 queued
+        Least-priority add queue: 0 queued
+        Normal-priority pfe table nexthop queue: 0 queued
+        EVPN gencfg queue: 0 queued
+        Normal-priority gmp queue: 0 queued
+        Routing table delete queue: 0 queued
+        Low priority route retry queue: 0 queued
+    

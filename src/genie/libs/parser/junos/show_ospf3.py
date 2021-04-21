@@ -14,12 +14,14 @@ Parser for the following show commands:
     * show ospf3 database link advertising-router {ipaddress} detail
     * show ospf3 neighbor
     * show ospf3 neighbor instance {instance_name}
+    * show ospf3 neighbor instance all
 '''
 import re
 
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, Optional, Use,
-                                                SchemaTypeError, Schema)
+                                                Schema)
 
 
 class ShowOspf3InterfaceSchema(MetaParser):
@@ -41,7 +43,7 @@ class ShowOspf3InterfaceSchema(MetaParser):
     def validate_ospf3_interface_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-interface is not a list')
+            raise SchemaError('ospf-interface is not a list')
         ospf3_interface_schema = Schema({
             "bdr-id": str,
             "dr-id": str,
@@ -138,7 +140,7 @@ class ShowOspf3NeighborExtensiveSchema(MetaParser):
     def validate_ospf3_neighbor_extensive_list(value):
         # Pass osp3_neighbor_extensive-entry list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf3-table-entry is not a list')
+            raise SchemaError('ospf3-table-entry is not a list')
         # Create Arp Entry Schema
         entry_schema = Schema({
             "activity-timer": str,
@@ -293,7 +295,7 @@ class ShowOspf3NeighborSchema(MetaParser):
     def validate_ospf3_neighbor_list(value):
         # Pass osp3_neighbor_detail-entry list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf3-table-entry is not a list')
+            raise SchemaError('ospf3-table-entry is not a list')
         # Create Arp Entry Schema
         entry_schema = Schema({
             "activity-timer": str,
@@ -324,11 +326,14 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
             * show ospf3 neighbor
     """
 
-    cli_command = ['show ospf3 neighbor']
+    cli_command = ['show ospf3 neighbor', 'show ospf3 neighbor instance {name}']
 
-    def cli(self, output=None):
+    def cli(self, name=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command[0])
+            if name:
+                out = self.device.execute(self.cli_command[1].format(name=name))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -366,7 +371,8 @@ class ShowOspf3Neighbor(ShowOspf3NeighborSchema):
                 ospf3_entry_dict['neighbor-address'] = neighbor_address
                 ospf3_entry_list.append(ospf3_entry_dict)
                 continue
-
+            
+            
         return ret_dict
 
 
@@ -434,7 +440,7 @@ class ShowOspf3DatabaseSchema(MetaParser):
     '''
     def validate_ospf3_database_information(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf3-database-information')
+            raise SchemaError('ospf3-database-information')
         ospf3_database_information_schema = Schema({
             "ospf3-area-header": {
                 "ospf-area": str
@@ -452,7 +458,7 @@ class ShowOspf3DatabaseSchema(MetaParser):
     def validate_ospf3_database_list(value):
         # Pass ospf3-database list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-interface is not a list')
+            raise SchemaError('ospf-interface is not a list')
         ospf3_database_schema = Schema({
             "advertising-router": str,
             "age": str,
@@ -472,7 +478,7 @@ class ShowOspf3DatabaseSchema(MetaParser):
     def validate_ospf3_intf_header_list(value):
         # Pass ospf3-intf-header list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-interface is not a list')
+            raise SchemaError('ospf-interface is not a list')
         ospf3_intf_header_schema = Schema({"ospf-area": str, "ospf-intf": str})
         # Validate each dictionary in list
         for item in value:
@@ -588,7 +594,7 @@ class ShowOspf3InterfaceExtensiveSchema(MetaParser):
     def validate_ospf3_interface_list(value):
         # Pass ospf3-interface list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf3-interface is not a list')
+            raise SchemaError('ospf3-interface is not a list')
         ospf3_interface_schema = Schema({
             "adj-count": str,
             "bdr-id": str,
@@ -610,7 +616,8 @@ class ShowOspf3InterfaceExtensiveSchema(MetaParser):
             "prefix-length": str,
             "retransmit-interval": str,
             Optional("router-priority"): str,
-            Optional("dr-address"): str
+            Optional("dr-address"): str,
+            Optional("br-address"): str
         })
         # Validate each dictionary in list
         for item in value:
@@ -659,7 +666,7 @@ class ShowOspf3InterfaceExtensive(ShowOspf3InterfaceExtensiveSchema):
         # Adj count: 1, Router LSA ID: 0
         p4 = re.compile(
             r'^Adj( +)count:( +)(?P<adj_count>\d+),( +)Router( +)LSA'
-            r'( +)ID:( +)(?P<ospf3_router_lsa_id>\S+)$')
+            r'( +)ID:( +)(?P<ospf3_router_lsa_id>\S+)(, \S+)?$')
 
         # Hello 10, Dead 40, ReXmit 5, Not Stub
         p5 = re.compile(
@@ -682,10 +689,12 @@ class ShowOspf3InterfaceExtensive(ShowOspf3InterfaceExtensiveSchema):
         # DR addr fe80::250:560f:fc8d:7c08
         p8 = re.compile(r'^DR( +)addr( +)(?P<dr_address>\S+)$')
 
+        # DR addr fe80::250:560f:fc8d:7c08 BDR addr fe80::250:560f:fc8d:7c08
+        p9 = re.compile(r'^DR addr +(?P<dr_address>\S+), BDR addr +(?P<br_address>\S+)$')
+
         # Validate each dictionary in list
         for line in out.splitlines():
             line = line.strip()
-
             # ge-0/0/0.0          PtToPt  0.0.0.8         0.0.0.0         0.0.0.0            1
             m = p1.match(line)
             if m:
@@ -802,6 +811,20 @@ class ShowOspf3InterfaceExtensive(ShowOspf3InterfaceExtensiveSchema):
 
                 continue
 
+            # DR addr fe80::250:560f:fc8d:7c08 BR addr fe80::250:560f:fc8d:7c08
+            m = p9.match(line)
+            if m:
+                last_interface = ret_dict["ospf3-interface-information"][
+                    "ospf3-interface"][-1]
+
+                group = m.groupdict()
+                entry = last_interface
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    entry[entry_key] = group_value
+
+                continue
+            
         return ret_dict
 
 
@@ -814,7 +837,7 @@ class ShowOspf3DatabaseExternalExtensiveSchema(MetaParser):
     def validate_ospf3_database_list(value):
         # Pass ospf3-database list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-interface is not a list')
+            raise SchemaError('ospf-interface is not a list')
         ospf3_interface_schema = Schema({
             "advertising-router": str,
             "age": str,
@@ -1432,7 +1455,7 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
     # Sub Schema ospf3-link
     def validate_ospf3_link_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError("ospf3-link is not a list")
+            raise SchemaError("ospf3-link is not a list")
         ospf3_link_schema = Schema({
             "link-intf-id": str,
             "link-metric": str,
@@ -1449,7 +1472,7 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
     # Sub Schema ospf3-lsa-topology-link
     def validate_ospf3_lsa_topology_link_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError("ospf3-lsa-topology-link is not a list")
+            raise SchemaError("ospf3-lsa-topology-link is not a list")
         ospf3_lsa_topology_link_schema = Schema({
             "link-type-name":
             str,
@@ -1468,7 +1491,7 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
     # Sub Schema ospf3-database
     def validate_ospf3_database_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError("ospf3-database is not a list")
+            raise SchemaError("ospf3-database is not a list")
         ospf3_database_schema = Schema({
             "advertising-router": str,
             "age": str,
@@ -1576,7 +1599,7 @@ class ShowOspf3DatabaseExtensiveSchema(MetaParser):
     # Sub Schema ospf3-intf-header
     def validate_ospf3_intf_header_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError("ospf3-intf-header is not a list")
+            raise SchemaError("ospf3-intf-header is not a list")
         ospf3_link_schema = Schema({"ospf-area": str, "ospf-intf": str})
         # Validate each dictionary in list
         for item in value:
@@ -1675,7 +1698,7 @@ class ShowOspf3DatabaseExtensive(ShowOspf3DatabaseExtensiveSchema):
         )
 
         # fe80::250:56ff:fe8d:a96c
-        p12 = re.compile(r"^(?P<linklocal_address>[\S\:]+)$")
+        p12 = re.compile(r"^(?P<linklocal_address>[a-fA-F\d\:]+)$")
 
         # Gen timer 00:49:49
         p13 = re.compile(r"^Gen +timer +(?P<generation_timer>\S+)$")
@@ -2150,7 +2173,7 @@ class ShowOspf3DatabaseNetworkDetailSchema(MetaParser):
     } """
     def validate_ospf_lsa_topology_innerlist(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf3 lsa is not a list')
+            raise SchemaError('ospf3 lsa is not a list')
         ospf3_lsa_schema = Schema({
             "link-type-name": str,
             "ospf-lsa-topology-link-metric": str,
@@ -2163,7 +2186,7 @@ class ShowOspf3DatabaseNetworkDetailSchema(MetaParser):
 
     def validate_ospf3_database_topology_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
         ospf3_database_schema = Schema({
             Optional("@heading"): str,
             "advertising-router": str,
@@ -2350,7 +2373,7 @@ class ShowOspf3DatabaseLinkAdvertisingRouterSchema(MetaParser):
     } """
     def validate_ospf3_intf_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf3 intf is not a list')
+            raise SchemaError('ospf3 intf is not a list')
         ospf3_intf_schema = Schema({"ospf-area": str, "ospf-intf": str})
         for item in value:
             ospf3_intf_schema.validate(item)
@@ -2358,7 +2381,7 @@ class ShowOspf3DatabaseLinkAdvertisingRouterSchema(MetaParser):
 
     def validate_ospf3_database_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
         ospf3_database_schema = Schema({
             Optional("@heading"): str,
             "advertising-router": str,
@@ -2551,14 +2574,18 @@ class ShowOspf3RouteNetworkExtensiveSchema(MetaParser):
 
     def validate_ospf3_route_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-route is not a list')
+            raise SchemaError('ospf-route is not a list')
         ospf3_route_schema = Schema({
             "ospf3-route-entry": {
                 "address-prefix": str,
+                Optional("forward"): str,
                 "interface-cost": str,
                 "next-hop-type": str,
                 "ospf-area": str,
                 Optional("ospf-next-hop"): {
+                    Optional("next-hop-address"): {
+                                "interface-address": str
+                    },
                     "next-hop-name": {
                         "interface-name": str
                     }
@@ -2606,12 +2633,12 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
                         r'+(?P<next_hop_type>\S+) +(?P<interface_cost>\d+)$')
 
         #NH-interface lo0.0
-        p2 = re.compile(r'^NH-interface +(?P<interface_name>\S+)$')
+        #NH-interface et-0/0/0.0, NH-addr fe80::96f7:adff:fe5a:4840
+        p2 = re.compile(r'^NH-interface +(?P<interface_name>[\w\d\-\/\.]+)(, +NH-addr +(?P<interface_address>\S+))?$')
 
         #Area 0.0.0.0, Origin 10.64.4.4, Priority low
-        p3 = re.compile(r'^Area +(?P<ospf_area>\S+),+ Origin '
-                        r'+(?P<route_origin>\S+), +Priority '
-                        r'+(?P<route_priority>\S+)$')
+        #Area 0.0.0.0, Origin 10.36.3.3, Fwd NZ, Priority medium
+        p3 = re.compile(r'^Area +(?P<ospf_area>\S+),+ Origin +(?P<route_origin>\S+),( +Fwd +(?P<forward>\S+),)? +Priority +(?P<route_priority>\S+)$')
 
 
         for line in out.splitlines():
@@ -2638,6 +2665,8 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
             if m:
                 group = m.groupdict()
                 next_hop_dict = {'next-hop-name':{'interface-name':group['interface_name']}}
+                if group['interface_address']:
+                    next_hop_dict['next-hop-address'] = {'interface-address':group['interface_address']} 
                 route_entry_dict['ospf-next-hop'] = next_hop_dict                
                 continue
 
@@ -2646,12 +2675,263 @@ class ShowOspf3RouteNetworkExtensive(ShowOspf3RouteNetworkExtensiveSchema):
             if m:
                 group = m.groupdict()
                 for group_key, group_value in group.items():
-                    entry_key = group_key.replace('_', '-')
-                    route_entry_dict[entry_key] = group_value
+                    if group_value != None:
+                        entry_key = group_key.replace('_', '-')
+                        route_entry_dict[entry_key] = group_value
 
                 ospf3_parent_route_dict = {}
                 ospf3_parent_route_dict['ospf3-route-entry'] = route_entry_dict
                 ospf3_topology_route_table.append(ospf3_parent_route_dict)
+                continue
+
+        return ret_dict
+
+class ShowOspf3NeighborInstanceAllSchema(MetaParser):
+    """schema = {
+        "ospf3-neighbor-information-all": {
+            "ospf3-instance-neighbor": {
+                "ospf3-instance-name": str,
+                "ospf3-realm-neighbor": {
+                    "ospf3-realm-name": str
+                    "ospf3-neighbor": [
+                        {
+                            "activity-timer": str,
+                            "interface-name": str,
+                            "neighbor-address": str,
+                            "neighbor-id": str,
+                            "neighbor-priority": str,
+                            "ospf-neighbor-state": str
+                        }
+                    ]
+                }
+            }
+        }
+    }"""
+
+    def validate_ospf3_neighbor_list(value):
+        # Pass osp3_neighbor_detail-entry list of dict in value
+        if not isinstance(value, list):
+            raise SchemaError('ospf3-table-entry is not a list')
+        # Create Arp Entry Schema
+        entry_schema = Schema({
+            "activity-timer": str,
+            "interface-name": str,
+            "neighbor-address": str,
+            "neighbor-id": str,
+            "neighbor-priority": str,
+            "ospf-neighbor-state": str
+        })
+        # Validate each dictionary in list
+        for item in value:
+            entry_schema.validate(item)
+        return value
+
+    # Main Schema
+    schema = {
+        "ospf3-neighbor-information-all": {
+            "ospf3-instance-neighbor": {
+                "ospf3-instance-name": str,
+                "ospf3-realm-neighbor": {
+                    "ospf3-realm-name": str,
+                    Optional("ospf3-neighbor"): Use(validate_ospf3_neighbor_list)
+                }
+            }
+        }
+    }
+
+
+# ==============================================
+# Parser for 'show ospf3 neighbor instance all'
+# ==============================================
+class ShowOspf3NeighborInstanceAll(ShowOspf3NeighborInstanceAllSchema):
+    """ Parser for:
+            * show ospf3 neighbor instance all
+    """
+
+    cli_command = ['show ospf3 neighbor instance all']
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Instance: master
+        p0 = re.compile(r'^Instance: +(?P<instance_name>\S+)$')
+
+        # Realm: ipv6-unicast
+        p1 = re.compile(r'^Realm: +(?P<realm_name>\S+)$')
+
+        #10.189.5.253     ge-0/0/0.0             Full      128     35
+        p2 = re.compile(r'^(?P<id>[\d\.]+) +(?P<interface>\S+) '
+                        r'+(?P<state>\S+) +(?P<pri>\S+) +(?P<dead>\d+)$')
+
+        #Neighbor-address fe80::250:56ff:fe8d:53c0
+        p3 = re.compile(r'^Neighbor-address +(?P<neighbor_address>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Instance: master
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                instance = group['instance_name']
+                ospf3_instance_neighbor = ret_dict.setdefault('ospf3-neighbor-information-all', {}).setdefault(
+                    'ospf3-instance-neighbor', {})
+                ospf3_instance_neighbor['ospf3-instance-name'] = instance
+                continue
+            # Realm: ipv6-unicast
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                realm_name = group['realm_name']
+                ospf3_realm_neighbor = ospf3_instance_neighbor.setdefault("ospf3-realm-neighbor", {})
+                ospf3_realm_neighbor["ospf3-realm-name"] = realm_name
+                continue
+            #10.189.5.253     ge-0/0/0.0             Full      128     35
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ospf3_entry_list = ospf3_realm_neighbor.setdefault('ospf3-neighbor', [])
+                ospf3_entry_dict = {}
+                ospf3_entry_dict['activity-timer'] = group['dead']
+                ospf3_entry_dict['interface-name'] = group['interface']
+                ospf3_entry_dict['neighbor-id'] = group['id']
+                ospf3_entry_dict['neighbor-priority'] = group['pri']
+                ospf3_entry_dict['ospf-neighbor-state'] = group['state']
+                continue
+
+            #Neighbor-address fe80::250:56ff:fe8d:53c0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor_address = group['neighbor_address']
+                ospf3_entry_dict['neighbor-address'] = neighbor_address
+                ospf3_entry_list.append(ospf3_entry_dict)
+                continue
+
+        return ret_dict
+
+class ShowOspf3RouteRouteSchema(MetaParser):
+
+    # schema = {
+    #   "ospf3-route-information": {
+    #         "ospf-topology-route-table": {
+    #             "ospf3-route": {
+    #                 "ospf3-route-entry": {
+    #                     "address-prefix": str,
+    #                     "interface-cost": str,
+    #                     "next-hop-type": str,
+    #                     "ospf-next-hop": [
+    #                         {
+    #                             "next-hop-address": {
+    #                                 "interface-address": str
+    #                             },
+    #                             "next-hop-name": {
+    #                                 "interface-name": str
+    #                             }
+    #                         }
+    #                     ],
+    #                     "route-path-type": str,
+    #                     "route-type": str
+    #                     }
+    #                 }
+    #             }
+    #         }
+    #     }
+
+    def validate_ospf_next_hop_list(value):
+        ''' Validates each entry in ospf-next-hop '''
+        if not isinstance(value, list):
+            raise SchemaError('ospf-next-hop is not a list')
+        
+        ospf_next_hop_schema = Schema({
+            "next-hop-address": {
+                "interface-address": str,
+            },
+            "next-hop-name": {
+                "interface-name": str,
+            }
+        })
+
+        for entry in value:
+            ospf_next_hop_schema.validate(entry)    
+        return value
+
+    schema = {
+      "ospf3-route-information": {
+            "ospf-topology-route-table": {
+                "ospf3-route": {
+                    "ospf3-route-entry": {
+                        "address-prefix": str,
+                        "interface-cost": str,
+                        "next-hop-type": str,
+                        "ospf-next-hop": Use(validate_ospf_next_hop_list),
+                        "route-path-type": str,
+                        "route-type": str
+                        }
+                    }
+                }
+            }
+        }
+
+'''
+Parser for:
+    * show ospf3 route {route}
+'''
+
+
+class ShowOspf3RoutePrefix(ShowOspf3RouteRouteSchema):
+    cli_command = 'show ospf3 route {prefix}'
+
+    def cli(self ,prefix, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                prefix=prefix
+            ))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #2001:30::/64                                 Intra Network    IP   2
+        p1 = re.compile(r'^(?P<address_prefix>[\d\:\/]+) '
+                        r'+(?P<route_path_type>\S+) +(?P<route_type>\S+) '
+                        r'+(?P<next_hop_type>\S+) +(?P<interface_cost>\d+)$')
+
+        #NH-interface ge-0/0/4.0, NH-addr fe80::250:56ff:fe8d:351d
+        p2 = re.compile(r'^NH-interface +(?P<interface_name>[\w\d\-\/\.]+)(, +NH-addr +(?P<interface_address>\S+))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #2001:30::/64                                 Intra Network    IP   2
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf3_topology_route_table = ret_dict.setdefault(
+                    'ospf3-route-information', {}).setdefault('ospf-topology-route-table', {})
+
+                route_entry_dict = {}
+
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    route_entry_dict[entry_key] = group_value
+
+            #NH-interface ge-0/0/4.0, NH-addr fe80::250:56ff:fe8d:351d
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                next_hop_dict = {'next-hop-name':{'interface-name':group['interface_name']}}
+                if group['interface_address']:
+                    next_hop_dict['next-hop-address'] = {'interface-address':group['interface_address']} 
+                route_entry_dict.setdefault('ospf-next-hop', []).append(next_hop_dict)
+                ospf3_parent_route_dict = {}
+                ospf3_parent_route_dict['ospf3-route-entry'] = route_entry_dict
+                ospf3_topology_route_table['ospf3-route'] = ospf3_parent_route_dict   
                 continue
 
         return ret_dict

@@ -237,7 +237,6 @@ class TestShowIpProtocols(unittest.TestCase):
         "execute.return_value": """
         show ip protocols
         *** IP Routing is NSF aware ***
-
         Routing Protocol is "application"
           Sending updates every 0 seconds
           Invalid after 0 seconds, hold down 0, flushed after 0
@@ -248,7 +247,6 @@ class TestShowIpProtocols(unittest.TestCase):
           Routing Information Sources:
             Gateway         Distance      Last Update
           Distance: (default is 4)
-
         Routing Protocol is "isis banana"
           Outgoing update filter list for all interfaces is not set
           Incoming update filter list for all interfaces is not set
@@ -268,7 +266,6 @@ class TestShowIpProtocols(unittest.TestCase):
             10.60.6.4            115      05:56:34
             10.60.6.9            115      05:56:34
           Distance: (default is 115)
-
         Routing Protocol is "bgp 9999"
           Outgoing update filter list for all interfaces is not set
           Incoming update filter list for all interfaces is not set
@@ -518,7 +515,6 @@ class TestShowIpProtocols(unittest.TestCase):
         "execute.return_value": """\
         R1#show ip protocols
         *** IP Routing is NSF aware ***
-
         Routing Protocol is "application"
           Sending updates every 0 seconds
           Invalid after 0 seconds, hold down 0, flushed after 0
@@ -529,7 +525,6 @@ class TestShowIpProtocols(unittest.TestCase):
           Routing Information Sources:
             Gateway         Distance      Last Update
           Distance: (default is 4)
-
         Routing Protocol is "rip"
           Output delay 50 milliseconds between packets
           Outgoing update filter list for all interfaces is not set
@@ -557,7 +552,6 @@ class TestShowIpProtocols(unittest.TestCase):
             10.1.3.3             120      00:00:00
             10.1.2.2             120      00:00:04
           Distance: (default is 120)
-
         """
     }
 
@@ -832,7 +826,6 @@ class TestShowIpProtocols(unittest.TestCase):
         "execute.return_value": """
         show ip protocols
         *** IP Routing is NSF aware ***
-
         Routing Protocol is "application"
           Sending updates every 0 seconds
           Invalid after 0 seconds, hold down 0, flushed after 0
@@ -843,7 +836,6 @@ class TestShowIpProtocols(unittest.TestCase):
           Routing Information Sources:
             Gateway         Distance      Last Update
           Distance: (default is 4)
-
         Routing Protocol is "ospf 1"
           Outgoing update filter list for all interfaces is not set
           Incoming update filter list for all interfaces is not set
@@ -873,7 +865,6 @@ class TestShowIpProtocols(unittest.TestCase):
             192.168.1.176        110      21:32:48
             192.168.1.178        110      21:36:07
           Distance: (default is 110)
-
         Routing Protocol is "bgp 202926"
           Outgoing update filter list for all interfaces is not set
           Incoming update filter list for all interfaces is not set
@@ -1093,7 +1084,6 @@ class TestShowIpProtocols(unittest.TestCase):
         raw1 = """\
             R1_ospf_xe#show ip protocols
             *** IP Routing is NSF aware ***
-
             Routing Protocol is "application"
               Sending updates every 0 seconds
               Invalid after 0 seconds, hold down 0, flushed after 0
@@ -1104,7 +1094,6 @@ class TestShowIpProtocols(unittest.TestCase):
               Routing Information Sources:
                 Gateway         Distance      Last Update
               Distance: (default is 4)
-
             Routing Protocol is "ospf 1"
               Outgoing update filter list for all interfaces is not set
               Incoming update filter list for all interfaces is not set
@@ -1123,7 +1112,6 @@ class TestShowIpProtocols(unittest.TestCase):
                 10.64.4.4            110      00:19:15
               Distance: (default is 110)
               Distance: intra-area 112 inter-area 113 external 114
-
             Routing Protocol is "bgp 100"
               Outgoing update filter list for all interfaces is not set
               Incoming update filter list for all interfaces is not set
@@ -1169,7 +1157,6 @@ class TestShowIpProtocols(unittest.TestCase):
         raw1 = """\
             show ip protocols
             *** IP Routing is NSF aware ***
-
             Routing Protocol is "application"
               Sending updates every 0 seconds
               Invalid after 0 seconds, hold down 0, flushed after 0
@@ -1180,7 +1167,6 @@ class TestShowIpProtocols(unittest.TestCase):
               Routing Information Sources:
                 Gateway         Distance      Last Update
               Distance: (default is 4)
-
             Routing Protocol is "ospf 1"
               Outgoing update filter list for all interfaces is not set
               Incoming update filter list for all interfaces is not set
@@ -1197,7 +1183,6 @@ class TestShowIpProtocols(unittest.TestCase):
                 Gateway         Distance      Last Update
                 192.168.0.9          110      01:36:38
               Distance: (default is 110)
-
             Routing Protocol is "bgp 1"
               Outgoing update filter list for all interfaces is not set
               Incoming update filter list for all interfaces is not set
@@ -1281,7 +1266,6 @@ class TestShowIpProtocols(unittest.TestCase):
 
         raw1 = '''
             *** IP Routing is NSF aware ***
-
             Routing Protocol is "application"
               Sending updates every 0 seconds
               Invalid after 0 seconds, hold down 0, flushed after 0
@@ -1292,7 +1276,6 @@ class TestShowIpProtocols(unittest.TestCase):
               Routing Information Sources:
                 Gateway         Distance      Last Update
               Distance: (default is 4)
-
             Routing Protocol is "isis"
               Outgoing update filter list for all interfaces is not set
               Incoming update filter list for all interfaces is not set
@@ -1311,7 +1294,6 @@ class TestShowIpProtocols(unittest.TestCase):
                 10.16.0.8              115      00:00:37
                 10.16.0.9              115      00:00:37
               Distance: (default is 115)
-
             Routing Protocol is "ospf 200"
               Outgoing update filter list for all interfaces is not set
               Incoming update filter list for all interfaces is not set
@@ -1326,7 +1308,6 @@ class TestShowIpProtocols(unittest.TestCase):
                 10.16.0.8              116      2w0d
                 10.16.0.9              116      2w0d
               Distance: (default is 116)
-
             Routing Protocol is "rip"
               Outgoing update filter list for all interfaces is not set
               Incoming update filter list for all interfaces is not set
@@ -1340,7 +1321,6 @@ class TestShowIpProtocols(unittest.TestCase):
               Routing Information Sources:
                 Gateway         Distance      Last Update
               Distance: (default is 120)
-
             Routing Protocol is "bgp 2"
               Outgoing update filter list for all interfaces is not set
               Incoming update filter list for all interfaces is not set
@@ -1373,350 +1353,6 @@ class TestShowIpProtocols(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_8)
 
-
-# ============================================
-# Parser for 'show ip protocols | sec rip'
-# Parser for 'show ip protocols vrf {vrf} | sec rip'
-# ============================================
-class TestShowIpProtocolsSectionRip(unittest.TestCase):
-    maxDiff = None
-    device = Device(name="aDevice")
-    empty_output = {"execute.return_value": ""}
-
-    golden_parsed_output_1 = {
-        "protocols": {
-            "rip": {
-                "vrf": {
-                    "default": {
-                        "address_family": {
-                            "ipv4": {
-                                "instance": {
-                                    "rip": {
-                                        "maximum_paths": 4,
-                                        "distance": 120,
-                                        "incoming_route_metric": {
-                                            "list": "21",
-                                            "added": "10",
-                                        },
-                                        "neighbors": {
-                                            "10.1.3.3": {
-                                                "distance": 120,
-                                                "last_update": "00:00:00",
-                                            },
-                                            "10.1.2.2": {
-                                                "distance": 120,
-                                                "last_update": "00:00:04",
-                                            },
-                                        },
-                                        "interfaces": {
-                                            "GigabitEthernet3.100": {
-                                                "summary_address": {
-                                                    "172.16.0.0/17": {}
-                                                },
-                                                "triggered_rip": "no",
-                                                "passive": True,
-                                                "send_version": "2",
-                                                "receive_version": "2",
-                                                "key_chain": "1",
-                                            }
-                                        },
-                                        "receive_version": 2,
-                                        "outgoing_update_filterlist": {
-                                            "outgoing_update_filterlist": "not set"
-                                        },
-                                        "default_redistribution_metric": 3,
-                                        "incoming_update_filterlist": {
-                                            "incoming_update_filterlist": "not set"
-                                        },
-                                        "automatic_network_summarization_in_effect": False,
-                                        "output_delay": 50,
-                                        "send_version": 2,
-                                        "timers": {
-                                            "update_interval": 10,
-                                            "flush_interval": 23,
-                                            "invalid_interval": 21,
-                                            "next_update": 8,
-                                            "holddown_interval": 22,
-                                        },
-                                        "network": ["10.0.0.0"],
-                                        "redistribute": {
-                                            "connected": {},
-                                            "rip": {},
-                                            "static": {},
-                                        },
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    golden_output_1 = {
-        "execute.return_value": """\
-        R1#show ip protocols | sec rip
-        Routing Protocol is "rip"
-          Output delay 50 milliseconds between packets
-          Outgoing update filter list for all interfaces is not set
-          Incoming update filter list for all interfaces is not set
-          Incoming routes will have 10 added to metric if on list 21
-          Sending updates every 10 seconds, next due in 8 seconds
-          Invalid after 21 seconds, hold down 22, flushed after 23
-          Default redistribution metric is 3
-          Redistributing: connected, static, rip
-          Neighbor(s):
-            10.1.2.2
-          Default version control: send version 2, receive version 2
-            Interface                           Send  Recv  Triggered RIP  Key-chain
-            GigabitEthernet3.100                2     2          No        1
-          Automatic network summarization is not in effect
-          Address Summarization:
-            172.16.0.0/17 for GigabitEthernet3.100
-          Maximum path: 4
-          Routing for Networks:
-            10.0.0.0
-          Passive Interface(s):
-            GigabitEthernet2.100
-          Routing Information Sources:
-            Gateway         Distance      Last Update
-            10.1.3.3             120      00:00:00
-            10.1.2.2             120      00:00:04
-          Distance: (default is 120)
-    """
-    }
-
-    golden_parsed_output_2 = {
-        "protocols": {
-            "rip": {
-                "vrf": {
-                    "VRF1": {
-                        "address_family": {
-                            "ipv4": {
-                                "instance": {
-                                    "rip": {
-                                        "distance": 120,
-                                        "network": ["10.0.0.0"],
-                                        "maximum_paths": 4,
-                                        "timers": {
-                                            "holddown_interval": 180,
-                                            "update_interval": 30,
-                                            "next_update": 2,
-                                            "invalid_interval": 180,
-                                            "flush_interval": 240,
-                                        },
-                                        "redistribute": {
-                                            "static": {},
-                                            "rip": {},
-                                            "connected": {},
-                                        },
-                                        "output_delay": 50,
-                                        "neighbors": {
-                                            "10.1.3.3": {
-                                                "last_update": "20:33:00",
-                                                "distance": 120,
-                                            },
-                                            "10.1.2.2": {
-                                                "last_update": "00:00:21",
-                                                "distance": 120,
-                                            },
-                                        },
-                                        "receive_version": 2,
-                                        "interfaces": {
-                                            "GigabitEthernet2.200": {
-                                                "key_chain": "none",
-                                                "triggered_rip": "no",
-                                                "send_version": "2",
-                                                "receive_version": "2",
-                                            },
-                                            "GigabitEthernet3.200": {
-                                                "key_chain": "none",
-                                                "triggered_rip": "no",
-                                                "send_version": "1 2",
-                                                "receive_version": "2",
-                                            },
-                                        },
-                                        "outgoing_update_filterlist": {
-                                            "outgoing_update_filterlist": "150",
-                                            "interfaces": {
-                                                "GigabitEthernet2.100": {
-                                                    "per_user": True,
-                                                    "filter": "150",
-                                                    "default": "not set",
-                                                },
-                                                "GigabitEthernet3.100": {
-                                                    "per_user": True,
-                                                    "filter": "130",
-                                                    "default": "not set",
-                                                },
-                                            },
-                                        },
-                                        "incoming_update_filterlist": {
-                                            "incoming_update_filterlist": "100",
-                                            "interfaces": {
-                                                "GigabitEthernet2.100": {
-                                                    "per_user": True,
-                                                    "filter": "13",
-                                                    "default": "not set",
-                                                }
-                                            },
-                                        },
-                                        "send_version": 2,
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    golden_output_2 = {
-        "execute.return_value": """
-        R1#show ip protocols vrf VRF1 | sec rip
-        Routing Protocol is "rip"
-          Output delay 50 milliseconds between packets
-          Outgoing update filter list for all interfaces is 150
-            GigabitEthernet2.100 filtered by 150 (per-user), default is not set
-            GigabitEthernet3.100 filtered by 130 (per-user), default is not set
-          Incoming update filter list for all interfaces is 100
-            GigabitEthernet2.100 filtered by 13 (per-user), default is not set
-          Sending updates every 30 seconds, next due in 2 seconds
-          Invalid after 180 seconds, hold down 180, flushed after 240
-          Redistributing: connected, static, rip
-          Default version control: send version 2, receive version 2
-            Interface                           Send  Recv  Triggered RIP  Key-chain
-            GigabitEthernet2.200                2     2          No        none
-            GigabitEthernet3.200                1 2   2          No        none
-          Maximum path: 4
-          Routing for Networks:
-             10.0.0.0
-            10.0.0.0
-          Routing Information Sources:
-            Gateway         Distance      Last Update
-            10.1.3.3             120      20:33:00
-            10.1.2.2             120      00:00:21
-          Distance: (default is 120)"""
-    }
-
-    def test_empty(self):
-        device = Mock(**self.empty_output)
-        obj = ShowIpProtocolsSectionRip(device=device)
-        with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()
-
-    def test_golden_vrf_default(self):
-        device = Mock(**self.golden_output_1)
-        obj = ShowIpProtocolsSectionRip(device=device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_1)
-
-    def test_golden_vrf_vrf1(self):
-        device = Mock(**self.golden_output_2)
-        obj = ShowIpProtocolsSectionRip(device=device)
-        parsed_output = obj.parse(vrf="VRF1")
-        self.assertEqual(parsed_output, self.golden_parsed_output_2)
-
-
-# ============================================
-# Parser for 'show ipv6 protocols | sec rip'
-# Parser for 'show ipv6 protocols vrf {vrf} | sec rip'
-# ============================================
-class TestShowIpv6Protocols(unittest.TestCase):
-    maxDiff = None
-    empty_output = {"execute.return_value": ""}
-
-    golden_parsed_output_1 = {
-        "vrf": {
-            "default": {
-                "address_family": {
-                    "ipv6": {
-                        "instance": {
-                            "rip ripng": {
-                                "redistribute": {
-                                    "static": {
-                                        "metric": 3}},
-                                "interfaces": {
-                                    "GigabitEthernet3.100": {},
-                                    "GigabitEthernet2.100": {},
-                                },
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    golden_output_1 = {
-        "execute.return_value": """\
-        R1#show ipv6 protocols | sec rip
-        IPv6 Routing Protocol is "rip ripng"
-          Interfaces:
-            GigabitEthernet3.100
-            GigabitEthernet2.100
-          Redistribution:
-            Redistributing protocol static with metric 3
-    """
-    }
-
-    golden_parsed_output_2 = {
-        "vrf": {
-            "VRF1": {
-                "address_family": {
-                    "ipv6": {
-                        "instance": {
-                            "rip ripng": {
-                                "redistribute": {
-                                    "static": {
-                                        "route_policy": "static-to-rip"
-                                    },
-                                    "connected": {},
-                                },
-                                "interfaces": {
-                                    "GigabitEthernet3.200": {},
-                                    "GigabitEthernet2.200": {},
-                                },
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    golden_output_2 = {
-        "execute.return_value": """
-        R1#show ipv6 protocols vrf VRF1 | sec rip
-        IPv6 Routing Protocol is "rip ripng"
-          Interfaces:
-            GigabitEthernet3.200
-            GigabitEthernet2.200
-          Redistribution:
-            Redistributing protocol connected with transparent metric
-            Redistributing protocol static with transparent metric route-map static-to-rip
-    """
-    }
-
-    def test_empty(self):
-        device = Mock(**self.empty_output)
-        obj = ShowIpv6ProtocolsSectionRip(device=device)
-        with self.assertRaises(SchemaEmptyParserError):
-            obj.parse()
-
-    def test_golden_golden_output_1(self):        
-        device = Mock(**self.golden_output_1)
-        obj = ShowIpv6ProtocolsSectionRip(device=device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output_1)
-
-    def test_golden_golden_output_2(self):
-        device = Mock(**self.golden_output_2)
-        obj = ShowIpv6ProtocolsSectionRip(device=device)
-        parsed_output = obj.parse(vrf="VRF1")
-        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 if __name__ == "__main__":
     unittest.main()

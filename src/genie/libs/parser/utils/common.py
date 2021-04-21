@@ -3,15 +3,21 @@
 # python
 import re
 import os
-import json
 import sys
-import warnings
-import logging
-import importlib
+import json
 import math
+import logging
+import warnings
+import importlib
 
 from genie.libs import parser
 from genie.abstract import Lookup
+from genie.metaparser.util import merge_dict
+
+from pyats import configuration as cfg
+from .extension import ExtendParsers
+
+PYATS_EXT_PARSER = 'pyats.libs.external.parser'
 
 log = logging.getLogger(__name__)
 
@@ -31,6 +37,21 @@ def _load_parser_json():
         # Open all the parsers in json file
         with open(parsers) as f:
             parser_data = json.load(f)
+
+        # check if provided external parser packages
+        ext_parser_package = cfg.get(PYATS_EXT_PARSER, None) or \
+            os.environ.get(PYATS_EXT_PARSER.upper().replace('.', '_'))
+        if ext_parser_package:
+            ext = ExtendParsers(ext_parser_package)
+            ext.extend()
+
+            ext.output.pop('tokens', None)
+            summary = ext.output.pop('extend_info', None)
+
+            merge_dict(parser_data, ext.output, update=True)
+            log.warning("External parser counts: {}\nSummary:\n{}"
+                .format(len(summary), json.dumps(summary, indent=2)))
+
     return parser_data
 
 # Parser within Genie
@@ -123,7 +144,6 @@ def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
         Returns:
             list: the result of the search
     """
-
     # Perfect match should return 
     if search in parser_data:
         return [(search, parser_data[search], {})]
@@ -263,8 +283,11 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                 token_is_regular = _is_regular_token(token)
 
             if token_is_regular: 
-               # Special case for `:\|Swap:`
+                # Special case for `:\|Swap:`
                 token = token.replace(r'\|', '|')
+                
+                # Special case for command `vim-cmd vmsvc/snapshot.get {vmid}`
+                token = token.replace(r'\.', '.')
 
         if token_is_regular:
             # Current token might be command or argument
@@ -330,8 +353,13 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                                 return None
 
                         # Currently spanned argument
-                        argument_value = ' '.join(tokens[i - 1:index]).rstrip(
-                                                        '"').replace('\\', '')
+                        if 'match' in tokens or 'include' in tokens:
+                            argument_value = ' '.join(tokens[i - 1:index]).replace('\\', '')
+                        else:
+                            argument_value = ' '.join(tokens[i - 1:index]).rstrip(
+                                                            '"').replace('\\', '')
+
+                        # argument_value = ' '.join(tokens[i - 1:index]).replace('\\', '')
                         
                         # Delete the extra tokens if spanning more than one
                         tokens_copy = tokens[:i] + tokens[index:]
@@ -499,6 +527,7 @@ class Common():
         # Please add more when face other type of interface
         convert = {'Eth': 'Ethernet',
                    'Lo': 'Loopback',
+                   'lo': 'Loopback',
                    'Fa': 'FastEthernet',
                    'Fas': 'FastEthernet',
                    'Po': 'Port-channel',
@@ -529,8 +558,8 @@ class Common():
                    'vr': 'vasiright',
                    'BE': 'Bundle-Ether'
                    }
-        m = re.search('([a-zA-Z]+)', intf) 
-        m1 = re.search('([\d\/\.]+)', intf)
+        m = re.search(r'([a-zA-Z]+)', intf) 
+        m1 = re.search(r'([\d\/\.]+)', intf)
         if hasattr(m, 'group') and hasattr(m1, 'group'):
             int_type = m.group(0)
             int_port = m1.group(0)

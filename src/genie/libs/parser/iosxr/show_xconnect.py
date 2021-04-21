@@ -391,10 +391,13 @@ class ShowL2vpnXconnectDetailSchema(MetaParser):
                                             'encapsulation': str,
                                             Optional('auto_discovered'): str,
                                             'protocol': str,
+                                            Optional('source_address'): str,
+                                            Optional('lsp'): str,
                                             Optional('type'): str,
                                             Optional('control_word'): str,
                                             Optional('interworking'): str,
                                             Optional('backup_disable_delay'): int,
+                                            Optional('status_tlv'): str,
                                             Optional('sequencing'): str,
                                             'mpls': {
                                                 Any(): {
@@ -696,6 +699,7 @@ class ShowL2vpnXconnectDetail(ShowL2vpnXconnectDetailSchema):
             # AC: GigabitEthernet0/4/0/1, state is down (Admin)
             m = p3.match(line)
             if m:
+                pw_backup = False
                 group = m.groupdict()
                 ac = group['ac']
                 state = group['state']

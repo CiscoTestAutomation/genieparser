@@ -384,7 +384,7 @@ class ShowIpRoute(ShowIpRouteSchema):
 
             #    [110/2] via 10.1.2.2, 06:46:59, GigabitEthernet0/0
             p4 = re.compile(r'^\[(?P<route_preference>[\d\/]+)\] +via +(?P<next_hop>[\d\.]+)?,?'
-                            r'( +(?P<date>[0-9][\w\:]+),)?( +(?P<interface>[\S]+))?$')
+                            r'( +(?P<date>[0-9][\w\:]+),?)?( +(?P<interface>[\S]+))?$')
             m = p4.match(line)
             if m:
                 routepreference = m.groupdict()['route_preference']

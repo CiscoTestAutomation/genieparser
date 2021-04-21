@@ -1,0 +1,218 @@
+
+        Group Type: Internal    AS: 65171                  Local AS: 65171
+        Name: Genie       Index: 0                   Flags: <Export Eval>
+        Export: [ (v4_WATARI && NEXT-HOP-SELF) ]
+        Options: <Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 1        Established: 1
+        10.189.5.253+179
+        Route Queue Timer: unset Route Queue: empty
+        Table inet.0
+            Active prefixes:              0
+            Received prefixes:            682
+            Accepted prefixes:            682
+            Suppressed due to damping:    0
+            Advertised prefixes:          682
+
+        Group Type: Internal    AS: 65171                  Local AS: 65171
+        Name: v6_Genie    Index: 1                   Flags: <Export Eval>
+        Export: [ (v6_WATARI && NEXT-HOP-SELF) ]
+        Options: <Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 1        Established: 1
+        2001:db8:223c:ca45::c+60268
+        Route Queue Timer: unset Route Queue: empty
+        Table inet6.0
+            Active prefixes:              0
+            Received prefixes:            0
+            Accepted prefixes:            0
+            Suppressed due to damping:    0
+            Advertised prefixes:          0
+
+        Group Type: Internal    AS: 65171                  Local AS: 65171
+        Name: v4_RRC_72_TRIANGLE Index: 2                Flags: <Export Eval>
+        Export: [ (ALL_out && v4_NEXT-HOP-SELF_pyats201) ]
+        Options: <Cluster Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 3        Established: 0
+        10.189.5.245
+        10.189.5.243
+        10.189.5.242+179
+
+        Group Type: Internal    AS: 65171                  Local AS: 65171
+        Name: v6_RRC_72_TRIANGLE Index: 3                Flags: <Export Eval>
+        Export: [ (ALL_out && v6_NEXT-HOP-SELF_pyats201) ]
+        Options: <Cluster Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 2        Established: 0
+        2001:db8:223c:ca45::7+179
+        2001:db8:223c:ca45::8+179
+
+        Group Type: Internal    AS: 65171                  Local AS: 65171
+        Name: v6_RRC_72_SQUARE Index: 4                  Flags: <Export Eval>
+        Export: [ ALL_out ]
+        Options: <Cluster Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 2        Established: 0
+        2001:db8:223c:ca45::9
+        2001:db8:223c:ca45::a+179
+
+        Group Type: Internal    AS: 65171                  Local AS: 65171
+        Name: v4_RRC_72_SQUARE Index: 5                  Flags: <Export Eval>
+        Export: [ ALL_out ]
+        Options: <Cluster Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 2        Established: 0
+        10.189.5.241+179
+        10.189.5.240
+
+        Group Type: Internal    AS: 65171                  Local AS: 65171
+        Name: v4_pyats       Index: 6                   Flags: <Export Eval>
+        Export: [ v4_pyats_NO-DEFAULT ]
+        Options: <Cluster Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 1        Established: 0
+        10.49.216.179
+
+        Group Type: Internal    AS: 65171                  Local AS: 65171
+        Name: v6_Kentik       Index: 7                   Flags: <Export Eval>
+        Export: [ v6_Kentik_NO-DEFAULT ]
+        Options: <Cluster Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 1        Established: 0
+        2001:db8:6be:89bb::1:140
+
+        Group Type: External                               Local AS: 65171
+        Name: sggjbb001       Index: 8                   Flags: <Export Eval>
+        Export: [ (ALL_out && (NEXT-HOP-SELF && HKG-SNG_AddMED)) ]
+        Options: <Multihop Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 1        Established: 0
+        10.189.6.250
+
+        Group Type: External                               Local AS: 65171
+        Name: v6_sggjbb001    Index: 9                   Flags: <Export Eval>
+        Export: [ (ALL_out && (NEXT-HOP-SELF && v6_HKG-SNG_AddMED)) ]
+        Options: <Multihop Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 1        Established: 0
+        2001:db8:5961:ca45::1
+
+        Group Type: External                               Local AS: 65171
+        Name: sjkGDS221-EC11  Index: 10                  Flags: <Export Eval>
+        Export: [ ((LABELSTACK_O2B || HKG-EC_out) && (NEXT-HOP-SELF && HKG-EC_AddMED)) ]
+        Options: <Multihop Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 1        Established: 1
+        10.169.14.240+60606
+        Route Queue Timer: unset Route Queue: empty
+        Table inet.0
+            Active prefixes:              682
+            Received prefixes:            684
+            Accepted prefixes:            684
+            Suppressed due to damping:    0
+            Advertised prefixes:          0
+        Table inet.3
+            Active prefixes:              2
+            Received prefixes:            2
+            Accepted prefixes:            2
+            Suppressed due to damping:    0
+            Advertised prefixes:          0
+
+        Group Type: External                               Local AS: 65171
+        Name: v6_sjkGDS221-EC11 Index: 11                Flags: <Export Eval>
+        Export: [ (v6_HKG-EC_out && (NEXT-HOP-SELF && v6_HKG-EC_AddMED)) ]
+        Options: <Multihop Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 1        Established: 1
+        2001:db8:eb18:ca45::1+179
+        Route Queue Timer: unset Route Queue: empty
+        Table inet6.0
+            Active prefixes:              0
+            Received prefixes:            0
+            Accepted prefixes:            0
+            Suppressed due to damping:    0
+            Advertised prefixes:          0
+
+        Group Type: External                               Local AS: 65171
+        Name: obpGCS001-WC11  Index: 12                  Flags: <Export Eval>
+        Export: [ (HKG-WC_out && (NEXT-HOP-SELF && HKG-WC_AddMED)) ]
+        Options: <Multihop Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 1        Established: 0
+        10.169.14.249
+
+        Group Type: External                               Local AS: 65171
+        Name: v6_obpGCS001-WC11 Index: 13                Flags: <Export Eval>
+        Export: [ (v6_HKG-WC_out && (NEXT-HOP-SELF && v6_HKG-WC_AddMED)) ]
+        Options: <Multihop Confed>
+        Options: <GracefulShutdownRcv>
+        Holdtime: 0
+        Graceful Shutdown Receiver local-preference: 0
+        Total peers: 1        Established: 0
+        2001:db8:eb18:ca45::11
+
+        Groups: 14 Peers: 19   External: 6    Internal: 13   Down peers: 15  Flaps: 359
+        Table inet.0
+            Received prefixes:            1366
+            Accepted prefixes:            1366
+            Active prefixes:              682
+            Suppressed due to damping:    0
+            Received external prefixes:   684
+            Active external prefixes:     682
+            Externals suppressed:         0
+            Received internal prefixes:   682
+            Active internal prefixes:     0
+            Internals suppressed:         0
+            RIB State: BGP restart is complete
+        Table inet.3
+            Received prefixes:            2
+            Accepted prefixes:            2
+            Active prefixes:              2
+            Suppressed due to damping:    0
+            Received external prefixes:   2
+            Active external prefixes:     2
+            Externals suppressed:         0
+            Received internal prefixes:   0
+            Active internal prefixes:     0
+            Internals suppressed:         0
+            RIB State: BGP restart is complete
+        Table inet6.0
+            Received prefixes:            0
+            Accepted prefixes:            0
+            Active prefixes:              0
+            Suppressed due to damping:    0
+            Received external prefixes:   0
+            Active external prefixes:     0
+            Externals suppressed:         0
+            Received internal prefixes:   0
+            Active internal prefixes:     0
+            Internals suppressed:         0
+            RIB State: BGP restart is complete
+    

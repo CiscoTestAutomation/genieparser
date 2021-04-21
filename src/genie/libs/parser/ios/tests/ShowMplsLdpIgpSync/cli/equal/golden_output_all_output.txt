@@ -1,0 +1,17 @@
+
+Router#show mpls ldp igp sync all
+Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+Time source is NTP, 16:10:10.780 EST Tue Nov 8 2016
+
+GigabitEthernet0/0/0:
+    LDP configured; LDP-IGP Synchronization enabled.
+    Sync status: sync achieved; peer reachable.
+    Sync delay time: 0 seconds (0 seconds left)
+    IGP holddown time: infinite.
+    Peer LDP Ident: 10.169.197.252:0
+    IGP enabled: OSPF 65109
+GigabitEthernet0/0/2:
+    LDP configured; LDP-IGP Synchronization not enabled.
+
+Router#
+    

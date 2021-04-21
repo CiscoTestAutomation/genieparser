@@ -1,0 +1,16 @@
+
+Router# show ip protocols
+*** IP Routing is NSF aware ***
+Routing Protocol is "isis"
+  Sending updates every 0 seconds
+  Invalid after 0 seconds, hold down 0, flushed after 0
+  Outgoing update filter list for all interfaces is not set
+  Incoming update filter list for all interfaces is not set
+  Redistributing: isis
+  Address Summarization:
+    None
+  Routing for Networks:
+    Serial0
+  Routing Information Sources:
+  Distance: (default is 115)
+        

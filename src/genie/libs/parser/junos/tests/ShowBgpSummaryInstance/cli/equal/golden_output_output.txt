@@ -1,0 +1,11 @@
+show bgp summary instance VRF-TEST001 
+Threading mode: BGP I/O
+Groups: 1 Peers: 1 Down peers: 0
+Table          Tot Paths  Act Paths Suppressed    History Damp State    Pending
+VRF-TEST001.inet.0   
+                       1          1          0          0          0          0
+VRF-TEST001.mdt.0    
+                       0          0          0          0          0          0
+Peer                     AS      InPkt     OutPkt    OutQ   Flaps Last Up/Dwn State|#Active/Received/Accepted/Damped...
+192.168.1.2           65001         10         10       0       0        4:05 Establ
+  VRF-TEST001.inet.0: 0/0/0/0

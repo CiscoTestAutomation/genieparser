@@ -1,0 +1,8 @@
+
+Device# show ip nat translations
+Pro Inside global Inside local Outside local Outside global
+tcp 192.168.1.1:514 192.168.2.3:53 192.168.2.22:256 192.168.2.22:256
+tcp 192.168.1.1:513 192.168.2.2:53 192.168.2.22:256 192.168.2.22:256
+tcp 192.168.1.1:512 192.168.2.4:53 192.168.2.22:256 192.168.2.22:256
+Total number of translations: 3
+    

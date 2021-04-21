@@ -68,6 +68,8 @@ help:
 	@echo "compile		 		 Compile all python modules to c"
 	@echo "coverage_all			 Run code coverage on all test files"
 	@echo "pylint_all			 Run python linter on all python modules"
+	@echo "json					 Build json files"
+	@echo "changelogs			 Build compiled changelog file"
 	@echo ""
 	@echo "     --- build arguments ---"
 	@echo " DEVNET=true              build for devnet style (cythonized, no ut)"
@@ -79,12 +81,16 @@ compile:
 	$(CYTHON_CMD) 
 	@echo "Done Compiling"
 	@echo ""
+	@echo "Done."
+	@echo ""
 
 coverage_all:
 	@echo ""
 	@echo "Running Code coverage on all unittests"
 	@echo ---------------------------------------
 	@$(TESTCMD) --path tests/ --coverage --no-refresh
+	@echo ""
+	@echo "Done."
 	@echo ""
 
 pylint_all:
@@ -93,6 +99,8 @@ pylint_all:
 	@echo "-----------------------------"
 	@$(PYLINT_CMD)
 	@echo "Done linting"
+	@echo ""
+	@echo "Done."
 	@echo ""
 
 devnet: package
@@ -125,6 +133,8 @@ package:
 	@echo ""
 	@echo "Completed building: $@"
 	@echo ""
+	@echo "Done."
+	@echo ""
 
 develop:
 	@echo ""
@@ -140,6 +150,8 @@ develop:
 	@echo ""
 	@echo "Completed building and installing: $@"
 	@echo ""
+	@echo "Done."
+	@echo ""
 
 undevelop:
 	@echo ""
@@ -151,6 +163,8 @@ undevelop:
 
 	@echo ""
 	@echo "Completed uninstalling: $@"
+	@echo ""
+	@echo "Done."
 	@echo ""
 
 clean:
@@ -182,6 +196,16 @@ json:
 	@echo "Generating Parser json file"
 	@echo ""
 	@python -c "from genie.json.make_json import make_genieparser; make_genieparser()"
+	@echo ""
+	@echo "Done."
+	@echo ""
+
+changelogs:
+	@echo ""
+	@echo "--------------------------------------------------------------------"
+	@echo "Generating changelog file"
+	@echo ""
+	@python "./tools/changelog_script.py" "./changelog/undistributed" --output "./changelog/undistributed.rst"
 	@echo ""
 	@echo "Done."
 	@echo ""

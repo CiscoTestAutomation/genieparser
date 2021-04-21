@@ -4,13 +4,14 @@ JUNOS parsers for the following commands:
     * show rsvp neighbor
     * show rsvp neighbor detail
     * show rsvp session
+    * show rsvp session transit
 """
 import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
-from genie.metaparser.util.exceptions import SchemaTypeError
 
 class ShowRSVPNeighborSchema(MetaParser):
     """ Schema for:
@@ -19,7 +20,7 @@ class ShowRSVPNeighborSchema(MetaParser):
 
     def validate_neighbor_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('RSVP Neighbor not a list')
+            raise SchemaError('RSVP Neighbor not a list')
 
         rsvp_neighbor_list = Schema({
                 "rsvp-neighbor-address": str,
@@ -106,7 +107,7 @@ class ShowRSVPNeighborDetailSchema(MetaParser):
 
     def validate_neighbor_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('RSVP Neighbor not a list')
+            raise SchemaError('RSVP Neighbor not a list')
 
         rsvp_neighbor_list = Schema({
                     "rsvp-neighbor-address": str,
@@ -123,11 +124,11 @@ class ShowRSVPNeighborDetailSchema(MetaParser):
                     "hellos-received": str,
                     "rsvp-neighbor-remote-instance": str,
                     "rsvp-neighbor-local-instance": str,
-                    "rsvp-refresh-reduct-status": str,
-                    "rsvp-refresh-reduct-remote-status": str,
-                    "rsvp-refresh-reduct-ack-status": str,
-                    "rsvp-nbr-enh-local-protection": {
-                        "rsvp-nbr-enh-lp-status": str,
+                    Optional("rsvp-refresh-reduct-status"): str,
+                    Optional("rsvp-refresh-reduct-remote-status"): str,
+                    Optional("rsvp-refresh-reduct-ack-status"): str,
+                    Optional("rsvp-nbr-enh-local-protection"): {
+                        Optional("rsvp-nbr-enh-lp-status"): str,
                         Optional("rsvp-nbr-enh-lp-total-lsp-count"): str,
                         Optional("rsvp-nbr-enh-lp-phop-lsp-count"): str,
                         Optional("rsvp-nbr-enh-lp-pphop-lsp-count"): str,
@@ -146,7 +147,7 @@ class ShowRSVPNeighborDetailSchema(MetaParser):
                 "rsvp-neighbor-count": str,
                 "rsvp-neighbor": Use(validate_neighbor_list)
             }
-        }
+       	}
 
 class ShowRSVPNeighborDetail(ShowRSVPNeighborDetailSchema):
     """ Parser for:
@@ -307,15 +308,16 @@ class ShowRSVPNeighborDetail(ShowRSVPNeighborDetailSchema):
 class ShowRSVPSessionSchema(MetaParser):
     """ Schema for:
         * show rsvp session
+        * show rsvp session transit
     """
 
     def validate_session_data_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('RSVP session data not a list')
+            raise SchemaError('RSVP session data not a list')
 
         def validate_session_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('RSVP session not a list')
+                raise SchemaError('RSVP session not a list')
 
             rsvp_session_list = Schema({
                     "destination-address": str,
@@ -422,3 +424,17 @@ class ShowRSVPSession(ShowRSVPSessionSchema):
                 continue
 
         return ret_dict
+    
+class ShowRSVPSessionTransit(ShowRSVPSession):
+    """ Parser for:
+            * show rsvp session transit
+    """
+    cli_command = 'show rsvp session transit'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+		
+        return super().cli(output=out)

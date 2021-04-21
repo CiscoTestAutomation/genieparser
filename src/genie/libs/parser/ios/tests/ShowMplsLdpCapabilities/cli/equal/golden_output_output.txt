@@ -1,0 +1,8 @@
+Router#show mpls ldp capabilities
+
+LDP Capabilities - [<description> (<type>)]
+---------------------------------------------------------
+[Dynamic Announcement (0x0506)]
+[Typed Wildcard (0x050B)]
+
+    

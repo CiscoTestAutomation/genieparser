@@ -1,0 +1,173 @@
+
+        RR-1_ASR-1001X#show ip bgp vpnv4 rd 5918:50 detail
+
+        Route Distinguisher: 5918:50
+        BGP routing table entry for 5918:50:10.4.1.0/24, version 29454065
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/11438
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:10.44.105.0/24, version 29454066
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/2903
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.1/32, version 29454165
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Community: 62000:1
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/6197
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.2/32, version 29454166
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Community: 62000:2
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/6195
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.3/32, version 29454067
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/14750
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.4/32, version 29454068
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/21290
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.5/32, version 29454069
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/22401
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.6/32, version 29454070
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/22381
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.7/32, version 29454071
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/22358
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.8/32, version 29454072
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/19297
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.9/32, version 29454073
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/19294
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.10/32, version 29454074
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/19273
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.11/32, version 29454075
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/19255
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.12/32, version 29454076
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/17920
+              rx pathid: 0, tx pathid: 0x0
+        BGP routing table entry for 5918:50:172.16.100.13/32, version 29454077
+          Paths: (1 available, best #1, no table)
+          Advertised to update-groups:
+             38         44         45        
+          Refresh Epoch 2
+          62000, (Received from a RR-client)
+            10.169.197.254 (metric 1002) (via default) from 10.169.197.254 (10.169.197.254)
+              Origin incomplete, metric 0, localpref 100, valid, internal, best
+              Extended Community: SoO:5918:999 RT:5918:50
+              mpls labels in/out nolabel/15114
+              rx pathid: 0, tx pathid: 0x0
+        RR-1_ASR-1001X#
+        

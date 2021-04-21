@@ -1,0 +1,28 @@
+
+Session Type: AnyConnect
+
+Username : lee Index : 1
+Assigned IP : 192.168.246.1 Public IP : 10.139.1.2
+Protocol : AnyConnect-Parent SSL-Tunnel DTLS-Tunnel
+License : AnyConnect Premium
+Encryption : RC4 AES128 Hashing : SHA1
+Bytes Tx : 11079 Bytes Rx : 4942
+Group Policy : EngPolicy Tunnel Group : EngGroup
+Login Time : 15:25:13 EST Fri Jan 28 2011
+Duration : 0h:00m:15s
+Inactivity : 0h:00m:00s
+NAC Result : Unknown
+VLAN Mapping : N/A VLAN : none
+
+Username : yumi Index : 2
+Assigned IP : 192.168.246.2 Public IP : 10.139.1.3
+Protocol : AnyConnect-Parent SSL-Tunnel DTLS-Tunnel
+License : AnyConnect Premium
+Encryption : RC4 AES128 Hashing : SHA1
+Bytes Tx : 11055 Bytes Rx : 6942
+Group Policy : EngPolicy Tunnel Group : EngGroup
+Login Time : 15:25:13 EST Fri Jan 29 2011
+Duration : 0h:05m:15s
+Inactivity : 0h:00m:00s
+NAC Result : Unknown
+VLAN Mapping : N/A VLAN : none

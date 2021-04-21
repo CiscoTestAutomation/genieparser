@@ -1,0 +1,13 @@
+
+show ip route 192.168.234.0
+Routing entry for 192.168.234.0/24
+  Known via "eigrp 1", distance 90, metric 3072, type internal
+  Redistributing via eigrp 1
+  Last update from 192.168.9.2 on GigabitEthernet0/2.4, 3d04h ago
+  Routing Descriptor Blocks:
+  * 192.168.9.2, from 192.168.9.2, 3d04h ago, via GigabitEthernet0/2.4
+      Route metric is 3072, traffic share count is 1
+      Total delay is 20 microseconds, minimum bandwidth is 1000000 Kbit
+      Reliability 255/255, minimum MTU 1500 bytes
+      Loading 1/255, Hops 1
+      

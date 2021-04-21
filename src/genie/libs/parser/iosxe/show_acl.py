@@ -32,6 +32,7 @@ class ShowAccessListsSchema(MetaParser):
         Any():{
             'name': str,
             'type': str,
+            'acl_type': str, # 'standard', 'extended' or 'ipv6'
             Optional('per_user'): bool,
             Optional('aces'): {
                 Any(): {
@@ -110,7 +111,7 @@ class ShowAccessListsSchema(MetaParser):
                         Optional('logging'): str,
                     },
                     Optional('statistics'): {
-                        'matched_packets': int,
+                        'matched_packets': Or(int,str)
                     }
                 }
             }
@@ -244,13 +245,13 @@ class ShowAccessLists(ShowAccessListsSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p_ip = re.compile(r'^(Extended|Standard) +IP +access +list[s]? '
+        p_ip = re.compile(r'^(?P<acl_type>Extended|Standard) +IP +access +list[s]? '
                           r'+(?P<name>[\w\-\.#]+)( *\((?P<per_user>.*)\))?$')
         p_ip_1 = re.compile(r'^ip +access-list +extended +(?P<name>[\w\-'
                             r'\.#]+)( *\((?P<per_user>.*)\))?$')
-        p_ipv6 = re.compile(r'^IPv6 +access +list +(?P<name>[\w\-\.#]+)'
+        p_ipv6 = re.compile(r'^(?P<acl_type>IPv6) +access +list +(?P<name>[\w\-\.#]+)'
                             r'( *\((?P<per_user>.*)\))?.*$')
-        p_mac = re.compile(r'^Extended +MAC +access +list +(?P<name>[\w\-\.'
+        p_mac = re.compile(r'^(?P<acl_type>Extended) +MAC +access +list +(?P<name>[\w\-\.'
                            r']+)( *\((?P<per_user>.*)\))?$')
 
 
@@ -268,7 +269,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                                        r'?(?P<actions_forwarding>permit|deny) '
                                        r'+(?P<src>\S+|any)( (?P<log>log))?(?:, +wildcard '
                                        r'+bits +(?P<wildcard_bits>any|\S+))'
-                                       r'?(?: +\((?P<matched_packets>\d+)+ matches\))?$')
+                                       r'?(?: +\((?P<matched_packets>\d+|\S+)+ matches\))?$')
 
         # 10 permit ip host 10.3.3.3 host 10.5.5.34
         # 20 permit icmp any any
@@ -291,14 +292,17 @@ class ShowAccessLists(ShowAccessListsSchema):
         # 10 permit tcp any any eq www
         # 20 permit tcp any any eq 22
         # 30 permit icmp any any ttl-exceeded
+        # 10 permit icmp any 10.120.194.64 0.0.0.63
+        # 20 permit tcp any eq 443 10.120.194.64 0.0.0.63
         p_ip_acl = re.compile(
             r'^(?P<seq>\d+) +(?P<actions_forwarding>permit|deny) +(?P<protocol>\w+) '
-            r'+(?P<src>(?:any|host|\d+\.\d+\.\d+\.\d+)(?: '
-            r'+\d+\.\d+\.\d+\.\d+)?)(?: +(?P<src_operator>eq|gt|lt|neq|range) '
-            r'+(?P<src_port>[\S ]+\S))? +(?P<dst>(?:any|host|\d+\.\d+\.\d+\.\d+)'
-            r'(?: +\d+\.\d+\.\d+\.\d+)?)(?: +(?P<dst_operator>eq|gt|lt|neq|range) '
-            r'+(?P<dst_port>(?:\S?)+\S))?(?: +(?P<msg_type>ttl-exceeded|unreachable|'
-            r'packet-too-big|echo-reply|echo|router-advertisement|mld-query+))?(?P<left>.+)?$')
+            r'+(?P<src>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)?)'
+            r'(?: +(?P<src_operator>eq|gt|lt|neq|range) '
+            r'+(?P<src_port>.*?(?=(?: +any| +host +\d+.\d+.\d+.\d+| +\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)|$)))? '
+            r'+(?P<dst>(?:any|host +\d+.\d+.\d+.\d+|\d+.\d+.\d+.\d+ +\d+.\d+.\d+.\d+)?)'
+            r'(?: +(?P<dst_operator>eq|gt|lt|neq|range) +(?P<dst_port>(?:\S?)+\S))?(?: '
+            r'+(?P<msg_type>ttl-exceeded|unreachable|packet-too-big|echo-reply|echo|'
+            r'router-advertisement|mld-query+))?(?P<left>.+)?$')
 
         # permit tcp host 2001: DB8: 1: : 32 eq bgp host 2001: DB8: 2: : 32 eq 11000 sequence 1
         # permit tcp host 2001: DB8: 1: : 32 eq telnet host 2001: DB8: 2: : 32 eq 11001 sequence 2
@@ -375,6 +379,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 acl_dict = ret_dict.setdefault(group['name'], {})
                 acl_dict['name'] = group['name']
                 acl_dict['type'] = acl_type
+                acl_dict['acl_type'] = group['acl_type'].lower()
                 acl_dict.setdefault('per_user', True) if group['per_user'] else None
                 continue
 
@@ -388,8 +393,10 @@ class ShowAccessLists(ShowAccessListsSchema):
 
             if m:
                 group = m.groupdict()
-
-                seq = int(sorted(acl_dict.get('aces', {'0': 'dummy'}).keys())[-1]) + 10
+                
+                seq = group['seq']
+                if seq == None:
+                    seq = int(sorted(acl_dict.get('aces', {'0': 'dummy'}).keys())[-1]) + 10
                 seq_dict = acl_dict.setdefault('aces', {}).setdefault(str(seq), {})
                 seq_dict['name'] = str(seq)
 
@@ -426,7 +433,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 if group['matched_packets']:
                     stats_dict = seq_dict.setdefault('statistics', {})
                     stats_dict.update(
-                        {'matched_packets': int(group['matched_packets'])})
+                        {'matched_packets': group['matched_packets']})
 
                 # Optional keys
                 # actions
@@ -674,7 +681,7 @@ class ShowAccessLists(ShowAccessListsSchema):
                 left = left.strip()
                 if left:
                     l2_dict['ether_type'] = left
-
+                    
         return ret_dict
 
 

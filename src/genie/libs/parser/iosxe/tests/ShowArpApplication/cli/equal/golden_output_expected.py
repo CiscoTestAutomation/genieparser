@@ -1,0 +1,21 @@
+expected_output = {
+    "num_of_clients_registered": 16,
+    "applications": {
+        "VRRS": {"id": 200, "num_of_subblocks": 0},
+        "ARP Backup": {"id": 201, "num_of_subblocks": 0},
+        "DHCPD": {"id": 202, "num_of_subblocks": 0},
+        "ARP HA": {"id": 203, "num_of_subblocks": 99789},
+        "ASR1000-RP SPA Ether": {"id": 204, "num_of_subblocks": 0},
+        "VRRS_L3CTRL": {"id": 205, "num_of_subblocks": 0},
+        "IP ARP Adj Conn ID": {"id": 206, "num_of_subblocks": 0},
+        "IP ARP Probe": {"id": 207, "num_of_subblocks": 0},
+        "ip arp retry": {"id": 208, "num_of_subblocks": 0},
+        "IP Mobility": {"id": 209, "num_of_subblocks": 0},
+        "IP Subscriber": {"id": 210, "num_of_subblocks": 0},
+        "RG IM": {"id": 211, "num_of_subblocks": 0},
+        "B2B NAT": {"id": 212, "num_of_subblocks": 0},
+        "MANET INFRA ARP": {"id": 213, "num_of_subblocks": 0},
+        "IP ARP Adjacency": {"id": 214, "num_of_subblocks": 99791},
+        "IP ARP VLAN ID": {"id": 215, "num_of_subblocks": 99791},
+    },
+}

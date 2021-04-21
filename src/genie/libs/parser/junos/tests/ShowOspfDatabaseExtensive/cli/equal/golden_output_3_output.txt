@@ -1,0 +1,37 @@
+
+        show ospf database netsummary extensive
+
+            OSPF database, Area 0.0.0.0
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Summary *10.9.0.0          10.4.1.1          0x80000005  2388  0x22 0x48e8  28
+        mask 255.255.255.0
+        Topology default (ID 0) -> Metric: 1
+        Gen timer 00:10:10
+        Aging timer 00:20:12
+        Installed 00:39:48 ago, expires in 00:20:12
+        Last changed 02:12:22 ago, Change count: 1, Ours
+        Summary *10.16.2.2          10.4.1.1          0x80000003  1890  0x22 0x1519  28
+        mask 255.255.255.255
+        Topology default (ID 0) -> Metric: 1
+        Gen timer 00:18:30
+        Aging timer 00:28:30
+        Installed 00:31:30 ago, expires in 00:28:30
+        Last changed 02:11:30 ago, Change count: 1, Ours
+
+            OSPF database, Area 0.0.0.1
+        Type       ID               Adv Rtr           Seq      Age  Opt  Cksum  Len
+        Summary *10.4.1.1          10.4.1.1          0x80000005  1389  0x22 0x35fb  28
+        mask 255.255.255.255
+        Topology default (ID 0) -> Metric: 0
+        Gen timer 00:26:50
+        Aging timer 00:36:50
+        Installed 00:23:09 ago, expires in 00:36:51, sent 00:23:07 ago
+        Last changed 02:12:22 ago, Change count: 1, Ours
+        Summary *10.229.11.11      10.4.1.1          0x80000005   890  0x22 0x67a1  28
+        mask 255.255.255.255
+        Topology default (ID 0) -> Metric: 0
+        Gen timer 00:35:10
+        Aging timer 00:45:10
+        Installed 00:14:50 ago, expires in 00:45:10, sent 00:14:47 ago
+        Last changed 02:12:22 ago, Change count: 1, Ours
+    

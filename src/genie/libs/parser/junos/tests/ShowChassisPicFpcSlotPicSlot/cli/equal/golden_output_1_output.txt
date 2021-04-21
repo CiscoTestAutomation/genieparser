@@ -1,0 +1,11 @@
+FPC slot 0, PIC slot 0 information:
+  Type                             2X100GE CFP2 OTN
+  State                            Online
+  PIC version                 1.19
+  Uptime			 2 hours, 36 minutes, 38 seconds
+
+PIC port information:
+                         Fiber                    Xcvr vendor       Wave-    Xcvr
+  Port Cable type        type  Xcvr vendor        part number       length   Firmware
+  0    100GBASE LR4      SM    FINISAR CORP.      FTLC1121RDNL-J3   1310 nm  1.5
+  1    100GBASE LR4      SM    FINISAR CORP.      FTLC1121RDNL-J3   1310 nm  1.5

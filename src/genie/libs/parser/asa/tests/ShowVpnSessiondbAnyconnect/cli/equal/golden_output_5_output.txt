@@ -1,0 +1,17 @@
+
+Session Type: AnyConnect
+Username     : tpet2195               Index        : 5097
+Assigned IP  : 10.97.140.229          Public IP    : 172.16.4.118
+Protocol     : AnyConnect-Parent DTLS-Tunnel
+License      : AnyConnect Premium
+Encryption   : AnyConnect-Parent: (1)none  DTLS-Tunnel: (1)AES256
+Hashing      : AnyConnect-Parent: (1)none  DTLS-Tunnel: (1)SHA1
+Bytes Tx     : 694074707              Bytes Rx     : 257924006
+Group Policy : GroupPolicy_Employee_US_Z
+Tunnel Group : Employee_US_Z
+Login Time   : 13:45:06 CDT Tue Mar 17 2020
+Duration     : 6d 21h:39m:09s
+Inactivity   : 0h:09m:00s
+VLAN Mapping : N/A                    VLAN         : none
+Audt Sess ID : 0afd8115013e90005e711ab2
+Security Grp : none

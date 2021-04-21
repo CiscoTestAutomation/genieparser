@@ -1,0 +1,10 @@
+Directory of flash0:/
+
+    1  drw-           0  Jan 30 2013 00:00:00 +00:00  boot
+  264  drw-           0  Oct 14 2013 00:00:00 +00:00  config
+  267  -rw-   147988420  Mar 29 2017 00:00:00 +00:00  vios-adventerprisek9-m
+  268  -rw-      524288  Oct 17 2018 18:57:10 +00:00  nvram
+  269  -rw-         119  Oct 17 2018 18:57:18 +00:00  e1000_bia.txt
+
+2142715904 bytes total (1989595136 bytes free)
+    

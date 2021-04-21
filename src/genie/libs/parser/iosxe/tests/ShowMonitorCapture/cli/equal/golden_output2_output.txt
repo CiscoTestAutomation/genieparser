@@ -1,0 +1,23 @@
+
+Router#show monitor capture
+Load for five secs: 1%/0%; one minute: 17%; five minutes: 8%
+Time source is NTP, 16:22:09.994 EST Fri Oct 14 2016
+        
+        
+Status Information for Capture NTP
+  Target Type: 
+   Interface: GigabitEthernet0/0/0, Direction: both
+   Status : Active
+  Filter Details: 
+    Capture all packets
+  Buffer Details: 
+   Buffer Type: LINEAR (default)
+   Buffer Size (in MB): 10
+  Limit Details: 
+   Number of Packets to capture: 0 (no limit)
+   Packet Capture duration: 0 (no limit)
+   Packet Size to capture: 0 (no limit)
+   Maximum number of packets to capture per second: 1000
+   Packet sampling rate: 0 (no sampling)
+Router#
+         

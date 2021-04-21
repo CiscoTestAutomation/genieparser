@@ -1,0 +1,21 @@
+
+202-XTR#show lisp all instance-id 101 dynamic-eid detail
+Output for router lisp 0
+
+-----------------------------------------------------
+LISP Dynamic EID Information for VRF "blue"
+
+Dynamic-EID name: CC-CA01-C-603
+ Database-mapping EID-prefix: 10.10.10.0/24, locator-set CC-CA04-C
+ Registering more-specific dynamic-EIDs
+ Map-Server(s): none configured, use global Map-Server
+ Site-based multicast Map-Notify group: none configured
+ Number of roaming dynamic-EIDs discovered: 3
+ Last dynamic-EID discovered: 10.10.10.85, 00:00:40 ago
+   10.10.10.83, Port-channel1.125, uptime: 03:28:27
+     last activity: 00:00:29, discovered by: Packet Reception
+   10.10.10.84, Port-channel1.125, uptime: 00:14:10
+     last activity: 00:00:14, discovered by: Packet Reception
+   10.10.10.86, Port-channel1.125, uptime: 03:40:08
+     last activity: 00:00:07, discovered by: Packet Reception
+        

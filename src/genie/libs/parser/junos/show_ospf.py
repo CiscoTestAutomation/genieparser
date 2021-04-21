@@ -28,6 +28,9 @@ JunOs parsers for the following show commands:
     * show ospf database lsa-id {ipaddress} detail
     * show ospf route brief
     * show ospf route network extensive
+    * show ospf database advertising-router {ipaddress} extensive
+    * show ospf neighbor instance all
+    * show ospf statistics
 """
 
 # Python
@@ -35,8 +38,9 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, Optional, Use,
-                                                SchemaTypeError, Schema, Or)
+                                                Schema, Or)
 
 
 class ShowOspfInterfaceBriefSchema(MetaParser):
@@ -410,7 +414,7 @@ class ShowOspfNeighborSchema(MetaParser):
     '''
     def validate_neighbor_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-neighbor is not a list')
+            raise SchemaError('ospf-neighbor is not a list')
         neighbor_schema = Schema({
             'neighbor-address': str,
             'interface-name': str,
@@ -437,11 +441,14 @@ Parser for:
 
 
 class ShowOspfNeighbor(ShowOspfNeighborSchema):
-    cli_command = 'show ospf neighbor'
+    cli_command = ['show ospf neighbor', 'show ospf neighbor instance {name}']
 
-    def cli(self, output=None):
+    def cli(self, name=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if name:
+                out = self.device.execute(self.cli_command[1].format(name=name))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -498,6 +505,117 @@ class ShowOspfNeighborInstance(ShowOspfNeighbor):
             )
 
 
+'''
+Schema for:
+    * show ospf neighbor instance all
+'''
+
+
+class ShowOspfNeighborInstanceAllSchema(MetaParser):
+    '''
+    schema = {
+        'ospf-neighbor-information-all': {
+        	'ospf-instance-neighbor': {
+        		'ospf-instance-name': str,
+	            'ospf-neighbor': [{
+	                'neighbor-address': str,
+	                'interface-name': str,
+	                'ospf-neighbor-state': str,
+	                'neighbor-id': str,
+	                'neighbor-priority': str,
+	                'activity-timer': str
+	            }]
+	        }
+        }
+    }
+    '''
+
+    def validate_neighbor_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('ospf-neighbor is not a list')
+        neighbor_schema = Schema({
+            'neighbor-address': str,
+            'interface-name': str,
+            'ospf-neighbor-state': str,
+            'neighbor-id': str,
+            'neighbor-priority': str,
+            'activity-timer': str
+        })
+        for item in value:
+            neighbor_schema.validate(item)
+        return value
+
+    schema = {
+        'ospf-neighbor-information-all': {
+            'ospf-instance-neighbor': {
+                'ospf-instance-name': str,
+                Optional('ospf-neighbor'): Use(validate_neighbor_list)
+            }
+        }
+    }
+
+
+'''
+Parser for:
+    * show ospf neighbor instance all
+'''
+
+
+class ShowOspfNeighborInstanceAll(ShowOspfNeighborInstanceAllSchema):
+    cli_command = 'show ospf neighbor instance all'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Instance: master
+        p0 = re.compile(r'^Instance: +(?P<instance_name>\S+)$')
+
+        # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
+        p1 = re.compile(
+            r'^(?P<neighbor>\S+) +(?P<interface>\S+) +'
+            r'(?P<state>\S+) +(?P<id>\S+) +(?P<pri>\d+) +(?P<dead>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Instance: master
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                instance = group['instance_name']
+                ospf_instance_neighbor = ret_dict.setdefault('ospf-neighbor-information-all', {}).setdefault(
+                    'ospf-instance-neighbor', {})
+                ospf_instance_neighbor['ospf-instance-name'] = instance
+                continue
+            # 10.189.5.94      ge-0/0/0.0             Full      10.189.5.253     128    32
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor = group['neighbor']
+                interface = group['interface']
+                state = group['state']
+                _id = group['id']
+                pri = group['pri']
+                dead = group['dead']
+                neighbor_list = ospf_instance_neighbor.setdefault('ospf-neighbor', [])
+                new_neighbor = {
+                    'neighbor-address': neighbor,
+                    'interface-name': interface,
+                    'ospf-neighbor-state': state,
+                    'neighbor-id': _id,
+                    'neighbor-priority': pri,
+                    'activity-timer': dead
+                }
+                neighbor_list.append(new_neighbor)
+                continue
+        return ret_dict
+
+
 class ShowOspfDatabaseSchema(MetaParser):
     '''
     schema = {
@@ -523,7 +641,7 @@ class ShowOspfDatabaseSchema(MetaParser):
     '''
     def validate_neighbor_database_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-neighbor is not a list')
+            raise SchemaError('ospf-neighbor is not a list')
         neighbor_schema = Schema({
             "advertising-router": str,
             "age": str,
@@ -636,7 +754,7 @@ class ShowOspfDatabaseSummarySchema(MetaParser):
     '''
     def validate_neighbor_database_summary_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-database-summary is not a list')
+            raise SchemaError('ospf-database-summary is not a list')
         neighbor_schema = Schema({
             Optional("@external-heading"): str,
             Optional("ospf-area"): Or(list, str),
@@ -830,7 +948,7 @@ class ShowOspfDatabaseExternalExtensiveSchema(MetaParser):
 } """
     def validate_neighbor_database_external_extensive_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
         neighbor_schema = Schema({
             Optional("@external-heading"): str,
             Optional("@heading"): str,
@@ -1570,11 +1688,11 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
     }'''
     def validate_ospf_database(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
 
         def validate_ospf_link(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-link is not a list')
+                raise SchemaError('ospf-link is not a list')
             ospf_link_schema = Schema({
                 "link-data": str,
                 "link-id": str,
@@ -1589,7 +1707,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
 
         def validate_ospf_lsa_topology_link(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-lsa-topology-link is not a list')
+                raise SchemaError('ospf-lsa-topology-link is not a list')
             ospf_lsa_topology_ink_schema = Schema({
                 "link-type-name":
                 str,
@@ -1606,7 +1724,7 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
 
         def validate_ospf_lsa_topology_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-lsa is not a list')
+                raise SchemaError('ospf-lsa is not a list')
             ospf_lsa_schema = Schema({
                 "link-type-name": str,
                 "ospf-lsa-topology-link-metric": str,
@@ -2141,6 +2259,8 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetail(
 class ShowOspfDatabaseExtensiveSchema(MetaParser):
     """ Schema for:
             * show ospf database extensive
+            * show ospf database advertising-router {ipaddress} extensive
+            * show ospf database {data_type} extensive
     """
     '''schema = {
         "ospf-database-information": {
@@ -2247,11 +2367,11 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
     }'''
     def validate_ospf_database(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
 
         def validate_ospf_link(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-link is not a list')
+                raise SchemaError('ospf-link is not a list')
             ospf_link_schema = Schema({
                 "link-data": str,
                 "link-id": str,
@@ -2266,7 +2386,7 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
 
         def validate_ospf_lsa_topology_link(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('ospf-lsa-topology-link is not a list')
+                raise SchemaError('ospf-lsa-topology-link is not a list')
             ospf_lsa_topology_ink_schema = Schema({
                 "link-type-name":
                 str,
@@ -2318,7 +2438,7 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
                     "#text": str
                 },
                 Optional("send-time"): {
-                    "#text": str
+                    Optional("#text"): str
                 },
                 Optional("database-entry-state"): str
             },
@@ -2358,6 +2478,14 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
                     "type-value": str
                 }
             },
+            Optional("ospf-summary-lsa"): {
+                "address-mask": str,
+                "ospf-summary-lsa-topology": {
+                    "ospf-topology-name": str,
+                    "ospf-topology-id": str,
+                    "ospf-topology-metric": str,
+                }
+            },
             "sequence-number": str
         })
         for item in value:
@@ -2377,12 +2505,21 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
 class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
     """ Parser for:
             * show ospf database extensive
+            * show ospf database {data_type} extensive
     """
-    cli_command = 'show ospf database extensive'
+    cli_command = [
+        'show ospf database extensive',
+        'show ospf database {data_type} extensive'
+        ]
 
-    def cli(self, output=None):
+    def cli(self, data_type=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
+            if data_type:
+                out = self.device.execute(self.cli_command[1].format(
+                    data_type=data_type
+                ))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
@@ -2445,6 +2582,12 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
             r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)\)$'
         )
 
+        # Topology default (ID 0) -> Metric: 0
+        p14_1 = re.compile(
+            r'^Topology +(?P<ospf_topology_name>\S+) +\(ID +(?P<ospf_topology_id>\S+)\) +'
+            r'-> +Metric: +(?P<ospf_topology_metric>\d+)$'
+        )
+
         # Type: 1, Metric: 50, Fwd addr: 0.0.0.0, Tag: 0.0.0.0
         p15 = re.compile(
             r'^Type: +(?P<type_value>\d+), +Metric: +(?P<ospf_topology_metric>\d+)'
@@ -2455,9 +2598,10 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
         p16 = re.compile(r"^Aging timer +(?P<aging_timer>(\S+ ){0,1}[\d\:]+)$")
 
         # Installed 00:10:20 ago, expires in 00:49:31, sent 00:10:18 ago
+        # Installed 00:10:20 ago, expires in 00:49:31
         p17 = re.compile(
             r"^Installed +(?P<installation_time>(\S+ ){0,1}[\d\:]+) +ago, +expires +in +"
-            r"(?P<expiration_time>(\S+ ){0,1}[\d\:]+), +sent +(?P<send_time>(\S+ ){0,1}[\d\:]+) +ago$"
+            r"(?P<expiration_time>(\S+ ){0,1}[\d\:]+)(, +sent +(?P<send_time>(\S+ ){0,1}[\d\:]+) +ago)?$"
         )
 
         # Last changed 2w6d 04:50:31 ago, Change count: 196
@@ -2640,16 +2784,18 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                         .setdefault("expiration-time", {})
                     last_entry.setdefault("ospf-database-extensive", {})\
                         .setdefault("installation-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {})\
-                        .setdefault("send-time", {})
+
 
                     group = m.groupdict()
                     last_entry["ospf-database-extensive"]["expiration-time"]["#text"]\
                      = group["expiration_time"]
                     last_entry["ospf-database-extensive"]["installation-time"]["#text"]\
                      = group["installation_time"]
-                    last_entry["ospf-database-extensive"]["send-time"]["#text"]\
-                     = group["send_time"]
+                    if group.get('send_time'):
+                        last_entry.setdefault("ospf-database-extensive", {}) \
+                            .setdefault("send-time", {})
+                        last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                         = group["send_time"]
 
                     continue
 
@@ -2789,16 +2935,22 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                         .setdefault("expiration-time", {})
                     last_entry.setdefault("ospf-database-extensive", {})\
                         .setdefault("installation-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {})\
-                        .setdefault("send-time", {})
+                    # last_entry.setdefault("ospf-database-extensive", {})\
+                    #     .setdefault("send-time", {})
 
                     group = m.groupdict()
                     last_entry["ospf-database-extensive"]["expiration-time"]\
                         ["#text"] = group["expiration_time"]
                     last_entry["ospf-database-extensive"]["installation-time"]\
                         ["#text"] = group["installation_time"]
-                    last_entry["ospf-database-extensive"]["send-time"]\
-                        ["#text"] = group["send_time"]
+                    # last_entry["ospf-database-extensive"]["send-time"]\
+                    #     ["#text"] = group["send_time"]
+                    
+                    if group.get('send_time'):
+                        last_entry.setdefault("ospf-database-extensive", {}) \
+                            .setdefault("send-time", {})
+                        last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                         = group["send_time"]
 
                     continue
 
@@ -2952,16 +3104,22 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                         .setdefault("expiration-time", {})
                     last_entry.setdefault("ospf-database-extensive", {})\
                         .setdefault("installation-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {})\
-                        .setdefault("send-time", {})
+                    # last_entry.setdefault("ospf-database-extensive", {})\
+                    #     .setdefault("send-time", {})
 
                     group = m.groupdict()
                     last_entry["ospf-database-extensive"]["expiration-time"]\
                         ["#text"] = group["expiration_time"]
                     last_entry["ospf-database-extensive"]["installation-time"]\
                         ["#text"] = group["installation_time"]
-                    last_entry["ospf-database-extensive"]["send-time"]["#text"]\
-                     = group["send_time"]
+                    # last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                    #  = group["send_time"]
+                    
+                    if group.get('send_time'):
+                        last_entry.setdefault("ospf-database-extensive", {}) \
+                            .setdefault("send-time", {})
+                        last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                         = group["send_time"]
 
                     continue
 
@@ -3076,16 +3234,133 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
                         .setdefault("expiration-time", {})
                     last_entry.setdefault("ospf-database-extensive", {})\
                         .setdefault("installation-time", {})
-                    last_entry.setdefault("ospf-database-extensive", {})\
-                        .setdefault("send-time", {})
+                    # last_entry.setdefault("ospf-database-extensive", {})\
+                    #     .setdefault("send-time", {})
 
                     group = m.groupdict()
                     last_entry["ospf-database-extensive"]["expiration-time"]\
                         ["#text"] = group["expiration_time"]
                     last_entry["ospf-database-extensive"]["installation-time"]\
                         ["#text"] = group["installation_time"]
-                    last_entry["ospf-database-extensive"]["send-time"]["#text"]\
-                     = group["send_time"]
+                    # if group["send_time"]:
+                    #     last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                    #     = group["send_time"]
+                    
+                    if group.get('send_time'):
+                        last_entry.setdefault("ospf-database-extensive", {}) \
+                            .setdefault("send-time", {})
+                        last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                         = group["send_time"]
+
+
+                    continue
+
+                # Last changed 2w6d 04:50:31 ago, Change count: 196
+                m = p18.match(line)  # lsa_changed_time , lsa_changed_count
+                if m:
+                    last_entry = ret_dict["ospf-database-information"][
+                        "ospf-database"][-1]
+
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("lsa-changed-time", {})
+
+                    group = m.groupdict()
+                    last_entry["ospf-database-extensive"]["lsa-changed-time"]["#text"]\
+                        = group["lsa_changed_time"]
+                    last_entry["ospf-database-extensive"]["lsa-change-count"] = \
+                        group["lsa_change_count"]
+
+                    continue
+
+                # Gen timer 00:49:49
+                m = p19.match(line)
+                if m:
+                    last_database = ret_dict["ospf-database-information"][
+                        "ospf-database"][-1]
+
+                    last_database.setdefault("ospf-database-extensive", {})\
+                        .setdefault("generation-timer", {})
+
+                    group = m.groupdict()
+                    last_database["ospf-database-extensive"]["generation-timer"]\
+                        ["#text"] = group["generation_timer"]
+
+                    continue
+
+            if self.lsa_type == "Summary":
+                
+                # mask 255.255.255.255
+                m = p13.match(line)
+                if m:
+                    group = m.groupdict()
+
+                    last_database = ret_dict["ospf-database-information"][
+                        "ospf-database"][-1]
+                    last_database.setdefault("ospf-summary-lsa", {})\
+                        .setdefault("address-mask", group['address_mask'])
+                    continue
+
+                # Topology default (ID 0) -> Metric: 0
+                m = p14_1.match(line)
+                if m:
+                    group = m.groupdict()
+                    last_database = ret_dict["ospf-database-information"][
+                            "ospf-database"][-1]
+
+                    last_database.setdefault("ospf-summary-lsa", {})\
+                            .setdefault("ospf-summary-lsa-topology", {})\
+                                .setdefault("ospf-topology-name", group["ospf_topology_name"])
+
+                    last_database.setdefault("ospf-summary-lsa", {})\
+                        .setdefault("ospf-summary-lsa-topology", {})\
+                            .setdefault("ospf-topology-id", group["ospf_topology_id"])
+
+                    last_database.setdefault("ospf-summary-lsa", {})\
+                        .setdefault("ospf-summary-lsa-topology", {})\
+                            .setdefault("ospf-topology-metric", group["ospf_topology_metric"])
+                    
+                    continue
+
+                # Aging timer 00:18:16
+                m = p16.match(line)
+                if m:
+                    last_database = ret_dict["ospf-database-information"][
+                        "ospf-database"][-1]
+                    last_database.setdefault("ospf-database-extensive",
+                                             {}).setdefault("aging-timer", {})
+
+                    group = m.groupdict()
+                    last_database["ospf-database-extensive"]["aging-timer"][
+                        "#text"] = group["aging_timer"]
+
+                    continue
+
+                # Installed 00:10:20 ago, expires in 00:49:31, sent 00:10:18 ago
+                m = p17.match(line)
+                if m:
+                    last_entry = ret_dict["ospf-database-information"][
+                        "ospf-database"][-1]
+
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("expiration-time", {})
+                    last_entry.setdefault("ospf-database-extensive", {})\
+                        .setdefault("installation-time", {})
+                    # last_entry.setdefault("ospf-database-extensive", {})\
+                    #     .setdefault("send-time", {})
+
+                    group = m.groupdict()
+                    last_entry["ospf-database-extensive"]["expiration-time"]\
+                        ["#text"] = group["expiration_time"]
+                    last_entry["ospf-database-extensive"]["installation-time"]\
+                        ["#text"] = group["installation_time"]
+                    # last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                    #  = group["send_time"]
+                    
+                    if group.get('send_time'):
+                        last_entry.setdefault("ospf-database-extensive", {}) \
+                            .setdefault("send-time", {})
+                        last_entry["ospf-database-extensive"]["send-time"]["#text"]\
+                         = group["send_time"]
 
                     continue
 
@@ -3123,6 +3398,19 @@ class ShowOspfDatabaseExtensive(ShowOspfDatabaseExtensiveSchema):
 
         return ret_dict
 
+class ShowOspfDatabaseAdvertisingRouterExtensive(ShowOspfDatabaseExtensive):
+    """ Parser for:
+            * show ospf database advertising-router {ipaddress} extensive
+    """
+
+    cli_command = 'show ospf database advertising-router {ipaddress} extensive'
+
+    def cli(self, ipaddress, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(ipaddress=ipaddress))
+        else:
+            out = output
+        return super().cli(output=out)
 
 class ShowOspfNeighborExtensiveSchema(MetaParser):
     """ Schema for:
@@ -3131,7 +3419,7 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
     def validate_ospf_neighbor_list(value):
         def validate_adjacency_labels_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError('adjacency labels is not a list')
+                raise SchemaError('adjacency labels is not a list')
             adjacency_labels_schema = Schema(
                 {
                     'label': str,
@@ -3143,7 +3431,7 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
             return value
 
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-neighbor is not a list')
+            raise SchemaError('ospf-neighbor is not a list')
         ospf_lsa_topology_ink_schema = Schema({
             "activity-timer": str,
             Optional("adj-sid-list"): {
@@ -3308,7 +3596,7 @@ class ShowOspfInterfaceExtensiveSchema(MetaParser):
     """
     def validate_ospf_interface_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-interface is not a list')
+            raise SchemaError('ospf-interface is not a list')
         neighbor_schema = Schema({
             "address-mask": str,
             "adj-count": str,
@@ -3599,7 +3887,7 @@ class ShowOspfRouteBriefSchema(MetaParser):
     """
     def validate_ospf_route_entry_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-route-entry is not a list')
+            raise SchemaError('ospf-route-entry is not a list')
         ospf_route_schema = Schema({
             "address-prefix": str,
             "interface-cost": str,
@@ -3626,7 +3914,7 @@ class ShowOspfRouteBriefSchema(MetaParser):
 
     def validate_ospf_route_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-route is not a list')
+            raise SchemaError('ospf-route is not a list')
         ospf_route_schema = Schema({
             "ospf-route-entry":
             Use(ShowOspfRouteBriefSchema.validate_ospf_route_entry_list)
@@ -3792,7 +4080,7 @@ class ShowOspfDatabaseNetworkLsaidDetailSchema(MetaParser):
     } """
     def validate_ospf_lsa_topology_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-lsa is not a list')
+            raise SchemaError('ospf-lsa is not a list')
         ospf_lsa_schema = Schema({
             "link-type-name": str,
             "ospf-lsa-topology-link-metric": str,
@@ -4032,7 +4320,7 @@ class ShowOspfRouteNetworkExtensiveSchema(MetaParser):
 
     def validate_ospf_route_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-route is not a list')
+            raise SchemaError('ospf-route is not a list')
         ospf_route_schema = Schema({
             "ospf-route-entry": {
                 "address-prefix": str,
@@ -4120,7 +4408,6 @@ class ShowOspfRouteNetworkExtensive(ShowOspfRouteNetworkExtensiveSchema):
                 ospf_route_entry_dict = {}
                 ospf_next_hop_dict = {}
 
-                # import pdb;pdb.set_trace()
                 for group_key, group_value in group.items():
                     entry_key = group_key.replace('_', '-')
 
@@ -4186,7 +4473,7 @@ class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
     def validate_ospf_database_entry(ospf_db_list):
         ''' Validates each entry in ospf-database '''
         if not isinstance(ospf_db_list, list):
-            raise SchemaTypeError('ospf-database is not a list')
+            raise SchemaError('ospf-database is not a list')
         
         ospf_db_entry_schema = Schema({
             Optional("@heading"): str,
@@ -4276,4 +4563,437 @@ class ShowOspfDatabaseOpaqueArea(ShowOspfDatabaseOpaqueAreaSchema):
                 ospf_db_entry_list.append(ospf_db_entry_dict)
                 continue
                                            
+        return ret_dict
+
+
+class ShowOspfRoutePrefixSchema(MetaParser):
+
+    # schema = {
+    #     "ospf-route-information": {
+    #         "ospf-topology-route-table": {
+    #             "ospf-route": {
+    #                 "ospf-route-entry": {
+    #                     "address-prefix": str,
+    #                     "interface-cost": str,
+    #                     "next-hop-type": str,
+    #                     "ospf-next-hop": [
+    #                         {
+    #                             "next-hop-address": {
+    #                                 "interface-address": str
+    #                             },
+    #                             "next-hop-name": {
+    #                                 "interface-name": str
+    #                             }
+    #                         }
+    #                     ],
+    #                     "route-path-type": str,
+    #                     "route-type": str
+    #                 }
+    #             },
+    #             "ospf-topology-name": str
+    #         }
+    #     }
+    # }
+
+    def validate_ospf_next_hop_list(value):
+        ''' Validates each entry in ospf-next-hop '''
+        if not isinstance(value, list):
+            raise SchemaError('ospf-next-hop is not a list')
+        
+        ospf_next_hop_schema = Schema({
+            "next-hop-address": {
+                "interface-address": str,
+            },
+            "next-hop-name": {
+                "interface-name": str,
+            }
+        })
+
+        for entry in value:
+            ospf_next_hop_schema.validate(entry)    
+        return value
+
+
+    schema = {
+        "ospf-route-information": {
+            "ospf-topology-route-table": {
+                "ospf-route": {
+                    "ospf-route-entry": {
+                        "address-prefix": str,
+                        "interface-cost": str,
+                        "next-hop-type": str,
+                        "ospf-next-hop": Use(validate_ospf_next_hop_list),
+                        "route-path-type": str,
+                        "route-type": str
+                    }
+                },
+                "ospf-topology-name": str
+            }
+        }
+    }
+
+    
+
+'''
+Parser for:
+    * show ospf route prefix
+'''
+
+
+class ShowOspfRoutePrefix(ShowOspfRoutePrefixSchema):
+    cli_command = 'show ospf route {prefix}'
+
+    def cli(self,prefix, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command.format(
+                prefix=prefix
+            ))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Topology default Route Table:
+        p1 = re.compile(r'^Topology +(?P<ospf_topology_name>\S+) +Route +Table:$')
+
+        #10.1.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    10.70.0.4
+        p2 = re.compile(r'^(?P<address_prefix>\S+) +(?P<route_path_type>\S+) '
+                        r'+(?P<route_type>\S+) +(?P<next_hop_type>\S+) +'
+                        r'(?P<interface_cost>\d+) +(?P<interface_name>\S+)'
+                        r'( +(?P<interface_address>\S+))?$')
+
+        #                                                    ge-0/0/4.0    10.0.0.2
+        p2_1 = re.compile(r'^(?P<interface_name>[a-z]{2}-\d+/\d+/\d+(\.\d+))?\s+(?P<interface_address>\d+.\d+\.\d+\.\d+)$')
+
+        #area 0.0.0.0, origin 10.64.4.4, priority medium
+        p3 = re.compile(r'^area +(?P<ospf_area>[\d\.]+)+, +origin '
+                        r'+(?P<route_origin>[\d\.]+), +priority +'
+                        r'(?P<route_priority>\w+)$')
+
+        ospf_topology_name = ''
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Topology default Route Table:
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_topology_name = group['ospf_topology_name']
+
+            #10.1.0.0/24         Ext2  Network    IP            0 ge-0/0/0.0    10.70.0.4
+            m = p2.match(line)
+            if m:
+                if ospf_topology_name:
+
+                    ospf_topology_route_table = ret_dict.setdefault(
+                        'ospf-route-information', {}).setdefault('ospf-topology-route-table', {})
+                    ospf_topology_route_table['ospf-topology-name'] = ospf_topology_name
+                    ospf_topology_name = ''
+
+                group = m.groupdict()
+
+                ospf_route_entry_dict = {}
+                ospf_next_hop_dict = {}
+
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+
+                    if (entry_key == 'interface-address' and group_value != None):
+                        next_hop_add = {}
+                        next_hop_add['interface-address'] = group_value
+                        ospf_next_hop_dict.update({'next-hop-address': next_hop_add})
+                    elif (entry_key == 'interface-name'):
+                        next_hop_name = {}
+                        next_hop_name['interface-name'] = group_value
+                        ospf_next_hop_dict.update({'next-hop-name': next_hop_name})
+                    else:
+                        if group_value != None:
+                            entry_key = group_key.replace('_', '-')
+                            ospf_route_entry_dict[entry_key] = group_value
+
+                ospf_route_entry_dict.update({'ospf-next-hop': [ospf_next_hop_dict]})
+                ospf_parent_route_dict = {}
+                ospf_parent_route_dict['ospf-route-entry'] = ospf_route_entry_dict
+                ospf_topology_route_table['ospf-route'] = ospf_parent_route_dict
+                continue
+
+            #                                                    ge-0/0/4.0    10.0.0.2
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_next_hop_dict = {}
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace('_', '-')
+                    if entry_key == 'interface-address':
+                        ospf_next_hop_dict.setdefault('next-hop-address', {}).setdefault(entry_key, group_value)
+                    if entry_key == 'interface-name':
+                        ospf_next_hop_dict.setdefault('next-hop-name', {}).setdefault(entry_key, group_value)
+                ospf_route_entry_dict['ospf-next-hop'].append(ospf_next_hop_dict)
+                continue
+
+        return ret_dict
+
+
+class ShowOspfStatisticsSchema(MetaParser):
+    """ Schema for:
+            * show ospf statistics
+    """
+
+    '''schema = {
+    Optional("@xmlns:junos"): str,
+    "ospf-statistics-information": {
+        Optional("@xmlns"): str,
+        "ospf-statistics": {
+            "dbds-retransmit": str,
+            "dbds-retransmit-5seconds": str,
+            "flood-queue-depth": str,
+            "lsas-acknowledged": str,
+            "lsas-acknowledged-5seconds": str,
+            "lsas-flooded": str,
+            "lsas-flooded-5seconds": str,
+            "lsas-high-prio-flooded": str,
+            "lsas-high-prio-flooded-5seconds": str,
+            "lsas-nbr-transmit": str,
+            "lsas-nbr-transmit-5seconds": str,
+            "lsas-requested": str,
+            "lsas-requested-5seconds": str,
+            "lsas-retransmit": str,
+            "lsas-retransmit-5seconds": str,
+            "ospf-errors": {
+                "subnet-mismatch-error": str
+            },
+            "packet-statistics": [
+                {
+                    "ospf-packet-type": str,
+                    "packets-received": str,
+                    "packets-received-5seconds": str,
+                    "packets-sent": str,
+                    "packets-sent-5seconds": str
+                }
+            ],
+            "total-database-summaries": str,
+            "total-linkstate-request": str,
+            "total-retransmits": str
+        }
+    }
+}'''
+
+    def validate_packet_statistic_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('packet_statistic is not a list')
+        packet_schema = Schema({
+            "ospf-packet-type": str,
+            "packets-received": str,
+            "packets-received-5seconds": str,
+            "packets-sent": str,
+            "packets-sent-5seconds": str
+        })
+        for item in value:
+            packet_schema.validate(item)
+        return value
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "ospf-statistics-information": {
+            Optional("@xmlns"): str,
+            "ospf-statistics": {
+                "dbds-retransmit": str,
+                "dbds-retransmit-5seconds": str,
+                "flood-queue-depth": str,
+                "lsas-acknowledged": str,
+                "lsas-acknowledged-5seconds": str,
+                "lsas-flooded": str,
+                "lsas-flooded-5seconds": str,
+                "lsas-high-prio-flooded": str,
+                "lsas-high-prio-flooded-5seconds": str,
+                "lsas-nbr-transmit": str,
+                "lsas-nbr-transmit-5seconds": str,
+                "lsas-requested": str,
+                "lsas-requested-5seconds": str,
+                "lsas-retransmit": str,
+                "lsas-retransmit-5seconds": str,
+                "ospf-errors": {
+                    "subnet-mismatch-error": str
+                },
+                "packet-statistics": Use(validate_packet_statistic_list),
+                "total-database-summaries": str,
+                "total-linkstate-request": str,
+                "total-retransmits": str
+                }
+        }
+    }
+
+
+class ShowOspfStatistics(ShowOspfStatisticsSchema):
+    """ Parser for:
+            * show ospf statistics
+    """
+    cli_command = 'show ospf statistics'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        #Packet type             Total                  Last 5 seconds
+        p0 = re.compile(r'^(?P<heading>\APacket +type[\S\s]+)$')
+
+        #Hello        6202169       5703920           0             3
+        p1 = re.compile(r'^(?P<ospf_packet_type>\S+) +(?P<packets_sent>\d+) '
+                        r'+(?P<packets_received>\d+) +'
+                        r'(?P<packets_sent_5seconds>\d+) '
+                        r'+(?P<packets_received_5seconds>\d+)$')
+
+        #DBDs retransmitted     :               203656, last 5 seconds :          0
+        p2 = re.compile(r'^DBDs retransmitted +: +(?P<dbds_retransmit>\d+), '
+                        r'+last +5 +seconds +: +(?P<dbds_retransmit_5seconds>\d+)$')
+  
+        #LSAs flooded           :             66582263, last 5 seconds :          0
+        p3 = re.compile(r'^LSAs flooded +: +(?P<lsas_flooded>\d+), '
+                        r'+last +5 +seconds +: +(?P<lsas_flooded_5seconds>\d+)$')
+
+        #LSAs flooded high-prio :            375568998, last 5 seconds :          0
+        p4 = re.compile(r'^LSAs flooded high-prio +: +(?P<lsas_high_prio_flooded>\d+), '
+                        r'+last +5 +seconds +: +(?P<lsas_high_prio_flooded_5seconds>\d+)$')
+
+        #LSAs retransmitted     :              8064643, last 5 seconds :          0
+        p5 = re.compile(r'^LSAs retransmitted +: +(?P<lsas_retransmit>\d+), '
+                        r'+last +5 +seconds +: +(?P<lsas_retransmit_5seconds>\d+)$')
+
+        #LSAs transmitted to nbr:              3423982, last 5 seconds :          0
+        p6 = re.compile(r'^LSAs transmitted to nbr+: +(?P<lsas_nbr_transmit>\d+), '
+                        r'+last +5 +seconds +: +(?P<lsas_nbr_transmit_5seconds>\d+)$')
+
+        #LSAs requested         :                 3517, last 5 seconds :          0
+        p7 = re.compile(r'^LSAs requested +: +(?P<lsas_requested>\d+), '
+                        r'+last +5 +seconds +: +(?P<lsas_requested_5seconds>\d+)$')
+
+        #LSAs acknowledged      :            225554974, last 5 seconds :          0
+        p8 = re.compile(r'^LSAs acknowledged +: +(?P<lsas_acknowledged>\d+), +last '
+                        r'+5 +seconds +: +(?P<lsas_acknowledged_5seconds>\d+)$')
+
+        #Flood queue depth      :               0
+        #Total rexmit entries   :               0
+        #db summaries           :               0
+        #lsreq entries          :               0
+        p9 = re.compile(r'^(?P<pattern>[\w\s]+): +(?P<value>\d+)$')
+        
+        #12 subnet mismatches
+        p10 = re.compile(r'^(?P<subnet_mismatch_error>\d+) +subnet +mismatches$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Packet type             Total                  Last 5 seconds
+            m = p0.match(line)
+            if m:
+                ospf_area = ret_dict.setdefault("ospf-statistics-information", \
+                                                {}).setdefault("ospf-statistics", {})
+                group = m.groupdict()
+                packet_list = []
+                continue
+
+            #Hello        6202169       5703920           0             3
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                inner_packet_dict = {}
+                inner_packet_dict["ospf-packet-type"] = group["ospf_packet_type"]
+                inner_packet_dict["packets-sent"] = group["packets_sent"]
+                inner_packet_dict["packets-received"] = group["packets_received"]
+                inner_packet_dict["packets-sent-5seconds"] = group["packets_sent_5seconds"]
+                inner_packet_dict["packets-received-5seconds"] = group["packets_received_5seconds"]
+
+                packet_list.append(inner_packet_dict)
+                ospf_area["packet-statistics"] = packet_list
+                continue
+
+            #DBDs retransmitted     :               203656, last 5 seconds :          0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["dbds-retransmit"] = group["dbds_retransmit"]
+                ospf_area["dbds-retransmit-5seconds"] = group["dbds_retransmit_5seconds"]
+                continue
+
+            #LSAs flooded           :             66582263, last 5 seconds :          0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-flooded"] = group["lsas_flooded"]
+                ospf_area["lsas-flooded-5seconds"] = group["lsas_flooded_5seconds"]
+                continue
+
+            #LSAs flooded high-prio :            375568998, last 5 seconds :          0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-high-prio-flooded"] = group["lsas_high_prio_flooded"]
+                ospf_area["lsas-high-prio-flooded-5seconds"] = group["lsas_high_prio_flooded_5seconds"]
+                continue
+
+            #LSAs retransmitted     :              8064643, last 5 seconds :          0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-retransmit"] = group["lsas_retransmit"]
+                ospf_area["lsas-retransmit-5seconds"] = group["lsas_retransmit_5seconds"]
+                continue
+
+            #LSAs transmitted to nbr:              3423982, last 5 seconds :          0
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-nbr-transmit"] = group["lsas_nbr_transmit"]
+                ospf_area["lsas-nbr-transmit-5seconds"] = group["lsas_nbr_transmit_5seconds"]
+                continue
+
+            #LSAs requested         :                 3517, last 5 seconds :          0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-requested"] = group["lsas_requested"]
+                ospf_area["lsas-requested-5seconds"] = group["lsas_requested_5seconds"]
+                continue
+
+            #LSAs acknowledged      :            225554974, last 5 seconds :          0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                ospf_area["lsas-acknowledged"] = group["lsas_acknowledged"]
+                ospf_area["lsas-acknowledged-5seconds"] = group["lsas_acknowledged_5seconds"]
+                continue
+
+            #Flood queue depth      :               0
+            #Total rexmit entries   :               0
+            #db summaries           :               0
+            #lsreq entries          :               0
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                if re.search('(Flood +queue +depth)', group['pattern'].strip()):
+                    key = 'flood-queue-depth'
+                elif re.search('(Total +rexmit +entries)', group['pattern'].strip()):
+                    key = 'total-retransmits'
+                elif re.search('(db +summaries)', group['pattern'].strip()):
+                    key = 'total-database-summaries'
+                elif re.search('(lsreq +entries)', group['pattern'].strip()):
+                    key = 'total-linkstate-request'
+                else:
+                    continue
+                ospf_area[key] = group["value"]
+                continue
+
+            #12 subnet mismatches
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                inner_dict = {}
+                inner_dict["subnet-mismatch-error"] = group["subnet_mismatch_error"]
+                ospf_area["ospf-errors"] = inner_dict
+                continue
+
         return ret_dict

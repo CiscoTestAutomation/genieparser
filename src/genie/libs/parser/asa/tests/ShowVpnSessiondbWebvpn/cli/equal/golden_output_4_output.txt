@@ -1,0 +1,16 @@
+
+Session Type: WebVPN
+
+Username     : admin                  Index        : 3
+Public IP    : 10.229.20.77
+Protocol     : Clientless
+License      : AnyConnect Premium
+Encryption   : Clientless: (1)AES128  Hashing      : Clientless: (1)SHA256
+Bytes Tx     : 72214                  Bytes Rx     : 270241
+Group Policy : WEBVPN_Group_Policy    Tunnel Group : DefaultWEBVPNGroup
+Login Time   : 10:40:04 UTC Tue May 26 2015
+Duration     : 0h:05m:21s
+Inactivity   : 0h:00m:00s
+VLAN Mapping : N/A                    VLAN         : none
+Audt Sess ID : 0a1516010000300055644d84
+Security Grp : none

@@ -1,0 +1,15 @@
+
+R1#show ip rip database vrf VRF1
+10.0.0.0/8    auto-summary
+10.1.2.0/24    directly connected, GigabitEthernet2.200
+10.1.3.0/24    directly connected, GigabitEthernet3.200
+10.2.3.0/24
+    [1] via 10.1.2.2, 00:00:08, GigabitEthernet2.200
+172.16.0.0/16    auto-summary
+172.16.11.0/24    redistributed
+    [15] via 0.0.0.0,
+172.16.22.0/24
+    [15] via 10.1.2.2, 00:00:08, GigabitEthernet2.200
+192.168.1.0/24    auto-summary
+192.168.1.1/32    redistributed
+    [1] via 0.0.0.0,

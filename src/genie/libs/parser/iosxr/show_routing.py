@@ -43,7 +43,7 @@ class ShowRouteIpv4Schema(MetaParser):
                                         'clientid': int,
                                     },
                                 },
-                                'next_hop': {
+                                Optional('next_hop'): {
                                     Optional('outgoing_interface'): {
                                         Any(): {
                                             'outgoing_interface': str,
@@ -52,7 +52,7 @@ class ShowRouteIpv4Schema(MetaParser):
                                         }
                                     },
                                     Optional('next_hop_list'): {
-                                        Any(): { # index
+                                        int: { # index
                                             'index': int,
                                             Optional('next_hop'): str,
                                             Optional('outgoing_interface'): str,
@@ -205,16 +205,19 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # Known via "connected", distance 0, metric 0 (connected)
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
+        # Known via "ospf 3", distance 110, metric 32001, type extern 1
         p6 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +distance +'
                 r'(?P<distance>\d+), +metric +(?P<metric>\d+)( \(connected\))?'
-                r'(, +type +(?P<type>\S+))?(, +candidate +default +path)?$')
+                r'(, +type +(?P<type>[\S\s]+))?(, +candidate +default +path)?$')
 
         # * directly connected, via GigabitEthernet1.120
         p7 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
         
         # Route metric is 10880, traffic share count is 1
+        # Route metric is 0, Wt is 1
         p8 = re.compile(r'^Route +metric +is +(?P<metric>\d+)(, +'
-                        r'traffic +share +count +is +(?P<share_count>\d+))?$')
+                        r'traffic +share +count +is +(?P<share_count>\d+))?'
+                        r'(, +Wt +is +\d+)?$')
 
         # eigrp/100 (protoid=5, clientid=22)
         p9 = re.compile(r'^(?P<redist_advertiser>\S+) +\(protoid=(?P<protoid>\d+)'
@@ -226,7 +229,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # 10.12.90.1, from 10.12.90.1, via GigabitEthernet0/0/0/0.90
         # 172.23.6.96, from 172.23.15.196
         # 172.25.253.121, from 172.25.253.121, BGP external
-        p11 = re.compile(r'^(?P<nexthop>\S+),\s+from\s+(?P<from>\S+)(, '
+        # 2001:10::1, via GigabitEthernet0/0/0/0
+        p11 = re.compile(r'^(?P<nexthop>\S+)(,\s+from\s+(?P<from>\S+))?(, '
                          r'+via\s+(?P<interface>\S+))?'
                          r'(, +BGP external)?$')
         
@@ -317,7 +321,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
                 next_hop_list_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
-                    setdefault(index, {})
+                    setdefault(int(index), {})
                 
                 next_hop_list_dict.update({'index': index})
                 next_hop_list_dict.update({'next_hop': next_hop})
@@ -342,7 +346,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
                 next_hop_list_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
-                    setdefault(index, {})
+                    setdefault(int(index), {})
                 
                 next_hop_list_dict.update({'index': index})
                 next_hop_list_dict.update({'next_hop': next_hop})
@@ -430,6 +434,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
             # Known via "connected", distance 0, metric 0 (connected)
             # Known via "eigrp 1", distance 130, metric 10880, type internal
             # Known via "bgp 65161", distance 20, metric 0, candidate default path
+            # Known via "ospf 3", distance 110, metric 32001, type extern 1
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -531,12 +536,12 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 index += 1
                 outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
-                    setdefault(index, {})
+                    setdefault(int(index), {})
                 outgoing_interface_dict.update({'index': index})
                 if interface:
                     outgoing_interface_dict.update({'outgoing_interface': interface})
-
-                outgoing_interface_dict.update({'from': _from})
+                if _from:
+                    outgoing_interface_dict.update({'from': _from})
                 outgoing_interface_dict.update({'next_hop': nexthop})
                 continue
 
@@ -563,7 +568,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
                 if interface:
                     nexthop_intf_dict = route_dict.setdefault('next_hop', {}).\
                         setdefault('next_hop_list', {}). \
-                        setdefault(index, {})
+                        setdefault(int(index), {})
 
                 nexthop_intf_dict.update({'index': index})
                 if interface:
@@ -688,15 +693,17 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # L    2001:2:2:2::2/128 is directly connected,
         # i L2 2001:0:10:204:0:33::/126
         # i L1 2001:21:21:21::21/128
-        p2 = re.compile(r'^((?P<code1>[\w](\*)*) +(?P<code2>\S+)? '
+        # i*L2 ::/0
+        # a*   ::/0
+        p2 = re.compile(r'^((?P<code1>[\w](\*)*)(\s*)?(?P<code2>\w+)? '
                         r'+(?P<network>\S+))?( +is +directly +connected\,)?$')
 
         # [1/0] via 2001:20:1:2::1, 01:52:23, GigabitEthernet0/0/0/0
         # [200/0] via 2001:13:13:13::13, 00:53:22
         # [0/0] via ::, 5w2d
         p3 = re.compile(r'^\[(?P<route_preference>\d+)\/(?P<metric>\d+)\] +'
-                'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
-                '( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
+                r'via +(?P<next_hop>\S+)( +\(nexthop +in +vrf +\w+\))?,'
+                r'( +(?P<date>[\w:]+))?,?( +(?P<interface>[\w\/\.\-]+))?$')
 
         # 01:52:24, Loopback0
         p5 = re.compile(r'^(?P<date>[\w+:]+), +(?P<interface>\S+)$')
@@ -711,16 +718,17 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         # Known via "eigrp 1", distance 130, metric 10880, type internal
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
         p7 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +'
-                'distance +(?P<distance>\d+), +metric +(?P<metric>\d+)'
-                '( \(connected\))?(, +type +(?P<type>\S+))?(, +candidate +'
-                'default +path)?$')
+                r'distance +(?P<distance>\d+), +metric +(?P<metric>\d+)'
+                r'( \(connected\))?(, +type +(?P<type>\S+))?(, +candidate +'
+                r'default +path)?$')
 
         # * directly connected, via GigabitEthernet1.120
         p8 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
         
         # Route metric is 10880, traffic share count is 1
         p9 = re.compile(r'^Route +metric +is +(?P<metric>\d+)(, +'
-                        r'traffic +share +count +is +(?P<share_count>\d+))?$')
+                        r'traffic +share +count +is +(?P<share_count>\d+))?'
+                        r'(, +Wt +is +\d+)?$')
 
         # eigrp/100 (protoid=5, clientid=22)
         p10 = re.compile(r'^(?P<redist_advertiser>\S+) +\(protoid=(?P<protoid>\d+)'
@@ -730,7 +738,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
         p11 = re.compile(r'^Installed +(?P<date>[\S\s]+) +for +(?P<for>\S+)$')
 
         # fe80::f816:3eff:fe76:b56d, from fe80::f816:3eff:fe76:b56d, via GigabitEthernet0/0/0/0.390
-        p12 = re.compile(r'^(?P<nexthop>\S+), from +(?P<from>\S+), '
+        p12 = re.compile(r'^(?P<nexthop>\S+)(, from +(?P<from>\S+))?, '
                         r'+via +(?P<interface>\S+)$')
 
         # R2_xrv#show route ipv6
@@ -752,7 +760,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
         for line in out.splitlines():
             line = line.strip()
-            
+
             # R2_xrv#show route ipv6
             # Routing Descriptor Blocks
             # No advertising protos.
@@ -771,11 +779,13 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
             # L    2001:2:2:2::2/128 is directly connected,
             # i L2 2001:0:10:204:0:33::/126
             # i L1 2001:21:21:21::21/128
+            # i*L2 ::/0
+            # a*   ::/0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 code1 = group['code1']
-                source_protocol_code = re.split('\*|\(\!\)|\(\>\)', code1)[0].strip()
+                source_protocol_code = re.split(r'\*|\(\!\)|\(\>\)', code1)[0].strip()
                 for key,val in self.source_protocol_dict.items():
                     if source_protocol_code in val:
                         source_protocol = key
@@ -813,7 +823,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
 
                 next_hop_list_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
-                    setdefault(index, {})
+                    setdefault(int(index), {})
                 
                 next_hop_list_dict.update({'index': index})
                 if next_hop:
@@ -888,7 +898,6 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 network = group.get('network', None)
                 updated = group.get('date', None)
                 interface = group.get('interface', None)
-
                 if network:
                     route_dict = ret_dict.setdefault('vrf', {}). \
                         setdefault(vrf, {}). \
@@ -901,7 +910,7 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     route_dict.update({'active': True})
                 
                 if code1:
-                    source_protocol_code = re.split('\*|\(\!\)|\(\>\)', code1)[0].strip()
+                    source_protocol_code = re.split(r'\*|\(\!\)|\(\>\)', code1)[0].strip()
                     for key,val in self.source_protocol_dict.items():
                         if source_protocol_code in val:
                             source_protocol = key
@@ -966,10 +975,11 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                 index += 1
                 outgoing_interface_dict = route_dict.setdefault('next_hop', {}). \
                     setdefault('next_hop_list', {}). \
-                    setdefault(index, {})
+                    setdefault(int(index), {})
                 outgoing_interface_dict.update({'index': index})
                 outgoing_interface_dict.update({'outgoing_interface': interface})
-                outgoing_interface_dict.update({'from': _from})
+                if _from:
+                    outgoing_interface_dict.update({'from': _from})
                 outgoing_interface_dict.update({'next_hop': nexthop})
                 continue
 
@@ -988,5 +998,124 @@ class ShowRouteIpv6(ShowRouteIpv4Schema):
                     gw_dict.update({'to_network' : group['to_network']})
                 
                 continue
-            
+
+        return ret_dict
+
+
+# ====================================================
+#  schema for show route summary
+# ====================================================
+class ShowRouteAllSummarySchema(MetaParser):
+    """Schema for :
+       show route afi-all safi-all summary
+       show route vrf all afi-all safi-all summary
+       show route vrf <vrf> afi-all safi-all summary"""
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'total_route_source': {
+                            'routes': int,
+                            'backup': int,
+                            'deleted': int,
+                            'memory_bytes': int,
+                        },
+                        'route_source': {
+                            Any(): {
+                                Any(): {
+                                    'routes': int,
+                                    'backup': int,
+                                    'deleted': int,
+                                    'memory_bytes': int,
+                                },
+                                Optional('routes'): int,
+                                Optional('backup'): int,
+                                Optional('deleted'): int,
+                                Optional('memory_bytes'): int,
+                            },
+                        }
+                    },
+                }
+            },
+        }
+    }
+
+
+# ====================================================
+#  parser for show route summary
+# ====================================================
+class ShowRouteAllSummary(ShowRouteAllSummarySchema):
+    """Parser for :
+       show route afi-all safi-all summary
+       show route vrf all afi-all safi-all summary
+       show route vrf <vrf> afi-all safi-all summary"""
+
+    cli_command = [
+        'show route afi-all safi-all summary',
+        'show route vrf {vrf} afi-all safi-all summary'
+    ]
+
+    def cli(self, vrf=None, output=None):
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        # VRF: VRF_NAME
+        p1 = re.compile(r'^VRF: (?P<vrf>.*)')
+        # IPv4 Unicast:
+        p2 = re.compile(r'(?P<address_family>^IPv.*)+:')
+        # connected                        0          0          0           0
+        p3 = re.compile(
+            r'^(?P<protocol>[a-zA-Z0-9(\-|\_)]+) +(?P<instance>[a-zA-Z0-9(\-|\_)]+)* * +('
+            r'?P<routes>\d+) +(?P<backup>\d+) +(?P<deleted>\d+) +(?P<memory_bytes>\d+)')
+
+        ret_dict = {}
+
+        if vrf is None:
+            vrf = 'default'
+            vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
+        elif vrf != 'all':
+            vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            if vrf == 'all':
+                # VRF: VRF_NAME
+                m = p1.match(line)
+                if m:
+                    vrf_temp = m.groupdict()['vrf']
+                    vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf_temp, {})
+                    continue
+            # IPv4 Unicast:
+            m = p2.match(line)
+            if m:
+                addrs_fam = m.groupdict()['address_family']
+                addrs_fam_dict = vrf_dict.setdefault('address_family', {}).setdefault(addrs_fam, {})
+                vrf_rs_dict = addrs_fam_dict.setdefault('route_source', {})
+            # connected                        0          0          0           0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                protocol = group.pop('protocol')
+                instance = group.pop('instance')
+                if protocol == 'Total':
+                    protocol_dict = addrs_fam_dict.setdefault('total_route_source', {})
+                else:
+                    protocol_dict = vrf_rs_dict.setdefault(protocol, {})
+                if instance is not None:
+                    inst_dict = protocol_dict.setdefault(instance, {})
+                    inst_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                else:
+                    group = {k: int(v) for k, v in group.items() if v is not None}
+                    protocol_dict.update(group)
+                continue
+
         return ret_dict

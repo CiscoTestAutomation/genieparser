@@ -1,0 +1,11 @@
+GigabitEthernet1 - Group 100
+  State is Init
+  Virtual IP address is 192.168.10.1
+  Virtual MAC address is 0000.5eff.0164
+  Advertisement interval is 1.000 sec
+  Preemption enabled
+  Priority is 115
+  Authentication text "hash"
+  Master Router is 192.168.1.233, priority is 120 
+  Master Advertisement interval is 1.000 sec
+  Master Down interval is 3.550 sec

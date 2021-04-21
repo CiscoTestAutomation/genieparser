@@ -1,0 +1,26 @@
+
+Router#show mpls ldp parameters
+Load for five secs: 2%/0%; one minute: 5%; five minutes: 5%
+Time source is NTP, 16:10:10.454 EST Tue Nov 8 2016
+LDP Feature Set Manager: State Initialized
+  LDP features:
+    Auto-Configuration
+    Basic
+    ICPM
+    IP-over-MPLS
+    IGP-Sync
+    LLAF
+    TCP-MD5-Rollover
+    TDP
+    NSR
+Protocol version: 1
+Session hold time: 180 sec; keep alive interval: 60 sec
+Discovery hello: holdtime: 15 sec; interval: 5 sec
+Discovery targeted hello: holdtime: 90 sec; interval: 10 sec
+Downstream on Demand max hop count: 255
+LDP for targeted sessions
+LDP initial/maximum backoff: 15/120 sec
+LDP loop detection: off
+LDP NSR: Disabled
+Router#
+    

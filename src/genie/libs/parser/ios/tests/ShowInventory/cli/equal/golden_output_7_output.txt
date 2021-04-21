@@ -1,0 +1,13 @@
+
+NAME: "2821 chassis", DESCR: "2821 chassis"
+PID: CISCO2821         , VID: V07 , SN: FTX1234AMWT
+    
+NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 0", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC98675U0D
+    
+NAME: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1 on Slot 0 SubSlot 1", DESCR: "VWIC2-2MFT-T1/E1 - 2-Port RJ-48 Multiflex Trunk - T1/E1"
+PID: VWIC2-2MFT-T1/E1  , VID: V01 , SN: FOC98675W3E
+    
+NAME: "Virtual Private Network (VPN) Module on Slot 0", DESCR: "Encryption AIM Element"
+PID: AIM-VPN/SSL-2     , VID: V01, SN: FOC2837465E
+    

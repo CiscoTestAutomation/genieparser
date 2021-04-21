@@ -1,0 +1,26 @@
+sn4451#sh ip nbar classification socket-cache 20
+|server ip                               |vrf  |port |proto|application            |is   |is   |is   |max time |entry|hit    |
+|                                        |     |     |     |name                   |valid|black|learn|to expiry|type |count  |
+|                                        |     |     |     |                       |     |list |phase|(sec)    |     |       |
+|----------------------------------------|-----|-----|-----|-----------------------|-----|-----|-----|---------|-----|-------|
+|10.169.188.209                          |    2|  443|TCP  |ssl                    |No   |No   |Yes  |633      |Infra|1      |
+|10.4.186.254                          |    2|  443|TCP  |ssl                    |No   |No   |Yes  |494      |Infra|1      |
+|192.168.70.161                          |    2|  443|TCP  |ssl                    |No   |No   |Yes  |1749     |Infra|1      |
+|172.16.195.202                          |    2|  443|TCP  |google-services        |No   |No   |Yes  |1491     |Infra|1      |
+|10.16.17.130                           |    2|  443|TCP  |ms-live-accounts       |Yes  |No   |No   |965      |Infra|4      |
+|10.111.202.43                           |    2|  443|TCP  |ssl                    |No   |No   |Yes  |1026     |Infra|1      |
+|10.81.18.254                            |    2|  443|TCP  |cnn                    |No   |No   |Yes  |640      |Infra|2      |
+|10.49.220.101                          |    2|  443|TCP  |amazon-web-services    |Yes  |No   |No   |1206     |Infra|6      |
+|10.16.100.243                          |    2|  443|TCP  |ssl                    |Yes  |No   |No   |739      |Infra|3      |
+|10.49.229.34                           |    2|  443|TCP  |ssl                    |No   |No   |Yes  |614      |Infra|2      |
+|192.168.94.176                         |    2|  443|TCP  |ssl                    |No   |No   |Yes  |155      |Infra|1      |
+|10.64.212.174                          |    2|  443|TCP  |ssl                    |No   |No   |Yes  |1049     |Infra|1      |
+|192.168.186.140                         |    2|  443|TCP  |ssl                    |No   |No   |Yes  |1158     |Infra|2      |
+|10.219.171.221                          |    2|  443|TCP  |ssl                    |No   |No   |Yes  |147      |Infra|1      |
+|10.169.0.199                            |    2|  443|TCP  |ssl                    |Yes  |No   |No   |1036     |Infra|3      |
+|10.151.90.179                           |    2|  443|TCP  |ssl                    |No   |No   |Yes  |1019     |Infra|1      |
+|172.16.16.19                           |    2|  443|TCP  |google-services        |Yes  |No   |No   |604      |Infra|2      |
+|10.76.93.84                             |    2|  443|TCP  |ssl                    |No   |No   |Yes  |1152     |Infra|1      |
+|172.16.234.66                           |    2|  443|TCP  |google-services        |No   |No   |Yes  |624      |Infra|1      |
+|10.36.249.228                          |    2|  443|TCP  |ms-services            |Yes  |No   |No   |475      |Infra|4      |
+|10.36.249.228                          |    3|  443|TCP  |ms-services            |Yes  |No   |No   |475      |Infra|4      |

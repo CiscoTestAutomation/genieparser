@@ -190,10 +190,10 @@ class ShowBgpInstancesSchema(MetaParser):
     schema = {
         'instance':{
             Any(): {
-                'bgp_id': int,
+                'bgp_id': Or(int, str),
                 'instance_id': int,
                 'placed_grp': str,
-                'num_vrfs': int,
+                Optional('num_vrfs'): int,
                 Optional('address_families'): list
             }
         },
@@ -213,8 +213,8 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
             out = output
 
         p1 = re.compile(r'^(?P<instance_id>\d+) +(?P<placed_grp>[\w\_|\-]+) '
-                        r'+(?P<instance>[\w\-]+) +(?P<bgp_id>\d+) '
-                        r'+(?P<num_vrfs>\d+) +(?P<address_family>[\w\s\,\-]+)$')
+                        r'+(?P<instance>[\w\-]+) +(?P<bgp_id>[\d\.]+) '
+                        r'+(?P<num_vrfs>\d+)? +(?P<address_family>[\w\s\,\-]+)$')
 
         p1_1 = re.compile(r'(ID +Placed-Grp +Name +AS +VRFs +Address +Families)|(\-)+')
         p2 = re.compile(r'^(?P<address_family>[(IPv|VPNv)\d Unicast\,]+)$')
@@ -250,7 +250,10 @@ class ShowBgpInstances(ShowBgpInstancesSchema):
                 if instance_id:
                     ret_dict['instance'][instance]['instance_id'] = int(instance_id)
                 if bgp_id:
-                    ret_dict['instance'][instance]['bgp_id'] = int(bgp_id)
+                    try:
+                        ret_dict['instance'][instance]['bgp_id'] = int(bgp_id)
+                    except:
+                        ret_dict['instance'][instance]['bgp_id'] = bgp_id
                 if num_vrfs:
                     ret_dict['instance'][instance]['num_vrfs'] = int(num_vrfs)
 
@@ -4407,7 +4410,7 @@ class ShowBgpInstanceSummarySchema(MetaParser):
                             {Any():
                                 {Optional('route_distinguisher'): str,
                                 Optional('bgp_table_version'): int,
-                                Optional('local_as'): int,
+                                Optional('local_as'): Or(int, str),
                                 Optional('bgp_vrf'): str,
                                 Optional('router_id'): str,
                                 Optional('non_stop_routing'): str,
@@ -4433,7 +4436,7 @@ class ShowBgpInstanceSummarySchema(MetaParser):
                                         'standbyver': int}}}},
                         Optional('neighbor'):
                             {Any():        
-                                {'remote_as': int,
+                                {'remote_as': Or(int, str),
                                 'address_family':
                                     {Any():
                                         {'tbl_ver': int,
@@ -4478,7 +4481,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         'nsr_initial_initsync_version', 'nsr_initial_init_ver_status',
         'nsr_issu_sync_group_versions', 'standbyver']
 
-    def cli(self, vrf_type='all', address_family='', instance='all', vrf='all', output=None):
+    def cli(self, instance='all', vrf_type='all', vrf='all', address_family='', output=None):
 
         assert vrf_type in ['all', 'vrf']
         # assert address_family in ['', 'ipv4 unicast', 'ipv6 unicast']
@@ -4503,14 +4506,14 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
         p2 = re.compile(r'^\s*VRF: *(?P<vrf>[\S]+)$')
         p3 = re.compile(r'^\s*Address *Family:'
                         ' *(?P<address_family>[\S\s]+)$')
-        p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[A-Z0-9]+), *state:'
+        p4 = re.compile(r'^\s*BGP *VRF *(?P<bgp_vrf>[a-zA-Z0-9]+), *state:'
                         ' *(?P<vrf_state>[a-zA-Z]+)$')
         p5 = re.compile(r'^\s*BGP *Route *Distinguisher:'
                         ' *(?P<route_distinguisher>\S+)$')
         p6 = re.compile(r'^\s*VRF *ID: *(?P<vrf_id>[a-z0-9]+)$')
         p7 = re.compile(r'^\s*BGP *router *identifier'
                         ' *(?P<router_id>[0-9\.]+)\, *local *AS *number'
-                        ' *(?P<local_as>[0-9]+)$')
+                        ' *(?P<local_as>[0-9\.]+)$')
         p8 = re.compile(r'^\s*BGP *generic *scan *interval'
                         ' *(?P<generic_scan_interval>[0-9]+) *secs$')
         p9 = re.compile(r'^\s*Non-stop *routing *is'
@@ -4541,7 +4544,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                            ' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
                            ' +(?P<state_pfxrcd>.+)$')
         p17_3 = re.compile(r'^\s*(?P<neighbor>[a-zA-Z0-9\.\:]+) +(?P<spk>[0-9]+)'
-                           ' +(?P<remote_as>[0-9]+) +(?P<msg_rcvd>[0-9]+)'
+                           ' +(?P<remote_as>[0-9\.]+) +(?P<msg_rcvd>[0-9]+)'
                            ' +(?P<msg_sent>[0-9]+)'
                            ' +(?P<tbl_ver>[0-9]+) +(?P<input_queue>[0-9]+)'
                            ' +(?P<output_queue>[0-9]+) +(?P<up_down>[a-z0-9\:]+)'
@@ -4619,6 +4622,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 continue
 
             # BGP VRF VRF1, state: Active
+            # BGP VRF vrf1, state: Active
 
             m = p4.match(line)
             if m:
@@ -4643,7 +4647,7 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 route_distinguisher = str(m.groupdict()['route_distinguisher'])
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['address_family'][address_family]['route_distinguisher'] = route_distinguisher
                 continue
-
+            
             # VRF ID: 0x60000001
 
             m = p6.match(line)
@@ -4657,7 +4661,10 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
             m = p7.match(line)
             if m:
                 router_id = str(m.groupdict()['router_id'])
-                local_as = int(m.groupdict()['local_as'])
+                try:
+                    local_as = int(m.groupdict()['local_as'])
+                except:
+                    local_as = m.groupdict()['local_as']
                 sub = bgp_instance_summary_dict.setdefault('instance', {}).setdefault(instance, {})\
                         .setdefault('vrf', {}).setdefault(vrf, {}).setdefault('address_family', {})\
                         .setdefault(address_family, {})
@@ -4815,7 +4822,10 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 if address_family not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family']:
                     bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family] = {}
 
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = int(m.groupdict()['remote_as'])
+                try:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = int(m.groupdict()['remote_as'])
+                except:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = m.groupdict()['remote_as']
                 if route_distinguisher is not None:
                         bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['route_distinguisher'] =  route_distinguisher
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['spk'] = int(m.groupdict()['spk'])                
@@ -4879,7 +4889,8 @@ class ShowBgpInstanceAllAllSchema(MetaParser):
                                     {Any():
                                         {Optional('index'): 
                                             {Any(): 
-                                                {'next_hop': str,
+                                                {
+                                                Optional('next_hop'): str,
                                                 Optional('status_codes'): str,
                                                 Optional('metric'): str,
                                                 Optional('locprf'): str,

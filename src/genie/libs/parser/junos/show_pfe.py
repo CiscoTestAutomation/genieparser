@@ -11,8 +11,9 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, Optional, Use,
-                                                SchemaTypeError, Schema)
+                                                Schema)
 
 
 class ShowPfeStatisticsTrafficSchema(MetaParser):
@@ -36,7 +37,7 @@ class ShowPfeStatisticsTrafficSchema(MetaParser):
                 "nexthop-discard": str,
                 "stack-overflow-discard": str,
                 "stack-underflow-discard": str,
-                "tcp-header-error-discard": str,
+                Optional("tcp-header-error-discard"): str,
                 "timeout-discard": str,
                 "truncated-key-discard": str
             },
@@ -69,10 +70,10 @@ class ShowPfeStatisticsTrafficSchema(MetaParser):
             "pfe-traffic-statistics": {
                 "input-pps": str,
                 "output-pps": str,
-                "pfe-fabric-input": str,
-                "pfe-fabric-input-pps": str,
-                "pfe-fabric-output": str,
-                "pfe-fabric-output-pps": str,
+                Optional("pfe-fabric-input"): str,
+                Optional("pfe-fabric-input-pps"): str,
+                Optional("pfe-fabric-output"): str,
+                Optional("pfe-fabric-output-pps"): str,
                 "pfe-input-packets": str,
                 "pfe-output-packets": str
             }
@@ -842,7 +843,7 @@ class ShowPfeRouteSummarySchema(MetaParser):
     """
     def validate_route_table_data(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('validate_route_table_data is not a list')
+            raise SchemaError('validate_route_table_data is not a list')
         entry_schema = Schema({'index': str, 'routes': str, 'size': str})
         # Validate each dictionary in list
         for item in value:

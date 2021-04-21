@@ -13,6 +13,7 @@ JunOS parsers for the following show commands:
     - 'show system users'
     - 'show system storage'
     - 'show system storage no-forwarding'
+    - 'show system connections'
 """
 
 # python
@@ -20,8 +21,8 @@ import re
 
 # metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
-from genie.metaparser.util.exceptions import SchemaTypeError
 
 
 class ShowSystemBuffersSchema(MetaParser):
@@ -342,7 +343,7 @@ class ShowSystemUsersSchema(MetaParser):
 } """
     def validate_system_user_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-neighbor is not a list')
+            raise SchemaError('ospf-neighbor is not a list')
         neighbor_schema = Schema({
             "command": str,
             "from": str,
@@ -408,9 +409,10 @@ class ShowSystemUsers(ShowSystemUsersSchema):
         # 12:58PM up 2 days, 5:30, 2 users, load averages: 0.36, 0.33, 0.35
         # 10:08PM up 7 days, 10:56, 1 user, load averages: 0.02, 0.02, 0.00
         # 1:08AM up 8 days, 5 hrs, 1 user, load averages: 0.07, 0.02, 0.01
+        # 9:38AM up 209 day, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
         p1 = re.compile(
             r'^(?P<time>[\d\:a-zA-Z]+) +up +'
-            r'(?P<up_time>(\d+ +days, +)?([\d:]+( +mins)?( +hrs)?)), +'
+            r'(?P<up_time>(\d+ +(days|day), +)?([\d:]+( +mins)?( +hrs)?)), +'
             r'(?P<user_count>\d+) +user(s)?, +'
             r'load +averages: (?P<avg1>[\d\.]+), +'
             r'(?P<avg2>[\d\.]+), +(?P<avg3>[\d\.]+)$')
@@ -427,6 +429,7 @@ class ShowSystemUsers(ShowSystemUsersSchema):
             # 9:38AM up 209 days, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
             # 12:58PM up 2 days, 5:30, 2 users, load averages: 0.36, 0.33, 0.35
             # 10:08PM up 7 days, 10:56, 1 user, load averages: 0.02, 0.02, 0.00
+            # 9:38AM up 209 day, 37 mins, 3 users, load averages: 0.28, 0.39, 0.37
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -496,7 +499,7 @@ class ShowSystemCommitSchema(MetaParser):
     def validate_commit_history_list(value):
         # Pass commit-history list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('commit-history is not a list')
+            raise SchemaError('commit-history is not a list')
         commit_history_schema = Schema({
             "client": str,
             "date-time": {
@@ -596,7 +599,7 @@ class ShowSystemQueuesSchema(MetaParser):
     def validate_interface_queue_list(value):
         # Pass interface-queue list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('commit-history is not a list')
+            raise SchemaError('commit-history is not a list')
         interface_queue_schema = Schema({
             "max-octets-allowed": str,
             "max-packets-allowed": str,
@@ -726,7 +729,7 @@ class ShowSystemStorageSchema(MetaParser):
     def validate_filesystem_list(value):
         # Pass filesystem list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('filesystem is not a list')
+            raise SchemaError('filesystem is not a list')
         filesystem_schema = Schema({
             "available-blocks": {
                 "junos:format": str
@@ -856,7 +859,7 @@ class ShowSystemCoreDumpsSchema(MetaParser):
     def validate_file_information_list(value):
         # Pass file-information list as value
         if not isinstance(value, list):
-            raise SchemaTypeError('ospf-interface is not a list')
+            raise SchemaError('ospf-interface is not a list')
         file_information_schema = Schema({
             "file-date": {
                 Optional("#text"): str,
@@ -1020,7 +1023,7 @@ class ShowSystemUptimeSchema(MetaParser):
                     Optional("@junos:seconds"): str
                 }
             },
-            "time-source": str,
+            Optional("time-source"): str,
             "uptime-information": {
                 "active-user-count": {
                     "#text": str,
@@ -1076,13 +1079,14 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
                         r'[A-Za-z\t .\d\-\:]+)+\((?P<time_length>'
                         r'[\w+\s\d+\:\d]+) ago\) by (?P<user>\S+)$')
 
-        #8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
-        p6 = re.compile(r'^(?P<date_time>\d+\:\w+)\s+up\s+'
-                        r'(?P<days>\d+)\s+days,\s+(?P<mins>'
-                        r'[\w\:]+)[^,]*,\s+(?P<user_count>\d+)'
-                        r'\s+users,\s+load\s+averages:\s+'
-                        r'(?P<avg1>[\d\.]+),\s+(?P<avg2>[\d\.]+),'
-                        r'\s+(?P<avg3>[\d\.]+)$')
+        # 8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
+        # 2:08PM  up 11:03, 1 users, load averages: 0.31, 0.48, 0.50
+        # 3:57AM  up 1 day, 16:57, 1 users, load averages: 0.55, 0.46, 0.44
+        # 12:31PM  up 15 days, 5 mins, 1 user, load averages: 0.07, 0.09, 0.04
+        p6 = re.compile(r'^(?P<date_time>\d+\:\w+)\s+up\s+((?P<days>\d+)\s+day(s)?,\s+)?'
+                        r'(?P<mins>((\d+ mins|[\w\:]+)))[^,]*,\s+(?P<user_count>\d+)\s+user(s)?'
+                        r',\s+load\s+averages:\s+(?P<avg1>[\d\.]+),\s+(?P<avg2>[\d\.]+)'
+                        r',\s+(?P<avg3>[\d\.]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1176,6 +1180,7 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
                 continue
 
             #8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
+            # 2:08PM  up 11:03, 1 users, load averages: 0.31, 0.48, 0.50
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -1184,13 +1189,39 @@ class ShowSystemUptime(ShowSystemUptimeSchema):
                 current_up_date_dict["#text"] = group["date_time"]
 
                 current_up_time_dict = {}
-                current_up_time_dict["#text"] = group[
-                    "days"] + " days," + " " + group["mins"] + " mins,"
-                current_up_time_dict["@junos:seconds"] = str(
-                    (int(group['days']) * 86400) + \
-                    (int(group['mins'].split(':')[0]) * 3600) + \
-                    ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
-                )
+
+                # 8:16AM  up 209 days, 23:14, 5 users, load averages: 0.43, 0.43, 0.42
+                if group["days"]:
+                    if "min" in group["mins"]:
+                        current_up_time_dict["#text"] = group[
+                            "days"] + " days," + " " + group["mins"]
+                        current_up_time_dict["@junos:seconds"] = str(
+                            (int(group['days']) * 86400) +
+                            (int(group['mins'].split(' ')[0]) * 60)
+                            )
+                    else:
+                        current_up_time_dict["#text"] = group[
+                            "days"] + " days," + " " + group["mins"] + " mins,"
+                        current_up_time_dict["@junos:seconds"] = str(
+                            (int(group['days']) * 86400) + \
+                            (int(group['mins'].split(':')[0]) * 3600) + \
+                            ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
+                        )
+
+                # 2:08PM  up 11:03, 1 users, load averages: 0.31, 0.48, 0.50
+                else:
+                    if "min" in group["mins"]:
+                        current_up_time_dict["#text"] = group["mins"]
+                        current_up_time_dict["@junos:seconds"] = str(
+                            int(group['mins'].split(' ')[0]) * 60
+                            )
+                    else:
+                        current_up_time_dict["#text"] = group["mins"] + " mins,"
+                        current_up_time_dict["@junos:seconds"] = str(
+                            (int(group['mins'].split(':')[0]) * 3600) + \
+                            ((int(group['mins'].split(':')[1]) if len(group['mins'].split(':')) == 2 else 0) * 60)
+                        )
+
                 current_active_dict = {}
                 current_active_dict["#text"] = group["user_count"]
 
@@ -1910,11 +1941,11 @@ class ShowSystemStatisticsSchema(MetaParser):
     """
     def statistics_list(value):
         if not isinstance(value, list):
-            raise SchemaTypeError("statistics is not a list")
+            raise SchemaError("statistics is not a list")
 
         def icmp_histogram_list(value):
             if not isinstance(value, list):
-                raise SchemaTypeError("icmp-histogram is not a list")
+                raise SchemaError("icmp-histogram is not a list")
             icmp_histogram_schema = Schema({
                 "destination-unreachable": str,
                 "icmp-echo": str,
@@ -1928,7 +1959,7 @@ class ShowSystemStatisticsSchema(MetaParser):
 
         def ip6_header_type(value):
             if not isinstance(value, list):
-                raise SchemaTypeError("statistics is not a list")
+                raise SchemaError("statistics is not a list")
             ip6_header_type_schema = Schema({
                 "globals":
                 str,
@@ -4890,3 +4921,189 @@ class ShowSystemStatisticsNoForwarding(ShowSystemStatistics):
             out = output
 
         return super().cli(output=out)
+    
+class ShowSystemInformationSchema(MetaParser):
+    """ Schema for:
+            * show system information
+    """
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "system-information": {
+            "hardware-model": str,
+            "host-name": str,
+            "os-name": str,
+            "os-version": str,
+            Optional("serial-number"): str
+        }
+    }
+
+
+class ShowSystemInformation(ShowSystemInformationSchema):
+    """ Parser for:
+            * show system information
+    """
+    cli_command = 'show system information'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Model: vmx
+        p1 = re.compile(r'^Model: +(?P<hardware_model>\S+)$')
+        
+        # Family: junos
+        p2 = re.compile(r'^Family: +(?P<os_name>\S+)$')
+        
+        # Junos: 19.2R1.8
+        p3 = re.compile(r'^Junos: +(?P<os_version>\S+)$')
+        
+        # Hostname: P4
+        p4 = re.compile(r'^Hostname: +(?P<host_name>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+    
+            # Model: vmx
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Family: junos
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Junos: 19.2R1.8
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+            
+            # Hostname: P4
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                entry = ret_dict.setdefault("system-information", {})
+                for group_key, group_value in group.items():
+                    entry_key = group_key.replace("_", "-")
+                    entry[entry_key] = group_value
+                continue
+
+        return ret_dict
+
+class ShowSystemConnectionsSchema(MetaParser):
+    """ Schema for:
+            * show system connections
+    """
+    """ schema = {
+        "output": {
+            "connections-table": [
+                {
+                    "proto": str,
+                    "recv-q": str,
+                    "send-q": str,
+                    "local-address": str,
+                    "foreign-address": str,
+                    "state": str,
+                }
+            ]
+        }
+    } """
+    def validate_system_connections_list(value):
+        if not isinstance(value, list):
+            raise SchemaError('connections-table is not a list')
+        connections_schema = Schema({
+            "proto": str,
+            "recv-q": str,
+            "send-q": str,
+            "local-address": str,
+            "foreign-address": str,
+            "state": str,
+        })
+        for item in value:
+            connections_schema.validate(item)
+        return value
+
+    schema = {
+        "output": {
+            "connections-table": Use(validate_system_connections_list)
+        }
+    }
+
+
+class ShowSystemConnections(ShowSystemConnectionsSchema):
+    """ Parser for:
+            * show system connections
+    """
+    cli_command = 'show system connections'
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Active Internet connections (including servers)
+        p1 = re.compile(r'^Active +Internet +connections +\(including servers\) *$')
+
+        # Proto Recv-Q Send-Q  Local Address                                 Foreign Address                               (state)
+        p2 = re.compile(r'^Proto +Recv-Q +Send-Q +Local +Address +Foreign +Address +\(state\) *$')
+
+        # tcp4       0      0  10.1.0.192.22                                  10.1.0.1.56714                                 ESTABLISHED
+        p3 = re.compile(r'^(?P<proto>\S+) +(?P<recv_q>\S+) +(?P<send_q>\S+) +'
+                        r'(?P<local_address>\S+) +(?P<foreign_address>\S+) +(?P<state>.*)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Active Internet connections (including servers)
+            m = p1.match(line)
+            if m:
+                continue
+
+            # Proto Recv-Q Send-Q  Local Address
+            m = p2.match(line)
+            if m:
+                continue
+
+            # tcp4       0      0  10.1.0.192.22                                  10.1.0.1.56714                                 ESTABLISHED
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                entry_dict = {}
+                connections_table_entry_list = ret_dict.setdefault('output', {}).\
+                    setdefault('connections-table', [])
+
+                entry_dict["proto"] = group["proto"]
+                entry_dict["recv-q"] = group["recv_q"]
+                entry_dict["send-q"] = group["send_q"]
+                entry_dict["local-address"] = group["local_address"]
+                entry_dict["foreign-address"] = group["foreign_address"]
+                entry_dict["state"] = group["state"]
+
+                connections_table_entry_list.append(entry_dict)
+
+                continue
+
+        return ret_dict

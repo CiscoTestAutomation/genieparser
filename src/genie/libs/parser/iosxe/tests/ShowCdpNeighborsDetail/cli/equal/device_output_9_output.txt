@@ -1,0 +1,16 @@
+
+Device ID: SEP009E2E69AC48
+Entry address(es):
+  IP address: 10.0.0.8
+Platform: "CTS-CODEC-SX80",  Capabilities: Host Phone
+Interface: GigabitEthernet3/0/38,  Port ID (outgoing port): gbe0
+Holdtime : 166 sec
+
+Version :
+"ce9.1.3 75ff735 2017-07-10"
+
+advertisement version: 2
+
+
+Total cdp entries displayed : 1
+

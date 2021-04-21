@@ -1,0 +1,28 @@
+expected_output = {
+    "version": {
+        "version_short": "12.1",
+        "platform": "C2940",
+        "version": "12.1(22)EA12",
+        "image_id": "C2940-I6K2L2Q4-M",
+        "os": "IOS",
+        "image_type": "developer image",
+        "compiled_date": "Tue 08-Jul-08 00:06",
+        "compiled_by": "amvarma",
+        "image": {"text_base": "0x80010000", "data_base": "0x8068C000"},
+        "rom": "Bootstrap program is C2950 boot loader",
+        "hostname": "testsw01",
+        "uptime": "24 weeks, 1 day, 20 hours, 50 minutes",
+        "returned_to_rom_by": "power-on",
+        "system_restarted_at": "09:17:28 UTC Sun Oct 27 2019",
+        "system_image": "flash:f1111-aei43934-mz.121-22.EA12.bin",
+        "chassis": "WS-C2940-8TT-S",
+        "main_mem": "19868",
+        "processor_type": "RC32300",
+        "rtr_type": "WS-C2940-8TT-S",
+        "chassis_sn": "FOC2345C3DB",
+        "last_reload_reason": "system-reset",
+        "interfaces": {"fastethernet": 8, "gigabit_ethernet": 1},
+        "mem_size": {"flash-simulated non-volatile configuration": "32"},
+        "curr_config_register": "0xF",
+    }
+}

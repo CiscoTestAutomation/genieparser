@@ -1,0 +1,9 @@
+Root bridge for: none.
+PortFast BPDU Guard is disabled
+UplinkFast is disabled
+BackboneFast is disabled
+
+Name                 Blocking Listening Learning Forwarding STP Active
+-------------------- -------- --------- -------- ---------- ----------
+               Total 0        0         0        0          0
+            

@@ -1,0 +1,7 @@
+
+        show route advertising-protocol bgp 10.135.0.2 10.81.123.0/32
+
+        inet.0: 1200008 destinations, 1200008 routes (1200008 active, 0 holddown, 0 hidden)
+        Prefix                  Nexthop              MED     Lclpref    AS path
+        * 10.81.123.0/32        Self                                    67890 [1] I
+    

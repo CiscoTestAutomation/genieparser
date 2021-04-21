@@ -51,7 +51,8 @@ from genie.libs.parser.iosxe.show_platform import \
     ShowModule as ShowModule_iosxe, \
     ShowSwitch as ShowSwitch_iosxe, \
     ShowSwitchDetail as ShowSwitchDetail_iosxe, \
-    ShowBootvar as ShowBootvar_iosxe
+    ShowBootvar as ShowBootvar_iosxe, \
+    ShowProcessesMemory as ShowProcessesMemory_iosxe
 
 
 class ShowVersion(ShowVersion_iosxe):
@@ -404,6 +405,7 @@ class ShowInventory(ShowInventorySchema_iosxe):
 
 
                 # slot_code == 'other'
+                # oc_key_values == ['power', 'fan', 'clock']
                 # 2700W AC power supply for CISCO7604 2
                 # High Speed Fan Module for CISCO7604 1
                 if any(key in descr.lower() for key in oc_key_values):
@@ -420,6 +422,33 @@ class ShowInventory(ShowInventorySchema_iosxe):
                     other_dict['sn'] = sn
 
                     continue
+
+                # No slot number
+                # golden_output_11_output
+                # schema = {
+                #     Optional('main'):
+                #         {Optional('swstack'): bool,
+                #         Optional(Any()): <------------------------
+                #             {Any():
+                #                 {Optional('name'): str,
+                #                 Optional('descr'): str,
+                #                 Optional('pid'): str,
+                #                 Optional('vid'): str,
+                #                 Optional('sn'): str,
+                #                 },
+                #             },
+                #         },
+                #     Optional('slot'):{(snip)}}
+                else:
+                    non_chassis_dict = parsed_output.setdefault('main', {})\
+                        .setdefault('non-chassis', {})\
+                        .setdefault(pid, {})
+
+                    non_chassis_dict['name'] = name
+                    non_chassis_dict['descr'] = descr
+                    non_chassis_dict['pid'] = pid                    
+                    non_chassis_dict['vid'] = vid
+                    non_chassis_dict['sn'] = sn                    
 
         # case: golden_output_8
         if 'slot' in parsed_output:
@@ -597,4 +626,10 @@ class ShowSwitch(ShowSwitch_iosxe):
 
 class ShowSwitchDetail(ShowSwitchDetail_iosxe):
     """Parser for show switch detail"""
+    pass
+
+
+class ShowProcessesMemory(ShowProcessesMemory_iosxe):
+    """Parser for show switch detail"""
+
     pass

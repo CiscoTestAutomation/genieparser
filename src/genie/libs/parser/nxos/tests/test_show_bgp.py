@@ -28329,6 +28329,8 @@ class test_show_bgp_l2vpn_evpn_neighbors(unittest.TestCase):
                                         'capoldrradvertised': True,  # Ops Bool True
                                         'capoldrrrecvd': True,
                                         'capas4advertised': True,
+                                        'convergence_routes_sent': 5,
+                                        'first_convergence': '00:00:01',
                                         'capas4recvd': True,
                                         'af': {
                                             'l2vpn evpn': {
@@ -28370,6 +28372,8 @@ class test_show_bgp_l2vpn_evpn_neighbors(unittest.TestCase):
                                         'rtrefreshrecvd': 0,
                                         'capabilitiessent': 2,
                                         'capabilitiesrecvd': 2,
+                                        'last_end_of_rib_received': '00:00:01',
+                                        'last_end_of_rib_sent': '00:00:01',
                                         'bytessent': 10398,
                                         'bytesrecvd': 2595,
                                         'peraf': {
@@ -28463,6 +28467,208 @@ BGP neighbor is 172.16.205.8, remote AS 200, ebgp link, Peer index 3
   fd = 84
     '''}
 
+    golden_output_2 = {'execute.return_value': '''
+        S1-AG-01# show bgp l2vpn evpn neighbors
+        BGP neighbor is 10.69.10.1, remote AS 1, ibgp link, Peer index 3
+        Inherits peer configuration from peer-template LEAF-PEERS
+        Description: site1-leaf1
+        BGP version 4, remote router ID 10.69.10.1
+        Neighbor previous state = OpenConfirm
+        BGP state = Established, up for 00:58:46
+        Neighbor vrf: default
+        Using loopback0 as update source for this peer
+        Enable logging neighbor events
+        Last read 00:00:34, hold time = 180, keepalive interval is 60 seconds
+        Last written 00:00:14, keepalive timer expiry due 00:00:45
+        Received 75 messages, 0 notifications, 0 bytes in queue
+        Sent 64 messages, 0 notifications, 0(0) bytes in queue
+        Enhanced error processing: On
+            0 discarded attributes
+        Connections established 1, dropped 0
+        Last reset by us never, due to No error
+        Last error length sent: 0
+        Reset error value sent: 0
+        Reset error sent major: 0 minor: 0
+        Notification data sent:
+        Last reset by peer never, due to No error
+        Last error length received: 0
+        Reset error value received 0
+        Reset error received major: 0 minor: 0
+        Notification data received:
+
+        Neighbor capabilities:
+        Dynamic capability: advertised (mp, refresh, gr) received (mp, refresh, gr)
+        Dynamic capability (old): advertised received
+        Route refresh capability (new): advertised received 
+        Route refresh capability (old): advertised received 
+        4-Byte AS capability: advertised received 
+        Address family L2VPN EVPN: advertised received 
+        Graceful Restart capability: advertised received
+
+        Graceful Restart Parameters:
+        Address families advertised to peer:
+            L2VPN EVPN  
+        Address families received from peer:
+            L2VPN EVPN  
+        Forwarding state preserved by peer for:
+        Restart time advertised to peer: 120 seconds
+        Stale time for routes advertised by peer: 300 seconds
+        Restart time advertised by peer: 120 seconds
+        Extended Next Hop Encoding Capability: advertised received
+        Receive IPv6 next hop encoding Capability for AF:
+            IPv4 Unicast  VPNv4 Unicast  
+
+        Message statistics:
+                                    Sent               Rcvd
+        Opens:                         1                  1  
+        Notifications:                 0                  0  
+        Updates:                    3364                 12  
+        Keepalives:                   60                 61  
+        Route Refresh:                 1                  0  
+        Capability:                    1                  1  
+        Total:                        64                 75  
+        Total bytes:             1769921               2825  
+        Bytes in queue:                0                  0  
+
+        For address family: L2VPN EVPN
+        BGP table version 274665, neighbor version 274665
+        10 accepted prefixes (10 paths), consuming 2360 bytes of memory
+        0 received prefixes treated as withdrawn
+        40541 sent prefixes (40541 paths)
+        Community attribute sent to this neighbor
+        Extended community attribute sent to this neighbor
+        Advertise GW IP is enabled
+        Outbound route-map configured is GENIE_TESTS, handle obtained
+        Route reflector client
+        Last End-of-RIB received 00:00:11 after session start
+        Last End-of-RIB sent 00:00:06 after session start
+        First convergence 00:00:06 after session start with 18810 routes sent
+
+        Local host: 10.69.10.11, Local port: 29478
+        Foreign host: 10.69.10.1, Foreign port: 179
+        fd = 1583
+    '''
+    }
+    golden_parsed_output_2 = {
+        'instance': {
+            'default': {
+                'vrf': {
+                    'default': {
+                        'address_family': {
+                            'l2vpn evpn': {
+                                'neighbor': {
+                                    '10.69.10.1': {
+                                        'accepted_prefixes': 10,
+                                        'af': {
+                                            'l2vpn evpn': {
+                                                'af_advertised': True,
+                                                'af_name': 'l2vpn evpn',
+                                                'af_recvd': True
+                                            }
+                                        },
+                                        'bytesrecvd': 2825,
+                                        'bytessent': 1769921,
+                                        'capabilitiesrecvd': 1,
+                                        'capabilitiessent': 1,
+                                        'capas4advertised': True,
+                                        'capas4recvd': True,
+                                        'capextendednhadvertised': True,
+                                        'capextendednhrecvd': True,
+                                        'capgradvertised': True,
+                                        'capgrdynamicadvertised': True,
+                                        'capgrdynamicrecvd': True,
+                                        'capgrrecvd': True,
+                                        'capmpadvertised': True,
+                                        'capmprecvd': True,
+                                        'capolddynamicadvertised': True,
+                                        'capolddynamicrecvd': True,
+                                        'capoldrradvertised': True,
+                                        'capoldrrrecvd': True,
+                                        'caprefreshadvertised': True,
+                                        'caprefreshrecvd': True,
+                                        'caprradvertised': True,
+                                        'caprrrecvd': True,
+                                        'connsdropped': 0,
+                                        'connsestablished': 1,
+                                        'convergence_routes_sent': 18810,
+                                        'elapsedtime': '00:58:46',
+                                        'enhanced_error_processing': {
+                                            'discarded_attr': 0,
+                                            'error_processing': True
+                                        },
+                                        'fd': 1583,
+                                        'first_convergence': '00:00:06',
+                                        'grrecvdrestarttime': 120,
+                                        'grrestarttime': 120,
+                                        'grstaletiem': 300,
+                                        'holdtime': 180,
+                                        'index': 3,
+                                        'keepalive': '00:00:45',
+                                        'keepaliverecvd': 61,
+                                        'keepalivesent': 60,
+                                        'keepalivetime': 60,
+                                        'last_end_of_rib_received': '00:00:11',
+                                        'last_end_of_rib_sent': '00:00:06',
+                                        'last_error_length_sent': 0,
+                                        'lastread': '00:00:34',
+                                        'lastwrite': '00:00:14',
+                                        'link': 'ibgp',
+                                        'localaddr': '10.69.10.11',
+                                        'localport': 29478,
+                                        'memory_consumed_in_bytes': 2360,
+                                        'msgrecvd': 75,
+                                        'msgsent': 64,
+                                        'neighbor': '10.69.10.1',
+                                        'notificationsrcvd': 0,
+                                        'notificationssent': 0,
+                                        'opensrecvd': 1,
+                                        'openssent': 1,
+                                        'outbound_route_map': 'GENIE_TESTS',
+                                        'peerresetreason': 'no error',
+                                        'peerresettime': 'never',
+                                        'peraf': {
+                                            'l2vpn evpn': {
+                                                'neighbortableversion': 274665,
+                                                'per_af_name': 'l2vpn evpn',
+                                                'sendcommunity': True,
+                                                'sendextcommunity': True,
+                                                'tableversion': 274665
+                                            }
+                                        },
+                                        'received_prefixes': 0,
+                                        'recvbufbytes': 0,
+                                        'remote_id': '10.69.10.1',
+                                        'remoteaddr': '10.69.10.1',
+                                        'remoteas': 1,
+                                        'remoteport': 179,
+                                        'reset_error_received_major': 0,
+                                        'reset_error_received_minor': 0,
+                                        'reset_error_sent_major': 0,
+                                        'reset_error_sent_minor': 0,
+                                        'reset_error_value_sent': 0,
+                                        'resetreason': 'no error',
+                                        'resettime': 'never',
+                                        'rtrefreshrecvd': 0,
+                                        'rtrefreshsent': 1,
+                                        'sent_prefixes': 40541,
+                                        'sentbytesoutstanding': 0,
+                                        'state': 'established',
+                                        'totalbytessent': 0,
+                                        'up': True,
+                                        'updatesrecvd': 12,
+                                        'updatessent': 3364,
+                                        'version': 4
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    
     def test_show_bgp_l2vpn_evpn_neighbors(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output)
@@ -28475,6 +28681,13 @@ BGP neighbor is 172.16.205.8, remote AS 200, ebgp link, Peer index 3
         obj = ShowBgpL2vpnEvpnNeighbors(device=self.device)
         with self.assertRaises(SchemaEmptyParserError):
             parsed_output = obj.parse()
+
+    def test_show_bgp_l2vpn_evpn_neighbors_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output_2)
+        obj = ShowBgpL2vpnEvpnNeighbors(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_2)
 
 # =============================================================
 #  show bgp l2vpn evpn <WORD> | be "best path, in rib" n <WORD>
@@ -29035,7 +29248,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-   10.64.4.4         10.100.5.5        
+   10.64.4.4         10.100.5.5        
 BGP routing table entry for [5][10.4.1.3][238.8.4.102]/64, version 409
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29048,7 +29261,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4        10.100.5.5        
+    10.64.4.4        10.100.5.5        
 BGP routing table entry for [5][10.111.2.3][238.8.4.101]/64, version 24
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29061,7 +29274,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4        10.100.5.5        
+    10.64.4.4        10.100.5.5        
 BGP routing table entry for [5][10.4.2.3][238.8.4.102]/64, version 58
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29074,7 +29287,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
      Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-   10.64.4.4         10.100.5.5        
+   10.64.4.4         10.100.5.5        
 BGP routing table entry for [5][10.111.1.4][238.8.4.101]/64, version 410
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29087,7 +29300,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4            10.100.5.5        
+    10.64.4.4            10.100.5.5        
 BGP routing table entry for [5][10.111.2.4][238.8.4.101]/64, version 7
 Paths: (1 available, best #1)
 Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
@@ -29100,7 +29313,7 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn
       Extcommunity: RT:100:10100
 
   Path-id 1 advertised to peers:
-    10.64.4.4            10.100.5.5        
+    10.64.4.4            10.100.5.5        
 
 Route Distinguisher: 10.144.6.6:3
 BGP routing table entry for [5][10.111.6.3][238.8.4.101]/64, version 454
@@ -29112,14 +29325,14 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn, is not in HW
     10.144.6.6 (inaccessible, metric 4294967295) from 10.100.5.5 (10.100.5.5)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
+      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
 
   Path type: internal, path is invalid(rnh not resolved), no labeled nexthop
   AS-Path: NONE, path sourced internal to AS
     10.144.6.6 (inaccessible, metric 4294967295) from 10.64.4.4 (10.64.4.4)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
+      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
 
 BGP routing table entry for [5][10.4.6.3][238.8.4.102]/64, version 456
 Paths: (2 available, best #0)
@@ -29130,14 +29343,14 @@ Flags: (0x000002) (high32 00000000) on xmit-list, is not in mvpn, is not in HW
     10.144.6.6 (inaccessible, metric 4294967295) from 10.100.5.5 (10.100.5.5)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
+      Originator: 10.144.6.6 Cluster list: 10.100.5.5 
 
   Path type: internal, path is invalid(rnh not resolved), no labeled nexthop
   AS-Path: NONE, path sourced internal to AS
     10.144.6.6 (inaccessible, metric 4294967295) from 10.64.4.4 (10.64.4.4)
       Origin IGP, MED not set, localpref 100, weight 0
       Extcommunity: RT:100:10100
-      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
+      Originator: 10.144.6.6 Cluster list: 10.64.4.4 
 
 '''}
 

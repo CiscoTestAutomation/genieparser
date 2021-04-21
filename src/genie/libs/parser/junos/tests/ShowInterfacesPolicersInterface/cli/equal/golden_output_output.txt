@@ -1,0 +1,8 @@
+
+        Interface       Admin Link Proto Input Policer         Output Policer
+        ge-0/0/2        up    up
+        ge-0/0/2.0      up    up
+                                inet  GE_1M-ge-0/0/2.0-log_int-i GE_1M-ge-0/0/2.0-log_int-o
+                                inet6 GE_1M-ge-0/0/2.0-log_int-i GE_1M-ge-0/0/2.0-log_int-o
+                                multiservice __default_arp_policer__
+    

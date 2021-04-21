@@ -470,7 +470,7 @@ class ShowIgmpGroupsDetailSchema(MetaParser):
             }
         }
     }
-    
+
 class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
     """Parser for show igmp groups detail"""
     #*************************
@@ -606,4 +606,117 @@ class ShowIgmpGroupsDetail(ShowIgmpGroupsDetailSchema):
                 continue
             
         return result_dict
-        
+
+
+# ==========================================================================
+# Schema for 'show igmp groups summary'
+# ==========================================================================
+class ShowIgmpGroupsSummarySchema(MetaParser):
+    """ Schema for show igmp [vrf <vrf>] groups summary. """
+
+    schema = {
+        'vrf':
+            {Any():
+                {'no_g_routes': int,
+                 'no_sg_routes': int,
+                 'no_group_x_intfs': int
+                 },
+             },
+        }
+
+
+# ==========================================================================
+# Parser for 'show igmp groups summary'
+# ==========================================================================
+class ShowIgmpGroupsSummary(ShowIgmpGroupsSummarySchema):
+    """
+    Parser for show igmp [vrf <vrf>] groups summary.
+
+    Parameters
+    ----------
+    device : Router
+        Device to be parsed.
+    vrf : str, optional
+        Vrf to be summarized.
+    output: str, optional
+        Output to be parsed.
+
+    Returns
+    -------
+    parsed_dict : dict
+        Contains the CLI output parsed into a dictionary.
+
+    Examples
+    --------
+    >>> dev.parse('show igmp groups summary')
+
+    {'vrf':
+        {'default':
+            {'no_g_routes': 4,
+             'no_group_x_intfs': 27,
+             'no_sg_routes': 2
+            }
+        }
+    }
+
+    """
+
+    cli_command = ["show igmp groups summary",
+                   "show igmp vrf {vrf} groups summary"]
+
+    def cli(self, vrf='', output=None):
+
+        if output is None:
+            if vrf:
+                cmd = self.cli_command[1].format(vrf=vrf)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        parsed_dict = {}
+
+        # IGMP Route Summary for vrf default
+        p1 = re.compile(r"IGMP +Route +Summary +for +vrf +(?P<vrf>\S+)")
+
+        # No. of (*,G) routes = 4
+        p2 = re.compile(r"No\. +of +\(\*,G\) +routes += +(?P<no_g_routes>\d+)")
+
+        # No. of (S,G) routes = 2
+        p3 = re.compile(r"No\. +of +\(\S,G\) +routes += +(?P<no_sg_routes>\d+)")
+
+        # No. of Group x Interfaces = 27
+        p4 = re.compile(r"No\. +of +Group +x +Interfaces += +"
+                        r"(?P<no_group_x_intfs>\d+)")
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                vrf = group['vrf']
+                vrf_dict = parsed_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {})
+                continue
+
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                vrf_dict['no_g_routes'] = int(group['no_g_routes'])
+                continue
+
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                vrf_dict['no_sg_routes'] = int(group['no_sg_routes'])
+                continue
+
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                vrf_dict['no_group_x_intfs'] = int(group['no_group_x_intfs'])
+                continue
+
+        return parsed_dict

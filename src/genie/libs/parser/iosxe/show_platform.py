@@ -13,7 +13,14 @@ IOSXE parsers for the following show commands:
     * 'show switch detail'
     * 'show switch'
     * 'show environment all'
+    * 'show platform hardware fed switch active fwd-asic resource tcam utilization'
     * 'show module'
+    * 'show platform hardware qfp active datapath utilization summary'
+    * 'show platform resources'
+    * 'show platform hardware qfp active tcam resource-manager usage'
+    * 'show platform software yang-management process'
+    * 'show platform software yang-management process monitor'
+    * 'show platform software yang-management process state'
 '''
 
 # Python
@@ -25,13 +32,16 @@ from xml.dom import minidom
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, Use
 from genie.libs.parser.utils.common import Common
 # genie.parsergen
 try:
     import genie.parsergen
 except (ImportError, OSError):
     pass
+
+# pyATS
+from pyats.utils.exceptions import SchemaTypeError
 
 log = logging.getLogger(__name__)
 
@@ -44,12 +54,12 @@ class ShowBootvarSchema(MetaParser):
         Optional('config_file'): str,
         Optional('bootldr'): str,
         Optional('active'): {
-            'configuration_register': str,
+            Optional('configuration_register'): str,
             Optional("next_reload_configuration_register"): str,
             Optional('boot_variable'): str,
         },
         Optional('standby'): {
-            'configuration_register': str,
+            Optional('configuration_register'): str,
             Optional("next_reload_configuration_register"): str,
             Optional('boot_variable'): str,
         },
@@ -310,7 +320,7 @@ class ShowVersion(ShowVersionSchema):
         active_dict = {}
         rtr_type = ''
         suite_flag = False
-        license_flag = False              
+        license_flag = False
 
         # version
         # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
@@ -396,9 +406,10 @@ class ShowVersion(ShowVersionSchema):
         # cisco WS-C3750X-24P (PowerPC405) processor (revision W0) with 262144K bytes of memory.
         # cisco ISR4451-X/K9 (2RU) processor with 1795979K/6147K bytes of memory.
         # cisco WS-C4507R+E (MPC8572) processor (revision 10) with 2097152K/20480K bytes of memory.
+        # Cisco CISCO1941/K9 (revision 1.0) with 491520K/32768K bytes of memory.
         p18 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) '
-                         r'+\((?P<processor_type>.+)\) +((processor.*)|with) '
-                         r'+with +(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
+                         r'+\((?P<processor_type>[^)]*)\) +(.*?)with '
+                         r'+(?P<main_mem>[0-9]+)[kK](\/[0-9]+[kK])?')
 
         # Cisco CISCO3945-CHASSIS (revision 1.0) with C3900-SPE150/K9 with 1835264K/261888K bytes of memory.
         p18_2 = re.compile(r'^(C|c)isco +(?P<chassis>[a-zA-Z0-9\-\/\+]+) +.* '
@@ -782,7 +793,7 @@ class ShowVersion(ShowVersionSchema):
             m = p19.match(line)
             if m:
                 version_dict['version']['chassis_sn'] \
-                    = m.groupdict()['chassis_sn']   
+                    = m.groupdict()['chassis_sn']
                 continue
 
             # number_of_intfs
@@ -1292,7 +1303,7 @@ class DirSchema(MetaParser):
         'dir': {
             'dir': str,
             Any(): {
-                'files': {
+                Optional('files'): {
                     Any(): {
                         Optional('index'): str,
                         Optional('permissions'): str,
@@ -1403,7 +1414,7 @@ class ShowRedundancySchema(MetaParser):
                 Optional('boot'): str,
                 Optional('config_file'): str,
                 Optional('bootldr'): str,
-                'config_register': str,
+                Optional('config_register'): str,
             }
         }
     }
@@ -1481,7 +1492,7 @@ class ShowRedundancy(ShowRedundancySchema):
                 continue
 
             # conf_red_mode
-            p6 = re.compile(r'\s*[Cc]onfigured +[Rr]edundancy +[Mm]ode +\= +(?P<conf_red_mode>\S+)$')
+            p6 = re.compile(r'\s*[Cc]onfigured +[Rr]edundancy +[Mm]ode +\= +(?P<conf_red_mode>[\s\S]+)$')
             m = p6.match(line)
             if m:
                 redundancy_dict['red_sys_info']['conf_red_mode'] = \
@@ -1651,11 +1662,11 @@ class ShowRedundancyStates(ShowRedundancyStatesSchema):
 
         # Redundancy Mode (Operational) = sso
         p6 = re.compile(r'^Redundancy +Mode +\(Operational\) += +'
-                        '(?P<redundancy_mode_operational>[\S]+)$')
+                        '(?P<redundancy_mode_operational>[\s\S]+)$')
 
         # Redundancy Mode (Configured)  = sso
         p7 = re.compile(r'^Redundancy +Mode +\(Configured\) += +'
-                        '(?P<redundancy_mode_configured>[\S]+)$')
+                        '(?P<redundancy_mode_configured>[\s\S]+)$')
 
         # Redundancy State              = sso
         p8 = re.compile(r'^Redundancy +State += +(?P<redundancy_state>[\s\S]+)$')
@@ -1799,7 +1810,7 @@ class ShowInventorySchema(MetaParser):
     schema = {
         Optional('main'):
             {Optional('swstack'): bool,
-             Optional('chassis'):
+             Optional(Any()):
                 {Any():
                     {Optional('name'): str,
                      Optional('descr'): str,
@@ -1953,7 +1964,6 @@ class ShowInventory(ShowInventorySchema):
         # PID: , VID: 1.0  , SN: 1162722191
         p2 = re.compile(r'^PID: +(?P<pid>[\S\s]+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
                         r' +SN:(?: +(?P<sn>(\S+)))?$')
-
         for line in out.splitlines():
             line = line.strip()
 
@@ -1964,6 +1974,7 @@ class ShowInventory(ShowInventorySchema):
             # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
             # NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
             m = p1.match(line)
+
             if m:
                 group = m.groupdict()
                 name = group['name'].strip()
@@ -2025,6 +2036,16 @@ class ShowInventory(ShowInventorySchema):
                 if 'Chassis' in name:
                     main_dict = ret_dict.setdefault('main', {}).\
                         setdefault('chassis', {}).\
+                        setdefault(pid, {})
+                    main_dict['name'] = name
+                    main_dict['descr'] = descr
+                    main_dict['pid'] = pid
+                    main_dict['vid'] = vid
+                    main_dict['sn'] = sn
+
+                if 'Switch1' in name or 'Switch2' in name or 'TenGigabitEthernet' in name:
+                    main_dict = ret_dict.setdefault('main', {}).\
+                        setdefault(name, {}).\
                         setdefault(pid, {})
                     main_dict['name'] = name
                     main_dict['descr'] = descr
@@ -2230,7 +2251,7 @@ class ShowPlatform(ShowPlatformSchema):
 
         # Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
         p1 = re.compile(r'^[Ss]witch\/[Ss]tack +[Mm]ac +[Aa]ddress +\: +'
-                        '(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
+                        r'(?P<switch_mac_address>[\w\.]+) *(?P<local>[\w\s\-]+)?$')
 
         # Mac persistency wait time: Indefinite
         p2 = re.compile(r'^[Mm]ac +persistency +wait +time\: +(?P<mac_persistency_wait_time>[\w\.\:]+)$')
@@ -2238,42 +2259,45 @@ class ShowPlatform(ShowPlatformSchema):
         # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
         # ------  -----   ---------             -----------  --------------  -------       --------
         #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
+        #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
         p3 = re.compile(r'^(?P<switch>\d+) +(?P<ports>\d+) +'
-                        '(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
-                        '(?P<mac_address>[\w\.\:]+) +'
-                        '(?P<hw_ver>\w+) +(?P<sw_ver>[\w\.]+)$')
+                        r'(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
+                        r'(?P<mac_address>[\w\.\:]+) +'
+                        r'(?P<hw_ver>\w+) +(?P<sw_ver>[\w\.]+)$')
 
         #                                     Current
         # Switch#   Role        Priority      State
         # -------------------------------------------
         # *1       Active          3          Ready
         p4 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
-                        '(?P<priority>\d+) +(?P<state>[\w\s]+)$')
+                        r'(?P<priority>\d+) +(?P<state>[\w\s]+)$')
 
         # ----------      ASR1K    -------------
         # Chassis type: ASR1006
-        p5 = re.compile(r'^[Cc]hassis +type: +(?P<chassis>\w+)$')
+        # Chassis type: ASR-903
+        p5 = re.compile(r'^[Cc]hassis +type: +(?P<chassis>\S+)$')
 
         # Slot      Type                State                 Insert time (ago)
         # --------- ------------------- --------------------- -----------------
         # 0         ASR1000-SIP40       ok                    00:33:53
         #  0/0      SPA-1XCHSTM1/OC3    ok                    2d00h
         p6 = re.compile(r'^(?P<slot>\w+)(\/(?P<subslot>\d+))? +(?P<name>\S+) +'
-                        '(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
+                        r'(?P<state>\w+(\, \w+)?) +(?P<insert_time>[\w\.\:]+)$')
 
         # 4                             unknown               2d00h
         p6_1 = re.compile(r'^(?P<slot>\w+) +(?P<state>\w+(\, \w+)?)'
-                          ' +(?P<insert_time>[\w\.\:]+)$')
+                          r' +(?P<insert_time>[\w\.\:]+)$')
 
         # Slot      CPLD Version        Firmware Version
         # --------- ------------------- ---------------------------------------
         # 0         00200800            16.2(1r)
         p7 = re.compile(r'^(?P<slot>\w+) +(?P<cpld_version>\d+|N\/A) +'
-                        '(?P<fireware_ver>[\w\.\(\)\/]+)$')
+                        r'(?P<fireware_ver>[\w\.\(\)\/]+)$')
 
         for line in out.splitlines():
             line = line.strip()
 
+            # Switch/Stack Mac Address : 0057.d2ff.e71b - Local Mac Address
             m = p1.match(line)
             if m:
                 if 'main' not in platform_dict:
@@ -2282,6 +2306,7 @@ class ShowPlatform(ShowPlatformSchema):
                 platform_dict['main']['swstack'] = True
                 continue
 
+            # Mac persistency wait time: Indefinite
             m = p2.match(line)
             if m:
                 if 'main' not in platform_dict:
@@ -2289,6 +2314,10 @@ class ShowPlatform(ShowPlatformSchema):
                 platform_dict['main']['mac_persistency_wait_time'] = m.groupdict()['mac_persistency_wait_time'].lower()
                 continue
 
+            # Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
+            # ------  -----   ---------             -----------  --------------  -------       --------
+            #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
+            #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
             m = p3.match(line)
             if m:
                 slot = m.groupdict()['switch']
@@ -2297,7 +2326,7 @@ class ShowPlatform(ShowPlatformSchema):
                     platform_dict['slot'] = {}
                 if slot not in platform_dict['slot']:
                     platform_dict['slot'][slot] = {}
-                if ('WS-C' in model) or ('C9500' in model) or ('C9300' in model):
+                if ('WS-C' in model) or ('C9500' in model) or ('C9300' in model) or ('C9200' in model):
                     lc_type = 'rp'
                 else:
                     lc_type = 'other'
@@ -2315,6 +2344,10 @@ class ShowPlatform(ShowPlatformSchema):
                 platform_dict['slot'][slot][lc_type][model]['sw_ver'] = m.groupdict()['sw_ver']
                 continue
 
+            #                                     Current
+            # Switch#   Role        Priority      State
+            # -------------------------------------------
+            # *1       Active          3          Ready
             m = p4.match(line)
             if m:
                 slot = m.groupdict()['switch']
@@ -2330,6 +2363,8 @@ class ShowPlatform(ShowPlatformSchema):
                         last['state'] = m.groupdict()['state']
                 continue
 
+            # Chassis type: ASR1006
+            # Chassis type: ASR-903
             m = p5.match(line)
             if m:
                 if 'main' not in platform_dict:
@@ -2337,6 +2372,11 @@ class ShowPlatform(ShowPlatformSchema):
                 platform_dict['main']['chassis'] = m.groupdict()['chassis']
                 continue
 
+            # Slot      Type                State                 Insert time (ago)
+            # --------- ------------------- --------------------- -----------------
+            # 0         ASR1000-SIP40       ok                    00:33:53
+            #  0/0      SPA-1XCHSTM1/OC3    ok                    2d00h
+            # 0         C8200-1N-4T         ok                    00:32:26
             m = p6.match(line)
             if m:
                 slot = m.groupdict()['slot']
@@ -2348,9 +2388,51 @@ class ShowPlatform(ShowPlatformSchema):
                 # subslot
                 if subslot:
                     try:
+                        # no-slot-type output:
+                        # Slot      Type                State                 Insert time (ago)
+
+                        # --------- ------------------- --------------------- -----------------
+
+                        # 0/2      A900-IMA8Z          ok                    1w4d
+
+                        if 'slot' not in platform_dict:
+                            platform_dict['slot'] = {}
                         if slot not in platform_dict['slot']:
-                            continue
-                        for key, value in platform_dict['slot'][slot].items():
+                            platform_dict['slot'][slot] = {}
+                        # if slot not in platform_dict['slot']:
+                        #     continue
+
+                        slot_items = platform_dict['slot'][slot].items()
+
+                        # for no-slot-type output
+                        if not slot_items:
+                            if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
+                                if 'R' in slot:
+                                    lc_type = 'rp'
+                                elif re.match(r'^\d+', slot):
+                                    lc_type = 'lc'
+                                else:
+                                    lc_type = 'other'
+                            elif re.match(r'^ASR\d+-RP\d+', name):
+                                lc_type = 'rp'
+                            elif re.match(r'^CSR\d+V', name):
+                                if 'R' in slot:
+                                    lc_type = 'rp'
+                                else:
+                                    lc_type = 'other'
+                            else:
+                                lc_type = 'other'
+
+                            if lc_type not in platform_dict['slot'][slot]:
+                                platform_dict['slot'][slot][lc_type] = {}
+
+                            if name not in platform_dict['slot'][slot][lc_type]:
+                                platform_dict['slot'][slot][lc_type][name] = {}
+                            sub_dict = platform_dict['slot'][slot][lc_type][name]
+                            sub_dict['slot'] = slot
+
+                        # Add subslot
+                        for key, value in slot_items:
                             for key, last in value.items():
                                 if 'subslot' not in last:
                                     last['subslot'] = {}
@@ -2360,6 +2442,8 @@ class ShowPlatform(ShowPlatformSchema):
                                     last['subslot'][subslot][name] = {}
                                 sub_dict = last['subslot'][subslot][name]
                         sub_dict['subslot'] = subslot
+
+                    # KeyError: 'slot'
                     except Exception:
                         continue
                 else:
@@ -2367,7 +2451,7 @@ class ShowPlatform(ShowPlatformSchema):
                         platform_dict['slot'] = {}
                     if slot not in platform_dict['slot']:
                         platform_dict['slot'][slot] = {}
-                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name):
+                    if re.match(r'^ASR\d+-(\d+T\S+|SIP\d+|X)', name) or ('ISR' in name) or ('C9' in name) or ('C82' in name):
                         if 'R' in slot:
                             lc_type = 'rp'
                         elif re.match(r'^\d+', slot):
@@ -2397,6 +2481,9 @@ class ShowPlatform(ShowPlatformSchema):
                 sub_dict['insert_time'] = m.groupdict()['insert_time']
                 continue
 
+            # Slot      CPLD Version        Firmware Version
+            # --------- ------------------- ---------------------------------------
+            # 0         00200800            16.2(1r)
             m = p7.match(line)
             if m:
                 fw_ver = m.groupdict()['fireware_ver']
@@ -2413,6 +2500,7 @@ class ShowPlatform(ShowPlatformSchema):
                         last['fw_ver'] = m.groupdict()['fireware_ver']
                 continue
 
+            # 4                             unknown               2d00h
             m = p6_1.match(line)
             if m:
                 slot = m.groupdict()['slot']
@@ -2770,13 +2858,14 @@ class ShowSwitchDetail(ShowSwitchDetailSchema):
         # -----------------------------------------------------------
         # *1       Active   689c.e2ff.b9d9     3      V04     Ready
         #  2       Standby  689c.e2ff.b9d9     14             Ready
+        #  3       Member   bbcc.fcff.7b00     15     0       V-Mismatch
         p3_0 = re.compile(r'^Switch#\s+Role\s+Mac\sAddress\s+Priority\s+Version\s+State$')
 
         p3_1 = re.compile(r'^\*?(?P<switch>\d+) +(?P<role>\w+) +'
                            '(?P<mac_address>[\w\.]+) +'
                            '(?P<priority>\d+) +'
                            '(?P<hw_ver>\w+)? +'
-                           '(?P<state>[\w\s]+)$')
+                           '(?P<state>[\w\s-]+)$')
 
         #          Stack Port Status             Neighbors
         # Switch#  Port 1     Port 2           Port 1   Port 2
@@ -2857,7 +2946,7 @@ class ShowSwitchSchema(MetaParser):
     schema = {
         'switch': {
             'mac_address': str,
-            'mac_persistency_wait_time': str,
+            Optional('mac_persistency_wait_time'): str,
             'stack': {
                 Any(): {
                     'role': str,
@@ -2893,7 +2982,7 @@ class ShowEnvironmentAllSchema(MetaParser):
                         'state': str,
                         Optional('pid'): str,
                         Optional('serial_number'): str,
-                        'status': str,
+                        Optional('status'): str,
                         Optional('system_power'): str,
                         Optional('poe_power'): str,
                         Optional('watts'): str
@@ -2913,6 +3002,12 @@ class ShowEnvironmentAllSchema(MetaParser):
                     'red_threshold': str
                 },
                 Optional('asic_temperature'): {
+                    'value': str,
+                    'state': str,
+                    'yellow_threshold': str,
+                    'red_threshold': str
+                },
+                Optional('outlet_temperature'): {
                     'value': str,
                     'state': str,
                     'yellow_threshold': str,
@@ -2939,28 +3034,30 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
         ret_dict = {}
 
         # initial regexp pattern
-        p1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) +is +(?P<state>[\w\s]+)$')
+        p1 = re.compile(r'^Switch\s+(?P<switch>\d+)\s+FAN\s+(?P<fan>\d+)\s+is\s+(?P<state>[\w\s]+)$')
 
         # Switch 1 FAN 1 direction is Front to Back
-        p1_1 = re.compile(r'^Switch +(?P<switch>\d+) +FAN +(?P<fan>\d+) '
-                          '+direction +is +(?P<direction>[\w\s]+)$')
+        p1_1 = re.compile(r'^Switch\s+(?P<switch>\d+)\s+FAN +(?P<fan>\d+)\s'
+                          r'+direction\s+is\s+(?P<direction>[\w\s]+)$')
 
-        p2 = re.compile(r'^FAN +PS\-(?P<ps>\d+) +is +(?P<state>[\w\s]+)$')
+        p1_2 = re.compile(r'^(?P<switch>\d+)\s+(?P<fan>\d+)\s+\d+\s+(?P<state>.*)')
 
-        p3 = re.compile(r'^Switch +(?P<switch>\d+): +SYSTEM +TEMPERATURE +is +(?P<state>[\w\s]+)$')
+        p2 = re.compile(r'^FAN\s+PS\-(?P<ps>\d+)\s+is\s+(?P<state>[\w\s]+)$')
 
-        p4 = re.compile(r'^(?P<type>\w+) +Temperature +Value: +(?P<temperature>\d+) +Degree +Celsius$')
+        p3 = re.compile(r'^Switch\s+(?P<switch>\d+):\s+SYSTEM\s+TEMPERATURE\s+is\s+(?P<state>[\w\s]+)$')
 
-        p5 = re.compile(r'^Temperature +State: +(?P<state>\w+)$')
+        p4 = re.compile(r'^(?P<type>\w+)\s+Temperature\s+Value:\s+(?P<temperature>\d+)\s+Degree\s+Celsius$')
 
-        p6 = re.compile(r'^(?P<color>\w+) +Threshold *: +(?P<temperature>\d+) +Degree +Celsius$')
+        p5 = re.compile(r'^Temperature\s+State:\s+(?P<state>\w+)$')
 
-        p7 = re.compile(r'^(?P<sw>\d+)(?P<ps>\w+) *'
-                        '((?P<pid>[\w\-]+) +'
-                        '(?P<serial_number>\w+) +)?'
-                        '(?P<status>(\w+|Not Present)) *'
-                        '((?P<system_power>\w+) +'
-                        '(?P<poe_power>[\w\/]+) +'
+        p6 = re.compile(r'^(?P<color>\w+)\s+Threshold\s*:\s+(?P<temperature>\d+)\s+Degree\s+Celsius$')
+
+        p7 = re.compile(r'^(?P<sw>\d+)(?P<ps>\w+)\s*'
+                        '((?P<pid>[\w\-]+)\s+'
+                        '(?P<serial_number>\w+)\s+)?'
+                        '(?P<status>(\w+|Not\sPresent|No\s+Input\s+Power))\s*'
+                        '((?P<system_power>\w+)\s+'
+                        '(?P<poe_power>[\w\/]+)\s+'
                         '(?P<watts>\w+))?$')
 
         for line in out.splitlines():
@@ -2985,6 +3082,15 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                 fan_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})\
                                    .setdefault('fan', {}).setdefault(fan, {})
                 fan_dict.update({'direction': group['direction'].lower()})
+                continue
+
+            m = p1_2.match(line)
+            if m:
+                group = m.groupdict()
+                switch = group['switch']
+                fan = group['fan']
+                root_dict = ret_dict.setdefault('switch', {}).setdefault(switch, {})
+                root_dict.setdefault('fan', {}).setdefault(fan, {}).setdefault('state', group['state'].lower())
                 continue
 
             # FAN PS-1 is OK
@@ -3047,7 +3153,6 @@ class ShowEnvironmentAll(ShowEnvironmentAllSchema):
                      if k in ['status', 'system_power', 'poe_power'] and v})
                 continue
         return ret_dict
-
 
 class ShowModuleSchema(MetaParser):
     """Schema for show module"""
@@ -5621,7 +5726,7 @@ class ShowProcessesMemorySchema(MetaParser):
             'used': int,
             'free': int,
         },
-        'lsmi_io_pool': {
+        Optional('lsmi_io_pool'): {
             'total': int,
             'used': int,
             'free': int,
@@ -5646,7 +5751,6 @@ class ShowProcessesMemorySchema(MetaParser):
 
 
 class ShowProcessesMemory(ShowProcessesMemorySchema):
-
     cli_command = [
         'show processes memory',
         'show processes memory | include {include}'
@@ -5808,7 +5912,6 @@ class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
 
     }
 
-
 class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSchema):
     """ Parser for show platform software memory <process> switch active <R0> alloc backtrace """
 
@@ -5865,6 +5968,19 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
 
         return parsed_dict
 
+# class RmSoftwareMemoryChassisActiveBacktrace(ShowPlatformSoftwareMemoryBacktrace):
+#     """ Parser for rm platform software memory <process> chassis active <R0> alloc backtrace """
+
+#     cli_command = 'rm software memory {process} chassis active {slot} alloc backtrace'
+
+#     def cli(self, process, slot, output=None):
+#         if output is None:
+#             out = self.device.execute(
+#                 self.cli_command.format(process=process, slot=slot))
+#         else:
+#             out = output
+
+#         return super().cli(process=process, slot=slot, output=out)
 
 class ShowProcessesMemorySortedSchema(MetaParser):
     schema = {
@@ -5991,17 +6107,22 @@ class ShowPlatformIntegritySchema(MetaParser):
         'os_version': str,
         'os_hashes': {
             Any(): str,
-        }
+        },
+        Optional('signature_version'): int,
+        Optional('signature'): str,
     }
 
 class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
-    cli_command = 'show platform integrity'
-    def cli(self, output=None):
+    # cli_command = 'show platform integrity'
+    cli_command = ['show platform integrity', 'show platform integrity sign nonce {nonce}']
+
+    def cli(self, nonce=None, output=None):
         if not output:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-        
+            if nonce:
+                output = self.device.execute(self.cli_command[1].format(nonce=nonce))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
         ret_dict = {}
 
         # Platform: C9300-24U
@@ -6012,7 +6133,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
         p3 = re.compile(r'^Boot +(?P<boot>\d+) +Hash: +(?P<hash>\S+)$')
         # Boot Loader Version: System Bootstrap, Version 16.10.1r[FC2], DEVELOPMENT SOFTWARE
         p4 = re.compile(r'^Boot +Loader +Version: +(?P<boot_loader_version>[\S ]+)$')
-        # Boot Loader Hash: 
+        # Boot Loader Hash: 523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF
         p5 = re.compile(r'^Boot +Loader +Hash: *(?P<hash>\S+)$')
         # 51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57
         p6 = re.compile(r'^(?P<hash>\S+)$')
@@ -6022,10 +6143,14 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
         p8 = re.compile(r'^OS +Hashes:$')
         # PCR0: BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E
         p9 = re.compile(r'^(?P<hash_key>\S+): +(?P<hash_val>\S+)$')
-        # cat9k_iosxe.2019-07-11_16.25_mzafar.SSA.bin: 
+        # cat9k_iosxe.2019-07-11_16.25_mzafar.SSA.bin:
         p10 = re.compile(r'^(?P<os_hash>\S+):$')
+        # Signature version: 1
+        p11 = re.compile(r'^Signature version: +(?P<signature_version>\S+)$')
+        # Signature:
+        p12 = re.compile(r'^Signature:$')
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # Platform: C9300-24U
@@ -6034,7 +6159,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 group = m.groupdict()
                 ret_dict.update({'platform': group['platform']})
                 continue
-            
+
             # Boot 0 Version: F01144R16.216e68ad62019-02-13
             m = p2.match(line)
             if m:
@@ -6045,7 +6170,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                     setdefault(boot, {})
                 boot_dict.update({'version': version})
                 continue
-            
+
             # Boot 0 Hash: 523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF
             m = p3.match(line)
             if m:
@@ -6056,7 +6181,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                     setdefault(boot, {})
                 boot_dict.update({'hash': hash_val})
                 continue
-            
+
             # Boot Loader Version: System Bootstrap, Version 16.10.1r[FC2], DEVELOPMENT SOFTWARE
             m = p4.match(line)
             if m:
@@ -6066,8 +6191,8 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 boot_loader_version = group['boot_loader_version']
                 boot_loader_dict.update({'version': boot_loader_version})
                 continue
-            
-            # Boot Loader Hash: 
+
+            # Boot Loader Hash: 523DD459C650AF0F5AB5396060605E412C1BE99AF51F4FA88AD26049612921FF
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -6093,7 +6218,13 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
             if m:
                 hash_type = 'os_hashes'
                 continue
-            
+
+            # Signature:
+            m = p12.match(line)
+            if m:
+                hash_type = 'signature'
+                continue
+
             # PCR0: BB33E3FE338B82635B1BD3F1401CF442ACC9BB12A405A424FBE0A5776569884E
             m = p9.match(line)
             if m:
@@ -6106,7 +6237,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 os_hash_dict.update({os_hash: hash_val})
                 continue
 
-            # cat9k_iosxe.2019-07-11_16.25_mzafar.SSA.bin: 
+            # cat9k_iosxe.2019-07-11_16.25_mzafar.SSA.bin:
             m = p10.match(line)
             if m:
                 hash_type = 'os_hashes'
@@ -6115,7 +6246,14 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 os_hash_dict = ret_dict.setdefault('os_hashes', {})
                 os_hash_dict.update({os_hash: ''})
                 continue
-            
+
+            # Signature version: 1
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'signature_version': int(group['signature_version'])})
+                continue
+
             # 51CE6FB9AE606330810EBFFE99D71D56640FD48F780EDE0C19FB5A75E31EF2192A58A196D18B244ADF67D18BF6B3AA6A16229C66DCC03D8A900753760B252C57
             m = p6.match(line)
             if m:
@@ -6129,18 +6267,20 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                     os_hash_val = os_hash_dict.get(os_hash, '')
                     os_hash_val = '{}{}'.format(os_hash_val, hash_val)
                     os_hash_dict.update({'os_hash': os_hash_val})
+                elif hash_type == 'signature':
+                    ret_dict.update({'signature': hash_val})
                 continue
+
         return ret_dict
-    
-    def yang(self, output=None):
+
+    def yang(self, nonce=None, output=None):
         if not output:
-            out = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
-        else:
-            out = output
+            # xpath is the same regardless of if nonce is passed or not
+            output = self.device.get(filter=('xpath', '/boot-integrity-oper-data')).data_xml
 
-        log.info(minidom.parseString(out).toprettyxml())
+        log.info(minidom.parseString(output).toprettyxml())
 
-        root = ET.fromstring(out)
+        root = ET.fromstring(output)
         boot_integrity_oper_data = Common.retrieve_xml_child(root=root, key='boot-integrity-oper-data')
         boot_integrity = Common.retrieve_xml_child(root=boot_integrity_oper_data, key='boot-integrity')
         ret_dict = {}
@@ -6166,7 +6306,7 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                 boot_loader_dict = ret_dict.setdefault('boot', {}). \
                     setdefault('loader', {})
                 boot_loader_dict.update({'version': child.text})
-            elif child.tag.endswith('package-signature'):
+            elif child.tag.endswith('package-signature') or child.tag.endswith('package-integrity'):
                 for sub_child in child:
                     os_hashes = ret_dict.setdefault('os_hashes', {})
                     if sub_child.tag.endswith('name'):
@@ -6182,12 +6322,16 @@ class ShowPlatformIntegrity(ShowPlatformIntegritySchema):
                     elif name and sub_child.tag.endswith('pcr-content'):
                         os_hashes.update({name: sub_child.text})
                         name = None
-        
+            elif child.tag.endswith('sig-version'):
+                ret_dict.update({'signature_version': int(child.text)})
+            elif child.tag.endswith('signature'):
+                ret_dict.update({'signature': child.text})
         return ret_dict
 
 
 # =======================================================================
 # Parser for 'show platform hardware qfp active feature appqoe stats all'
+# =======================================================================
 # =======================================================================
 class ShowPlatformHardwareQfpActiveFeatureAppqoeSchema(MetaParser):
     schema = {
@@ -6198,15 +6342,37 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoeSchema(MetaParser):
                     'not_enabled': int,
                     'cft_handle_pkt': int,
                     'sdvt_divert_req_fail': int,
-                    'syn_policer_rate': int,
+                    Optional('syn_policer_rate'): int,
+                    Optional('sn_data_pkts_processed'): int,
                     'sdvt_global_stats': {
-                        'appnav_registration': int,
+                        Optional('appnav_registration'): int,
+                        Optional('control_decaps_could_not_find_flow_from_tuple'): int,
                         'within_sdvt_syn_policer_limit': int
                     }
                 },
                 'sn_index': {
                     Any(): {
+                        Optional('ip'): str,
+                        Optional('oce_id'): int,
+                        Optional('del'): int,
+                        Optional('key'): str,
+                        Optional('id'): int,
+                        Optional('ver'): int,
+                        Optional('status'): int,
+                        Optional('type'): int,
+                        Optional('sng'): int,
+                        Optional('appnav_stats'): {
+                            Optional('to_sn'): {
+                                'packets': int,
+                                'bytes': int
+                            },
+                            Optional('from_sn'): {
+                                'packets': int,
+                                'bytes': int
+                            }
+                        },
                         'sdvt_count_stats': {
+                            Optional('active_connections'): int,
                             Optional('decaps'): int,
                             Optional('encaps'): int,
                             Optional('packets_unmarked_in_ingress'): int,
@@ -6282,6 +6448,15 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
         # syn_policer_rate: 800
         p8 = re.compile(r'^(?P<key>[\s\S]+): +(?P<value>\d+)$')
 
+        # SN Index [0 (Green)], IP: 10.136.1.250, oce_id: 1243618816
+        p9 = re.compile(r'^SN +Index +\[(?P<index>[\s\S]+)\], +IP: +(?P<ip>[\s\S]+), +oce_id: +(?P<oce_id>[\s\S]+)$')
+
+        # del 0, key 0x0301, id 1, ver 1, status 1, type 3, sng 0
+        p10 = re.compile(r'^del +(?P<del>[\s\S]+), key +(?P<key>[\s\S]+), id +(?P<id>[\s\S]+), ver +(?P<ver>[\s\S]+), status +(?P<status>[\s\S]+), type +(?P<type>[\s\S]+), sng +(?P<sng>[\s\S]+)$')
+
+        # APPNAV STATS: toSN 2662751642/2206742552009, fromSN 2715505607/2260448392656
+        p11 = re.compile(r'^APPNAV STATS: +(?P<to_sn>[\S]+) +(?P<tosn_packets>[\d]+)\/(?P<tosn_bytes>\d+), +(?P<from_sn>[\S]+) +(?P<frmsn_packets>[\d]+)\/(?P<frmsn_bytes>\d+)$')
+
         ret_dict = {}
 
         for line in output.splitlines():
@@ -6327,6 +6502,51 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
             if m:
                 groups = m.groupdict()
                 index_dict = feature_dict.setdefault('sn_index', {}).setdefault(groups['index'], {})
+
+                last_dict_ptr = index_dict
+                continue
+
+            # SN Index [0 (Green)], IP: 10.136.1.250, oce_id: 1243618816
+            m = p9.match(line)
+            if m:
+                groups = m.groupdict()
+                index_dict = feature_dict.setdefault('sn_index', {}).setdefault(groups['index'], {})
+                index_dict.update({'ip': groups['ip']})
+                index_dict.update({'oce_id': int(groups['oce_id'])})
+
+                last_dict_ptr = index_dict
+                continue
+
+            # del 0, key 0x0301, id 1, ver 1, status 1, type 3, sng 0
+            m = p10.match(line)
+            if m:
+                groups = m.groupdict()
+                index_dict.update({'del': int(groups['del'])})
+                index_dict.update({'key': groups['key']})
+                index_dict.update({'id': int(groups['id'])})
+                index_dict.update({'ver': int(groups['ver'])})
+                index_dict.update({'status': int(groups['status'])})
+                index_dict.update({'type': int(groups['type'])})
+                index_dict.update({'sng': int(groups['sng'])})
+
+                last_dict_ptr = index_dict
+                continue
+
+            # APPNAV STATS: toSN 2662751642/2206742552009, fromSN 2715505607/2260448392656
+            m = p11.match(line)
+            if m:
+                groups = m.groupdict()
+                appnav_stats_dict = index_dict.setdefault('appnav_stats', {})
+                to_sn_dict = appnav_stats_dict.setdefault('to_sn', {})
+                to_sn_dict.update({
+                    'packets': int(groups['tosn_packets']),
+                    'bytes': int(groups['tosn_bytes'])
+                    })
+                from_sn_dict = appnav_stats_dict.setdefault('from_sn', {})
+                from_sn_dict.update({
+                    'packets': int(groups['frmsn_packets']),
+                    'bytes': int(groups['frmsn_bytes'])
+                    })
 
                 last_dict_ptr = index_dict
                 continue
@@ -6391,7 +6611,1241 @@ class ShowPlatformHardwareQfpActiveFeatureAppqoe(ShowPlatformHardwareQfpActiveFe
             m = p8.match(line)
             if m:
                 groups = m.groupdict()
-                key = groups['key'].replace('-', '_').replace(' ', '_').lower()
+                key = groups['key'].replace('-', '_').replace(' ', '_').replace(':', '').lower()
                 last_dict_ptr.update({key: int(groups['value'])})
 
         return ret_dict
+
+
+class ShowPlatformTcamUtilizationSchema(MetaParser):
+    """Schema for show platform hardware fed sw active fwd-asic resource tcam utilization """
+    schema = {
+        'asic': {
+            Any(): {
+                'table': {
+                    Any(): {
+                        'subtype': {
+                            Any(): {
+                                'dir': {
+                                    Any(): {
+                                        'max': str,
+                                        'used': str,
+                                        'used_percent': str,
+                                        'v4': str,
+                                        'v6': str,
+                                        'mpls': str,
+                                        'other': str,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
+    """Parser for show platform hardware fed sw active fwd-asic resource tcam utilization """
+
+    cli_command = 'show platform hardware fed switch active fwd-asic resource tcam utilization'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        ret_dict = {}
+
+        # initial regexp pattern
+        # CAM Utilization for ASIC  [0]
+        p1 = re.compile(r'CAM +Utilization +for +ASIC  +\[+(?P<asic>(\d+))\]$')
+
+        #CTS Cell Matrix/VPN
+        #Label                  EM           O       16384        0    0.00%        0        0        0        0
+        #CTS Cell Matrix/VPN
+        #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+        # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
+        # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
+        p2 = re.compile(r'(?P<table>.*(\S+)) +(?P<subtype>\S+) +(?P<dir>\S+) +(?P<max>\d+) +(?P<used>\d+) +(?P<used_percent>\S+\%) +(?P<v4>\d+) +(?P<v6>\d+) +(?P<mpls>\d+) +(?P<other>\d+)$')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # CAM Utilization for ASIC  [0]
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                asic = group['asic']
+                asic_dict = ret_dict.setdefault('asic', {}).setdefault(asic, {})
+                continue
+
+            #CTS Cell Matrix/VPN
+            #Label                  EM           O       16384        0    0.00%        0        0        0        0
+            #CTS Cell Matrix/VPN
+            #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+            # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
+            # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                table_ = group.pop('table')
+                if table_ == 'Label':
+                    table_ = 'CTS Cell Matrix/VPN Label'
+                subtype_ = group.pop('subtype')
+                dir_ = group.pop('dir')
+                dir_dict = asic_dict.setdefault('table', {}). \
+                            setdefault(table_, {}). \
+                            setdefault('subtype', {}). \
+                            setdefault(subtype_, {}). \
+                            setdefault('dir', {}). \
+                            setdefault(dir_, {})
+                dir_dict.update({k: v for k, v in group.items()})
+                continue
+
+        return ret_dict
+
+class ShowPlatformHardwareQfpActiveDatapathUtilSumSchema(MetaParser):
+
+    schema = {
+        'cpp': {
+            Any(): {
+                Any(): {
+                    'pps': {
+                    	'5_secs': int,
+                    	'1_min': int,
+                    	'5_min': int,
+                    	'60_min': int
+                    },
+                    'bps': {
+                    	'5_secs': int,
+                    	'1_min': int,
+                    	'5_min': int,
+                    	'60_min': int
+                    }
+                },
+                'Processing': {
+                    'pct': {
+                    	'5_secs': int,
+                    	'1_min': int,
+                    	'5_min': int,
+                    	'60_min': int
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowPlatformHardwareQfpActiveDatapathUtilSum(ShowPlatformHardwareQfpActiveDatapathUtilSumSchema):
+
+    cli_command = ['show platform hardware qfp active datapath utilization summary']
+
+    def cli(self, output=None):
+
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if not output:
+            output = self.device.execute(self.cli_command[0])
+
+
+        #CPP 0:                     5 secs        1 min        5 min       60 min
+        p1 = re.compile(r'^CPP (?P<cpp_num>\d)\: +(\d\s\S+) +(\d\s\S+) +(\d\s\S+) +(\d+\s\S+)$')
+        #Input:     Total (pps)            2            2            1            0
+        p2 = re.compile(r'^(?P<dir>\w+)\: +\S+ \((?P<type>\S+)\) +(?P<value5s>\d+) +(?P<value1m>\d+) +(?P<value5m>\d+) +(?P<value60m>\d+)$')
+        #(bps)         2928         1856         1056           88
+        p3 = re.compile(r'^\((?P<type>bps)\) +(?P<value5s>\d+) +(?P<value1m>\d+) +(?P<value5m>\d+) +(?P<value60m>\d+)$')
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+            #   CPP 0:                     5 secs        1 min        5 min       60 min
+            m = p1.match(line)
+
+            if m:
+                groups = m.groupdict()
+                cpp_number = groups['cpp_num'].lower()
+                feature_dict = ret_dict.setdefault('cpp', {}).setdefault(cpp_number, {})
+                last_dict_ptr = feature_dict
+                continue
+
+            #Input:     Total (pps)            2            2            1            0
+            #Processing: Load (pct)            0            0            0            0
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                dir_dict = feature_dict.setdefault(groups['dir'], {})
+                type_dict = dir_dict.setdefault(groups['type'], {})
+                type_dict.update({'5_secs': int(groups['value5s'])})
+                type_dict.update({'1_min': int(groups['value1m'])})
+                type_dict.update({'5_min': int(groups['value5m'])})
+                type_dict.update({'60_min': int(groups['value60m'])})
+                last_dict_ptr = type_dict
+                continue
+
+
+            #(bps)         2928         1856         1056           88
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                type_dict = dir_dict.setdefault(groups['type'], {})
+                type_dict.update({'5_secs': int(groups['value5s'])})
+                type_dict.update({'1_min': int(groups['value1m'])})
+                type_dict.update({'5_min': int(groups['value5m'])})
+                type_dict.update({'60_min': int(groups['value60m'])})
+                last_dict_ptr = type_dict
+                continue
+
+        return ret_dict
+
+# =======================================================================
+# Schema for 'show platform hardware qfp active tcam resource-manager usage'
+# =======================================================================
+class ShowPlatformHardwareQfpActiveTcamResourceManagerUsageSchema(MetaParser):
+     schema = {
+                'qfp_tcam_usage_information': {
+                    Any(): {
+                        'name': str,
+                        'number_of_cells_per_entry': int,
+                        Optional('current_80_bit_entries_used'): int,
+                        Optional('current_160_bits_entries_used'): int,
+                        Optional('current_320_bits_entries_used'): int,
+                        'current_used_cell_entries': int,
+                        'current_free_cell_entries': int
+                        },
+                    'total_tcam_cell_usage_information': {
+                        'name': str,
+                        'total_number_of_regions': int,
+                        'total_tcam_used_cell_entries': int,
+                        'total_tcam_free_cell_entries': int,
+                        'threshold_status': str
+                        }
+                    }
+                }
+
+# =======================================================================
+# Parser for 'show platform hardware qfp active tcam resource-manager usage'
+# =======================================================================
+class ShowPlatformHardwareQfpActiveTcamResourceManagerUsage(ShowPlatformHardwareQfpActiveTcamResourceManagerUsageSchema):
+
+    cli_command = ['show platform hardware qfp active tcam resource-manager usage']
+
+
+    def cli(self, output=None):
+
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if not output:
+            output = self.device.execute(self.cli_command[0])
+
+        #QFP TCAM Usage Information
+        p1 = re.compile(r'^(?P<key>QFP TCAM Usage Information)$')
+
+        #80 Bit Region Information
+        #Total TCAM Cell Usage Information
+        p2 = re.compile(r'^(?P<num>\d+|Total TCAM)(?P<region>[\s\S]+)$')
+
+        # Name                                : Leaf Region #1
+        # Number of cells per entry           : 2
+        # Current 160 bits entries used       : 19
+        # Current used cell entries           : 38
+        # Current free cell entries           : 4058
+        p3 = re.compile(r'^(?P<key>[\s\S]+)\:(?P<value>[\s\S]+\S)$')
+
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            #QFP TCAM Usage Information
+            m = p1.match(line)
+            if m:
+                groups = m.groupdict()
+                key1 = groups['key'].replace(' ','_').lower()
+                feature_dict = ret_dict.setdefault(key1, {})
+                continue
+
+            #80 Bit Region Information
+            #Total TCAM Cell Usage Information
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                reg = groups['region'].strip().replace(' ','_').lower()
+                reg_name = groups['num'].replace(' ','_').lower() +'_'+reg
+                region_hash = feature_dict.setdefault(reg_name, {})
+                continue
+
+            # Name                                : Leaf Region #1
+            # Number of cells per entry           : 2
+            # Current 160 bits entries used       : 19
+            # Current used cell entries           : 38
+            # Current free cell entries           : 4058
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                name = groups['key'].strip().replace(' ','_').lower()
+                val = groups['value'].strip()
+                if name not in ['threshold_status', 'name']:
+                    val = int(groups['value'])
+
+                region_hash.update({name : val})
+                continue
+
+
+        return ret_dict
+
+# =======================================================================
+# Schema for 'show platform resources'
+# =======================================================================
+class ShowPlatformResourcesSchema(MetaParser):
+    schema = {
+        'rp': {
+            Any():  {
+
+            'state': str,
+            'role': str,
+            'control_processer': {
+                'usage_perc': float,
+                'max_perc': int,
+                'warning_perc': int,
+                'critical_perc': int,
+                'state': str,
+                'dram': {
+                    'usage_mb': int,
+                    'usage_perc': int,
+                    'max_mb': int,
+                    'warning_perc': int,
+                    'critical_perc': int,
+                    'state': str
+                },
+                Optional('bootflash'): {
+                'usage_mb': int,
+                'usage_perc': int,
+                'max_mb': int,
+                'warning_perc': int,
+                'critical_perc': int,
+                'state': str
+                },
+                Optional('harddisk'): {
+                'usage_mb': int,
+                'usage_perc': int,
+                'max_mb': int,
+                'warning_perc': int,
+                'critical_perc': int,
+                'state': str
+                }
+            }
+            }
+        },
+        'esp': {
+            Any(): {
+                'state': str,
+                'role': str,
+                Optional('control_processer'): {
+                    'usage_perc': float,
+                    'max_perc': int,
+                    'warning_perc': int,
+                    'critical_perc': int,
+                    'state': str,
+                    'dram': {
+                        'usage_mb': int,
+                        'usage_perc': int,
+                        'max_mb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    }
+                },
+                'qfp': {
+                    'state': str,
+                    'tcam': {
+                        'usage_cells': int,
+                        'usage_perc': int,
+                        'max_cells': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': 'H'
+                    },
+                    'dram': {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    },
+                    'iram': {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    },
+                    'cpu_utilization': {
+                        'usage_perc': float,
+                        'max_perc': int,
+                        'warning_perc': int,
+                        'state': str
+                    },
+                    Optional('pkt_buf_mem_0'): {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    },
+                    Optional('pkt_buf_mem_1'): {
+                        'usage_kb': int,
+                        'usage_perc': int,
+                        'max_kb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    }
+                }
+            }
+        },
+        Optional('sip'): {
+            Any(): {
+                'state': str,
+                'control_processer': {
+                    'usage_perc': float,
+                    'max_perc': int,
+                    'warning_perc': int,
+                    'critical_perc': int,
+                    'state': str,
+                    'dram': {
+                        'usage_mb': int,
+                        'usage_perc': int,
+                        'max_mb': int,
+                        'warning_perc': int,
+                        'critical_perc': int,
+                        'state': str
+                    }
+                }
+            }
+        }
+    }
+
+# =======================================================================
+# Parser for 'show platform resources'
+# =======================================================================
+class ShowPlatformResources(ShowPlatformResourcesSchema):
+
+    cli_command = ['show platform resources']
+
+
+    def cli(self, output=None):
+
+        # if the user does not provide output to the parser
+        # we need to get it from the device
+        if not output:
+            output = self.device.execute(self.cli_command[0])
+
+
+        #RP0 (ok, active)                                                                               H
+        #RP1 (ok, standby)                                                                               H
+        #ESP0(ok, active)                                                                               H
+        #ESP1(ok, standby)                                                                               H
+        p1 = re.compile(r'^(?P<type>RP|ESP)(?P<key>[0-9]) ?\((?P<status>\S+)\, +(?P<role>\S+)\) +(?P<state>\S)$')
+
+        #SIP0                                                                                           H
+        p2 = re.compile(r'^SIP(?P<key>[0-9]) +(?P<state>\S)$')
+
+        # Control Processor       0.51%                 100%            80%             90%             H
+        p3 = re.compile(r'^Control Processor +(?P<usage>(\d*\.?\d+))\S+ +(?P<max>\d+)\S+ +(?P<warning>\d+)\S+ +(?P<critical>\d+)\S+ +(?P<state>\S)$')
+
+        #QFP                                                                                           H
+        p4 = re.compile(r'^QFP +(?P<state>\S)$')
+
+        #CPU Utilization        0.00%                 100%            90%             95%             H
+        p5 = re.compile(r'^(?P<resource>[\S\s]+\S) +(?P<usage>(\d*\.?\d+))\S+ +(?P<max>\d+)\S+ +(?P<warning>\d+)\S+ +(?P<critical>\d+)\S+ +(?P<state>\S)$')
+
+        # TCAM                   16cells(0%)           1048576cells    65%             85%             H
+        # DRAM                   238906KB(5%)          4194304KB       85%             95%             H
+        # IRAM                   13014KB(9%)           131072KB        85%             95%             H
+        p6 = re.compile(r'^(?P<resource>[\s\S]+\S) +(?P<use_val>(\d*\.?\d+))(?P<type>\S+)\((?P<val>\d+)\%\) +(?P<max>\d+)(?P<max_type>\S+) +(?P<warning>\d+)\S+ +(?P<critical>\d+)\S+ +(?P<state>\S)$')
+
+
+        ret_dict = {}
+        for line in output.splitlines():
+            line = line.strip()
+
+            #RP1 (ok, standby)                                                                               H
+            #ESP0 (ok, active)                                                                               H
+            m = p1.match(line)
+
+            if m:
+                groups = m.groupdict()
+                type_ = groups['type'].lower()
+
+                feature_dict = ret_dict.setdefault(type_, {}).setdefault(groups['key'], {})
+
+                feature_dict.update(({'state': (groups['state'])}))
+                feature_dict.update(({'role': (groups['role'])}))
+
+                last_dict_ptr1 = feature_dict
+                continue
+
+            #SIP0                                                                                           H
+            m = p2.match(line)
+            if m:
+                groups = m.groupdict()
+                feature_dict = ret_dict.setdefault('sip', {}).setdefault(groups['key'], {})
+                feature_dict.update(({'state': (groups['state'])}))
+                last_dict_ptr1 = feature_dict
+                continue
+
+            # Control Processor       0.51%                 100%            80%             90%             H
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()
+                feature_dict = feature_dict.setdefault('control_processer', {})
+                feature_dict.update({'usage_perc': float(groups['usage'])})
+                feature_dict.update({'max_perc': int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'critical_perc': int(groups['critical'])})
+                feature_dict.update({'state': (groups['state'])})
+                last_dict_ptr = feature_dict
+                continue
+
+            #QFP                                                                                           H
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                feature_dict = last_dict_ptr1
+                feature_dict = feature_dict.setdefault('qfp', {})
+                feature_dict.update({'state': (groups['state'])})
+                last_dict_ptr = feature_dict
+                continue
+
+            #CPU Utilization        0.00%                 100%            90%             95%             H
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                feature_dict = last_dict_ptr
+                res1 = groups['resource'].replace(' ','_').replace('(','').replace(')','').lower()
+                feature_dict = feature_dict.setdefault(res1,{})
+                feature_dict.update({'usage_' + groups['type'].lower(): int(groups['use_val'])})
+                feature_dict.update({'usage_perc': int(groups['val'])})
+                feature_dict.update({'max_' + groups['max_type'].lower(): int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'critical_perc': int(groups['critical'])})
+                feature_dict.update({'state': (groups['state'])})
+                continue
+
+            #TCAM                   16cells(0%)           1048576cells    65%             85%             H
+            # DRAM                   238906KB(5%)          4194304KB       85%             95%             H
+            # IRAM                   13014KB(9%)           131072KB        85%             95%             H
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                feature_dict = last_dict_ptr
+                res1 = groups['resource'].replace(' ','_').replace('(','').replace(')','').lower()
+                feature_dict = feature_dict.setdefault(res1,{})
+                feature_dict.update({'usage_perc': float(groups['usage'])})
+                feature_dict.update({'max_perc': int(groups['max'])})
+                feature_dict.update({'warning_perc': int(groups['warning'])})
+                feature_dict.update({'state': (groups['state'])})
+                continue
+
+        return(ret_dict)
+
+
+class ShowPlatformSoftwareYangManagementProcessSchema(MetaParser):
+    '''schema for
+        * show platform software yang-management process
+    '''
+
+    schema = {
+        str: str
+    }
+
+class ShowPlatformSoftwareYangManagementProcess(ShowPlatformSoftwareYangManagementProcessSchema):
+    '''parser for
+        * show platform software yang-management process
+    '''
+
+    cli_command = "show platform software yang-management process"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # confd            : Running
+        # pubd             : Running
+        # gnmib            : Not Running
+        p1 = re.compile(r'^(?P<key>\S+) *: +(?P<data>(Running|Not +Running))$')
+
+        ret_dict = dict()
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({
+                    group['key']: group['data']
+                })
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareYangManagementProcessMonitorSchema(MetaParser):
+    '''schema for
+        * show platform software yang-management process monitor
+    '''
+
+    schema = {
+        'pid': {
+            int: {
+                'command': str,
+                'state': str,
+                'vsz': int,
+                'rss': int,
+                'cpu': float,
+                'mem': float,
+                'elapsed': str,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareYangManagementProcessMonitor(ShowPlatformSoftwareYangManagementProcessMonitorSchema):
+    '''parser for
+        * show platform software yang-management process monitor
+    '''
+
+    cli_command = "show platform software yang-management process monitor"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # dmiauthd          551 S 376940 49600  0.0  0.6    21:44:33
+        # ncsshd           1503 S 301344 17592  0.0  0.2    21:44:32
+        p1 = re.compile(r'^(?P<command>\S+) +(?P<pid>\d+) +(?P<s>\S+) +(?P<vsz>\d+) +'
+                        r'(?P<rss>\d+) +(?P<cpu>\S+) +(?P<mem>\S+) +(?P<elapsed>\S+)$')
+
+        ret_dict = dict()
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # dmiauthd          551 S 376940 49600  0.0  0.6    21:44:33
+            # ncsshd           1503 S 301344 17592  0.0  0.2    21:44:32
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                commands = ret_dict.setdefault('pid', {})
+                command = commands.setdefault(int(group['pid']), {})
+                command.update({
+                    'command': group['command'],
+                    'state': group['s'],
+                    'vsz': int(group['vsz']),
+                    'rss': int(group['rss']),
+                    'cpu': float(group['cpu']),
+                    'mem': float(group['mem']),
+                    'elapsed': group['elapsed'],
+                })
+                continue
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareYangManagementProcessStateSchema(MetaParser):
+    '''schema for
+        * show platform software yang-management process state
+    '''
+
+    schema = {
+        'confd-status': str,
+        'processes': {
+            str: {
+                'status': str,
+                'state': str,
+                },
+            }
+        }
+
+class ShowPlatformSoftwareYangManagementProcessState(ShowPlatformSoftwareYangManagementProcessStateSchema):
+    '''parser for
+        * show platform software yang-management process state
+    '''
+
+    cli_command = "show platform software yang-management process state"
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Confd Status: Started
+        p1 = re.compile(r'^Confd +Status: +(?P<status>\S+)$')
+
+        # pubd                 Running             Active
+        # gnmib                Not Running         Not Applicable
+        p2 = re.compile(r'^(?P<process>\S+) +(?P<status>(Running|Not +Running)) +'
+                        r'(?P<state>(Active|Not +Active|Not +Applicable))$')
+
+        ret_dict = dict()
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Confd Status: Started
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['confd-status'] = group['status']
+                continue
+
+            # pubd                 Running             Active
+            # gnmib                Not Running         Not Applicable
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                commands = ret_dict.setdefault('processes', {})
+                command = commands.setdefault(group['process'], {})
+                command.update({
+                    'status': group['status'],
+                    'state': group['state'],
+                })
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemoryRpActiveSchema(MetaParser):
+    """ Schema for
+        * show platform software memory mdt-pubd RP active
+    """
+    schema = {
+        'module': {
+            Any(): {
+                'allocated': int,
+                'requested': int,
+                'overhead': int,
+                Optional('allocations'): int,
+                Optional('failed'): int,
+                Optional('frees'): int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryRpActive(ShowPlatformSoftwareMemoryRpActiveSchema):
+    """ Parser for
+        * show platform software memory mdt-pubd RP active
+    """
+
+    cli_command = 'show platform software memory {process} RP active'
+
+    def cli(self, process, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process=process))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Module: process
+        p1 = re.compile(r'Module: +(?P<module>[\S\s]+)$')
+
+        # allocated: 16695, requested: 16647, overhead: 48
+        p2 = re.compile(r'allocated: +(?P<allocated>\d+), +requested: +'
+            r'(?P<requested>\d+), +overhead: +(?P<overhead>\d+)$')
+
+        # Allocations: 3, failed: 0, frees: 0
+        p3 = re.compile(r'Allocations: +(?P<allocations>\d+), +failed: +'
+            r'(?P<failed>\d+), +frees: +(?P<frees>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Module: process
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                module = group.get('module')
+                module_dict = ret_dict.setdefault('module', {}). \
+                    setdefault(module, {})
+                continue
+
+            # allocated: 16695, requested: 16647, overhead: 48
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Allocations: 3, failed: 0, frees: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemorySwitchActive(ShowPlatformSoftwareMemoryRpActive):
+    """ Parser for
+        * show platform software memory mdt-pubd switch active <R0>
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot}'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+
+        return super().cli(process=process, output=out)
+
+class ShowPlatformSoftwareMemoryChassisActive(ShowPlatformSoftwareMemoryRpActive):
+    """ Parser for
+        * show platform software memory mdt-pubd chassis active <R0>
+    """
+
+    cli_command = 'show platform software memory {process} chassis active {slot}'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+
+        return super().cli(process=process, output=out)
+
+class ShowPlatformSoftwareMemoryRpActiveBriefSchema(MetaParser):
+    """ Schema for
+        * show platform software memory mdt-pubd RP active brief
+    """
+    schema = {
+        'module': {
+            Any(): {
+                'allocated': int,
+                'requested': int,
+                'allocs': int,
+                'frees': int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryRpActiveBrief(ShowPlatformSoftwareMemoryRpActiveBriefSchema):
+    """ Parser for
+        * show platform software memory mdt-pubd RP active brief
+    """
+
+    cli_command = 'show platform software memory {process} RP active brief'
+
+    def cli(self, process, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process=process))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Summary                 420136        364136        3706          206
+        p1 = re.compile(r'^(?P<module>\S+) +(?P<allocated>\d+) +'
+            r'(?P<requested>\d+) +(?P<allocs>\d+) +(?P<frees>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Summary                 420136        364136        3706          206
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                module = group.pop('module')
+                module_dict = ret_dict.setdefault('module', {}). \
+                    setdefault(module, {})
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemorySwitchActiveBrief(ShowPlatformSoftwareMemoryRpActiveBrief):
+    """ Parser for
+        * show platform software memory mdt-pubd switch active R0 brief
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot} brief'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+
+        return super().cli(process=process, output=out)
+
+class ShowPlatformSoftwareMemoryChassisActiveBrief(ShowPlatformSoftwareMemoryRpActiveBrief):
+    """ Parser for
+        * show platform software memory mdt-pubd chassis active R0 brief
+    """
+
+    cli_command = 'show platform software memory {process} chassis active {slot} brief'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+
+        return super().cli(process=process, output=out)
+
+class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteSchema(MetaParser):
+    """ Schema for
+        * show platform software memory mdt-pubd RP active alloc callsite
+    """
+    schema = {
+        'callsite': {
+            Any(): {
+                'thread_id': int,
+                'allocs': int,
+                'frees': int,
+                'alloc_bytes': int,
+                'free_bytes': int,
+                'call_diff': int,
+                'byte_diff': int
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryRpActiveAllocCallsite(ShowPlatformSoftwareMemoryRpActiveAllocCallsiteSchema):
+    """ Parser for
+        * show platform software memory mdt-pubd RP active alloc callsite
+    """
+
+    cli_command = 'show platform software memory {process} RP active alloc callsite'
+
+    def cli(self, process, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process=process))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # callsite: 1355696130, thread_id: 24813
+        p1 = re.compile(r'^callsite: +(?P<callsite>\d+), +thread_id: +(?P<thread_id>\d+)$')
+
+        # allocs: 138151, frees: 138141, alloc_bytes: 15466123, free_bytes: 15464846, call_diff: 10, byte_diff: 1277
+        p2 = re.compile(r'^allocs: +(?P<allocs>\d+), +frees: +(?P<frees>\d+), +'
+            r'alloc_bytes: +(?P<alloc_bytes>\d+), +free_bytes: +(?P<free_bytes>\d+), +'
+            r'call_diff: +(?P<call_diff>\d+), +byte_diff: +(?P<byte_diff>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # callsite: 1355696130, thread_id: 24813
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                callsite = group.get('callsite')
+                thread_id = group.get('thread_id')
+                thread_dict = ret_dict.setdefault('callsite', {}). \
+                    setdefault(callsite, {})
+                thread_dict.update({'thread_id': int(thread_id)})
+                continue
+
+            # allocs: 138151, frees: 138141, alloc_bytes: 15466123, free_bytes: 15464846, call_diff: 10, byte_diff: 1277
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                thread_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemorySwitchActiveAllocCallsite(ShowPlatformSoftwareMemoryRpActiveAllocCallsite):
+    """ Parser for
+        * show platform software memory mdt-pubd switch active <R0> alloc callsite
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot} alloc callsite'
+
+    def cli(self, process, slot, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot))
+        else:
+            out = output
+
+        return super().cli(process=process, output=out)
+
+class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteBriefSchema(MetaParser):
+    """ Schema for
+        * show platform software memory mdt-pubd RP active alloc callsite
+    """
+    schema = {
+        'tracekey': str,
+        'callsite': {
+            Any(): {
+                'thread_id': int,
+                'diff_byte': int,
+                'diff_call': int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryRpActiveAllocCallsiteBrief(ShowPlatformSoftwareMemoryRpActiveAllocCallsiteBriefSchema):
+    """ Parser for
+        * show platform software memory mdt-pubd RP active alloc callsite brief
+    """
+
+    cli_command = 'show platform software memory {process} RP active alloc callsite brief'
+
+    def cli(self, process, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(process=process))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # callsite: 1355696130, thread_id: 24813
+        p1 = re.compile(r'^The +current +tracekey +is +: +(?P<tracekey>\S+)$')
+
+        # allocs: 138151, frees: 138141, alloc_bytes: 15466123, free_bytes: 15464846, call_diff: 10, byte_diff: 1277
+        p2 = re.compile(r'^(?P<callsite>\d+) +(?P<thread_id>\d+) +(?P<diff_byte>\d+) +(?P<diff_call>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.update({'tracekey': group['tracekey']})
+                continue
+
+            # callsite: 1355696130, thread_id: 24813
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                callsite = group.pop('callsite')
+                thread_id = group.pop('thread_id')
+                thread_dict = ret_dict.setdefault('callsite', {}). \
+                    setdefault(callsite, {})
+                thread_dict.update({'thread_id': int(thread_id)})
+                thread_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemoryRpActiveAllocTypeSchema(MetaParser):
+    """ Schema for
+        * show platform software memory mdt-pubd RP active alloc type component
+    """
+    schema = {
+        Optional('module'): {
+            Any(): {
+                'allocated': int,
+                'requested': int,
+                'overhead': int,
+                'allocations': int,
+                'null_allocations': int,
+                'frees': int,
+            }
+        },
+        Optional('type'): {
+            Any(): {
+                'allocated': int,
+                'requested': int,
+                'overhead': int,
+                'allocations': int,
+                'null_allocations': int,
+                'frees': int,
+            }
+        },
+    }
+
+class ShowPlatformSoftwareMemoryRpActiveAllocType(ShowPlatformSoftwareMemoryRpActiveAllocTypeSchema):
+    """ Parser for
+        * show platform software memory mdt-pubd RP active alloc type component
+        * show platform software memory mdt-pubd RP active alloc type data
+    """
+
+    cli_command = 'show platform software memory {process} RP active alloc type {alloc_type}'
+
+    def cli(self, process, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                alloc_type=alloc_type))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Module: process
+        p1 = re.compile(r'Module: +(?P<module>[\S\s]+)$')
+
+        # Type: process
+        p1_1 = re.compile(r'Type: +(?P<type>[\S\s]+)$')
+
+        # allocated: 16695, requested: 16647, overhead: 48
+        p2 = re.compile(r'Allocated: +(?P<allocated>\d+), +'
+            r'Requested: +(?P<requested>\d+), +Overhead: +(?P<overhead>\d+)$')
+
+        # Allocations: 3, failed: 0, frees: 0
+        p3 = re.compile(r'Allocations: +(?P<allocations>\d+), +Null +Allocations: +'
+            r'(?P<null_allocations>\d+), +Frees: +(?P<frees>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Module: process
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                module = group.get('module')
+                module_dict = ret_dict.setdefault('module', {}). \
+                    setdefault(module, {})
+                continue
+
+            # type: process
+            m = p1_1.match(line)
+            if m:
+                group = m.groupdict()
+                module = group.get('type')
+                module_dict = ret_dict.setdefault('type', {}). \
+                    setdefault(module, {})
+                continue
+
+            # allocated: 16695, requested: 16647, overhead: 48
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+            # Allocations: 3, failed: 0, frees: 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemorySwitchActiveAllocType(ShowPlatformSoftwareMemoryRpActiveAllocType):
+    """ Parser for
+        * show platform software memory mdt-pubd switch active <R0> alloc type component
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot} alloc type {alloc_type}'
+
+    def cli(self, process, slot, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot,
+                alloc_type=alloc_type))
+        else:
+            out = output
+
+        return super().cli(process=process, output=out, alloc_type=alloc_type)
+
+class ShowPlatformSoftwareMemoryRpActiveAllocTypeBriefSchema(MetaParser):
+    """ Schema for
+        * show platform software memory mdt-pubd RP active alloc type component brief
+    """
+    schema = {
+        'type': {
+            Any(): {
+                'allocated': int,
+                'requested': int,
+                'allocations': int,
+                'frees': int,
+            }
+        }
+    }
+
+class ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpActiveAllocTypeBriefSchema):
+    """ Parser for
+        * show platform software memory mdt-pubd RP active alloc type component brief
+    """
+
+    cli_command = 'show platform software memory {process} RP active alloc type {alloc_type} brief'
+
+    def cli(self, process, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                alloc_type=alloc_type))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # Summary                 4989412       4501988       150851        142147
+        p1 = re.compile(r'(?P<type>\S+) +(?P<allocated>\d+) +'
+            r'(?P<requested>\d+) +(?P<allocations>\d+) +(?P<frees>\d+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Summary                 4989412       4501988       150851        142147
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                module = group.pop('type')
+                module_dict = ret_dict.setdefault('type', {}). \
+                    setdefault(module, {})
+                module_dict.update({k:int(v) for k, v in group.items() if v is not None})
+                continue
+
+        return ret_dict
+
+class ShowPlatformSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareMemoryRpActiveAllocTypeBrief):
+    """ Parser for
+        * show platform software memory mdt-pubd switch active <R0> alloc type component brief
+    """
+
+    cli_command = 'show platform software memory {process} switch active {slot} alloc type {alloc_type} brief'
+
+    def cli(self, process, slot, alloc_type, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                process=process,
+                slot=slot,
+                alloc_type=alloc_type))
+        else:
+            out = output
+
+        return super().cli(process=process, alloc_type=alloc_type, output=out)

@@ -1,0 +1,27 @@
+Ingress LSP: 0 sessions
+        Total 0 displayed, Up 0, Down 0
+
+        Egress LSP: 0 sessions
+        Total 0 displayed, Up 0, Down 0
+
+        Transit LSP: 30 sessions
+
+        10.49.194.125
+        From: 10.49.194.127, LSPstate: Up, ActiveRoute: 0
+        LSPname: test_lsp_01, LSPpath: Primary
+        Suggested label received: -, Suggested label sent: -
+        Recovery label received: -, Recovery label sent: 44
+        Resv style: 1 FF, Label in: 46, Label out: 44
+        Time left:  138, Since: Tue Jun 30 07:22:02 2020
+        Tspec: rate 0bps size 0bps peak Infbps m 20 M 1500
+        Port number: sender 1 receiver 50088 protocol 0
+        PATH rcvfrom: 10.169.14.157 (ge-0/0/0.0) 1 pkts
+        Adspec: received MTU 1500 sent MTU 1500
+        PATH sentto: 192.168.145.218 (ge-0/0/1.1) 1 pkts
+        RESV rcvfrom: 192.168.145.218 (ge-0/0/1.1) 1 pkts, Entropy label: Yes
+        Explct route: 192.168.145.218 10.49.194.65 10.49.194.66
+        10.49.194.123
+        Record route: 10.49.194.2 10.169.14.157 <self> 192.168.145.218
+        10.49.194.66 10.49.194.12
+        255.255.255.255 10.4.1.1 10.1.8.8 10.64.64.64
+        Total 1 displayed, Up 1, Down 0

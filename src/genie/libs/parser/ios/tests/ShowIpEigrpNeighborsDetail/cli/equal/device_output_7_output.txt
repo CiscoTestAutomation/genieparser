@@ -1,0 +1,18 @@
+
+show ip eigrp vrf VRF1 neighbors detail
+EIGRP-IPv4 VR(test) Address-Family Neighbors for AS(100)
+           VRF(VRF1)
+H   Address                 Interface              Hold Uptime   SRTT   RTO  Q  Seq
+                                                   (sec)         (ms)       Cnt Num
+1   10.12.90.2              Gi0/2.390                14 1d17h      21   126  0  8
+   Version 3.3/2.0, Retrans: 3, Retries: 0, Prefixes: 3
+   Topology-ids from peer - 0
+   Topologies advertised to peer:   base
+
+0   10.13.90.3              Gi0/3.390                13 1d17h     990  5000  0  11
+   Version 8.0/1.2, Retrans: 0, Retries: 0, Prefixes: 3
+   Topology-ids from peer - 0
+   Topologies advertised to peer:   base
+
+Max Nbrs: 0, Current Nbrs: 0
+    

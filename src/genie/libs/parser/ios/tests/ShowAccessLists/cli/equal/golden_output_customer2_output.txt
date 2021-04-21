@@ -1,0 +1,6 @@
+
+Extended IP access list acl1
+    10 permit icmp any any
+    20 permit udp any host 10.4.1.1 eq 1985 (67 matches)
+    30 permit ip object-group dummydpd-local object-group dummydpd-remote
+    

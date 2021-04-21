@@ -1,0 +1,8 @@
+
+R1_xe#show ipv6 pim vrf VRF1 bsr candidate-rp
+PIMv2 C-RP information
+   Candidate RP: 2001:DB8:1:5::1 SM
+     Priority 192, Holdtime 150
+    Advertisement interval 60 seconds
+    Next advertisement in 00:00:50
+            

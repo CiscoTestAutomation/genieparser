@@ -8,8 +8,8 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import (Any, Optional, Use,
-                                                SchemaTypeError, Schema)
+from pyats.utils.exceptions import SchemaError
+from genie.metaparser.util.schemaengine import (Any, Optional, Use, Schema)
 
 
 class ShowClassOfServiceSchema(MetaParser):
@@ -34,9 +34,9 @@ class ShowClassOfServiceSchema(MetaParser):
                     "i-logical-name": str
                 },
                 "interface-congestion-notification-map": str,
-                "interface-exclude-queue-overhead-bytes": str,
+                Optional("interface-exclude-queue-overhead-bytes"): str,
                 "interface-index": str,
-                "interface-logical-interface-aggregate-statistics": str,
+                Optional("interface-logical-interface-aggregate-statistics"): str,
                 "interface-name": str,
                 "interface-queues-in-use": str,
                 "interface-queues-supported": str,
@@ -68,7 +68,8 @@ class ShowClassOfService(ShowClassOfServiceSchema):
             r'Index: +(?P<interface_index>\d+)$')
 
         # Maximum usable queues: 8, Queues in use: 4
-        p2 = re.compile(r'^Maximum +usable +queues: +(?P<interface_queues_supported>\d+), +'
+        # Queues supported: 8, Queues in use: 4
+        p2 = re.compile(r'^(Maximum +usable +queues|Queues +supported): +(?P<interface_queues_supported>\d+), +'
             r'Queues +in +use: +(?P<interface_queues_in_use>\d+)$')
 
         # Exclude aggregate overhead bytes: disabled
@@ -90,7 +91,9 @@ class ShowClassOfService(ShowClassOfServiceSchema):
         p8 = re.compile(r'^Logical +interface: +(?P<i_logical_name>\S+), +Index: +(?P<i_logical_index>\S+)$')
 
         # Classifier              dscp-ipv6-compatibility dscp-ipv6                  9
-        p9 = re.compile(r'^(?P<object_type>\S+) +(?P<object_name>\S+) +(?P<object_subtype>\S+) +(?P<index>\d+)$')
+        # Rewrite-Output          EXP-test               exp (mpls-any)          49467
+        p9 = re.compile(r'^(?P<object_type>\S+) +(?P<object_name>\S+) +(?P<object_subtype>\S+( +\(\S+\))?) +'
+            r'(?P<index>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()

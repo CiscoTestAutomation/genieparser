@@ -1,0 +1,20 @@
+
+show segment-routing mpls mapping-server ipv4
+
+        PREFIX_SID_EXPORT_MAP ALGO_0
+
+Prefix/masklen   SID Type Range Flags SRGB
+
+        PREFIX_SID_REMOTE_EXPORT_MAP ALGO_0
+
+Prefix/masklen   SID Type Range Flags SRGB Source
+192.168.111.1/32  5001 Indx     1         Y  OSPF Area 8 10.229.11.11
+
+        PREFIX_SID_EXPORT_MAP ALGO_1
+
+Prefix/masklen   SID Type Range Flags SRGB
+
+        PREFIX_SID_REMOTE_EXPORT_MAP ALGO_1
+
+Prefix/masklen   SID Type Range Flags SRGB Source
+        

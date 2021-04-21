@@ -1,0 +1,98 @@
+VLAN0001 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 24576, sysid 1, address 000e.39ff.71a2
+  Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 10 last change occurred 38w1d ago
+          from GigabitEthernet8/10
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0, aging 480
+
+ Port 1671 (Port-channel220) of VLAN0001 is designated forwarding 
+   Port path cost 1, Port priority 128, Port Identifier 128.1671.
+   Designated root has priority 24577, address 000e.39ff.71a2
+   Designated bridge has priority 24577, address 000e.39ff.71a2
+   Designated port id is 128.1671, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   Link type is point-to-point by default
+   BPDU: sent 20120147, received 0
+
+ Port 1673 (Port-channel265) of VLAN0001 is designated forwarding 
+   Port path cost 3, Port priority 128, Port Identifier 128.1673.
+   Designated root has priority 24577, address 000e.39ff.71a2
+   Designated bridge has priority 24577, address 000e.39ff.71a2
+   Designated port id is 128.1673, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   The port is in the portfast edge trunk mode
+   Link type is point-to-point by default
+   BPDU: sent 21320048, received 0
+
+                  
+VLAN0115 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 24576, sysid 115, address 000e.39ff.71a2
+  Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 2 last change occurred 33w6d ago
+          from Port-channel210
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0, aging 480
+
+ Port 1670 (Port-channel210) of VLAN0115 is designated forwarding 
+   Port path cost 2, Port priority 128, Port Identifier 128.1670.
+   Designated root has priority 24691, address 000e.39ff.71a2
+   Designated bridge has priority 24691, address 000e.39ff.71a2
+   Designated port id is 128.1670, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   Link type is point-to-point by default
+   BPDU: sent 10172865, received 4
+
+                  
+VLAN0116 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 24576, sysid 116, address 000e.39ff.71a2
+  Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 2 last change occurred 33w6d ago
+          from Port-channel210
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0, aging 480
+
+ Port 1670 (Port-channel210) of VLAN0116 is designated forwarding 
+   Port path cost 2, Port priority 128, Port Identifier 128.1670.
+   Designated root has priority 24692, address 000e.39ff.71a2
+   Designated bridge has priority 24692, address 000e.39ff.71a2
+   Designated port id is 128.1670, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   Link type is point-to-point by default
+   BPDU: sent 10172829, received 4
+
+                  
+VLAN0118 is executing the rstp compatible Spanning Tree protocol
+  Bridge Identifier has priority 24576, sysid 118, address 000e.39ff.71a2
+  Configured hello time 2, max age 20, forward delay 15, tranmsit hold-count 6
+  We are the root of the spanning tree
+  Topology change flag not set, detected flag not set
+  Number of topology changes 2 last change occurred 33w6d ago
+          from Port-channel210
+  Times:  hold 1, topology change 35, notification 2
+          hello 2, max age 20, forward delay 15 
+  Timers: hello 0, topology change 0, notification 0, aging 480
+
+ Port 1670 (Port-channel210) of VLAN0118 is designated forwarding 
+   Port path cost 2, Port priority 128, Port Identifier 128.1670.
+   Designated root has priority 24694, address 000e.39ff.71a2
+   Designated bridge has priority 24694, address 000e.39ff.71a2
+   Designated port id is 128.1670, designated path cost 0
+   Timers: message age 0, forward delay 0, hold 0
+   Number of transitions to forwarding state: 1
+   Link type is point-to-point by default
+   BPDU: sent 10172791, received 4
+        

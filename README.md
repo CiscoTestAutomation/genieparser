@@ -45,14 +45,31 @@ Change logs can be found [here](changelog/CHANGELOG.md).
 [Guide]: https://pubhub.devnetcloud.com/media/pyats-development-guide/docs/writeparser/writeparser.html#
 
 
+YouTube Video: <How to write a Genie parser for Cisco!> https://youtube.com/watch?v=ibLNilSfdTc (Thank you! @Jmahaja1)
+
+
 Once you create a new parser, don't forget to check 1, 2, and 3;
 if you only update the parser class without modifying/creating the schema, please check 2 and 3. 
 - [ ] 1. `make json`
 - [ ] 2. cd tests; and execute `python -m unittest -v`
-- [ ] 3. update [changelog] by following the existing format
+- [ ] 3. create changelog for your pull request.
 
-[changelog]: https://github.com/CiscoTestAutomation/genieparser/blob/master/changelog/undistributed.rst
+# How to write 'changelog':
+1. A few examples are added into changelog/undistributed/template.rst:
+```
+* IOS
+* Modified ShowVersion:
+    * Changed <key1>, <key2> from schema to Optional.
+        * Updated regex pattern <p1> to accommodate various outputs.
+        * Added keys <key3>, <key4> into the schema.
+```
+Please take it as a reference, and avoid to create vague logs, such as 'Updated regex.' 
 
+2. How to generate an unique number for file name:
+```
+>>>from datetime import datetime
+>>>datetime.utcnow().strftime('%Y%m%d%H%M%S')
+'20200807212611'
+```
 
-
-> Copyright (c) 2018 Cisco Systems, Inc. and/or its affiliates
+> Copyright (c) 2020 Cisco Systems, Inc. and/or its affiliates

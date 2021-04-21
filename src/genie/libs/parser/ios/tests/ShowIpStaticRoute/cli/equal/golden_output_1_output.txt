@@ -1,0 +1,18 @@
+
+Codes: M - Manual static, A - AAA download, N - IP NAT, D - DHCP,
+   G - GPRS, V - Crypto VPN, C - CASA, P - Channel interface processor,
+   B - BootP, S - Service selection gateway
+   DN - Default Network, T - Tracking object
+   L - TL1, E - OER, I - iEdge
+   D1 - Dot1x Vlan Network, K - MWAM Route
+   PP - PPP default route, MR - MRIPv6, SS - SSLVPN
+   H - IPe Host, ID - IPe Domain Broadcast
+   U - User GPRS, TE - MPLS Traffic-eng, LI - LIIN
+   IR - ICMP Redirect
+Codes in []: A - active, N - non-active, B - BFD-tracked, D - Not Tracked, P - permanent
+Static local RIB for default
+M  10.1.1.0/24 [1/0] via GigabitEthernet2.2 10.16.0.2 [A]
+M              [3/0] via GigabitEthernet1 192.168.1.1 [N]
+M  10.186.1.0/24 [3/0] via GigabitEthernet1 192.168.1.1 [A]
+
+    

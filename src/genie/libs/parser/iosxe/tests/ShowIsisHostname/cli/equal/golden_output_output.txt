@@ -1,0 +1,13 @@
+R2#show isis hostname
+Level  System ID      Dynamic Hostname  (VRF1)
+ 2     7777.77ff.eeee R7
+     * 2222.22ff.4444 R2
+Level  System ID      Dynamic Hostname  (test)
+ 2     9999.99ff.3333 R9
+ 2     8888.88ff.1111 R8
+ 2     7777.77ff.eeee R7
+ 2     5555.55ff.aaaa R5
+ 2     3333.33ff.6666 R3
+ 1     1111.11ff.2222 R1
+     * 2222.22ff.4444 R2
+           

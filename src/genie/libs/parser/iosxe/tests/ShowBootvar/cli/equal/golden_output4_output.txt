@@ -1,0 +1,11 @@
+
+SSR-4400-1#sh bootvar
+BOOT variable = 
+CONFIG_FILE variable = bootflash:/taas/psan06_Golden_Config
+BOOTLDR variable does not exist
+Configuration register is 0x1
+
+Standby not ready to show bootvar
+
+SSR-4400-1#
+        

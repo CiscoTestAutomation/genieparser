@@ -1,0 +1,19 @@
+
+show interfaces accounting
+GigabitEthernet0/0 
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+                   Other          0          0      16094     965640
+                      IP      13444    1388409      13176    1292961
+                 DEC MOP          0          0        267      20559
+                     ARP     179717   10783020         45       2700
+                     CDP      34936    7438028       2984    1071256
+Interface GigabitEthernet0/2 is disabled
+Loopback0 
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+                      IP      13651     671855      13651     671855
+                    IPv6         21       1596         25       1900
+Tunnel0 Pim Register Tunnel (Encap) for RP 10.186.1.1
+                Protocol    Pkts In   Chars In   Pkts Out  Chars Out
+No traffic sent or received on this interface.
+
+    

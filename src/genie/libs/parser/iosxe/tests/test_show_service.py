@@ -12,7 +12,8 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 # Parser
 from genie.libs.parser.iosxe.show_service import ShowServiceGroupState, \
                                             ShowServiceGroupStats, \
-                                            ShowServiceGroupTrafficStats
+                                            ShowServiceGroupTrafficStats, \
+                                            ShowServiceInsertionTypeAppqoeServiceNodeGroup
 
 # ============================================
 # Test for 'show service-group state'

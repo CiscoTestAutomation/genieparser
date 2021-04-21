@@ -1,0 +1,27 @@
+
+Router#show monitor session all
+Load for five secs: 15%/0%; one minute: 13%; five minutes: 7%
+Time source is NTP, 19:54:41.566 EST Fri Oct 21 2016
+        
+Session 1
+---------
+Type                   : ERSPAN Source Session
+Status                 : Admin Enabled
+Source Ports           :
+    Both               : Gi0/1/4
+Destination IP Address : 10.76.1.2
+MTU                    : 1464
+Destination ERSPAN ID  : 1
+Origin IP Address      : 10.76.1.1
+        
+        
+Session 2
+---------
+Type                   : ERSPAN Destination Session
+Status                 : Admin Disabled
+Destination Ports      : Gi0/1/6
+Source IP Address      : 172.18.197.254
+Source ERSPAN ID       : 1
+MTU                    : 1464
+            
+        

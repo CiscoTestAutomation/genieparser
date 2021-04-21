@@ -2,18 +2,21 @@
 
 JunOS parsers for the following command:
     * traceroute {ipaddress} no-resolve
+    * traceroute {ipaddress} source {ipaddress2} no-resolve
 """
 # Python
 import re
 
 # Metaparser
 from genie.metaparser import MetaParser
+from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, SchemaTypeError, Schema)
+        Optional, Use, Schema)
 
 class TracerouteNoResolveSchema(MetaParser):
     """ Schema for:
                 * traceroute {ipaddress} no-resolve
+                * traceroute {ipaddress} source {ipaddress2} no-resolve
     """
     """schema = {
         "traceroute": {
@@ -38,7 +41,7 @@ class TracerouteNoResolveSchema(MetaParser):
     def validate_hops_list(value):
         # Pass hops list of dict in value
         if not isinstance(value, list):
-            raise SchemaTypeError('hops is not a list')
+            raise SchemaError('hops is not a list')
         # Create hop Schema
         hop_schema = Schema({
                        "hop-number": str,
@@ -67,11 +70,17 @@ class TracerouteNoResolveSchema(MetaParser):
 class TracerouteNoResolve(TracerouteNoResolveSchema):
     """ Parser for:
             * traceroute {ipaddress} no-resolve
+            * traceroute {ipaddress} source {ipaddress2} no-resolve
     """
-    cli_command = 'traceroute {addr} no-resolve'
+    cli_command = ['traceroute {addr} no-resolve',
+                    'traceroute {addr} source {addr2} no-resolve']
 
-    def cli(self, addr, output=None):
-        cmd = self.cli_command.format(addr=addr)
+    def cli(self, addr, addr2=None, output=None):
+        if addr2:
+            cmd = self.cli_command[1].format(addr=addr, addr2=addr2)    
+        else:
+            cmd = self.cli_command[0].format(addr=addr)
+
         if not output:
             out = self.device.execute(cmd)
         else:
@@ -79,18 +88,20 @@ class TracerouteNoResolve(TracerouteNoResolveSchema):
 
         ret_dict = {}
 
-        # traceroute to 30.0.0.2 (30.0.0.2) 30 hops max 52 byte packets
-        p1 = re.compile(r'^traceroute +to +(?P<domain>\S+) +\((?P<address>\S+)\), +'
-                        r'(?P<max_hops>\S+) +hops +max, +(?P<packet_size>\S+) +byte +packets$')
+        # traceroute to 10.135.0.2 (10.135.0.2) 30 hops max 52 byte packets
+        # traceroute6 to 2001::2 (2001::2) from 2001::1, 64 hops max, 12 byte packets
+        p1 = re.compile(r'^traceroute(6)? +to +(?P<domain>\S+) +\((?P<address>\S+)\)'
+                        r'( +from +(?P<source>\S+))?, +(?P<max_hops>\S+) +hops +max, '
+                        r'+(?P<packet_size>\S+) +byte +packets$')
 
-        #  1  30.0.0.2  1.792 ms  1.142 ms  0.831 ms
+        #  1  10.135.0.2  1.792 ms  1.142 ms  0.831 ms
         p2 = re.compile(r'^(?P<hop_number>\S+) +( +(?P<router_name>\S+))? +'
                         r'(?P<address>\S+) +(?P<round_trip_time>\S+ +ms +\S+ +ms +\S+ +ms)$')
 
         for line in out.splitlines():
             line = line.strip()
 
-            # traceroute to 30.0.0.2 (30.0.0.2) 30 hops max 52 byte packets
+            # traceroute to 10.135.0.2 (10.135.0.2) 30 hops max 52 byte packets
             m = p1.match(line)
 
             if m:
@@ -103,7 +114,7 @@ class TracerouteNoResolve(TracerouteNoResolveSchema):
                 traceroute_dict['packet-size'] = group['packet_size']
                 continue
 
-            #  1  30.0.0.2  1.792 ms  1.142 ms  0.831 ms
+            #  1  10.135.0.2  1.792 ms  1.142 ms  0.831 ms
             m = p2.match(line)
             if m:
                 group = m.groupdict()

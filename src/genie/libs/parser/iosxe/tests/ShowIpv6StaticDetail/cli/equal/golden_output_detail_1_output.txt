@@ -1,0 +1,19 @@
+
+R1_iosv#show ipv6 static detail
+IPv6 Static routes Table - default
+Codes: * - installed in RIB, u/m - Unicast/Multicast only
+       U - Per-user Static route
+       N - ND Static route
+       M - MIP Static route
+       P - DHCP-PD Static route
+       R - RHI Static route
+    2001:2:2:2::2/128 via 2001:10:1:2::2, distance 3
+     Resolves to 1 paths (max depth 1)
+     via GigabitEthernet0/0
+*   2001:2:2:2::2/128 via 2001:20:1:2::2, GigabitEthernet0/1, distance 1
+    2001:2:2:2::2/128 via 2001:10:1:2::2, GigabitEthernet0/0, distance 11, tag 100
+     Rejected by routing table
+     Tracked object 1 is Up
+*   2001:3:3:3::3/128 via GigabitEthernet0/3, distance 1
+*   2001:3:3:3::3/128 via GigabitEthernet0/2, distance 1
+    

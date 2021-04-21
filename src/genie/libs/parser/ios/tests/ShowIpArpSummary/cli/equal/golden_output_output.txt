@@ -1,0 +1,4 @@
+
+R5#show ip arp summary 
+4 IP ARP entries, with 0 of them incomplete
+		

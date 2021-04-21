@@ -1,3 +1,6 @@
+#temporary until folder structure tests are all built
+helper.py
+
 # Python compiled files
 *.pyc
 *.pyo
@@ -54,6 +57,6 @@ uni.log
 # Files resulting from a git meld merge
 *.orig
 
-# vscode
-.vscode/*
+# .vscode
+.vscode
 

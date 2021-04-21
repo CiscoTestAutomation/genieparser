@@ -337,6 +337,7 @@ class ShowNtpConfigSchema(MetaParser):
                                 'type': str,
                                 'vrf': str,
                                 Optional('source'): str,
+                                Optional('preferred'): bool,
                             }
                         },
                         'isconfigured': {
@@ -371,9 +372,10 @@ class ShowNtpConfig(ShowNtpConfigSchema):
         # ntp server 10.16.2.2
         # ntp server vrf VRF1 10.64.4.4
         # ntp server 10.16.2.2 source Loopback0
-
+        # ntp server 10.3.254.100 prefer
         p1 = re.compile(r"^ntp +(?P<type>\w+)( +vrf +(?P<vrf>\S+))? "
-            "+(?P<address>[\w\.\:]+)( +source +(?P<source_interface>[\w]+))?$")
+                         "+(?P<address>[\w\.\:]+)( +source +"
+                         "(?P<source_interface>[\w]+))?(?P<prefer> prefer)?$")
 
         for line in out.splitlines():
             line = line.strip()
@@ -387,6 +389,7 @@ class ShowNtpConfig(ShowNtpConfigSchema):
                 ntp_type = groups['type']
                 address = groups['address']
                 source = groups['source_interface'] or ''
+                prefer = groups['prefer']
                 isconfigured = True
 
                 addr_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {})\
@@ -395,12 +398,18 @@ class ShowNtpConfig(ShowNtpConfigSchema):
                 addr_dict.setdefault('type', {}).setdefault(ntp_type, {}).update({'address': address,
                                                                                  'type': ntp_type,
                                                                                  'vrf': vrf})
+
+                if prefer:
+                    addr_dict['type'][ntp_type]['preferred'] = True
+
                 if source:
-                    addr_dict['type'][ntp_type]['source']= source
+                    addr_dict['type'][ntp_type]['source'] = source
 
                 addr_dict.setdefault('isconfigured', {}).\
                     setdefault(str(isconfigured), {}).update({'address': address,
                                                               'isconfigured': isconfigured})
+
+
 
         return ret_dict
 

@@ -1,0 +1,11 @@
+
+        root@junos_vmx1> file list
+        /root/:
+        .cshrc@ -> /packages/mnt/os-runtime/root/.cshrc
+        .history
+        .login@ -> /packages/mnt/os-runtime/root/.login
+        .profile@ -> /packages/mnt/os-runtime/root/.profile
+        filename
+        my_file1
+        golden_config
+        

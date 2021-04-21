@@ -1,0 +1,7 @@
+interface GigabitEthernet0/0/3
+ ip address 10.189.110.1 255.255.255.0
+ ip ospf 2 area 0
+ negotiation auto
+ ipv6 address 2001:db8:c409::1/112
+ ipv6 ospf 1 area 0
+end

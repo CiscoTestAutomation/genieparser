@@ -1,0 +1,2 @@
+The VTP password is not configured.
+    

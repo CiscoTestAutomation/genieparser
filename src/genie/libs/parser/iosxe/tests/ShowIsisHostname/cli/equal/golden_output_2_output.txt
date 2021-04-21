@@ -1,0 +1,4 @@
+
+#show isis hostname        
+Level  System ID      Dynamic Hostname  (default)
+    

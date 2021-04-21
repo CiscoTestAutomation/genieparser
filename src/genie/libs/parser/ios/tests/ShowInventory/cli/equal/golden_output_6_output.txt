@@ -1,0 +1,4 @@
+
+NAME: "1", DESCR: "SM-ES2-16-P"
+PID: SM-ES2-16-P       , VID:      , SN: FOC09876NP3
+    
