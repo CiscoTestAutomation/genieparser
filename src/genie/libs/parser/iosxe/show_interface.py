@@ -61,6 +61,7 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('line_protocol'): str,
                 Optional('enabled'): bool,
                 Optional('connected'): bool,
+                Optional('err_disabled'): bool,
                 Optional('description'): str,
                 Optional('type'): str,
                 Optional('link_state'): str,
@@ -222,6 +223,8 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Port-channel12 is up, line protocol is up (connected)
         # Vlan1 is administratively down, line protocol is down , Autostate Enabled
         # Dialer1 is up (spoofing), line protocol is up (spoofing)
+        #FastEthernet1 is down, line protocol is down (err-disabled)
+
         p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +is +(?P<enabled>[\w\s]+)(?: '
                         r'+\S+)?, +line +protocol +is +(?P<line_protocol>\w+)(?: '
                         r'*\((?P<attribute>\S+)\)|( +\, +Autostate +(?P<autostate>\S+)))?.*$')
@@ -472,10 +475,12 @@ class ShowInterfaces(ShowInterfacesSchema):
         unnumbered_dict = {}
         for line in out.splitlines():
             line = line.strip()
+
             # GigabitEthernet1 is up, line protocol is up 
             # Port-channel12 is up, line protocol is up (connected)
             # Vlan1 is administratively down, line protocol is down , Autostate Enabled
             # Dialer1 is up (spoofing), line protocol is up (spoofing)
+            # FastEthernet1 is down, line protocol is down (err-disabled)
 
             m = p1.match(line)
             m1 = p1_1.match(line)
@@ -484,7 +489,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 interface = m.groupdict()['interface']
                 enabled = m.groupdict()['enabled']
                 line_protocol = m.groupdict()['line_protocol']
-                connected = m.groupdict()['attribute']
+                line_attribute = m.groupdict()['attribute']
                 
                 if m.groupdict()['autostate']:
                     autostate = m.groupdict()['autostate'].lower()
@@ -508,8 +513,9 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface]\
                                 ['oper_status'] = line_protocol
 
-                if connected:
-                    interface_dict[interface]['connected'] = True if connected == 'connected' else False
+                if line_attribute:
+                    interface_dict[interface]['connected'] = True if line_attribute == 'connected' else False
+                    interface_dict[interface]['err_disabled'] = True if line_attribute == 'err-disabled' else False
 
                 if autostate:
                     interface_dict[interface]['autostate'] = True if autostate == 'enabled' else False
@@ -908,6 +914,10 @@ class ShowInterfaces(ShowInterfacesSchema):
             # 5 minute output rate 0 bits/sec, 0 packets/sec
             m = p21.match(line)
             if m:
+                if 'counters' not in interface_dict[interface]:
+                    interface_dict[interface]['counters'] = {}   
+                    interface_dict[interface]['counters']['rate'] = {}
+
                 out_rate = int(m.groupdict()['out_rate'])
                 out_rate_pkts = int(m.groupdict()['out_rate_pkts'])
 
