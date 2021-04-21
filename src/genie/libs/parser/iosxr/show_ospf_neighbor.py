@@ -21,9 +21,12 @@ from genie.metaparser.util.schemaengine import Any
 #   * show ospf {process_name} neighbor
 #   * show ospf vrf {vrf} neighbor
 # ======================================================
-
 class ShowOspfNeighborSchema(MetaParser):
-    """Schema for show ospf neighbor detail"""
+    """Schema detail for:
+          * show ospf neighbor
+          * show ospf {process_name} neighbor
+          * show ospf vrf {vrf} neighbor
+     """
     schema = {
         'processes': {
             Any(): {  # process name
@@ -79,11 +82,8 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
         # Neighbor ID     Pri   State           Dead Time   Address         Interface
         # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
         # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
-        p2 = re.compile(r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[A-Z]+/\s{0,3}[A-Z-]*) +(?P<dead_time>(\d+:){2}\d+) +(?P<address>(\d+\.){3}\d+) +(?P<interface>\w+\s*\S+)')
-
-
-        #     r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[A-Z]+/((\s+-)|(\w+)))'
-        #     r' +(?P<dead_time>(\d+:){2}\d+) +(?P<address>(\d+\.){3}\d+) +(?P<interface>\S+\s*\S*)$')
+        p2 = re.compile(r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[A-Z]+/\s{0,3}[A-Z-]*)'
+                        r' +(?P<dead_time>(\d+:){2}\d+) +(?P<address>(\d+\.){3}\d+) +(?P<interface>\w+\s*\S+)$')
 
         # Neighbor is up for 2d18h
         p3 = re.compile(r'^Neighbor +is +up +for +(?P<up_time>\S+)$')
