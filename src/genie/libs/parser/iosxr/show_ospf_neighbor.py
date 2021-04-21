@@ -16,7 +16,10 @@ from genie.metaparser.util.schemaengine import Any
 
 
 # ======================================================
-# Parser for 'show ospf neighbor'
+# schema for:
+#   * show ospf neighbor
+#   * show ospf {process_name} neighbor
+#   * show ospf vrf all-inclusive neighbor
 # ======================================================
 
 class ShowOspfNeighborSchema(MetaParser):
@@ -38,20 +41,29 @@ class ShowOspfNeighborSchema(MetaParser):
 
         }
     }
+# ======================================================
+# parser for:
+#   * show ospf neighbor
+#   * show ospf {process_name} neighbor
+#   * show ospf vrf all-inclusive neighbor
+# ======================================================
 
 
 class ShowOspfNeighbor(ShowOspfNeighborSchema):
-    """Parser for show ospf neighbor"""
+    """output
+    Mon Apr 12 11:10:38.799 JST
 
-    """
+    * Indicates MADJ interface
+    # Indicates Neighbor awaiting BFD session up
+
     Neighbors for OSPF mpls1
-    
+
     Neighbor ID     Pri   State           Dead Time   Address         Interface
     100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
         Neighbor is up for 2d18h
     95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
         Neighbor is up for 2d18h
-    
+
     Total neighbor count: 2
     """
 
@@ -72,8 +84,8 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
         # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
         # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
         p2 = re.compile(
-            r'(?P<neighbor_id>\S+) +(?P<priority>\d+) +(?P<state>\S+\s*\S+) +(?P<dead_time>\S+)'
-            r' +(?P<address>\S+) +(?P<interface>\S+)')
+            r'(?P<neighbor_id>\S+) +(?P<priority>\d+) +(?P<state>\S+\s*\S+) +(?P<dead_time>(\d+:){2}\d+)'
+            r' +(?P<address>(\d+\.){3}\d) +(?P<interface>\S+)')
 
         # Neighbor is up for 2d18h
         p3 = re.compile(r'Neighbor +is +up +for +(?P<up_time>\S+)')
@@ -88,9 +100,7 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
             m = p1.match(line)
             if m:
                 process_name = m.groupdict()['process_name']
-
                 processes_dict = ret_dict.setdefault('processes', {}).setdefault(process_name, {})
-
                 continue
 
             # Neighbor ID     Pri   State           Dead Time   Address         Interface
