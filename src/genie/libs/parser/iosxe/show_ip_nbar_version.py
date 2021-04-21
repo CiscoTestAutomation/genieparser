@@ -87,10 +87,9 @@ class ShowIpNbarVersion(ShowIpNbarVersionSchema):
         # State: Active
         p9 = re.compile('^State:\s+(?P<state>.+)$')
 
-
         for line in out.splitlines():
             line = line.strip()
-
+            
             # NBAR software version: 34
             m = p1.match(line)
             if m:
@@ -109,7 +108,7 @@ class ShowIpNbarVersion(ShowIpNbarVersionSchema):
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
-                loaded_protocol_packs_dict = parsed_dict.setdefault('loaded_protocol_packs_dict',{}).setdefault(groups['name'],{})
+                loaded_protocol_packs_dict = parsed_dict.setdefault('loaded_protocol_packs',{}).setdefault(groups['name'],{})
                 continue
 
             # Version: 41.0
@@ -155,5 +154,3 @@ class ShowIpNbarVersion(ShowIpNbarVersionSchema):
                 continue
 
         return parsed_dict
-
-    
