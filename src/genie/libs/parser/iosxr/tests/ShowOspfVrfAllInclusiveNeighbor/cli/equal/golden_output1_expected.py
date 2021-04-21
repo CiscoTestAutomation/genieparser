@@ -1,7 +1,7 @@
 expected_output = {
     'processes': {
-        'mpls1': {  # process name
-            '100.100.100.100': {  # neighbor id
+        'mpls1': {
+            '100.100.100.100': {
                 'id': '100.100.100.100',
                 'priority': '1',
                 'state': 'FULL/  -',
@@ -10,7 +10,7 @@ expected_output = {
                 'interface': 'GigabitEthernet0/0/0/0',
                 'up_time': '2d18h'
             },
-            '95.95.95.95': {  # neighbor id
+            '95.95.95.95': {
                 'id': '95.95.95.95',
                 'priority': '1',
                 'state': 'FULL/  -',
@@ -21,6 +21,5 @@ expected_output = {
             },
             'total_neighbor_count': 2
         }
-
     }
 }

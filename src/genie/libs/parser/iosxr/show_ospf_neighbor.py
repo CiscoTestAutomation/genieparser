@@ -4,7 +4,7 @@
 
     * show ospf neighbor
     * show ospf {process_name} neighbor
-    * show ospf vrf all-inclusive neighbor
+    * show ospf vrf {vrf} neighbor
 """
 
 # Python
@@ -19,7 +19,7 @@ from genie.metaparser.util.schemaengine import Any
 # schema for:
 #   * show ospf neighbor
 #   * show ospf {process_name} neighbor
-#   * show ospf vrf all-inclusive neighbor
+#   * show ospf vrf {vrf} neighbor
 # ======================================================
 
 class ShowOspfNeighborSchema(MetaParser):
@@ -41,57 +41,53 @@ class ShowOspfNeighborSchema(MetaParser):
 
         }
     }
+
+
 # ======================================================
 # parser for:
 #   * show ospf neighbor
 #   * show ospf {process_name} neighbor
-#   * show ospf vrf all-inclusive neighbor
+#   * show ospf vrf {vrf} neighbor
 # ======================================================
-
-
 class ShowOspfNeighbor(ShowOspfNeighborSchema):
-    """output
-    Mon Apr 12 11:10:38.799 JST
-
-    * Indicates MADJ interface
-    # Indicates Neighbor awaiting BFD session up
-
-    Neighbors for OSPF mpls1
-
-    Neighbor ID     Pri   State           Dead Time   Address         Interface
-    100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
-        Neighbor is up for 2d18h
-    95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
-        Neighbor is up for 2d18h
-
-    Total neighbor count: 2
+    """parser details for:
+        * show ospf neighbor
+        * show ospf {process_name} neighbor
+        * show ospf vrf all-inclusive neighbor
     """
 
-    cli_command = ['show ospf neighbor', 'show ospf {process_name} neighbor', 'show ospf vrf all-inclusive neighbor']
+    cli_command = ['show ospf neighbor', 'show ospf {process_name} neighbor', 'show ospf vrf {vrf} neighbor']
 
-    def cli(self, process_name='', output=None):
+    def cli(self, process_name='', vrf='', output=None):
         if output is None:
-            out = self.device.execute(self.cli_command)
+            if process_name:
+                out = self.device.execute(
+                    self.cli_command[1].format(process_name=process_name))
+            elif vrf:
+                out = self.device.execute(
+                    self.cli_command[2].format(vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
         ret_dict = {}
 
         # Neighbors for OSPF mpls1
-        p1 = re.compile(r'Neighbors +for +OSPF +(?P<process_name>\w+$)')
+        p1 = re.compile(r'^Neighbors +for +OSPF +(?P<process_name>\w+)$')
 
         # Neighbor ID     Pri   State           Dead Time   Address         Interface
         # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
         # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
         p2 = re.compile(
-            r'(?P<neighbor_id>\S+) +(?P<priority>\d+) +(?P<state>\S+\s*\S+) +(?P<dead_time>(\d+:){2}\d+)'
-            r' +(?P<address>(\d+\.){3}\d) +(?P<interface>\S+)')
+            r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>\S+\s*\S+)'
+            r' +(?P<dead_time>(\d+:){2}\d+) +(?P<address>(\d+\.){3}\d+) +(?P<interface>\S+\s*\S*)$')
 
         # Neighbor is up for 2d18h
-        p3 = re.compile(r'Neighbor +is +up +for +(?P<up_time>\S+)')
+        p3 = re.compile(r'^Neighbor +is +up +for +(?P<up_time>\S+)$')
 
         # Total neighbor count: 2
-        p4 = re.compile(r'Total +neighbor +count: +(?P<total_neighbor_count>\S+)')
+        p4 = re.compile(r'^Total +neighbor +count: +(?P<total_neighbor_count>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
