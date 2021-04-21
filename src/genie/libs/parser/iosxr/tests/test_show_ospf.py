@@ -7280,24 +7280,6 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
 
-# Python
-import unittest
-from unittest.mock import Mock
-
-# ATS
-from pyats.topology import Device
-
-# Metaparset
-from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
-    SchemaMissingKeyError
-
-# Parser
-from genie.libs.parser.iosxr.show_arp import ShowArpDetail, \
-    ShowArpTrafficDetail
-
-from genie.libs.parser.iosxr.show_ospf import ShowOspfDatabase
-
-
 
 
 # ============================================
