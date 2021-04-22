@@ -1,4 +1,4 @@
-Neighbors for OSPF test
+Neighbors for OSPF
 
 Neighbor ID     Pri  State         Dead Time  Address           Interface
 192.168.199.137 1    FULL/DR       0:00:31    172.31.80.37      GigabitEthernet 0/3/0/2
@@ -9,4 +9,3 @@ Neighbor ID     Pri  State         Dead Time  Address           Interface
   Neighbor is up for 18:45:25
 192.168.199.136 5    FULL/DR       0:00:33    192.168.48.189     GigabitEthernet 0/3/0/3
   Neighbor is up for 18:45:27
-Total neighbor count: 4

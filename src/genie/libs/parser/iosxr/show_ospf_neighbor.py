@@ -12,7 +12,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
 # ======================================================
@@ -28,21 +28,19 @@ class ShowOspfNeighborSchema(MetaParser):
           * show ospf vrf {vrf} neighbor
      """
     schema = {
-        'processes': {
-            Any(): {  # process name
-                Any(): {  # neighbor id
-                    'id': str,
-                    'priority': str,
-                    'state': str,
-                    'dead_time': str,
-                    'address': str,
-                    'interface': str,
-                    'up_time': str
-                },
-                'total_neighbor_count': int
-            }
-
-        }
+        Optional('process_name'): str,
+        Optional('vrf'): str,  # vrf parameter from command line
+        'neighbors': {
+            Optional(Any()): {  # neighbor address
+                'neighbor_id': str,
+                'priority': str,
+                'state': str,
+                'dead_time': str,
+                'interface': str,
+                'up_time': str
+            },
+        },
+        Optional('total_neighbor_count'): int,
     }
 
 
@@ -76,12 +74,24 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
 
         ret_dict = {}
 
+        # If command line has `vrf` argument, assign it to `vrf` key
+        if vrf:
+            ret_dict['vrf'] = vrf
+
+        # If command line has `process_name` argument, assign it to `process_name` key
+        if process_name:
+            ret_dict['process_name'] = process_name
+
+        # Set default value for `neighbors`
+        neighbors_dict = ret_dict.setdefault('neighbors', {})
+
         # Neighbors for OSPF mpls1
         p1 = re.compile(r'^Neighbors +for +OSPF +(?P<process_name>\w+)$')
 
         # Neighbor ID     Pri   State           Dead Time   Address         Interface
         # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
         # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
+        # 192.168.199.137 1    FULL/DR       0:00:31    172.31.80.37      GigabitEthernet 0/3/0/2
         p2 = re.compile(r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[A-Z]+/\s{0,3}[A-Z-]*)'
                         r' +(?P<dead_time>(\d+:){2}\d+) +(?P<address>(\d+\.){3}\d+) +(?P<interface>\w+\s*\S+)$')
 
@@ -98,12 +108,13 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
             m = p1.match(line)
             if m:
                 process_name = m.groupdict()['process_name']
-                processes_dict = ret_dict.setdefault('processes', {}).setdefault(process_name, {})
+                ret_dict['process_name'] = process_name
                 continue
 
             # Neighbor ID     Pri   State           Dead Time   Address         Interface
             # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
             # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
+            # 192.168.199.137 1    FULL/DR       0:00:31    172.31.80.37      GigabitEthernet 0/3/0/2
             m = p2.match(line)
             if m:
                 neighbor_id = m.groupdict()['neighbor_id']
@@ -113,9 +124,9 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
                 address = m.groupdict()['address']
                 interface = m.groupdict()['interface']
 
-                neighbor_dict = processes_dict.setdefault(neighbor_id, {})
+                neighbor_dict = neighbors_dict.setdefault(address, {})
 
-                neighbor_dict['id'] = neighbor_id
+                neighbor_dict['neighbor_id'] = neighbor_id
                 neighbor_dict['priority'] = priority
                 neighbor_dict['state'] = state
                 neighbor_dict['dead_time'] = dead_time
@@ -136,6 +147,6 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
             m = p4.match(line)
             if m:
                 total_neighbor_count = m.groupdict()['total_neighbor_count']
-                processes_dict['total_neighbor_count'] = int(total_neighbor_count)
+                ret_dict['total_neighbor_count'] = int(total_neighbor_count)
 
         return ret_dict
