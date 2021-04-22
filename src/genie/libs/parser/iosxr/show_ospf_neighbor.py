@@ -1,10 +1,9 @@
 """
     show_ospf_neighbor.py
     IOSXR parsers for the following show commands:
-
-    * show ospf neighbor
-    * show ospf {process_name} neighbor
-    * show ospf vrf {vrf} neighbor
+        * show ospf neighbor
+        * show ospf {process_name} neighbor
+        * show ospf vrf {vrf} neighbor
 """
 
 # Python
@@ -37,7 +36,7 @@ class ShowOspfNeighborSchema(MetaParser):
                 'state': str,
                 'dead_time': str,
                 'interface': str,
-                'up_time': str
+                'up_time': str,
             },
         },
         Optional('total_neighbor_count'): int,
@@ -74,16 +73,15 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
 
         ret_dict = {}
 
-        # If command line has `vrf` argument, assign it to `vrf` key
-        if vrf:
-            ret_dict['vrf'] = vrf
-
-        # If command line has `process_name` argument, assign it to `process_name` key
-        if process_name:
-            ret_dict['process_name'] = process_name
-
-        # Set default value for `neighbors`
-        neighbors_dict = ret_dict.setdefault('neighbors', {})
+        if out:
+            # If command line has `vrf` argument, assign it to `vrf` key
+            if vrf:
+                ret_dict['vrf'] = vrf
+            # If command line has `process_name` argument, assign it to `process_name` key
+            if process_name:
+                ret_dict['process_name'] = process_name
+            # Set default value for `neighbors`
+            neighbors_dict = ret_dict.setdefault('neighbors', {})
 
         # Neighbors for OSPF mpls1
         p1 = re.compile(r'^Neighbors +for +OSPF +(?P<process_name>\w+)$')
@@ -130,7 +128,6 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
                 neighbor_dict['priority'] = priority
                 neighbor_dict['state'] = state
                 neighbor_dict['dead_time'] = dead_time
-                neighbor_dict['address'] = address
                 neighbor_dict['interface'] = interface
 
                 continue
