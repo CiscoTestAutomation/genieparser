@@ -2225,6 +2225,12 @@ class ShowInventory(ShowInventorySchema):
                 # PID: EM7455/EM7430     , VID: 1.0  , SN: 355813070074072
                 elif subslot:
                     if ('STACK' in pid) or asr900_rp:
+                        # Try and access the rp_dict dict if already initialised
+                        try:
+                            rp_dict
+                        # If not found, initialise an empty dict to store results
+                        except NameError:
+                            rp_dict = dict()
                         subslot_dict = rp_dict.setdefault('subslot', {}).\
                             setdefault(subslot, {}).\
                             setdefault(pid, {})
