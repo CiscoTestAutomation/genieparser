@@ -1,0 +1,41 @@
+ GigabitEthernet3/8/0/48 current state: UP
+ IP Packet Frame Type: PKTFMT_ETHNT_2, Hardware Address: cc3e-5f69-abcd
+ Description: ## TRUNK INTERFACE ##
+ Loopback is not set
+ Media type is twisted pair
+ Port hardware type is  1000_BASE_T
+ 1000Mbps-speed mode, full-duplex mode
+ Link speed type is autonegotiation, link duplex type is autonegotiation
+ Flow-control is not enabled
+ The Maximum Frame Length is 9216
+ Broadcast MAX-ratio: 100%
+ Unicast MAX-ratio: 100%
+ Multicast MAX-ratio: 100%
+ Allow jumbo frame to pass
+ PVID: 1
+ Mdi type: auto
+ Link delay is 0(sec)
+ Port link-type: trunk
+  VLAN passing  : 1(default vlan), 3, 9, 17, 20, 28, 203, 207, 550
+  VLAN permitted: 1(default vlan), 3, 9, 17, 20, 28, 203, 207, 550
+  Trunk port encapsulation: IEEE 802.1q
+ Port priority: 0
+ Last clearing of counters:  Never
+ Peak value of input: 4382127 bytes/sec, at 2020-11-03 15:00:46
+ Peak value of output: 76824715 bytes/sec, at 2019-11-06 16:58:49
+ Last 300 seconds input:  2 packets/sec 1145 bytes/sec 0%
+ Last 300 seconds output:  514 packets/sec 542086 bytes/sec 0%
+ Input (total):  3184372634 packets, 4508060351380 bytes
+         3180540219 unicasts, 0 broadcasts, 3832415 multicasts, 0 pauses
+ Input (normal):  3184372634 packets, - bytes
+         3180540219 unicasts, 0 broadcasts, 3832415 multicasts, 0 pauses
+ Input:  0 input errors, 0 runts, 0 giants, 0 throttles
+         0 CRC, 0 frame, - overruns, 0 aborts
+         - ignored, - parity errors
+ Output (total): 189514390228 packets, 183658868807300 bytes
+         161859083717 unicasts, 2279737294 broadcasts, 25375569217 multicasts, 0 pauses
+ Output (normal): 189514390228 packets, - bytes
+         161859083717 unicasts, 2279737294 broadcasts, 25375569217 multicasts, 0 pauses
+ Output: 0 output errors, - underruns, - buffer failures
+         0 aborts, 0 deferred, 0 collisions, 0 late collisions
+         0 lost carrier, - no carrier
