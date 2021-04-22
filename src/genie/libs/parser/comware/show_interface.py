@@ -1,8 +1,6 @@
 '''
 Author: Renato Almeida de Oliveira
 Contact: renato.almeida.oliveira@gmail.com
-https://twitter.com/ORenato_Almeida
-https://www.youtube.com/c/RenatoAlmeidadeOliveira
 '''
 
 from genie.metaparser import MetaParser
