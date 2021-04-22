@@ -83,6 +83,7 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
         )
 
         # Encr: 3DES, Hash: SHA96, DH Grp:2, Auth sign: PSK, Auth verify: PSK
+        # Encr: AES-CBC, keysize: 256, Hash: SHA512, DH Grp:19, Auth sign: PSK, Auth verify: PSK
         p3 = re.compile(
             r'^Encr:\s+(?P<encr>\S+),( +keysize:\s+(?P<keysize>\d+),)?'
             r' +Hash:\s+(?P<hash>\S+),\s+DH\sGrp:(?P<dh_group>\d+),\s+'
@@ -193,7 +194,7 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 group = m.groupdict()
                 local_selector = group['local_selector']
                 child_sa = child_sas.setdefault(child_sa_index, {})
-                child_sa.update({'local_selector': local_selector})
+                child_sa.update({'local_selector': str(local_selector)})
                 child_sa_index = child_sa_index + 1
                 continue
 
@@ -202,7 +203,7 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
             if m:
                 group = m.groupdict()
                 remote_selector = group['remote_selector']
-                child_sa.update({'remote_selector': local_selector})
+                child_sa.update({'remote_selector': str(remote_selector)})
                 continue
 
             m = p7.match(line)
