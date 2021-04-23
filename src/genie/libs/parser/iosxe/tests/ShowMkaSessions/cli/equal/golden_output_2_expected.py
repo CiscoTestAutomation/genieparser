@@ -1,1 +1,10 @@
-expected_output = {'Session-1': {'Interface': 'Hu2/6/0/39', 'Local-TxSCI': '70b3.171e.b282/0103', 'Policy-Name': 'defau', 'Inherited': 'NO', 'Key-Server': 'NO', 'Port-ID': '259', 'Peer-RxSCI': '00a7.42ce.d57f/0074', 'MACsec-Peers': '1', 'Status': 'Secured', 'CKN': '10'}}
+expected_output = {'sessions': {1: {'ckn': '90',
+                  'inherited': 'NO',
+                  'interface': 'Hu1/0/3.5',
+                  'key-server': 'NO',
+                  'local-txsci': 'f87a.4125.2702/008b',
+                  'macsec-peers': '0',
+                  'peer-rxsci': 'ecce.1346.f902/008d',
+                  'policy-name': '*DEFAULT POLICY*',
+                  'port-id': '139',
+                  'status': 'Secured, no peer'}}}

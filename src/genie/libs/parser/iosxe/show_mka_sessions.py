@@ -4,7 +4,7 @@ IOSXE parsers for the following show commands:
     * show mka sessions
     * show mka sessions interface {interface}
     * show mka sessions interface {interface} detail
-
+    * show macsec interface {interface}
 '''
 # Python
 import re
@@ -46,23 +46,24 @@ class ShowMkaSessionsSchema(MetaParser):
                   show mka sessions interface {interface}
     """
     schema = {
+        'sessions': {
             Any(): {
-                'Interface': str,
-                'Local-TxSCI': str,
-                'Policy-Name': str,
-                'Inherited': str,
-                'Key-Server': str,
-                'Port-ID': str,
-                'Peer-RxSCI': str,
-                'MACsec-Peers': str,
-                'Status': str,
-                'CKN': str
+                'interface': str,
+                'local-txsci': str,
+                'policy-name': str,
+                'inherited': str,
+                'key-server': str,
+                'port-id': str,
+                'peer-rxsci': str,
+                'macsec-peers': str,
+                'status': str,
+                'ckn': str
             },
-        Optional('Total MKA Sessions'): int,
-        Optional('Secured MKA Sessions'): int,
-        Optional('Pending MKA Sessions'): int
+        Optional('total-mka-sessions'): int,
+        Optional('secured-mka-sessions'): int,
+        Optional('pending-mka-sessions'): int
     }
-
+    }
 
 class ShowMkaSessions(ShowMkaSessionsSchema):
     """Parser for 'show mka sessions'
@@ -81,52 +82,66 @@ class ShowMkaSessions(ShowMkaSessionsSchema):
             out = self.device.execute(cmd)
         else:
             out = output
-        out=out.replace('\r','')
         # initial return dictionary
         ret_dict = {}
-        p1 = re.compile('Total MKA Sessions....... (.*)')
-        p2 = re.compile('Secured Sessions... (.*)')
-        p3 = re.compile('Pending Sessions... (.*)')
+  
+        p1 = re.compile('^Total MKA Sessions\.+ (?P<total_mka_sessions>\d+)$')
+        p2 = re.compile('^Secured Sessions\.+ (?P<secured_mka_sessions>\d+)$')
+        p3 = re.compile('^Pending Sessions\.+ (?P<pending_mka_sessions>\d+)$')
 
-        if p1.search(out):
-            ret_dict.update({'Total MKA Sessions': int(p1.search(out).group(1))})
-        if p2.search(out):
-            ret_dict.update({'Secured MKA Sessions': int(p2.search(out).group(1))})
-        if p3.search(out):
-            ret_dict.update({'Pending MKA Sessions': int(p3.search(out).group(1))})
         # Matching patterns
         #Hu2/6/0/39     70b3.171e.b282/0103 *DEFAULT POLICY* NO                NO
-        #259            00a7.42ce.d57f/0074 1                Secured           10 
-        p4 = re.compile(r'(\S+\/\S+) +'
-                        '(\w+\.\w+\.\w+\/\w+) +'
-                        '(\S+(?: +\S+)?) +'
-                        '(\w+) +'
-                        '(\w+(?: +\w+)?) +\n'
-                        '(\w+) +'
-                        '(\w+\.\w+\.\w+\/\w+) +'
-                        '(\w+) +'
-                        '(\w+) +'
-                        '(\w+)',re.MULTILINE)
+        p4 = re.compile(r'(?P<interface>\S+\/\S+) +'
+                    '(?P<local_txsci>\w+\.\w+\.\w+\/\w+) +'
+                    '(?P<policy_name>\S+(?: +\S+)?) +'
+                    '(?P<inherited>\w+) +'
+                    '(?P<key_server>\w+(?: +\w+)?)')
 
-        sess=p1.search(out)
-        if sess==None or int(sess.group(1)) != 0:
-            i = 1
-            for line in p4.findall(out):
-                 #Hu2/6/0/39     70b3.171e.b282/0103 *DEFAULT POLICY* NO                NO
-                 #259            00a7.42ce.d57f/0074 1                Secured           10
-                 dict_temp = {}
-                 dict_temp['Interface'] = line[0]
-                 dict_temp['Local-TxSCI'] = line[1]
-                 dict_temp['Policy-Name'] = line[2]
-                 dict_temp['Inherited'] = line[3]  
-                 dict_temp['Key-Server'] = line[4]
-                 dict_temp['Port-ID'] = line[5]
-                 dict_temp['Peer-RxSCI'] = line[6]
-                 dict_temp['MACsec-Peers'] = line[7]
-                 dict_temp['Status'] = line[8]
-                 dict_temp['CKN'] = line[9]
-                 ret_dict['Session-%s'%i] = dict_temp
-                 i+=1
+        # Matching patterns
+        #259            00a7.42ce.d57f/0074 1                Secured           10
+        p5 = re.compile(r'(?P<port_id>\d+) +'
+                        '(?P<peer_rxsci>\w+\.\w+\.\w+\/\w+) +'
+                        '(?P<macsec_peers>\w+) +'
+                        '(?P<status>.*) '
+                        '(?P<ckn>\d+)')
+
+        session_count = 0
+        for line in out.splitlines():
+            out_dict = ret_dict.setdefault('sessions', {})
+            line = line.strip()
+            m1=p1.match(line)
+            if m1:
+                  group = m1.groupdict()
+                  out_dict['total-mka-sessions'] = int(group['total_mka_sessions'])
+            m2=p2.match(line)
+            if m2:
+                  group = m2.groupdict()
+                  out_dict['secured-mka-sessions'] = int(group['secured_mka_sessions'])
+            m3=p3.match(line)
+            if m3:
+                  group = m3.groupdict()
+                  out_dict['pending-mka-sessions'] = int(group['pending_mka_sessions'])
+               
+            m4=p4.match(line)
+            if m4:
+                  group = m4.groupdict()
+                  session_count+=1
+                  sess_dict = out_dict.setdefault(session_count, {})
+                  sess_dict['interface'] = group['interface']
+                  sess_dict['local-txsci'] = group['local_txsci']
+                  sess_dict['policy-name'] = group['policy_name']
+                  sess_dict['inherited'] = group['inherited']
+                  sess_dict['key-server'] = group['key_server']
+
+            m5=p5.match(line)
+            if m5:
+                  group = m5.groupdict()
+                  sess_dict = out_dict.setdefault(session_count, {})
+                  sess_dict['port-id'] = group['port_id']
+                  sess_dict['peer-rxsci'] = group['peer_rxsci']
+                  sess_dict['macsec-peers'] = group['macsec_peers']
+                  sess_dict['status'] = group['status'].strip()
+                  sess_dict['ckn'] = group['ckn']
         return ret_dict
 
 
@@ -137,72 +152,72 @@ class ShowMkaSessionsInterfaceDetailsSchema(MetaParser):
     """Schema for 'show mka sessions interface {interface} detail'
     """
     schema = {
-               'Local Tx-SCI': str,
-               'Interface MAC Address': str,
-               'MKA Port Identifier': str,
-               'Interface Name': str,
-               'Audit Session ID': str,
-               'CAK Name (CKN)': str,
-               'Member Identifier (MI)': str,
-               'Message Number (MN)': str,
-               'EAP Role': str,
-               'Key Server': str,
-               'MKA Cipher Suite': str,
-               'Latest SAK Status': str,
-               'Latest SAK AN': str,
-               'Latest SAK KI (KN)': str,
-               'Old SAK Status': str,
-               'Old SAK AN': str,
-               'Old SAK KI (KN)': str,
-               'SAK Transmit Wait Time': str,
-               'SAK Retire Time': str,
-               'SAK Rekey Time': str,
-               'MKA Policy Name': str,
-               'Key Server Priority': str,
-               'Delay Protection': str,
-               'Delay Protection Timer': str,
-               'Confidentiality Offset': str,
-               'Algorithm Agility': str,
-               'SAK Rekey On Live Peer Loss': str,
-               'Send Secure Announcement': str,
-               'SCI Based SSCI Computation': str,
-               'SAK Cipher Suite': str,
-               'MACsec Capability': str,
-               'MACsec Desired': str,
-               '# of MACsec Capable Live Peers': str,
-               '# of MACsec Capable Live Peers Responded': str,
-        
-               'Live_peers_dict' : {
+             'sessions': {
+               'status': str,
+               'local-txsci': str,
+               'interface-mac-address': str,
+               'mka-port-identifier': str,
+               'interface-name': str,
+               Optional('audit-session-id'): str,
+               'ckn': str,
+               'member-identifier': str,
+               'message-number': str,
+               'eap-role': str,
+               'key-server': str,
+               'mka-cipher-suite': str,
+               'latest-sak-status': str,
+               'latest-sak-an': str,
+               'latest-sak-ki': str,
+               'old-sak-status': str,
+               'old-sak-an': str,
+               'old-sak-ki': str,
+               'sak-transmit-wait-time': str,
+               'sak-retire-time': str,
+               'sak-rekey-time': str,
+               'mka-policy-name': str,
+               'key-server-priority': str,
+               'delay-protection': str,
+               'delay-protection-timer': str,
+               'confidentiality-offset': str,
+               'algorithm-agility': str,
+               'sak-rekey-on-live-peer-loss': str,
+               'send-secure-announcement': str,
+               'sci-based-ssci-computation': str,
+               'sak-cipher-suite': str,
+               'macsec-capability': str,
+               'macsec-desired': str,
+               'macsec-capable-live-peers': str,
+               'macsec-capable-live-peers-responded': str,
+               Optional('live-peers'): {
                                  Any(): {
-                                    'MI': str,
-                                    'MN': str,
-                                    'Rx-SCI (Peer)': str,
-                                    'KS Priority': str,
-                                    'RxSA Installed': str,
-                                    'SSCI': str
+                                    'mi': str,
+                                    'mn': str,
+                                    'rx-sci': str,
+                                    'ks-priority': str,
+                                    'rxsa-installed': str,
+                                    'ssci': str
                                  }
                },
-               'Potential_peers_dict' : {
+               Optional('potential-peers') : {
                                  Any(): {
-                                    'MI': str,
-                                    'MN': str,
-                                    'Rx-SCI (Peer)': str,
-                                    'KS Priority': str,
-                                    'RxSA Installed': str,
-                                    'SSCI': str
+                                    'mi': str,
+                                    'mn': str,
+                                    'rx-sci': str,
+                                    'ks-priority': str,
+                                    'rxsa-installed': str,
+                                    'ssci': str
                                  }
                 },
-                'Dormant_peers_dict' : {
+                Optional('dormant-peers') : {
                                  Any(): {
-                                    'MI': str,
-                                    'MN': str,
-                                    'Rx-SCI (Peer)': str,
-                                    'KS Priority': str,
-                                    'RxSA Installed': str,
-                                    'SSCI': str
+                                    'mi': str,
+                                    'mn': str,
+                                    'rx-sci': str,
+                                    'ks-priority': str,
+                                    'rxsa-installed': str,
+                                    'ssci': str
                                  }
-                }
-    }
+    }}}
 
 
 class ShowMkaSessionsInterfaceDetails(ShowMkaSessionsInterfaceDetailsSchema):
@@ -217,8 +232,8 @@ class ShowMkaSessionsInterfaceDetails(ShowMkaSessionsInterfaceDetailsSchema):
         else:
             out = output
 
+        #Matching the below lines one by one
         '''
-
         Local Tx-SCI............. 70b3.171e.b282/0103
         Interface MAC Address.... 70b3.171e.b282
         MKA Port Identifier...... 259
@@ -258,15 +273,47 @@ class ShowMkaSessionsInterfaceDetails(ShowMkaSessionsInterfaceDetailsSchema):
         '''
 
         ret_dict = {}
-        for line in out.splitlines():
-            elem=line.split('..')
-            if len(elem) > 1:
-                if elem[-1] == ' ' or  elem[-1] == '.' or  elem[-1] == '. ':
-                    ret_dict[elem[0]] = ''
-                else:
-                    ret_dict[elem[0]] = elem[-1].strip().strip('. ')
+        peer='None'
+        live_peer_count=0
+        potential_peer_count=0
+        dormant_peer_count=0        
+        p1 = re.compile(r'^Status\: (?P<status>\S+)')
+        p2 = re.compile(r'^Local Tx-SCI.+ (?P<local_txsci>\S+)$')
+        p3 = re.compile(r'^Interface MAC Address.+ (?P<interface_mac>\S+\.\S+\.\S+)$')
+        p4 = re.compile(r'^MKA Port Identifier.+ (?P<mka_port_id>\S+)$')
+        p5 = re.compile(r'^Interface Name.+ (?P<int_name>\S+)$')
+        p6 = re.compile(r'^Audit Session ID.+ (?P<audit_sess>\S+)$')
+        p7 = re.compile(r'^CAK Name \(CKN\).+ (?P<ckn>\S+)$')
+        p8 = re.compile(r'^Member Identifier \(MI\).+ (?P<mi>\S+)$')
+        p9 = re.compile(r'^Message Number \(MN\).+ (?P<mn>\S+)$')
+        p10 = re.compile(r'^EAP Role.+ (?P<eap_role>\S+)$')
+        p11 = re.compile(r'^Key Server\.+ (?P<key_server>\w+)$')
+        p12 = re.compile(r'^MKA Cipher Suite.+ (?P<mka_cipher_suite>\S+)$')
+        p13 = re.compile(r'^Latest SAK Status\.+ +(?P<latest_sak_status>\S+(?: +\S+)*)')
+        p14 = re.compile(r'^Latest SAK AN.+ (?P<latest_sak_an>\w+)$')
+        p15 = re.compile(r'^Latest SAK KI \(KN\)\.+ (?P<latest_sak_ki>(.*))')
+        p16 = re.compile(r'^Old SAK Status\.+ (?P<old_sak_status>(.*))')
+        p17 = re.compile(r'^Old SAK AN.+ (?P<old_sak_an>\w+)$')
+        p18 = re.compile(r'^Old SAK KI \(KN\)\.+ (?P<old_sak_ki>(.*))')
+        p19 = re.compile(r'^SAK Transmit Wait Time\.+ (?P<sak_transmit_wait_time>(.*))')
+        p20 = re.compile(r'^SAK Retire Time\.+ (?P<sak_retire_time>(.*))')
+        p21 = re.compile(r'^SAK Rekey Time\.+ (?P<sak_rekey_time>(.*))')
+        p22 = re.compile(r'^MKA Policy Name\.+ (?P<mka_policy_name>(.*))')
+        p23 = re.compile(r'^Delay Protection\.+ (?P<delay_protection>\w+)$')
+        p24 = re.compile(r'^Confidentiality Offset\.+ (?P<confidentiality_offset>\w+)$')
+        p25 = re.compile(r'^Algorithm Agility\.+ (?P<algorithm_agility>\w+)$')
+        p26 = re.compile(r'^SAK Rekey On Live Peer Loss\.+ (?P<sak_rekey_on_live_peer_loss>\w+)$')
+        p27 = re.compile(r'^Send Secure Announcement\.+ (?P<send_secure_announcement>\w+)$')
+        p28 = re.compile(r'^SCI Based SSCI Computation\.+ (?P<sci_based_ssci_computation>\w+)$')
+        p29 = re.compile(r'^SAK Cipher Suite\.+ (?P<sak_cipher_suite>(.*))')
+        p30 = re.compile(r'^MACsec Capability\.+ (?P<macsec_capability>(.*))')
+        p31 = re.compile(r'^MACsec Desired\.+ (?P<macsec_desired>\w+)$')
+        p32 = re.compile(r'^\# of MACsec Capable Live Peers\.+ (?P<macsec_capable_live_peers>\w+)$')
+        p33 = re.compile(r'^\# of MACsec Capable Live Peers Responded\.+ (?P<macsec_capable_live_peers_responded>\w+)$')
+        p34 = re.compile(r'^Delay Protection Timer\.+ (?P<delay_protection_timer>(.*))')
+        p35 = re.compile(r'^Key Server Priority\.+ (?P<key_server_priority>\S+)')
 
-
+        #Matching the below peer list line by line
         '''
         Live Peers List:
         MI                        MN          Rx-SCI (Peer)        KS        RxSA          SSCI
@@ -285,176 +332,309 @@ class ShowMkaSessionsInterfaceDetails(ShowMkaSessionsInterfaceDetailsSchema):
         ---------------------------------------------------------------------------------------
         '''
 
-        start1 = out.find("Live Peers List") + len("Live Peers List")
-        end1 = out.find("Potential Peers List:")
-        peer_out = out[start1:end1]
+        p36 = re.compile(r'^Live Peers List:')
+        p37 = re.compile(r'^Potential Peers List:')
+        p38 = re.compile(r'^Dormant Peers List:')
+        p39 = re.compile(re.compile(r'(?P<mi>\S+) +'
+                            '(?P<mn>\S+) +'
+                        '(?P<rx_sci>\w+\.\w+\.\w+\/\w+) +'
+                        '(?P<ks_priority>\w+) +'
+                        '(?P<rxsa_installed>\w+) +'
+                        '(?P<ssci>\w+)')) 
 
-        start2 = out.find("Potential Peers List") + len("Potential Peers List")
-        end2 = out.find("Dormant Peers List:")
-        potential_out = out[start2:end2]
+        for line in out.splitlines():
+            out_dict = ret_dict.setdefault('sessions', {})
+            line=line.strip()
+            m1=p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                out_dict['status'] = group['status']
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                out_dict['local-txsci'] = group['local_txsci']
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                out_dict['interface-mac-address'] = group['interface_mac']
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                out_dict['mka-port-identifier'] = group['mka_port_id']
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                out_dict['interface-name'] = group['int_name']
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                out_dict['audit-sess'] = group['audit_sess']
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                out_dict['ckn'] = group['ckn']
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                out_dict['member-identifier'] = group['mi']
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                out_dict['message-number'] = group['mn']
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                out_dict['eap-role'] = group['eap_role']
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
+                out_dict['key-server'] = group['key_server']
+            m12 = p12.match(line)
+            if m12:
+                group = m12.groupdict()
+                out_dict['mka-cipher-suite'] = group['mka_cipher_suite']
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+                out_dict['latest-sak-status'] = group['latest_sak_status']
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                out_dict['latest-sak-an'] = group['latest_sak_an']
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                out_dict['latest-sak-ki'] = group['latest_sak_ki']
+            m16 = p16.match(line)
+            if m16:
+                group = m16.groupdict()
+                out_dict['old-sak-status'] = group['old_sak_status']
+            m17 = p17.match(line)
+            if m17:
+                group = m17.groupdict()
+                out_dict['old-sak-an'] = group['old_sak_an']
+            m18 = p18.match(line)
+            if m18:
+                group = m18.groupdict()
+                out_dict['old-sak-ki'] = group['old_sak_ki']
+            m19 = p19.match(line)
+            if m19:
+                group = m19.groupdict()
+                out_dict['sak-transmit-wait-time'] = group['sak_transmit_wait_time']
+            m20 = p20.match(line)
+            if m20:
+                group = m20.groupdict()
+                out_dict['sak-retire-time'] = group['sak_retire_time']
+            m21 = p21.match(line)
+            if m21:
+                group = m21.groupdict()
+                out_dict['sak-rekey-time'] = group['sak_rekey_time']
+            m22 = p22.match(line)
+            if m22:
+                group = m22.groupdict()
+                out_dict['mka-policy-name'] = group['mka_policy_name']
+            m23 = p23.match(line)
+            if m23:
+                group = m23.groupdict()
+                out_dict['delay-protection'] = group['delay_protection']
+            m24 = p24.match(line)
+            if m24:
+                 group = m24.groupdict()
+                 out_dict['confidentiality-offset'] = group['confidentiality_offset']
+            m25 = p25.match(line)
+            if m25:
+                 group = m25.groupdict()
+                 out_dict['algorithm-agility'] = group['algorithm_agility']
+            m26 = p26.match(line)
+            if m26:
+                 group = m26.groupdict()
+                 out_dict['sak-rekey-on-live-peer-loss'] = group['sak_rekey_on_live_peer_loss']
+            m27 = p27.match(line)
+            if m27:
+                 group = m27.groupdict()
+                 out_dict['send-secure-announcement'] = group['send_secure_announcement']
+            m28 = p28.match(line)
+            if m28:
+                group = m28.groupdict()
+                out_dict['sci-based-ssci-computation'] = group['sci_based_ssci_computation']
+            m29 = p29.match(line)
+            if m29:
+                 group = m29.groupdict()
+                 out_dict['sak-cipher-suite'] = group['sak_cipher_suite']
+            m30 = p30.match(line)
+            if m30:
+                 group = m30.groupdict()
+                 out_dict['macsec-capability'] = group['macsec_capability']
+            m31 = p31.match(line)
+            if m31:
+                group = m31.groupdict()
+                out_dict['macsec-desired'] = group['macsec_desired']
+            m32 = p32.match(line)
+            if m32:
+                 group = m32.groupdict()
+                 out_dict['macsec-capable-live-peers'] = group['macsec_capable_live_peers']
+            m33 = p33.match(line)
+            if m33:
+                group = m33.groupdict()
+                out_dict['macsec-capable-live-peers-responded'] = group['macsec_capable_live_peers_responded']
+            m34 = p34.match(line)
+            if m34:
+                group = m34.groupdict()
+                out_dict['delay-protection-timer'] = group['delay_protection_timer']
+            m35 = p35.match(line)
+            if m35:
+                group = m35.groupdict()
+                out_dict['key-server-priority'] = group['key_server_priority']
 
-        start3 = out.find("Dormant Peers List") + len("Dormant Peers List")
-        dormant_out = out[start3:]
-
-        p1 = re.compile(r'(\S+) +'
-                '(\S+) +'
-                '(\w+\.\w+\.\w+\/\w+) +'
-                '(\w+) +'
-                '(\w+) +'
-                '(\w+)',re.MULTILINE)
-
-        i=1
-        live_peers_dict = {}
-        for line in p1.findall(peer_out):
-            peer_dict={}
-            peer_dict['MI'] = line[0]
-            peer_dict['MN'] = line[1]
-            peer_dict['Rx-SCI (Peer)'] = line[2]
-            peer_dict['KS Priority'] = line[3]
-            peer_dict['RxSA Installed'] = line[4]
-            peer_dict['SSCI'] = line[5]
-            live_peers_dict['Session-%s'%i] = peer_dict
-            i+=1
-
-        i=1
-        potential_peers_dict = {}
-        for line in p1.findall(potential_out):
-            potential_dict={}
-            potential_dict['MI'] = line[0]
-            potential_dict['MN'] = line[1]
-            potential_dict['Rx-SCI (Peer)'] = line[2]
-            potential_dict['KS Priority'] = line[3]
-            potential_dict['RxSA Installed'] = line[4]
-            potential_dict['SSCI'] = line[5]
-            potential_peers_dict['Session-%s'%i] = potential_dict
-            i+=1
-
-        i=1
-        dormant_peers_dict = {}
-        for line in p1.findall(dormant_out):
-            dormant_dict={}
-            dormant_dict['MI'] = line[0]
-            dormant_dict['MN'] = line[1]
-            dormant_dict['Rx-SCI (Peer)'] = line[2]
-            dormant_dict['KS Priority'] = line[3]
-            dormant_dict['RxSA Installed'] = line[4]
-            dormant_dict['SSCI'] = line[5]
-            dormant_peers_dict['Session-%s'%i] = dormant_dict
-            i+=1
-
-        if len(live_peers_dict) == 0 and len(potential_peers_dict) == 0 and len(dormant_peers_dict) == 0:
-            pass
-        else:
-            ret_dict['Live_peers_dict'] = live_peers_dict
-            ret_dict['Potential_peers_dict'] = potential_peers_dict
-            ret_dict['Dormant_peers_dict'] = dormant_peers_dict
+            m36 = p36.match(line)
+            if m36:
+               peer='Live'
+               live_peers = out_dict.setdefault('live-peers', {})
+            m37 = p37.match(line)
+            if m37:
+               peer='Potential'
+               potential_peers = out_dict.setdefault('potential-peers', {})
+            m38 = p38.match(line)
+            if m38:
+               peer='Dormant'
+               dormant_peers = out_dict.setdefault('dormant-peers', {})
+            m39 = p39.match(line)
+            if m39:
+               group = m39.groupdict()
+               if peer == 'Live':
+                   live_peer_count+=1
+                   live_dict = live_peers.setdefault(live_peer_count, {})
+                   live_dict['mi'] = group['mi']
+                   live_dict['mn'] = group['mn']
+                   live_dict['rx-sci'] = group['rx_sci']
+                   live_dict['ks-priority'] = group['ks_priority']
+                   live_dict['rxsa-installed'] = group['rxsa_installed']
+                   live_dict['ssci'] = group['ssci']
+               elif peer == 'Potential':
+                   potential_peer_count+=1
+                   potential_dict = potential_peers.setdefault(potential_peer_count, {})
+                   potential_dict['mi'] = group['mi']
+                   potential_dict['mn'] = group['mn']
+                   potential_dict['rx-sci'] = group['rx_sci']
+                   potential_dict['ks-priority'] = group['ks_priority']
+                   potential_dict['rxsa-installed'] = group['rxsa_installed']
+                   potential_dict['ssci'] = group['ssci']
+               elif peer == 'Dormant':
+                   dormant_peer_count+=1
+                   dormant_dict = dormant_peers.setdefault(dormant_peer_count, {})
+                   dormant_dict['mi'] = group['mi']
+                   dormant_dict['mn'] = group['mn']
+                   dormant_dict['rx-sci'] = group['rx_sci']
+                   dormant_dict['ks-priority'] = group['ks_priority']
+                   dormant_dict['rxsa-installed'] = group['rxsa_installed']
+                   dormant_dict['ssci'] = group['ssci']
         return ret_dict
 
 
 # ==============================================
-# Parser for 'show macsec interface <interface>'
+# Parser for 'show macsec interface {interface}'
 # ==============================================
 class ShowMacsecInterfaceSchema(MetaParser):
-    """Schema for show macsec interface <interface>
+    """Schema for show macsec interface {interface}
     """
     schema = {
-        'Macsec_Data': {
-                 'Admin_Pt2Pt_MAC': str,
-                 'Cipher': str,
-                 'Confidentiality_Offset': str,
-                 'Include_SCI': str,
-                 'Macsec_status': str,
-                 'Pt2Pt_MAC_Operational': str,
-                 'Replay_protect_status': str,
-                 'Replay_window': str,
-                 'Use_ES_Enable': str,
-                 'Use_SCB_Enable': str
+        'macsec-data': {
+                 'admin-pt2pt-mac': str,
+                 'cipher': str,
+                 'confidentiality-offset': str,
+                 'include-sci': str,
+                 'status': str,
+                 'pt2pt-mac-operational': str,
+                 'replay-protect-status': str,
+                 'replay-window': str,
+                 'use-es-enable': str,
+                 'use-scb-enable': str
                        },
-        'Capabilities': {
-                  'Data_length_change_supported': str,
-                  'ICV_length': str,
-                  'Max_Rx_SA': str,
-                  'Max_Rx_SC': str,
-                  'Max_Tx_SA': str,
-                  'Max_Tx_SC': str,
-                  'PN_threshold_notification_support': str,
-                  'Validate_Frames': str,
-                  'Ciphers_supported': list
+        'capabilities': {
+                  'data-length-change-supported': str,
+                  'icv-length': str,
+                  'max-rx-sa': str,
+                  'max-rx-sc': str,
+                  'max-tx-sa': str,
+                  'max-tx-sc': str,
+                  'pn-threshold-notification-support': str,
+                  'validate-frames': str,
+                  'ciphers-supported': list
                         },
-        'Access_control': str,
-         Optional('Cleartag_details'): {
-             'Type': str,
-             'VlanId1': str
+        'access-control': str,
+         Optional('cleartag-details'): {
+             'type': str,
+             'vlanid1': str
                             },
-         Optional('Transmit_Secure_Channels'): {
-                              'Confidentiality': str,
-                              'Current_AN': str,
-                              'Elapsed_time': str,
-                              'Next_PN': str,
-                              'Previous_AN': str,
-                              'SAK_Unchanged': str,
-                              'SA_Create_time': str,
-                              'SA_Start_time': str,
-                              'SA_State': str,
-                              'SCI': str,
-                              'SC_state': str,
-                              'Start_time': str,
-                              'SA_Statistics': {
-                                                'Auth_only_Bytes': str,
-                                                'Auth_only_Pkts': str,
-                                                'Encrypted_Bytes': str,
-                                                'Encrypted_Pkts': str
+         Optional('transmit-secure-channels'): {
+                              'confidentiality': str,
+                              'current-an': str,
+                              'elapsed-time': str,
+                              'next-pn': str,
+                              'previous-an': str,
+                              'sak-unchanged': str,
+                              'sa-create-time': str,
+                              'sa-start-time': str,
+                              'sa-state': str,
+                              'sci': str,
+                              'sc-state': str,
+                              'start-time': str,
+                              'sa-statistics': {
+                                                'auth-only-bytes': str,
+                                                'auth-only-pkts': str,
+                                                'encrypted-bytes': str,
+                                                'encrypted-pkts': str
                                                },
-                              'SC_Statistics': {'Auth_only_Bytes': str,
-                                                'Auth_only_Pkts': str,
-                                                'Encrypted_Bytes': str,
-                                                'Encrypted_Pkts': str
+                              'sc-statistics': {'auth-only-bytes': str,
+                                                'auth-only-pkts': str,
+                                                'encrypted-bytes': str,
+                                                'encrypted-pkts': str
                                                },
-                              'Port_Statistics': {'Egress_long_pkts': str,
-                                                  'Egress_untag_pkts': str
+                              'port-statistics': {'egress-long-pkts': str,
+                                                  'egress-untag-pkts': str
                                                }
                                      },
-         Optional('Receive_Secure_Channels'): {'Current_AN': str,
-                             'Elapsed_time': str,
-                             'Next_PN': str,
-                             'SC_state': str,
-                             'Start_time': str,
-                             'Port_Statistics': {'Ingress_badtag_pkts': str,
-                                                 'Ingress_noSCI_pkts': str,
-                                                 'Ingress_notag_pkts': str,
-                                                 'Ingress_overrun_pkts': str,
-                                                 'Ingress_unknownSCI_pkts': str,
-                                                 'Ingress_untag_pkts': str},
-                             'Previous_AN': str,
-                             'RX_SA_Count': str,
-                             'SAK_Unchanged': str,
-                             'SA_Create_time': str,
-                             'SA_Start_time': str,
-                             'SA_State': str,
-                             'SA_Statistics': {'Decrypted_Bytes': str,
-                                               'Invalid_pkts': str,
-                                               'Notvalid_pkts': str,
-                                               'NousingSA_pkts': str,
-                                               'UnusedSA_pkts': str,
-                                               'Valid_pkts': str,
-                                               'Validated_Bytes': str},
-                             'SCI': str,
-                             'SC_Statistics': {'Decrypted_Bytes': str,
-                                               'Delay_pkts': str,
-                                               'Invalid_pkts': str,
-                                               'Late_pkts': str,
-                                               'Notvalid_pkts': str,
-                                               'NousingSA_pkts': str,
-                                               'Uncheck_pkts': str,
-                                               'UnusedSA_pkts': str,
-                                               'Valid_pkts': str,
-                                               'Validated_Bytes': str}
+         Optional('receive-secure-channels'): {'current-an': str,
+                             'elapsed-time': str,
+                             'next-pn': str,
+                             'sc-state': str,
+                             'start-time': str,
+                             'port-statistics': {'ingress-badtag-pkts': str,
+                                                 'ingress-nosci-pkts': str,
+                                                 'ingress-notag-pkts': str,
+                                                 'ingress-overrun-pkts': str,
+                                                 'ingress-unknownsci-pkts': str,
+                                                 'ingress-untag-pkts': str},
+                             'previous-an': str,
+                             'rx-sa-count': str,
+                             'sak-unchanged': str,
+                             'sa-create-time': str,
+                             'sa-start-time': str,
+                             'sa-state': str,
+                             'sa-statistics': {'decrypted-bytes': str,
+                                               'invalid-pkts': str,
+                                               'notvalid-pkts': str,
+                                               'nousingsa-pkts': str,
+                                               'unusedsa-pkts': str,
+                                               'valid-pkts': str,
+                                               'validated-bytes': str},
+                             'sci': str,
+                             'sc-statistics': {'decrypted-bytes': str,
+                                               'delay-pkts': str,
+                                               'invalid-pkts': str,
+                                               'late-pkts': str,
+                                               'notvalid-pkts': str,
+                                               'nousingsa-pkts': str,
+                                               'uncheck-pkts': str,
+                                               'unusedsa-pkts': str,
+                                               'valid-pkts': str,
+                                               'validated-bytes': str}
                                         }
                      }
 
 
 class ShowMacsecInterface(ShowMacsecInterfaceSchema):
-    'Parser for show macsec interface <interface>'
+    'Parser for show macsec interface {interface}'
 
     cli_command = 'show macsec interface {interface}'
     def cli(self, interface=None, output=None):
@@ -465,8 +645,7 @@ class ShowMacsecInterface(ShowMacsecInterfaceSchema):
         else:
             out = output
 
-        ret_dict={}
-        out=out.replace('\r','')
+        #Below output to be matched line by line
         '''
         MACsec is enabled
         Replay protect : enabled
@@ -478,339 +657,501 @@ class ShowMacsecInterface(ShowMacsecInterfaceSchema):
         Pt2Pt MAC Operational : no
         Cipher : GCM-AES-256
         Confidentiality Offset : 30
-        '''
-        p1 = re.compile(r'MACsec is +(?P<Macsec_status>\w+)\n'
-                r' +Replay protect : +(?P<Replay_protect_status>\w+)\n'
-                r' +Replay window : +(?P<Replay_window>\w+)\n'
-                r' +Include SCI : +(?P<Include_SCI>\w+)\n'
-                r' +Use ES Enable : +(?P<Use_ES_Enable>\w+)\n'
-                r' +Use SCB Enable : +(?P<Use_SCB_Enable>\w+)\n'
-                r' +Admin Pt2Pt MAC : +(?P<Admin_Pt2Pt_MAC>\S+)\n'
-                r' +Pt2Pt MAC Operational : +(?P<Pt2Pt_MAC_Operational>\w+)\n'
-                r' +Cipher : +(?P<Cipher>\S+)\n'
-                r' +Confidentiality Offset : +(?P<Confidentiality_Offset>\w+)\n', re.MULTILINE)
-        m1 = p1.search(out)
-        if m1:
-            group1 = m1.groupdict()
-            macsec_values = {}
-            macsec_values['Macsec_status'] = group1['Macsec_status']
-            macsec_values['Replay_protect_status'] = group1['Replay_protect_status']
-            macsec_values['Replay_window'] = group1['Replay_window']
-            macsec_values['Include_SCI'] = group1['Include_SCI']
-            macsec_values['Use_ES_Enable'] = group1['Use_ES_Enable']
-            macsec_values['Use_SCB_Enable'] = group1['Use_SCB_Enable']
-            macsec_values['Admin_Pt2Pt_MAC'] = group1['Admin_Pt2Pt_MAC']
-            macsec_values['Pt2Pt_MAC_Operational'] = group1['Pt2Pt_MAC_Operational']
-            macsec_values['Cipher'] = group1['Cipher']
-            macsec_values['Confidentiality_Offset'] = group1['Confidentiality_Offset']
-            ret_dict['Macsec_Data'] = macsec_values
-
-        '''
-    Capabilities
-    ICV length : 16
-    Data length change supported: yes
-    Max. Rx SA : 16
-    Max. Tx SA : 16
-    Max. Rx SC : 8
-    Max. Tx SC : 8
-    Validate Frames : strict
-    PN threshold notification support : Yes
-        '''
-        p2 = re.compile(r'Capabilities\n'
-                r' +ICV length : +(?P<ICV_length>\w+)\n'
-                r' +Data length change supported: +(?P<Data_length_change_supported>\w+)\n'
-                r' +Max. Rx SA : +(?P<Max_Rx_SA>\w+)\n'
-                r' +Max. Tx SA : +(?P<Max_Tx_SA>\w+)\n'
-                r' +Max. Rx SC : +(?P<Max_Rx_SC>\w+)\n'
-                r' +Max. Tx SC : +(?P<Max_Tx_SC>\w+)\n'
-                r' +Validate Frames : +(?P<Validate_Frames>\w+)\n'
-                r' +PN threshold notification support : +(?P<PN_threshold_notification_support>\w+)\n', re.MULTILINE)
-        m2 = p2.search(out)
-        capabilities_values = {}
-        if m2:
-            group2 = m2.groupdict()
-            capabilities_values['ICV_length'] = group2['ICV_length']
-            capabilities_values['Data_length_change_supported'] = group2['Data_length_change_supported']
-            capabilities_values['Max_Rx_SA'] = group2['Max_Rx_SA']
-            capabilities_values['Max_Tx_SA'] = group2['Max_Tx_SA']
-            capabilities_values['Max_Rx_SC'] = group2['Max_Rx_SC']
-            capabilities_values['Max_Tx_SC'] = group2['Max_Tx_SC']
-            capabilities_values['Validate_Frames'] = group2['Validate_Frames']
-            capabilities_values['PN_threshold_notification_support'] = group2['PN_threshold_notification_support']
-
-        '''
+        Capabilities
+        ICV length : 16
+        Data length change supported: yes
+        Max. Rx SA : 16
+        Max. Tx SA : 16
+        Max. Rx SC : 8
+        Max. Tx SC : 8
+        Validate Frames : strict
+        PN threshold notification support : Yes
         Ciphers supported : GCM-AES-128
                       GCM-AES-256
                       GCM-AES-XPN-128
                       GCM-AES-XPN-256
-        '''
-        start1 = out.find("Ciphers supported : ") + len("Ciphers supported : ")
-        end1 = out.find("Access control ")
-        ciphers_out = out[start1:end1]
-        ciphers_list =[]
-        for elem in ciphers_out.splitlines():
-            if elem != '' and elem != ' ':
-                ciphers_list.append(elem.strip())
-        capabilities_values['Ciphers_supported'] = ciphers_list
-        ret_dict['Capabilities'] = capabilities_values
+        Access control : must secure
 
-        #Access control : must secure
-        p3 = re.search('Access control : (.*)', out)
-        ret_dict['Access_control'] = p3.group(1)
-
-        '''
         Cleartag Details
         Type    : one dot1q in clear
         VlanId1 : 5
+        Transmit Secure Channels
+        SCI : F87A41252702008C
+        SC state : inUse(1)
+        Elapsed time : 7w0d
+        Start time : 7w0d
+        Current AN: 3
+        Previous AN: 2
+        Next PN: 874
+        SA State: inUse(1)
+        Confidentiality : yes
+        SAK Unchanged : no
+        SA Create time : 07:51:09
+        SA Start time : 7w0d
+        SC Statistics
+        Auth-only Pkts : 0
+        Auth-only Bytes : 0
+        Encrypted Pkts : 1776012104
+        Encrypted Bytes : 15955677638612
+        SA Statistics
+        Auth-only Pkts : 0
+        Auth-only Bytes : 0
+        Encrypted Pkts : 873
+        Encrypted Bytes : 123706
+
+        Port Statistics
+        Egress untag pkts  0
+        Egress long pkts  0
+        Receive Secure Channels
+        SCI : ECCE1346F902008C
+        SC state : inUse(1)
+        Elapsed time : 7w0d
+        Start time : 7w0d
+        Current AN: 3
+        Previous AN: 2
+        Next PN: 876
+        RX SA Count: 0
+        SA State: inUse(1)
+        SAK Unchanged : no
+        SA Create time : 07:51:07
+        SA Start time : 7w0d
+        SC Statistics
+        Notvalid pkts 0
+        Invalid pkts 0
+        Valid pkts 1776339674
+        Late pkts 0
+        Uncheck pkts 0
+        Delay pkts 0
+        UnusedSA pkts 0
+        NousingSA pkts 0
+        Validated Bytes 0
+        Decrypted Bytes 15958621049438
+        SA Statistics
+        Notvalid pkts 0
+        Invalid pkts 0
+        Valid pkts 874
+        UnusedSA pkts 0
+        NousingSA pkts 0
+        Validated Bytes 0
+        Decrypted Bytes 123888
+
+        Port Statistics
+        Ingress untag pkts  0
+        Ingress notag pkts  16957
+        Ingress badtag pkts  0
+        Ingress unknownSCI pkts  0
+        Ingress noSCI pkts  0
+        Ingress overrun pkts  0
         '''
-        p4 = re.compile(r'Cleartag Details\n'
-                 r' +Type    : (?P<Type>(.*))\n'
-                 r' +VlanId1 : +(?P<VlanId1>\w+)\n', re.MULTILINE)
-        m4 = p4.search(out)
-        if m4:
-            group4 = m4.groupdict()
-            cleartag_values = {}
-            cleartag_values['Type'] = group4['Type']
-            cleartag_values['VlanId1'] = group4['VlanId1']
-            ret_dict['Cleartag_details'] = cleartag_values
 
-        '''
-    Transmit Secure Channels
-  SCI : F87A41252702008C
-  SC state : inUse(1)
-   Elapsed time : 7w0d
-   Start time : 7w0d
-   Current AN: 3
-   Previous AN: 2
-   Next PN: 874
-   SA State: inUse(1)
-   Confidentiality : yes
-   SAK Unchanged : no
-   SA Create time : 07:51:09
-   SA Start time : 7w0d
-   SC Statistics
-    Auth-only Pkts : 0
-    Auth-only Bytes : 0
-    Encrypted Pkts : 1776012104
-    Encrypted Bytes : 15955677638612
-   SA Statistics
-    Auth-only Pkts : 0
-    Auth-only Bytes : 0
-    Encrypted Pkts : 873
-    Encrypted Bytes : 123706
+        ret_dict = {}
+        p1 = re.compile(r'^MACsec is (?P<status>\S+)$')
+        p2 = re.compile(r'^Replay protect \: (?P<replay_protect_status>\S+)$')
+        p3 = re.compile(r'^Replay window \: (?P<replay_window>\S+)$')
+        p4 = re.compile(r'^Include SCI \: (?P<include_sci>\S+)$')
+        p5 = re.compile(r'^Use ES Enable \: (?P<use_es_enable>\S+)$')
+        p6 = re.compile(r'^Use SCB Enable \: (?P<use_scb_enable>\S+)$')
+        p7 = re.compile(r'^Admin Pt2Pt MAC \: (?P<admin_pt2pt_mac>(.*))')
+        p8 = re.compile(r'^Pt2Pt MAC Operational \: (?P<pt2pt_mac_operational>\S+)$')
+        p9 = re.compile(r'^Cipher \: (?P<cipher>\S+)$')
+        p10 = re.compile(r'^Confidentiality Offset \: (?P<confidentiality_offset>\S+)$')
 
-  Port Statistics
-   Egress untag pkts  0
-   Egress long pkts  0
-       '''
+        p11 = re.compile(r'^Capabilities$')
+        p12 = re.compile(r'^ICV length \: (?P<icv_length>\S+)$')
+        p13 = re.compile(r'^Data length change supported\: (?P<data_length_change_supported>\S+)$')
+        p14 = re.compile(r'^Max\. Rx SA \: (?P<max_rx_sa>\S+)$')
+        p15 = re.compile(r'^Max\. Tx SA \: (?P<max_tx_sa>\S+)$')
+        p16 = re.compile(r'^Max\. Rx SC \: (?P<max_rx_sc>\S+)$')
+        p17 = re.compile(r'^Max\. Tx SC \: (?P<max_tx_sc>\S+)$')
+        p18 = re.compile(r'^Validate Frames \: (?P<validate_frames>\S+)$')
+        p19 = re.compile(r'^PN threshold notification support \: (?P<pn_threshold_notification_support>\S+)$')
+        p20 = re.compile(r'^Ciphers supported \: (?P<ciphers_supported>\S+)$')
+        p21 = re.compile(r'^GCM.+(?P<ciphers>128|256)$')
+        p22 = re.compile(r'^Access control \: (?P<access_control>(.*))$')
+        p23 = re.compile(r'^Type    \: (?P<type>(.*))$')
+        p24 = re.compile(r'^VlanId1 \: (?P<vlanid1>\S+)$')
 
-        if 'No Transmit Secure Channels' not in out:
-            transmit_ch = {}
-            p5 = re.compile(r'Transmit Secure Channels\n'
-                    r' +SCI : +(?P<SCI>\w+)\n'
-                    r' +SC state : +(?P<SC_state>\S+)\n'
-                    r' +Elapsed time : +(?P<Elapsed_time>\w+)\n'
-                    r' +Start time : +(?P<Start_time>\w+)\n'
-                    r' +Current AN: +(?P<Current_AN>\w+)\n'
-                    r' +Previous AN: +(?P<Previous_AN>\S+)\n'
-                    r' +Next PN: +(?P<Next_PN>\w+)\n'
-                    r' +SA State: +(?P<SA_State>\S+)\n'
-                    r' +Confidentiality : +(?P<Confidentiality>\w+)\n'
-                    r' +SAK Unchanged : +(?P<SAK_Unchanged>\w+)\n'
-                    r' +SA Create time : +(?P<SA_Create_time>\S+)\n'
-                    r' +SA Start time : +(?P<SA_Start_time>\w+)\n', re.MULTILINE)
-            p6 = re.compile(r'SC Statistics\n'
-                    r' +Auth-only Pkts : +(?P<Auth_only_Pkts>\w+)\n'
-                    r' +Auth-only Bytes : +(?P<Auth_only_Bytes>\w+)\n'
-                    r' +Encrypted Pkts : +(?P<Encrypted_Pkts>\w+)\n'
-                    r' +Encrypted Bytes : +(?P<Encrypted_Bytes>\w+)\n', re.MULTILINE)
-            p7 = re.compile(r'SA Statistics\n'
-                    r' +Auth-only Pkts : +(?P<Auth_only_Pkts>\w+)\n'
-                    r' +Auth-only Bytes : +(?P<Auth_only_Bytes>\w+)\n'
-                    r' +Encrypted Pkts : +(?P<Encrypted_Pkts>\w+)\n'
-                    r' +Encrypted Bytes : +(?P<Encrypted_Bytes>\w+)\n', re.MULTILINE)
-            p8 = re.compile(r'Port Statistics\n'
-                    r' +Egress untag pkts  +(?P<Egress_untag_pkts>\w+)\n'
-                    r' +Egress long pkts  +(?P<Egress_long_pkts>\w+)\n', re.MULTILINE)
-            m5 = p5.search(out)
+        p25 = re.compile(r'^Transmit Secure Channels$')
+        p26 = re.compile(r'^SCI \: (?P<sci>\S+)$')
+        p27 = re.compile(r'^SC state \: (?P<sc_state>\S+)$')
+        p28 = re.compile(r'^Elapsed time \: (?P<elapsed_time>\S+)$')
+        p29 = re.compile(r'^Start time \: (?P<start_time>\S+)$')
+        p30 = re.compile(r'^Current AN\: (?P<current_an>\S+)$')
+        p31 = re.compile(r'^Previous AN\: (?P<previous_an>\S+)$')
+        p32 = re.compile(r'^Next PN\: (?P<next_pn>\S+)$')
+        p33 = re.compile(r'^SA State\: (?P<sa_state>\S+)$')
+        p34 = re.compile(r'^Confidentiality \: (?P<confidentiality>\S+)$')
+        p35 = re.compile(r'^SAK Unchanged \: (?P<sak_unchanged>\S+)$')
+        p36 = re.compile(r'^SA Create time \: (?P<sa_create_time>(.*))$')
+        p37 = re.compile(r'^SA Start time \: (?P<sa_start_time>\S+)$')
+        p38 = re.compile(r'^SC Statistics$')
+        p39 = re.compile(r'^Auth\-only Pkts \: (?P<auth_only_pkts>\d+)$')
+        p40 = re.compile(r'^Auth\-only Bytes \: (?P<auth_only_bytes>\d+)$')
+        p41 = re.compile(r'^Encrypted Pkts \: (?P<encrypted_pkts>\d+)$')
+        p42 = re.compile(r'^Encrypted Bytes \: (?P<encrypted_bytes>\d+)$')
+        p43 = re.compile(r'^SA Statistics$')
+        p44 = re.compile(r'^Port Statistics$')
+        p45 = re.compile(r'^Egress untag pkts  (?P<egress_untag_pkts>\d+)$')
+        p46 = re.compile(r'^Egress long pkts  (?P<egress_long_pkts>\d+)$')
+        p47 = re.compile(r'^Receive Secure Channels$')
+        p48 = re.compile(r'^RX SA Count\: (?P<rx_sa_count>\d+)$')
+
+        p49 = re.compile(r'^Notvalid pkts (?P<notvalid_pkts>\d+)$')
+        p50 = re.compile(r'^Invalid pkts (?P<invalid_pkts>\d+)$')
+        p51 = re.compile(r'^Valid pkts (?P<valid_pkts>\d+)$')
+        p52 = re.compile(r'^UnusedSA pkts (?P<unusedsa_pkts>\d+)$')
+        p53 = re.compile(r'^NousingSA pkts (?P<nousingsa_pkts>\d+)$')
+        p54 = re.compile(r'^Validated Bytes (?P<validated_bytes>\d+)$')
+        p55 = re.compile(r'^Decrypted Bytes (?P<decrypted_bytes>\d+)$')
+        p56 = re.compile(r'^Late pkts (?P<late_pkts>\d+)$')
+        p57 = re.compile(r'^Uncheck pkts (?P<uncheck_pkts>\d+)$')
+        p58 = re.compile(r'^Delay pkts (?P<delay_pkts>\d+)$')
+
+        p59 = re.compile(r'^Ingress untag pkts  (?P<ingress_untag_pkts>\d+)$')
+        p60 = re.compile(r'^Ingress notag pkts  (?P<ingress_notag_pkts>\d+)$')
+        p61 = re.compile(r'^Ingress badtag pkts  (?P<ingress_badtag_pkts>\d+)$')
+        p62 = re.compile(r'^Ingress unknownSCI pkts  (?P<ingress_unknownsci_pkts>\d+)$')
+        p63 = re.compile(r'^Ingress noSCI pkts  (?P<ingress_nosci_pkts>\d+)$')
+        p64 = re.compile(r'^Ingress overrun pkts  (?P<ingress_overrun_pkts>\d+)$')
+        for line in out.splitlines():
+            macsec_dict = ret_dict.setdefault('macsec-data', {})
+            line=line.strip()
+            m1=p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                macsec_dict['status'] = group['status']
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                macsec_dict['replay-protect-status'] = group['replay_protect_status']
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                macsec_dict['replay-window'] = group['replay_window']
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                macsec_dict['include-sci'] = group['include_sci']
+            m5 = p5.match(line)
             if m5:
-                group5 = m5.groupdict()
-                transmit_ch['SCI'] = group5['SCI']
-                transmit_ch['SC_state'] = group5['SC_state']
-                transmit_ch['Elapsed_time'] = group5['Elapsed_time']
-                transmit_ch['Start_time'] = group5['Start_time']
-                transmit_ch['Current_AN'] = group5['Current_AN']
-                transmit_ch['Previous_AN'] = group5['Previous_AN']
-                transmit_ch['Next_PN'] = group5['Next_PN']
-                transmit_ch['SA_State'] = group5['SA_State']
-                transmit_ch['Confidentiality'] = group5['Confidentiality']
-                transmit_ch['SAK_Unchanged'] = group5['SAK_Unchanged']
-                transmit_ch['SA_Create_time'] = group5['SA_Create_time']
-                transmit_ch['SA_Start_time'] = group5['SA_Start_time']
-
-            m6 = p6.search(out)
+                group = m5.groupdict()
+                macsec_dict['use-es-enable'] = group['use_es_enable']
+            m6 = p6.match(line)
             if m6:
-                group6 = m6.groupdict()
-                transmit_sc = {}
-                transmit_sc['Auth_only_Pkts'] = group6['Auth_only_Pkts']
-                transmit_sc['Auth_only_Bytes'] = group6['Auth_only_Bytes']
-                transmit_sc['Encrypted_Pkts'] = group6['Encrypted_Pkts']
-                transmit_sc['Encrypted_Bytes'] = group6['Encrypted_Bytes']
-                transmit_ch['SC_Statistics'] = transmit_sc
-            m7 = p7.search(out)
+                group = m6.groupdict()
+                macsec_dict['use-scb-enable'] = group['use_scb_enable']
+            m7 = p7.match(line)
             if m7:
-                group7 = m7.groupdict()
-                transmit_sa = {}
-                transmit_sa['Auth_only_Pkts'] = group7['Auth_only_Pkts']
-                transmit_sa['Auth_only_Bytes'] = group7['Auth_only_Bytes']
-                transmit_sa['Encrypted_Pkts'] = group7['Encrypted_Pkts']
-                transmit_sa['Encrypted_Bytes'] = group7['Encrypted_Bytes']
-                transmit_ch['SA_Statistics'] = transmit_sa
-            m8 = p8.search(out)
+                group = m7.groupdict()
+                macsec_dict['admin-pt2pt-mac'] = group['admin_pt2pt_mac']
+            m8 = p8.match(line)
             if m8:
-                group8 = m8.groupdict()
-                transmit_port = {}
-                transmit_port['Egress_untag_pkts'] = group8['Egress_untag_pkts']
-                transmit_port['Egress_long_pkts'] = group8['Egress_long_pkts']
-                transmit_ch['Port_Statistics'] = transmit_port
-            ret_dict['Transmit_Secure_Channels'] = transmit_ch
-
-        '''
-    Receive Secure Channels
-  SCI : ECCE1346F902008C
-  SC state : inUse(1)
-   Elapsed time : 7w0d
-   Start time : 7w0d
-   Current AN: 3
-   Previous AN: 2
-   Next PN: 876
-   RX SA Count: 0
-   SA State: inUse(1)
-   SAK Unchanged : no
-   SA Create time : 07:51:07
-   SA Start time : 7w0d
-   SC Statistics
-    Notvalid pkts 0
-    Invalid pkts 0
-    Valid pkts 1776339674
-    Late pkts 0
-    Uncheck pkts 0
-    Delay pkts 0
-    UnusedSA pkts 0
-    NousingSA pkts 0
-    Validated Bytes 0
-    Decrypted Bytes 15958621049438
-   SA Statistics
-    Notvalid pkts 0
-    Invalid pkts 0
-    Valid pkts 874
-    UnusedSA pkts 0
-    NousingSA pkts 0
-    Validated Bytes 0
-    Decrypted Bytes 123888
-
-  Port Statistics
-   Ingress untag pkts  0
-   Ingress notag pkts  16957
-   Ingress badtag pkts  0
-   Ingress unknownSCI pkts  0
-   Ingress noSCI pkts  0
-   Ingress overrun pkts  0
-        '''
-        if 'No Receive Secure Channels' not in out:
-            receive_ch = {}
-            p9 = re.compile(r'Receive Secure Channels\n'
-                    r' +SCI : +(?P<SCI>\w+)\n'
-                    r' +SC state : +(?P<SC_state>\S+)\n'
-                    r' +Elapsed time : +(?P<Elapsed_time>\w+)\n'
-                    r' +Start time : +(?P<Start_time>\w+)\n'
-                    r' +Current AN: +(?P<Current_AN>\w+)\n'
-                    r' +Previous AN: +(?P<Previous_AN>\S+)\n'
-                    r' +Next PN: +(?P<Next_PN>\w+)\n'
-                    r' +RX SA Count: +(?P<RX_SA_Count>\w+)\n'
-                    r' +SA State: +(?P<SA_State>\S+)\n'
-                    r' +SAK Unchanged : +(?P<SAK_Unchanged>\w+)\n'
-                    r' +SA Create time : +(?P<SA_Create_time>\S+)\n'
-                    r' +SA Start time : +(?P<SA_Start_time>\w+)\n', re.MULTILINE)
-            p10 = re.compile(r'SC Statistics\n'
-                    r' +Notvalid pkts +(?P<Notvalid_pkts>\w+)\n'
-                    r' +Invalid pkts +(?P<Invalid_pkts>\w+)\n'
-                    r' +Valid pkts +(?P<Valid_pkts>\w+)\n'
-                    r' +Late pkts +(?P<Late_pkts>\w+)\n'
-                    r' +Uncheck pkts +(?P<Uncheck_pkts>\w+)\n'
-                    r' +Delay pkts +(?P<Delay_pkts>\w+)\n'
-                    r' +UnusedSA pkts +(?P<UnusedSA_pkts>\w+)\n'
-                    r' +NousingSA pkts +(?P<NousingSA_pkts>\w+)\n'
-                    r' +Validated Bytes +(?P<Validated_Bytes>\w+)\n'
-                    r' +Decrypted Bytes +(?P<Decrypted_Bytes>\w+)\n', re.MULTILINE)
-            p11 = re.compile(r'SA Statistics\n'
-                    r' +Notvalid pkts +(?P<Notvalid_pkts>\w+)\n'
-                    r' +Invalid pkts +(?P<Invalid_pkts>\w+)\n'
-                    r' +Valid pkts +(?P<Valid_pkts>\w+)\n'
-                    r' +UnusedSA pkts +(?P<UnusedSA_pkts>\w+)\n'
-                    r' +NousingSA pkts +(?P<NousingSA_pkts>\w+)\n'
-                    r' +Validated Bytes +(?P<Validated_Bytes>\w+)\n'
-                    r' +Decrypted Bytes +(?P<Decrypted_Bytes>\w+)\n', re.MULTILINE)
-            p12 = re.compile(r'Port Statistics\n'
-                    r' +Ingress untag pkts  +(?P<Ingress_untag_pkts>\w+)\n'
-                    r' +Ingress notag pkts  +(?P<Ingress_notag_pkts>\w+)\n'
-                    r' +Ingress badtag pkts  +(?P<Ingress_badtag_pkts>\w+)\n'
-                    r' +Ingress unknownSCI pkts  +(?P<Ingress_unknownSCI_pkts>\w+)\n'
-                    r' +Ingress noSCI pkts  +(?P<Ingress_noSCI_pkts>\w+)\n'
-                    r' +Ingress overrun pkts  +(?P<Ingress_overrun_pkts>\w+)', re.MULTILINE)
-            m9 = p9.search(out)
+                group = m8.groupdict()
+                macsec_dict['pt2pt-mac-operational'] = group['pt2pt_mac_operational']
+            m9 = p9.match(line)
             if m9:
-                group9 = m9.groupdict()
-                receive_ch['SCI'] = group9['SCI']
-                receive_ch['SC_state'] = group9['SC_state']
-                receive_ch['Elapsed_time'] = group9['Elapsed_time']
-                receive_ch['Start_time'] = group9['Start_time']
-                receive_ch['Current_AN'] = group9['Current_AN']
-                receive_ch['Previous_AN'] = group9['Previous_AN']
-                receive_ch['Next_PN'] = group9['Next_PN']
-                receive_ch['SA_State'] = group9['SA_State']
-                receive_ch['RX_SA_Count'] = group9['RX_SA_Count']
-                receive_ch['SAK_Unchanged'] = group9['SAK_Unchanged']
-                receive_ch['SA_Create_time'] = group9['SA_Create_time']
-                receive_ch['SA_Start_time'] = group9['SA_Start_time']
-
-            m10 = p10.search(out)
+                group = m9.groupdict()
+                macsec_dict['cipher'] = group['cipher']
+            m10 = p10.match(line)
             if m10:
-                group10 = m10.groupdict()
-                receive_sc = {}
-                receive_sc['Notvalid_pkts'] = group10['Notvalid_pkts']
-                receive_sc['Invalid_pkts'] = group10['Invalid_pkts']
-                receive_sc['Valid_pkts'] = group10['Valid_pkts']
-                receive_sc['Late_pkts'] = group10['Late_pkts']
-                receive_sc['Uncheck_pkts'] = group10['Uncheck_pkts']
-                receive_sc['Delay_pkts'] = group10['Delay_pkts']
-                receive_sc['UnusedSA_pkts'] = group10['UnusedSA_pkts']
-                receive_sc['NousingSA_pkts'] = group10['NousingSA_pkts']
-                receive_sc['Validated_Bytes'] = group10['Validated_Bytes']
-                receive_sc['Decrypted_Bytes'] = group10['Decrypted_Bytes']
-                receive_ch['SC_Statistics'] = receive_sc
-            m11 = p11.search(out)
+                group = m10.groupdict()
+                macsec_dict['confidentiality-offset'] = group['confidentiality_offset']
+
+            m11 = p11.match(line)
             if m11:
-                group11 = m11.groupdict()
-                receive_sa = {}
-                receive_sa['Notvalid_pkts'] = group11['Notvalid_pkts']
-                receive_sa['Invalid_pkts'] = group11['Invalid_pkts']
-                receive_sa['Valid_pkts'] = group11['Valid_pkts']
-                receive_sa['UnusedSA_pkts'] = group11['UnusedSA_pkts']
-                receive_sa['NousingSA_pkts'] = group11['NousingSA_pkts']
-                receive_sa['Decrypted_Bytes'] = group11['Decrypted_Bytes']
-                receive_sa['Validated_Bytes'] = group11['Validated_Bytes']
-                receive_ch['SA_Statistics'] = receive_sa
-            m12 = p12.search(out)
+                capab_dict = ret_dict.setdefault('capabilities', {})
+            m12 = p12.match(line)
             if m12:
-                group12 = m12.groupdict()
-                receive_port = {}
-                receive_port['Ingress_untag_pkts'] = group12['Ingress_untag_pkts']
-                receive_port['Ingress_notag_pkts'] = group12['Ingress_notag_pkts']
-                receive_port['Ingress_badtag_pkts'] = group12['Ingress_badtag_pkts']
-                receive_port['Ingress_unknownSCI_pkts'] = group12['Ingress_unknownSCI_pkts']
-                receive_port['Ingress_noSCI_pkts'] = group12['Ingress_noSCI_pkts']
-                receive_port['Ingress_overrun_pkts'] = group12['Ingress_overrun_pkts']
-                receive_ch['Port_Statistics'] = receive_port
-            ret_dict['Receive_Secure_Channels'] = receive_ch
-        return ret_dict 
+                group = m12.groupdict()
+                capab_dict['icv-length'] = group['icv_length']
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+                capab_dict['data-length-change-supported'] = group['data_length_change_supported']
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                capab_dict['max-rx-sa'] = group['max_rx_sa']
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                capab_dict['max-tx-sa'] = group['max_tx_sa']
+            m16 = p16.match(line)
+            if m16:
+                group = m16.groupdict()
+                capab_dict['max-rx-sc'] = group['max_rx_sc']
+            m17 = p17.match(line)
+            if m17:
+                group = m17.groupdict()
+                capab_dict['max-tx-sc'] = group['max_tx_sc']
+            m18 = p18.match(line)
+            if m18:
+                group = m18.groupdict()
+                capab_dict['validate-frames'] = group['validate_frames']
+            m19 = p19.match(line)
+            if m19:
+                group = m19.groupdict()
+                capab_dict['pn-threshold-notification-support'] = group['pn_threshold_notification_support']
+            m20 = p20.match(line)
+            if m20:
+                group = m20.groupdict()
+                ciphers_list = capab_dict.setdefault('ciphers-supported', [])
+                ciphers_list.append(group['ciphers_supported'])
+            m21 = p21.match(line)
+            if m21:
+                ciphers_list = capab_dict.setdefault('ciphers-supported', [])
+                ciphers_list.append(m21.group())
+            m22 = p22.match(line)
+            if m22:
+                ret_dict['access-control'] = m22.groupdict()['access_control']
+            m23 = p23.match(line)
+            if m23:
+                group = m23.groupdict()
+                cleartag_details = ret_dict.setdefault('cleartag-details', {})
+                cleartag_details['type'] = group['type']
+            m24 = p24.match(line)
+            if m24:
+                group = m24.groupdict()
+                cleartag_details = ret_dict.setdefault('cleartag-details', {})
+                cleartag_details['vlanid1'] = group['vlanid1']
+
+            m25 = p25.match(line)
+            if m25:
+                transmit_dict = ret_dict.setdefault('transmit-secure-channels', {})
+                secure_ch = 'transmit'
+            m26 = p26.match(line)
+            if m26:
+                group = m26.groupdict()
+                if secure_ch == 'transmit':
+                    transmit_dict['sci'] = group['sci']
+                elif secure_ch == 'receive':
+                    receive_dict['sci'] = group['sci']
+            m27 = p27.match(line)
+            if m27:
+                group = m27.groupdict()
+                if secure_ch == 'transmit':
+                    transmit_dict['sc-state'] = group['sc_state']
+                elif secure_ch == 'receive':
+                    receive_dict['sc-state'] = group['sc_state']
+            m28 = p28.match(line)
+            if m28:
+                group = m28.groupdict()
+                if secure_ch == 'transmit':
+                    transmit_dict['elapsed-time'] = group['elapsed_time']
+                elif secure_ch == 'receive':
+                    receive_dict['elapsed-time'] = group['elapsed_time']
+            m29 = p29.match(line)
+            if m29:
+                group = m29.groupdict()
+                if secure_ch == 'transmit':
+                    transmit_dict['start-time'] = group['start_time']
+                elif secure_ch == 'receive':
+                    receive_dict['start-time'] = group['start_time']
+            m30 = p30.match(line)
+            if m30:
+                group = m30.groupdict()
+                if secure_ch == 'transmit':
+                    transmit_dict['current-an'] = group['current_an']
+                elif secure_ch == 'receive':
+                    receive_dict['current-an'] = group['current_an']
+
+            m31 = p31.match(line)
+            if m31:
+                group = m31.groupdict()
+                if secure_ch == 'transmit':
+                    transmit_dict['previous-an'] = group['previous_an']
+                elif secure_ch == 'receive':
+                    receive_dict['previous-an'] = group['previous_an']
+            m32 = p32.match(line)
+            if m32:
+                group = m32.groupdict()
+                if secure_ch == 'transmit':
+                     transmit_dict['next-pn'] = group['next_pn']
+                elif secure_ch == 'receive':
+                     receive_dict['next-pn'] = group['next_pn']
+            m33 = p33.match(line)
+            if m33:
+                group = m33.groupdict()
+                if secure_ch == 'transmit':
+                    transmit_dict['sa-state'] = group['sa_state']
+                elif secure_ch == 'receive':
+                    receive_dict['sa-state'] = group['sa_state']
+            m34 = p34.match(line)
+            if m34:
+                group = m34.groupdict()
+                if secure_ch == 'transmit':
+                     transmit_dict['confidentiality'] = group['confidentiality']
+            m35 = p35.match(line)
+            if m35:
+                group = m35.groupdict()
+                if secure_ch == 'transmit':
+                   transmit_dict['sak-unchanged'] = group['sak_unchanged']
+                elif secure_ch == 'receive':
+                   receive_dict['sak-unchanged'] = group['sak_unchanged']
+            m36 = p36.match(line)
+            if m36:
+                group = m36.groupdict()
+                if secure_ch == 'transmit':
+                     transmit_dict['sa-create-time'] = group['sa_create_time']
+                elif secure_ch == 'receive':
+                     receive_dict['sa-create-time'] = group['sa_create_time']
+            m37 = p37.match(line)
+            if m37:
+                 group = m37.groupdict()
+                 if secure_ch == 'transmit':
+                      transmit_dict['sa-start-time'] = group['sa_start_time']
+                 elif secure_ch == 'receive':
+                      receive_dict['sa-start-time'] = group['sa_start_time']
+
+            m38 = p38.match(line)
+            if m38:
+                sub_dict = 'sc'
+                if secure_ch == 'transmit':
+                    transmit_sc_dict = transmit_dict.setdefault('sc-statistics', {})
+                elif secure_ch == 'receive':
+                    receive_sc_dict = receive_dict.setdefault('sc-statistics', {})
+            m39 = p39.match(line)
+            if m39:
+                group = m39.groupdict()
+                if sub_dict == 'sc':
+                    transmit_sc_dict['auth-only-pkts'] = group['auth_only_pkts']
+                elif sub_dict == 'sa':
+                    transmit_sa_dict['auth-only-pkts'] = group['auth_only_pkts']
+            m40 = p40.match(line)
+            if m40:
+                 group = m40.groupdict()
+                 if sub_dict == 'sc':
+                     transmit_sc_dict['auth-only-bytes'] = group['auth_only_bytes']
+                 elif sub_dict == 'sa':
+                     transmit_sa_dict['auth-only-bytes'] = group['auth_only_bytes']
+            m41 = p41.match(line)
+            if m41:
+                group = m41.groupdict()
+                if sub_dict == 'sc':
+                     transmit_sc_dict['encrypted-pkts'] = group['encrypted_pkts']
+                elif sub_dict == 'sa':
+                     transmit_sa_dict['encrypted-pkts'] = group['encrypted_pkts']
+            m42 = p42.match(line)
+            if m42:
+                group = m42.groupdict()
+                if sub_dict == 'sc':
+                    transmit_sc_dict['encrypted-bytes'] = group['encrypted_bytes']
+                elif sub_dict == 'sa':
+                    transmit_sa_dict['encrypted-bytes'] = group['encrypted_bytes']
+            m43 = p43.match(line)
+            if m43:
+                sub_dict = 'sa'
+                if secure_ch == 'transmit':
+                    transmit_sa_dict = transmit_dict.setdefault('sa-statistics', {})
+                elif secure_ch == 'receive':
+                    receive_sa_dict = receive_dict.setdefault('sa-statistics', {})
+            m44 = p44.match(line)
+            if m44:
+               sub_dict = 'port'
+               if secure_ch == 'transmit':
+                   transmit_port_dict = transmit_dict.setdefault('port-statistics', {})
+               elif secure_ch == 'receive':
+                   receive_port_dict = receive_dict.setdefault('port-statistics', {})
+            m45 = p45.match(line)
+            if m45:
+                group = m45.groupdict()
+                transmit_port_dict['egress-untag-pkts'] = group['egress_untag_pkts']
+            m46 = p46.match(line)
+            if m46:
+                group = m46.groupdict()
+                transmit_port_dict['egress-long-pkts'] = group['egress_long_pkts']
+            m47 = p47.match(line)
+            if m47:
+                receive_dict = ret_dict.setdefault('receive-secure-channels', {})
+                secure_ch = 'receive'
+            m48 = p48.match(line)
+            if m48:
+               group = m48.groupdict()
+               receive_dict['rx-sa-count'] = group['rx_sa_count']
+
+            m49 = p49.match(line)
+            if m49:
+                group = m49.groupdict()
+                if sub_dict == 'sc':
+                    receive_sc_dict['notvalid-pkts'] = group['notvalid_pkts']
+                elif sub_dict == 'sa':
+                    receive_sa_dict['notvalid-pkts'] = group['notvalid_pkts']
+            m50 = p50.match(line)
+            if m50:
+                group = m50.groupdict()
+                if sub_dict == 'sc':
+                    receive_sc_dict['invalid-pkts'] = group['invalid_pkts']
+                elif sub_dict == 'sa':
+                    receive_sa_dict['invalid-pkts'] = group['invalid_pkts']
+            m51 = p51.match(line)
+            if m51:
+                group = m51.groupdict()
+                if sub_dict == 'sc':
+                    receive_sc_dict['valid-pkts'] = group['valid_pkts']
+                elif sub_dict == 'sa':
+                    receive_sa_dict['valid-pkts'] = group['valid_pkts']
+            m52 = p52.match(line)
+            if m52:
+                group = m52.groupdict()
+                if sub_dict == 'sc':
+                    receive_sc_dict['unusedsa-pkts'] = group['unusedsa_pkts']
+                elif sub_dict == 'sa':
+                    receive_sa_dict['unusedsa-pkts'] = group['unusedsa_pkts']
+            m53 = p53.match(line)
+            if m53:
+                group = m53.groupdict()
+                if sub_dict == 'sc':
+                     receive_sc_dict['nousingsa-pkts'] = group['nousingsa_pkts']
+                elif sub_dict == 'sa':
+                     receive_sa_dict['nousingsa-pkts'] = group['nousingsa_pkts']
+            m54 = p54.match(line)
+            if m54:
+                group = m54.groupdict()
+                if sub_dict == 'sc':
+                      receive_sc_dict['validated-bytes'] = group['validated_bytes']
+                elif sub_dict == 'sa':
+                     receive_sa_dict['validated-bytes'] = group['validated_bytes']
+            m55 = p55.match(line)
+            if m55:
+               group = m55.groupdict()
+               if sub_dict == 'sc':
+                  receive_sc_dict['decrypted-bytes'] = group['decrypted_bytes']
+               elif sub_dict == 'sa':
+                  receive_sa_dict['decrypted-bytes'] = group['decrypted_bytes']
+            m56 = p56.match(line)
+            if m56:
+                group = m56.groupdict()
+                receive_sc_dict['late-pkts'] = group['late_pkts']
+            m57 = p57.match(line)
+            if m57:
+                group = m57.groupdict()
+                receive_sc_dict['uncheck-pkts'] = group['uncheck_pkts']
+            m58 = p58.match(line)
+            if m58:
+                group = m58.groupdict()
+                receive_sc_dict['delay-pkts'] = group['delay_pkts']
+            m59 = p59.match(line)
+            if m59:
+                group = m59.groupdict()
+                receive_port_dict['ingress-untag-pkts'] = group['ingress_untag_pkts']
+            m60 = p60.match(line)
+            if m60:
+                group = m60.groupdict()
+                receive_port_dict['ingress-notag-pkts'] = group['ingress_notag_pkts']
+            m61 = p61.match(line)
+            if m61:
+                group = m61.groupdict()
+                receive_port_dict['ingress-badtag-pkts'] = group['ingress_badtag_pkts']
+            m62 = p62.match(line)
+            if m62:
+                group = m62.groupdict()
+                receive_port_dict['ingress-unknownsci-pkts'] = group['ingress_unknownsci_pkts']
+            m63 = p63.match(line)
+            if m63:
+                group = m63.groupdict()
+                receive_port_dict['ingress-nosci-pkts'] = group['ingress_nosci_pkts']
+            m64 = p64.match(line)
+            if m64:
+                 group = m64.groupdict()
+                 receive_port_dict['ingress-overrun-pkts'] = group['ingress_overrun_pkts']
+        return ret_dict
