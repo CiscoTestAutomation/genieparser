@@ -1,0 +1,25 @@
+Node          Type              PLIM               State           Config State
+------------- ----------------- ------------------ --------------- ---------------
+0/0/CPU0      MSC-B             8-10GbE            IOS XR RUN      PWR,NSHUT,MON
+0/3/CPU0      MSC-140G          Services Plim      IOS XR RUN      PWR,NSHUT,MON
+0/3/0         MSC-140G(SPA)     CGSE-PLUS          OK              PWR,NSHUT,MON
+0/6/CPU0      MSC-X             4-100GbE           IOS XR RUN      PWR,NSHUT,MON
+0/7/CPU0      FP-X              4-100GbE           IOS XR RUN      PWR,NSHUT,MON
+0/9/CPU0      MSC-B             4-10GbE            IOS XR RUN      PWR,NSHUT,MON
+0/11/CPU0     MSC               4-10GbE            IOS XR RUN      PWR,NSHUT,NMON
+0/13/CPU0     MSC-B             4OC192-POS/DPT     IOS XR RUN      PWR,NSHUT,MON
+0/RP0/CPU0    RP(Active)        N/A                IOS XR RUN      PWR,NSHUT,MON
+0/RP1/CPU0    RP(Standby)       N/A                IOS XR RUN      PWR,NSHUT,MON
+1/2/CPU0      MSC-X             40-10GbE           IOS XR RUN      PWR,NSHUT,MON
+1/3/CPU0      MSC               Jacket Card        IOS XR RUN      PWR,NSHUT,MON
+1/3/0         MSC(SPA)          8X1GE              OK              PWR,NSHUT,MON
+1/3/1         MSC(SPA)          OC192RPR-XFP       OK              PWR,NSHUT,MON
+1/3/3         MSC(SPA)          OC192RPR-XFP       DISABLED        NPWR,SHUT,MON 
+1/3/5         MSC(SPA)          5X1GE              OK              PWR,NSHUT,MON
+1/4/CPU0      LSP-X             40-10GbE           IOS XR RUN      PWR,NSHUT,MON
+1/5/CPU0      MSC               1OC768-POS         IOS XR RUN      PWR,NSHUT,MON
+1/6/CPU0      MSC-140G          14-10GbE           IOS XR RUN      PWR,NSHUT,MON
+1/7/CPU0      MSC               1OC768-POS         IOS XR RUN      PWR,NSHUT,MON
+1/10/CPU0     FP-X              N/A                UNPOWERED       NPWR,NSHUT,MON
+1/RP0/CPU0    RP(Active)        N/A                IOS XR RUN      PWR,NSHUT,MON
+1/RP1/CPU0    RP(Standby)       N/A                IOS XR RUN      PWR,NSHUT,MON

@@ -1,0 +1,14 @@
+RP/0/RP0/CPU0:router# show protocols bgp
+
+Routing Protocol "BGP 40"
+
+Address Family IPv4 Unicast:
+  Distance: external 20 internal 200 local 200
+  Sourced Networks:
+    10.100.0.0/16 backdoor
+    10.100.1.0/24
+    10.100.2.0/24
+  Routing Information Sources:
+    Neighbor          State/Last update received
+    10.5.0.2          Idle
+    10.9.0.3          Idle
