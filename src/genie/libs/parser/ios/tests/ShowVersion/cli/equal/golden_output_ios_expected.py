@@ -9,6 +9,7 @@ expected_output = {
         "hostname": "R5",
         "image_id": "C3750E-UNIVERSALK9-M",
         "image_type": "production image",
+        "label": "RELEASE SOFTWARE (fc2)",
         "last_reload_reason": "power-on",
         "license_level": "ipservices",
         "license_type": "Permanent",

@@ -11,7 +11,8 @@ import re
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, Schema)
+        Optional, Use, Schema, ListOf)
+
 
 class ShowVersionDetailSchema(MetaParser):
 
@@ -48,41 +49,7 @@ class ShowVersionDetailSchema(MetaParser):
     }
 } """
 
-    def validate_version_information_list(value):
-        # Pass ospf3-interface list as value
-        if not isinstance(value, list):
-            raise SchemaError('version_information is not a list')
-        version_information_schema = Schema({
-            "build-date": str,
-            Optional("build-number"): str,
-            "builder": str,
-            "component": str,
-            Optional("major"): str,
-            Optional("minor"): str,
-            "release": str,
-            Optional("release-category"): str,
-            Optional("spin"): str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            version_information_schema.validate(item)
-        return value
-
-
-    def validate_package_information_list(value):
-        # Pass ospf3-interface list as value
-        if not isinstance(value, list):
-            raise SchemaError('package_information is not a list')
-        package_information_schema = Schema({
-            "comment": str,
-            "name": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            package_information_schema.validate(item)
-        return value
-
-        # Main Schema
+    # Main Schema
     schema = {
         Optional("@xmlns:junos"): str,
         "software-information": {
@@ -92,10 +59,23 @@ class ShowVersionDetailSchema(MetaParser):
             "host-name": str,
             "junos-version": str,
             "output": list,
-            "package-information": Use(validate_package_information_list),
+            "package-information": ListOf({
+                "comment": str,
+                "name": str
+            }),
             "product-model": str,
             Optional("product-name"): str,
-            "version-information": Use(validate_version_information_list)
+            "version-information": ListOf({
+                "build-date": str,
+                Optional("build-number"): str,
+                "builder": str,
+                "component": str,
+                Optional("major"): str,
+                Optional("minor"): str,
+                "release": str,
+                Optional("release-category"): str,
+                Optional("spin"): str
+            })
         }
     }
 
@@ -342,20 +322,7 @@ class ShowVersionInvokeOnAllRoutingEnginesSchema(MetaParser):
     }
 } """
 
-    def validate_package_information_list(value):
-        # Pass ospf3-interface list as value
-        if not isinstance(value, list):
-            raise SchemaError('package_information is not a list')
-        package_information_schema = Schema({
-            "comment": str,
-            "name": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            package_information_schema.validate(item)
-        return value
-
-        # Main Schema
+    # Main Schema
     schema = {
     Optional("@xmlns:junos"): str,
     "multi-routing-engine-results": {
@@ -364,7 +331,10 @@ class ShowVersionInvokeOnAllRoutingEnginesSchema(MetaParser):
             "software-information": {
                 "host-name": str,
                 "junos-version": str,
-                "package-information": Use(validate_package_information_list),
+                "package-information": ListOf({
+                        "comment": str,
+                        "name": str
+                }),
                 "product-model": str,
                 Optional("product-name"): str
                 }

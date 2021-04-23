@@ -1,0 +1,40 @@
+        N95_1# show mac address-table limit 
+         
+        Configured System Limit: 111
+        Current System Count: 3
+        Configured System Action: Flood
+        Currently System is: Flooding Unknown SA
+         
+         
+    Vlan    Conf Limit     Curr Count    Cfg Action    Currently
+    ----    ------------   ---------     ---------    --------
+    1       196000              0           Flood         Flooding Unknown SA
+    10      196000              1           Flood         Flooding Unknown SA
+    20      196000              1           Flood         Flooding Unknown SA
+    30      196000              1           Flood         Flooding Unknown SA
+    100     200               0           Flood         Flooding Unknown SA
+    101     196000              0           Flood         Flooding Unknown SA
+    102     196000              0           Flood         Flooding Unknown SA
+    103     196000              0           Flood         Flooding Unknown SA
+    104     196000              0           Flood         Flooding Unknown SA
+    105     196000              0           Flood         Flooding Unknown SA
+    106     196000              0           Flood         Flooding Unknown SA
+    107     196000              0           Flood         Flooding Unknown SA
+    108     196000              0           Flood         Flooding Unknown SA
+    109     196000              0           Flood         Flooding Unknown SA
+    110     196000              0           Flood         Flooding Unknown SA
+    111     196000              0           Flood         Flooding Unknown SA
+    112     196000              0           Flood         Flooding Unknown SA
+    113     196000              0           Flood         Flooding Unknown SA
+    114     196000              0           Flood         Flooding Unknown SA
+    115     196000              0           Flood         Flooding Unknown SA
+    185     196000              0           Flood         Flooding Unknown SA
+    285     196000              0           Flood         Flooding Unknown SA
+    910     196000              0           Flood         Flooding Unknown SA
+    1000    196000              0           Flood         Flooding Unknown SA
+    1005    196000              0           Flood         Flooding Unknown SA
+    1006    196000              0           Flood         Flooding Unknown SA
+    1007    196000              0           Flood         Flooding Unknown SA
+    1008    196000              0           Flood         Flooding Unknown SA
+    1009    196000              0           Flood         Flooding Unknown SA
+    
