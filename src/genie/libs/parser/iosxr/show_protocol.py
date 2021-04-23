@@ -859,17 +859,17 @@ class ShowProtocols(ShowProtocolsSchema):
             m = p19.match(line)
             if m:
                 group = m.groupdict()
-                nbr = group['nbr']
-                nbr_dict = af_dict.setdefault('neighbors', {})\
-                                  .setdefault(nbr, {})
+                neighbor = group['nbr']
+                neighbors_dict = af_dict.setdefault('neighbors', {})\
+                                        .setdefault(neighbor, {})
 
-                nbr_dict['last_update'] = group['last_update']
+                neighbors_dict['last_update'] = group['last_update']
 
                 if group['nsr_state']:
-                    nbr_dict['nsr_state'] = group['nsr_state']
+                    neighbors_dict['nsr_state'] = group['nsr_state']
 
                 if group['gr_enable']:
-                    nbr_dict['gr_enable'] = group['gr_enable']
-
+                    neighbors_dict['gr_enable'] = group['gr_enable']
                 continue
+
         return result_dict
