@@ -140,7 +140,7 @@ class ShowFailover(ShowFailoverSchema):
 
         # Failover LAN Interface: folink GigabitEthernet0/1 (up)
         p3 = re.compile(
-            r'^Failover +LAN +Interface:\s(?P<name>[A-Za-z0-9]+)\s+'
+            r'^Failover +LAN +Interface:\s(?P<name>[A-Za-z0-9\-\_]+)\s+'
             '(?P<interface>(Lo\S*|Fa\S*|Gi\S*|Ten\S*|\S*(SL|VL)\S*|Se\S*|VoIP\S*|Configured))'
             '( +\((?P<status>[A-Za-z0-0_\-\s]+)\))?$'
         )
