@@ -758,9 +758,6 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
                                        "(?P<channel>\S+)\s*(?P<mode>\S+|^.{0}$)?$")
 
         for line in out.splitlines():
-
-            # import pdb; pdb.set_trace()
-
             line = line.strip()
             # AP Name                       Mac Address     Slot    Admin State    Oper State    Width  Txpwr         Channel  Mode
             if ap_header_capture.match(line):
