@@ -18,7 +18,6 @@ expected_output = {
             "width": 20,
             "tx_pwr": "*1/8 (23 dBm)",
             "channel": "(36)*",
-            "mode": "",
         },
         "ab21-cap40": {
             "mac_address": "5c50.15ff.dbb6",
@@ -28,7 +27,6 @@ expected_output = {
             "width": 20,
             "tx_pwr": "*7/8 (6 dBm)",
             "channel": "(100)*",
-            "mode": "",
         },
         "ab12-cap2": {
             "mac_address": "5c50.15ff.7f24",
@@ -38,7 +36,6 @@ expected_output = {
             "width": 20,
             "tx_pwr": "*7/8 (6 dBm)",
             "channel": "(116)*",
-            "mode": "",
         },
         "ab21-cap36": {
             "mac_address": "5c50.15ff.8be4",
@@ -48,7 +45,16 @@ expected_output = {
             "width": 20,
             "tx_pwr": "*7/8 (6 dBm)",
             "channel": "(100)*",
-            "mode": "",
+        },
+        "BHS-D-105": {
+            "mac_address": "f80b.cbb3.bb80",
+            "slot": 1,
+            "admin_state": "Enabled",
+            "oper_state": "Up",
+            "width": 20,
+            "tx_pwr": "1/8 (22 dBm)",
+            "channel": "(36)",
+            "mode": "Local",
         },
         "ab21-cap28": {
             "mac_address": "5c50.15ff.8d24",
@@ -58,7 +64,6 @@ expected_output = {
             "width": 20,
             "tx_pwr": "*7/8 (6 dBm)",
             "channel": "(120)*",
-            "mode": "",
         },
         "ab31-cap26": {
             "mac_address": "5c50.15ff.8d44",
@@ -68,7 +73,6 @@ expected_output = {
             "width": 20,
             "tx_pwr": "*6/8 (9 dBm)",
             "channel": "(128)*",
-            "mode": "",
         },
         "ab22-cap16": {
             "mac_address": "5c50.15ff.8da4",
@@ -78,7 +82,6 @@ expected_output = {
             "width": 20,
             "tx_pwr": "*7/8 (8 dBm)",
             "channel": "(48)*",
-            "mode": "",
         },
         "ab22-cap24": {
             "mac_address": "5c50.15ff.8de4",
@@ -88,7 +91,6 @@ expected_output = {
             "width": 20,
             "tx_pwr": "*7/8 (8 dBm)",
             "channel": "(36)*",
-            "mode": "",
         },
         "ab22-cap18": {
             "mac_address": "5c50.15ff.8ec4",
@@ -98,7 +100,6 @@ expected_output = {
             "width": 20,
             "tx_pwr": "*7/8 (6 dBm)",
             "channel": "(124)*",
-            "mode": "",
         },
         "ab32-cap13": {
             "mac_address": "5c50.15ff.8fc4",
@@ -108,7 +109,6 @@ expected_output = {
             "width": 20,
             "tx_pwr": "*6/8 (9 dBm)",
             "channel": "(124)*",
-            "mode": "",
         },
     }
 }
