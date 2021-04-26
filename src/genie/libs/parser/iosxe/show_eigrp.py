@@ -1015,8 +1015,7 @@ class ShowIpv6EigrpTopology(ShowEigrpTopologySuperParser, ShowIpEigrpTopologySch
                 cmd = self.cli_command[0].format(vrf=vrf)
             else:
                 cmd = self.cli_command[1]
-            show_output = self.device.execute(cmd)
-        else:
-            show_output = output
+                
+            output = self.device.execute(cmd)
         
-        return super().cli(output=show_output, address_family='ipv4', vrf=vrf)
+        return super().cli(output=output, address_family='ipv4', vrf=vrf)
