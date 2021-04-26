@@ -14,16 +14,6 @@ import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Any, Optional
 
-# ======================================================
-# schema for:
-#       * show ospf interface
-#       * show ospf interface <interface_name>
-#       * show ospf <process_name> interface
-#       * show ospf <process_name> interface <interface_name>
-#       * show ospf vrf all-inclusive interface <interface_name>
-# ======================================================
-from genie.libs.parser.iosxr.show_ospf import ShowOspfVrfAllInclusiveInterfaceSchema
-
 
 # ======================================================
 # parser schema for:
@@ -33,6 +23,12 @@ from genie.libs.parser.iosxr.show_ospf import ShowOspfVrfAllInclusiveInterfaceSc
 #          * show ospf <process_name> interface <interface_name>
 # ======================================================
 class ShowOspfInterfaceSchema(MetaParser):
+    """Schema details for:
+          * show ospf interface
+          * show ospf interface <interface_name>
+          * show ospf <process_name> interface
+          * show ospf <process_name> interface <interface_name>
+    """
     schema = {
         "vrf": {
             Any(): {  # VRF information, if no, assign "default"
@@ -189,7 +185,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
         # Process ID 1, Router ID 10.36.3.3, Network Type LOOPBACK, Cost: 1
         p5 = re.compile(r'^Process +ID +(?P<process_id>\w+), +Router +ID +(?P<router_id>(\d+.){3}\d+), +'
-                        r'Network +Type +(?P<interface_type>\w+), +Cost: +(?P<cost>\d+)')
+                        r'Network +Type +(?P<interface_type>\w+), +Cost: +(?P<cost>\d+)$')
 
         # Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
         # Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 1500, MaxPktSz 1500
@@ -420,6 +416,8 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 if mode:
                     interface_dict['bfd']['mode'] = mode
 
+                continue
+
             # Designated Router (ID) 10.64.4.4, Interface address 10.3.4.4
             m = p7.match(line)
             if m:
@@ -479,6 +477,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             m = p10_2.match(line)
             if m:
                 interface_dict['passive'] = True
+                continue
 
             # Index 1/1, flood queue length 0
             m = p11.match(line)
