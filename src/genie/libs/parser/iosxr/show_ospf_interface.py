@@ -24,6 +24,7 @@ from genie.metaparser.util.schemaengine import Any, Optional
 # ======================================================
 from genie.libs.parser.iosxr.show_ospf import ShowOspfVrfAllInclusiveInterfaceSchema
 
+
 # ======================================================
 # parser schema for:
 #          * show ospf interface
@@ -166,7 +167,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
         ret_dict = {}
 
-        # initialization
+        # initialization of vrf dict
         if out:
             vrfs_dict = ret_dict.setdefault('vrf', {})
 
@@ -234,16 +235,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
         p16 = re.compile(
             r'^Neighbor +Count +is +(?P<nbr_count>(\d+)), +Adjacent +neighbor +count +is +(?P<adj_nbr_count>(\d+))$')
 
-
-
-
-        # Adjacent with neighbor 10.64.4.4  (Designated Router)
-        p17_1 = re.compile(
-            r'^Adjacent +with +neighbor +(?P<neighbors_dr_router_id>(\S+)) +\((D|d)esignated +(R|r)outer\)$')
-        # Adjacent with neighbor 10.16.2.2  (Backup Designated Router)
-        p17_2 = re.compile(
-            r'Adjacent +with +neighbor +(?P<neighbors_bdr_router_id>(\S+)) +\((D|d)esignated +(R|r)outer\)$')
-
         # Adjacent with neighbor 10.64.4.4  (Designated Router)
         # Adjacent with neighbor 10.16.2.2  (Backup Designated Router)
         # Adjacent with neighbor 101.3.3.3
@@ -263,11 +254,9 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
         p21 = re.compile(
             r'Forward +reference No, +Unnumbered +(?P<unnumbered_bool>\w+), +Bandwidth +(?P<bandwidth>\d+)$')
 
-
         # BFD enabled, BFD interval 150 msec, BFD multiplier 3, Mode: Default
         p22 = re.compile(r'^BFD enabled(?:, +BFD +interval +(?P<interval>(\d+)) +msec)?(?:, +BFD +multiplier +('
                          r'?P<multi>(\d+)))?(?:, +Mode: +(?P<mode>(\S+)))?$')
-
 
         # Non-Stop Forwarding (NSF) enabled
         p23 = re.compile(r'^Non-Stop +Forwarding +\(NSF\) +(?P<nsf_status>\w+)$')
@@ -283,8 +272,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
         # DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
         p27 = re.compile(
-            r"^DoNotAge +LSA +not +allowed +\(Number +of"
-            " +DCbitless +LSA +is +(?P<num>(\d+))\)\.$"
+            r"^DoNotAge +LSA +not +allowed +\(Number +of +DCbitless +LSA +is +(?P<num>(\d+))\)\.$"
         )
 
         for line in out.splitlines():
@@ -294,14 +282,16 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             m = p1.match(line)
             if m:
                 ospf_instance = m.groupdict()['ospf_instance']
+
                 # Interfaces for OSPF 1, VRF VRF1
                 m_sub = p2.match(line)
                 if m_sub:
                     vrf_name = m_sub.groupdict()['vrf_name']
                     vrf_dict = vrfs_dict.setdefault(vrf_name, {})
-                else: # if there is no vrf information following ospf instance, assign it to default vrf dict
+                else:  # if there is no vrf information following ospf instance, assign it to default vrf dict
                     vrf_dict = vrfs_dict.setdefault('default', {})
 
+                # initialize vrf dict
                 instance_dict = vrf_dict \
                     .setdefault('address_family', {}) \
                     .setdefault('ipv4', {}) \
@@ -321,13 +311,10 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interfaces_dict = ospf_dict.setdefault('interfaces', {})
                 interface_dict = interfaces_dict.setdefault(interface, {})
 
-
                 # initializing some keys
                 interface_dict['name'] = interface
                 interface_dict['demand_circuit'] = False
-
                 interface_dict['enable'] = True if interface_enable == 'up' else False
-
                 interface_dict['line_protocol'] = True if line_protocol == 'up' else False
 
                 # initialize bfd state
@@ -337,7 +324,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
             # Internet Address 10.36.3.3/32, Area 0
             m = p4.match(line)
-
             if m:
                 ip_address = m.groupdict()['ip_address']
                 area = m.groupdict()['area']
@@ -350,12 +336,14 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 if m_sub:
                     sid = m_sub.groupdict()['sid']
                     strict_spf_sid = m_sub.groupdict()['sid']
+
                     interface_dict['sid'] = sid
                     interface_dict['strict_spf_sid'] = strict_spf_sid
 
+                    continue
+
             # Label stack Primary label 0 Backup label 0 SRTE label 0
             m = p20.match(line)
-
             if m:
                 primary_label = m.groupdict()['primary_label']
                 backup_label = m.groupdict()['backup_label']
@@ -366,9 +354,10 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 label_stack_dict['backup_label'] = backup_label
                 label_stack_dict['srte_label'] = srte_label
 
+                continue
+
             # Process ID mpls1, Router ID 25.97.1.1, Network Type LOOPBACK, Cost: 1
             m = p5.match(line)
-
             if m:
                 process_id = m.groupdict()['process_id']
                 router_id = m.groupdict()['router_id']
@@ -387,7 +376,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             # Transmit Delay is 1 sec, State BDR, Priority 1, MTU 1500, MaxPktSz 1500
             # Transmit Delay is 1 sec, State POINT_TO_POINT,
             m = p6.match(line)
-
             if m:
                 transmit_delay = m.groupdict()['transmit_delay']
                 state = m.groupdict()['state']
@@ -417,8 +405,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 forward_reference_no_dict['unnumbered'] = True if unnumbered_bool == 'yes' else False
                 forward_reference_no_dict['bandwidth'] = int(bandwidth)
 
-
-
+                continue
 
             # BFD enabled, BFD interval 150 msec, BFD multiplier 3, Mode: Default
             m = p22.match(line)
@@ -434,10 +421,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                     interface_dict['bfd']['mode'] = mode
 
             # Designated Router (ID) 10.64.4.4, Interface address 10.3.4.4
-            # p7 = re.compile(
-            #     r'^Designated +(R|r)outer +\(ID\) +(?P<dr_router_id>(\S+)), +(I|i)nterface +(A|a)ddress +'
-            #     r'(?P<dr_ip_addr>(\S+))$')
-            #
             m = p7.match(line)
             if m:
                 dr_router_id = m.groupdict()['dr_router_id']
@@ -446,12 +429,9 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['dr_router_id'] = dr_router_id
                 interface_dict['dr_ip_addr'] = dr_ip_addr
 
+                continue
 
             # Backup Designated router (ID) 10.36.3.3, Interface address 10.3.4.3
-            # p8 = re.compile(
-            #     r'^Backup +(D|d)esignated +(R|r)outer +\(ID\) +(?P<bdr_router_id>(\S+)), +(I|i)nterface +'
-            #     r'(A|a)ddress +(?P<bdr_ip_addr>(\S+))$')
-
             m = p7.match(line)
             if m:
                 bdr_router_id = m.groupdict()['bdr_router_id']
@@ -460,10 +440,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['bdr_router_id'] = bdr_router_id
                 interface_dict['bdr_ip_addr'] = bdr_ip_addr
 
-
-
-
-
+                continue
 
             # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
             m = p9.match(line)
@@ -478,40 +455,32 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['wait_interval'] = int(wait_interval)
                 interface_dict['retransmit_interval'] = int(retransmit_interval)
 
+                continue
 
             # Non-Stop Forwarding (NSF) enabled
-            # p23 = re.compile(r'^Non-Stop +Forwarding +\(NSF\) +(?P<nsf_status>\w+)$')
             m = p23.match(line)
             if m:
                 nsf_status = m.groupdict()['nsf_status']
 
                 interface_dict.setdefault('nsf', {})['enabled'] = True if nsf_status == 'enabled' else False
 
+                continue
+
             # Hello due in 00:00:07:171
-            # p10_1 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
-
-
             m = p10_1.match(line)
             if m:
                 hello_timer = m.groupdict()['hello_timer']
 
-
                 interface_dict['hello_timer'] = hello_timer
 
-
-
-
-
-
+                continue
 
             # No Hellos (Passive interface)
-            # p10_2 = re.compile(r"^No +Hellos +\(Passive +interface\)$")
             m = p10_2.match(line)
             if m:
                 interface_dict['passive'] = True
 
             # Index 1/1, flood queue length 0
-            # p11 = re.compile(r'^Index +(?P<index>(\S+)), +flood +queue +length +(?P<length>(\d+))$')
             m = p11.match(line)
             if m:
                 index = m.groupdict()['index']
@@ -519,17 +488,16 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['index'] = index
                 interface_dict['flood_queue_length'] = int(flood_queue_length)
 
+                continue
 
             # Next 0(0)/0(0)
-            # p12 = re.compile(r'^Next +(?P<next>(\S+))$')
             m = p12.match(line)
             if m:
                 next_ = m.groupdict()['next']
                 interface_dict['next'] = next_
+                continue
 
             # Last flood scan length is 1, maximum is 7
-            # Last flood scan length is 1, maximum is 3
-            # p13 = re.compile(r'^Last +flood +scan +length +is +(?P<num>(\d+)), +maximum +is +(?P<max>(\d+))$')
             m = p13.match(line)
             if m:
                 last_flood_scan_length = m.groupdict()['num']
@@ -538,12 +506,10 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['last_flood_scan_length'] = int(last_flood_scan_length)
                 interface_dict['max_flood_scan_length'] = int(max_flood_scan_length)
 
+                continue
 
             # Last flood scan time is 0 msec, maximum is 0 msec
-            # p14 = re.compile(
-            #     r'^Last +flood +scan +time +is +(?P<time1>(\d+)) +msec, +maximum +is +(?P<time2>(\d+)) +msec$')
             m = p14.match(line)
-
             if m:
                 last_flood_scan_time_msec = m.groupdict()['time1']
                 max_flood_scan_time_msec = m.groupdict()['time2']
@@ -551,35 +517,35 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['last_flood_scan_time_msec'] = int(last_flood_scan_time_msec)
                 interface_dict['max_flood_scan_time_msec'] = int(max_flood_scan_time_msec)
 
+                continue
 
             # LS Ack List: current length 0, high water mark 5
-            #         p15 = re.compile(
-            #             r'^LS +Ack +List: +(?P<ls_ack_list>(\S+)) +length +(?P<num>(\d+)), +high +water +mark +(?P<num2>(\d+))$')
-
             m = p15.match(line)
             if m:
                 ls_ack_list = m.groupdict()['ls_ack_list']
                 ls_ack_list_length = m.groupdict()['num']
                 high_water_mark = m.groupdict()['num2']
+
                 interface_dict['ls_ack_list'] = ls_ack_list
                 interface_dict['ls_ack_list_length'] = int(ls_ack_list_length)
                 interface_dict['high_water_mark'] = int(high_water_mark)
 
+                continue
+
             # Neighbor Count is 1, Adjacent neighbor count is 1
-            # Neighbor Count is 1, Adjacent neighbor count is 1
-            # p16 = re.compile(
-            #     r'^Neighbor +Count +is +(?P<nbr_count>(\d+)), +Adjacent +neighbor +count +is +(?P<adj_nbr_count>(\d+))$')
             m = p16.match(line)
             if m:
                 nbr_count = m.groupdict()['nbr_count']
                 adj_nbr_count = m.groupdict()['adj_nbr_count']
 
-                statistic_dict = interface_dict.setdefault('statistics',{})
+                statistic_dict = interface_dict.setdefault('statistics', {})
                 statistic_dict['nbr_count'] = int(nbr_count)
                 statistic_dict['adj_nbr_count'] = int(adj_nbr_count)
 
-
+                # initialize 'neighbors'
                 neighbors = interface_dict.setdefault('neighbors', [])
+
+                continue
 
             # Adjacent with neighbor 10.64.4.4  (Designated Router)
             # Adjacent with neighbor 10.16.2.2  (Backup Designated Router)
@@ -589,51 +555,43 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 neighbor_id = m.groupdict()['neighbors_router_id']
                 neighbors.append(neighbor_id)
 
+                continue
 
             # Suppress hello for 0 neighbor(s)
-            # p18 = re.compile(r'^Suppress +hello +for +(?P<sup>(\d+)) +neighbor\(s\)$')
             m = p18.match(line)
             if m:
                 num_nbrs_suppress_hello = m.groupdict()['sup']
                 statistic_dict['num_nbrs_suppress_hello'] = int(num_nbrs_suppress_hello)
 
+                continue
 
             # Multi-area interface Count is 0
             # Multi-area interface Count is 0
-            # p19 = re.compile(r'^Multi-area +interface +Count +is +(?P<count>(\d+))$')
             m = p19.match(line)
             if m:
                 multi_area_intf_count = m.groupdict()['count']
                 statistic_dict['multi_area_intf_count'] = int(multi_area_intf_count)
 
-            # # Configured as demand circuit
-            # p25 = re.compile(r'^Configured as demand circuit$')
-            #
+                continue
 
+            # # Configured as demand circuit
             m = p25.match(line)
             if m:
                 interface_dict['demand_circuit'] = True
-
-
+                continue
 
             # Run as demand circuit.
-            # p26 = re.compile(r"^Run as demand circuit\.$")
-            #
             m = p26.match(line)
             if m:
                 interface_dict['demand_circuit'] = True
-
+                continue
 
             # DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
-            # p27 = re.compile(
-            #     r"^DoNotAge +LSA +not +allowed +\(Number +of"
-            #     " +DCbitless +LSA +is +(?P<num>(\d+))\)\.$"
-            # )
-
             m = p27.match(line)
             if m:
                 interface_dict['donotage_lsa'] = False
                 interface_dict['total_dcbitless_lsa'] = int(m.groupdict()['num'])
+                continue
 
             # if there is no 'default' vrf in the output, remove its initial empty dict
             if 'default' in ret_dict['vrf'] and not ret_dict['vrf']['default']:

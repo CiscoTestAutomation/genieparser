@@ -1,10 +1,10 @@
 expected_output = {
         "vrf": {
-            'default': {  # VRF information, if no, assign "default"
+            'default': {
                 "address_family": {
-                    'ipv4': {  # IPv4 as initial value
+                    'ipv4': {
                         "instance": {
-                            '1': {  # here is ospf name
+                            '1': {
                                 "interfaces": {
                                     'GigabitEthernet0/2/0/1': {
                                         "name": 'GigabitEthernet0/2/0/1',

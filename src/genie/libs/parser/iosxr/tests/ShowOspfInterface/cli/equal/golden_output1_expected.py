@@ -1,10 +1,10 @@
 expected_output = {
         "vrf": {
-            'default': {  # VRF information, if no, assign "default"
+            'default': {
                 "address_family": {
-                    'ipv4': {  # IPv4 as initial value
+                    'ipv4': {
                         "instance": {
-                            'mpls1': {  # here is ospf name
+                            'mpls1': {
                                 "interfaces": {
                                     'Loopback0': {
                                         "name": 'Loopback0',
