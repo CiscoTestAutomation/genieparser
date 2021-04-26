@@ -48,9 +48,13 @@ def _load_parser_json():
                     'genie.libs.parsers')
         parser_data = {}
     else:
-        # Open all the parsers in json file
-        with open(parsers) as f:
-            parser_data = json.load(f)
+        try:
+            # Open all the parsers in json file
+            with open(parsers) as f:
+                parser_data = json.load(f)
+        except:
+            log.error(f'Could not load parser json from file {parsers}', exc_info=True)
+            return {}
 
         # check if provided external parser packages
         ext_parser_package = cfg.get(PYATS_EXT_PARSER, None) or \
@@ -580,9 +584,12 @@ class Common():
                    'vl': 'vasileft',
                    'vr': 'vasiright',
                    'BE': 'Bundle-Ether',
-                   'tu': 'Tunnel'
+                   'tu': 'Tunnel',
+                   'M-E': 'M-Ethernet',             # comware
+                   'BAGG' : 'Bridge-Aggregation',   # comware
+                   'Ten-GigabitEthernet': 'TenGigabitEthernet'  # HP
                    }
-        m = re.search(r'([a-zA-Z]+)', intf) 
+        m = re.search(r'([-a-zA-Z]+)', intf)
         m1 = re.search(r'([\d\/\.]+)', intf)
         if hasattr(m, 'group') and hasattr(m1, 'group'):
             int_type = m.group(0)

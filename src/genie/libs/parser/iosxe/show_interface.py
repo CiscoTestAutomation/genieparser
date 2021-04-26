@@ -1793,6 +1793,7 @@ class ShowInterfacesSwitchport(ShowInterfacesSwitchportSchema):
             m = p21.match(line)
             if m:
                 ret_dict[intf]['trunk_vlans'] = m.groupdict()['trunk_vlans'].lower()
+                private_operational = None
                 continue
 
             # 10 (VLAN0010) 100 (VLAN0100)
