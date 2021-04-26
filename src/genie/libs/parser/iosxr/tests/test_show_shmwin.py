@@ -13,9 +13,9 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 from genie.libs.parser.iosxr.show_shmwin import ShowShmwinSummary
 
 
-# =================================
-# Unit test for 'show lisp session'
-# =================================
+# ===================================
+# Unit test for 'show shmwin summary'
+# ===================================
 class test_show_shmwin_summary(unittest.TestCase):
 
     '''Unit test for "show lisp session"'''
