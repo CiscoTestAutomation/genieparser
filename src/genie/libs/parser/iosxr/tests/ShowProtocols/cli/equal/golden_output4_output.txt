@@ -1,0 +1,15 @@
+Routing Protocol OSPF 1
+  Router Id: 10.36.3.3
+  Distance: 110
+  Distance: IntraArea 112 InterArea 113 External/NSSA 114
+  Non-Stop Forwarding: Disabled
+  Redistribution:
+    connected
+    static with metric 10
+    bgp 100 with metric 111
+    isis 10 with metric 3333
+  Area 0
+    MPLS/TE enabled
+    Loopback0
+    GigabitEthernet0/0/0/0
+    GigabitEthernet0/0/0/2
