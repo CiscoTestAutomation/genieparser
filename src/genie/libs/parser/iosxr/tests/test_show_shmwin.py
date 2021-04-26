@@ -18,7 +18,7 @@ from genie.libs.parser.iosxr.show_shmwin import ShowShmwinSummary
 # ===================================
 class test_show_shmwin_summary(unittest.TestCase):
 
-    '''Unit test for "show lisp session"'''
+    '''Unit test for "show shmwin summary"'''
 
     empty_output = {'execute.return_value': ''}
 
