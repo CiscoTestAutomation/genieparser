@@ -17,25 +17,6 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, D
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
-'''
-show platform software object-manager switch active F0 statistics
-Forwarding Manager Asynchronous Object Manager Statistics
-
-Object update: Pending-issue: 0, Pending-acknowledgement: 0
-Batch begin:   Pending-issue: 0, Pending-acknowledgement: 0
-Batch end:     Pending-issue: 0, Pending-acknowledgement: 0
-Command:       Pending-acknowledgement: 0
-Total-objects: 827
-Stale-objects: 0
-Resolve-objects: 0
-Childless-delete-objects: 0
-Error-objects: 0
-Number of bundles: 0
-Paused-types: 0
-
-
-'''
-
 # ========================================
 # Parser for 'show platform software'
 # ========================================
@@ -146,39 +127,39 @@ class ShowPlatformSoftware(ShowPlatformSchema):
             #Object update: Pending-issue: 0, Pending-acknowledgement: 0
             m = p2.match(line)
             if m:
-                Object_update_dict = stats_dict.setdefault('Object_update', {})
+                object_update_dict = stats_dict.setdefault('Object_update', {})
                 pending_issue = int(m.groupdict()['pending_issue'])
                 pending_ack = int(m.groupdict()['pending_ack'])
-                Object_update_dict['pending_issue']= pending_issue
-                Object_update_dict['pending_ack']= pending_ack
+                object_update_dict['pending_issue']= pending_issue
+                object_update_dict['pending_ack']= pending_ack
                 continue
 
             #Batch begin:   Pending-issue: 0, Pending-acknowledgement: 0
             m = p3.match(line)
             if m:
-                Batch_begin_dict = stats_dict.setdefault('Batch_begin', {})
+                batch_begin_dict = stats_dict.setdefault('Batch_begin', {})
                 pending_issue = int(m.groupdict()['pending_issue'])
                 pending_ack = int(m.groupdict()['pending_ack'])
-                Batch_begin_dict['pending_issue']= pending_issue
-                Batch_begin_dict['pending_ack']= pending_ack
+                batch_begin_dict['pending_issue']= pending_issue
+                batch_begin_dict['pending_ack']= pending_ack
                 continue
 
             #Batch end:     Pending-issue: 0, Pending-acknowledgement: 0
             m = p4.match(line)
             if m:
-                Batch_end_dict = stats_dict.setdefault('Batch_end', {})
+                batch_end_dict = stats_dict.setdefault('Batch_end', {})
                 pending_issue = int(m.groupdict()['pending_issue'])
                 pending_ack = int(m.groupdict()['pending_ack'])
-                Batch_end_dict['pending_issue']= pending_issue
-                Batch_end_dict['pending_ack']= pending_ack
+                batch_end_dict['pending_issue']= pending_issue
+                batch_end_dict['pending_ack']= pending_ack
                 continue
 
             #Command:       Pending-acknowledgement: 0
             m = p5.match(line)
             if m:
-                Command_dict = stats_dict.setdefault('Command', {})
+                command_dict = stats_dict.setdefault('Command', {})
                 pending_ack = int(m.groupdict()['pending_ack'])
-                Command_dict['pending_ack']= pending_ack
+                command_dict['pending_ack']= pending_ack
                 continue
 
             #Total-objects: 1231
