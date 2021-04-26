@@ -42,7 +42,6 @@ expected_output = {
                                             "route_type":"Passive",
                                             "route":"10.10.10.0/24",
                                             "known_via":"Redistributed",
-                                            "outgoing_interface":""
                                         }
                                     }
                                 }

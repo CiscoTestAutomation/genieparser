@@ -945,7 +945,7 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
                     .setdefault(address_family, {})\
                     .setdefault('eigrp_id', {})\
                     .setdefault(eigrp_id, {})\
-                    .setdefault('eigrp_routes', {})
+                    .setdefault('eigrp_routes', {})\
                     .setdefault(route_prefix, {})
                 
                 route_code = result.groupdict()['code'].strip()
@@ -996,7 +996,7 @@ class ShowIpEigrpTopology(ShowEigrpTopologySuperParser, ShowIpEigrpTopologySchem
             
             output = self.device.execute(cmd)
         
-        return super().cli(output=show_output, address_family='ipv4', vrf=vrf)
+        return super().cli(output=output, address_family='ipv4', vrf=vrf)
 
 # ===============================================
 # Parser for:
@@ -1012,8 +1012,8 @@ class ShowIpv6EigrpTopology(ShowEigrpTopologySuperParser, ShowIpEigrpTopologySch
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
             else:
-                cmd = self.cli_command[1])
+                cmd = self.cli_command[1]
 
             output = self.device.execute(cmd)
         
-        return super().cli(output=show_output, address_family='ipv4', vrf=vrf)
+        return super().cli(output=output, address_family='ipv4', vrf=vrf)
