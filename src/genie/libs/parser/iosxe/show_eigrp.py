@@ -945,7 +945,8 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
                     .setdefault(address_family, {})\
                     .setdefault('eigrp_id', {})\
                     .setdefault(eigrp_id, {})\
-                    .setdefault('eigrp_routes', {}).setdefault(route_prefix, {})
+                    .setdefault('eigrp_routes', {})
+                    .setdefault(route_prefix, {})
                 
                 route_code = result.groupdict()['code'].strip()
                 successor_count = int(result.groupdict()['successor_count'])
@@ -970,8 +971,6 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
                 known_via = result.groupdict()['known_via']
                 if result.groupdict()['interface']:
                     outgoing_interface = result.groupdict()['interface']
-                else:
-                    outgoing_interface = ''
 
                 route_dict['known_via'] = known_via
                 route_dict['outgoing_interface'] = outgoing_interface
@@ -994,9 +993,8 @@ class ShowIpEigrpTopology(ShowEigrpTopologySuperParser, ShowIpEigrpTopologySchem
                 cmd = self.cli_command[0].format(vrf=vrf)
             else:
                 cmd = self.cli_command[1]
-            show_output = self.device.execute(cmd)
-        else:
-            show_output = output
+            
+            output = self.device.execute(cmd)
         
         return super().cli(output=show_output, address_family='ipv4', vrf=vrf)
 
@@ -1014,8 +1012,8 @@ class ShowIpv6EigrpTopology(ShowEigrpTopologySuperParser, ShowIpEigrpTopologySch
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
             else:
-                cmd = self.cli_command[1]
-                
+                cmd = self.cli_command[1])
+
             output = self.device.execute(cmd)
         
-        return super().cli(output=output, address_family='ipv4', vrf=vrf)
+        return super().cli(output=show_output, address_family='ipv4', vrf=vrf)
