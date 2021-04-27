@@ -1,0 +1,24 @@
+
+        Device# show cdp neighbors detail
+
+        Device ID:savbu-qa-dist-120
+        System Name:
+        Interface address(es):
+        IPv4 Address: 192.168.0.82
+        Platform: cisco WS-C3750E-24TD, Capabilities: Switch IGMP Filtering
+        Interface: mgmt0, Port ID (outgoing port): GigabitEthernet1/0/13
+        Holdtime: 128 sec
+
+        Version:
+        Cisco IOS Software, C3750E Software (C3750E-UNIVERSAL-M), Version 12.2(35)SE5, RELEASE SOFTWARE (fc1)
+        Copyright (c) 1986-2007 by Cisco Systems, Inc.
+        Compiled Thu 19-Jul-07 16:17 by nachen
+
+        Advertisement Version: 2
+        Native VLAN: 16
+        VTP Management Domain:
+        Duplex: full
+        Mgmt address(es):
+        IPv4 Address: 192.168.0.82
+
+    

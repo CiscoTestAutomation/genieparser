@@ -1,0 +1,3 @@
+IP Address               Type              Version
+ntp2.checkpoint.com      Secondary         4
+ntp.checkpoint.com       Primary           4
