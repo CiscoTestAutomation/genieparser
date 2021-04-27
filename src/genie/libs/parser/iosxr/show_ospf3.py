@@ -38,8 +38,7 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                 "name": str,
                                                 "enable": bool,
                                                 "line_protocol": bool,
-                                                "ip_address": str,
-                                                "demand_circuit": bool,
+                                                "link_local_address": str, 
                                                 "process_id": str,
                                                 "router_id": str,
                                                 "interface_type": str,
@@ -53,18 +52,10 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                 Optional("cost"): int,
                                                 Optional("transmit_delay"): int,
                                                 Optional("state"): str,
-                                                Optional("priority"): int,
-                                                Optional("mtu"): int,
-                                                Optional("max_pkt_sz"): int,
-                                                Optional("dr_router_id"): str,
-                                                Optional("dr_ip_addr"): str,
-                                                Optional("bdr_router_id"): str,
-                                                Optional("bdr_ip_addr"): str,
                                                 Optional("hello_interval"): int,
                                                 Optional("dead_interval"): int,
                                                 Optional("wait_interval"): int,
                                                 Optional("retransmit_interval"): int,
-                                                Optional("passive"): bool,
                                                 Optional("hello_timer"): str,
                                                 Optional("index"): str,
                                                 Optional("flood_queue_length"): int,
@@ -73,21 +64,17 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                 Optional("max_flood_scan_length"): int,
                                                 Optional("last_flood_scan_time_msec"): int,
                                                 Optional("max_flood_scan_time_msec"): int,
-                                                Optional("ls_ack_list"): str,
-                                                Optional("ls_ack_list_length"): int,
-                                                Optional("high_water_mark"): int,
                                                 Optional("total_dcbitless_lsa"): int,
-                                                Optional("donotage_lsa"): bool,
                                                 Optional("statistics"): {
                                                     Optional("adj_nbr_count"): int,
                                                     Optional("nbr_count"): int,
                                                     Optional("num_nbrs_suppress_hello"): int,
-                                                    Optional("multi_area_intf_count"): int,
+                                                    Optional("refrence_count"): int,
                                                 },
                                                 Optional("neighbors"): {
                                                     Any(): {
-                                                        Optional("dr_router_id"): str,
-                                                        Optional("bdr_router_id"): str,
+                                                        Optional("nbr_count"): str,
+                                                        Optional("adj_nbr_count"): str,
                                                     },
                                                 },
                                             },
@@ -163,7 +150,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
         # Link Local address fe80:100:10::1, Interface ID 7
         p3 = re.compile(
-            r"^Link +Local +address +(?P<address>(\S+)),"
+            r"^Link +Local +address +(?P<link_local_address>(\S+)),"
             " +Interface ID +(?P<interface_id>(\S+))$")
 
         # Area 0, Process ID mpls1, Instance ID 0, Router ID 25.97.1.1
@@ -461,7 +448,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 sub_dict = ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance]["areas"][area][intf_type][intf_name]
 
                 # Set keys
-                sub_dict["demand_circuit"] = False
+                sub_dict["demand_circuit"] = False ##
                 if "bfd" not in sub_dict:
                     sub_dict["bfd"] = {}
                 sub_dict["bfd"]["enable"] = False
@@ -496,15 +483,15 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
             # Designated Router (ID) 10.36.3.3, Interface address 10.2.3.3
             m = p6.match(line)
             if m:
-                sub_dict["dr_router_id"] = str(m.groupdict()["dr_router_id"])
-                sub_dict["dr_ip_addr"] = str(m.groupdict()["dr_ip_addr"])
+                sub_dict["dr_router_id"] = str(m.groupdict()["dr_router_id"])  ##
+                sub_dict["dr_ip_addr"] = str(m.groupdict()["dr_ip_addr"])      ##
                 continue
 
             # Backup Designated router (ID) 10.16.2.2, Interface address 10.2.3.2
             m = p7.match(line)
             if m:
-                sub_dict["bdr_router_id"] = str(m.groupdict()["bdr_router_id"])
-                sub_dict["bdr_ip_addr"] = str(m.groupdict()["bdr_ip_addr"])
+                sub_dict["bdr_router_id"] = str(m.groupdict()["bdr_router_id"]) ##
+                sub_dict["bdr_ip_addr"] = str(m.groupdict()["bdr_ip_addr"])     ##
                 continue
 
             # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
@@ -559,9 +546,9 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
             # LS Ack List: current length 0, high water mark 7
             m = p13.match(line)
             if m:
-                sub_dict["ls_ack_list"] = str(m.groupdict()["ls_ack_list"])
-                sub_dict["ls_ack_list_length"] = int(m.groupdict()["num"])
-                sub_dict["high_water_mark"] = int(m.groupdict()["num2"])
+                sub_dict["ls_ack_list"] = str(m.groupdict()["ls_ack_list"]) ##
+                sub_dict["ls_ack_list_length"] = int(m.groupdict()["num"])  ##
+                sub_dict["high_water_mark"] = int(m.groupdict()["num2"])    ##
                 continue
 
             # Neighbor Count is 1, Adjacent neighbor count is 1
@@ -586,26 +573,26 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 sub_dict["neighbors"][neighbor]["bdr_router_id"] = neighbor
                 continue
 
-            # Adjacent with neighbor 10.36.3.3  (Designated Router)
-            m = p15_2.match(line)
-            if m:
-                neighbor = str(m.groupdict()["nbr"])
-                if "neighbors" not in sub_dict:
-                    sub_dict["neighbors"] = {}
-                if neighbor not in sub_dict["neighbors"]:
-                    sub_dict["neighbors"][neighbor] = {}
-                sub_dict["neighbors"][neighbor]["dr_router_id"] = neighbor
-                continue
+            # # Adjacent with neighbor 10.36.3.3  (Designated Router)
+            # m = p15_2.match(line)
+            # if m:
+            #     neighbor = str(m.groupdict()["nbr"])
+            #     if "neighbors" not in sub_dict:
+            #         sub_dict["neighbors"] = {}
+            #     if neighbor not in sub_dict["neighbors"]:
+            #         sub_dict["neighbors"][neighbor] = {}
+            #     sub_dict["neighbors"][neighbor]["dr_router_id"] = neighbor
+            #     continue
 
-            # Adjacent with neighbor 10.64.4.4  (Hello suppressed)
-            m = p15_3.match(line)
-            if m:
-                neighbor = str(m.groupdict()["nbr"])
-                if "neighbors" not in sub_dict:
-                    sub_dict["neighbors"] = {}
-                if neighbor not in sub_dict["neighbors"]:
-                    sub_dict["neighbors"][neighbor] = {}
-                continue
+            # # Adjacent with neighbor 10.64.4.4  (Hello suppressed)
+            # m = p15_3.match(line)
+            # if m:
+            #     neighbor = str(m.groupdict()["nbr"])
+            #     if "neighbors" not in sub_dict:
+            #         sub_dict["neighbors"] = {}
+            #     if neighbor not in sub_dict["neighbors"]:
+            #         sub_dict["neighbors"][neighbor] = {}
+            #     continue
 
             # Suppress hello for 0 neighbor(s)
             m = p16.match(line)
@@ -623,24 +610,24 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 sub_dict["statistics"]["multi_area_intf_count"] = int( m.groupdict()["count"])
                 continue
 
-            # Configured as demand circuit.
-            m = p18.match(line)
-            if m:
-                sub_dict["demand_circuit"] = True
-                continue
+            # # Configured as demand circuit.
+            # m = p18.match(line)
+            # if m:
+            #     sub_dict["demand_circuit"] = True
+            #     continue
 
-            # Run as demand circuit.
-            m = p19.match(line)
-            if m:
-                sub_dict["demand_circuit"] = True
-                continue
+            # # Run as demand circuit.
+            # m = p19.match(line)
+            # if m:
+            #     sub_dict["demand_circuit"] = True
+            #     continue
 
-            # DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
-            m = p20.match(line)
-            if m:
-                sub_dict["donotage_lsa"] = False
-                sub_dict["total_dcbitless_lsa"] = int(m.groupdict()["num"])
-                continue
+            # # DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
+            # m = p20.match(line)
+            # if m:
+            #     sub_dict["donotage_lsa"] = False
+            #     sub_dict["total_dcbitless_lsa"] = int(m.groupdict()["num"])
+            #     continue
 
             # BFD enabled, BFD interval 12345 msec, BFD multiplier 50, Mode: Default
             m = p21.match(line)
