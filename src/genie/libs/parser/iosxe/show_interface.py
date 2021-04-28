@@ -225,10 +225,10 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Dialer1 is up (spoofing), line protocol is up (spoofing)
         #FastEthernet1 is down, line protocol is down (err-disabled)
 
-        p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +is +(?P<enabled>[\w\s]+)(?: '
+        p1 = re.compile(r'^(?P<interface>(\S+)) +is +(?P<enabled>[\w\s]+)(?: '
                         r'+\S+)?, +line +protocol +is +(?P<line_protocol>\w+)(?: '
                         r'*\((?P<attribute>\S+)\)|( +\, +Autostate +(?P<autostate>\S+)))?.*$')
-        p1_1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
+        p1_1 =  re.compile(r'^(?P<interface>(\S+)) +is'
                            r' +(?P<enabled>[\w\s]+),'
                            r' +line +protocol +is +(?P<line_protocol>\w+)'
                            r'( *, *(?P<attribute>[\w\s]+))?$')
