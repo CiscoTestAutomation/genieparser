@@ -42,8 +42,8 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                 "process_id": str,
                                                 "router_id": str,
                                                 "interface_type": str,
-                                                "bfd": {
-                                                    "enable": bool,
+                                                Optional("bfd"): {
+                                                    Optional("bfd_status"): str,
                                                     Optional("interval"): int,
                                                     Optional("min_interval"): int,
                                                     Optional("multiplier"): int,
@@ -132,79 +132,61 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
         # Address Family for ospfv3 is always ipv6
         af = "ipv6"  
 
-        # set instance
-        instance = ""
-        
         # Mapping dict
         bool_dict = {"up": True, "down": False, "unknown": False}
 
-        # p1 = re.compile(
-        #     r"^Interfaces +for +OSPF +(?P<instance>(\S+))"
-        #     "(?:, +VRF +(?P<vrf>(\S+)))?$")
 
         # GigabitEthernet0/0/0/0 is up, line protocol is up
-        p2 = re.compile(
+        p1 = re.compile(
             r"^(?P<interface>(\S+)) +is( +administratively)?"
             " +(?P<enable>(unknown|up|down)), +line +protocol +is"
             " +(?P<line_protocol>(up|down))$")
 
         # Link Local address fe80:100:10::1, Interface ID 7
-        p3 = re.compile(
+        p2 = re.compile(
             r"^Link +Local +address +(?P<link_local_address>(\S+)),"
             " +Interface ID +(?P<interface_id>(\S+))$")
 
         # Area 0, Process ID mpls1, Instance ID 0, Router ID 25.97.1.1
-        p4 = re.compile(
+        p3 = re.compile(
             r"^Area +(?P<area>(\S+))"
             ", +Process +ID +(?P<pid>(\S+))"
             ", +Instance +ID +(?P<instance>(\S+))"
             ", +Router +ID +(?P<router_id>(\S+))$")
 
         # Network Type POINT_TO_POINT, Cost: 1
-        p4_1 = re.compile(
+        p4 = re.compile(
             r"^Network +Type +(?P<interface_type>(\S+))"
             ", +Cost: +(?P<cost>(\S+))$") 
 
         # BFD enabled, interval 150 msec, multiplier 3, mode Default
-        p21 = re.compile(
-            r"^BFD enabled"
+        p5 = re.compile(
+            r"^BFD +(?P<bfd_status>(\S+))"
             "(?:, +interval +(?P<interval>(\d+)) +msec)?"
             "(?:, +multiplier +(?P<multi>(\d+)))?"
             "(?:, +mode +(?P<mode>(\S+)))?$")
 
         # Transmit Delay is 1 sec, State POINT_TO_POINT,
-        p5 = re.compile(
+        p6 = re.compile(
             r"^Transmit +Delay is +(?P<delay>(\d+)) +sec"
             ", +sec, +State +(?P<state>(\w)+),$")
 
         # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-        p8 = re.compile(
+        p7 = re.compile(
             r"^Timer +intervals +configured"
             ", +Hello +(?P<hello>(\d+))"
             ", +Dead +(?P<dead>(\d+))"
             ", +Wait +(?P<wait>(\d+))"
             ", +Retransmit +(?P<retransmit>(\d+))$")
 
-        # p6 = re.compile(
-        #     r"^Designated +(R|r)outer +\(ID\)"
-        #     " +(?P<dr_router_id>(\S+)), +(I|i)nterface"
-        #     " +(A|a)ddress +(?P<dr_ip_addr>(\S+))$")
-
-        # p7 = re.compile(
-        #     r"^Backup +(D|d)esignated +(R|r)outer +\(ID\)"
-        #     " +(?P<bdr_router_id>(\S+)), +(I|i)nterface"
-        #     " +(A|a)ddress +(?P<bdr_ip_addr>(\S+))$")
-
         # Hello due in 00:00:08
-        p9_1 = re.compile(r"^Hello +due +in +(?P<hello_timer>(\S+))$")
-
-        # p9_2 = re.compile(r"^No +Hellos +\(Passive +interface\)$")
+        p8 = re.compile(r"^Hello +due +in +(?P<hello_timer>(\S+))$")
 
         # Index 1/1/1, flood queue length 0
-        p10 = re.compile(r"^Index +(?P<index>(\S+)), +flood +queue +length +(?P<length>(\d+))$")
+        p9 = re.compile(r"^Index +(?P<index>(\S+)), +flood +queue +length +(?P<length>(\d+))$")
 
         # Next 0(0)/0(0)/0(0)
-        p22 = re.compile(r"^Next +(?P<next>(\S+))$")
+        p10 = re.compile(r"^Next +(?P<next>(\S+))$")
         
         # Last flood scan length is 1, maximum is 4
         p11 = re.compile(r"^Last +flood +scan +length +is +(?P<num>(\d+))"
@@ -215,43 +197,24 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
             r"^Last +flood +scan +time +is +(?P<time1>(\d+))"
             " +msec, +maximum +is +(?P<time2>(\d+)) +msec$")
 
-
-        # p13 = re.compile(
-        #     r"^LS +Ack +List: +(?P<ls_ack_list>(\S+)) +length"
-        #     " +(?P<num>(\d+)), +high +water +mark"
-        #     " +(?P<num2>(\d+))$")
-
         # Neighbor Count is 1, Adjacent neighbor count is 1
-        p14 = re.compile(
+        p13 = re.compile(
             r"^Neighbor +Count +is +(?P<nbr_count>(\d+))"
             ", +Adjacent +neighbor +count +is"
             " +(?P<adj_nbr_count>(\d+))$")
 
         # Adjacent with neighbor 100.100.100.100
-        p15_1 = re.compile(
+        p14 = re.compile(
             r"^Adjacent +with +neighbor +(?P<nbr>(\S+))$")
 
-            
-        # p15_2 = re.compile(
-        #     r"^Adjacent +with +neighbor +(?P<nbr>(\S+))"
-        #     " +\((D|d)esignated +(R|r)outer\)$")
-        # p15_3 = re.compile(
-        #     r"^Adjacent +with +neighbor +(?P<nbr>(\S+))" " +\(Hello suppressed\)$")
-
         # Suppress hello for 0 neighbor(s)
-        p16 = re.compile(r"^Suppress +hello +for +(?P<sup>(\d+)) +neighbor\(s\)$")
+        p15 = re.compile(r"^Suppress +hello +for +(?P<sup>(\d+)) +neighbor\(s\)$")
 
         # Reference count is 6
-        p17 = re.compile(r"^Reference +Count +is +(?P<count>(\d+))$")
+        p16 = re.compile(r"^Reference +count +is +(?P<count>(\d+))$")
 
-
-        # p18 = re.compile(r"^Configured as demand circuit\.$")
-        # p19 = re.compile(r"^Run as demand circuit\.$")
-        # p20 = re.compile(
-        #     r"^DoNotAge +LSA +not +allowed +\(Number +of"
-        #     " +DCbitless +LSA +is +(?P<num>(\d+))\)\.$")
-
-        p21 = re.compile(r"^Loopback interface is treated as a stub Host\.$")
+        # Loopback interface is treated as a stub Host
+        p17 = re.compile(r"^(?P<loobpack_txt>Loopback interface is treated as a stub Host)$")
 
         
 
