@@ -28,6 +28,7 @@ expected_output = {
             "endpoint_alert": 0,
             "fin_rst_received_during_handshake": 0,
             "pushdown_by_sc": 0,
+            "ism_flow_create_failure": 0,
             "pushdown_default": 0,
         },
         "dropped_connection_reasons": {
@@ -55,6 +56,7 @@ expected_output = {
             "memory_allocation_failure": 0,
             "memory_access_failure": 0,
             "abort_on_ssl_parse_failure": 0,
+            "failed_to_save_orig_client_hello": 0,
             "invalid_ssl_record_header": 0,
             "unable_to_send_hs_message_to_ism": 0,
             "fail_to_get_memory_from_pool_in_ism": 0,
@@ -102,6 +104,7 @@ expected_output = {
         "proxy_server": {
             "lwssl_flow_create": 0,
             "lwssl_flow_delete": 0,
+            "lfs_mem_alloc_failure": 0,
             "fin_generated_by_sc": 0,
             "rst_generated_by_sc": 0,
             "close_notify_sent": 0,
@@ -109,6 +112,7 @@ expected_output = {
         "proxy_client": {
             "lwssl_flow_create": 0,
             "lwssl_flow_delete": 0,
+            "lfs_mem_alloc_failure": 0,
             "fin_generated_by_sc": 0,
             "rst_generated_by_sc": 0,
             "close_notify_sent": 0,
@@ -187,6 +191,9 @@ expected_output = {
                 "ssl_resumption_session_tkt": 0,
                 "ssl_fallback_to_full_hs": 0,
                 "ssl_failed_renego": 0,
+                "ssl_cert_validation_success": 0,
+                "ssl_cert_validation_reqs": 0,
+                "cert_validation_failures": 0,
                 "ssl_server_cert_validation_reqs": 0,
                 "ssl_server_cert_validation_success": 0,
                 "server_cert_verify_failed_expired": 0,

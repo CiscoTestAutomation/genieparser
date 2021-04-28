@@ -1742,6 +1742,7 @@ class ShowRunningConfigNvOverlaySchema(MetaParser):
                         Optional('vni'): int,
                         Optional('associated_vrf'): bool,
                         Optional('multisite_ingress_replication'): bool,
+                        Optional('multisite_ingress_replication_optimized'): bool,
                         Optional('mcast_group'): str,
                         Optional('suppress_arp'): bool,
                         Optional('vni_type'): str,
@@ -1816,7 +1817,9 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
         p14 = re.compile(r'^global +suppress-arp$')
         # global mcast-group 192.168.0.1 L2
         p15 = re.compile(r'^global +mcast-group +(?P<address>[\d\.]+) +(?P<layer>L2|L3)')
-
+        #   multisite ingress-replication optimized
+        p16 = re.compile(r'^multisite +ingress-replication +optimized$')
+        
         for line in out.splitlines():
             line = line.strip()
 
@@ -1947,6 +1950,14 @@ class ShowRunningConfigNvOverlay(ShowRunningConfigNvOverlaySchema):
             m = p15.match(line)
             if m:
                 global_mcast_group_flag = (m.groupdict()['address'], m.groupdict()['layer'])
+                continue
+
+            m = p16.match(line)
+            if m:
+                for vni in nve_vni_list:
+                    vni_dict = nve_dict.setdefault('vni', {}).setdefault(vni, {})
+                    vni_dict.update({'multisite_ingress_replication_optimized': True})
+                continue
 
         return result_dict
 
