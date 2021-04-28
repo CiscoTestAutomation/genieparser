@@ -24,6 +24,7 @@ expected_output = {
                                             "backup_label": '0',
                                             "srte_label": '0',
                                         },
+                                        "treated_as_stub_host": True,
                                         "sid": '0',
                                         "strict_spf_sid": '0',
                                         "cost": 1,
@@ -52,13 +53,10 @@ expected_output = {
                                         "sid": '0',
                                         "strict_spf_sid": '0',
                                         "cost": 1,
-                                        "forward_ref_No": {
-                                            "unnumbered": False,
-                                            "bandwidth": 1000000
-                                        },
-                                        "nsf": {
-                                            "enabled": True,
-                                        },
+                                        "forward_reference": 'No',
+                                        "unnumbered": False,
+                                        "bandwidth": 1000000,
+                                        "nsf_enabled": True,
                                         "transmit_delay": 1,
                                         "state": 'POINT_TO_POINT',
                                         "mtu": 1500,
@@ -114,13 +112,10 @@ expected_output = {
                                         "sid": '0',
                                         "strict_spf_sid": '0',
                                         "cost": 1,
-                                        "forward_ref_No": {
-                                            "unnumbered": False,
-                                            "bandwidth": 1000000
-                                        },
-                                        "nsf": {
-                                            "enabled": True,
-                                        },
+                                        "forward_reference": 'No',
+                                        "unnumbered": False,
+                                        "bandwidth": 1000000,
+                                        "nsf_enabled": True,
                                         "transmit_delay": 1,
                                         "state": 'POINT_TO_POINT',
                                         "mtu": 1500,

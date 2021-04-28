@@ -59,13 +59,11 @@ class ShowOspfInterfaceSchema(MetaParser):
                                             "backup_label": str,
                                             "srte_label": str,
                                         },
-                                        Optional("forward_ref_No"): {
-                                            "unnumbered": bool,
-                                            "bandwidth": int
-                                        },
-                                        Optional("nsf"): {
-                                            "enabled": bool,
-                                        },
+                                        Optional("forward_reference"): str,
+                                        Optional("unnumbered"): bool,
+                                        Optional("bandwidth"): int,
+                                        Optional("nsf_enabled"): bool,
+                                        Optional("treated_as_stub_host"): bool,
                                         Optional("sid"): str,
                                         Optional("strict_spf_sid"): str,
                                         Optional("cost"): int,
@@ -247,8 +245,8 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                          r'(?P<backup_label>\d+) +SRTE +label +(?P<srte_label>\d+)$')
 
         # Forward reference No, Unnumbered no,  Bandwidth 1000000
-        p21 = re.compile(
-            r'Forward +reference No, +Unnumbered +(?P<unnumbered_bool>\w+), +Bandwidth +(?P<bandwidth>\d+)$')
+        p21 = re.compile(r'^Forward +reference +(?P<forward_reference>\w+), +Unnumbered +'
+                         r'(?P<unnumbered_bool>\w+), +Bandwidth +(?P<bandwidth>\S+)$')
 
         # BFD enabled, BFD interval 150 msec, BFD multiplier 3, Mode: Default
         p22 = re.compile(r'^BFD enabled(?:, +BFD +interval +(?P<interval>(\d+)) +msec)?(?:, +BFD +multiplier +('
@@ -270,6 +268,9 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
         p27 = re.compile(
             r"^DoNotAge +LSA +not +allowed +\(Number +of +DCbitless +LSA +is +(?P<num>(\d+))\)\.$"
         )
+
+        # Loopback interface is treated as a stub Host
+        p28 = re.compile(r'^Loopback +interface +is +treated +as +a +stub +Host$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -338,20 +339,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
                     continue
 
-            # Label stack Primary label 0 Backup label 0 SRTE label 0
-            m = p20.match(line)
-            if m:
-                primary_label = m.groupdict()['primary_label']
-                backup_label = m.groupdict()['backup_label']
-                srte_label = m.groupdict()['srte_label']
-
-                label_stack_dict = interface_dict.setdefault('label_stack', {})
-                label_stack_dict['primary_label'] = primary_label
-                label_stack_dict['backup_label'] = backup_label
-                label_stack_dict['srte_label'] = srte_label
-
-                continue
-
             # Process ID mpls1, Router ID 25.97.1.1, Network Type LOOPBACK, Cost: 1
             m = p5.match(line)
             if m:
@@ -390,34 +377,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
                 continue
 
-            # Forward reference No, Unnumbered no,  Bandwidth 1000000
-            m = p21.match(line)
-            if m:
-                unnumbered_bool = m.groupdict()['unnumbered_bool']
-                bandwidth = m.groupdict()['bandwidth']
-
-                forward_reference_no_dict = interface_dict.setdefault('forward_ref_No', {})
-
-                forward_reference_no_dict['unnumbered'] = True if unnumbered_bool == 'yes' else False
-                forward_reference_no_dict['bandwidth'] = int(bandwidth)
-
-                continue
-
-            # BFD enabled, BFD interval 150 msec, BFD multiplier 3, Mode: Default
-            m = p22.match(line)
-            if m:
-                interval = m.groupdict()['interval']
-                multiplier = m.groupdict()['multi']
-                mode = m.groupdict()['mode']
-
-                interface_dict['bfd']['enable'] = True
-                interface_dict['bfd']['interval'] = int(interval)
-                interface_dict['bfd']['multiplier'] = int(multiplier)
-                if mode:
-                    interface_dict['bfd']['mode'] = mode
-
-                continue
-
             # Designated Router (ID) 10.64.4.4, Interface address 10.3.4.4
             m = p7.match(line)
             if m:
@@ -452,15 +411,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['dead_interval'] = int(dead_interval)
                 interface_dict['wait_interval'] = int(wait_interval)
                 interface_dict['retransmit_interval'] = int(retransmit_interval)
-
-                continue
-
-            # Non-Stop Forwarding (NSF) enabled
-            m = p23.match(line)
-            if m:
-                nsf_status = m.groupdict()['nsf_status']
-
-                interface_dict.setdefault('nsf', {})['enabled'] = True if nsf_status == 'enabled' else False
 
                 continue
 
@@ -573,6 +523,57 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
                 continue
 
+            # Label stack Primary label 0 Backup label 0 SRTE label 0
+            m = p20.match(line)
+            if m:
+                primary_label = m.groupdict()['primary_label']
+                backup_label = m.groupdict()['backup_label']
+                srte_label = m.groupdict()['srte_label']
+
+                label_stack_dict = interface_dict.setdefault('label_stack', {})
+                label_stack_dict['primary_label'] = primary_label
+                label_stack_dict['backup_label'] = backup_label
+                label_stack_dict['srte_label'] = srte_label
+
+                continue
+
+            # Forward reference No, Unnumbered no,  Bandwidth 1000000
+            m = p21.match(line)
+            if m:
+                forward_reference = m.groupdict()['forward_reference']
+                unnumbered_bool = m.groupdict()['unnumbered_bool']
+                bandwidth = m.groupdict()['bandwidth']
+
+                interface_dict['forward_reference'] = forward_reference
+                interface_dict['unnumbered'] = False if unnumbered_bool == 'no' else True
+                interface_dict['bandwidth'] = int(bandwidth)
+
+                continue
+
+            # BFD enabled, BFD interval 150 msec, BFD multiplier 3, Mode: Default
+            m = p22.match(line)
+            if m:
+                interval = m.groupdict()['interval']
+                multiplier = m.groupdict()['multi']
+                mode = m.groupdict()['mode']
+
+                interface_dict['bfd']['enable'] = True
+                interface_dict['bfd']['interval'] = int(interval)
+                interface_dict['bfd']['multiplier'] = int(multiplier)
+                if mode:
+                    interface_dict['bfd']['mode'] = mode
+
+                continue
+
+            # Non-Stop Forwarding (NSF) enabled
+            m = p23.match(line)
+            if m:
+                nsf_status = m.groupdict()['nsf_status']
+
+                interface_dict['nsf_enabled'] = True if nsf_status == 'enabled' else False
+
+                continue
+
             # # Configured as demand circuit
             m = p25.match(line)
             if m:
@@ -591,6 +592,11 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['donotage_lsa'] = False
                 interface_dict['total_dcbitless_lsa'] = int(m.groupdict()['num'])
                 continue
+
+            # Loopback interface is treated as a stub Host
+            m = p28.match(line)
+            if m:
+                interface_dict['treated_as_stub_host'] = True
 
             # if there is no 'default' vrf in the output, remove its initial empty dict
             if 'default' in ret_dict['vrf'] and not ret_dict['vrf']['default']:
