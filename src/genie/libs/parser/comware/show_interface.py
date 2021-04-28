@@ -1,8 +1,6 @@
 '''
 Author: Renato Almeida de Oliveira
 Contact: renato.almeida.oliveira@gmail.com
-https://twitter.com/ORenato_Almeida
-https://www.youtube.com/c/RenatoAlmeidadeOliveira
 '''
 
 from genie.metaparser import MetaParser
@@ -291,6 +289,7 @@ class DisplayInterfaces(DisplayInterfaceSchema):
                 media_type = m.groupdict()['media_type']
                 interface_dict[interface]['media_type'] = media_type
                 continue
+
             # r'Port hardware type is\s+(?<port_type>[\w+_?]+)'
             m = p5.match(line)
             if m:
@@ -333,6 +332,7 @@ class DisplayInterfaces(DisplayInterfaceSchema):
                 mtu = m.groupdict()['mtu']
                 interface_dict[interface]['mtu'] = int(mtu)
                 continue
+
             # ^Internet *Address *is *(?P<ipv4>(?P<ip>[0-9\.x]+)\/(?P<prefix_length>[0-9]+)) (?P<type>\w+)$
             m = p9.match(line)
             if m:
@@ -442,6 +442,7 @@ class DisplayInterfaces(DisplayInterfaceSchema):
                 if 'counters' not in interface_dict[interface]:
                     interface_dict[interface]['counters'] = {}
                 interface_dict[interface]['counters']['last_clear'] = last_clear
+                continue
 
             # r'Last (?P<load_interval>[0-9\#]+) *(?P<unit>(minute|second|minutes|seconds)) input: *(?P<in_rate_pkts>[0-9]+) packets\/sec *(?P<in_rate_bytes>[0-9]+) *bytes\/sec *.*%$'
             m = p19.match(line)

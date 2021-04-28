@@ -21,8 +21,22 @@ PYATS_EXT_PARSER = 'pyats.libs.external.parser'
 
 log = logging.getLogger(__name__)
 
+class ParserNotFound(Exception):
+    '''raise exception if parser command is not found
+       first argument is parser class
+       second argument is token '''
+    def __init__(self, *args):
+        self.parser_command = args[0]
+        self.token = args[1]
+
+    def __str__(self):
+        return (f"Could not find parser for {self.parser_command} under {self.token}")
+
 def _load_parser_json():
     '''get all parser data in json file'''
+
+    global parser_data
+
     try:
         mod = importlib.import_module('genie.libs.parser')
         parsers = os.path.join(mod.__path__[0], 'parsers.json')
@@ -34,9 +48,13 @@ def _load_parser_json():
                     'genie.libs.parsers')
         parser_data = {}
     else:
-        # Open all the parsers in json file
-        with open(parsers) as f:
-            parser_data = json.load(f)
+        try:
+            # Open all the parsers in json file
+            with open(parsers) as f:
+                parser_data = json.load(f)
+        except:
+            log.error(f'Could not load parser json from file {parsers}', exc_info=True)
+            return {}
 
         # check if provided external parser packages
         ext_parser_package = cfg.get(PYATS_EXT_PARSER, None) or \
@@ -49,18 +67,21 @@ def _load_parser_json():
             summary = ext.output.pop('extend_info', None)
 
             merge_dict(parser_data, ext.output, update=True)
-            log.warning("External parser counts: {}\nSummary:\n{}"
+            log.info("External parser counts: {}\nSummary:\n{}"
                 .format(len(summary), json.dumps(summary, indent=2)))
 
     return parser_data
 
-# Parser within Genie
-parser_data = _load_parser_json()
-
-def get_parser_commands(device, data=parser_data):
+def get_parser_commands(device, data=None):
     '''Remove all commands which contain { as this requires
        extra kwargs which cannot be guessed dynamically
        Remove the ones that arent related to this os'''
+
+    if data is None:
+        try:
+            data = parser_data
+        except NameError:
+            data = _load_parser_json()
 
     commands = []
     for command, values in data.items():
@@ -122,8 +143,8 @@ def get_parser(command, device, fuzzy=False):
             continue
 
     if not valid_results:
-        raise Exception("Could not find parser for "
-                        "'{c}' under {l}".format(c=command, l=lookup._tokens))
+        '''result is not valid. raise custom ParserNotFound exception'''
+        raise ParserNotFound(command, lookup._tokens)
 
     if not fuzzy:
         return valid_results[0][1], valid_results[0][2]
@@ -144,9 +165,15 @@ def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
         Returns:
             list: the result of the search
     """
-    # Perfect match should return 
-    if search in parser_data:
-        return [(search, parser_data[search], {})]
+
+    try:
+        data = parser_data
+    except NameError:
+        data = _load_parser_json()
+
+    # Perfect match should return
+    if search in data:
+        return [(search, data[search], {})]
 
     # Preprocess if fuzzy
     if fuzzy:
@@ -161,7 +188,7 @@ def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
     best_score = -math.inf
     result = []
 
-    for command, source in parser_data.items():
+    for command, source in data.items():
         # Tokens and kwargs parameter must be non reference
         match_result = _matches_fuzzy(0, 0, tokens.copy(),
                                                         command, {}, fuzzy)
@@ -557,10 +584,12 @@ class Common():
                    'vl': 'vasileft',
                    'vr': 'vasiright',
                    'BE': 'Bundle-Ether',
+                   'tu': 'Tunnel',
                    'M-E': 'M-Ethernet',             # comware
-                   'BAGG' : 'Bridge-Aggregation'    # comware
+                   'BAGG' : 'Bridge-Aggregation',   # comware
+                   'Ten-GigabitEthernet': 'TenGigabitEthernet'  # HP
                    }
-        m = re.search(r'([a-zA-Z]+)', intf) 
+        m = re.search(r'([-a-zA-Z]+)', intf)
         m1 = re.search(r'([\d\/\.]+)', intf)
         m2 = re.search(r'(M-E)', intf)
         if hasattr(m, 'group') and hasattr(m1, 'group'):
