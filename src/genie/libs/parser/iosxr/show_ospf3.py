@@ -45,8 +45,8 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                         "router_id": str,
                                                         "interface_type": str,
                                                         Optional("cost"): int,
-                                                        "bfd": {
-                                                            "enable": bool,
+                                                        Optional("bfd"): {
+                                                            Optional("bdf_status"): str,
                                                             Optional("interval"): int,
                                                             Optional("multiplier"): int,
                                                             Optional("mode"): str,
@@ -59,7 +59,6 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                         Optional("retransmit_interval"): int,
                                                         Optional("hello_timer"): str,
                                                         Optional("index"): str,
-                                                        Optional("flood_queue_length"): int,
                                                         Optional("next"): str,
                                                         Optional("last_flood_scan_length"): int,
                                                         Optional("max_flood_scan_length"): int,
@@ -68,16 +67,17 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                         Optional("neighbors_statistics"): {
                                                             Optional("neighbor_count"): int,
                                                             Optional("adjacent_neighbor_count"): int,
-                                                            Optional("adjacent_with_neighbor"): int,
+                                                            Optional("adjacent_with_neighbor"): str,
                                                             Optional("num_nbrs_suppress_hello"): int,
                                                             Optional("refrence_count"): int,
                                                         },
                                                         Optional("neighbors"): {
                                                             Any(): {
-                                                                Optional("nbr_count"): str,
-                                                                Optional("adj_nbr_count"): str,
+                                                                Optional("neighbor_count"): int,
+                                                                Optional("adjacent_neighbor_count"): int,
                                                             },
                                                         },
+                                                       Optional("loopback"): str, 
                                                     },
                                                 },
                                             },
@@ -125,7 +125,6 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
         # Init vars
         ret_dict = {}
         interface_dict = {}
-        # instance_dict = {}
 
         # Address Family for ospfv3 is always ipv6
         af = "ipv6"  
@@ -158,7 +157,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
         # BFD enabled, interval 150 msec, multiplier 3, mode Default
         p5 = re.compile(
-            r"^BFD +(?P<enable>(\S+))"
+            r"^BFD +(?P<bdf_status>(\S+))"
             "(?:, +interval +(?P<interval>(\d+)) +msec)?"
             "(?:, +multiplier +(?P<multi>(\d+)))?"
             "(?:, +mode +(?P<mode>(\S+)))?$")
@@ -208,12 +207,11 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
         p15 = re.compile(r"^Suppress +hello +for +(?P<num_nbrs_suppress_hello>(\d+)) +neighbor\(s\)$")
 
         # Reference count is 6
-        p16 = re.compile(r"^Reference +Count +is +(?P<refrence_count>(\d+))$")
+        p16 = re.compile(r"^Reference +count +is +(?P<refrence_count>(\d+))$")
 
         # Loopback interface is treated as a stub Host
         p17 = re.compile(r"^(?P<loopback>Loopback interface is treated as a stub Host)$")
 
-        
         
         for line in out.splitlines():
             line = line.strip()
@@ -242,7 +240,8 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
           
                 #update interface_dict
                 interface_dict.update({'name': group['name']})
-                interface_dict.update({'enable': group['enable']})
+                interface_dict.update({'enable': bool_dict[group['enable']]})
+                interface_dict.update({'line_protocol': bool_dict[group['line_protocol']]})
                 continue
 
             # Link Local address fe80:100:10::1, Interface ID 7
@@ -252,7 +251,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
                 #update interface_dict
                 interface_dict.update({'link_local_address': group['link_local_address']})
-                interface_dict.update({'interface_id': group['interface_id']})
+                interface_dict.update({'interface_id': int(group['interface_id'])})
                 continue
 
             # Area 0, Process ID mpls1, Instance ID 0, Router ID 25.97.1.1
@@ -267,13 +266,16 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 process_dict = instance_dict.setdefault(group['process_id'],{})
                 
                 #define instance_id_dict dictionary and set to 'instance_id'
-                instance_id_dict = process_dict.setdefault('instance_id',{}).setdefault(group['instance_id'],{})
+                instance_id_dict = process_dict.setdefault('instance_id',{}).\
+                                                setdefault(group['instance_id'],{})
 
                 #define areas_dict dictionary and set to 'area'
-                areas_dict = instance_id_dict.setdefault('areas',{}).setdefault(group['area'],{})
+                areas_dict = instance_id_dict.setdefault('areas',{}).\
+                                              setdefault(group['area'],{})
 
                 #define int_dict dictionary and set to interfaces_dict
-                interfaces_dict = areas_dict.setdefault('interfaces', {}).setdefault(interface_dict['name'],{})
+                interfaces_dict = areas_dict.setdefault('interfaces', {}).\
+                                             setdefault(interface_dict['name'],{})
                 
                 # update int_dict
                 interfaces_dict.update(interface_dict)
@@ -287,7 +289,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 
                 # update interface_dict
                 interface_dict.update({'interface_type': group['interface_type']})
-                interface_dict.update({'cost': group['cost']})
+                interface_dict.update({'cost': int(group['cost'])})
 
                 # # update interfaces_dict
                 interfaces_dict.update(interface_dict)                
@@ -302,12 +304,12 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 bdf_dict = interface_dict.setdefault('bdf',{})
 
                 #update bdf_dict
-                bdf_dict.update({'enable': group['enable']})
-                bdf_dict.update({'interval': group['interval']})
-                bdf_dict.update({'multi': group['multi']})
+                bdf_dict.update({'bdf_status': group['bdf_status']})
+                bdf_dict.update({'interval': int(group['interval'])})
+                bdf_dict.update({'multi': int(group['multi'])})
                 bdf_dict.update({'mode': group['mode']})
 
-                # # update interfaces_dict
+                # update interfaces_dict
                 interfaces_dict.update(interface_dict)
                 continue
 
@@ -317,10 +319,10 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 group = m.groupdict()
 
                 # update interface_dict
-                interface_dict.update({'transmit_delay': group['transmit_delay']})
+                interface_dict.update({'transmit_delay': int(group['transmit_delay'])})
                 interface_dict.update({'state': group['state']})
 
-                # # update interfaces_dict
+                # update interfaces_dict
                 interfaces_dict.update(interface_dict)
                 continue
 
@@ -330,12 +332,12 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 group = m.groupdict()
 
                 # update interface_dict
-                interface_dict.update({'hello_interval': group['hello_interval']})
-                interface_dict.update({'dead_interval': group['dead_interval']})
-                interface_dict.update({'wait_interval': group['wait_interval']})
-                interface_dict.update({'retransmit_interval': group['retransmit_interval']})
+                interface_dict.update({'hello_interval': int(group['hello_interval'])})
+                interface_dict.update({'dead_interval': int(group['dead_interval'])})
+                interface_dict.update({'wait_interval': int(group['wait_interval'])})
+                interface_dict.update({'retransmit_interval': int(group['retransmit_interval'])})
 
-                # # update interfaces_dict
+                # update interfaces_dict
                 interfaces_dict.update(interface_dict)
                 continue
 
@@ -358,7 +360,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
                 # update interface_dict
                 interface_dict.update({'index': group['index']})
-                interface_dict.update({'length': group['length']})
+                interface_dict.update({'length': int(group['length'])})
 
                 # update interfaces_dict
                 interfaces_dict.update(interface_dict)
@@ -382,8 +384,8 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 group = m.groupdict()
 
                 # update interface_dict
-                interface_dict.update({'last_flood_scan_length': group['last_flood_scan_length']})
-                interface_dict.update({'max_flood_scan_length': group['max_flood_scan_length']})
+                interface_dict.update({'last_flood_scan_length': int(group['last_flood_scan_length'])})
+                interface_dict.update({'max_flood_scan_length': int(group['max_flood_scan_length'])})
 
                 # update interfaces_dict
                 interfaces_dict.update(interface_dict)
@@ -395,8 +397,8 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 group = m.groupdict()
 
                 # update interface_dict
-                interface_dict.update({'last_flood_scan_time_msec': group['last_flood_scan_time_msec']})
-                interface_dict.update({'max_flood_scan_time_msec': group['max_flood_scan_time_msec']})
+                interface_dict.update({'last_flood_scan_time_msec': int(group['last_flood_scan_time_msec'])})
+                interface_dict.update({'max_flood_scan_time_msec': int(group['max_flood_scan_time_msec'])})
 
                 # update interfaces_dict
                 interfaces_dict.update(interface_dict)
@@ -410,9 +412,14 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 #define neighbor_statistics_dict dictionary and set to 'neighbors_statistics'
                 neighbor_statistics_dict = interface_dict.setdefault('neighbors_statistics',{})
 
+                
+                # is used in neighbor_statistics_dict and neighbors_dict 
+                nbr_count = int(group['neighbor_count'])
+                adj_nbr_count = int(group['adjacent_neighbor_count'])
+
                 #update neighbor_statistics_dict
-                neighbor_statistics_dict.update({'neighbor_count': group['neighbor_count']})
-                neighbor_statistics_dict.update({'adjacent_neighbor_count': group['adjacent_neighbor_count']})
+                neighbor_statistics_dict.update({'neighbor_count': nbr_count})
+                neighbor_statistics_dict.update({'adjacent_neighbor_count': adj_nbr_count})
 
                 #update interfaces_dict
                 interfaces_dict.update(interface_dict)
@@ -426,6 +433,14 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 #update neighbor_statistics_dict
                 neighbor_statistics_dict.update({'adjacent_with_neighbor': group['adjacent_with_neighbor']})
 
+                #define neighbors_dict dictionary and set to 'neighbors'
+                neighbors_dict = interface_dict.setdefault('neighbors',{}).\
+                                                setdefault(group['adjacent_with_neighbor'],{})
+                
+                #update neighbors_dict
+                neighbors_dict.update({'neighbor_count': nbr_count})
+                neighbors_dict.update({'adjacent_neighbor_count': adj_nbr_count}) 
+
                 #update interfaces_dict
                 interfaces_dict.update(interface_dict)                
                 continue
@@ -436,24 +451,24 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 group = m.groupdict()
 
                 #update neighbor_statistics_dict
-                neighbor_statistics_dict.update({'num_nbrs_suppress_hello': group['num_nbrs_suppress_hello']})
+                neighbor_statistics_dict.update({'num_nbrs_suppress_hello': int(group['num_nbrs_suppress_hello'])})
 
                 #update interfaces_dict
                 interfaces_dict.update(interface_dict)                
                 continue
-            import pdb; pdb.set_trace()
+            
             # Reference count is 6
             m = p16.match(line)
             if m:
                 group = m.groupdict()
 
                 #update neighbor_statistics_dict
-                neighbor_statistics_dict.update({'refrence_count': group['refrence_count']})
+                neighbor_statistics_dict.update({'refrence_count': int(group['refrence_count'])})
 
                 #update interfaces_dict
                 interfaces_dict.update(interface_dict)    
                 continue
-            
+            import pdb; pdb.set_trace()
             # Loopback interface is treated as a stub Host
             m = p17.match(line)
             if m:
@@ -465,5 +480,6 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 # update interfaces_dict
                 interfaces_dict.update(interface_dict)
                 continue
+            
 
         return ret_dict
