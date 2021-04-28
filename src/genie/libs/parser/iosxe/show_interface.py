@@ -1973,7 +1973,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Vlan211 is up, line protocol is up
             # GigabitEthernet2 is administratively down, line protocol is down
-            p1 =  re.compile(r'^(?P<interface>[\w\/\.\-]+) +is'
+            p1 =  re.compile(r'^(?P<interface>(\S+)) +is'
                             r' +(?P<enabled>[\w\s]+),'
                             r' +line +protocol +is +(?P<oper_status>\w+)$')
             m = p1.match(line)
