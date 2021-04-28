@@ -26,55 +26,59 @@ class ShowOspfv3InterfaceSchema(MetaParser):
 
     schema = {
         "vrf": {
-            Any(): {
+            Any(): {    #default
                 "address_family": {
-                    Any(): {
+                    Any(): {    #ipv6
                         "instance": {
-                            Any(): {
-                                "areas": {
-                                    Any(): {
-                                        Optional("interfaces"): {
-                                            Any(): {
-                                                "name": str,
-                                                "enable": bool,
-                                                "line_protocol": bool,
-                                                "link_local_address": str, 
-                                                "process_id": str,
-                                                "router_id": str,
-                                                "interface_type": str,
-                                                Optional("bfd"): {
-                                                    Optional("bfd_status"): str,
-                                                    Optional("interval"): int,
-                                                    Optional("min_interval"): int,
-                                                    Optional("multiplier"): int,
-                                                    Optional("mode"): str,
-                                                },
-                                                Optional("cost"): int,
-                                                Optional("transmit_delay"): int,
-                                                Optional("state"): str,
-                                                Optional("hello_interval"): int,
-                                                Optional("dead_interval"): int,
-                                                Optional("wait_interval"): int,
-                                                Optional("retransmit_interval"): int,
-                                                Optional("hello_timer"): str,
-                                                Optional("index"): str,
-                                                Optional("flood_queue_length"): int,
-                                                Optional("next"): str,
-                                                Optional("last_flood_scan_length"): int,
-                                                Optional("max_flood_scan_length"): int,
-                                                Optional("last_flood_scan_time_msec"): int,
-                                                Optional("max_flood_scan_time_msec"): int,
-                                                Optional("total_dcbitless_lsa"): int,
-                                                Optional("statistics"): {
-                                                    Optional("adj_nbr_count"): int,
-                                                    Optional("nbr_count"): int,
-                                                    Optional("num_nbrs_suppress_hello"): int,
-                                                    Optional("refrence_count"): int,
-                                                },
-                                                Optional("neighbors"): {
-                                                    Any(): {
-                                                        Optional("nbr_count"): str,
-                                                        Optional("adj_nbr_count"): str,
+                            Any(): {    # p3-- group[pid] --mpls1
+                                "instance_id": {
+                                    Any(): {    # p3-- int(group[instance])   --0
+                                        "areas": {
+                                            Any(): {    # p3-- int(group[area]) --0
+                                                Optional("interfaces"): {
+                                                    Any(): {    # p1-- group[interface] -- GigabitEthernet0/0/0/0
+                                                        "name": str,
+                                                        "enable": bool,
+                                                        "line_protocol": bool,
+                                                        "link_local_address": str,
+                                                        "process_id": str,
+                                                        "router_id": str,
+                                                        "interface_type": str,
+                                                        Optional("bfd"): {
+                                                            Optional("bfd_status"): str,
+                                                            Optional("interval"): int,
+                                                            Optional("min_interval"): int,
+                                                            Optional("multiplier"): int,
+                                                            Optional("mode"): str,
+                                                        },
+                                                        Optional("cost"): int,
+                                                        Optional("transmit_delay"): int,
+                                                        Optional("state"): str,
+                                                        Optional("hello_interval"): int,
+                                                        Optional("dead_interval"): int,
+                                                        Optional("wait_interval"): int,
+                                                        Optional("retransmit_interval"): int,
+                                                        Optional("hello_timer"): str,
+                                                        Optional("index"): str,
+                                                        Optional("flood_queue_length"): int,
+                                                        Optional("next"): str,
+                                                        Optional("last_flood_scan_length"): int,
+                                                        Optional("max_flood_scan_length"): int,
+                                                        Optional("last_flood_scan_time_msec"): int,
+                                                        Optional("max_flood_scan_time_msec"): int,
+                                                        Optional("total_dcbitless_lsa"): int,
+                                                        Optional("statistics"): {
+                                                            Optional("adj_nbr_count"): int,
+                                                            Optional("nbr_count"): int,
+                                                            Optional("num_nbrs_suppress_hello"): int,
+                                                            Optional("refrence_count"): int,
+                                                        },
+                                                        Optional("neighbors"): {    
+                                                            Any(): {    #100.100.100.100
+                                                                Optional("nbr_count"): str,
+                                                                Optional("adj_nbr_count"): str,
+                                                            },
+                                                        },
                                                     },
                                                 },
                                             },
@@ -128,6 +132,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
         # Init vars
         ret_dict = {}
+        interface_dict = {}
 
         # Address Family for ospfv3 is always ipv6
         af = "ipv6"  
@@ -218,79 +223,54 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
         
 
-
         for line in out.splitlines():
             line = line.strip()
 
-            # Interfaces for OSPF 1, VRF VRF1
+            # GigabitEthernet0/0/0/0 is up, line protocol is up
             m = p1.match(line)
             if m:
-                instance = str(m.groupdict()["instance"])
-                if m.groupdict()["vrf"]:
-                    vrf = str(m.groupdict()["vrf"])
-                else:
-                    vrf = "default"
-                if "vrf" not in ret_dict:
-                    ret_dict["vrf"] = {}
-                if vrf not in ret_dict["vrf"]:
-                    ret_dict["vrf"][vrf] = {}
-                if "address_family" not in ret_dict["vrf"][vrf]:
-                    ret_dict["vrf"][vrf]["address_family"] = {}
-                if af not in ret_dict["vrf"][vrf]["address_family"]:
-                    ret_dict["vrf"][vrf]["address_family"][af] = {}
-                if "instance" not in ret_dict["vrf"][vrf]["address_family"][af]:
-                    ret_dict["vrf"][vrf]["address_family"][af]["instance"] = {}
-                if (instance not in ret_dict["vrf"][vrf]["address_family"][af]["instance"]):
-                    ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance] = {}
-                    continue
+                group = m.groupdict()
 
-            # GigabitEthernet0/0/0/2 is up, line protocol is up
-            # Loopback1 is administratively down, line protocol is down
-            # OSPF_SL0 is unknown, line protocol is up
-            # OSPF_VL0 is unknown, line protocol is up
+                #define vrf_dict dictionary and set to 'vrf'
+                vrf_dict = ret_dict.setdefault('vrf', {}).\
+                                    setdefault('default',{})
+                
+                #define af_dict dictionary and set to 'address_family'
+                af_dict = vrf_dict.setdefault('address_family',{}).\
+                                    setdefault(af,{})
+
+                interface_name = group['interface']
+                interface_dict.update({'interface':interface_name})
+                interface_dict.update({'enable':bool_dict(group['enable'])})
+                interface_dict.update({'line_protocol':bool_dict(group['line_protocol'])})
+           
+                continue
+
+            # Link Local address fe80:100:10::1, Interface ID 7
             m = p2.match(line)
             if m:
-                if "vrf" not in ret_dict:
-                    ret_dict["vrf"] = {}
-                if vrf not in ret_dict["vrf"]:
-                    ret_dict["vrf"][vrf] = {}
-                if "address_family" not in ret_dict["vrf"][vrf]:
-                    ret_dict["vrf"][vrf]["address_family"] = {}
-                if af not in ret_dict["vrf"][vrf]["address_family"]:
-                    ret_dict["vrf"][vrf]["address_family"][af] = {}
-                if "instance" not in ret_dict["vrf"][vrf]["address_family"][af]:
-                    ret_dict["vrf"][vrf]["address_family"][af]["instance"] = {}
-                if (instance not in ret_dict["vrf"][vrf]["address_family"][af]["instance"]):
-                    ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance] = {}
-                    
-                interface = str(m.groupdict()["interface"])
-                enable = str(m.groupdict()["enable"])
-                line_protocol = str(m.groupdict()["line_protocol"])
+                group = m.groupdict()
 
-                # Determine if 'interface' or 'sham_link' or 'virtual_link'
-                if re.search("SL", interface):
-                    n = re.match("(?P<ignore>\S+)_SL(?P<num>(\d+))", interface)
-                    if n:
-                        intf_type = "sham_links"
-                        name = "SL" + str(n.groupdict()["num"])
-                elif re.search("VL", interface):
-                    n = re.match("(?P<ignore>\S+)_VL(?P<num>(\d+))", interface)
-                    if n:
-                        intf_type = "virtual_links"
-                        name = "VL" + str(n.groupdict()["num"])
-                else:
-                    intf_type = "interfaces"
-                    name = interface
-                    continue
+                interface_dict.update({'link_local_address':group['link_local_address']})
+                interface_dict.update({'interface_id':int(group['interface_id'])})
+                continue
 
-            # Internet Address 10.2.3.3/24, Area 0
-            # Internet Address 192.168.205.1/32, Area 1, SID 0, Strict-SPF SID 0
+            import pdb; pdb.set_trace()    
+            # Area 0, Process ID mpls1, Instance ID 0, Router ID 25.97.1.1
             m = p3.match(line)
             if m:
-                ip_address = str(m.groupdict()["address"])
-                area = str(m.groupdict()["area"])
-                if area.isdigit():
-                    area = str(IPAddress(area))
+                group = m.groupdict()
+
+                interface_dict.update({'router_id':group['router_id']})
+
+
+                instance_dict = af_dict.setdefault('instance',{}).setdefault(group[pid],{}).\
+                                        setdefault('instance_id',{}).setdefault(int(group[instance]),{}).\
+                                        setdefault('areas',{}).setdefault(int(group[area]),{}).\
+                                        setdefault('interfaces',{}).setdefault(interface_name,{})
+                
+
+
                 continue
 
             # Process ID 1, Router ID 10.36.3.3, Network Type POINT_TO_POINT
