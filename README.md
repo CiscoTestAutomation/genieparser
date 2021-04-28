@@ -68,8 +68,8 @@ YouTube Video: <How to write a Genie parser for Cisco!> https://youtube.com/watc
 Once you create a new parser, don't forget to check 1, 2, and 3;
 if you only update the parser class without modifying/creating the schema, please check 2 and 3. 
 - [ ] 1. `make json`
-- [ ] 2. cd tests; and execute `python -m unittest -v`
-- [ ] 3. create changelog for your pull request.
+- [ ] 2. create changelog for your pull request.
+- [ ] 3. make sure GitHub Actions checks passed.
 
 # How to write 'changelog':
 1. A few examples are added into changelog/undistributed/template.rst:

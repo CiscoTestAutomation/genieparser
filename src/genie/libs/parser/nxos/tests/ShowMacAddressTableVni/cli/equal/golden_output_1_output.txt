@@ -1,0 +1,11 @@
+CH-P2-TOR-1# show mac address-table local vni 2001001 
+Legend: 
+        * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
+        age - seconds since last seen,+ - primary entry using vPC Peer-Link,
+        (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
+   VLAN     MAC Address      Type      age     Secure NTFY Ports
+---------+-----------------+--------+---------+------+----+------------------
+* 1001     0000.01ff.9191   dynamic  0         F      F    Eth1/11
+* 1001     00f1.00ff.0000   dynamic  0         F      F    Eth1/11
+* 1001     00f5.00ff.0000   dynamic  0         F      F    Eth1/11
+    
