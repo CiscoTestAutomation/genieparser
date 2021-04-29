@@ -1,0 +1,12 @@
+
+        N95_1# show mac address-table address 5e00.c0ff.0007 interface ethernet1/2
+        Legend: 
+            * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
+            age - seconds since last seen,+ - primary entry using vPC Peer-Link,
+            (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
+           VLAN     MAC Address      Type      age     Secure NTFY Ports
+        ---------+-----------------+--------+---------+------+----+---------------
+        G  102     5e00.c0ff.0007   static   -         F      F    Eth1/2
+        G  107     5e00.c0ff.0007   static   -         F      F    Eth1/2
+        G 1006     5e00.c0ff.0007   static   -         F      F    Eth1/2
+        
