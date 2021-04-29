@@ -1,0 +1,27 @@
+
+    R3_n9kv# show access-lists
+
+    IP access list acl_name
+            10 permit ip any any
+    IP access list ipv4_acl
+            10 permit tcp any any eq www
+            20 permit tcp any any eq 22
+            30 permit tcp any any eq 443
+    IP access list ipv4_ext
+    IPv6 access list ipv6_acl
+            10 permit ipv6 any any log
+            20 permit ipv6 2001::1/128 2001:1::2/128
+            30 permit tcp any eq 8443 2001:2::2/128
+    IPv6 access list ipv6_acl2
+            10 permit udp any any
+    MAC access list mac_acl
+            10 permit aaaa.bbff.8888 0000.0000.0000 bbbb.ccff.aaaa bbbb.ccff.aaaa aarp
+            20 permit 0000.0000.0000 0000.0000.0000 any
+            30 deny 0000.0000.0000 0000.0000.0000 aaaa.bbff.8888 0000.0000.0000 0x8041
+            40 deny any any vlan 10
+            50 permit aaaa.aaff.5555 ffff.ffff.0000 any aarp
+    IP access list test22
+            10 permit tcp 192.168.1.0 0.0.0.255 10.4.1.1/32 established log
+            20 permit tcp 10.16.2.2/32 eq www any precedence network ttl 255
+            30 deny ip any any
+    

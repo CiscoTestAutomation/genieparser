@@ -1,0 +1,19 @@
+
+	show ip arp detail vrf all
+	
+	
+	Flags: * - Adjacencies learnt on non-active FHRP router
+		   + - Adjacencies synced via CFSoE
+		   # - Adjacencies Throttled for Glean
+		   CP - Added via L2RIB, Control plane Adjacencies
+		   PS - Added via L2RIB, Peer Sync
+		   RO - Re-Originated Peer Sync Entry
+	
+	IP ARP Table for all contexts
+	Total number of entries: 4
+	Address         Age       MAC Address     Interface        Physical Interface  Flags	
+	172.16.8.178    00:00:04  INCOMPLETE      Vlan392          Vlan392             
+	172.16.8.183    00:13:47  0050.56ff.ece6  Vlan392          port-channel105     
+	172.16.8.185    00:08:55  0050.56ff.c11c  Vlan392          port-channel110     + 
+	172.16.10.1        -      0000.0cff.9129  Vlan393          -    	
+	

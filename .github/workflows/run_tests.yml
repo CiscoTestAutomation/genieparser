@@ -1,7 +1,7 @@
 # This workflow will install Python dependencies, run tests and lint with a variety of Python versions
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: Python package
+name: Run Tests
 
 on:
   - push
@@ -14,7 +14,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
+        python-version: [3.6, 3.7, 3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v2
@@ -29,10 +29,13 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         pip uninstall genie.libs.parser -y
 
-    - name: Test Unit Tests
+    - name: Folder based testing
       run: |
         make develop
         cd tests
+        pyats run job folder_parsing_job.py --no-mail --no-archive
+
+    - name: Unittest based testing
+      run: |
+        cd tests
         python -m unittest
-        pyats run job folder_parsing_job.py
-    

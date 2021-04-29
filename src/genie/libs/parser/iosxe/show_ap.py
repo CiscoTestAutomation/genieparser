@@ -693,8 +693,7 @@ class ShowApDot115GhzSummarySchema(MetaParser):
                 "oper_state": str,
                 "width": int,
                 "tx_pwr": str,
-                "channel": str,
-                Optional("mode"): str
+                "channel": str
             }
         } 
     }     
@@ -718,7 +717,7 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
         ap_dot11_5ghz_summ = {}
         # AP Name                       Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel   Mode
         # ---------------------------------------------------------------------------------------------------------------------------------
-        # ab-1-test-4800                5c50.15ff.41e1  1       Enabled        Down          20     *1/8 (23 dBm)   (36)*
+        # ab-1-test-4800                 5c50.15ff.41e1  1       Enabled        Down          20     *1/8 (23 dBm)   (36)*
         # ab21-cap40                    5c50.15ff.dbb6  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
         # ab12-cap2                     5c50.15ff.7f24  1       Enabled        Up            20     *7/8 (6 dBm)    (116)*
         # ab21-cap36                    5c50.15ff.8be4  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
@@ -746,7 +745,7 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
         # AP Name                       Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
         # AP Name                       Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel     Mode
         ap_header_capture = re.compile(
-            r"^AP\s+Name\s+Mac\s+Address\s+Slot\s+Admin\s+State\s+Oper\s+State\s+Width\s+Txpwr\s+Channel\s+Mode$")
+            r"^AP\s+Name\s+Mac\s+Address\s+Slot\s+Admin\s+State\s+Oper\s+State\s+Width\s+Txpwr\s+Channel$")
         # ---------------------------------------------------------------------------------------------------------------------------------
         delimiter_capture = re.compile(
             r"^---------------------------------------------------------------------------------------------------------------------------------$")

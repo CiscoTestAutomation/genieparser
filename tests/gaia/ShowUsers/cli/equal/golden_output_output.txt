@@ -1,0 +1,5 @@
+ User             Uid       Gid       Home Dir.        Shell            Real Name               Privileges
+admin            0         0         /home/admin      /etc/cli.sh      Admin                   Access to Expert features
+monitor          102       100       /home/monitor    /etc/cli.sh      Monitor                 None
+somedude         10        20        /home/somewhere  /bin/bash        Some Dude               None
+user7730         0         0         /home/user7730   /bin/bash        n/a                                       
