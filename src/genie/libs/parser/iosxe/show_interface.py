@@ -225,10 +225,10 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Dialer1 is up (spoofing), line protocol is up (spoofing)
         #FastEthernet1 is down, line protocol is down (err-disabled)
 
-        p1 = re.compile(r'^(?P<interface>(\S+)) +is +(?P<enabled>[\w\s]+)(?: '
+        p1 = re.compile(r'^(?P<interface>[\w\/\.\-\:]+) +is +(?P<enabled>[\w\s]+)(?: '
                         r'+\S+)?, +line +protocol +is +(?P<line_protocol>\w+)(?: '
                         r'*\((?P<attribute>\S+)\)|( +\, +Autostate +(?P<autostate>\S+)))?.*$')
-        p1_1 =  re.compile(r'^(?P<interface>(\S+)) +is'
+        p1_1 =  re.compile(r'^(?P<interface>[\w\/\.\-\:]+) +is'
                            r' +(?P<enabled>[\w\s]+),'
                            r' +line +protocol +is +(?P<line_protocol>\w+)'
                            r'( *, *(?P<attribute>[\w\s]+))?$')
@@ -1973,7 +1973,7 @@ class ShowIpInterface(ShowIpInterfaceSchema):
 
             # Vlan211 is up, line protocol is up
             # GigabitEthernet2 is administratively down, line protocol is down
-            p1 =  re.compile(r'^(?P<interface>(\S+)) +is'
+            p1 =  re.compile(r'^(?P<interface>[\w\/\.\-\:]+) +is'
                             r' +(?P<enabled>[\w\s]+),'
                             r' +line +protocol +is +(?P<oper_status>\w+)$')
             m = p1.match(line)
@@ -2656,7 +2656,7 @@ class ShowIpv6Interface(ShowIpv6InterfaceSchema):
 
             # Vlan211 is up, line protocol is up
             # GigabitEthernet1/0/1 is administratively down, line protocol is down
-            p1 =  re.compile(r'^(?P<interface>(\S+)) +is'
+            p1 =  re.compile(r'^(?P<interface>[\w\/\.\-\:]+) +is'
                              r' +(?P<enabled>[\w\s]+),'
                              r' +line +protocol +is +(?P<oper_status>\w+)$')
             m = p1.match(line)
