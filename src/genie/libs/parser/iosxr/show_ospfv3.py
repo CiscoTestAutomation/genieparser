@@ -43,14 +43,19 @@ class ShowOspfv3Neighbor(ShowOspfv3NeighborSchema):
     cli_command = [
         'show ospfv3 neighbor',
         'show ospfv3 {process} neighbor',
-        'show ospfv3 vrf {vrf} neighbor'
+        'show ospfv3 vrf {vrf} neighbor',
+        'show ospfv3 {process} vrf {vrf} neighbor',
     ]
 
     def cli(self, process="", vrf="", output=None):
         if output is None:
             if process:
-                out = self.device.execute(
-                    self.cli_command[1].format(process=process))
+                if vrf:
+                    out = self.device.execute(
+                        self.cli_command[3].format(process=process, vrf=vrf))
+                else:
+                    out = self.device.execute(
+                        self.cli_command[1].format(process=process))
             elif vrf:
                 out = self.device.execute(
                     self.cli_command[2].format(vrf=vrf))
