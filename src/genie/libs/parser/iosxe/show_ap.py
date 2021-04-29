@@ -803,9 +803,13 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
                     mode = groups['mode']
                     ap_name_dict['mode'] = mode
                 else:
-                    del groups['mode']
-                    mode = None 
+                    try:
+                        del groups['mode']
+                        mode = None
+                    except: KeyError
 
+                    # del groups['mode']
+                    # mode = None 
                 continue
 
         return ap_dot11_5ghz_summ
