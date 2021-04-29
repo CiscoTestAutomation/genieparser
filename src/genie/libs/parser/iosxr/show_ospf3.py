@@ -77,6 +77,7 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                                 Optional("adj_nbr_count"): str,
                                                             },
                                                         },
+                                                       Optional("loobpack_txt"): str, 
                                                     },
                                                 },
                                             },
@@ -251,23 +252,25 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 interface_dict.update({'link_local_address':group['link_local_address']})
                 interface_dict.update({'interface_id':int(group['interface_id'])})
                 continue
-
+            
             # Area 0, Process ID mpls1, Instance ID 0, Router ID 25.97.1.1
             m = p3.match(line)
             if m:
                 group = m.groupdict()
 
                 interface_dict.update({'router_id':group['router_id']})
-                instance = group['pid']
-                area = group['area']
-                
 
 
-                top_dict = af_dict.setdefault('instance',{}).setdefault(group['pid'],{}).\
-                                    setdefault('instance_id',{}).setdefault(int(group['instance']),{}).\
-                                    setdefault('areas',{}).setdefault(int(group['area']),{}).\
-                                    setdefault('interfaces',{})
-                
+                # af_dict.setdefault('instance',{}).setdefault(group['pid'],{}).\
+                #                 setdefault('instance_id',{}).setdefault(int(group['instance']),{}).\
+                #                 setdefault('areas',{}).setdefault(int(group['area']),{}).\
+                #                 setdefault('interfaces',{}).setdefault(interface_name,{})
+
+                instance_dict= af_dict.setdefault('instance',{}).setdefault(group['pid'],{})
+                instance_id_dict = instance_dict.setdefault('instance_id',{}).setdefault(int(group['instance']),{})
+                areas_dict = instance_id_dict.setdefault('areas',{}).setdefault(int(group['area']),{})
+                interfaces_dict= areas_dict.setdefault('interfaces',{}).setdefault(interface_name,{})
+                        
                 continue
 
             # Network Type POINT_TO_POINT, Cost: 1
@@ -356,7 +359,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 interface_dict.update({'max_flood_scan_time_msec':int(group['max_flood_scan_time_msec'])})
                 continue
 
-
+            
             # Neighbor Count is 1, Adjacent neighbor count is 1
             m = p13.match(line)
             if m:
@@ -376,7 +379,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 group = m.groupdict()
                 adj_nbr = group['adj_with_nbr']
 
-                neighbor_stats_dict.update({'neighbors':adj_nbr})
+                neighbor_stats_dict.update({'neighbor':adj_nbr})
                 continue
 
             # Suppress hello for 0 neighbor(s)
@@ -386,7 +389,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
                 neighbor_stats_dict.update({'num_nbrs_suppress_hello':int(group['num_nbrs_suppress_hello'])})                
                 continue
-            
+            import pdb; pdb.set_trace()
             # Reference count is 6
             m = p16.match(line)
             if m:
@@ -399,11 +402,10 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
                 neighbor_dict.update({'nbr_count':nbr_count})
                 neighbor_dict.update({'adj_nbr_count':adj_nbr_count})
-
-                top_dict.update({interface_name:interface_dict})
+                interfaces_dict.update(interface_dict)
 
                 continue
-            import pdb; pdb.set_trace()
+            
             m = p17.match(line)
             if m:
                 group = m.groupdict()
