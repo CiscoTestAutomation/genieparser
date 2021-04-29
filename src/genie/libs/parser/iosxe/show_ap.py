@@ -807,9 +807,6 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
                         del groups['mode']
                         mode = None
                     except: KeyError
-
-                    # del groups['mode']
-                    # mode = None 
                 continue
 
         return ap_dot11_5ghz_summ
