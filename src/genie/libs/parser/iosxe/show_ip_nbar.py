@@ -52,7 +52,7 @@ class ShowIpNbarClassificationSocket(ShowIpNbarClassificationSocketSchema):
         * show ip nbar classification socket-cache <number_of_sockets>
     """
 
-    cli_command = ['show ip nbar classification socket-cache <number_of_sockets>']
+    cli_command = ['show ip nbar classification socket-cache {number_of_sockets}']
                   
     def cli(self, number_of_sockets=None, output=None):
         if output is None:
