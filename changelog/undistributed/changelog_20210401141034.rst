@@ -1,6 +1,0 @@
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* IOSXE
-    * Modified ShowWirelessMobilitySummary:
-        * Updated regex pattern <pmtu> to accommodate various outputs.

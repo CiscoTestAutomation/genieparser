@@ -1,0 +1,24 @@
+show ospfv3 vrf all-inclusive neighbor
+Mon Apr 26 20:58:40.144 UTC
+
+# Indicates Neighbor awaiting BFD session up
+
+Neighbors for OSPFv3 1, VRF default
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+1.1.1.1         1     FULL/DR         00:00:32    22              GigabitEthernet0/0/0/0.110
+    Neighbor is up for 02:05:32
+3.3.3.3         1     FULL/BDR        00:00:33    136             GigabitEthernet0/0/0/1.110
+    Neighbor is up for 02:02:56
+
+Total neighbor count: 2
+
+# Indicates Neighbor awaiting BFD session up
+
+Neighbors for OSPFv3 1, VRF VRF1
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+3.3.3.3         1     FULL/BDR        00:00:37    140             GigabitEthernet0/0/0/1.410
+    Neighbor is up for 02:02:57
+
+Total neighbor count: 1

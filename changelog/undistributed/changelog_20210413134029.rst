@@ -1,7 +1,0 @@
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* NXOS
-    * Modified ShowIpRoute
-        * Added sorting of next_hop_list
-        * ShowIpv6Route, ShowRouting are affected by this change as well
