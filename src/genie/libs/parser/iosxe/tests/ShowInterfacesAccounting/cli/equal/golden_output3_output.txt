@@ -1,0 +1,11 @@
+GigabitEthernet0/0/0
+ INPKTS input pkts                 OUTPKTS: output pkts
+ RXBYTES: iput bytes recieved      TXBYTES: output byetes transmitted
+ RXBS: rx rate (bits/sec)          RXPS: rx rate (pkts/sec)
+ TXBS: tx rate (bits/sec)          TXPS: tx rate (pkts/sec)
+    Protocol      Pkts In     Chars In     Pkts Out    Chars Out        RXBS         RXPS         TXBS         TXPS
+-------------------------------------------------------------------------------------------------------------------------
+       Other           15          900          861       370708           0            0            0            0
+          IP         1548       103193         1590       100855           0            0            0            0
+         ARP           15          900           33         1980           0            0            0            0
+         CDP            0            0          829       368788           0            0            0            0
