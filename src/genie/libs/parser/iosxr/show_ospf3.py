@@ -47,7 +47,6 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                         Optional("bfd"): {
                                                             Optional("bfd_status"): str,
                                                             Optional("interval"): int,
-                                                            Optional("min_interval"): int,
                                                             Optional("multiplier"): int,
                                                             Optional("mode"): str,
                                                         },
@@ -66,10 +65,9 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                         Optional("max_flood_scan_length"): int,
                                                         Optional("last_flood_scan_time_msec"): int,
                                                         Optional("max_flood_scan_time_msec"): int,
-                                                        Optional("total_dcbitless_lsa"): int,
                                                         Optional("statistics"): {
+                                                            Optional("nbr_count"): int,                                                            
                                                             Optional("adj_nbr_count"): int,
-                                                            Optional("nbr_count"): int,
                                                             Optional("num_nbrs_suppress_hello"): int,
                                                             Optional("refrence_count"): int,
                                                         },
@@ -174,7 +172,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
         # Transmit Delay is 1 sec, State POINT_TO_POINT,
         p6 = re.compile(
             r"^Transmit +Delay is +(?P<delay>(\d+)) +sec"
-            ", +sec, +State +(?P<state>(\w)+),$")
+            ", +State +(?P<state>(\w)+),$")
 
         # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
         p7 = re.compile(
@@ -188,19 +186,19 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
         p8 = re.compile(r"^Hello +due +in +(?P<hello_timer>(\S+))$")
 
         # Index 1/1/1, flood queue length 0
-        p9 = re.compile(r"^Index +(?P<index>(\S+)), +flood +queue +length +(?P<length>(\d+))$")
+        p9 = re.compile(r"^Index +(?P<index>(\S+)), +flood +queue +length +(?P<flood_queue_length>(\d+))$")
 
         # Next 0(0)/0(0)/0(0)
         p10 = re.compile(r"^Next +(?P<next>(\S+))$")
         
         # Last flood scan length is 1, maximum is 4
-        p11 = re.compile(r"^Last +flood +scan +length +is +(?P<num>(\d+))"
-            ", +maximum +is +(?P<max>(\d+))$")
+        p11 = re.compile(r"^Last +flood +scan +length +is +(?P<last_flood_scan_length>(\d+))"
+            ", +maximum +is +(?P<max_flood_scan_length>(\d+))$")
 
         # Last flood scan time is 0 msec, maximum is 0 msec
         p12 = re.compile(
-            r"^Last +flood +scan +time +is +(?P<time1>(\d+))"
-            " +msec, +maximum +is +(?P<time2>(\d+)) +msec$")
+            r"^Last +flood +scan +time +is +(?P<last_flood_scan_time_msec>(\d+))"
+            " +msec, +maximum +is +(?P<max_flood_scan_time_msec>(\d+)) +msec$")
 
         # Neighbor Count is 1, Adjacent neighbor count is 1
         p13 = re.compile(
@@ -210,13 +208,13 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
         # Adjacent with neighbor 100.100.100.100
         p14 = re.compile(
-            r"^Adjacent +with +neighbor +(?P<nbr>(\S+))$")
+            r"^Adjacent +with +neighbor +(?P<adj_with_nbr>(\S+))$")
 
         # Suppress hello for 0 neighbor(s)
-        p15 = re.compile(r"^Suppress +hello +for +(?P<sup>(\d+)) +neighbor\(s\)$")
+        p15 = re.compile(r"^Suppress +hello +for +(?P<num_nbrs_suppress_hello>(\d+)) +neighbor\(s\)$")
 
         # Reference count is 6
-        p16 = re.compile(r"^Reference +count +is +(?P<count>(\d+))$")
+        p16 = re.compile(r"^Reference +count +is +(?P<refrence_count>(\d+))$")
 
         # Loopback interface is treated as a stub Host
         p17 = re.compile(r"^(?P<loobpack_txt>Loopback interface is treated as a stub Host)$")
@@ -237,13 +235,12 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 
                 #define af_dict dictionary and set to 'address_family'
                 af_dict = vrf_dict.setdefault('address_family',{}).\
-                                    setdefault(af,{})
+                                   setdefault(af,{})
 
                 interface_name = group['interface']
                 interface_dict.update({'interface':interface_name})
-                interface_dict.update({'enable':bool_dict(group['enable'])})
-                interface_dict.update({'line_protocol':bool_dict(group['line_protocol'])})
-           
+                interface_dict.update({'enable':bool_dict[group['enable']]})
+                interface_dict.update({'line_protocol':bool_dict[group['line_protocol']]})
                 continue
 
             # Link Local address fe80:100:10::1, Interface ID 7
@@ -255,333 +252,163 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 interface_dict.update({'interface_id':int(group['interface_id'])})
                 continue
 
-            import pdb; pdb.set_trace()    
             # Area 0, Process ID mpls1, Instance ID 0, Router ID 25.97.1.1
             m = p3.match(line)
             if m:
                 group = m.groupdict()
 
                 interface_dict.update({'router_id':group['router_id']})
-
-
-                instance_dict = af_dict.setdefault('instance',{}).setdefault(group[pid],{}).\
-                                        setdefault('instance_id',{}).setdefault(int(group[instance]),{}).\
-                                        setdefault('areas',{}).setdefault(int(group[area]),{}).\
-                                        setdefault('interfaces',{}).setdefault(interface_name,{})
+                instance = group['pid']
+                area = group['area']
                 
 
 
+                top_dict = af_dict.setdefault('instance',{}).setdefault(group['pid'],{}).\
+                                    setdefault('instance_id',{}).setdefault(int(group['instance']),{}).\
+                                    setdefault('areas',{}).setdefault(int(group['area']),{}).\
+                                    setdefault('interfaces',{})
+                
                 continue
 
-            # Process ID 1, Router ID 10.36.3.3, Network Type POINT_TO_POINT
-            # Process ID 1, Router ID 10.36.3.3, Network Type BROADCAST, Cost: 1
-            # Process ID 1, VRF VRF1, Router ID 10.36.3.3, Network Type SHAM_LINK, Cost: 111
-            # Process ID 1, VRF VRF501, Router ID 192.168.111.1, Network Type BROADCAST, Cost: 1 (RSVP-TE)
+            # Network Type POINT_TO_POINT, Cost: 1
             m = p4.match(line)
             if m:
-                pid = str(m.groupdict()["pid"])
-                router_id = str(m.groupdict()["router_id"])
-                interface_type = str(m.groupdict()["interface_type"]).lower()
-                interface_type = interface_type.replace("_", "-")
-                if not instance:
-                    ret_dict["vrf"][vrf]["address_family"][af]["instance"][pid] = ret_dict["vrf"][vrf]["address_family"][af]["instance"].pop(instance)
-                    instance = pid
+                group = m.groupdict()
 
-                # Get interface values
-                if intf_type == "interfaces":
-                    intf_name = interface
-                elif intf_type == "virtual_links":
-                    # Init
-                    vl_transit_area_id = None
-
-                    # Execute 'show ospf vrf all-inclusive virtual-links' to get the vl_transit_area_id
-                    obj = ShowOspfVrfAllInclusiveVirtualLinks(device=self.device)
-                    vl_out = obj.parse()
-
-                    for vl_vrf in vl_out["vrf"]:
-                        for vl_af in vl_out["vrf"][vl_vrf]["address_family"]:
-                            for vl_inst in vl_out["vrf"][vl_vrf]["address_family"][vl_af]["instance"]:
-                                for vl_area in vl_out["vrf"][vl_vrf]["address_family"][vl_af]["instance"][vl_inst]["areas"]:
-                                    for vl in vl_out["vrf"][vl_vrf]["address_family"][vl_af]["instance"][vl_inst]["areas"][vl_area]["virtual_links"]:
-                                        vl_name = vl_out["vrf"][vl_vrf]["address_family"][vl_af]["instance"][vl_inst]["areas"][vl_area]["virtual_links"][vl]["name"]
-                                        if vl_name == name:
-                                            vl_transit_area_id = vl_out["vrf"][vl_vrf]["address_family"][vl_af]["instance"][vl_inst]["areas"][vl_area]["virtual_links"][vl]["transit_area_id"]
-                                            break
-
-                    if vl_transit_area_id is not None:
-                        intf_name = vl_transit_area_id + " " + router_id
-                        area = vl_transit_area_id
-                elif intf_type == "sham_links":
-                    # Init
-                    sl_local_id = None
-                    sl_remote_id = None
-
-                    # Execute command to get sham-link remote_id
-                    cmd = "show ospf vrf all-inclusive sham-links | i {interface}".format(
-                        interface=interface
-                    )
-                    out = self.device.execute(cmd)
-
-                    for line in out.splitlines():
-                        line = line.rstrip()
-                        # Sham Link OSPF_SL0 to address 10.151.22.22 is up
-                        p = re.search(
-                            "Sham +Link +(?P<intf>(\S+)) +to +address"
-                            " +(?P<remote>(\S+)) +is +up",
-                            line,
-                        )
-                        if p:
-                            if interface == str(p.groupdict()["intf"]):
-                                sl_remote_id = str(p.groupdict()["remote"])
-                                break
-
-                    # Execute command to get sham-link local_id
-                    if sl_remote_id is not None:
-                        cmd = "show run formal router ospf | i sham | i {remote}".format(
-                            remote=sl_remote_id
-                        )
-                        out = self.device.execute(cmd)
-
-                        for line in out.splitlines():
-                            line = line.rstrip()
-                            # router ospf 1 vrf VRF1 area 1 sham-link 10.21.33.33 10.151.22.22
-                            q = re.search(
-                                "router +ospf +(?P<q_inst>(\d+))(?: +vrf"
-                                " +(?P<q_vrf>(\S+)))? +area"
-                                " +(?P<q_area>(\S+)) +sham-link"
-                                " +(?P<local_id>(\S+))"
-                                " +(?P<remote_id>(\S+))",
-                                line,
-                            )
-                            if q:
-                                if q.groupdict()["q_vrf"]:
-                                    q_vrf = str(q.groupdict()["q_vrf"])
-                                else:
-                                    q_vrf = "default"
-                                q_inst = str(q.groupdict()["q_inst"])
-                                q_area = str(q.groupdict()["q_area"])
-                                if q_area.isdigit():
-                                    q_area = str(IPAddress(q_area))
-                                remote_id = str(q.groupdict()["remote_id"])
-
-                                # Check parameters match
-                                if (
-                                    q_inst == instance
-                                    and q_vrf == vrf
-                                    and q_area == area
-                                    and remote_id == sl_remote_id
-                                ):
-                                    sl_local_id = str(q.groupdict()["local_id"])
-                                    break
-
-                    if sl_local_id is not None:
-                        intf_name = sl_local_id + " " + sl_remote_id
-
-                # Build dictionary
-                if ("areas" not in ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance]):
-                    ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance]["areas"] = {}
-                if (area not in ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance]["areas"]):
-                    ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance]["areas"][area] = {}
-                if (intf_type not in ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance]["areas"][area]):
-                    ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance]["areas"][area][intf_type] = {}
-                if (intf_name not in ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance]["areas"][area][intf_type]):
-                    ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance]["areas"][area][intf_type][intf_name] = {}
-
-                # Set sub_dict
-                sub_dict = ret_dict["vrf"][vrf]["address_family"][af]["instance"][instance]["areas"][area][intf_type][intf_name]
-
-                # Set keys
-                sub_dict["demand_circuit"] = False ##
-                if "bfd" not in sub_dict:
-                    sub_dict["bfd"] = {}
-                sub_dict["bfd"]["enable"] = False
-                try:
-                    sub_dict["name"] = name
-                    sub_dict["ip_address"] = ip_address
-                    sub_dict["enable"] = bool_dict[enable]
-                    sub_dict["line_protocol"] = bool_dict[line_protocol]
-                except Exception:
-                    pass
-
-                sub_dict["process_id"] = pid
-                sub_dict["router_id"] = router_id
-                sub_dict["interface_type"] = interface_type
-                if m.groupdict()["cost"]:
-                    sub_dict["cost"] = int(m.groupdict()["cost"])
+                interface_dict.update({'interface_type':group['interface_type']})
+                interface_dict.update({'cost':int(group['cost'])})
                 continue
 
-            # Transmit Delay is 1 sec, State DR, Priority 1, MTU 1500, MaxPktSz 1500
+            # BFD enabled, interval 150 msec, multiplier 3, mode Default
             m = p5.match(line)
             if m:
-                sub_dict["transmit_delay"] = int(m.groupdict()["delay"])
-                state = str(m.groupdict()["state"]).lower()
-                state = state.replace("_", "-")
-                sub_dict["state"] = state
-                sub_dict["mtu"] = int(m.groupdict()["mtu"])
-                sub_dict["max_pkt_sz"] = int(m.groupdict()["max_pkt_sz"])
-                if m.groupdict()["priority"]:
-                    sub_dict["priority"] = int(m.groupdict()["priority"])
-                continue
+                group = m.groupdict()
 
-            # Designated Router (ID) 10.36.3.3, Interface address 10.2.3.3
+                bdf_dict = interface_dict.setdefault('bdf',{})
+
+                bdf_dict.update({'bfd_status':group['bfd_status']})
+                bdf_dict.update({'interval':int(group['interval'])})
+                bdf_dict.update({'multi':int(group['multi'])})
+                bdf_dict.update({'mode':group['mode']})
+                continue
+            
+            # Transmit Delay is 1 sec, State POINT_TO_POINT,
             m = p6.match(line)
             if m:
-                sub_dict["dr_router_id"] = str(m.groupdict()["dr_router_id"])  ##
-                sub_dict["dr_ip_addr"] = str(m.groupdict()["dr_ip_addr"])      ##
-                continue
+                group = m.groupdict()
 
-            # Backup Designated router (ID) 10.16.2.2, Interface address 10.2.3.2
-            m = p7.match(line)
-            if m:
-                sub_dict["bdr_router_id"] = str(m.groupdict()["bdr_router_id"]) ##
-                sub_dict["bdr_ip_addr"] = str(m.groupdict()["bdr_ip_addr"])     ##
+                interface_dict.update({'transmit_delay':int(group['delay'])})
+                interface_dict.update({'state':group['state']})
                 continue
 
             # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
-            m = p8.match(line)
+            m = p7.match(line)
             if m:
-                sub_dict["hello_interval"] = int(m.groupdict()["hello"])
-                sub_dict["dead_interval"] = int(m.groupdict()["dead"])
-                sub_dict["wait_interval"] = int(m.groupdict()["wait"])
-                sub_dict["retransmit_interval"] = int(m.groupdict()["retransmit"])
+                group = m.groupdict()
+
+                interface_dict.update({'hello_interval':int(group['hello'])})
+                interface_dict.update({'dead_interval':int(group['dead'])})
+                interface_dict.update({'wait_interval':int(group['wait'])})
+                interface_dict.update({'retransmit_interval':int(group['retransmit'])})
                 continue
+
 
             # Hello due in 00:00:07:587
-            m = p9_1.match(line)
+            m = p8.match(line)
             if m:
-                sub_dict["passive"] = False
-                sub_dict["hello_timer"] = str(m.groupdict()["hello_timer"])
+                group = m.groupdict()
+
+                interface_dict.update({'hello_timer':group['hello_timer']})
                 continue
 
-            # No Hellos (Passive interface)
-            m = p9_2.match(line)
+            # Index 1/1/1, flood queue length 0
+            m = p9.match(line)
             if m:
-                sub_dict["passive"] = True
-                continue
+                group = m.groupdict()
 
-            # Index 2/2, flood queue length 0
-            m = p10.match(line)
-            if m:
-                sub_dict["index"] = str(m.groupdict()["index"])
-                sub_dict["flood_queue_length"] = int(m.groupdict()["length"])
+                interface_dict.update({'index':group['index']})
+                interface_dict.update({'flood_queue_length':int(group['flood_queue_length'])})
                 continue
 
             # Next 0(0)/0(0)
-            m = p22.match(line)
+            m = p10.match(line)
             if m:
-                sub_dict["next"] = str(m.groupdict()["next"])
+                group = m.groupdict()
+
+                interface_dict.update({'next':group['next']})
                 continue
 
             # Last flood scan length is 1, maximum is 3
             m = p11.match(line)
             if m:
-                sub_dict["last_flood_scan_length"] = int(m.groupdict()["num"])
-                sub_dict["max_flood_scan_length"] = int(m.groupdict()["max"])
+                group = m.groupdict()
+
+                interface_dict.update({'last_flood_scan_length':int(group['last_flood_scan_length'])})
+                interface_dict.update({'max_flood_scan_length':int(group['max_flood_scan_length'])})
                 continue
 
             # Last flood scan time is 0 msec, maximum is 0 msec
             m = p12.match(line)
             if m:
-                sub_dict["last_flood_scan_time_msec"] = int(m.groupdict()["time1"])
-                sub_dict["max_flood_scan_time_msec"] = int(m.groupdict()["time2"])
+                group = m.groupdict()
+
+                interface_dict.update({'last_flood_scan_time_msec':int(group['last_flood_scan_time_msec'])})
+                interface_dict.update({'max_flood_scan_time_msec':int(group['max_flood_scan_time_msec'])})
                 continue
 
-            # LS Ack List: current length 0, high water mark 7
-            m = p13.match(line)
-            if m:
-                sub_dict["ls_ack_list"] = str(m.groupdict()["ls_ack_list"]) ##
-                sub_dict["ls_ack_list_length"] = int(m.groupdict()["num"])  ##
-                sub_dict["high_water_mark"] = int(m.groupdict()["num2"])    ##
-                continue
 
             # Neighbor Count is 1, Adjacent neighbor count is 1
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+
+                neighbor_stats_dict = interface_dict.setdefault('statistics',{})
+                nbr_count = int(group['nbr_count'])
+                adj_nbr_count = int(group['adj_nbr_count'])
+
+                neighbor_stats_dict.update({'nbr_count':nbr_count})
+                neighbor_stats_dict.update({'adj_nbr_count':adj_nbr_count})
+                continue
+
+            # Adjacent with neighbor 100.100.100.100
             m = p14.match(line)
             if m:
-                if "statistics" not in sub_dict:
-                    sub_dict["statistics"] = {}
-                sub_dict["statistics"]["nbr_count"] = int(m.groupdict()["nbr_count"])
-                sub_dict["statistics"]["adj_nbr_count"] = int(
-                    m.groupdict()["adj_nbr_count"]
-                )
+                group = m.groupdict()
+                adj_nbr = group['adj_with_nbr']
+
+                neighbor_stats_dict.update({'neighbors':adj_nbr})
                 continue
-
-            # Adjacent with neighbor 10.16.2.2  (Backup Designated Router)
-            m = p15_1.match(line)
-            if m:
-                neighbor = str(m.groupdict()["nbr"])
-                if "neighbors" not in sub_dict:
-                    sub_dict["neighbors"] = {}
-                if neighbor not in sub_dict["neighbors"]:
-                    sub_dict["neighbors"][neighbor] = {}
-                sub_dict["neighbors"][neighbor]["bdr_router_id"] = neighbor
-                continue
-
-            # # Adjacent with neighbor 10.36.3.3  (Designated Router)
-            # m = p15_2.match(line)
-            # if m:
-            #     neighbor = str(m.groupdict()["nbr"])
-            #     if "neighbors" not in sub_dict:
-            #         sub_dict["neighbors"] = {}
-            #     if neighbor not in sub_dict["neighbors"]:
-            #         sub_dict["neighbors"][neighbor] = {}
-            #     sub_dict["neighbors"][neighbor]["dr_router_id"] = neighbor
-            #     continue
-
-            # # Adjacent with neighbor 10.64.4.4  (Hello suppressed)
-            # m = p15_3.match(line)
-            # if m:
-            #     neighbor = str(m.groupdict()["nbr"])
-            #     if "neighbors" not in sub_dict:
-            #         sub_dict["neighbors"] = {}
-            #     if neighbor not in sub_dict["neighbors"]:
-            #         sub_dict["neighbors"][neighbor] = {}
-            #     continue
 
             # Suppress hello for 0 neighbor(s)
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+
+                neighbor_stats_dict.update({'num_nbrs_suppress_hello':int(group['num_nbrs_suppress_hello'])})                
+                continue
+            
+            # Reference count is 6
             m = p16.match(line)
             if m:
-                if "statistics" not in sub_dict:
-                    sub_dict["statistics"] = {}
-                sub_dict["statistics"]["num_nbrs_suppress_hello"] = int(m.groupdict()["sup"])
-                continue
+                group = m.groupdict()
 
-            # Multi-area interface Count is 0
+                neighbor_stats_dict.update({'refrence_count':int(group['refrence_count'])})
+
+                neighbor_dict = interface_dict.setdefault('neighbors',{}).\
+                                                setdefault(adj_nbr,{})
+
+                neighbor_dict.update({'nbr_count':nbr_count})
+                neighbor_dict.update({'adj_nbr_count':adj_nbr_count})
+
+                top_dict.update({interface_name:interface_dict})
+
+                continue
+            import pdb; pdb.set_trace()
             m = p17.match(line)
             if m:
-                if "statistics" not in sub_dict:
-                    sub_dict["statistics"] = {}
-                sub_dict["statistics"]["multi_area_intf_count"] = int( m.groupdict()["count"])
+                group = m.groupdict()
+
+                interface_dict.update({'loobpack_txt':group['loobpack_txt']})
                 continue
-
-            # # Configured as demand circuit.
-            # m = p18.match(line)
-            # if m:
-            #     sub_dict["demand_circuit"] = True
-            #     continue
-
-            # # Run as demand circuit.
-            # m = p19.match(line)
-            # if m:
-            #     sub_dict["demand_circuit"] = True
-            #     continue
-
-            # # DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
-            # m = p20.match(line)
-            # if m:
-            #     sub_dict["donotage_lsa"] = False
-            #     sub_dict["total_dcbitless_lsa"] = int(m.groupdict()["num"])
-            #     continue
-
-            # BFD enabled, BFD interval 12345 msec, BFD multiplier 50, Mode: Default
-            m = p21.match(line)
-            if m:
-                sub_dict["bfd"]["enable"] = True
-                if m.groupdict()["interval"]:
-                    sub_dict["bfd"]["interval"] = int(m.groupdict()["interval"])
-                if m.groupdict()["multi"]:
-                    sub_dict["bfd"]["multiplier"] = int(m.groupdict()["multi"])
-                if m.groupdict()["mode"]:
-                    sub_dict["bfd"]["mode"] = str(m.groupdict()["mode"]).lower()
-                    continue
-
+            
         return ret_dict
