@@ -729,7 +729,7 @@ def _parse_args(
     }
 
 def main(**kwargs):
-    
+
     parsed_args = _parse_args(**kwargs)
 
     if parsed_args['_number'] and (not parsed_args['_class'] or not parsed_args['_number']):
@@ -748,12 +748,14 @@ def main(**kwargs):
         )
     else:
         # Used for `python folder_parsing_job.py`
-        aetest.main(
+        result = aetest.main(
             testable=__file__,
             runtime=runtime,
             reporter=FailedReporter(),
             **parsed_args
         )
+        if str(result) == 'failed':
+            sys.exit(1)
 
 
 if __name__ == "__main__":
