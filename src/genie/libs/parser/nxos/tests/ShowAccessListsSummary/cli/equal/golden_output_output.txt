@@ -1,0 +1,46 @@
+
+    Device# show access-lists summary 
+IPV4 ACL acl_name
+        Total ACEs Configured: 1
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL ipv4_acl
+        Total ACEs Configured: 3
+        Configured on interfaces:
+                Ethernet1/1 - egress (Router ACL)
+        Active on interfaces:
+                Ethernet1/1 - egress (Router ACL)
+IPV4 ACL ipv4_ext
+        Total ACEs Configured: 0
+        Configured on interfaces:
+        Active on interfaces:
+IPV6 ACL ipv6_acl
+        Total ACEs Configured: 3
+        Configured on interfaces:
+                Ethernet1/1 - ingress (Router ACL)
+        Active on interfaces:
+                Ethernet1/1 - ingress (Router ACL)
+IPV6 ACL ipv6_acl2
+        Total ACEs Configured: 1
+        Configured on interfaces:
+                Ethernet1/1 - egress (Router ACL)
+        Active on interfaces:
+                Ethernet1/1 - egress (Router ACL)
+MAC ACL mac_acl
+        Total ACEs Configured: 5
+        Configured on interfaces:
+                Ethernet1/1 - ingress (Port ACL)
+        Active on interfaces:
+IPV4 ACL sl_def_acl
+
+        Statistics enabled
+        Total ACEs Configured: 4
+        Configured on interfaces:
+        Active on interfaces:
+IPV4 ACL test22
+        Total ACEs Configured: 3
+        Configured on interfaces:
+                Ethernet1/1 - ingress (Router ACL)
+        Active on interfaces:
+                Ethernet1/1 - ingress (Router ACL)
+    

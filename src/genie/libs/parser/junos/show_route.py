@@ -28,7 +28,7 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
+from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema, ListOf, Or
 '''
 Schema for:
     * show route table {table}
@@ -294,36 +294,18 @@ class ShowRouteSchema(MetaParser):
             }
         }
     """
-    def validate_route_table_list(value):
-        # Pass route-table list of dict in value
-        if not isinstance(value, list):
-            raise SchemaError('route-table is not a list')
-        
-        def validate_rt_list(value):
-            # Pass rt list of dict in value
-            if not isinstance(value, list):
-                raise SchemaError('rt list is not a list')
-            
-            def validate_nh_list(value):
-                # Pass nh list of dict in value
-                if not isinstance(value, list):
-                    raise SchemaError('nh list is not a list')
-                # Create nh-list Entry Schema
-                nh_schema = Schema({
-                            Optional("mpls-label"): str,
-                            Optional("selected-next-hop"): str,
-                            Optional("nh-local-interface"): str,
-                            Optional("nh-table"): str,
-                            Optional("to"): str,
-                            Optional("via"): str
-                        })
-                # Validate each dictionary in list
-                for item in value:
-                    nh_schema.validate(item)
-                return value
 
-            # Create rt-list Entry Schema
-            rt_schema = Schema({
+    # Main Schema
+    schema = {
+        Optional("@xmlns:junos"): str,
+        'route-information': {
+            Optional("@xmlns"): str,
+            'route-table': ListOf({
+                "active-route-count": str,
+                "destination-count": str,
+                "hidden-route-count": str,
+                "holddown-route-count": str,
+                Optional("rt"): ListOf({
                     Optional("@junos:style"): str,
                     Optional("rt-destination"): str,
                     "rt-entry": {
@@ -341,7 +323,14 @@ class ShowRouteSchema(MetaParser):
                         Optional("med"): str,
                         Optional("metric"): str,
                         Optional("metric2"): str,
-                        Optional("nh"): Use(validate_nh_list),
+                        Optional("nh"): ListOf({
+                            Optional("mpls-label"): str,
+                            Optional("selected-next-hop"): str,
+                            Optional("nh-local-interface"): str,
+                            Optional("nh-table"): str,
+                            Optional("to"): str,
+                            Optional("via"): str
+                        }),
                         Optional('nh-type'): str,
                         "preference": str,
                         Optional("preference2"): str,
@@ -349,34 +338,10 @@ class ShowRouteSchema(MetaParser):
                         Optional('rt-tag'): str,
                         Optional("validation-state"): str
                     }
-                })
-            # Validate each dictionary in list
-            for item in value:
-                rt_schema.validate(item)
-            return value
-
-
-        # Create RouteEntry Schema
-        route_entry_schema = Schema({
-                "active-route-count": str,
-                "destination-count": str,
-                "hidden-route-count": str,
-                "holddown-route-count": str,
-                Optional("rt"): Use(validate_rt_list),
+                }),
                 "table-name": str,
                 "total-route-count": str
             })
-        # Validate each dictionary in list
-        for item in value:
-            route_entry_schema.validate(item)
-        return value
-
-    # Main Schema
-    schema = {
-        Optional("@xmlns:junos"): str,
-        'route-information': {
-            Optional("@xmlns"): str,
-            'route-table': Use(validate_route_table_list)
         }
     }
 
@@ -714,190 +679,129 @@ class ShowRouteProtocolExtensiveSchema(MetaParser):
             }
         }
     """
-    def validate_route_table_list(value):
-        # Pass route-table list of dict in value
-        if not isinstance(value, list):
-            raise SchemaError('route-table is not a list')
-        
-        def validate_rt_list(value):
-            # Pass rt list of dict in value
-            if not isinstance(value, list):
-                raise SchemaError('rt is not a list')
-            def validate_rt_entry_list(value):
-                if isinstance(value, dict):
-                    value = [value]
-                if not isinstance(value, list):
-                    raise SchemaError('rt-entry is not a list')
-                def validate_nh_list(value):
-                    # Pass nh list of dict in value
-                    if not isinstance(value, list):
-                        raise SchemaError('nh is not a list')
-                    nh_schema = Schema({
-                        Optional("@junos:indent"): str,
-                        Optional("label-element"): str,
-                        Optional("label-element-childcount"): str,
-                        Optional("label-element-lspid"): str,
-                        Optional("label-element-parent"): str,
-                        Optional("label-element-refcount"): str,
-                        Optional("label-ttl-action"): str,
-                        Optional("load-balance-label"): str,
-                        Optional("mpls-label"): str,
-                        Optional("nh-string"): str,
-                        Optional("selected-next-hop"): str,
-                        Optional("session"): str,
-                        Optional("to"): str,
-                        Optional("via"): str,
-                        Optional("weight"): str
-                    })
-                    # Validate each dictionary in list
-                    for item in value:
-                        nh_schema.validate(item)
-                    return value
-                def validate_protocol_nh_list(value):
-                    # Pass nh list of dict in value
-                    if isinstance(value, dict):
-                        value = [value]
-                    if not isinstance(value, list):
-                        raise SchemaError('protocol-nh is not a list')
-                    def validate_nh_list(value):
-                        # Pass nh list of dict in value
-                        if isinstance(value, dict):
-                            value = [value]
-                        if not isinstance(value, list):
-                            raise SchemaError('nh is not a list')
-                        nh_schema = Schema({
-                            Optional("@junos:indent"): str,
-                            Optional("label-element"): str,
-                            Optional("label-element-childcount"): str,
-                            Optional("label-element-lspid"): str,
-                            Optional("label-element-parent"): str,
-                            Optional("label-element-refcount"): str,
-                            Optional("label-ttl-action"): str,
-                            Optional("load-balance-label"): str,
-                            Optional("mpls-label"): str,
-                            Optional("nh-string"): str,
-                            Optional("selected-next-hop"): str,
-                            Optional("session"): str,
-                            Optional("to"): str,
-                            Optional("via"): str,
-                            Optional("weight"): str
-                        })
-                        # Validate each dictionary in list
-                        for item in value:
-                            nh_schema.validate(item)
-                        return value
-                    protocol_nh_schema = Schema({
-                        Optional("@junos:indent"): str,
-                        Optional("forwarding-nh-count"): str,
-                        "indirect-nh": str,
-                        Optional("label-ttl-action"): str,
-                        Optional("load-balance-label"): str,
-                        Optional("metric"): str,
-                        Optional("mpls-label"): str,
-                        Optional("nh"): Use(validate_nh_list),
-                        Optional("nh-index"): str,
-                        Optional("nh-type"): str,
-                        Optional("output"): str,
-                        "to": str
-                    })
-                    # Validate each dictionary in list
-                    for item in value:
-                        protocol_nh_schema.validate(item)
-                    return value
-                rt_entry_schema = Schema({
-                    Optional("accepted"): str,
-                    Optional("active-tag"): str,
-                    Optional("age"): {
-                        "#text": str,
-                        Optional("@junos:seconds"): str
-                    },
-                    Optional("announce-bits"): str,
-                    Optional("announce-tasks"): str,
-                    Optional("as-path"): str,
-                    Optional("cluster-list"): str,
-                    Optional("bgp-rt-flag"): str,
-                    Optional("bgp-path-attributes"): {
-                        "attr-as-path-effective": {
-                            "aspath-effective-string": str,
-                            "attr-value": str
-                        }
-                    },
-                    Optional("current-active"): str,
-                    Optional("inactive-reason"): str,
-                    Optional("last-active"): str,
-                    Optional("local-as"): str,
-                    Optional("local-preference"): str,
-                    Optional("peer-as"): str,
-                    Optional("metric"): str,
-                    Optional("metric2"): str,
-                    Optional("nh"): Use(validate_nh_list),
-                    Optional("nh-address"): str,
-                    Optional("nh-index"): str,
-                    Optional("nh-kernel-id"): str,
-                    Optional("nh-reference-count"): str,
-                    Optional("gateway"): str,
-                    Optional("nh-type"): str,
-                    Optional("preference"): str,
-                    Optional("preference2"): str,
-                    Optional("protocol-name"): str,
-                    Optional("protocol-nh"): Use(validate_protocol_nh_list),
-                    Optional("rt-entry-state"): str,
-                    Optional("rt-ospf-area"): str,
-                    Optional("rt-tag"): str,
-                    Optional("peer-id"): str,
-                    Optional("task-name"): str,
-                    Optional("validation-state"): str
-                })
-                # Validate each dictionary in list
-                for item in value:
-                    rt_entry_schema.validate(item)
-                return value
 
-            # Create rt Schema
-            rt_schema = Schema({
-                Optional("@junos:style"): str,
-                "rt-announced-count": str,
-                "rt-destination": str,
-                Optional("rt-entry"): Use(validate_rt_entry_list),
-                "rt-entry-count": {
-                    "#text": str,
-                    Optional("@junos:format"): str
-                },
-                Optional("rt-prefix-length"): str,
-                Optional("rt-state"): str,
-                Optional("tsi"): {
-                    "#text": str,
-                    Optional("@junos:indent"): str
-                }
-            })
-            # Validate each dictionary in list
-            for item in value:
-                rt_schema.validate(item)
-            return value
-
-        # Create Route Table Schema
-        route_table_schema = Schema({
-            "active-route-count": str,
-            "destination-count": str,
-            "hidden-route-count": str,
-            "holddown-route-count": str,
-            Optional("rt"): Use(validate_rt_list),
-            "table-name": str,
-            "total-route-count": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            route_table_schema.validate(item)
-        return value
+    rt_entry_schema = {
+        Optional("accepted"): str,
+        Optional("active-tag"): str,
+        Optional("age"): {
+            "#text": str,
+            Optional("@junos:seconds"): str
+        },
+        Optional("announce-bits"): str,
+        Optional("announce-tasks"): str,
+        Optional("as-path"): str,
+        Optional("cluster-list"): str,
+        Optional("bgp-rt-flag"): str,
+        Optional("bgp-path-attributes"): {
+            "attr-as-path-effective": {
+                "aspath-effective-string": str,
+                "attr-value": str
+            }
+        },
+        Optional("current-active"): str,
+        Optional("inactive-reason"): str,
+        Optional("last-active"): str,
+        Optional("local-as"): str,
+        Optional("local-preference"): str,
+        Optional("peer-as"): str,
+        Optional("metric"): str,
+        Optional("metric2"): str,
+        Optional("nh"): ListOf({
+            Optional("@junos:indent"): str,
+            Optional("label-element"): str,
+            Optional("label-element-childcount"): str,
+            Optional("label-element-lspid"): str,
+            Optional("label-element-parent"): str,
+            Optional("label-element-refcount"): str,
+            Optional("label-ttl-action"): str,
+            Optional("load-balance-label"): str,
+            Optional("mpls-label"): str,
+            Optional("nh-string"): str,
+            Optional("selected-next-hop"): str,
+            Optional("session"): str,
+            Optional("to"): str,
+            Optional("via"): str,
+            Optional("weight"): str
+        }),
+        Optional("nh-address"): str,
+        Optional("nh-index"): str,
+        Optional("nh-kernel-id"): str,
+        Optional("nh-reference-count"): str,
+        Optional("gateway"): str,
+        Optional("nh-type"): str,
+        Optional("preference"): str,
+        Optional("preference2"): str,
+        Optional("protocol-name"): str,
+        Optional("protocol-nh"): ListOf({
+            Optional("@junos:indent"): str,
+            Optional("forwarding-nh-count"): str,
+            "indirect-nh": str,
+            Optional("label-ttl-action"): str,
+            Optional("load-balance-label"): str,
+            Optional("metric"): str,
+            Optional("mpls-label"): str,
+            Optional("nh"): ListOf({
+                Optional("@junos:indent"): str,
+                Optional("label-element"): str,
+                Optional("label-element-childcount"): str,
+                Optional("label-element-lspid"): str,
+                Optional("label-element-parent"): str,
+                Optional("label-element-refcount"): str,
+                Optional("label-ttl-action"): str,
+                Optional("load-balance-label"): str,
+                Optional("mpls-label"): str,
+                Optional("nh-string"): str,
+                Optional("selected-next-hop"): str,
+                Optional("session"): str,
+                Optional("to"): str,
+                Optional("via"): str,
+                Optional("weight"): str
+            }),
+            Optional("nh-index"): str,
+            Optional("nh-type"): str,
+            Optional("output"): str,
+            "to": str
+        }),
+        Optional("rt-entry-state"): str,
+        Optional("rt-ospf-area"): str,
+        Optional("rt-tag"): str,
+        Optional("peer-id"): str,
+        Optional("task-name"): str,
+        Optional("validation-state"): str
+    }
 
     # Main Schema
     schema = {
         Optional("@xmlns:junos"): str,
         "route-information": {
             Optional("@xmlns"): str,
-            "route-table": Use(validate_route_table_list)
+            "route-table": ListOf({
+                "active-route-count": str,
+                "destination-count": str,
+                "hidden-route-count": str,
+                "holddown-route-count": str,
+                Optional("rt"): ListOf({
+                    Optional("@junos:style"): str,
+                    "rt-announced-count": str,
+                    "rt-destination": str,
+                    Optional("rt-entry"): Or(rt_entry_schema, ListOf(rt_entry_schema)),
+                    "rt-entry-count": {
+                        "#text": str,
+                        Optional("@junos:format"): str
+                    },
+                    Optional("rt-prefix-length"): str,
+                    Optional("rt-state"): str,
+                    Optional("tsi"): {
+                        "#text": str,
+                        Optional("@junos:indent"): str
+                    }
+                }),
+                "table-name": str,
+                "total-route-count": str
+            })
         }
     }
+
 
 class ShowRouteProtocolExtensive(ShowRouteProtocolExtensiveSchema):
     """ Parser for:
@@ -1598,40 +1502,19 @@ class ShowRouteForwardingTableSummarySchema(MetaParser):
     #     }
     # }
 
-    def validate_route_table_list(value):
-        # Pass route-table list of dict in value
-        if not isinstance(value, list):
-            raise SchemaError('route-table is not a list')
-        def validate_route_table_summary_list(value):
-            # Pass route-table-summary list of dict in value
-            if not isinstance(value, list):
-                raise SchemaError('route-table-summary is not a list')
-            # Create route-table-summary Schema
-            route_table_summary_schema = Schema({
-                "route-count": str,
-                "route-table-type": str
-            })
-            # Validate each dictionary in list
-            for item in value:
-                route_table_summary_schema.validate(item)
-            return value
-        # Create route-table-summary Schema
-        route_table_schema = Schema({
-            "address-family": str,
-            Optional("enabled-protocols"): str,
-            "route-table-summary": Use(validate_route_table_summary_list),
-            "table-name": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            route_table_schema.validate(item)
-        return value
-    
     schema = {
         Optional("@xmlns:junos"): str,
         "forwarding-table-information": {
             Optional("@xmlns"): str,
-            "route-table": Use(validate_route_table_list)
+            "route-table": ListOf({
+                "address-family": str,
+                Optional("enabled-protocols"): str,
+                "route-table-summary": ListOf({
+                    "route-count": str,
+                    "route-table-type": str
+                }),
+                "table-name": str
+            })
         }
     }
 
@@ -1739,56 +1622,33 @@ class ShowRouteReceiveProtocolSchema(MetaParser):
         }
     """
 
-    def validate_route_table_list(value):
-        # Pass route-table list of dict in value
-        if not isinstance(value, list):
-            raise SchemaError('route-table is not a list')
-        
-        def validate_rt_list(value):
-            # Pass rt list of dict in value
-            if not isinstance(value, list):
-                raise SchemaError('rt is not a list')
-            # Create rt entry Schema
-            rt_entry_schema = Schema({
-                Optional("@junos:style"): str,
-                "rt-destination": str,
-                "rt-entry": {
-                    Optional("active-tag"): str,
-                    "as-path": str,
-                    Optional("local-preference"): str,
-                    Optional("med"): str,
-                    "nh": {
-                        "to": str
-                    },
-                    "protocol-name": str
-                }
-            })
-            # Validate each dictionary in list
-            for item in value:
-                rt_entry_schema.validate(item)
-            return value
-
-        # Create route-table entry Schema
-        route_table_schema = Schema({
-            "active-route-count": str,
-            "destination-count": str,
-            "hidden-route-count": str,
-            "holddown-route-count": str,
-            Optional("rt"): Use(validate_rt_list),
-            "table-name": str,
-            "total-route-count": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            route_table_schema.validate(item)
-        return value
-    
     # Main Schema
     schema = {
         Optional("@xmlns:junos"): str,
         "route-information": {
             Optional("@xmlns"): str,
-            "route-table": Use(validate_route_table_list)
+            "route-table": ListOf({
+                "active-route-count": str,
+                "destination-count": str,
+                "hidden-route-count": str,
+                "holddown-route-count": str,
+                Optional("rt"): ListOf({
+                    Optional("@junos:style"): str,
+                    "rt-destination": str,
+                    "rt-entry": {
+                        Optional("active-tag"): str,
+                        "as-path": str,
+                        Optional("local-preference"): str,
+                        Optional("med"): str,
+                        "nh": {
+                            "to": str
+                        },
+                        "protocol-name": str
+                    }
+                }),
+                "table-name": str,
+                "total-route-count": str
+            })
         }
     }
 
@@ -1937,31 +1797,6 @@ class ShowRouteAdvertisingProtocolSchema(MetaParser):
         }
     """
 
-    def validate_rt_list(value):
-        # Pass rt list of dict in value
-        if not isinstance(value, list):
-            raise SchemaError('rt is not a list')
-        # Create rt entry Schema
-        entry_schema = Schema({
-            Optional("@junos:style"): str,
-            "rt-destination": str,
-            "rt-entry": {
-                Optional("active-tag"): str,
-                "as-path": str,
-                "bgp-metric-flags": str,
-                Optional("local-preference"): str,
-                Optional("med"): str,
-                "nh": {
-                    "to": str
-                },
-                "protocol-name": str
-            }
-        })
-        # Validate each dictionary in list
-        for item in value:
-            entry_schema.validate(item)
-        return value
-    
     # Main schema
     schema = {
         Optional("@xmlns:junos"): str,
@@ -1972,7 +1807,21 @@ class ShowRouteAdvertisingProtocolSchema(MetaParser):
                 "destination-count": str,
                 "hidden-route-count": str,
                 "holddown-route-count": str,
-                Optional('rt'): Use(validate_rt_list),
+                Optional('rt'): ListOf({
+                    Optional("@junos:style"): str,
+                    "rt-destination": str,
+                    "rt-entry": {
+                        Optional("active-tag"): str,
+                        "as-path": str,
+                        "bgp-metric-flags": str,
+                        Optional("local-preference"): str,
+                        Optional("med"): str,
+                        "nh": {
+                            "to": str
+                        },
+                        "protocol-name": str
+                    }
+                }),
                 "table-name": str,
                 "total-route-count": str
             }
@@ -2122,46 +1971,25 @@ class ShowRouteSummarySchema(MetaParser):
     #     }
     # }
 
-    def validate_route_table_list(value):
-        # Pass route-table list of dict in value
-        if not isinstance(value, list):
-            raise SchemaError('route-table is not a list')
-        def validate_protocols_list(value):
-            # Pass protocols list of dict in value
-            if not isinstance(value, list):
-                raise SchemaError('protocols is not a list')
-            # Create protocols Schema
-            protocols_schema = Schema({
-                "active-route-count": str,
-                "protocol-name": str,
-                "protocol-route-count": str
-            })
-            # Validate each dictionary in list
-            for item in value:
-                protocols_schema.validate(item)
-            return value
-        # Create route-table Schema
-        route_table_schema = Schema({
-            "active-route-count": str,
-            "destination-count": str,
-            "hidden-route-count": str,
-            "holddown-route-count": str,
-            "protocols": Use(validate_protocols_list),
-            "table-name": str,
-            "total-route-count": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            route_table_schema.validate(item)
-        return value
-
     # Main Schema
     schema = {
         Optional("@xmlns:junos"): str,
         "route-summary-information": {
             Optional("@xmlns"): str,
             Optional("as-number"): str,
-            "route-table": Use(validate_route_table_list),
+            "route-table": ListOf({
+                "active-route-count": str,
+                "destination-count": str,
+                "hidden-route-count": str,
+                "holddown-route-count": str,
+                "protocols": ListOf({
+                    "active-route-count": str,
+                    "protocol-name": str,
+                    "protocol-route-count": str
+                }),
+                "table-name": str,
+                "total-route-count": str
+            }),
             "router-id": str
         }
     }
@@ -2272,52 +2100,28 @@ class ShowRouteInstanceDetailSchema(MetaParser):
     #     }
     # }
 
-    def validate_instance_core_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('instance-core is not a list')
-        def validate_instance_rib_list(value):
-            if not isinstance(value, list):
-                raise SchemaError('instance-rib is not a list')
-            instance_rib_schema = Schema({
-                        "irib-active-count": str,
-                        "irib-hidden-count": str,
-                        "irib-holddown-count": str,
-                        "irib-name": str,
-                        "irib-route-count": str
-                    })
-            # Validate each dictionary in list
-            for item in value:
-                instance_rib_schema.validate(item)
-            return value
-        def validate_interface_name_list(value):
-            if not isinstance(value, list):
-                raise SchemaError('interface-name is not a list')
-            instance_rib_schema = Schema({
-                    "interface-name": str
-                })
-            # Validate each dictionary in list
-            for item in value:
-                instance_rib_schema.validate(item)
-            return value
-        instance_core_schema = Schema({
-            Optional("instance-interface"): Use(validate_interface_name_list),
-            "instance-name": str,
-            Optional("instance-rib"): Use(validate_instance_rib_list),
-            Optional("instance-state"): str,
-            Optional("instance-type"): str,
-            Optional("router-id"): str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            instance_core_schema.validate(item)
-        return value
-    
+
     schema = {
         Optional("@xmlns:junos"): str,
         "instance-information": {
             Optional("@junos:style"): str,
             Optional("@xmlns"): str,
-            "instance-core": Use(validate_instance_core_list)
+            "instance-core": ListOf({
+                Optional("instance-interface"): ListOf({
+                    "interface-name": str
+                }),
+                "instance-name": str,
+                Optional("instance-rib"): ListOf({
+                    "irib-active-count": str,
+                    "irib-hidden-count": str,
+                    "irib-holddown-count": str,
+                    "irib-name": str,
+                    "irib-route-count": str
+                }),
+                Optional("instance-state"): str,
+                Optional("instance-type"): str,
+                Optional("router-id"): str
+            })
         }
     }
 
@@ -2456,50 +2260,40 @@ class ShowRouteAdvertisingProtocolDetailSchema(MetaParser):
     #     },
     # }
 
-    def validate_rt_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('protocol information is not a list')
-
-        entry_schema = Schema({
-            Optional("@junos:style"): str,
-            "table-name": str,
-            "destination-count": str,
-            "total-route-count": str,
-            "active-route-count": str,
-            "holddown-route-count": str,
-            "hidden-route-count": str,
-            "rt-entry": {
-                Optional('active-tag'): str,
-                "rt-destination": str,
-                "rt-prefix-length": str,
-                "rt-entry-count": str,
-                "rt-announced-count": str,
-                Optional('route-label'): str,
-                Optional("bgp-group"): {
-                    "bgp-group-name": str,
-                    "bgp-group-type": str,
-                },
-                "nh": {
-                    "to": str,
-                },
-                Optional("med"): str,
-                Optional("local-preference"): str,
-                'as-path': str,
-                Optional("communities"): str,
-                Optional("flags"): str,
-            }
-        })
-
-        for item in value:
-            entry_schema.validate(item)
-        return value
-
     # Main schema
     schema = {
         Optional("@xmlns:junos"): str,
         "route-information":{
             Optional("@xmlns"): str,
-            "route-table": Use(validate_rt_list),
+            "route-table": ListOf({
+                Optional("@junos:style"): str,
+                "table-name": str,
+                "destination-count": str,
+                "total-route-count": str,
+                "active-route-count": str,
+                "holddown-route-count": str,
+                "hidden-route-count": str,
+                "rt-entry": {
+                    Optional('active-tag'): str,
+                    "rt-destination": str,
+                    "rt-prefix-length": str,
+                    "rt-entry-count": str,
+                    "rt-announced-count": str,
+                    Optional('route-label'): str,
+                    Optional("bgp-group"): {
+                        "bgp-group-name": str,
+                        "bgp-group-type": str,
+                    },
+                    "nh": {
+                        "to": str,
+                    },
+                    Optional("med"): str,
+                    Optional("local-preference"): str,
+                    'as-path': str,
+                    Optional("communities"): str,
+                    Optional("flags"): str,
+                }
+            }),
         },
     }
 
@@ -2648,49 +2442,27 @@ class ShowRouteForwardingTableLabelSchema(MetaParser):
         * show route forwarding-table label {label}
     """
 
-
-    def validate_rt_table_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('Route table is not a list')
-
-        def validate_rt_entry_list(value):
-            if not isinstance(value, list):
-                raise SchemaError('Route entry is not a list')
-
-            rt_entry = Schema({
-                                "rt-destination": str,
-                                "destination-type": str,
-                                "route-reference-count": str,
-                                "nh":{
-                                    Optional("to"): str,
-                                    "nh-type": str,
-                                    "nh-index": str,
-                                    "nh-reference-count": str,
-                                    Optional("nh-lb-label"): str,
-                                    Optional("via"): str,
-                                }
-                            })
-            
-            for item in value:
-                rt_entry.validate(item)
-            return value
-
-
-        rt_table = Schema({
-                        "table-name": str,
-                        "address-family": str,
-                        Optional("enabled-protocols"): str,
-                        "rt-entry": Use(validate_rt_entry_list)
-                    })
-
-        for item in value:
-            rt_table.validate(item)
-        return value
-
     # Main schema
     schema = {
             "forwarding-table-information":{
-                "route-table": Use(validate_rt_table_list)
+                "route-table": ListOf({
+                    "table-name": str,
+                    "address-family": str,
+                    Optional("enabled-protocols"): str,
+                    "rt-entry": ListOf({
+                        "rt-destination": str,
+                        "destination-type": str,
+                        "route-reference-count": str,
+                        "nh":{
+                            Optional("to"): str,
+                            "nh-type": str,
+                            "nh-index": str,
+                            "nh-reference-count": str,
+                            Optional("nh-lb-label"): str,
+                            Optional("via"): str,
+                        }
+                    })
+                })
             }
         }
 
@@ -2784,57 +2556,6 @@ class ShowRouteTableLabelSwitchedNameSchema(MetaParser):
         * show route table {table} label-switched-path {name}
     """
 
-    def validate_rt_schema(value):
-        if not isinstance(value, list):
-            raise SchemaError('rt schema is not a list')
-
-        def validate_rt_entry_schema(value):
-            if not isinstance(value, list):
-                raise SchemaError('rt entry schema is not a list')
-
-            def validate_nh_schema(value):
-                if not isinstance(value, list):
-                    raise SchemaError('nh schema is not a list')
-            
-                nh_schema = Schema({
-                            Optional("selected-next-hop"): bool,
-                            "to": str,
-                            "via": str,
-                            "lsp-name": str,
-                        })
-            
-                for item in value:
-                    nh_schema.validate(item)
-                return value
-        
-            rt_entry_schema = Schema({
-                        Optional("active-tag"): str,
-                        Optional("current-active"): str,
-                        Optional("last-active"): str,
-                        "protocol-name": str,
-                        "preference": str,
-                        "preference2": str,
-                        "age": {
-                            '#text': str,
-                            Optional('@junos:seconds'): str,
-                        },
-                        "metric": str,
-                        "nh": Use(validate_nh_schema)
-                    })
-        
-            for item in value:
-                rt_entry_schema.validate(item)
-            return value
-    
-        rt_schema = Schema({
-                    "rt-destination": str,
-                    "rt-entry": Use(validate_rt_entry_schema)
-                })
-    
-        for item in value:
-            rt_schema.validate(item)
-        return value
-
     schema = {
             "route-information": {
                 "route-table": {
@@ -2844,7 +2565,28 @@ class ShowRouteTableLabelSwitchedNameSchema(MetaParser):
                     "active-route-count": str,
                     "holddown-route-count": str,
                     "hidden-route-count": str,
-                    "rt": Use(validate_rt_schema)
+                    "rt": ListOf({
+                        "rt-destination": str,
+                        "rt-entry": ListOf({
+                            Optional("active-tag"): str,
+                            Optional("current-active"): str,
+                            Optional("last-active"): str,
+                            "protocol-name": str,
+                            "preference": str,
+                            "preference2": str,
+                            "age": {
+                                '#text': str,
+                                Optional('@junos:seconds'): str,
+                            },
+                            "metric": str,
+                            "nh": ListOf({
+                                Optional("selected-next-hop"): bool,
+                                "to": str,
+                                "via": str,
+                                "lsp-name": str,
+                            })
+                        })
+                    })
                 }
             }
         }
@@ -3325,55 +3067,44 @@ class ShowRouteReceiveProtocolExtensiveSchema(MetaParser):
     """ Schema for:
             * 'show route receive-protocol bgp {peer_address} {target_address} extensive'
     """
-    def validate_route_table_list(value):
-        # Pass route-table list of dict in value
-        if not isinstance(value, list):
-            raise SchemaError('route-table is not a list')
-        
-        # Create Route Table Schema
-        route_table_schema = Schema({
-            "active-route-count": str,
-            "destination-count": str,
-            "hidden-route-count": str,
-            "holddown-route-count": str,
-            Optional("rt"): {
-                    Optional("@junos:style"): str,
-                    "rt-announced-count": str,
-                    "rt-destination": str,
-                    Optional("active-tag"): str,
-                    Optional("rt-entry"): {
-                        Optional("as-path"): str,
-                        Optional("bgp-rt-flag"): str,
-                        Optional("bgp-path-attributes"): {
-                            "attr-as-path-effective": {
-                                "aspath-effective-string": str,
-                                "attr-value": str
-                            }
-                        },
-                        Optional("local-preference"): str,
-                        Optional("nh"): {
-                            'to': str,
-                        }
-                    },
-                    "rt-entry-count": {
-                        "#text": str,
-                    },
-                    Optional("rt-prefix-length"): str,
-                    Optional("rt-state"): str,
-                },
-            "table-name": str,
-            "total-route-count": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            route_table_schema.validate(item)
-        return value
 
     # Main Schema
     schema = {
         "route-information": {
             Optional("@xmlns"): str,
-            "route-table": Use(validate_route_table_list)
+            "route-table": ListOf({
+                "active-route-count": str,
+                "destination-count": str,
+                "hidden-route-count": str,
+                "holddown-route-count": str,
+                Optional("rt"): {
+                        Optional("@junos:style"): str,
+                        "rt-announced-count": str,
+                        "rt-destination": str,
+                        Optional("active-tag"): str,
+                        Optional("rt-entry"): {
+                            Optional("as-path"): str,
+                            Optional("bgp-rt-flag"): str,
+                            Optional("bgp-path-attributes"): {
+                                "attr-as-path-effective": {
+                                    "aspath-effective-string": str,
+                                    "attr-value": str
+                                }
+                            },
+                            Optional("local-preference"): str,
+                            Optional("nh"): {
+                                'to': str,
+                            }
+                        },
+                        "rt-entry-count": {
+                            "#text": str,
+                        },
+                        Optional("rt-prefix-length"): str,
+                        Optional("rt-state"): str,
+                    },
+                "table-name": str,
+                "total-route-count": str
+            })
         }
     }
 
@@ -3501,18 +3232,18 @@ class ShowRouteReceiveProtocolPeerAddressExtensiveSchema(MetaParser):
     """ Schema for:
             * 'show route receive-protocol bgp {peer_address} extensive'
     """
-    def validate_route_table_list(value):
-        # Pass route-table list of dict in value
-        if not isinstance(value, list):
-            raise SchemaError('route-table is not a list')
-        
-        def validate_rt_list(value): 
-            # Pass rt list of dict in value
-            if not isinstance(value, list):
-                raise SchemaError('rt is not a list')
-            # Create rt entry Schema
-            rt_entry_schema = Schema(
-                    {Optional("@junos:style"): str,
+
+    # Main Schema
+    schema = {
+        "route-information": {
+            Optional("@xmlns"): str,
+            "route-table": ListOf({
+                "active-route-count": str,
+                "destination-count": str,
+                "hidden-route-count": str,
+                "holddown-route-count": str,
+                Optional("rt"): ListOf({
+                    Optional("@junos:style"): str,
                     Optional("active-tag"): str,
                     "rt-announced-count": str,
                     "rt-destination": str,
@@ -3534,34 +3265,13 @@ class ShowRouteReceiveProtocolPeerAddressExtensiveSchema(MetaParser):
                         "#text": str,
                     },
                     Optional("rt-prefix-length"): str,
-                    Optional("rt-state"): str,}
-            )
-            # Validate each dictionary in list
-            for item in value:
-                rt_entry_schema.validate(item)
-            return value
-        # Create Route Table Schema
-        route_table_schema = Schema({
-            "active-route-count": str,
-            "destination-count": str,
-            "hidden-route-count": str,
-            "holddown-route-count": str,
-            Optional("rt"): Use(validate_rt_list),
-            "table-name": str,
-            "total-route-count": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            route_table_schema.validate(item)
-        return value
-
-    # Main Schema
-    schema = {
-        "route-information": {
-            Optional("@xmlns"): str,
-            "route-table": Use(validate_route_table_list)
+                    Optional("rt-state"): str,
+                }),
+                "table-name": str,
+                "total-route-count": str
+            })
         }
-    }        
+    }
 
 # Parser for 'show route receive-protocol bgp {peer_address} extensive'
 class ShowRouteReceiveProtocolPeerAddressExtensive(ShowRouteReceiveProtocolPeerAddressExtensiveSchema):
@@ -3689,21 +3399,6 @@ class ShowRouteInstanceNameSchema(MetaParser):
     """ Schema for:
             * show route instance {name}
     """
-    
-    def validate_instance_rib(value):
-        if not isinstance(value, list):
-            raise SchemaError('Instance rib is not a list')
-    
-        instance_rib = Schema({
-            "irib-name": str,
-            "irib-active-count": str,
-            "irib-holddown-count": str,
-            "irib-hidden-count": str,
-        })
-    
-        for item in value:
-            instance_rib.validate(item)
-        return value
 
     # Main Schema
     schema = {
@@ -3711,10 +3406,15 @@ class ShowRouteInstanceNameSchema(MetaParser):
             "instance-core": {
                 "instance-name": str,
                 "instance-type": str,
-                Optional("instance-ribs"): Use(validate_instance_rib)
+                Optional("instance-ribs"): ListOf({
+                    "irib-name": str,
+                    "irib-active-count": str,
+                    "irib-holddown-count": str,
+                    "irib-hidden-count": str,
+                })
             }
         }
-    }        
+    }
 
 class ShowRouteInstanceName(ShowRouteInstanceNameSchema):
     """Parser for

@@ -1,0 +1,29 @@
+
+        Device# show cdp neighbors detail
+
+        Device ID:swor95(SSI13110AAS)
+        System Name:swor95
+        Interface address(es):
+        IPv4 Address: 192.168.0.95
+        IPv6 Address: 2001:DB8:1000::BC:0:C0A8B:BC06 (global unicast)
+        IPv6 Address: 2001:DB8:1900::CB:0:C0B8B:BCC6 (link-local)
+        IPv4 Address: 192.168.0.96
+        IPv4 Address: 192.168.0.97
+        Platform: N5K-C5010P-BF, Capabilities: Switch IGMP Filtering Supports-STP-Dispute
+        Interface: Ethernet1/29, Port ID (outgoing port): Ethernet1/19
+        Holdtime: 121 sec
+
+        Version:
+        Cisco Nexus Operating System (NX-OS) Software, Version 5.0(3)N2(1)
+
+        Advertisement Version: 2
+        Native VLAN: 1
+        Duplex: full
+        Physical Location: snmplocation
+        Mgmt address(es):
+        IPv4 Address: 192.168.0.95
+        IPv6 Address: 2001:DB8:1000::BC:0:C0A8B:BC06 (global unicast)
+        IPv6 Address: 2001:DB8:1900::CB:0:C0B8B:BCC6 (link-local)
+        IPv4 Address: 192.168.0.96
+        IPv4 Address: 192.168.0.97
+    

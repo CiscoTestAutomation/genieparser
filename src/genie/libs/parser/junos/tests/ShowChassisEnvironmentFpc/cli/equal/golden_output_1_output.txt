@@ -1,0 +1,37 @@
+    FPC 0 status:
+    State                      Online
+    Temperature Intake         27 degrees C / 80 degrees F
+    Temperature Exhaust A      31 degrees C / 87 degrees F
+    Temperature Exhaust B      34 degrees C / 93 degrees F
+    Temperature I3 0 TSensor   34 degrees C / 93 degrees F
+    Temperature I3 0 Chip      38 degrees C / 100 degrees F
+    Temperature I3 1 TSensor   34 degrees C / 93 degrees F
+    Temperature I3 1 Chip      38 degrees C / 100 degrees F
+    Temperature IA 0 TSensor   37 degrees C / 98 degrees F
+    Temperature IA 0 Chip      36 degrees C / 96 degrees F
+    Power   Disabled
+    I2C Slave Revision         42
+    FPC 1 status:
+    State                      Online
+    Temperature Intake         27 degrees C / 80 degrees F
+    Temperature Exhaust A      31 degrees C / 87 degrees F
+    Temperature Exhaust B      34 degrees C / 93 degrees F
+    Temperature I3 0 TSensor   36 degrees C / 96 degrees F
+    Temperature I3 0 Chip      41 degrees C / 105 degrees F
+    Temperature I3 1 TSensor   35 degrees C / 95 degrees F
+    Temperature I3 1 Chip      37 degrees C / 98 degrees F
+    Temperature IA 0 TSensor   38 degrees C / 100 degrees F
+    Temperature IA 0 Chip      36 degrees C / 96 degrees F
+    Power
+        1.2 V PFE 0               1214 mV
+        1.2 V PFE 1               1231 mV
+        1.2 V PFE 2                 19 mV
+        1.2 V PFE 3                  9 mV
+        1.5 V                     1498 mV
+        1.8 V PFE 0               1811 mV
+        1.8 V PFE 1               1785 mV
+        1.8 V PFE 2               1791 mV
+        1.8 V PFE 3               1801 mV
+        2.5 V                     2445 mV
+        3.3 V                     3280 mV
+    I2C Slave Revision         42

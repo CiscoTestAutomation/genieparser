@@ -1,0 +1,22 @@
+The brief information of interface(s) under route mode:
+Link: ADM - administratively down; Stby - standby
+Protocol: (s) - spoofing
+Interface            Link Protocol Main IP         Description
+M-E1/0/0/0           DOWN DOWN     10.0.0.1
+NULL0                UP   UP(s)    --
+Vlan1                UP   UP       10.1.0.1        == VLAN 1 ==
+Vlan2                UP   UP       10.2.0.1        == VLAN 2 ==
+Vlan9                UP   UP       --              == VLAN 9 ==
+Vlan10               UP   UP       10.10.0.1       == VLAN 10==
+
+
+The brief information of interface(s) under bridge mode:
+Link: ADM - administratively down; Stby - standby
+Speed or Duplex: (a)/A - auto; H - half; F - full
+Type: A - access; T - trunk; H - hybrid
+Interface            Link Speed   Duplex Type PVID Description
+BAGG1                UP   3G(a)   F(a)   T    1    ## BAGG 1 ##
+BAGG2                UP   40G(a)  F(a)   T    2    ## BAGG 2 ##
+BAGG5                UP   20G(a)  F(a)   T    1    ## BAGG 5 ##
+BAGG8                UP   2G(a)   F(a)   T    1    ## BAGG 8 ##
+

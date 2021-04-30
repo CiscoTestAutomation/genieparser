@@ -194,15 +194,16 @@ class ShowInterfaceIpBrief(ShowInterfaceIpBriefSchema):
 
         ret_dict = {}
 
-        # Control0/0 10.10.1.1 YES CONFIG up up
-        # GigabitEthernet0/0 10.10.1.1 YES CONFIG up up
-        # GigabitEthernet0/1 unassigned YES unset admin down down
-        # GigabitEthernet0/2 10.10.1.1 YES manual admin down down
-        # GigabitEthernet0/3 10.10.1.1 YES DHCP admin down down
-        # Management0/0 10.10.1.1 YES CONFIG up
+        # Control0/0         10.10.1.1  YES CONFIG up                    up
+        # GigabitEthernet0/0 10.10.1.1  YES CONFIG up                    up
+        # GigabitEthernet0/1 unassigned YES unset  admin down            down
+        # GigabitEthernet0/2 10.10.1.1  YES manual admin down            down
+        # GigabitEthernet0/3 10.10.1.1  YES DHCP   admin down            down
+        # GigabitEthernet0/6 unassigned YES unset  administratively down up
+        # Management0/0      10.10.1.1  YES CONFIG up
         p1 = re.compile(r'^(?P<interface>\S+) *(?P<ip>unassigned|\d+.\d+.\d+.\d+)?'
-            '(\/(?P<prefix_length>[0-9]+))? *(?P<check>\w+) *(?P<method>\S* ?\S*?) *'
-            '(?P<link_status>\w+) *(?P<line_protocol>\w+)?$')
+            r'(\/(?P<prefix_length>[0-9]+))? *(?P<check>\w+) *(?P<method>\w+) *'
+            r'(?P<link_status>\S* ?\S*?) *(?P<line_protocol>\w+)?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -233,12 +234,12 @@ class ShowInterfaceIpBrief(ShowInterfaceIpBriefSchema):
                     if groups['prefix_length']:
                         dict_ipv4.update({'prefix_length': groups['prefix_length']})
                 instance_dict.update({'check': groups['check']})
+                instance_dict.update({'method': groups['method']})
                 
-                method = groups['method']
-                method = method.strip()
+                link_status = groups['link_status']
+                link_status = link_status.strip()
 
-                instance_dict.update({'method': method})
-                instance_dict.update({'link_status': groups['link_status']})
+                instance_dict.update({'link_status': link_status})
                 if groups['line_protocol']:
                     instance_dict.update({'line_protocol': groups['line_protocol']})
                 continue

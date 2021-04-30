@@ -6,6 +6,7 @@ expected_output = {
         "image_id": "C3750E-UNIVERSALK9-M",
         "os": "IOS",
         "image_type": "production image",
+        "label": "RELEASE SOFTWARE (fc1)",
         "compiled_date": "Mon 22-Jan-18 04:07",
         "compiled_by": "prod_rel_team",
         "rom": "Bootstrap program is C3750E boot loader",
