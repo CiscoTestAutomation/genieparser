@@ -1981,6 +1981,10 @@ class ShowInventory(ShowInventorySchema):
         # Modem 0 on Cellular0/2/0
         p1_7 = re.compile(r'^Modem +(?P<modem>\S+) +on +Cellular(?P<slot>\d+)\/(?P<subslot>.*)$')
 
+        # Slot 2 Linecard
+        # Slot 3 Supervisor
+        p1_8 = re.compile(r'^Slot \d Linecard|Slot \d Supervisor$')        
+
         # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
         # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
         # PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
@@ -2052,6 +2056,14 @@ class ShowInventory(ShowInventorySchema):
                     slot = name.replace(' ', '_')
                     # Create slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+
+                # Slot 2 Linecard
+                # Slot 3 Supervisor
+                m1_8 = p1_8.match(name)
+                if m1_8:
+                    slot = name.replace(' ', '_')
+                    # Create slot_dict
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})                    
                 
                 # go to next line
                 continue
@@ -2134,7 +2146,7 @@ class ShowInventory(ShowInventorySchema):
                 # PID: ASR1002-X         , VID: V07, SN: FOX1111P1M1
                 # PID: ASR1002-HX        , VID:      , SN:
                 elif (('SIP' in pid)  or ('-X' in pid) or \
-                     ('-HX' in pid) or ('module' in name and not ('module F' in name))) and \
+                     ('-HX' in pid) or ('LC' in pid) or ('module' in name and not ('module F' in name))) and \
                      ('subslot' not in name):
 
                     lc_dict = slot_dict.setdefault('lc', {}).\
