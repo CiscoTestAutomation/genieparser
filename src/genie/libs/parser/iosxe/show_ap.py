@@ -693,7 +693,8 @@ class ShowApDot115GhzSummarySchema(MetaParser):
                 "oper_state": str,
                 "width": int,
                 "tx_pwr": str,
-                "channel": str
+                "channel": str,
+                Optional("mode"): str      
             }
         } 
     }     
