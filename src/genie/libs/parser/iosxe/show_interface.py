@@ -487,6 +487,7 @@ class ShowInterfaces(ShowInterfacesSchema):
             m = m if m else m1
             if m:
                 interface = m.groupdict()['interface']
+                interface = Common.convert_intf_name(interface)
                 enabled = m.groupdict()['enabled']
                 line_protocol = m.groupdict()['line_protocol']
                 line_attribute = m.groupdict()['attribute']
