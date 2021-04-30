@@ -624,7 +624,6 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 continue
             #     Minimum                                  : 4 hours 9 minutes 54 seconds
             elif chan_dwell_minimum_capture.match(line):
-                print(line)
                 chan_dwell_minimum_capture_match = chan_dwell_minimum_capture.match(line)
                 groups = chan_dwell_minimum_capture_match.groupdict()
                 chan_dwell_min_hours = groups['chan_dwell_min_hours']
@@ -767,7 +766,6 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
                     ap_dot11_5ghz_summ['ap_name'] = {}
                 ap_info_capture_match = ap_info_capture.match(line)
                 groups = ap_info_capture_match.groupdict()
-                print(groups)
                 ap_name = groups['ap_name']
                 mac_address = groups['mac_address']
                 slot = int(groups['slot'])
@@ -785,7 +783,6 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
                 ap_dot11_5ghz_summ['ap_name'][ap_name]['tx_pwr'] = tx_pwr
                 ap_dot11_5ghz_summ['ap_name'][ap_name]['channel'] = channel
                 continue
-            # print(ap_dot11_5ghz_summ)
 
         return ap_dot11_5ghz_summ
 
