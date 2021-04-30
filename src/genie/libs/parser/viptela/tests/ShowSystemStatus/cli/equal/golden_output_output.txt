@@ -1,5 +1,5 @@
 
-        srp_vedge# show system status
+srp_vedge# show system status
 
         Viptela (tm) vedge Operating System Software
         Copyright (c) 2013-2020 by Viptela, Inc.
@@ -40,4 +40,3 @@
         Commit pending:          false
         Configuration template:  CLItemplate_srp_vedge
         Chassis serial number:   None
-    

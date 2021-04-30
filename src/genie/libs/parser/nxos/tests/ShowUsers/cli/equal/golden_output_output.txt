@@ -1,0 +1,4 @@
+NAME     LINE         TIME         IDLE          PID COMMENT
+admin    pts/0        Jan 28 13:44   .          8096 adding some comments 
+admin    pts/1        Jan 28 13:44   .          8096  
+admin    pts/2        Jan 28 13:44   .          8096 adding some comments *

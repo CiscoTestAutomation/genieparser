@@ -11,76 +11,52 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import (Any, 
-        Optional, Use, Schema, Or)
+from genie.metaparser.util.schemaengine import (Any,
+        Optional, Use, Schema, Or, ListOf)
 
 class ShowFirewallSchema(MetaParser):
 
     """ Schema for:
             * show firewall
-    """
 
-    """schema = {
-    Optional("@xmlns:junos"): str,
-    "firewall-information": {
-        Optional("@xmlns"): str,
-        "filter-information": [
-            {
-                Optional("counter"): {
-                    "byte-count": str,
-                    "counter-name": str,
-                    "packet-count": str
-                },
-                "filter-name": str,
-                Optional("policer"): {
-                    "byte-count": str,
-                    "packet-count": str,
-                    "policer-name": str
-                }
-            }
-        ]
-    }
-}"""
-
-    def validate_counter_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('counter is not a list')
-        counter_inner_schema = Schema(
-                        {
-                            "byte-count": str,
-                            "counter-name": str,
-                            "packet-count": str
-                        
-                        }
-                    
-        )
-        # Validate each dictionary in list
-        for item in value:
-            counter_inner_schema.validate(item)
-        return value
-
-    
-    def validate_filter_information_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('filter-information is not a list')
-        filter_schema = Schema({
-                Optional("counter"): Use(ShowFirewall.validate_counter_list),
-                "filter-name": str,
-                Optional("policer"): {
-                    "byte-count": str,
-                    "packet-count": str,
-                    "policer-name": str
-                }
-        })
-        for item in value:
-            filter_schema.validate(item)
-        return value
     schema = {
         Optional("@xmlns:junos"): str,
         "firewall-information": {
             Optional("@xmlns"): str,
-            "filter-information": Use(validate_filter_information_list)
+            "filter-information": ListOf({
+                Optional("counter"): ListOf({
+                    "byte-count": str,
+                    "counter-name": str,
+                    "packet-count": str
+                }),
+                "filter-name": str,
+                Optional("policer"): {
+                    "byte-count": str,
+                    "packet-count": str,
+                    "policer-name": str
+                }
+            })
+        }
+    }
+"""
+
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "firewall-information": {
+            Optional("@xmlns"): str,
+            "filter-information": ListOf({
+                Optional("counter"): ListOf({
+                    "byte-count": str,
+                    "counter-name": str,
+                    "packet-count": str
+                }),
+                "filter-name": str,
+                Optional("policer"): {
+                    "byte-count": str,
+                    "packet-count": str,
+                    "policer-name": str
+                }
+            })
         }
     }
 
@@ -256,25 +232,17 @@ class ShowFirewallLogSchema(MetaParser):
     }
 }"""
 
-    def validate_log_information_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('log-information is not a list')
-        log_schema = Schema({
-                "action-name": str,
-                "destination-address": str,
-                "filter-name": str,
-                "interface-name": str,
-                "protocol-name": str,
-                "source-address": str,
-                "time": str
-        })
-        for item in value:
-            log_schema.validate(item)
-        return value
-
     schema = {
     "firewall-log-information": {
-        "log-information": Use(validate_log_information_list)
+        "log-information": ListOf({
+                        "action-name": str,
+                        "destination-address": str,
+                        "filter-name": str,
+                        "interface-name": str,
+                        "protocol-name": str,
+                        "source-address": str,
+                        "time": str
+                })
             }
         }
 
@@ -297,7 +265,7 @@ class ShowFirewallLog(ShowFirewallLogSchema):
                         r'+(?P<action_name>\S+) +(?P<interface_name>\S+) '
                         r'+(?P<protocol_name>\S+) +(?P<source_address>\S+) '
                         r'+(?P<destination_address>\S+)$')
-        
+
         ret_dict = {}
 
         for line in out.splitlines():

@@ -1,10 +1,11 @@
 expected_output = {
         "version": {
-            "version_short": "2019-10-31_17.49_makale",
+            "version_short": "17.2",
             "os": "IOS-XE",
             "code_name": "Amsterdam",
             "platform": "Catalyst L3 Switch",
             "image_id": "CAT9K_IOSXE",
+            "label": "[HEAD-/nobackup/makale/puntject2/polaris 106]",
             "version": "17.2.20191101:003833",
             "compiled_date": "Thu 31-Oct-19 17:43",
             "compiled_by": "makale",
@@ -47,6 +48,7 @@ expected_output = {
             "mb_rev_num": "4",
             "model_num": "C9500-32QC",
             "system_sn": "CAT2242L6CG",
-            "curr_config_register": "0x102"
+            "curr_config_register": "0x102",
+            "xe_version": "2019-10-31_17.49_makale"
         }
     }

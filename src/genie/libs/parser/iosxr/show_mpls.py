@@ -1,6 +1,7 @@
 ''' show_mpls.py
 
 IOSXR parsers for the following show commands:
+    * 'show mpls ldp interface'
     * 'show mpls label range'
     * 'show mpls ldp neighbor'
     * 'show mpls ldp neighbor {interface}'
@@ -24,6 +25,159 @@ from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
                                          Default, Use
 # import parser utils
 from genie.libs.parser.utils.common import Common
+
+# ======================================================
+# Parser for 'show mpls ldp interface'
+# ======================================================
+class ShowMplsLdpInterfaceSchema(MetaParser):
+
+    """Schema for show mpls ldp interface"""
+
+    schema =  {
+        'vrf': {
+            Any(): {  
+                'vrf_index': str,
+                'interfaces': {
+                    Any(): { 
+                    'interface_index': str,
+                        Optional('enabled'): {
+                            Any(): {
+                                'via': str,
+                            }
+                        },
+                        Optional('disabled'): {
+                            Any(): {
+                                'via': str,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowMplsLdpInterface(ShowMplsLdpInterfaceSchema):
+
+    '''Parser for show mpls ldp interface'''
+
+    cli_command = ['show mpls ldp interface']
+
+    """
+    Interface HundredGigE0/5/0/0 (0xe0000c0)
+        VRF: 'default' (0x60000000)
+        Disabled: 
+    Interface HundredGigE0/5/0/0.100 (0xe0001c0)
+        VRF: 'default' (0x60000000)
+        Disabled: 
+    Interface TenGigE0/3/0/0 (0xa0004c0)
+        VRF: 'default' (0x60000000)
+        Enabled via config: LDP interface
+    Interface TenGigE0/3/0/1.100 (0xa001940)
+        VRF: 'default' (0x60000000)
+        Disabled: 
+    """
+
+    def cli (self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+        
+        #Init returned dictionary        
+        ret_dict = {}
+
+        #Interface HundredGigE0/5/0/0.100 (0xe0001c0)
+        p1 = re.compile(r'Interface\s+(?P<interface_name>[\w\/\.]+)\s+\((?P<interface_index>[\w]+)\)\s*$') 
+
+        #VRF: 'default' (0x60000000)
+        p2_1 = re.compile(r'(^VRF\:\s+(?P<vrf>\'(\w)+\')\s+\((?P<vrf_index>[\s\S]+)\)\s*$)') 
+
+        #Enabled via config: LDP interface
+        p2_2 = re.compile(r'^Enabled\s+via\s+(?P<via>[\w]+):\s+(?P<enabled>.*?)$') 
+
+        #Disabled:
+        #Disabled via config: LDP interface
+        p2_3 = re.compile(r'^(?P<dis>Disabled\:)|Disabled\s+via\s+(?P<via>[\w]+):\s+(?P<disabled>.*?)$')                 
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Interface HundredGigE0/5/0/0.100 (0xe0001c0)
+            m1 = p1.match(line)
+                           
+            if m1:
+                interface_group = m1.groupdict()
+                inter_name = interface_group['interface_name']
+                inter_index = interface_group['interface_index']
+                continue
+            
+            #VRF: 'default' (0x60000000)
+            m2_1 = p2_1.match(line)
+            if m2_1:
+                vrf_group = m2_1.groupdict()
+                #remove single code from 'default'
+                vrf = vrf_group['vrf'].replace("'","")
+                vrf_index = vrf_group['vrf_index']
+                
+                #define top level dictionary vrf and set to 'vrf'
+                top_dict = ret_dict.setdefault('vrf', {})
+                
+                #define sub-default dictionary and set to 'default'
+                def_dict = top_dict.setdefault(vrf, {})
+                
+                #set 'sub-default' dictionary
+                def_dict['vrf_index'] = vrf_index  
+
+                #define sub-interface dictionary and set to 'interfaces'
+                int_dict = def_dict.setdefault('interfaces', {})
+
+                #set sub-interfaces dictionary
+                int_dict[inter_name] = {'interface_index':inter_index}
+                
+                #update top level dictionary 'sub-default dictionalry'                           
+                top_dict.update({vrf:def_dict})
+                continue                
+            
+            #Enabled via config: LDP interface
+            m2_2 = p2_2.match(line)
+            if m2_2:
+                enabled_group = m2_2.groupdict()
+                enabled = enabled_group['enabled']
+                via = enabled_group['via']
+
+                #define enabled_dict sub-dictionary within interface dictionary and set to 'enabled'
+                enabled_dict = int_dict[inter_name].setdefault('enabled', {}).setdefault(enabled, {})
+
+                #set enabled_dict
+                enabled_dict['via'] = via                
+                continue                
+
+            #Disabled:
+            m2_3 = p2_3.match(line)
+            if m2_3:
+                disabled_group = m2_3.groupdict()
+
+                #Disabled via config: LDP interface | Disabled:
+                disabled = disabled_group['disabled']
+
+                #via:'config'  disable:'LDP interface'
+                if disabled_group['via']:
+                    via = disabled_group['via']
+
+                    #define disabled_dic dictionary within interface dictionary and set to 'disabled'
+                    disabled_dict = int_dict[inter_name].setdefault('disabled', {}).setdefault(disabled, {})
+                    # disabled_dict['disabled'] = disabled
+                    disabled_dict['via'] = via 
+                
+                #Disabled:      
+                else:
+                    disabled = disabled_group['disabled']
+
+                    #define disabled_dic dictionary within interface dictionary and set to 'disabled'
+                    disabled_dict = int_dict[inter_name].setdefault('disabled', {})
+                continue               
+        return ret_dict
 
 
 # ======================================================
@@ -1487,3 +1641,115 @@ class ShowMplsForwarding(ShowMplsForwardingSchema, ShowMplsForwardingVrf):
                     'vrf', {}).get('default', {})
 
         return ret_dict
+
+
+# ======================================================
+# Parser for 'show mpls ldp bindings'
+# ======================================================
+class ShowMplsLdpBindingsSchema(MetaParser):
+
+    """Schema for 'show mpls ldp bindings' """
+
+    schema =  {
+        'lib_entry': {
+            Any(): {
+                'rev': int,
+                'local_binding': {
+                    'label': str
+                },
+                Optional('remote_bindings'): {
+                    Optional('peer_count'): int,
+                    'label': {
+                        Any(): { 
+                            'lsr_id': {
+                                Any(): {
+                                    'label': str,
+                                    'lsr_id': str
+                                }
+                            }
+                        }
+                    },
+                }
+            }
+        }
+    }
+
+class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
+
+    """ Parser for 'show mpls ldp bindings' """
+
+    cli_command = ['show mpls ldp bindings']
+
+    def cli (self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
+        
+        # intialize bindings dictionary for parsed results
+        result_dict = {}
+
+        # 95.95.95.95/32, rev 20
+        # 5.43.9.98/32 , rev 6 
+        p1 = re.compile(r'^(?P<lib_entry>[\d\.\/]+) ?, +rev +(?P<rev>\d+)')
+        
+        # Local binding: label: ImpNull
+        # local binding: label:IMP-NULL
+        p2 = re.compile(r'^[lL]ocal +binding: +label: ?(?P<local_label>\S+)')
+        
+        # Remote bindings: (2 peers)
+        # remote bindings : 
+        p3 = re.compile(r'^[rR]emote +bindings ?:(?: +\((?P<peer_count>\d+) +peers\))?')
+        
+        # 95.95.95.95:0       16002
+        # lsr:10.255.255.255:0, label:16 
+        p4 = re.compile(r'^(?:lsr:)?(?P<lsr_id>[\d\.\:]+),? +(?:label:)?(?P<remote_label>\S+)')
+        
+
+        for line in output.splitlines():
+            line = line.strip() # strip whitespace from beginning and end
+
+            # 95.95.95.95/32, rev 20
+            # 5.43.9.98/32 , rev 6 
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                lib_entry_dict = result_dict.setdefault('lib_entry', {}).setdefault(group['lib_entry'], {})
+                lib_entry_dict.update({'rev': int(group['rev'])})
+                continue
+            
+            # Local binding: label: ImpNull
+            # local binding: label:IMP-NULL
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                local_dict = lib_entry_dict.setdefault('local_binding', {})
+                local_dict.update({'label': group['local_label']})
+                continue
+                
+            # Remote bindings: (2 peers)
+            # remote bindings : 
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                remote_dict = lib_entry_dict.setdefault('remote_bindings', {})
+                if group['peer_count']: 
+                    remote_dict.update({'peer_count': int(group['peer_count'])})
+                continue
+
+            # 95.95.95.95:0       16002
+            # lsr:10.255.255.255:0, label:16 
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                    
+                lsr_id = remote_dict.setdefault('label', {}).\
+                            setdefault(group['remote_label'],{}).\
+                            setdefault('lsr_id', {}).\
+                            setdefault(group['lsr_id'],{})
+                            
+                lsr_id.update({'label': group['remote_label']})
+                lsr_id.update({'lsr_id': group['lsr_id']})
+                continue
+                
+            
+        return result_dict
+

@@ -1,5 +1,6 @@
 expected_output = {
     "version": {
+        "xe_version": "BLD_V163_MR_THROTTLE_LATEST_20170410_093453_V16_3_3_24",
         "version_short": "16.3",
         "platform": "ASR1000",
         "compiled_by": "mcpre",
@@ -12,6 +13,7 @@ expected_output = {
         "hostname": "PE1",
         "uptime": "32 minutes",
         "image_type": "developer image",
+        "label": "[v163_mr_throttle-BLD-BLD_V163_MR_THROTTLE_LATEST_20170410_093453 118]",
         "uptime_this_cp": "34 minutes",
         "system_restarted_at": "09:08:57 PDT Mon Apr 10 2017",
         "system_image": "harddisk:test-image-PE1-13113029",
@@ -20,6 +22,7 @@ expected_output = {
         "license_level": "advipservices",
         "next_reload_license_level": "advipservices",
         "chassis": "ASR1006",
+        "build_label": "BLD_V163_MR_THROTTLE_LATEST_20170410_093453",
         "processor_type": "RP2",
         "chassis_sn": "FOX1444GPXU",
         "rtr_type": "ASR1K",

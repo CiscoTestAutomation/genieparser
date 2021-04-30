@@ -1,0 +1,5 @@
+      ID   Pod ID                 Name    Serial Number         IP Address    Role        State   LastUpdMsgId
+--------------------------------------------------------------------------------------------------------------
+     101        1        hw_leaf1_II23      FDO20521053     10.0.152.66/32    leaf         active   0
+     102        1        hw_leaf2_II23      FDO23151BX4     10.0.152.64/32    leaf         active   0
+     201        1       hw_spine1_II23      FDO221425X6     10.0.152.65/32   spine         active   0

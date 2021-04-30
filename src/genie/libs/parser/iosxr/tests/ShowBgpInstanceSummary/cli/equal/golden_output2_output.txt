@@ -1,0 +1,45 @@
+        show bgp instance all vrf all ipv4 unicast summary
+
+        Fri Oct 25 18:08:37.602 EDT
+
+        BGP instance 0: 'default'
+        =========================
+
+        VRF: HI-TST
+        -----------
+        BGP VRF HI-TST, state: Active
+        BGP Route Distinguisher: 10.16.2.2:0
+        VRF ID: 0x60000001
+        BGP router identifier 10.4.1.1, local AS number 64577
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0011110  RD version: 19
+        BGP main routing table version 1
+        BGP NSR Initial initsync version 18 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker              1         1         1         1          1           0
+
+
+        VRF: CTV-BG-JYI
+        ---------------
+        BGP VRF CTV-BG-JYI, state: Active
+        BGP Route Distinguisher: 10.25.4.5:1
+        VRF ID: 0x60000004
+        BGP router identifier 10.4.1.1, local AS number 12345
+        Non-stop routing is enabled
+        BGP table state: Active
+        Table ID: 0xe0011114   RD version: 1
+        BGP main routing table version 1
+        BGP NSR Initial initsync version 18 (Reached)
+        BGP NSR/ISSU Sync-Group versions 0/0
+
+        BGP is operating in STANDALONE mode.
+
+
+        Process       RcvTblVer   bRIB/RIB   LabelVer  ImportVer  SendTblVer  StandbyVer
+        Speaker              1         1         1         1          1           0 

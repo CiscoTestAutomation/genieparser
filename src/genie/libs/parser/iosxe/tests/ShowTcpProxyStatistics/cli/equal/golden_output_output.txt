@@ -7,6 +7,7 @@
    Flow Entries Created                : 32432
    Flow Entries Deleted                : 32432
    Current Flow Entries                : 0
+   Current Valid Flow Entries          : 0
    Current Connections                 : 0
    Connections In Progress             : 0
    Failed Connections                  : 12
@@ -61,8 +62,13 @@ Invalid Flow Entries : 0
    SSL Resume Done                     : 0
    SNORT Pause Done                    : 0
    SNORT Resume Done                   : 0
+   DRE Pause Done	                     : 0
+   DRE Resume Done	                   : 0
+   DRE Resume msg to be Sent           : 0
+   DRE Resume msg Sent                 : 0
    EV SSL Pause Process                : 0
    EV SNORT Pause Process              : 0
+   EV DRE Pause Process                : 0
    EV SSL/SNORT Resume Process         : 4728
    Socket Pause Done                   : 0
    Socket Resume Done                  : 4728
@@ -77,6 +83,7 @@ Invalid Flow Entries : 0
 
    TCP SSL Reset Initiated             : 0
    TCP SNORT Reset Initiated           : 0
+   TCP DRE Close Initiated             : 0
    TCP FIN Received from clnt/svr      : 44168
    TCP Reset Received from clnt/svr    : 24995
    SSL FIN Received -> SC              : 0
@@ -93,6 +100,8 @@ Invalid Flow Entries : 0
    Flow Cleaned with Client Data       : 0
    Flow Cleaned with Server Data       : 0
    Buffers dropped in Tx socket close  : 1
+   Buffers dropped in Tx not writable  : 0
+   Buffers dropped in Tx socket closed  : 1
    TCP 4k Allocated Buffers            : 416778
    TCP 16k Allocated Buffers           : 0
    TCP 32k Allocated Buffers           : 0
@@ -121,6 +130,7 @@ Invalid Flow Entries : 0
    Flows Dropped-Snort Inst Health Yellow       : 0
    Flows Dropped-WCAPI Channel Health Yellow    : 0
    Total WCAPI snd flow create svc chain failed : 0
+   Total WCAPI snd flow delete svc chain failed : 0
    Total WCAPI send data svc chain failed       : 0
    Total WCAPI send close svc chain failed      : 0
    Total Tx Enqueue Failed                      : 0
@@ -129,6 +139,7 @@ Invalid Flow Entries : 0
    Total Cleanup Flow Msg Rcvd in wk_q          : 0
    Total Cleanup Flow Ignored, Already Done     : 0
    Total Cleanup SSL Msg Add to wk_q Failed     : 0
+   Total SSL Trigger Reset msg to wk q failed   : 0
    Total UHI mmap                               : 7793
    Total UHI munmap                             : 0
 Total UHI Page Alloc : 0
@@ -154,4 +165,3 @@ Unified Logging Deq Fail(not enough space) : 0
 AOIM Sync Started : 0
 AOIM Sync Completed : 0
 AOIM Sync Errored : 0
-        

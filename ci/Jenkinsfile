@@ -1,0 +1,107 @@
+def project = 'genieparser'
+
+pipeline {
+    agent {
+        label 'linux'
+    }
+    options {
+        timeout(time: 30, unit: 'MINUTES')
+    }
+    stages {
+        stage('Clone repos') {
+            steps {
+                checkout([$class: 'GitSCM', branches: [[name: '*/dev']], extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: 'genie']], userRemoteConfigs: [[credentialsId: 'e8a7354a-c71a-42cb-83ee-49ab5ad40085', url: 'https://wwwin-github.cisco.com/pyATS/genie.git']]])
+                script {
+                    sh """
+                    ls -l
+                    cd genie
+                    git remote -v
+                    """
+                }
+            }
+        }
+
+        stage('Checkout branches') {
+            steps {
+                script {
+                    sh """
+                    cd genie
+                    # checkout same branch on genie, if it exists
+                    git checkout ${env.CHANGE_BRANCH == null ? env.GIT_BRANCH : env.CHANGE_BRANCH} || true
+                    """
+                }
+            }
+        }
+
+        stage("Build pyATS and make develop") {
+            steps {
+                sh """
+                    env
+                    pip list
+                    pip freeze
+                    export PIP_DOWNLOAD_CACHE=/scratch/pip_download_cache
+                    rm -rf /scratch/genieparser-env
+                    cd /scratch
+                    /usr/bin/python3.6 -m venv genieparser-env
+                    . /scratch/genieparser-env/bin/activate
+                    pip install --upgrade pip setuptools
+                    pip3 install --no-cache-dir wheel pytest pytest-xdist coverage
+                    pip3 install --no-cache-dir -i http://pyats-pypi.cisco.com/simple --trusted-host pyats-pypi.cisco.com cisco-distutils ats[full]
+                    cd $WORKSPACE/genie
+                    make develop
+                    cd $WORKSPACE
+                    make develop
+                    env
+                    pip list
+                    pip freeze
+                """
+            }
+        }
+
+        stage("Run compileAll") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                compileAll
+                """
+            }
+        }
+
+
+        stage("Run runAll") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                runAll --path tests --no-refresh --coverage
+                """
+            }
+        }
+
+
+        stage("Run folder_parsing_job") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                cd tests
+
+                coverage run --include '*/parser/*' --omit '*/tests/*' folder_parsing_job.py --no-mail --no-archive
+                coverage html
+                """
+                publishHTML (target: [
+                    allowMissing: true,
+                    alwaysLinkToLastBuild: false,
+                    keepAll: true,
+                    reportDir: 'tests/htmlcov',
+                    reportFiles: "index.html",
+                    reportName: 'Coverage report'
+                ])
+            }
+        }
+
+    }
+    post {
+        cleanup {
+            cleanWs()
+        }
+    }
+}

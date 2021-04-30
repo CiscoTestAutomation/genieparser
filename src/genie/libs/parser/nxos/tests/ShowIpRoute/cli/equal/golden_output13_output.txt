@@ -1,0 +1,14 @@
+IP Route Table for VRF "User-VLAN"
+'*' denotes best ucast next-hop
+'**' denotes best mcast next-hop
+'[x/y]' denotes [preference/metric]
+'%<string>' in via output denotes VRF <string>
+
+0.0.0.0/0, ubest/mbest: 1/0
+    *via 192.168.1.1%Internet_VLAN, [20/0], 38w2d, bgp-64512, external, tag 65000
+10.0.0.0/24, ubest/mbest: 1/0
+    *via 169.254.0.1%Server*VLAN, [20/0], 38w2d, bgp-64512, external, tag 65001
+10.0.0.10/32, ubest/mbest: 1/0
+    *via 169.254.1.1%LegacyLAN:{101}, [20/0], 38w2d, bgp-64512, external, tag 65002
+10.2.0.0/24, ubest/mbest: 1/0
+    *via 172.16.0.1%default-VLAN, [200/0], 02:46:06, bgp-64512, internal, tag 64513 (mpls-vpn)
