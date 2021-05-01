@@ -754,8 +754,7 @@ def main(**kwargs):
             reporter=FailedReporter(),
             **parsed_args
         )
-        if str(result) == 'failed':
-            sys.exit(1)
+        aetest.exit_cli_code(result)
 
 
 if __name__ == "__main__":
