@@ -1,0 +1,35 @@
+
+    +++ genie_device: executing command 'show mac address-table' +++
+    
+    show mac address-table
+    
+    Legend:
+    
+        * - primary entry, G - Gateway MAC, (R) - Routed MAC, O - Overlay MAC
+
+        age - seconds since last seen,+ - primary entry using vPC Peer-Link,
+
+        (T) - True, (F) - False, C - ControlPlane MAC, ~ - vsan
+    
+       VLAN     MAC Address      Type      age     Secure NTFY Ports
+    
+    ---------+-----------------+--------+---------+------+----+------------------
+    
+    *  390     000f.53ff.e5a5   dynamic  0         F      F    Po113
+    
+    +  390     000f.53ff.1446   dynamic  0         F      F    Po103
+    
+    +  390     000f.53ff.d708   dynamic  0         F      F    Po115
+    
+    *  390     000f.53ff.fd77   dynamic  0         F      F    Po116
+    
+    *  390     000f.53ff.d0fc   dynamic  0         F      F    Po127
+    
+    *  390     000f.53ff.037d   dynamic  0         F      F    Po133
+    
+    +  390     000f.53ff.061e   dynamic  0         F      F    Po132
+    
+    *  390     000f.53ff.1e9c   dynamic  0         F      F    Po124
+    
+    +  390     000f.53ff.1f1d   dynamic  0         F      F    Po125             
+    
