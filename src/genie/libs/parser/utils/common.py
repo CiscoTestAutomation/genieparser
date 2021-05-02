@@ -23,7 +23,7 @@ log = logging.getLogger(__name__)
 
 class ParserNotFound(Exception):
     '''raise exception if parser command is not found
-       first argument is parser class 
+       first argument is parser class
        second argument is token '''
     def __init__(self, *args):
         self.parser_command = args[0]
@@ -48,9 +48,13 @@ def _load_parser_json():
                     'genie.libs.parsers')
         parser_data = {}
     else:
-        # Open all the parsers in json file
-        with open(parsers) as f:
-            parser_data = json.load(f)
+        try:
+            # Open all the parsers in json file
+            with open(parsers) as f:
+                parser_data = json.load(f)
+        except:
+            log.error(f'Could not load parser json from file {parsers}', exc_info=True)
+            return {}
 
         # check if provided external parser packages
         ext_parser_package = cfg.get(PYATS_EXT_PARSER, None) or \
@@ -72,9 +76,9 @@ def get_parser_commands(device, data=None):
     '''Remove all commands which contain { as this requires
        extra kwargs which cannot be guessed dynamically
        Remove the ones that arent related to this os'''
-    
+
     if data is None:
-        try: 
+        try:
             data = parser_data
         except NameError:
             data = _load_parser_json()
@@ -140,7 +144,7 @@ def get_parser(command, device, fuzzy=False):
 
     if not valid_results:
         '''result is not valid. raise custom ParserNotFound exception'''
-        raise ParserNotFound(command, lookup._tokens)                        
+        raise ParserNotFound(command, lookup._tokens)
 
     if not fuzzy:
         return valid_results[0][1], valid_results[0][2]
@@ -162,12 +166,12 @@ def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
             list: the result of the search
     """
 
-    try: 
+    try:
         data = parser_data
     except NameError:
         data = _load_parser_json()
 
-    # Perfect match should return 
+    # Perfect match should return
     if search in data:
         return [(search, data[search], {})]
 
@@ -580,12 +584,19 @@ class Common():
                    'vl': 'vasileft',
                    'vr': 'vasiright',
                    'BE': 'Bundle-Ether',
-                   'tu': 'Tunnel'
+                   'tu': 'Tunnel',
+                   'M-E': 'M-Ethernet',             # comware
+                   'BAGG' : 'Bridge-Aggregation',   # comware
+                   'Ten-GigabitEthernet': 'TenGigabitEthernet'  # HP
                    }
-        m = re.search(r'([a-zA-Z]+)', intf) 
+        m = re.search(r'([-a-zA-Z]+)', intf)
         m1 = re.search(r'([\d\/\.]+)', intf)
+        m2 = re.search(r'(M-E)', intf)
         if hasattr(m, 'group') and hasattr(m1, 'group'):
-            int_type = m.group(0)
+            if hasattr(m2, 'group'):
+                int_type = m2.group(0)
+            else:
+                int_type = m.group(0)
             int_port = m1.group(0)
             if int_type in convert.keys():
                 return(convert[int_type] + int_port)

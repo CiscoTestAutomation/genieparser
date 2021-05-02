@@ -1,8 +1,0 @@
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* IOSXE
-    * Modified ShowWlanAll:
-        * Added Optional keys <wifi_direct_policy>, <multicast_buffer_frames>, <dual_neighbor_list>, <client_scan_report_11k_beacon_radio_measurement>, <request_on_association>, and <request_on_roam> into the schema.
-        * Changed <multicast_buffer_size> from schema to Optional.
-        * Updated regex pattern <p_multi_buffer_frames> to correctly accommodate outputs.

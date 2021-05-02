@@ -20,7 +20,7 @@ expected_output = {
         "pruning_vlans": "2-1001",
         "access_vlan": "1",
         "unknown_multicast_blocked": False,
-        "trunk_vlans": "1,111,130,131,400,405,410,420,430,439-442,450,451,460,",
+        "trunk_vlans": "1,111,130,131,400,405,410,420,430,439-442,450,451,460,470,480,490,500,616,619,700,709-712,720,723-725,760",
         "unknown_unicast_blocked": False,
     },
     "TenGigabitEthernet1/1/2": {
@@ -31,7 +31,7 @@ expected_output = {
         "switchport_enable": True,
         "private_vlan": {},
         "capture_mode": False,
-        "trunk_vlans": "1,111,130,131,400,405,410,420,430,439-442,450,451,460,",
+        "trunk_vlans": "1,111,130,131,400,405,410,420,430,439-442,450,451,460,470,480,490,500,616,619,700,709-712,720,723-725,760",
         "capture_vlans": "all",
         "negotiation_of_trunk": False,
         "unknown_multicast_blocked": False,
