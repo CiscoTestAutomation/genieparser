@@ -5301,43 +5301,40 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(
 
 
 # =============================================================
-# Schema for 'show ospf database', 'show ospf mpls1 database'
+# Schema for 'show ospf database', 'show ospf <process_id> database'
 # =============================================================
 class ShowOspfDatabaseSchema(MetaParser):
-    """Schema for show ospf database, show ospf mpls1 database
+    """Schema for show ospf database, show ospf <process_id> database
     """
 
     schema = {
-        'vrf':
-            {Any():
-                 {'address_family':
-                      {Any():
-                           {'instance':
-                                {Any():
-                                     {"router_id": str,
-                                      Optional('area'):
-                                          {Any():
-                                              {
-                                                  "area_id": int,
-                                                  'database':
-                                                      {'lsa_types':
-                                                           {Any():
-                                                                {'lsa_type': int,
-                                                                 'lsas':
-                                                                     {Any():
-                                                                         {
-                                                                             'adv_router': str,
-                                                                             'link_id': str,
-                                                                             'ospf':
-                                                                                 {'header':
-                                                                                     {
-                                                                                         'age': int,
-                                                                                         'seq_num': str,
-                                                                                         'checksum': str,
-                                                                                         Optional('link_count'): int,
-                                                                                         Optional('opaque_id'): int
-                                                                                     },
+        'vrf':{
+            Any():{
+                'address_family':{
+                    Any():{
+                        'instance':{
+                            Any():{
+                                "router_id": str,
+                                Optional('area'):{
+                                    Any():{
+                                            "area_id": int,
+                                            'database':{
+                                                'lsa_types':{
+                                                    Any():{
+                                                        'lsa_type': int,
+                                                        'lsas':{
+                                                            Any():{
+                                                                    'adv_router': str,
+                                                                    'link_id': str,
+                                                                    'ospf':{
+                                                                        'header':{
+                                                                                     'age': int,
+                                                                                     'seq_num': str,
+                                                                                     'checksum': str,
+                                                                                     Optional('link_count'): int,
+                                                                                     Optional('opaque_id'): int
                                                                                  },
+                                                                             },
                                                                          },
                                                                      },
                                                                  },
@@ -5352,21 +5349,19 @@ class ShowOspfDatabaseSchema(MetaParser):
                   },
              },
         }
-
-
 # =============================================================
-#  Parser for 'show ospf database', 'show ospf mpls1 database'
+#  Parser for 'show ospf database', 'show ospf <process_id> database'
 # =============================================================
 
 class ShowOspfDatabase(ShowOspfDatabaseSchema):
-    """ Parser for show ospf database, show ospf mpls1 database
+    """ Parser for show ospf database, show ospf <process_id> database
     """
-    cli_command = ['show ospf database', 'show ospf {process} database']
+    cli_command = ['show ospf database', 'show ospf {process_id} database']
 
-    def cli(self, process=None, output=None):
+    def cli(self, process_id=None, output=None):
         if not output:
-            if process:
-                output = self.device.execute(self.cli_command[1].format(process=process))
+            if process_id:
+                output = self.device.execute(self.cli_command[1].format(process_id=process_id))
             else:
                 output = self.device.execute(self.cli_command[0])
 
