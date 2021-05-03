@@ -1875,7 +1875,8 @@ class ShowIpRouteSummary(ShowIpRouteSummarySchema):
 
         # IP routing table name is default (0x0)
         # IP routing table name is VRF-1 (0x27)
-        p1 = re.compile(r'^IP +routing +table +name +is +(?P<vrf>\S+) +\((?P<vrf_id>\w+)\)$')
+        # IP routing table name is Default-IP-Routing-Table(0)
+        p1 = re.compile(r'^IP +routing +table +name +is +(?P<vrf>\S+) *\((?P<vrf_id>\w+)\)$')
         # IP routing table maximum-paths is 32
         p2 = re.compile(r'^IP +routing +table +maximum-paths +is +(?P<max_path>[\d]+)$')
         # application     0           0           0           0           0
