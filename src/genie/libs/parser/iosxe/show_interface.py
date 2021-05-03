@@ -490,7 +490,6 @@ class ShowInterfaces(ShowInterfacesSchema):
                 enabled = m.groupdict()['enabled']
                 line_protocol = m.groupdict()['line_protocol']
                 line_attribute = m.groupdict()['attribute']
-
                 if m.groupdict()['autostate']:
                     autostate = m.groupdict()['autostate'].lower()
                 else:
