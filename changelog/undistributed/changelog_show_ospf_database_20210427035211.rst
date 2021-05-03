@@ -4,4 +4,4 @@
 * IOSXR
     * Added ShowOspfDatabase
         * show ospf database
-        * show ospf mpls1 database
+        * show ospf {process_id} database
