@@ -5308,47 +5308,47 @@ class ShowOspfDatabaseSchema(MetaParser):
     """
 
     schema = {
-        'vrf':{
-            Any():{
-                'address_family':{
-                    Any():{
-                        'instance':{
-                            Any():{
-                                "router_id": str,
-                                Optional('area'):{
-                                    Any():{
-                                            "area_id": int,
-                                            'database':{
-                                                'lsa_types':{
-                                                    Any():{
-                                                        'lsa_type': int,
-                                                        'lsas':{
-                                                            Any():{
-                                                                    'adv_router': str,
-                                                                    'link_id': str,
-                                                                    'ospf':{
-                                                                        'header':{
-                                                                                     'age': int,
-                                                                                     'seq_num': str,
-                                                                                     'checksum': str,
-                                                                                     Optional('link_count'): int,
-                                                                                     Optional('opaque_id'): int
-                                                                                 },
-                                                                             },
-                                                                         },
-                                                                     },
-                                                                 },
+    'vrf': {
+        Any(): {
+            'address_family': {
+                Any(): {
+                    'instance': {
+                        Any(): {
+                            "router_id": str,
+                            Optional('area'): {
+                                Any(): {
+                                    "area_id": int,
+                                    'database': {
+                                        'lsa_types': {
+                                            Any(): {
+                                                'lsa_type': int,
+                                                'lsas': {
+                                                    Any(): {
+                                                        'adv_router': str,
+                                                        'link_id': str,
+                                                        'ospf': {
+                                                            'header': {
+                                                                'age': int,
+                                                                'seq_num': str,
+                                                                'checksum': str,
+                                                                Optional('link_count'): int,
+                                                                Optional('opaque_id'): int
                                                             },
-                                                       },
-                                              },
-                                          },
-                                      },
-                                 },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
                             },
-                       },
-                  },
-             },
-        }
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
 # =============================================================
 #  Parser for 'show ospf database', 'show ospf <process_id> database'
 # =============================================================
