@@ -31,6 +31,7 @@ expected_output = {
                                 "received": {
                                     "explicit_withdraw": 0,
                                     "implicit_withdraw": 0,
+                                    "prefixes_current": 1,
                                     "prefixes_total": 1,
                                     "used_as_bestpath": 1,
                                     "used_as_multipath": 0,
@@ -39,6 +40,7 @@ expected_output = {
                                 "sent": {
                                     "explicit_withdraw": 0,
                                     "implicit_withdraw": 3,
+                                    "prefixes_current": 3,
                                     "prefixes_total": 6,
                                     "used_as_bestpath": "n/a",
                                     "used_as_multipath": "n/a",

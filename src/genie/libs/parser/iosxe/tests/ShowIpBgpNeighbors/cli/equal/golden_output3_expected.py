@@ -83,6 +83,7 @@ expected_output = {
                             "slow_peer_split_update_group_dynamic": False,
                             "prefix_activity_counters": {
                                 "sent": {
+                                    "prefixes_current": 201,
                                     "prefixes_total": 402,
                                     "implicit_withdraw": 201,
                                     "explicit_withdraw": 0,
@@ -91,6 +92,7 @@ expected_output = {
                                     "used_as_secondary": "n/a",
                                 },
                                 "received": {
+                                    "prefixes_current": 497,
                                     "prefixes_total": 497,
                                     "implicit_withdraw": 0,
                                     "explicit_withdraw": 0,
@@ -148,6 +150,7 @@ expected_output = {
                             "slow_peer_split_update_group_dynamic": False,
                             "prefix_activity_counters": {
                                 "sent": {
+                                    "prefixes_current": 202,
                                     "prefixes_total": 404,
                                     "implicit_withdraw": 202,
                                     "explicit_withdraw": 0,
@@ -156,6 +159,7 @@ expected_output = {
                                     "used_as_secondary": "n/a",
                                 },
                                 "received": {
+                                    "prefixes_current": 101,
                                     "prefixes_total": 101,
                                     "implicit_withdraw": 0,
                                     "explicit_withdraw": 0,
