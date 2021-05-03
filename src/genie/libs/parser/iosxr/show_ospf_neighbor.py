@@ -28,18 +28,21 @@ class ShowOspfNeighborSchema(MetaParser):
      """
     schema = {
         Optional('process_name'): str,
-        Optional('vrf'): str,  # vrf parameter from command line
-        'neighbors': {
-            Optional(Any()): {  # neighbor address
-                'neighbor_id': str,
-                'priority': str,
-                'state': str,
-                'dead_time': str,
-                'interface': str,
-                'up_time': str,
-            },
-        },
-        Optional('total_neighbor_count'): int,
+        'vrfs': {
+            Any(): {
+                'neighbors': {
+                    Optional(Any()): { # neighbor_id
+                        'priority': str,
+                        'state': str,
+                        'dead_time': str,
+                        'address': str,
+                        'interface': str,
+                        'up_time': str
+                    }
+                },
+                Optional('total_neighbor_count'): int
+            }
+        }
     }
 
 
@@ -74,17 +77,16 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
         ret_dict = {}
 
         if out:
-            # If command line has `vrf` argument, assign it to `vrf` key
-            if vrf:
-                ret_dict['vrf'] = vrf
-            # If command line has `process_name` argument, assign it to `process_name` key
+            # process_name is passed from cli
             if process_name:
                 ret_dict['process_name'] = process_name
-            # Set default value for `neighbors`
-            neighbors_dict = ret_dict.setdefault('neighbors', {})
 
-        # Neighbors for OSPF mpls1
-        p1 = re.compile(r'^Neighbors +for +OSPF +(?P<process_name>\w+)$')
+        # Neighbors for OSPF
+        p1 = re.compile(r'^Neighbors +for +OSPF')
+        # Neighbors for OSPFv3 mpls1
+        p1_1 = re.compile(r'^Neighbors +for +OSPF\w* +(?P<process_name>\w+)$')
+        # Neighbors for OSPFv3 mpls1, VRF 1
+        p1_2 = re.compile(r'Neighbors +for +OSPF\w* +(?P<process_name>\w+), VRF +(?P<vrf>\S+)')
 
         # Neighbor ID     Pri   State           Dead Time   Address         Interface
         # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
@@ -102,11 +104,39 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Neighbors for OSPF mpls1
+            # Neighbors for OSPF
             m = p1.match(line)
             if m:
-                process_name = m.groupdict()['process_name']
-                ret_dict['process_name'] = process_name
+                # Neighbors for OSPFv3 mpls1
+                m = p1_1.match(line)
+                if m:
+                    process_name = m.groupdict()['process_name']
+
+                    ret_dict['process_name'] = process_name
+                    vrfs_dict = ret_dict.setdefault('vrfs', {})
+
+                    vrf_dict = vrfs_dict.setdefault('default', {})
+                    neighbors_dict = vrf_dict.setdefault('neighbors', {})
+                    continue
+
+                # Neighbors for OSPFv3 mpls1, VRF 1
+                m = p1_2.match(line)
+                if m:
+                    process_name = m.groupdict()['process_name']
+                    vrf_name = m.groupdict()['vrf']
+
+                    ret_dict['process_name'] = process_name
+                    vrfs_dict = ret_dict.setdefault('vrfs', {})
+
+                    vrf_dict = vrfs_dict.setdefault(vrf_name, {})
+                    neighbors_dict = vrf_dict.setdefault('neighbors', {})
+                    continue
+
+                # Neighbors for OSPF
+                vrfs_dict = ret_dict.setdefault('vrfs', {})
+                vrf_dict = vrfs_dict.setdefault('default', {})
+                neighbors_dict = vrf_dict.setdefault('neighbors', {})
+
                 continue
 
             # Neighbor ID     Pri   State           Dead Time   Address         Interface
@@ -122,12 +152,12 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
                 address = m.groupdict()['address']
                 interface = m.groupdict()['interface']
 
-                neighbor_dict = neighbors_dict.setdefault(address, {})
+                neighbor_dict = neighbors_dict.setdefault(neighbor_id, {})
 
-                neighbor_dict['neighbor_id'] = neighbor_id
                 neighbor_dict['priority'] = priority
                 neighbor_dict['state'] = state
                 neighbor_dict['dead_time'] = dead_time
+                neighbor_dict['address'] = address
                 neighbor_dict['interface'] = interface
 
                 continue
@@ -144,6 +174,6 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
             m = p4.match(line)
             if m:
                 total_neighbor_count = m.groupdict()['total_neighbor_count']
-                ret_dict['total_neighbor_count'] = int(total_neighbor_count)
+                vrf_dict['total_neighbor_count'] = int(total_neighbor_count)
 
         return ret_dict
