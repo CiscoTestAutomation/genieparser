@@ -5406,13 +5406,11 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         p2 = re.compile(r'^(?P<lsa_type>(\S+)) +Link +States +\(Area'
                         ' +(?P<area>(\S+))\)$')
 
-        #Link ID         ADV Router      Age         Seq#       Checksum Link count
         #25.97.1.1       25.97.1.1       86          0x800080ff 0x0043de 5
         p3 = re.compile(
             "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)\s+"
             "(?P<seq_num>[\w]+)\s+(?P<checksum>[\w]+)\s(?P<link_count>[\w]+)$")
 
-        #Link ID         ADV Router      Age         Seq#           Checksum Opaque ID
         #1.0.0.0         25.97.1.1       54          0x8003b136     0x009cb2        0
         p4 = re.compile(
             "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)"
@@ -5480,7 +5478,6 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
 
 
             #To process the router link states
-            # Link ID         ADV Router      Age         Seq#       Checksum Link count
             # 25.97.1.1       25.97.1.1       86          0x800080ff 0x0043de 5
             m = p3.match(line)
             if m:
@@ -5509,7 +5506,6 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 continue
 
             # To process the type_10_opaque_link_states
-            # Link ID         ADV Router      Age         Seq#       Checksum Opaque ID
             # 1.0.0.0         25.97.1.1       54          0x8003b136 0x009cb2        0
             m = p4.match(line)
             if m:
