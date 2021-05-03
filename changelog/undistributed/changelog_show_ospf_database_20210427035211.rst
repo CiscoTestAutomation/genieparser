@@ -3,6 +3,5 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Added ShowOspfDatabase
-      * show ospf database
-      * show ospf mpls1 database
-      * folder based unittests
+        * show ospf database
+        * show ospf mpls1 database

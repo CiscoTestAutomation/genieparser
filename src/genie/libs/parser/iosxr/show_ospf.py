@@ -5300,209 +5300,6 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(
         return super().cli(cmd=cmd, db_type="opaque", output=output)
 
 
-'''
-# =============================================================
-# Schema for 'show ospf database', 'show ospf mpls1 database'
-# =============================================================
-class ShowOspfDatabaseSchema(MetaParser):
-    """Schema for show ospf database, show ospf mpls1 database
-    """
-
-    schema = {
-    'router_id': {
-        Any(): {
-            'process_id': {
-                Any(): {
-                    'router_link_states': {
-                        'area': {
-                            Any(): {
-                                'link_id': {
-                                    Any(): {
-                                        'adv_router': {
-                                            Any(): {
-                                                'link_id': str,
-                                                'adv_router': str,
-                                                'age': int,
-                                                'seq': str,
-                                                'checksum': str,
-                                                'link_count': int
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    },
-
-                    'type_10_opaque_link_states': {
-                        'area': {
-                            Any(): {
-                                'link_id': {
-                                    Any(): {
-                                        'adv_router': {
-                                            Any(): {
-                                                'link_id': str,
-                                                'adv_router': str,
-                                                'age': int,
-                                                'seq': str,
-                                                'checksum': str,
-                                                'opaque_id': int
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                 }
-             }
-          }
-        }
-    }
-
-
-# =============================================================
-#  Parser for 'show ospf database', 'show ospf mpls1 database'
-# =============================================================
-
-class ShowOspfDatabase(ShowOspfDatabaseSchema):
-    """ Parser for show ospf database, show ospf mpls1 database
-    """
-    cli_command = ['show ospf database', 'show ospf {process} database']
-
-    def cli(self, process=None, output=None):
-        if not output:
-            if process:
-                out = self.device.execute(self.cli_command[1].format(process=process))
-            else:
-                out = self.device.execute(self.cli_command[0])
-        else:
-            out = output
-
-        # Initializes the Python dictionary variable
-        parsed_dict = {}
-
-        #OSPF Router with ID (25.97.1.1) (Process ID mpls1)
-        p1 = re.compile(r"^OSPF +Router +with +ID +\((?P<routerid>[\w\.]+)\) "
-                        r"+\(Process ID (?P<processid>[\w]+)\)$")
-
-        #Router Link States (Area 0)
-        p2 = re.compile(r"^Router +Link +States +\(Area (?P<areaid>[\w]+)\)$")
-
-        #Link ID         ADV Router      Age         Seq#       Checksum Link count
-        #25.97.1.1       25.97.1.1       86          0x800080ff 0x0043de 5
-        p3 = re.compile(
-            "^(?P<linkid>[\w\.]+)\s+(?P<advrouter>[\w\.]+)\s+(?P<age>[\w]+)\s+"
-            "(?P<seq>[\w]+)\s+(?P<checksum>[\w]+)\s+(?P<linkcount>[\w]+)$")
-
-        #Type-10 Opaque Link Area Link States (Area 0)
-        p4 = re.compile("^Type-10 +Opaque +Link +Area +Link +States "
-                        "+\(Area (?P<areaid>[\w]+)\)$")
-
-        #Link ID         ADV Router      Age         Seq#       Checksum Opaque ID
-        #1.0.0.0         25.97.1.1       54          0x8003b136 0x009cb2        0
-        p5 = re.compile(
-            "^(?P<linkid>[\w\.]+)\s+(?P<advrouter>[\w\.]+)\s+(?P<age>[\w]+)"
-            "\s+(?P<seq>[\w]+)\s+(?P<checksum>[\w]+)\s+(?P<opaqueid>[\w]+)$")
-
-
-        for line in out.splitlines():
-            line = line.strip()
-
-            # OSPF Router with ID (25.97.1.1) (Process ID mpls1)
-            m = p1.match(line)
-            if m:
-                group = m.groupdict()
-                routerid = group['routerid']
-                processid = group['processid']
-
-                final_dict = parsed_dict.setdefault('router_id', {}). \
-                    setdefault(routerid, {}).setdefault('process_id', {}). \
-                    setdefault(processid, {})
-                continue
-
-            # Router Link States (Area 0)
-            m = p2.match(line)
-            if m:
-                group = m.groupdict()
-                areaid = int(group['areaid'])
-                final_dict = final_dict.setdefault('router_link_states', {}). \
-                    setdefault('area', {}).setdefault(areaid, {}). \
-                    setdefault('link_id', {})
-                continue
-
-            #To process the router link states
-            # Link ID         ADV Router      Age         Seq#       Checksum Link count
-            # 25.97.1.1       25.97.1.1       86          0x800080ff 0x0043de 5
-            m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                linkid = group['linkid']
-                advrouter = group['advrouter']
-                age = int(group['age'])
-                seq = group['seq']
-                checksum = group['checksum']
-                linkcount = int(group['linkcount'])
-
-                router_id_innerdict = {
-                    'link_id': linkid,
-                    'adv_router': advrouter,
-                    'age': age,
-                    'seq': seq,
-                    'checksum': checksum,
-                    'link_count': linkcount
-                }
-
-                final_dict.setdefault(linkid, {}). \
-                    setdefault('adv_router', {}).setdefault(advrouter, router_id_innerdict)
-                continue
-
-            # Type-10 Opaque Link Area Link States (Area 0)
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                opaque_areaid = int(group['areaid'])
-                opaque_temp_dict = parsed_dict['router_id'][routerid]['process_id'][processid]
-                opaque_temp_dict.setdefault('type_10_opaque_link_states', {}). \
-                    setdefault('area', {}).setdefault(opaque_areaid, {}).setdefault('link_id', {})
-
-                #Since similar pattern is used in p3 and p5. Once p3 is done the value changed to avoid
-                #conflict.(After router link state is updated)
-                p3 = re.compile("router link states updated")
-                continue
-
-            #To process the type_10_opaque_link_states
-            # Link ID         ADV Router      Age         Seq#       Checksum Opaque ID
-            # 1.0.0.0         25.97.1.1       54          0x8003b136 0x009cb2        0
-            m = p5.match(line)
-            if m:
-                group = m.groupdict()
-                linkid = group['linkid']
-                advrouter = group['advrouter']
-                age = int(group['age'])
-                seq = group['seq']
-                checksum = group['checksum']
-                opaqueid = int(group['opaqueid'])
-                opaque_id_innerdict = {
-                    'link_id': linkid,
-                    'adv_router': advrouter,
-                    'age': age,
-                    'seq': seq,
-                    'checksum': checksum,
-                    'opaque_id': opaqueid
-                }
-
-                opaque_temp_dict['type_10_opaque_link_states']['area'][opaque_areaid]['link_id'].\
-                    setdefault(linkid, {}).setdefault('adv_router', {}).\
-                    setdefault(advrouter, opaque_id_innerdict)
-                continue
-
-
-        return parsed_dict
-'''
-
-
-
 # =============================================================
 # Schema for 'show ospf database', 'show ospf mpls1 database'
 # =============================================================
@@ -5569,11 +5366,9 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
     def cli(self, process=None, output=None):
         if not output:
             if process:
-                out = self.device.execute(self.cli_command[1].format(process=process))
+                output = self.device.execute(self.cli_command[1].format(process=process))
             else:
-                out = self.device.execute(self.cli_command[0])
-        else:
-            out = output
+                output = self.device.execute(self.cli_command[0])
 
 
         # Init vars
@@ -5613,7 +5408,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
 
         #Router Link States (Area 0)
         #Type-10 Opaque Link Area Link States (Area 0)
-        p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
+        p2 = re.compile(r'^(?P<lsa_type>(\S+)) +Link +States +\(Area'
                         ' +(?P<area>(\S+))\)$')
 
         #Link ID         ADV Router      Age         Seq#       Checksum Link count
@@ -5622,14 +5417,14 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
             "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)\s+"
             "(?P<seq_num>[\w]+)\s+(?P<checksum>[\w]+)\s(?P<link_count>[\w]+)$")
 
-        #Link ID         ADV Router      Age         Seq#       Checksum Opaque ID
-        #1.0.0.0         25.97.1.1       54          0x8003b136 0x009cb2        0
+        #Link ID         ADV Router      Age         Seq#           Checksum Opaque ID
+        #1.0.0.0         25.97.1.1       54          0x8003b136     0x009cb2        0
         p4 = re.compile(
             "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)"
             "\s+(?P<seq_num>[\w]+)\s+(?P<checksum>[\w]+)\s+(?P<opaque_id>[\w]+)$")
 
 
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
             # OSPF Router with ID (25.97.1.1) (Process ID mpls1)
@@ -5637,10 +5432,10 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
 
             if m:
                 group = m.groupdict()
-                router_id = str(group['router_id'])
-                instance = str(group['instance'])
+                router_id = group['router_id']
+                instance = group['instance']
                 if group['vrf']:
-                    vrf = str(group['vrf'])
+                    vrf = group['vrf']
                 else:
                     vrf = 'default'
 
