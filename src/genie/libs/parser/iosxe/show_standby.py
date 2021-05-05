@@ -749,6 +749,20 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                     int(m.groupdict()['default_priority'])
                 continue
 
+            def do_follow():
+                vdict = standby_all_dict[interface]['address_family']\
+                    [address_family]['version'][version]
+                if 'follow' in group_key:
+                    if 'slave_groups' not in vdict:
+                        vdict['slave_groups'] = {}
+                    vdict['slave_groups'][group_key['group_number']] = group_key
+                    vdict['slave_groups'][group_key['group_number']]\
+                        ['slave_group_number'] = group_key['group_number']
+                    if vdict['groups'][group_key['group_number']]:
+                        del vdict['groups'][group_key['group_number']]
+                else:
+                    vdict['groups'][group_number] = group_key
+
             # Priority 100 (configured 100)
             p15 = re.compile(r'\s*Priority +(?P<priority>[0-9]+)'
                               ' +\(configured'
@@ -758,112 +772,18 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                 group_key['priority'] = int(m.groupdict()['priority'])
                 group_key['configured_priority'] = \
                     int(m.groupdict()['configured_priority'])
-                if 'follow' in group_key:
-                    if 'slave_groups' not in standby_all_dict[interface]\
-                        ['address_family'][address_family]['version'][version]:
-                        standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]\
-                            ['slave_groups'] = {}
-                    if group_key['group_number'] not in standby_all_dict\
-                        [interface]['address_family'][address_family]\
-                        ['version'][version]['slave_groups']:
-                        standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]\
-                            ['slave_groups'][group_key['group_number']] = {}
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['slave_groups']\
-                        [group_key['group_number']] = group_key
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['slave_groups']\
-                        [group_key['group_number']]['slave_group_number'] \
-                        = group_key['group_number']
-                    if standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['groups']\
-                        [group_key['group_number']]:
-                        del standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]['groups']\
-                            [group_key['group_number']]
-                else:
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['groups']\
-                        [group_number] = group_key
+                do_follow()
                 continue
 
             # Group name is "hsrp-Gi1/0/1-0" (default)
-            p16 = re.compile(r'\s*Group +name +is'
-                              ' +\"(?P<session_name>[a-zA-Z0-9\/\-]+)\"'
-                              ' +\(default\)$')
-            m = p16.match(line)
-            if m:
-                group_key['session_name'] = m.groupdict()['session_name']
-                if 'follow' in group_key:
-                    if 'slave_groups' not in standby_all_dict[interface]\
-                        ['address_family'][address_family]['version'][version]:
-                        standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]\
-                            ['slave_groups'] = {}
-                    if group_key['group_number'] not in standby_all_dict\
-                        [interface]['address_family'][address_family]\
-                        ['version'][version]['slave_groups']:
-                        standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]\
-                            ['slave_groups'][group_key['group_number']] = {}
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['slave_groups']\
-                        [group_key['group_number']] = group_key
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['slave_groups']\
-                        [group_key['group_number']]['slave_group_number'] \
-                        = group_key['group_number']
-                    if standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['groups']\
-                        [group_key['group_number']]:
-                        del standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]['groups']\
-                            [group_key['group_number']]
-                else:
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['groups']\
-                        [group_number] = group_key
-                continue
-            
             # Group name is "gandalf" (cfgd)
             p16 = re.compile(r'\s*Group +name +is'
                               ' +\"(?P<session_name>[a-zA-Z0-9\/\-]+)\"'
-                              ' +\(cfgd\)$')
+                              ' +(?:\(default\)|\(cfgd\))$')
             m = p16.match(line)
             if m:
-                group_key['session_name'] = \
-                    m.groupdict()['session_name']
-                if 'follow' in group_key:
-                    if 'slave_groups' not in standby_all_dict[interface]\
-                        ['address_family'][address_family]['version'][version]:
-                        standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]\
-                            ['slave_groups'] = {}
-                    if group_key['group_number'] not in standby_all_dict\
-                        [interface]['address_family'][address_family]\
-                        ['version'][version]['slave_groups']:
-                        standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]\
-                            ['slave_groups'][group_key['group_number']] = {}
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['slave_groups']\
-                        [group_key['group_number']] = group_key
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['slave_groups']\
-                        [group_key['group_number']]['slave_group_number'] \
-                        = group_key['group_number']
-                    if standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['groups']\
-                        [group_key['group_number']]:
-                        del standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]['groups']\
-                            [group_key['group_number']]
-                else:
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['groups']\
-                        [group_number] = group_key
+                group_key['session_name'] = m.groupdict()['session_name']
+                do_follow()
                 continue
 
             # Following "group10"
@@ -871,35 +791,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             m = p17.match(line)
             if m:
                 group_key['follow'] = m.groupdict()['follow']
-                if 'follow' in group_key:
-                    if 'slave_groups' not in standby_all_dict[interface]\
-                        ['address_family'][address_family]['version'][version]:
-                        standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]\
-                            ['slave_groups'] = {}
-                    if group_key['group_number'] not in standby_all_dict\
-                        [interface]['address_family'][address_family]\
-                        ['version'][version]['slave_groups']:
-                        standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]\
-                            ['slave_groups'][group_key['group_number']] = {}
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['slave_groups']\
-                        [group_key['group_number']] = group_key
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['slave_groups']\
-                        [group_key['group_number']]['slave_group_number'] \
-                        = group_key['group_number']
-                    if standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['groups']\
-                        [group_key['group_number']]:
-                        del standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]['groups']\
-                            [group_key['group_number']]
-                else:
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['groups']\
-                        [group_number] = group_key
+                do_follow()
                 continue            
 
             # HSRP ICMP redirects disabled
@@ -907,35 +799,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             m = p17.match(line)
             if m:
                 standby_all_dict[interface]['redirects_disable'] = True
-                if 'follow' in group_key:
-                    if 'slave_groups' not in standby_all_dict[interface]\
-                        ['address_family'][address_family]['version'][version]:
-                        standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]\
-                            ['slave_groups'] = {}
-                    if group_key['group_number'] not in standby_all_dict\
-                        [interface]['address_family'][address_family]\
-                        ['version'][version]['slave_groups']:
-                        standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]\
-                            ['slave_groups'][group_key['group_number']] = {}
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['slave_groups']\
-                        [group_key['group_number']] = group_key
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['slave_groups']\
-                        [group_key['group_number']]['slave_group_number'] \
-                        = group_key['group_number']
-                    if standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['groups']\
-                        [group_key['group_number']]:
-                        del standby_all_dict[interface]['address_family']\
-                            [address_family]['version'][version]['groups']\
-                            [group_key['group_number']]
-                else:
-                    standby_all_dict[interface]['address_family']\
-                        [address_family]['version'][version]['groups']\
-                        [group_number] = group_key
+                do_follow()
                 continue
 
         return standby_all_dict
