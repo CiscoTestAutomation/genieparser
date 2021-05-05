@@ -5402,7 +5402,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
 
         #Router Link States (Area 0)
         #Type-10 Opaque Link Area Link States (Area 0)
-        p2 = re.compile(r'^(?P<lsa_type>(\S+)) +Link +States +\(Area'
+        p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
                         ' +(?P<area>(\S+))\)$')
 
         #25.97.1.1       25.97.1.1       86          0x800080ff 0x0043de 5
