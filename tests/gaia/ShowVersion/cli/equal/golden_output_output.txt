@@ -1,0 +1,4 @@
+Product version Check Point Gaia R80.40
+OS build 294
+OS kernel version 3.10.0-957.21.3cpx86_64
+OS edition 64-bit

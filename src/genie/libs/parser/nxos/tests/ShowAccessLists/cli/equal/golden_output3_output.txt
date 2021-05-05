@@ -1,0 +1,6 @@
+
+    IPV4 ACL 1
+    10 remark NTP Access
+    20 permit ip 10.1.1.39/32 any
+    30 permit ip 172.16.154.23/32 any
+    

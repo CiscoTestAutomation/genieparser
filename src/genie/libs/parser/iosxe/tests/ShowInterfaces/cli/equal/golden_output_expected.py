@@ -1,6 +1,7 @@
 expected_output = {
     "Port-channel12": {
         "flow_control": {"send": False, "receive": False},
+        "err_disabled": False,
         "type": "EtherChannel",
         "counters": {
             "out_buffer_failure": 0,
@@ -87,6 +88,7 @@ expected_output = {
     },
     "GigabitEthernet1/0/1": {
         "flow_control": {"send": False, "receive": False},
+        "err_disabled": False,
         "type": "Gigabit Ethernet",
         "counters": {
             "out_buffer_failure": 0,
@@ -374,6 +376,7 @@ expected_output = {
     },
     "GigabitEthernet1/0/2": {
         "flow_control": {"send": False, "receive": False},
+        "err_disabled": False,
         "type": "Gigabit Ethernet",
         "counters": {
             "out_buffer_failure": 0,

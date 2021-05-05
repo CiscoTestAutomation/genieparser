@@ -1,0 +1,18 @@
+        Dot1x Info for GigabitEthernet1/6
+        -----------------------------------
+        PAE                       = AUTHENTICATOR
+        QuietPeriod               = 3
+        ServerTimeout             = 0
+        SuppTimeout               = 15
+        ReAuthMax                 = 2
+        MaxReq                    = 1
+        TxPeriod                  = 1
+        
+        Dot1x Authenticator Client List
+        -------------------------------
+        EAP Method                = (13)
+        Supplicant                = 6451.06ff.565e
+        Session ID                = 0A90740B0000A7FD44A5F6A8
+            Auth SM State         = AUTHENTICATED
+            Auth BEND SM State    = IDLE
+        

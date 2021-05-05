@@ -1,0 +1,11 @@
+IOx Infrastructure Summary:
+---------------------------
+IOx service (CAF)              : Running
+IOx service (HA)               : Running 
+IOx service (IOxman)           : Running 
+IOx service (Sec storage)      : Not Running 
+Libvirtd 5.5.0                 : Running
+Dockerd 18.03.0                : Running
+Redundancy Status              : Ready 
+Sync status                    : Successful
+Last application sync time     : 2021-04-11 20:39:45.140534
