@@ -13,6 +13,7 @@
     * show interfaces accounting
     * show interfaces status
     * show interface {interface} transceiver detail
+    * show interface {interface} transceiver
 """
 
 import os
@@ -61,7 +62,6 @@ class ShowInterfacesSchema(MetaParser):
                 Optional('line_protocol'): str,
                 Optional('enabled'): bool,
                 Optional('connected'): bool,
-                Optional('err_disabled'): bool,
                 Optional('description'): str,
                 Optional('type'): str,
                 Optional('link_state'): str,
@@ -223,8 +223,6 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Port-channel12 is up, line protocol is up (connected)
         # Vlan1 is administratively down, line protocol is down , Autostate Enabled
         # Dialer1 is up (spoofing), line protocol is up (spoofing)
-        #FastEthernet1 is down, line protocol is down (err-disabled)
-
         p1 = re.compile(r'^(?P<interface>[\w\/\.\-]+) +is +(?P<enabled>[\w\s]+)(?: '
                         r'+\S+)?, +line +protocol +is +(?P<line_protocol>\w+)(?: '
                         r'*\((?P<attribute>\S+)\)|( +\, +Autostate +(?P<autostate>\S+)))?.*$')
@@ -475,12 +473,10 @@ class ShowInterfaces(ShowInterfacesSchema):
         unnumbered_dict = {}
         for line in out.splitlines():
             line = line.strip()
-
             # GigabitEthernet1 is up, line protocol is up 
             # Port-channel12 is up, line protocol is up (connected)
             # Vlan1 is administratively down, line protocol is down , Autostate Enabled
             # Dialer1 is up (spoofing), line protocol is up (spoofing)
-            # FastEthernet1 is down, line protocol is down (err-disabled)
 
             m = p1.match(line)
             m1 = p1_1.match(line)
@@ -489,7 +485,7 @@ class ShowInterfaces(ShowInterfacesSchema):
                 interface = m.groupdict()['interface']
                 enabled = m.groupdict()['enabled']
                 line_protocol = m.groupdict()['line_protocol']
-                line_attribute = m.groupdict()['attribute']
+                connected = m.groupdict()['attribute']
                 
                 if m.groupdict()['autostate']:
                     autostate = m.groupdict()['autostate'].lower()
@@ -513,9 +509,8 @@ class ShowInterfaces(ShowInterfacesSchema):
                     interface_dict[interface]\
                                 ['oper_status'] = line_protocol
 
-                if line_attribute:
-                    interface_dict[interface]['connected'] = True if line_attribute == 'connected' else False
-                    interface_dict[interface]['err_disabled'] = True if line_attribute == 'err-disabled' else False
+                if connected:
+                    interface_dict[interface]['connected'] = True if connected == 'connected' else False
 
                 if autostate:
                     interface_dict[interface]['autostate'] = True if autostate == 'enabled' else False
@@ -914,10 +909,6 @@ class ShowInterfaces(ShowInterfacesSchema):
             # 5 minute output rate 0 bits/sec, 0 packets/sec
             m = p21.match(line)
             if m:
-                if 'counters' not in interface_dict[interface]:
-                    interface_dict[interface]['counters'] = {}   
-                    interface_dict[interface]['counters']['rate'] = {}
-
                 out_rate = int(m.groupdict()['out_rate'])
                 out_rate_pkts = int(m.groupdict()['out_rate_pkts'])
 
@@ -3494,6 +3485,13 @@ class ShowInterfaceTransceiverDetailSchema(MetaParser):
                 Optional('serial_number'): str,
                 Optional('transceiver'): str,
                 Optional('type'): str,
+                Any(): {
+                    Optional('Value'): float,
+                    Optional('HighAlarmThreshold'): float,
+                    Optional('HighWarnThreshold'): float,
+                    Optional('LowWarnThreshold'): float,
+                    Optional('LowAlarmThreshold'): float,
+                },
                 Any(): str,
             }
         }
@@ -3502,13 +3500,20 @@ class ShowInterfaceTransceiverDetailSchema(MetaParser):
 
 class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
     """parser for 
-            * show interface {interface} transceiver detail
+            * show interfaces {interface} transceiver detail
         """
 
-    cli_command = 'show interface {interface} transceiver detail'
+    cli_command = 'show interfaces {interface} transceiver detail'
 
     def cli(self, interface, output=None):
-
+        switcher = {
+          0: "Temp",
+          1: "Voltage",
+          2: "Current",
+          3: "OpticalTX",
+          4: "OpticalRX"
+        }
+        
         if output is None:
             out = self.device.execute(self.cli_command.format(interface=interface))
         else:
@@ -3524,7 +3529,10 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
 
         # number of lanes 1
         p2 = re.compile(r'^number +of +lanes +(?P<lanes>[\d]+)$')
-
+        
+        #transceiver info
+        p3 = re.compile(r'^(?P<port>\S+)\s+(?P<value>[\-0-9][0-9\.]+[0-9])\s+(?P<HAT>[\-0-9][0-9\.]+[0-9])\s+(?P<HWT>[\-0-9][0-9\.]+[0-9])\s+(?P<LWT>[\-0-9][0-9\.]+[0-9])\s+(?P<LAT>[\-0-9][0-9\.]+[0-9])$')
+        count = 0
         for line in out.splitlines():
             line = line.strip()
 
@@ -3545,5 +3553,83 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
             if m:
                 intf_dict['number_of_lanes'] = m.groupdict()['lanes']
                 continue
+                
+            m = p3.match(line)
+
+            if m:     
+                intf_dict[switcher.get(count)] = {}
+                intf_dict[switcher.get(count)]['Value'] = float(m.groupdict()['value'])
+                intf_dict[switcher.get(count)]['HighAlarmThreshold'] = float(m.groupdict()['HAT'])
+                intf_dict[switcher.get(count)]['HighWarnThreshold'] = float(m.groupdict()['HWT'])
+                intf_dict[switcher.get(count)]['LowWarnThreshold'] = float(m.groupdict()['LWT'])
+                intf_dict[switcher.get(count)]['LowAlarmThreshold'] = float(m.groupdict()['LAT'])
+                count += 1
 
         return result_dict
+
+# ==========================================================
+#  Parser for show interface {interface} transceiver 
+# ==========================================================
+class ShowInterfaceTransceiverSchema(MetaParser):
+    """Schema for:
+        show interfaces {interface} transceiver"""
+
+    schema = {
+        'interfaces': {
+            Any(): {# interface name
+                Optional('port'): str,
+                Optional('temp'): str,
+                Optional('voltage'): str,
+                Optional('current'): str,
+                Optional('opticaltx'): str,
+                Optional('opticalrx'): str,
+            }
+        }
+    }
+
+class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
+
+    """parser for 
+            * show interfaces {interface} transceiver 
+        """
+
+    cli_command = 'show interfaces {interface} transceiver'
+    
+
+    def cli(self, interface, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command.format(interface=interface))
+        else:
+            out = output
+
+        result_dict = {}
+
+        # transceiver is present
+        # type is 10Gbase-LR
+        # name is CISCO-FINISAR
+        # part number is FTLX1474D3BCL-CS
+        p1 = re.compile(r'^(?P<key>[\S\s]+) +is +(?P<value>[\S\s]+)$')
+
+        # number of lanes 1
+        p2 = re.compile(r'^number +of +lanes +(?P<lanes>[\d]+)$')
+
+        #transceiver info
+        p3 = re.compile(r'^(?P<port>\S+)\s+(?P<temp>[\-0-9][0-9\.]+[0-9])\s+(?P<voltage>[\-0-9][0-9\.]+[0-9])\s+(?P<current>[\-0-9][0-9\.]+[0-9])\s+(?P<opticaltx>[\-0-9][0-9\.]+[0-9])\s+(?P<opticalrx>[\-0-9][0-9\.]+[0-9])$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+            m = p1.match(line)
+            m = p3.match(line)
+
+            if m:
+                group = m.groupdict()
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(group['port'], {})
+                intf_dict['temp'] = group['temp']
+                intf_dict['voltage'] = group['voltage']
+                intf_dict['current'] = group['current']
+                intf_dict['opticaltx'] = group['opticaltx']
+                intf_dict['opticalrx'] = group['opticalrx']
+                continue
+                
+        return result_dict
+        
