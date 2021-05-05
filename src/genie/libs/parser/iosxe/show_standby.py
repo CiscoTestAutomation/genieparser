@@ -773,8 +773,9 @@ class ShowStandbyAll(ShowStandbyAllSchema):
 
             # Group name is "hsrp-Gi1/0/1-0" (default)
             # Group name is "gandalf" (cfgd)
+            # Group name is "hsrp-Gi4/10.103-100" (default)
             p16 = re.compile(r'\s*Group +name +is'
-                              ' +\"(?P<session_name>[a-zA-Z0-9\/\-]+)\"'
+                              ' +\"(?P<session_name>[a-zA-Z0-9\/\-\.]+)\"'
                               ' +(?:\(default\)|\(cfgd\))$')
             m = p16.match(line)
             if m:
