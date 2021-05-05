@@ -971,9 +971,9 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
                 known_via = result.groupdict()['known_via']
                 if result.groupdict()['interface']:
                     outgoing_interface = result.groupdict()['interface']
+                    route_dict['outgoing_interface'] = outgoing_interface
 
                 route_dict['known_via'] = known_via
-                route_dict['outgoing_interface'] = outgoing_interface
                 continue
 
         return parsed_dict
