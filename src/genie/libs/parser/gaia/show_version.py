@@ -25,7 +25,7 @@ class ShowVersion(ShowVersionSchema):
 
         result_dict = {}
 
-        if out is '':
+        if out == '':
             return result_dict
 
         result_dict = {
