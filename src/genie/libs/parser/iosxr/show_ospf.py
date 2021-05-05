@@ -5306,7 +5306,6 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(
 class ShowOspfDatabaseSchema(MetaParser):
     """Schema for show ospf database, show ospf <process_id> database
     """
-
     schema = {
     'vrf': {
         Any(): {
