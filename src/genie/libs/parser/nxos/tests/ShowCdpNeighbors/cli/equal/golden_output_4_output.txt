@@ -20,5 +20,7 @@
                                                                Ten-GigabitEthernet1/0/10
         4444-5555-6666      Eth1/5         125    S         HPE 2200AF-48 B
                                                                Ten-GigabitEthernet2/0/20
-        
-    
+        shkothap-lnx        Eth1/1/1       119    R S H     Linux         enp2s0
+        shkothap-lnx.cisco.com                                 
+                            Eth1/1/2       119    R S H     Linux         enp2s1
+

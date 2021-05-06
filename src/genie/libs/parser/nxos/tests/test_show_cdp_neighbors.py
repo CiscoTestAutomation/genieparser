@@ -65,7 +65,22 @@ class TestShowCdpNeighbors(unittest.TestCase):
                               'hold_time': 177,
                               'local_interface': 'Ethernet1/30/2',
                               'platform': 'N3K-C34200YC-',
-                              'port_id': 'Ethernet1/32'}}}
+                              'port_id': 'Ethernet1/32'},
+                          8: {'capability': 'S',
+                               'device_id': '1111-2222-3333',
+                               'hold_time': 130,
+                               'local_interface': 'Ethernet1/3',
+                               'platform': 'HPE 2200AF-48',
+                               'port_id': 'TenGigabitEthernet1/0/10'},
+                           9: {'capability': 'S',
+                               'device_id': '4444-5555-6666',
+                               'hold_time': 125,
+                               'local_interface': 'Ethernet1/5',
+                               'platform': 'HPE 2200AF-48 B',
+                               'port_id': 'TenGigabitEthernet2/0/20'}
+
+                         }
+               }
     }
 
     device_output_1 = {'execute.return_value': '''
@@ -86,8 +101,12 @@ class TestShowCdpNeighbors(unittest.TestCase):
         ironcity            Eth1/30/1      177    R S s     N3K-C34200YC- Eth1/31       
         ironcity(FOC23223HC5)
                             Eth1/30/2      177    R S s     N3K-C34200YC- Eth1/32       
+        1111-2222-3333      Eth1/3         130    S         HPE 2200AF-48
+                                                               Ten-GigabitEthernet1/0/10
+        4444-5555-6666      Eth1/5         125    S         HPE 2200AF-48 B
+                                                               Ten-GigabitEthernet2/0/20
 
-Total entries displayed: 7
+Total entries displayed: 9
     '''}
 
     @classmethod

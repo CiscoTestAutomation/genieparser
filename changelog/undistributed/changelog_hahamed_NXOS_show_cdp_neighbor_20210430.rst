@@ -3,5 +3,6 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Modified ShowCdpNeighbors:
-      * Updated regex patterns p1, p2 and p4 to accept arbitrary interface name
+      * Added regex patterns p5 and p6 to accept Linux interface names
       * Added unittest
+      * Added folder based unittest
