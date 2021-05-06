@@ -99,14 +99,14 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         p6 = re.compile(r'^(?P<device_id>\S+) +'
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[\S\s]+) +'        
+                        '(?P<platform>[Ll]inux[\S\s]*) +'        
                         '(?P<port_id>[a-z0-9]+)$')
 
         # p7: For Linux neighbor split in two lines
         #                    Eth1/1/2       119    R S H     Linux         enp2s1
         p7 = re.compile(r'^(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[\S\s]+) +'        
+                        '(?P<platform>[Ll]inux[\S\s]*) +'        
                         '(?P<port_id>[a-z0-9]+)$')
 
         device_id_index = 0
