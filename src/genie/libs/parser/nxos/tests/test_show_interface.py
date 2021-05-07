@@ -3439,6 +3439,11 @@ class test_show_interface_status(unittest.TestCase):
                 'port_speed': 'auto',
                 'status': 'connected',
             },
+            'Loopback0': {
+                'duplex_code': 'auto',
+                'status': 'connected',
+                'vlan': 'routed',
+            },
         }
     }
 
@@ -3459,6 +3464,7 @@ class test_show_interface_status(unittest.TestCase):
         Vlan1         --                 down      routed    auto    auto    --
         Vlan366       BigData            connected routed    auto    auto    --
         nve1          --                 connected --        auto    auto    --
+        Lo0           --                 connected routed    auto    --      --
     '''}
 
     golden_parsed_interface_output = {

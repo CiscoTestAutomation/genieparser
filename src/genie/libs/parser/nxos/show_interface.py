@@ -3487,7 +3487,7 @@ class ShowInterfaceStatusSchema(MetaParser):
                 'status': str,
                 Optional('vlan'): str,
                 'duplex_code': str,
-                'port_speed': str,
+                Optional('port_speed'): str,
                 Optional('type'): str,
             }
         }
@@ -3523,6 +3523,7 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Po1           VPC_PeerLink       connected trunk     full    40G     --
         # Vlan366       BigData            connected routed    auto    auto    --
         # Eth101/1/10   DO-HYPER-03        connected 101       full    a-1000
+        # Lo0            --                  connected  routed     auto     --       --
         p1 = re.compile(r'(?P<interface>(\S+)) +(?P<name>(\S+))? '
                         r'+(?P<status>(\S+))? +(?P<vlan>(\S+))'
                         r' +(?P<duplex_code>(\S+)) '
