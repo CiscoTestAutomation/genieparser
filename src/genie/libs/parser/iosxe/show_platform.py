@@ -607,7 +607,7 @@ class ShowVersion(ShowVersionSchema):
         p57 = re.compile(r'^[Vv]ersion\s+ID\s+\:\s+(?P<version_id>.+)$')
 
         # clei_code_num
-        # CLEI Code Number                : AAALJ00ERT
+        # CLEI Code Number                : AaalJ00ERT
         p58 = re.compile(r'^CLEI\s+[Cc]ode\s+[Nn]umber\s+\:\s+(?P<clei_code_num>.+)$')
 
         # Daughterboard revision number   : A0
@@ -2173,7 +2173,7 @@ class ShowInventory(ShowInventorySchema):
 
                 # PID: ASR1000-RP2       , VID: V02  , SN: JAE153408NJ
                 # PID: ASR1000-RP2       , VID: V03  , SN: JAE1703094H
-                # PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
+                # PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0lb
                 if ('RP' in pid) or ('WS-C' in pid) or ('R' in name):
                     rp_dict = slot_dict.setdefault('rp', {}).\
                         setdefault(pid, {})
@@ -5667,7 +5667,7 @@ class ShowPlatformHardwareQfpStatisticsDrop(ShowPlatformHardwareQfpStatisticsDro
 
         # Global Drop Stats                         Packets                  Octets
         # -------------------------------------------------------------------------
-        # Ipv4NoAdj                                       7                     296
+        # Ipv4Noadj                                       7                     296
         # Ipv4NoRoute                                   181                    7964
         p1 = re.compile(r'^(?P<global_drop_stats>\w+) +(?P<packets>\d+) +(?P<octets>\d+)$')
 
@@ -6764,9 +6764,9 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
         p1 = re.compile(r'CAM +Utilization +for +ASIC  +\[+(?P<asic>(\d+))\]$')
 
         #CTS Cell Matrix/VPN
-        #Label                  EM           O       16384        0    0.00%        0        0        0        0
+        #label                  EM           O       16384        0    0.00%        0        0        0        0
         #CTS Cell Matrix/VPN
-        #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+        #label                  TCAM         O        1024        1    0.10%        0        0        0        1
         # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
         # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
         p2 = re.compile(r'(?P<table>.*(\S+)) +(?P<subtype>\S+) +(?P<dir>\S+) +(?P<max>\d+) +(?P<used>\d+) +(?P<used_percent>\S+\%) +(?P<v4>\d+) +(?P<v6>\d+) +(?P<mpls>\d+) +(?P<other>\d+)$')
@@ -6784,17 +6784,17 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
                 continue
 
             #CTS Cell Matrix/VPN
-            #Label                  EM           O       16384        0    0.00%        0        0        0        0
+            #label                  EM           O       16384        0    0.00%        0        0        0        0
             #CTS Cell Matrix/VPN
-            #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
+            #label                  TCAM         O        1024        1    0.10%        0        0        0        1
             # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
             # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 table_ = group.pop('table')
-                if table_ == 'Label':
-                    table_ = 'CTS Cell Matrix/VPN Label'
+                if table_ == 'label':
+                    table_ = 'CTS Cell Matrix/VPN label'
                 subtype_ = group.pop('subtype')
                 dir_ = group.pop('dir')
                 dir_dict = asic_dict.setdefault('table', {}). \
@@ -7950,54 +7950,57 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareM
         return super().cli(process=process, alloc_type=alloc_type, output=out)
 
 # =============================================
-# Schema for 'show platform soft fed sw active mpls forwd label <label> detail'
-# Schema for 'show platform soft fed active mpls forwd label <label> detail'
+# Schema for 'show platform software fed switch active mpls forwarding label <label> detail'
+# Schema for 'show platform software fed active mpls forwarding label <label> detail'
 # =============================================
 class ShowPlatformSoftwareFedSchema(MetaParser):
     """ Schema for:
-        *show platform soft fed sw active mpls forwd label <label> detail
-        *show platform soft fed active mpls forwd label <label> detail
+        *show platform software fed switch active mpls forwarding label <label> detail
+        *show platform software fed active mpls forwarding label <label> detail
     """
     schema = {
-        'LENTRY_label':{
-            Optional(Any()):{
-                'label': int,
-                Optional('nobj'): str,
-                Optional('lentry_hdl'): str,
-                Optional('modify_cnt'): int,
-                Optional('backwalk_cnt'): int,
-                Optional('lspa_handle'): str,
-                Optional('AAL'):{
-                    Optional('id'): int,
-                    Optional('lbl'): int,
-                    Optional('eos0'):{
-                        Optional('adj_hdl'): str,
-                        Optional('hw_hdl'): str,
+        'lentry_label':{
+            Any():{
+                'nobj': list,
+                'lentry_hdl': str,
+                'modify_cnt': int,
+                'backwalk_cnt': int,
+                'lspa_handle': str,
+                'aal':{
+                    'id': int,
+                    'lbl': int,
+                    'eos0':{
+                        'adj_hdl': str,
+                        'hw_hdl': str,
                         },
-                    Optional('eos1'):{
-                        Optional('adj_hdl'): str,
-                        Optional('hw_hdl'): str,
+                    'eos1':{
+                        'adj_hdl': str,
+                        'hw_hdl': str,
                     },
-                    Optional('deagg_vrf_id'): int,
-                    Optional('lspa_handle'): str,
+                    'deagg_vrf_id': int,
+                    'lspa_handle': str,
                     },
-                Optional('EOS'):{
+                Optional('eos'):{
                     Optional('objid'): int,
                     Optional('local_label'): int,
                     Optional('flags'): str,
                     Optional('pdflags'): str,
-                    Optional('nobj0'): str,
-                    Optional('nobj1'): str,
+                    Optional('nobj0'): list,
+                    Optional('nobj1'): list,
                     Optional('modify'): int,
                     Optional('bwalk'): int,     
                 },
-                Optional('LABEL'):{
+                Optional('label'):{
                     Optional(Any()):{
                         Optional('link_type'): str,
                         Optional('local_label'): int,
-                        Optional('outlabel'):str,
-                        Optional('flags'): str,
-                        Optional('pdflags'): str,
+                        Optional('outlabel'): str,
+                        Optional('flags'): {
+                            Optional(Any()): list,
+                        },
+                        Optional('pdflags'): {
+                            Optional(Any()): list,
+                        },
                         Optional('adj_handle'): str,
                         Optional('unsupported_recursion'): int,
                         Optional('olbl_changed'): int,
@@ -8006,29 +8009,30 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
                         Optional('bwalk_cnt'): int,
                         Optional('subwalk_cnt'): int,
                         Optional('collapsed_oce'): int,
-                        Optional('AAL'):{
-                            Optional('id'):int,
-                            Optional('lbl'): int,
-                            Optional('smac'): str,
-                            Optional('dmac'): str,
-                            Optional('sub_type'): int,
-                            Optional('link_type'): int,
-                            Optional('adj_flags'): int,
-                            Optional('label_type'): int,
-                            Optional('rewrite_type'): str,
-                            Optional('vlan_id'): int,
-                            Optional('vrf_id'): int,
-                            Optional('ri'): str,
-                            Optional('ri_id'): str,
-                            Optional('phdl'): str,
-                            Optional('ref_cnt'):int,
-                            Optional('si'): str,
-                            Optional('si_id'): str,
-                            Optional('di_id'): str,
+                        Optional('label_aal'):{
+                            Optional(Any()):{
+                                Optional('lbl'): int,
+                                Optional('smac'): str,
+                                Optional('dmac'): str,
+                                Optional('sub_type'): int,
+                                Optional('link_type'): int,
+                                Optional('adj_flags'): int,
+                                Optional('label_type'): int,
+                                Optional('rewrite_type'): str,
+                                Optional('vlan_id'): int,
+                                Optional('vrf_id'): int,
+                                Optional('ri'): str,
+                                Optional('ri_id'): str,
+                                Optional('phdl'): str,
+                                Optional('ref_cnt'):int,
+                                Optional('si'): str,
+                                Optional('si_id'): str,
+                                Optional('di_id'): str,
                                 },
                             },
                         },
-                Optional('ADJ'):{
+                    },
+                Optional('adj'):{
                     Optional(Any()):{
                         Optional('link_type'): str,
                         Optional('ifnum'): str,
@@ -8043,7 +8047,7 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
                     },
                 },
 
-                Optional('LB'):{
+                Optional('lb'):{
                     Optional(Any()):{
                         Optional('ecr_map_objid'): int,
                         Optional('link_type'): str, 
@@ -8063,7 +8067,7 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
                             Optional('in_prog'): int,
                             Optional('nested'): int,
                             },
-                        Optional('AAL'):{
+                        Optional('aal'):{
                             Optional('ecr_id'): int,
                             Optional('af'): int,
                             Optional('ecr_type'): str,
@@ -8073,7 +8077,7 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
                         }
                     },
                 },
-                Optional('Sw_Enh_ECR_scale'):{
+                Optional('sw_enh_ecr_scale'):{
                     Optional(Any()):{
                         Optional('llabel'): int,
                         Optional('eos'): int, 
@@ -8110,16 +8114,16 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
 # ================================================================
 class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
     ''' Parser for:
-        ' show platform soft fed sw active mpls forwarding label <label> detail '
-        ' show platform soft fed active mpls forwarding label <label> detail '
+        ' show platform software fed switch active mpls forwarding label <label> detail'
+        ' show platform software fed active mpls forwarding label <label> detail '
     '''
 
     cli_command = ['show platform software fed active mpls forwarding label {label} detail',
                    'show platform software fed switch active mpls forwarding label {label} detail']
     def cli(self, label='',switch='',output=None):
         ''' cli for:
-         ' show platform soft fed sw active mpls forwarding label <label> detail '
-         ' show platform soft fed active mpls forwarding label <label> detail '
+         ' show platform software fed switch active mpls forwarding label <label> detail '
+         ' show platform software fed active mpls forwarding label <label> detail '
         '''
         if output is None:
             # Build command
@@ -8133,24 +8137,24 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
             out = output
         
 
-        #LENTRY:label:18 nobj:(EOS, 76) lentry_hdl:0x13000005
-        p1 = re.compile(r'^LENTRY:label:+(?P<label>\d+)\s+nobj:+'
-                        r'(?P<nobj>[\S\s]+)\s+lentry_hdl:+(?P<lentry_hdl>\S+)$')
+        #LENTRY:label:22 nobj:(EOS, 142) lentry_hdl:0xde00000a
+        p1 = re.compile(r'^LENTRY:label:+(?P<label>\d+)\s+nobj:\(+'
+                        r'(?P<nobj>[\S\s]+)+\)\s+lentry_hdl:+(?P<lentry_hdl>\S+)$')
 
         #modify_cnt:1 backwalk_cnt:2
         p2 = re.compile(r'^modify_cnt:+(?P<modify_cnt>\d+)\s+'
                         r'backwalk_cnt:+(?P<backwalk_cnt>\d+)$')
 
         #lspa_handle:0
-        p3 = re.compile(r'^lspa_handle:+(?P<lspa_handle>\w+)\s$')
+        p3 = re.compile(r'^lspa_handle:+(?P<lspa_handle>\w+)$')
 
-        #AAL: id:318767109 lbl:18
+        #AAL: id:3724541962 lbl:22
         p4 = re.compile(r'^AAL:\s+id:+(?P<id>\d+)\s+lbl:+(?P<lbl>\d+)$')
 
-        #eos0:[adj_hdl:0x76000024, hw_hdl:0x7ff7911bf758]
+        #eos0:[adj_hdl:0x83000039, hw_hdl:0x7f02737c6628]
         p5 = re.compile(r'^eos0:\[+adj_hdl:+(?P<adj_hdl>\w+)+,\s+hw_hdl:+(?P<hw_hdl>\w+)+\]+$')
 
-        #eos1:[adj_hdl:0xeb000022, hw_hdl:0x7ff7911bf548]
+        #eos1:[adj_hdl:0x3d000038, hw_hdl:0x7f02737c6478]
         p6 = re.compile(r'^eos1:\[+adj_hdl:+(?P<adj_hdl>\w+)+,\s+hw_hdl:+'
                         r'(?P<hw_hdl>\w+)+\]+$')
 
@@ -8158,25 +8162,24 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
         p7 = re.compile(r'^deagg_vrf_id\s+=\s+(?P<deagg_vrf_id>\d+)+\s+lspa_handle:+'
                         r'(?P<lspa_handle>\w+)+$')
 
-        #EOS:objid:76 local_label:0 flags:0:() pdflags:0
+        #EOS:objid:142 local_label:0 flags:0:() pdflags:0
         p8 = re.compile(r'^EOS:+objid:+(?P<objid>\d+)\s+local_label:+'
                         r'(?P<local_label>\d+)\s+flags:+\S:+'
                         r'(?P<flags>[\S\s]+)\s+pdflags:+'
                         r'(?P<pdflags>\S+)$')
-
-        #nobj0:(LABEL, 78), nobj1:(LABEL, 75) modify:1 bwalk:0
-        p9 = re.compile(r'^nobj0:+(?P<nobj0>[\S\s]+)\s+nobj1:+'
-                        r'(?P<nobj1>[\S\s]+)\s+modify:+'
-                        r'(?P<modify>\d+)\s+bwalk:+(?P<bwalk>\d+)$')
-
-        #LABEL:objid:78 link_type:MPLS local_label:18 outlabel:(3, 0)
+        
+        #nobj0:(LABEL, 143), nobj1:(LABEL, 141) modify:1 bwalk:0
+        p9 = re.compile(r'^nobj0:\(+(?P<nobj0>[\w\,\s]+)+\)+\,\s+nobj1:\(+'
+                        r'(?P<nobj1>[\w\,\s]+)+\)\s+modify:+(?P<modify>\d+)\s+bwalk:+(?P<bwalk>\d+)$')
+    
+        #LABEL:objid:143 link_type:MPLS local_label:22 outlabel:(3, 0)
         p10 = re.compile(r'LABEL:+objid:+(?P<objid>\d+)\s+link_type:+'
                          r'(?P<link_type>\w+)\s+local_label:+'
                          r'(?P<local_label>\d+)\s+outlabel:+(?P<outlabel>[\S\s]+)$')
 
-        #flags:0x18:(POP,PHP,) pdflags:0:(INSTALL_HW_OK,) adj_handle:0x76000024
-        p11 = re.compile(r'^flags:+(?P<flags>[\S\w]+)\s+pdflags:+'
-                         r'(?P<pdflags>[\S\w]+)\s+adj_handle:+(?P<adj_handle>\w+)$')
+        #flags:0x18:(POP,PHP,) pdflags:0:(INSTALL_HW_OK,) adj_handle:0x83000039
+        p11 = re.compile(r'flags:+(?P<flagid>\w+)+:\(+(?P<flagstr>\S+)+\,+\)+\s+pdflags:+'
+                         r'(?P<pdflagid>\w+)+:\(+(?P<pdflagstr>\S+)+\,+\)+\s+adj_handle:+(?P<adj_handle>\w+)$')
 
         #unsupported recursion:0 olbl_changed 0 local_adj:0 modify_cnt:0
         p12 = re.compile(r'^unsupported\s+recursion:+(?P<unsupported_recursion>\d+)\s+olbl_changed\s+'
@@ -8187,29 +8190,29 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
         p13 = re.compile(r'^bwalk_cnt:+(?P<bwalk_cnt>\d+)\s+subwalk_cnt:+'
                          r'(?P<subwalk_cnt>\d+)\s+collapsed_oce:+(?P<collapsed_oce>\d+)$')
 
-        #AAL: id:1979711524 lbl:0 smac:7486.0b05.0d46 dmac:5897.bd7a.6f80
+        #AAL: id:2197815353 lbl:0 smac:00a7.42d6.c41f dmac:0027.90bf.2ee7
         p14 = re.compile(r'^AAL:\s+id:+(?P<id>\d+)\s+lbl:+(?P<lbl>\d+)\s+smac:+'
-                         r'(?P<smac>\S+)\s+dmac:+(?P<dmac>\S+)\s$')
+                         r'(?P<smac>\S+)\s+dmac:+(?P<dmac>\S+)$')
 
         #sub_type:0 link_type:2 adj_flags:0 label_type:1 rewrite_type:POP2MPLS(138)
         p15 = re.compile(r'^sub_type:+(?P<sub_type>\d+)\s+link_type:+'
                          r'(?P<link_type>\d+)\s+adj_flags:+(?P<adj_flags>\d+)\s+label_type:+'
-                         r'(?P<label_type>\d+)\s+rewrite_type:+(?P<rewrite_type>\S+)\s$')
+                         r'(?P<label_type>\d+)\s+rewrite_type:+(?P<rewrite_type>\S+)$')
 
-        #vlan_id:0 vrf_id:0 ri:0x7ff7911c7808, ri_id:0x22 phdl:0xe90000d3, ref_cnt:1
+        #vlan_id:0 vrf_id:0 ri:0x7f02737cc1e8, ri_id:0x3e phdl:0xab000447, ref_cnt:1
         p16 = re.compile(r'^vlan_id:+(?P<vlan_id>\d+)\s+vrf_id:+(?P<vrf_id>\d+)\s+ri:+'
                          r'(?P<ri>\w+)+,\s+ri_id:+(?P<ri_id>\w+)\s+phdl:+'
-                         r'(?P<phdl>\w+)+,\s+ref_cnt:+(?P<ref_cnt>\d+)\s$')
+                         r'(?P<phdl>\w+)+,\s+ref_cnt:+(?P<ref_cnt>\d+)$')
 
-        #si:0x7ff7911c6098, si_id:0x4007, di_id:0x5378
-        p17 = re.compile(r'^si:+(?P<si>\w+)+,\s+si_id:+(?P<si_id>\w+)+,\s+di_id:+(?P<di_id>\w+)\s$')
+        #si:0x7f02737cc6b8, si_id:0x4027, di_id:0x526d 
+        p17 = re.compile(r'^si:+(?P<si>\w+)+,\s+si_id:+(?P<si_id>\w+)+,\s+di_id:+(?P<di_id>\w+)$')
 
         #ADJ:objid:71 {link_type:MPLS ifnum:0x7c, adj:0x53000020, si: 0x7ff791190278
         p18 = re.compile(r'ADJ:objid:+(?P<objid>\d+)+\s\{+link_type:+'
                          r'(?P<link_type>\w+)\s+ifnum:+(?P<ifnum>\w+)+,\s+adj:+'
                          r'(?P<adj>\w+)+,\s+si:+\s(?P<si>\w+)+  }$')
 
-        #ADJ:objid:69 {link_type:IP ifnum:0x7c, adj:0xa000001f, si: 0x7ff791190278  IPv4:       93.1.1.11 }
+        #ADJ:objid:139 {link_type:MPLS ifnum:0x36, adj:0x5c000037, si: 0x7f02737a2348  }
         p19 = re.compile(r'ADJ:objid:+(?P<objid>\d+)+\s\{+link_type:+'
                          r'(?P<link_type>\w+)\s+ifnum:+(?P<ifnum>\w+)+,\s+adj:+'
                          r'(?P<adj>\w+)+,\s+si:+\s(?P<si>\w+)\s+IPv4:+\s+'
@@ -8244,7 +8247,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                          r'(?P<in_prog>\d+)\s+nested:+(?P<nested>\d+)+\]+$')
 
         #AAL: ecr:id:4177526786 af:0 ecr_type:0 ref:3 ecrh:0x7f02737e49f8(28:2)
-        p26 = re.compile(r'AAL:\s+ecr:id:+(?P<ecr_id>\d+)\s+af:(?P<af>\d+)\s+ecr_type:+'
+        p26 = re.compile(r'aal:\s+ecr:id:+(?P<ecr_id>\d+)\s+af:(?P<af>\d+)\s+ecr_type:+'
                          r'(?P<ecr_type>\w+)\s+ref:+(?P<ref>\d+)\s+ecrh:+(?P<ecrh>\S+)\s+$')
 
         #hwhdl:1937656312 ::0x7f02737e11c8,0x7f02737e2728,0x7f02737e11c8,0x7f02737e2728
@@ -8289,17 +8292,16 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
             line = line.strip()
             eos_dict = {}
 
-            #LENTRY:label:18 nobj:(EOS, 76) lentry_hdl:0x13000005
+            #LENTRY:label:22 nobj:(EOS, 142) lentry_hdl:0xde00000a
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 label_id = int(group['label'])
-                lentry_dict = ret_dict.setdefault('LENTRY_label', {}).setdefault(label_id, {})
-                lentry_dict['label'] = int(group['label'])
-                lentry_dict['nobj'] = str(group['nobj'])
+                lentry_dict = ret_dict.setdefault('lentry_label', {}).setdefault(label_id, {})
+                lentry_dict['nobj'] = list(str(group['nobj']).split(','))
                 lentry_dict['lentry_hdl'] = str(group['lentry_hdl'])
                 continue
-
+            
             #modify_cnt:1 backwalk_cnt:2
             m = p2.match(line)
             if m:
@@ -8314,34 +8316,34 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 group = m.groupdict()
                 lentry_dict['lspa_handle'] = str(group['lspa_handle'])
                 continue
-
-            #AAL: id:318767109 lbl:18
+            
+            #AAL: id:3724541962 lbl:22
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                aal_dict = ret_dict['LENTRY_label'][label_id].setdefault('AAL', {})
+                aal_dict = ret_dict['lentry_label'][label_id].setdefault('aal', {})
                 aal_dict['id'] = int(group['id'])
                 aal_dict['lbl'] = int(group['lbl'])
                 continue
 
-            #eos0:[adj_hdl:0x76000024, hw_hdl:0x7ff7911bf758]
+            #eos0:[adj_hdl:0x83000039, hw_hdl:0x7f02737c6628]
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                eos0_dict = ret_dict['LENTRY_label'][label_id]['AAL'].setdefault('eos0', {})
+                eos0_dict = ret_dict['lentry_label'][label_id]['aal'].setdefault('eos0', {})
                 eos0_dict['adj_hdl'] = str(group['adj_hdl'])
                 eos0_dict['hw_hdl'] = str(group['hw_hdl'])
                 continue
 
-            #eos1:[adj_hdl:0xeb000022, hw_hdl:0x7ff7911bf548]
+            #eos1:[adj_hdl:0x3d000038, hw_hdl:0x7f02737c6478]
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                eos1_dict = ret_dict['LENTRY_label'][label_id]['AAL'].setdefault('eos1', {})
+                eos1_dict = ret_dict['lentry_label'][label_id]['aal'].setdefault('eos1', {})
                 eos1_dict['adj_hdl'] = str(group['adj_hdl'])
                 eos1_dict['hw_hdl'] = str(group['hw_hdl'])
                 continue
-
+            
             #deagg_vrf_id = 0 lspa_handle:0
             m = p7.match(line)
             if m:
@@ -8349,45 +8351,53 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 aal_dict['deagg_vrf_id'] = int(group['deagg_vrf_id'])
                 aal_dict['lspa_handle'] = str(group['lspa_handle'])
                 continue
-
-            #EOS:objid:76 local_label:0 flags:0:() pdflags:0
+            
+            #EOS:objid:142 local_label:0 flags:0:() pdflags:0
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                eos_dict = ret_dict['LENTRY_label'][label_id].setdefault('EOS', {})
+                eos_dict = ret_dict['lentry_label'][label_id].setdefault('eos', {})
                 eos_dict['objid'] = int(group['objid'])
                 eos_dict['local_label'] = int(group['local_label'])
                 eos_dict['flags'] = str(group['flags'])
                 eos_dict['pdflags'] = str(group['pdflags'])
                 continue
-
-            #nobj0:(LABEL, 78), nobj1:(LABEL, 75) modify:1 bwalk:0
+            
+            #nobj0:(LABEL, 143), nobj1:(LABEL, 141) modify:1 bwalk:0
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                eos_dict['nobj0'] = str(group['nobj0'])
-                eos_dict['nobj1'] = str(group['nobj1'])
-                eos_dict['modify'] = int(group['modify'])
-                eos_dict['bwalk'] = int(group['bwalk'])
+                ret_dict['lentry_label'][label_id]['eos']['nobj0'] = list(str(group['nobj0']).split(', '))
+                ret_dict['lentry_label'][label_id]['eos']['nobj1'] = list(str(group['nobj1']).split(', '))
+                ret_dict['lentry_label'][label_id]['eos']['modify']=int(group['modify'])
+                ret_dict['lentry_label'][label_id]['eos']['bwalk'] = int(group['bwalk'])
                 continue
-
-            #LABEL:objid:78 link_type:MPLS local_label:18 outlabel:(3, 0)
+            
+            #LABEL:objid:143 link_type:MPLS local_label:22 outlabel:(3, 0)
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 objid = int(group['objid'])
-                label_dict = ret_dict['LENTRY_label'][label_id].setdefault('LABEL', {}).setdefault(objid, {})
+                label_dict = ret_dict['lentry_label'][label_id].setdefault('label', {}).setdefault(objid, {})
                 label_dict['link_type'] = str(group['link_type'])
                 label_dict['local_label'] = int(group['local_label'])
                 label_dict['outlabel'] = str(group['outlabel'])
                 continue
-
-            #flags:0x18:(POP,PHP,) pdflags:0:(INSTALL_HW_OK,) adj_handle:0x76000024 
+            
+            #flags:0x18:(POP,PHP,) pdflags:0:(INSTALL_HW_OK,) adj_handle:0x83000039
             m = p11.match(line)
             if m:
                 group = m.groupdict()
-                label_dict['flags'] = str(group['flags'])
-                label_dict['pdflags'] = str(group['pdflags'])
+                label_dict['flags'] = {}
+                flagid = str(group['flagid'])
+                flagstr = str(group['flagstr'])
+                flaglist = list(flagstr.split(','))
+                label_dict['flags'][flagid] = flaglist
+                label_dict['pdflags'] = {}
+                flagid = str(group['pdflagid'])
+                flagstr = str(group['pdflagstr'])
+                flaglist = list(flagstr.split(','))
+                label_dict['pdflags'][flagid] = flaglist
                 label_dict['adj_handle'] = str(group['adj_handle'])
                 continue
 
@@ -8410,14 +8420,14 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 label_dict['collapsed_oce'] = int(group['collapsed_oce'])
                 continue
 
-            #AAL: id:1979711524 lbl:0 smac:7486.0b05.0d46 dmac:5897.bd7a.6f80
+            #AAL: id:2197815353 lbl:0 smac:00a7.42d6.c41f dmac:0027.90bf.2ee7
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                labelaal_dict = ret_dict['LENTRY_label'][label_id]['LABEL'][objid].setdefault('AAL', {})
-                labelaal_dict['id'] = int(group['id'])
-                labelaal_dict['lbl'] = str(group['lbl'])
-                labelaal_dict['smac'] = int(group['smac'])
+                id = int(group['id'])
+                labelaal_dict = ret_dict['lentry_label'][label_id]['label'][objid].setdefault('label_aal', {}).setdefault(id, {})
+                labelaal_dict['lbl'] = int(group['lbl'])
+                labelaal_dict['smac'] = str(group['smac'])
                 labelaal_dict['dmac'] = str(group['dmac'])
                 continue
 
@@ -8431,8 +8441,8 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 labelaal_dict['label_type'] = int(group['label_type'])
                 labelaal_dict['rewrite_type'] = str(group['rewrite_type'])
                 continue
-
-            #vlan_id:0 vrf_id:0 ri:0x7ff7911c7808, ri_id:0x22 phdl:0xe90000d3, ref_cnt:1
+            
+            #vlan_id:0 vrf_id:0 ri:0x7f02737cc1e8, ri_id:0x3e phdl:0xab000447, ref_cnt:1
             m = p16.match(line)
             if m:
                 group = m.groupdict()
@@ -8444,7 +8454,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 labelaal_dict['ref_cnt'] = int(group['ref_cnt'])
                 continue
 
-            #si:0x7ff7911c6098, si_id:0x4007, di_id:0x5378
+            #si:0x7f02737cc6b8, si_id:0x4027, di_id:0x526d 
             m = p17.match(line)
             if m:
                 group = m.groupdict()
@@ -8458,19 +8468,19 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
             if m:
                 group = m.groupdict()
                 objid = int(group['objid'])
-                adj_dict = ret_dict['LENTRY_label'][label_id].setdefault('ADJ', {}).setdefault(objid, {})
+                adj_dict = ret_dict['lentry_label'][label_id].setdefault('adj', {}).setdefault(objid, {})
                 adj_dict['link_type'] = str(group['link_type'])
                 adj_dict['ifnum'] = str(group['ifnum'])
                 adj_dict['adj'] = str(group['adj'])
                 adj_dict['si'] = str(group['si'])
                 continue
 
-            #ADJ:objid:69 {link_type:IP ifnum:0x7c, adj:0xa000001f, si: 0x7ff791190278  IPv4:       93.1.1.11 }
+            #ADJ:objid:139 {link_type:MPLS ifnum:0x36, adj:0x5c000037, si: 0x7f02737a2348  }
             m = p19.match(line)
             if m:
                 group = m.groupdict()
                 objid = int(group['objid'])
-                adj_dict = ret_dict['LENTRY_label'][label_id].setdefault('ADJ', {}).setdefault(objid, {})
+                adj_dict = ret_dict['lentry_label'][label_id].setdefault('adj', {}).setdefault(objid, {})
                 adj_dict['link_type'] = str(group['link_type'])
                 adj_dict['ifnum'] = str(group['ifnum'])
                 adj_dict['adj'] = str(group['adj'])
@@ -8483,7 +8493,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
             if m:
                 group = m.groupdict()
                 label_id = int(group['label'])
-                lentry_dict = ret_dict.setdefault('LENTRY_label', {}).setdefault(label_id,{})
+                lentry_dict = ret_dict.setdefault('lentry_label', {}).setdefault(label_id,{})
                 lentry_dict['label'] = int(group['label'])
                 continue
 
@@ -8491,7 +8501,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
             m = p21.match(line)
             if m:
                 group = m.groupdict()
-                labelaal_dict = ret_dict['LENTRY_label'][label_id].setdefault('AAL', {})
+                labelaal_dict = ret_dict['lentry_label'][label_id].setdefault('aal', {})
                 continue
 
             #LB:obj_id:38 ecr_map_objid:0 link_type:IP num_choices:2 Flags:0
@@ -8499,7 +8509,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
             if m:
                 group = m.groupdict()
                 objid1 = int(group['obj_id'])
-                lb_dict = ret_dict['LENTRY_label'][label_id].setdefault('LB', {}).setdefault(objid1, {})
+                lb_dict = ret_dict['lentry_label'][label_id].setdefault('lb', {}).setdefault(objid1, {})
                 lb_dict['ecr_map_objid'] = int(group['ecr_map_objid'])
                 lb_dict['link_type'] = str(group['link_type'])
                 lb_dict['num_choices'] = int(group['num_choices'])
@@ -8524,7 +8534,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 lb_dict['bwalk_cnt'] = int(group['bwalk_cnt'])
                 lb_dict['subwalk_cnt'] = int(group['subwalk_cnt'])
                 lb_dict['finish_cnt'] = int(group['finish_cnt'])
-                lb_dict['AAL'] = {}
+                lb_dict['aal'] = {}
                 lb_dict['bwalk'] = {}
                 continue
             
@@ -8541,26 +8551,26 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
             m = p26.match(line)
             if m:
                 group = m.groupdict()
-                lb_dict['AAL']['ecr_id'] = int(group['ecr_id'])
-                lb_dict['AAL']['af'] = int(group['af'])
-                lb_dict['AAL']['ecr_type'] = str(group['ecr_type'])
-                lb_dict['AAL']['ref'] = int(group['ref'])
-                lb_dict['AAL']['ecrh'] = str(group['ecrh'])
+                lb_dict['aal']['ecr_id'] = int(group['ecr_id'])
+                lb_dict['aal']['af'] = int(group['af'])
+                lb_dict['aal']['ecr_type'] = str(group['ecr_type'])
+                lb_dict['aal']['ref'] = int(group['ref'])
+                lb_dict['aal']['ecrh'] = str(group['ecrh'])
                 continue
 
             #hwhdl:1937656312 ::0x7f02737e11c8,0x7f02737e2728,0x7f02737e11c8,0x7f02737e2728
             m = p27.match(line)
             if m:
                 group = m.groupdict()
-                lb_dict['AAL']['hwhdl'] = str(group['hwhdl'])
+                lb_dict['aal']['hwhdl'] = str(group['hwhdl'])
                 continue
-
+        
             #Sw Enh ECR scale: objid:38 llabel:24 eos:1 #adjs:2 mixed_adj:0          
             m = p28.match(line)
             if m:
                 group = m.groupdict()
                 objid = int(group['objid'])
-                ecr_dict = ret_dict['LENTRY_label'][label_id].setdefault('Sw_Enh_ECR_scale', {}).setdefault(objid, {})
+                ecr_dict = ret_dict['lentry_label'][label_id].setdefault('sw_enh_ecr_scale', {}).setdefault(objid, {})
                 ecr_dict['llabel'] = int(group['llabel'])
                 ecr_dict['eos'] = int(group['eos'])
                 ecr_dict['adjs'] = int(group['adjs'])
