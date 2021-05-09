@@ -4,6 +4,7 @@
         * show ospf neighbor
         * show ospf {process_name} neighbor
         * show ospf vrf {vrf} neighbor
+        * show ospf {process} vrf {vrf} neighbor
 """
 
 # Python
@@ -19,19 +20,21 @@ from genie.metaparser.util.schemaengine import Any, Optional
 #   * show ospf neighbor
 #   * show ospf {process_name} neighbor
 #   * show ospf vrf {vrf} neighbor
+#   * show ospf {process} vrf {vrf} neighbor
 # ======================================================
 class ShowOspfNeighborSchema(MetaParser):
     """Schema detail for:
           * show ospf neighbor
           * show ospf {process_name} neighbor
           * show ospf vrf {vrf} neighbor
+          * show ospf {process} vrf {vrf} neighbor
      """
     schema = {
         Optional('process_name'): str,
         'vrfs': {
             Any(): {
                 'neighbors': {
-                    Optional(Any()): { # neighbor_id
+                    Optional(Any()): {  # neighbor_id
                         'priority': str,
                         'state': str,
                         'dead_time': str,
@@ -51,19 +54,25 @@ class ShowOspfNeighborSchema(MetaParser):
 #   * show ospf neighbor
 #   * show ospf {process_name} neighbor
 #   * show ospf vrf {vrf} neighbor
+#   * show ospf {process} vrf {vrf} neighbor
 # ======================================================
 class ShowOspfNeighbor(ShowOspfNeighborSchema):
     """parser details for:
         * show ospf neighbor
         * show ospf {process_name} neighbor
-        * show ospf vrf all-inclusive neighbor
+        * show ospf vrf {vrf} neighbor
+        * show ospf {process} vrf {vrf} neighbor
     """
 
-    cli_command = ['show ospf neighbor', 'show ospf {process_name} neighbor', 'show ospf vrf {vrf} neighbor']
+    cli_command = ['show ospf neighbor', 'show ospf {process_name} neighbor',
+                   'show ospf vrf {vrf} neighbor', 'show ospf {process_name} vrf {vrf} neighbor']
 
     def cli(self, process_name='', vrf='', output=None):
         if output is None:
-            if process_name:
+            if process_name and vrf:
+                out = self.device.execute(
+                    self.cli_command[3].format(process_name=process_name, vrf=vrf))
+            elif process_name:
                 out = self.device.execute(
                     self.cli_command[1].format(process_name=process_name))
             elif vrf:
@@ -93,7 +102,7 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
         # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
         # 192.168.199.137 1    FULL/DR       0:00:31    172.31.80.37      GigabitEthernet 0/3/0/2
         p2 = re.compile(r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[A-Z]+/\s{0,3}[A-Z-]*)'
-                        r' +(?P<dead_time>(\d+:){2}\d+) +(?P<address>(\d+\.){3}\d+) +(?P<interface>\w+\s*\S+)$')
+                        r' +(?P<dead_time>(\d+:){2}\d+) +(?P<address>[\d\.\/]+) +(?P<interface>\w+\s*\S+)$')
 
         # Neighbor is up for 2d18h
         p3 = re.compile(r'^Neighbor +is +up +for +(?P<up_time>\S+)$')
@@ -134,7 +143,10 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
 
                 # Neighbors for OSPF
                 vrfs_dict = ret_dict.setdefault('vrfs', {})
-                vrf_dict = vrfs_dict.setdefault('default', {})
+                if vrf:
+                    vrf_dict = vrfs_dict.setdefault(vrf, {})
+                else:
+                    vrf_dict = vrfs_dict.setdefault('default', {})
                 neighbors_dict = vrf_dict.setdefault('neighbors', {})
 
                 continue
