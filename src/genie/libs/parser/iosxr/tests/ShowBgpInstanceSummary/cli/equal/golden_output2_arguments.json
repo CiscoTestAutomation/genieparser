@@ -1,0 +1,4 @@
+{
+    "vrf_type": "vrf",
+    "address_family": "ipv4 unicast"
+}

@@ -31,5 +31,8 @@ expected_output = {
             "bootflash:.": {"disk_size": "11161600", "type_of_disk": "Bootflash"},
             "crashinfo:.": {"disk_size": "1638400", "type_of_disk": "Crash Files"},
         },
+        "build_label": "BLD_POLARIS_DEV_LATEST_20200702_122021",
+        "label": "[S2C-build-polaris_dev-116872-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20200702_122021 243]",
+        "xe_version": "BLD_POLARIS_DEV_LATEST_20200702_122021_V17_4_0_67_2",
     }
 }

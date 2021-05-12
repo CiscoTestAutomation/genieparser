@@ -248,7 +248,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         tmp_port_id = ''
         # Chassis id: 000d.bdff.4f04
         # Chassis id: 39373638-3935-5A43-4A37-35303036574C
-        p1 = re.compile(r'^Chassis +id: +(?P<chassis_id>[\S]+)$')
+        p1 = re.compile(r'^Chassis +id: +(?P<chassis_id>.+?)\s*$')
         # Port id: Gi0/0/0/1
         # Port id: PCI-E Slot 1, Port 2
         p2 = re.compile(r'^Port +id: +(?P<port_id>[\S ]+)$')
@@ -257,9 +257,9 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         # Port Description: null
         p4 = re.compile(r'^Port +Description: +(?P<port_description>(?!null).+)$')
         # System Name: R2_xrv9000
-        p5 = re.compile(r'^System +Name: +(?P<system_name>\S+)$')
+        p5 = re.compile(r'^System +Name: +(?P<system_name>.+?)\s*$')
         # System Description:  6.2.2, IOS-XRv 9000
-        p6 = re.compile(r'^System +Description: +(?P<system_description>.+)$')
+        p6 = re.compile(r'^System +Description: +(?P<system_description>.+?)$')
         # Copyright (c) 1986-2017 by Cisco Systems, Inc.
         p6_1 = re.compile(r'^(?P<copyright>Copyright +\([c|C]\) +.+)$')
         # Compiled Sat 22-Jul-17 05:51 by

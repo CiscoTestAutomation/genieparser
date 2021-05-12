@@ -1,0 +1,27 @@
+      Bundle-Ether1 is up, line protocol is up 
+      Interface state transitions: 9
+      Description: to-ML26-BE1
+      Internet address is 192.168.0.25/30
+      MTU 1514 bytes, BW 100000000 Kbit (Max: 100000000 Kbit)
+         reliability 255/255, txload 0/255, rxload 0/255
+      Encapsulation ARPA,
+      Full-duplex, 100000Mb/s
+      loopback not set,
+      Last link flapped 3w3d
+      ARP type ARPA, ARP timeout 04:00:00
+        No. of members in this bundle: 1
+          HundredGigE0/0/1/2/0         Full-duplex  100000Mb/s   Active          
+      Last input 00:00:00, output 00:00:00
+      Last clearing of "show interface" counters never
+      30 second input rate 1000 bits/sec, 0 packets/sec
+      30 second output rate 2000 bits/sec, 1 packets/sec
+         1716386544 packets input, 751342403591 bytes, 0 total input drops
+         0 drops for unrecognized upper-level protocol
+         Received 6 broadcast packets, 642898 multicast packets
+                  0 runts, 0 giants, 0 throttles, 0 parity
+         0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+         1714349214 packets output, 754526715390 bytes, 0 total output drops
+         Output 12 broadcast packets, 642896 multicast packets
+         0 output errors, 0 underruns, 0 applique, 0 resets
+         0 output buffer failures, 0 output buffers swapped out
+         0 carrier transitions

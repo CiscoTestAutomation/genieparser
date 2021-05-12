@@ -149,12 +149,64 @@ class TestShowCdpNeighborsDetail(unittest.TestCase):
 
     """}
 
+
+    expected_parsed_output_2 = {
+        'index': {
+            1: {
+                'capabilities': 'Router Switch IGMP',
+                'device_id': 'R3_nx.cisco.com(972ZZK4REQK)',
+                'duplex_mode': 'full',
+                'hold_time': 138,
+                'entry_addresses': {
+                    '172.16.1.53': {}
+                },
+                'native_vlan': '1',
+                'platform': 'N9K/9000v',
+                'local_interface': 'GigabitEthernet0/0/0/5',
+                'port_id': 'Ethernet1/4',
+                'software_version': 'Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)',
+                'system_name': 'R3_nx',
+                'advertisement_ver': 2,
+            }
+        },
+        'total_entries_displayed': 1
+    }
+
+    device_output_2 = {'execute.return_value': """
+        Device# show cdp neighbors detail
+
+        Device ID: R3_nx.cisco.com(972ZZK4REQK)
+        SysName : R3_nx
+        Entry address(es):
+          IPv4 address: 172.16.1.53
+        Platform: N9K/9000v,  Capabilities: Router Switch IGMP
+        Interface: GigabitEthernet0/0/0/5
+        Port ID (outgoing port): Ethernet1/4
+        Holdtime : 138 sec
+
+        Version :
+        Cisco Nexus Operating System (NX-OS) Software, Version 9.2(1)
+
+        advertisement version: 2
+        Native VLAN: 1
+        Duplex: full
+
+
+    """}
+
     def test_show_cdp_neighbors_detail_1(self):
         self.maxDiff = None
         self.device = Mock(**self.device_output_1)
         obj = ShowCdpNeighborsDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.expected_parsed_output_1)
+
+    def test_show_cdp_neighbors_detail_2(self):
+        self.maxDiff = None
+        self.device = Mock(**self.device_output_2)
+        obj = ShowCdpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.expected_parsed_output_2)
 
 
 if __name__ == '__main__':

@@ -1,0 +1,6 @@
+        RP/0/RP0/CPU0:router# show mpls ldp neighbor brief
+  
+        Peer              GR Up Time         Discovery Address
+        ----------------- -- --------------- --------- -------
+        10.36.3.3:0         Y  00:01:04                3       8
+        10.16.2.2:0         N  00:01:02                2       5

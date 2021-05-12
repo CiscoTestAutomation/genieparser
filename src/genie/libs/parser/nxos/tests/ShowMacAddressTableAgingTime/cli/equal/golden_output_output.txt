@@ -1,0 +1,5 @@
+        N95_1# show mac address-table aging-time 
+        Aging Time
+        ----------
+            120
+    
