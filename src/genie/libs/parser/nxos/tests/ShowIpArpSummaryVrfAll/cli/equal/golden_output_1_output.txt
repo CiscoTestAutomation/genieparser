@@ -1,0 +1,10 @@
+
+		N95_1# show ip arp summary vrf all
+
+		IP ARP Table - Adjacency Summary
+
+		  Resolved   : 12
+		  Incomplete : 0 (Throttled : 0)
+		  Unknown    : 0
+		  Total      : 12
+	

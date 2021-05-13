@@ -1,0 +1,9 @@
+
+               Interface     PAE              Client          Status
+    ------------------------------------------------------------------
+             Ethernet1/1    AUTH                none      AUTHORIZED
+
+               Interface     PAE              Client          Status
+    ------------------------------------------------------------------
+      Ethernet102/1/6    AUTH   0E:BE:EF:FF:3F:3F      AUTHORIZED
+    

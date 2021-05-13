@@ -3439,6 +3439,11 @@ class test_show_interface_status(unittest.TestCase):
                 'port_speed': 'auto',
                 'status': 'connected',
             },
+            'Loopback0': {
+                'duplex_code': 'auto',
+                'status': 'connected',
+                'vlan': 'routed',
+            },
         }
     }
 
@@ -3459,6 +3464,7 @@ class test_show_interface_status(unittest.TestCase):
         Vlan1         --                 down      routed    auto    auto    --
         Vlan366       BigData            connected routed    auto    auto    --
         nve1          --                 connected --        auto    auto    --
+        Lo0           --                 connected routed    auto    --      --
     '''}
 
     golden_parsed_interface_output = {
@@ -3626,6 +3632,360 @@ class test_show_interface_status(unittest.TestCase):
         },
     }
 
+    golden_output_4 = {'execute.return_value': '''
+        ----------------------------------------------------------------------------------------------
+         Port           Name                Status     Vlan       Duplex   Speed    Type              
+        ----------------------------------------------------------------------------------------------
+         mgmt0          --                  connected  routed     full     1G       --               
+         Eth1/1         --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/2         --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/3         --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/4         --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/5         --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/6         --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/7         --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/8         --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/9         --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/10        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/11        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/12        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/13        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/14        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/15        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/16        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/17        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/18        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/19        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/20        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/21        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/22        --                  sfpabsent  trunk      full     inherit  --               
+         Eth1/23        --                  out-of-ser trunk      full     40G      QSFP-40G-SR-BD   
+         Eth1/24        --                  notconnect trunk      full     inherit  QSFP-40G-SR-BD   
+         Eth1/25        --                  sfpabsent  routed     full     inherit  --               
+         Eth1/25.1      --                  parentdown routed     full     inherit  --               
+         Eth1/26        --                  sfpabsent  routed     full     inherit  --               
+         Eth1/26.2      --                  parentdown routed     full     inherit  --               
+         Eth1/27        --                  sfpabsent  routed     full     inherit  --               
+         Eth1/27.3      --                  parentdown routed     full     inherit  --               
+         Eth1/28        --                  sfpabsent  routed     full     inherit  --               
+         Eth1/28.4      --                  parentdown routed     full     inherit  --               
+         Eth1/29        --                  sfpabsent  routed     full     inherit  --               
+         Eth1/29.5      --                  parentdown routed     full     inherit  --               
+         Eth1/30        --                  sfpabsent  routed     full     inherit  --               
+         Eth1/30.6      --                  parentdown routed     full     inherit  --               
+         Eth1/31        --                  connected  routed     full     100G     QSFP-40/100-SRBD 
+         Eth1/31.21     --                  connected  routed     full     100G     QSFP-40/100-SRBD 
+         Eth1/32        --                  connected  routed     full     100G     QSFP-40/100-SRBD 
+         Eth1/32.22     --                  connected  routed     full     100G     QSFP-40/100-SRBD 
+         Lo0            --                  connected  routed     auto     --       --               
+         Lo1            --                  connected  routed     auto     --       --               
+         Lo1023         --                  connected  routed     auto     --       --               
+
+        ----------------------------------------------------------------
+         Interface     Name                Status    Reason             
+        ----------------------------------------------------------------
+         Tunnel7       --                  up        no-reason         
+         Tunnel8       --                  up        no-reason         
+         Tunnel36      --                  up        no-reason         
+         Tunnel37      --                  up        no-reason         
+         Tunnel38      --                  up        no-reason         
+         Tunnel39      --                  up        no-reason         
+         Tunnel40      --                  up        no-reason         
+         Tunnel41      --                  up        no-reason         
+         Tunnel42      --                  up        no-reason         
+         Tunnel43      --                  up        no-reason         
+         Tunnel44      --                  up        no-reason         
+         Tunnel45      --                  up        no-reason         
+         Tunnel46      --                  up        no-reason         
+         Tunnel47      --                  up        no-reason         
+            '''}
+
+    golden_parsed_output_4 = {
+          "interfaces": {
+            "mgmt0": {
+              "status": "connected",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "1G"
+            },
+            "Ethernet1/1": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/2": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/3": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/4": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/5": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/6": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/7": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/8": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/9": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/10": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/11": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/12": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/13": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/14": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/15": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/16": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/17": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/18": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/19": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/20": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/21": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/22": {
+              "status": "sfpabsent",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/23": {
+              "status": "out-of-ser",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "40G",
+              "type": "QSFP-40G-SR-BD"
+            },
+            "Ethernet1/24": {
+              "status": "notconnect",
+              "vlan": "trunk",
+              "duplex_code": "full",
+              "port_speed": "inherit",
+              "type": "QSFP-40G-SR-BD"
+            },
+            "Ethernet1/25": {
+              "status": "sfpabsent",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/25.1": {
+              "status": "parentdown",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/26": {
+              "status": "sfpabsent",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/26.2": {
+              "status": "parentdown",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/27": {
+              "status": "sfpabsent",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/27.3": {
+              "status": "parentdown",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/28": {
+              "status": "sfpabsent",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/28.4": {
+              "status": "parentdown",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/29": {
+              "status": "sfpabsent",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/29.5": {
+              "status": "parentdown",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/30": {
+              "status": "sfpabsent",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/30.6": {
+              "status": "parentdown",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "inherit"
+            },
+            "Ethernet1/31": {
+              "status": "connected",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "100G",
+              "type": "QSFP-40/100-SRBD"
+            },
+            "Ethernet1/31.21": {
+              "status": "connected",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "100G",
+              "type": "QSFP-40/100-SRBD"
+            },
+            "Ethernet1/32": {
+              "status": "connected",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "100G",
+              "type": "QSFP-40/100-SRBD"
+            },
+            "Ethernet1/32.22": {
+              "status": "connected",
+              "vlan": "routed",
+              "duplex_code": "full",
+              "port_speed": "100G",
+              "type": "QSFP-40/100-SRBD"
+            },
+            "Loopback0": {
+              "status": "connected",
+              "vlan": "routed",
+              "duplex_code": "auto"
+            },
+            "Loopback1": {
+              "status": "connected",
+              "vlan": "routed",
+              "duplex_code": "auto"
+            },
+            "Loopback1023": {
+              "status": "connected",
+              "vlan": "routed",
+              "duplex_code": "auto"
+            },
+            "Tunnel7": { "status": "up", "reason": "no-reason" },
+            "Tunnel8": { "status": "up", "reason": "no-reason" },
+            "Tunnel36": { "status": "up", "reason": "no-reason" },
+            "Tunnel37": { "status": "up", "reason": "no-reason" },
+            "Tunnel38": { "status": "up", "reason": "no-reason" },
+            "Tunnel39": { "status": "up", "reason": "no-reason" },
+            "Tunnel40": { "status": "up", "reason": "no-reason" },
+            "Tunnel41": { "status": "up", "reason": "no-reason" },
+            "Tunnel42": { "status": "up", "reason": "no-reason" },
+            "Tunnel43": { "status": "up", "reason": "no-reason" },
+            "Tunnel44": { "status": "up", "reason": "no-reason" },
+            "Tunnel45": { "status": "up", "reason": "no-reason" },
+            "Tunnel46": { "status": "up", "reason": "no-reason" },
+            "Tunnel47": { "status": "up", "reason": "no-reason" }
+          }
+        }
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowInterfaceStatus(device=self.device)
@@ -3659,6 +4019,13 @@ class test_show_interface_status(unittest.TestCase):
         parsed_output = obj.parse()
         self.maxDiff = None
         self.assertEqual(parsed_output, self.golden_parsed_output_3)
+
+    def test_golden_4(self):
+        self.device = Mock(**self.golden_output_4)
+        obj = ShowInterfaceStatus(device=self.device)
+        parsed_output = obj.parse()
+        self.maxDiff = None
+        self.assertEqual(parsed_output, self.golden_parsed_output_4)
 
 # ===========================================
 # Unit test for 'show interface capabilities'

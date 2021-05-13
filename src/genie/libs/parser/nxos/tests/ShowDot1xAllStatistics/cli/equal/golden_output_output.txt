@@ -1,0 +1,10 @@
+
+        Dot1x Authenticator Port Statistics for Ethernet1/1
+        --------------------------------------------
+        RxStart = 0     RxLogoff = 0    RxResp = 0      RxRespID = 0
+        RxInvalid = 0   RxLenErr = 0    RxTotal = 0
+
+        TxReq = 0       TxReqID = 0     TxTotal = 3
+
+        RxVersion = 0   LastRxSrcMAC = 00:00:00:ff:00:00
+    
