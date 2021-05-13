@@ -3512,6 +3512,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
             #  Keepalives:            75         74
             #  Route Refresh:          0          0
             #  Total:                 87         81
+            #  Prefixes Current:     403        201 (Consumes 27336 bytes)
             m = p22.match(line)
             if m:
                 group = m.groupdict()
