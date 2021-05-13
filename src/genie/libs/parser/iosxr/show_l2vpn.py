@@ -389,7 +389,7 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                             'num_vfi': int,
                             Any(): {
                                 Optional('state'): str,
-                                'neighbor': {
+                                Optional('neighbor'): {
                                     Any(): {
                                         'pw_id': {
                                             Any(): {
@@ -401,9 +401,19 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                                 }
                             }
                         },
-                        'pw': {
+                        'access_pw': {
                             'num_pw': int,
                             'num_pw_up': int,
+                            Optional("neighbor"): {
+                                Any(): {
+                                    "pw_id": {
+                                        Any(): {
+                                            "state": str, 
+                                            "static_mac_address": int
+                                        }
+                                    }
+                                }
+                            }
                         },
                         Optional('pbb'): {
                             'num_pbb': int,
