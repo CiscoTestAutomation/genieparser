@@ -547,7 +547,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 vfi_dict = bridge_domain_dict.setdefault('vfi', {})
                 vfi_dict.update({'num_vfi': vfi})
 
-                pw_dict = bridge_domain_dict.setdefault('pw', {})
+                pw_dict = bridge_domain_dict.setdefault('access_pw', {})
                 pw_dict.update({'num_pw': pw})
                 pw_dict.update({'num_pw_up': pw_up})
 
