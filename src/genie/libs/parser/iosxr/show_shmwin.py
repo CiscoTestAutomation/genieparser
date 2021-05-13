@@ -17,7 +17,7 @@ from genie.metaparser.util.schemaengine import Optional
 # ==================================================
 class ShowShmwinSummarySchema(MetaParser):
     """Schema for show shmwin summary
-                  show shmwin summary location <WORD>
+                  show shmwin summary location {location}
     """
 
     schema = {
@@ -48,7 +48,7 @@ class ShowShmwinSummarySchema(MetaParser):
 
 class ShowShmwinSummary(ShowShmwinSummarySchema):
     """ Parser for show shmwin summary
-                  show shmwin summary location <WORD>"""
+                   show shmwin summary location {location}"""
 
     cli_command = ['show shmwin summary', 'show shmwin summary location {location}']
     exclude = ['age']
@@ -65,13 +65,11 @@ class ShowShmwinSummary(ShowShmwinSummarySchema):
             out = output
 
         # Virtual Memory size  : 1536 MBytes
-        # Virtual Memory Range : 0x50000000 - 0xb0000000
         # Virtual Memory Group 2 size  : 384 MBytes
+        p1 = re.compile(r'Virtual Memory\s+(Group (?P<group>\d+)\s+)?size\s+:\s+(?P<virtual_mem_size>\d+) +MBytes')
+        # Virtual Memory Range : 0x50000000 - 0xb0000000
         # Virtual Memory Group 2 Range : 0xb8000000 - 0xd0000000
-        p1 = re.compile(r'Virtual Memory size\s+:\s+(?P<virtual_mem_size>\d+) +MBytes')
-        p2 = re.compile(r'Virtual Memory Range\s+:\s+(?P<virtual_mem_range_start>\S+) +- +(?P<virtual_mem_range_end>\w+)')
-        p3 = re.compile(r'Virtual Memory Group 2 size\s+:\s+(?P<virtual_mem_size>\d+) +MBytes')
-        p4 = re.compile(r'Virtual Memory Group 2 Range\s+:\s+(?P<virtual_mem_range_start>\w+) +- +(?P<virtual_mem_range_end>\w+)')
+        p2 = re.compile(r'Virtual Memory\s+(Group (?P<group>\d+)\s+)?Range\s+:\s+(?P<virtual_mem_range_start>\S+) +- +(?P<virtual_mem_range_end>\w+)')
 
         # Window Name      ID  GRP #Usrs #Wrtrs Ownr Usage(KB) Peak(KB) Peak Timestamp
         # ---------------- --- --- ----- ------ ---- --------- -------- -------------------
@@ -85,14 +83,14 @@ class ShowShmwinSummary(ShowShmwinSummarySchema):
         # -----------------------------
         # ifo_ea_shm       130 P   1     1      0    2795      2795     03/18/2021 02:09:01
 
-        p5 = re.compile(
+        p3 = re.compile(
             r'\s*(?P<window_name>\S+)\s+(?P<id>\d+)\s+(?P<group>\S+)\s+(?P<num_users>\d+)\s+(?P<num_writers>\d+)'
             r'\s+(?P<owner>\S+)\s+(?P<usage>\d+)\s+(?P<peak>\d+)\s+(?P<peak_date>\S+)\s+(?P<peak_time>\S+)'
         )
 
         # ---------------------------------------------
         # Total SHMWIN memory usage : 984 MBytes
-        p6 = re.compile(r'Total SHMWIN memory usage\s+:\s+(?P<total_shmwin_usage>\d+) +MBytes')
+        p4 = re.compile(r'Total SHMWIN memory usage\s+:\s+(?P<total_shmwin_usage>\d+) +MBytes')
 
         # initial variables
         ret_dict = {}
@@ -101,35 +99,29 @@ class ShowShmwinSummary(ShowShmwinSummarySchema):
         for line in out.splitlines():
             line = line.strip()
 
+            # Virtual Memory size  : 1536 MBytes
+            # Virtual Memory Group 2 size  : 384 MBytes
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 summary_dict = ret_dict.setdefault('summary', {})
-                summary_dict.setdefault('1', {})['virtual_mem_size'] = int(group['virtual_mem_size'])
+                grp = group.get('group') or '1'
+                summary_dict.setdefault(grp, {})['virtual_mem_size'] = int(group['virtual_mem_size'])
                 continue
 
+            # Virtual Memory Range : 0x50000000 - 0xb0000000
+            # Virtual Memory Group 2 Range : 0xb8000000 - 0xd0000000
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                summary_dict['1']['virtual_mem_range_start'] = group['virtual_mem_range_start']
-                summary_dict['1']['virtual_mem_range_end'] = group['virtual_mem_range_end']
+                grp = group.get('group') or '1'
+                summary_dict[grp]['virtual_mem_range_start'] = group['virtual_mem_range_start']
+                summary_dict[grp]['virtual_mem_range_end'] = group['virtual_mem_range_end']
                 continue
 
+            # sub_ses_ut_db    82  1   1     1      0    3         0        --/--/---- --:--:--
+            # subsession_db    81  1   2     2      0    9859      9859     03/21/2021 21:13:51
             m = p3.match(line)
-            if m:
-                group = m.groupdict()
-                summary_dict = ret_dict.setdefault('summary', {})
-                summary_dict.setdefault('2', {})['virtual_mem_size'] = int(group['virtual_mem_size'])
-                continue
-
-            m = p4.match(line)
-            if m:
-                group = m.groupdict()
-                summary_dict['2']['virtual_mem_range_start'] = group['virtual_mem_range_start']
-                summary_dict['2']['virtual_mem_range_end'] = group['virtual_mem_range_end']
-                continue
-
-            m = p5.match(line)
             if m:
                 group = m.groupdict()
                 window_dict = ret_dict.setdefault('windows', {}).setdefault(index, {})
@@ -150,7 +142,8 @@ class ShowShmwinSummary(ShowShmwinSummarySchema):
                     window_dict['peak_time'] = group['peak_time']
                 continue
 
-            m = p6.match(line)
+            # Total SHMWIN memory usage : 984 MBytes
+            m = p4.match(line)
             if m:
                 group = m.groupdict()
                 summary_dict = ret_dict.setdefault('summary', {})
