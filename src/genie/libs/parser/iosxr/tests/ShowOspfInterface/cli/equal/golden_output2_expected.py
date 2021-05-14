@@ -44,7 +44,11 @@ expected_output = {
                                             "multi_area_intf_count"
                                             : 1,
                                         },
-                                        "neighbors": ['101.3.3.3']
+                                        "neighbors": {
+                                            '101.3.3.3':{
+                                                'router_id': '101.3.3.3'
+                                            }
+                                        }
                                     },
                                     'GigabitEthernet0/3/0/0': {
                                         "name": 'GigabitEthernet0/3/0/0',
@@ -85,7 +89,11 @@ expected_output = {
                                             "multi_area_intf_count"
                                             : 0,
                                         },
-                                        "neighbors": ['101.3.3.3']
+                                        "neighbors": {
+                                            '101.3.3.3':{
+                                                'router_id': '101.3.3.3'
+                                            }
+                                        }
                                     },
                                 },
                             },

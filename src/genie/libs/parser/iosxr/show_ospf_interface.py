@@ -492,7 +492,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 statistic_dict['adj_nbr_count'] = int(adj_nbr_count)
 
                 # initialize 'neighbors'
-                neighbors = interface_dict.setdefault('neighbors', [])
+                neighbors = interface_dict.setdefault('neighbors', {})
 
                 continue
 
@@ -502,7 +502,13 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             m = p17.match(line)
             if m:
                 neighbor_id = m.groupdict()['neighbors_router_id']
-                neighbors.append(neighbor_id)
+                inner_neighbor_dict = neighbors.setdefault(neighbor_id, {})
+                if "Designated" in line:
+                    inner_neighbor_dict['dr_router_id'] = neighbor_id
+                elif "Backup" in line:
+                    inner_neighbor_dict['bdr_router_id'] = neighbor_id
+                else:
+                    inner_neighbor_dict['router_id'] = neighbor_id
 
                 continue
 
