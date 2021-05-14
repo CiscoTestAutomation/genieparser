@@ -5604,10 +5604,6 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
 
         ret_dict = {}
 
-        if out:
-            # process_name is passed from cli
-            if process_name:
-                ret_dict['process_name'] = process_name
 
         # Neighbors for OSPF
         p1 = re.compile(r'^Neighbors +for +OSPF')
@@ -5620,7 +5616,7 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
         # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
         # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
         # 192.168.199.137 1    FULL/DR       0:00:31    172.31.80.37      GigabitEthernet 0/3/0/2
-        p2 = re.compile(r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[A-Z]+/\s{0,3}[A-Z-]*)'
+        p2 = re.compile(r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[A-Z]+/\s*[A-Z-]*)'
                         r' +(?P<dead_time>(\d+:){2}\d+) +(?P<address>[\d\.\/]+) +(?P<interface>\w+\s*\S+)$')
 
         # Neighbor is up for 2d18h
