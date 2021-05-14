@@ -1,0 +1,333 @@
+----------------------------------------
+Device ID:ctsstagegdcnwswx01.mgmt.cihs.gov.on.ca
+
+Interface address(es): 1
+    IPv4 Address: 192.168.1.1
+Platform: cisco WS-C3750-48TS, Capabilities: Switch 
+Interface: mgmt0, Port ID (outgoing port): FastEthernet1/0/6
+Holdtime: 134 sec
+
+Version:
+Cisco IOS Software, C3750 Software (C3750-IPBASEK9-M), Version 12.2(53)SE2, RELE
+ASE SOFTWARE (fc3)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2010 by Cisco Systems, Inc.
+Compiled Wed 21-Apr-10 04:49 by prod_rel_team
+
+Advertisement Version: 2
+
+Native VLAN: 10
+Duplex: full
+Mgmt address(es):
+    IPv4 Address: 192.168.1.1
+Local Interface MAC: a4:53:0e:3d:2f:94
+Remote Interface MAC: ec:44:76:cc:39:88
+----------------------------------------
+Device ID:NewAgg1
+System Name: NewAgg1
+
+Interface address(es): 1
+    IPv4 Address: 1.1.1.1
+Platform: N9K-C93360YC-FX2, Capabilities: Router Switch Supports-STP-Dispute
+Interface: Ethernet1/1, Port ID (outgoing port): Ethernet1/7
+Holdtime: 137 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 9.3(6)
+
+Advertisement Version: 2
+
+Native VLAN: 99
+Duplex: full
+
+MTU: 1500
+Mgmt address(es):
+    IPv4 Address: 192.168.1.30
+Local Interface MAC: a4:53:0e:3d:2f:9c
+Remote Interface MAC: b0:c5:3c:48:9f:a6
+----------------------------------------
+Device ID:NewAgg2
+System Name: NewAgg2
+
+Interface address(es): 1
+    IPv4 Address: 10.10.11.2
+Platform: N9K-C93360YC-FX2, Capabilities: Router Switch Supports-STP-Dispute
+Interface: Ethernet1/2, Port ID (outgoing port): Ethernet1/7
+Holdtime: 152 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 9.3(6)
+
+Advertisement Version: 2
+
+Native VLAN: 99
+Duplex: full
+
+MTU: 1500
+Physical Location: `
+Mgmt address(es):
+    IPv4 Address: 192.168.1.40
+Local Interface MAC: a4:53:0e:3d:2f:9d
+Remote Interface MAC: b0:c5:3c:48:a0:fe
+----------------------------------------
+Device ID:Core1
+System Name: Core1
+
+Interface address(es): 1
+    IPv4 Address: 10.194.1.130
+Platform: N9K-C93180YC-FX, Capabilities: Router Switch Supports-STP-Dispute
+Interface: Ethernet1/3, Port ID (outgoing port): Ethernet1/3
+Holdtime: 132 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 9.3(6)
+
+Advertisement Version: 2
+
+Native VLAN: 99
+Duplex: full
+
+MTU: 1500
+Mgmt address(es):
+    IPv4 Address: 192.168.1.10
+Local Interface MAC: a4:53:0e:3d:2f:9e
+Remote Interface MAC: 40:b5:c1:22:b3:67
+----------------------------------------
+Device ID:Core2
+System Name: Core2
+
+Interface address(es): 1
+    IPv4 Address: 10.194.1.131
+Platform: N9K-C93180YC-FX, Capabilities: Router Switch Supports-STP-Dispute
+Interface: Ethernet1/4, Port ID (outgoing port): Ethernet1/3
+Holdtime: 126 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 9.3(6)
+
+Advertisement Version: 2
+
+Native VLAN: 99
+Duplex: full
+
+MTU: 1500
+Mgmt address(es):
+    IPv4 Address: 192.168.1.20
+Local Interface MAC: a4:53:0e:3d:2f:9f
+Remote Interface MAC: 40:b5:c1:22:b3:c7
+----------------------------------------
+Device ID:OldAcc1(FOX1703GE2N)
+System Name: OldAcc1
+
+Interface address(es): 1
+    IPv4 Address: 10.10.10.1
+Platform: N5K-C5596UP, Capabilities: Switch IGMP Filtering Supports-STP-Dispute
+Interface: Ethernet1/5, Port ID (outgoing port): Ethernet2/3
+Holdtime: 134 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 7.1(5)N1(1)
+
+Advertisement Version: 2
+
+Native VLAN: 99
+Duplex: full
+
+MTU: 1500
+Physical Location: snmplocation
+Mgmt address(es):
+    IPv4 Address: 192.168.1.90
+Local Interface MAC: a4:53:0e:3d:2f:a0
+Remote Interface MAC: 54:7f:ee:f8:c8:a2
+----------------------------------------
+Device ID:OldAcc2(FOX1601G56C)
+System Name: OldAcc2
+
+Interface address(es): 1
+    IPv4 Address: 10.10.10.2
+Platform: N5K-C5596UP, Capabilities: Switch IGMP Filtering Supports-STP-Dispute
+Interface: Ethernet1/6, Port ID (outgoing port): Ethernet2/3
+Holdtime: 123 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 7.1(5)N1(1)
+
+Advertisement Version: 2
+
+Native VLAN: 1
+Duplex: full
+
+MTU: 1500
+Physical Location: snmplocation
+Mgmt address(es):
+    IPv4 Address: 192.168.1.100
+Local Interface MAC: a4:53:0e:3d:2f:a1
+Remote Interface MAC: 54:7f:ee:f9:6b:02
+----------------------------------------
+Device ID:Host2
+System Name: Host2
+
+Interface address(es): 1
+    IPv4 Address: 192.168.1.120
+Platform: N9K-C9348GC-FXP, Capabilities: Router Switch Supports-STP-Dispute
+Interface: Ethernet1/7, Port ID (outgoing port): Ethernet1/5
+Holdtime: 128 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 9.3(4)
+
+Advertisement Version: 2
+Duplex: full
+
+MTU: 1500
+Mgmt address(es):
+    IPv4 Address: 192.168.1.120
+Local Interface MAC: a4:53:0e:3d:2f:a2
+Remote Interface MAC: ec:ce:13:5a:a7:27
+----------------------------------------
+Device ID:OldAgg2
+System Name: OldAgg2
+
+Interface address(es): 1
+    IPv4 Address: 10.20.128.19
+Platform: N9K-C93360YC-FX2, Capabilities: Router Switch IGMP Filtering Supports-
+STP-Dispute
+Interface: Ethernet1/43, Port ID (outgoing port): Ethernet1/43
+Holdtime: 141 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 9.3(6)
+
+Advertisement Version: 2
+
+Native VLAN: 1
+Duplex: full
+
+MTU: 1500
+Physical Location: `
+Mgmt address(es):
+    IPv4 Address: 192.168.1.60
+Local Interface MAC: a4:53:0e:3d:2f:c6
+Remote Interface MAC: a4:53:0e:03:83:84
+----------------------------------------
+Device ID:OldAgg2
+System Name: OldAgg2
+
+Interface address(es): 1
+    IPv4 Address: 10.20.128.19
+Platform: N9K-C93360YC-FX2, Capabilities: Router Switch IGMP Filtering Supports-
+STP-Dispute
+Interface: Ethernet1/44, Port ID (outgoing port): Ethernet1/44
+Holdtime: 141 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 9.3(6)
+
+Advertisement Version: 2
+
+Native VLAN: 1
+Duplex: full
+
+MTU: 1500
+Physical Location: `
+Mgmt address(es):
+    IPv4 Address: 192.168.1.60
+Local Interface MAC: a4:53:0e:3d:2f:c7
+Remote Interface MAC: a4:53:0e:03:83:85
+----------------------------------------
+Device ID:OldAgg2
+System Name: OldAgg2
+
+Interface address(es): 1
+    IPv4 Address: 10.20.128.19
+Platform: N9K-C93360YC-FX2, Capabilities: Router Switch IGMP Filtering Supports-
+STP-Dispute
+Interface: Ethernet1/45, Port ID (outgoing port): Ethernet1/45
+Holdtime: 141 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 9.3(6)
+
+Advertisement Version: 2
+
+Native VLAN: 99
+Duplex: full
+
+MTU: 1500
+Physical Location: `
+Mgmt address(es):
+    IPv4 Address: 192.168.1.60
+Local Interface MAC: a4:53:0e:3d:2f:c8
+Remote Interface MAC: a4:53:0e:03:83:59
+----------------------------------------
+Device ID:OldAgg2
+System Name: OldAgg2
+
+Interface address(es): 1
+    IPv4 Address: 10.20.128.19
+Platform: N9K-C93360YC-FX2, Capabilities: Router Switch IGMP Filtering Supports-
+STP-Dispute
+Interface: Ethernet1/46, Port ID (outgoing port): Ethernet1/46
+Holdtime: 141 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 9.3(6)
+
+Advertisement Version: 2
+
+Native VLAN: 99
+Duplex: full
+
+MTU: 1500
+Physical Location: `
+Mgmt address(es):
+    IPv4 Address: 192.168.1.60
+Local Interface MAC: a4:53:0e:3d:2f:c9
+Remote Interface MAC: a4:53:0e:03:83:59
+----------------------------------------
+Device ID:OldAgg2
+System Name: OldAgg2
+
+Interface address(es): 1
+    IPv4 Address: 10.20.128.19
+Platform: N9K-C93360YC-FX2, Capabilities: Router Switch IGMP Filtering Supports-
+STP-Dispute
+Interface: Ethernet1/47, Port ID (outgoing port): Ethernet1/47
+Holdtime: 141 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 9.3(6)
+
+Advertisement Version: 2
+
+Native VLAN: 1
+Duplex: full
+
+MTU: 1500
+Physical Location: `
+Mgmt address(es):
+    IPv4 Address: 192.168.1.60
+Local Interface MAC: a4:53:0e:3d:2f:ca
+Remote Interface MAC: a4:53:0e:03:83:88
+----------------------------------------
+Device ID:OldAgg2
+System Name: OldAgg2
+
+Interface address(es): 1
+    IPv4 Address: 10.194.254.242
+Platform: N9K-C93360YC-FX2, Capabilities: Router Switch Supports-STP-Dispute
+Interface: Ethernet1/48, Port ID (outgoing port): Ethernet1/48
+Holdtime: 141 sec
+
+Version:
+Cisco Nexus Operating System (NX-OS) Software, Version 9.3(6)
+
+Advertisement Version: 2
+Duplex: full
+
+MTU: 1500
+Physical Location: `
+Mgmt address(es):
+    IPv4 Address: 192.168.1.60
+Local Interface MAC: a4:53:0e:3d:2f:cb
+Remote Interface MAC: a4:53:0e:03:83:59
