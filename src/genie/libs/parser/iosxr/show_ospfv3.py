@@ -141,6 +141,7 @@ class ShowOspfv3Neighbor(ShowOspfv3NeighborSchema):
 
         return result_dict
 
+
 class ShowOspfv3DatabaseSchema(MetaParser):
     ''' Schema for:
         * 'show ospfv3 database'
@@ -148,35 +149,36 @@ class ShowOspfv3DatabaseSchema(MetaParser):
     '''
 
     schema = {
-    'vrf': {
-        Any(): {
-            'address_family': {
-                Any(): {
-                    'instance': {
-                        Any(): {
-                            "router_id": str,
-                            Optional('area'): {
-                                Any(): {
-                                    "area_id": int,
-                                    'database': {
-                                        'lsa_types': {
-                                            Any(): {
-                                                'lsa_type': int,
-                                                'lsas': {
-                                                    Any(): {
-                                                        'adv_router': str,
-                                                        Optional('fragment_id'): int,
-                                                        Optional('link_id'): int,
-                                                        'ospfv3': {
-                                                            'header': {
-                                                                'age': int,
-                                                                'seq_num': str,
-                                                                Optional('link_count'): int,
-                                                                Optional('link_id'): int,
-                                                                Optional('bits'): str,
-                                                                Optional('interface'): str,
-                                                                Optional('ref_lstype'): str,
-                                                                Optional('ref_lsid'): int,
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'instance': {
+                            Any(): {
+                                "router_id": str,
+                                Optional('area'): {
+                                    Any(): {
+                                        "area_id": int,
+                                        'database': {
+                                            'lsa_types': {
+                                                Any(): {
+                                                    'lsa_type': int,
+                                                    'lsas': {
+                                                        Any(): {
+                                                            'adv_router': str,
+                                                            Optional('fragment_id'): int,
+                                                            Optional('link_id'): int,
+                                                            'ospfv3': {
+                                                                'header': {
+                                                                    'age': int,
+                                                                    'seq_num': str,
+                                                                    Optional('link_count'): int,
+                                                                    Optional('link_id'): int,
+                                                                    Optional('bits'): str,
+                                                                    Optional('interface'): str,
+                                                                    Optional('ref_lstype'): str,
+                                                                    Optional('ref_lsid'): int,
+                                                                },
                                                             },
                                                         },
                                                     },
@@ -191,8 +193,8 @@ class ShowOspfv3DatabaseSchema(MetaParser):
                 },
             },
         },
-    },
-}
+    }
+
 
 class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
     ''' Parser for:
@@ -214,7 +216,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
         ret_dict = {}
         address_family = 'ipv6'
 
-        #Lsa Types
+        # Lsa Types
         # 1: Router
         # 2: Network Link
         # 3: Summary
@@ -238,28 +240,28 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
             'opaque': 10
         }
 
-        #OSPFv3 Router with ID(25.97.1.1) (Process ID mpls1)
+        # OSPFv3 Router with ID(25.97.1.1) (Process ID mpls1)
         p1 = re.compile(r'^OSPFv3 +Router +with +ID +\((?P<router_id>(\S+))\) '
                         r'+\(Process +ID +(?P<instance>(\S+))(?:, +VRF +(?P<vrf>(\S+)))?\)$')
 
-        #Router Link States (Area 0)
-        #Link (Type-8) Link States (Area 0)
-        #Intra Area Prefix Link States (Area 0)
+        # Router Link States (Area 0)
+        # Link (Type-8) Link States (Area 0)
+        # Intra Area Prefix Link States (Area 0)
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
                         ' +(?P<area>(\S+))\)$')
 
-        #25.97.1.1       2019        0x8000007d 0            2           E
-        #95.95.95.95     607         0x80000097 0            2           E
+        # 25.97.1.1       2019        0x8000007d 0            2           E
+        # 95.95.95.95     607         0x80000097 0            2           E
         p3 = re.compile(r'^(?P<adv_router>(\S+)) +(?P<age>(\d+)) +(?P<seq_num>(\S+))'
                         r' +(?P<fragment_id>(\d+)) +(?P<link_count>(\d+)) +(?P<bits>(\w+))$')
 
-        #25.97.1.1       1518        0x80000086 7          Gi0/0/0/0
-        #100.100.100.100 1841        0x80000079 6          Gi0/0/0/0
+        # 25.97.1.1       1518        0x80000086 7          Gi0/0/0/0
+        # 100.100.100.100 1841        0x80000079 6          Gi0/0/0/0
         p4 = re.compile(r'^(?P<adv_router>(\S+)) +(?P<age>(\d+)) +(?P<seq_num>(\S+))'
                         r' +(?P<link_id>(\d+)) +(?P<interface>([a-zA-Z0-9\/])+)$')
 
-        #25.97.1.1       2019        0x80000078 0          0x2001      0
-        #95.95.95.95     1583        0x80000086 0          0x2001      0
+        # 25.97.1.1       2019        0x80000078 0          0x2001      0
+        # 95.95.95.95     1583        0x80000086 0          0x2001      0
         p5 = re.compile(r'^(?P<adv_router>(\S+)) +(?P<age>(\d+)) +(?P<seq_num>(\S+))'
                         r' +(?P<link_id>(\d+)) +(?P<ref_lstype>(\S)+)'
                         r' +(?P<ref_lsid>(\d)+)$')
@@ -288,7 +290,6 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
                     setdefault(instance, {})
                 continue
 
-
             # Router Link States (Area 0)
             # Link (Type-8) Link States (Area 0)
             # Intra Area Prefix Link States (Area 0)
@@ -309,7 +310,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
                 else:
                     area = '0.0.0.0'
 
-                ospf_dict['router_id']=router_id
+                ospf_dict['router_id'] = router_id
                 area_dict = ospf_dict.setdefault('area', {}). \
                     setdefault(area, {})
                 area_dict['area_id'] = int(group['area'])
@@ -333,7 +334,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
                 fragment_id = int(group['fragment_id'])
                 link_count = group['link_count']
                 bits = group['bits']
-                frag_adv_router = str(fragment_id)+ " " +adv_router
+                frag_adv_router = str(fragment_id) + " " + adv_router
 
                 # Create lsas dict
                 lsas_dict = lsa_type_dict.setdefault('lsas', {}). \
@@ -360,7 +361,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
                 seq = group['seq_num']
                 link_id = int(group['link_id'])
                 interface = group['interface']
-                link_adv_router = str(link_id)+ " " +adv_router
+                link_adv_router = str(link_id) + " " + adv_router
 
                 # Create lsas dict
                 lsas_dict = lsa_type_dict.setdefault('lsas', {}). \
@@ -389,7 +390,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
                 ref_lsid = int(group['ref_lsid'])
                 link_adv_router = str(link_id) + " " + adv_router
 
-                #lsas dict
+                # lsas dict
                 lsas_dict = lsa_type_dict.setdefault('lsas', {}). \
                     setdefault(link_adv_router, {})
                 lsas_dict['adv_router'] = adv_router
@@ -404,3 +405,148 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
                 ospfv3_dict['ref_lsid'] = ref_lsid
                 continue
         return ret_dict
+
+
+class ShowOspfv3VRFAllInclusiveNeighborDetailSchema(MetaParser):
+    schema = {
+        "vrf": {Any(): {
+            "address_family": {
+                Any(): {
+                    "instance": {
+                        Any(): {
+                            Optional("total_neighbor_count"): int,
+                            "areas": {
+                                Any(): {
+                                    Optional("interfaces"): {
+                                        Any(): {
+                                            "neighbors": {
+                                                Any(): {
+                                                    "neighbor_router_id": str,
+                                                    Optional("bfd_enable"): bool,
+                                                    Optional("bfd_mode"): str,
+                                                    'Neighbor': {
+                                                        'interface-id': int,
+                                                        'link-local_address': str
+                                                    },
+                                                    "priority": int,
+                                                    "state": str,
+                                                    "dr_ip_addr": str,
+                                                    "bdr_ip_addr": str,
+                                                    Optional("options"): str,
+                                                    Optional("dead_timer"): str,
+                                                    Optional("neighbor_uptime"): str,
+                                                    Optional("index"): str,
+                                                    Optional("statistics"): {
+                                                        Optional("total_dbd_retrans"): int,
+                                                        Optional("nbr_event_count"): int,
+                                                        Optional("nbr_retrans_qlen"): int,
+                                                        Optional("total_retransmission"): int,
+                                                        Optional("last_retrans_scan_length"): int,
+                                                        Optional("last_retrans_max_scan_length"): int,
+                                                        Optional("last_retrans_scan_time_msec"): int,
+                                                        Optional("last_retrans_max_scan_time_msec"): int,
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                    Optional("virtual_links"): {
+                                        Any(): {
+                                            "neighbors": {
+                                                Any(): {
+                                                    "neighbor_router_id": str,
+                                                    Optional("bfd_enable"): bool,
+                                                    Optional("bfd_mode"): str,
+                                                    'Neighbor': {
+                                                        'interface-id': int,
+                                                        'link-local_address': str
+                                                    },
+                                                    "priority": int,
+                                                    "state": str,
+                                                    "dr_ip_addr": str,
+                                                    "bdr_ip_addr": str,
+                                                    Optional("options"): str,
+                                                    Optional("dead_timer"): str,
+                                                    Optional("neighbor_uptime"): str,
+                                                    Optional("index"): str,
+                                                    Optional("statistics"): {
+                                                        Optional("total_dbd_retrans"): int,
+                                                        Optional("nbr_event_count"): int,
+                                                        Optional("nbr_retrans_qlen"): int,
+                                                        Optional("total_retransmission"): int,
+                                                        Optional("last_retrans_scan_length"): int,
+                                                        Optional("last_retrans_max_scan_length"): int,
+                                                        Optional("last_retrans_scan_time_msec"): int,
+                                                        Optional("last_retrans_max_scan_time_msec"): int,
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            }, }, }, }, }, }, }, }
+
+
+class ShowOspfv3VRFAllInclusiveNeighborDetail(ShowOspfv3VRFAllInclusiveNeighborDetailSchema):
+    """
+    Parser for show ospfv3 vrf all-inclusive neighbor detail
+
+    Parser picks the appropriate command and gets the device output,
+    or it  takes the raw show command.
+
+    Parser then compiles regular expressions to deal with each line
+    in the show command, after which it casts the pulled values into
+    the appropriate place in the schema, defined the class above.
+    """
+    cli_command = ['show ospfv3 vrf all-inclusive neighbor detail']
+
+    # exclude = []
+
+    # (self, vrf='', neighbor='', interface='', output=None)
+    def cli(self, output=None):
+        if output:
+            # if an output file is passed use it, otherwise generate the output
+            out = output
+        else:
+            cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+
+        ret_dict = {}
+        af = "ipv6"
+
+        # Neighbors for OSPFv3 <name>, VRF <name>
+        p1 = re.compile(r"^Neighbors +for +OSPFv3 +(?P<instance>(\S+)), +(?P<VRF>(VRF \S+))$")
+
+        # Neighbor <address>
+        p2 = re.compile(r"^Neighbor +(?P<neighbor>(\S+))$")
+        # In the area <area> via interface <interface>
+        p3 = re.compile(r"^In +the +area +(?P<area>\S+) "
+                        r"+via +interface +(?P<interface>\S+)( +, +BFD +(?P<bfd_status>\w+), "
+                        r"+Mode: (?P<mode>\w+))?$")
+        # Neighbor: interface-id <id> link-local address <ipv6 address>
+        p4 = re.compile(r"^Neighbor: interface-id +(?P<interface_id>([0-9]+)), "
+                        r"link-local address +(?P<link_local>(['a-z:0-9']+))$")
+        # Neighbor priority is <int1>, State is <state>, <int2> state changes
+        p5 = re.compile(r"^Neighbor priority is +(?P<neighbor_priority>([0-9])+), "
+                        r"State is +(?P<state>([A-Z]+)), "
+                        r"+(?P<state_changes>([0-9]+)) state changes$")
+        # Options is <hex>
+        p6 = re.compile(r"^Options +is +(?P<options>(\S+))$")
+        # Dead timer due in <time>
+        p7 = re.compile(r"^Dead timer due in (?P<time>[0-9:]+)$")
+        # Neighbor is up for <time>
+        p8 = re.compile(r"^Neighbor is up for (?P<time>[0-9:]+)$")
+        # Index <string> retransmission queue length <int1>, number of retransmission <int2>
+        p9 = re.compile(r"^Index +(?P<index>(\S+)) +retransmission +queue +length +(?P<ql>(\d+)), "
+                        r"+number +of +retransmission +(?P<num_retrans>(\d+))$")
+        # First <string> Next <string>
+        p10 = re.compile(r"^First +(?P<first>(\S+)) +Next +(?P<next>(\S+))$")
+        # Last retransmission scan length is <int1>, maximum is <int2>
+        p11 = re.compile(r"^Last retransmission scan length is +(?P<length>([0-9]+)), "
+                         r"maximum is +(?P<maximum>([0-9]+))$")
+        # Last retransmission time is <string1>, maximum is <string2>
+        p12 = re.compile(r"^Last retransmission scan time is (?P<scan_time>([0-9]+ msec)), "
+                         r"maximum is (?P<max_time>([0-9]+ msec))")
+
+        # Total neighbor count <int>
+        p13 = re.compile(r"^Total +neighbor +count: +(?P<num>(\d+))$")
