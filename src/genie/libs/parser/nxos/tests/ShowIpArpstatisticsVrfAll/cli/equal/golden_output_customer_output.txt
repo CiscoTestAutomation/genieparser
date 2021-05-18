@@ -1,0 +1,64 @@
+
+		# show ip arp statistics
+		ARP packet statistics for context default
+		Sent:
+		Total 125449722, Requests 41815694, Replies 83633906, Requests on L2 0, Replies on L2 0,
+		Gratuitous 122, Tunneled 0, Dropped 0
+		Send packet drops details:
+			MBUF operation failed               : 0
+			Context not yet created             : 0
+			Invalid context                     : 0
+			Invalid ifindex                     : 0
+			Invalid SRC IP                      : 0
+			Invalid DEST IP                     : 0
+			Destination is our own IP           :  0
+			Unattached IP                       :  0
+		Adjacency Couldn't be added         :  0
+			Null Source IP                      :  0
+			Null Source MAC                     :  0
+			Client Enqueue Failed               :  0
+			Dest. not reachable for proxy arp   :  0
+			Dest. unreachable for enhanced proxy:  0
+			Dest. on L2 port being tracked      :  0
+			Invalid Local proxy arp             :  0
+			Invalid proxy arp                   :  0
+		VIP is not active                   :  0
+		Received:
+		Total 268933895, Requests 83633906, Replies 3578191, Requests on L2 0, Replies on L2 0
+		Proxy arp 0, Local-Proxy arp 0,  Enhanced Proxy arp 0, Anycast proxy Proxy arp 0,  L2 Port-track Proxy arp 0,  Tunneled 0, Fastpath
+		0, Snooped 0, Dropped 181721798, on Server Port 0
+		Received packet drops details:
+			Appeared on a wrong interface       : 0
+			Incorrect length                    : 0
+			Invalid protocol packet             : 0
+			Invalid context                     : 0
+			Context not yet created             : 0
+			Invalid layer 2 address length      : 0
+			Invalid layer 3 address length      : 0
+			Invalid source IP address           : 65347
+			Source IP address is our own        : 1
+			No mem to create per intf structure : 0
+			Source address mismatch with subnet : 2804
+			Directed broadcast source           : 0
+			Invalid destination IP address      : 77
+			Non-local destination IP address    : 181653418
+			Non-active FHRP dest IP address. Learn and drop
+												: 151
+			Invalid source MAC address          : 0
+			Source MAC address is our own       : 0
+			Received before arp initialization  : 0
+			L2 packet on proxy-arp-enabled interface
+												: 0
+			L2 packet on untrusted L2 port      : 0
+			Packet with VIP on standby FHRP     : 0
+			Grat arp received on proxy-arp-enabled interface
+												: 0
+			Requests came for exising entries   : 152075
+			Requests came on a l2 interface     : 0
+			L2FM query failed for a L2 Address  : 0
+			Dropping due to tunneling failures  : 0
+		
+		ARP adjacency statistics
+		
+		Adds 9546429, Deletes 9546204, Timeouts 9546204
+	

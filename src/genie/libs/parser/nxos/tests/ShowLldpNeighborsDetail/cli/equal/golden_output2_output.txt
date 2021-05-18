@@ -1,0 +1,116 @@
+        show lldp neighbors detail
+
+        Capability codes:
+        (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+        (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+        Device ID            Local Intf      Hold-time  Capability  Port ID  
+
+        Chassis id: 3935-5A43-4A37-39373638-35303036574C
+        Port id: PCI-E Slot 1, Port 2
+        Local Port id: Eth1/14
+        Port Description: ConnectX-4 Lx, 25G/10G/1G SFP
+        System Name: null
+        System Description: ProLiant DL360 Gen10
+        Time remaining: 40 seconds
+        System Capabilities: not advertised
+        Enabled Capabilities: not advertised
+        Management Address: 98f2.b3ff.07f4
+        Management Address IPV6: not advertised
+        Vlan ID: not advertised
+
+
+        Chassis id: e0cb.bcff.4290
+        Port id: 0
+        Local Port id: Eth1/38
+        Port Description: internet port 0
+        System Name: VPN-1
+        System Description: Meraki MX450 Cloud Managed Security Appliance
+        Time remaining: 101 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Address: not advertised
+        Management Address IPV6: not advertised
+        Vlan ID: not advertised
+
+
+        Chassis id: e0cb.bcff.7bab
+        Port id: 1
+        Local Port id: Eth1/40
+        Port Description: internet port 1
+        System Name: MX-L0
+        System Description: Meraki MX450 Cloud Managed Security Appliance
+        Time remaining: 90 seconds
+        System Capabilities: R
+        Enabled Capabilities: R
+        Management Address: not advertised
+        Management Address IPV6: not advertised
+        Vlan ID: not advertised
+
+
+        Chassis id: 7018.a7ff.7d64
+        Port id: Te2/0/2
+        Local Port id: Eth1/42
+        Port Description: - NX1-2 (Eth1/43) -
+        System Name: CAT2960-CED1
+        System Description: Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(4)E7, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Tue 18-Sep-18 13:07 by prod_rel_team
+        Time remaining: 93 seconds
+        System Capabilities: B, R
+        Enabled Capabilities: B
+        Management Address: 10.22.134.6
+        Management Address IPV6: not advertised
+        Vlan ID: 1
+
+
+        Chassis id: 7018.a7ff.7d64
+        Port id: Te1/0/1
+        Local Port id: Eth1/43
+        Port Description: - NX1-1 (Eth1/42) -
+        System Name: RCAT2960
+        System Description: Cisco IOS Software, C2960X Software (C2960X-UNIVERSALK9-M), Version 15.2(4)E7, RELEASE SOFTWARE (fc2)
+        Technical Support: http://www.cisco.com/techsupport
+        Copyright (c) 1986-2018 by Cisco Systems, Inc.
+        Compiled Tue 18-Sep-18 13:07 by prod_rel_team
+        Time remaining: 109 seconds
+        System Capabilities: B, R
+        Enabled Capabilities: B
+        Management Address: 10.22.134.6
+        Management Address IPV6: not advertised
+        Vlan ID: not advertised
+
+
+        Chassis id: 70ea.1aff.b6f6
+        Port id: Ethernet1/46
+        Local Port id: Eth1/46
+        Port Description: - NX1-1 (eth1/46) - vPC Peer Keepalive link
+        System Name: NX1-2
+        System Description: Cisco Nexus Operating System (NX-OS) Software 9.2(3)
+        TAC support: http://www.cisco.com/tac
+        Copyright (c) 2002-2019, Cisco Systems, Inc. All rights reserved.
+        Time remaining: 116 seconds
+        System Capabilities: B, R
+        Enabled Capabilities: B, R
+        Management Address: 70ea.1aff.b6f6
+        Management Address IPV6: not advertised
+        Vlan ID: not advertised
+
+
+        Chassis id: 70ea.1aff.854d
+        Port id: Ethernet1/54
+        Local Port id: Eth1/54
+        Port Description: - NX1 -
+        System Name: NX2-2
+        System Description: Cisco Nexus Operating System (NX-OS) Software 9.2(3)
+        TAC support: http://www.cisco.com/tac
+        Copyright (c) 2002-2019, Cisco Systems, Inc. All rights reserved.
+        Time remaining: 116 seconds
+        System Capabilities: B, R
+        Enabled Capabilities: B, R
+        Management Address: 70ea.1aff.854d
+        Management Address IPV6: not advertised
+        Vlan ID: 1
+
+        Total entries displayed: 22
+    

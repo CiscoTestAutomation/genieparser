@@ -1,0 +1,7 @@
+ Pod         Node        Current-Firmware      Target-Firmware       Status                     Upgrade-Progress(%)   Download-Status            Download-Progress(%)
+ ----------  ----------  --------------------  --------------------  -------------------------  --------------------  -------------------------  --------------------
+ 1           101         n9000-15.0(0.138)     n9000-15.0(0.144)     upgrade in progress        45                    downloaded                 100                 
+ 1           107         n9000-15.0(0.138)     n9000-15.0(0.144)     waiting in queue           0                     downloaded                 100                 
+ 1           108         n9000-15.0(0.138)     n9000-15.0(0.144)     upgrade in progress        45                    downloaded                 100                 
+ 1           112         n9000-15.0(0.138)     n9000-15.0(0.144)     upgrade in progress        45                    downloaded                 100                 
+ 1           113         n9000-15.0(0.138)     n9000-15.0(0.144)     upgrade in progress        45                    downloaded       

@@ -1,0 +1,7 @@
+
+    204-MSMR#show fabricpath isis adjacency
+    Fabricpath IS-IS domain: default Fabricpath IS-IS adjacency database:
+    System ID       SNPA            Level  State  Hold Time  Interface
+    Switch-A        N/A             1      UP     00:00:28   port-channel1
+    Switch-B        N/A             1      UP     00:00:32   port-channel326
+                

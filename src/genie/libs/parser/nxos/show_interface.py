@@ -1575,9 +1575,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                  = icmp_port_unreachable
                 continue
 
-            #IP unicast reverse path forwarding: none
-            p16 = re.compile(r'^\s*IP *unicast *reverse *path *forwarding:'
-                              ' *(?P<unicast_reverse_path>\w+)$')
+            #IP unicast reverse path forwarding: loose allow default 
+            p16 = re.compile(r'^\s*IP\s+unicast\s+reverse\s+path\s+forwarding:\s+'
+                              '(?P<unicast_reverse_path>([\w\s]+)\s*)$')            
             m = p16.match(line)
             if m:
                 unicast_reverse_path = m.groupdict()['unicast_reverse_path']
@@ -2507,9 +2507,9 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 ipv6_interface_dict[interface]['ipv6']['ipv6_mtu'] = ipv6_mtu
                 continue
 
-            #IPv6 unicast reverse path forwarding: none
-            p14 = re.compile(r'^\s*IPv6 *unicast *reverse *path *forwarding:'
-                              ' *(?P<ipv6_unicast_rev_path_forwarding>\w+)$')
+            #IPv6 unicast reverse path forwarding: loose allow default
+            p14 = re.compile(r'^\s*IPv6\s+unicast\s+reverse\s+path\s+forwarding:\s+'
+                                '(?P<ipv6_unicast_rev_path_forwarding>([\w\s]+)\s*)$')                              
             m = p14.match(line)
             if m:
                 ipv6_unicast_rev_path_forwarding = m.groupdict()\
@@ -2842,7 +2842,7 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         # Po8          1       eth  access down    No operational members      auto(I)  none
         # Po10         --      eth  routed up      none                                 a-40G(D)  lacp
         # Po10.1       2       eth  routed up      none                                 a-40G(D)    --
-        p6 = re.compile(r'^(?P<interface>\S+) +(?P<vlan>\S+) '
+        p6 = re.compile(r'^(?P<interface>(P|p)\S+) +(?P<vlan>\S+) '
                         r'+(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+) '
                         r'+(?P<status>[a-z]+) +(?P<reason>[\w\s]+) '
                         r'+(?P<speed>\S+) +(?P<protocol>[\w\-]+)$')
@@ -3485,9 +3485,10 @@ class ShowInterfaceStatusSchema(MetaParser):
                 Optional('name'): str,
                 'status': str,
                 Optional('vlan'): str,
-                'duplex_code': str,
-                'port_speed': str,
+                Optional('duplex_code'): str,
+                Optional('port_speed'): str,
                 Optional('type'): str,
+                Optional('reason'): str,
             }
         }
     }
@@ -3513,6 +3514,10 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
             out = output
 
         result_dict = {}
+        flag = False
+
+        # Interface     Name                Status    Reason
+        p0 = re.compile(r'Interface\s+Name\s+Status\s+Reason')
 
         # Port          Name               Status    Vlan      Duplex  Speed   Type
         # --------------------------------------------------------------------------------
@@ -3522,32 +3527,53 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Po1           VPC_PeerLink       connected trunk     full    40G     --
         # Vlan366       BigData            connected routed    auto    auto    --
         # Eth101/1/10   DO-HYPER-03        connected 101       full    a-1000
-        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<name>(\S+))? '
-                        r'+(?P<status>(\S+))? +(?P<vlan>(\S+))'
-                        r' +(?P<duplex_code>(\S+)) '
-                        r'+(?P<port_speed>(\S+))( +(?P<type>(\S+)))?$')
+        # Lo0            --                  connected  routed     auto     --       --
+        p1 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>(\S+))?\s'
+                        r'+(?P<status>(\S+))?\s+(?P<vlan>(\S+))'
+                        r' +(?P<duplex_code>(\S+))\s'
+                        r'+(?P<port_speed>(\S+))(\s+(?P<type>(\S+)))?$')
 
         # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
-        p1_1 = re.compile(r'(?P<interface>(\S+)) +'
-                        r'(?P<name>([\S\s]+))(?<! ) +'
-                        r'(?P<status>(\S+)) +'
-                        r'(?P<vlan>(\S+)) +'
-                        r'(?P<duplex_code>([a-z]+)) +'
-                        r'(?P<port_speed>(\S+)) +'
+        p1_1 = re.compile(r'(?P<interface>(\S+))\s+'
+                        r'(?P<name>([\S\s]+))(?<! )\s+'
+                        r'(?P<status>(\S+))\s+'
+                        r'(?P<vlan>(\S+))\s+'
+                        r'(?P<duplex_code>([a-z]+))\s+'
+                        r'(?P<port_speed>(\S+))\s+'
                         r'(?P<type>([\S\s]+))$')
 
+        # Tunnel7       --                  up        no-reason 
+        p2 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>([\S\s]+))(?<! )\s+(?P<status>(\S+))\s+(?P<reason>(\S+))')
 
         for line in out.splitlines():
             line = line.strip()
 
+            m = p0.match(line)
+            if m:
+                flag = True
+                continue
+
             m = p1.match(line) or p1_1.match(line)
-            if m and m.groupdict()['name'] != 'Name':
+            if m and m.groupdict()['name'] != 'Name' and not flag:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
 
                 keys = ['name','status', 'vlan', 'duplex_code', 'port_speed', 'type']
+
+                for k in keys:
+                    if group[k] and group[k] != '--':
+                        intf_dict[k] = group[k]
+                continue
+
+            m = p2.match(line)
+            if m and flag:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+
+                keys = ['name','status', 'reason']
 
                 for k in keys:
                     if group[k] and group[k] != '--':

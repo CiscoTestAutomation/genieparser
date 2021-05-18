@@ -1,0 +1,36 @@
+           Capability codes:
+              (R) Router, (B) Bridge, (T) Telephone, (C) DOCSIS Cable Device
+              (W) WLAN Access Point, (P) Repeater, (S) Station, (O) Other
+            Device ID            Local Intf      Hold-time  Capability  Port ID  
+
+            Chassis id: 001e.49ff.24f7.4e4w3
+            Port id: Gi3
+            Local Port id: Eth1/1
+            Port Description: GigabitEthernet3
+            System Name: R1_csr1000v.openstacklocal.open 
+            System Description: Cisco IOS Software [Everest], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.1, RELEASE SOFTWARE (fc2) and much MORE
+            Technical Support: http://www.cisco.com/techsupport
+            Copyright (c) 1986-2017 by Cisco Systems, Inc.
+            Compiled Sat 22-Jul-17 05:51 by 
+            Time remaining: 114 seconds
+            System Capabilities: B, R
+            Enabled Capabilities: R
+            Management Address: 10.1.3.1
+            Management Address IPV6: not advertised
+            Vlan ID: not advertised
+
+
+            Chassis id: 000d.bdff.4f04
+            Port id: Gi0/0/0/1
+            Local Port id: Eth1/2
+            Port Description: null
+            System Name: R2_xrv9000
+            System Description: 6.2.2, IOS-XRv 9000
+            Time remaining: 95 seconds
+            System Capabilities: R
+            Enabled Capabilities: R
+            Management Address: 10.2.3.2
+            Management Address IPV6: not advertised
+            Vlan ID: not advertised
+
+            Total entries displayed: 2

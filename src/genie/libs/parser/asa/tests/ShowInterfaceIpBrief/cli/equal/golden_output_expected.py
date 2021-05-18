@@ -17,22 +17,22 @@ expected_output = {
         "GigabitEthernet0/1": {
             "ipv4": {"unnumbered": {"unnumbered_intf_ref": "unassigned"}},
             "check": "YES",
-            "method": "unset admin",
-            "link_status": "down",
+            "method": "unset",
+            "link_status": "admin down",
             "line_protocol": "down",
         },
         "GigabitEthernet0/2": {
             "ipv4": {"10.10.1.1": {"ip": "10.10.1.1"}},
             "check": "YES",
-            "method": "manual admin",
-            "link_status": "down",
+            "method": "manual",
+            "link_status": "admin down",
             "line_protocol": "down",
         },
         "GigabitEthernet0/3": {
             "ipv4": {"10.10.1.1": {"ip": "10.10.1.1"}},
             "check": "YES",
-            "method": "DHCP admin",
-            "link_status": "down",
+            "method": "DHCP",
+            "link_status": "admin down",
             "line_protocol": "down",
         },
         "Management0/0": {

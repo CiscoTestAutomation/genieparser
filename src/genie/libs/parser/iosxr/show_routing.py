@@ -10,6 +10,408 @@ from genie.metaparser.util.schemaengine import Schema, \
 
 
 # ====================================================
+#  schema for show cef {afi} {prefix} detail
+# ====================================================
+class ShowCefDetailSchema(MetaParser):
+    """ Schema for:
+        * show cef {afi} {prefix} detail
+    """
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'prefix': {
+                            Any(): {
+                                'LW-LDI-TS': {
+                                    'datetime': str,
+                                    'via_entries': {
+                                        Any(): {
+                                            'dependencies': int,
+                                            'path': {
+                                                'nhid': str,
+                                                'path_idx': int,
+                                                'path_idx_nh': {
+                                                    'local_label_nh': {
+                                                        'local_label': int,
+                                                        'local_label_nh_address': str,
+                                                        'local_label_nh_interface': str,
+                                                        'local_label_nh_labels': str
+                                                    },
+                                                    'path_idx_address': str,
+                                                    'path_idx_via': str,
+                                                },
+                                            },
+                                            'via_address': str,
+                                            'via_flags': str,
+                                        },
+                                    },
+                                    'load_distribution': {
+                                        Any(): {
+                                            'address': str,
+                                            'hash': int,
+                                            'interface': str,
+                                            'ok': str,
+                                        }
+                                    },
+                                    'weight_distribution': {
+                                        Any(): {
+                                            'class': int,
+                                            'normalized_weight': int,
+                                            'slot': int,
+                                            'weight': int,
+                                        }
+                                    }
+                                },
+                                'gateway_array': {
+                                    'LW-LDI': {
+                                        'ptr': str,
+                                        'refc': int,
+                                        'sh_ldi': str,
+                                        'type': int,
+                                    },
+                                    'backups': int,
+                                    'flags': {
+                                        'flag_count': int,
+                                        'flag_internal': str,
+                                        'flag_type': int,
+                                    },
+                                    'reference_count': int,
+                                    'source_lsd': int,
+                                    'update': {
+                                        'type_time': int,
+                                        'updated_at': str,
+                                    }
+                                },
+                                'internal': str,
+                                'ldi_update_time': str,
+                                'length': int,
+                                'precedence': str,
+                                'priority': int,
+                                'traffic_index': int,
+                                'updated': str,
+                                'version': int,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+class ShowCefDetail(ShowCefDetailSchema):
+    """ Parser for:
+        * show cef {afi} {prefix} detail
+    """
+
+    cli_command = 'show cef {afi} {prefix} detail'
+
+    def cli(self, afi="", prefix="", output=None):
+
+        if not output:
+            out = self.device.execute(
+                self.cli_command.format(afi=afi, prefix=prefix))
+        else:
+            out = output
+
+        vrf = 'default'
+
+        # 16.16.16.16/32, version 13285, internal 0x1000001 0x0 (ptr 0x78b55d78) [2], 0x0 (0x78b064d8), 0xa00 (0x7a1a60a8)
+        p1 = re.compile(r'^(?P<ip>[\d.\/]+), +version +(?P<version>[\d]+)'
+                        ', +internal +(?P<internal>.+)+$')
+
+        # Updated Oct 13 18:18:19.680
+        p2 = re.compile(r'^Updated +(?P<updated>[\w\s:.]+)$')
+
+        # Prefix Len 32, traffic index 0, precedence n/a, priority 3
+        p3 = re.compile(r'^Prefix +Len +(?P<length>[\d]+), +traffic +index'
+                        ' +(?P<traffic_index>[\d]+), +precedence'
+                        ' +(?P<precedence>[\S]+), +priority'
+                        ' +(?P<priority>[\d]+)$')
+
+        # gateway array (0x78967928) reference count 2, flags 0x8078, source lsd (5), 1 backups
+        p4 = re.compile(r'^gateway +array +\((?P<gateway_array>[\w\d]+)\)'
+                        ' +reference +count +(?P<reference_count>[\d]+),'
+                        ' +flags +(?P<flag_hex>[\w\d]+), +source +lsd'
+                        ' +\((?P<source_lsd>[\d]+)\), (?P<backups>[\d]+) +backups$')
+
+        # [3 type 4 flags 0x108441 (0x793d4b28) ext 0x0 (0x0)]
+        p5 = re.compile(r'^\[(?P<flag_count>[\d]+) +type +(?P<flag_type>[\d]+)'
+                        ' +flags +(?P<flags>[\S\s]+)$')
+
+        # LW-LDI[type=1, refc=1, ptr=0x78b064d8, sh-ldi=0x793d4b28]
+        p6 = re.compile(r'^LW-LDI\[type=(?P<type>[\d]+),'
+                        ' +refc=(?P<refc>[\d]+), +ptr=(?P<ptr>[\w]+),'
+                        ' +sh-ldi=(?P<sh_ldi>[\w]+)\]$')
+
+        # gateway array update type-time 1 Oct 13 18:18:19.680
+        p7 = re.compile(r'^gateway +array +update +type-time'
+                        ' +(?P<type_time>[\d]+) +(?P<updated_at>[\w\s:.]+)$')
+
+        # LDI Update time Oct 13 18:18:19.691
+        p8 = re.compile(r'^LDI +Update +time +(?P<ldi_update_time>[\w\s:.]+)$')
+
+        # LW-LDI-TS Oct 13 18:18:19.691
+        p9 = re.compile(r'^LW-LDI-TS +(?P<datetime>[\w\s:.]+)$')
+
+        # via 100.0.0.2/32, 4 dependencies, recursive [flags 0x0]
+        # via 100.1.15.2/32, 4 dependencies, recursive [flags 0x0]
+        p10 = re.compile(r'^via +(?P<via>[\S]+), +(?P<dependencies>[\w]{1,})'
+                         ' +dependencies, +(?P<via_flags>[\w]+)'
+                         ' +\[([\S\s]+)\]$')
+
+        # path-idx 0 NHID 0x0 [0x78b4cbf8 0x0]
+        # path-idx 1 NHID 0x0 [0x78b4fbf8 0x0]
+        p11 = re.compile(r'^path-idx +(?P<idx>[\w]+) +NHID +(?P<nhid>[\S]+)'
+                         ' +\[(?P<nhid_hex>[\w\s]+)\]$')
+
+        # next hop 100.0.0.2/32 via 100.0.0.2/32
+        # next hop 100.1.15.2/32 via 100.1.15.2/32
+        p12 = re.compile(r'^next +hop +(?P<path_idx_address>[\S]+)'
+                         ' +via +(?P<path_idx_via>[\S]+)$')
+
+        # local label 24006
+        p13 = re.compile(r'^local +label +(?P<local_label>[\d]+)$')
+
+        # next hop 100.0.0.2/32 Te0/4/0/15.1 labels imposed {None}
+        # next hop 100.1.15.2/32 Te0/3/0/15.16 labels imposed {None}
+        p14 = re.compile(r'^next +hop +(?P<address>[\S]+)'
+                         ' +(?P<interface>[\S]+) +labels'
+                         ' +imposed +\{(?P<labels>[\S]+)\}')
+
+        # Weight distribution:
+        p15 = re.compile(r'^Weight +distribution:$')
+
+        # slot 0, weight 1, normalized_weight 1, class 0
+        # slot 31, weight 1, normalized_weight 1, class 0
+        p16 = re.compile(r'^slot +(?P<slot>[\d]+), +weight'
+                         ' +(?P<weight>[\d]+), +normalized_weight'
+                         ' +(?P<normalized_weight>[\d]+), +class'
+                         ' +(?P<class>[\d]+)$')
+
+        # Load distribution: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 (refcount 3)
+        p17 = re.compile(r'^Load +distribution: +'
+                         '(?P<distribution>[\d\s]+) +'
+                         '\(refcount (?P<refcount>[\d]+)\)$')
+
+        # Hash  OK  Interface                 Address
+        # 0     Y   recursive                 100.0.0.2
+        # 31    Y   recursive                 100.1.15.2
+        p18 = re.compile(r'^(?P<hash>[\d]+)\s+(?P<ok>[Y|N])\s+(?P<interface>[\w]+)\s+(?P<address>[\S]+)$')
+
+        result_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # 16.16.16.16/32, version 13285, internal 0x1000001 0x0 (ptr 0x78b55d78) [2], 0x0 (0x78b064d8), 0xa00 (0x7a1a60a8)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict = result_dict.\
+                    setdefault('vrf', {}).\
+                    setdefault(vrf, {}).\
+                    setdefault('address_family', {}).\
+                    setdefault(afi, {}).\
+                    setdefault('prefix', {}).\
+                    setdefault(group['ip'], {})
+
+                prefix_dict.update({
+                    'version': int(group['version']),
+                    'internal': group['internal'],
+                })
+                continue
+
+            # Updated Oct 13 18:18:19.680
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict.update(
+                    {'updated': group['updated']})
+                continue
+
+            # Prefix Len 32, traffic index 0, precedence n/a, priority 3
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict.update({
+                    'length': int(group['length']),
+                    'traffic_index': int(group['traffic_index']),
+                    'precedence': group['precedence'],
+                    'priority': int(group['priority']),
+                })
+                continue
+
+            # gateway array (0x78967928) reference count 2, flags 0x8078, source lsd (5), 1 backups
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                gateway_dict = prefix_dict.\
+                    setdefault('gateway_array', {})
+
+                gateway_dict.update({
+                    'reference_count': int(group['reference_count']),
+                    'source_lsd': int(group['source_lsd']),
+                    'backups': int(group['backups']),
+                })
+
+                flags_dict = gateway_dict.setdefault('flags', {})
+                continue
+
+            # [3 type 4 flags 0x108441 (0x793d4b28) ext 0x0 (0x0)]
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                flags_dict.update({
+                    'flag_count': int(group['flag_count']),
+                    'flag_type': int(group['flag_type']),
+                    'flag_internal': group['flags']
+                })
+                continue
+
+            # LW-LDI[type=1, refc=1, ptr=0x78b064d8, sh-ldi=0x793d4b28]
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                lw_ldi_dict = gateway_dict.\
+                    setdefault('LW-LDI', {})
+
+                lw_ldi_dict.update({
+                    'type': int(group['type']),
+                    'refc': int(group['refc']),
+                    'ptr': group['ptr'],
+                    'sh_ldi': group['sh_ldi'],
+                })
+                continue
+
+            # gateway array update type-time 1 Oct 13 18:18:19.680
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                gateway_update_dict = gateway_dict.\
+                    setdefault('update', {})
+
+                gateway_update_dict.update({
+                    'type_time': int(group['type_time']),
+                    'updated_at': group['updated_at']
+                })
+                continue
+
+            # LDI Update time Oct 13 18:18:19.691
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                prefix_dict.update({
+                    'ldi_update_time': group['ldi_update_time']
+                })
+                continue
+
+            # LW-LDI-TS Oct 13 18:18:19.691
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                lw_ldi_ts_dict = prefix_dict.\
+                    setdefault('LW-LDI-TS', {})
+                lw_ldi_ts_dict.update({
+                    'datetime': group['datetime']
+                })
+                entries_dict = lw_ldi_ts_dict.\
+                    setdefault('via_entries', {})
+                entries_id = 0
+                continue
+
+            # via 100.0.0.2/32, 4 dependencies, recursive [flags 0x0]
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                via_dict = {
+                    'via_address': group['via'],
+                    'dependencies': int(group['dependencies']),
+                    'via_flags': group['via_flags']
+                }
+                entries_dict.update({str(entries_id): via_dict})
+                entries_id += 1
+                continue
+
+            # path-idx 0 NHID 0x0 [0x78b4cbf8 0x0]
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                path_dict = {
+                    'path_idx': int(group['idx']),
+                    'nhid': group['nhid']
+                }
+                via_dict.update({'path': path_dict})
+                continue
+
+            # next hop 100.0.0.2/32 via 100.0.0.2/32
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                path_nh_dict = path_dict.\
+                    setdefault('path_idx_nh', {})
+                path_nh_dict.update({k: v for k, v in group.items()})
+                continue
+
+            # local label 24006
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                local_label_dict = path_nh_dict.\
+                    setdefault('local_label_nh', {})
+                local_label_dict.update({
+                    'local_label': int(group['local_label'])
+                })
+                continue
+
+            # next hop 100.0.0.2/32 Te0/4/0/15.1 labels imposed {None}
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                local_label_dict.update(
+                    {f'local_label_nh_{k}': v for k, v in group.items()})
+                continue
+
+            # Weight distribution:
+            m = p15.match(line)
+            if m:
+                weight_dict = lw_ldi_ts_dict.\
+                    setdefault('weight_distribution', {})
+                continue
+
+            # slot 0, weight 1, normalized_weight 1, class 0
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                slot_dict = {k: int(v) for k, v in group.items()}
+                weight_dict.update({group['slot']: slot_dict})
+                continue
+
+            # Load distribution: 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 (refcount 3)
+            m = p17.match(line)
+            if m:
+                load_dict = lw_ldi_ts_dict.\
+                    setdefault('load_distribution', {})
+                continue
+
+            m = p18.match(line)
+            if m:
+
+                group = m.groupdict()
+                hash_dict = {
+                    'hash': int(group['hash']),
+                    'ok': group['ok'],
+                    'interface': group['interface'],
+                    'address': group['address'],
+                }
+                load_dict.update({group['hash']: hash_dict})
+                continue
+
+        return result_dict
+
+
+# ====================================================
 #  schema for show route ipv4
 # ====================================================
 class ShowRouteIpv4Schema(MetaParser):
@@ -1078,12 +1480,6 @@ class ShowRouteAllSummary(ShowRouteAllSummarySchema):
 
         ret_dict = {}
 
-        if vrf is None:
-            vrf = 'default'
-            vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
-        elif vrf != 'all':
-            vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
-
         for line in out.splitlines():
             line = line.strip()
 
@@ -1094,9 +1490,15 @@ class ShowRouteAllSummary(ShowRouteAllSummarySchema):
                     vrf_temp = m.groupdict()['vrf']
                     vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf_temp, {})
                     continue
+
             # IPv4 Unicast:
             m = p2.match(line)
             if m:
+                if vrf is None:
+                    vrf = 'default'
+                    vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
+                elif vrf != 'all':
+                    vrf_dict = ret_dict.setdefault('vrf',{}).setdefault(vrf, {})
                 addrs_fam = m.groupdict()['address_family']
                 addrs_fam_dict = vrf_dict.setdefault('address_family', {}).setdefault(addrs_fam, {})
                 vrf_rs_dict = addrs_fam_dict.setdefault('route_source', {})

@@ -2,7 +2,7 @@ expected_output = {
     "vrf": {
         "default": {
             "neighbor": {
-                "10.106.101.1": {
+                "192.168.0.1": {
                     "address_family": {
                         "ipv4 multicast": {
                             "bgp_table_version": 175,
@@ -17,7 +17,7 @@ expected_output = {
                                             "path": "2 3 4",
                                             "path_type": "i",
                                             "status_codes": "*>",
-                                            "weight": 0,
+                                            "weight": 0
                                         }
                                     }
                                 },
@@ -30,11 +30,11 @@ expected_output = {
                                             "path": "2 3 4",
                                             "path_type": "i",
                                             "status_codes": "*>",
-                                            "weight": 0,
+                                            "weight": 0
                                         }
                                     }
-                                },
-                            },
+                                }
+                            }
                         },
                         "ipv4 unicast": {
                             "bgp_table_version": 174,
@@ -50,7 +50,7 @@ expected_output = {
                                             "path": "1 2 3 65000 23",
                                             "path_type": "i",
                                             "status_codes": "*",
-                                            "weight": 0,
+                                            "weight": 0
                                         }
                                     }
                                 },
@@ -64,7 +64,7 @@ expected_output = {
                                             "path": "1 2 3 65000 23",
                                             "path_type": "i",
                                             "status_codes": "*",
-                                            "weight": 0,
+                                            "weight": 0
                                         }
                                     }
                                 },
@@ -77,21 +77,21 @@ expected_output = {
                                             "path": "10 20 30 40 50 60 70 80 90",
                                             "path_type": "i",
                                             "status_codes": "*>",
-                                            "weight": 0,
+                                            "weight": 0
                                         }
                                     }
-                                },
-                            },
+                                }
+                            }
                         },
                         "ipv6 multicast": {
                             "bgp_table_version": 6,
                             "local_router_id": "10.145.0.6",
-                            "received_routes": {},
+                            "received_routes": {}
                         },
                         "ipv6 unicast": {
                             "bgp_table_version": 173,
                             "local_router_id": "10.145.0.6",
-                            "received_routes": {},
+                            "received_routes": {}
                         },
                         "link-state": {
                             "bgp_table_version": 173,
@@ -107,7 +107,7 @@ expected_output = {
                                             "path": "3 10 20 30 40 50 60 70 80 90",
                                             "path_type": "i",
                                             "status_codes": "*>",
-                                            "weight": 0,
+                                            "weight": 0
                                         }
                                     }
                                 },
@@ -121,27 +121,26 @@ expected_output = {
                                             "path": "3 10 20 30 40 50 60 70 80 90",
                                             "path_type": "i",
                                             "status_codes": "*>",
-                                            "weight": 0,
+                                            "weight": 0
                                         }
                                     }
-                                },
-                            },
+                                }
+                            }
                         },
                         "vpnv4 unicast": {
                             "bgp_table_version": 183,
                             "local_router_id": "10.145.0.6",
-                            "received_routes": {},
+                            "received_routes": {}
                         },
                         "vpnv4 unicast RD 0:0": {
                             "bgp_table_version": 183,
                             "local_router_id": "10.145.0.6",
-                            "route_distinguisher": "0:0",
                             "received_routes": {},
+                            "route_distinguisher": "0:0"
                         },
                         "vpnv4 unicast RD 101:100": {
                             "bgp_table_version": 183,
                             "local_router_id": "10.145.0.6",
-                            "route_distinguisher": "101:100",
                             "received_routes": {
                                 "10.16.1.0/24": {
                                     "index": {
@@ -153,7 +152,7 @@ expected_output = {
                                             "path": "3 10 20 4 5 6 3 10 20 4 5 6",
                                             "path_type": "i",
                                             "status_codes": "*",
-                                            "weight": 0,
+                                            "weight": 0
                                         }
                                     }
                                 },
@@ -167,46 +166,34 @@ expected_output = {
                                             "path": "3 10 20 4 5 6 3 10 20 4 5 6",
                                             "path_type": "i",
                                             "status_codes": "*",
-                                            "weight": 0,
+                                            "weight": 0
                                         }
                                     }
-                                },
+                                }
                             },
+                            "route_distinguisher": "101:100"
                         },
                         "vpnv4 unicast RD 102:100": {
                             "bgp_table_version": 183,
                             "local_router_id": "10.145.0.6",
-                            "route_distinguisher": "102:100",
                             "received_routes": {},
+                            "route_distinguisher": "102:100"
                         },
                         "vpnv6 unicast": {
                             "bgp_table_version": 13,
                             "local_router_id": "10.145.0.6",
-                            "received_routes": {},
+                            "received_routes": {}
                         },
                         "vpnv6 unicast RD 0xbb00010000000000": {
                             "bgp_table_version": 13,
                             "local_router_id": "10.145.0.6",
-                            "route_distinguisher": "0xbb00010000000000",
                             "received_routes": {},
+                            "route_distinguisher": "0xbb00010000000000"
                         },
                         "vpnv6 unicast RD 100:200": {
                             "bgp_table_version": 13,
                             "local_router_id": "10.145.0.6",
-                            "route_distinguisher": "100:200",
                             "received_routes": {
-                                "2001:db8:aaaa:1::/113": {
-                                    "index": {
-                                        1: {
-                                            "localprf": 100,
-                                            "next_hop": "4444",
-                                            "origin_codes": "i",
-                                            "path_type": "i",
-                                            "status_codes": "*>",
-                                            "weight": 0,
-                                        }
-                                    }
-                                },
                                 "2001:db8:2001:db8:aaaa:1::8000/113": {
                                     "index": {
                                         1: {
@@ -215,12 +202,25 @@ expected_output = {
                                             "origin_codes": "i",
                                             "path_type": "i",
                                             "status_codes": "*>",
-                                            "weight": 0,
+                                            "weight": 0
                                         }
                                     }
                                 },
+                                "2001:db8:aaaa:1::/113": {
+                                    "index": {
+                                        1: {
+                                            "localprf": 100,
+                                            "next_hop": "4444",
+                                            "origin_codes": "i",
+                                            "path_type": "i",
+                                            "status_codes": "*>",
+                                            "weight": 0
+                                        }
+                                    }
+                                }
                             },
-                        },
+                            "route_distinguisher": "100:200"
+                        }
                     }
                 }
             }

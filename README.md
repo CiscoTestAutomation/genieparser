@@ -24,13 +24,30 @@ datastructure.
 
 # Installation
 
-Installation guide can be found on [our website].
+The package is automatically installed when pyATS gets installed
 
+```
+$ pip install 'pyats[full]'
+```
+
+Detailed installation guide can be found on [our website].
 [our website]: https://developer.cisco.com/site/pyats/
 
+# Development
+
+To develop this package, assuming you have Genie already installed in your
+environment, follow the commands below:
+
+```bash
+# clone this repo
+bash$ git clone https://github.com/CiscoTestAutomation/genieparser.git
+
+# put all packages in dev mode
+bash$ cd genieparser
+bash$ make develop
 ```
-$ pip install genie.metaparser
-```
+
+Now you should be able to develop the files and see it reflected in your runs.
 
 # ChangeLog
 
@@ -51,8 +68,8 @@ YouTube Video: <How to write a Genie parser for Cisco!> https://youtube.com/watc
 Once you create a new parser, don't forget to check 1, 2, and 3;
 if you only update the parser class without modifying/creating the schema, please check 2 and 3. 
 - [ ] 1. `make json`
-- [ ] 2. cd tests; and execute `python -m unittest -v`
-- [ ] 3. create changelog for your pull request.
+- [ ] 2. create changelog for your pull request.
+- [ ] 3. make sure GitHub Actions checks passed.
 
 # How to write 'changelog':
 1. A few examples are added into changelog/undistributed/template.rst:
