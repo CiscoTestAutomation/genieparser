@@ -412,19 +412,14 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
 class ShowOspfv3VrfAllInclusiveNeighborDetailSchema(MetaParser):
     schema = {
         "vrf": {
-            # vrf default
             Any(): {
                 "address_family": {
-                    # ipv6
                     Any(): {
                         "instance": {
-                            # mpls1
                             Any(): {
                                 "area": {
-                                    # area 0
                                     Any(): {
                                         "neighbor_router_id": {
-                                            # 25.97.1.1
                                             Any(): {
                                                 "interface": {
                                                     Any(): {
@@ -468,7 +463,7 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
     Parser for show ospfv3 vrf all-inclusive neighbor detail
 
     Parser picks the appropriate command and gets the device output,
-    or it  takes the raw show command.
+    or it  takes the raw show output with output=.
 
     Parser then compiles regular expressions to deal with each line
     in the show command, after which it casts the pulled values into
@@ -476,9 +471,6 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
     """
     cli_command = ['show ospfv3 vrf all-inclusive neighbor detail']
 
-    # exclude = []
-
-    # (self, vrf='', neighbor='', interface='', output=None)
     def cli(self, output=None):
         if output:
             # if an output file is passed use it, otherwise generate the output
@@ -527,6 +519,7 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
         # Total neighbor count <int>
         p13 = re.compile(r"^Total +neighbor +count: +(?P<num>(\d+))$")
 
+        # loop through output and add to ret_dict
         for line in out.splitlines():
             line = line.strip()
 
