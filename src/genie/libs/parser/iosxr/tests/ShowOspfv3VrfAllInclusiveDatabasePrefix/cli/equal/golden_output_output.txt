@@ -1,0 +1,25 @@
+Thu May 13 13:52:45.805 JST
+
+OSPFv3 Router with ID (25.97.1.1) (Process ID mpls1 VRF default)
+
+Intra Area Prefix Link States (Area 0)
+
+  Routing Bit Set on this LSA
+  LS age: 852
+  LS Type: Intra-Area-Prefix-LSA
+  Link State ID: 0
+  Advertising Router: 25.97.1.1
+  LS Seq Number: 80000002
+  Checksum: 0x66cb
+  Length: 76
+  Referenced LSA Type: 2001
+  Referenced Link State ID: 0
+  Referenced Advertising Router: 25.97.1.1
+  Number of Prefixes: 3
+  Prefix Address: 2001:1100::1001
+  Prefix Length: 128, Options: None, Metric: 65535, Priority: Medium
+  Prefix Address: 2001:100:20::
+  Prefix Length: 64, Options: None, Metric: 65535, Priority: Low
+  Prefix Address: 2001:100:10::
+  Prefix Length: 64, Options: None, Metric: 65535, Priority: Low
+
