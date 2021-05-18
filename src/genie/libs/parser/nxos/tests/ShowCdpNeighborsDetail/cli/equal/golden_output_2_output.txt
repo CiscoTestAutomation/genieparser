@@ -1,0 +1,22 @@
+
+        Device# show cdp neighbors detail
+
+        Device ID:swor96(SSI13110AAQ)
+        System Name:swor96
+        Interface address(es):
+        IPv4 Address: 192.168.0.1
+        Platform: N5K-C5010P-BF, Capabilities: Switch IGMP Filtering Supports-STP-Disput
+        e
+        Interface: Ethernet1/17, Port ID (outgoing port): Ethernet1/19
+        Holdtime: 175 sec
+
+        Version:
+        Cisco Nexus Operating System (NX-OS) Software, Version 5.0(3)N2(1)
+
+        Advertisement Version: 2
+        Native VLAN: 1
+        Duplex: full
+        Physical Location: snmplocation
+        Mgmt address(es):
+        IPv4 Address: 192.168.0.96
+    

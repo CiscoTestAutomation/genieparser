@@ -1,0 +1,1 @@
+primary and secondary servers are not synchronized

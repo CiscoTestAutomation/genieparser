@@ -655,7 +655,7 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
 
     cli_command = ['show bgp {address_family} vrf {vrf}',
                    'show bgp {address_family} rd {rd}',
-                   'show bgp {address_family} unicast',
+                   'show bgp {address_family}',
                    ]
 
     def cli(self, address_family='', rd='', vrf='', output=None):

@@ -4338,7 +4338,6 @@ class ShowWirelessStatsClientDetail(ShowWirelessStatsClientDetailSchema):
               match = p_colon_split.match(line)
               group = match.groupdict()
               group["key"] = group["key"].replace(" ", "_").replace(".", "_").replace("-", "_").replace("___", "_").replace("__", "_").replace("/", "_").lower()
-              print(group["key"])
               group["value"] = int(group["value"])
               if len(section_tracker) == 1:
                   client_detail_dict[section_tracker[-1]].update({ group["key"]: group["value"] })

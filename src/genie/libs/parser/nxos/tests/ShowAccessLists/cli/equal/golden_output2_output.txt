@@ -1,0 +1,8 @@
+
+    Router# show access-list NTP-ACL
+
+IP access list NTP-ACL
+        statistics per-entry 
+        10 permit ip 10.1.50.64/32 any [match=0] 
+        20 permit ip 172.18.106.1/32 any [match=4] 
+        40 permit ip any any [match=4] 

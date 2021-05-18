@@ -1,0 +1,10 @@
+
+       Feature Name          Instance  State   
+        --------------------  --------  --------
+        bash-shell             1          disabled
+        bgp                    1          enabled 
+        eigrp                  1          enabled 
+        eigrp                  2          enabled(not-running)
+        eigrp                  3          enabled(not-running)
+        eigrp                  4          enabled(not-running)
+        
