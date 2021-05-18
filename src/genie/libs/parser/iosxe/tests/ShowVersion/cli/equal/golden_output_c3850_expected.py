@@ -20,6 +20,13 @@ expected_output = {
         "system_image": "tftp://10.1.6.241//auto/tftp-ssr/Edison/cat3k_caa-universalk9.BLD_V164_THROTTLE_LATEST_20170410_174845.SSA.bin",
         "last_reload_reason": "Admin reload CLI",
         "license_type": "Permanent",
+        "license_package": {
+            "ipservicesk9": {
+                "license_level": "ipservicesk9",
+                "license_type": "Permanent",
+                "next_reload_license_level": "ipservicesk9"
+            }
+        },
         "license_level": "ipservicesk9",
         "next_reload_license_level": "ipservicesk9",
         "chassis": "WS-C3850-24P",

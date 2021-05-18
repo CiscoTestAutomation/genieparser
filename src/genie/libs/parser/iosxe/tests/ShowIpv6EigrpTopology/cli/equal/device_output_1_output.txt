@@ -1,0 +1,7 @@
+Device# show ipv6 eigrp topology
+IPv6-EIGRP Topology Table for AS(1)/ID(2001:0DB8:10::/64)
+Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply,
+        r - reply Status, s - sia Status
+
+P 2001:0DB8:3::/64, 1 successors, FD is 281600
+        via Connected, Ethernet1/0
