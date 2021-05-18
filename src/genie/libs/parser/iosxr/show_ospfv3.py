@@ -8,6 +8,8 @@ Parser for the following commands:
     * show ospfv3 {process_id} database
 '''
 import re
+
+import genie.metaparser.util.exceptions
 from netaddr import IPAddress, IPNetwork
 
 from genie.metaparser import MetaParser
@@ -407,7 +409,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
         return ret_dict
 
 
-class ShowOspfv3VRFAllInclusiveNeighborDetailSchema(MetaParser):
+class ShowOspfv3VrfAllInclusiveNeighborDetailSchema(MetaParser):
     schema = {
         "vrf": {Any(): {
             "address_family": {
@@ -487,7 +489,7 @@ class ShowOspfv3VRFAllInclusiveNeighborDetailSchema(MetaParser):
                             }, }, }, }, }, }, }, }
 
 
-class ShowOspfv3VRFAllInclusiveNeighborDetail(ShowOspfv3VRFAllInclusiveNeighborDetailSchema):
+class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborDetailSchema):
     """
     Parser for show ospfv3 vrf all-inclusive neighbor detail
 
@@ -515,14 +517,12 @@ class ShowOspfv3VRFAllInclusiveNeighborDetail(ShowOspfv3VRFAllInclusiveNeighborD
         af = "ipv6"
 
         # Neighbors for OSPFv3 <name>, VRF <name>
-        p1 = re.compile(r"^Neighbors +for +OSPFv3 +(?P<instance>(\S+)), +(?P<VRF>(VRF \S+))$")
+        p1 = re.compile(r"^Neighbors +for +OSPFv3 +(?P<instance>(\S+)), +(?P<vrf>(VRF \S+))$")
 
         # Neighbor <address>
         p2 = re.compile(r"^Neighbor +(?P<neighbor>(\S+))$")
         # In the area <area> via interface <interface>
-        p3 = re.compile(r"^In +the +area +(?P<area>\S+) "
-                        r"+via +interface +(?P<interface>\S+)( +, +BFD +(?P<bfd_status>\w+), "
-                        r"+Mode: (?P<mode>\w+))?$")
+        p3 = re.compile(r"^In the area +(?P<area>([0-9]+)) via interface +(?P<interface>(\S+))$")
         # Neighbor: interface-id <id> link-local address <ipv6 address>
         p4 = re.compile(r"^Neighbor: interface-id +(?P<interface_id>([0-9]+)), "
                         r"link-local address +(?P<link_local>(['a-z:0-9']+))$")
@@ -550,3 +550,33 @@ class ShowOspfv3VRFAllInclusiveNeighborDetail(ShowOspfv3VRFAllInclusiveNeighborD
 
         # Total neighbor count <int>
         p13 = re.compile(r"^Total +neighbor +count: +(?P<num>(\d+))$")
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                instance = str(m.groupdict()["instance"])
+                vrf = str(m.groupdict()['vrf'])
+
+                instance_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
+                    setdefault('address_family', {}).setdefault(af, {}). \
+                    setdefault('instance', {}).setdefault(instance, {})
+
+            m = p2.match(line)
+            if m:
+                'neighbor'
+
+            m = p3.match(line)
+            if m:
+                area = str(m.groupdict()["area"])
+                if area.isdigit():
+                    area = str(IPAddress(area))
+                interface = str(m.groupdict()["interface"])
+
+            m = p13.match(line)
+            if m:
+                instance_dict.update({'total_neighbor_count': int(m.groupdict()['num'])})
+
+        print(ret_dict)
+        # return ret_dict
