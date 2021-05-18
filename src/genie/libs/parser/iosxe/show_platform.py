@@ -3430,11 +3430,7 @@ class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema)
                         '(?P<free>\d+) +\((?P<free_percentage>[\d\s]+)\%\) +'
                         '(?P<committed>\d+) +\((?P<committed_percentage>[\d\s]+)\%\)$')
 
-        p3 = re.compile(r'^(?P<slot>\S+)? *(?P<cpu>\d+) +'
-                        '(?P<user>[\d\.]+) +(?P<system>[\d\.]+) +'
-                        '(?P<nice_process>[\d\.]+) +(?P<idle>[\d\.]+) +'
-                        '(?P<irq>[\d\.]+) +(?P<sirq>[\d\.]+) +'
-                        '(?P<waiting>[\d\.]+)$')
+        p3 = re.compile(r'^((?P<slot>\S+) +)?(?P<cpu>\d+) +(?P<user>[\d\.]+) +(?P<system>[\d\.]+) +(?P<nice_process>[\d\.]+) +(?P<idle>[\d\.]+) +(?P<irq>[\d\.]+) +(?P<sirq>[\d\.]+) +(?P<waiting>[\d\.]+)$')
 
         for line in out.splitlines():
             line = line.strip()
