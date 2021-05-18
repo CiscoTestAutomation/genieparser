@@ -378,6 +378,7 @@ class ShowNveInterfaceDetailSchema(MetaParser):
             Optional('host_reach_mode'): str,
             Optional('source_if'): str,
             Optional('primary_ip'): str,
+            Optional('anycast_if'): str,
             Optional('secondary_ip'): str,
             Optional('src_if_state'): str,
             Optional('ir_cap_mode'): str,
