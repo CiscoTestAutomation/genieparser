@@ -150,7 +150,7 @@ class Ping(PingSchema):
                     'send': int(group['send'])
                 })
 
-                if 'min' in group and group['min'] is not None:
+                if group['min']:
                     round_dict = stat_dict.setdefault('round_trip', {})
 
                     min_ms = float(group['min'])
