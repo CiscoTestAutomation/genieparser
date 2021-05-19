@@ -105,7 +105,10 @@ class Ping(PingSchema):
         p3 = re.compile(r'[!\.UQM\?&]+')
 
         # Success rate is 100 percent (100/100), round-trip min/avg/max = 1/2/14 ms
-        p4 = re.compile(r'Success +rate +is +(?P<success_percent>\d+) +percent +\((?P<received>\d+)\/(?P<send>\d+)\), +round-trip +min/avg/max *= *(?P<min>\d+)/(?P<max>\d+)/(?P<avg>\d+) +(?P<unit>\w+)')
+        # Success rate is 0 percent (0/5)
+        p4 = re.compile(
+            r'Success +rate +is +(?P<success_percent>\d+) +percent +\((?P<received>\d+)\/(?P<send>\d+)\)(, +round-trip +min/avg/max *= *(?P<min>\d+)/(?P<max>\d+)/(?P<avg>\d+) +(?P<unit>\w+))?'
+        )
 
         ping_dict = {}
         for line in out.splitlines():
@@ -141,26 +144,29 @@ class Ping(PingSchema):
             if m:
                 group = m.groupdict()
                 stat_dict = ping_dict.setdefault('statistics', {})
-                stat_dict.update({'success_rate_percent': float(group['success_percent']),
-                                  'received':int(group['received']),
-                                  'send': int(group['send'])})
-
-                round_dict = stat_dict.setdefault('round_trip', {})
-
-                min_ms = float(group['min'])
-                max_ms = float(group['max'])
-                avg_ms = float(group['avg'])
-
-                if group['unit'] == "s":
-                    min_ms *= 1000
-                    max_ms *= 1000
-                    avg_ms *= 1000
-
-                round_dict.update({
-                        'min_ms': min_ms,
-                        'max_ms': max_ms,
-                        'avg_ms': avg_ms
+                stat_dict.update({
+                    'success_rate_percent': float(group['success_percent']),
+                    'received': int(group['received']),
+                    'send': int(group['send'])
                 })
+
+                if group['min']:
+                    round_dict = stat_dict.setdefault('round_trip', {})
+
+                    min_ms = float(group['min'])
+                    max_ms = float(group['max'])
+                    avg_ms = float(group['avg'])
+
+                    if group['unit'] == "s":
+                        min_ms *= 1000
+                        max_ms *= 1000
+                        avg_ms *= 1000
+
+                    round_dict.update({
+                            'min_ms': min_ms,
+                            'max_ms': max_ms,
+                            'avg_ms': avg_ms
+                    })
 
                 continue
 
