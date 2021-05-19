@@ -477,11 +477,10 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
 
     def cli(self, output=None):
 
-        if not output:
-            if output is None:
-                out = self.device.execute(self.cli_command)
-            else:
-                out = output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         # Init vars
         ret_dict = {}
