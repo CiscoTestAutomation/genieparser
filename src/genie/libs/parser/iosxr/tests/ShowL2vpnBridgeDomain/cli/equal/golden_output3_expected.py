@@ -36,7 +36,7 @@ expected_output = {
                             },
                         },
                     },
-                    "access_pw": {"num_pw": 1, "num_pw_up": 1},
+                    "pw": {"num_pw": 1, "num_pw_up": 1},
                     "pbb": {"num_pbb": 0, "num_pbb_up": 0},
                     "vni": {"num_vni": 0, "num_vni_up": 0},
                 }
@@ -66,7 +66,7 @@ expected_output = {
                         },
                     },
                     "vfi": {"num_vfi": 0},
-                    "access_pw": {"num_pw": 0, "num_pw_up": 0},
+                    "pw": {"num_pw": 0, "num_pw_up": 0},
                     "pbb": {"num_pbb": 0, "num_pbb_up": 0},
                     "vni": {"num_vni": 0, "num_vni_up": 0},
                     "evpn": {"EVPN": {"state": "up"}},

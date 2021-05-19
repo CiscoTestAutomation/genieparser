@@ -36,7 +36,7 @@ expected_output = {
                             }
                         },
                     },
-                    "access_pw": {"num_pw": 1, "num_pw_up": 1},
+                    "pw": {"num_pw": 1, "num_pw_up": 1},
                 }
             }
         }

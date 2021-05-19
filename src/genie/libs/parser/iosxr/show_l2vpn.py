@@ -401,7 +401,7 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
                                 }
                             }
                         },
-                        'access_pw': {
+                        'pw': {
                             'num_pw': int,
                             'num_pw_up': int,
                             Optional("neighbor"): {
@@ -434,21 +434,24 @@ class ShowL2vpnBridgeDomainSchema(MetaParser):
         }
     }
 
+
 class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
     """Parser for show l2vpn bridge-domain"""
 
     cli_command = 'show l2vpn bridge-domain'
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output        
         ret_dict = {}
+
         # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
         # Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
         p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\S+), +bridge\-domain: +'
             '(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>[\w\s\(\)]+), +'
-            'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')        
+            'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')
 
         # Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
         # Aging: 300 s, MAC limit: 100, Action: limit, no-flood, Notification: syslog, trap
@@ -547,7 +550,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
                 vfi_dict = bridge_domain_dict.setdefault('vfi', {})
                 vfi_dict.update({'num_vfi': vfi})
 
-                pw_dict = bridge_domain_dict.setdefault('access_pw', {})
+                pw_dict = bridge_domain_dict.setdefault('pw', {})
                 pw_dict.update({'num_pw': pw})
                 pw_dict.update({'num_pw_up': pw_up})
 
@@ -604,8 +607,8 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
             # VFI vfi60 (up)
             m = p6.match(line)
             if m:
-                #clear satate from earlier
-                state=''
+                # clear state from earlier
+                state = ''
                 group = m.groupdict()
                 vfi = group['vfi']
                 vfi_dict = bridge_domain_dict.setdefault('vfi', {}). \
@@ -687,7 +690,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
 
 # =================================================
 # Parser for:
-#   * 'show l2vpn bridge-domain breif'
+#   * 'show l2vpn bridge-domain brief'
 # =================================================
 class ShowL2vpnBridgeDomainBriefSchema(MetaParser):
     schema = {
@@ -704,6 +707,14 @@ class ShowL2vpnBridgeDomainBriefSchema(MetaParser):
                         'pw': {
                             'num_pw': int,
                             'num_pw_up': int
+                        },
+                        Optional('pbb'): {
+                            'num_pbb': int,
+                            'num_pbb_up': int
+                        },
+                        Optional('vni'): {
+                            'num_vni': int,
+                            'num_vni_up': int
                         }
                     }
                 }
@@ -727,8 +738,18 @@ class ShowL2vpnBridgeDomainBrief(ShowL2vpnBridgeDomainBriefSchema):
         else:
             out = output
 
-        p1 = re.compile(r"^(?P<group>([a-zA-Z0-9]+))\/(?P<domain>([a-zA-Z0-9]+)) +(?P<id>([0-9]+)) +(?P<state>(\S+)) "
-                        r"+(?P<acs>([0-9]+))\/(?P<acup>([0-9]+)) +(?P<pws>([0-9]+))\/(?P<pwup>([0-9]+))")
+        # Bridge Group/Bridge-Domain
+        # Bridge Group:Bridge-Domain Name  ID    State          Num ACs/up   Num PWs/up    Num PBBs/up Num VNIs/up
+        # g1/bd1                           0     up         1/1            1/1
+        # G-t:BDA                  1     up             3/2          3/2           0/0         0/0
+        # g_D:a1                     2     admin down     1/0          1/0           0/0         0/0
+        p1 = re.compile(r"^(?P<group>([\w\-]+))(?:\:|\/)(?P<domain>([\w\-]+)) "
+                        r"+(?P<id>([\d]+)) +(?P<state>(\S+(?: \S+)?)) "
+                        r"+(?P<acs>([\d]+))\/(?P<acup>([\d]+)) "
+                        r"+(?P<pws>([\d]+))\/(?P<pwup>([\d]+))(?: "
+                        r"+(?P<pbbs>([\d]+))\/(?P<pbbup>([\d]+)) "
+                        r"+(?P<vnis>([\d]+))\/(?P<vniup>([\d]+)))?$")
+        # regex only takes values from under the table headers. Table headers static, so no regex needed.
 
         ret_dict = {}
         for line in out.splitlines():
@@ -750,7 +771,18 @@ class ShowL2vpnBridgeDomainBrief(ShowL2vpnBridgeDomainBriefSchema):
                 pw_dict.update({'num_pw': int(m.groupdict()['pws'])})
                 pw_dict.update({'num_pw_up': int(m.groupdict()['pwup'])})
 
+                if m.groupdict()['pbbs'] and m.groupdict()['pbbup']:
+                    pbb_dict = bridge_dict.setdefault('pbb', {})
+                    pbb_dict.update({'num_pbb': int(m.groupdict()['pbbs'])})
+                    pbb_dict.update({'num_pbb_up': int(m.groupdict()['pbbup'])})
+
+                if m.groupdict()['vnis'] and m.groupdict()['vniup']:
+                    vni_dict = bridge_dict.setdefault('vni', {})
+                    vni_dict.update({'num_vni': int(m.groupdict()['vnis'])})
+                    vni_dict.update({'num_vni_up': int(m.groupdict()['vniup'])})
+
         return ret_dict
+
 
 # =============================================
 # Schema for 'show l2vpn bridge-domain summary'
