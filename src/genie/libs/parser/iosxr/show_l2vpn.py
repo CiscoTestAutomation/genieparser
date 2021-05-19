@@ -684,21 +684,73 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
 
         return ret_dict
 
+
+# =================================================
+# Parser for:
+#   * 'show l2vpn bridge-domain breif'
+# =================================================
+class ShowL2vpnBridgeDomainBriefSchema(MetaParser):
+    schema = {
+        'bridge_group': {
+            Any(): {
+                'bridge_domain': {
+                    Any(): {
+                        'id': int,
+                        'state': str,
+                        'ac': {
+                            'num_ac': int,
+                            'num_ac_up': int
+                        },
+                        'pw': {
+                            'num_pw': int,
+                            'num_pw_up': int
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
 # =====================================================
 # Parser for:
 #   * 'show l2vpn bridge-domain brief'
 # =====================================================
-
-class ShowL2vpnBridgeDomainBrief(ShowL2vpnBridgeDomain):
+class ShowL2vpnBridgeDomainBrief(ShowL2vpnBridgeDomainBriefSchema):
     """Parser class for 'show l2vpn bridge-domain brief'"""
 
     cli_command = 'show l2vpn bridge-domain brief'
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
-        return super().cli(output=out)
+
+        p1 = re.compile(r"^(?P<group>([a-zA-Z0-9]+))\/(?P<domain>([a-zA-Z0-9]+)) +(?P<id>([0-9]+)) +(?P<state>(\S+)) "
+                        r"+(?P<acs>([0-9]+))\/(?P<acup>([0-9]+)) +(?P<pws>([0-9]+))\/(?P<pwup>([0-9]+))")
+
+        ret_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+            if m:
+                bridge_dict = ret_dict.setdefault('bridge_group', {}).setdefault(m.groupdict()['group'], {}). \
+                    setdefault('bridge_domain', {}).setdefault(m.groupdict()['domain'], {})
+
+                bridge_dict.update({'id': int(m.groupdict()['id'])})
+                bridge_dict.update({'state': m.groupdict()['state']})
+
+                ac_dict = bridge_dict.setdefault('ac', {})
+                ac_dict.update({'num_ac': int(m.groupdict()['acs'])})
+                ac_dict.update({'num_ac_up': int(m.groupdict()['acup'])})
+
+                pw_dict = bridge_dict.setdefault('pw', {})
+                pw_dict.update({'num_pw': int(m.groupdict()['pws'])})
+                pw_dict.update({'num_pw_up': int(m.groupdict()['pwup'])})
+
+        return ret_dict
 
 # =============================================
 # Schema for 'show l2vpn bridge-domain summary'
