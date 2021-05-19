@@ -1,0 +1,6 @@
+ Pod         Node        Current-Firmware      Target-Firmware       Status                     Upgrade-Progress(%)
+ ----------  ----------  --------------------  --------------------  -------------------------  --------------------
+ 1           1           apic-4.2(4o)                                success                    100
+ 1           101         unknown               unknown               node unreachable           -
+ 1           102         n9000-14.2(4q)                              not scheduled              0
+ 1           201         unknown               unknown               node unreachable           -

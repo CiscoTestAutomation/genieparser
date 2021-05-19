@@ -1,0 +1,14 @@
+
+
+        Capability Codes: R - Router, T - Trans-Bridge, B - Source-Route-Bridge
+                          S - Switch, H - Host, I - IGMP, r - Repeater,
+                          V - VoIP-Phone, D - Remotely-Managed-Device,
+                          s - Supports-STP-Dispute
+        Device-ID           Local Intrfce    Hldtme Capability    Platform        Port ID
+        Mgmt-switch
+                            mgmt0             148    R S I         WS-C4948-10GE Gig1/37
+        switch88(FOX1518GRE6)
+                            Eth1/25           164    R S I s       N5K-C5596UP   Eth1/25
+        switch89(FOX1518GQJ2)
+                            Eth1/26           163    R S I s       N5K-C5596UP   Eth1/25
+    

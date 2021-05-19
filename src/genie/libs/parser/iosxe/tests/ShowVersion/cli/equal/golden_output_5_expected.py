@@ -16,6 +16,19 @@ expected_output = {
         "returned_to_rom_by": "Reload Command",
         "system_image": "bootflash:/cat9k_iosxe.BLD_POLARIS_DEV_LATEST_20200702_122021_V17_4_0_67_2.SSA.bin",
         "last_reload_reason": "Reload Command",
+        "air_license_level": "AIR DNA Advantage",
+        "license_package": {
+            "dna-advantage": {
+                "license_level": "dna-advantage",
+                "license_type": "Subscription Smart License",
+                "next_reload_license_level": "dna-advantage"
+            },
+            "network-advantage": {
+                "license_level": "network-advantage",
+                "license_type": "Smart License",
+                "next_reload_license_level": "network-advantage"
+            }
+        },
         "chassis": "C9500-24Y4C",
         "main_mem": "2900319",
         "processor_type": "X86",
@@ -26,6 +39,7 @@ expected_output = {
             "TwentyFive Gigabit Ethernet": "24",
             "Hundred Gigabit Ethernet": "4",
         },
+        "next_reload_air_license_level": "AIR DNA Advantage",
         "mem_size": {"non-volatile configuration": "32768", "physical": "16002516"},
         "disks": {
             "bootflash:.": {"disk_size": "11161600", "type_of_disk": "Bootflash"},

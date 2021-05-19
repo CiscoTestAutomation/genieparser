@@ -1,0 +1,32 @@
+
+                   Sysauthcontrol Disabled
+           Dot1x Protocol Version 3 
+
+        Dot1x Info for Ethernet1/2
+        -----------------------------------
+                              PAE = AUTHENTICATOR
+                      PortControl = NOT AUTO
+                         HostMode = DOUBLE HOST
+                 ReAuthentication = DISABLE
+                      QuietPeriod = 59
+                    ServerTimeout = 29
+                      SuppTimeout = 29
+                     ReAuthPeriod = 59 (From Authentication Server)
+                        ReAuthMax = 1
+                           MaxReq = 2
+                         TxPeriod = 29
+                  RateLimitPeriod = 1
+                  Mac-Auth-Bypass = ENABLED
+
+        Dot1x Authenticator Client List
+        -------------------------------
+                       Supplicant = 53:AB:DE:FF:E5:E5
+                Auth SM State = AUTHENTICATED
+                Auth BEND SM State = IDLE
+                      Port Status = AUTHORIZED
+            Authentication Method = EAP
+                 Authenticated By = Remote
+                     ReAuthPeriod = 59
+                     ReAuthAction = reauthenticate
+                 TimeToNextReauth = 16
+    

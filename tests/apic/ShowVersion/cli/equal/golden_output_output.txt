@@ -1,0 +1,6 @@
+ Role        Pod         Node        Name                      Version              
+ ----------  ----------  ----------  ------------------------  -------------------- 
+ controller  1           1           msl-ifav205-ifc1          5.1(2e)              
+ leaf        1           101         msl-ifav205-leaf1         n9000-15.1(2e)       
+ spine       1           201         msl-ifav205-spine1        n9000-15.1(2e)       
+ spine       1           202         msl-ifav205-spine2        n9000-14.2(2e)       
