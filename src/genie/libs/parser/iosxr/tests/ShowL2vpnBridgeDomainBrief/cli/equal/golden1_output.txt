@@ -1,0 +1,10 @@
+Bridge Group:Bridge-Domain Name  ID    State          Num ACs/up   Num PWs/up    Num PBBs/up Num VNIs/up
+-------------------------------- ----- -------------- ------------ ------------- ----------- -----------
+D:D-w                            0     up             1/1          1/1           0/0         0/0
+d:s-VLAN_20                      1     up             2/2          1/1           0/0         0/0
+MGMT:DSL-MGMT                    2     up             1/0          0/0           0/0         0/0
+WOrd:CODE-123-4567               3     up             1/0          1/0           0/0         0/0
+woRD:THING_PLACE_DIA-765_4321    4     up             1/1          1/1           0/0         0/0
+GO-LEAFS:GO                      9     up             3/2          7/5           0/0         0/0
+admin1:domain1                   6     admin down     1/0          1/0           0/0         0/0
+g1/bd1                           0     up             1/1          1/1
