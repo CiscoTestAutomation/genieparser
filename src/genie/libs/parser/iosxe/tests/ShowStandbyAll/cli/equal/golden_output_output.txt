@@ -39,4 +39,28 @@ GigabitEthernet3 - Group 10
   Standby router is local
   Priority 110 (configured 110)
   Group name is "hsrp-Gi3-10" (default)
-        
+GigabitEthernet4/10.101 - Group 100
+  State is Active
+    3 state changes, last state change 1d
+  Virtual IP address is 10.2.2.253
+  Active virtual MAC address is 0050.56ff.c8cf
+    Local virtual MAC address is 0050.56ff.c8cf (v1 default)
+  Hello time 1 sec, hold time 1 sec
+    Next hello sent in 0.010 secs
+  Preemption enabled
+  Active router is local
+  Standby router is 10.2.2.2, priority 80 (expires in 1.00 sec)
+  Priority 100 (default 100)
+GigabitEthernet4/10.103 - Group 100
+State is Active
+    3 state changes, last state change 1d
+  Virtual IP address is 10.2.2.252
+  Active virtual MAC address is 0050.56ff.c8cf
+    Local virtual MAC address is 0050.56ff.c8cf (v1 default)
+  Hello time 1 sec, hold time 1 sec
+    Next hello sent in 0.100 secs
+  Preemption enabled
+  Active router is local
+  Standby router is 10.2.2.2, priority 80 (expires in 1.00 sec)
+  Priority 100 (default 100)
+  Group name is "hsrp-Gi4/10.103-100" (default)
