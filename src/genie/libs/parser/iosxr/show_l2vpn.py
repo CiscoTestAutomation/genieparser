@@ -478,6 +478,7 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
 
         # VFI 1
         # VFI vfi60 (up)
+        # VFI string_LABEL_01 (up)
         p6 = re.compile(r'^VFI\s+(?P<vfi>\S+)(\s*(\((?P<state>[\w\s]+)\))?\s*)$')
 
         # Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0
