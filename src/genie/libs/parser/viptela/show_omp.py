@@ -171,10 +171,11 @@ class ShowOmpPeers(ShowOmpPeersSchema):
 
         peer_dict = {}
 
-        #10.220.100.3    vsmart  1         1         100       up       43:06:01:54      3/3/2
-        p1 = re.compile(r'^(?P<ip_add>\d\S+) +(?P<type>\S+) +(?P<domain_id>\S+) +(?P<overlay_id>\S+) +(?P<site_id>\S+) +(?P<state>\S+) +(?P<uptime>\S+) +(?P<route>\S+)$')
+        # 1.1.1.5          vsmart  1         1         4294945506up       27:03:26:37      4012/0/4012
+        # 10.1.1.1         vedge   1         1         10001985  up       1:23:10:51       884/0/236
+        p1 = re.compile(r'^(?P<ip_add>\d\S+)\s+(?P<type>\S+)\s+(?P<domain_id>\S+)\s+(?P<overlay_id>\S+)\s+'
+                        r'(?P<site_id>\d+)(|\s+)(?P<state>\S+)\s+(?P<uptime>\S+)\s+(?P<route>\S+)$')
 
-        
         for line in out.splitlines():
             line = line.strip()
 
