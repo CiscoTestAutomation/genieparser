@@ -37,7 +37,6 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                             Any(): {  # p3-- int(group[area]) --0
                                                 Optional("interfaces"): {
                                                     Any(): {  # p1-- group[interface] -- GigabitEthernet0/0/0/0
-                                                        "name": str,
                                                         "enable": bool,
                                                         "line_protocol": bool,
                                                         "link_local_address": str,
@@ -238,7 +237,6 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                     setdefault(af, {})
 
                 interface_name = group['interface']
-                interface_dict.update({'interface': interface_name})
                 interface_dict.update({'enable': bool_dict[group['enable']]})
                 interface_dict.update({'line_protocol': bool_dict[group['line_protocol']]})
                 continue

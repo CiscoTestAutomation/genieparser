@@ -11,7 +11,6 @@ expected_output = {
                                         0: {
                                             "interfaces": {
                                                 "GigabitEthernet0/0/0/0": {
-                                                    "interface": "GigabitEthernet0/0/0/0",
                                                     "enable": True,
                                                     "line_protocol": True,
                                                     "link_local_address": "fe80:100:10::1",
