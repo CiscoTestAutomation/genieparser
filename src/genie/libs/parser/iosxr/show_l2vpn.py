@@ -448,7 +448,8 @@ class ShowL2vpnBridgeDomain(ShowL2vpnBridgeDomainSchema):
         ret_dict = {}
 
         # Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
-        # Bridge group: EVPN-Multicast, bridge-domain: EVPN-Multicast-BTV, id: 0, state: up, ShgId: 0, MSTi: 0
+        # Bridge group: ev-Multicast, bridge-domain: ev-Multicast-TV, id: 1, state: up, ShgId: 0, MSTi: 0
+        # Bridge group: a_b, bridge-domain: CD, id: 2, state: admin down (Shutdown), ShgId: 0, MSTi: 0
         p1 = re.compile(r'^Bridge +group: +(?P<bridge_group>\S+), +bridge\-domain: +'
             '(?P<bridge_domain>\S+), +id: +(?P<id>\d+), +state: +(?P<state>[\w\s\(\)]+), +'
             'ShgId: +(?P<shg_id>\d+), +MSTi: +(?P<mst_i>\d+)$')
