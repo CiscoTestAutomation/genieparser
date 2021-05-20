@@ -21,7 +21,7 @@ expected_output = {
                                                     "bfd": {
                                                         "bfd_status": "enabled",
                                                         "interval": 150,
-                                                        "multi": 3,
+                                                        "multiplier": 3,
                                                         "mode": "Default",
                                                     },
                                                     "transmit_delay": 1,
@@ -57,7 +57,6 @@ expected_output = {
                                                     },
                                                 },
                                                 "GigabitEthernet0/0/0/1": {
-                                                    "interface": "GigabitEthernet0/0/0/1",
                                                     "enable": True,
                                                     "line_protocol": "up",
                                                     "link_local_address": "fe80:100:20::1",
@@ -68,7 +67,7 @@ expected_output = {
                                                     "bfd": {
                                                         "bfd_status": "enabled",
                                                         "interval": 150,
-                                                        "multi": 3,
+                                                        "multiplier": 3,
                                                         "mode": "Default",
                                                     },
                                                     "transmit_delay": 1,
