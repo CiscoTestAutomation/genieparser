@@ -38,11 +38,11 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                 Optional("interfaces"): {
                                                     Any(): {  # p1-- group[interface] -- GigabitEthernet0/0/0/0
                                                         "enable": bool,
-                                                        "line_protocol": bool,
+                                                        "line_protocol": str,
                                                         "link_local_address": str,
-                                                        "process_id": str,
                                                         "router_id": str,
                                                         "interface_type": str,
+                                                        "interface_id": int,
                                                         Optional("bfd"): {
                                                             Optional("bfd_status"): str,
                                                             Optional("interval"): int,
@@ -238,7 +238,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
                 interface_name = group['interface']
                 interface_dict.update({'enable': bool_dict[group['enable']]})
-                interface_dict.update({'line_protocol': bool_dict[group['line_protocol']]})
+                interface_dict.update({'line_protocol': group['line_protocol']})
                 continue
 
             # Link Local address fe80:100:10::1, Interface ID 7

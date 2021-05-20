@@ -12,7 +12,7 @@ expected_output = {
                                             "interfaces": {
                                                 "GigabitEthernet0/0/0/0": {
                                                     "enable": True,
-                                                    "line_protocol": True,
+                                                    "line_protocol": "up",
                                                     "link_local_address": "fe80:100:10::1",
                                                     "interface_id": 7,
                                                     "router_id": "25.97.1.1",
@@ -59,7 +59,7 @@ expected_output = {
                                                 "GigabitEthernet0/0/0/1": {
                                                     "interface": "GigabitEthernet0/0/0/1",
                                                     "enable": True,
-                                                    "line_protocol": True,
+                                                    "line_protocol": "up",
                                                     "link_local_address": "fe80:100:20::1",
                                                     "interface_id": 8,
                                                     "router_id": "25.97.1.1",
