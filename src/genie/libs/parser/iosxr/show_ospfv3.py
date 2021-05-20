@@ -472,10 +472,8 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
     cli_command = ['show ospfv3 vrf all-inclusive neighbor detail']
 
     def cli(self, output=None):
-        if output:
-            out = output
-        else:
-            out = self.device.execute(self.cli_command[0])
+        if output is None:
+            output = self.device.execute(self.cli_command[0])
 
         ret_dict = {}
 
