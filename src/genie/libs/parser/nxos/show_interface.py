@@ -2820,9 +2820,10 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         p1 = re.compile(r'^Port +VRF +Status +IP Address +Speed +MTU$')
 
         # mgmt0  --           up     172.25.143.76                           1000     1500
+        # mgmt0  --           up     172.25.143.76                           --     1500
         p2 = re.compile(r'^(?P<port>[a-zA-Z0-9]+) +(?P<vrf>[a-zA-Z0-9\-]+)'
                         r' +(?P<status>[a-zA-Z]+) +(?P<ip_address>(\S+))'
-                        r' +(?P<speed>[0-9]+) +(?P<mtu>[0-9]+)$')
+                        r' +(?P<speed>\S+) +(?P<mtu>[0-9]+)$')
 
         # Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
         p3 = re.compile(r'^Ethernet +VLAN +Type +Mode +Status +Reason +Speed'
