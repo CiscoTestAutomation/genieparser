@@ -594,16 +594,16 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
 
             m = p11.match(line)
             if m:
-                stats_dict.update \
-                        ({
+                stats_dict.update(
+                    {
                         "last_retrans_scan_length": int(m.groupdict()['length']),
                         "last_retrans_max_scan_length": int(m.groupdict()['maximum'])
                     })
 
             m = p12.match(line)
             if m:
-                stats_dict.update \
-                        ({
+                stats_dict.update(
+                    {
                         "last_retrans_scan_time_msec": int(m.groupdict()['scan_time']),
                         "last_retrans_max_scan_time_msec": int(m.groupdict()['max_time'])
                     })
