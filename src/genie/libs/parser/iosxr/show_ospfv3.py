@@ -473,108 +473,121 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
 
     def cli(self, output=None):
         if output:
-            # if an output file is passed use it, otherwise generate the output
             out = output
         else:
-            cmd = self.cli_command[0]
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command[0])
 
         ret_dict = {}
 
         # OSPFv3 supports both ipv4 and ipv6 but the information is not in the show output provided.
         af = "ipv6"
 
-        # Neighbors for OSPFv3 <name>, VRF <name>
+        # Neighbors for OSPFv3 mpls1, VRF default
         p1 = re.compile(r"^Neighbors +for +OSPFv3 +(?P<instance>(\S+)), +(?P<vrf>(VRF \S+))$")
 
-        # Neighbor <address>
+        # Neighbor 25.97.1.1
         p2 = re.compile(r"^Neighbor +(?P<neighbor>(\S+))$")
-        # In the area <area> via interface <interface>
+
+        # In the area 0 via interface GigabitEthernet0/0/0/0.1
         p3 = re.compile(r"^In the area +(?P<area>([0-9]+)) via interface +(?P<interface>(\S+))$")
-        # Neighbor: interface-id <id> link-local address <ipv6 address>
+
+        # Neighbor: interface-id 14, link-local address fe80::20c:29ff:fe6b:1a0
         p4 = re.compile(r"^Neighbor: interface-id +(?P<interface_id>([0-9]+)), "
                         r"link-local address +(?P<link_local>(['a-z:0-9']+))$")
-        # Neighbor priority is <int1>, State is <state>, <int2> state changes
+
+        # Neighbor priority is 1, State is FULL, 6 state changes
         p5 = re.compile(r"^Neighbor priority is +(?P<neighbor_priority>([0-9])+), "
                         r"State is +(?P<state>([A-Z]+)), "
                         r"+(?P<state_changes>([0-9]+)) state changes$")
-        # Options is <hex>
+
+        # Options is 0x13
         p6 = re.compile(r"^Options +is +(?P<options>(\S+))$")
-        # Dead timer due in <time>
+
+        # Dead timer due in 00:00:38
         p7 = re.compile(r"^Dead timer due in (?P<time>[0-9:]+)$")
-        # Neighbor is up for <time>
+
+        # Neighbor is up for 00:31:44
         p8 = re.compile(r"^Neighbor is up for (?P<time>[0-9:]+)$")
-        # Index <string> retransmission queue length <int1>, number of retransmission <int2>
+
+        # Index 1/46/46, retransmission queue length 0, number of retransmission 0
         p9 = re.compile(r"^Index +(?P<index>(\S+)) +retransmission +queue +length +(?P<ql>(\d+)), "
                         r"+number +of +retransmission +(?P<num_retrans>(\d+))$")
-        # First <string> Next <string>
+
+        # First 0(0)/0(0)/0(0) Next 0(0)/0(0)/0(0)
         p10 = re.compile(r"^First +(?P<first>(\S+)) +Next +(?P<next>(\S+))$")
-        # Last retransmission scan length is <int1>, maximum is <int2>
+
+        # Last retransmission scan length is 0, maximum is 0
         p11 = re.compile(r"^Last retransmission scan length is +(?P<length>([0-9]+)), "
                          r"maximum is +(?P<maximum>([0-9]+))$")
-        # Last retransmission time is <string1>, maximum is <string2>
+
+        # Last retransmission scan time is 0 msec, maximum is 0 msec
         p12 = re.compile(r"^Last retransmission scan time is (?P<scan_time>([0-9]+)), "
                          r"maximum is (?P<max_time>([0-9]+))")
 
-        # Total neighbor count <int>
+        # Total neighbor count: 24
         p13 = re.compile(r"^Total +neighbor +count: +(?P<num>(\d+))$")
 
         # loop through output and add to ret_dict
-        for line in out.splitlines():
+        for line in output.splitlines():
             line = line.strip()
 
+            # Neighbors for OSPFv3 mpls1, VRF default
             m = p1.match(line)
             if m:
-                instance = str(m.groupdict()["instance"])
-                vrf = str(m.groupdict()['vrf'])
+                instance = m.groupdict()["instance"]
+                vrf = m.groupdict()['vrf']
 
                 instance_dict = ret_dict.setdefault('vrf', {}).setdefault(vrf, {}). \
                     setdefault('address_family', {}).setdefault(af, {}). \
                     setdefault('instance', {}).setdefault(instance, {})
 
+            # Neighbor 25.97.1.1
             m = p2.match(line)
             if m:
-                neighbor_rid = str(m.groupdict()['neighbor'])
+                neighbor_rid = m.groupdict()['neighbor']
 
+            # In the area 0 via interface GigabitEthernet0/0/0/0.1
             m = p3.match(line)
             if m:
                 area = int(m.groupdict()['area'])
-                interface = str(m.groupdict()['interface'])
+                interface = m.groupdict()['interface']
                 interface_dict = instance_dict.setdefault('area', {}).setdefault(area, {}). \
                     setdefault('neighbor_router_id', {}).setdefault(neighbor_rid, {}). \
                     setdefault('interface', {}).setdefault(interface, {})
 
+            # Neighbor: interface-id 14, link-local address fe80::20c:29ff:fe6b:1a0
             m = p4.match(line)
             if m:
                 neighbor_dict = interface_dict.setdefault('Neighbor', {})
                 neighbor_dict.update({'interface-id': int(m.groupdict()['interface_id']),
-                                      'link-local_address': str(m.groupdict()['link_local'])
+                                      'link-local_address': m.groupdict()['link_local']
                                       })
 
+            # Neighbor priority is 1, State is FULL, 6 state changes
             m = p5.match(line)
             if m:
-                p5info = \
-                    {
-                        'priority': int(m.groupdict()['neighbor_priority']),
-                        'state': str(m.groupdict()['state']),
-                        'state_changes': int(m.groupdict()['state_changes'])
-                    }
+                p5info = {'priority': int(m.groupdict()['neighbor_priority']),
+                          'state': m.groupdict()['state'],
+                          'state_changes': int(m.groupdict()['state_changes'])}
 
                 interface_dict.update(p5info)
 
+            # Options is 0x13
             m = p6.match(line)
             if m:
-                options = str(m.groupdict()['options'])
-                interface_dict.update({'options': options})
+                interface_dict.update({'options': m.groupdict()['options']})
 
+            # Dead timer due in 00:00:38
             m = p7.match(line)
             if m:
                 interface_dict.update({'dead_timer': m.groupdict()['time']})
 
+            # Neighbor is up for 00:31:44
             m = p8.match(line)
             if m:
                 interface_dict.update({'neighbor_uptime': m.groupdict()['time']})
 
+            # Index 1/46/46, retransmission queue length 0, number of retransmission 0
             m = p9.match(line)
             if m:
                 interface_dict.update({'index': m.groupdict()['index']})
@@ -585,29 +598,27 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
                         "number_of_retransmissions": int(m.groupdict()['num_retrans'])
                     })
 
+            # First 0(0)/0(0)/0(0) Next 0(0)/0(0)/0(0)
             m = p10.match(line)
             if m:
-                first = str(m.groupdict()['first'])
-                nxt = str(m.groupdict()['next'])
+                first = m.groupdict()['first']
+                nxt = m.groupdict()['next']
                 interface_dict.update({'first': first})
                 interface_dict.update({'next': nxt})
 
+            # Last retransmission scan length is 0, maximum is 0
             m = p11.match(line)
             if m:
-                stats_dict.update(
-                    {
-                        "last_retrans_scan_length": int(m.groupdict()['length']),
-                        "last_retrans_max_scan_length": int(m.groupdict()['maximum'])
-                    })
+                stats_dict.update({"last_retrans_scan_length": int(m.groupdict()['length']),
+                                   "last_retrans_max_scan_length": int(m.groupdict()['maximum'])})
 
+            # Last retransmission scan time is 0 msec, maximum is 0 msec
             m = p12.match(line)
             if m:
-                stats_dict.update(
-                    {
-                        "last_retrans_scan_time_msec": int(m.groupdict()['scan_time']),
-                        "last_retrans_max_scan_time_msec": int(m.groupdict()['max_time'])
-                    })
+                stats_dict.update({"last_retrans_scan_time_msec": int(m.groupdict()['scan_time']),
+                                   "last_retrans_max_scan_time_msec": int(m.groupdict()['max_time'])})
 
+            # Total neighbor count: 24
             m = p13.match(line)
             if m:
                 instance_dict.update({'total_neighbor_count': int(m.groupdict()['num'])})
