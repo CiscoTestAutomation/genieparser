@@ -430,7 +430,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouterSchema(MetaParser):
                                                                     "options": str,
                                                                     "lsa_id": str,
                                                                     "age": int,
-                                                                    "type": int,
+                                                                    "type": str,
                                                                     "adv_router": str,
                                                                     "seq_num": str,
                                                                     "checksum": str,
@@ -513,17 +513,11 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
         }
 
         # OSPFv3 Router with ID (96.96.96.96) (Process ID mpls1 VRF default)
-        p1 = re.compile(
-            r"^OSPF +Router +with +ID +\((?P<router_id>(\S+))\)"
-            " +\(Process +ID +(?P<instance>(\S+))"
-            "(?: +VRF +(?P<vrf>(\S+)))?\)$"
-        )
-
+        p1 = re.compile(r'^OSPFv3 +Router +with +ID +\((?P<router_id>(\S+))\) +\(Process +ID +(?P<instance>(\S+))(?: +VRF +(?P<vrf>(\S+)))?\)$')
+        
         # Router Link States (Area 0)
-        p2 = re.compile(
-            r"^(?P<lsa_type_name>(.*)) +Link +States"
-            "(?: +\(Area +(?P<area>(\S+))\))?$"
-        )
+        p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
+                        ' +(?P<area>(\S+))\)$')
 
         # Routing Bit Set on this LSA
         p3 = re.compile(r"^Routing +Bit +Set +on +this +LSA$")
@@ -604,7 +598,10 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
             # Router Link States (Area 0)
             m = p2.match(line)
             if m:
-                lsa_type = lsa_type_mapping[db_type]
+                # get lsa_type
+                lsa_type_key = m.groupdict()['lsa_type'].lower()
+                if lsa_type_key in lsa_type_mapping:
+                    lsa_type = lsa_type_mapping[lsa_type_key]
 
                 # Set area
                 if m.groupdict()["area"]:
@@ -650,7 +647,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
             # LS Type: Router Links
             m = p6.match(line)
             if m:
-                lsa_type = lsa_type_mapping[db_type]
+                lsa_type = str(m.groupdict()["lsa_type"])
                 continue
 
             # Link State ID: 0
@@ -682,11 +679,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
                 header_dict = lsa_dict.setdefault("ospfv3", {}).setdefault("header", {})
 
                 # Set db_dict
-                db_dict = (
-                    lsa_dict.setdefault("ospfv3", {})
-                    .setdefault("body", {})
-                    .setdefault(db_type, {})
-                )
+                db_dict = lsa_dict.setdefault("ospfv3", {}).setdefault("body", {})
 
                 # Set previously parsed values
                 try:
@@ -757,7 +750,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
                 continue
 
             # Link connected to: another Router (point-to-point)
-            m = p14_2_1.match(line)
+            m = p14_2.match(line)
             if m:
                 link_type = str(m.groupdict()["type"]).lower()
                 continue
@@ -765,7 +758,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
             # Link Metric: 65535
             m = p15.match(line)
             if m:
-                link_idx = len(db_dict.get("", {links})) + 1
+                link_idx = len(db_dict.get("links", {})) + 1
                 link_dict = db_dict.setdefault("links", {}).setdefault(link_idx, {})
 
                 link_dict["type"] = link_type
