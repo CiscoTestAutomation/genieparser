@@ -2942,7 +2942,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
         #  Used as bestpath:     n/a          0
         #  Used as multipath:    n/a          0
         p22 = re.compile('^(?P<item>([a-zA-Z\s\-]+)):? +(?P<sent>(n/a|\d+))'
-                         ' +(?P<recv>(n/a|\d+))(?:\(Consumes +(?P<bytes>(\d+))'
+                         ' +(?P<recv>(n/a|\d+))(?:\s+\(Consumes +(?P<bytes>(\d+))'
                          ' +bytes\))?$')
 
         # Do log neighbor state changes (via global configuration)
@@ -3512,6 +3512,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
             #  Keepalives:            75         74
             #  Route Refresh:          0          0
             #  Total:                 87         81
+            #  Prefixes Current:     403        201 (Consumes 27336 bytes)
             m = p22.match(line)
             if m:
                 group = m.groupdict()
