@@ -253,7 +253,7 @@ class TestShowLldpTraffic(unittest.TestCase):
 class TestShowLldpNeighborsDetail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_output = {'execute.return_value': '''
-                Chassis id: abcd.abcd.abcd
+                Chassis id: 4321.abcd.1234
                 Port id: Te0/1/0/4/0
                 Local Port id: Eth1/1
                 Port Description: BAR
@@ -267,7 +267,23 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                 Management Address IPV6: not advertised
                 Vlan ID: not advertised
                 
-                Chassis id: 001e.7a8a.f900
+                Chassis id: 4321.abcd.1234
+                Port id: Te0/1/0/5/0
+                Local Port id: Eth1/5
+                Port Description: GigabitEthernet6
+                System Name: R1_xe.cisco.com
+                System Description: Cisco IOS Software [Fuji], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.1, RELEASE SOFTWARE (fc2)
+                Technical Support: http://www.cisco.com/techsupport
+                Copyright (c) 1986-2018 by Cisco Systems, Inc.
+                Compiled Tue 17-Jul-18 16:57 by mcp
+                Time remaining: 95 seconds
+                System Capabilities: B, R
+                Enabled Capabilities: R
+                Management Address: 172.16.1.73
+                Management Address IPV6: 2001:10:12:90::1
+                Vlan ID: not advertised
+
+                Chassis id: 4321.abcd.1234
                 Port id: Gi7
                 Local Port id: Eth1/6
                 Port Description: GigabitEthernet7
@@ -288,61 +304,88 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
                      }
 
     golden_parsed_output = {
-        "interfaces": {
-            "Ethernet1/1": {
-                "port_id": {
-                    "TenGigabitEthernet0/1/0/4/0": {
-                        "neighbors": {
-                            "ROUTER_Y": {
-                                "chassis_id": "abcd.abcd.abcd",
-                                "port_description": "BAR",
-                                "system_name": "ROUTER_Y",
-                                "system_description": "Cisco IOS XR Software, Version 5.3.4[Default]Copyright (c) 2018 by Cisco Systems, Inc., ASR9K Series\n",
-                                "time_remaining": 92,
-                                "capabilities": {
-                                    "router": {
-                                        "name": "router",
-                                        "system": True,
-                                        "enabled": True,
-                                    }
-                                },
-                                "management_address_v4": "not advertised",
-                                "management_address_v6": "not advertised",
-                                "vlan_id": "not advertised",
-                            }
+    "interfaces": {
+        "Ethernet1/1": {
+            "port_id": {
+                "TenGigabitEthernet0/1/0/4/0": {
+                    "neighbors": {
+                        "ROUTER_Y": {
+                            "chassis_id": "4321.abcd.1234",
+                            "port_description": "BAR",
+                            "system_name": "ROUTER_Y",
+                            "system_description": "Cisco IOS XR Software, Version 5.3.4[Default]Copyright (c) 2018 by Cisco Systems, Inc., ASR9K Series\n",
+                            "time_remaining": 92,
+                            "capabilities": {
+                                "router": {
+                                    "name": "router",
+                                    "system": True,
+                                    "enabled": True,
+                                }
+                            },
+                            "management_address_v4": "not advertised",
+                            "management_address_v6": "not advertised",
+                            "vlan_id": "not advertised",
                         }
                     }
                 }
-            },
-            "Ethernet1/6": {
-                "port_id": {
-                    "GigabitEthernet7": {
-                        "neighbors": {
-                            "R1_xe.cisco.com": {
-                                "chassis_id": "001e.7a8a.f900",
-                                "port_description": "GigabitEthernet7",
-                                "system_name": "R1_xe.cisco.com",
-                                "system_description": "Cisco IOS Software [Fuji], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.1, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2018 by Cisco Systems, Inc.\nCompiled Tue 17-Jul-18 16:57 by mcp",
-                                "time_remaining": 100,
-                                "capabilities": {
-                                    "bridge": {"name": "bridge", "system": True},
-                                    "router": {
-                                        "name": "router",
-                                        "system": True,
-                                        "enabled": True,
-                                    },
-                                },
-                                "management_address_v4": "172.16.1.73",
-                                "management_address_v6": "2001:10:12:90::1",
-                                "vlan_id": "not advertised",
-                            }
-                        }
-                    }
-                }
-            },
+            }
         },
-        "total_entries": 2,
-    }
+        "Ethernet1/5": {
+            "port_id": {
+                "TenGigabitEthernet0/1/0/5/0": {
+                    "neighbors": {
+                        "R1_xe.cisco.com": {
+                            "chassis_id": "4321.abcd.1234",
+                            "port_description": "GigabitEthernet6",
+                            "system_name": "R1_xe.cisco.com",
+                            "system_description": "Cisco IOS Software [Fuji], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.1, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2018 by Cisco Systems, Inc.\nCompiled Tue 17-Jul-18 16:57 by mcp",
+                            "time_remaining": 95,
+                            "capabilities": {
+                                "bridge": {"name": "bridge", "system": True},
+                                "router": {
+                                    "name": "router",
+                                    "system": True,
+                                    "enabled": True,
+                                },
+                            },
+                            "management_address_v4": "172.16.1.73",
+                            "management_address_v6": "2001:10:12:90::1",
+                            "vlan_id": "not advertised",
+                        }
+                    }
+                }
+            }
+        },
+        "Ethernet1/6": {
+            "port_id": {
+                "GigabitEthernet7": {
+                    "neighbors": {
+                        "R1_xe.cisco.com": {
+                            "chassis_id": "4321.abcd.1234",
+                            "port_description": "GigabitEthernet7",
+                            "system_name": "R1_xe.cisco.com",
+                            "system_description": "Cisco IOS Software [Fuji], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.1, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2018 by Cisco Systems, Inc.\nCompiled Tue 17-Jul-18 16:57 by mcp",
+                            "time_remaining": 100,
+                            "capabilities": {
+                                "bridge": {"name": "bridge", "system": True},
+                                "router": {
+                                    "name": "router",
+                                    "system": True,
+                                    "enabled": True,
+                                },
+                            },
+                            "management_address_v4": "172.16.1.73",
+                            "management_address_v6": "2001:10:12:90::1",
+                            "vlan_id": "not advertised",
+                        }
+                    }
+                }
+            }
+        },
+    },
+    "total_entries": 2,
+}
+
 
     def test_empty(self):
         self.maxDiff = None
