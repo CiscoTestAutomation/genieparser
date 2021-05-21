@@ -5,7 +5,7 @@ expected_output = {
                 'ipv6': {
                     'instance': {
                         'mpls1': {
-                            'router_id': '25.97.1.1',
+                            'router_id': '10.94.1.1',
                             'area': {
                                 '0.0.0.0': {
                                     'area_id': 0,
@@ -14,8 +14,8 @@ expected_output = {
                                             1: {
                                                 'lsa_type': 1,
                                                 'lsas': {
-                                                    '0 25.97.1.1': {
-                                                        'adv_router': '25.97.1.1',
+                                                    '0 10.94.1.1': {
+                                                        'adv_router': '10.94.1.1',
                                                         'fragment_id': 0,
                                                         'ospfv3': {
                                                             'header': {
@@ -26,8 +26,8 @@ expected_output = {
                                                             }
                                                         }
                                                     },
-                                                    '0 95.95.95.95': {
-                                                        'adv_router': '95.95.95.95',
+                                                    '0 10.145.95.95': {
+                                                        'adv_router': '10.145.95.95',
                                                         'fragment_id': 0,
                                                         'ospfv3': {
                                                             'header': {
@@ -38,8 +38,8 @@ expected_output = {
                                                             }
                                                         }
                                                     },
-                                                    '0 100.100.100.100': {
-                                                        'adv_router': '100.100.100.100',
+                                                    '0 10.220.100.100': {
+                                                        'adv_router': '10.220.100.100',
                                                         'fragment_id': 0,
                                                         'ospfv3': {
                                                             'header': {
@@ -55,8 +55,8 @@ expected_output = {
                                             8: {
                                                 'lsa_type': 8,
                                                 'lsas': {
-                                                    '7 25.97.1.1': {
-                                                        'adv_router': '25.97.1.1',
+                                                    '7 10.94.1.1': {
+                                                        'adv_router': '10.94.1.1',
                                                         'link_id': 7,
                                                         'ospfv3': {
                                                             'header': {
@@ -66,8 +66,8 @@ expected_output = {
                                                             }
                                                         }
                                                     },
-                                                    '6 100.100.100.100': {
-                                                        'adv_router': '100.100.100.100',
+                                                    '6 10.220.100.100': {
+                                                        'adv_router': '10.220.100.100',
                                                         'link_id': 6,
                                                         'ospfv3': {
                                                             'header': {
@@ -77,8 +77,8 @@ expected_output = {
                                                             }
                                                         }
                                                     },
-                                                    '8 25.97.1.1': {
-                                                        'adv_router': '25.97.1.1',
+                                                    '8 10.94.1.1': {
+                                                        'adv_router': '10.94.1.1',
                                                         'link_id': 8,
                                                         'ospfv3': {
                                                             'header': {
@@ -88,8 +88,8 @@ expected_output = {
                                                             }
                                                         }
                                                     },
-                                                    '5 95.95.95.95': {
-                                                        'adv_router': '95.95.95.95',
+                                                    '5 10.145.95.95': {
+                                                        'adv_router': '10.145.95.95',
                                                         'link_id': 5,
                                                         'ospfv3': {
                                                             'header': {
@@ -104,8 +104,8 @@ expected_output = {
                                             9: {
                                                 'lsa_type': 9,
                                                 'lsas': {
-                                                    '0 25.97.1.1': {
-                                                        'adv_router': '25.97.1.1',
+                                                    '0 10.94.1.1': {
+                                                        'adv_router': '10.94.1.1',
                                                         'link_id': 0,
                                                         'ospfv3': {
                                                             'header': {
@@ -116,8 +116,8 @@ expected_output = {
                                                             }
                                                         }
                                                     },
-                                                    '0 95.95.95.95': {
-                                                        'adv_router': '95.95.95.95',
+                                                    '0 10.145.95.95': {
+                                                        'adv_router': '10.145.95.95',
                                                         'link_id': 0,
                                                         'ospfv3': {
                                                             'header': {
@@ -128,8 +128,8 @@ expected_output = {
                                                             }
                                                         }
                                                     },
-                                                    '0 100.100.100.100': {
-                                                        'adv_router': '100.100.100.100',
+                                                    '0 10.220.100.100': {
+                                                        'adv_router': '10.220.100.100',
                                                         'link_id': 0,
                                                         'ospfv3': {
                                                             'header': {

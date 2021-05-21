@@ -6,9 +6,9 @@ Thu Apr 29 15:14:46.281 UTC
 Neighbors for OSPFv3 1, VRF default
 
 Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
-1.1.1.1         1     FULL/DR         00:00:34    22              GigabitEthernet0/0/0/0.110
+10.4.1.1         1     FULL/DR         00:00:34    22              GigabitEthernet0/0/0/0.110
     Neighbor is up for 2d20h
-3.3.3.3         1     FULL/BDR        00:00:33    136             GigabitEthernet0/0/0/1.110
+10.36.3.3         1     FULL/BDR        00:00:33    136             GigabitEthernet0/0/0/1.110
     Neighbor is up for 2d20h
 
 Total neighbor count: 2
@@ -18,7 +18,7 @@ Total neighbor count: 2
 Neighbors for OSPFv3 1, VRF VRF1
 
 Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
-3.3.3.3         1     FULL/BDR        00:00:36    140             GigabitEthernet0/0/0/1.410
+10.36.3.3         1     FULL/BDR        00:00:36    140             GigabitEthernet0/0/0/1.410
     Neighbor is up for 2d20h
 
 Total neighbor count: 1

@@ -26,7 +26,7 @@ expected_output = {
             "physical_location": "",
             "system_name": "NewAgg1",
             "management_addresses": {"192.168.1.30": {}},
-            "interface_addresses": {"1.1.1.1": {}},
+            "interface_addresses": {"10.4.1.1": {}},
             "capabilities": "Router Switch Supports-STP-Dispute",
             "platform": "N9K-C93360YC-FX2",
             "port_id": "Ethernet1/7",

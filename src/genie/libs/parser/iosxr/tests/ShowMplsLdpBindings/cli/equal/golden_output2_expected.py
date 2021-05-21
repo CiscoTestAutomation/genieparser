@@ -1,6 +1,6 @@
 expected_output = {
     'lib_entry': {
-        '5.43.9.98/32': {
+        '10.9.9.98/32': {
                 'rev': 6,
                 'local_binding': {
                     'label': 'IMP-NULL'

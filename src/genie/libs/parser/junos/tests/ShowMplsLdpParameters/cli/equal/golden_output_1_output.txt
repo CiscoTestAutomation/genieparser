@@ -1,7 +1,7 @@
 LDP Parameters:
   Role: Active
   Protocol Version: 1
-  Router ID: 1.1.1.1
+  Router ID: 10.4.1.1
   Null Label:
     IPv4: Implicit
   Session:
@@ -14,7 +14,7 @@ LDP Parameters:
     Targeted Hellos: Holdtime:90 sec, Interval:10 sec
     Quick-start: Enabled (by default)
     Transport address:
-      IPv4: 1.1.1.1
+      IPv4: 10.4.1.1
   Graceful Restart:
     Enabled
     Reconnect Timeout:120 sec, Forwarding State Holdtime:180 sec

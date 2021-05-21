@@ -8,7 +8,7 @@ expected_output = {
                             "area": {
                                 0: {
                                     "neighbor_router_id": {
-                                        "25.97.1.1": {
+                                        "10.94.1.1": {
                                             "interface": {
                                                 "GigabitEthernet0/0/0/0.1": {
                                                     "Neighbor": {
