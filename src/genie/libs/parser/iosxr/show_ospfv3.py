@@ -694,7 +694,7 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
                     pass
                 try:
                     header_dict["options"] = options
-                    del option
+                    del options
                 except Exception:
                     pass
                 try:
