@@ -1,5 +1,5 @@
 RP/0/RP0/CPU0:F11-sjkIAN103#show mpls ldp discovery detail
-Mon Sep 14 17:55:44.713 JST
+Mon Sep 14 17:55:44.713 EST
 
 Local LDP Identifier: 25.97.1.1:0
 Discovery Sources:

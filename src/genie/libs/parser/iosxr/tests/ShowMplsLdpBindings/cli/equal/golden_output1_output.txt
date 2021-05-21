@@ -1,5 +1,5 @@
 RP/0/RP0/CPU0:F11-sjkIAN103#show mpls ldp bindings
-        Mon Sep 14 19:08:39.424 JST
+        Mon Sep 14 19:08:39.424 EST
 
         25.97.1.1/32, rev 2
                 Local binding: label: ImpNull

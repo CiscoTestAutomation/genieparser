@@ -1,5 +1,5 @@
 RP/0/RP0/CPU0:F97-sjkIAN103#show bgp nexthops 16.16.16.16
-Tue Oct 13 18:31:28.036 JST
+Tue Oct 13 18:31:28.036 EST
 Nexthop: 16.16.16.16
   VRF: default
   Nexthop ID: 0x6000074, Version: 0x0

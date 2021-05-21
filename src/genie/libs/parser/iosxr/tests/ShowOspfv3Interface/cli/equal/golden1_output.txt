@@ -1,4 +1,4 @@
-Mon Apr 12 10:50:20.204 JST
+Mon Apr 12 10:50:20.204 EST
 
 GigabitEthernet0/0/0/0 is up, line protocol is up
   Link Local address fe80:100:10::1, Interface ID 7

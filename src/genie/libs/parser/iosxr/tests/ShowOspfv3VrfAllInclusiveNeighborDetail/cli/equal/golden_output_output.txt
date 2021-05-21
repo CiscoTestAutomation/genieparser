@@ -1,4 +1,4 @@
-Fri May 14 18:47:29.125 JST
+Fri May 14 18:47:29.125 EST
 
 # Indicates Neighbor awaiting BFD session up
 

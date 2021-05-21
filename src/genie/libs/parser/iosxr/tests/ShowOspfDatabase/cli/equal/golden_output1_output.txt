@@ -1,4 +1,4 @@
-Mon Apr 12 11:25:07.259 JST
+Mon Apr 12 11:25:07.259 EST
 
 
             OSPF Router with ID (25.97.1.1) (Process ID mpls1)

@@ -1,4 +1,4 @@
-Tue Oct 13 18:31:23.355 JST
+Tue Oct 13 18:31:23.355 EST
 16.16.16.16/32, version 13285, internal 0x1000001 0x0 (ptr 0x78b55d78) [2], 0x0 (0x78b064d8), 0xa00 (0x7a1a60a8)
  Updated Oct 13 18:18:19.680
  Prefix Len 32, traffic index 0, precedence n/a, priority 3

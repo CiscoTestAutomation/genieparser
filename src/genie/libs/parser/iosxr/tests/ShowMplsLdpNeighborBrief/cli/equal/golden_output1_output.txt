@@ -1,4 +1,4 @@
-Mon Sep 14 15:14:28.051 JST
+Mon Sep 14 15:14:28.051 EST
 
 Peer               GR  NSR  Up Time     Discovery   Addresses     Labels    
                                         ipv4  ipv6  ipv4  ipv6  ipv4   ipv6 
