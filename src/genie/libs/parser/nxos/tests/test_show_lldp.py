@@ -14,6 +14,7 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError, \
 from genie.libs.parser.nxos.show_lldp import ShowLldpAll, ShowLldpTimers, \
     ShowLldpTlvSelect, ShowLldpNeighborsDetail, ShowLldpTraffic
 
+
 # =================================
 # Unit test for 'show lldp all'
 # =================================
@@ -95,7 +96,7 @@ class TestShowLldpTimers(unittest.TestCase):
             Hold multiplier in seconds: 4
             Notification interval in seconds: 5
     '''
-    }
+                       }
 
     golden_parsed_output_1 = {
         'hello_timer': 30,
@@ -126,6 +127,7 @@ class TestShowLldpTimers(unittest.TestCase):
         obj = ShowLldpTimers(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 
 # =================================
 # Unit test for 'show lldp tlv-select'
@@ -199,8 +201,8 @@ class TestShowLldpTraffic(unittest.TestCase):
             Total frames discarded: 0
             Total unrecognized TLVs: 0
     '''
-    }
-    
+                     }
+
     golden_output_1 = {'execute.return_value': '''
         LLDP traffic statistics: 
 
@@ -212,7 +214,7 @@ class TestShowLldpTraffic(unittest.TestCase):
             Total unrecognized TLVs: 0
             Total flap count: 1
     '''
-    }
+                       }
 
     golden_parsed_output_1 = {
         'counters': {
@@ -246,6 +248,109 @@ class TestShowLldpTraffic(unittest.TestCase):
         obj = ShowLldpTraffic(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
+
+class TestShowLldpNeighborsDetail(unittest.TestCase):
+    empty_output = {'execute.return_value': ''}
+    golden_output = {'execute.return_value': '''
+                Chassis id: abcd.abcd.abcd
+                Port id: Te0/1/0/4/0
+                Local Port id: Eth1/1
+                Port Description: BAR
+                System Name: ROUTER_Y
+                System Description: Cisco IOS XR Software, Version 5.3.4[Default]
+                Copyright (c) 2018 by Cisco Systems, Inc., ASR9K Series
+                Time remaining: 92 seconds
+                System Capabilities: R
+                Enabled Capabilities: R
+                Management Address: not advertised
+                Management Address IPV6: not advertised
+                Vlan ID: not advertised
+                
+                Chassis id: 001e.7a8a.f900
+                Port id: Gi7
+                Local Port id: Eth1/6
+                Port Description: GigabitEthernet7
+                System Name: R1_xe.cisco.com
+                System Description: Cisco IOS Software [Fuji], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.1, RELEASE SOFTWARE (fc2)
+                Technical Support: http://www.cisco.com/techsupport
+                Copyright (c) 1986-2018 by Cisco Systems, Inc.
+                Compiled Tue 17-Jul-18 16:57 by mcp
+                Time remaining: 100 seconds
+                System Capabilities: B, R
+                Enabled Capabilities: R
+                Management Address: 172.16.1.73
+                Management Address IPV6: 2001:10:12:90::1
+                Vlan ID: not advertised
+                
+                Total entries displayed: 2
+        '''
+                     }
+
+    golden_parsed_output = {
+        "interfaces": {
+            "Ethernet1/1": {
+                "port_id": {
+                    "TenGigabitEthernet0/1/0/4/0": {
+                        "neighbors": {
+                            "ROUTER_Y": {
+                                "chassis_id": "abcd.abcd.abcd",
+                                "port_description": "BAR",
+                                "system_name": "ROUTER_Y",
+                                "system_description": "Cisco IOS XR Software, Version 5.3.4[Default]Copyright (c) 2018 by Cisco Systems, Inc., ASR9K Series\n",
+                                "time_remaining": 92,
+                                "capabilities": {
+                                    "router": {
+                                        "name": "router",
+                                        "system": True,
+                                        "enabled": True,
+                                    }
+                                },
+                                "management_address_v4": "not advertised",
+                                "management_address_v6": "not advertised",
+                                "vlan_id": "not advertised",
+                            }
+                        }
+                    }
+                }
+            },
+            "Ethernet1/6": {
+                "port_id": {
+                    "GigabitEthernet7": {
+                        "neighbors": {
+                            "R1_xe.cisco.com": {
+                                "chassis_id": "001e.7a8a.f900",
+                                "port_description": "GigabitEthernet7",
+                                "system_name": "R1_xe.cisco.com",
+                                "system_description": "Cisco IOS Software [Fuji], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.1, RELEASE SOFTWARE (fc2)\nTechnical Support: http://www.cisco.com/techsupport\nCopyright (c) 1986-2018 by Cisco Systems, Inc.\nCompiled Tue 17-Jul-18 16:57 by mcp",
+                                "time_remaining": 100,
+                                "capabilities": {
+                                    "bridge": {"name": "bridge", "system": True},
+                                    "router": {
+                                        "name": "router",
+                                        "system": True,
+                                        "enabled": True,
+                                    },
+                                },
+                                "management_address_v4": "172.16.1.73",
+                                "management_address_v6": "2001:10:12:90::1",
+                                "vlan_id": "not advertised",
+                            }
+                        }
+                    }
+                }
+            },
+        },
+        "total_entries": 2,
+    }
+
+    def test_empty(self):
+        self.maxDiff = None
+        self.device = Mock(**self.golden_output)
+        obj = ShowLldpNeighborsDetail(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output)
+
 
 if __name__ == '__main__':
     unittest.main()
