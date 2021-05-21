@@ -14,7 +14,7 @@ expected_output = {
                                                 'lsas': {
                                                     '0 25.97.1.1': {
                                                         'adv_router': '25.97.1.1',
-                                                        'lsa_id': '0',
+                                                        'lsa_id': 0,
                                                         'ospfv3': {
                                                             'body': {
                                                                 'num_of_links': 2,
@@ -41,7 +41,7 @@ expected_output = {
                                                                 'as_boundary_router': True,
                                                                 'checksum': '0x440',
                                                                 'length': 56,
-                                                                'lsa_id': '0',
+                                                                'lsa_id': 0,
                                                                 'options': 'V6-Bit ' 'E-Bit ' 'R-Bit ' 'DC-Bit',
                                                                 'seq_num': '80000013',
                                                                 'type': 'Router ' 'Links'
@@ -50,7 +50,7 @@ expected_output = {
                                                     },
                                                     '0 95.95.95.95': {
                                                         'adv_router': '95.95.95.95',
-                                                        'lsa_id': '0',
+                                                        'lsa_id': 0,
                                                         'ospfv3': {
                                                             'body': {
                                                                 'num_of_links': 2,
@@ -77,7 +77,7 @@ expected_output = {
                                                                 'as_boundary_router': True,
                                                                 'checksum': '0x6fda',
                                                                 'length': 56,
-                                                                'lsa_id': '0',
+                                                                'lsa_id': 0,
                                                                 'options': 'V6-Bit ' 'E-Bit ' 'R-Bit ' 'DC-Bit',
                                                                 'routing_bit_enable': True,
                                                                 'seq_num': '80000003',
@@ -87,7 +87,7 @@ expected_output = {
                                                     },
                                                     '0 96.96.96.96': {
                                                         'adv_router': '96.96.96.96',
-                                                        'lsa_id': '0',
+                                                        'lsa_id': 0,
                                                         'ospfv3': {
                                                             'body': {
                                                                 'num_of_links': 2,
@@ -114,7 +114,7 @@ expected_output = {
                                                                 'as_boundary_router': True,
                                                                 'checksum': '0xc572',
                                                                 'length': 56,
-                                                                'lsa_id': '0',
+                                                                'lsa_id': 0,
                                                                 'options': 'V6-Bit ' 'E-Bit ' 'R-Bit ' 'DC-Bit',
                                                                 'routing_bit_enable': True,
                                                                 'seq_num': '80000010',
