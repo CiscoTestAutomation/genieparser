@@ -125,4 +125,83 @@ expected_output = {
         "redirects_disable": False,
         "use_bia": False,
     },
+    "GigabitEthernet4/10.101": {
+        "address_family": {
+            "ipv4": {
+                "version": {
+                    1: {
+                        "groups": {
+                            100: {
+                                "active_router": "local",
+                                "default_priority": 100,
+                                "group_number": 100,
+                                "hsrp_router_state": "active",
+                                "last_state_change": "1d",
+                                "local_virtual_mac_address": "0050.56ff.c8cf",
+                                "local_virtual_mac_address_conf": "v1 " "default",
+                                "preempt": True,
+                                "primary_ipv4_address": {"address": "10.2.2.253"},
+                                "priority": 100,
+                                "standby_expires_in": 1.0,
+                                "standby_ip_address": "10.2.2.2",
+                                "standby_priority": 80,
+                                "standby_router": "10.2.2.2",
+                                "statistics": {"num_state_changes": 3},
+                                "timers": {
+                                    "hello_msec_flag": False,
+                                    "hello_sec": 1,
+                                    "hold_msec_flag": False,
+                                    "hold_sec": 1,
+                                    "next_hello_sent": 0.01,
+                                },
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "interface": "GigabitEthernet4/10.101",
+        "redirects_disable": False,
+        "use_bia": False,
+    },
+    "GigabitEthernet4/10.103": {
+        "address_family": {
+            "ipv4": {
+                "version": {
+                    1: {
+                        "groups": {
+                            100: {
+                                "active_router": "local",
+                                "default_priority": 100,
+                                "group_number": 100,
+                                "hsrp_router_state": "active",
+                                "last_state_change": "1d",
+                                "local_virtual_mac_address": "0050.56ff.c8cf",
+                                "local_virtual_mac_address_conf": "v1 " "default",
+                                "preempt": True,
+                                "primary_ipv4_address": {"address": "10.2.2.252"},
+                                "priority": 100,
+                                "session_name": "hsrp-Gi4/10.103-100",
+                                "standby_expires_in": 1.0,
+                                "standby_ip_address": "10.2.2.2",
+                                "standby_priority": 80,
+                                "standby_router": "10.2.2.2",
+                                "statistics": {"num_state_changes": 3},
+                                "timers": {
+                                    "hello_msec_flag": False,
+                                    "hello_sec": 1,
+                                    "hold_msec_flag": False,
+                                    "hold_sec": 1,
+                                    "next_hello_sent": 0.1,
+                                },
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "interface": "GigabitEthernet4/10.103",
+        "redirects_disable": False,
+        "use_bia": False,
+    },
 }
