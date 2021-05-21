@@ -266,6 +266,12 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
         p6_2 = re.compile(r'^(?P<compiled_by>Compiled +.+)$')
         # Technical Support: http://www.cisco.com/techsupport
         p6_3 = re.compile(r'^(?P<technical_support>(Technical|TAC) (S|s)upport: +.+)$')
+
+        # "Cisco IOS XR Software, Version 5.3.4[Default]Copyright (c) 2018 by Cisco Systems, Inc., ASR9K Series\n"
+        p6_xr_0 = re.compile(r'(?P<is_iosxr>(IOS XR))')
+        # Port id: Te0/1/0/4/0
+        p6_xr_1 = re.compile(r'(?P<is_10gbe>(TenGigabitEthernet)(?P<interface_number>(\S+)))')
+
         # Time remaining: 95 seconds
         p7 = re.compile(r'^Time +remaining: +(?P<time_remaining>\d+) +seconds$')
         # System Capabilities: B, R
@@ -314,8 +320,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 sub_dict = {}
                 group = m.groupdict()
                 intf = Common.convert_intf_name(group['local_port_id'])
-                intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(intf,
-                                                                                {})
+                intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 sub_dict.update({'chassis_id': tmp_chassis_id})
                 port_dict = intf_dict.setdefault('port_id', {}).setdefault(tmp_port_id,
                                                                            {})
@@ -345,6 +350,25 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 sub_dict.update({'system_description': group['system_description']})
+
+                # as requested at https://github.com/CiscoTestAutomation/genieparser/issues/442
+                # detects if system description returns an IOS-XR device
+                # changes the format of the interface to ensure compatibility
+                xr_check = p6_xr_0.search(sub_dict['system_description'])
+                if xr_check:
+                    # sets ports to contain the dictionary of port_ids
+                    ports = intf_dict['port_id']
+                    # port_id is a dictionary, despite only having one values (another dictionary)
+                    # this requires a loop through the keys.
+                    for key in ports.keys():
+                        # searches for "Te" which denotes Ten Gigabit
+                        ten_gig_check = p6_xr_1.search(key)
+                        if ten_gig_check:
+                            interface_num = ten_gig_check.groupdict()['interface_number']
+                            new_interface = re.sub(p6_xr_1, "TenGigE" + interface_num, key)
+                            print(new_interface)
+                            # ports[key] = p6_xr_1.sub("TenGigE" + interface_num, ports[key])
+
                 continue
 
             # Copyright (c) 1986-2011 by Cisco Systems, Inc.
@@ -454,6 +478,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 group = m15.groupdict()
                 sub_dict['system_description'] += group['special_name'] + '\n'
 
+        print(parsed_dict)
         return parsed_dict
 
 
@@ -503,7 +528,7 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
             m = p1.match(line)
             if m:
                 traffic = m.groupdict()
-                traffic_dict=parsed_dict.setdefault('counters',{})
+                traffic_dict=parsed_dict.setdefault('counters', {})
                 traffic_key = traffic['pattern'].replace(' ', '_').lower()
                 traffic_value = int(traffic['value'])
                 traffic_dict.update({traffic_key: traffic_value})
