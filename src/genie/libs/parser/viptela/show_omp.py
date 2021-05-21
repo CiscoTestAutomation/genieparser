@@ -173,7 +173,7 @@ class ShowOmpPeers(ShowOmpPeersSchema):
 
         # 1.1.1.5          vsmart  1         1         4294945506up       27:03:26:37      4012/0/4012
         # 10.1.1.1         vedge   1         1         10001985  up       1:23:10:51       884/0/236
-        p1 = re.compile(r'^(?P<ip_add>\d\S+)\s+(?P<type>\S+)\s+(?P<domain_id>\S+)\s+(?P<overlay_id>\S+)\s+(?P<site_id>\d+) *(?P<state>\S+)\s+(?P<uptime>\S+)\s+(?P<route>\S+)$')
+        p1 = re.compile(r'^(?P<ip_add>\d\S+)\s+(?P<type>\S+)\s+(?P<domain_id>\S+)\s+(?P<overlay_id>\S+)\s+(?P<site_id>\d+)\s*(?P<state>\S+)\s+(?P<uptime>\S+)\s+(?P<route>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
