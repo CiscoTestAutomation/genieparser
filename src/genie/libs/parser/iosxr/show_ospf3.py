@@ -37,19 +37,24 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                             Any(): {  # p3-- int(group[area]) --0
                                                 Optional("interfaces"): {
                                                     Any(): {  # p1-- group[interface] -- GigabitEthernet0/0/0/0
-                                                        "enable": bool,
+                                                        "enable": str,
                                                         "line_protocol": str,
                                                         "link_local_address": str,
                                                         "router_id": str,
-                                                        "interface_type": str,
+                                                        "network_type": str,
                                                         "interface_id": int,
+                                                        "cost": int,
+                                                        Optional("adjacent_neighbors"): {
+                                                            Optional("neighbor"): str,
+                                                            Optional("nbr_count"): int,
+                                                            Optional("adj_nbr_count"): int,
+                                                        },
                                                         Optional("bfd"): {
                                                             Optional("bfd_status"): str,
                                                             Optional("interval"): int,
                                                             Optional("multiplier"): int,
                                                             Optional("mode"): str,
                                                         },
-                                                        Optional("cost"): int,
                                                         Optional("transmit_delay"): int,
                                                         Optional("state"): str,
                                                         Optional("hello_interval"): int,
@@ -65,17 +70,8 @@ class ShowOspfv3InterfaceSchema(MetaParser):
                                                         Optional("last_flood_scan_time_msec"): int,
                                                         Optional("max_flood_scan_time_msec"): int,
                                                         Optional("statistics"): {
-                                                            Optional("nbr_count"): int,
-                                                            Optional("adj_nbr_count"): int,
-                                                            Optional("neighbor"): str,
                                                             Optional("num_nbrs_suppress_hello"): int,
                                                             Optional("refrence_count"): int,
-                                                        },
-                                                        Optional("neighbors"): {
-                                                            Any(): {  # 100.100.100.100
-                                                                Optional("nbr_count"): int,
-                                                                Optional("adj_nbr_count"): int,
-                                                            },
                                                         },
                                                         Optional("loopback_txt"): str,
                                                     },
@@ -130,16 +126,6 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
         else:
             out = output
 
-        # Init vars
-        ret_dict = {}
-        interface_dict = {}
-
-        # Address Family for ospfv3 is always ipv6
-        af = "ipv6"
-
-        # Mapping dict
-        bool_dict = {"up": True, "down": False, "unknown": False}
-
         # GigabitEthernet0/0/0/0 is up, line protocol is up
         # Loopback0 is up, line protocol is up
         p1 = re.compile(
@@ -161,7 +147,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
 
         # Network Type POINT_TO_POINT, Cost: 1
         p4 = re.compile(
-            r"^Network +Type +(?P<interface_type>(\S+))"
+            r"^Network +Type +(?P<network_type>(\S+))"
             ", +Cost: +(?P<cost>(\S+))$")
 
         # BFD enabled, interval 150 msec, multiplier 3, mode Default
@@ -221,11 +207,18 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
         # Loopback interface is treated as a stub Host
         p17 = re.compile(r"^(?P<loopback_txt>Loopback interface is treated as a stub Host)$")
 
+        # Init vars
+        ret_dict = {}
+
+        # Address Family for ospfv3 is always ipv6
+        af = "ipv6"
+
         for line in out.splitlines():
             line = line.strip()
             # GigabitEthernet0/0/0/0 is up, line protocol is up
             m = p1.match(line)
             if m:
+                interface_dict = {}
                 group = m.groupdict()
 
                 # define vrf_dict dictionary and set to 'vrf'
@@ -237,7 +230,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                     setdefault(af, {})
 
                 interface_name = group['interface']
-                interface_dict.update({'enable': bool_dict[group['enable']]})
+                interface_dict.update({'enable': group['enable']})
                 interface_dict.update({'line_protocol': group['line_protocol']})
 
             # Link Local address fe80:100:10::1, Interface ID 7
@@ -265,7 +258,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
             if m:
                 group = m.groupdict()
 
-                interface_dict.update({'interface_type': group['interface_type']})
+                interface_dict.update({'network_type': group['network_type']})
                 interface_dict.update({'cost': int(group['cost'])})
 
             # BFD enabled, interval 150 msec, multiplier 3, mode Default
@@ -342,19 +335,15 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 group = m.groupdict()
 
                 neighbor_stats_dict = interface_dict.setdefault('statistics', {})
-                nbr_count = int(group['nbr_count'])
-                adj_nbr_count = int(group['adj_nbr_count'])
-
-                neighbor_stats_dict.update({'nbr_count': nbr_count})
-                neighbor_stats_dict.update({'adj_nbr_count': adj_nbr_count})
+                neighbor_dict = interface_dict.setdefault('adjacent_neighbors', {})
+                neighbor_dict.update({'nbr_count': int(group['nbr_count'])})
+                neighbor_dict.update({'adj_nbr_count': int(group['adj_nbr_count'])})
 
             # Adjacent with neighbor 100.100.100.100
             m = p14.match(line)
             if m:
                 group = m.groupdict()
-                adj_nbr = group['adj_with_nbr']
-
-                neighbor_stats_dict.update({'neighbor': adj_nbr})
+                neighbor_dict.update({'neighbor': group['adj_with_nbr']})
 
             # Suppress hello for 0 neighbor(s)
             m = p15.match(line)
@@ -364,26 +353,28 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 neighbor_stats_dict.update({'num_nbrs_suppress_hello': int(group['num_nbrs_suppress_hello'])})
 
             # Reference count is 6
-            m = p16.match(line)
-            if m:
-                group = m.groupdict()
+            m1 = p16.match(line)
+            m2 = p17.match(line)
+            if m1:
+                group = m1.groupdict()
 
                 neighbor_stats_dict.update({'refrence_count': int(group['refrence_count'])})
-
-                neighbor_dict = interface_dict.setdefault('neighbors', {}). \
-                    setdefault(adj_nbr, {})
-
-                neighbor_dict.update({'nbr_count': nbr_count})
-                neighbor_dict.update({'adj_nbr_count': adj_nbr_count})
-                interfaces_dict.update(interface_dict)
-            elif p1.match(line) and not m:
                 interfaces_dict.update(interface_dict)
 
-            m = p17.match(line)
-            if m:
-                group = m.groupdict()
+            elif m2:
+                group = m2.groupdict()
+
+                loopback_keys = ['enable', 'line_protocol', 'link_local_address', 'interface_id',
+                                 'network_type', 'cost', 'router_id']
+
+                # prevents non-loopback interface information from carrying over into loopback interface
+                temp_int_dict = interface_dict
+                for k in list(interface_dict.keys()):
+                    if k not in loopback_keys:
+                        del temp_int_dict[k]
+                interface_dict = temp_int_dict
 
                 interface_dict.update({'loopback_txt': group['loopback_txt']})
+                interfaces_dict.update(interface_dict)
 
-        print(ret_dict)
         return ret_dict

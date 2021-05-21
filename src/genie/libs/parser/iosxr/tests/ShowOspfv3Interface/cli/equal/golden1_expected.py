@@ -11,12 +11,12 @@ expected_output = {
                                         0: {
                                             "interfaces": {
                                                 "GigabitEthernet0/0/0/0": {
-                                                    "enable": True,
+                                                    "enable": "up",
                                                     "line_protocol": "up",
                                                     "link_local_address": "fe80:100:10::1",
                                                     "interface_id": 7,
                                                     "router_id": "25.97.1.1",
-                                                    "interface_type": "POINT_TO_POINT",
+                                                    "network_type": "POINT_TO_POINT",
                                                     "cost": 1,
                                                     "bfd": {
                                                         "bfd_status": "enabled",
@@ -39,30 +39,32 @@ expected_output = {
                                                     "last_flood_scan_time_msec": 0,
                                                     "max_flood_scan_time_msec": 0,
                                                     "statistics": {
-                                                        "nbr_count": 1,
-                                                        "adj_nbr_count": 1,
-                                                        "neighbor": "95.95.95.95",
                                                         "num_nbrs_suppress_hello": 0,
                                                         "refrence_count": 6,
                                                     },
-                                                    "neighbors": {
-                                                        "100.100.100.100": {
-                                                            "nbr_count": 1,
-                                                            "adj_nbr_count": 1,
-                                                        },
-                                                        "95.95.95.95": {
-                                                            "nbr_count": 1,
-                                                            "adj_nbr_count": 1,
-                                                        },
+                                                    "adjacent_neighbors": {
+                                                        "nbr_count": 1,
+                                                        "adj_nbr_count": 1,
+                                                        "neighbor": "100.100.100.100",
                                                     },
                                                 },
+                                                "Loopback0": {
+                                                    "enable": "up",
+                                                    "line_protocol": "up",
+                                                    "link_local_address": "fe80::8849:faff:fe9c:f9b6",
+                                                    "interface_id": 6,
+                                                    "router_id": "25.97.1.1",
+                                                    "network_type": "LOOPBACK",
+                                                    "cost": 0,
+                                                    "loopback_txt": "Loopback interface is treated as a stub Host",
+                                                },
                                                 "GigabitEthernet0/0/0/1": {
-                                                    "enable": True,
+                                                    "enable": "up",
                                                     "line_protocol": "up",
                                                     "link_local_address": "fe80:100:20::1",
                                                     "interface_id": 8,
                                                     "router_id": "25.97.1.1",
-                                                    "interface_type": "POINT_TO_POINT",
+                                                    "network_type": "POINT_TO_POINT",
                                                     "cost": 1,
                                                     "bfd": {
                                                         "bfd_status": "enabled",
@@ -85,24 +87,15 @@ expected_output = {
                                                     "last_flood_scan_time_msec": 0,
                                                     "max_flood_scan_time_msec": 0,
                                                     "statistics": {
-                                                        "nbr_count": 1,
-                                                        "adj_nbr_count": 1,
-                                                        "neighbor": "95.95.95.95",
                                                         "num_nbrs_suppress_hello": 0,
                                                         "refrence_count": 6,
                                                     },
-                                                    "neighbors": {
-                                                        "100.100.100.100": {
-                                                            "nbr_count": 1,
-                                                            "adj_nbr_count": 1,
-                                                        },
-                                                        "95.95.95.95": {
-                                                            "nbr_count": 1,
-                                                            "adj_nbr_count": 1,
-                                                        },
+                                                    "adjacent_neighbors": {
+                                                        "nbr_count": 1,
+                                                        "adj_nbr_count": 1,
+                                                        "neighbor": "95.95.95.95",
                                                     },
                                                 },
-                                                "Loopback0": {},
                                             }
                                         }
                                     }
