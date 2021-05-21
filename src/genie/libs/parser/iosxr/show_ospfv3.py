@@ -424,11 +424,11 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefixSchema(MetaParser):
                                                     "lsa_type": int,
                                                     "lsas": {
                                                         Any(): {
-                                                            "lsa_id": str,
+                                                            "lsa_id": int,
                                                             "adv_router": str,
                                                             "ospfv3": {
                                                                 "header": {
-                                                                    "lsa_id": str,
+                                                                    "lsa_id": int,
                                                                     "age": int,
                                                                     "type": str,
                                                                     "adv_router": str,
@@ -436,7 +436,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefixSchema(MetaParser):
                                                                     "checksum": str,
                                                                     "length": int,
                                                                     "ref_lsa_type": str,
-                                                                    "ref_lsa_id": str,
+                                                                    "ref_lsa_id": int,
                                                                     "ref_adv_router": str,
                                                                     Optional("routing_bit_enable"): bool,
                                                                 },
@@ -484,7 +484,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
 
         # Init vars
         ret_dict = {}
-        af = "ipv6"
+        address_family = "ipv6"
 
         #Lsa Types
         # 1: Router
@@ -511,9 +511,6 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
         }
 
         # OSPFv3 Router with ID (25.97.1.1) (Process ID mpls1 VRF default)
-        #p1 = re.compile(r'^OSPFv3 +Router +with +ID +\((?P<router_id>(\S+))\) '
-        #                r'+\(Process +ID +(?P<instance>(\S+))(?: +VRF +(?P<vrf>(\S+)))?\)$')
-
         p1 = re.compile(r'^OSPFv3 +Router +with +ID +\((?P<router_id>(\S+))\) +\(Process +ID +(?P<instance>(\S+))(?: +VRF +(?P<vrf>(\S+)))?\)$')
 
         # Intra Area Prefix Link States (Area 0)
@@ -529,7 +526,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
         p5 = re.compile(r'^LS +Type: +(?P<lsa_type>(.*))$')
 
         # Link State ID: 0
-        p6 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\S+))' '(?: +\(.*\))?$')
+        p6 = re.compile(r'^Link +State +ID: +(?P<lsa_id>(\d+))' '(?: +\(.*\))?$')
 
         # Advertising Router: 25.97.1.1
         p7 = re.compile(r'^Advertising +Router: +(?P<adv_router>(\S+))$')
@@ -547,7 +544,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
         p11 = re.compile(r'^Referenced +LSA +Type: +(?P<ref_lsa_type>(.*))$')
 
         # Referenced Link State ID: 0
-        p12 = re.compile(r'^Referenced +Link +State +ID: +(?P<ref_lsa_id>(\S+))' '(?: +\(.*\))?$')
+        p12 = re.compile(r'^Referenced +Link +State +ID: +(?P<ref_lsa_id>(\d+))' '(?: +\(.*\))?$')
 
         # Referenced Advertising Router: 25.97.1.1
         p13 = re.compile(r'^Referenced +Advertising +Router: +(?P<ref_adv_router>(\S+))$')
@@ -583,7 +580,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
                     ret_dict.setdefault("vrf", {})
                     .setdefault(vrf, {})
                     .setdefault("address_family", {})
-                    .setdefault(af, {})
+                    .setdefault(address_family , {})
                     .setdefault("instance", {})
                     .setdefault(instance, {})
                 )
@@ -641,14 +638,14 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
             # Link State ID: 0
             m = p6.match(line)
             if m:
-                lsa_id = str(m.groupdict()["lsa_id"])
+                lsa_id = int(m.groupdict()["lsa_id"])
                 continue
 
             # Advertising Router: 25.97.1.1
             m = p7.match(line)
             if m:
                 adv_router = str(m.groupdict()["adv_router"])
-                lsa = lsa_id + " " + adv_router
+                lsa = str(lsa_id) + " " + adv_router
 
                 # Reset counters for this lsa
                 prefix_idx = 0
@@ -726,7 +723,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
             # Referenced Link State ID: 0
             m = p12.match(line)
             if m:
-                header_dict["ref_lsa_id"] = str(m.groupdict()["ref_lsa_id"])
+                header_dict["ref_lsa_id"] = int(m.groupdict()["ref_lsa_id"])
                 continue
 
             # Referenced Advertising Router: 25.97.1.1
