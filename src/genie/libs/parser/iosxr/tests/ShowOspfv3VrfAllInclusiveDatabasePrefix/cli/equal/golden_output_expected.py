@@ -14,7 +14,7 @@ expected_output = {
                                                 'lsas': {
                                                     '0 95.95.95.95': {
                                                         'adv_router': '95.95.95.95',
-                                                        'lsa_id': '0',
+                                                        'lsa_id': 0,
                                                         'ospfv3': {
                                                             'body': {
                                                                 'number_of_prefix': 3,
@@ -45,9 +45,9 @@ expected_output = {
                                                                 'age': 1784,
                                                                 'checksum': '0x2ce8',
                                                                 'length': 76,
-                                                                'lsa_id': '0',
+                                                                'lsa_id': 0,
                                                                 'ref_adv_router': '95.95.95.95',
-                                                                'ref_lsa_id': '0',
+                                                                'ref_lsa_id': 0,
                                                                 'ref_lsa_type': '2001',
                                                                 'routing_bit_enable': True,
                                                                 'seq_num': '8000081f',
@@ -57,7 +57,7 @@ expected_output = {
                                                     },
                                                     '0 96.96.96.96': {
                                                         'adv_router': '96.96.96.96',
-                                                        'lsa_id': '0',
+                                                        'lsa_id': 0,
                                                         'ospfv3': {
                                                             'body': {
                                                                 'number_of_prefix': 3,
@@ -88,9 +88,9 @@ expected_output = {
                                                                 'age': 501,
                                                                 'checksum': '0xd641',
                                                                 'length': 76,
-                                                                'lsa_id': '0',
+                                                                'lsa_id': 0,
                                                                 'ref_adv_router': '96.96.96.96',
-                                                                'ref_lsa_id': '0',
+                                                                'ref_lsa_id': 0,
                                                                 'ref_lsa_type': '2001',
                                                                 'routing_bit_enable': True,
                                                                 'seq_num': '80000822',
@@ -100,7 +100,7 @@ expected_output = {
                                                     },
                                                     '0 99.99.99.99': {
                                                         'adv_router': '99.99.99.99',
-                                                         'lsa_id': '0',
+                                                         'lsa_id': 0,
                                                          'ospfv3': {
                                                              'body': {
                                                                  'number_of_prefix': 3,
@@ -131,9 +131,9 @@ expected_output = {
                                                                  'age': 1000,
                                                                  'checksum': '0x2e86',
                                                                  'length': 76,
-                                                                 'lsa_id': '0',
+                                                                 'lsa_id': 0,
                                                                  'ref_adv_router': '99.99.99.99',
-                                                                 'ref_lsa_id': '0',
+                                                                 'ref_lsa_id': 0,
                                                                  'ref_lsa_type': '2001',
                                                                  'routing_bit_enable': True,
                                                                  'seq_num': '80000059',
