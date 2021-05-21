@@ -94,6 +94,7 @@ expected_output = {
                                 "received": {
                                     "explicit_withdraw": 0,
                                     "implicit_withdraw": 0,
+                                    "prefixes_current": 4,
                                     "prefixes_total": 4,
                                     "used_as_bestpath": 4,
                                     "used_as_multipath": 0,
@@ -102,6 +103,7 @@ expected_output = {
                                 "sent": {
                                     "explicit_withdraw": 0,
                                     "implicit_withdraw": 4,
+                                    "prefixes_current": 4,
                                     "prefixes_total": 8,
                                     "used_as_bestpath": "n/a",
                                     "used_as_multipath": "n/a",
@@ -378,6 +380,7 @@ expected_output = {
                                 "received": {
                                     "explicit_withdraw": 0,
                                     "implicit_withdraw": 0,
+                                    "prefixes_current": 4,
                                     "prefixes_total": 4,
                                     "used_as_bestpath": 0,
                                     "used_as_multipath": 0,
@@ -386,6 +389,7 @@ expected_output = {
                                 "sent": {
                                     "explicit_withdraw": 0,
                                     "implicit_withdraw": 4,
+                                    "prefixes_current": 4,
                                     "prefixes_total": 8,
                                     "used_as_bestpath": "n/a",
                                     "used_as_multipath": "n/a",
