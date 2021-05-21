@@ -174,7 +174,7 @@ class ShowRoute(ShowRouteSchema):
         # L 10.10.1.5 255.255.255.255 is directly connected, pod2500
         p5 = re.compile(r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s(?:.*),\s(?P<context_name>\S+)')
 
-        # SI 11.0.0.0 255.0.0.0 [1/0] is directly connected, gig3
+        # SI 10.121.0.0 255.0.0.0 [1/0] is directly connected, gig3
         p5_1 = re.compile(
             r'^(?P<code>\S+)\s(?P<network>\S+)\s(?P<subnet>\S+)\s(\[(?P<route_preference>[\d\/]+)\])?\s(?:.*),\s(?P<context_name>\S+)')
 

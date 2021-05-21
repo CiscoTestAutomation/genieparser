@@ -57,7 +57,7 @@ expected_output = {
         "switch_num": {
             "1": {
                 "active": True,
-                "mac_address": "00:b6:70:dd:28:80",
+                "mac_address": "00:b6:70:ff:06:5e",
                 "mb_assembly_num": "73-18271-03",
                 "mb_rev_num": "A0",
                 "mb_sn": "FOC22221AD2",

@@ -68,7 +68,7 @@ Processor board ID FCW2223G0B9
 1638400K bytes of Crash Files at crashinfo:.
 11264000K bytes of Flash at flash:.
 
-Base Ethernet MAC Address          : 00:b6:70:dd:28:80
+Base Ethernet MAC Address          : 00:b6:70:ff:06:5e
 Motherboard Assembly Number        : 73-18271-03
 Motherboard Serial Number          : FOC22221AD2
 Model Revision Number              : A0

@@ -1,11 +1,11 @@
 Device# show ip eigrp vrf red topology
-EIGRP-IPv4 Topology Table for AS(10)/ID(13.0.0.2) VRF(red)
+EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2) VRF(red)
 Codes: P - Passive, A - Active, U - Update, Q - Query, R - Reply,
        r - reply Status, s - sia Status 
 
-P 13.0.0.0/16, 1 successors, FD is 2816
+P 10.169.0.0/16, 1 successors, FD is 2816
         via Connected, GigabitEthernet0/0/0
-P 3.3.3.3/32, 1 successors, FD is 130816
-        via 13.0.0.1 (130816/128256), GigabitEthernet0/0/0
-P 1.1.1.1/32, 1 successors, FD is 2816, tag is 900
+P 10.36.3.3/32, 1 successors, FD is 130816
+        via 10.169.0.1 (130816/128256), GigabitEthernet0/0/0
+P 10.4.1.1/32, 1 successors, FD is 2816, tag is 900
         via +Redistributed (2816/0)

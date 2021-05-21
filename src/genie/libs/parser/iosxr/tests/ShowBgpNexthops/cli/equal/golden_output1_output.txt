@@ -1,6 +1,6 @@
-RP/0/RP0/CPU0:F97-sjkIAN103#show bgp nexthops 16.16.16.16
+RP/0/RP0/CPU0:F97-sjkIAN103#show bgp nexthops 10.4.16.16
 Tue Oct 13 18:31:28.036 EST
-Nexthop: 16.16.16.16
+Nexthop: 10.4.16.16
   VRF: default
   Nexthop ID: 0x6000074, Version: 0x0
   Nexthop Flags: 0x00000000
@@ -11,7 +11,7 @@ Nexthop: 16.16.16.16
     Gateway TBL Id: 0xe0000000    Gateway Flags: 0x00000080
     Gateway Handle: 0x7fba14059ce0
     Gateway: reachable, non-Connected route, prefix length 32
-    Resolving Route: 16.16.16.16/32 (static)
+    Resolving Route: 10.4.16.16/32 (static)
     Paths: 0
     RIB Nexhop ID: 0x0
     Status: [Reachable][Not Connected][Not Local]
