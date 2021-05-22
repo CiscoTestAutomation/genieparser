@@ -12,6 +12,7 @@
     * show ip eigrp interfaces
       * Adjusting p1 regex to support IPv6 too
       * Offloading parser to a SuperParser class
+      * support eigrp named mode
       * adding optional keys to ShowIpEigrpInterfacesSchema schema to support `show ip eigrp interfaces detail parser`
 * IOS
   * New command parsers:
@@ -24,6 +25,7 @@
     * show ip eigrp interfaces
       * Adjusting p1 regex to support IPv6 too
       * Offloading parser to a SuperParser class
+      * Support eigrp named mode
       * adding optional keys to ShowIpEigrpInterfacesSchema schema to support `show ip eigrp interfaces detail parser`
 * ASA
   * New command parsers:
