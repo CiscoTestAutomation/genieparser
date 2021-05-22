@@ -1,0 +1,8 @@
+         +++ R2_xr: executing command 'show mpls ldp neighbor brief' +++
+         show mpls ldp neighbor brief
+         Wed Apr 17 16:45:04.410 UTC
+         
+         Peer               GR  NSR  Up Time     Discovery   Addresses     Labels
+                                                 ipv4  ipv6  ipv4  ipv6  ipv4   ipv6
+         -----------------  --  ---  ----------  ----------  ----------  ------------
+         10.4.1.1:0          N   N    00:08:57    1     0     9     0     15     0

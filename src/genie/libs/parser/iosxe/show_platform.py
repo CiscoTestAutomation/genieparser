@@ -1952,6 +1952,7 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
         # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
         # NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
+        # NAME: "1", DESCR: "WS-C3560CX-12PC-S"
         p1 = re.compile(r'^NAME: +\"(?P<name>.*)\",'
                         r' +DESCR: +\"(?P<descr>.*)\"$')
 
@@ -1975,7 +1976,7 @@ class ShowInventory(ShowInventorySchema):
         p1_5 = re.compile(r'^StackPort(?P<slot>(\d+))/(?P<subslot>(\d+))$')
 
         # Fan Tray
-        p1_6 = re.compile(r'^Fan +Tray$')
+        p1_6 = re.compile(r'^Fan +Tray|\d+$')
 
         # Modem 0 on Cellular0/2/0
         p1_7 = re.compile(r'^Modem +(?P<modem>\S+) +on +Cellular(?P<slot>\d+)\/(?P<subslot>.*)$')
@@ -1988,6 +1989,7 @@ class ShowInventory(ShowInventorySchema):
         # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
         # PID: ISR4331/K9        , VID:      , SN:
         # PID: , VID: 1.0  , SN: 1162722191
+        # PID: WS-C3560CX-12PC-S , VID: V03  , SN: FOC2419L9KY
         p2 = re.compile(r'^PID: +(?P<pid>[\S\s]+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
                         r' +SN:(?: +(?P<sn>(\S+)))?$')
         for line in out.splitlines():
@@ -1999,6 +2001,7 @@ class ShowInventory(ShowInventorySchema):
             # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
             # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
             # NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
+            # NAME: "1", DESCR: "WS-C3560CX-12PC-S"
             m = p1.match(line)
 
             if m:
@@ -2009,12 +2012,16 @@ class ShowInventory(ShowInventorySchema):
                 # ------------------------------------------------------------------
                 # Define slot_dict
                 # ------------------------------------------------------------------
+                
+                # Switch 1
+                # module 0
                 m1_1 = p1_1.match(name)
                 if m1_1:
                     slot = m1_1.groupdict()['slot']
                     # Creat slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
+                # Power Supply Module 0
                 m1_2 = p1_2.match(name)
                 if m1_2:
                     slot = name.replace('Power Supply Module ', 'P')
@@ -2024,6 +2031,13 @@ class ShowInventory(ShowInventorySchema):
                 # ------------------------------------------------------------------
                 # Define subslot
                 # ------------------------------------------------------------------
+
+                # SPA subslot 0/0
+                # IM subslot 0/1
+                # NIM subslot 0/0
+                # subslot 0/0 transceiver 0
+                # StackPort1/1
+                # Modem 0 on Cellular0/2/0
                 m = p1_3.match(name) or p1_4.match(name) or p1_5.match(name) or p1_7.match(name)
                 if m:
                     group = m.groupdict()
@@ -2032,11 +2046,13 @@ class ShowInventory(ShowInventorySchema):
                     # Creat slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
+                # Fan Tray
                 m1_6 = p1_6.match(name)
                 if m1_6:
                     slot = name.replace(' ', '_')
                     # Create slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+                
                 # go to next line
                 continue
 
@@ -2048,6 +2064,7 @@ class ShowInventory(ShowInventorySchema):
             # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
             # PID: ISR4331/K9        , VID:      , SN:
             # PID: EM7455/EM7430     , VID: 1.0  , SN: 355813070074072
+            # PID: WS-C3560CX-12PC-S , VID: V03  , SN: FOC2419L9KY
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -2286,10 +2303,11 @@ class ShowPlatform(ShowPlatformSchema):
         # ------  -----   ---------             -----------  --------------  -------       --------
         #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
         #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
+        #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           2021-03-03_18.
         p3 = re.compile(r'^(?P<switch>\d+) +(?P<ports>\d+) +'
                         r'(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
                         r'(?P<mac_address>[\w\.\:]+) +'
-                        r'(?P<hw_ver>\w+) +(?P<sw_ver>[\w\.]+)$')
+                        r'(?P<hw_ver>\w+) +(?P<sw_ver>[\s\S]+)$')
 
         #                                     Current
         # Switch#   Role        Priority      State
@@ -2344,6 +2362,7 @@ class ShowPlatform(ShowPlatformSchema):
             # ------  -----   ---------             -----------  --------------  -------       --------
             #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
             #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
+            #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           2021-03-03_18.
             m = p3.match(line)
             if m:
                 slot = m.groupdict()['switch']

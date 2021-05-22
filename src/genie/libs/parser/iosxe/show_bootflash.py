@@ -44,7 +44,6 @@ class ShowBootflash(ShowBootflashSchema):
     cli_command = 'show bootflash:'
 
     def cli(self, output=None):
-        #print("DEBUG: cli")
         if output is None:
             out = self.device.execute(self.cli_command)
         else:

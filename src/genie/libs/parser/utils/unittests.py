@@ -10,16 +10,26 @@ import logging
 import inspect
 import pathlib
 import argparse
+import traceback
 import importlib
 from unittest.mock import Mock
 
 # pyATS
 from pyats import aetest
-from ats.easypy import run
-from ats.easypy import runtime
+from pyats.easypy import run
+from pyats.easypy import runtime
 from pyats.topology import Device
 from pyats.log.utils import banner
 from pyats.aetest.steps import Steps
+from pyats.log.colour import FgColour
+from pyats.aetest.loop import Iteration
+from pyats.log.cisco import ScreenHandler
+from pyats.datastructures import TreeNode
+from pyats.datastructures import AttrDict
+from pyats.easypy.email import TEST_RESULT_ROW
+from pyats.log.utils import banner, str_shortener
+from pyats.aetest.reporter import StandaloneReporter
+
 
 
 # Genie
@@ -29,7 +39,12 @@ from genie.metaparser.util.exceptions import SchemaEmptyParserError
 
 
 log = logging.getLogger(__name__)
+glo_values = AttrDict
 
+
+#===========================================================================
+#                            Helper Functions
+#===========================================================================
 def read_from_file(file_path):
     """Helper function to read from a file."""
     with open(file_path, "r") as f:
@@ -51,16 +66,11 @@ def read_python_file(file_path):
 
 def get_operating_systems(_os):
     """Helper Script to get operating systems."""
-    # Update and fix as more OS's converted to folder based tests
     if _os:
         return [_os]
-    return ["asa", "ios", "iosxe", "junos", "iosxr", "nxos"]
-    # operating_system = []
-    # for folder in os.listdir("./"):
-    #    if os.path.islink("./" + folder):
-    #        operating_system.append(folder)
-    # return operating_system
-
+    EXCLUDED_FOLDERS = ['__pycache__', 'utils']
+    # Gather all folders in our running directory and get their parsers
+    return [f.path.replace('./', '') for f in os.scandir('.') if f.is_dir() and f.path.replace('./', '') not in EXCLUDED_FOLDERS]
 
 # The get_tokens function dynamically finds tokens by leveraging globs. This
 # works based on the deterministic folder structure. Within a given OS root folder one can
@@ -78,13 +88,316 @@ def get_files(folder, token=None):
     for parse_file in glob.glob(str(folder / "*.py")):
         if parse_file.endswith("__init__.py"):
             continue
+        if parse_file.startswith("_"):
+            continue
         files.append({"parse_file": parse_file, "token": token})
     return files
 
 
-class FileBasedTest(aetest.Testcase):
+#===========================================================================
+#                            Final Output
+#===========================================================================
+# Build a testcase tree using anything that isn't passed
+RESULT_ROW = "{name:<{max_len}s}{result:>24s}"
+RESULT_COLOUR = {
+    'passed': FgColour.BRIGHT_GREEN,
+    'failed': FgColour.BRIGHT_RED,
+    'errored': FgColour.BRIGHT_BLUE,
+}
+def failed_build_tree(section, parent_node, level=0):
+    """
+    Builds a tree for displaying items mimicking linux tree command.
+    """
+    # max_len is calculated to align all the result values on the
+    # right regardless of indentation from TreeNode. (80 char width)
+    max_len = 66-level*4
+    # Determine if ran with harness or not
+    if runtime.job:
+        if section.type == 'Step':
+            name = str_shortener('%s: %s' % (section.id, section.name), max_len)
+        else:
+            name = str_shortener(section.id, max_len)
+        section_node = TreeNode(RESULT_ROW.format(
+                                    name = name,
+                                    # result = RESULT_COLOUR[str(section.result)].apply(str(section.result).upper()),
+                                    result = str(section.result).upper(),
+                                    max_len = max_len))
+        result = section.result.value
+        sections = section.sections
+    else:
+        section_node = TreeNode(RESULT_ROW.format(
+                                name = str_shortener(section['name'], max_len),
+                                result = RESULT_COLOUR[str(section['result'])].apply(str(section['result']).upper()),
+                                max_len = max_len))
+    
+        result = section['result'].value
+        sections = section['sections']
+
+    # Determine if we're only looking to display failures or not
+    parsed_args = _parse_args()
+    if parsed_args['_display_only_failed']:
+        if result not in ['passed']:
+            parent_node.add_child(section_node)
+    else:
+        parent_node.add_child(section_node)
+
+    # Recursive indentation
+    for child_section in sections:
+        if level < 2:
+            failed_build_tree(child_section, section_node, level+1)
+        else:
+            failed_build_tree(child_section, parent_node, level)
+
+# Handles output for standalone run
+class FailedReporter(StandaloneReporter):
+
+    def __init__(self):
+        super().__init__()
+    
+    def log_summary(self):
+        log.root.setLevel(0)
+        if self.section_details:
+            log.info(banner("Unittest results"))
+            log.info(' %-70s%10s ' % ('SECTIONS/TESTCASES',
+                                         'RESULT'.center(10)))
+            log.info('-'*80)
+
+            report = TreeNode('.')
+            for section in self.section_details:
+                failed_build_tree(section, report)
+
+            if str(report) == '.':
+                log.info(' %-70s%10s ' % ('ALL UNITTESTS',
+                                         'PASSED'.center(10)))
+            else:
+                log.info(str(report))
+
+            log.info(banner("Summary"))
+            for k in sorted(self.summary.keys()):
+
+                log.info(' {name:<58}{num:>20} '.format(
+                                        name = 'Number of {}'.format(k.upper()),
+                                        num = self.summary[k]))
+            log.info(' {name:<58}{num:>20} '.format(
+                                        name = 'Total Number',
+                                        num = self.summary.total))
+            log.info(' {name:<58}{num:>19.1f}% '.format(
+                                        name = 'Success Rate',
+                                        num = self.summary.success_rate))
+            log.info('-'*80)
+            if glo_values.missingCount > 0:
+                log.info(' {name:<58}{num:>20} '.format(
+                                            name = 'Total Parsers Missing Unittests',
+                                            num = glo_values.missingCount))
+                log.info('-'*80)
+
+                if glo_values.missingParsers:
+                    log.info("\n".join(glo_values.missingParsers), extra={'colour': 'yellow'})
+                    log.info('-'*80)
+            
+            log.info(' {name:<58}{num:>20} '.format(
+                                            name = 'Total Passing Unittests',
+                                            num = glo_values.parserPassed))
+            log.info(' {name:<58}{num:>20} '.format(
+                                            name = 'Total Failed Unittests',
+                                            num = glo_values.parserFailed))
+            log.info(' {name:<58}{num:>20} '.format(
+                                            name = 'Total Errored Unittests',
+                                            num = glo_values.parserErrored))
+            log.info(' {name:<58}{num:>20} '.format(
+                                            name = 'Total Unittests',
+                                            num = glo_values.parserTotal))                                            
+            log.info('-'*80)
+
+            if hasattr(glo_values, '_class_exists'):
+                if not glo_values._class_exists:
+                    parsed_args = _parse_args()
+                    log.info(f'`{parsed_args["_class"]}` does not exist', extra={'colour': 'yellow'})
+                    log.info('-'*80)
+
+        else:
+            log.info(banner('No Results To Show'))
+
+# Handles output for pyats run job
+def generate_email_reports():
+
+    # Retrieve testsuite from ReportServer
+    testsuite = runtime.details()
+
+    summary_entries = []
+    detail_trees = []
+
+    # Parse run details from ReportServer into nice human-readable formats
+    for task in testsuite.tasks:
+        # New task tree
+        task_tree = TreeNode('%s: %s' % (task.id, task.name))
+        for section in task.sections:
+            # Add to summary
+            summary_entries.append(
+                TEST_RESULT_ROW.format(
+                    name = str_shortener('%s: %s.%s' % (task.id,
+                                                        task.name,
+                                                        section.id),
+                                            70),
+                    result = str(section.result).upper(),
+                    max_len = 70))
+
+            # Build task report tree
+            failed_build_tree(section, task_tree)
+        # Add task tree to details tree list
+        detail_trees.append(task_tree)
+
+    # Format details for email
+    task_summary = '\n'.join(summary_entries) or\
+                    'Empty - did something go wrong?'
+    task_details = '\n'.join(map(str, detail_trees)) or\
+                    'Empty - did something go wrong?'
+
+    if str(task_details) == 'Task-1: unittests':
+                task_details = ' %-70s%10s ' % ('ALL UNITTESTS', 'PASSED'.center(10))
+
+    # Add details to email contents
+    if runtime.mail_report:
+        runtime.mail_report.contents['Task Result Summary'] = task_summary
+        runtime.mail_report.contents['Task Result Details'] = task_details
+        # ? I've yet to find a way to make this work. Problem is this function gets called independent of the file
+        # runtime.mail_report.contents['Total Parsers Missing Unittests'] = f"{glo_values.missingCount}\n{'-'*80}"
+        # runtime.mail_report.contents['Total Parsers Missing Unittests'] = f"{glo_values._class_exists}\n{'-'*80}"
+
+#===========================================================================
+#                            Testcase Generators
+#===========================================================================
+class OSGenerator(object):
+    def __init__(self, loopee, operating_system):
+        self.operating_system = operating_system
+
+    def __iter__(self):
+        """Sets the uid of each os step to its name"""
+        for os_data in self.operating_system:
+            yield Iteration(uid=os_data[0], parameters={"operating_system": os_data})
+
+class ParserGenerator(object):
+    def __init__(self, loopee, data):
+        self.data = data
+
+    def __iter__(self):
+        """Sets the uid of each parser step to its class name. Adds token if it exists"""
+        for d in self.data:
+            if not re.match(f'{d["operating_system"]}_\S+', d['local_class'].__module__):
+                continue
+            if d['token']:
+                yield Iteration(uid=f"{d['local_class'].__name__} -> {d['token']}", parameters={"data": d})
+            else:
+                yield Iteration(uid=d['local_class'].__name__, parameters={"data": d})
+
+#===========================================================================
+#                            OS Testcase
+#===========================================================================
+class SuperFileBasedTesting(aetest.Testcase):
     """Standard pyats testcase class."""
 
+    def __init__(self, *args, **kwargs):
+        # init parent
+        super().__init__(*args, **kwargs)
+        glo_values.missingCount = 0
+        glo_values.parserPassed = 0
+        glo_values.parserFailed = 0
+        glo_values.parserErrored = 0
+        glo_values.parserTotal = 0
+        glo_values.missingParsers = list()
+
+
+    @aetest.setup
+    def setup(self, _os, _class, _token, _display_only_failed, _number, _external_folder, _show_missing_unittests):
+
+        # If _class is passed then check to see if it even exists
+        if _class:
+            glo_values._class_exists = False
+        
+        operating_systems = get_operating_systems(_os)
+
+        self.parsers = dict()
+
+        for operating_system in operating_systems:
+
+            self.parsers_list = self.parsers.setdefault(operating_system, list())
+
+            if _external_folder:
+                base_folder = _external_folder / operating_system
+            else:
+                base_folder = pathlib.Path(f"{pathlib.Path(_parser.__file__).parent}/{operating_system}")
+
+            # Please refer to get_tokens comments for the how, the what is a genie token, such as
+            # "asr1k" or "c3850" to provide namespaced parsing.
+            tokens = get_tokens(base_folder)
+            parse_files = []
+            parse_files.extend(get_files(base_folder))
+            for token in tokens:
+                parse_files.extend(get_files(base_folder / token, token))
+            # Get all of the root level files
+            for details in parse_files:
+                parse_file = details["parse_file"]
+                token = details["token"]
+                # Load all of the classes in each of those files, and search for classes
+                # that have a `cli` method
+                _module = None
+                module_name = os.path.basename(parse_file[: -len(".py")])
+                if token:
+                    module_name = f"{operating_system}_{token}_{module_name}"
+                else:
+                    module_name = f"{operating_system}_{module_name}"
+                _module = importlib.machinery.SourceFileLoader(
+                    module_name, parse_file
+                ).load_module()
+                for name, local_class in inspect.getmembers(_module):
+                    if token:
+                        folder_root_equal = pathlib.Path(f"{operating_system}/{token}/{name}/cli/equal")
+                        folder_root_empty = pathlib.Path(f"{operating_system}/{token}/{name}/cli/empty")
+                    else:
+                        folder_root_equal = pathlib.Path(f"{operating_system}/{name}/cli/equal")
+                        folder_root_empty = pathlib.Path(f"{operating_system}/{name}/cli/empty")
+
+
+                    # This is used in conjunction with the arguments that are run at command line, to skip over all tests you are
+                    # not concerned with. Basically, it allows a user to not have to wait for 100s of tests to run, to run their
+                    # one test.
+                    if _token and _token != token:
+                        continue
+                    # Same as previous, however, for class
+                    if _class and _class != name:
+                        continue
+                    if _class and _class == name:
+                        glo_values._class_exists = True
+                    # Each "globals()" is checked to see if it has a cli attribute, if so, assumed to be a parser. The _osxe, is
+                    # since the ios module often refers to the iosxe parser, leveraging this naming convention.
+                    if hasattr(local_class, "cli") and not name.endswith("_iosxe"):
+     
+                        if not folder_root_equal.exists():
+                            if _show_missing_unittests or _class:
+                                if token:
+                                    log.warning(f'Equal unittests for {operating_system}-> {token} -> {name} don\'t exist')
+                                    glo_values.missingParsers.append(f" {operating_system} -> {token} -> {name}")
+                                else:
+                                    log.warning(f'Equal unittests for {operating_system} -> {name} don\'t exist')
+                                    glo_values.missingParsers.append(f" {operating_system} -> {name}")
+                            glo_values.missingCount += 1
+                            continue
+
+                        self.parsers_list.append({
+                            "local_class": local_class,
+                            "operating_system": operating_system,
+                            "display_only_failed": _display_only_failed,
+                            "token": token,
+                            "number": _number,
+                            "show_missing_unittests": _show_missing_unittests,
+                        })
+
+        aetest.loop.mark(ParserTest, operating_system=self.parsers.items(), generator=OSGenerator)
+
+#===========================================================================
+#                            Parser Testcase
+#===========================================================================
+class ParserTest(aetest.Testcase):
     # removes screenhandler from root, but tasklog handler
     # is kept to allow all logs to be visible in the report
     def remove_logger(self):
@@ -105,105 +418,47 @@ class FileBasedTest(aetest.Testcase):
                 self.remove_logger()
         return wrapper
 
-    # constructor used to initialize the class attribute temporary_screen_handler
-    # which will point to the screenhandler log, which is used to display
-    # data on stdout
-    def __init__(self, *args, **kwargs):
-        # init parent
-        super().__init__(*args, **kwargs)
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self.temporary_screen_handler = None
+        if self.parameters['_display_only_failed']:
+                self.remove_logger()
 
-    # setup portion used to define command line options
     @aetest.setup
-    def setup(self, _os, _class, _token, _display_only_failed, _number):
+    def setup(self, operating_system):
+        self.uid = operating_system[0]
+        self.data = operating_system[1]
 
-        # removes screenhandler from root if _display_only_failed 
-        # flag is passed
-        if _display_only_failed and log.root.handlers:
-            self.temporary_screen_handler = log.root.handlers.pop(0)
-
-        aetest.loop.mark(self.test, operating_system=get_operating_systems(_os))
+        aetest.loop.mark(self.test, data=self.data, generator=ParserGenerator)
 
     @aetest.test
-    def test(self,operating_system, steps, _os, _class, _token, _number, _display_only_failed, _external_folder):
-
-        """Loop through OS's and run appropriate tests."""
-        if _external_folder:
-            base_folder = _external_folder / operating_system
+    def test(self, data, steps):
+        local_class = data['local_class']
+        operating_system = data['operating_system']
+        _display_only_failed = data['display_only_failed']
+        token = data['token']
+        _number = data['number']
+        name = local_class.__name__
+        if token:
+            msg = f"{operating_system} -> Token -> {token} -> {name}"
         else:
-            base_folder = pathlib.Path(f"{pathlib.Path(_parser.__file__).parent}/{operating_system}")
-        # Please refer to get_tokens comments for the how, the what is a genie token, such as
-        # "asr1k" or "c3850" to provide namespaced parsing.
-        tokens = get_tokens(base_folder)
-        parse_files = []
-        parse_files.extend(get_files(base_folder))
-        for token in tokens:
-            parse_files.extend(get_files(base_folder / token, token))
-        start = False
-        # Get all of the root level files
-        for details in parse_files:
-            parse_file = details["parse_file"]
-            token = details["token"]
-            # Load all of the classes in each of those files, and search for classes
-            # that have a `cli` method
-            _module = None
-            module_name = os.path.basename(parse_file[: -len(".py")])
-            if token:
-                module_name = f"{operating_system}_{token}_{module_name}"
-            else:
-                module_name = f"{operating_system}_{module_name}"
-            _module = importlib.machinery.SourceFileLoader(
-                module_name, parse_file
-            ).load_module()
-            for name, local_class in inspect.getmembers(_module):
-                # The following methods determin when a test is not warranted, further detail will be provided for each method.
+            msg = f"{operating_system} -> {name}"
+        with steps.start(msg, continue_=True) as class_step:
+            with class_step.start(
+                f"Test Golden -> {operating_system} -> {name}",
+                continue_=True,
+            ) as golden_steps:
+                self.test_golden(
+                    golden_steps, local_class, operating_system, _display_only_failed, token, _number
+                )
 
-                # If there is a token and the "class" was found to be a known whitelist (mainly since there was not existing tests),
-                # skip. Whitelisted items should be cleaned up over time, and this removed to enforce testing always happens.
-                if token and CLASS_SKIP.get(operating_system, {}).get(token, {}).get(
-                    name
-                ):
-                    continue
-                # Same as previous, but in cases without tokens (which is the majority.)
-                elif not token and CLASS_SKIP.get(operating_system, {}).get(name):
-                    continue
-
-                # This is used in conjunction with the arguments that are run at command line, to skip over all tests you are
-                # not concerned with. Basically, it allows a user to not have to wait for 100s of tests to run, to run their
-                # one test.
-                if _token and _token != token:
-                    continue
-                # Same as previous, however, for class
-                if _class and _class != name:
-                    continue
-                # Each "globals()" is checked to see if it has a cli attribute, if so, assumed to be a parser. The _osxe, is
-                # since the ios module often refers to the iosxe parser, leveraging this naming convention.
-                if hasattr(local_class, "cli") and not name.endswith("_iosxe"):
-                    # if name == 'SomeClassName':
-                    #    start = True
-                    # if not start:
-                    #    continue
-                    if token:
-                        msg = f"{operating_system} -> Token -> {token} -> {name}"
-                    else:
-                        msg = f"{operating_system} -> {name}"
-                    with steps.start(msg, continue_=True) as class_step:
-                        with class_step.start(
-                            f"Test Golden -> {operating_system} -> {name}",
-                            continue_=True,
-                        ) as golden_steps:
-                            self.test_golden(
-                                golden_steps, local_class, operating_system, _display_only_failed, token, _number
-                            )
-
-                        with class_step.start(
-                            f"Test Empty -> {operating_system} -> {name}",
-                            continue_=True,
-                        ) as empty_steps:
-                            self.test_empty(
-                                empty_steps, local_class, operating_system, token
-                            )
-
+            with class_step.start(
+                f"Test Empty -> {operating_system} -> {name}",
+                continue_=True,
+            ) as empty_steps:
+                self.test_empty(
+                    empty_steps, local_class, operating_system, token
+                )
 
     @screen_log_handling
     def test_golden(self, steps, local_class, operating_system, display_only_failed=None, token=None, number=None):
@@ -224,6 +479,10 @@ class FileBasedTest(aetest.Testcase):
         else:
             output_glob = sorted(glob.glob(f"{folder_root}/*_output.txt"), key=aph_key)
 
+        all_txt_glob = sorted(glob.glob(f"{folder_root}/*.txt"), key=aph_key)
+        
+        unacceptable_filenames = [fil for fil in all_txt_glob if fil not in output_glob]
+
         if len(output_glob) == 0:
             steps.failed(f"No files found in appropriate directory for {local_class}")
 
@@ -231,6 +490,7 @@ class FileBasedTest(aetest.Testcase):
         # on truncating that _output.txt suffix) and obtaining expected results and potentially an arguments file
         
         for user_defined in output_glob:
+            glo_values.parserTotal += 1
             user_test = os.path.basename(user_defined[: -len("_output.txt")])
             if token:
                 msg = f"Gold -> {operating_system} -> Token {token} -> {local_class.__name__} -> {user_test}"
@@ -241,11 +501,12 @@ class FileBasedTest(aetest.Testcase):
                 golden_output_str = read_from_file(
                     f"{folder_root}/{user_test}_output.txt"
                 )
-                golden_output = {"execute.return_value": golden_output_str}
+                golden_output = {
+                    "execute.return_value": golden_output_str,
+                    "expect.return_value": golden_output_str,
+                    }
 
-                golden_parsed_output = read_python_file(
-                    f"{folder_root}/{user_test}_expected.py"
-                )
+                golden_parsed_output = read_python_file(f"{folder_root}/{user_test}_expected.py")
                 arguments = {}
                 if os.path.exists(f"{folder_root}/{user_test}_arguments.json"):
                     arguments = read_json_file(
@@ -254,13 +515,22 @@ class FileBasedTest(aetest.Testcase):
 
                 device = Mock(**golden_output)
                 obj = local_class(device=device)
-                parsed_output = obj.parse(**arguments)
+                try:
+                    parsed_output = obj.parse(**arguments)
+                except Exception as e:
+                    parsed_output = dict()
+                    if display_only_failed:
+                        self.add_logger()
+                        log.error(traceback.format_exc(), extra={"colour": 'red'})
+                        self.remove_logger()
+                    glo_values.parserErrored += 1
                 
                 # Use Diff method to get the difference between 
                 # what is expected and the parsed output
                 dd = Diff(parsed_output,golden_parsed_output)
                 dd.findDiff()
                 if parsed_output != golden_parsed_output:
+                    glo_values.parserFailed += 1
                     # if -f flag provided, then add the screen handler back into
                     # the root.handlers to displayed failed tests. Decorator removes
                     # screen handler from root.handlers after failed tests are displayed
@@ -273,15 +543,18 @@ class FileBasedTest(aetest.Testcase):
                     golden_parsed_output_json_data = json.dumps(golden_parsed_output, indent=4, sort_keys=True)
                     
                     # Display device output, parsed output, and golden_output of failed tests
-                    log.info("\nThe following is the device output before it is parsed:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
+                    log.info("\nThe following is the device output before it is parsed:\n{}\n\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
                     log.info("The following is your device's parsed output:\n{}\n".format(parsed_json_data), extra = {'colour': 'yellow'})
                     log.info("The following is your expected output:\n{}\n".format(golden_parsed_output_json_data), extra = {'colour': 'yellow'})
                     log.info("The following is the difference between the two outputs:\n", extra = {'colour': 'yellow'})
 
                     # Display the diff between parsed output and golden_output
                     log.info(str(dd), extra = {'colour': 'yellow'})
+                    if display_only_failed:
+                        self.remove_logger()
                     raise AssertionError("Device output and expected output do not match")
                 else:
+                    glo_values.parserPassed += 1
                     # If tests pass, display the device output in debug mode
                     # But first check if the screen handler is removed, if it is
                     # put it back into the root otherwise just display to stdout
@@ -294,35 +567,52 @@ class FileBasedTest(aetest.Testcase):
                         logging.debug(banner(msg))
                         logging.debug("\nThe following is the device output for the passed parser:\n{}\n".format(golden_output['execute.return_value']), extra = {'colour': 'yellow'})
 
+        if unacceptable_filenames:
+            for unacc_fil in unacceptable_filenames:
+                unacc_fil_name = pathlib.Path(unacc_fil).name
+                msg = f"{unacc_fil_name} does not follow the filename schema and will not be ran..."
+                with steps.start(msg, continue_ = True) as step:
+                    if self.temporary_screen_handler not in log.root.handlers and self.temporary_screen_handler != None:
+                        self.add_logger()
+                        log.info(msg, extra={'colour': 'yellow'})
+                        log.info(f"Filename should be `{unacc_fil_name.split('.')[0]}_expected.txt`", extra={'colour': 'yellow'})
+                        self.remove_logger()
+                    else:
+                        log.info(f"Filename should be `{unacc_fil_name.split('.')[0]}_expected.txt`", extra={'colour': 'yellow'})
+                    step.failed()
 
     @screen_log_handling
     def test_empty(self, steps, local_class, operating_system, token=None, display_only_failed=None):
         """Test step that looks for empty output."""
         if token:
-            folder_root = f"{operating_system}/{token}/{local_class.__name__}/cli/empty"
-
+            folder_root = pathlib.Path(f"{operating_system}/{token}/{local_class.__name__}/cli/empty")
         else:
-            folder_root = f"{operating_system}/{local_class.__name__}/cli/empty"
+            folder_root = pathlib.Path(f"{operating_system}/{local_class.__name__}/cli/empty")
         output_glob = glob.glob(f"{folder_root}/*_output.txt")
 
-        if len(output_glob) == 0 and not EMPTY_SKIP.get(operating_system, {}).get(
-            local_class.__name__
-        ):
-            steps.failed(
-                f"No files found in appropriate directory for {local_class} empty file"
-            )
+        all_txt_glob = sorted(glob.glob(f"{folder_root}/*.txt"))
+        
+        unacceptable_filenames = [fil for fil in all_txt_glob if fil not in output_glob]
 
         for user_defined in output_glob:
+            glo_values.parserTotal += 1
             user_test = os.path.basename(user_defined[: -len("_output.txt")])
             if token:
                 msg = f"Empty -> {operating_system} -> {token} -> {local_class.__name__} -> {user_test}"
             else:
                 msg = f"Empty -> {operating_system} -> {local_class.__name__} -> {user_test}"
             with steps.start(msg, continue_=True) as step_within:
-                empty_output_str = read_from_file(
-                    f"{folder_root}/{user_test}_output.txt"
-                )
-                empty_output = {"execute.return_value": empty_output_str}
+
+                try:
+                    empty_output_str = read_from_file(
+                        f"{folder_root}/{user_test}_output.txt"
+                    )
+                except Exception:
+                    empty_output_str = ""
+                empty_output = {
+                    "execute.return_value": empty_output_str,
+                    "expect.return_value": empty_output_str,
+                }
                 arguments = {}
                 if os.path.exists(f"{folder_root}/{user_test}_arguments.json"):
                     arguments = read_json_file(
@@ -338,620 +628,44 @@ class FileBasedTest(aetest.Testcase):
                     # to stdout
                     if display_only_failed:
                         self.add_logger()
+                    glo_values.parserFailed += 1
                     step_within.failed(f"File parsed, when expected not to for {local_class}")
                 except SchemaEmptyParserError:
+                    glo_values.parserPassed += 1
                     return True
                 except AttributeError:
+                    glo_values.parserPassed += 1
                     return True
+                except Exception:
+                    glo_values.parserErrored += 1
+                    raise
 
-CLASS_SKIP = {
-    "asa": {
-        "ShowVpnSessiondbSuper": True,
-        },
-    "iosxe": {
-        "c9300": {
-            "ShowInventory": True,
-        },
-        "c9200": {
-            "ShowEnvironmentAllSchema": True,
-            "ShowEnvironmentAll_C9300": True,
-        },
-        "ShowPimNeighbor": True,
-        "ShowIpInterfaceBrief": True,
-        "ShowIpInterfaceBriefPipeVlan": True,
-        "ShowBfdSessions": True,
-        "ShowBfdSessions_viptela": True,
-        "ShowBfdSummary": True,
-        "ShowDot1x": True,
-        "ShowEnvironmentAll": True,
-        "ShowControlConnections_viptela": True,
-        "ShowControlConnections": True,
-        "ShowEigrpNeighborsSuperParser": True,
-        "ShowEigrpInterfacesSuperParser": True, # PR submitted
-        "ShowIpEigrpNeighborsDetailSuperParser": True,
-        "ShowIpOspfInterface": True,
-        "ShowIpOspfNeighborDetail": True,
-        "ShowIpOspfShamLinks": True,
-        "ShowIpOspfVirtualLinks": True,
-        "ShowIpOspfMplsTrafficEngLink": True,
-        "ShowIpOspfDatabaseOpaqueAreaTypeExtLink": True,
-        "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkAdvRouter": True,
-        "ShowIpOspfDatabaseOpaqueAreaTypeExtLinkSelfOriginate": True,
-        "ShowIpOspfDatabaseTypeParser": True,
-        "ShowIpOspfLinksParser": True,  # super class
-        "ShowIpOspfLinksParser2": True, # super class
-        "ShowIpRouteDistributor": True, # super class
-        "ShowIpv6RouteDistributor": True, # super class
-        "ShowControlLocalProperties_viptela": True,
-        "ShowControlLocalProperties": True,
-        "ShowVrfDetailSuperParser": True,
-        "ShowBgpAllNeighborsRoutesSuperParser": True,
-        "ShowBgpDetailSuperParser": True,
-        "ShowBgpNeighborSuperParser": True,
-        "ShowBgpNeighborsAdvertisedRoutesSuperParser": True,
-        "ShowBgpNeighborsReceivedRoutes": True,
-        "ShowBgpNeighborsReceivedRoutesSuperParser": True,
-        "ShowBgpNeighborsRoutes": True,
-        "ShowBgpSummarySuperParser": True,
-        "ShowBgpSuperParser": True,
-        "ShowIpBgpAllNeighborsAdvertisedRoutes": True,
-        "ShowIpBgpAllNeighborsReceivedRoutes": True,
-        "ShowIpBgpNeighborsReceivedRoutes": True,
-        "ShowIpBgpNeighborsRoutes": True,
-        "ShowIpBgpRouteDistributer": True,
-        "ShowPolicyMapTypeSuperParser": True,
-        "ShowIpLocalPool": True,
-        "ShowInterfaceDetail": True,
-        "ShowInterfaceIpBrief": True,
-        "ShowInterfaceSummary": True,
-        "ShowAuthenticationSessionsInterface": True,
-        "ShowVersion_viptela": True,
-        "ShowOmpPeers_viptela": True,
-        "ShowBfdSummary_viptela": True,
-        "ShowOmpTlocPath_viptela": True,
-        "ShowOmpTlocs_viptela": True,
-        "ShowSoftwaretab_viptela": True, # PR submitted
-        "ShowRebootHistory_viptela": True,
-        "ShowOmpSummary_viptela": True,
-        "ShowSystemStatus_viptela": True,
-        "ShowTcpProxyStatistics": True, # PR submitted
-        "ShowTcpproxyStatus": True, # PR submitted
-        "ShowPlatformTcamUtilization": True, # PR submitted
-        "ShowLicense": True, # PR submitted
-        "Show_Stackwise_Virtual_Dual_Active_Detection": True, # PR submitted
-        "ShowSoftwaretab": True, # PR submitted
-        "ShowOmpPeers_viptela": True,
-        "ShowOmpTlocPath_viptela": True,
-        "ShowOmpTlocs_viptela": True,
-        "genie": True, # need to check
-    },
-    "nxos": {
-        "ShowAccessLists": True, # Not migrated
-        "ShowAccessListsSummary": True, # Not migrated
-        "ShowEnvironment": True, # Not migrated
-        "ShowEnvironmentFan": True, # Not migrated
-        "ShowEnvironmentFanDetail": True, # Not migrated
-        "ShowEnvironmentPower": True, # Not migrated
-        "ShowEnvironmentPowerDetail": True, # Not migrated
-        "ShowEnvironmentTemperature": True, # Not migrated
-        "ShowInterfaceCapabilities": True, # Not migrated
-        "ShowInterfaceFec": True, # Not migrated
-        "ShowInterfaceHardwareMap": True, # Not migrated
-        "ShowEnvironmentTemperature": True, # Not migrated
-        "ShowInterfaceTransceiver": True, # Not migrated
-        "ShowInterfaceTransceiverDetails": True, # Not migrated
-        "ShowIpArp": True, # Not migrated
-        "ShowIpArpDetailVrfAll": True, # Not migrated
-        "ShowIpArpSummaryVrfAll": True, # Not migrated
-        "ShowIpArpstatisticsVrfAll": True, # Not migrated
-        "ShowBgpAllDampeningFlapStatistics": True, # Not migrated
-        "ShowBgpAllNexthopDatabase": True, # Not migrated
-        "ShowBgpIpMvpn": True, # Not migrated
-        "ShowBgpIpMvpnSaadDetail": True, # Not migrated
-        "ShowBgpIpMvpnRouteType": True, # Not migrated
-        "ShowBgpL2vpnEvpn": True, # Not migrated
-        "ShowBgpL2vpnEvpnNeighbors": True, # Not migrated
-        "ShowBgpL2vpnEvpnNeighborsAdvertisedRoutes": True, # Not migrated
-        "ShowBgpL2vpnEvpnRouteType": True, # Not migrated
-        "ShowBgpL2vpnEvpnSummary": True, # Not migrated
-        "ShowBgpL2vpnEvpnWord": True, # Not migrated
-        "ShowBgpLabels": True, # Not migrated
-        "ShowBgpPeerPolicy": True, # Not migrated
-        "ShowBgpPeerSession": True, # Not migrated
-        "ShowBgpPeerTemplate": True, # Not migrated
-        "ShowBgpPeerTemplateCmd": True, # Not migrated
-        "ShowBgpPolicyStatisticsDampening": True, # Not migrated
-        "ShowBgpPolicyStatisticsNeighbor": True, # Not migrated
-        "ShowBgpPolicyStatisticsParser": True, # Not migrated
-        "ShowBgpPolicyStatisticsRedistribute": True, # Not migrated
-        "ShowBgpProcessVrfAll": True, # Not migrated
-        "ShowBgpSessions": True, # Not migrated
-        "ShowBgpVrfAllAll": True, # Not migrated
-        "ShowBgpVrfAllAllDampeningParameters": True, # Not migrated
-        "ShowBgpVrfAllAllNextHopDatabase": True, # Not migrated
-        "ShowBgpVrfAllAllSummary": True, # Not migrated
-        "ShowBgpVrfAllNeighbors": True, # Not migrated
-        "ShowBgpVrfAllNeighborsAdvertisedRoutes": True, # Not migrated
-        "ShowBgpVrfAllNeighborsReceivedRoutes": True, # Not migrated
-        "ShowBgpVrfAllNeighborsRoutes": True, # Not migrated
-        "ShowBgpVrfIpv4Unicast": True, # Not migrated
-        "ShowRunningConfigBgp": True, # Not migrated
-        "ShowCdpNeighbors": True, # Not migrated
-        "ShowCheckpointSummary": True, # Not migrated
-        "ShowDot1xAllDetails": True, # Not migrated
-        "ShowDot1xAllStatistics": True, # Not migrated
-        "ShowDot1xAllSummary": True, # Not migrated
-        "ShowEigrpNeighborsDetailSuperParser": True, # Not migrated
-        "ShowEigrpNeighborsSuperParser": True, # Not migrated
-        "ShowEigrpTopology": True, # Not migrated
-        "ShowIpv4EigrpNeighbors": True, # Not migrated
-        "ShowIpv4EigrpNeighborsDetail": True, # Not migrated
-        "ShowIpv6EigrpNeighbors": True, # Not migrated
-        "ShowIpv6EigrpNeighborsDetail": True, # Not migrated
-        "ShowFabricpathIsisAdjacency": True, # Not migrated
-        "ShowMacAddressTable": True, # Not migrated
-        "ShowMacAddressTableAgingTime": True, # Not migrated
-        "ShowMacAddressTableBase": True, # Not migrated
-        "ShowMacAddressTableLimit": True, # Not migrated
-        "ShowMacAddressTableVni": True, # Not migrated
-        "ShowFeature": True, # Not migrated
-        "ShowFeatureSet": True, # Not migrated
-        "ShowForwardingIpv4": True, # Not migrated
-        "ShowHsrpAll": True, # Not migrated
-        "ShowHsrpDelay": True, # Not migrated
-        "ShowHsrpSummary": True, # Not migrated
-        "ShowIpIgmpGroups": True, # Not migrated
-        "ShowIpIgmpInterface": True, # Not migrated
-        "ShowIpIgmpLocalGroups": True, # Not migrated
-        "ShowIpIgmpSnooping": True, # Not migrated
-        "ShowInterface": True, # Not migrated
-        "ShowInterfaceSwitchport": True, # Not migrated
-        "ShowIpInterfaceBrief": True, # Not migrated
-        "ShowIpInterfaceBriefPipeVlan": True, # Not migrated
-        "ShowIpInterfaceBriefVrfAll": True, # Not migrated
-        "ShowIpv6InterfaceVrfAll": True, # Not migrated
-        "ShowNveInterface": True, # Not migrated
-        "ShowRunningConfigInterface": True, # Not migrated
-        "ShowVrfAllInterface": True, # Not migrated
-        "ShowIsis": True, # Not migrated
-        "ShowIsisAdjacency": True, # Not migrated
-        "ShowIsisHostname": True, # Not migrated
-        "ShowIsisHostnameDetail": True, # Not migrated
-        "ShowIsisInterface": True, # Not migrated
-        "ShowIsisSpfLogDetail": True, # Not migrated
-        "ShowL2routeEvpnMac": True, # Not migrated
-        "ShowL2routeEvpnMacEvi": True, # Not migrated
-        "ShowLacpCounters": True, # Not migrated
-        "ShowLacpNeighbor": True, # Not migrated
-        "ShowLacpSystemIdentifier": True, # Not migrated
-        "ShowPortChannelDatabase": True, # Not migrated
-        "ShowPortChannelSummary": True, # Not migrated
-        "ShowLldpAll": True, # Not migrated
-        "ShowLldpTimers": True, # Not migrated
-        "ShowLldpTlvSelect": True, # Not migrated
-        "ShowLldpTraffic": True, # Not migrated
-        "ShowLoggingLogfile": True, # Not migrated
-        "ShowForwardingDistributionMulticastRoute": True, # Not migrated
-        "ShowIpMrouteVrfAll": True, # Not migrated
-        "ShowIpStaticRouteMulticast": True, # Not migrated
-        "ShowIpv6MrouteVrfAll": True, # Not migrated
-        "ShowIpv6StaticRouteMulticast": True, # Not migrated
-        "ShowIpv6MldGroups": True, # Not migrated
-        "ShowIpv6MldInterface": True, # Not migrated
-        "ShowIpMsdpPeerVrf": True, # Not migrated
-        "ShowIpMsdpPolicyStatisticsSaPolicyIn": True, # Not migrated
-        "ShowIpMsdpPolicyStatisticsSaPolicyInOut": True, # Not migrated
-        "ShowIpMsdpPolicyStatisticsSaPolicyOut": True, # Not migrated
-        "ShowIpMsdpSaCacheDetailVrf": True, # Not migrated
-        "ShowIpv6IcmpNeighborDetail": True, # Not migrated
-        "ShowIpv6NdInterface": True, # Not migrated
-        "ShowIpv6Routers": True, # Not migrated
-        "ShowNtpPeerStatus": True, # Not migrated
-        "ShowNtpPeers": True, # Not migrated
-        "ShowIpOspf": True, # Not migrated
-        "ShowIpOspfDatabaseDetailParser": True, # Not migrated
-        "ShowIpOspfDatabaseExternalDetail": True, # Not migrated
-        "ShowIpOspfDatabaseNetworkDetail": True, # Not migrated
-        "ShowIpOspfDatabaseOpaqueAreaDetail": True, # Not migrated
-        "ShowIpOspfDatabaseRouterDetail": True, # Not migrated
-        "ShowIpOspfDatabaseSummaryDetail": True, # Not migrated
-        "ShowIpOspfInterface": True, # Not migrated
-        "ShowIpOspfLinksParser": True, # Not migrated
-        "ShowIpOspfMplsLdpInterface": True, # Not migrated
-        "ShowIpOspfNeighborDetail": True, # Not migrated
-        "ShowIpOspfShamLinks": True, # Not migrated
-        "ShowIpOspfVirtualLinks": True, # Not migrated
-        "ShowIpPimDf": True, # Not migrated
-        "ShowIpPimGroupRange": True, # Not migrated
-        "ShowIpPimInterface": True, # Not migrated
-        "ShowIpPimNeighbor": True, # Not migrated
-        "ShowIpPimPolicyStaticticsRegisterPolicy": True, # Not migrated
-        "ShowIpPimRoute": True, # Not migrated
-        "ShowIpPimRp": True, # Not migrated
-        "ShowIpPimVrfDetail": True, # Not migrated
-        "ShowIpv6PimDf": True, # Not migrated
-        "ShowIpv6PimGroupRange": True, # Not migrated
-        "ShowIpv6PimInterface": True, # Not migrated
-        "ShowIpv6PimNeighbor": True, # Not migrated
-        "ShowIpv6PimRoute": True, # Not migrated
-        "ShowIpv6PimRp": True, # Not migrated
-        "ShowIpv6PimVrfAllDetail": True, # Not migrated
-        "ShowPimRp": True, # Not migrated
-        "ShowRunningConfigPim": True, # Not migrated
-        "Dir": True, # Not migrated
-        "ShowBoot": True, # Not migrated
-        "ShowCores": True, # Not migrated
-        "ShowInstallActive": True, # Not migrated
-        "ShowInventory": True, # Not migrated
-        "ShowProcessesCpu": True, # Not migrated
-        "ShowProcessesMemory": True, # Not migrated
-        "ShowRedundancyStatus": True, # Not migrated
-        "ShowSystemRedundancyStatus": True, # Not migrated
-        "ShowVdcCurrent": True, # Not migrated
-        "ShowVdcDetail": True, # Not migrated
-        "ShowVdcMembershipStatus": True, # Not migrated
-        "ShowVersion": True, # Not migrated
-        "ShowIpPrefixList": True, # Not migrated
-        "ShowIpv6PrefixList": True, # Not migrated
-        "ShowProcesses": True, # Not migrated
-        "ShowIpRipInterfaceVrfAll": True, # Not migrated
-        "ShowIpRipNeighborVrfAll": True, # Not migrated
-        "ShowIpRipRouteVrfAll": True, # Not migrated
-        "ShowIpRipStatistics": True, # Not migrated
-        "ShowIpRipVrfAll": True, # Not migrated
-        "ShowIpv6RipInterfaceVrfAll": True, # Not migrated
-        "ShowIpv6RipNeighborVrfAll": True, # Not migrated
-        "ShowIpv6RipRouteVrfAll": True, # Not migrated
-        "ShowIpv6RipStatistics": True, # Not migrated
-        "ShowIpv6RipVrfAll": True, # Not migrated
-        "ShowRunRip": True, # Not migrated
-        "ShowRouteMap": True, # Not migrated
-        "ShowIpRoute": True, # Not migrated
-        "ShowIpRouteSummary": True, # Not migrated
-        "ShowIpv6Route": True, # Not migrated
-        "ShowRouting": True, # Not migrated
-        "ShowRoutingIpv6VrfAll": True, # Not migrated
-        "ShowRoutingVrfAll": True, # Not migrated
-        "ShowErrdisableRecovery": True, # Not migrated
-        "ShowSpanningTreeDetail": True, # Not migrated
-        "ShowSpanningTreeMst": True, # Not migrated
-        "ShowSpanningTreeSummary": True, # Not migrated
-        "ShowIpStaticRoute": True, # Not migrated
-        "ShowIpv6StaticRoute": True, # Not migrated
-        "ShowSystemInternalL2fwderMac": True, # Not migrated
-        "ShowSystemInternalSysmgrServiceName": True, # Not migrated
-        "ShowRunningConfigTrm": True, # Not migrated
-        "ShowVdcResourceDetail": True, # Not migrated
-        "ShowGuestshell": True, # Not migrated
-        "ShowVirtualServiceCore": True, # Not migrated
-        "ShowVirtualServiceDetail": True, # Not migrated
-        "ShowVirtualServiceGlobal": True, # Not migrated
-        "ShowVirtualServiceList": True, # Not migrated
-        "ShowVirtualServiceUtilization": True, # Not migrated
-        "ShowVlan": True, # Not migrated
-        "ShowVlanAccessMap": True, # Not migrated
-        "ShowVlanFilter": True, # Not migrated
-        "ShowVlanIdVnSegment": True, # Not migrated
-        "ShowVlanInternalInfo": True, # Not migrated
-        "ShowVxlan": True, # Not migrated
-        "ShowVpc": True, # Not migrated
-        "ShowRunningConfigVrf": True, # Not migrated
-        "ShowVrfDetail": True, # Not migrated
-        "ShowVrfInterface": True, # Not migrated
-        "ShowFabricMulticastGlobals": True, # Not migrated
-        "ShowFabricMulticastIpL2Mroute": True, # Not migrated
-        "ShowFabricMulticastIpSaAdRoute": True, # Not migrated
-        "ShowL2routeEvpnEternetSegmentAll": True, # Not migrated
-        "ShowL2routeEvpnImetAllDetail": True, # Not migrated
-        "ShowL2routeFlAll": True, # Not migrated
-        "ShowL2routeEvpnMacIpEvi": True, # Not migrated
-        "ShowL2routeMacAllDetail": True, # Not migrated
-        "ShowL2routeMacIpAllDetail": True, # Not migrated
-        "ShowL2routeSummary": True, # Not migrated
-        "ShowL2routeTopologyDetail": True, # Not migrated
-        "ShowNveInterface": True, # Not migrated
-        "ShowNveInterfaceDetail": True, # Not migrated
-        "ShowNveMultisiteDciLinks": True, # Not migrated
-        "ShowNveMultisiteFabricLinks": True, # Not migrated
-        "ShowNvePeers": True, # Not migrated
-        "ShowNveVni": True, # Not migrated
-        "ShowNveVniIngressReplication": True, # Not migrated
-        "ShowNveVniSummary": True, # Not migrated
-        "ShowRunningConfigNvOverlay": True, # Not migrated
-        "ShowCdpNeighborsDetail": True, # Not migrated
-        "ShowInterfaceDescription": True, # Not migrated
-        "ShowInterfaceStatus": True, # Not migrated
-        "ShowIpInterfaceVrfAll": True, # Not migrated
-        "ShowIsisDatabaseDetail": True, # Not migrated
-        "ShowIpv6MldLocalGroups": True, # Not migrated
-        "ShowIpMsdpSummary": True, # Not migrated
-        "ShowRunningConfigMsdp": True, # Not migrated
-        "ShowIpv6NeighborDetail": True, # Not migrated
-        "ShowL2routeEvpnMacIpAll": True, # Not migrated
-        "ShowNveEthernetSegment": True, # Not migrated
-        "aci":{
-            "ShowPlatformInternalHalPolicyRedirdst": True, # Not migrated
-            "ShowServiceRedirInfoGroup": True, # Not migrated
-        },
-    },
-    "iosxr": {
-        "Ping": True, # Not migrated
-        "ShowAclAfiAll": True, # Not migrated
-        "ShowAclEthernetServices": True, # Not migrated
-        "ShowArpDetail": True, # Not migrated
-        "ShowArpTrafficDetail": True, # Not migrated
-        "ShowBfdSessionDestinationDetails": True, # Not migrated
-        "ShowBgpEgressEngineering": True, # Not migrated
-        "ShowBgpInstanceAfGroupConfiguration": True, # Not migrated
-        "ShowBgpInstanceAllAll": True, # Not migrated
-        "ShowBgpInstanceAllSessions": True, # Not migrated
-        "ShowBgpInstanceNeighborsAdvertisedRoutes": True, # Not migrated
-        "ShowBgpInstanceNeighborsDetail": True, # Not migrated
-        "ShowBgpInstanceNeighborsReceivedRoutes": True, # Not migrated
-        "ShowBgpInstanceNeighborsRoutes": True, # Not migrated
-        "ShowBgpInstanceProcessDetail": True, # Not migrated
-        "ShowBgpInstanceSessionGroupConfiguration": True, # Not migrated
-        "ShowBgpInstanceSessions": True, # Not migrated
-        "ShowBgpL2vpnEvpn": True, # Not migrated
-        "ShowBgpL2vpnEvpnAdvertised": True, # Not migrated
-        "ShowBgpL2vpnEvpnNeighbors": True, # Not migrated
-        "ShowBgpNeighbors": True, # Not migrated
-        "ShowBgpSummary": True, # Not migrated
-        "ShowBgpVrfDbVrfAll": True, # Not migrated
-        "ShowEthernetTags": True, # due to duplication
-        "ShowPlacementProgramAll": True, # Not migrated
-        "ShowL2VpnBridgeDomainBrief": True, # Not migrated
-        "ShowL2VpnBridgeDomainDetail": True, # Not migrated
-        "ShowL2VpnBridgeDomainSummary": True, # Not migrated
-        "ShowCdpNeighbors": True, # Not migrated
-        "ShowCdpNeighborsDetail": True, # Not migrated
-        "ShowControllersCoherentDSP": True, # Not migrated
-        "ShowControllersFiaDiagshellDiagCosqQp": True, # Not migrated
-        "ShowControllersFiaDiagshellDiagEgrCal": True, # Not migrated
-        "ShowControllersFiaDiagshellL2showLoca": True, # Not migrated
-        "ShowControllersNpuInterfaceInstanceLo": True, # Not migrated
-        "ShowControllersOptics": True, # Not migrated
-        "ShowImDampening": True, # Not migrated
-        "ShowImDampeningIntf": True, # Not migrated
-        "ShowBgpInstances": True, # Not migrated
-        "ShowSegmentRoutingLocalBlockInconsistencies": True, # Not migrated
-        "ShowSegmentRoutingMappingServerPrefixSidMapIPV4": True, # Not migrated
-        "ShowSegmentRoutingMappingServerPrefixSidMapIPV4Detail": True, # Not migrated
-        "ShowControllersFiaDiagshellDiagCosqQpairEgpMap": True, # Not migrated
-        "ShowControllersFiaDiagshellDiagEgrCalendarsLocation": True, # Not migrated
-        "ShowControllersFiaDiagshellL2showLocation": True, # Not migrated
-        "ShowControllersNpuInterfaceInstanceLocation": True, # Not migrated
-        "ShowL2vpnForwardingProtectionMainInterface": True, # Not migrated
-        "ShowEigrpIpv4Neighbors": True, # Not migrated
-        "ShowEigrpIpv4NeighborsDetail": True, # Not migrated
-        "ShowEigrpIpv6Neighbors": True, # Not migrated
-        "ShowEigrpIpv6NeighborsDetail": True, # Not migrated
-        "ShowEigrpNeighborsDetailSuperParser": True, # Not migrated
-        "ShowEigrpNeighborsSuperParser": True, # Not migrated
-        "ShowEthernetCfmMeps": True, # Not migrated
-        "ShowEthernetTrunkDetail": True, # Not migrated
-        "ShowEvpnEthernetSegment": True, # Not migrated
-        "ShowEvpnEthernetSegmentDetail": True, # Not migrated
-        "ShowEvpnEthernetSegmentEsiDetail": True, # Not migrated
-        "ShowEvpnEthernetSegmentPrivate": True, # Not migrated
-        "ShowEvpnEvi": True, # Not migrated
-        "ShowEvpnEviDetail": True, # Not migrated
-        "ShowEvpnEviMac": True, # Not migrated
-        "ShowEvpnEviMacPrivate": True, # Not migrated
-        "ShowEvpnInternalLabel": True, # Not migrated
-        "ShowEvpnInternalLabelDetail": True, # Not migrated
-        "ShowHsrpDetail": True, # Not migrated
-        "ShowHsrpSummary": True, # Not migrated
-        "ShowIgmpGroupsDetail": True, # Not migrated
-        "ShowIgmpGroupsSummary": True, # Not migrated
-        "ShowIgmpInterface": True, # Not migrated
-        "ShowIgmpSummary": True, # Not migrated
-        "ShowInterfaceBrief": True, # Not migrated
-        "ShowIpv4InterfaceBrief": True, # Not migrated
-        "ShowIpv6Neighbors": True, # Not migrated
-        "ShowIpv6NeighborsDetail": True, # Not migrated
-        "ShowIsis": True, # Not migrated
-        "ShowIsisAdjacency": True, # Not migrated
-        "ShowIsisDatabaseDetail": True, # Not migrated
-        "ShowIsisFastRerouteSummary": True, # Not migrated
-        "ShowIsisHostname": True, # Not migrated
-        "ShowIsisInterface": True, # Not migrated
-        "ShowIsisLspLog": True, # Not migrated
-        "ShowIsisNeighbors": True, # Not migrated
-        "ShowIsisPrivateAll": True, # Not migrated
-        "ShowIsisProtocol": True, # Not migrated
-        "ShowIsisSegmentRoutingLabelTable": True, # Not migrated
-        "ShowIsisSpfLog": True, # Not migrated
-        "ShowIsisSpfLogDetail": True, # Not migrated
-        "ShowIsisStatistics": True, # Not migrated
-        "ShowL2routeEvpnMacAll": True, # Not migrated
-        "ShowL2routeEvpnMacIpAll": True, # Not migrated
-        "ShowL2routeTopology": True, # Not migrated
-        "ShowL2vpnBridgeDomain": True, # Not migrated
-        "ShowL2vpnBridgeDomainBrief": True, # Not migrated
-        "ShowL2vpnBridgeDomainDetail": True, # Not migrated
-        "ShowL2vpnBridgeDomainSummary": True, # Not migrated
-        "ShowL2vpnForwardingBridgeDomainMacAdd": True, # Not migrated
-        "ShowL2vpnForwardingProtectionMainInte": True, # Not migrated
-        "ShowL2vpnMacLearning": True, # Not migrated
-        "ShowBundle": True, # Not migrated
-        "ShowBundleReasons": True, # Not migrated
-        "ShowLacp": True, # Not migrated
-        "ShowLacpSystemId": True, # Not migrated
-        "ShowLldp": True, # Not migrated
-        "ShowLldpEntry": True, # Not migrated
-        "ShowLldpNeighborsDetail": True, # Not migrated
-        "ShowLldpTraffic": True, # Not migrated
-        "ShowLogging": True, # Not migrated
-        "ShowMfibPlatformEvpnBucketLocation": True, # Not migrated
-        "ShowMldGroupsDetail": True, # Not migrated
-        "ShowMldGroupsGroupDetail": True, # Not migrated
-        "ShowMldInterface": True, # Not migrated
-        "ShowMldSummaryInternal": True, # Not migrated
-        "ShowMplsForwarding": True, # Not migrated
-        "ShowMplsForwardingVrf": True, # Not migrated
-        "ShowMplsInterfaces": True, # Not migrated
-        "ShowMplsLabelRange": True, # Not migrated
-        "ShowMplsLabelTableDetail": True, # Not migrated
-        "ShowMplsLabelTablePrivate": True, # Not migrated
-        "ShowMplsLdpDiscovery": True, # Not migrated
-        "ShowMplsLdpNeighbor": True, # Not migrated
-        "ShowMplsLdpNeighborBrief": True, # Not migrated
-        "ShowMplsLdpNeighborDetail": True, # Not migrated
-        "ShowMribEvpnBucketDb": True, # Not migrated
-        "ShowMribVrfRoute": True, # Not migrated
-        "ShowMribVrfRouteSummary": True, # Not migrated
-        "ShowMsdpContext": True, # Not migrated
-        "ShowMsdpPeer": True, # Not migrated
-        "ShowMsdpSaCache": True, # Not migrated
-        "ShowMsdpStatisticsPeer": True, # Not migrated
-        "ShowMsdpSummary": True, # Not migrated
-        "ShowNtpStatus": True, # Not migrated
-        "ShowRunningConfigNtp": True, # Not migrated
-        "ShowOspfMplsTrafficEngLink": True, # Not migrated
-        "ShowOspfVrfAllInclusive": True, # Not migrated
-        "ShowOspfVrfAllInclusiveDatabaseExternal": True, # Not migrated
-        "ShowOspfVrfAllInclusiveDatabaseNetwork": True, # Not migrated
-        "ShowOspfVrfAllInclusiveDatabaseOpaqu": True, # Not migrated
-        "ShowOspfVrfAllInclusiveDatabaseParser": True, # Not migrated
-        "ShowOspfVrfAllInclusiveDatabaseRouter": True, # Not migrated
-        "ShowOspfVrfAllInclusiveDatabaseSummary": True, # Not migrated
-        "ShowOspfVrfAllInclusiveInterface": True, # Not migrated
-        "ShowOspfVrfAllInclusiveLinksParser": True, # Not migrated
-        "ShowOspfVrfAllInclusiveNeighborDetail": True, # Not migrated
-        "ShowOspfVrfAllInclusiveShamLinks": True, # Not migrated
-        "ShowOspfVrfAllInclusiveVirtualLinks": True, # Not migrated
-        "ShowPimTopologySummary": True, # Not migrated
-        "ShowPimVrfInterfaceDetail": True, # Not migrated
-        "ShowPimVrfMstatic": True, # Not migrated
-        "ShowPimVrfRpfSummary": True, # Not migrated
-        "AdminShowDiagChassis": True, # Not migrated
-        "Dir": True, # Not migrated
-        "ShowInstallActiveSummary": True, # Not migrated
-        "ShowInstallCommitSummary": True, # Not migrated
-        "ShowInstallInactiveSummary": True, # Not migrated
-        "ShowPlatformVm": True, # Not migrated
-        "ShowProcessesMemory": True, # Not migrated
-        "ShowRedundancy": True, # Not migrated
-        "ShowRedundancySummary": True, # Not migrated
-        "ShowSdrDetail": True, # Not migrated
-        "ShowVersion": True, # Not migrated
-        "ShowRplPrefixSet": True, # Not migrated
-        "ShowProcesses": True, # Not migrated
-        "ShowProcessesCpu": True, # Not migrated
-        "ShowProtocolsAfiAllAll": True, # Not migrated
-        "ShowRibTables": True, # Not migrated
-        "ShowImDampeningIntf": True, # Not migrated
-        "ShowIpInterfaceBriefPipeVlan": True, # Not migrated
-        "ShowL2vpnForwardingBridgeDomainMacAddress": True, # Not migrated
-        "ShowL2vpnForwardingProtectionMainInter": True, # Not migrated
-        "ShowLldpInterface": True, # Not migrated
-        "ShowMfibRouteSummary": True, # Not migrated
-        "ShowNtpAssociations": True, # Not migrated
-        "ShowOspfVrfAllInclusiveDatabaseOpaque": True, # Not migrated
-        "ShowInventory": True, # Not migrated
-        "ShowProcessesMemoryDetail": True, # Not migrated
-        "ShowRibTablesSummary": True, # Not migrated
-        "ShowOspfVrfAllInclusiveDatabaseOpaqueArea": True, # Not migrated
-        "ShowRip": True, # Not migrated
-        "ShowRipDatabase": True, # Not migrated
-        "ShowRipInterface": True, # Not migrated
-        "ShowRipStatistics": True, # Not migrated
-        "ShowRouteIpv4": True, # Not migrated
-        "ShowRouteIpv6": True, # Not migrated
-        "ShowRplRoutePolicy": True, # Not migrated
-        "ShowRunKeyChain": True, # Not migrated
-        "ShowRunRouterIsis": True, # Not migrated
-        "ShowIsisSegmentRoutingPrefixSidMap": True, # Not migrated
-        "ShowOspfSegmentRoutingPrefixSidMap": True, # Not migrated
-        "ShowPceIPV4Peer": True, # Not migrated
-        "ShowPceIPV4PeerDetail": True, # Not migrated
-        "ShowPceIPV4PeerPrefix": True, # Not migrated
-        "ShowPceIpv4TopologySummary": True, # Not migrated
-        "ShowPceLsp": True, # Not migrated
-        "ShowPceLspDetail": True, # Not migrated
-        "ShowSegmentRoutingLocalBlockInconsist": True, # Not migrated
-        "ShowSegmentRoutingMappingServerPrefix": True, # Not migrated
-        "ShowSpanningTreeMst": True, # Not migrated
-        "ShowSpanningTreeMstag": True, # Not migrated
-        "ShowSpanningTreePvrsTag": True, # Not migrated
-        "ShowSpanningTreePvrst": True, # Not migrated
-        "ShowSpanningTreePvsTag": True, # Not migrated
-        "ShowSsh": True, # Not migrated
-        "ShowSshHistory": True, # Not migrated
-        "ShowStaticTopologyDetail": True, # Not migrated
-        "ShowTrafficCollecterExternalInterface": True, # Not migrated
-        "ShowTrafficCollecterIpv4CountersPrefi": True, # Not migrated
-        "ShowVrfAllDetail": True, # Not migrated
-        "ShowL2VpnXconnectBrief": True, # Not migrated
-        "ShowL2VpnXconnectSummary": True, # Not migrated
-        "ShowL2vpnXconnect": True, # Not migrated
-        "ShowL2vpnXconnectDetail": True, # Not migrated
-        "ShowL2vpnXconnectMp2mpDetail": True, # Not migrated
-        "Traceroute": True, # Not migrated
-        "ShowRouteAllSummary": True, # Not migrated
-        "ShowSegmentRoutingLocalBlockInconsiste": True, # Not migrated
-        "ShowSegmentRoutingMappingServerPrefixS": True, # Not migrated
-        "ShowBgpSessions": True, # Not migrated
-        "ShowTrafficCollecterIpv4CountersPrefixDetail": True, # Not migrated
-        "ShowL2vpnXconnectSummary": True, # Not migrated
-    },
-    "ios": {
-        "ShowPimNeighbor": True,
-        "ShowInterfacesTrunk": True,
-        "ShowIpInterfaceBrief": True,
-        "ShowIpInterfaceBriefPipeVlan": True,
-        "ShowDot1x": True,
-        "ShowBoot": True,
-        "ShowPagpNeighbor": True,
-        "ShowIpProtocols": True,
-        "ShowIpv6Rpf": True,
-        "ShowIpOspfDatabaseRouter": True,
-        "ShowIpOspfInterface": True,
-        "ShowIpOspfMplsTrafficEngLink": True,
-        "ShowIpOspfNeighborDetail": True,
-        "ShowIpOspfShamLinks": True,
-        "ShowIpOspfVirtualLinks": True,
-        "ShowIpRouteDistributor": True, # super class
-        "ShowIpv6RouteDistributor": True, # super class
-        "ShowIpv6Route": True,
-        "ShowIpBgp": True,
-        "ShowMplsLdpNeighbor": True,
-        "ShowInterfaceDetail": True,
-        "ShowInterfaceIpBrief": True,
-        "ShowInterfaceSummary": True,
-        "ShowInterfaceTransceiverDetail": True,
-        "ShowSdwanSystemStatus": True,
-        "ShowSdwanSoftware": True,
-    },
-    "junos": {
-        "MonitorInterfaceTraffic": True, # issue with Mac
-        "ShowBgpGroupDetailNoMore": True, # need to check
-        "ShowBgpGroupBriefNoMore": True, # need to check
-        "ShowTaskMemory": True, # need to check
-        "ShowConfigurationSystemNtp": True, # need to check
-        "ShowLDPSession": True, # need to check
-        "ShowOspfNeighborInstance": True, # need to check
-        "ShowOspfDatabaseAdvertisingRouterExtensive": True, # need to check
-        "ShowArpNoMore": True, # need to check
-        "ShowRouteProtocolNoMore": True, # need to check
-        "ShowRouteLogicalSystem": True, # need to check
-        "ShowInterfacesTerseInterface": True, # need to check
-        "ShowInterfacesExtensiveNoForwarding": True, # need to check
-        "ShowInterfacesExtensiveInterface": True, # need to check
-        "ShowOspf3NeighborInstance": True, # need to check
-    }
-}
+        if unacceptable_filenames:
+            for unacc_fil in unacceptable_filenames:
+                unacc_fil_name = pathlib.Path(unacc_fil).name
+                msg = f"{unacc_fil_name} does not follow the filename schema and will not be ran..."
+                with steps.start(msg, continue_ = True) as step:
+                    if self.temporary_screen_handler not in log.root.handlers and self.temporary_screen_handler != None:
+                        self.add_logger()
+                        log.info(msg, extra={'colour': 'yellow'})
+                        log.info(f"Filename should be `{unacc_fil_name.split('.')[0]}_expected.txt`", extra={'colour': 'yellow'})
+                        self.remove_logger()
+                    else:
+                        log.info(f"Filename should be `{unacc_fil_name.split('.')[0]}_expected.txt`", extra={'colour': 'yellow'})
+                    step.failed()
 
-EMPTY_SKIP = {
-    "iosxe": {"ShowVersion": True},
-    "ios": {
-        "ShowVersion": True,
-        "ShowIpv6EigrpNeighbors": True,
-        "ShowIpv6EigrpNeighborsDetail": True,
-    },
-}
+    @aetest.cleanup
+    def cleanup(self, _display_only_failed=None, _show_missing_unittests=None):
+        if _display_only_failed:
+            self.add_logger()
+        if _show_missing_unittests and glo_values.missingCount > 0:
+            self.failed('Unittests are missing')
 
+#===========================================================================
+#                            Main Section
+#===========================================================================
+
+# Function for parsing cli arguments
 def _parse_args(
         operating_system=None,
         class_name=None,
@@ -959,6 +673,7 @@ def _parse_args(
         display_only_failed=None,
         number=None,
         external_folder=None,
+        show_missing_unittests=None,
         o=None,c=None,t=None,f=None,n=None,e=None,
         **kwargs):
     
@@ -989,6 +704,10 @@ def _parse_args(
                         type=pathlib.Path,
                         help="An external parser folder to work with",
                         default=None or external_folder or e)
+    my_parser.add_argument("--show-missing-unittests",
+                        action='store_true',
+                        help="Print out parsers that are missing unittests",
+                        default=None or show_missing_unittests)
     args = my_parser.parse_known_args()[0]
 
     _os = args.operating_system
@@ -997,45 +716,43 @@ def _parse_args(
     _display_only_failed = args.display_only_failed
     _number = args.number
     _external_folder = args.external_folder
+    _show_missing_unittests = args.show_missing_unittests
 
-    return _os, _class, _token, _display_only_failed, _number, _external_folder
+    return {
+        "_os":_os, 
+        "_class":_class, 
+        "_token":_token, 
+        "_display_only_failed":_display_only_failed, 
+        "_number":_number, 
+        "_external_folder":_external_folder,
+        "_show_missing_unittests":_show_missing_unittests,
+    }
 
 def main(**kwargs):
     
-    _os, _class, _token, _display_only_failed, _number, _external_folder = _parse_args(**kwargs)
+    parsed_args = _parse_args(**kwargs)
 
-    if _number and (not _class or not _number):
+    if parsed_args['_number'] and (not parsed_args['_class'] or not parsed_args['_number']):
         sys.exit("Unittest number provided but missing supporting arguments:"
                 "\n* '-c' or '--class_name' for the parser class"
                 "\n* '-o' or '--operating_system' for operating system")
 
 
-    if _display_only_failed and log.root.handlers:
-        temporary_screen_handler = log.root.handlers.pop(0)
-    
     if runtime.job:
         # Used for `pyats run job folder_parsing_job.py`
+        runtime.generate_email_reports = generate_email_reports
         run(
             testscript=__file__,
             runtime=runtime,
-            _os=_os,
-            _class=_class,
-            _token=_token,
-            _display_only_failed=_display_only_failed,
-            _number=_number,
-            _external_folder=_external_folder,
+            **parsed_args
         )
     else:
         # Used for `python folder_parsing_job.py`
         aetest.main(
             testable=__file__,
             runtime=runtime,
-            _os=_os,
-            _class=_class,
-            _token=_token,
-            _display_only_failed=_display_only_failed,
-            _number=_number,
-            _external_folder=_external_folder,
+            reporter=FailedReporter(),
+            **parsed_args
         )
 
 
