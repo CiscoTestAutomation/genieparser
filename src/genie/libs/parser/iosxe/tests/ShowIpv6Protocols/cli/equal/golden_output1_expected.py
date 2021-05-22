@@ -47,14 +47,14 @@ expected_output = {
         },
         "eigrp": {
             "vrf": {
-                None: {
+                "default": {
                     "address_family": {
                         "ipv6": {
                             "eigrp_instance": {
                                 "10": {
                                     "configured_interfaces": [
-                                        "GigabitEthernet0/1",
                                         "Loopback3",
+                                        "GigabitEthernet0/1",
                                         "GigabitEthernet0/0",
                                     ],
                                     "eigrp_id": 10,
@@ -190,4 +190,5 @@ expected_output = {
         },
     }
 }
+
 

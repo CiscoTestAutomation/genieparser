@@ -5,6 +5,7 @@ expected_output = {
                 "10": {
                     "address_family": {
                         "ipv6": {
+                            "named_mode": False,
                             "interface": {
                                 "GigabitEthernet0/1": {
                                     "mcast_flow_timer": 0,

@@ -17,9 +17,9 @@ expected_output = {
                             "local_selector": "2001:db8:1:2::/0 "
                             "- "
                             "2001:db8:1:2:ffff:ffff:ffff:ffff/65535",
-                            "remote_selector": "2001:db8:1:2::/0 "
+                            "remote_selector": "2001:db8:3:2::/0 "
                             "- "
-                            "2001:db8:1:2:ffff:ffff:ffff:ffff/65535",
+                            "2001:db8:3:2:ffff:ffff:ffff:ffff/65535",
                         },
                         1: {
                             "esp_in": "0x69b865f8",
@@ -27,9 +27,9 @@ expected_output = {
                             "local_selector": "2001:db8:1:1::/0 "
                             "- "
                             "2001:db8:1:1:ffff:ffff:ffff:ffff/65535",
-                            "remote_selector": "2001:db8:1:1::/0 "
+                            "remote_selector": "2001:db8:3:1::/0 "
                             "- "
-                            "2001:db8:1:1:ffff:ffff:ffff:ffff/65535",
+                            "2001:db8:3:1:ffff:ffff:ffff:ffff/65535",
                         },
                     },
                     "dh_group": 2,

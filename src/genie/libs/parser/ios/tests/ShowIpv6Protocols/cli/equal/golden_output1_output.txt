@@ -19,38 +19,6 @@ IPv6 Routing Protocol is "rip worldskills"
     Redistributing protocol ospf 1 with metric 5 (internal, external 1 & 2, nssa-external 1 & 2) include-connected
     Redistributing protocol bgp 65003 with metric 4 route-map test
     Redistributing protocol eigrp 10 with metric 4 include-connected
-IPv6 Routing Protocol is "bgp 65003"
-  IGP synchronization is disabled
-  Redistribution:
-    Redistributing protocol connected
-    Redistributing protocol ospf 1 (internal) route-map test include-connected
-    Redistributing protocol rip worldskills route-map test include-connected
-    Redistributing protocol eigrp 10 route-map test include-connected
-    Redistributing protocol static route-map test
-  Neighbor(s):
-    Address                    FiltIn FiltOut Weight RoutemapIn RoutemapOut
-    1.1.1.1
-    2001:DB8:20:10::10
-  Distance:
-IPv6 Routing Protocol is "eigrp 10"
-EIGRP-IPv6 Protocol for AS(10)
-  Metric weight K1=1, K2=0, K3=1, K4=0, K5=0
-  Soft SIA disabled
-  NSF-aware route hold timer is 240
-  Router-ID: 4.4.4.4
-  Topology : 0 (base)
-    Active Timer: 3 min
-    Distance: internal 90 external 170
-    Maximum path: 16
-    Maximum hopcount 100
-    Maximum metric variance 1
-
-  Interfaces:
-    GigabitEthernet0/1
-    Loopback3
-    GigabitEthernet0/0 (passive)
-  Redistribution:
-    None
 IPv6 Routing Protocol is "eigrp 20"
 EIGRP-IPv6 VR(cisco) Address-Family Protocol for AS(20)
   Metric weight K1=1, K2=0, K3=1, K4=0, K5=0 K6=0
@@ -77,4 +45,37 @@ EIGRP-IPv6 VR(cisco) Address-Family Protocol for AS(20)
     Loopback3
   Redistribution:
     None
+IPv6 Routing Protocol is "bgp 65003"
+  IGP synchronization is disabled
+  Redistribution:
+    Redistributing protocol connected
+    Redistributing protocol ospf 1 (internal) route-map test include-connected
+    Redistributing protocol rip worldskills route-map test include-connected
+    Redistributing protocol static route-map test
+    Redistributing protocol eigrp 10 route-map test include-connected
+  Neighbor(s):
+    Address                    FiltIn FiltOut Weight RoutemapIn RoutemapOut
+    1.1.1.1
+    2001:DB8:20:10::10
+  Distance:
 IPv6 Routing Protocol is "static"
+IPv6 Routing Protocol is "eigrp 10"
+EIGRP-IPv6 Protocol for AS(10)
+  Metric weight K1=1, K2=0, K3=1, K4=0, K5=0
+  Soft SIA disabled
+  NSF-aware route hold timer is 240
+  Router-ID: 4.4.4.4
+  Topology : 0 (base)
+    Active Timer: 3 min
+    Distance: internal 90 external 170
+    Maximum path: 16
+    Maximum hopcount 100
+    Maximum metric variance 1
+
+  Interfaces:
+    Loopback3
+    GigabitEthernet0/1
+    GigabitEthernet0/0 (passive)
+  Redistribution:
+    None
+
