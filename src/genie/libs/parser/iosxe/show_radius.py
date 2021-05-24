@@ -1,3 +1,11 @@
+''' show_radius.py
+
+IOSXE parsers for the following show commands:
+
+    * 'show radius statistics'
+    * 'show radius server-group all'
+'''
+
 # Python
 import re
 
