@@ -4,7 +4,7 @@ import json
 # Genie
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
-from ats import aetest
+
 
 class ShowCryptoSessionSchema(MetaParser):
     ''' Schema for show crypto session detail
