@@ -1,4 +1,4 @@
-{
+expected_output = {
     "radius": {
         "memlocks": "1",
         "server(10.106.26.213:1812,1813,mgmt-rad)_transactions": {
