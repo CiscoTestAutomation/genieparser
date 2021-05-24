@@ -1,0 +1,55 @@
+{
+    "radius": {
+        "memlocks": "1",
+        "server(10.106.26.213:1812,1813,mgmt-rad)_transactions": {
+            "acct": "0",
+            "authen": "0",
+            "author": "0",
+            "keywrap_enabled": "FALSE",
+            "server_auto_test_enabled": "FALSE",
+        },
+        "server(121.0.0.1:1812,1813,data-rad)_transactions": {
+            "acct": "0",
+            "authen": "0",
+            "author": "0",
+            "keywrap_enabled": "FALSE",
+            "server_auto_test_enabled": "FALSE",
+        },
+        "server(44aa::1:1812,1813,ipv6-rad)_transactions": {
+            "acct": "0",
+            "authen": "0",
+            "author": "0",
+            "keywrap_enabled": "FALSE",
+            "server_auto_test_enabled": "FALSE",
+        },
+        "sg_unconfigured": "FALSE",
+        "sharecount": "1",
+        "type": "standard",
+    },
+    "radius-1": {
+        "memlocks": "1",
+        "server(10.106.26.213:1812,1813,mgmt-rad)_transactions": {
+            "acct": "4",
+            "authen": "0",
+            "author": "0",
+            "keywrap_enabled": "FALSE",
+            "server_auto_test_enabled": "FALSE",
+        },
+        "sg_unconfigured": "FALSE",
+        "sharecount": "1",
+        "type": "standard",
+    },
+    "radius-2": {
+        "memlocks": "1",
+        "server(121.0.0.1:1812,1813,data-rad)_transactions": {
+            "acct": "0",
+            "authen": "0",
+            "author": "0",
+            "keywrap_enabled": "FALSE",
+            "server_auto_test_enabled": "FALSE",
+        },
+        "sg_unconfigured": "FALSE",
+        "sharecount": "1",
+        "type": "standard",
+    },
+}
