@@ -1,0 +1,55 @@
+
+                   Sysauthcontrol Enabled   
+           Dot1x Protocol Version 2         
+
+        Dot1x Info for Ethernet1/1
+        -----------------------------------
+                              PAE = AUTHENTICATOR
+                      PortControl = FORCE_AUTH
+                         HostMode = SINGLE HOST
+                 ReAuthentication = Disabled
+                      QuietPeriod = 60
+                    ServerTimeout = 30
+                      SuppTimeout = 30
+                     ReAuthPeriod = 3600 (Locally configured)
+                        ReAuthMax = 2
+                           MaxReq = 2
+                         TxPeriod = 30
+                  RateLimitPeriod = 0
+                  Mac-Auth-Bypass = Disabled
+
+        Dot1x Authenticator Client List Empty
+
+                      Port Status = AUTHORIZED
+
+                   Sysauthcontrol Enabled   
+           Dot1x Protocol Version 2 
+
+        Dot1x Info for Ethernet1/2
+        -----------------------------------
+                              PAE = AUTHENTICATOR
+                      PortControl = AUTO
+                         HostMode = SINGLE HOST
+                 ReAuthentication = Enabled
+                      QuietPeriod = 60
+                    ServerTimeout = 30
+                      SuppTimeout = 30
+                     ReAuthPeriod = 60 (From Authentication Server)
+                        ReAuthMax = 2
+                           MaxReq = 3
+                         TxPeriod = 30
+                  RateLimitPeriod = 0
+                  Mac-Auth-Bypass = Disabled
+
+        Dot1x Authenticator Client List
+        -------------------------------
+                       Supplicant = 54:BE:EF:FF:E5:E5
+                Auth SM State = AUTHENTICATED
+                Auth BEND SM State = IDLE
+                      Port Status = AUTHORIZED
+            Authentication Method = EAP
+                 Authenticated By = Remote Server
+                     ReAuthPeriod = 60
+                     ReAuthAction = Reauthenticate
+                 TimeToNextReauth = 17
+    

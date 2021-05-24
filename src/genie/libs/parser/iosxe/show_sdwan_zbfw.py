@@ -63,6 +63,7 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
             line = line.strip()
             
             ##18005202  open    10.76.0.7  172.16.186.50    49873  443   PROTO_L7_HTTPS  2    2    1    0    ZP_lanZone_wanZone_I_-1639760094  Isn4451ZbfPolicy-seq-1-cm_  -      0         3684       67394                   
+
             m = p1.match(line)      
             if m:
                 groups = m.groupdict()
@@ -230,7 +231,6 @@ class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
         last_dict_ptr = {}
         for line in out.splitlines():
             line = line.strip()
-            print(line)
 
             #zbfw zonepair-statistics ZP_lanZone_lanZone_Is_-902685811
             m = p1.match(line)      

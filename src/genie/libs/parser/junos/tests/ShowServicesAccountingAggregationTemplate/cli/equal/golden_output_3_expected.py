@@ -2,7 +2,7 @@ expected_output = {
 'services-accounting-information': {
     'flow-aggregate-template-detail': {
         'flow-aggregate-template-detail-ipv4': {
-            'detail-entry': {
+            'detail-entry': [{
                 'byte-count': '180',
                 'destination-address': '192.168.61.2',
                 'destination-mask': '0',
@@ -21,5 +21,5 @@ expected_output = {
                 'start-time': '58267189',
                 'tcp-flags': '0',
                 'top-label-address': '10.120.202.40',
-                'tos': '0'}}}}
+                'tos': '0'}]}}}
 }

@@ -1,0 +1,16 @@
+IOX version: 10.49.0.0
+App signature verification: disabled
+Internal working directory: /vol/usb1/iox
+
+Application Interface Mapping
+AppGigabitEthernet Port #  Interface Name                 Port Type            Bandwidth  
+           1               AppGigabitEthernet1/0/1        KR Port - Internal   10G
+       
+           2               AppGigabitEthernet1/0/2        KR Port - Internal   10G
+       
+
+CPU:
+  Quota: 25(Percentage) 
+  Available: 25(Percentage)
+  Quota: 7400(Units)
+  Available: 7400(Units)

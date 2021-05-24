@@ -397,7 +397,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                         {'type': ipv6_address_dict['type']}
 
                 continue
-
+            
             result = advertver_re.match(line)
             if result:
                 devices_dict['advertisement_ver'] = \
@@ -418,6 +418,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                     parsed_sw_ver = '\n'.join(sw_version)
                     
                     result = software_version_re.match(parsed_sw_ver)
+                    if not result:
+                        continue
 
                     devices_dict['software_version'] = \
                         result.group('software_version')

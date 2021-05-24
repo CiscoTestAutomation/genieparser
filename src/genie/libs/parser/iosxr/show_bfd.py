@@ -27,10 +27,10 @@ class ShowBfdSessionSchema(MetaParser):
             Any(): {
                 'dest_ip_address': {
                     Any(): {
-                        'echo_total_msec': int,
+                        Optional('echo_total_msec'): int,
                         Optional('echo_multiplier'): int,
                         Optional('echo_msec'): int,
-                        'async_total_msec': int,
+                        Optional('async_total_msec'): int,
                         Optional('async_multiplier'): int,
                         Optional('async_msec'): int,
                         'state': str,
@@ -60,15 +60,19 @@ class ShowBfdSession(ShowBfdSessionSchema):
             out = output
 
         result_dict = {}
+        
         #Gi0/0/0/36.52       10.129.196.34   450ms(150ms*3)   6s(2s*3)         UP
         p1 = re.compile(
             r'^(?P<intf>\S+) +(?P<dest>\d+\.\d+\.\d+\.\d+) +(?P<echo_total_msec>\d+\w+)\((?P<echo_msec>\d+\w+)\*(?P<echo_multiplier>\d+)\) +(?P<async_total_msec>\d+\w+)\((?P<async_msec>\d+\w+)\*(?P<async_multiplier>\d+)\) +(?P<state>\S+)')
+        
         #Gi0/0/0/26.110      10.0.221.98     0s               0s               DOWN DAMP
         p2 = re.compile(
             r'^(?P<intf>\S+) +(?P<dest>\d+\.\d+\.\d+\.\d+) +(?P<echo_total_msec>\d+\w+) +(?P<async_total_msec>\d+\w+) +(?P<state>\S+) ?(?P<damp>\S+)?')
+        
         #BE300               172.16.253.53   n/a              n/a              UP
         p3 = re.compile(
             r'^(?P<intf>\S+) +(?P<dest>\d+\.\d+\.\d+\.\d+) +(?P<echo_total_msec>\w+\/\w+) +(?P<async_total_msec>\w+\/\w+) +(?P<state>\S+) ?(?P<damp>\S+)?')
+        
         #                                                             No    n/a
         p4 = re.compile(
             r'(?P<hw>[No|Yes]+) +(?P<npu>\S+)')
@@ -147,8 +151,6 @@ class ShowBfdSession(ShowBfdSessionSchema):
                 interface = Common.convert_intf_name(group['intf'])
                 destaddress = group['dest']
                 bfd_dict = result_dict.setdefault('interface',{}).setdefault(interface,{}).setdefault('dest_ip_address',{}).setdefault(destaddress,{})
-                bfd_dict.update({'echo_total_msec': group['echo_total_msec']})
-                bfd_dict.update({'async_total_msec': group['async_total_msec']})
                 bfd_dict.update({'state': group['state']})
                 if group['damp']:
                     bfd_dict.update({'dampening': group['damp']})

@@ -1,0 +1,21 @@
+
+        Device# show cdp neighbors detail
+
+        Device ID:swor95(SSI13110AAS)
+        System Name:swor95
+        Interface address(es):
+        IPv4 Address: 192.168.0.95
+        Platform: N5K-C5010P-BF, Capabilities: Switch IGMP Filtering Supports-STP-Dispute
+        Interface: Ethernet1/29, Port ID (outgoing port): Ethernet1/19
+        Holdtime: 121 sec
+
+        Version:
+        Cisco Nexus Operating System (NX-OS) Software, Version 5.0(3)N2(1)
+
+        Advertisement Version: 2
+        Native VLAN: 1
+        Duplex: full
+        Physical Location: snmplocation
+        Mgmt address(es):
+        IPv4 Address: 192.168.0.95
+    

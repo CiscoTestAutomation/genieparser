@@ -1,0 +1,18 @@
+VLAN Name                             Status    Ports
+---- -------------------------------- --------- -------------------------------
+10   STD-VLAN10                       active    Eth1/1, Eth1/2
+20   PV-VLAN20-PRIMARY                active    Eth1/11, Eth1/12
+25   PV-VLAN25-SEC-ISO                active    Eth1/11, Eth1/12
+
+VLAN Type         Vlan-mode
+---- -----        ----------
+10   enet         CE
+20   enet         CE
+25   enet         CE
+
+Remote SPAN VLANs
+-------------------------------------------------------------------------------
+
+Primary  Secondary  Type             Ports
+-------  ---------  ---------------  -------------------------------------------
+20       25         isolated

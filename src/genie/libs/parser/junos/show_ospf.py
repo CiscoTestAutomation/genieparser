@@ -40,7 +40,7 @@ import re
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, Optional, Use,
-                                                Schema, Or)
+                                                Schema, Or, ListOf)
 
 
 class ShowOspfInterfaceBriefSchema(MetaParser):
@@ -412,24 +412,17 @@ class ShowOspfNeighborSchema(MetaParser):
         }
     }
     '''
-    def validate_neighbor_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-neighbor is not a list')
-        neighbor_schema = Schema({
-            'neighbor-address': str,
-            'interface-name': str,
-            'ospf-neighbor-state': str,
-            'neighbor-id': str,
-            'neighbor-priority': str,
-            'activity-timer': str
-        })
-        for item in value:
-            neighbor_schema.validate(item)
-        return value
 
     schema = {
         'ospf-neighbor-information': {
-            'ospf-neighbor': Use(validate_neighbor_list)
+            'ospf-neighbor': ListOf({
+                'neighbor-address': str,
+                'interface-name': str,
+                'ospf-neighbor-state': str,
+                'neighbor-id': str,
+                'neighbor-priority': str,
+                'activity-timer': str
+            })
         }
     }
 
@@ -530,26 +523,18 @@ class ShowOspfNeighborInstanceAllSchema(MetaParser):
     }
     '''
 
-    def validate_neighbor_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-neighbor is not a list')
-        neighbor_schema = Schema({
-            'neighbor-address': str,
-            'interface-name': str,
-            'ospf-neighbor-state': str,
-            'neighbor-id': str,
-            'neighbor-priority': str,
-            'activity-timer': str
-        })
-        for item in value:
-            neighbor_schema.validate(item)
-        return value
-
     schema = {
         'ospf-neighbor-information-all': {
             'ospf-instance-neighbor': {
                 'ospf-instance-name': str,
-                Optional('ospf-neighbor'): Use(validate_neighbor_list)
+                Optional('ospf-neighbor'): ListOf({
+                    'neighbor-address': str,
+                    'interface-name': str,
+                    'ospf-neighbor-state': str,
+                    'neighbor-id': str,
+                    'neighbor-priority': str,
+                    'activity-timer': str
+                })
             }
         }
     }
@@ -639,30 +624,23 @@ class ShowOspfDatabaseSchema(MetaParser):
     }
 }
     '''
-    def validate_neighbor_database_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-neighbor is not a list')
-        neighbor_schema = Schema({
-            "advertising-router": str,
-            "age": str,
-            "checksum": str,
-            "lsa-id": str,
-            "lsa-length": str,
-            "lsa-type": str,
-            "options": str,
-            Optional('our-entry'): bool,
-            "sequence-number": str
-        })
-        for item in value:
-            neighbor_schema.validate(item)
-        return value
 
     schema = {
         'ospf-database-information': {
             "ospf-area-header": {
                 "ospf-area": str
             },
-            'ospf-database': Use(validate_neighbor_database_list)
+            'ospf-database': ListOf({
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                "lsa-length": str,
+                "lsa-type": str,
+                "options": str,
+                Optional('our-entry'): bool,
+                "sequence-number": str
+            })
         }
     }
 
@@ -752,24 +730,16 @@ class ShowOspfDatabaseSummarySchema(MetaParser):
         ]
     }
     '''
-    def validate_neighbor_database_summary_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-database-summary is not a list')
-        neighbor_schema = Schema({
-            Optional("@external-heading"): str,
-            Optional("ospf-area"): Or(list, str),
-            Optional("ospf-intf"): list,
-            Optional("ospf-lsa-count"): Or(list, str),
-            Optional("ospf-lsa-type"): Or(list, str)
-        })
-        for item in value:
-            neighbor_schema.validate(item)
-        return value
 
     schema = {
         'ospf-database-information': {
-            'ospf-database-summary':
-            Use(validate_neighbor_database_summary_list)
+            'ospf-database-summary': ListOf({
+                Optional("@external-heading"): str,
+                Optional("ospf-area"): Or(list, str),
+                Optional("ospf-intf"): list,
+                Optional("ospf-lsa-count"): Or(list, str),
+                Optional("ospf-lsa-type"): Or(list, str)
+            })
         }
     }
 
@@ -946,66 +916,58 @@ class ShowOspfDatabaseExternalExtensiveSchema(MetaParser):
         ]
     }
 } """
-    def validate_neighbor_database_external_extensive_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-database is not a list')
-        neighbor_schema = Schema({
-            Optional("@external-heading"): str,
-            Optional("@heading"): str,
-            "advertising-router": str,
-            "age": str,
-            "checksum": str,
-            "lsa-id": str,
-            "lsa-length": str,
-            "lsa-type": str,
-            "options": str,
-            "ospf-database-extensive": {
-                "aging-timer": {
-                    "#text": str,
-                    Optional("@junos:seconds"): str
-                },
-                "expiration-time": {
-                    "#text": str,
-                    Optional("@junos:seconds"): str
-                },
-                "installation-time": {
-                    "#text": str,
-                    Optional("@junos:seconds"): str
-                },
-                "lsa-change-count": str,
-                "lsa-changed-time": {
-                    "#text": str,
-                    Optional("@junos:seconds"): str
-                },
-                "send-time": {
-                    "#text": str,
-                    Optional("@junos:seconds"): str
-                }
-            },
-            "ospf-external-lsa": {
-                "address-mask": str,
-                "ospf-external-lsa-topology": {
-                    "forward-address": str,
-                    "ospf-topology-id": str,
-                    "ospf-topology-metric": str,
-                    "ospf-topology-name": str,
-                    "tag": str,
-                    "type-value": str
-                }
-            },
-            "sequence-number": str
-        })
-        for item in value:
-            neighbor_schema.validate(item)
-        return value
 
     schema = {
         Optional("@xmlns:junos"): str,
         'ospf-database-information': {
             Optional("@xmlns"):
             str,
-            'ospf-database':
-            Use(validate_neighbor_database_external_extensive_list)
+            'ospf-database': ListOf({
+                Optional("@external-heading"): str,
+                Optional("@heading"): str,
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                "lsa-length": str,
+                "lsa-type": str,
+                "options": str,
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": str,
+                        Optional("@junos:seconds"): str
+                    },
+                    "expiration-time": {
+                        "#text": str,
+                        Optional("@junos:seconds"): str
+                    },
+                    "installation-time": {
+                        "#text": str,
+                        Optional("@junos:seconds"): str
+                    },
+                    "lsa-change-count": str,
+                    "lsa-changed-time": {
+                        "#text": str,
+                        Optional("@junos:seconds"): str
+                    },
+                    "send-time": {
+                        "#text": str,
+                        Optional("@junos:seconds"): str
+                    }
+                },
+                "ospf-external-lsa": {
+                    "address-mask": str,
+                    "ospf-external-lsa-topology": {
+                        "forward-address": str,
+                        "ospf-topology-id": str,
+                        "ospf-topology-metric": str,
+                        "ospf-topology-name": str,
+                        "tag": str,
+                        "type-value": str
+                    }
+                },
+                "sequence-number": str
+            })
         }
     }
 
@@ -1686,124 +1648,84 @@ class ShowOspfDatabaseAdvertisingRouterSelfDetailSchema(MetaParser):
             ]
         }
     }'''
-    def validate_ospf_database(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-database is not a list')
-
-        def validate_ospf_link(value):
-            if not isinstance(value, list):
-                raise SchemaError('ospf-link is not a list')
-            ospf_link_schema = Schema({
-                "link-data": str,
-                "link-id": str,
-                "link-type-name": str,
-                "link-type-value": str,
-                "metric": str,
-                "ospf-topology-count": str
-            })
-            for item in value:
-                ospf_link_schema.validate(item)
-            return value
-
-        def validate_ospf_lsa_topology_link(value):
-            if not isinstance(value, list):
-                raise SchemaError('ospf-lsa-topology-link is not a list')
-            ospf_lsa_topology_ink_schema = Schema({
-                "link-type-name":
-                str,
-                "ospf-lsa-topology-link-metric":
-                str,
-                "ospf-lsa-topology-link-node-id":
-                str,
-                "ospf-lsa-topology-link-state":
-                str
-            })
-            for item in value:
-                ospf_lsa_topology_ink_schema.validate(item)
-            return value
-
-        def validate_ospf_lsa_topology_list(value):
-            if not isinstance(value, list):
-                raise SchemaError('ospf-lsa is not a list')
-            ospf_lsa_schema = Schema({
-                "link-type-name": str,
-                "ospf-lsa-topology-link-metric": str,
-                "ospf-lsa-topology-link-node-id": str,
-                "ospf-lsa-topology-link-state": str
-            })
-            for item in value:
-                ospf_lsa_schema.validate(item)
-            return value
-
-        ospf_database_schema = Schema({
-            "advertising-router": str,
-            "age": str,
-            "checksum": str,
-            "lsa-id": str,
-            Optional("our-entry"): bool,
-            "lsa-length": str,
-            "lsa-type": str,
-            "options": str,
-            Optional("ospf-router-lsa"): {
-                "bits": str,
-                "link-count": str,
-                "ospf-link": Use(validate_ospf_link),
-                Optional("ospf-lsa-topology"): {
-                    "ospf-lsa-topology-link":
-                    Use(validate_ospf_lsa_topology_link),
-                    "ospf-topology-id": str,
-                    "ospf-topology-name": str
-                }
-            },
-            Optional("ospf-opaque-area-lsa"): {
-                "tlv-block": {
-                    "formatted-tlv-data": str,
-                    "tlv-length": str,
-                    "tlv-type-name": str,
-                    "tlv-type-value": str
-                },
-                Optional("te-subtlv"): {
-                    "formatted-tlv-data": list,
-                    "tlv-length": list,
-                    "tlv-type-name": list,
-                    "tlv-type-value": list
-                }
-            },
-            Optional("ospf-external-lsa"): {
-                "address-mask": str,
-                "ospf-external-lsa-topology": {
-                    "forward-address": str,
-                    "ospf-topology-id": str,
-                    "ospf-topology-metric": str,
-                    "ospf-topology-name": str,
-                    "tag": str,
-                    "type-value": str
-                }
-            },
-            Optional("ospf-network-lsa"): {
-                "address-mask": str,
-                "attached-router": list,
-                "ospf-lsa-topology": {
-                    "ospf-lsa-topology-link":
-                    Use(validate_ospf_lsa_topology_list),
-                    "ospf-topology-id":
-                    str,
-                    "ospf-topology-name":
-                    str
-                }
-            },
-            "sequence-number": str
-        })
-        for item in value:
-            ospf_database_schema.validate(item)
-        return value
 
     schema = {
         "ospf-database-information": {
             Optional("ospf-area-header"): {
                 "ospf-area": str
             },
-            "ospf-database": Use(validate_ospf_database)
+            "ospf-database": ListOf({
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                Optional("our-entry"): bool,
+                "lsa-length": str,
+                "lsa-type": str,
+                "options": str,
+                Optional("ospf-router-lsa"): {
+                    "bits": str,
+                    "link-count": str,
+                    "ospf-link": ListOf({
+                        "link-data": str,
+                        "link-id": str,
+                        "link-type-name": str,
+                        "link-type-value": str,
+                        "metric": str,
+                        "ospf-topology-count": str
+                    }),
+                    Optional("ospf-lsa-topology"): {
+                        "ospf-lsa-topology-link": ListOf({
+                            "link-type-name": str,
+                            "ospf-lsa-topology-link-metric": str,
+                            "ospf-lsa-topology-link-node-id": str,
+                            "ospf-lsa-topology-link-state": str
+                        }),
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str
+                    }
+                },
+                Optional("ospf-opaque-area-lsa"): {
+                    "tlv-block": {
+                        "formatted-tlv-data": str,
+                        "tlv-length": str,
+                        "tlv-type-name": str,
+                        "tlv-type-value": str
+                    },
+                    Optional("te-subtlv"): {
+                        "formatted-tlv-data": list,
+                        "tlv-length": list,
+                        "tlv-type-name": list,
+                        "tlv-type-value": list
+                    }
+                },
+                Optional("ospf-external-lsa"): {
+                    "address-mask": str,
+                    "ospf-external-lsa-topology": {
+                        "forward-address": str,
+                        "ospf-topology-id": str,
+                        "ospf-topology-metric": str,
+                        "ospf-topology-name": str,
+                        "tag": str,
+                        "type-value": str
+                    }
+                },
+                Optional("ospf-network-lsa"): {
+                    "address-mask": str,
+                    "attached-router": list,
+                    "ospf-lsa-topology": {
+                        "ospf-lsa-topology-link": ListOf({
+                            "link-type-name": str,
+                            "ospf-lsa-topology-link-metric": str,
+                            "ospf-lsa-topology-link-node-id": str,
+                            "ospf-lsa-topology-link-state": str
+                        }),
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str
+                    }
+                },
+                "sequence-number": str
+            })
         }
     }
 
@@ -2365,139 +2287,114 @@ class ShowOspfDatabaseExtensiveSchema(MetaParser):
             ]
         }
     }'''
-    def validate_ospf_database(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-database is not a list')
-
-        def validate_ospf_link(value):
-            if not isinstance(value, list):
-                raise SchemaError('ospf-link is not a list')
-            ospf_link_schema = Schema({
-                "link-data": str,
-                "link-id": str,
-                "link-type-name": str,
-                "link-type-value": str,
-                "metric": str,
-                "ospf-topology-count": str
-            })
-            for item in value:
-                ospf_link_schema.validate(item)
-            return value
-
-        def validate_ospf_lsa_topology_link(value):
-            if not isinstance(value, list):
-                raise SchemaError('ospf-lsa-topology-link is not a list')
-            ospf_lsa_topology_ink_schema = Schema({
-                "link-type-name":
-                str,
-                "ospf-lsa-topology-link-metric":
-                str,
-                "ospf-lsa-topology-link-node-id":
-                str,
-                "ospf-lsa-topology-link-state":
-                str
-            })
-            for item in value:
-                ospf_lsa_topology_ink_schema.validate(item)
-            return value
-
-        ospf_database_schema = Schema({
-            "advertising-router": str,
-            "age": str,
-            "checksum": str,
-            "lsa-id": str,
-            Optional("our-entry"): bool,
-            "lsa-length": str,
-            "lsa-type": str,
-            "options": str,
-            Optional("ospf-network-lsa"): {
-                "address-mask": str,
-                "attached-router": list,
-                "ospf-lsa-topology": {
-                    "ospf-lsa-topology-link":
-                    Use(validate_ospf_lsa_topology_link),
-                    "ospf-topology-id": str,
-                    "ospf-topology-name": str
-                }
-            },
-            "ospf-database-extensive": {
-                "aging-timer": {
-                    "#text": str
-                },
-                Optional("expiration-time"): {
-                    "#text": str
-                },
-                Optional("installation-time"): {
-                    "#text": str
-                },
-                Optional("generation-timer"): {
-                    "#text": str
-                },
-                Optional("lsa-change-count"): str,
-                Optional("lsa-changed-time"): {
-                    "#text": str
-                },
-                Optional("send-time"): {
-                    Optional("#text"): str
-                },
-                Optional("database-entry-state"): str
-            },
-            Optional("ospf-router-lsa"): {
-                "bits": str,
-                "link-count": str,
-                "ospf-link": Use(validate_ospf_link),
-                Optional("ospf-lsa-topology"): {
-                    "ospf-lsa-topology-link":
-                    Use(validate_ospf_lsa_topology_link),
-                    "ospf-topology-id": str,
-                    "ospf-topology-name": str
-                }
-            },
-            Optional("ospf-opaque-area-lsa"): {
-                "tlv-block": {
-                    "formatted-tlv-data": str,
-                    "tlv-length": str,
-                    "tlv-type-name": str,
-                    "tlv-type-value": str
-                },
-                Optional("te-subtlv"): {
-                    "formatted-tlv-data": list,
-                    "tlv-length": list,
-                    "tlv-type-name": list,
-                    "tlv-type-value": list
-                }
-            },
-            Optional("ospf-external-lsa"): {
-                "address-mask": str,
-                "ospf-external-lsa-topology": {
-                    "forward-address": str,
-                    "ospf-topology-id": str,
-                    "ospf-topology-metric": str,
-                    "ospf-topology-name": str,
-                    "tag": str,
-                    "type-value": str
-                }
-            },
-            Optional("ospf-summary-lsa"): {
-                "address-mask": str,
-                "ospf-summary-lsa-topology": {
-                    "ospf-topology-name": str,
-                    "ospf-topology-id": str,
-                    "ospf-topology-metric": str,
-                }
-            },
-            "sequence-number": str
-        })
-        for item in value:
-            ospf_database_schema.validate(item)
-        return value
 
     schema = {
         "ospf-database-information": {
             "ospf-area-header": {
                 "ospf-area": str
             },
-            "ospf-database": Use(validate_ospf_database)
+            "ospf-database": ListOf({
+                "advertising-router": str,
+                "age": str,
+                "checksum": str,
+                "lsa-id": str,
+                Optional("our-entry"): bool,
+                "lsa-length": str,
+                "lsa-type": str,
+                "options": str,
+                Optional("ospf-network-lsa"): {
+                    "address-mask": str,
+                    "attached-router": list,
+                    "ospf-lsa-topology": {
+                        "ospf-lsa-topology-link": ListOf({
+                            "link-type-name": str,
+                            "ospf-lsa-topology-link-metric": str,
+                            "ospf-lsa-topology-link-node-id": str,
+                            "ospf-lsa-topology-link-state": str
+                        }),
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str
+                    }
+                },
+                "ospf-database-extensive": {
+                    "aging-timer": {
+                        "#text": str
+                    },
+                    Optional("expiration-time"): {
+                        "#text": str
+                    },
+                    Optional("installation-time"): {
+                        "#text": str
+                    },
+                    Optional("generation-timer"): {
+                        "#text": str
+                    },
+                    Optional("lsa-change-count"): str,
+                    Optional("lsa-changed-time"): {
+                        "#text": str
+                    },
+                    Optional("send-time"): {
+                        Optional("#text"): str
+                    },
+                    Optional("database-entry-state"): str
+                },
+                Optional("ospf-router-lsa"): {
+                    "bits": str,
+                    "link-count": str,
+                    "ospf-link": ListOf({
+                        "link-data": str,
+                        "link-id": str,
+                        "link-type-name": str,
+                        "link-type-value": str,
+                        "metric": str,
+                        "ospf-topology-count": str
+                    }),
+                    Optional("ospf-lsa-topology"): {
+                        "ospf-lsa-topology-link": ListOf({
+                            "link-type-name": str,
+                            "ospf-lsa-topology-link-metric": str,
+                            "ospf-lsa-topology-link-node-id": str,
+                            "ospf-lsa-topology-link-state": str
+                        }),
+                        "ospf-topology-id": str,
+                        "ospf-topology-name": str
+                    }
+                },
+                Optional("ospf-opaque-area-lsa"): {
+                    "tlv-block": {
+                        "formatted-tlv-data": str,
+                        "tlv-length": str,
+                        "tlv-type-name": str,
+                        "tlv-type-value": str
+                    },
+                    Optional("te-subtlv"): {
+                        "formatted-tlv-data": list,
+                        "tlv-length": list,
+                        "tlv-type-name": list,
+                        "tlv-type-value": list
+                    }
+                },
+                Optional("ospf-external-lsa"): {
+                    "address-mask": str,
+                    "ospf-external-lsa-topology": {
+                        "forward-address": str,
+                        "ospf-topology-id": str,
+                        "ospf-topology-metric": str,
+                        "ospf-topology-name": str,
+                        "tag": str,
+                        "type-value": str
+                    }
+                },
+                Optional("ospf-summary-lsa"): {
+                    "address-mask": str,
+                    "ospf-summary-lsa-topology": {
+                        "ospf-topology-name": str,
+                        "ospf-topology-id": str,
+                        "ospf-topology-metric": str,
+                    }
+                },
+                "sequence-number": str
+            })
         }
     }
 
@@ -3416,56 +3313,40 @@ class ShowOspfNeighborExtensiveSchema(MetaParser):
     """ Schema for:
             * show ospf neighbor extensive
     """
-    def validate_ospf_neighbor_list(value):
-        def validate_adjacency_labels_list(value):
-            if not isinstance(value, list):
-                raise SchemaError('adjacency labels is not a list')
-            adjacency_labels_schema = Schema(
-                {
-                    'label': str,
-                    'flags': str,
-                    'adj-sid-type': str
-                }, )
-            for item in value:
-                adjacency_labels_schema.validate(item)
-            return value
-
-        if not isinstance(value, list):
-            raise SchemaError('ospf-neighbor is not a list')
-        ospf_lsa_topology_ink_schema = Schema({
-            "activity-timer": str,
-            Optional("adj-sid-list"): {
-                'spring-adjacency-labels': Use(validate_adjacency_labels_list)
-            },
-            "bdr-address": str,
-            "dr-address": str,
-            "interface-name": str,
-            "neighbor-address": str,
-            Optional("neighbor-adjacency-time"): {
-                "#text": str
-            },
-            "neighbor-id": str,
-            "neighbor-priority": str,
-            Optional("neighbor-up-time"): {
-                "#text": str,
-                Optional("junos:seconds"): str,
-            },
-            "options": str,
-            "ospf-area": str,
-            "ospf-neighbor-state": str,
-            Optional("ospf-neighbor-topology"): {
-                "ospf-neighbor-topology-state": str,
-                "ospf-topology-id": str,
-                "ospf-topology-name": str
-            }
-        })
-        for item in value:
-            ospf_lsa_topology_ink_schema.validate(item)
-        return value
 
     schema = {
         "ospf-neighbor-information": {
-            "ospf-neighbor": Use(validate_ospf_neighbor_list)
+            "ospf-neighbor": ListOf({
+                "activity-timer": str,
+                Optional("adj-sid-list"): {
+                    'spring-adjacency-labels': ListOf({
+                        'label': str,
+                        'flags': str,
+                        'adj-sid-type': str
+                    })
+                },
+                "bdr-address": str,
+                "dr-address": str,
+                "interface-name": str,
+                "neighbor-address": str,
+                Optional("neighbor-adjacency-time"): {
+                    "#text": str
+                },
+                "neighbor-id": str,
+                "neighbor-priority": str,
+                Optional("neighbor-up-time"): {
+                    "#text": str,
+                    Optional("junos:seconds"): str,
+                },
+                "options": str,
+                "ospf-area": str,
+                "ospf-neighbor-state": str,
+                Optional("ospf-neighbor-topology"): {
+                    "ospf-neighbor-topology-state": str,
+                    "ospf-topology-id": str,
+                    "ospf-topology-name": str
+                }
+            })
         }
     }
 
@@ -3594,49 +3475,42 @@ class ShowOspfInterfaceExtensiveSchema(MetaParser):
     """ Schema for:
             * show ospf interface extensive
     """
-    def validate_ospf_interface_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-interface is not a list')
-        neighbor_schema = Schema({
-            "address-mask": str,
-            "adj-count": str,
-            "authentication-type": str,
-            "bdr-id": str,
-            "dead-interval": str,
-            "dr-id": str,
-            "hello-interval": str,
-            "interface-address": str,
-            "interface-cost": str,
-            "interface-name": str,
-            "interface-type": str,
-            "mtu": str,
-            "neighbor-count": str,
-            "ospf-area": str,
-            "ospf-interface-protection-type": str,
-            "ospf-interface-state": str,
-            Optional("ospf-interface-tilfa-prot-fate"): str,
-            Optional("ospf-interface-tilfa-prot-link"): str,
-            Optional("ospf-interface-tilfa-prot-node"): str,
-            Optional("ospf-interface-tilfa-prot-srlg"): str,
-            Optional("passive"): str,
-            Optional("dr-address"): str,
-            Optional("router-priority"): str,
-            "ospf-interface-topology": {
-                "ospf-topology-id": str,
-                "ospf-topology-metric": str,
-                "ospf-topology-name": str,
-                Optional("ospf-topology-passive"): bool,
-            },
-            "ospf-stub-type": str,
-            "retransmit-interval": str
-        })
-        for item in value:
-            neighbor_schema.validate(item)
-        return value
 
     schema = {
         "ospf-interface-information": {
-            "ospf-interface": Use(validate_ospf_interface_list),
+            "ospf-interface": ListOf({
+                "address-mask": str,
+                "adj-count": str,
+                "authentication-type": str,
+                "bdr-id": str,
+                "dead-interval": str,
+                "dr-id": str,
+                "hello-interval": str,
+                "interface-address": str,
+                "interface-cost": str,
+                "interface-name": str,
+                "interface-type": str,
+                "mtu": str,
+                "neighbor-count": str,
+                "ospf-area": str,
+                "ospf-interface-protection-type": str,
+                "ospf-interface-state": str,
+                Optional("ospf-interface-tilfa-prot-fate"): str,
+                Optional("ospf-interface-tilfa-prot-link"): str,
+                Optional("ospf-interface-tilfa-prot-node"): str,
+                Optional("ospf-interface-tilfa-prot-srlg"): str,
+                Optional("passive"): str,
+                Optional("dr-address"): str,
+                Optional("router-priority"): str,
+                "ospf-interface-topology": {
+                    "ospf-topology-id": str,
+                    "ospf-topology-metric": str,
+                    "ospf-topology-name": str,
+                    Optional("ospf-topology-passive"): bool,
+                },
+                "ospf-stub-type": str,
+                "retransmit-interval": str
+            }),
         }
     }
 
@@ -3885,48 +3759,32 @@ class ShowOspfRouteBriefSchema(MetaParser):
         }
     }
     """
-    def validate_ospf_route_entry_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-route-entry is not a list')
-        ospf_route_schema = Schema({
-            "address-prefix": str,
-            "interface-cost": str,
-            "next-hop-type": str,
-            "ospf-next-hop": {
-                Optional("next-hop-address"): {
-                    "interface-address": str
-                },
-                "next-hop-name": {
-                    "interface-name": str
-                }
-            },
-            "route-path-type": str,
-            "route-type": str,
-            Optional("ospf-backup-next-hop"): {
-                "ospf-backup-next-hop-type": str,
-                "ospf-backup-next-hop-address": str,
-                "ospf-backup-next-hop-interface": str
-            }
-        })
-        for item in value:
-            ospf_route_schema.validate(item)
-        return value
-
-    def validate_ospf_route_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-route is not a list')
-        ospf_route_schema = Schema({
-            "ospf-route-entry":
-            Use(ShowOspfRouteBriefSchema.validate_ospf_route_entry_list)
-        })
-        for item in value:
-            ospf_route_schema.validate(item)
-        return value
 
     schema = {
         "ospf-route-information": {
             "ospf-topology-route-table": {
-                "ospf-route": Use(validate_ospf_route_list),
+                "ospf-route": ListOf({
+                    "ospf-route-entry": ListOf({
+                        "address-prefix": str,
+                        "interface-cost": str,
+                        "next-hop-type": str,
+                        "ospf-next-hop": {
+                            Optional("next-hop-address"): {
+                                "interface-address": str
+                            },
+                            "next-hop-name": {
+                                "interface-name": str
+                            }
+                        },
+                        "route-path-type": str,
+                        "route-type": str,
+                        Optional("ospf-backup-next-hop"): {
+                            "ospf-backup-next-hop-type": str,
+                            "ospf-backup-next-hop-address": str,
+                            "ospf-backup-next-hop-interface": str
+                        }
+                    })
+                }),
                 Optional("ospf-topology-name"): str
             }
         }
@@ -4078,18 +3936,6 @@ class ShowOspfDatabaseNetworkLsaidDetailSchema(MetaParser):
             }
         }
     } """
-    def validate_ospf_lsa_topology_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-lsa is not a list')
-        ospf_lsa_schema = Schema({
-            "link-type-name": str,
-            "ospf-lsa-topology-link-metric": str,
-            "ospf-lsa-topology-link-node-id": str,
-            "ospf-lsa-topology-link-state": str
-        })
-        for item in value:
-            ospf_lsa_schema.validate(item)
-        return value
 
     schema = {
         Optional("@xmlns:junos"): str,
@@ -4111,8 +3957,12 @@ class ShowOspfDatabaseNetworkLsaidDetailSchema(MetaParser):
                     "address-mask": str,
                     "attached-router": list,
                     "ospf-lsa-topology": {
-                        "ospf-lsa-topology-link":
-                        Use(validate_ospf_lsa_topology_list),
+                        "ospf-lsa-topology-link": ListOf({
+                            "link-type-name": str,
+                            "ospf-lsa-topology-link-metric": str,
+                            "ospf-lsa-topology-link-node-id": str,
+                            "ospf-lsa-topology-link-state": str
+                        }),
                         "ospf-topology-id":
                         str,
                         "ospf-topology-name":
@@ -4318,38 +4168,30 @@ class ShowOspfRouteNetworkExtensiveSchema(MetaParser):
 }
     '''
 
-    def validate_ospf_route_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('ospf-route is not a list')
-        ospf_route_schema = Schema({
-            "ospf-route-entry": {
-                "address-prefix": str,
-                "interface-cost": str,
-                "next-hop-type": str,
-                "ospf-area": str,
-                "ospf-next-hop": {
-                    Optional("next-hop-address"): {
-                        Optional("interface-address"): str
-                    },
-                    "next-hop-name": {
-                        "interface-name": str
-                    }
-                },
-                "route-origin": str,
-                "route-path-type": str,
-                "route-priority": str,
-                "route-type": str
-            }
-        })
-        for item in value:
-            ospf_route_schema.validate(item)
-        return value
-
     schema = {
         "ospf-route-information": {
             Optional("@xmlns"): str,
             "ospf-topology-route-table": {
-                "ospf-route": Use(validate_ospf_route_list),
+                "ospf-route": ListOf({
+                    "ospf-route-entry": {
+                        "address-prefix": str,
+                        "interface-cost": str,
+                        "next-hop-type": str,
+                        "ospf-area": str,
+                        "ospf-next-hop": {
+                            Optional("next-hop-address"): {
+                                Optional("interface-address"): str
+                            },
+                            "next-hop-name": {
+                                "interface-name": str
+                            }
+                        },
+                        "route-origin": str,
+                        "route-path-type": str,
+                        "route-priority": str,
+                        "route-type": str
+                    }
+                }),
                 "ospf-topology-name": str
             }
         }
@@ -4469,35 +4311,24 @@ class ShowOspfDatabaseOpaqueAreaSchema(MetaParser):
         }
     }
     """
-    
-    def validate_ospf_database_entry(ospf_db_list):
-        ''' Validates each entry in ospf-database '''
-        if not isinstance(ospf_db_list, list):
-            raise SchemaError('ospf-database is not a list')
-        
-        ospf_db_entry_schema = Schema({
-            Optional("@heading"): str,
-                "advertising-router": str,
-                "age": str,
-                "checksum": str,
-                "lsa-id": str,
-                "lsa-length": str,
-                "lsa-type": str,
-                "options": str,
-                Optional("our-entry"): bool,
-                "sequence-number": str
-        })
-
-        for entry in ospf_db_list:
-            ospf_db_entry_schema.validate(entry)    
-        return ospf_db_list
 
     schema = {
         "ospf-database-information": {
             "ospf-area-header": {
                 "ospf-area": str
             },
-            "ospf-database": Use(validate_ospf_database_entry)
+            "ospf-database": ListOf({
+                Optional("@heading"): str,
+                    "advertising-router": str,
+                    "age": str,
+                    "checksum": str,
+                    "lsa-id": str,
+                    "lsa-length": str,
+                    "lsa-type": str,
+                    "options": str,
+                    Optional("our-entry"): bool,
+                    "sequence-number": str
+            })
         }
     }
 
@@ -4595,25 +4426,6 @@ class ShowOspfRoutePrefixSchema(MetaParser):
     #     }
     # }
 
-    def validate_ospf_next_hop_list(value):
-        ''' Validates each entry in ospf-next-hop '''
-        if not isinstance(value, list):
-            raise SchemaError('ospf-next-hop is not a list')
-        
-        ospf_next_hop_schema = Schema({
-            "next-hop-address": {
-                "interface-address": str,
-            },
-            "next-hop-name": {
-                "interface-name": str,
-            }
-        })
-
-        for entry in value:
-            ospf_next_hop_schema.validate(entry)    
-        return value
-
-
     schema = {
         "ospf-route-information": {
             "ospf-topology-route-table": {
@@ -4622,7 +4434,14 @@ class ShowOspfRoutePrefixSchema(MetaParser):
                         "address-prefix": str,
                         "interface-cost": str,
                         "next-hop-type": str,
-                        "ospf-next-hop": Use(validate_ospf_next_hop_list),
+                        "ospf-next-hop": ListOf({
+                            "next-hop-address": {
+                                "interface-address": str,
+                            },
+                            "next-hop-name": {
+                                "interface-name": str,
+                            }
+                        }),
                         "route-path-type": str,
                         "route-type": str
                     }
@@ -4632,7 +4451,6 @@ class ShowOspfRoutePrefixSchema(MetaParser):
         }
     }
 
-    
 
 '''
 Parser for:
@@ -4779,19 +4597,6 @@ class ShowOspfStatisticsSchema(MetaParser):
     }
 }'''
 
-    def validate_packet_statistic_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('packet_statistic is not a list')
-        packet_schema = Schema({
-            "ospf-packet-type": str,
-            "packets-received": str,
-            "packets-received-5seconds": str,
-            "packets-sent": str,
-            "packets-sent-5seconds": str
-        })
-        for item in value:
-            packet_schema.validate(item)
-        return value
     schema = {
         Optional("@xmlns:junos"): str,
         "ospf-statistics-information": {
@@ -4815,7 +4620,13 @@ class ShowOspfStatisticsSchema(MetaParser):
                 "ospf-errors": {
                     "subnet-mismatch-error": str
                 },
-                "packet-statistics": Use(validate_packet_statistic_list),
+                "packet-statistics": ListOf({
+                    "ospf-packet-type": str,
+                    "packets-received": str,
+                    "packets-received-5seconds": str,
+                    "packets-sent": str,
+                    "packets-sent-5seconds": str
+                }),
                 "total-database-summaries": str,
                 "total-linkstate-request": str,
                 "total-retransmits": str

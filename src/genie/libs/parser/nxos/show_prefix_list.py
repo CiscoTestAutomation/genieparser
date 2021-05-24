@@ -25,7 +25,7 @@ class ShowIpPrefixListSchema(MetaParser):
         show ip prefix-list
         show ipv6 prefix-list"""
 
-    schema = {'prefix_set_name':         
+    schema = {'prefix_set_name':
                 {Any(): {
                     'prefix_set_name': str,
                     'protocol': str,
@@ -47,7 +47,7 @@ class ShowIpPrefixList(ShowIpPrefixListSchema):
 
     cli_command = 'show {af} prefix-list'
 
-    def cli(self, af='ip',output=None):
+    def cli(self, af='ip', output=None):
 
         # ip should be ip or ipv6
         assert af in ['ip', 'ipv6']
@@ -152,6 +152,6 @@ class ShowIpPrefixList(ShowIpPrefixListSchema):
 class ShowIpv6PrefixList(ShowIpPrefixList):
     """Parser for show ipv6 prefix-list detail"""
 
-    def cli(self,output=None):
-        return super().cli(af='ipv6',output=output)
+    def cli(self, af='ipv6' ,output=None):
+        return super().cli(af=af, output=output)
 

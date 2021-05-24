@@ -580,9 +580,8 @@ class ShowBgpAll(ShowBgpSuperParser, ShowBgpSchema):
         * 'show bgp {address_family} all'
     '''
 
-    cli_command = ['show bgp {address_family} all',
-                   'show bgp all',
-                   ]
+    cli_command = ['show bgp {address_family} all', 'show bgp all']
+                   
     exclude = ['bgp_table_version']
 
     def cli(self, address_family='', output=None):
@@ -644,20 +643,23 @@ class ShowIpBgpAll(ShowBgpSuperParser, ShowBgpSchema):
 # Parser for:
 #   * 'show bgp {address_family} rd {rd}'
 #   * 'show bgp {address_family} vrf {vrf}'
+#   * 'show bgp {address_family} unicast'
 # =============================================
 class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
 
     ''' Parser for:
         * 'show bgp {address_family} rd {rd}'
         * 'show bgp {address_family} vrf {vrf}'
+        * 'show bgp {address_family} unicast'
     '''
 
     cli_command = ['show bgp {address_family} vrf {vrf}',
                    'show bgp {address_family} rd {rd}',
+                   'show bgp {address_family}',
                    ]
 
     def cli(self, address_family='', rd='', vrf='', output=None):
-
+        cmd = None
         if output is None:
             # Build command
             if address_family and vrf:
@@ -666,6 +668,9 @@ class ShowBgp(ShowBgpSuperParser, ShowBgpSchema):
             elif address_family and rd:
                 cmd = self.cli_command[1].format(address_family=address_family,
                                                  rd=rd)
+            elif address_family and not vrf and not rd:
+                cmd = self.cli_command[2].format(address_family=address_family)
+                                                                                                  
             # Execute command
             show_output = self.device.execute(cmd)
         else:
@@ -2937,7 +2942,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
         #  Used as bestpath:     n/a          0
         #  Used as multipath:    n/a          0
         p22 = re.compile('^(?P<item>([a-zA-Z\s\-]+)):? +(?P<sent>(n/a|\d+))'
-                         ' +(?P<recv>(n/a|\d+))(?:\(Consumes +(?P<bytes>(\d+))'
+                         ' +(?P<recv>(n/a|\d+))(?:\s+\(Consumes +(?P<bytes>(\d+))'
                          ' +bytes\))?$')
 
         # Do log neighbor state changes (via global configuration)
@@ -3507,6 +3512,7 @@ class ShowBgpNeighborSuperParser(MetaParser):
             #  Keepalives:            75         74
             #  Route Refresh:          0          0
             #  Total:                 87         81
+            #  Prefixes Current:     403        201 (Consumes 27336 bytes)
             m = p22.match(line)
             if m:
                 group = m.groupdict()

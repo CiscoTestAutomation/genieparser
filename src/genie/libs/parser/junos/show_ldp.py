@@ -14,32 +14,23 @@ import re
 # Metaparser
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
-from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema
+from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema, ListOf
 
 
 class ShowLDPSessionSchema(MetaParser):
     """ Schema for
         * show ldp session
     """
-    def validate_ldp_session(value):
-        if not isinstance(value, list):
-            raise SchemaError('LDP Session not a list')
-
-        ldp_session = Schema({
-            "ldp-neighbor-address": str,
-            "ldp-session-state": str,
-            "ldp-connection-state": str,
-            "ldp-remaining-time": str,
-            Optional("ldp-session-adv-mode"): str,
-        })
-
-        for item in value:
-            ldp_session.validate(item)
-        return value
 
     schema = {
         "ldp-session-information": {
-            "ldp-session": Use(validate_ldp_session)
+            "ldp-session": ListOf({
+                "ldp-neighbor-address": str,
+                "ldp-session-state": str,
+                "ldp-connection-state": str,
+                "ldp-remaining-time": str,
+                Optional("ldp-session-adv-mode"): str,
+            })
         }
     }
 
@@ -103,26 +94,16 @@ class ShowLdpNeighborSchema(MetaParser):
         }
     }'''
 
-    def validate_ldp_neighbor(value):
-        if not isinstance(value, list):
-            raise SchemaError('LDP neighbor is not a list')
-
-        ldp_neighbor = Schema({
-            "interface-name": str,
-            "ldp-label-space-id": str,
-            "ldp-neighbor-address": str,
-            "ldp-remaining-time": str
-        })
-
-        for item in value:
-            ldp_neighbor.validate(item)
-        return value
-
     schema = {
         Optional("@xmlns:junos"): str,
         "ldp-neighbor-information": {
             Optional("@xmlns"): str,
-            "ldp-neighbor": Use(validate_ldp_neighbor)
+            "ldp-neighbor": ListOf({
+                "interface-name": str,
+                "ldp-label-space-id": str,
+                "ldp-neighbor-address": str,
+                "ldp-remaining-time": str
+            })
         }
     }
 
@@ -193,38 +174,18 @@ class ShowLdpDatabaseSessionIpaddressSchema(MetaParser):
     }
 }'''
 
-    def validate_ldp_binding(value):
-        if not isinstance(value, list):
-            raise SchemaError('LDP binding is not a list')
-
-        ldp_binding = Schema({
-            "ldp-label": str,
-            "ldp-prefix": str
-        })
-
-        for item in value:
-            ldp_binding.validate(item)
-        return value
-
-    def validate_ldp_database(value):
-        if not isinstance(value, list):
-            raise SchemaError('LDP database is not a list')
-
-        ldp_database = Schema({
-            "ldp-binding": Use(ShowLdpDatabaseSessionIpaddress.validate_ldp_binding),
-            "ldp-database-type": str,
-            Optional("ldp-label-received"): str,
-            Optional("ldp-label-advertised"): str,
-            "ldp-session-id": str
-        })
-
-        for item in value:
-            ldp_database.validate(item)
-        return value
-
     schema = {
         "ldp-database-information": {
-            "ldp-database": Use(validate_ldp_database)
+            "ldp-database": ListOf({
+                "ldp-binding": ListOf({
+                    "ldp-label": str,
+                    "ldp-prefix": str
+                }),
+                "ldp-database-type": str,
+                Optional("ldp-label-received"): str,
+                Optional("ldp-label-advertised"): str,
+                "ldp-session-id": str
+            })
         }
     }
 

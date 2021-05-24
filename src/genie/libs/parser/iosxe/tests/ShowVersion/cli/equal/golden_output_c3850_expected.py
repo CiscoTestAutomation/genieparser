@@ -10,14 +10,23 @@ expected_output = {
         "image_id": "CAT3K_CAA-UNIVERSALK9-M",
         "rom": "IOS-XE ROMMON",
         "bootldr": "CAT3K_CAA Boot Loader (CAT3K_CAA-HBOOT-M) Version 4.318, engineering software (D)",
+        "build_label": "BLD_V164_THROTTLE_LATEST_20170410_174845",
         "hostname": "R1",
         "image_type": "developer image",
+        "label": "[v164_throttle-BLD-BLD_V164_THROTTLE_LATEST_20170410_174845 105]",
         "uptime": "1 hour, 24 minutes",
         "uptime_this_cp": "1 hour, 27 minutes",
         "system_restarted_at": "17:23:53 UTC Mon Apr 10 2017",
         "system_image": "tftp://10.1.6.241//auto/tftp-ssr/Edison/cat3k_caa-universalk9.BLD_V164_THROTTLE_LATEST_20170410_174845.SSA.bin",
         "last_reload_reason": "Admin reload CLI",
         "license_type": "Permanent",
+        "license_package": {
+            "ipservicesk9": {
+                "license_level": "ipservicesk9",
+                "license_type": "Permanent",
+                "next_reload_license_level": "ipservicesk9"
+            }
+        },
         "license_level": "ipservicesk9",
         "next_reload_license_level": "ipservicesk9",
         "chassis": "WS-C3850-24P",

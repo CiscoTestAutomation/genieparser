@@ -212,7 +212,7 @@ class ShowVrrp(ShowVrrpSchema):
                 vrrp_dict.update({'virtual_ip_address': str(group['vir_ip'])})
                 continue
 
-            # Virtual MAC address is 0000.5e00.0101
+            # Virtual MAC address is 0000.5eff.0101
             m = p4.match(line)
             if m:
                 group = m.groupdict()

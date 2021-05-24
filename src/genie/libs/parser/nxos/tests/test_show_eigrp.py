@@ -487,7 +487,7 @@ class test_show_eigrp_topology(unittest.TestCase):
                                             }
                                         }
                                     },
-                                    "110.1.1.0/24": {
+                                    "10.81.1.0/24": {
                                         "state": "P",
                                         "num_successors": 1,
                                         "fd": "51200",
@@ -580,7 +580,7 @@ class test_show_eigrp_topology(unittest.TestCase):
         P 10.121.0.0/24, 1 successors, FD is 51200
                 via Rstatic (51200/0)
                 via 10.1.1.2 (3072/576), Ethernet1/2
-        P 110.1.1.0/24, 1 successors, FD is 51200
+        P 10.81.1.0/24, 1 successors, FD is 51200
                 via Rstatic (51200/0)
                 via 10.1.1.2 (3072/576), Ethernet1/2
         P 10.121.2.0/24, 1 successors, FD is 51200
