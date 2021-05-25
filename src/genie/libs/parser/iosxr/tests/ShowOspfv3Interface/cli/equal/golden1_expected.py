@@ -15,7 +15,7 @@ expected_output = {
                                                     "line_protocol": "up",
                                                     "link_local_address": "fe80:100:10::1",
                                                     "interface_id": 7,
-                                                    "router_id": "25.97.1.1",
+                                                    "router_id": "10.94.1.1",
                                                     "network_type": "POINT_TO_POINT",
                                                     "cost": 1,
                                                     "bfd": {
@@ -45,7 +45,7 @@ expected_output = {
                                                     "adjacent_neighbors": {
                                                         "nbr_count": 1,
                                                         "adj_nbr_count": 1,
-                                                        "neighbor": "100.100.100.100",
+                                                        "neighbor": "10.220.100.100",
                                                     },
                                                 },
                                                 "Loopback0": {
@@ -53,7 +53,7 @@ expected_output = {
                                                     "line_protocol": "up",
                                                     "link_local_address": "fe80::8849:faff:fe9c:f9b6",
                                                     "interface_id": 6,
-                                                    "router_id": "25.97.1.1",
+                                                    "router_id": "10.94.1.1",
                                                     "network_type": "LOOPBACK",
                                                     "cost": 0,
                                                     "loopback_txt": "Loopback interface is treated as a stub Host",
@@ -63,7 +63,7 @@ expected_output = {
                                                     "line_protocol": "up",
                                                     "link_local_address": "fe80:100:20::1",
                                                     "interface_id": 8,
-                                                    "router_id": "25.97.1.1",
+                                                    "router_id": "10.94.1.1",
                                                     "network_type": "POINT_TO_POINT",
                                                     "cost": 1,
                                                     "bfd": {
@@ -93,7 +93,7 @@ expected_output = {
                                                     "adjacent_neighbors": {
                                                         "nbr_count": 1,
                                                         "adj_nbr_count": 1,
-                                                        "neighbor": "95.95.95.95",
+                                                        "neighbor": "10.145.95.95",
                                                     },
                                                 },
                                             }

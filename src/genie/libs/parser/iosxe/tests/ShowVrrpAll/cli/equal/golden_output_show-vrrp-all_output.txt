@@ -1,7 +1,7 @@
 GigabitEthernet3.420 - Group 10 
   State is Master
   Virtual IP address is 10.13.120.254
-  Virtual MAC address is 0000.5e00.010a
+  Virtual MAC address is 0000.5eff.010a
   Advertisement interval is 1.000 sec
   Preemption enabled
   Priority is 100 
@@ -14,7 +14,7 @@ GigabitEthernet3.420 - Group 10
 GigabitEthernet3.415 - Group 13 
   State is Master
   Virtual IP address is 10.13.115.254
-  Virtual MAC address is 0000.5e00.010d
+  Virtual MAC address is 0000.5eff.010d
   Advertisement interval is 1.000 sec
   Preemption enabled
   Priority is 100 

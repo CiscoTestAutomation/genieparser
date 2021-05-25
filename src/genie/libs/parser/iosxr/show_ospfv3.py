@@ -77,8 +77,8 @@ class ShowOspfv3Neighbor(ShowOspfv3NeighborSchema):
                         '(, +VRF (?P<vrf>[\w]+))?$')
 
         # Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
-        # 95.95.95.95     1     FULL/  -        00:00:37    5               GigabitEthernet0/0/0/1
-        # 100.100.100.100 1     FULL/  -        00:00:38    6               GigabitEthernet0/0/0/0
+        # 10.145.95.95     1     FULL/  -        00:00:37    5               GigabitEthernet0/0/0/1
+        # 10.220.100.100 1     FULL/  -        00:00:38    6               GigabitEthernet0/0/0/0
         p2 = re.compile(r'^(?P<neighbor_id>\S+) +(?P<priority>\d+)'
                         ' +(?P<state>\S+\s*\S+) +(?P<dead_time>\S+)'
                         ' +(?P<address>\S+) +(?P<interface>\S+)$')
@@ -110,8 +110,8 @@ class ShowOspfv3Neighbor(ShowOspfv3NeighborSchema):
                 continue
 
             # Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
-            # 95.95.95.95     1     FULL/  -        00:00:37    5               GigabitEthernet0/0/0/1
-            # 100.100.100.100 1     FULL/  -        00:00:38    6               GigabitEthernet0/0/0/0
+            # 10.145.95.95     1     FULL/  -        00:00:37    5               GigabitEthernet0/0/0/1
+            # 10.220.100.100 1     FULL/  -        00:00:38    6               GigabitEthernet0/0/0/0
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -242,7 +242,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
             'opaque': 10
         }
 
-        # OSPFv3 Router with ID(25.97.1.1) (Process ID mpls1)
+        # OSPFv3 Router with ID(10.94.1.1) (Process ID mpls1)
         p1 = re.compile(r'^OSPFv3 +Router +with +ID +\((?P<router_id>(\S+))\) '
                         r'+\(Process +ID +(?P<instance>(\S+))(?:, +VRF +(?P<vrf>(\S+)))?\)$')
 
@@ -252,18 +252,18 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
                         ' +(?P<area>(\S+))\)$')
 
-        # 25.97.1.1       2019        0x8000007d 0            2           E
-        # 95.95.95.95     607         0x80000097 0            2           E
+        # 10.94.1.1       2019        0x8000007d 0            2           E
+        # 10.145.95.95     607         0x80000097 0            2           E
         p3 = re.compile(r'^(?P<adv_router>(\S+)) +(?P<age>(\d+)) +(?P<seq_num>(\S+))'
                         r' +(?P<fragment_id>(\d+)) +(?P<link_count>(\d+)) +(?P<bits>(\w+))$')
 
-        # 25.97.1.1       1518        0x80000086 7          Gi0/0/0/0
-        # 100.100.100.100 1841        0x80000079 6          Gi0/0/0/0
+        # 10.94.1.1       1518        0x80000086 7          Gi0/0/0/0
+        # 10.220.100.100 1841        0x80000079 6          Gi0/0/0/0
         p4 = re.compile(r'^(?P<adv_router>(\S+)) +(?P<age>(\d+)) +(?P<seq_num>(\S+))'
                         r' +(?P<link_id>(\d+)) +(?P<interface>([a-zA-Z0-9\/])+)$')
 
-        # 25.97.1.1       2019        0x80000078 0          0x2001      0
-        # 95.95.95.95     1583        0x80000086 0          0x2001      0
+        # 10.94.1.1       2019        0x80000078 0          0x2001      0
+        # 10.145.95.95     1583        0x80000086 0          0x2001      0
         p5 = re.compile(r'^(?P<adv_router>(\S+)) +(?P<age>(\d+)) +(?P<seq_num>(\S+))'
                         r' +(?P<link_id>(\d+)) +(?P<ref_lstype>(\S)+)'
                         r' +(?P<ref_lsid>(\d)+)$')
@@ -271,7 +271,7 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            # OSPFv3 Router with ID(25.97.1.1) (Process ID mpls1)
+            # OSPFv3 Router with ID(10.94.1.1) (Process ID mpls1)
             m = p1.match(line)
 
             if m:
@@ -325,8 +325,8 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
                 lsa_type_dict['lsa_type'] = lsa_type
                 continue
 
-            # 25.97.1.1       2019        0x8000007d 0            2           E
-            # 95.95.95.95     607         0x80000097 0            2           E
+            # 10.94.1.1       2019        0x8000007d 0            2           E
+            # 10.145.95.95     607         0x80000097 0            2           E
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -353,8 +353,8 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
                 ospfv3_dict['link_count'] = int(group['link_count'])
                 continue
 
-            # 25.97.1.1       1518        0x80000086 7          Gi0/0/0/0
-            # 100.100.100.100 1841        0x80000079 6          Gi0/0/0/0
+            # 10.94.1.1       1518        0x80000086 7          Gi0/0/0/0
+            # 10.220.100.100 1841        0x80000079 6          Gi0/0/0/0
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -379,8 +379,8 @@ class ShowOspfv3Database(ShowOspfv3DatabaseSchema):
                 ospfv3_dict['interface'] = interface
                 continue
 
-            # 25.97.1.1       2019        0x80000078 0          0x2001      0
-            # 95.95.95.95     1583        0x80000086 0          0x2001      0
+            # 10.94.1.1       2019        0x80000078 0          0x2001      0
+            # 10.145.95.95     1583        0x80000086 0          0x2001      0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -483,7 +483,7 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
         # Neighbors for OSPFv3 mpls1, VRF default
         p1 = re.compile(r"^Neighbors +for +OSPFv3 +(?P<instance>(\S+)), +(?P<vrf>(VRF \S+))$")
 
-        # Neighbor 25.97.1.1
+        # Neighbor 10.94.1.1
         p2 = re.compile(r"^Neighbor +(?P<neighbor>(\S+))$")
 
         # In the area 0 via interface GigabitEthernet0/0/0/0.1
@@ -539,7 +539,7 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
                     setdefault('address_family', {}).setdefault(af, {}). \
                     setdefault('instance', {}).setdefault(instance, {})
 
-            # Neighbor 25.97.1.1
+            # Neighbor 10.94.1.1
             m = p2.match(line)
             if m:
                 neighbor_rid = m.groupdict()['neighbor']
@@ -744,7 +744,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
             r"^Link +Local +address +(?P<link_local_address>(\S+)),"
             " +Interface ID +(?P<interface_id>(\S+))$")
 
-        # Area 0, Process ID mpls1, Instance ID 0, Router ID 25.97.1.1
+        # Area 0, Process ID mpls1, Instance ID 0, Router ID 10.94.1.1
         p3 = re.compile(
             r"^Area +(?P<area>(\S+))"
             ", +Process +ID +(?P<pid>(\S+))"
@@ -800,7 +800,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
             ", +Adjacent +neighbor +count +is"
             " +(?P<adj_nbr_count>(\d+))$")
 
-        # Adjacent with neighbor 100.100.100.100
+        # Adjacent with neighbor 10.220.100.100
         p14 = re.compile(
             r"^Adjacent +with +neighbor +(?P<adj_with_nbr>(\S+))$")
 
@@ -847,7 +847,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 interface_dict.update({'link_local_address': group['link_local_address']})
                 interface_dict.update({'interface_id': int(group['interface_id'])})
 
-            # Area 0, Process ID mpls1, Instance ID 0, Router ID 25.97.1.1
+            # Area 0, Process ID mpls1, Instance ID 0, Router ID 10.94.1.1
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -945,7 +945,7 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
                 neighbor_dict.update({'nbr_count': int(group['nbr_count'])})
                 neighbor_dict.update({'adj_nbr_count': int(group['adj_nbr_count'])})
 
-            # Adjacent with neighbor 100.100.100.100
+            # Adjacent with neighbor 10.220.100.100
             m = p14.match(line)
             if m:
                 group = m.groupdict()

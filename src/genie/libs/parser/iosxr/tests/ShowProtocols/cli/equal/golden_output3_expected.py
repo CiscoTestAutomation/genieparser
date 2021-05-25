@@ -7,7 +7,7 @@ expected_output = {
                         "ipv4": {
                             "instance": {
                                 "mpls1": {
-                                    "router_id": "25.97.1.1",
+                                    "router_id": "10.94.1.1",
                                     "preference": {
                                         "single_value": {
                                             "all": 110

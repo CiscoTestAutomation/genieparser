@@ -1,4 +1,4 @@
-IOX version: 2.5.0.0
+IOX version: 10.49.0.0
 App signature verification: disabled
 Internal working directory: /vol/usb1/iox
 

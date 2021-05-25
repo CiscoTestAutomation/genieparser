@@ -1,8 +1,8 @@
-Mon Apr 12 10:50:20.204 JST
+Mon Apr 12 10:50:20.204 EST
 
 GigabitEthernet0/0/0/0 is up, line protocol is up
   Link Local address fe80:100:10::1, Interface ID 7
-  Area 0, Process ID mpls1, Instance ID 0, Router ID 25.97.1.1
+  Area 0, Process ID mpls1, Instance ID 0, Router ID 10.94.1.1
   Network Type POINT_TO_POINT, Cost: 1
   BFD enabled, interval 150 msec, multiplier 3, mode Default
   Transmit Delay is 1 sec, State POINT_TO_POINT,
@@ -13,12 +13,12 @@ GigabitEthernet0/0/0/0 is up, line protocol is up
   Last flood scan length is 1, maximum is 4
   Last flood scan time is 0 msec, maximum is 0 msec
   Neighbor Count is 1, Adjacent neighbor count is 1
-    Adjacent with neighbor 100.100.100.100
+    Adjacent with neighbor 10.220.100.100
   Suppress hello for 0 neighbor(s)
   Reference count is 6
 GigabitEthernet0/0/0/1 is up, line protocol is up
   Link Local address fe80:100:20::1, Interface ID 8
-  Area 0, Process ID mpls1, Instance ID 0, Router ID 25.97.1.1
+  Area 0, Process ID mpls1, Instance ID 0, Router ID 10.94.1.1
   Network Type POINT_TO_POINT, Cost: 1
   BFD enabled, interval 150 msec, multiplier 3, mode Default
   Transmit Delay is 1 sec, State POINT_TO_POINT,
@@ -29,11 +29,11 @@ GigabitEthernet0/0/0/1 is up, line protocol is up
   Last flood scan length is 1, maximum is 4
   Last flood scan time is 0 msec, maximum is 0 msec
   Neighbor Count is 1, Adjacent neighbor count is 1
-    Adjacent with neighbor 95.95.95.95
+    Adjacent with neighbor 10.145.95.95
   Suppress hello for 0 neighbor(s)
   Reference count is 6
 Loopback0 is up, line protocol is up
   Link Local address fe80::8849:faff:fe9c:f9b6, Interface ID 6
-  Area 0, Process ID mpls1, Instance ID 0, Router ID 25.97.1.1
+  Area 0, Process ID mpls1, Instance ID 0, Router ID 10.94.1.1
   Network Type LOOPBACK, Cost: 0
   Loopback interface is treated as a stub Host

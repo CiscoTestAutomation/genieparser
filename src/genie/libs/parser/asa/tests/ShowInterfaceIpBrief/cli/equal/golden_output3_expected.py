@@ -8,7 +8,7 @@ expected_output = {
             "line_protocol": "up",
         },
         "GigabitEthernet0/0": {
-            "ipv4": {"209.165.200.226": {"ip": "209.165.200.226"}},
+            "ipv4": {"192.168.16.226": {"ip": "192.168.16.226"}},
             "check": "YES",
             "method": "CONFIG",
             "link_status": "up",
@@ -36,7 +36,7 @@ expected_output = {
             "line_protocol": "down",
         },
         "Management0/0": {
-            "ipv4": {"209.165.201.3": {"ip": "209.165.201.3"}},
+            "ipv4": {"192.168.145.3": {"ip": "192.168.145.3"}},
             "check": "YES",
             "method": "CONFIG",
             "link_status": "up",
