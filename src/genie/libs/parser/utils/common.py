@@ -545,11 +545,12 @@ class Common():
         return match
 
     @classmethod
-    def convert_intf_name(self, intf):
+    def convert_intf_name(self, intf, os='generic'):
         '''return the full interface name
 
             Args:
                 intf (`str`): Short version of the interface name
+                os: picks what operating system the interface needs to be translated for.
 
             Returns:
                 Full interface name fit the standard
@@ -565,6 +566,7 @@ class Common():
         # Please add more when face other type of interface
         convert = {
             'generic':
+                # generic keys for when no OS detected
                 {
                     'Eth': 'Ethernet',
                     'Lo': 'Loopback',
@@ -603,11 +605,12 @@ class Common():
                     'BAGG': 'Bridge-Aggregation',  # comware
                     'Ten-GigabitEthernet': 'TenGigabitEthernet'  # HP
                 },
+            # interface formats specific to ios-xr
             'ios-xr': {
-                # ethernet interfaces
                 'BV': 'BVI',
                 'BE': 'Bundle-Ether',
                 'BP': 'Bundle-POS',
+                'Eth': 'Ethernet',
                 'Fa': 'FastEthernet',
                 'Gi': 'GigabitEthernet',
                 'Te': 'TenGigE',
@@ -644,24 +647,35 @@ class Common():
                 }
             }
 
+        # takes in the words preceding a digit e.g. the Ge in Ge0/0/1
         m = re.search(r'([-a-zA-Z]+)', intf)
+        # takes in everything after the first encountered digit, e.g. the 0/0/1 in Ge0/0/1
         m1 = re.search(r'([\d\/\.]+)', intf)
-        m2 = re.search(r'(M-E)', intf)
+
+        # checks if an interface has both Ge and 0/0/1 in the example of Ge0/0/1
         if hasattr(m, 'group') and hasattr(m1, 'group'):
-            if hasattr(m2, 'group'):
-                int_type = m2.group(0)
-            else:
-                int_type = m.group(0)
+            # fetches the interface type
+            int_type = m.group(0)
+
+            # fetch the interface number
             int_port = m1.group(0)
-            if int_type in convert.keys():
-                return (convert[int_type] + int_port)
-            else:
-                # Unifying interface names
-                converted_intf = intf[0].capitalize() + intf[1:].replace(
-                    ' ', '').replace('ethernet', 'Ethernet')
-                return (converted_intf)
+
+            try:
+                os_type_dict = convert[os]
+                if int_type in os_type_dict.keys():
+                    return os_type_dict[int_type] + int_port
+                else:
+                    # Unifying interface names
+                    converted_intf = intf[0].capitalize() + intf[1:].replace(
+                        ' ', '').replace('ethernet', 'Ethernet')
+                    return converted_intf
+
+            except KeyError as k:
+                print(f"Check '{os}' is in convert dict in utils/common.py, otherwise leave blank")
+                print(f"Missing key {k}\n")
+
         else:
-            return (intf)
+            return intf
 
     @classmethod
     def retrieve_xml_child(self, root, key):

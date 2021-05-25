@@ -270,8 +270,6 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
 
         # "Cisco IOS XR Software, Version 5.3.4[Default]Copyright (c) 2018 by Cisco Systems, Inc., ASR9K Series\n"
         p6_xr_0 = re.compile(r'(?P<is_iosxr>(IOS XR))')
-        # Port id: Te0/1/0/4/0
-        p6_xr_1 = re.compile(r'(?P<is_10gbe>(TenGigabitEthernet)(?P<interface_number>(\S+)))')
 
         # Time remaining: 95 seconds
         p7 = re.compile(r'^Time +remaining: +(?P<time_remaining>\d+) +seconds$')
@@ -312,8 +310,8 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                port_id = Common.convert_intf_name(group['port_id'])
-                tmp_port_id = port_id
+                port_id = group['port_id']
+                # tmp_port_id = port_id
                 continue
             # Local Port id: Eth1/2
             m = p3.match(line)
@@ -323,7 +321,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 intf = Common.convert_intf_name(group['local_port_id'])
                 intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 sub_dict.update({'chassis_id': tmp_chassis_id})
-                port_dict = intf_dict.setdefault('port_id', {}).setdefault(tmp_port_id, {})
+                port_dict = intf_dict.setdefault('port_id', {}).setdefault(port_id, {})
                 continue
 
             # Port Description: null
@@ -351,20 +349,19 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 group = m.groupdict()
                 sub_dict.update({'system_description': group['system_description']})
 
+                # sets ports to contain the dictionary of port_ids
+                # sets port equal to the first port in ports, which should be the only one.
+                ports = intf_dict['port_id']
+                port = list(ports.keys())[0]
                 # detects if system description returns an IOS-XR device
                 # changes the format of the interface to ensure compatibility
                 xr_check = p6_xr_0.search(sub_dict['system_description'])
                 if xr_check:
-                    # sets ports to contain the dictionary of port_ids
-                    ports = intf_dict['port_id']
-                    # port_id is a dictionary, despite only having one values (another dictionary)
-                    # this requires a loop through the keys.
-                    for key in list(ports.keys()):
-                        # searches for "Te" which denotes Ten Gigabit
-                        ten_gig_check = p6_xr_1.search(key)
-                        if ten_gig_check:
-                            new_interface = key.replace('TenGigabitEthernet', 'TenGigE')
-                            ports[new_interface] = ports.pop(key)
+                    new_port = Common.convert_intf_name(port, os='ios-xr')
+                    ports[new_port] = ports.pop(port)
+                else:
+                    new_port = Common.convert_intf_name(port)
+                    ports[new_port] = ports.pop(port)
 
                 continue
 
