@@ -364,8 +364,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                         # searches for "Te" which denotes Ten Gigabit
                         ten_gig_check = p6_xr_1.search(key)
                         if ten_gig_check:
-                            interface_num = ten_gig_check.groupdict()['interface_number']
-                            new_interface = str(re.sub(p6_xr_1, "TenGigE" + interface_num, key))
+                            new_interface = key.replace('TenGigabitEthernet', 'TenGigE')
                             ports[new_interface] = ports.pop(key)
 
                 continue
