@@ -1,0 +1,47 @@
+Chassis id: 4321.abcd.1234
+Port id: Te0/1/0/4/0
+Local Port id: Eth1/1
+Port Description: BAR
+System Name: ROUTER_Y
+System Description: Cisco IOS XR Software, Version 5.3.4[Default]
+Copyright (c) 2018 by Cisco Systems, Inc., ASR9K Series
+Time remaining: 92 seconds
+System Capabilities: R
+Enabled Capabilities: R
+Management Address: not advertised
+Management Address IPV6: not advertised
+Vlan ID: not advertised
+
+Chassis id: 4321.abcd.1234
+Port id: Te0/1/0/5/0
+Local Port id: Eth1/5
+Port Description: GigabitEthernet6
+System Name: R1_xe.cisco.com
+System Description: Cisco IOS Software [Fuji], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.1, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2018 by Cisco Systems, Inc.
+Compiled Tue 17-Jul-18 16:57 by mcp
+Time remaining: 95 seconds
+System Capabilities: B, R
+Enabled Capabilities: R
+Management Address: 172.16.1.73
+Management Address IPV6: 2001:10:12:90::1
+Vlan ID: not advertised
+
+Chassis id: 4321.abcd.1234
+Port id: Gi7
+Local Port id: Eth1/6
+Port Description: GigabitEthernet7
+System Name: R1_xe.cisco.com
+System Description: Cisco IOS Software [Fuji], Virtual XE Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.9.1, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2018 by Cisco Systems, Inc.
+Compiled Tue 17-Jul-18 16:57 by mcp
+Time remaining: 100 seconds
+System Capabilities: B, R
+Enabled Capabilities: R
+Management Address: 172.16.1.73
+Management Address IPV6: 2001:10:12:90::1
+Vlan ID: not advertised
+
+Total entries displayed: 2
