@@ -307,7 +307,7 @@ class TestShowLldpNeighborsDetail(unittest.TestCase):
     "interfaces": {
         "Ethernet1/1": {
             "port_id": {
-                "TenGigabitEthernet0/1/0/4/0": {
+                "TenGigE0/1/0/4/0": {
                     "neighbors": {
                         "ROUTER_Y": {
                             "chassis_id": "4321.abcd.1234",

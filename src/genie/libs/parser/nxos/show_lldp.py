@@ -89,6 +89,7 @@ class ShowLldpTimersSchema(MetaParser):
         Optional('notification_interval'): int
     }
 
+
 class ShowLldpTimers(ShowLldpTimersSchema):
     """parser for show lldp timers"""
     cli_command = 'show lldp timers'
@@ -322,15 +323,14 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 intf = Common.convert_intf_name(group['local_port_id'])
                 intf_dict = parsed_dict.setdefault('interfaces', {}).setdefault(intf, {})
                 sub_dict.update({'chassis_id': tmp_chassis_id})
-                port_dict = intf_dict.setdefault('port_id', {}).setdefault(tmp_port_id,
-                                                                           {})
+                port_dict = intf_dict.setdefault('port_id', {}).setdefault(tmp_port_id, {})
                 continue
+
             # Port Description: null
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                sub_dict.setdefault('port_description',
-                                    group['port_description'])
+                sub_dict.setdefault('port_description', group['port_description'])
                 continue
 
             # System Name: R2_xrv9000
@@ -360,14 +360,13 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                     ports = intf_dict['port_id']
                     # port_id is a dictionary, despite only having one values (another dictionary)
                     # this requires a loop through the keys.
-                    for key in ports.keys():
+                    for key in list(ports.keys()):
                         # searches for "Te" which denotes Ten Gigabit
                         ten_gig_check = p6_xr_1.search(key)
                         if ten_gig_check:
                             interface_num = ten_gig_check.groupdict()['interface_number']
-                            new_interface = re.sub(p6_xr_1, "TenGigE" + interface_num, key)
-                            print(new_interface)
-                            # ports[key] = p6_xr_1.sub("TenGigE" + interface_num, ports[key])
+                            new_interface = str(re.sub(p6_xr_1, "TenGigE" + interface_num, key))
+                            ports[new_interface] = ports.pop(key)
 
                 continue
 
@@ -411,7 +410,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                     cap = [self.CAPABILITY_CODES[n] for n in cap_list]
                     for item in cap:
                         cap_dict = sub_dict.setdefault('capabilities', {}).setdefault(item,
-                                                                                    {})
+                                                                                      {})
                         cap_dict.update({'name': item})
                         cap_dict.update({'system': True})
                 continue
@@ -463,7 +462,7 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                     m.groupdict()['total_entries'])})
 
                 continue
-                
+
             # VRP (R) software, Version 8.80 (CE6850 V100R003C00SPC600)
             m14 = p14.match(line)
             if m14:
@@ -478,7 +477,6 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 group = m15.groupdict()
                 sub_dict['system_description'] += group['special_name'] + '\n'
 
-        print(parsed_dict)
         return parsed_dict
 
 
@@ -495,7 +493,7 @@ class ShowLldpTrafficSchema(MetaParser):
             "total_frames_discarded": int,  # Total frames discarded: 0
             'total_unrecognized_tlvs': int,  # Total unrecognized TLVs: 0
             'total_entries_aged': int,  # Total entries aged: 0
-            Optional('total_flap_count'): int #  Total flap count: 1
+            Optional('total_flap_count'): int  # Total flap count: 1
         }
     }
 
@@ -528,7 +526,7 @@ class ShowLldpTraffic(ShowLldpTrafficSchema):
             m = p1.match(line)
             if m:
                 traffic = m.groupdict()
-                traffic_dict=parsed_dict.setdefault('counters', {})
+                traffic_dict = parsed_dict.setdefault('counters', {})
                 traffic_key = traffic['pattern'].replace(' ', '_').lower()
                 traffic_value = int(traffic['value'])
                 traffic_dict.update({traffic_key: traffic_value})
