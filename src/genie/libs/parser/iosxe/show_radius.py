@@ -155,11 +155,6 @@ class ShowRadiusStatisticsSchema(MetaParser):
 class ShowRadiusStatistics(ShowRadiusStatisticsSchema):
     """
     Parser for show radius statistics 
-    Args:
-        device (`obj`): Device object.
-        output (Optional): Output of show radius statistics command
-    Returns:
-        Dictionary with the keys mentioned in schema class
     """
 
     def cli(self, output=None):
@@ -254,129 +249,121 @@ class ShowRadiusStatistics(ShowRadiusStatisticsSchema):
 
         ret_dict = {}
 
-        try:
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
-            if output is None:
-                out = self.device.execute(cmd)
-            else:
-                out = output
+        istr = iter(out.splitlines())
+        for line in istr:
+            line = line.strip()
 
-            istr = iter(out.splitlines())
-            for line in istr:
-                line = line.strip()
+            
+            mo = p1.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                ret_dict.setdefault(key_string, mo.groupdict())
 
-                
-                mo = p1.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    ret_dict.setdefault(key_string, mo.groupdict())
+            mo = p2.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                ret_dict.setdefault(key_string, mo.groupdict())
 
-                mo = p2.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    ret_dict.setdefault(key_string, mo.groupdict())
+            mo = p3.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                ret_dict.setdefault(key_string, mo.groupdict())
 
-                mo = p3.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    ret_dict.setdefault(key_string, mo.groupdict())
+            mo = p4.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                ret_dict.setdefault(key_string, mo.groupdict())
 
-                mo = p4.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    ret_dict.setdefault(key_string, mo.groupdict())
+            mo = p5.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                ret_dict.setdefault(key_string, mo.groupdict())
 
-                mo = p5.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    ret_dict.setdefault(key_string, mo.groupdict())
+            mo = p6.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                ret_dict.setdefault(key_string, mo.groupdict())
 
-                mo = p6.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    ret_dict.setdefault(key_string, mo.groupdict())
-
-                # Source Port Range: (2 ports only)
-                # 1645 - 1646
-                mo = p7.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    ret_dict.setdefault(key_string, '')
-                    try:
-                        next_line = next(istr)
-                        res = p8.match(next_line.strip())
-                        if res:
-                            ret_dict[key_string] = res.group()
-                    except StopIteration as e:
-                        continue
-
-                # Last used Source Port/Identifier:
-                # 1645/0
-                # 1646/0
-                mo = p9.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    ret_dict.setdefault(key_string, '')
-                    try:
-                        last_used_source_port = []
-                        for i in range(2):
-                            next_line = next(istr)
-                            res = p10.match(next_line.strip())
-                            if res:
-                                last_used_source_port.append(res.group())
-                            else:
-                                break
-                        ret_dict[key_string] = last_used_source_port
-                    except StopIteration as e:
-                        continue
-
-                mo = p11.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    ret_dict.setdefault(key_string, mo.group(2))
-
-                # Radius Latency Distribution:
-                # <= 2ms :          0          0
-                # 3-5ms  :          0          0
-                # 5-10ms :          0          0
-                # 10-20ms:          0          0
-                # 20-50ms:          0          0
-                # 50-100m:          0          0
-                # >100ms :          0          0
-                mo = p12.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    radius_latency = ret_dict.setdefault(key_string, {})
+            # Source Port Range: (2 ports only)
+            # 1645 - 1646
+            mo = p7.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                ret_dict.setdefault(key_string, '')
+                try:
                     next_line = next(istr)
-                    res = p13.match(next_line.strip())
+                    res = p8.match(next_line.strip())
                     if res:
-                        radius_latency.setdefault(res.group(1), res.groupdict())
-                        for i in range(6):
-                            next_line = next(istr)
-                            res = p14.match(next_line.strip())
-                            if res:
-                                radius_latency.setdefault(res.group(1), res.groupdict())
-                            elif p16.match(line):
-                                break
-                        res = p15.match(next_line.strip())
+                        ret_dict[key_string] = res.group()
+                except StopIteration as e:
+                    continue
+
+            # Last used Source Port/Identifier:
+            # 1645/0
+            # 1646/0
+            mo = p9.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                ret_dict.setdefault(key_string, '')
+                try:
+                    last_used_source_port = []
+                    for i in range(2):
+                        next_line = next(istr)
+                        res = p10.match(next_line.strip())
+                        if res:
+                            last_used_source_port.append(res.group())
+                        else:
+                            break
+                    ret_dict[key_string] = last_used_source_port
+                except StopIteration as e:
+                    continue
+
+            mo = p11.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                ret_dict.setdefault(key_string, mo.group(2))
+
+            # Radius Latency Distribution:
+            # <= 2ms :          0          0
+            # 3-5ms  :          0          0
+            # 5-10ms :          0          0
+            # 10-20ms:          0          0
+            # 20-50ms:          0          0
+            # 50-100m:          0          0
+            # >100ms :          0          0
+            mo = p12.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                radius_latency = ret_dict.setdefault(key_string, {})
+                next_line = next(istr)
+                res = p13.match(next_line.strip())
+                if res:
+                    radius_latency.setdefault(res.group(1), res.groupdict())
+                    for i in range(6):
+                        next_line = next(istr)
+                        res = p14.match(next_line.strip())
                         if res:
                             radius_latency.setdefault(res.group(1), res.groupdict())
+                        elif p16.match(line):
+                            break
+                    res = p15.match(next_line.strip())
+                    if res:
+                        radius_latency.setdefault(res.group(1), res.groupdict())
 
-                mo = p16.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    ret_dict.setdefault(key_string, mo.group(2))
+            mo = p16.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                ret_dict.setdefault(key_string, mo.group(2))
 
-                mo = p17.match(line)
-                if mo:
-                    key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
-                    ret_dict.setdefault(key_string, mo.group(2))
-
-        except Exception as error:
-            logger.info('error {} occurred while executing the command'.format(error))
-
-        import pprint
-        pprint.pprint(ret_dict)
+            mo = p17.match(line)
+            if mo:
+                key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
+                ret_dict.setdefault(key_string, mo.group(2))
 
         return ret_dict
 
@@ -444,46 +431,42 @@ class ShowRadiusServerGroupAll(ShowRadiusServerGroupAllSchema):
         server_grp = {}
         server_trans = {}
 
-        try:
-            if output is None:
-                out = self.device.execute(cmd)
-            else:
-                out = output
+        if output is None:
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
-            for line in out.splitlines():
-                line = line.strip()
+        for line in out.splitlines():
+            line = line.strip()
+            
+            res = p1.match(line)
+            if res:
+                server_grp = ret_dict.setdefault(res.group(2), {})
+
+            res = p2.match(line)
+            if res:
+                server_grp.update(res.groupdict())
+
+            res = p3.match(line)
+            if res:
+                server_grp.update(res.groupdict())
+
+            res = p4.match(line)
+            if res:
+                key_string = (re.sub(r'\s+', '_', res.group())).lower()
+                server_trans = server_grp.setdefault(key_string, {})
+            
+            res = p5.match(line)
+            if res:
+                server_trans.update(res.groupdict())
                 
-                res = p1.match(line)
-                if res:
-                    server_grp = ret_dict.setdefault(res.group(2), {})
+            res = p6.match(line)
+            if res:
+                server_trans.update(res.groupdict())
 
-                res = p2.match(line)
-                if res:
-                    server_grp.update(res.groupdict())
 
-                res = p3.match(line)
-                if res:
-                    server_grp.update(res.groupdict())
-
-                res = p4.match(line)
-                if res:
-                    key_string = (re.sub(r'\s+', '_', res.group())).lower()
-                    server_trans = server_grp.setdefault(key_string, {})
+            res = p7.match(line)
+            if res:
+                server_trans.update(res.groupdict())
                 
-                res = p5.match(line)
-                if res:
-                    server_trans.update(res.groupdict())
-                    
-                res = p6.match(line)
-                if res:
-                    server_trans.update(res.groupdict())
-
-
-                res = p7.match(line)
-                if res:
-                    server_trans.update(res.groupdict())
-                
-        except Exception as error:
-            logger.info('error {} occurred while executing the command'.format(error))
-
         return ret_dict
