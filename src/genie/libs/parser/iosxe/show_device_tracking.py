@@ -24,10 +24,11 @@ class ShowDeviceTrackingDatabaseSchema(MetaParser):
                 "vlan_id": int,
                 "pref_level_code": int,
                 "age": str,
-                "state": str
+                "state": str,
+                Optional("time_left"): str,
             }
         }
-    }   
+    }
 
 
 # ==================================
@@ -88,6 +89,12 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
         device_info_capture = re.compile(
             r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)$")
+        # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+        device_info_capture_database = re.compile(
+            r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+.*)$"
+            )
+
+
 
         device_index = 0
 
@@ -133,6 +140,33 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
             elif device_info_header_capture.match(line):
                 device_info_header_capture_match = device_info_header_capture.match(line)
                 groups = device_info_header_capture_match.groupdict()
+                continue
+            # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+            elif device_info_capture_database.match(line):
+                device_index = device_index + 1
+                device_info_capture_database_match = device_info_capture_database.match(line)
+                groups = device_info_capture_database_match.groupdict()
+                dev_code = groups['dev_code']
+                network_layer_address = groups['network_layer_address']
+                link_layer_address = groups['link_layer_address']
+                interface = groups['interface']
+                vlan_id = int(groups['vlan_id'])
+                pref_level_code = int(groups['pref_level_code'])
+                age = groups['age']
+                state = groups['state']
+                time_left = groups['time_left']
+                if not device_tracking_database_dict.get('device', {}):
+                    device_tracking_database_dict['device'] = {}
+                device_tracking_database_dict['device'][device_index] = {}
+                device_tracking_database_dict['device'][device_index].update({'dev_code': dev_code})
+                device_tracking_database_dict['device'][device_index]['network_layer_address'] = network_layer_address
+                device_tracking_database_dict['device'][device_index]['link_layer_address'] = link_layer_address
+                device_tracking_database_dict['device'][device_index]['interface'] = interface
+                device_tracking_database_dict['device'][device_index]['vlan_id'] = vlan_id
+                device_tracking_database_dict['device'][device_index]['pref_level_code'] = pref_level_code
+                device_tracking_database_dict['device'][device_index]['age'] = age
+                device_tracking_database_dict['device'][device_index]['state'] = state
+                device_tracking_database_dict['device'][device_index]['time_left'] = time_left
                 continue
             # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
             elif device_info_capture.match(line):
