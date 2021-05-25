@@ -351,7 +351,6 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 group = m.groupdict()
                 sub_dict.update({'system_description': group['system_description']})
 
-                # as requested at https://github.com/CiscoTestAutomation/genieparser/issues/442
                 # detects if system description returns an IOS-XR device
                 # changes the format of the interface to ensure compatibility
                 xr_check = p6_xr_0.search(sub_dict['system_description'])
