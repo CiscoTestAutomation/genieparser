@@ -249,13 +249,6 @@ class TestShowLldpTraffic(unittest.TestCase):
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
 
-    def test_empty(self):
-        self.maxDiff = None
-        self.device = Mock(**self.golden_output)
-        obj = ShowLldpNeighborsDetail(device=self.device)
-        parsed_output = obj.parse()
-        self.assertEqual(parsed_output, self.golden_parsed_output)
-
 
 if __name__ == '__main__':
     unittest.main()
