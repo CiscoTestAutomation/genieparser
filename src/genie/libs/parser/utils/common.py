@@ -566,7 +566,7 @@ class Common():
         # Please add more when face other type of interface
         convert = {
             'generic':
-                # generic keys for when no OS detected
+            # generic keys for when no OS detected
                 {
                     'Eth': 'Ethernet',
                     'Lo': 'Loopback',
@@ -605,47 +605,48 @@ class Common():
                     'BAGG': 'Bridge-Aggregation',  # comware
                     'Ten-GigabitEthernet': 'TenGigabitEthernet'  # HP
                 },
+            'ios-xr':
             # interface formats specific to ios-xr
-            'ios-xr': {
-                'BV': 'BVI',
-                'BE': 'Bundle-Ether',
-                'BP': 'Bundle-POS',
-                'Eth': 'Ethernet',
-                'Fa': 'FastEthernet',
-                'Gi': 'GigabitEthernet',
-                'Te': 'TenGigE',
-                'Tf': 'TwentyFiveGigE',
-                'Fo': 'FortyGigE',
-                'Fi': 'FiftyGigE',
-                'Hu': 'HundredGigE',
-                'Th': 'TwoHundredGigE',
-                'Fh': 'FourHundredGigE',
-                'Tsec': 'tunnel-ipsec',
-                'Ti': 'tunnel-ip',
-                'Tm': 'tunnel-mte',
-                'Tt': 'tunnel-te',
-                'Tp': 'tunnel-tp',
-                'IMA': 'IMA',
-                'IL': 'InterflexLeft',
-                'IR': 'InterflexRight',
-                'Lo': 'Loopback',
-                'Mg': 'MgmtEth',
-                'Ml': 'Multilink',
-                'Nu': 'Null',
-                'POS': 'POS',
-                'Pw': 'PW-Ether',
-                'Pi': 'PW-IW',
-                'SRP': 'SRP',
-                'Se': 'Serial',
-                'CS': 'CSI',
-                'G0': 'GCC0',
-                'G1': 'GCC1',
-                'nG': 'nVFabric-GigE',
-                'nT': 'nVFabric-TenGigE',
-                'nF': 'nVFabric-FortyGigE',
-                'nH': 'nVFabric-HundredGigE'
+                {
+                    'BV': 'BVI',
+                    'BE': 'Bundle-Ether',
+                    'BP': 'Bundle-POS',
+                    'Eth': 'Ethernet',
+                    'Fa': 'FastEthernet',
+                    'Gi': 'GigabitEthernet',
+                    'Te': 'TenGigE',
+                    'Tf': 'TwentyFiveGigE',
+                    'Fo': 'FortyGigE',
+                    'Fi': 'FiftyGigE',
+                    'Hu': 'HundredGigE',
+                    'Th': 'TwoHundredGigE',
+                    'Fh': 'FourHundredGigE',
+                    'Tsec': 'tunnel-ipsec',
+                    'Ti': 'tunnel-ip',
+                    'Tm': 'tunnel-mte',
+                    'Tt': 'tunnel-te',
+                    'Tp': 'tunnel-tp',
+                    'IMA': 'IMA',
+                    'IL': 'InterflexLeft',
+                    'IR': 'InterflexRight',
+                    'Lo': 'Loopback',
+                    'Mg': 'MgmtEth',
+                    'Ml': 'Multilink',
+                    'Nu': 'Null',
+                    'POS': 'POS',
+                    'Pw': 'PW-Ether',
+                    'Pi': 'PW-IW',
+                    'SRP': 'SRP',
+                    'Se': 'Serial',
+                    'CS': 'CSI',
+                    'G0': 'GCC0',
+                    'G1': 'GCC1',
+                    'nG': 'nVFabric-GigE',
+                    'nT': 'nVFabric-TenGigE',
+                    'nF': 'nVFabric-FortyGigE',
+                    'nH': 'nVFabric-HundredGigE'
                 }
-            }
+        }
 
         # takes in the words preceding a digit e.g. the Ge in Ge0/0/1
         m = re.search(r'([-a-zA-Z]+)', intf)
