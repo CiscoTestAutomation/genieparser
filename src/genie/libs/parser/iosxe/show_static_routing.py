@@ -61,7 +61,7 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
     exclude = ['unnumbered', 'interface_ref',
                '(Tunnel.*)', 'joined_group_addresses', 'ipv6']
 
-    def cli(self, vrf="",output=None):
+    def cli(self, vrf="", output=None):
         if output is None:
             if vrf:
                 cmd = self.cli_command[0].format(vrf=vrf)
@@ -81,7 +81,8 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
             else:
                 continue
             # Static local RIB for default
-            p1 = re.compile(r'^\s*Static +local +RIB +for +(?P<vrf>[\w]+)$')
+            # Statuc local RIB for default-thing
+            p1 = re.compile(r'^\s*Static +local +RIB +for +(?P<vrf>[\w?-]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -266,7 +267,8 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
                 continue
 
             # IPv6 Static routes Table - default
-            p1 = re.compile(r'^\s*IPv6 +Static +routes +Table -+ (?P<vrf>[\w]+)$')
+            # IPv6 Static routes Table - default-table
+            p1 = re.compile(r'^\s*IPv6 +Static +routes +Table -+ (?P<vrf>[\w?-]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
