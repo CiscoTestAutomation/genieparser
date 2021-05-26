@@ -10,6 +10,5 @@
 * Utils
     * Modified Common.py - Common.convert_intf_name:
         * Dictionary containing interface conversions is now nested.
-        * Format is {"Operating System": {List of interface types to translate}}
         * Created *generic* key as a catchall for previous code.
         * Edited logic to check if a specific operating system is mentions in the os= argument

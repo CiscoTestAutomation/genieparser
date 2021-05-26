@@ -311,7 +311,6 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
             if m:
                 group = m.groupdict()
                 port_id = group['port_id']
-                # tmp_port_id = port_id
                 continue
             # Local Port id: Eth1/2
             m = p3.match(line)
@@ -357,11 +356,11 @@ class ShowLldpNeighborsDetail(ShowLldpNeighborsDetailSchema):
                 # changes the format of the interface to ensure compatibility
                 xr_check = p6_xr_0.search(sub_dict['system_description'])
                 if xr_check:
-                    new_port = Common.convert_intf_name(port, os='ios-xr')
-                    ports[new_port] = ports.pop(port)
+                    new_port = Common.convert_intf_name(port, os='iosxr')
                 else:
                     new_port = Common.convert_intf_name(port)
-                    ports[new_port] = ports.pop(port)
+
+                ports[new_port] = ports.pop(port)
 
                 continue
 

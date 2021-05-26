@@ -496,8 +496,7 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                     # For matched range, perform submatches on next real token
                     for subindex in range(j + skipped, token_end + 1):
                         # Make sure items are passed by copies, not by reference
-                        submatch_result = _matches_fuzzy(i, subindex,
-                                                         tokens.copy(), command, kwargs.copy(),
+                        submatch_result = _matches_fuzzy(i, subindex, tokens.copy(), command, kwargs.copy(),
                                                          fuzzy, required_arguments, score)
 
                         # If any match is found, return true
@@ -530,7 +529,7 @@ def _find_parser_cls(device, data):
     return getattr(getattr(lookup.parser, data['module_name']), data['class'])
 
 
-class Common():
+class Common:
     '''Common functions to be used in parsers.'''
 
     @classmethod
@@ -550,7 +549,7 @@ class Common():
 
             Args:
                 intf (`str`): Short version of the interface name
-                os: picks what operating system the interface needs to be translated for.
+                os (`str`): picks what operating system the interface needs to be translated for.
 
             Returns:
                 Full interface name fit the standard
@@ -605,8 +604,8 @@ class Common():
                     'BAGG': 'Bridge-Aggregation',  # comware
                     'Ten-GigabitEthernet': 'TenGigabitEthernet'  # HP
                 },
-            'ios-xr':
-            # interface formats specific to ios-xr
+            'iosxr':
+            # interface formats specific to iosxr
                 {
                     'BV': 'BVI',
                     'BE': 'Bundle-Ether',
@@ -663,6 +662,10 @@ class Common():
 
             try:
                 os_type_dict = convert[os]
+            except KeyError as k:
+                log.error("Check '{}' is in convert dict in utils/common.py, otherwise leave blank.\n"
+                          "Missing key {}\n".format(os, k))
+            else:
                 if int_type in os_type_dict.keys():
                     return os_type_dict[int_type] + int_port
                 else:
@@ -670,10 +673,6 @@ class Common():
                     converted_intf = intf[0].capitalize() + intf[1:].replace(
                         ' ', '').replace('ethernet', 'Ethernet')
                     return converted_intf
-
-            except KeyError as k:
-                print(f"Check '{os}' is in convert dict in utils/common.py, otherwise leave blank")
-                print(f"Missing key {k}\n")
 
         else:
             return intf
