@@ -368,10 +368,10 @@ class TestFuzzyRegexSearchCommand(unittest.TestCase):
         self.assertEqual(common._fuzzy_search_command('swp .* wx', False), [])
 
     def test_regex_escaped_arguments(self):
-        result = common._fuzzy_search_command('sh bridge-domain 10.4.1.1.1', False)
+        result = common._fuzzy_search_command('sh bridge-domain 1.1.1.1.1', False)
         self.assertEqual(len(result), 1)
         self.assertEqual(result[0][0], 'show bridge-domain {bd_id}')
-        self.assertEqual(result[0][2], {'bd_id': '10.4.1.1.1'})
+        self.assertEqual(result[0][2], {'bd_id': '1.1.1.1.1'})
 
         result = common._fuzzy_search_command(r'sh bridge\-domain 1\.1\.1\.1\.1', True)
         self.assertEqual(len(result), 1)

@@ -1,0 +1,25 @@
+        Mon Oct 21 11:04:45.164 EDT
+        Legend: pp = Partially Programmed.
+        Bridge group: SBC-service, bridge-domain: bd100, id: 0, state: up, ShgId: 0, MSTi: 0
+        Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+        Filter MAC addresses: 0
+        ACs: 2 (2 up), VFIs: 1, PWs: 1 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+        List of ACs:
+            BV100, state: up, BVI MAC addresses: 2
+            Gi0/4/0/1.100, state: up, Static MAC addresses: 0
+        List of Access PWs:
+        List of VFIs:
+            VFI vfi100 (up)
+            Neighbor 10.229.11.11 pw-id 100100, state: up, Static MAC addresses: 0
+        List of Access VFIs:
+        Bridge group: evpn_access, bridge-domain: 100_evpn_access, id: 1, state: up, ShgId: 0, MSTi: 0
+        Aging: 300 s, MAC limit: 100, Action: limit, no-flood, Notification: syslog, trap
+        Filter MAC addresses: 0
+        ACs: 1 (1 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+        List of EVPNs:
+            EVPN, state: up
+        List of ACs:
+            Gi0/4/0/6.100, state: up, Static MAC addresses: 0, MSTi: 5
+        List of Access PWs:
+        List of VFIs:
+        List of Access VFIs:

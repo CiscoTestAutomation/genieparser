@@ -1687,8 +1687,8 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         # intialize bindings dictionary for parsed results
         result_dict = {}
 
-        # 95.95.95.95/32, rev 20
-        # 5.43.9.98/32 , rev 6 
+        # 10.145.95.95/32, rev 20
+        # 10.9.9.98/32 , rev 6 
         p1 = re.compile(r'^(?P<lib_entry>[\d\.\/]+) ?, +rev +(?P<rev>\d+)')
         
         # Local binding: label: ImpNull
@@ -1699,7 +1699,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         # remote bindings : 
         p3 = re.compile(r'^[rR]emote +bindings ?:(?: +\((?P<peer_count>\d+) +peers\))?')
         
-        # 95.95.95.95:0       16002
+        # 10.145.95.95:0       16002
         # lsr:10.255.255.255:0, label:16 
         p4 = re.compile(r'^(?:lsr:)?(?P<lsr_id>[\d\.\:]+),? +(?:label:)?(?P<remote_label>\S+)')
         
@@ -1707,8 +1707,8 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
         for line in output.splitlines():
             line = line.strip() # strip whitespace from beginning and end
 
-            # 95.95.95.95/32, rev 20
-            # 5.43.9.98/32 , rev 6 
+            # 10.145.95.95/32, rev 20
+            # 10.9.9.98/32 , rev 6 
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -1735,7 +1735,7 @@ class ShowMplsLdpBindings(ShowMplsLdpBindingsSchema):
                     remote_dict.update({'peer_count': int(group['peer_count'])})
                 continue
 
-            # 95.95.95.95:0       16002
+            # 10.145.95.95:0       16002
             # lsr:10.255.255.255:0, label:16 
             m = p4.match(line)
             if m:

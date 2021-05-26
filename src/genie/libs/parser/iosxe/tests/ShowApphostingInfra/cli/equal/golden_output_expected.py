@@ -6,5 +6,5 @@ expected_output = {
 		}
 	},
 	'internal_working_directory': '/vol/usb1/iox',
-	'iox_version': '2.5.0.0'
+	'iox_version': '10.49.0.0'
 }

@@ -2830,11 +2830,10 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 
         # Eth1/6        1       eth  access down    Link not connected         auto(D) --
         # Eth1/4.2      112     eth  routed down    Administratively down    auto(D) --
-        p4 = re.compile(r'^(?P<interface>(E|e)\S+) +(?P<vlan>[a-zA-Z0-9\-]+)'
-                        r' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
-                        r' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
-                        r' +(?P<speed>[0-9a-zA-Z\(\)]+)'
-                        r' +(?P<port>[0-9\-]+)$')
+        p4 = re.compile(r'^(?P<interface>[^pP][\S]+) +(?P<vlan>[a-zA-Z0-9\-]+) +'
+                        r'(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+) +'
+                        r'(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+) +'
+                        r'(?P<speed>[0-9a-zA-Z\(\)]+) +(?P<port>[0-9\-]+)$')
 
         # Port-channel VLAN    Type Mode   Status  Reason                    Speed   Protocol
         p5 = re.compile(r'^Port-channel +VLAN +Type +Mode +Status +Reason'
