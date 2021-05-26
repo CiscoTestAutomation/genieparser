@@ -5348,10 +5348,11 @@ class ShowOspfDatabaseSchema(MetaParser):
         },
     },
 }
+
+
 # =============================================================
 #  Parser for 'show ospf database', 'show ospf <process_id> database'
 # =============================================================
-
 class ShowOspfDatabase(ShowOspfDatabaseSchema):
     """ Parser for show ospf database, show ospf <process_id> database
     """
@@ -5532,4 +5533,98 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 ospfv2_dict['opaque_id'] = int(group['opaque_id'])
                 continue
 
+        return ret_dict
+
+
+class ShowOspfDatabaseRouterSchema(MetaParser):
+    """Schema for show ospf database router"""
+
+    schema = {
+        "instance": {
+            Any(): {
+                Optional("areas"): {
+                    Any(): {
+                        "database": {
+                            "lsa_types": {
+                                Any(): {
+                                    "lsa_type": int,
+                                    "lsas": {
+                                        Any(): {
+                                            "lsa_id": str,
+                                            "adv_router": str,
+                                            "ospfv2": {
+                                                "header": {
+                                                    "option": str,
+                                                    "option_desc": str,
+                                                    "lsa_id": str,
+                                                    "age": int,
+                                                    "type": int,
+                                                    "adv_router": str,
+                                                    "seq_num": str,
+                                                    "checksum": str,
+                                                    "length": int,
+                                                    Optional(
+                                                        "routing_bit_enable"
+                                                    ): bool,
+                                                    Optional(
+                                                        "as_boundary_router"
+                                                    ): bool,
+                                                    Optional(
+                                                        "area_border_router"
+                                                    ): bool,
+                                                },
+                                                "body": {
+                                                    "router": {
+                                                        Optional(
+                                                            "flags"
+                                                        ): str,
+                                                        "num_of_links": int,
+                                                        "links": {
+                                                            Any(): {
+                                                                "link_id": str,
+                                                                "link_data": str,
+                                                                "type": str,
+                                                                "num_tos_metrics": int,
+                                                                "topologies": {
+                                                                    Any(): {
+                                                                        "mt_id": int,
+                                                                        Optional(
+                                                                            "metric"
+                                                                        ): int,
+                                                                        Optional(
+                                                                            "tos"
+                                                                        ): int,
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowOspfDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseParser, ShowOspfDatabaseRouterSchema):
+    """Parser for show ospf database router"""
+    cli_command = ['show ospf {process_id} database router', 'show ospf all-inclusive database router']
+
+    def cli(self, process_id=None, output=None):
+        if process_id:
+            output = self.device.execute(self.cli_command[0].format(process_id=process_id))
+        else:
+            output = self.device.execute(self.cli_command[1])
+
+        sup_ret = super().cli(cmd=output, db_type="router", output=None)
+
+        # Parent class uses VRFs, child does not. Parent class uses 'default' if not vrf detected.
+        ret_dict = sup_ret.get('vrf').get('default').get('address_family').get("ipv4")
         return ret_dict
