@@ -197,6 +197,8 @@ class ShowVersionSchema(MetaParser):
             Optional('license_type'): str,
             Optional('license_level'): str,
             Optional('next_reload_license_level'): str,
+            Optional('air_license_level'): str,
+            Optional('next_reload_air_license_level'): str,
             Optional('chassis'): str,
             Optional('processor_type'): str,
             Optional('chassis_sn'): str,
@@ -403,9 +405,28 @@ class ShowVersion(ShowVersionSchema):
         # license_level
         p16 = re.compile(r'^\s*[Ll]icense +[Ll]evel\: +(?P<license_level>.+)$')
 
+        # entservices   Type: Permanent
+        p16_1 = re.compile(r'(?P<license_level>\S+) +Type\: +(?P<license_type>\S+)$')
+
+        # AIR License Level: AIR DNA Advantage
+        p16_2 = re.compile(r'^\s*AIR [Ll]icense +[Ll]evel\: +(?P<air_license_level>.+)$')
+
+        ## Technology Package License Information:
+        ## Technology-package                                     Technology-package
+        # Current                        Type                       Next reboot
+        p16_3 = re.compile(r'^Current  +Type  +Next reboot')
+
+        # network-advantage   	Smart License                 	 network-advantage
+        # dna-advantage       	Subscription Smart License    	 dna-advantage
+        p16_4 = re.compile(r'^(?P<license_package>[\w-]+)(?:\s{2,})(?P<package_license_type>(\w+ )+)(?:\s{2,})(?P<next_reload_license_level>\S+)\s*$')
+
         # next_reload_license_level
         p17 = re.compile(r'^[Nn]ext +(reload|reboot) +license +Level\: '
                          r'+(?P<next_reload_license_level>.+)$')
+
+        # Next reload AIR license Level: AIR DNA Advantage
+        p17_1 = re.compile(r'^[Nn]ext +(reload|reboot) +AIR license +Level\: '
+                           r'+(?P<next_reload_air_license_level>.+)$')
 
         # chassis, processor_type, main_mem and rtr_type
         # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
@@ -759,9 +780,6 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 group = m.groupdict()
                 if 'Type:' in group['license_level']:
-                    # entservices   Type: Permanent
-                    p16_1 = re.compile(r'(?P<license_level>\S+) +Type\: '
-                                       r'+(?P<license_type>\S+)')
                     lic_type = group['license_level'].strip()
                     m_1 = p16_1.match(lic_type)
                     group = m_1.groupdict()
@@ -769,6 +787,32 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['version']['license_level'] = group['license_level']
                 else:
                     version_dict['version']['license_level'] = group['license_level']
+                continue
+
+            # AIR License Level: AIR DNA Advantage
+            m = p16_2.match(line)
+            if m:
+                version_dict['version']['air_license_level'] = m.groupdict()['air_license_level']
+                continue
+
+            # Current                        Type                       Next reboot
+            m = p16_3.match(line)
+            if m:
+                version_dict['version'].setdefault('license_package', {})
+                continue
+
+            # network-advantage   	Smart License                 	 network-advantage
+            # dna-advantage       	Subscription Smart License    	 dna-advantage
+            m = p16_4.match(line)
+            if m:
+                group = m.groupdict()
+                license_package = group['license_package']
+                version_dict['version'].setdefault('license_package', {})
+                version_dict['version']['license_package'][license_package] = {
+                    'license_level': license_package,
+                    'license_type': group['package_license_type'].strip(),
+                    'next_reload_license_level': group['next_reload_license_level']
+                }
                 continue
 
             # next_reload_license_level
@@ -779,6 +823,12 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['version']['next_reload_license_level'] = \
                     m.groupdict()['next_reload_license_level']
                 continue
+
+            # Next reload AIR license Level: AIR DNA Advantage
+            m = p17_1.match(line)
+            if m:
+                version_dict['version']['next_reload_air_license_level'] = \
+                    m.groupdict()['next_reload_air_license_level']
 
             # chassis, processor_type, main_mem and rtr_type
             # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
@@ -1271,24 +1321,6 @@ class ShowVersion(ShowVersionSchema):
                                                      table_terminal_pattern=r"(^\n|^\s*$)",
                                                      device_output=out,
                                                      device_os='ios')
-        # switch_number
-        # license table for Cat3850
-        tmp = genie.parsergen.oper_fill_tabular(right_justified=True,
-                                                header_fields=["Current            ",
-                                                               "Type            ",
-                                                               "Next reboot  "],
-                                                label_fields=["license_level",
-                                                              "license_type",
-                                                              "next_reload_license_level"],
-                                                table_terminal_pattern=r"(^\n|^\s*$)",
-                                                device_output=out,
-                                                device_os='iosxe')
-
-        if tmp.entries:
-            res = tmp
-            for key in res.entries.keys():
-                for k, v in res.entries[key].items():
-                    version_dict['version'][k] = v
 
         if tmp2.entries:
             res2 = tmp2
@@ -1319,6 +1351,14 @@ class ShowVersion(ShowVersionSchema):
                         if 'switch_num' != k:
                             version_dict['version']['switch_num'][key][k] = v
                     version_dict['version']['switch_num'][key]['active'] = False
+
+        # Backward compatibility for license_level and license_type
+        if len(version_dict['version'].get('license_package', '')) == 1:
+            k = list(version_dict['version']['license_package'].keys())[0]
+            lic_info = version_dict['version']['license_package'][k]
+            version_dict['version'].setdefault('license_level', lic_info.get('license_level'))
+            version_dict['version'].setdefault('license_type', lic_info.get('license_type'))
+            version_dict['version'].setdefault('next_reload_license_level', lic_info.get('next_reload_license_level'))
 
         return version_dict
 
@@ -1981,6 +2021,10 @@ class ShowInventory(ShowInventorySchema):
         # Modem 0 on Cellular0/2/0
         p1_7 = re.compile(r'^Modem +(?P<modem>\S+) +on +Cellular(?P<slot>\d+)\/(?P<subslot>.*)$')
 
+        # Slot 2 Linecard
+        # Slot 3 Supervisor
+        p1_8 = re.compile(r'^Slot \d Linecard|Slot \d Supervisor$')        
+
         # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
         # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
         # PID: A900-IMA3G-IMSG   , VID: V01  , SN: FOC2204PAP1
@@ -2052,6 +2096,14 @@ class ShowInventory(ShowInventorySchema):
                     slot = name.replace(' ', '_')
                     # Create slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+
+                # Slot 2 Linecard
+                # Slot 3 Supervisor
+                m1_8 = p1_8.match(name)
+                if m1_8:
+                    slot = name.replace(' ', '_')
+                    # Create slot_dict
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})                    
                 
                 # go to next line
                 continue
@@ -2134,7 +2186,7 @@ class ShowInventory(ShowInventorySchema):
                 # PID: ASR1002-X         , VID: V07, SN: FOX1111P1M1
                 # PID: ASR1002-HX        , VID:      , SN:
                 elif (('SIP' in pid)  or ('-X' in pid) or \
-                     ('-HX' in pid) or ('module' in name and not ('module F' in name))) and \
+                     ('-HX' in pid) or ('-LC' in pid) or ('module' in name and not ('module F' in name))) and \
                      ('subslot' not in name):
 
                     lc_dict = slot_dict.setdefault('lc', {}).\
@@ -3378,11 +3430,7 @@ class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema)
                         '(?P<free>\d+) +\((?P<free_percentage>[\d\s]+)\%\) +'
                         '(?P<committed>\d+) +\((?P<committed_percentage>[\d\s]+)\%\)$')
 
-        p3 = re.compile(r'^(?P<slot>\S+)? *(?P<cpu>\d+) +'
-                        '(?P<user>[\d\.]+) +(?P<system>[\d\.]+) +'
-                        '(?P<nice_process>[\d\.]+) +(?P<idle>[\d\.]+) +'
-                        '(?P<irq>[\d\.]+) +(?P<sirq>[\d\.]+) +'
-                        '(?P<waiting>[\d\.]+)$')
+        p3 = re.compile(r'^((?P<slot>\S+) +)?(?P<cpu>\d+) +(?P<user>[\d\.]+) +(?P<system>[\d\.]+) +(?P<nice_process>[\d\.]+) +(?P<idle>[\d\.]+) +(?P<irq>[\d\.]+) +(?P<sirq>[\d\.]+) +(?P<waiting>[\d\.]+)$')
 
         for line in out.splitlines():
             line = line.strip()

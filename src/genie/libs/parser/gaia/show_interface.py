@@ -89,7 +89,7 @@ class ShowInterface(ShowInterfaceSchema):
         gw-a> show interfaces all
         Interface eth0
             state on
-            mac-addr 50:00:00:01:00:00
+            mac-addr 50:00:00:ff:01:01
             type ethernet
             link-state link up
             mtu 1500
@@ -156,7 +156,7 @@ class ShowInterface(ShowInterfaceSchema):
                     interfaces[current_interface]['alias'][current_alias]['state'] = state
                     continue
 
-            # mac-addr 50:00:00:01:00:00
+            # mac-addr 50:00:00:ff:01:01
             m = p2.match(line)
             if m:
                 interfaces[current_interface]['mac_addr'] = m.groupdict()['mac_addr']

@@ -52,6 +52,7 @@ from genie.libs.parser.iosxe.show_platform import \
     ShowSwitch as ShowSwitch_iosxe, \
     ShowSwitchDetail as ShowSwitchDetail_iosxe, \
     ShowBootvar as ShowBootvar_iosxe, \
+    ShowBoot as ShowBoot_iosxe, \
     ShowProcessesMemory as ShowProcessesMemory_iosxe
 
 
@@ -489,7 +490,7 @@ class ShowBootvar(ShowBootvar_iosxe):
         return super().cli(output=output)
 
 
-class ShowBoot(ShowBootvar_iosxe):
+class ShowBoot(ShowBoot_iosxe):
     """Parser for show boot"""
 
     cli_command = 'show boot'

@@ -36,7 +36,7 @@ class ShowApphostingInfraSchema(MetaParser):
 class ShowApphostingInfra(ShowApphostingInfraSchema):
     ''' Parser for "show app-hosting infra"
     
-    IOX version: 2.5.0.0
+    IOX version: 10.49.0.0
     App signature verification: disabled
     Internal working directory: /vol/usb1/iox
 
@@ -62,7 +62,7 @@ class ShowApphostingInfra(ShowApphostingInfraSchema):
         else:
             out = output
 
-        # IOX version: 2.5.0.0
+        # IOX version: 10.49.0.0
         p1 = re.compile(r"IOX version: (?P<iox_version>.*)$")
 
         # App signature verification: enabled

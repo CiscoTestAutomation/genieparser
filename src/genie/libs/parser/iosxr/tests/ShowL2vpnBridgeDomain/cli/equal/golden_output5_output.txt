@@ -1,0 +1,78 @@
+Bridge group: GTT_DIP, bridge-domain: EXXON903DIP, id: 244, state: up, ShgId: 0, MSTi: 0
+  Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+  Filter MAC addresses: 0
+  ACs: 1 (1 up), VFIs: 1, PWs: 1 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    Gi0/0/1/10.903, state: up, Static MAC addresses: 0
+  List of Access PWs:
+  List of VFIs:
+    VFI EXXON902DIP-04 (up)
+      Neighbor 172.16.75.4 pw-id 903, state: down, Static MAC addresses: 0
+  List of Access VFIs:
+Bridge group: GTT_DIP, bridge-domain: EXXON904DIP, id: 243, state: up, ShgId: 0, MSTi: 0
+  Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+  Filter MAC addresses: 0
+  ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    Gi0/0/1/10.904, state: up, Static MAC addresses: 0
+  List of Access PWs:
+  List of VFIs:
+    VFI EXXON899DIP-04 (up)
+      Neighbor 172.16.75.8 pw-id 904, state: up, Static MAC addresses: 0
+  List of Access VFIs: 
+Bridge group: GTT_DIP, bridge-domain: Gafoors-DIP, id: 40, state: up, ShgId: 0, MSTi: 0
+  Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+  Filter MAC addresses: 0
+  ACs: 1 (1 up), VFIs: 1, PWs: 5 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    BE47.744, state: up, Static MAC addresses: 0
+  List of Access PWs:
+  List of VFIs:
+    VFI Gafoors-DIP-VFI01 (up)
+      Neighbor 172.16.74.1 pw-id 744, state: down, Static MAC addresses: 0
+      Neighbor 172.16.70.4 pw-id 744, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.7 pw-id 744, state: down, Static MAC addresses: 0
+      Neighbor 172.16.70.8 pw-id 744, state: down, Static MAC addresses: 0
+      Neighbor 172.16.71.16 pw-id 744, state: down, Static MAC addresses: 0
+  List of Access VFIs:
+Bridge group: GTT_DIP, bridge-domain: CAMEX-DIP-BD, id: 42, state: up, ShgId: 0, MSTi: 0
+  Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+  Filter MAC addresses: 0
+  ACs: 4 (3 up), VFIs: 1, PWs: 5 (5 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    BE44.742, state: down, Static MAC addresses: 0
+    BE45.742, state: up, Static MAC addresses: 0
+    Gi0/0/1/10.742, state: up, Static MAC addresses: 0
+    Te0/2/0/3.742, state: up, Static MAC addresses: 0
+  List of Access PWs:
+  List of VFIs:
+    VFI VRF1 (up)
+      Neighbor 172.16.70.6 pw-id 742, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.7 pw-id 742, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.12 pw-id 742, state: up, Static MAC addresses: 0
+      Neighbor 172.16.71.16 pw-id 742, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.160 pw-id 742, state: up, Static MAC addresses: 0
+  List of Access VFIs:
+Bridge group: GTT_DIP, bridge-domain: CEVONS-L2VPN, id: 264, state: up, ShgId: 0, MSTi: 0
+  Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+  Filter MAC addresses: 0
+  ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    BE53.752, state: up, Static MAC addresses: 0
+  List of Access PWs:
+  List of VFIs:
+    VFI CEVONS-L2VPN-VFI01 (up)
+      Neighbor 172.16.77.1 pw-id 752, state: up, Static MAC addresses: 0
+  List of Access VFIs:
+Bridge group: GTT_DIP, bridge-domain: EBD-MXK-MGMT, id: 43, state: up, ShgId: 0, MSTi: 0
+  Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+  Filter MAC addresses: 0
+  ACs: 1 (1 up), VFIs: 1, PWs: 2 (2 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    BV990, state: up, BVI MAC addresses: 1
+  List of Access PWs:
+  List of VFIs:
+    VFI EBD-MXK-MGMT (up)
+      Neighbor 172.16.74.6 pw-id 990, state: up, Static MAC addresses: 0
+      Neighbor 172.16.74.7 pw-id 990, state: up, Static MAC addresses: 0
+  List of Access VFIs: 

@@ -43,7 +43,7 @@ class ShowRouterArpDynamic(ShowRouterArpDynamicSchema):
 		#No. of ARP Entries: 4
 		p1 = re.compile(r'^No. of ARP Entries: (?P<entries>\d+)$')
 
-		#1.1.1.1         00:fe:c8:34:a7:39 02h34m12s Dyn[I] To-ASR5.5K
+		#10.4.1.1         00:fe:c8:ff:db:6d 02h34m12s Dyn[I] To-ASR5.5K
 		p2 = re.compile(r'^(?P<ip_address>\S+) +(?P<mac_add>\S+) +(?P<expiry>\S+) +(?P<type>\S+) +(?P<interface>\S+)$')
 		
 		for line in out.splitlines():
@@ -61,7 +61,7 @@ class ShowRouterArpDynamic(ShowRouterArpDynamicSchema):
 				router_dict["entries"] = int(m.groupdict()['entries'])
 				continue
 			
-			#1.1.1.1         00:fe:c8:34:a7:39 02h34m12s Dyn[I] To-ASR5.5K
+			#10.4.1.1         00:fe:c8:ff:db:6d 02h34m12s Dyn[I] To-ASR5.5K
 			m = p2.match(line)
 			if m:
 				group = m.groupdict()
