@@ -3,8 +3,8 @@ expected_output = {
     "read": "Dec 01 1997 12:01 AM",
     "written": "Never",
     "status": "Last read succeeded. Bindings have been loaded in RAM.",
-    "delay_in_seconds": 300,
-    "timeout_in_seconds": 300,
+    "delay_in_secs": 300,
+    "timeout_in_secs": 300,
     "failures": 0,
     "successes": 1,
 }
