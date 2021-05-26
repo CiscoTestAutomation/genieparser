@@ -205,6 +205,7 @@ class ShowInterface(ShowInterfaceSchema):
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
         # Vlan200 is down (VLAN/BD is down), line protocol is down, autostate enabled
         # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
+        # Vlan3378 is down (VLAN/BD does not exist), line protocol is down, autostate enabled
         # Ethernet2/2 is up
         # Ethernet1/10 is down (Link not connected)
         # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
@@ -220,7 +221,7 @@ class ShowInterface(ShowInterfaceSchema):
                         r'SFP +validation +failed|Channel +admin +down))?'
                         r'(administratively\s+(?P<admin_1>(down)))?\s*'
                         r'(\(Administratively\s*(?P<admin_2>(down))\))?'
-                        r'(\(VLAN\/BD\s+is+\s+(down|up)\))?'
+                        r'(\(VLAN\/BD\s+((is\s+(down|up))|does\s+not\s+exist)\))?'
                         r'(,\s*line\s+protocol\s+is\s+(?P<line_protocol>\w+))?'
                         r'(,\s+autostate\s+(?P<autostate>\S+))?'
                         r'(\(No\s+operational\s+members\))?'
@@ -232,7 +233,8 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(\(\S+ErrDisabled\))?'
                         r'(\(XCVR\s+not\s+inserted\))?'
                         r'(\(No\s+operational\s+members\))?'
-                        r'(\(.*ACK.*\))?$')
+                        r'(\(.*ACK.*\))?'
+                        r'(\(inactive\))?$')
 
         # admin state is up
         # admin state is up,
@@ -257,6 +259,11 @@ class ShowInterface(ShowInterfaceSchema):
 
         #Description: desc
         p4 = re.compile(r'^Description: *(?P<description>.*)$')
+
+        #Description: VLAN information Internet Address is 10.10.10.1/24
+        p4_1 = re.compile(r'^Description: *(?P<description>.*)'
+                          r'\s+Internet\s+Address\s+is\s+(?P<ip>[0-9\.]+)'
+                          r'\/(?P<prefix_length>[0-9]+)$')
 
         #Internet Address is 10.4.4.4/24 secondary tag 10
         p5 = re.compile(r'^Internet *Address *is *(?P<ip>[0-9\.]+)'
@@ -570,13 +577,34 @@ class ShowInterface(ShowInterfaceSchema):
                             ['phys_address'] = phys_address
                 continue
 
-            #Description: desc
+            # Description: VLAN information Internet Address is 10.10.10.1/24
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                description = group['description']
+                interface_dict[interface]['description'] = description
+
+                ip = group['ip']
+                prefix_length = str(m.groupdict()['prefix_length'])
+
+                address = ip + '/' + prefix_length
+
+                interface_dict[interface].setdefault('ipv4', {})
+                add_dict = interface_dict[interface]['ipv4'].\
+                    setdefault(address, {})
+
+                add_dict['ip'] = ip
+                add_dict['prefix_length'] = prefix_length
+                continue
+
+            # Description: desc
             m = p4.match(line)
             if m:
                 description = m.groupdict()['description']
 
                 interface_dict[interface]['description'] = description
                 continue
+
 
             #Internet Address is 10.4.4.4/24 secondary tag 10
             m = p5.match(line)
