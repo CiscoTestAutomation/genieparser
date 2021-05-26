@@ -989,3 +989,67 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
                 continue
 
         return result_dict
+
+
+# ===================================
+# Parser for 'show ip mroute summary vrf all'
+# ===================================
+
+class ShowIpMrouteSummaryVrfAllSchema(MetaParser):
+    """Schema for show ip mroute summary vrf all"""
+
+    schema = {'vrf':         
+                {Any():
+                    {'address_family':
+                        {Any(): 
+                            {Optional('count_multicast_starg'): str 
+                            },
+                        },
+                    }
+                },
+            }
+
+class ShowIpMrouteSummaryVrfAll(ShowIpMrouteSummaryVrfAllSchema):
+    """Parser for show ip mroute summary vrf all"""
+
+    cli_command = 'show ip mroute summary vrf all'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        mroute_dict = {}
+
+        for line in out.splitlines():
+            line = line.rstrip()
+            # IP Multicast Routing Table for VRF "default" 
+            p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
+                             ' +[rR]outing +[tT]able +for +VRF '
+                            '+(?P<vrf>[\S]+)$')
+            p2 = re.compile(r'^\s*Total +number +of +\(\*,G\) +routes:'
+                            r' +(?P<count>[0-9]+)$')
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                vrf = vrf.replace('"',"")
+                address_family = m.groupdict()['address_family'].lower()
+                address_family += 'v4'
+
+                if 'vrf' not in mroute_dict:
+                    mroute_dict['vrf'] = {}
+                if vrf not in mroute_dict['vrf']:
+                    mroute_dict['vrf'][vrf] = {}
+                if 'address_family' not in mroute_dict['vrf'][vrf]:
+                    mroute_dict['vrf'][vrf]['address_family'] = {}
+                if address_family not in mroute_dict['vrf'][vrf]['address_family']:
+                    mroute_dict['vrf'][vrf]['address_family'][address_family] = {}
+                continue
+            m = p2.match(line)
+            if m:
+                count_multicast_starg = m.groupdict()['count']
+                if 'count_multicast_starg' not in mroute_dict['vrf'][vrf]['address_family'][address_family]:
+                   mroute_dict['vrf'][vrf]['address_family'][address_family]['count_multicast_starg'] = count_multicast_starg
+                continue
+        return mroute_dict
