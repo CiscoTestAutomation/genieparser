@@ -2,6 +2,6 @@
                                 New
 --------------------------------------------------------------------------------
 * IOS-XE
-    * Added ShowIpDhcpDatabase\
+    * Added ShowIpDhcpDatabase:
 
       * show ip dhcp database
