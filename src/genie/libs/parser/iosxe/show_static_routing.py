@@ -81,7 +81,7 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
             else:
                 continue
             # Static local RIB for default
-            # Statuc local RIB for default-thing
+            # Static local RIB for default-thing
             p1 = re.compile(r'^\s*Static +local +RIB +for +(?P<vrf>[\w?-]+)$')
             m = p1.match(line)
             if m:
