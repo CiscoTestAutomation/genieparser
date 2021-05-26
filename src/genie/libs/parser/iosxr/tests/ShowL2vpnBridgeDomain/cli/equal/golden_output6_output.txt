@@ -1,0 +1,36 @@
+Bridge group: GTT_DIP, bridge-domain: GPF-CID-2723, id: 45, state: up, ShgId: 0, MSTi: 0
+  Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+  Filter MAC addresses: 0
+  ACs: 2 (2 up), VFIs: 1, PWs: 14 (14 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    BE53.2723, state: up, Static MAC addresses: 0
+    Te0/2/0/3.2723, state: up, Static MAC addresses: 0
+  List of Access PWs:
+  List of VFIs:
+    VFI GPF-CID01 (up)
+      Neighbor 172.16.74.2 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.3 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.6 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.7 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.8 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.12 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.71.14 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.74.15 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.17 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.74.20 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.71.26 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.74.26 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.160 pw-id 2723, state: up, Static MAC addresses: 0
+      Neighbor 172.16.70.165 pw-id 2723, state: up, Static MAC addresses: 0
+  List of Access VFIs: 
+Bridge group: GTT_DIP, bridge-domain: BPI-DIP196-BD, id: 46, state: up, ShgId: 0, MSTi: 0
+  Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+  Filter MAC addresses: 0
+  ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    BE53.196, state: up, Static MAC addresses: 0
+  List of Access PWs:
+  List of VFIs:
+    VFI BPI196-VFI01 (up)
+      Neighbor 172.16.70.160 pw-id 196, state: up, Static MAC addresses: 0
+  List of Access VFIs:

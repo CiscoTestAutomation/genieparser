@@ -4,7 +4,7 @@ expected_output = {
             "address_family": {
                 "IPv4 Unicast": {
                     "nexthop": {
-                        "16.16.16.16": {
+                        "10.4.16.16": {
                             "nexthop_id": "0x6000074",
                             "version": "0x0",
                             "nexthop_flags": "0x00000000",
@@ -16,7 +16,7 @@ expected_output = {
                                         "gateway_flags": "0x00000080",
                                         "gateway_handle": "0x7fba14059ce0",
                                         "gateway": "reachable, non-Connected route, prefix length 32",
-                                        "resolving_route": "16.16.16.16/32 (static)",
+                                        "resolving_route": "10.4.16.16/32 (static)",
                                         "paths": 0,
                                         "rib_nexthop_id": "0x0",
                                         "status": "[Reachable][Not Connected][Not Local]",

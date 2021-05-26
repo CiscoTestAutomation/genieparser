@@ -5396,7 +5396,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         # Initializes the Python dictionary variable
         parsed_dict = {}
 
-        #OSPF Router with ID (25.97.1.1) (Process ID mpls1)
+        #OSPF Router with ID (10.94.1.1) (Process ID mpls1)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\) '
                         r'+\(Process +ID +(?P<instance>(\S+))(?:, +VRF +(?P<vrf>(\S+)))?\)$')
 
@@ -5405,12 +5405,12 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
                         ' +(?P<area>(\S+))\)$')
 
-        #25.97.1.1       25.97.1.1       86          0x800080ff 0x0043de 5
+        #10.94.1.1       10.94.1.1       86          0x800080ff 0x0043de 5
         p3 = re.compile(
             "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)\s+"
             "(?P<seq_num>[\w]+)\s+(?P<checksum>[\w]+)\s(?P<link_count>[\w]+)$")
 
-        #1.0.0.0         25.97.1.1       54          0x8003b136     0x009cb2        0
+        #10.1.0.0         10.94.1.1       54          0x8003b136     0x009cb2        0
         p4 = re.compile(
             "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)"
             "\s+(?P<seq_num>[\w]+)\s+(?P<checksum>[\w]+)\s+(?P<opaque_id>[\w]+)$")
@@ -5419,7 +5419,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            # OSPF Router with ID (25.97.1.1) (Process ID mpls1)
+            # OSPF Router with ID (10.94.1.1) (Process ID mpls1)
             m = p1.match(line)
 
             if m:
@@ -5477,7 +5477,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
 
 
             #To process the router link states
-            # 25.97.1.1       25.97.1.1       86          0x800080ff 0x0043de 5
+            # 10.94.1.1       10.94.1.1       86          0x800080ff 0x0043de 5
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -5505,7 +5505,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 continue
 
             # To process the type_10_opaque_link_states
-            # 1.0.0.0         25.97.1.1       54          0x8003b136 0x009cb2        0
+            # 10.1.0.0         10.94.1.1       54          0x8003b136 0x009cb2        0
             m = p4.match(line)
             if m:
                 group = m.groupdict()
