@@ -1,0 +1,42 @@
+show inventory
+NAME: "Chassis", DESCR: "Cisco Catalyst 9400 Series 7 Slot Chassis"
+PID: C9407R            , VID: V01  , SN: ******
+
+NAME: "Slot 1 Linecard", DESCR: "Cisco Catalyst 9400 Series 48-Port POE 10/100/1000 (RJ-45)"
+PID: C9400-LC-48P      , VID: V01  , SN: ******
+
+NAME: "Slot 2 Linecard", DESCR: "Cisco Catalyst 9400 Series 48-Port POE 10/100/1000 (RJ-45)"
+PID: C9400-LC-48P      , VID: V01  , SN: ******
+
+NAME: "Slot 5 Linecard", DESCR: "Cisco Catalyst 9400 Series 48-Port POE 10/100/1000 (RJ-45)"
+PID: C9400-LC-48P      , VID: V01  , SN: ******
+
+NAME: "Slot 6 Linecard", DESCR: "Cisco Catalyst 9400 Series 48-Port POE 10/100/1000 (RJ-45)"
+PID: C9400-LC-48P      , VID: V01  , SN: ******
+
+NAME: "Slot 3 Supervisor", DESCR: "Cisco Catalyst 9400 Series Supervisor 1 Module"
+PID: C9400-SUP-1       , VID: V02  , SN: ******
+
+NAME: "TenGigabitEthernet3/0/1", DESCR: "SFP 10GBASE-SR"
+PID: SFP-10G-SR          , VID: 01   , SN: ******
+
+NAME: "TenGigabitEthernet3/0/2", DESCR: "SFP 10GBASE-SR"
+PID: SFP-10G-SR          , VID: 01   , SN: ******
+
+NAME: "TenGigabitEthernet3/0/3", DESCR: "SFP 10GBASE-SR"
+PID: SFP-10G-SR          , VID: 01   , SN: ******
+
+NAME: "TenGigabitEthernet3/0/4", DESCR: "SFP 10GBASE-SR"
+PID: SFP-10G-SR          , VID: 01   , SN: ******
+
+NAME: "TenGigabitEthernet3/0/8", DESCR: "GE SX"
+PID: QFBR-5798L        , VID:      , SN: ******
+
+NAME: "Power Supply Module 1", DESCR: "Cisco Catalyst 9400 Series 3200W AC Power Supply"
+PID: C9400-PWR-3200AC  , VID: V01  , SN: ******
+
+NAME: "Power Supply Module 2", DESCR: "Cisco Catalyst 9400 Series 3200W AC Power Supply"
+PID: C9400-PWR-3200AC  , VID: V01  , SN: DTM224703G0
+
+NAME: "Fan Tray", DESCR: "Cisco Catalyst 9400 Series 7 Slot Chassis Fan Tray"
+PID: C9407-FAN         , VID: V01  , SN: ******

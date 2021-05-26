@@ -1,0 +1,12 @@
+Device# show ip eigrp vrf VRF1 topology
+EIGRP-IPv4 Topology Table for AS(1)/ID(192.168.10.1) VRF(VRF1)
+Codes:P - Passive, A - Active, U - Update, Q - Query, R - Reply,
+       r - reply Status, s - sia Status
+P 10.17.17.0/24, 1 successors, FD is 409600
+         via 10.10.10.2 (409600/128256), Ethernet3/0
+P 172.16.19.0/24, 1 successors, FD is 409600
+         via 10.10.10.2 (409600/128256), Ethernet3/0
+P 192.168.10.0/24, 1 successors, FD is 281600
+         via Connected, Ethernet3/0
+P 10.10.10.0/24, 1 successors, FD is 281600
+         via Redistributed (281600/0)

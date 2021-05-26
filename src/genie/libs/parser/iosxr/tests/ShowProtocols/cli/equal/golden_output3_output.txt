@@ -1,8 +1,8 @@
 RP/0/RP0/CPU0:R1#show protocols ospf
-Mon Apr 12 11:40:00.356 JST
+Mon Apr 12 11:40:00.356 EST
 
 Routing Protocol OSPF mpls1
-  Router Id: 25.97.1.1
+  Router Id: 10.94.1.1
   Distance: 110
   Non-Stop Forwarding: Enabled
   Redistribution:

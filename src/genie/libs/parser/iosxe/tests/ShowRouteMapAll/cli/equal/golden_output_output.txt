@@ -1,9 +1,13 @@
 
 STATIC routemaps
 route-map test, permit, sequence 10
+  description hello!
   Match clauses:
     interface GigabitEthernet1 
     ipv6 next-hop test
+    ip next-hop prefix-lists: FILTER25 FILTER.26
+    community (community-list filter): DENY50000! DENY50000
+    extcommunity (extcommunity-list filter):DENY50000 DENY50000!
   Set clauses:
     tag 10 
     ipv6 next-hop 2001:DB8:1::1 2001:DB8:2::1
@@ -29,7 +33,7 @@ route-map test2, permit, sequence 10
   Policy routing matches: 0 packets, 0 bytes
 route-map test2, permit, sequence 20
   Match clauses:
-    ip address prefix-lists: test test2 
+    ip address prefix-lists: test test_2 test&3
     route-type level-1 level-2 
     interface GigabitEthernet1 GigabitEthernet2 
     as-path (as-path filter): 100 
@@ -41,6 +45,12 @@ route-map test2, permit, sequence 20
     origin igp
     ip next-hop 10.36.3.3
      ipv6 next-hop 2001:DB8:3::1
+  Policy routing matches: 0 packets, 0 bytes
+route-map rtp, permit, sequence 10
+  Match clauses:
+      ipv6 address prefix-list cisco&&2
+      ipv6 next-hop prefix-list cisco
+  Set clauses:
   Policy routing matches: 0 packets, 0 bytes
 DYNAMIC routemaps
 Current active dynamic routemaps = 0

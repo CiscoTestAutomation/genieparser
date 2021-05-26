@@ -3,7 +3,7 @@ Interface GigabitEthernet0/0 "", is administratively down, line protocol is up
 	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
 	Input flow control is unsupported, output flow control is unsupported
 	Available but not configured via nameif
-	MAC address 5254.0008.ad3e, MTU not set
+	MAC address 5254.00ff.b546, MTU not set
 	IP address unassigned
 	0 packets input, 0 bytes, 0 no buffer
 	Received 0 broadcasts, 0 runts, 0 giants
@@ -26,7 +26,7 @@ Interface GigabitEthernet0/1 "", is administratively down, line protocol is up
 	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
 	Input flow control is unsupported, output flow control is unsupported
 	Available but not configured via nameif
-	MAC address 5254.001a.0769, MTU not set
+	MAC address 5254.00ff.2183, MTU not set
 	IP address unassigned
 	0 packets input, 0 bytes, 0 no buffer
 	Received 0 broadcasts, 0 runts, 0 giants
@@ -49,7 +49,7 @@ Interface GigabitEthernet0/2 "", is administratively down, line protocol is up
 	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
 	Input flow control is unsupported, output flow control is unsupported
 	Available but not configured via nameif
-	MAC address 5254.0002.2391, MTU not set
+	MAC address 5254.00ff.2593, MTU not set
 	IP address unassigned
 	0 packets input, 0 bytes, 0 no buffer
 	Received 0 broadcasts, 0 runts, 0 giants
@@ -72,7 +72,7 @@ Interface GigabitEthernet0/3 "", is administratively down, line protocol is up
 	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
 	Input flow control is unsupported, output flow control is unsupported
 	Available but not configured via nameif
-	MAC address 5254.0010.d5fb, MTU not set
+	MAC address 5254.00ff.e50c, MTU not set
 	IP address unassigned
 	0 packets input, 0 bytes, 0 no buffer
 	Received 0 broadcasts, 0 runts, 0 giants
@@ -95,7 +95,7 @@ Interface GigabitEthernet0/4 "", is administratively down, line protocol is up
 	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
 	Input flow control is unsupported, output flow control is unsupported
 	Available but not configured via nameif
-	MAC address 5254.0006.5aaa, MTU not set
+	MAC address 5254.00ff.60b0, MTU not set
 	IP address unassigned
 	0 packets input, 0 bytes, 0 no buffer
 	Received 0 broadcasts, 0 runts, 0 giants
@@ -118,7 +118,7 @@ Interface GigabitEthernet0/5 "", is administratively down, line protocol is up
 	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
 	Input flow control is unsupported, output flow control is unsupported
 	Available but not configured via nameif
-	MAC address 5254.000b.a810, MTU not set
+	MAC address 5254.00ff.b31b, MTU not set
 	IP address unassigned
 	0 packets input, 0 bytes, 0 no buffer
 	Received 0 broadcasts, 0 runts, 0 giants
@@ -141,7 +141,7 @@ Interface GigabitEthernet0/6 "", is administratively down, line protocol is up
 	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
 	Input flow control is unsupported, output flow control is unsupported
 	Available but not configured via nameif
-	MAC address 5254.0009.2ac6, MTU not set
+	MAC address 5254.00ff.33cf, MTU not set
 	IP address unassigned
 	0 packets input, 0 bytes, 0 no buffer
 	Received 0 broadcasts, 0 runts, 0 giants
@@ -163,7 +163,7 @@ Interface Internal-Data0/0 "nlp_int_tap", is up, line protocol is up
   Hardware is en_vtun rev00, BW Unknown Speed-Capability, DLY 1000 usec
 	(Full-duplex), (1000 Mbps)
 	Input flow control is unsupported, output flow control is unsupported
-	MAC address 0000.0100.0001, MTU 1500
+	MAC address 0000.01ff.0001, MTU 1500
 	IP address 169.254.1.1, subnet mask 255.255.255.248
 	10 packets input, 896 bytes, 0 no buffer
 	Received 0 broadcasts, 0 runts, 0 giants
@@ -195,7 +195,7 @@ Interface Management0/0 "management", is up, line protocol is up
   Hardware is net_virtio, BW 1000 Mbps, DLY 10 usec
 	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
 	Input flow control is unsupported, output flow control is unsupported
-	MAC address 5254.001d.9eb0, MTU 1500
+	MAC address 5254.00ff.bbcd, MTU 1500
 	IP address 10.224.128.27, subnet mask 255.255.254.0
 	1872 packets input, 161997 bytes, 0 no buffer
 	Received 0 broadcasts, 0 runts, 0 giants

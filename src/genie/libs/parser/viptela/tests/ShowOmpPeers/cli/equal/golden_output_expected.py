@@ -4,7 +4,7 @@ expected_output = {
             "type": "vsmart",
             "domain_id": 1,
             "overlay_id": 1,
-            "site_id": 4,
+            "site_id": 4294945506,
             "state": "up",
             "uptime": "6:13:57:28",
             "route": {"recv": 4, "install": 0, "sent": 4},
