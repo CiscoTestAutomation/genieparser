@@ -32,7 +32,7 @@ Unknown Responses          :          0          0          0
  1645/0
  1646/0
 
-  Elapsed time since counters last cleared: 2h43m
+  Elapsed time since counters last cleared: 5h58m
 Radius Latency Distribution:
 <= 2ms :          0          0
 3-5ms  :          0          0
@@ -43,4 +43,4 @@ Radius Latency Distribution:
 >100ms :          0          0
 
 Current inQ length  : 0
-Current doneQ length:
+Current doneQ length: 0
