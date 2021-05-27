@@ -20,14 +20,17 @@ class ShowIpDhcpDatabaseSchema(MetaParser):
     """
 
     schema = {
-        'url': str,
-        'read': str,
-        'written': str,
-        'status': str,
-        'delay_in_secs': int,
-        'timeout_in_secs': int,
-        'failures': int,
-        'successes': int
+        'url': {
+            str: {
+                'read': str,
+                'written': str,
+                'status': str,
+                'delay_in_secs': int,
+                'timeout_in_secs': int,
+                'failures': int,
+                'successes': int
+            }
+        }
     }
 
 
