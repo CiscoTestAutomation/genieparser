@@ -79,7 +79,7 @@ class ShowForwardingIpv4(ShowForwardingIpv4Schema):
         #0.0.0.0/32           Drop                                      Null0
         #*10.36.3.2/32          10.2.1.2                                  Ethernet1/1
         #10.36.3.2/32          10.2.1.2                                  Ethernet1/1       vni: 501003
-        #1.1.1.1/32           10.2.1.2                                  Ethernet1/1           PUSH 16001
+        #10.4.1.1/32           10.2.1.2                                  Ethernet1/1           PUSH 16001
         p3 = re.compile(r'^(?P<is_best_next_hop>\*)?'
                           '(?P<prefix>[0-9\.]+\/[0-9]+)?'
                           ' +(?P<next_hop>[0-9A-Za-z.]+)'  

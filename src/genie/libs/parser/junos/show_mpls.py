@@ -77,7 +77,7 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
         result_dict = {}
         discovery_flag = False
 
-        # Local LDP Identifier: 25.97.1.1:0
+        # Local LDP Identifier: 10.94.1.1:0
         p1 = re.compile(r'^Local +LDP +Identifier: '
                         '(?P<local_ldp_identifier>[\d\.\:]+)$')
 
@@ -92,10 +92,10 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
         # VRF: 'default' (0x60000000)
         p4 = re.compile(r'^VRF: \'(?P<vrf>\S+)\' +\((?P<vrf_hex>[\w]+)\)$')
 
-        # LDP Id: 96.96.96.96:0
+        # LDP Id: 10.144.96.96:0
         p5 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:\s*(?P<ldp_tdp_id>[\S]+)$')
 
-        # Source address: 100.20.0.1; Transport address: 25.97.1.1
+        # Source address: 10.120.0.1; Transport address: 10.94.1.1
         p6 = re.compile(r'^Source +address: +(?P<source_ip_addr>[\d\.]+);'
                         ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
 
@@ -134,7 +134,7 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # Local LDP Identifier: 25.97.1.1:0
+            # Local LDP Identifier: 10.94.1.1:0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -185,7 +185,7 @@ class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
 
                 continue
 
-            # LDP Id: 96.96.96.96:0
+            # LDP Id: 10.144.96.96:0
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -855,7 +855,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
         # Protocol Version: 1
         p3 = re.compile(r'^Protocol +Version: +(?P<protocol_version_number>\S+)$')
 
-        # Router ID: 1.1.1.1
+        # Router ID: 10.4.1.1
         p4 = re.compile(r'^Router +ID: +(?P<router_id_ip>[\d.]+)$')
 
         # Null Labels:
@@ -901,7 +901,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
         # Transport address:
         p16 = re.compile(r'^Transport +address:$')
 
-        # IPv4: 1.1.1.1
+        # IPv4: 10.4.1.1
         p17 = re.compile(r'^IPv4: +(?P<transport_address_ipv4_ip>[\d.]+)$')
 
         # Graceful Restart:
@@ -977,7 +977,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
                 parameters_dict['protocol-version'] = group['protocol_version_number']
                 continue
 
-            # Router ID: 1.1.1.1
+            # Router ID: 10.4.1.1
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -1070,7 +1070,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
                 transport_address_dict = discovery_dict.setdefault('discovery-transport-address', {})
                 continue
 
-            # IPv4: 1.1.1.1
+            # IPv4: 10.4.1.1
             m = p17.match(line)
             if m:
                 group = m.groupdict()

@@ -9,21 +9,21 @@ expected_output = {
         },
         "GigabitEthernet0/0/1": {
             "interface_is_ok": "YES",
-            "ip_address": "84.84.10.1",
+            "ip_address": "10.174.10.1",
             "method": "other",
             "protocol": "up",
             "status": "up"
         },
         "GigabitEthernet0/0/2": {
             "interface_is_ok": "YES",
-            "ip_address": "64.64.10.1",
+            "ip_address": "10.64.10.1",
             "method": "other",
             "protocol": "up",
             "status": "up"
         },
         "GigabitEthernet0/0/3": {
             "interface_is_ok": "YES",
-            "ip_address": "87.87.10.1",
+            "ip_address": "10.186.10.1",
             "method": "other",
             "protocol": "up",
             "status": "up"
@@ -51,7 +51,7 @@ expected_output = {
         },
         "TenGigabitEthernet0/0/4": {
             "interface_is_ok": "YES",
-            "ip_address": "88.88.10.1",
+            "ip_address": "10.121.10.1",
             "method": "other",
             "protocol": "up",
             "status": "up"
@@ -65,7 +65,7 @@ expected_output = {
         },
         "Tunnel1": {
             "interface_is_ok": "YES",
-            "ip_address": "84.84.10.1",
+            "ip_address": "10.174.10.1",
             "method": "TFTP",
             "protocol": "up",
             "status": "up"
@@ -79,14 +79,14 @@ expected_output = {
         },
         "Tunnel2000000002": {
             "interface_is_ok": "YES",
-            "ip_address": "192.0.4.1",
+            "ip_address": "192.168.166.1",
             "method": "unset",
             "protocol": "up",
             "status": "up"
         },
         "Tunnel3": {
             "interface_is_ok": "YES",
-            "ip_address": "87.87.10.1",
+            "ip_address": "10.186.10.1",
             "method": "TFTP",
             "protocol": "up",
             "status": "up"
@@ -107,7 +107,7 @@ expected_output = {
         },
         "Ucse1/0/0": {
             "interface_is_ok": "YES",
-            "ip_address": "14.14.14.1",
+            "ip_address": "10.19.14.1",
             "method": "other",
             "protocol": "down",
             "status": "administratively down"
@@ -142,7 +142,7 @@ expected_output = {
         },
         "VirtualPortGroup4": {
             "interface_is_ok": "YES",
-            "ip_address": "192.0.4.1",
+            "ip_address": "192.168.166.1",
             "method": "other",
             "protocol": "up",
             "status": "up"

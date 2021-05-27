@@ -6,32 +6,32 @@ expected_output = {
                     "address_family":{
                         "IPv4":{
                             "eigrp_id":{
-                                "13.0.0.2":{
+                                "10.169.0.2":{
                                     "eigrp_routes":{
-                                        "13.0.0.0/16":{
+                                        "10.169.0.0/16":{
                                             "route_code":"P",
                                             "successor_count":1,
                                             "FD":2816,
                                             "route_type":"Passive",
-                                            "route":"13.0.0.0/16",
+                                            "route":"10.169.0.0/16",
                                             "known_via":"Connected",
                                             "outgoing_interface":"GigabitEthernet0/0/0"
                                         },
-                                        "3.3.3.3/32":{
+                                        "10.36.3.3/32":{
                                             "route_code":"P",
                                             "successor_count":1,
                                             "FD":130816,
                                             "route_type":"Passive",
-                                            "route":"3.3.3.3/32",
-                                            "known_via":"13.0.0.1",
+                                            "route":"10.36.3.3/32",
+                                            "known_via":"10.169.0.1",
                                             "outgoing_interface":"GigabitEthernet0/0/0"
                                         },
-                                        "1.1.1.1/32":{
+                                        "10.4.1.1/32":{
                                             "route_code":"P",
                                             "successor_count":1,
                                             "FD":2816,
                                             "route_type":"Passive",
-                                            "route":"1.1.1.1/32",
+                                            "route":"10.4.1.1/32",
                                             "known_via":"Redistributed",
                                         }
                                     }

@@ -569,7 +569,7 @@ class ShowProtocols(ShowProtocolsSchema):
         p1 = re.compile(r'^Routing +Protocol +(?P<protocol>(OSPF(v3)?))'
                         ' +(?P<pid>\S+)$')
 
-        # Router Id: 25.97.1.1
+        # Router Id: 10.94.1.1
         p2 = re.compile(r'^Router +Id: +(?P<router_id>\S+)$')
 
         # Distance: 110
@@ -666,7 +666,7 @@ class ShowProtocols(ShowProtocolsSchema):
                                        .setdefault(instance, {})
                 continue
 
-            # Router Id: 25.97.1.1
+            # Router Id: 10.94.1.1
             m = p2.match(line)
             if m:
                 group = m.groupdict()

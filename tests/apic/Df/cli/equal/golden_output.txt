@@ -1,0 +1,24 @@
+Filesystem                      1K-blocks     Used Available Use% Mounted on
+/dev/mapper/vg_ifc0-boot         41153856 13027584  26012736  34% /bin
+/dev/mapper/vg_ifc0_ssd-data     91266816   360084  86247532   1% /var/log/dme
+devtmpfs                         32771464        0  32771464   0% /dev
+tmpfs                             4194304   175968   4018336   5% /dev/shm
+/dev/mapper/vg_ifc0-firmware     41153760  2172892  36867332   6% /firmware
+/dev/mapper/vg_ifc0-scratch      41153760  6944104  32096120  18% /home
+tmpfs                            32785504        0  32785504   0% /sys/fs/cgroup
+/dev/mapper/vg_ifc0-techsupport  41153760   249516  38790708   1% /data/techsupport
+tmpfs                            16777216       60  16777156   1% /tmp
+/dev/sdc1                           55397     1213     49884   3% /tmp/bootflash
+tmpfs                             2097152   609748   1487404  30% /var/log/dme/log
+/dev/mapper/vg_ifc0-logs         41153760  4609268  34430956  12% /var/log/dme/oldlog
+/dev/mapper/vg_ifc0-data2        66956728 18807804  44724668  30% /data2
+/dev/mapper/vg_ifc0-dmecores     51474912    53288  48783800   1% /var/log/dme/core
+tmpfs                            32785504     3516  32781988   1% /var/run/utmp
+tmpfs                                1024        0      1024   0% /data2/third-party/nomad/data/alloc/97d95dd6-39c1-bedb-1cab-2aaf8633ea80/zk/secrets
+tmpfs                                1024        0      1024   0% /data2/third-party/nomad/data/alloc/8c9a3ab0-19c4-610b-85f6-5cb63e071e1a/es/secrets
+tmpfs                                1024        0      1024   0% /data2/third-party/nomad/data/alloc/6c97f156-6997-358a-80e7-1d6cd81beb3d/hms/secrets
+tmpfs                                1024        0      1024   0% /data2/third-party/nomad/data/alloc/89f6f22f-3f6e-0057-b324-a8008af16a9e/dc/secrets
+tmpfs                                1024        0      1024   0% /data2/third-party/nomad/data/alloc/047a0365-93a3-a452-cfd9-24a556594476/moss/secrets
+tmpfs                                1024        0      1024   0% /data2/third-party/nomad/data/alloc/623ade6f-94a6-ce85-c0ca-3abc781771c2/ksm/secrets
+tmpfs                                1024        0      1024   0% /data2/third-party/nomad/data/alloc/75e3d4f6-1d43-dc01-0244-96eea0d48978/statsq/secrets
+tmpfs                                1024        0      1024   0% /data2/third-party/nomad/data/alloc/4ff974a9-b3b2-ef30-c8c6-17f1380b24d2/kafka/secrets

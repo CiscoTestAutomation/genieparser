@@ -54,20 +54,20 @@ expected_output = {
             "send": False
         },
         "ipv4": {
-            "14.14.14.1/24": {
-                "ip": "14.14.14.1",
+            "10.19.14.1/24": {
+                "ip": "10.19.14.1",
                 "prefix_length": "24"
             }
         },
         "last_input": "04:27:45",
         "last_output": "00:16:35",
         "line_protocol": "down",
-        "mac_address": "4ce1.7660.9720",
+        "mac_address": "4ce1.76ff.f780",
         "media_type": "Internal",
         "mtu": 1500,
         "oper_status": "down",
         "output_hang": "never",
-        "phys_address": "4ce1.7660.9720",
+        "phys_address": "4ce1.76ff.f780",
         "port_channel": {
             "port_channel_member": False
         },
