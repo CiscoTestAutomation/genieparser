@@ -958,7 +958,7 @@ class ShowPlatformSoftwareSchema(MetaParser):
                 Optional('childless-delete-objects'): int,
                 Optional('backplane-objects'): int,
                 Optional('error-objects'): int,
-                Optional('number of bundles'): int,
+                Optional('number_of_bundles'): int,
                 Optional('paused-types'): int,
                 },
         }
@@ -1070,8 +1070,11 @@ class ShowPlatformSoftware(ShowPlatformSoftwareSchema):
             m = p6.match(line)
             if m:
                 groups = m.groupdict()
-                stats_dict.update({groups['key'].lower(): int(groups['value'])})
+                scrubbed = groups['key'].replace(' ', '_')
+                #stats_dict.update({groups['key'].lower(): int(groups['value'])})
+                stats_dict.update({scrubbed.lower(): int(groups['value'])})
                 continue
 
         return ret_dict
+
 

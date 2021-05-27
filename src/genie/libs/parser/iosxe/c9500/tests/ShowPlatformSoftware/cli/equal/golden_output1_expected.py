@@ -21,7 +21,7 @@ expected_output={
       "childless-delete-objects":0,
       "backplane-objects":0,
       "error-objects":0,
-      "number of bundles":0,
+      "number_of_bundles":0,
       "paused-types":0
    }
 }
