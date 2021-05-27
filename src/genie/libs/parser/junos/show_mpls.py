@@ -3,6 +3,8 @@
 JUNOS parsers for the following commands:
     * show mpls lsp name {name} detail
     * show mpls lsp name {name} extensive
+    * show mpls ldp discovery detail
+    * show mpls ldp parameters
 """
 
 import re
@@ -11,6 +13,283 @@ import re
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import Any, Optional, Use, Schema, ListOf
+
+
+# ==============================================
+#   Show mpls ldp discovery
+# ==============================================
+class ShowMplsLdpDiscoveryDetailSchema(MetaParser):
+    """
+    Schema for show mpls ldp discovery detail
+    """
+    schema = {
+        'vrf': {
+            Optional('local_ldp_identifier'): str,
+            'vrfs': ListOf({
+                'vrf_name': str,
+                'interfaces': ListOf({
+                    Optional('interface'): str,
+                    Optional('vrf_hex'): str,
+                    Optional('source_ip_addr'): str,
+                    Optional('transport_ip_addr'): str,
+                    Optional('xmit'): str,
+                    Optional('recv'): str,
+                    Optional('hello_interval_ms'): str,
+                    Optional('hello_due_time_ms'): str,
+                    Optional('quick_start'): str,
+                    Optional('ldp_id'): {
+                        Optional('network_addr'): str,
+                        "ldp_entries": ListOf({
+                            Optional('source_ip_addr'): str,
+                            Optional('transport_ip_addr'): str,
+                            Optional('holdtime_sec'): str,
+                            Optional('proposed_local'): str,
+                            Optional('proposed_peer'): str,
+                            Optional('expiring_in'): str,
+                            Optional('established_date'): str,
+                            Optional('established_elapsed'): str,
+                            Optional('last_session_connection_failures'): ListOf({
+                                Optional('timestamp'): str,
+                                Optional('reason'): str,
+                                Optional('last_up_for'): str,
+                            })
+                        })
+                    }
+                })
+            })
+        }
+    }
+
+
+class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
+    """
+        Parser for show mpls ldp discovery detail
+    """
+    cli_command = 'show mpls ldp discovery detail'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        result_dict = {}
+        discovery_flag = False
+
+        # Local LDP Identifier: 10.94.1.1:0
+        p1 = re.compile(r'^Local +LDP +Identifier: '
+                        '(?P<local_ldp_identifier>[\d\.\:]+)$')
+
+        # Discovery Sources:
+        p2 = re.compile(r'^Discovery +Sources:$')
+
+        # TenGigE0/3/0/0 (0xa0004c0) : xmit/recv
+        # TenGigE0/3/0/26 (0xa000e00) : xmit/recv
+        p3 = re.compile(r'^(?P<interface>\S+) \((?P<interface_hex>[\w]+)\)'
+                        ' : (?P<xmit>xmit)?\/?(?P<recv>recv)?$')
+
+        # VRF: 'default' (0x60000000)
+        p4 = re.compile(r'^VRF: \'(?P<vrf>\S+)\' +\((?P<vrf_hex>[\w]+)\)$')
+
+        # LDP Id: 10.144.96.96:0
+        p5 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:\s*(?P<ldp_tdp_id>[\S]+)$')
+
+        # Source address: 10.120.0.1; Transport address: 10.94.1.1
+        p6 = re.compile(r'^Source +address: +(?P<source_ip_addr>[\d\.]+);'
+                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
+
+        # Hold time: 15 sec (local:15 sec, peer:45 sec)
+        p7 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec '
+                        '\(local:(?P<proposed_local>\d+) +sec, '
+                        'peer:(?P<proposed_peer>\d+) +sec\)$')
+
+        # (expiring in 11 sec)
+        # (expiring in 14.5 sec)
+        p8 = re.compile(r'^\(expiring +in +(?P<expiring_in>\d.*) +sec\)$')
+
+        # Established: Nov  6 14:39:26.164 (5w2d ago)
+        p9 = re.compile(r'^Established: +(?P<established_date>\S.*) '
+                        '+\((?P<established_elapsed>\S*) +ago\)$')
+
+        # Hello interval: 5 sec (due in 563 msec)
+        p10 = re.compile(r'^Hello +interval: +(?P<hello_interval>\d+) +sec'
+                        ' +\(due +in +(?P<hello_due_time>\S+ +\S+)\)$')
+
+        # Quick-start: Enabled
+        p11 = re.compile(r'^Quick-start: +(?P<quick_start>\S+)$')
+
+        # Last session connection failures:
+        p12 = re.compile(r'^Last +session +connection +failures:$')
+
+        #     Jan  4 05:20:34.814: User cleared session manually
+        #     Jan  4 05:28:48.641: User cleared session manually
+        p13 = re.compile(r'^(?P<timestamp>[A-Z][a-z]{2}\s+[0-9]{1,2}\s[0-9:.]+)'
+                         ':\s+(?P<reason>[\w\s]+)$')
+
+        #         (Last up for 00:06:56)
+        #         (Last up for 00:08:05)
+        p14 = re.compile(r'\(Last +up +for +(?P<last_up_for>[\d:]+)\)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Local LDP Identifier: 10.94.1.1:0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict = result_dict.setdefault('vrf', {})
+                ldp_dict.update(
+                    {'local_ldp_identifier': group['local_ldp_identifier']})
+                continue
+
+            # Discovery Sources:
+            m = p2.match(line)
+            if m:
+                discovery_flag = True
+                continue
+
+            # TenGigE0/3/0/0 (0xa0004c0) : xmit/recv
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface'] if group['interface'] \
+                    else "default"
+
+                interface_dict = {'interface': interface}
+                interface_dict.update(
+                    {'xmit': 'True' if group['xmit'] else 'False'})
+                interface_dict.update(
+                    {'recv': 'True' if group['recv'] else 'False'})
+                continue
+
+            # VRF: 'default' (0x60000000)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_name = group['vrf'] if group['vrf'] else "default"
+                vrf_list = result_dict.setdefault('vrf', {}).\
+                    setdefault('vrfs', [])
+
+                vrf = next(
+                    (i for i in vrf_list if i['vrf_name'] == vrf_name), None)
+
+                if vrf is None:
+                    vrf = {'vrf_name': vrf_name, 'interfaces': []}
+                    vrf_list.append(vrf)
+
+                if interface:
+                    vrf_hex = group['vrf_hex']
+                    interface_dict.update({'vrf_hex': vrf_hex})
+                    vrf['interfaces'].append(interface_dict)
+
+                continue
+
+            # LDP Id: 10.144.96.96:0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_tdp = group['ldp_tdp'].lower()
+                ldp_tdp_id = group['ldp_tdp_id']
+                if discovery_flag:
+                    ldp_dict = interface_dict.\
+                        setdefault('{}_id'.format(ldp_tdp), {})
+
+                    net_addr = next((i for i in ldp_dict
+                                    if i['network_addr'] == ldp_tdp_id
+                                    ), None)
+
+                    if net_addr is None:
+                        net_addr = {
+                            'network_addr': ldp_tdp_id,
+                            'ldp_entries': []
+                        }
+                        ldp_dict.update(net_addr)
+
+                continue
+
+            # Source address: 10.166.0.57; Transport address: 10.52.31.247
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                if 'source_ip_addr' in interface_dict.keys():
+                    item_dict = {k: v for k, v in group.items() if v}
+                    net_addr['ldp_entries'].append(item_dict)
+                else:
+                    interface_dict.update(
+                        {k: v for k, v in group.items() if v})
+                continue
+
+            # Hold time: 15 sec (local:15 sec, peer:45 sec)
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                item_dict.update(
+                    {k: v for k, v in group.items() if v})
+                continue
+
+            # (expiring in 14.5 sec)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                item_dict.update(
+                    {'expiring_in': group['expiring_in']})
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                item_dict.update({
+                    'established_date': group['established_date'],
+                    'established_elapsed': group['established_elapsed']
+                })
+
+            # Hello interval: 5 sec (due in 563 msec)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'hello_interval_ms': str(
+                    1000*int(group['hello_interval']))})
+                if ' sec' in group['hello_due_time']:
+                    hello_due_time_ms = str(
+                        int(1000*float(group['hello_due_time'].split(' ')[0])))
+                else:
+                    hello_due_time_ms = str(
+                        int(group['hello_due_time'].split(' ')[0]))
+                interface_dict.update({'hello_due_time_ms': hello_due_time_ms})
+                continue
+
+            # Quick-start: Enabled
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update(
+                    {'quick_start': group['quick_start'].lower()})
+                continue
+
+            # Last session connection failures:
+            m = p12.match(line)
+            if m:
+                item_dict['last_session_connection_failures'] = []
+
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                connection_failure_dict = {
+                    'timestamp': group['timestamp'],
+                    'reason': group['reason']
+                }
+
+                item_dict['last_session_connection_failures'].append(
+                    connection_failure_dict)
+                continue
+
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                connection_failure_dict.update(
+                    {'last_up_for': group['last_up_for']})
+
+        return result_dict
 
 
 class ShowMPLSLSPNameDetailSchema(MetaParser):
@@ -473,3 +752,432 @@ class ShowMPLSLSPNameExtensive(ShowMPLSLSPNameDetail):
             out = output
 
         return super().cli(output=out, name=name)
+
+
+
+
+# ==============================================
+#  Schema for show mpls ldp parameters
+# ==============================================
+
+class ShowMplsLdpParametersSchema(MetaParser):
+    """ Schema for
+        * show mpls ldp parameters
+    """
+    schema = {
+        "ldp-parameters": {
+            "role": str,
+            "protocol-version": str,
+            "router-id": str,
+            "null-label": {
+                "null-label-ipv4-address": str
+            },
+            "session": {
+                "session-holdtime-sec": str,
+                "session-keepalive-interval-sec": str,
+                "session-backoff": {
+                    "backoff-initial-sec": str,
+                    "backoff-maximum-sec": str
+                },
+                "global-md5-password": str
+            },
+            "discovery": {
+                "discovery-link-hellos": {
+                    "link-hellos-hold-time-sec": str,
+                    "link-hellos-interval-sec": str
+                },
+                "discovery-target-hellos": {
+                    "target-hellos-hold-time-sec": str,
+                    "target-hellos-interval-sec": str
+                },
+                "discovery-quick-start": str,
+                "discovery-transport-address": {
+                    "transport-ipv4-address": str
+                },
+            },
+            "graceful-restart": {
+                "graceful-restart-status": str,
+                "graceful-restart-reconnect-timeout": {
+                    "reconnect-timeout-time-sec": str,
+                    "reconnect-timeout-forward-state-holdtime-sec": str
+                }
+            },
+            "nsr": {
+                "nsr-status": str,
+                Optional("nsr-sync-ed-status"): str
+            },
+            "timeouts": {
+                "housekeeping-periodic-timer-timeouts-sec": str,
+                "local-binding-timeouts-sec": str,
+                "forward-state-lsd-timeouts-sec": str
+            },
+            "delay-af-bind-peer-sec": str,
+            "max": {
+                "interfaces": {
+                    "max-interfaces-units": str,
+                    Optional("attached-interfaces-units"): str,
+                    Optional("te-tunnel-interfaces-units"): str
+                },
+                "max-peers-units": str
+            },
+            "oor-state": {
+                "oor-memory": str
+            },
+        },
+    }
+
+
+# ==============================================
+#  Parser for show mpls ldp parameters
+# ==============================================
+
+class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
+    """ For Parsing
+        * show mpls ldp parameters
+    """
+
+    cli_command = 'show mpls ldp parameters'
+
+    def cli(self, output=None):
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        # LDP Parameters:
+        p1 = re.compile(r'^LDP +Parameters:$')
+
+        # Role: Active
+        p2 = re.compile(r'^Role: +(?P<role_value>\w+)$')
+
+        # Protocol Version: 1
+        p3 = re.compile(r'^Protocol +Version: +(?P<protocol_version_number>\S+)$')
+
+        # Router ID: 10.4.1.1
+        p4 = re.compile(r'^Router +ID: +(?P<router_id_ip>[\d.]+)$')
+
+        # Null Labels:
+        p5 = re.compile(r'^Null +Label:$')
+
+        # IPv4: Implicit
+        p6 = re.compile(r'^IPv4: +(?P<null_labels_ipv4>\w+)$')
+
+        # Session:
+        p7 = re.compile(r'^Session:$')
+
+        # Hold time: 180 sec
+        p8 = re.compile(r'^Hold +time: +(?P<hold_time_seconds>\d+) +sec$')
+
+        # Keepalive interval: 60 sec
+        p9 = re.compile(r'^Keepalive +interval: +(?P<keepalive_interval_seconds>\d+) +sec$')
+
+        # Backoff: Initial:15 sec, Maximum:120 sec
+        p10 = re.compile(
+            r'^Backoff: +Initial:(?P<initial_seconds>\d+) +sec'
+            r', +Maximum:(?P<maximum_seconds>\d+) +sec$')
+
+        # Global MD5 password: Disabled
+        p11 = re.compile(
+            r'^Global +MD5 +password: +(?P<global_md5_password>\w+)$')
+
+        # Discovery:
+        p12 = re.compile(r'^Discovery:$')
+
+        # Link Hellos: Holdtime:15 sec, Interval:5 sec
+        p13 = re.compile(
+            r'^Link +Hellos: +Holdtime:(?P<link_hellos_hold_time_seconds>\d+) +sec,'
+            r' +Interval:(?P<link_hellos_interval_seconds>\d+) +sec$')
+
+        # Targeted Hellos: Holdtime:90 sec, Interval:10 sec
+        p14 = re.compile(
+            r'^Targeted +Hellos: +Holdtime:(?P<targeted_hellos_hold_time_seconds>\d+) +sec'
+            r', +Interval:(?P<targeted_hellos_interval_seconds>\d+) +sec$')
+
+        # Quick-start: Enabled (by default)
+        p15 = re.compile(r'^Quick-start: +(?P<quick_start>.*)$')
+
+        # Transport address:
+        p16 = re.compile(r'^Transport +address:$')
+
+        # IPv4: 10.4.1.1
+        p17 = re.compile(r'^IPv4: +(?P<transport_address_ipv4_ip>[\d.]+)$')
+
+        # Graceful Restart:
+        p18 = re.compile(r'^Graceful +Restart:$')
+
+        # Enabled
+        p19 = re.compile(r'^(?P<graceful_restart_value>(Enabled|Disabled))$')
+
+        # Reconnect Timeout:120 sec, Forwarding State Holdtime:180 sec
+        p20 = re.compile(
+            r'^Reconnect +Timeout:(?P<reconnect_timeout_seconds>\d+) +sec,'
+            r' +Forwarding +State +Holdtime:(?P<forwarding_state_holdtime_seconds>\d+) +sec$')
+
+        # NSR: Enabled, Sync-ed
+        p21 = re.compile(r'^NSR: +(?P<nsr_value>\w+)(, +(?P<synced_value>Sync-ed))?$')
+
+        # Timeouts:
+        p22 = re.compile(r'^Timeouts:$')
+
+        # Housekeeping periodic timer: 10 sec
+        p23 = re.compile(
+            r'^Housekeeping +periodic +timer: +(?P<housekeeping_periodic_timer_seconds>\d+) +sec$')
+
+        # Local binding: 300 sec
+        p24 = re.compile(r'^Local +binding: +(?P<local_binding_seconds>\d+) +sec$')
+
+        # Forwarding state in LSD: 360 sec
+        p25 = re.compile(
+            r'^Forwarding +state +in +LSD: +(?P<forwarding_state_lsd_seconds>\d+) +sec$')
+
+        # Delay in AF Binding withdrawl from peer: 180 sec
+        p26 = re.compile(
+            r'^Delay +in +AF +Binding +Withdrawl +from +peer:'
+            r' +(?P<delay_af_binding_peer_seconds>\d+) +sec$')
+
+        # Max:
+        p27 = re.compile(r'^Max:$')
+
+        # 5000 interfaces (4000 attached, 1000 TE tunnel), 2000 peers
+        p28 = re.compile(
+            r'^(?P<max_interface_number>\d+) +interfaces(,| )(\(| )'
+            r'((?P<attached_interfaces_number>\d+) +attached(\)|,))?'
+            r'((,| )*)?((?P<te_tunnel_number>\d+) +TE +tunnel\))?((,| )*)?((?P<peers_number>\d+) +peers)?')
+
+        # OOR state
+        p29 = re.compile(r'^OOR +state$')
+
+        # Memory: Normal
+        p30 = re.compile(
+            r'^Memory: +(?P<oor_memory_value>(Normal|Major|Critical))$')
+
+        # Looping through each line
+        for line in out.splitlines():
+            line = line.strip()
+
+            # LDP Parameters:
+            m = p1.match(line)
+            if m:
+                parameters_dict = ret_dict.setdefault('ldp-parameters', {})
+                continue
+
+            # Role: Active
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                parameters_dict['role'] = group['role_value']
+                continue
+
+            # Protocol Version: 1
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                parameters_dict['protocol-version'] = group['protocol_version_number']
+                continue
+
+            # Router ID: 10.4.1.1
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                parameters_dict['router-id'] = group['router_id_ip']
+                continue
+
+            # Null Label:
+            m = p5.match(line)
+            if m:
+                null_label_dict = parameters_dict.setdefault('null-label', {})
+                continue
+
+            # ipv4: Implicit
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                null_label_dict['null-label-ipv4-address'] = group['null_labels_ipv4']
+                continue
+
+            # Session:
+            m = p7.match(line)
+            if m:
+                session_dict = parameters_dict.setdefault('session', {})
+                continue
+
+            # Hold time: 180 sec
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict['session-holdtime-sec'] = group['hold_time_seconds']
+                continue
+
+            # Keepalive interval: 60 sec
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict['session-keepalive-interval-sec'] = group['keepalive_interval_seconds']
+                continue
+
+            # Backoff: Initial:15 sec, Maximum:120 sec
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                backoff_dict = session_dict.setdefault('session-backoff', {})
+                backoff_dict['backoff-initial-sec'] = group['initial_seconds']
+                backoff_dict['backoff-maximum-sec'] = group['maximum_seconds']
+                continue
+
+            # Global MD5 password: Disabled
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict['global-md5-password'] = group['global_md5_password']
+                continue
+
+            # Discovery:
+            m = p12.match(line)
+            if m:
+                discovery_dict = parameters_dict.setdefault('discovery', {})
+                continue
+
+            # Link Hellos: Holdtime:15 sec, Interval:5 sec
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                link_hellos_dict = discovery_dict.setdefault('discovery-link-hellos', {})
+                link_hellos_dict['link-hellos-hold-time-sec'] = group['link_hellos_hold_time_seconds']
+                link_hellos_dict['link-hellos-interval-sec'] = group['link_hellos_interval_seconds']
+                continue
+
+            # Targeted Hellos: Holdtime:90 sec, Interval:10 sec
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                target_hellos_dict = discovery_dict.setdefault('discovery-target-hellos', {})
+                target_hellos_dict['target-hellos-hold-time-sec'] = group['targeted_hellos_hold_time_seconds']
+                target_hellos_dict['target-hellos-interval-sec'] = group['targeted_hellos_interval_seconds']
+                continue
+
+            # Quick-start: Enabled (by default)
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                discovery_dict['discovery-quick-start'] = group['quick_start']
+                continue
+
+            # Transport address:
+            m = p16.match(line)
+            if m:
+                transport_address_dict = discovery_dict.setdefault('discovery-transport-address', {})
+                continue
+
+            # IPv4: 10.4.1.1
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                transport_address_dict['transport-ipv4-address'] = group['transport_address_ipv4_ip']
+                continue
+
+            # Graceful Restart:
+            m = p18.match(line)
+            if m:
+                graceful_restart_dict = parameters_dict.setdefault('graceful-restart', {})
+                continue
+
+            # Enabled
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                graceful_restart_dict['graceful-restart-status'] = group['graceful_restart_value']
+                continue
+
+            # Reconnect Timeout:120 sec, Forwarding State Holdtime:180 sec
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                reconnect_timeout_dict = graceful_restart_dict.setdefault('graceful-restart-reconnect-timeout', {})
+                reconnect_timeout_dict['reconnect-timeout-time-sec'] = group['reconnect_timeout_seconds']
+                reconnect_timeout_dict['reconnect-timeout-forward-state-holdtime-sec'] = group['forwarding_state_holdtime_seconds']
+                continue
+
+            # NSR: Enabled, Sync-ed
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                nrs_dict = parameters_dict.setdefault('nsr', {})
+                nrs_dict['nsr-status'] = group['nsr_value']
+
+                if group['synced_value']:
+                    nrs_dict['nsr-sync-ed-status'] = group['synced_value']
+                continue
+
+            # Timeouts:
+            m = p22.match(line)
+            if m:
+                timeouts_dict = parameters_dict.setdefault('timeouts', {})
+                continue
+
+            # Housekeeping periodic timer: 10 sec
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                timeouts_dict['housekeeping-periodic-timer-timeouts-sec'] = group['housekeeping_periodic_timer_seconds']
+                continue
+
+            # Local binding: 300 sec
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                timeouts_dict['local-binding-timeouts-sec'] = group['local_binding_seconds']
+                continue
+
+            # Forwarding state in LSD: 360 sec
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                timeouts_dict['forward-state-lsd-timeouts-sec'] = group['forwarding_state_lsd_seconds']
+                continue
+
+            # Delay in AF Binding Withdrawl from peer: 180 sec
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                parameters_dict['delay-af-bind-peer-sec'] = group['delay_af_binding_peer_seconds']
+                continue
+
+            # Max:
+            m = p27.match(line)
+            if m:
+                max_dict = parameters_dict.setdefault('max', {})
+                continue
+
+            # 5000 interfaces (4000 attached, 1000 TE tunnel), 2000 peers
+            m = p28.match(line)
+            if m:
+                group = m.groupdict()
+
+                max_interfaces_dict = max_dict.setdefault('interfaces', {})
+                max_interfaces_dict['max-interfaces-units'] = group['max_interface_number']
+
+                if group['attached_interfaces_number']:
+                    max_interfaces_dict['attached-interfaces-units'] = group['attached_interfaces_number']
+
+                if group['te_tunnel_number']:
+                    max_interfaces_dict['te-tunnel-interfaces-units'] = group['te_tunnel_number']
+
+                max_dict['max-peers-units'] = group['peers_number']
+                continue
+
+            # OOR state
+            m = p29.match(line)
+            if m:
+                oor_state_dict = parameters_dict.setdefault('oor-state', {})
+                continue
+
+            # Memory: Normal
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                oor_state_dict['oor-memory'] = group['oor_memory_value']
+                continue
+
+        return ret_dict

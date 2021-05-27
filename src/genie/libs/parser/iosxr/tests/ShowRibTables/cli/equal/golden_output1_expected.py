@@ -50,7 +50,7 @@ expected_output = {
                                 'table_name': 'default',
                                 'table_reached_convergence': 'Yes',
                                 'table_version': 0,
-                                'vrf_name': '**nVjjh'
+                                'vrf_name': 'default'
                         }
                 }
         }

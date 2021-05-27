@@ -1,0 +1,14 @@
+show ospfv3 neighbor
+Mon Apr 26 20:55:12.142 UTC
+
+# Indicates Neighbor awaiting BFD session up
+
+Neighbors for OSPFv3 1
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+10.4.1.1         1     FULL/DR         00:00:39    22              GigabitEthernet0/0/0/0.110
+    Neighbor is up for 02:02:04
+10.36.3.3         1     FULL/BDR        00:00:39    136             GigabitEthernet0/0/0/1.110
+    Neighbor is up for 01:59:28
+
+Total neighbor count: 2

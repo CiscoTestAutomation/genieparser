@@ -1,0 +1,11 @@
+Routing Protocol "BGP 100"
+Non-stop routing is enabled
+Graceful restart is enabled
+Current BGP NSR state - TCP Initial Sync
+BGP NSR state not ready: TCP Initsync in progress
+
+Address Family VPNv4 Unicast:
+    Distance: external 20 internal 200 local 200
+
+Address Family VPNv6 Unicast:
+    Distance: external 20 internal 200 local 200

@@ -129,7 +129,7 @@ class ShowNtpServers(ShowNtpServersSchema):
         gw-a> show ntp servers
         IP Address               Type              Version
         0.pool.ntp.org           Secondary         4
-        162.159.200.123          Primary           4
+        172.16.121.123          Primary           4
         '''
 
         p1 = re.compile(r'^(?P<ip_address>.*)\s+(?P<type>\w+)\s+(?P<version>\d)$')
@@ -140,7 +140,7 @@ class ShowNtpServers(ShowNtpServersSchema):
 
             line = line.strip()
 
-            # 162.159.200.123          Primary           4
+            # 172.16.121.123          Primary           4
             m = p1.match(line)
             if m:
                 ip_address = m.groupdict()['ip_address'].strip()

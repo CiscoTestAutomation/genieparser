@@ -1,0 +1,28 @@
+IPv6 Interface Status for VRF "VRF1"
+Ethernet2/1, Interface status: protocol-up/link-up/admin-up, iod: 36
+  IPv6 address:
+    2001:db8:1:1::1/64 [VALID]
+    2001:db8:3:3::3/64 [VALID]
+    2001:db8:4:4:a8aa:bbff:feff:8888/64 [VALID]
+    2001:db8:2:2::2/64 [VALID]
+  IPv6 subnet:  2001:db8:1:1::/64
+  Anycast configured addresses:
+    2001:db8:2:2::2/64 [VALID]
+  IPv6 link-local address: fe80::a8aa:bbff:feff:8888 (default) [VALID]
+  IPv6 virtual addresses configured: none
+  IPv6 multicast routing: disabled
+  IPv6 report link local: disabled
+  IPv6 Forwarding feature: disabled
+  IPv6 multicast groups locally joined:
+      ff02::1:ffbb:cccc  ff02::1:ff00:3  ff02::1:ff00:2  ff02::2
+      ff02::1  ff02::1:ff00:1  ff02::1:ffbb:cccc  ff02::1:ff00:0
+  IPv6 multicast (S,G) entries joined: none
+  IPv6 MTU: 1600 (using link MTU)
+  IPv6 unicast reverse path forwarding: none
+  IPv6 load sharing: none
+  IPv6 interface statistics last reset: never
+  IPv6 interface RP-traffic statistics: (forwarded/originated/consumed)
+    Unicast packets:      0/0/0
+    Unicast bytes:        0/0/0
+    Multicast packets:    0/12/9
+    Multicast bytes:      0/1144/640

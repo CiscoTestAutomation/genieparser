@@ -49,6 +49,7 @@ import re
 import logging
 import collections
 from ipaddress import ip_address, ip_network
+from sys import version
 
 # Metaparser
 from genie.libs.parser.base import *
@@ -4792,7 +4793,11 @@ class ShowBgpInstanceSummary(ShowBgpInstanceSummarySchema):
                 if address_family not in bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family']:
                     bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family] = {}
 
-                bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = int(m.groupdict()['remote_as'])
+                try:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = int(m.groupdict()['remote_as'])
+                except:
+                    bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['remote_as'] = m.groupdict()['remote_as']
+                
                 if route_distinguisher is not None:
                         bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['route_distinguisher'] =  route_distinguisher
                 bgp_instance_summary_dict['instance'][instance]['vrf'][vrf]['neighbor'][neighbor]['address_family'][address_family]['spk'] = int(m.groupdict()['spk'])                
@@ -6666,3 +6671,372 @@ class ShowBgpSummary(ShowBgpInstanceSummary):
         return super().cli(output=out, address_family=address_family)
 
 # vim: ft=python ts=8 sw=4 et
+
+
+# ===========================================
+# Schema for 'show bgp nexthops {ipaddress}'
+# ===========================================
+class ShowBgpNexthopsSchema(MetaParser):
+    '''Schema for:
+        * 'show bgp nexthops {ipaddress}'
+    '''
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'nexthop': {
+                            Any(): {
+                                'nexthop_id': str,
+                                'version': str,
+                                'nexthop_flags': str,
+                                'nexthop_handle': str,
+                                'rib_related_information': {
+                                    'first_interface_handle': {
+                                        Any(): {
+                                            'gateway_tbl_id': str,
+                                            'gateway_flags': str,
+                                            'gateway_handle': str,
+                                            'gateway': str,
+                                            'resolving_route': str,
+                                            'paths': int,
+                                            'rib_nexthop_id': str,
+                                            'status': str,
+                                            'metric': int,
+                                            'registration': str,
+                                            'completed': str,
+                                            'events': str,
+                                            'last_received': str,
+                                            'last_gw_update': str,
+                                            'reference_count': int,
+                                        },
+                                    }
+                                },
+                                'prefix_related_information': {
+                                    'active_tables': str,
+                                    'metrics': str,
+                                    'reference_counts': int,
+                                },
+                                'interface_handle': str,
+                                'attr_ref_count': int,
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+# ===========================================
+# Parser for 'show bgp nexthops {ipaddress}'
+# ===========================================
+class ShowBgpNexthops(ShowBgpNexthopsSchema):
+    '''Parser for:
+        * 'show bgp nexthops {ipaddress}'
+    '''
+
+    cli_command = ['show bgp nexthops {ipaddress}']
+
+    def cli(self, ipaddress, output=None):
+
+        if output is None:
+            if ipaddress:
+                out = self.device.execute(self.cli_command[0].format(ipaddress=ipaddress))
+        else:
+            out = output
+
+        # Initialize dictionaries
+        ret_dict = {}
+        ipaddress_dict = {}
+        nexthop_address_dict = {}
+        nexthop_dict = {}        
+
+
+        # VRF: default
+        p1 = re.compile(r'^VRF:\s+(?P<vrf>([\w]+))$')
+
+        # Nexthop ID: 0x6000074, Version: 0x0
+        p2 = re.compile(r'^Nexthop ID:\s+(?P<nexthop_id>([\w]+)),\s+Version:\s+((?P<version>[\w]+))$')
+
+        # Nexthop Flags: 0x00000000
+        p3 = re.compile(r'^Nexthop Flags:\s+((?P<nexthop_flags>[\w]+))$')
+
+        # Nexthop Handle: 0x7fba00aafccc
+        p4 = re.compile(r'^Nexthop Handle:\s+((?P<nexthop_handle>[\w]+))$')
+
+        # Firsthop interface handle 0x0c001cc0
+        p5 = re.compile(r'^Firsthop interface handle\s+((?P<first_interface_handle>[\w]+))$')
+
+        # Gateway TBL Id: 0xe0000000    Gateway Flags: 0x00000080
+        p6 = re.compile(r'^Gateway TBL Id:\s+((?P<gateway_tbl_id>[\w]+)\s+)Gateway Flags:\s+((?P<gateway_flags>[\w]+))$')
+
+        # Gateway Handle: 0x7fba14059ce0
+        p7 = re.compile(r'^Gateway Handle:\s+((?P<gateway_handle>[\w]+))$')
+
+        # Gateway: reachable, non-Connected route, prefix length 32
+        p8 = re.compile(r'^Gateway:\s+((?P<gateway>[\s\S]+))$')
+
+        # Resolving Route: 10.4.16.16/32 (static)
+        p9 = re.compile(r'^Resolving Route:\s+((?P<resolving_route>[\s\S]+))$')        
+
+        # Paths: 0
+        p10 = re.compile(r'^Paths:\s+((?P<paths>[\d]+)\s*)$')
+
+        # RIB Nexhop ID: 0x0
+        p11 = re.compile(r'^RIB Nexhop ID:\s+((?P<rib_nexthop_id>[\w]+))$')
+
+        # Status: [Reachable][Not Connected][Not Local]
+        p12 = re.compile(r'^Status:\s+((?P<status>[\s\S]+))$')
+
+        # Metric: 0
+        p13 = re.compile(r'^Metric:\s+((?P<metric>[\d]+))$')
+
+        # Registration: Asynchronous, Completed: 00:02:15
+        p14 = re.compile(r'^Registration:\s+(?P<registration>[\w]+),\s+Completed:\s+((?P<completed>[\w\:]+))$')
+
+        # Events: Critical (1)/Non-critical (0)
+        p15 = re.compile(r'^Events:\s+((?P<events>[\s\S]+))$')
+
+        # Last Received: 00:02:14 (Critical)
+        p16 = re.compile(r'^Last Received:\s+((?P<last_received>[\s\S]+))$')
+
+        # Last gw update: (Crit-notif) 00:02:14(rib)
+        p17 = re.compile(r'^Last gw update:\s+((?P<last_gw_update>[\s\S]+))$')
+
+        # Reference Count: 1
+        p18 = re.compile(r'^Reference Count:\s+((?P<reference_count>[\d]+))$')
+
+        # Active Tables: [IPv4 Unicast]
+        p19 = re.compile(r'^Active Tables:\s+((?P<active_tables>[\s\S]+))$')
+
+        # Metrices: [0x0]
+        p20 = re.compile(r'^Metrices:\s+((?P<metrics>[\s\S]+))$')
+
+        # Reference Counts: [1]
+        p21 = re.compile(r'^Reference Counts:\s+(\[(?P<reference_counts>[\d]+)\])$')
+
+        # Interface Handle: 0x0
+        p22 = re.compile(r'^Interface Handle:\s+((?P<interface_handle>[\w]+))$')                        
+
+        # Attr ref-count: 4
+        p23 = re.compile(r'^Attr ref-count:\s+((?P<attr_ref_count>[\d]+))$')
+        
+        for line in out.splitlines():
+            line = line.strip()
+                
+            # VRF: default
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                vrf = group['vrf']
+
+                #define vrf_dict dictionary and set to 'vrf'
+                vrf_dict = ret_dict.setdefault('vrf', {})
+                
+                #define def_dict dictionary and assigned to vrf_dict
+                def_dict = vrf_dict.setdefault(vrf,{})
+
+                #define af_dict dictionary and set to 'address_family'
+                af_dict = def_dict.setdefault('address_family',{})                
+                continue
+            
+            # Nexthop ID: 0x6000074, Version: 0x0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                #update nexthop_address_dict               
+                nexthop_address_dict.update({'nexthop_id': group['nexthop_id']})
+                nexthop_address_dict.update({'version': group['version']})
+                continue
+
+            # Nexthop Flags: 0x00000000
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                #update nexthop_address_dict
+                nexthop_address_dict.update({'nexthop_flags': group['nexthop_flags']})
+                continue
+
+            # Nexthop Handle: 0x7fba00aafccc
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                nexthop_address_dict.update({'nexthop_handle': group['nexthop_handle']})  
+                rib_related_dict = nexthop_address_dict.setdefault('rib_related_information',{})
+                continue
+
+            # Firsthop interface handle 0x0c001cc0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                #set first_interface_handle_dict
+                first_interface_handle = group['first_interface_handle']
+                first_interface_handle_dict = rib_related_dict.setdefault('first_interface_handle',{})\
+                                                                .setdefault(first_interface_handle,{})                                                                             
+                continue            
+
+            # Gateway TBL Id: 0xe0000000    Gateway Flags: 0x00000080
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'gateway_tbl_id':group['gateway_tbl_id']})
+                first_interface_handle_dict.update({'gateway_flags':group['gateway_flags']})
+                continue
+            
+            # Gateway Handle: 0x7fba14059ce0
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'gateway_handle':group['gateway_handle']})
+                continue 
+            
+            # Gateway: reachable, non-Connected route, prefix length 32
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'gateway':group['gateway']})
+                continue         
+            
+            # Resolving Route: 10.4.16.16/32 (static)
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'resolving_route':group['resolving_route']})
+                continue 
+
+            # Paths: 0
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'paths':int(group['paths'])}) 
+                continue       
+
+            # RIB Nexhop ID: 0x0
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'rib_nexthop_id':group['rib_nexthop_id']})
+                continue 
+            
+            # Status: [Reachable][Not Connected][Not Local]
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'status':group['status']})
+                continue         
+            
+            # Metric: 0
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'metric':int(group['metric'])})
+                continue                      
+
+            # Registration: Asynchronous, Completed: 00:02:15
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'registration':group['registration']})
+                first_interface_handle_dict.update({'completed':group['completed']})
+                continue   
+
+            # Events: Critical (1)/Non-critical (0)
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'events':group['events']})
+                continue   
+
+            # Last Received: 00:02:14 (Critical)
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'last_received':group['last_received']})
+                continue   
+
+            # Last gw update: (Crit-notif) 00:02:14(rib)
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'last_gw_update':group['last_gw_update']})
+                continue                                      
+
+            # Reference Count: 1
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                #update first_interface_handle_dict
+                first_interface_handle_dict.update({'reference_count':int(group['reference_count'])})                
+                continue      
+
+            # Active Tables: [IPv4 Unicast]
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                #set prefix_related_dict
+                prefix_related_dict = nexthop_address_dict.setdefault('prefix_related_information',{}) 
+                #remove [] from [IPv4]
+                active_tables = group['active_tables'].replace('[','').replace(']','')
+                #update prefix_related_dict
+                prefix_related_dict.update({'active_tables':active_tables})
+                
+                #update top ipaddress_dict with child nexthop_address_dict dictionary
+                ipaddress_dict.update({ipaddress:nexthop_address_dict})
+
+                #update top nexthop_dict with child ipaddress_dict dictionary
+                nexthop_dict.update({'nexthop':ipaddress_dict})
+
+                #update top af_dict with child nexthop_dict dictionary
+                af_dict.update({active_tables:nexthop_dict})
+                continue  
+
+            # Metrices: [0x0]
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                metrics = group['metrics'].replace('[','').replace(']','')
+                #update prefix_related_dict
+                prefix_related_dict.update({'metrics':metrics})
+                continue 
+
+            # Reference Counts: [1]
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                #update prefix_related_dict
+                prefix_related_dict.update({'reference_counts':int(group['reference_counts'])})
+                continue   
+
+            # Interface Handle: 0x0
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                #update nexthop_address_dict
+                nexthop_address_dict.update({'interface_handle': group['interface_handle']})
+                continue   
+
+            # Attr ref-count: 4
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                #update nexthop_address_dict
+                nexthop_address_dict.update({'attr_ref_count': int(group['attr_ref_count'])})  
+                continue  
+
+        return ret_dict
+
+
