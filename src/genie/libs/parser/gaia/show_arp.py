@@ -41,8 +41,8 @@ class ShowArpDynamic(ShowArpSchema):
         Dynamic Arp Parameters
 
         IP Address                 Mac Address
-        10.1.1.2                50:00:00:02:80:0a
-        10.1.1.1                50:00:00:06:00:01
+        10.1.1.2                50:00:00:ff:82:0c
+        10.1.1.1                50:00:00:ff:06:07
         '''
 
         p1 = re.compile(r'^^(?P<ip_address>[\d+\.*]+)\s+(?P<mac_address>[\w\w\:]+)$')
@@ -56,7 +56,7 @@ class ShowArpDynamic(ShowArpSchema):
 
             line = line.strip()
 
-            # 10.1.1.2                50:00:00:02:80:0a
+            # 10.1.1.2                50:00:00:ff:82:0c
             m = p1.match(line)
             if m:
                 ip_address = m.groupdict()['ip_address']

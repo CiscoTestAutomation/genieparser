@@ -1,5 +1,5 @@
 expected_output = {
-  "iox_version": "2.5.0.0",
+  "iox_version": "10.49.0.0",
   "app_signature_verification": "disabled",
   "internal_working_directory": "/vol/usb1/iox",
   "appge_port_number": {

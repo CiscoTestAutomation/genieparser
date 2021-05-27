@@ -1,0 +1,15 @@
+Mon Oct  7 16:18:58.402 EDT
+Legend: pp = Partially Programmed.
+Bridge group: EVPN-Mulicast, bridge-domain: EVPN-Multicast-Genie, id: 0, state: up, ShgId: 0, MSTi: 0
+Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+Filter MAC addresses: 0
+ACs: 3 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+List of EVPNs:
+    EVPN, state: up
+List of ACs:
+    BV100, state: up, BVI MAC addresses: 1
+    BE3.100, state: down, Static MAC addresses: 0, MSTi: 5
+    BE4.100, state: up, Static MAC addresses: 0, MSTi: 5
+List of Access PWs:
+List of VFIs:
+List of Access VFIs:
