@@ -1,6 +1,0 @@
---------------------------------------------------------------------------------
-                                      Fix                                       
---------------------------------------------------------------------------------
-* IOSXE
-    * Modified ShowBgpNeighborSuperParser
-        * Update regex <p22> to properly match Current Prefixes:
