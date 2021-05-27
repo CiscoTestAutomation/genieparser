@@ -565,7 +565,7 @@ class ShowOspfv3VrfAllInclusiveNeighborDetail(ShowOspfv3VrfAllInclusiveNeighborD
             m = p5.match(line)
             if m:
                 p5info = {'priority': int(m.groupdict()['neighbor_priority']),
-                          'state': m.groupdict()['state'],
+                          'state': m.groupdict()['state'].lower(),
                           'state_changes': int(m.groupdict()['state_changes'])}
 
                 interface_dict.update(p5info)
