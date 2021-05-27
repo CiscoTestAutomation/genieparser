@@ -7951,8 +7951,8 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareM
 # =============================================
 class ShowPlatformSoftwareFedSchema(MetaParser):
     """ Schema for:
-        *show platform software fed switch active mpls forwarding label <label> detail
-        *show platform software fed active mpls forwarding label <label> detail
+        *show platform software fed {switch} active mpls forwarding label {label} detail
+        *show platform software fed active mpls forwarding label {label} detail
     """
     schema = {
         'lentry_label':{
@@ -7977,125 +7977,125 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
                     'lspa_handle': str,
                     },
                 Optional('eos'):{
-                    Optional('objid'): int,
-                    Optional('local_label'): int,
-                    Optional('flags'): str,
-                    Optional('pdflags'): str,
-                    Optional('nobj0'): list,
-                    Optional('nobj1'): list,
-                    Optional('modify'): int,
-                    Optional('bwalk'): int,     
+                    'objid': int,
+                    'local_label': int,
+                    'flags': str,
+                    'pdflags': str,
+                    'nobj0': list,
+                    'nobj1': list,
+                    'modify': int,
+                    'bwalk': int,     
                 },
                 Optional('label'):{
-                    Optional(Any()):{
-                        Optional('link_type'): str,
-                        Optional('local_label'): int,
-                        Optional('outlabel'): str,
-                        Optional('flags'): {
-                            Optional(Any()): list,
+                    Any():{
+                        'link_type': str,
+                        'local_label': int,
+                        'outlabel': str,
+                        'flags': {
+                            Any(): list,
                         },
-                        Optional('pdflags'): {
-                            Optional(Any()): list,
+                        'pdflags': {
+                            Any(): list,
                         },
-                        Optional('adj_handle'): str,
-                        Optional('unsupported_recursion'): int,
-                        Optional('olbl_changed'): int,
-                        Optional('local_adj'): int,
-                        Optional('modify_cnt'): int,
-                        Optional('bwalk_cnt'): int,
-                        Optional('subwalk_cnt'): int,
-                        Optional('collapsed_oce'): int,
+                        'adj_handle': str,
+                        'unsupported_recursion': int,
+                        'olbl_changed': int,
+                        'local_adj': int,
+                        'modify_cnt': int,
+                        'bwalk_cnt': int,
+                        'subwalk_cnt': int,
+                        'collapsed_oce': int,
                         Optional('label_aal'):{
-                            Optional(Any()):{
-                                Optional('lbl'): int,
-                                Optional('smac'): str,
-                                Optional('dmac'): str,
-                                Optional('sub_type'): int,
-                                Optional('link_type'): int,
-                                Optional('adj_flags'): int,
-                                Optional('label_type'): int,
-                                Optional('rewrite_type'): str,
-                                Optional('vlan_id'): int,
-                                Optional('vrf_id'): int,
-                                Optional('ri'): str,
-                                Optional('ri_id'): str,
-                                Optional('phdl'): str,
-                                Optional('ref_cnt'):int,
-                                Optional('si'): str,
-                                Optional('si_id'): str,
-                                Optional('di_id'): str,
+                            Any():{
+                                'lbl': int,
+                                'smac': str,
+                                'dmac': str,
+                                'sub_type': int,
+                                'link_type': int,
+                                'adj_flags': str,
+                                'label_type': int,
+                                'rewrite_type': str,
+                                'vlan_id': int,
+                                'vrf_id': int,
+                                'ri': str,
+                                'ri_id': str,
+                                'phdl': str,
+                                'ref_cnt':int,
+                                'si': str,
+                                'si_id': str,
+                                'di_id': str,
                                 },
                             },
                         },
                     },
                 Optional('adj'):{
-                    Optional(Any()):{
-                        Optional('link_type'): str,
-                        Optional('ifnum'): str,
-                        Optional('adj'): str,
-                        Optional('si'): str,
+                    Any():{
+                        'link_type': str,
+                        'ifnum': str,
+                        'adj': str,
+                        'si': str,
                         Optional('IPv4'): str,
                         },
                     },
                 Optional('objid'):{
-                    Optional(Any()):{
-                        Optional('SPECIAL'): str,
+                    Any():{
+                        'SPECIAL': str,
                     },
                 },
 
                 Optional('lb'):{
-                    Optional(Any()):{
-                        Optional('ecr_map_objid'): int,
-                        Optional('link_type'): str, 
-                        Optional('num_choices'): int,
-                        Optional('flags'): str,
-                        Optional('mpls_ecr'): int,
-                        Optional('local_label'): int,
-                        Optional('path_inhw'): int,
-                        Optional('ecrh'): str,
-                        Optional('old_ecrh'): str,
-                        Optional('modify_cnt'): int,
-                        Optional('bwalk_cnt'): int, 
-                        Optional('subwalk_cnt'): int,
-                        Optional('finish_cnt'): int,
+                    Any():{
+                        'ecr_map_objid': int,
+                        'link_type': str, 
+                        'num_choices': int,
+                        'flags': str,
+                        'mpls_ecr': int,
+                        'local_label': int,
+                        'path_inhw': int,
+                        'ecrh': str,
+                        'old_ecrh': str,
+                        'modify_cnt': int,
+                        'bwalk_cnt': int, 
+                        'subwalk_cnt': int,
+                        'finish_cnt': int,
                         Optional('bwalk'):{
-                            Optional('req'): int,
-                            Optional('in_prog'): int,
-                            Optional('nested'): int,
+                            'req': int,
+                            'in_prog': int,
+                            'nested': int,
                             },
                         Optional('aal'):{
-                            Optional('ecr_id'): int,
-                            Optional('af'): int,
-                            Optional('ecr_type'): str,
-                            Optional('ref'): int,
-                            Optional('ecrh'): str,
-                            Optional('hwhdl'): str,
+                            'ecr_id': int,
+                            'af': int,
+                            'ecr_type': str,
+                            'ref': int,
+                            'ecrh': str,
+                            'hwhdl': str,
                         }
                     },
                 },
                 Optional('sw_enh_ecr_scale'):{
-                    Optional(Any()):{
-                        Optional('llabel'): int,
-                        Optional('eos'): int, 
-                        Optional('adjs'): int,
-                        Optional('mixed_adj'): str, 
-                        Optional('reprogram_hw'): str,
-                        Optional('ecrhdl'): str,
-                        Optional('ecr_hwhdl'): str,
-                        Optional('mod_cnt'): int,
-                        Optional('prev_npath'): int,
-                        Optional('pmismatch'): int,
-                        Optional('pordermatch'): int,
+                    Any():{
+                        'llabel': int,
+                        'eos': int, 
+                        'adjs': int,
+                        'mixed_adj': str, 
+                        'reprogram_hw': str,
+                        'ecrhdl': str,
+                        'ecr_hwhdl': str,
+                        'mod_cnt': int,
+                        'prev_npath': int,
+                        'pmismatch': int,
+                        'pordermatch': int,
                         Optional('ecr_adj'):{
-                            Optional(Any()):{
+                            Any():{
                                 Optional('is_mpls_adj'): int,
                                 Optional('l3adj_flags'): str,
                                 Optional('recirc_adj_id'): int,
-                                Optional('sih'): str,
-                                Optional('di_id'): int, 
-                                Optional('rih'): str,
+                                'sih': str,
+                                'di_id': int, 
+                                'rih': str,
                                 Optional('adj_lentry'): str,
-                            }
+                            },
                         },
                     },
                 },    
@@ -8110,16 +8110,16 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
 # ================================================================
 class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
     ''' Parser for:
-        ' show platform software fed switch active mpls forwarding label <label> detail'
-        ' show platform software fed active mpls forwarding label <label> detail '
+        ' show platform software fed {switch} active mpls forwarding label {label} detail'
+        ' show platform software fed active mpls forwarding label {label} detail '
     '''
 
     cli_command = ['show platform software fed active mpls forwarding label {label} detail',
-                   'show platform software fed switch active mpls forwarding label {label} detail']
+                   'show platform software fed {switch} active mpls forwarding label {label} detail']
     def cli(self, label='',switch='',output=None):
         ''' cli for:
-         ' show platform software fed switch active mpls forwarding label <label> detail '
-         ' show platform software fed active mpls forwarding label <label> detail '
+         ' show platform software fed {switch} active mpls forwarding label {label} detail '
+         ' show platform software fed active mpls forwarding label {label} detail '
         '''
         if output is None:
             # Build command
@@ -8192,7 +8192,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
 
         #sub_type:0 link_type:2 adj_flags:0 label_type:1 rewrite_type:POP2MPLS(138)
         p15 = re.compile(r'^sub_type:+(?P<sub_type>\d+)\s+link_type:+'
-                         r'(?P<link_type>\d+)\s+adj_flags:+(?P<adj_flags>\d+)\s+label_type:+'
+                         r'(?P<link_type>\d+)\s+adj_flags:+(?P<adj_flags>\w+)\s+label_type:+'
                          r'(?P<label_type>\d+)\s+rewrite_type:+(?P<rewrite_type>\S+)$')
 
         #vlan_id:0 vrf_id:0 ri:0x7f02737cc1e8, ri_id:0x3e phdl:0xab000447, ref_cnt:1
@@ -8243,8 +8243,8 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                          r'(?P<in_prog>\d+)\s+nested:+(?P<nested>\d+)+\]+$')
 
         #AAL: ecr:id:4177526786 af:0 ecr_type:0 ref:3 ecrh:0x7f02737e49f8(28:2)
-        p26 = re.compile(r'aal:\s+ecr:id:+(?P<ecr_id>\d+)\s+af:(?P<af>\d+)\s+ecr_type:+'
-                         r'(?P<ecr_type>\w+)\s+ref:+(?P<ref>\d+)\s+ecrh:+(?P<ecrh>\S+)\s+$')
+        p26 = re.compile(r'AAL:\s+ecr:id:+(?P<ecr_id>\d+)\s+af:(?P<af>\d+)\s+ecr_type:+'
+                         r'(?P<ecr_type>\w+)\s+ref:+(?P<ref>\d+)\s+ecrh:+(?P<ecrh>\S+)+$')
 
         #hwhdl:1937656312 ::0x7f02737e11c8,0x7f02737e2728,0x7f02737e11c8,0x7f02737e2728
         p27 = re.compile(r'hwhdl+(?P<hwhdl>[\S\s]+)$')
@@ -8433,7 +8433,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 group = m.groupdict()
                 labelaal_dict['sub_type'] = int(group['sub_type'])
                 labelaal_dict['link_type'] = int(group['link_type'])
-                labelaal_dict['adj_flags'] = int(group['adj_flags'])
+                labelaal_dict['adj_flags'] = str(group['adj_flags'])
                 labelaal_dict['label_type'] = int(group['label_type'])
                 labelaal_dict['rewrite_type'] = str(group['rewrite_type'])
                 continue
@@ -8509,6 +8509,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 lb_dict['ecr_map_objid'] = int(group['ecr_map_objid'])
                 lb_dict['link_type'] = str(group['link_type'])
                 lb_dict['num_choices'] = int(group['num_choices'])
+                lb_dict['flags'] = str(group['flags'])
                 continue
 
             #mpls_ecr:1 local_label:24 path_inhw:2 ecrh:0xf9000002 old_ecrh:0

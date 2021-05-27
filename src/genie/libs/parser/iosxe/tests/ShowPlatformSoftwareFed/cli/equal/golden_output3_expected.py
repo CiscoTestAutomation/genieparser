@@ -1,4 +1,4 @@
-expected_output = {
+expected_output ={
     "lentry_label": {
         24: {
             "aal": {
@@ -32,7 +32,7 @@ expected_output = {
                     "flags": {"0x1": ["REAL"]},
                     "label_aal": {
                         1644167265: {
-                            "adj_flags": 0,
+                            "adj_flags": "0",
                             "di_id": "0x526d",
                             "dmac": "0027.90bf.2ee7",
                             "label_type": 2,
@@ -68,7 +68,7 @@ expected_output = {
                     "flags": {"0x1": ["REAL"]},
                     "label_aal": {
                         2298478690: {
-                            "adj_flags": 0,
+                            "adj_flags": "0",
                             "di_id": "0x5268",
                             "dmac": "00a7.42ce.f69f",
                             "label_type": 2,
@@ -101,14 +101,20 @@ expected_output = {
             "lb": {
                 38: {
                     "aal": {
+                        "af": 0,
+                        "ecr_id": 4177526786,
+                        "ecr_type": "0",
+                        "ecrh": "0x7f02737e49f8(28:2)",
                         "hwhdl": ":1937656312 "
-                        "::0x7f02737e11c8,0x7f02737e2728,0x7f02737e11c8,0x7f02737e2728"
+                        "::0x7f02737e11c8,0x7f02737e2728,0x7f02737e11c8,0x7f02737e2728",
+                        "ref": 3,
                     },
                     "bwalk": {"in_prog": 0, "nested": 0, "req": 0},
                     "bwalk_cnt": 0,
                     "ecr_map_objid": 0,
                     "ecrh": "0xf9000002",
                     "finish_cnt": 0,
+                    "flags": "0",
                     "link_type": "IP",
                     "local_label": 24,
                     "modify_cnt": 0,

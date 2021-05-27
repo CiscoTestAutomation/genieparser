@@ -14,5 +14,4 @@
         * Modify nobj0 and nobj1 from str to list in regex P9 and corresponding Schema 
         * Add folder based unittests
 
-    * Delete iosxe/show_platform_software_fed.py instead content is Appended in 
-        iosxe/show_platform.py 
+    * Delete iosxe/show_platform_software_fed.py instead content is Appended in iosxe/show_platform.py 

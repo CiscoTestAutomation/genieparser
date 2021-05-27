@@ -43,7 +43,7 @@ expected_output = {
                     "flags": {"0x18": ["POP", "PHP"]},
                     "label_aal": {
                         1023410232: {
-                            "adj_flags": 0,
+                            "adj_flags": "0",
                             "di_id": "0x526d",
                             "dmac": "0027.90bf.2ee7",
                             "label_type": 1,
@@ -79,7 +79,7 @@ expected_output = {
                     "flags": {"0x18": ["POP", "PHP"]},
                     "label_aal": {
                         2197815353: {
-                            "adj_flags": 0,
+                            "adj_flags": "0",
                             "di_id": "0x526d",
                             "dmac": "0027.90bf.2ee7",
                             "label_type": 1,
