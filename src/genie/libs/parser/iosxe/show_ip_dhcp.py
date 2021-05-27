@@ -70,49 +70,50 @@ class ShowIpDhcpDatabase(ShowIpDhcpDatabaseSchema):
             # URL       :    ftp://user:password@172.16.4.253/router-dhcp
             m = p1.match(line)
             if m:
-                ret_dict.update({'url': m.groupdict()['url']})
+                url_dict = ret_dict.setdefault('url', {}).setdefault(m.groupdict()['url'], {})
+                # ret_dict.update({'url': m.groupdict()['url']})
                 continue
 
             # Read      :    Dec 01 1997 12:01 AM
             m = p2.match(line)
             if m:
-                ret_dict.update({'read': m.groupdict()['read']})
+                url_dict.update({'read': m.groupdict()['read']})
                 continue
 
             # Written   :    Never
             m = p3.match(line)
             if m:
-                ret_dict.update({'written': m.groupdict()['written']})
+                url_dict.update({'written': m.groupdict()['written']})
                 continue
 
             # Status    :    Last read succeeded. Bindings have been loaded in RAM.
             m = p4.match(line)
             if m:
-                ret_dict.update({'status': m.groupdict()['status']})
+                url_dict.update({'status': m.groupdict()['status']})
                 continue
 
             # Delay     :    300 seconds
             m = p5.match(line)
             if m:
-                ret_dict.update({'delay_in_secs': int(m.groupdict()['delay'])})
+                url_dict.update({'delay_in_secs': int(m.groupdict()['delay'])})
                 continue
 
             # Timeout   :    300 seconds
             m = p6.match(line)
             if m:
-                ret_dict.update({'timeout_in_secs': int(m.groupdict()['timeout'])})
+                url_dict.update({'timeout_in_secs': int(m.groupdict()['timeout'])})
                 continue
 
             # Failures  :    0
             m = p7.match(line)
             if m:
-                ret_dict.update({'failures': int(m.groupdict()['failures'])})
+                url_dict.update({'failures': int(m.groupdict()['failures'])})
                 continue
 
             # Successes :    1
             m = p8.match(line)
             if m:
-                ret_dict.update({'successes': int(m.groupdict()['successes'])})
+                url_dict.update({'successes': int(m.groupdict()['successes'])})
                 continue
 
         return ret_dict
