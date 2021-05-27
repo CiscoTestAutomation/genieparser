@@ -3,6 +3,6 @@
 --------------------------------------------------------------------------------
 
 * IOSXE
-    * Modify=ied:
-        * Modifide show_device_tracking.py to fix a bug in show_device_tracking
-        * now able to match entries with time left
+    * Modified:
+        * Modified show_device_tracking.py to fix a bug in show_device_tracking
+        * Now able to match entries with time left
