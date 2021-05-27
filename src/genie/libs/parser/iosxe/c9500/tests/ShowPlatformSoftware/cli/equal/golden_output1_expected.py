@@ -1,19 +1,19 @@
 expected_output={
    "statistics":{
-      "object_update":{
-         "pending_issue":0,
-         "pending_ack":0
+      "object-update":{
+         "pending-issue":0,
+         "pending-ack":0
       },
-      "batch_begin":{
-         "pending_issue":0,
-         "pending_ack":0
+      "batch-begin":{
+         "pending-issue":0,
+         "pending-ack":0
       },
-      "batch_end":{
-         "pending_issue":0,
-         "pending_ack":0
+      "batch-end":{
+         "pending-issue":0,
+         "pending-ack":0
       },
       "command":{
-         "pending_ack":0
+         "pending-ack":0
       },
       "total-objects":830,
       "stale-objects":0,
@@ -21,7 +21,7 @@ expected_output={
       "childless-delete-objects":0,
       "backplane-objects":0,
       "error-objects":0,
-      "number_of_bundles":0,
+      "number-of-bundles":0,
       "paused-types":0
    }
 }

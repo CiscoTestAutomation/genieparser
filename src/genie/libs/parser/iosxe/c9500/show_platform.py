@@ -937,20 +937,20 @@ class ShowPlatformSoftwareSchema(MetaParser):
 
     schema = {
         Optional('statistics'):
-                {Optional('object_update'):
-                    {Optional('pending_issue'):int,
-                     Optional('pending_ack'):int,
+                {Optional('object-update'):
+                    {Optional('pending-issue'):int,
+                     Optional('pending-ack'):int,
                     },
-                Optional('batch_begin'):
-                    {Optional('pending_issue'):int,
-                     Optional('pending_ack'):int,
+                Optional('batch-begin'):
+                    {Optional('pending-issue'):int,
+                     Optional('pending-ack'):int,
                     },
-                Optional('batch_end'):
-                    {Optional('pending_issue'):int,
-                     Optional('pending_ack'):int,
+                Optional('batch-end'):
+                    {Optional('pending-issue'):int,
+                     Optional('pending-ack'):int,
                     },
                 Optional('command'):
-                    {Optional('pending_ack'):int,
+                    {Optional('pending-ack'):int,
                     },
                 Optional('total-objects'):int,
                 Optional('stale-objects'): int,
@@ -958,7 +958,7 @@ class ShowPlatformSoftwareSchema(MetaParser):
                 Optional('childless-delete-objects'): int,
                 Optional('backplane-objects'): int,
                 Optional('error-objects'): int,
-                Optional('number_of_bundles'): int,
+                Optional('number-of-bundles'): int,
                 Optional('paused-types'): int,
                 },
         }
@@ -1023,31 +1023,31 @@ class ShowPlatformSoftware(ShowPlatformSoftwareSchema):
             #Object update: Pending-issue: 0, Pending-acknowledgement: 0
             m = p2.match(line)
             if m:
-                object_update_dict = stats_dict.setdefault('object_update', {})
+                object_update_dict = stats_dict.setdefault('object-update', {})
                 pending_issue = int(m.groupdict()['pending_issue'])
                 pending_ack = int(m.groupdict()['pending_ack'])
-                object_update_dict['pending_issue']= pending_issue
-                object_update_dict['pending_ack']= pending_ack
+                object_update_dict['pending-issue']= pending_issue
+                object_update_dict['pending-ack']= pending_ack
                 continue
 
             #Batch begin:   Pending-issue: 0, Pending-acknowledgement: 0
             m = p3.match(line)
             if m:
-                batch_begin_dict = stats_dict.setdefault('batch_begin', {})
+                batch_begin_dict = stats_dict.setdefault('batch-begin', {})
                 pending_issue = int(m.groupdict()['pending_issue'])
                 pending_ack = int(m.groupdict()['pending_ack'])
-                batch_begin_dict['pending_issue']= pending_issue
-                batch_begin_dict['pending_ack']= pending_ack
+                batch_begin_dict['pending-issue']= pending_issue
+                batch_begin_dict['pending-ack']= pending_ack
                 continue
 
             #Batch end:     Pending-issue: 0, Pending-acknowledgement: 0
             m = p4.match(line)
             if m:
-                batch_end_dict = stats_dict.setdefault('batch_end', {})
+                batch_end_dict = stats_dict.setdefault('batch-end', {})
                 pending_issue = int(m.groupdict()['pending_issue'])
                 pending_ack = int(m.groupdict()['pending_ack'])
-                batch_end_dict['pending_issue']= pending_issue
-                batch_end_dict['pending_ack']= pending_ack
+                batch_end_dict['pending-issue']= pending_issue
+                batch_end_dict['pending-ack']= pending_ack
                 continue
 
             #Command:       Pending-acknowledgement: 0
@@ -1055,7 +1055,7 @@ class ShowPlatformSoftware(ShowPlatformSoftwareSchema):
             if m:
                 command_dict = stats_dict.setdefault('command', {})
                 pending_ack = int(m.groupdict()['pending_ack'])
-                command_dict['pending_ack']= pending_ack
+                command_dict['pending-ack']= pending_ack
                 continue
 
             #Total-objects: 1231
@@ -1070,8 +1070,7 @@ class ShowPlatformSoftware(ShowPlatformSoftwareSchema):
             m = p6.match(line)
             if m:
                 groups = m.groupdict()
-                scrubbed = groups['key'].replace(' ', '_')
-                #stats_dict.update({groups['key'].lower(): int(groups['value'])})
+                scrubbed = groups['key'].replace(' ', '-')
                 stats_dict.update({scrubbed.lower(): int(groups['value'])})
                 continue
 
