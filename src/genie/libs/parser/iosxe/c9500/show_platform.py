@@ -1016,7 +1016,6 @@ class ShowPlatformSoftware(ShowPlatformSoftwareSchema):
             #Forwarding Manager Asynchronous Object Manager Statistics
             m = p1.match(line)
             if m:
-            #    statistics = m.groupdict()['statistics']
                 stats_dict = ret_dict.setdefault('statistics', {})
                 continue
 
