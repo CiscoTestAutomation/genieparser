@@ -3360,12 +3360,19 @@ class ShowNveInterface(ShowNveInterfaceSchema):
 # ============================================
 class ShowIpInterfaceBriefVrfAllSchema(MetaParser):
     """Schema for show ip interface brief vrf all"""
-    schema = {'interface':
-                {Any():
-                    {Optional('ip_address'): str,
-                     Optional('interface_status'): str}
-                },
+    schema = {
+        'vrf': {
+            Any(): {
+                'interface': {
+                    Any(): {
+                        Optional('ip_address'): str,
+                        Optional('interface_status'): str
+                    }
+                }
             }
+        }
+    }
+
 
 # ============================================
 # Schema for 'show ip interface brief vrf all'
@@ -3397,32 +3404,32 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
             out = self.device.execute(cmd)
         else:
             out = output
-        interface_dict = {}
+
+        # IP Interface Status for VRF "default"(1)
+        p1 = re.compile(r'^IP Interface Status for VRF "(?P<vrf>(\S+))"')
 
         # mgmt0                10.255.5.169    protocol-up/link-up/admin-up
-        p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
-            '+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-z\-\/]+)$')
+        p2 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
+                        r'+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-z\-\/]+)$')
 
+        ret_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
 
-            m = p.match(line)
+            m = p1.match(line)
             if m:
-                interface = m.groupdict()['interface']
-
-                if 'interface' not in interface_dict:
-                    interface_dict['interface'] = {}
-                if interface not in interface_dict['interface']:
-                    interface_dict['interface'][interface] = {}
-
-                interface_dict['interface'][interface]['ip_address'] = \
-                    str(m.groupdict()['ip_address'])
-                interface_dict['interface'][interface]['interface_status'] = \
-                    str(m.groupdict()['interface_status'])
-
+                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(m.groupdict()['vrf'], {})
                 continue
 
-        return interface_dict
+            m = p2.match(line)
+            if m:
+                interface = m.groupdict()['interface']
+                interface_dict = vrf_dict.setdefault('interface', {}).setdefault(interface, {})
+                interface_dict.update({'ip_address': m.groupdict()['ip_address']})
+                interface_dict.update({'interface_status': m.groupdict()['interface_status']})
+                continue
+
+        return ret_dict
 
 #############################################################################
 # Parser For show interface Description
