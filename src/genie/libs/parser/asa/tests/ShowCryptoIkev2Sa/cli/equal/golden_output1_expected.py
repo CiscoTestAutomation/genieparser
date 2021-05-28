@@ -3,11 +3,10 @@ expected_output = {
         1: {
             "child_sa_count": 2,
             "ike_count": 1,
-            "session_id": 1,
             "status": "UP-ACTIVE",
             "tunnels": {
                 "2001:db8:2:1::1/500-2001:db8:2:1::2/500": {
-                    "activetime": 880,
+                    "activetime_secs": 880,
                     "authentication_sign": "PSK",
                     "authentication_verify": "PSK",
                     "child_sa": {
@@ -35,7 +34,7 @@ expected_output = {
                     "dh_group": 2,
                     "encryption_algorithm": "3DES",
                     "hashing_algorithm": "SHA96",
-                    "lifetime": 43200,
+                    "lifetime_secs": 43200,
                     "local": "2001:db8:2:1::1/500",
                     "remote": "2001:db8:2:1::2/500",
                     "role": "INITIATOR",

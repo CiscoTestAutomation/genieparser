@@ -55,7 +55,7 @@ class ShowFailoverSchema(MetaParser):
         Optional('this_host'): {
             'is_primary': bool,
             'state': str,
-            Optional('active_time'): int,
+            Optional('active_time_secs'): int,
             'interfaces': {
                 Any(): {
                     Optional('ipv4_address'): str,
@@ -75,7 +75,7 @@ class ShowFailoverSchema(MetaParser):
         Optional('other_host'): {
             'is_primary': bool,
             'state': str,
-            Optional('active_time'): int,
+            Optional('active_time_secs'): int,
             'interfaces': {
                 Any(): {
                     Optional('ipv4_address'): str,
@@ -385,9 +385,9 @@ class ShowFailover(ShowFailoverSchema):
             m = p13.match(line)
             if m:
                 if is_this_host:
-                    this_host_dict.update({'active_time': int(m.groupdict()['active_time'])})
+                    this_host_dict.update({'active_time_secs': int(m.groupdict()['active_time'])})
                 else:
-                    other_host_dict.update({'active_time': int(m.groupdict()['active_time'])})
+                    other_host_dict.update({'active_time_secs': int(m.groupdict()['active_time'])})
                 continue
 
             # Interface outside (0.0.0.0/fe80::e8f:c5ff:fe5f:d01): Unknown (Waiting)
@@ -552,18 +552,21 @@ class ShowFailoverInterface(ShowFailoverInterfaceSchema):
                 interface_dict.update({'name': group['name']})
                 continue
 
+            # System IP Address: 2001:db8:cafe:ffee::a/127
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict.update({'system_ip': group['ip']})
                 continue
 
+            # My IP Address    : 2001:db8:cafe:ffee::a
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict.update({'my_ip': group['ip']})
                 continue
 
+            # Other IP Address : 2001:db8:cafe:ffee::b
             m = p4.match(line)
             if m:
                 group = m.groupdict()

@@ -37,6 +37,8 @@ class ShowNameif(ShowNameifSchema):
         else:
             out = output
 
+        # Interface                Name                     Security
+        # GigabitEthernet0/0       outside                    0
         header = ['Interface', 'Name', 'Security']
 
         result = parsergen.oper_fill_tabular(

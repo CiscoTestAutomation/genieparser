@@ -17,7 +17,7 @@ expected_output = {
     "max_monitored_interfaces": 61,
     "monitored_interfaces": 2,
     "other_host": {
-        "active_time": 0,
+        "active_time_secs": 0,
         "interfaces": {
             "inside": {
                 "ipv4_address": "0.0.0.0",
@@ -70,7 +70,7 @@ expected_output = {
         "up time": {"rcv": 0, "rerr": 0, "xerr": 0, "xmit": 0},
     },
     "this_host": {
-        "active_time": 30858,
+        "active_time_secs": 30858,
         "interfaces": {
             "inside": {
                 "ipv4_address": "0.0.0.0",

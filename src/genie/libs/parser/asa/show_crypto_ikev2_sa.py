@@ -17,7 +17,6 @@ class ShowCryptoIkev2SaSchema(MetaParser):
     schema = {
         'sessions': {
             Any(): {
-                'session_id': int,
                 'status': str,
                 'ike_count': int,
                 'child_sa_count': int,
@@ -34,8 +33,8 @@ class ShowCryptoIkev2SaSchema(MetaParser):
                         'dh_group': int,
                         'authentication_sign': str,
                         'authentication_verify': str,
-                        'lifetime': int,
-                        'activetime': int,
+                        'lifetime_secs': int,
+                        'activetime_secs': int,
                         'child_sa': {
                             Any(): {
                                 'local_selector': str,
@@ -70,10 +69,10 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
 
         # Session-id:1, Status:UP-ACTIVE, IKE count:1, CHILD count:1
         p1 = re.compile(
-            r'^Session-id:(?P<session_id>[\d]),\s'
-            r'Status:(?P<status>[A-Za-z\-]{1,}),\s'
-            r'IKE\scount:(?P<ike_count>[\d]),\s'
-            r'CHILD\scount:(?P<child_count>[\d])$'
+            r'^Session-id:(?P<session_id>[\d+]),\s+'
+            r'Status:(?P<status>[A-Za-z\-]{1,}),\s+'
+            r'IKE\scount:(?P<ike_count>[\d+]),\s+'
+            r'CHILD\scount:(?P<child_count>[\d+])$'
         )
 
         # 3752379 2001:db8:2:1::1/500 2001:db8:2:1::2/500 READY INITIATOR
@@ -121,8 +120,8 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
         for line in out:
             line = line.strip()
 
+            # Session-id:1, Status:UP-ACTIVE, IKE count:1, CHILD count:1
             m = p1.match(line)
-
             if m:
                 group = m.groupdict()
                 session_id = int(group['session_id'])
@@ -130,15 +129,14 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 ike_count = int(group['ike_count'])
                 child_sa_count = int(group['child_count'])
                 dict_session = dict_sessions.setdefault(session_id, {})
-                dict_session.update({'session_id': session_id})
                 dict_session.update({'status': status})
                 dict_session.update({'ike_count': ike_count})
                 dict_session.update({'child_sa_count': child_sa_count})
                 dict_tunnels = dict_session.setdefault('tunnels', {})
                 continue
 
+            # 3752379 2001:db8:2:1::1/500 2001:db8:2:1::2/500 READY INITIATOR
             m = p2.match(line)
-
             if m:
                 group = m.groupdict()
                 tunnel_id = int(group['tunnel_id'])
@@ -156,8 +154,9 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 dict_tunnel.update({'role': role})
                 continue
 
+            # Encr: 3DES, Hash: SHA96, DH Grp:2, Auth sign: PSK, Auth verify: PSK
+            # Encr: AES-CBC, keysize: 256, Hash: SHA512, DH Grp:19, Auth sign: PSK, Auth verify: PSK
             m = p3.match(line)
-
             if m:
                 group = m.groupdict()
                 encr_alg = group['encr']
@@ -176,20 +175,21 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                     })
                 continue
 
+            # Life/Active Time: 43200/53 sec
             m = p4.match(line)
-
             if m:
                 group = m.groupdict()
                 life_time = int(group['life_time'])
                 active_time = int(group['active_time'])
-                dict_tunnel.update({'lifetime': life_time})
-                dict_tunnel.update({'activetime': active_time})
+                dict_tunnel.update({'lifetime_secs': life_time})
+                dict_tunnel.update({'activetime_secs': active_time})
                 child_sas = dict_tunnel.setdefault('child_sa', {})
                 child_sa_index = 0
                 continue
 
+            # Child sa: local selector  2001:db8:1:1::/0 -
+            # 2001:db8:1:1:ffff:ffff:ffff:ffff/65535
             m = p5.match(line)
-
             if m:
                 group = m.groupdict()
                 local_selector = group['local_selector']
@@ -198,16 +198,17 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 child_sa_index = child_sa_index + 1
                 continue
 
+            # remote selector 2001:db8:3:1::/0 -
+            # 2001:db8:3:1:ffff:ffff:ffff:ffff/65535
             m = p6.match(line)
-
             if m:
                 group = m.groupdict()
                 remote_selector = group['remote_selector']
                 child_sa.update({'remote_selector': str(remote_selector)})
                 continue
 
+            # ESP spi in/out: 0x295bd35a/0x5755a09f
             m = p7.match(line)
-
             if m:
                 group = m.groupdict()
                 esp_in = group['esp_in']
