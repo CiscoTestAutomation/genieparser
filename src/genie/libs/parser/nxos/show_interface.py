@@ -2,19 +2,39 @@
 
 NXOS parsers for the following show commands:
     * show interface
-    * show vrf all interface
+    * show interface {interface}
+    * show ip interface {interface} vrf {vrf}
+    * show ip interface {interface} vrf all
+    * show ip interface vrf {vrf}
     * show ip interface vrf all
-    * show ipv6 interface detail vrf all
+    * show vrf {vrf} interface {interface}
+    * show vrf all interface {interface}
+    * show vrf {vrf} interface
+    * show vrf all interface
     * show interface switchport
+    * show interface {interface} switchport
+    * show ipv6 interface {interface} vrf {vrf}
+    * show ipv6 interface {interface} vrf all
+    * show ipv6 interface vrf {vrf}
+    * show ipv6 interface vrf all
     * show ip interface brief
-    * show ip interface brief | vlan
+    * show ip interface brief | include Vlan
     * show interface brief
     * show interface {interface} brief
     * show running-config interface {interface}
+    * show nve interface {interface} detail
+    * show ip interface brief vrf all | include {ip}
+    * show ip interface brief vrf all
+    * show interface description
+    * show interface {interface} description
     * show interface status
     * show interface {interface} status
+    * show interface capabilities
     * show interface {interface} capabilities
-    * show interface {interface} transciever details
+    * show interface transceiver
+    * show interface {interface} transceiver
+    * show interface transceiver details
+    * show interface {interface} transceiver details
     * show interface fec
     * show interface hardware-mappings
 '''
