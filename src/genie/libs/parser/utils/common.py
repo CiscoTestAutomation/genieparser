@@ -667,7 +667,8 @@ class Common:
                           "Missing key {}\n".format(os, k))
             else:
                 if int_type in os_type_dict.keys():
-                    return os_type_dict[int_type] + int_port
+                    converted_intf = os_type_dict[int_type] + int_port
+                    return converted_intf[0].capitalize() + converted_intf[1:]
                 else:
                     # Unifying interface names
                     converted_intf = intf[0].capitalize() + intf[1:].replace(
