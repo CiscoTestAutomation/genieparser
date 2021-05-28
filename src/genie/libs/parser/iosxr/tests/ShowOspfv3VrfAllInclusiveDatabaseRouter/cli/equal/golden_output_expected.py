@@ -21,15 +21,15 @@ expected_output = {
                                                                 'links': {
                                                                     1: {
                                                                         'link_metric': 1,
-                                                                        'local_interface_id': '6',
-                                                                        'neighbor_interface_id': '6',
+                                                                        'local_interface_id': 6,
+                                                                        'neighbor_interface_id': 6,
                                                                         'neighbor_router_id': '96.96.96.96',
                                                                         'type': 'transit ' 'network'
                                                                     },
                                                                     2: {
                                                                         'link_metric': 1,
-                                                                        'local_interface_id': '7',
-                                                                        'neighbor_interface_id': '6',
+                                                                        'local_interface_id': 7,
+                                                                        'neighbor_interface_id': 6,
                                                                         'neighbor_router_id': '95.95.95.95',
                                                                         'type': 'another ' 'router ' '(point-to-point)'
                                                                     }
@@ -57,15 +57,15 @@ expected_output = {
                                                                 'links': {
                                                                     1: {
                                                                         'link_metric': 10,
-                                                                        'local_interface_id': '7',
-                                                                        'neighbor_interface_id': '7',
+                                                                        'local_interface_id': 7,
+                                                                        'neighbor_interface_id': 7,
                                                                         'neighbor_router_id': '96.96.96.96',
                                                                         'type': 'another ' 'router ' '(point-to-point)'
                                                                     },
                                                                     2: {
                                                                         'link_metric': 1,
-                                                                        'local_interface_id': '6',
-                                                                        'neighbor_interface_id': '7',
+                                                                        'local_interface_id': 6,
+                                                                        'neighbor_interface_id': 7,
                                                                         'neighbor_router_id': '25.97.1.1',
                                                                         'type': 'another ' 'router ' '(point-to-point)'
                                                                     }
@@ -94,15 +94,15 @@ expected_output = {
                                                                 'links': {
                                                                     1: {
                                                                         'link_metric': 1,
-                                                                        'local_interface_id': '6',
-                                                                        'neighbor_interface_id': '6',
+                                                                        'local_interface_id': 6,
+                                                                        'neighbor_interface_id': 6,
                                                                         'neighbor_router_id': '96.96.96.96',
                                                                         'type': 'transit ' 'network'
                                                                     },
                                                                     2: {
                                                                         'link_metric': 10,
-                                                                        'local_interface_id': '7',
-                                                                        'neighbor_interface_id': '7',
+                                                                        'local_interface_id': 7,
+                                                                        'neighbor_interface_id': 7,
                                                                         'neighbor_router_id': '95.95.95.95',
                                                                         'type': 'another ' 'router ' '(point-to-point)'
                                                                     }

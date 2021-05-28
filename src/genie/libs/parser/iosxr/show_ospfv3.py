@@ -1028,8 +1028,8 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouterSchema(MetaParser):
                                                                         Any(): {
                                                                             "type": str,
                                                                             "link_metric": int,
-                                                                            "local_interface_id": str,
-                                                                            "neighbor_interface_id": str,
+                                                                            "local_interface_id": int,
+                                                                            "neighbor_interface_id": int,
                                                                             "neighbor_router_id": str,
                                                                         },
                                                                     },
@@ -1141,11 +1141,11 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
         p15 = re.compile(r"^Link +Metric: +(?P<link_metric>(\d+))$")
 
         # Local Interface ID: 7
-        p16 = re.compile(r"^Local +Interface +ID: +(?P<local_interface_id>(\S+))$")
+        p16 = re.compile(r"^Local +Interface +ID: +(?P<local_interface_id>(\d+))$")
 
         # Neighbor Interface ID: 6
         # Neighbor (DR) Interface ID: 6
-        p17 = re.compile(r"^Neighbor.*Interface +ID: +(?P<neighbor_interface_id>(\S+))$")
+        p17 = re.compile(r"^Neighbor.*Interface +ID: +(?P<neighbor_interface_id>(\d+))$")
 
         # Neighbor Router ID: 95.95.95.95
         # Neighbor (DR) Router ID: 96.96.96.96
@@ -1348,14 +1348,14 @@ class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseR
             # Local Interface ID: 7
             m = p16.match(line)
             if m:
-                link_dict["local_interface_id"] = str(m.groupdict()["local_interface_id"])
+                link_dict["local_interface_id"] = int(m.groupdict()["local_interface_id"])
                 continue
 
             # Neighbor Interface ID: 6
             # Neighbor (DR) Interface ID: 6
             m = p17.match(line)
             if m:
-                link_dict["neighbor_interface_id"] = str(m.groupdict()["neighbor_interface_id"])
+                link_dict["neighbor_interface_id"] = int(m.groupdict()["neighbor_interface_id"])
                 continue
 
             # Neighbor Router ID: 95.95.95.95
