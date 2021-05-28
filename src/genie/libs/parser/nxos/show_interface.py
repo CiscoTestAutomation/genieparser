@@ -3423,8 +3423,7 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
 
             m = p2.match(line)
             if m:
-                interface = m.groupdict()['interface']
-                interface_dict = vrf_dict.setdefault('interface', {}).setdefault(interface, {})
+                interface_dict = vrf_dict.setdefault('interface', {}).setdefault(m.groupdict()['interface'], {})
                 interface_dict.update({'ip_address': m.groupdict()['ip_address']})
                 interface_dict.update({'interface_status': m.groupdict()['interface_status']})
                 continue
