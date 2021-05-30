@@ -155,6 +155,8 @@ class ShowVrfDetailSchema(MetaParser):
                         'export_to_global_map': str,
                         'prefix_limit': int
                     },
+                    Optional('import_route_map'): str,
+                    Optional('export_route_map'): str,
                     Optional('routing_table_limit'): {
                         Optional('routing_table_limit_number'): int,
                         'routing_table_limit_action': {
@@ -242,13 +244,19 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
         p7_1 = re.compile(r'^Import +route-map +for +(?P<af>[\w\s]+): +'
                           r'(?P<import_map>[\w\-]+) +\(prefix +limit: (?P<limit>\d+)\)$')
 
+        # Import route-map: import-test-map
+        p7_2 = re.compile(r'^Import +route-map: +(?P<import_map>[\w\-]+)$')
+
         # No global export route-map
         # No export route-map
         p8 = re.compile(r'^No( *global)? export route-map$')
 
         # Global export route-map for ipv4 unicast: export_to_global_map (prefix limit: 1000)
         p8_1 = re.compile(r'^Global +export +route-map +for +(?P<af>[\w\s]+): +'
-                          r'(?P<import_map>[\w\-]+) +\(prefix +limit: +(?P<limit>\d+)\)$')
+                          r'(?P<export_map>[\w\-]+) +\(prefix +limit: +(?P<limit>\d+)\)$')
+
+        # Export route-map: export-test-map
+        p8_2 = re.compile(r'^Export +route-map: +(?P<export_map>[\w\-]+)$')
 
         # Route warning limit 10000, current count 0
         # Route limit 10000, warning limit 70% (7000), current count 1
@@ -409,6 +417,14 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                 import_global_dict.update({'prefix_limit': int(groups['limit'])})
                 continue
 
+            # Import route-map: import-test-map
+            m = p7_2.match(line)
+            if m:
+                groups = m.groupdict()
+                rt_type = None
+                af_dict.update({'import_route_map': groups['import_map']})
+                continue
+
             # No global export route-map
             # No export route-map
             m = p8.match(line)
@@ -422,8 +438,16 @@ class ShowVrfDetailSuperParser(ShowVrfDetailSchema):
                 groups = m.groupdict()
                 rt_type = None
                 export_global_dict = af_dict.setdefault('export_to_global', {})
-                export_global_dict.update({'export_to_global_map': groups['import_map']})
+                export_global_dict.update({'export_to_global_map': groups['export_map']})
                 export_global_dict.update({'prefix_limit': int(groups['limit'])})
+                continue
+
+            # Export route-map: export-test-map
+            m = p8_2.match(line)
+            if m:
+                groups = m.groupdict()
+                rt_type = None
+                af_dict.update({'export_route_map': groups['export_map']})
                 continue
 
             # Route warning limit 10000, current count 0
