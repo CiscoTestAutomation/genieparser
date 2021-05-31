@@ -258,10 +258,10 @@ class ShowInterface(ShowInterfaceSchema):
                         r' *\(bia *(?P<phys_address>[a-z0-9\.]+)\)$')
 
         #Description: desc
-        p4 = re.compile(r'^Description: *(?P<description>.*)$')
+        p4 = re.compile(r'^Description:\s*(?P<description>.*)$')
 
         #Description: VLAN information Internet Address is 10.10.10.1/24
-        p4_1 = re.compile(r'^Description: *(?P<description>.*)'
+        p4_1 = re.compile(r'^Description:\s*(?P<description>.*)'
                           r'\s+Internet\s+Address\s+is\s+(?P<ip>[0-9\.]+)'
                           r'\/(?P<prefix_length>[0-9]+)$')
 
