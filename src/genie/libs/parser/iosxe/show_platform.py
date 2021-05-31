@@ -7033,7 +7033,7 @@ class ShowPlatformResourcesSchema(MetaParser):
             }
             }
         },
-        'esp': {
+        Optional('esp'): {
             Any(): {
                 'state': str,
                 'role': str,
