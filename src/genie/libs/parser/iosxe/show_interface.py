@@ -3630,7 +3630,7 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
 # ==========================================================
 #  Parser for show interface {interface} transceiver
 # ==========================================================
-class ShowInterfaceTransceiverSchema(MetaParser):
+class ShowInterfacesTransceiverSchema(MetaParser):
     """Schema for:
         * show interfaces {interface} transceiver
     """
@@ -3649,41 +3649,34 @@ class ShowInterfaceTransceiverSchema(MetaParser):
     }
 
 
-class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
+class ShowInterfacesTransceiver(ShowInterfacesTransceiverSchema):
     """
     parser for
         * show interfaces {interface} transceiver
     """
 
-    cli_command = 'show interfaces {interface} transceiver'
+    cli_command = ['show interfaces {interface} transceiver', 'show interfaces transceiver']
 
-    def cli(self, interface, output=None):
+    def cli(self, interface=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(interface=interface))
+            if interface:
+                out = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[1])
+
         else:
             out = output
 
+        # Gi1/1      40.6       5.09       0.4     -25.2      N/A
+        p = re.compile(r'^(?P<port>([\d\/A-Za-z]+)) +(?P<temp>([\d\.-]+)) '
+                       r'+(?P<voltage>([\d\.-]+)) +(?P<current>([\d\.-]+)) '
+                       r'+(?P<opticaltx>(\S+)) +(?P<opticalrx>(\S+))$')
+
         result_dict = {}
-
-        # transceiver is present
-        # type is 10Gbase-LR
-        # name is CISCO-FINISAR
-        # part number is FTLX1474D3BCL-CS
-        p1 = re.compile(r'^(?P<key>[\S\s]+) +is +(?P<value>[\S\s]+)$')
-
-        # number of lanes 1
-        p2 = re.compile(r'^number +of +lanes +(?P<lanes>[\d]+)$')
-
-        # transceiver info
-        p3 = re.compile(r'^(?P<port>\S+)\s+(?P<temp>[\-0-9][0-9\.]+[0-9])\s+(?P<voltage>[\-0-9][0-9\.]+[0-9])\s'
-                        r'+(?P<current>[\-0-9][0-9\.]+[0-9])\s'
-                        r'+(?P<opticaltx>[\-0-9][0-9\.]+[0-9])\s+(?P<opticalrx>[\-0-9][0-9\.]+[0-9])$')
-
         for line in out.splitlines():
             line = line.strip()
-            m = p1.match(line)
-            m = p3.match(line)
 
+            m = p.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(group['port'], {})
@@ -3694,6 +3687,5 @@ class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
                 intf_dict['opticalrx'] = group['opticalrx']
                 continue
 
+        print(result_dict)
         return result_dict
-
-
