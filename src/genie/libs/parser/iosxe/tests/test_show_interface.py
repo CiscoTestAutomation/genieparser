@@ -31,8 +31,7 @@ from genie.libs.parser.iosxe.show_interface import (
                                         ShowInterfacesSwitchport,
                                         ShowInterfacesDescription,
                                         ShowIpInterfaceBriefPipeIp,
-                                        ShowIpInterfaceBriefPipeVlan,
-                                        ShowInterfaceTransceiverDetail)
+                                        ShowIpInterfaceBriefPipeVlan)
 
 
 class TestShowInterfaceParsergen(unittest.TestCase):
