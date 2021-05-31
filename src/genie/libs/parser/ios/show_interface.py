@@ -20,7 +20,7 @@ import re
 # genie
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
-                                         Any, Optional
+    Any, Optional
 
 # import iosxe parser
 from genie.libs.parser.iosxe.show_interface import \
@@ -34,9 +34,9 @@ from genie.libs.parser.iosxe.show_interface import \
     ShowInterfacesCounters as ShowInterfacesCounters_iosxe, \
     ShowInterfacesSwitchport as ShowInterfacesSwitchport_iosxe, \
     ShowInterfacesTrunk as ShowInterfacesTrunk_iosxe, \
-    ShowInterfacesStats as ShowInterfacesStats_iosxe,\
+    ShowInterfacesStats as ShowInterfacesStats_iosxe, \
     ShowInterfacesDescription as ShowInterfacesDescription_iosxe, \
-    ShowInterfacesStatus as ShowInterfacesStatus_iosxe,
+    ShowInterfacesStatus as ShowInterfacesStatus_iosxe, \
     ShowInterfaceTransceiver as ShowInterfaceTransceiver_iosxe, \
     ShowInterfaceTransceiverDetail as ShowInterfaceTransceiverDetail_iosxe
 
@@ -47,14 +47,14 @@ from genie.libs.parser.utils.common import Common
 class ShowInterfaces(ShowInterfaces_iosxe):
     """parser for show interfaces"""
     exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts',
-        'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts',
-        'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts'
-        'last_output', 'out_unknown_protocl_drops', 'last_input',
-        'input_queue_drops', 'out_interface_resets', 
-        'rxload', 'txload', 'last_clear', 'in_crc_errors',
-        'in_errors', 'in_giants', 'unnumbered', 'mac_address', 
-        'phys_address', 'out_lost_carrier', '(Tunnel.*)',
-        'input_queue_flushes', 'reliability', 'in_runts']
+               'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts',
+               'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts'
+                                                        'last_output', 'out_unknown_protocl_drops', 'last_input',
+               'input_queue_drops', 'out_interface_resets',
+               'rxload', 'txload', 'last_clear', 'in_crc_errors',
+               'in_errors', 'in_giants', 'unnumbered', 'mac_address',
+               'phys_address', 'out_lost_carrier', '(Tunnel.*)',
+               'input_queue_flushes', 'reliability', 'in_runts']
 
     pass
 
@@ -112,7 +112,7 @@ class ShowInterfacesTrunk(ShowInterfacesTrunk_iosxe):
     """Parser for show interfaces trunk"""
     pass
 
-    
+
 class ShowInterfacesStats(ShowInterfacesStats_iosxe):
     """Parser for:
         show interfaces <interface> stats
@@ -132,12 +132,18 @@ class ShowInterfacesStatus(ShowInterfacesStatus_iosxe):
         show interfaces status"""
     pass
 
-class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetail_iosxe):
-     """Parser for:
-         show interface <interface> transceiver detail"""
-     pass
 
- class ShowInterfaceTransceiver(ShowInterfaceTransceiver_iosxe):
-     """Parser for:
-         show interface <interface> transceiver"""
-     pass
+class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetail_iosxe):
+    """
+    Parser for:
+        show interface <interface> transceiver detail
+    """
+    pass
+
+
+class ShowInterfaceTransceiver(ShowInterfaceTransceiver_iosxe):
+    """
+    Parser for:
+         show interface <interface> transceiver
+    """
+    pass
