@@ -3361,14 +3361,11 @@ class ShowNveInterface(ShowNveInterfaceSchema):
 class ShowIpInterfaceBriefVrfAllSchema(MetaParser):
     """Schema for show ip interface brief vrf all"""
     schema = {
-        'vrf': {
+        'interface': {
             Any(): {
-                'interface': {
-                    Any(): {
-                        Optional('ip_address'): str,
-                        Optional('interface_status'): str
-                    }
-                }
+                Optional('vrf'): str,
+                Optional('ip_address'): str,
+                Optional('interface_status'): str
             }
         }
     }
@@ -3418,12 +3415,13 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
 
             m = p1.match(line)
             if m:
-                vrf_dict = ret_dict.setdefault('vrf', {}).setdefault(m.groupdict()['vrf'], {})
+                vrf = m.groupdict()['vrf']
                 continue
 
             m = p2.match(line)
             if m:
-                interface_dict = vrf_dict.setdefault('interface', {}).setdefault(m.groupdict()['interface'], {})
+                interface_dict = ret_dict.setdefault('interface', {}).setdefault(m.groupdict()['interface'], {})
+                interface_dict.update({'vrf': vrf})
                 interface_dict.update({'ip_address': m.groupdict()['ip_address']})
                 interface_dict.update({'interface_status': m.groupdict()['interface_status']})
                 continue
