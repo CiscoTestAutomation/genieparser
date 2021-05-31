@@ -12,6 +12,7 @@
     * show ipv6 interface
     * show interfaces accounting
     * show interfaces status
+    * show interface {interface} transceiver
     * show interface {interface} transceiver detail
 """
 
@@ -3531,6 +3532,15 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
 
     def cli(self, interface, output=None):
 
+        switcher = {
+           0: "Temp",
+           1: "Voltage",
+           2: "Current",
+           3: "OpticalTX",
+           4: "OpticalRX"
+         }
+
+
         if output is None:
             out = self.device.execute(self.cli_command.format(interface=interface))
         else:
@@ -3547,6 +3557,9 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
         # number of lanes 1
         p2 = re.compile(r'^number +of +lanes +(?P<lanes>[\d]+)$')
 
+     #transceiver info
+         p3 = re.compile(r'^(?P<port>\S+)\s+(?P<value>[\-0-9][0-9\.]+[0-9])\s+(?P<HAT>[\-0-9][0-9\.]+[0-9])\s+(?P<HWT>[\-0-9][0-9\.]+[0-9])\s+(?P<LWT>[\-0-9][0-9\.]+[0-9])\s+(?P<LAT>[\-0-9][0-9\.]+[0-9])$')
+        count = 0
         for line in out.splitlines():
             line = line.strip()
 
@@ -3568,4 +3581,82 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
                 intf_dict['number_of_lanes'] = m.groupdict()['lanes']
                 continue
 
+
+            if m:
+                 intf_dict[switcher.get(count)] = {}
+                 intf_dict[switcher.get(count)]['Value'] = float(m.groupdict()['value'])
+                 intf_dict[switcher.get(count)]['HighAlarmThreshold'] = float(m.groupdict()['HAT'])
+                 intf_dict[switcher.get(count)]['HighWarnThreshold'] = float(m.groupdict()['HWT'])
+                 intf_dict[switcher.get(count)]['LowWarnThreshold'] = float(m.groupdict()['LWT'])
+                 intf_dict[switcher.get(count)]['LowAlarmThreshold'] = float(m.groupdict()['LAT'])
+                 count += 1
+
         return result_dict
+
+    # ==========================================================
+ #  Parser for show interface {interface} transceiver
+ # ==========================================================
+ class ShowInterfaceTransceiverSchema(MetaParser):
+     """Schema for:
+         show interfaces {interface} transceiver"""
+
+     schema = {
+         'interfaces': {
+             Any(): {# interface name
+                 Optional('port'): str,
+                 Optional('temp'): str,
+                 Optional('voltage'): str,
+                 Optional('current'): str,
+                 Optional('opticaltx'): str,
+                 Optional('opticalrx'): str,
+             }
+         }
+     }
+
+ class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
+
+     """parser for
+             * show interfaces {interface} transceiver
+         """
+
+     cli_command = 'show interfaces {interface} transceiver'
+
+
+     def cli(self, interface, output=None):
+         if output is None:
+             out = self.device.execute(self.cli_command.format(interface=interface))
+         else:
+             out = output
+
+         result_dict = {}
+
+         # transceiver is present
+         # type is 10Gbase-LR
+         # name is CISCO-FINISAR
+         # part number is FTLX1474D3BCL-CS
+         p1 = re.compile(r'^(?P<key>[\S\s]+) +is +(?P<value>[\S\s]+)$')
+
+         # number of lanes 1
+         p2 = re.compile(r'^number +of +lanes +(?P<lanes>[\d]+)$')
+
+         #transceiver info
+         p3 = re.compile(r'^(?P<port>\S+)\s+(?P<temp>[\-0-9][0-9\.]+[0-9])\s+(?P<voltage>[\-0-9][0-9\.]+[0-9])\s+(?P<current>[\-0-9][0-9\.]+[0-9])\s+(?P<opticaltx>[\-0-9][0-9\.]+[0-9])\s+(?P<opticalrx>[\-0-9][0-9\.]+[0-9])$')
+
+         for line in out.splitlines():
+             line = line.strip()
+             m = p1.match(line)
+             m = p3.match(line)
+
+             if m:
+                 group = m.groupdict()
+                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(group['port'], {})
+                 intf_dict['temp'] = group['temp']
+                 intf_dict['voltage'] = group['voltage']
+                 intf_dict['current'] = group['current']
+                 intf_dict['opticaltx'] = group['opticaltx']
+                 intf_dict['opticalrx'] = group['opticalrx']
+                 continue
+
+         return result_dict
+
+
