@@ -3546,17 +3546,6 @@ class ShowInterfaceTransceiverDetailSchema(MetaParser):
                     'LowWarnThreshold': float,
                     'LowAlarmThreshold': float
                 },
-                Optional('cisco_extended_id_number'): str,
-                Optional('cisco_id'): str,
-                Optional('cisco_part_number'): str,
-                Optional('cisco_product_id'): str,
-                Optional('cisco_vendor_id'): str,
-                Optional('name'): str,
-                Optional('nominal_bitrate'): str,
-                Optional('number_of_lanes'): str,
-                Optional('part_number'): str,
-                Optional('revision'): str,
-                Optional('serial_number'): str
             }
         }
     }
@@ -3585,9 +3574,6 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
         # part number is FTLX1474D3BCL-CS
         p1 = re.compile(r'^(?P<key>[\S\s]+) +is +(?P<value>[\S\s]+)$')
 
-        # number of lanes 1
-        p2 = re.compile(r'^number +of +lanes +(?P<lanes>[\d]+)$')
-
         # Voltage            Threshold   Threshold  Threshold  Threshold
         p3_0 = re.compile(r'(?P<statistic>(Temperature|Voltage|Current|Transmit Power|Receive Power))')
 
@@ -3607,6 +3593,7 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
                 group = m.groupdict()
                 key = group['key'].strip().replace(" ", '_').lower()
                 value = group['value'].strip()
+                lanes = None
                 continue
 
             m = p3_0.match(line)
