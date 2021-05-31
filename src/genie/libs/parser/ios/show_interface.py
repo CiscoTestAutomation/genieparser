@@ -38,7 +38,7 @@ from genie.libs.parser.iosxe.show_interface import \
     ShowInterfacesDescription as ShowInterfacesDescription_iosxe, \
     ShowInterfacesStatus as ShowInterfacesStatus_iosxe, \
     ShowInterfacesTransceiver as ShowInterfacesTransceiver_iosxe, \
-    ShowInterfaceTransceiverDetail as ShowInterfaceTransceiverDetail_iosxe
+    ShowInterfacesTransceiverDetail as ShowInterfacesTransceiverDetail_iosxe
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -133,17 +133,17 @@ class ShowInterfacesStatus(ShowInterfacesStatus_iosxe):
     pass
 
 
-class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetail_iosxe):
+class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetail_iosxe):
     """
     Parser for:
-        show interface <interface> transceiver detail
+        show interfaces <interface> transceiver detail
     """
     pass
 
 
-class ShowInterfaceTransceiver(ShowInterfacesTransceiver_iosxe):
+class ShowInterfacesTransceiver(ShowInterfacesTransceiver_iosxe):
     """
     Parser for:
-         show interface <interface> transceiver
+         show interfaces <interface> transceiver
     """
     pass

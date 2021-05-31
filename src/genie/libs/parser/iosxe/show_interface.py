@@ -3497,9 +3497,9 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
 # ==========================================================
 #  Parser for show interface {interface} transceiver detail
 # ==========================================================
-class ShowInterfaceTransceiverDetailSchema(MetaParser):
+class ShowInterfacesTransceiverDetailSchema(MetaParser):
     """Schema for:
-        show interface {interface} transceiver detail"""
+        show interfaces {interface} transceiver detail"""
 
     schema = {
         'interfaces': {
@@ -3551,9 +3551,9 @@ class ShowInterfaceTransceiverDetailSchema(MetaParser):
     }
 
 
-class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
+class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
     """parser for 
-            * show interface {interface} transceiver detail
+            * show interfaces {interface} transceiver detail
         """
 
     cli_command = ['show interface {interface} transceiver detail',
@@ -3579,7 +3579,8 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
 
         # Twe2/1/1     25.5                   90.0       85.0       -5.0      -10.0
         # Twe2/1/1   N/A    5.7                 50.0       40.0        2.0        1.0
-        p3_1 = re.compile(r'^(?P<port>(\S+)) +(?P<lane>(\S+))? +(?P<value>(-?[\d\.]+)) '
+        # Twe2/1/1   N/A    N/A                 50.0       40.0        2.0        1.0
+        p3_1 = re.compile(r'^(?P<port>(\S+)) +(?P<lane>(\S+))? +(?P<value>(\S+)) '
                           r'+(?P<HAT>(-?[\d\.]+)) +(?P<HWT>(-?[\d\.]+)) +(?P<LWT>(-?[\d\.]+)) +(?P<LAT>(-?[\d\.]+))$')
 
         result_dict = {}
@@ -3687,5 +3688,4 @@ class ShowInterfacesTransceiver(ShowInterfacesTransceiverSchema):
                 intf_dict['opticalrx'] = group['opticalrx']
                 continue
 
-        print(result_dict)
         return result_dict
