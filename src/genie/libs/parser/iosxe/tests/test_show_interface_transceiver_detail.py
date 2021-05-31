@@ -12,7 +12,7 @@ class test_show_interface_transceiver_detail(unittest.TestCase):
     empty_output = {'execute.return_value': ''}
     golden_parsed_output1 = {
         "interfaces": {
-            "TwentyFiveGigE1/0/1": {
+            "TwentyFiveGigE2/1/1": {
                 "transceiver": "internally calibrated.",
                 "Temperature": {
                     "Value": 25.5,
@@ -101,7 +101,7 @@ class test_show_interface_transceiver_detail(unittest.TestCase):
         self.maxDiff = None
         self.device = Mock(**self.golden_output1)
         obj = ShowInterfaceTransceiverDetail(device=self.device)
-        parsed_output = obj.parse(interface='TwentyFiveGigE1/0/1')
+        parsed_output = obj.parse(interface='TwentyFiveGigE2/1/1')
         self.assertEqual(parsed_output, self.golden_parsed_output1)
 
     def test_show_interface_transceiver_detail_empty(self):

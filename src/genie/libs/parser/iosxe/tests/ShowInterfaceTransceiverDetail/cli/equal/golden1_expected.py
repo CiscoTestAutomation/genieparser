@@ -1,6 +1,6 @@
 expected_output = {
         "interfaces": {
-            "TwentyFiveGigE1/0/1": {
+            "TwentyFiveGigE2/1/1": {
                 "transceiver": "internally calibrated.",
                 "Temperature": {
                     "Value": 25.5,

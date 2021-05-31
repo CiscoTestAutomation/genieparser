@@ -3567,12 +3567,15 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
             * show interface {interface} transceiver detail
         """
 
-    cli_command = 'show interface {interface} transceiver detail'
+    cli_command = ['show interface {interface} transceiver detail',
+                   'show interface transceiver detail']
 
     def cli(self, interface=None, output=None):
         if output is None:
             if interface:
-                out = self.device.execute(self.cli_command.format(interface=interface))
+                out = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[1])
         else:
             out = output
 
@@ -3604,15 +3607,6 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
                 group = m.groupdict()
                 key = group['key'].strip().replace(" ", '_').lower()
                 value = group['value'].strip()
-
-                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
-                intf_dict.update({key: value})
-                continue
-
-            # number of lanes 1
-            m = p2.match(line)
-            if m:
-                intf_dict['number_of_lanes'] = m.groupdict()['lanes']
                 continue
 
             m = p3_0.match(line)
@@ -3626,6 +3620,13 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
 
             m = p3_1.match(line)
             if m:
+                interface = m.groupdict()['port']
+                interface = Common.convert_intf_name(interface)
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+
+                if key and value:
+                    intf_dict.update({key: value})
+
                 intf_dict[stat] = {}
                 intf_dict[stat]['Value'] = float(m.groupdict()['value'])
                 if m.groupdict()['lane'] is not None:
@@ -3636,7 +3637,6 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
                 intf_dict[stat]['LowAlarmThreshold'] = float(m.groupdict()['LAT'])
                 continue
 
-        print(result_dict)
         return result_dict
 
 
