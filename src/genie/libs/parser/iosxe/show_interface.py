@@ -3569,9 +3569,10 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
 
     cli_command = 'show interface {interface} transceiver detail'
 
-    def cli(self, interface='', output=None):
+    def cli(self, interface=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(interface=interface))
+            if interface:
+                out = self.device.execute(self.cli_command.format(interface=interface))
         else:
             out = output
 
@@ -3635,8 +3636,7 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
                 intf_dict[stat]['LowAlarmThreshold'] = float(m.groupdict()['LAT'])
                 continue
 
-        logger.info(str(result_dict))
-        # print(result_dict)
+        print(result_dict)
         return result_dict
 
 
