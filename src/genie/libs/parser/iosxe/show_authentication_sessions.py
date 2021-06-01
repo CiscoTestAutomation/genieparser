@@ -166,6 +166,10 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
                         Optional('periodic_acct_timeout'): str,
                         Optional('timeout_action'): str,
                         Optional('restart_timeout'): str,
+                        Optional('unauth_timeout'): {
+                            Optional('timeout'): str,
+                            Optional('remaining'): str,
+                        },
                         Optional('session_uptime'): str,
                         'status': str,
                         'domain': str,
@@ -297,6 +301,12 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Server Policies:
         p12 = re.compile(r'^Server +Policies\:$')
 
+        # Restart timeout:  60s, Remaining: 44s
+        p13 = re.compile(r'(Restart\s*timeout)\s*:\s*(?P<restart_timeout>.*)')
+
+        # Unauth timeout:  10s, Remaining: 5s
+        p14 = re.compile(r'(Unauth\s*timeout)\s*:\s*(?P<timeout>\w+)(\s*,\s*Remaining\s*:\s*(?P<remaining>\w*))?')
+
         # initial return dictionary
         ret_dict = {}
         hold_dict = {}
@@ -369,6 +379,19 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                     session_dict.update({'remaining': group['remaining']})
 
                 continue
+            
+            # Restart timeout:  10s, Remaining: 5s
+            m13 = p13.match(line)
+            if m13:
+                mac_dict.update(m13.groupdict())
+                continue
+
+            # Unauth timeout:  60s, Remaining: 44s
+            m14 = p14.match(line)
+            if m14:
+                unauth_dict = mac_dict.setdefault('unauth_timeout', {})
+                unauth_dict.update(m14.groupdict())
+                continue
 
             # match these lines:
             #             Interface:  GigabitEthernet3/0/2
@@ -400,7 +423,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                               'oper_control_dir', 'session_timeout', 
                               'common_session_id', 'acct_session_id', 
                               'handle', 'current_policy', 'authorized_by',
-                              'periodic_acct_timeout', 'restart_timeout',
+                              'periodic_acct_timeout',
                               'session_uptime', 'timeout_action', 'ip_address',
                               'idle_timeout', 'vlan_policy']
 
@@ -486,5 +509,5 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                 policies_flag = True
 
                 continue
-
+        
         return ret_dict
