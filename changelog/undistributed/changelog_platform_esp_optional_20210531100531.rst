@@ -3,4 +3,4 @@
 --------------------------------------------------------------------------------
 * IOSXE
 	* Modified ShowPlatformResourcesSchema:
-    	* Made 'esp' optional
+    	    * Made 'esp' optional
