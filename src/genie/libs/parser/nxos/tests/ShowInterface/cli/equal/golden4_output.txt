@@ -1,0 +1,104 @@
+show interface
+
+      mgmt0 is up
+      admin state is up,
+        Hardware: GigabitEthernet, address: 80e0.1dff.6bae (bia 80e0.1dff.6bae)
+        Internet Address is 10.154.64.17/23
+        MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
+        reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation ARPA, medium is broadcast
+        full-duplex, 1000 Mb/s
+        Auto-Negotiation is turned on
+        Auto-mdix is turned off
+        EtherType is 0x0000
+        1 minute input rate 13408 bits/sec, 16 packets/sec
+        1 minute output rate 51208 bits/sec, 17 packets/sec
+        Rx
+          607382344 input packets 445986207 unicast packets 132485585 multicast packets
+          28910552 broadcast packets 63295517997 bytes
+        Tx
+          449637617 output packets 447789202 unicast packets 1848405 multicast packets
+          10 broadcast packets 141467913935 bytes
+
+      Ethernet1/1 is up
+      admin state is up, Dedicated Interface
+        Belongs to Po302
+        Hardware: 1000/10000 Ethernet, address: 80e0.1dff.6bb6 (bia 80e0.1dff.6bb6)
+        Description: << GENIE GIG 0/0/1 >>
+        MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec
+        reliability 255/255, txload 1/255, rxload 4/255
+        Encapsulation ARPA, medium is broadcast
+        Port mode is access
+        full-duplex, 1000 Mb/s, media type is 1G
+        Beacon is turned off
+        Auto-Negotiation is turned on
+        Input flow-control is off, output flow-control is off
+        Auto-mdix is turned off
+        Rate mode is dedicated
+        Switchport monitor is off
+        EtherType is 0x8100
+        EEE (efficient-ethernet) : n/a
+        Last link flapped 3d22h
+        Last clearing of "show interface" counters never
+        9 interface resets
+        30 seconds input rate 17542088 bits/sec, 1904 packets/sec
+        30 seconds output rate 1575520 bits/sec, 477 packets/sec
+        Load-Interval #2: 5 minute (300 seconds)
+          input rate 17.40 Mbps, 1.86 Kpps; output rate 1.95 Mbps, 469 pps
+        RX
+          525266408025 unicast packets  128283847 multicast packets  14 broadcast packets
+          525394691886 input packets  157262428316065 bytes
+          0 jumbo packets  0 storm suppression packets
+          0 runts  0 giants  0 CRC  0 no buffer
+          0 input error  0 short frame  0 overrun   0 underrun  0 ignored
+          0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
+          0 input with dribble  0 input discard
+          0 Rx pause
+        TX
+          568365811507 unicast packets  103573671 multicast packets  10009 broadcast packets
+          568469395187 output packets  604413238507323 bytes
+          0 jumbo packets
+          0 output error  0 collision  0 deferred  0 late collision
+          0 lost carrier  0 no carrier  0 babble  1535 output discard
+          0 Tx pause
+
+      Ethernet1/15 is down (Administratively down)
+      admin state is down, Dedicated Interface
+        Hardware: 1000/10000 Ethernet, address: 80e0.1dff.6cc3 (bia 80e0.1dff.6cc3)
+        Description: << LINK TO GENIE PACKET CAPTURE >>
+        MTU 1500 bytes, BW 10000000 Kbit, DLY 10 usec
+        reliability 255/255, txload 1/255, rxload 1/255
+        Encapsulation ARPA, medium is broadcast
+        Port mode is access
+        auto-duplex, auto-speed, media type is 10G
+        Beacon is turned off
+        Auto-Negotiation is turned on
+        Input flow-control is off, output flow-control is off
+        Auto-mdix is turned off
+        Rate mode is dedicated
+        Switchport monitor is off
+        EtherType is 0x8100
+        EEE (efficient-ethernet) : n/a
+        Last link flapped 82week(s) 6day(s)
+        Last clearing of "show interface" counters never
+        16 interface resets
+        30 seconds input rate 0 bits/sec, 0 packets/sec
+        30 seconds output rate 0 bits/sec, 0 packets/sec
+        Load-Interval #2: 5 minute (300 seconds)
+          input rate 0 bps, 0 pps; output rate 0 bps, 0 pps
+        RX
+          30893435 unicast packets  33488177 multicast packets  139092473555 broadcast packets
+          139156855167 input packets  8908513989496 bytes
+          38749 jumbo packets  0 storm suppression packets
+          0 runts  0 giants  0 CRC  0 no buffer
+          0 input error  0 short frame  0 overrun   0 underrun  0 ignored
+          0 watchdog  0 bad etype drop  0 bad proto drop  0 if down drop
+          0 input with dribble  0 input discard
+          0 Rx pause
+        TX
+          757262383558 unicast packets  1012356 multicast packets  16 broadcast packets
+          757263395930 output packets  634405170787968 bytes
+          24175356863 jumbo packets
+          0 output error  0 collision  0 deferred  0 late collision
+          0 lost carrier  0 no carrier  0 babble  169893674 output discard
+          0 Tx pause
