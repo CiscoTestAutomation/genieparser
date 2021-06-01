@@ -117,7 +117,7 @@ class ShowCefDetail(ShowCefDetailSchema):
 
         vrf = 'default'
 
-        # 16.16.16.16/32, version 13285, internal 0x1000001 0x0 (ptr 0x78b55d78) [2], 0x0 (0x78b064d8), 0xa00 (0x7a1a60a8)
+        # 10.4.16.16/32, version 13285, internal 0x1000001 0x0 (ptr 0x78b55d78) [2], 0x0 (0x78b064d8), 0xa00 (0x7a1a60a8)
         p1 = re.compile(r'^(?P<ip>[\d.\/]+), +version +(?P<version>[\d]+)'
                         ', +internal +(?P<internal>.+)+$')
 
@@ -155,8 +155,8 @@ class ShowCefDetail(ShowCefDetailSchema):
         # LW-LDI-TS Oct 13 18:18:19.691
         p9 = re.compile(r'^LW-LDI-TS +(?P<datetime>[\w\s:.]+)$')
 
-        # via 100.0.0.2/32, 4 dependencies, recursive [flags 0x0]
-        # via 100.1.15.2/32, 4 dependencies, recursive [flags 0x0]
+        # via 10.55.0.2/32, 4 dependencies, recursive [flags 0x0]
+        # via 10.1.15.2/32, 4 dependencies, recursive [flags 0x0]
         p10 = re.compile(r'^via +(?P<via>[\S]+), +(?P<dependencies>[\w]{1,})'
                          ' +dependencies, +(?P<via_flags>[\w]+)'
                          ' +\[([\S\s]+)\]$')
@@ -166,16 +166,16 @@ class ShowCefDetail(ShowCefDetailSchema):
         p11 = re.compile(r'^path-idx +(?P<idx>[\w]+) +NHID +(?P<nhid>[\S]+)'
                          ' +\[(?P<nhid_hex>[\w\s]+)\]$')
 
-        # next hop 100.0.0.2/32 via 100.0.0.2/32
-        # next hop 100.1.15.2/32 via 100.1.15.2/32
+        # next hop 10.55.0.2/32 via 10.55.0.2/32
+        # next hop 10.1.15.2/32 via 10.1.15.2/32
         p12 = re.compile(r'^next +hop +(?P<path_idx_address>[\S]+)'
                          ' +via +(?P<path_idx_via>[\S]+)$')
 
         # local label 24006
         p13 = re.compile(r'^local +label +(?P<local_label>[\d]+)$')
 
-        # next hop 100.0.0.2/32 Te0/4/0/15.1 labels imposed {None}
-        # next hop 100.1.15.2/32 Te0/3/0/15.16 labels imposed {None}
+        # next hop 10.55.0.2/32 Te0/4/0/15.1 labels imposed {None}
+        # next hop 10.1.15.2/32 Te0/3/0/15.16 labels imposed {None}
         p14 = re.compile(r'^next +hop +(?P<address>[\S]+)'
                          ' +(?P<interface>[\S]+) +labels'
                          ' +imposed +\{(?P<labels>[\S]+)\}')
@@ -196,8 +196,8 @@ class ShowCefDetail(ShowCefDetailSchema):
                          '\(refcount (?P<refcount>[\d]+)\)$')
 
         # Hash  OK  Interface                 Address
-        # 0     Y   recursive                 100.0.0.2
-        # 31    Y   recursive                 100.1.15.2
+        # 0     Y   recursive                 10.55.0.2
+        # 31    Y   recursive                 10.1.15.2
         p18 = re.compile(r'^(?P<hash>[\d]+)\s+(?P<ok>[Y|N])\s+(?P<interface>[\w]+)\s+(?P<address>[\S]+)$')
 
         result_dict = {}
@@ -205,7 +205,7 @@ class ShowCefDetail(ShowCefDetailSchema):
         for line in out.splitlines():
             line = line.strip()
 
-            # 16.16.16.16/32, version 13285, internal 0x1000001 0x0 (ptr 0x78b55d78) [2], 0x0 (0x78b064d8), 0xa00 (0x7a1a60a8)
+            # 10.4.16.16/32, version 13285, internal 0x1000001 0x0 (ptr 0x78b55d78) [2], 0x0 (0x78b064d8), 0xa00 (0x7a1a60a8)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -321,7 +321,7 @@ class ShowCefDetail(ShowCefDetailSchema):
                 entries_id = 0
                 continue
 
-            # via 100.0.0.2/32, 4 dependencies, recursive [flags 0x0]
+            # via 10.55.0.2/32, 4 dependencies, recursive [flags 0x0]
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -345,7 +345,7 @@ class ShowCefDetail(ShowCefDetailSchema):
                 via_dict.update({'path': path_dict})
                 continue
 
-            # next hop 100.0.0.2/32 via 100.0.0.2/32
+            # next hop 10.55.0.2/32 via 10.55.0.2/32
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -365,7 +365,7 @@ class ShowCefDetail(ShowCefDetailSchema):
                 })
                 continue
 
-            # next hop 100.0.0.2/32 Te0/4/0/15.1 labels imposed {None}
+            # next hop 10.55.0.2/32 Te0/4/0/15.1 labels imposed {None}
             m = p14.match(line)
             if m:
                 group = m.groupdict()

@@ -297,11 +297,11 @@ class ShowIpRoute(ShowIpRouteSchema):
             # D        192.168.205.1
             # S*       0.0.0.0/0 [1/0] via 10.50.15.1
             # L        FF00::/8 [0/0]
-            # S   %    17.0.0.1 [1/0] via 192.168.16.1
-            # C   p    17.0.0.2 is directly connected, Loopback0
-            # S   &    18.0.0.0 [1/0] via 17.0.0.1
-            # S   +    80.1.1.0 [1/0] via 12.0.0.1 (red)
-            # B   +    100.0.0.0 [20/0] via 12.0.0.1 (red), 00:00:09
+            # S   %    10.34.0.1 [1/0] via 192.168.16.1
+            # C   p    10.34.0.2 is directly connected, Loopback0
+            # S   &    10.69.0.0 [1/0] via 10.34.0.1
+            # S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
+            # B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09
             if self.IP_VER == 'ipv4':
                 p3 = re.compile(
                     r'^(?P<code>[\w\*]+) +(?P<code1>[\w+%&p]+)? +(?P<network>[0-9\.\:\/]+)?( '

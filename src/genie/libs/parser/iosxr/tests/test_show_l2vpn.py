@@ -17,6 +17,8 @@ from genie.libs.parser.iosxr.show_l2vpn import (ShowL2vpnMacLearning,
                                                 ShowL2vpnBridgeDomainSummary,
                                                 ShowL2vpnBridgeDomainBrief,
                                                 ShowL2vpnBridgeDomainDetail)
+
+
 # ===========================================
 # Unit test for 'show l2vpn mac-learning {mac_type} all location {location}'
 # ===========================================
@@ -373,7 +375,7 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         List of Access PWs:
         List of VFIs:
         List of Access VFIs:
-        
+
     '''}
 
     def test_empty(self):
@@ -388,20 +390,21 @@ class TestShowL2vpnBridgeDomain(unittest.TestCase):
         obj = ShowL2vpnBridgeDomain(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-    
+
     def test_golden2(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output2)
         obj = ShowL2vpnBridgeDomain(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
-    
+
     def test_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowL2vpnBridgeDomain(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
 
 # ====================================================================================
 #  Unit test for 'show l2vpn forwarding bridge-domain mac-address location {location}'
@@ -491,7 +494,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                                       '0m '
                                       '14s',
                         'type': 'dynamic'},
-                     '0001.00ff.000a': {
+                    '0001.00ff.000a': {
                         'lc_learned': 'N/A',
                         'learned_from': 'Te0/0/1/0/3.3',
                         'mapped_to': 'N/A',
@@ -621,71 +624,71 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
                     '0021.00ff.0103': {
                         'lc_learned': 'N/A',
                         'learned_from': '(10.25.40.40, '
-                                       '10007)',
+                                        '10007)',
                         'mapped_to': 'N/A',
                         'resync_age': '14 '
-                                     'Mar '
-                                     '12:46:04',
+                                      'Mar '
+                                      '12:46:04',
                         'type': 'dynamic'},
                     '1234.00ff.0106': {'lc_learned': 'N/A',
-                        'learned_from': '(10.25.40.40, '
-                                       '10007)',
-                        'mapped_to': 'N/A',
-                        'resync_age': 'N/A',
-                        'type': 'static'}
+                                       'learned_from': '(10.25.40.40, '
+                                                       '10007)',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'static'}
                 }
             },
             'BD id:0': {
                 'mac_address': {
                     '0021.00ff.0102': {
                         'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                        'learned_from': 'BD '
+                                        'id:0',
+                        'mapped_to': 'N/A',
+                        'resync_age': 'N/A',
+                        'type': 'EVPN'},
                     '0021.00ff.0104': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '0021.00ff.0105': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '0021.00ff.0106': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '1234.00ff.0102': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '1234.00ff.0103': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '1234.00ff.0104': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'},
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'},
                     '1234.00ff.0105': {'lc_learned': 'N/A',
-                                      'learned_from': 'BD '
-                                                      'id:0',
-                                      'mapped_to': 'N/A',
-                                      'resync_age': 'N/A',
-                                      'type': 'EVPN'}
+                                       'learned_from': 'BD '
+                                                       'id:0',
+                                       'mapped_to': 'N/A',
+                                       'resync_age': 'N/A',
+                                       'type': 'EVPN'}
                 }
             },
             'BE1.2': {
@@ -752,6 +755,7 @@ class TestShowL2vpnForwardingBridgeDomain(unittest.TestCase):
         obj = ShowL2vpnForwardingBridgeDomainMacAddress(device=self.device)
         parsed_output = obj.parse(location=0, bridge_domain=0)
         self.assertEqual(parsed_output, self.golden_parsed_output_1)
+
 
 # ====================================================================================
 #  Unit test for 'show l2vpn forwarding protection main-interface location {location}'
@@ -892,6 +896,7 @@ class TestShowL2vpnForwardingProtectionMainInterface(unittest.TestCase):
         with self.assertRaises(TypeError):
             parsed_output = obj.parse()
 
+
 # ==================================================
 #  Unit test for 'show l2vpn bridge-domain summary'
 # ==================================================
@@ -941,6 +946,7 @@ class TestShowL2vpnBridgeDomainSummary(unittest.TestCase):
         obj = ShowL2vpnBridgeDomainSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
 
 # ==================================================
 #  Unit test for 'show l2vpn bridge-domain summary'
@@ -993,7 +999,8 @@ class TestShowL2vpnBridgeDomainBrief(unittest.TestCase):
         obj = ShowL2vpnBridgeDomainBrief(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
-        
+
+
 # ==================================================
 #  Unit test for 'show l2vpn bridge-domain summary'
 # ==================================================
@@ -1043,6 +1050,7 @@ class TestShowL2vpnBridgeDomainSummary(unittest.TestCase):
         obj = ShowL2vpnBridgeDomainSummary(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
 
 # ==================================================
 #  Unit test for 'show l2vpn bridge-domain summary'
@@ -1095,6 +1103,7 @@ class TestShowL2vpnBridgeDomainBrief(unittest.TestCase):
         obj = ShowL2vpnBridgeDomainBrief(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output1)
+
 
 # =================================================
 #  Unit test for 'show l2vpn bridge-domain detail'
@@ -2716,7 +2725,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
               drops: illegal VLAN 0, illegal length 0
         List of Access VFIs:
     '''}
-    
+
     golden_parsed_output6 = {
         'legend': 'pp = Partially Programmed.',
         'bridge_group': {
@@ -2971,7 +2980,7 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
             },
         },
     }
-    
+
     def test_empty(self):
         self.device = Mock(**self.empty_output)
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
@@ -2991,34 +3000,35 @@ class TestShowL2vpnBridgeDomainDetail(unittest.TestCase):
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output2)
-    
+
     def test_golden3(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output3)
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
-    
+
     def test_golden4(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output4)
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output4)
-    
+
     def test_golden5(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output5)
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output5)
-    
+
     def test_golden6(self):
         self.maxDiff = None
         self.device = Mock(**self.golden_output6)
         obj = ShowL2vpnBridgeDomainDetail(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output6)
-        
+
+
 if __name__ == '__main__':
     unittest.main()

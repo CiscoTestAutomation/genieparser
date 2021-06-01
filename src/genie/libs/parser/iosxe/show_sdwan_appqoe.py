@@ -307,7 +307,7 @@ class ShowSdwanAppqoeFlowAll(ShowSdwanAppqoeFlowAllSchema):
         p1 = re.compile(r'^(?P<key>[\s\S]+\w):+\s+(?P<value>[\d]+)$')
 
         # Flow ID      VPN  Source IP:Port        Destination IP:Port   Service
-        # 171064589     1    17.0.0.2:53350       40.119.211.203:443    TSU
+        # 171064589     1    10.34.0.2:53350       10.36.211.203:443    TSU
         p2 = re.compile(
             r'^(?P<flow_id>[\d]+)[\s]+(?P<vpn>[\d]+)[\s]+(?P<source_ip>[\S]+\w)'
             r':(?P<source_port>[\d]+)[\s]+(?P<destination_ip>[\S]+\w)'

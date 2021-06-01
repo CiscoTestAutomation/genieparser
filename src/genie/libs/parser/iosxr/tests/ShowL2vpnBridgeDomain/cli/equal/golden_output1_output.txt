@@ -1,0 +1,10 @@
+Bridge group: g1, bridge-domain: EVPN-Multicast-Genie, id: 0, state: up, ShgId: 0, MSTi: 0
+  Aging: 300 s, MAC limit: 4000, Action: none, Notification: syslog
+  Filter MAC addresses: 0
+  ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
+  List of ACs:
+	Gi0/1/0/0, state: up, Static MAC addresses: 2, MSTi: 0 (unprotected)
+  List of Access PWs:
+  List of VFIs:
+	VFI 1 
+	  Neighbor 10.1.1.1 pw-id 1, state: up, Static MAC addresses: 0 

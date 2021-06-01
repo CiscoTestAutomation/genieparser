@@ -1,0 +1,5 @@
+------------------------------------------------------------------------------------------
+Port-channel VLAN    Type Mode   Status  Reason                              Speed   Protocol
+Interface
+------------------------------------------------------------------------------------------
+Po103.1      1001    eth  routed down    Administratively down                 auto(D)    --

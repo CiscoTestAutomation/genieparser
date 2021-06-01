@@ -1524,6 +1524,52 @@ class TestShowInterface(unittest.TestCase):
            }
         }
 
+    golden_output_8 = {'execute.return_value': """
+
+    Vlan420 is up, line protocol is up, autostate enabled
+    Hardware is EtherSVI, address is 1234.5678.90ab
+    Description: VLAN information Internet Address is 10.10.10.1/24
+    MTU 1500 bytes, BW 1000000 Kbit, DLY 10 usec,
+
+    reliability 255/255, txload 1/255, rxload 1/255
+    Encapsulation ARPA, loopback not set
+    Keepalive not supported
+    ARP type: ARPA
+    Last clearing of "show interface" counters never
+    L3 in Switched:
+    ucast: 0 pkts, 0 bytes
+
+    """}
+
+    golden_parsed_output_8 = {
+        "Vlan420": {
+            "port_channel": {
+                "port_channel_member": False
+            },
+            "link_state": "up",
+            "oper_status": "up",
+            "enabled": True,
+            "line_protocol": "up",
+            "autostate": True,
+            "description": "VLAN information",
+            "ipv4": {
+                "10.10.10.1/24": {
+                    "ip": "10.10.10.1",
+                    "prefix_length": "24"
+                }
+            },
+            "delay": 10,
+            "mtu": 1500,
+            "bandwidth": 1000000,
+            "reliability": "255/255",
+            "txload": "1/255",
+            "rxload": "1/255",
+            "encapsulations": {
+                "encapsulation": "arpa"
+            }
+        }
+    }
+
     def test_empty(self):
         self.device1 = Mock(**self.empty_output)
         interface_obj = ShowInterface(device=self.device1)
@@ -1592,6 +1638,11 @@ class TestShowInterface(unittest.TestCase):
         parsed_output = interface_obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output_7)
 
+    def test_golden_8(self):
+        self.device = Mock(**self.golden_output_8)
+        interface_obj = ShowInterface(device=self.device)
+        parsed_output = interface_obj.parse()
+        self.assertEqual(parsed_output, self.golden_parsed_output_8)
 
 
 # #############################################################################

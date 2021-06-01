@@ -10,7 +10,7 @@ expected_output = {
             "channel": "(36)*",
         },
         "BHS-A-204": {
-            "mac_address": "00a7.42b0.2420",
+            "mac_address": "00a7.42ff.d4d0",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",
@@ -47,7 +47,7 @@ expected_output = {
             "channel": "(100)*",
         },
         "BHS-D-105": {
-            "mac_address": "f80b.cbb3.bb80",
+            "mac_address": "f80b.cbff.6f34",
             "slot": 1,
             "admin_state": "Enabled",
             "oper_state": "Up",

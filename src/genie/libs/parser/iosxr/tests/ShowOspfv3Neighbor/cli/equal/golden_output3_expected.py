@@ -3,7 +3,7 @@ expected_output = {
     "vrfs": {
         "default": {
             "neighbors": {
-                "1.1.1.1": {
+                "10.4.1.1": {
                     "priority": "1",
                     "state": "FULL/DR",
                     "dead_time": "00:00:32",
@@ -11,7 +11,7 @@ expected_output = {
                     "interface": "GigabitEthernet0/0/0/0.110",
                     "up_time": "02:05:32"
                 },
-                "3.3.3.3": {
+                "10.36.3.3": {
                     "priority": "1",
                     "state": "FULL/BDR",
                     "dead_time": "00:00:33",
@@ -24,7 +24,7 @@ expected_output = {
         },
         "VRF1": {
             "neighbors": {
-                "3.3.3.3": {
+                "10.36.3.3": {
                     "priority": "1",
                     "state": "FULL/BDR",
                     "dead_time": "00:00:37",

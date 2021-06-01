@@ -2,7 +2,7 @@ expected_output = {
         "ldp-parameters": {
             "role": "Active",
             "protocol-version": '1',
-            "router-id": '1.1.1.1',
+            "router-id": '10.4.1.1',
             "null-label": {
                 "null-label-ipv4-address": 'Implicit'
             },
@@ -26,7 +26,7 @@ expected_output = {
                 },
                 "discovery-quick-start": 'Enabled (by default)',
                 "discovery-transport-address": {
-                    "transport-ipv4-address": '1.1.1.1'
+                    "transport-ipv4-address": '10.4.1.1'
                 },
             },
             "graceful-restart": {

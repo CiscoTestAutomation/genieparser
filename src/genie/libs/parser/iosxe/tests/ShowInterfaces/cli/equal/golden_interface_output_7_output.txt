@@ -1,6 +1,6 @@
 ucse1/0/0 is administratively down, line protocol is down
-  Hardware is UCS-E1120D-M3/K9, address is 4ce1.7660.9720 (bia 4ce1.7660.9720)
-  Internet address is 14.14.14.1/24
+  Hardware is UCS-E1120D-M3/K9, address is 4ce1.76ff.f780 (bia 4ce1.76ff.f780)
+  Internet address is 10.19.14.1/24
   MTU 1500 bytes, BW 1000000 Kbit/sec, DLY 10 usec,
      reliability 255/255, txload 1/255, rxload 1/255
   Encapsulation ARPA, loopback not set
