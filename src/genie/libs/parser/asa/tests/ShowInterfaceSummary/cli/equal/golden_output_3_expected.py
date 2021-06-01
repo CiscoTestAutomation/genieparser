@@ -62,7 +62,7 @@ expected_output = {
             'line_protocol': True,
             'interface_state': True,
             'config_status': True,
-            'mac_address': '0000.0100.0001',
+            'mac_address': '0000.01ff.0001',
             'mtu': 1500,
             'ipv4': {
                 '169.254.1.1': {
@@ -77,7 +77,7 @@ expected_output = {
             'line_protocol': True,
             'interface_state': True,
             'config_status': True,
-            'mac_address': '5254.001d.9eb0',
+            'mac_address': '5254.00ff.bbcd',
             'mtu': 1500,
             'ipv4': {
                 '10.224.128.27': {

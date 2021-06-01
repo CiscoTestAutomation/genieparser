@@ -732,7 +732,7 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
         # AP Name                       Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel     Mode
         # ---------------------------------------------------------------------------------------------------------------------------------
         # ab22-cap10                    5c50.15ff.8fe4  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
-        # BHS-A-204 				    00a7.42b0.2420  1 	    Enabled 	   Up 			 20 	 3/7 (12 dBm)   (124)       Local
+        # BHS-A-204 				    00a7.42ff.d4d0  1 	    Enabled 	   Up 			 20 	 3/7 (12 dBm)   (124)       Local
         # ab11-cap18                    5c50.15ff.9024  1       Enabled        Up            20     *7/8 (8 dBm)    (48)*
         # ab22-cap8                     5c50.15ff.9044  1       Enabled        Up            20     *7/8 (8 dBm)    (149)*
         # ab22-cap22                    5c50.15ff.90e4  1       Enabled        Up            20     *8/8 (5 dBm)    (40)*
@@ -753,7 +753,7 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
 
 
         # ab22-cap10                   5c50.15ff.8fe4 1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
-        # BHS-A-204 				   00a7.42b0.2420 1 	  Enabled 		 Up 		   20 	   3/7 (12 dBm)   (124)   Local
+        # BHS-A-204 				   00a7.42ff.d4d0 1 	  Enabled 		 Up 		   20 	   3/7 (12 dBm)   (124)   Local
         p1 = re.compile(r"^(?P<ap_name>\S+)\s+(?P<mac_address>\S+)\s+"
                                        "(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled))\s+(?P<oper_state>\S+)\s+"
                                        "(?P<width>\d+)\s+(?P<tx_pwr>(\*\d\/\d.*dBm\))|(\d\/\d.*dBm\)))\s+"
@@ -763,7 +763,7 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
             line = line.strip()
 
             # ab22-cap10                   5c50.15ff.8fe4 1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
-            # BHS-A-204 				   00a7.42b0.2420 1 	  Enabled 		 Up 		   20 	   3/7 (12 dBm)   (124)   Local
+            # BHS-A-204 				   00a7.42ff.d4d0 1 	  Enabled 		 Up 		   20 	   3/7 (12 dBm)   (124)   Local
             if ap_header_capture.match(line):
                 continue
             # ---------------------------------------------------------------------------------------------------------------------------------
@@ -771,7 +771,7 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
                 continue
 
             # ab22-cap10                   5c50.15ff.8fe4 1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
-            # BHS-A-204 				   00a7.42b0.2420 1 	  Enabled 		 Up 		   20 	   3/7 (12 dBm)   (124)   Local
+            # BHS-A-204 				   00a7.42ff.d4d0 1 	  Enabled 		 Up 		   20 	   3/7 (12 dBm)   (124)   Local
             elif p1.match(line):
                 if not ap_dot11_5ghz_summ.get('ap_name'):
                     ap_dot11_5ghz_summ['ap_name'] = {}

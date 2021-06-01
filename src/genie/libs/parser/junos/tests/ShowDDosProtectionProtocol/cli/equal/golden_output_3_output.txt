@@ -22,8 +22,8 @@ Protocol Group: RSVP
     System-wide information:
       Aggregate bandwidth is no longer being violated
 	No. of FPCs that have received excess traffic: 1
-	Last violation started at: 2021-03-10 06:29:50 JST
-	Last violation ended at:   2021-03-10 06:38:21 JST
+	Last violation started at: 2021-03-10 06:29:50 EST
+	Last violation ended at:   2021-03-10 06:38:21 EST
 	Duration of last violation: 00:08:31 Number of violations: 1
       Received:  580528875           Arrival rate:     0 pps
       Dropped:   573259829           Max arrival rate: 1603269 pps
@@ -36,8 +36,8 @@ Protocol Group: RSVP
     FPC slot 0 information:
       Bandwidth: 100% (20000 pps), Burst: 100% (20000 packets), enabled
       Aggregate policer is no longer being violated
-	Last violation started at: 2021-03-10 06:29:50 JST
-	Last violation ended at:   2021-03-10 06:38:21 JST
+	Last violation started at: 2021-03-10 06:29:50 EST
+	Last violation ended at:   2021-03-10 06:38:21 EST
 	Duration of last violation: 00:08:31 Number of violations: 1
       Received:  580528875           Arrival rate:     0 pps
       Dropped:   573259829           Max arrival rate: 1603269 pps

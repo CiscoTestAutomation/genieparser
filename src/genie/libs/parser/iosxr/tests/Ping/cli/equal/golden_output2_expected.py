@@ -2,7 +2,7 @@ expected_output = {
     'ping': {
         'repeat': 5,
         'data_bytes': 100,
-        'address': '12.12.12.12',
+        'address': '10.66.12.12',
         'timeout_secs': 2,
         'result_per_line': ['UUUUU'],
         'statistics': {
