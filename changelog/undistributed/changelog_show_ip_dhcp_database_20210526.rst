@@ -3,5 +3,4 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Added ShowIpDhcpDatabase:
-
-      * show ip dhcp database
+        * show ip dhcp database
