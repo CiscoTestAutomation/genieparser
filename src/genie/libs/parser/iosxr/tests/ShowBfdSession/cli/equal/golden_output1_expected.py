@@ -104,9 +104,7 @@ expected_output = {
             "GigabitEthernet0/0/0/26.120": {
                 "dest_ip_address": {
                     "10.0.221.98": {
-                        "async_total_msec": 0,
                         "dampening": "DAMP",
-                        "echo_total_msec": 0,
                         "hardware": "No",
                         "npu": "n/a",
                         "state": "DOWN",

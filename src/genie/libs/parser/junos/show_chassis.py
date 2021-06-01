@@ -30,7 +30,7 @@ import re
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any,
-        Optional, Use, Schema, Or)
+        Optional, Use, Schema, Or, ListOf)
 
 class ShowChassisFpcDetailSchema(MetaParser):
 
@@ -273,26 +273,16 @@ class ShowChassisFirmwareSchema(MetaParser):
     }
 } """
 
-    def validate_chassis_firmware_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('firmware is not a list')
-        chassis_firmware_schema = Schema({
-            "firmware-version": str,
-                        "type": str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            chassis_firmware_schema.validate(item)
-        return value
-
     schema = {
         "firmware-information": {
         Optional("@xmlns"): str,
         "chassis": {
             Optional("@junos:style"): str,
             "chassis-module": {
-                "firmware": Use(validate_chassis_firmware_list),
+                "firmware": ListOf({
+                    "firmware-version": str,
+                                "type": str
+                }),
                 "name": str
                 }
             }
@@ -418,109 +408,60 @@ class ShowChassisHardwareSchema(MetaParser):
     }
 }"""
 
-    # ------------------------------------------------------
-    # Optional("chassis-sub-module")
-    # ------------------------------------------------------
-    def validate_chassis_sub_module_list(value):
-        
-        # ------------------------------------------------------
-        # Optional("chassis-sub-sub-sub-module")
-        # ------------------------------------------------------
-        def validate_chassis_sub_sub_sub_module_list(value):
-            # Pass list as value
-            if not isinstance(value, list):
-                raise SchemaError('inner chassis sub sub sub module is not a list')
-
-            chassis_sub_sub_sub_module_schema = Schema(
-                            {
-                                Optional("description"): str,
-                                Optional("name"): str,
-                                Optional("part-number"): str,
-                                Optional("serial-number"): str,
-                                Optional("version"): str
-                            }
-                        )
-            # Validate each dictionary in list
-            for item in value:
-                chassis_sub_sub_sub_module_schema.validate(item)
-            return value
-        
-
-        # Pass list as value
-        if not isinstance(value, list):
-            raise SchemaError('inner chassis sub sub sub module is not a list')
-
-        # ------------------------------------------------------
-        # Optional("chassis-sub-sub-module")
-        # ------------------------------------------------------
-        def validate_chassis_sub_sub_module_list(value):
-            # Pass list as value
-            if not isinstance(value, list):
-                raise SchemaError('inner chassis sub sub module is not a list')
-
-            chassis_sub_sub_module_schema = Schema(
-                            {
-                                Optional("description"): str,
-                                Optional("name"): str,
-                                Optional("part-number"): str,
-                                Optional("serial-number"): str,
-                                Optional("chassis-sub-sub-sub-module"): Use(validate_chassis_sub_sub_sub_module_list)
-                            },
-                        )
-            # Validate each dictionary in list
-            for item in value:
-                chassis_sub_sub_module_schema.validate(item)
-            return value
-        
-
-        # Pass list as value
-        if not isinstance(value, list):
-            raise SchemaError('inner chassis sub sub module is not a list')
-
-        chassis_sub_module_schema = Schema(
-                        {
-                            Optional("chassis-sub-sub-module"): Use(validate_chassis_sub_sub_module_list),
-                            Optional("description"): str,
-                            Optional("name"): str,
-                            Optional("part-number"): str,
-                            Optional("serial-number"): str,
-                            Optional("version"): str
-                        }
-                    
-        )
-        # Validate each dictionary in list
-        for item in value:
-            chassis_sub_module_schema.validate(item)
-        return value
-
-
-    def validate_chassis_hardware_detail_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('chassis module is not a list')
-        chassis_hardware_detail_schema = Schema({
-            Optional("chassis-re-dimm-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_dimm_list),
-            Optional("chassis-re-disk-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_disk_list),
-            Optional("chassis-re-usb-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_usb_list),
-            Optional("chassis-sub-module"): Use(ShowChassisHardwareDetail.validate_chassis_sub_module_list),
-            Optional("description"): str,
-            Optional("name"): str,
-            Optional("part-number"): str,
-            Optional("serial-number"): str,
-            Optional("version"): str,
-        })
-        # Validate each dictionary in list
-        for item in value:
-            chassis_hardware_detail_schema.validate(item)
-        return value
-
     schema = {
     Optional("@xmlns:junos"): str,
     "chassis-inventory": {
         Optional("@xmlns"): str,
         "chassis": {
             Optional("@junos:style"): str,
-            Optional("chassis-module"): Use(validate_chassis_hardware_detail_list),
+            Optional("chassis-module"): ListOf({
+                Optional("chassis-re-dimm-module"): ListOf({
+                    "die-rev": str,
+                    "mfr-id": str,
+                    "name": str,
+                    "part-number": str,
+                    "pcb-rev": str,
+                }),
+                Optional("chassis-re-disk-module"): ListOf({
+                    "description": str,
+                    "disk-size": str,
+                    "model": str,
+                    "name": str,
+                    "serial-number": str
+                }),
+                Optional("chassis-re-usb-module"): ListOf({
+                    Optional("description"): str,
+                    "name": str,
+                    "product": str,
+                    "product-number": str,
+                    "vendor": str,
+                }),
+                Optional("chassis-sub-module"): ListOf({
+                    Optional("chassis-sub-sub-module"): ListOf({
+                        Optional("description"): str,
+                        Optional("name"): str,
+                        Optional("part-number"): str,
+                        Optional("serial-number"): str,
+                        Optional("chassis-sub-sub-sub-module"): ListOf({
+                            Optional("description"): str,
+                            Optional("name"): str,
+                            Optional("part-number"): str,
+                            Optional("serial-number"): str,
+                            Optional("version"): str
+                        })
+                    }),
+                    Optional("description"): str,
+                    Optional("name"): str,
+                    Optional("part-number"): str,
+                    Optional("serial-number"): str,
+                    Optional("version"): str
+                }),
+                Optional("description"): str,
+                Optional("name"): str,
+                Optional("part-number"): str,
+                Optional("serial-number"): str,
+                Optional("version"): str,
+            }),
             Optional("description"): str,
             Optional("name"): str,
             Optional("serial-number"): str
@@ -819,165 +760,6 @@ class ShowChassisHardwareDetailSchema(MetaParser):
         }
     }
     '''
-    # ------------------------------------------------------
-    # Optional("chassis-re-dimm-module")
-    # ------------------------------------------------------
-    def validate_chassis_re_dimm_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('chassis re dimm is not a list')
-
-        chassis_re_dimm_schema = Schema(
-           {"die-rev": str,
-            "mfr-id": str,
-            "name": str,
-            "part-number": str,
-            "pcb-rev": str,}
-        )
-
-        # Validate each dictionary in list
-        for item in value:
-            chassis_re_dimm_schema.validate(item)
-        return value
-
-    # ------------------------------------------------------
-    # Optional("chassis-re-disk-module")
-    # ------------------------------------------------------
-    def validate_chassis_re_disk_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('chassis re disk is not a list')
-
-        chassis_re_disk_schema = Schema(
-            {
-                "description": str,
-                "disk-size": str,
-                "model": str,
-                "name": str,
-                "serial-number": str
-            }
-        )
-
-        # Validate each dictionary in list
-        for item in value:
-            chassis_re_disk_schema.validate(item)
-        return value        
-
-    # ------------------------------------------------------
-    # Optional("chassis-re-usb-module")
-    # ------------------------------------------------------
-    def validate_chassis_re_usb_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('chassis re usb is not a list')
-
-        chassis_re_usb_schema = Schema(
-            {
-                Optional("description"): str,
-                "name": str,
-                "product": str,
-                "product-number": str,
-                "vendor": str,
-            }
-        )
-
-        # Validate each dictionary in list
-        for item in value:
-            chassis_re_usb_schema.validate(item)
-        return value         
-
-    # ------------------------------------------------------
-    # Optional("chassis-sub-module")
-    # ------------------------------------------------------
-    def validate_chassis_sub_module_list(value):
-        
-        # ------------------------------------------------------
-        # Optional("chassis-sub-sub-sub-module")
-        # ------------------------------------------------------
-        def validate_chassis_sub_sub_sub_module_list(value):
-            # Pass list as value
-            if not isinstance(value, list):
-                raise SchemaError('inner chassis sub sub sub module is not a list')
-
-            chassis_sub_sub_sub_module_schema = Schema(
-                            {
-                                Optional("description"): str,
-                                Optional("name"): str,
-                                Optional("part-number"): str,
-                                Optional("serial-number"): str,
-                                Optional("version"): str
-                            }
-                        )
-            # Validate each dictionary in list
-            for item in value:
-                chassis_sub_sub_sub_module_schema.validate(item)
-            return value
-        
-
-        # Pass list as value
-        if not isinstance(value, list):
-            raise SchemaError('inner chassis sub sub sub module is not a list')
-
-        # ------------------------------------------------------
-        # Optional("chassis-sub-sub-module")
-        # ------------------------------------------------------
-        def validate_chassis_sub_sub_module_list(value):
-            # Pass list as value
-            if not isinstance(value, list):
-                raise SchemaError('inner chassis sub sub module is not a list')
-
-            chassis_sub_sub_module_schema = Schema(
-                            {
-                                Optional("description"): str,
-                                Optional("name"): str,
-                                Optional("part-number"): str,
-                                Optional("serial-number"): str,
-                                Optional("chassis-sub-sub-sub-module"): Use(validate_chassis_sub_sub_sub_module_list)
-                            },
-                        )
-            # Validate each dictionary in list
-            for item in value:
-                chassis_sub_sub_module_schema.validate(item)
-            return value
-        
-
-        # Pass list as value
-        if not isinstance(value, list):
-            raise SchemaError('inner chassis sub sub module is not a list')
-
-        chassis_sub_module_schema = Schema(
-                        {
-                            Optional("chassis-sub-sub-module"): Use(validate_chassis_sub_sub_module_list),
-                            Optional("description"): str,
-                            Optional("name"): str,
-                            Optional("part-number"): str,
-                            Optional("serial-number"): str,
-                            Optional("version"): str
-                        }
-                    
-        )
-        # Validate each dictionary in list
-        for item in value:
-            chassis_sub_module_schema.validate(item)
-        return value
-
-
-    def validate_chassis_hardware_detail_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('chassis module is not a list')
-        chassis_hardware_detail_schema = Schema({
-            Optional("chassis-re-dimm-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_dimm_list),
-            Optional("chassis-re-disk-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_disk_list),
-            Optional("chassis-re-usb-module"): Use(ShowChassisHardwareDetail.validate_chassis_re_usb_list),
-            Optional("chassis-sub-module"): Use(ShowChassisHardwareDetail.validate_chassis_sub_module_list),
-            Optional("description"): str,
-            Optional("name"): str,
-            Optional("part-number"): str,
-            Optional("serial-number"): str,
-            Optional("version"): str,
-        })
-        # Validate each dictionary in list
-        for item in value:
-            chassis_hardware_detail_schema.validate(item)
-        return value
 
     schema = {
     Optional("@xmlns:junos"): str,
@@ -985,7 +767,54 @@ class ShowChassisHardwareDetailSchema(MetaParser):
         Optional("@xmlns"): str,
         "chassis": {
             Optional("@junos:style"): str,
-            Optional("chassis-module"): Use(validate_chassis_hardware_detail_list),
+            Optional("chassis-module"): ListOf({
+                Optional("chassis-re-dimm-module"): ListOf({
+                    "die-rev": str,
+                    "mfr-id": str,
+                    "name": str,
+                    "part-number": str,
+                    "pcb-rev": str,
+                }),
+                Optional("chassis-re-disk-module"): ListOf({
+                    "description": str,
+                    "disk-size": str,
+                    "model": str,
+                    "name": str,
+                    "serial-number": str
+                }),
+                Optional("chassis-re-usb-module"): ListOf({
+                    Optional("description"): str,
+                    "name": str,
+                    "product": str,
+                    "product-number": str,
+                    "vendor": str,
+                }),
+                Optional("chassis-sub-module"): ListOf({
+                    Optional("chassis-sub-sub-module"): ListOf({
+                        Optional("description"): str,
+                        Optional("name"): str,
+                        Optional("part-number"): str,
+                        Optional("serial-number"): str,
+                        Optional("chassis-sub-sub-sub-module"): ListOf({
+                            Optional("description"): str,
+                            Optional("name"): str,
+                            Optional("part-number"): str,
+                            Optional("serial-number"): str,
+                            Optional("version"): str
+                        })
+                    }),
+                    Optional("description"): str,
+                    Optional("name"): str,
+                    Optional("part-number"): str,
+                    Optional("serial-number"): str,
+                    Optional("version"): str
+                }),
+                Optional("description"): str,
+                Optional("name"): str,
+                Optional("part-number"): str,
+                Optional("serial-number"): str,
+                Optional("version"): str,
+            }),
             Optional("description"): str,
             Optional("name"): str,
             Optional("serial-number"): str
@@ -1385,90 +1214,65 @@ class ShowChassisHardwareExtensiveSchema(MetaParser):
         }
     }
 }"""
-
-    def validate_inner_chassis_hardware_detail_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('inner chassis module is not a list')
-        chassis_inner_hardware_schema = Schema(
-                        {
-                            Optional("chassis-sub-sub-module"): {
-                                "description": str,
-                                "name": str,
-                                "part-number": str,
-                                "serial-number": str
-                            },
-                            Optional("description"): str,
-                            Optional("i2c-information"): {
-                            "assembly-flags": str,
-                            "assembly-identifier": str,
-                            "assembly-version": str,
-                            "board-information-record": str,
-                            "eeprom-version": str,
-                            Optional("i2c-data"): list,
-                            Optional("i2c-identifier"): Or(str, None),
-                            "i2c-version": Or(str, None),
-                            "jedec-code": str,
-                            "manufacture-date": str,
-                            "part-number": Or(str, None),
-                            Optional("serial-number"): Or(str,None)
-                        },
-                            "name": str,
-                            Optional("part-number"): str,
-                            Optional("serial-number"): str,
-                            Optional("version"): str
-                        }
-                    
-        )
-        # Validate each dictionary in list
-        for item in value:
-            chassis_inner_hardware_schema.validate(item)
-        return value
-
-
-    def validate_chassis_hardware_extensive_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('chassis module is not a list')
-        chassis_hardware_detail_schema = Schema({
-            Optional("chassis-re-disk-module"): {
-                        "description": str,
-                        "disk-size": str,
-                        "model": str,
-                        "name": str,
-                        "serial-number": str
-                    },
-            Optional("chassis-sub-module"): Use(ShowChassisHardwareExtensive.validate_inner_chassis_hardware_detail_list),
-            Optional("description"): str,
-            Optional("i2c-information"): {
-                "assembly-flags": str,
-                "assembly-identifier": str,
-                "assembly-version": str,
-                "board-information-record": str,
-                "eeprom-version": str,
-                Optional("i2c-data"): list,
-                Optional("i2c-identifier"): Or(str, None),
-                "i2c-version": Or(str, None),
-                "jedec-code": str,
-                "manufacture-date": str,
-                "part-number": Or(str, None),
-                Optional("serial-number"): Or(str,None)
-            },
-            "name": str,
-            Optional("serial-number"): str
-        })
-        # Validate each dictionary in list
-        for item in value:
-            chassis_hardware_detail_schema.validate(item)
-        return value
-
     schema = {
     Optional("@xmlns:junos"): str,
     "chassis-inventory": {
         Optional("@xmlns"): str,
         "chassis": {
             Optional("@junos:style"): str,
-            "chassis-module": Use(validate_chassis_hardware_extensive_list),
+            "chassis-module": ListOf({
+                Optional("chassis-re-disk-module"): {
+                            "description": str,
+                            "disk-size": str,
+                            "model": str,
+                            "name": str,
+                            "serial-number": str
+                        },
+                Optional("chassis-sub-module"): ListOf({
+                    Optional("chassis-sub-sub-module"): {
+                        "description": str,
+                        "name": str,
+                        "part-number": str,
+                        "serial-number": str
+                    },
+                    Optional("description"): str,
+                    Optional("i2c-information"): {
+                    "assembly-flags": str,
+                    "assembly-identifier": str,
+                    "assembly-version": str,
+                    "board-information-record": str,
+                    "eeprom-version": str,
+                    Optional("i2c-data"): list,
+                    Optional("i2c-identifier"): Or(str, None),
+                    "i2c-version": Or(str, None),
+                    "jedec-code": str,
+                    "manufacture-date": str,
+                    "part-number": Or(str, None),
+                    Optional("serial-number"): Or(str,None)
+                },
+                    "name": str,
+                    Optional("part-number"): str,
+                    Optional("serial-number"): str,
+                    Optional("version"): str
+                }),
+                Optional("description"): str,
+                Optional("i2c-information"): {
+                    "assembly-flags": str,
+                    "assembly-identifier": str,
+                    "assembly-version": str,
+                    "board-information-record": str,
+                    "eeprom-version": str,
+                    Optional("i2c-data"): list,
+                    Optional("i2c-identifier"): Or(str, None),
+                    "i2c-version": Or(str, None),
+                    "jedec-code": str,
+                    "manufacture-date": str,
+                    "part-number": Or(str, None),
+                    Optional("serial-number"): Or(str,None)
+                },
+                "name": str,
+                Optional("serial-number"): str
+            }),
             "description": str,
             Optional("i2c-information"): {
                 "assembly-flags": str,
@@ -1924,40 +1728,29 @@ class ShowChassisFpcSchema(MetaParser):
         }
     }
     """
-    
-
-    def validate_chassis_fpc_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('fpc is not a list')
-        chassis_fpc_schema = Schema({
-                Optional("cpu-15min-avg"): str,
-                Optional("cpu-1min-avg"): str,
-                Optional("cpu-5min-avg"): str,
-                Optional("cpu-interrupt"): str,
-                Optional("cpu-total"): str,
-                Optional("memory-buffer-utilization"): str,
-                Optional("memory-dram-size"): str,
-                Optional("memory-heap-utilization"): str,
-                Optional("comment"): str,
-                "slot": str,
-                "state": str,
-                Optional("temperature"): {
-                    "#text": str,
-                    Optional("@junos:celsius"): str
-                }
-        })
-        # Validate each dictionary in list
-        for item in value:
-            chassis_fpc_schema.validate(item)
-        return value
 
     schema = {
     Optional("@xmlns:junos"): str,
      "fpc-information": {
         Optional("@junos:style"): str,
         Optional("@xmlns"): str,
-        "fpc": Use(validate_chassis_fpc_list)
+        "fpc": ListOf({
+            Optional("cpu-15min-avg"): str,
+            Optional("cpu-1min-avg"): str,
+            Optional("cpu-5min-avg"): str,
+            Optional("cpu-interrupt"): str,
+            Optional("cpu-total"): str,
+            Optional("memory-buffer-utilization"): str,
+            Optional("memory-dram-size"): str,
+            Optional("memory-heap-utilization"): str,
+            Optional("comment"): str,
+            "slot": str,
+            "state": str,
+            Optional("temperature"): {
+                "#text": str,
+                Optional("@junos:celsius"): str
+            }
+        })
         }
     }
 
@@ -2114,75 +1907,64 @@ class ShowChassisRoutingEngineSchema(MetaParser):
         }
     }
 
-
-    def validate_chassis_routing_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('routing engine is not a list')
-        chassis_routing_schema = Schema({
-                Optional("cpu-background"): str,
-                Optional("cpu-background-5sec"): str,
-                Optional("cpu-background-1min"): str,
-                Optional("cpu-background-5min"): str,
-                Optional("cpu-background-15min"): str,
-                Optional("cpu-idle"): str,
-                Optional("cpu-idle-5sec"): str,
-                Optional("cpu-idle-1min"): str,
-                Optional("cpu-idle-5min"): str,
-                Optional("cpu-idle-15min"): str,
-                Optional("cpu-interrupt"): str,
-                Optional("cpu-interrupt-5sec"): str,
-                Optional("cpu-interrupt-1min"): str,
-                Optional("cpu-interrupt-5min"): str,
-                Optional("cpu-interrupt-15min"): str,
-                Optional("cpu-system"): str,
-                Optional("cpu-system-5sec"): str,
-                Optional("cpu-system-1min"): str,
-                Optional("cpu-system-5min"): str,
-                Optional("cpu-system-15min"): str,
-                Optional("cpu-temperature"):{
-                    "#text": str
-                },
-                Optional("cpu-user"): str,
-                Optional("cpu-user-5sec"): str,
-                Optional("cpu-user-1min"): str,
-                Optional("cpu-user-5min"): str,
-                Optional("cpu-user-15min"): str,
-                Optional("last-reboot-reason"): str,
-                Optional("load-average-fifteen"): str,
-                Optional("load-average-five"): str,
-                Optional("load-average-one"): str,
-                Optional("mastership-priority"): str,
-                "mastership-state": str,
-                Optional("memory-buffer-utilization"): str,
-                Optional("memory-dram-size"): str,
-                Optional("memory-installed-size"): str,
-                Optional("model"): str,
-                Optional("serial-number"): str,
-                "slot": str,
-                Optional("start-time"): {
-                    "#text": str,
-                    Optional("@junos:seconds"): str
-                },
-                Optional("status"): str,
-                Optional("temperature"):{
-                    "#text": str
-                },
-                Optional("up-time"): {
-                    "#text": str,
-                    Optional("@junos:seconds"): str
-                    }
-            })
-        # Validate each dictionary in list
-        for item in value:
-            chassis_routing_schema.validate(item)
-        return value
-
     schema = {
     Optional("@xmlns:junos"): str,
     "route-engine-information": {
         Optional("@xmlns"): str,
-        "route-engine": Use(validate_chassis_routing_list),
+        "route-engine": ListOf({
+            Optional("cpu-background"): str,
+            Optional("cpu-background-5sec"): str,
+            Optional("cpu-background-1min"): str,
+            Optional("cpu-background-5min"): str,
+            Optional("cpu-background-15min"): str,
+            Optional("cpu-idle"): str,
+            Optional("cpu-idle-5sec"): str,
+            Optional("cpu-idle-1min"): str,
+            Optional("cpu-idle-5min"): str,
+            Optional("cpu-idle-15min"): str,
+            Optional("cpu-interrupt"): str,
+            Optional("cpu-interrupt-5sec"): str,
+            Optional("cpu-interrupt-1min"): str,
+            Optional("cpu-interrupt-5min"): str,
+            Optional("cpu-interrupt-15min"): str,
+            Optional("cpu-system"): str,
+            Optional("cpu-system-5sec"): str,
+            Optional("cpu-system-1min"): str,
+            Optional("cpu-system-5min"): str,
+            Optional("cpu-system-15min"): str,
+            Optional("cpu-temperature"):{
+                "#text": str
+            },
+            Optional("cpu-user"): str,
+            Optional("cpu-user-5sec"): str,
+            Optional("cpu-user-1min"): str,
+            Optional("cpu-user-5min"): str,
+            Optional("cpu-user-15min"): str,
+            Optional("last-reboot-reason"): str,
+            Optional("load-average-fifteen"): str,
+            Optional("load-average-five"): str,
+            Optional("load-average-one"): str,
+            Optional("mastership-priority"): str,
+            "mastership-state": str,
+            Optional("memory-buffer-utilization"): str,
+            Optional("memory-dram-size"): str,
+            Optional("memory-installed-size"): str,
+            Optional("model"): str,
+            Optional("serial-number"): str,
+            "slot": str,
+            Optional("start-time"): {
+                "#text": str,
+                Optional("@junos:seconds"): str
+            },
+            Optional("status"): str,
+            Optional("temperature"):{
+                "#text": str
+            },
+            Optional("up-time"): {
+                "#text": str,
+                Optional("@junos:seconds"): str
+                }
+        }),
         Optional("re-state"): str
         }
     }
@@ -2451,28 +2233,18 @@ class ShowChassisRoutingEngineNoForwarding(ShowChassisRoutingEngine):
         
 class ShowChassisEnvironmentSchema(MetaParser):
 
-    def validate_environment_item_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('environment-item is not a list')        
-        
-        environment_item_schema = Schema({
-            Optional('class'): str,
-            Optional('comment'): str,
-            'name': str,
-            'status': str,
-            Optional('temperature'): {
-                '#text': str,
-                '@junos:celsius': str,
-            }
-        })
-
-        for item in value:
-            environment_item_schema.validate(item)
-        return value
-
     schema = {
         'environment-information': {
-            'environment-item': Use(validate_environment_item_list)
+            'environment-item': ListOf({
+                Optional('class'): str,
+                Optional('comment'): str,
+                'name': str,
+                'status': str,
+                Optional('temperature'): {
+                    '#text': str,
+                    '@junos:celsius': str,
+                }
+            })
         }
     }
 
@@ -2594,63 +2366,29 @@ class ShowChassisEnvironmentFpcSchema(MetaParser):
     }
     '''
 
-    def validate_environment_item_list(value):
-        if not isinstance(value, list):
-            raise SchemaError('environment-item is not a list')        
-        
-        def validate_voltage_list(value):
-            if not isinstance(value, list):
-                raise SchemaError("voltage is not a list")
-
-            voltage_schema = Schema(
-                {
-                    "actual-voltage": str,
-                    "reference-voltage": str,
-                }
-            )
-
-            for item in value:
-                voltage_schema.validate(item)    
-            return value
-
-        def valivalidate_temp_reading_list(value):
-            if not isinstance(value, list):
-                raise SchemaError("temperature reading is not a list")
-
-            temp_reading_schema = Schema(
-                {
+    schema = {
+        'environment-component-information': {
+            'environment-component-item': ListOf({
+                "name": str,
+                Optional("power-information"): {
+                    "power-title": {
+                        "power-type": str
+                    },
+                    Optional("voltage"): ListOf({
+                        "actual-voltage": str,
+                        "reference-voltage": str,
+                    }),
+                },
+                Optional("slave-revision"): str,
+                "state": str,
+                "temperature-reading": ListOf({
                     "temperature": {
                         "#text": str,
                         "@junos:celsius": str,
                     },
                     "temperature-name": str,
-                }
-            )
-
-            for item in value:
-                temp_reading_schema.validate(item)    
-            return value
-
-        environment_item_schema = Schema({
-            "name": str,
-            Optional("power-information"): {
-                "power-title": {
-                    "power-type": str
-                },
-                Optional("voltage"): Use(validate_voltage_list),
-            },
-            Optional("slave-revision"): str,
-            "state": str,
-            "temperature-reading": Use(valivalidate_temp_reading_list),
-        })
-
-        for item in value:
-            environment_item_schema.validate(item)
-        return value
-
-    schema = {
-        'environment-component-information': {
-            'environment-component-item': Use(validate_environment_item_list)
+                }),
+            })
         }
     }
 
@@ -2803,10 +2541,9 @@ class ShowChassisAlarmsSchema(MetaParser):
     #     },
     # }
 
-    def validate_alarm_detail(value):
-        if not isinstance(value, list):
-            raise SchemaError('alarm-detail is not a list')
-        alarm_detail_schema = Schema({
+    schema = {
+        "alarm-information": {
+            Optional("alarm-detail"): ListOf({
                 "alarm-class": str,
                 "alarm-description": str,
                 "alarm-short-description": str,
@@ -2814,15 +2551,7 @@ class ShowChassisAlarmsSchema(MetaParser):
                     "#text": str,
                 },
                 "alarm-type": str
-            })
-
-        for item in value:
-            alarm_detail_schema.validate(item)
-        return value
-
-    schema = {
-        "alarm-information": {
-            Optional("alarm-detail"): Use(validate_alarm_detail),
+            }),
             "alarm-summary": {
                 Optional("active-alarm-count"): str,
                 Optional("no-active-alarms"): bool
@@ -2937,23 +2666,13 @@ class ShowChassisFabricSummarySchema(MetaParser):
             }
         }"""
 
-    def validate_chassis_fm_state(value):
-        # Pass fm-state-item
-        if not isinstance(value, list):
-            raise SchemaError('fm-state-item is not a list')
-        chassis_routing_schema = Schema({
+    schema = {
+    "fm-state-information": {
+        "fm-state-item": ListOf({
                 "plane-slot": str,
                 "state": str,
                 Optional("up-time"): str
             })
-        # Validate each dictionary in list
-        for item in value:
-            chassis_routing_schema.validate(item)
-        return value
-
-    schema = {
-    "fm-state-information": {
-        "fm-state-item": Use(validate_chassis_fm_state)
         }
     }
 
@@ -3017,11 +2736,9 @@ class ShowChassisFabricPlaneSchema(MetaParser):
         }
     }"""
 
-    def validate_chassis_fm_state(value):
-        # Pass fm-state-item
-        if not isinstance(value, list):
-            raise SchemaError('routing engine is not a list')
-        chassis_routing_schema = Schema({
+    schema = {
+    "fm-plane-state-information": {
+        "fmp-plane": ListOf({
                 "fru-name": list,
                 "fru-slot": list,
                 "pfe-link-status": list,
@@ -3029,14 +2746,6 @@ class ShowChassisFabricPlaneSchema(MetaParser):
                 "slot": str,
                 "state": str
             })
-        # Validate each dictionary in list
-        for item in value:
-            chassis_routing_schema.validate(item)
-        return value
-
-    schema = {
-    "fm-plane-state-information": {
-        "fmp-plane": Use(validate_chassis_fm_state)
         }
     }
 
@@ -3123,61 +2832,43 @@ class ShowChassisFabricPlane(ShowChassisFabricPlaneSchema):
     * show chassis power
 """
 class ShowChassisPowerSchema(MetaParser):
-    def validate_power_usage_item(value):
-        if not isinstance(value, list):
-            raise SchemaError('power-usage-item is not a list')        
-        
-        power_usage_item_schema = Schema({
-            "dc-input-detail2": {
-                Optional("dc-input-status"): str,
-                Optional("str-dc-actual-feed"): str,
-                Optional("str-dc-expect-feed"): str
-            },
-            "dc-output-detail2": {
-                "str-dc-current": str,
-                "str-dc-load": str,
-                "str-dc-power": str,
-                "str-dc-voltage": str,
-                "str-zone": str
-            },
-            "name": str,
-            "pem-capacity-detail": {
-                "capacity-actual": str,
-                "capacity-max": str
-            },
-            "state": str
-        })
-
-        for item in value:
-            power_usage_item_schema.validate(item)
-        return value
-    
-    def validate_power_usage_zone_information_item(value):
-        if not isinstance(value, list):
-            raise SchemaError('power-usage-zone-information is not a list')        
-        
-        power_usage_zone_information_schema = Schema({
-            "capacity-actual": str,
-            "capacity-actual-usage": str,
-            "capacity-allocated": str,
-            "capacity-max": str,
-            "capacity-remaining": str,
-            "str-zone": str
-        })
-
-        for item in value:
-            power_usage_zone_information_schema.validate(item)
-        return value
 
     schema = {
         Optional("@xmlns:junos"): str,
         "power-usage-information": {
-            "power-usage-item": Use(validate_power_usage_item),
+            "power-usage-item": ListOf({
+                Optional("dc-input-detail2"): {
+                    Optional("dc-input-status"): str,
+                    Optional("str-dc-actual-feed"): str,
+                    Optional("str-dc-expect-feed"): str
+                },
+                Optional("dc-output-detail2"): {
+                    "str-dc-current": str,
+                    "str-dc-load": str,
+                    "str-dc-power": str,
+                    "str-dc-voltage": str,
+                    "str-zone": str
+                },
+                "name": str,
+                Optional("pem-capacity-detail"): {
+                    "capacity-actual": str,
+                    "capacity-max": str
+                },
+                "state": str,
+                Optional("input"): str,
+            }),
             "power-usage-system": {
                 "capacity-sys-actual": str,
                 "capacity-sys-max": str,
                 "capacity-sys-remaining": str,
-                "power-usage-zone-information": Use(validate_power_usage_zone_information_item)
+                "power-usage-zone-information": ListOf({
+                    "capacity-actual": str,
+                    "capacity-actual-usage": str,
+                    "capacity-allocated": str,
+                    "capacity-max": str,
+                    "capacity-remaining": str,
+                    "str-zone": str
+                })
             }
         }
     }
@@ -3200,6 +2891,9 @@ class ShowChassisPower(ShowChassisPowerSchema):
 
         # State                      Online Master
         p2 = re.compile(r'^State: +(?P<state>[\S\s]+)$')
+
+        # Input:                      Absent
+        p2_1 = re.compile(r'^Input: +(?P<input>[\S\s]+)$')
 
         # DC input:  OK (INP0 feed expected, INP0 feed connected)
         p3 = re.compile(r'^DC +input: +(?P<dc_input_status>[\S\s]+)( +\((?P<str_dc_expect_feed>\S+) +'
@@ -3252,6 +2946,13 @@ class ShowChassisPower(ShowChassisPowerSchema):
             if m:
                 group = m.groupdict()
                 power_usage_item_dict.update({'state' : group['state']})
+                continue
+
+            # Input:                      Absent
+            m = p2_1.match(line)
+            if m:
+                group = m.groupdict()
+                power_usage_item_dict.update({'input' : group['input']})
                 continue
             
             # DC input:  OK (INP0 feed expected, INP0 feed connected)
@@ -3321,7 +3022,6 @@ class ShowChassisPower(ShowChassisPowerSchema):
                 group = m.groupdict()
                 power_usage_zone_information_dict.update({k.replace('_', '-'):v for k, v in group.items() if v is not None})
                 continue
-        
         return ret_dict
 
 """
@@ -3350,43 +3050,18 @@ class ShowChassisFpcPicStatusSchema(MetaParser):
     }
     """
 
-    # Validate fpc
-    def validate_fpc(value):
-
-        if not isinstance(value, list):
-            raise SchemaError('fpc is not a list')
-        
-        # Validate pic 
-        def validate_pic(value):
-            if not isinstance(value, list):
-                raise SchemaError('pic is not a list')
-
-            pic_schema = Schema({
-                "pic-slot": str,
-                "pic-state": str,
-                "pic-type": str,
-            })
-
-            for item in value:
-                pic_schema.validate(item)
-            return value
-
-        fpc_schema = Schema(
-            {
-                    "description": str,
-                    "slot": str,
-                    "state": str,
-                    "pic": Use(validate_pic)
-                }
-        )
-
-        for item in value:
-            fpc_schema.validate(item)
-        return value
-
     schema = {
         "fpc-information": {
-            "fpc": Use(validate_fpc)
+            "fpc": ListOf({
+                "description": str,
+                "slot": str,
+                "state": str,
+                "pic": ListOf({
+                    "pic-slot": str,
+                    "pic-state": str,
+                    "pic-type": str,
+                })
+            })
         }
     }
 
@@ -3467,40 +3142,13 @@ class ShowChassisEnvironmentComponentSchema(MetaParser):
     """ Schema for:
             * show chassis environment {component}
     """
-    def validate_temperature_reading_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('environment-component-item is not a list')
-        env_schema = Schema({
-                        "temperature": {
-                            "#text": str,
-                            Optional("@junos:celsius"): str
-                        },
-                        "temperature-name": str
-                    })
-        # Validate each dictionary in list
-        for item in value:
-            env_schema.validate(item)
-        return value
-    
-    def validate_voltage_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('environment-component-item is not a list')
-        env_schema = Schema({
-                            "actual-voltage": str,
-                            "reference-voltage": str
-                        })
-        # Validate each dictionary in list
-        for item in value:
-            env_schema.validate(item)
-        return value
-    
-    def validate_environment_component_item_list(value):
-        # Pass firmware list as value
-        if not isinstance(value, list):
-            raise SchemaError('environment-component-item is not a list')
-        env_schema = Schema({
+
+    schema = {
+        Optional("@xmlns:junos"): str,
+        "environment-component-information": {
+            Optional("@xmlns"):
+            str,
+            "environment-component-item": ListOf({
                 "name": str,
                 "state": str,
                 Optional("bus-revision"): str,
@@ -3510,7 +3158,10 @@ class ShowChassisEnvironmentComponentSchema(MetaParser):
                         "power-type": str
                     },
                     Optional("psm-hours-used"): str,
-                    Optional("voltage"): Use(ShowChassisEnvironmentComponentSchema.validate_voltage_list)
+                    Optional("voltage"): ListOf({
+                        "actual-voltage": str,
+                        "reference-voltage": str
+                    })
                 },
                 Optional("dc-information"): {
                     "dc-detail": {
@@ -3526,19 +3177,14 @@ class ShowChassisEnvironmentComponentSchema(MetaParser):
                     "dc-feed1-power": str,
                     "dc-feed1-voltage": str
                 },
-                Optional("temperature-reading"): Use(ShowChassisEnvironmentComponentSchema.validate_temperature_reading_list)
+                Optional("temperature-reading"): ListOf({
+                    "temperature": {
+                        "#text": str,
+                        Optional("@junos:celsius"): str
+                    },
+                    "temperature-name": str
+                })
             })
-        # Validate each dictionary in list
-        for item in value:
-            env_schema.validate(item)
-        return value
-    
-    schema = {
-        Optional("@xmlns:junos"): str,
-        "environment-component-information": {
-            Optional("@xmlns"):
-            str,
-            "environment-component-item": Use(validate_environment_component_item_list)
         }
     }
 
@@ -3750,23 +3396,6 @@ class ShowChassisPicFpcSlotPicSlotSchema(MetaParser):
     }
     '''
 
-    # validate 'port'
-    def validate_port(value):
-        if not isinstance(value, list):
-            raise SchemaError('Port is not a list')
-        port_schema = Schema({
-                        "cable-type": str,
-                        "fiber-mode": str,
-                        "port-number": str,
-                        "sfp-vendor-fw-ver": str,
-                        "sfp-vendor-name": str,
-                        "sfp-vendor-pno": str,
-                        "wavelength": str,
-                    })
-        for item in value:
-            port_schema.validate(item)
-        return value
-
     # main schema
     schema = {
         "fpc-information": {
@@ -3776,7 +3405,15 @@ class ShowChassisPicFpcSlotPicSlotSchema(MetaParser):
                     "pic-type": str,
                     "pic-version": str,
                     "port-information": {
-                        "port": Use(validate_port),
+                        "port": ListOf({
+                            "cable-type": str,
+                            "fiber-mode": str,
+                            "port-number": str,
+                            "sfp-vendor-fw-ver": str,
+                            "sfp-vendor-name": str,
+                            "sfp-vendor-pno": str,
+                            "wavelength": str,
+                        }),
                     },
                     "slot": str,
                     "state": str,
@@ -3822,10 +3459,10 @@ class ShowChassisPicFpcSlotPicSlot(ShowChassisPicFpcSlotPicSlotSchema):
         # PIC version                 1.19
         p4 = re.compile(r'^PIC version +(?P<pic_version>\S+)$')
 
+        # Uptime			 18 minutes, 56 seconds
+        # Uptime			 6 hours, 24 minutes, 1 second
         # Uptime			 2 hours, 36 minutes, 32 seconds
-        p5 = re.compile(r'^Uptime\s+(?P<up_time>(?P<hours>\d+) +hours, '
-                        r'+(?P<minutes>\d+) +minutes, '
-                        r'+(?P<seconds>\d+) +seconds)$')
+        p5 = re.compile(r'^Uptime\s+(?P<up_time>((?P<hours>\d+) +hours, +)?(?P<minutes>\d+) +minutes, +(?P<seconds>\d+) +seconds?)$')
 
         # PIC port information:
         p6 = re.compile(r'PIC port information:')
@@ -3874,13 +3511,15 @@ class ShowChassisPicFpcSlotPicSlot(ShowChassisPicFpcSlotPicSlotSchema):
                     pic_detail_dict[k] = v.strip()
                 continue
 
+            # Uptime			 18 minutes, 56 seconds
+            # Uptime			 6 hours, 24 minutes, 1 second
             # Uptime			 2 hours, 36 minutes, 32 seconds
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 up_time = group["up_time"]
 
-                total_seconds = int(group["hours"])*60*60+int(group["minutes"])*60+int(group["seconds"])
+                total_seconds = int(group.get("hours") or 0)*60*60+int(group["minutes"])*60+int(group["seconds"])
 
                 pic_detail_dict["up-time"] = {
                     "#text": up_time,

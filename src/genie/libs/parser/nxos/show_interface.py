@@ -13,6 +13,10 @@ NXOS parsers for the following show commands:
     * show running-config interface {interface}
     * show interface status
     * show interface {interface} status
+    * show interface {interface} capabilities
+    * show interface {interface} transciever details
+    * show interface fec
+    * show interface hardware-mappings
 '''
 
 # python
@@ -201,6 +205,7 @@ class ShowInterface(ShowInterfaceSchema):
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
         # Vlan200 is down (VLAN/BD is down), line protocol is down, autostate enabled
         # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
+        # Vlan3378 is down (VLAN/BD does not exist), line protocol is down, autostate enabled
         # Ethernet2/2 is up
         # Ethernet1/10 is down (Link not connected)
         # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
@@ -216,7 +221,7 @@ class ShowInterface(ShowInterfaceSchema):
                         r'SFP +validation +failed|Channel +admin +down))?'
                         r'(administratively\s+(?P<admin_1>(down)))?\s*'
                         r'(\(Administratively\s*(?P<admin_2>(down))\))?'
-                        r'(\(VLAN\/BD\s+is+\s+(down|up)\))?'
+                        r'(\(VLAN\/BD\s+((is\s+(down|up))|does\s+not\s+exist)\))?'
                         r'(,\s*line\s+protocol\s+is\s+(?P<line_protocol>\w+))?'
                         r'(,\s+autostate\s+(?P<autostate>\S+))?'
                         r'(\(No\s+operational\s+members\))?'
@@ -228,7 +233,8 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(\(\S+ErrDisabled\))?'
                         r'(\(XCVR\s+not\s+inserted\))?'
                         r'(\(No\s+operational\s+members\))?'
-                        r'(\(.*ACK.*\))?$')
+                        r'(\(.*ACK.*\))?'
+                        r'(\(inactive\))?$')
 
         # admin state is up
         # admin state is up,
@@ -252,7 +258,12 @@ class ShowInterface(ShowInterfaceSchema):
                         r' *\(bia *(?P<phys_address>[a-z0-9\.]+)\)$')
 
         #Description: desc
-        p4 = re.compile(r'^Description: *(?P<description>.*)$')
+        p4 = re.compile(r'^Description:\s*(?P<description>.*)$')
+
+        #Description: VLAN information Internet Address is 10.10.10.1/24
+        p4_1 = re.compile(r'^Description:\s*(?P<description>.*)'
+                          r'\s+Internet\s+Address\s+is\s+(?P<ip>[0-9\.]+)'
+                          r'\/(?P<prefix_length>[0-9]+)$')
 
         #Internet Address is 10.4.4.4/24 secondary tag 10
         p5 = re.compile(r'^Internet *Address *is *(?P<ip>[0-9\.]+)'
@@ -566,13 +577,34 @@ class ShowInterface(ShowInterfaceSchema):
                             ['phys_address'] = phys_address
                 continue
 
-            #Description: desc
+            # Description: VLAN information Internet Address is 10.10.10.1/24
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                description = group['description']
+                interface_dict[interface]['description'] = description
+
+                ip = group['ip']
+                prefix_length = str(m.groupdict()['prefix_length'])
+
+                address = ip + '/' + prefix_length
+
+                interface_dict[interface].setdefault('ipv4', {})
+                add_dict = interface_dict[interface]['ipv4'].\
+                    setdefault(address, {})
+
+                add_dict['ip'] = ip
+                add_dict['prefix_length'] = prefix_length
+                continue
+
+            # Description: desc
             m = p4.match(line)
             if m:
                 description = m.groupdict()['description']
 
                 interface_dict[interface]['description'] = description
                 continue
+
 
             #Internet Address is 10.4.4.4/24 secondary tag 10
             m = p5.match(line)
@@ -1571,9 +1603,9 @@ class ShowIpInterfaceVrfAll(ShowIpInterfaceVrfAllSchema):
                  = icmp_port_unreachable
                 continue
 
-            #IP unicast reverse path forwarding: none
-            p16 = re.compile(r'^\s*IP *unicast *reverse *path *forwarding:'
-                              ' *(?P<unicast_reverse_path>\w+)$')
+            #IP unicast reverse path forwarding: loose allow default 
+            p16 = re.compile(r'^\s*IP\s+unicast\s+reverse\s+path\s+forwarding:\s+'
+                              '(?P<unicast_reverse_path>([\w\s]+)\s*)$')            
             m = p16.match(line)
             if m:
                 unicast_reverse_path = m.groupdict()['unicast_reverse_path']
@@ -2503,9 +2535,9 @@ class ShowIpv6InterfaceVrfAll(ShowIpv6InterfaceVrfAllSchema):
                 ipv6_interface_dict[interface]['ipv6']['ipv6_mtu'] = ipv6_mtu
                 continue
 
-            #IPv6 unicast reverse path forwarding: none
-            p14 = re.compile(r'^\s*IPv6 *unicast *reverse *path *forwarding:'
-                              ' *(?P<ipv6_unicast_rev_path_forwarding>\w+)$')
+            #IPv6 unicast reverse path forwarding: loose allow default
+            p14 = re.compile(r'^\s*IPv6\s+unicast\s+reverse\s+path\s+forwarding:\s+'
+                                '(?P<ipv6_unicast_rev_path_forwarding>([\w\s]+)\s*)$')                              
             m = p14.match(line)
             if m:
                 ipv6_unicast_rev_path_forwarding = m.groupdict()\
@@ -2730,7 +2762,7 @@ class ShowInterfaceBriefSchema(MetaParser):
 
     schema = {
         'interface': {
-            'ethernet': {
+            Optional('ethernet'): {
                 Any(): {
                     'vlan': str,
                     'type': str,
@@ -2770,6 +2802,13 @@ class ShowInterfaceBriefSchema(MetaParser):
             Optional('vlan'): {
                 Any(): {
                     Optional('type'): str,
+                    Optional('status'): str,
+                    Optional('reason'): str,
+                },
+            },
+            Optional('nve'): {
+                Any(): {
+                    Optional('mtu'): str,
                     Optional('status'): str,
                     Optional('reason'): str,
                 },
@@ -2819,11 +2858,10 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 
         # Eth1/6        1       eth  access down    Link not connected         auto(D) --
         # Eth1/4.2      112     eth  routed down    Administratively down    auto(D) --
-        p4 = re.compile(r'^(?P<interface>[\S]+) +(?P<vlan>[a-zA-Z0-9\-]+)'
-                        r' +(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+)'
-                        r' +(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+)'
-                        r' +(?P<speed>[0-9a-zA-Z\(\)]+)'
-                        r' +(?P<port>[0-9\-]+)$')
+        p4 = re.compile(r'^(?P<interface>[^pP][\S]+) +(?P<vlan>[a-zA-Z0-9\-]+) +'
+                        r'(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+) +'
+                        r'(?P<status>[a-z]+) +(?P<reason>[a-zA-Z\s]+) +'
+                        r'(?P<speed>[0-9a-zA-Z\(\)]+) +(?P<port>[0-9\-]+)$')
 
         # Port-channel VLAN    Type Mode   Status  Reason                    Speed   Protocol
         p5 = re.compile(r'^Port-channel +VLAN +Type +Mode +Status +Reason'
@@ -2832,7 +2870,7 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         # Po8          1       eth  access down    No operational members      auto(I)  none
         # Po10         --      eth  routed up      none                                 a-40G(D)  lacp
         # Po10.1       2       eth  routed up      none                                 a-40G(D)    --
-        p6 = re.compile(r'^(?P<interface>\S+) +(?P<vlan>\S+) '
+        p6 = re.compile(r'^(?P<interface>(P|p)\S+) +(?P<vlan>\S+) '
                         r'+(?P<type>[a-zA-Z]+) +(?P<mode>[a-z]+) '
                         r'+(?P<status>[a-z]+) +(?P<reason>[\w\s]+) '
                         r'+(?P<speed>\S+) +(?P<protocol>[\w\-]+)$')
@@ -2851,6 +2889,11 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         p10 = re.compile(r'^(?P<interface>[\S]+) +(?P<type>[\w\-]+) +(?P<status>[\w]+)'
                          r' +(?P<reason>[\w\s\-]+)$')
 
+        # Port           Status Reason          MTU
+        p11 = re.compile(r'^Port +Status +Reason + MTU$')
+        # nve1           up     none            9216
+        p12 = re.compile(r'^(?P<interface>[a-zA-Z0-9]+) +(?P<status>[a-z]+)'
+                         r' +(?P<reason>[a-zA-Z\s\-]+) +(?P<mtu>[0-9]+)$')
         for line in output.splitlines():
             line = line.strip()
 
@@ -2952,6 +2995,23 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
                 intf_dict['type'] = group['type']
                 intf_dict['status'] = group['status']
                 intf_dict['reason'] = group['reason']
+                continue
+            # Port           Status Reason          MTU
+            m = p11.match(line)
+            if m:
+                nve_dict = parsed_dict.setdefault('interface', {}).\
+                                        setdefault('nve', {})
+                continue
+
+            # nve1           up     none            9216
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = nve_dict.\
+                    setdefault(group['interface'], {})
+                intf_dict['status'] = group['status']
+                intf_dict['reason'] = group['reason'].strip()
+                intf_dict['mtu'] = group['mtu']
                 continue
 
         return parsed_dict
@@ -3453,9 +3513,10 @@ class ShowInterfaceStatusSchema(MetaParser):
                 Optional('name'): str,
                 'status': str,
                 Optional('vlan'): str,
-                'duplex_code': str,
-                'port_speed': str,
+                Optional('duplex_code'): str,
+                Optional('port_speed'): str,
                 Optional('type'): str,
+                Optional('reason'): str,
             }
         }
     }
@@ -3481,6 +3542,10 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
             out = output
 
         result_dict = {}
+        flag = False
+
+        # Interface     Name                Status    Reason
+        p0 = re.compile(r'Interface\s+Name\s+Status\s+Reason')
 
         # Port          Name               Status    Vlan      Duplex  Speed   Type
         # --------------------------------------------------------------------------------
@@ -3490,27 +3555,35 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
         # Po1           VPC_PeerLink       connected trunk     full    40G     --
         # Vlan366       BigData            connected routed    auto    auto    --
         # Eth101/1/10   DO-HYPER-03        connected 101       full    a-1000
-        p1 = re.compile(r'(?P<interface>(\S+)) +(?P<name>(\S+))? '
-                        r'+(?P<status>(\S+))? +(?P<vlan>(\S+))'
-                        r' +(?P<duplex_code>(\S+)) '
-                        r'+(?P<port_speed>(\S+))( +(?P<type>(\S+)))?$')
+        # Lo0            --                  connected  routed     auto     --       --
+        p1 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>(\S+))?\s'
+                        r'+(?P<status>(\S+))?\s+(?P<vlan>(\S+))'
+                        r' +(?P<duplex_code>(\S+))\s'
+                        r'+(?P<port_speed>(\S+))(\s+(?P<type>(\S+)))?$')
 
         # Eth1/5 *** L2 L3-CIS-N connected trunk full a-1000 1000base-T
         # Eth1/4 *** FEX 2248TP  connected 1     full a-10G  Fabric Exte
-        p1_1 = re.compile(r'(?P<interface>(\S+)) +'
-                        r'(?P<name>([\S\s]+))(?<! ) +'
-                        r'(?P<status>(\S+)) +'
-                        r'(?P<vlan>(\S+)) +'
-                        r'(?P<duplex_code>([a-z]+)) +'
-                        r'(?P<port_speed>(\S+)) +'
+        p1_1 = re.compile(r'(?P<interface>(\S+))\s+'
+                        r'(?P<name>([\S\s]+))(?<! )\s+'
+                        r'(?P<status>(\S+))\s+'
+                        r'(?P<vlan>(\S+))\s+'
+                        r'(?P<duplex_code>([a-z]+))\s+'
+                        r'(?P<port_speed>(\S+))\s+'
                         r'(?P<type>([\S\s]+))$')
 
+        # Tunnel7       --                  up        no-reason 
+        p2 = re.compile(r'(?P<interface>(\S+))\s+(?P<name>([\S\s]+))(?<! )\s+(?P<status>(\S+))\s+(?P<reason>(\S+))')
 
         for line in out.splitlines():
             line = line.strip()
 
+            m = p0.match(line)
+            if m:
+                flag = True
+                continue
+
             m = p1.match(line) or p1_1.match(line)
-            if m and m.groupdict()['name'] != 'Name':
+            if m and m.groupdict()['name'] != 'Name' and not flag:
                 group = m.groupdict()
                 interface = Common.convert_intf_name(group['interface'])
                 intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
@@ -3522,4 +3595,1271 @@ class ShowInterfaceStatus(ShowInterfaceStatusSchema):
                         intf_dict[k] = group[k]
                 continue
 
+            m = p2.match(line)
+            if m and flag:
+                group = m.groupdict()
+                interface = Common.convert_intf_name(group['interface'])
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+
+                keys = ['name','status', 'reason']
+
+                for k in keys:
+                    if group[k] and group[k] != '--':
+                        intf_dict[k] = group[k]
+                continue
+
         return result_dict
+
+# ========================================
+# Schema for 'show interface capabilities'
+# ========================================
+class ShowInterfaceCapabilitiesSchema(MetaParser):
+    """Schema for show interface capabilities"""
+
+    schema = {
+        Any():{
+            Optional('model'): str,
+            Optional('sfp'): bool,
+            Optional('type'): str,
+            Optional('speed'): list,
+            Optional('duplex'): str,
+            Optional('trunk_encap_type'): str,
+            Optional('channel'): str,
+            Optional('broadcast_suppression'):{
+                  Optional('type'): str,
+                  Optional('value'): str
+            },
+            Optional('flowcontrol'):{
+                  Optional('rx'): str,
+                  Optional('tx'): str
+            },
+            Optional('rate_mode'): str,
+            Optional('port_mode'): str,
+            Optional('qos_scheduling'):{
+                  Optional('rx'): str,
+                  Optional('tx'): str
+            },
+            Optional('cos_rewrite'): str,
+            Optional('tos_rewrite'): str,
+            Optional('span'): str,
+            Optional('udld'): str,
+            Optional('mdix'): str,
+            Optional('tdr_capable'): str,
+            Optional('link_debounce'): str,
+            Optional('link_debounce_time'): str,
+            Optional('fex_fabric'): str,
+            Optional('dot1q_tunnel_mode'): str,
+            Optional('pvlan_trunk_capable'): str, 
+            Optional('port_group_members'): int,
+            Optional('eee_efficient_eth'): str,
+            Optional('pfc_capable'): str,
+            Optional('buffer_boost_capable'): str,
+            Optional('breakout_capable'): str,
+            Optional('macsec_capable'): str
+        }
+    }
+
+# ========================================
+# Parser for 'show interface capabilities'
+# ========================================
+
+class ShowInterfaceCapabilities(ShowInterfaceCapabilitiesSchema):
+    """Parser for show interface capabilities, show interface <interface> capabilities"""
+
+    cli_command = ['show interface capabilities', 'show interface {interface} capabilities']
+    exclude = []
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        #Match interface
+        p1 = re.compile(r'^([A-Za-z0-9/]+)$')
+
+        ## Model:     N9K-X9736C-FX
+        p2 = re.compile(r'^\s*Model *: +([a-zA-Z0-9-]+)')
+
+        #Type (SFP capable):    QSFP-H40G-AOC1M
+        #Type (Non SFP):        10g
+        p3 = re.compile(r'^\s*Type\s*\([Non|SFP|sfp|Sfp]+ +[SFP|sfp|Sfp|Capable|capable]*\s*\): +([a-zA-Z0-9-]+)')
+        
+        # Speed:                 100,1000,10000
+        p4 = re.compile(r'^\s*Speed *: +([\d+,]+)\s*')
+
+        # Duplex:                full
+        p5 = re.compile(r'^\s*Duplex *: +(half|full)\s*')
+
+        # Trunk encap. type:     802.1Q
+        p6 = re.compile(r'^\s*Trunk +encap\. +type *: +([A-Za-z0-9.]+)\s*')
+
+        # Channel:               yes
+        p7 = re.compile(r'^\s*Channel *: +(\w+)\s*')
+
+        # Broadcast suppression: percentage(0-100)
+        p8 = re.compile(r'^\s*Broadcast +suppression *: +(?P<type>\w+)(\((?P<value>[0-9\-]+)\))?\s*')
+
+        # Flowcontrol:           rx-(off/on),tx-(off/on)
+        p9 = re.compile(r'^\s*Flowcontrol *: +(rx?-?\(?(?P<rx>[a-z/]*)\)?)?,?((tx?-?\(?(?P<tx>[a-z/]+)\)?)?)?\s*')
+
+        # Rate mode:             dedicated
+        p10 = re.compile(r'^\s*Rate mode\s*: +((?P<rate_mode>[a-zA-Z,\-]+))?')
+
+        # Port mode:             Routed,Switched
+        p11 = re.compile(r'^\s*Port mode\s*: +((?P<port_mode>[a-zA-Z,\-]+))?')
+
+        # QOS scheduling:        rx-(8q2t),tx-(7q)
+        p12 = re.compile(r'^\s*QOS scheduling\s*: +(rx?-?\(?(?P<rx>[a-z0-9/\-]*)\)?)?,?((tx?-?\(?(?P<tx>[a-z0-9/\-]+)\)?)?)?\s*')
+        
+        # CoS rewrite:           yes
+        p13 = re.compile(r'^\s*CoS rewrite\s*: +(\w+)\s*')
+
+        # ToS rewrite:           yes
+        p14 = re.compile(r'^\s*ToS rewrite\s*: +(\w+)\s*')
+
+        # SPAN:                  yes
+        p15 = re.compile(r'^\s*SPAN\s*: +(\w+)\s*')
+
+        # UDLD:                  yes
+        p16 = re.compile(r'^\s*UDLD\s*: +(\w+)\s*')
+
+        # MDIX:                  yes
+        p17 = re.compile(r'^\s*MDIX\s*: +(\w+)\s*')
+
+        # TDR capable:           no
+        p18 = re.compile(r'^\s*TDR capable\s*: +(\w+)\s*')
+
+        # Link Debounce:         yes
+        p19 = re.compile(r'^\s*Link Debounce\s*: +(\w+)\s*')
+
+        # Link Debounce Time:    yes
+        p20 = re.compile(r'^\s*Link Debounce Time\s*: +(\w+)\s*')
+        
+        # FEX Fabric:            yes
+        p21 = re.compile(r'^\s*FEX Fabric\s*: +(\w+)\s*')
+
+        # dot1Q-tunnel mode:     yes
+        p22 = re.compile(r'^\s*dot1Q-tunnel mode\s*: +(\w+)\s*')
+
+        # Pvlan Trunk capable:   no
+        p23 = re.compile(r'^\s*Pvlan Trunk capable\s*: +(\w+)\s*')
+
+        # Port Group Members:    4
+        p24 = re.compile(r'^\s*Port Group Members\s*: +(\d+)\s*')
+        
+        # EEE (efficient-eth):   no
+        p25 = re.compile(r'^\s*EEE \(efficient-eth\)\s*: +(\w+)\s*')
+
+        # PFC capable:           yes
+        p26 = re.compile(r'^\s*PFC capable\s*: +(\w+)\s*')
+
+        # Buffer Boost capable:  no
+        p27 = re.compile(r'^\s*Buffer Boost capable\s*: +(\w+)\s*')
+
+        # Breakout capable:      no
+        p28 = re.compile(r'^\s*Breakout capable\s*: +(\w+)\s*')
+
+        # MACSEC capable:        no
+        p29 = re.compile(r'^\s*MACSEC capable\s*: +(\w+)\s*')
+
+        parsed_cap_dict = {}
+
+        rx = False
+        tx = False
+        for line in out.splitlines():
+            line = line.replace('\t', '    ')
+            line = line.strip()
+
+            # Match Ethernet interfaces
+            # Ethernet1/1 or Eth1/1 or Eth1/1/1 or Ethernet1/1/1
+            m = p1.match(line)
+            if m:
+              interface = m.group()
+              parsed_cap_dict[interface] = {}
+              continue
+
+            #Model:     N9K-X9736C-FX
+            m = p2.match(line)
+            if m:
+              parsed_cap_dict[interface]['model'] = m.group(1)
+
+            #Type (SFP capable):    QSFP-H40G-AOC1M
+            #Type (Non SFP):        10g
+            m = p3.match(line)
+            if m:
+              parsed_cap_dict[interface]['sfp'] = False if 'Non' in m.group() else True
+              parsed_cap_dict[interface]['type'] = m.group(1)
+              continue
+
+            # Speed:                 100,1000,10000
+            m = p4.match(line)
+            if m:
+              parsed_cap_dict[interface]['speed'] = [int(val) for val in m.group(1).split(',')]
+              continue
+
+            # Duplex:                full
+            m = p5.match(line)
+            if m:
+              parsed_cap_dict[interface]['duplex'] = m.group(1)
+              continue
+
+            # Trunk encap. type:     802.1Q
+            m = p6.match(line)
+            if m:
+              parsed_cap_dict[interface]['trunk_encap_type'] = m.group(1)
+              continue
+
+            # Channel:               yes
+            m = p7.match(line)
+            if m:
+              parsed_cap_dict[interface]['channel'] = m.group(1)
+              continue
+
+            # Broadcast suppression: percentage(0-100)
+            m = p8.match(line)
+            if m:
+                parsed_cap_dict[interface]['broadcast_suppression'] = {}
+                parsed_cap_dict[interface]['broadcast_suppression']['type'] = m.group('type')
+                parsed_cap_dict[interface]['broadcast_suppression']['value'] = m.group('value')
+                continue
+            
+            # Flowcontrol:           rx-(off/on),tx-(off/on)
+            m = p9.match(line)
+            if m:
+                parsed_cap_dict[interface]['flowcontrol'] = {}
+                parsed_cap_dict[interface]['flowcontrol']['rx'] = m.group('rx')
+                parsed_cap_dict[interface]['flowcontrol']['tx'] = m.group('tx')
+                continue
+            
+            # Rate mode:             dedicated
+            m = p10.match(line)
+            if m:
+                parsed_cap_dict[interface]['rate_mode'] = m.group('rate_mode')
+                continue
+            
+            # Port mode:             Routed,Switched
+            m = p11.match(line)
+            if m:
+                parsed_cap_dict[interface]['port_mode'] = m.group('port_mode')
+                continue
+            
+            # QOS scheduling:        rx-(8q2t),tx-(7q)
+            m = p12.match(line)
+            if m:
+                parsed_cap_dict[interface]['qos_scheduling'] = {}
+                parsed_cap_dict[interface]['qos_scheduling']['rx'] = m.group('rx')
+                parsed_cap_dict[interface]['qos_scheduling']['tx'] = m.group('tx')
+                continue
+            
+            # CoS rewrite:           yes
+            m = p13.match(line)
+            if m:
+                parsed_cap_dict[interface]['cos_rewrite'] = m.group(1)
+                continue
+            
+            # ToS rewrite:           yes
+            m = p14.match(line)
+            if m:
+                parsed_cap_dict[interface]['tos_rewrite'] = m.group(1)
+                continue
+            
+            # SPAN:                  yes
+            m = p15.match(line)
+            if m:
+                parsed_cap_dict[interface]['span'] = m.group(1)
+                continue
+            
+            # UDLD:                  yes
+            m = p16.match(line)
+            if m:
+                parsed_cap_dict[interface]['udld'] = m.group(1)
+                continue
+            
+            # MDIX:                  yes
+            m = p17.match(line)
+            if m:
+                parsed_cap_dict[interface]['mdix'] = m.group(1)
+                continue
+            
+            # TDR capable:           no
+            m = p18.match(line)
+            if m:
+                parsed_cap_dict[interface]['tdr_capable'] = m.group(1)
+                continue
+            
+            # Link Debounce:         yes
+            m = p19.match(line)
+            if m:
+                parsed_cap_dict[interface]['link_debounce'] = m.group(1)
+                continue
+            
+            # Link Debounce Time:    yes
+            m = p20.match(line)
+            if m:
+                parsed_cap_dict[interface]['link_debounce_time'] = m.group(1)
+                continue
+            
+            # FEX Fabric:            yes
+            m = p21.match(line)
+            if m:
+                parsed_cap_dict[interface]['fex_fabric'] = m.group(1)
+                continue
+            
+            # dot1Q-tunnel mode:     yes
+            m = p22.match(line)
+            if m:
+                parsed_cap_dict[interface]['dot1q_tunnel_mode'] = m.group(1)
+                continue
+            
+            # Pvlan Trunk capable:   no
+            m = p23.match(line)
+            if m:
+                parsed_cap_dict[interface]['pvlan_trunk_capable'] = m.group(1)
+                continue
+            
+            # Port Group Members:    4
+            m = p24.match(line)
+            if m:
+                parsed_cap_dict[interface]['port_group_members'] = int(m.group(1))
+                continue
+            
+            # EEE (efficient-eth):   no
+            m = p25.match(line)
+            if m:
+                parsed_cap_dict[interface]['eee_efficient_eth'] = m.group(1)
+                continue
+            
+            # PFC capable:           yes
+            m = p26.match(line)
+            if m:
+                parsed_cap_dict[interface]['pfc_capable'] = m.group(1)
+                continue
+            
+            # Buffer Boost capable:  no
+            m = p27.match(line)
+            if m:
+                parsed_cap_dict[interface]['buffer_boost_capable'] = m.group(1)
+                continue
+            
+            # Breakout capable:      no
+            m = p28.match(line)
+            if m:
+                parsed_cap_dict[interface]['breakout_capable'] = m.group(1)
+                continue
+            
+            # MACSEC capable:        no
+            m = p29.match(line)
+            if m:
+                parsed_cap_dict[interface]['macsec_capable'] = m.group(1)
+                continue
+
+
+        return parsed_cap_dict
+
+
+
+# ========================================
+# Schema for 'show interface transceiver'
+# ========================================
+class ShowInterfaceTransceiverSchema(MetaParser):
+    """Schema for show interface transceiver"""
+
+    schema = {
+        Any():{
+            Optional('transceiver_present'): bool,
+            Optional('transceiver_type'): str,
+            Optional('name'): str,
+            Optional('part_number'): str,
+            Optional('revision'): str,
+            Optional('serial_number'): str,
+            Optional('nominal_bitrate'): int,
+            Optional('cisco_id'): str,
+            Optional('cis_part_number'): str,
+            Optional('cis_product_id'): str,
+            Optional('cis_version_id'): str,
+            Optional('firmware_ver'): str,
+            Optional('link_length'): str,
+            Optional('nominal_trans_wavelength'): str,
+            Optional('wavelength_tolerance'): str,
+            Optional('host_lane_count'): int,
+            Optional('media_lane_count'): int,
+            Optional('max_mod_temp'): int,
+            Optional('min_mod_temp'): int,
+            Optional('min_oper_volt'): str,
+            Optional('vendor_oui'): str,
+            Optional('date_code'): str,
+            Optional('clei'): str,
+            Optional('power_class'): str,
+            Optional('max_power'): float,
+            Optional('near_end_lanes'): str,
+            Optional('far_end_lanes'): str,
+            Optional('media_interface'): str,
+            Optional('advertising_code'): str,
+            Optional('host_electrical_intf'): str,
+            Optional('media_interface_advert_code'): str,
+            Optional('cable_length'): float,
+            Optional('cmis_ver'): int,
+            Optional('cable_attenuation'): str
+        }
+    }
+
+# ========================================
+# Parser for 'show interface transceiver'
+# ========================================
+
+class ShowInterfaceTransceiver(ShowInterfaceTransceiverSchema):
+    """Parser for show interface transceiver, show interface <interface> transceiver"""
+
+    cli_command = ['show interface transceiver', 'show interface {interface} transceiver']
+    exclude = []
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        #match interface name
+        p1 = re.compile(r'^\s*(?P<intf>(Ethernet|Eth)[0-9/]+)')
+
+        p2 = re.compile(r'^\s*transceiver\s+is\s*(not)?\s+present')
+
+        p3 = re.compile(r'^\s*type is\s+(?P<type>[A-Za-z0-9-]+)\s*')
+
+        p4 = re.compile(r'^\s*name is\s+(?P<name>[A-Za-z0-9-]+)\s*')
+
+        p5 = re.compile(r'^\s*part number is\s+(?P<part_number>[A-Za-z0-9-]+)\s*')
+
+        p6 = re.compile(r'^\s*revision is\s+(?P<rev>[A-Z0-9]+)\s*')
+
+        p7 = re.compile(r'^\s*serial\s+number\s+is\s+(?P<sn>[A-Z0-9-]+)\s*')
+        
+        p8 = re.compile(r'^\s*nominal\s+bitrate\s+is\s+(?P<bit_rate>\d+) MBit/sec')
+
+        p9 = re.compile(r'^\s*cisco\s+id\s+is\s+(?P<cis_id>[0-9x]+)')
+
+        p10 = re.compile(r'^\s*cisco\s+part\s+number\s+is\s+(?P<cis_part_num>[0-9-]+)\s*')
+
+        p11 = re.compile(r'^\s*cisco\s+product\s+id\s+is\s+(?P<prod_id>[A-Z0-9-]+)\s*')
+
+        p12 = re.compile(r'^\s*cisco\s+version\s+id\s+is\s+(?P<ver_id>[A-Z0-9]+)\s*')
+
+        p13 = re.compile(r'^\s*firmware\s+version\s+is\s+(?P<fw_ver>[0-9.]+)\s*')
+
+        p14 = re.compile(r'^\s*Link\s+length\s+\w+\s+is\s+(?P<link_length>[0-9.]+\s*\w+)\s*')
+
+        p15 = re.compile(r'^\s*Nominal\s+transmitter\s+wavelength\s+is\s+(?P<nom_tran_wl>[0-9.]+\s*\w+)\s*')
+
+        p16 = re.compile(r'^\s*Wavelength\s+tolerance\s+is\s+(?P<wl_tol>[0-9.]+\s*\w+)\s*')
+
+        p17 = re.compile(r'^\s*host\s+lane\s+count\s+is\s+(?P<host_lane_count>\d+)')
+
+        p18 = re.compile(r'^\s*media\s+lane\s+count\s+is\s+(?P<media_lane_count>\d+)')
+
+        p19 = re.compile(r'^\s*max\s+module\s+temperature\s+is\s+(?P<max_mod_temp>\d+)')
+
+        p20 = re.compile(r'^\s*min\s+module\s+temperature\s+is\s+(?P<min_mod_temp>\d+)')
+
+        p21 = re.compile(r'^\s*min\s+operational\s+voltage\s+is\s+(?P<min_oper_volt>[0-9.]+\s+\w+)')
+
+        p22 = re.compile(r'^\s*vendor\s+OUI\s+is\s+(?P<oui>[a-zA-Z0-9]+)')
+
+        p23 = re.compile(r'^\s*date\s+code\s+is\s+(?P<date_code>\d+)')
+
+        p24 = re.compile(r'^\s*clei\s+code\s+is\s+(?P<clei>[A-Za-z0-9]+)')
+
+        p25 = re.compile(r'^\s*power\s+class\s+is\s+(?P<power_class>[0-9a-zA-Z\(\) .]+)')
+
+        p26 = re.compile(r'^\s*max\s+power\s+is\s+(?P<max_power>[0-9.]+)\s+W\s*')
+
+        p27 = re.compile(r'^\s*near-end\s+lanes\s+used\s+(?P<near_end_lanes>\w+)')
+
+        p28 = re.compile(r'^\s*far-end\s+lane\s+code\s+for\s+(?P<far_end_lanes>.*)\s*')
+
+        p29 = re.compile(r'^\s*media\s+interface\s+is\s+(?P<media_intf>.*)\s*')
+
+        p30 = re.compile(r'^\s*Advertising\s+code\s+is\s+(?P<adv_code>.*)\s*')
+
+        p31 = re.compile(r'^\s*Host\s+electrical\s+interface\s+code\s+is\s+(?P<host_elec_intf>.*)\s*')
+
+        p32 = re.compile(r'^\s*media\s+interface\s+advertising\s+code\s+is\s+(?P<media_intf_adv_code>.*)\s*')
+
+        p33 = re.compile(r'^\s*Cable\s+Length\s+is\s+(?P<cable_len>[0-9.]+)')
+
+        p34 = re.compile(r'^\s*CMIS\s+version\s+is\s+(?P<cmis_ver>\d+)')
+
+        p35 = re.compile(r'^\s*cable\s+attenuation\s+is\s+(?P<cable_attenuation>.*)\s*')
+
+        parsed_xcvr_dict = {}
+        for line in out.splitlines():
+            line = line.replace('\t', '    ')
+            line = line.strip()
+
+            # Match Ethernet interfaces
+            # Ethernet1/1 or Eth1/1 or Eth1/1/1 or Ethernet1/1/1
+            m = p1.match(line)
+            if m:
+              interface = m.group()
+              parsed_xcvr_dict[interface] = {}
+              continue
+
+            m = p2.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['transceiver_present'] = False if 'not' in m.group(0) else True
+              continue
+
+            m = p3.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['transceiver_type'] = m.group('type')
+              continue
+
+
+            m = p4.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['name'] = m.group('name')
+              continue
+
+            m = p5.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['part_number'] = m.group('part_number')
+              continue
+
+            m = p6.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['revision'] = m.group('rev')
+              continue
+
+            m = p7.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['serial_number'] = m.group('sn')
+              continue
+
+            m = p8.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['nominal_bitrate'] = int(m.group('bit_rate'))
+              continue
+
+            m = p9.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cisco_id'] = m.group('cis_id')
+              continue
+
+            m = p10.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cis_part_number'] = m.group('cis_part_num')
+              continue
+
+            m = p11.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cis_product_id'] = m.group('prod_id')
+              continue
+
+            m = p12.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cis_version_id'] = m.group('ver_id')
+              continue
+
+            m = p13.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['firmware_ver'] = m.group('fw_ver')
+              continue
+
+            m = p14.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['link_length'] = m.group('link_length')
+              continue
+
+            m = p15.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['nominal_trans_wavelength'] = m.group('nom_tran_wl')
+              continue
+
+            m = p16.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['wavelength_tolerance'] = m.group('wl_tol')
+              continue
+
+            m = p17.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['host_lane_count'] = int(m.group('host_lane_count'))
+              continue
+
+            m = p18.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['media_lane_count'] = int(m.group('media_lane_count'))
+              continue
+
+            m = p19.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['max_mod_temp'] = int(m.group('max_mod_temp'))
+              continue
+
+            m = p20.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['min_mod_temp'] = int(m.group('min_mod_temp'))
+              continue
+
+            m = p21.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['min_oper_volt'] = m.group('min_oper_volt')
+              continue
+
+            m = p22.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['vendor_oui'] = m.group('oui')
+              continue
+
+            m = p23.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['date_code'] = m.group('date_code')
+              continue
+
+            m = p24.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['clei'] = m.group('clei')
+              continue
+
+            m = p25.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['power_class'] = m.group('power_class')
+              continue
+
+            m = p26.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['max_power'] = float(m.group('max_power'))
+              continue
+
+            m = p27.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['near_end_lanes'] = m.group('near_end_lanes')
+              continue
+
+            m = p28.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['far_end_lanes'] = m.group('far_end_lanes')
+              continue
+
+            m = p29.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['media_interface'] = m.group('media_intf')
+              continue
+
+            m = p30.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['advertising_code'] = m.group('adv_code')
+              continue
+
+            m = p31.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['host_electrical_intf'] = m.group('host_elec_intf')
+              continue
+
+            m = p32.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['media_interface_advert_code'] = m.group('media_intf_adv_code')
+              continue
+
+
+            m = p33.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cable_length'] = float(m.group('cable_len'))
+              continue
+
+            m = p34.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cmis_ver'] = int(m.group('cmis_ver'))
+              continue
+
+            m = p35.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cable_attenuation'] = m.group('cable_attenuation')
+              continue
+
+        return parsed_xcvr_dict
+
+
+
+# ================================================
+# Schema for 'show interface transceiver details'
+# ================================================
+class ShowInterfaceTransceiverDetailsSchema(MetaParser):
+    """Schema for show interface transceiver details"""
+
+    schema = {
+        Any():{
+            Optional('transceiver_present'): bool,
+            Optional('transceiver_type'): str,
+            Optional('name'): str,
+            Optional('part_number'): str,
+            Optional('revision'): str,
+            Optional('serial_number'): str,
+            Optional('nominal_bitrate'): int,
+            Optional('cisco_id'): str,
+            Optional('cis_part_number'): str,
+            Optional('cis_product_id'): str,
+            Optional('cis_version_id'): str,
+            Optional('firmware_ver'): str,
+            Optional('link_length'): str,
+            Optional('nominal_trans_wavelength'): str,
+            Optional('wavelength_tolerance'): str,
+            Optional('host_lane_count'): int,
+            Optional('media_lane_count'): int,
+            Optional('max_mod_temp'): int,
+            Optional('min_mod_temp'): int,
+            Optional('min_oper_volt'): str,
+            Optional('vendor_oui'): str,
+            Optional('date_code'): str,
+            Optional('clei'): str,
+            Optional('power_class'): str,
+            Optional('max_power'): float,
+            Optional('near_end_lanes'): str,
+            Optional('far_end_lanes'): str,
+            Optional('media_interface'): str,
+            Optional('advertising_code'): str,
+            Optional('host_electrical_intf'): str,
+            Optional('media_interface_advert_code'): str,
+            Optional('cable_length'): float,
+            Optional('cmis_ver'): int,
+            Optional('cable_attenuation'): str,
+            Optional('dom_supported'): bool,
+            Optional('lane_number'): {
+              Any():{
+                  Any():{
+                      Optional('current'): str,
+                      Optional('high_alarm'): str,
+                      Optional('high_warning'): str,
+                      Optional('low_alarm'): str, 
+                      Optional('low_warning'): str,
+                      Optional('alarm'): str
+                  },
+                  Optional('tx_fault_count'): int
+              }
+            }
+        }
+    }
+
+# ================================================
+# Parser for 'show interface transceiver details'
+# ================================================
+
+class ShowInterfaceTransceiverDetails(ShowInterfaceTransceiverDetailsSchema):
+    """Parser for show interface transceiver details, show interface <interface> transceiver details"""
+
+    cli_command = ['show interface transceiver details', 'show interface {interface} transceiver details']
+    exclude = []
+
+    def cli(self, interface="", output=None):
+        if output is None:
+            if interface:
+                cmd = self.cli_command[1].format(interface=interface)
+            else:
+                cmd = self.cli_command[0]
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        
+        #match interface name
+        p1 = re.compile(r'^\s*(?P<intf>(Ethernet|Eth)[0-9/]+)')
+
+        p2 = re.compile(r'^\s*transceiver\s+is\s*(not)?\s+present')
+
+        p3 = re.compile(r'^\s*type is\s+(?P<type>[A-Za-z0-9-]+)\s*')
+
+        p4 = re.compile(r'^\s*name is\s+(?P<name>[A-Za-z0-9-]+)\s*')
+
+        p5 = re.compile(r'^\s*part number is\s+(?P<part_number>[A-Za-z0-9-]+)\s*')
+
+        p6 = re.compile(r'^\s*revision is\s+(?P<rev>[A-Z0-9]+)\s*')
+
+        p7 = re.compile(r'^\s*serial\s+number\s+is\s+(?P<sn>[A-Z0-9-]+)\s*')
+        
+        p8 = re.compile(r'^\s*nominal\s+bitrate\s+is\s+(?P<bit_rate>\d+) MBit/sec')
+
+        p9 = re.compile(r'^\s*cisco\s+id\s+is\s+(?P<cis_id>[0-9x]+)')
+
+        p10 = re.compile(r'^\s*cisco\s+part\s+number\s+is\s+(?P<cis_part_num>[0-9-]+)\s*')
+
+        p11 = re.compile(r'^\s*cisco\s+product\s+id\s+is\s+(?P<prod_id>[A-Z0-9-]+)\s*')
+
+        p12 = re.compile(r'^\s*cisco\s+version\s+id\s+is\s+(?P<ver_id>[A-Z0-9]+)\s*')
+
+        p13 = re.compile(r'^\s*firmware\s+version\s+is\s+(?P<fw_ver>[0-9.]+)\s*')
+
+        p14 = re.compile(r'^\s*Link\s+length\s+\w+\s+is\s+(?P<link_length>[0-9.]+\s*\w+)\s*')
+
+        p15 = re.compile(r'^\s*Nominal\s+transmitter\s+wavelength\s+is\s+(?P<nom_tran_wl>[0-9.]+\s*\w+)\s*')
+
+        p16 = re.compile(r'^\s*Wavelength\s+tolerance\s+is\s+(?P<wl_tol>[0-9.]+\s*\w+)\s*')
+
+        p17 = re.compile(r'^\s*host\s+lane\s+count\s+is\s+(?P<host_lane_count>\d+)')
+
+        p18 = re.compile(r'^\s*media\s+lane\s+count\s+is\s+(?P<media_lane_count>\d+)')
+
+        p19 = re.compile(r'^\s*max\s+module\s+temperature\s+is\s+(?P<max_mod_temp>\d+)')
+
+        p20 = re.compile(r'^\s*min\s+module\s+temperature\s+is\s+(?P<min_mod_temp>\d+)')
+
+        p21 = re.compile(r'^\s*min\s+operational\s+voltage\s+is\s+(?P<min_oper_volt>[0-9.]+\s+\w+)')
+
+        p22 = re.compile(r'^\s*vendor\s+OUI\s+is\s+(?P<oui>[a-zA-Z0-9]+)')
+
+        p23 = re.compile(r'^\s*date\s+code\s+is\s+(?P<date_code>\d+)')
+
+        p24 = re.compile(r'^\s*clei\s+code\s+is\s+(?P<clei>[A-Za-z0-9]+)')
+
+        p25 = re.compile(r'^\s*power\s+class\s+is\s+(?P<power_class>[0-9a-zA-Z\(\) .]+)')
+
+        p26 = re.compile(r'^\s*max\s+power\s+is\s+(?P<max_power>[0-9.]+)\s+W\s*')
+
+        p27 = re.compile(r'^\s*near-end\s+lanes\s+used\s+(?P<near_end_lanes>\w+)')
+
+        p28 = re.compile(r'^\s*far-end\s+lane\s+code\s+for\s+(?P<far_end_lanes>.*)\s*')
+
+        p29 = re.compile(r'^\s*media\s+interface\s+is\s+(?P<media_intf>.*)\s*')
+
+        p30 = re.compile(r'^\s*Advertising\s+code\s+is\s+(?P<adv_code>.*)\s*')
+
+        p31 = re.compile(r'^\s*Host\s+electrical\s+interface\s+code\s+is\s+(?P<host_elec_intf>.*)\s*')
+
+        p32 = re.compile(r'^\s*media\s+interface\s+advertising\s+code\s+is\s+(?P<media_intf_adv_code>.*)\s*')
+
+        p33 = re.compile(r'^\s*Cable\s+Length\s+is\s+(?P<cable_len>[0-9.]+)')
+
+        p34 = re.compile(r'^\s*CMIS\s+version\s+is\s+(?P<cmis_ver>\d+)')
+
+        p35 = re.compile(r'^\s*cable\s+attenuation\s+is\s+(?P<cable_attenuation>.*)\s*')
+
+        p36 = re.compile(r'^\s*DOM\s+is\s+not\s+supported')
+
+        p37 = re.compile(r'^\s*(?P<lane>Lane)\s+Number:(?P<lane_num>\d+\s+Network\s+Lane)')
+
+        p38 = re.compile(r'^\s*(?P<temp>Temperature)\s+'
+                      r'(?P<curr>[0-9.NAna/-]+)\s?C?(\s+)?'
+                      r'(?P<alarm>[+-]+)?\s+'
+                      r'(?P<high_alarm>[0-9.NAna/-]+)\s?C?\s+'
+                      r'(?P<low_alarm>[0-9.NAna/-]+)\s?C?\s+'
+                      r'(?P<high_warn>[0-9.NAna/-]+)\s?C?\s+'
+                      r'(?P<low_warn>[0-9.NAna/-]+)\s?C?')
+
+        p39 = re.compile(r'^\s*(?P<voltage>Voltage)\s+'
+                        r'(?P<curr>[0-9.NAna/-]+)\s?V?(\s+)?'
+                        r'(?P<alarm>[+-]+)?\s+'
+                        r'(?P<high_alarm>[0-9.NAna/-]+)\s?V?\s+'
+                        r'(?P<low_alarm>[0-9.NAna/-]+)\s?V?\s+'
+                        r'(?P<high_warn>[0-9.NAna/-]+)\s?V?\s+'
+                        r'(?P<low_warn>[0-9.NAna/-]+)\s?V?')
+
+        p40 = re.compile(r'^\s*(?P<current>Current)\s+'
+                        r'(?P<curr>[0-9.NAna/-]+)\s?(mA)?(\s+)?'
+                        r'(?P<alarm>[+-]+)?\s+'
+                        r'(?P<high_alarm>[0-9.NAna/-]+)\s?(mA)?\s+'
+                        r'(?P<low_alarm>[0-9.NAna/-]+)\s?(mA)?\s+'
+                        r'(?P<high_warn>[0-9.NAna/-]+)\s?(mA)?\s+'
+                        r'(?P<low_warn>[0-9.NAna/-]+)\s?(mA)?')
+        
+        p41 = re.compile(r'^\s*(?P<tx_power>Tx Power)\s+'
+                        r'(?P<curr>[0-9.NAna/-]+)\s?(dBm)?(\s+)?'
+                        r'(?P<alarm>[+-]+)?\s+'
+                        r'(?P<high_alarm>[0-9.NAna/-]+)\s?(dBm)?\s+'
+                        r'(?P<low_alarm>[0-9.NAna/-]+)\s?(dBm)?\s+'
+                        r'(?P<high_warn>[0-9.NAna/-]+)\s?(dBm)?\s+'
+                        r'(?P<low_warn>[0-9.NAna/-]+)\s?(dBm)?')
+
+        p42 = re.compile(r'^\s*(?P<rx_power>Rx Power)\s+'
+                        r'(?P<curr>[0-9.NAna/-]+)\s?(dBm)?(\s+)?'
+                        r'(?P<alarm>[+-]+)?\s+'
+                        r'(?P<high_alarm>[0-9.NAna/-]+)\s?(dBm)?\s+'
+                        r'(?P<low_alarm>[0-9.NAna/-]+)\s?(dBm)?\s+'
+                        r'(?P<high_warn>[0-9.NAna/-]+)\s?(dBm)?\s+'
+                        r'(?P<low_warn>[0-9.NAna/-]+)\s?(dBm)?')
+
+        p43 = re.compile(r'^\s*Transmit\s+Fault\s+Count\s+=\s+(?P<fault_count>\d+)')
+
+        parsed_xcvr_dict = {}
+        xcvr_lane = ''
+
+        for line in out.splitlines():
+            line = line.replace('\t', '    ')
+            line = line.strip()
+
+            # Match Ethernet interfaces
+            # Ethernet1/1 or Eth1/1 or Eth1/1/1 or Ethernet1/1/1
+            m = p1.match(line)
+            if m:
+              interface = m.group()
+              parsed_xcvr_dict[interface] = {}
+              continue
+
+            m = p2.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['transceiver_present'] = False if 'not' in m.group(0) else True
+              continue
+
+            m = p3.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['transceiver_type'] = m.group('type')
+              continue
+
+
+            m = p4.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['name'] = m.group('name')
+              continue
+
+            m = p5.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['part_number'] = m.group('part_number')
+              continue
+
+            m = p6.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['revision'] = m.group('rev')
+              continue
+
+            m = p7.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['serial_number'] = m.group('sn')
+              continue
+
+            m = p8.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['nominal_bitrate'] = int(m.group('bit_rate'))
+              continue
+
+            m = p9.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cisco_id'] = m.group('cis_id')
+              continue
+
+            m = p10.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cis_part_number'] = m.group('cis_part_num')
+              continue
+
+            m = p11.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cis_product_id'] = m.group('prod_id')
+              continue
+
+            m = p12.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cis_version_id'] = m.group('ver_id')
+              continue
+
+            m = p13.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['firmware_ver'] = m.group('fw_ver')
+              continue
+
+            m = p14.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['link_length'] = m.group('link_length')
+              continue
+
+            m = p15.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['nominal_trans_wavelength'] = m.group('nom_tran_wl')
+              continue
+
+            m = p16.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['wavelength_tolerance'] = m.group('wl_tol')
+              continue
+
+            m = p17.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['host_lane_count'] = int(m.group('host_lane_count'))
+              continue
+
+            m = p18.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['media_lane_count'] = int(m.group('media_lane_count'))
+              continue
+
+            m = p19.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['max_mod_temp'] = int(m.group('max_mod_temp'))
+              continue
+
+            m = p20.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['min_mod_temp'] = int(m.group('min_mod_temp'))
+              continue
+
+            m = p21.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['min_oper_volt'] = m.group('min_oper_volt')
+              continue
+
+            m = p22.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['vendor_oui'] = m.group('oui')
+              continue
+
+            m = p23.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['date_code'] = m.group('date_code')
+              continue
+
+            m = p24.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['clei'] = m.group('clei')
+              continue
+
+            m = p25.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['power_class'] = m.group('power_class')
+              continue
+
+            m = p26.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['max_power'] = float(m.group('max_power'))
+              continue
+
+            m = p27.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['near_end_lanes'] = m.group('near_end_lanes')
+              continue
+
+            m = p28.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['far_end_lanes'] = m.group('far_end_lanes')
+              continue
+
+            m = p29.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['media_interface'] = m.group('media_intf')
+              continue
+
+            m = p30.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['advertising_code'] = m.group('adv_code')
+              continue
+
+            m = p31.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['host_electrical_intf'] = m.group('host_elec_intf')
+              continue
+
+            m = p32.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['media_interface_advert_code'] = m.group('media_intf_adv_code')
+              continue
+
+
+            m = p33.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cable_length'] = float(m.group('cable_len'))
+              continue
+
+            m = p34.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cmis_ver'] = int(m.group('cmis_ver'))
+              continue
+
+            m = p35.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['cable_attenuation'] = m.group('cable_attenuation')
+              continue
+
+            m = p36.match(line)
+            if m:
+              parsed_xcvr_dict[interface]['dom_supported'] = False
+              continue
+
+            # Lane Number:1 Network Lane
+            m = p37.match(line)
+            if m:
+              values = m.groupdict()
+              parsed_xcvr_dict[interface]['dom_supported'] = True
+              xcvr_lane = values['lane_num']
+              parsed_xcvr_dict[interface].setdefault('lane_number', {})
+              parsed_xcvr_dict[interface]['lane_number'].setdefault(xcvr_lane, {})
+              continue
+
+
+            # Temperature   24.18 C        80.00 C     -5.00 C     75.00 C        0.00 C
+            m = p38.match(line)
+            if m:
+              values = m.groupdict()
+              parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['temp']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
+                    'low_alarm': values['low_alarm'], 'high_warning': values['high_warn'], 'low_warning': values['low_warn'], 'alarm': str(values['alarm']) }
+
+            # Voltage        3.33 V         3.63 V      2.97 V      3.46 V        3.13 V
+            m = p39.match(line)
+            if m:
+              values = m.groupdict()
+              parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['voltage']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
+                    'low_alarm': values['low_alarm'], 'high_warning': values['high_warn'], 'low_warning': values['low_warn'], 'alarm': str(values['alarm']) }
+
+            # Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+            m = p40.match(line)
+            if m:
+              values = m.groupdict()
+              parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['current']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
+                    'low_alarm': values['low_alarm'], 'high_warning': values['high_warn'], 'low_warning': values['low_warn'], 'alarm': str(values['alarm']) }
+
+            # Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+            m = p41.match(line)
+            if m:
+              values = m.groupdict()
+              parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['tx_power']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
+                    'low_alarm': values['low_alarm'], 'high_warning': values['high_warn'], 'low_warning': values['low_warn'], 'alarm': str(values['alarm']) }
+
+            # Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+            m = p42.match(line)
+            if m:
+              values = m.groupdict()
+              parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['rx_power']] = { 'current': values['curr'], 'high_alarm': values['high_alarm'], \
+                    'low_alarm': values['low_alarm'], 'high_warning': values['high_warn'], 'low_warning': values['low_warn'], 'alarm': str(values['alarm']) }
+            
+            # Transmit Fault Count = 0
+            m = p43.match(line)
+            if m:
+                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane]['tx_fault_count'] = int(m.groupdict()['fault_count'])
+
+
+        return parsed_xcvr_dict
+
+# ========================================
+# Schema for 'show interface fec'
+# ========================================
+class ShowInterfaceFecSchema(MetaParser):
+    """Schema for show interface fec"""
+
+    schema = {
+          Any():{
+              'ifindex': str,
+              'admin-fec': str,
+              'oper-fec': str,
+              'status': str,
+              'speed': str,
+              'type': str
+          }
+    }
+
+# ========================================
+# Parser for 'show interface fec'
+# ========================================
+
+class ShowInterfaceFec(ShowInterfaceFecSchema):
+    """Parser for show interface fec """
+
+    cli_command = 'show interface fec'
+
+    exclude = []
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        p = re.compile(r'^\s*(?P<name>[Ethernet/0-9]+)\s+'
+                      r'(?P<ifIdx>[xa-f0-9]+)\s+(?P<admin_fec>\w+)\s+'
+                      r'(?P<oper_fec>\S+)\s+(?P<status>\w+)\s+'
+                      r'(?P<speed>\w+|\d+)\s+(?P<type>\S+)')
+
+        parsed_fec_dict = {}
+        for line in out.splitlines():
+            line = line.replace('\t', '    ')
+            line = line.strip()
+
+            m = p.match(line)
+            if m:
+                vdict = m.groupdict()
+                parsed_fec_dict[vdict['name']] = {'ifindex': vdict['ifIdx'], 'admin-fec': vdict['admin_fec'], 'oper-fec': vdict['oper_fec'], 
+                'status': vdict['status'], 'speed': vdict['speed'], 'type': vdict['type'] }
+
+        return parsed_fec_dict
+
+
+# ========================================
+# Schema for 'show interface hardware-mappings'
+# ========================================
+class ShowInterfaceHardwareMapSchema(MetaParser):
+    """Schema for show interface hardware-mappings"""
+
+    schema = {
+          Any():{
+              'ifindex': str,
+              'smod': int,
+              'unit': int,
+              'hport': int,
+              'fport': int,
+              'nport': int,
+              'vport': int,
+              'slice': int,
+              'sport': int,
+              'srcid': int,
+              'macid': int,
+              'macsp': int,
+              'vif': int,
+              'block': int,
+              'blksrcid': int
+          }
+    }
+
+# ========================================
+# Parser for 'show interface hardware-mappings'
+# ========================================
+
+class ShowInterfaceHardwareMap(ShowInterfaceHardwareMapSchema):
+    """Parser for show interface hardware-mappings """
+
+    cli_command = 'show interface hardware-mappings'
+
+    exclude = []
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+        
+        p = re.compile(r'^\s*(?P<name>[PoEthernet/0-9]+)\s+'
+                      r'(?P<ifIdx>[xa-f0-9]+)\s+(?P<smod>\S+)\s+'
+                      r'(?P<unit>\S+)\s+(?P<hport>\S+)\s+'
+                      r'(?P<fport>\S+)\s+(?P<nport>\S+)\s+'
+                      r'(?P<vport>\S+)\s+(?P<slice>\S+)\s+'
+                      r'(?P<sport>\S+)\s+(?P<srcid>\S+)\s+'
+                      r'(?P<macid>\S+)?\s+(?P<macsp>\S+)?\s+'
+                      r'(?P<vif>\S+)\s+(?P<block>\S+)\s+(?P<blksrcid>\S+)\s*')
+        parsed_hw_map_dict = {}
+
+        for line in out.splitlines():
+            line = line.replace('\t', '    ')
+            line = line.strip()
+
+            m = p.match(line)
+            if m:
+                vdict = m.groupdict()
+                intf_name = interface = Common.convert_intf_name(vdict['name'])
+                parsed_hw_map_dict[intf_name] = {
+                'ifindex': vdict['ifIdx'], 
+                'smod': int(vdict['smod']), 
+                'unit': int(vdict['unit']), 
+                'hport': int(vdict['hport']), 
+                'fport': int(vdict['fport']), 
+                'nport': int(vdict['nport']), 
+                'vport': int(vdict['vport']), 
+                'slice': int(vdict['slice']),
+                'sport': int(vdict['sport']), 
+                'srcid': int(vdict['srcid']), 
+                'macid': int(vdict['macid']), 
+                'macsp': int(vdict['macsp']),
+                'vif': int(vdict['vif']), 
+                'block': int(vdict['block']), 
+                'blksrcid': int(vdict['blksrcid'])}
+
+
+        return parsed_hw_map_dict

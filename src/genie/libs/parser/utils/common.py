@@ -21,8 +21,25 @@ PYATS_EXT_PARSER = 'pyats.libs.external.parser'
 
 log = logging.getLogger(__name__)
 
+
+class ParserNotFound(Exception):
+    '''raise exception if parser command is not found
+       first argument is parser class
+       second argument is token '''
+
+    def __init__(self, *args):
+        self.parser_command = args[0]
+        self.token = args[1]
+
+    def __str__(self):
+        return (f"Could not find parser for {self.parser_command} under {self.token}")
+
+
 def _load_parser_json():
     '''get all parser data in json file'''
+
+    global parser_data
+
     try:
         mod = importlib.import_module('genie.libs.parser')
         parsers = os.path.join(mod.__path__[0], 'parsers.json')
@@ -34,13 +51,17 @@ def _load_parser_json():
                     'genie.libs.parsers')
         parser_data = {}
     else:
-        # Open all the parsers in json file
-        with open(parsers) as f:
-            parser_data = json.load(f)
+        try:
+            # Open all the parsers in json file
+            with open(parsers) as f:
+                parser_data = json.load(f)
+        except:
+            log.error(f'Could not load parser json from file {parsers}', exc_info=True)
+            return {}
 
         # check if provided external parser packages
         ext_parser_package = cfg.get(PYATS_EXT_PARSER, None) or \
-            os.environ.get(PYATS_EXT_PARSER.upper().replace('.', '_'))
+                             os.environ.get(PYATS_EXT_PARSER.upper().replace('.', '_'))
         if ext_parser_package:
             ext = ExtendParsers(ext_parser_package)
             ext.extend()
@@ -49,18 +70,22 @@ def _load_parser_json():
             summary = ext.output.pop('extend_info', None)
 
             merge_dict(parser_data, ext.output, update=True)
-            log.warning("External parser counts: {}\nSummary:\n{}"
-                .format(len(summary), json.dumps(summary, indent=2)))
+            log.info("External parser counts: {}\nSummary:\n{}"
+                     .format(len(summary), json.dumps(summary, indent=2)))
 
     return parser_data
 
-# Parser within Genie
-parser_data = _load_parser_json()
 
-def get_parser_commands(device, data=parser_data):
+def get_parser_commands(device, data=None):
     '''Remove all commands which contain { as this requires
        extra kwargs which cannot be guessed dynamically
        Remove the ones that arent related to this os'''
+
+    if data is None:
+        try:
+            data = parser_data
+        except NameError:
+            data = _load_parser_json()
 
     commands = []
     for command, values in data.items():
@@ -69,26 +94,29 @@ def get_parser_commands(device, data=parser_data):
         commands.append(command)
     return commands
 
+
 def format_output(parser_data, tab=2):
     '''Format the parsed output in an aligned intended structure'''
 
     s = ['{\n']
     if parser_data is None:
         return parser_data
-    for k,v in sorted(parser_data.items()):
+    for k, v in sorted(parser_data.items()):
         if isinstance(v, dict):
-            v = format_output(v, tab+2)
+            v = format_output(v, tab + 2)
         else:
             v = repr(v)
-        s.append('%s%r: %s,\n' % ('  '*tab, k, v))
-    s.append('%s}' % ('  '*(tab-2)))
+        s.append('%s%r: %s,\n' % ('  ' * tab, k, v))
+    s.append('%s}' % ('  ' * (tab - 2)))
     return ''.join(s)
+
 
 def get_parser_exclude(command, device):
     try:
         return get_parser(command, device)[0].exclude
     except AttributeError:
         return []
+
 
 def get_parser(command, device, fuzzy=False):
     '''From a show command and device, return parser class and kwargs if any'''
@@ -101,7 +129,7 @@ def get_parser(command, device, fuzzy=False):
     lookup = Lookup.from_device(device, packages={'parser': parser})
     results = _fuzzy_search_command(command, fuzzy, device.os, order_list)
     valid_results = []
-    
+
     for result in results:
         found_command, data, kwargs = result
 
@@ -114,24 +142,25 @@ def get_parser(command, device, fuzzy=False):
                 data = data[token]
 
         try:
-            valid_results.append((found_command, 
-                                        _find_parser_cls(device, data), kwargs))
+            valid_results.append((found_command,
+                                  _find_parser_cls(device, data), kwargs))
         except KeyError:
             # Case when the show command is only found under one of
             # the child level tokens
             continue
 
     if not valid_results:
-        raise Exception("Could not find parser for "
-                        "'{c}' under {l}".format(c=command, l=lookup._tokens))
+        '''result is not valid. raise custom ParserNotFound exception'''
+        raise ParserNotFound(command, lookup._tokens)
 
     if not fuzzy:
         return valid_results[0][1], valid_results[0][2]
 
     return valid_results
 
-def _fuzzy_search_command(search, fuzzy, os=None, order_list=None, 
-                                                                device=None):
+
+def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
+                          device=None):
     """ Find commands that match the search criteria.
 
         Args: 
@@ -144,9 +173,15 @@ def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
         Returns:
             list: the result of the search
     """
-    # Perfect match should return 
-    if search in parser_data:
-        return [(search, parser_data[search], {})]
+
+    try:
+        data = parser_data
+    except NameError:
+        data = _load_parser_json()
+
+    # Perfect match should return
+    if search in data:
+        return [(search, data[search], {})]
 
     # Preprocess if fuzzy
     if fuzzy:
@@ -161,16 +196,16 @@ def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
     best_score = -math.inf
     result = []
 
-    for command, source in parser_data.items():
+    for command, source in data.items():
         # Tokens and kwargs parameter must be non reference
         match_result = _matches_fuzzy(0, 0, tokens.copy(),
-                                                        command, {}, fuzzy)
+                                      command, {}, fuzzy)
 
-        if match_result: 
+        if match_result:
             kwargs, score = match_result
-            
+
             if order_list and device and \
-                                getattr(device, order_list[0]) not in source:
+                    getattr(device, order_list[0]) not in source:
                 continue
 
             if os and os not in source:
@@ -195,21 +230,22 @@ def _fuzzy_search_command(search, fuzzy, os=None, order_list=None,
         # Check if the result regex match the search
         for instance in result:
             s = re.sub('{.*?}', '(.*)', instance[0])
-            p =re.compile(s)
+            p = re.compile(s)
             if p.match(search):
                 return [instance]
 
-        if len(set(re.sub('{.*?}', '---', instance[0]) 
-                                                for instance in result)) == 1:
+        if len(set(re.sub('{.*?}', '---', instance[0])
+                   for instance in result)) == 1:
             return [result[0]]
         else:
             # Search is ambiguous
-            raise Exception("\nSearch for '" + search +  "' is ambiguous. " + 
+            raise Exception("\nSearch for '" + search + "' is ambiguous. " +
                             "Please be more specific in your keywords.\n\n" +
                             "Results matched:\n" + '\n'.join(
-                                                '> ' + i[0] for i in result))
+                '> ' + i[0] for i in result))
 
     return result
+
 
 def _is_regular_token(token):
     """ Checks if a token is regular (does not contain regex symbols).
@@ -238,11 +274,12 @@ def _is_regular_token(token):
         candidate = candidate.replace(r'\|', '')
 
         token_is_regular = candidate.isalnum() or candidate == ''
-    
+
     return token_is_regular
 
-def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy, 
-                                            required_arguments=None, score=0):
+
+def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
+                   required_arguments=None, score=0):
     """ Compares between given tokens and command to see if they match.
 
         Args: 
@@ -282,10 +319,10 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                 # Check if it is nonregex token
                 token_is_regular = _is_regular_token(token)
 
-            if token_is_regular: 
+            if token_is_regular:
                 # Special case for `:\|Swap:`
                 token = token.replace(r'\|', '|')
-                
+
                 # Special case for command `vim-cmd vmsvc/snapshot.get {vmid}`
                 token = token.replace(r'\.', '.')
 
@@ -313,19 +350,19 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                             kwargs[
                                 re.search('{(.*)}', command_token).groups()[0]
                             ] = re.match('{}(.*){}'
-                                        .format(start, end), token).groups()[0]
+                                         .format(start, end), token).groups()[0]
 
                             is_found = True
                             score += 103
-                    
+
                     if not is_found:
                         return None
                 else:
-                    argument_key = re.search('{(.*)}', 
-                                                    command_token).groups()[0]
+                    argument_key = re.search('{(.*)}',
+                                             command_token).groups()[0]
                     i += 1
                     j += 1
-                    
+
                     # Plus 101 once to favor nongreedy argument fit
                     score += 100
 
@@ -333,12 +370,12 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                     # Else argument can be up to 2 tokens
                     endpoint = i + 1 \
                         if argument_key == 'vrf' \
-                            or argument_key == 'rd' \
-                            or argument_key == 'instance' \
-                            or argument_key == 'vrf_type' \
-                            or argument_key == 'feature' \
-                            or argument_key == 'fileA' \
-                            or argument_key == 'fileB' \
+                           or argument_key == 'rd' \
+                           or argument_key == 'instance' \
+                           or argument_key == 'vrf_type' \
+                           or argument_key == 'feature' \
+                           or argument_key == 'fileA' \
+                           or argument_key == 'fileB' \
                         else i + 2
 
                     # Try out ways we can assign search tokens into argument
@@ -347,9 +384,9 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                             return None
 
                         # Make sure not to use regex expression as argument
-                        if index > i: 
+                        if index > i:
                             if fuzzy and not _is_regular_token(tokens[
-                                                                    index - 1]): 
+                                                                   index - 1]):
                                 return None
 
                         # Currently spanned argument
@@ -357,24 +394,24 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                             argument_value = ' '.join(tokens[i - 1:index]).replace('\\', '')
                         else:
                             argument_value = ' '.join(tokens[i - 1:index]).rstrip(
-                                                            '"').replace('\\', '')
+                                '"').replace('\\', '')
 
                         # argument_value = ' '.join(tokens[i - 1:index]).replace('\\', '')
-                        
+
                         # Delete the extra tokens if spanning more than one
                         tokens_copy = tokens[:i] + tokens[index:]
                         tokens_copy[i - 1] = command_token
                         kwargs_copy = kwargs.copy()
                         kwargs_copy.setdefault(argument_key, argument_value)
-                        
+
                         result = _matches_fuzzy(i, j, tokens_copy, command,
-                                kwargs_copy, fuzzy, required_arguments, score)
-                            
+                                                kwargs_copy, fuzzy, required_arguments, score)
+
                         if result:
                             result_kwargs, score = result
 
                             if len(result_kwargs) == required_arguments:
-                                    return result_kwargs, score
+                                return result_kwargs, score
 
                     return None
             elif token == command_token:
@@ -410,15 +447,15 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
                 _, end = test.span()
 
                 # Expression matches command to end
-                if i + 1 == len(tokens) and end == len(command): 
+                if i + 1 == len(tokens) and end == len(command):
                     # Return result if from start to end there are no arguments
                     if all(not '{' in ct for ct in command_tokens[j:]):
                         return kwargs, score
-                    else: 
+                    else:
                         # Else in range we have another unspecified argument
                         return None
 
-                if end == 0: 
+                if end == 0:
                     # If regex matched nothing, we stop because
                     # expression = "d? a b c" search in "a b c"
                     # expression = "a b d? c" search in "a b c"
@@ -426,7 +463,7 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
 
                 # Span single command token
                 if abs(
-                    end - sum(len(ct) for ct in command_tokens[:j + 1]) - j
+                        end - sum(len(ct) for ct in command_tokens[:j + 1]) - j
                 ) <= 1:
                     if not '{' in command_token:
                         # Span single token if it is not argument
@@ -445,7 +482,7 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
 
                     while current_sum + len(command_tokens[token_end]) <= end:
                         current_sum += len(command_tokens[token_end])
-                        
+
                         if current_sum < end:
                             # Account for space 
                             current_sum += 1
@@ -455,14 +492,13 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
 
                     # Incrememt token index
                     i += 1
-                
+
                     # For matched range, perform submatches on next real token
                     for subindex in range(j + skipped, token_end + 1):
                         # Make sure items are passed by copies, not by reference
-                        submatch_result = _matches_fuzzy(i, subindex, 
-                            tokens.copy(), command, kwargs.copy(),
-                                            fuzzy, required_arguments, score)
-                        
+                        submatch_result = _matches_fuzzy(i, subindex, tokens.copy(), command, kwargs.copy(),
+                                                         fuzzy, required_arguments, score)
+
                         # If any match is found, return true
                         if submatch_result:
                             result_kwargs, score = submatch_result
@@ -482,18 +518,18 @@ def _matches_fuzzy(i, j, tokens, command, kwargs, fuzzy,
     if len(command_tokens) == j:
         # If command pointer is at end then it matches
         return kwargs, score
-    else: 
+    else:
         # It doesn't match
         return None
 
 
 def _find_parser_cls(device, data):
-    lookup = Lookup.from_device(device, packages={'parser':importlib.import_module(data['package'])})
+    lookup = Lookup.from_device(device, packages={'parser': importlib.import_module(data['package'])})
 
     return getattr(getattr(lookup.parser, data['module_name']), data['class'])
 
 
-class Common():
+class Common:
     '''Common functions to be used in parsers.'''
 
     @classmethod
@@ -504,14 +540,16 @@ class Common():
             else:
                 raise TypeError("Value '%s' doesnt match regex '%s'"
                                 % (value, expression))
+
         return match
 
     @classmethod
-    def convert_intf_name(self, intf):
+    def convert_intf_name(self, intf, os='generic'):
         '''return the full interface name
 
             Args:
                 intf (`str`): Short version of the interface name
+                os (`str`): picks what operating system the interface needs to be translated for.
 
             Returns:
                 Full interface name fit the standard
@@ -525,54 +563,119 @@ class Common():
         '''
 
         # Please add more when face other type of interface
-        convert = {'Eth': 'Ethernet',
-                   'Lo': 'Loopback',
-                   'lo': 'Loopback',
-                   'Fa': 'FastEthernet',
-                   'Fas': 'FastEthernet',
-                   'Po': 'Port-channel',
-                   'PO': 'Port-channel',
-                   'Null': 'Null',
-                   'Gi': 'GigabitEthernet',
-                   'Gig': 'GigabitEthernet',
-                   'GE': 'GigabitEthernet',
-                   'Te': 'TenGigabitEthernet',
-                   'Ten': 'TenGigabitEthernet',
-                   'Tw': 'TwoGigabitEthernet',
-                   'Two': 'TwoGigabitEthernet',
-                   'Twe': 'TwentyFiveGigE',
-                   'mgmt': 'mgmt',
-                   'Vl': 'Vlan',
-                   'Tu': 'Tunnel',
-                   'Fe': '',
-                   'Hs': 'HSSI',
-                   'AT': 'ATM',
-                   'Et': 'Ethernet',
-                   'BD': 'BDI',
-                   'Se': 'Serial',
-                   'Fo': 'FortyGigabitEthernet',
-                   'For': 'FortyGigabitEthernet',
-                   'Hu': 'HundredGigE',
-                   'Hun': 'HundredGigE',
-                   'vl': 'vasileft',
-                   'vr': 'vasiright',
-                   'BE': 'Bundle-Ether'
-                   }
-        m = re.search(r'([a-zA-Z]+)', intf) 
-        m1 = re.search(r'([\d\/\.]+)', intf)
-        if hasattr(m, 'group') and hasattr(m1, 'group'):
-            int_type = m.group(0)
-            int_port = m1.group(0)
-            if int_type in convert.keys():
-                return(convert[int_type] + int_port)
-            else:
-                # Unifying interface names
-                converted_intf = intf[0].capitalize()+intf[1:].replace(
-                    ' ','').replace('ethernet', 'Ethernet')
-                return(converted_intf)
-        else:
-            return(intf)
+        convert = {
+            'generic':
+            # generic keys for when no OS detected
+                {
+                    'Eth': 'Ethernet',
+                    'Lo': 'Loopback',
+                    'lo': 'Loopback',
+                    'Fa': 'FastEthernet',
+                    'Fas': 'FastEthernet',
+                    'Po': 'Port-channel',
+                    'PO': 'Port-channel',
+                    'Null': 'Null',
+                    'Gi': 'GigabitEthernet',
+                    'Gig': 'GigabitEthernet',
+                    'GE': 'GigabitEthernet',
+                    'Te': 'TenGigabitEthernet',
+                    'Ten': 'TenGigabitEthernet',
+                    'Tw': 'TwoGigabitEthernet',
+                    'Two': 'TwoGigabitEthernet',
+                    'Twe': 'TwentyFiveGigE',
+                    'mgmt': 'mgmt',
+                    'Vl': 'Vlan',
+                    'Tu': 'Tunnel',
+                    'Fe': '',
+                    'Hs': 'HSSI',
+                    'AT': 'ATM',
+                    'Et': 'Ethernet',
+                    'BD': 'BDI',
+                    'Se': 'Serial',
+                    'Fo': 'FortyGigabitEthernet',
+                    'For': 'FortyGigabitEthernet',
+                    'Hu': 'HundredGigE',
+                    'Hun': 'HundredGigE',
+                    'vl': 'vasileft',
+                    'vr': 'vasiright',
+                    'BE': 'Bundle-Ether',
+                    'tu': 'Tunnel',
+                    'M-E': 'M-Ethernet',  # comware
+                    'BAGG': 'Bridge-Aggregation',  # comware
+                    'Ten-GigabitEthernet': 'TenGigabitEthernet'  # HP
+                },
+            'iosxr':
+            # interface formats specific to iosxr
+                {
+                    'BV': 'BVI',
+                    'BE': 'Bundle-Ether',
+                    'BP': 'Bundle-POS',
+                    'Eth': 'Ethernet',
+                    'Fa': 'FastEthernet',
+                    'Gi': 'GigabitEthernet',
+                    'Te': 'TenGigE',
+                    'Tf': 'TwentyFiveGigE',
+                    'Fo': 'FortyGigE',
+                    'Fi': 'FiftyGigE',
+                    'Hu': 'HundredGigE',
+                    'Th': 'TwoHundredGigE',
+                    'Fh': 'FourHundredGigE',
+                    'Tsec': 'tunnel-ipsec',
+                    'Ti': 'tunnel-ip',
+                    'Tm': 'tunnel-mte',
+                    'Tt': 'tunnel-te',
+                    'Tp': 'tunnel-tp',
+                    'IMA': 'IMA',
+                    'IL': 'InterflexLeft',
+                    'IR': 'InterflexRight',
+                    'Lo': 'Loopback',
+                    'Mg': 'MgmtEth',
+                    'Ml': 'Multilink',
+                    'Nu': 'Null',
+                    'POS': 'POS',
+                    'Pw': 'PW-Ether',
+                    'Pi': 'PW-IW',
+                    'SRP': 'SRP',
+                    'Se': 'Serial',
+                    'CS': 'CSI',
+                    'G0': 'GCC0',
+                    'G1': 'GCC1',
+                    'nG': 'nVFabric-GigE',
+                    'nT': 'nVFabric-TenGigE',
+                    'nF': 'nVFabric-FortyGigE',
+                    'nH': 'nVFabric-HundredGigE'
+                }
+        }
 
+        # takes in the words preceding a digit e.g. the Ge in Ge0/0/1
+        m = re.search(r'([-a-zA-Z]+)', intf)
+        # takes in everything after the first encountered digit, e.g. the 0/0/1 in Ge0/0/1
+        m1 = re.search(r'([\d\/\.]+)', intf)
+
+        # checks if an interface has both Ge and 0/0/1 in the example of Ge0/0/1
+        if hasattr(m, 'group') and hasattr(m1, 'group'):
+            # fetches the interface type
+            int_type = m.group(0)
+
+            # fetch the interface number
+            int_port = m1.group(0)
+
+            try:
+                os_type_dict = convert[os]
+            except KeyError as k:
+                log.error("Check '{}' is in convert dict in utils/common.py, otherwise leave blank.\n"
+                          "Missing key {}\n".format(os, k))
+            else:
+                if int_type in os_type_dict.keys():
+                    return os_type_dict[int_type] + int_port
+                else:
+                    # Unifying interface names
+                    converted_intf = intf[0].capitalize() + intf[1:].replace(
+                        ' ', '').replace('ethernet', 'Ethernet')
+                    return converted_intf
+
+        else:
+            return intf
 
     @classmethod
     def retrieve_xml_child(self, root, key):
@@ -602,7 +705,6 @@ class Common():
                 root = item
                 return self.retrieve_xml_child(root, key)
 
-
     @classmethod
     def compose_compare_command(self, root, namespace, expect_command):
         '''compose commmand from the xml Element object from the root,
@@ -630,7 +732,7 @@ class Common():
                         expect_command='show bgp all dampening flap-statistics')
         '''
         # get to data node
-        cmd_node = root.getchildren()[0]
+        cmd_node = list(root)[0]
         # compose command from element tree
         # ex.  <nf:data>
         #        <show>
@@ -643,7 +745,7 @@ class Common():
         while True:
             # get next node
             try:
-                cmd_node = cmd_node.getchildren()
+                cmd_node = list(cmd_node)
                 if len(cmd_node) == 1:
 
                     # when only have one child
@@ -657,15 +759,15 @@ class Common():
 
                 elif len(cmd_node) > 1:
 
-                   # <__XML__PARAM__interface>
-                   #   <__XML__value>loopback100</__XML__value>
-                   #   <vrf>
-                   for item in cmd_node:
-                       if '__XML__value' in item.tag:
-                           cli += ' ' + item.text
-                       else:
-                           cmd_node = item
-                           break
+                    # <__XML__PARAM__interface>
+                    #   <__XML__value>loopback100</__XML__value>
+                    #   <vrf>
+                    for item in cmd_node:
+                        if '__XML__value' in item.tag:
+                            cli += ' ' + item.text
+                        else:
+                            cmd_node = item
+                            break
                 else:
                     break
             except Exception:
@@ -677,8 +779,8 @@ class Common():
             # __readonly__ is the end of the command
             if '__readonly__' not in tag:
                 if '__XML__PARAM__' not in tag and \
-                   '__XML__value' not in tag and \
-                   'TABLE' not in tag:
+                        '__XML__value' not in tag and \
+                        'TABLE' not in tag:
                     cli += ' ' + tag
             else:
                 break
@@ -693,10 +795,8 @@ class Common():
         cli = cli.strip()
         # compare the commands
         assert cli == expect_command, \
-            'Cli created from XML tags does not match the actual cli:\n'\
+            'Cli created from XML tags does not match the actual cli:\n' \
             'XML Tags cli: {c}\nCli command: {e}'.format(c=cli, e=expect_command)
-
-
 
     @classmethod
     def convert_xml_time(self, xml_time):
@@ -725,24 +825,23 @@ class Common():
             hour = m.groupdict()['hour']
             hour = 0 if not hour else int(hour)
             minute = m.groupdict()['minute']
-            minute = 0 if not  minute else int(minute)
+            minute = 0 if not minute else int(minute)
             second = m.groupdict()['second']
-            second = 0 if not  second else int(second)
+            second = 0 if not second else int(second)
 
             if day:
-                standard_time = "{d}d{h}h".format(d=day, h="%02d"% (hour))
+                standard_time = "{d}d{h}h".format(d=day, h="%02d" % (hour))
             else:
                 standard_time = ''
-                standard_time += format("%02d"% (hour))
-                standard_time += ' ' + format("%02d"% (minute))
-                standard_time += ' ' +  format("%02d"% (second))
+                standard_time += format("%02d" % (hour))
+                standard_time += ' ' + format("%02d" % (minute))
+                standard_time += ' ' + format("%02d" % (second))
 
                 standard_time = ':'.join(standard_time.strip().split())
         else:
             # P4M13DT21H21M19S
             standard_time = xml_time
         return standard_time
-
 
     @classmethod
     def find_keys(self, key, dictionary):
@@ -764,7 +863,6 @@ class Common():
                 for d in v:
                     for result in self.find_keys(key, d):
                         yield result
-
 
     @classmethod
     def combine_units_of_time(self, hours=None, minutes=None, seconds=None):

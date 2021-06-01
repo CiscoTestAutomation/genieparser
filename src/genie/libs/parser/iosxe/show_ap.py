@@ -624,7 +624,6 @@ class ShowApDot115GhzChannel(ShowApDot115GhzChannelSchema):
                 continue
             #     Minimum                                  : 4 hours 9 minutes 54 seconds
             elif chan_dwell_minimum_capture.match(line):
-                print(line)
                 chan_dwell_minimum_capture_match = chan_dwell_minimum_capture.match(line)
                 groups = chan_dwell_minimum_capture_match.groupdict()
                 chan_dwell_min_hours = groups['chan_dwell_min_hours']
@@ -694,7 +693,8 @@ class ShowApDot115GhzSummarySchema(MetaParser):
                 "oper_state": str,
                 "width": int,
                 "tx_pwr": str,
-                "channel": str
+                "channel": str,
+                Optional("mode"): str      
             }
         } 
     }     
@@ -716,7 +716,7 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
             out = output
 
         ap_dot11_5ghz_summ = {}
-        # AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
+        # AP Name                       Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel   Mode
         # ---------------------------------------------------------------------------------------------------------------------------------
         # ab-1-test-4800                 5c50.15ff.41e1  1       Enabled        Down          20     *1/8 (23 dBm)   (36)*
         # ab21-cap40                    5c50.15ff.dbb6  1       Enabled        Up            20     *7/8 (6 dBm)    (100)*
@@ -729,9 +729,10 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
         # ab22-cap18                    5c50.15ff.8ec4  1       Enabled        Up            20     *7/8 (6 dBm)    (124)*
         # ab32-cap13                    5c50.15ff.8fc4  1       Enabled        Up            20     *6/8 (9 dBm)    (124)*
         #
-        # AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
+        # AP Name                       Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel     Mode
         # ---------------------------------------------------------------------------------------------------------------------------------
         # ab22-cap10                    5c50.15ff.8fe4  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
+        # BHS-A-204 				    00a7.42ff.d4d0  1 	    Enabled 	   Up 			 20 	 3/7 (12 dBm)   (124)       Local
         # ab11-cap18                    5c50.15ff.9024  1       Enabled        Up            20     *7/8 (8 dBm)    (48)*
         # ab22-cap8                     5c50.15ff.9044  1       Enabled        Up            20     *7/8 (8 dBm)    (149)*
         # ab22-cap22                    5c50.15ff.90e4  1       Enabled        Up            20     *8/8 (5 dBm)    (40)*
@@ -742,32 +743,40 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
         # ab21-cap27                    5c50.15ff.9364  1       Enabled        Up            20     *7/8 (6 dBm)    (132)*
         # ab21-cap35                    5c50.15ff.b0a4  1       Enabled        Up            20     *7/8 (6 dBm)    (140)*
 
-        # AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
+        # AP Name                       Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
+        # AP Name                       Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel     Mode
         ap_header_capture = re.compile(
             r"^AP\s+Name\s+Mac\s+Address\s+Slot\s+Admin\s+State\s+Oper\s+State\s+Width\s+Txpwr\s+Channel$")
         # ---------------------------------------------------------------------------------------------------------------------------------
         delimiter_capture = re.compile(
             r"^---------------------------------------------------------------------------------------------------------------------------------$")
-        # ab22-cap10                    5c50.15ff.8fe4  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
-        ap_info_capture = re.compile(
-            r"^(?P<ap_name>\S+)\s+(?P<mac_address>\S+)\s+(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled))"
-                        r"\s+(?P<oper_state>\S+)\s+(?P<width>\d+)\s+(?P<tx_pwr>\*.*dBm\))\s+(?P<channel>\S+)$")
+
+
+        # ab22-cap10                   5c50.15ff.8fe4 1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
+        # BHS-A-204 				   00a7.42ff.d4d0 1 	  Enabled 		 Up 		   20 	   3/7 (12 dBm)   (124)   Local
+        p1 = re.compile(r"^(?P<ap_name>\S+)\s+(?P<mac_address>\S+)\s+"
+                                       "(?P<slot>\d+)\s+(?P<admin_state>(Enabled|Disabled))\s+(?P<oper_state>\S+)\s+"
+                                       "(?P<width>\d+)\s+(?P<tx_pwr>(\*\d\/\d.*dBm\))|(\d\/\d.*dBm\)))\s+"
+                                       "(?P<channel>\S+)\s*(?P<mode>\S+|^.{0}$)?$")
 
         for line in out.splitlines():
             line = line.strip()
-            # AP Name                           Mac Address     Slot    Admin State    Oper State    Width  Txpwr           Channel
+
+            # ab22-cap10                   5c50.15ff.8fe4 1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
+            # BHS-A-204 				   00a7.42ff.d4d0 1 	  Enabled 		 Up 		   20 	   3/7 (12 dBm)   (124)   Local
             if ap_header_capture.match(line):
                 continue
             # ---------------------------------------------------------------------------------------------------------------------------------
             elif delimiter_capture.match(line):
                 continue
-            # ab22-cap10                    5c50.15ff.8fe4  1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
-            elif ap_info_capture.match(line):
+
+            # ab22-cap10                   5c50.15ff.8fe4 1       Enabled        Up            20     *6/8 (9 dBm)    (132)*
+            # BHS-A-204 				   00a7.42ff.d4d0 1 	  Enabled 		 Up 		   20 	   3/7 (12 dBm)   (124)   Local
+            elif p1.match(line):
                 if not ap_dot11_5ghz_summ.get('ap_name'):
                     ap_dot11_5ghz_summ['ap_name'] = {}
-                ap_info_capture_match = ap_info_capture.match(line)
+                ap_info_capture_match = p1.match(line)
                 groups = ap_info_capture_match.groupdict()
-                print(groups)
                 ap_name = groups['ap_name']
                 mac_address = groups['mac_address']
                 slot = int(groups['slot'])
@@ -776,16 +785,29 @@ class ShowApDot115GhzSummary(ShowApDot115GhzSummarySchema):
                 width = int(groups['width'])
                 tx_pwr = groups['tx_pwr']
                 channel = groups['channel']
-                ap_dot11_5ghz_summ['ap_name'].update({ap_name: {}})
-                ap_dot11_5ghz_summ['ap_name'][ap_name]['mac_address'] = mac_address
-                ap_dot11_5ghz_summ['ap_name'][ap_name]['slot'] = slot
-                ap_dot11_5ghz_summ['ap_name'][ap_name]['admin_state'] = admin_state
-                ap_dot11_5ghz_summ['ap_name'][ap_name]['oper_state'] = oper_state
-                ap_dot11_5ghz_summ['ap_name'][ap_name]['width'] = width
-                ap_dot11_5ghz_summ['ap_name'][ap_name]['tx_pwr'] = tx_pwr
-                ap_dot11_5ghz_summ['ap_name'][ap_name]['channel'] = channel
+
+                # define ap_name_dict and set ap_name
+                ap_name_dict = ap_dot11_5ghz_summ['ap_name'].setdefault(ap_name, {})
+
+                # update ap_name_dict
+                ap_name_dict['mac_address'] = mac_address
+                ap_name_dict['slot'] = slot
+                ap_name_dict['admin_state'] = admin_state
+                ap_name_dict['oper_state'] = oper_state
+                ap_name_dict['width'] = width
+                ap_name_dict['tx_pwr'] = tx_pwr
+                ap_name_dict['channel'] = channel
+
+                # assign mode if it is captured in groups otherwise remove it from groups deictionary and set mode to None
+                if groups['mode']:
+                    mode = groups['mode']
+                    ap_name_dict['mode'] = mode
+                else:
+                    try:
+                        del groups['mode']
+                        mode = None
+                    except: KeyError
                 continue
-            # print(ap_dot11_5ghz_summ)
 
         return ap_dot11_5ghz_summ
 

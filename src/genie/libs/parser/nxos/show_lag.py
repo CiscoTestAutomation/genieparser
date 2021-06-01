@@ -119,18 +119,18 @@ class ShowLacpCounters(ShowLacpCountersSchema):
         # Err
         # ------------------------------------------------------------------------------
         # port - channel1
-        # Ethernet1 / 1        92                   85                     0      0   
-        # 0      
-        # Ethernet1 / 2        79                   87                     0      0   
-        # 0      
+        # Ethernet1 / 1        92                   85                     0      0
+        # 0
+        # Ethernet1 / 2        79                   87                     0      0
+        # 0
         #
         # port - channel2
-        # Ethernet1 / 3        136                  112                    0      0   
-        # 0      
-        # Ethernet1 / 4        95                   90                     0      0   
-        # 0      
-        # Ethernet1 / 5        118                  146                    0      0   
-        # 0      
+        # Ethernet1 / 3        136                  112                    0      0
+        # 0
+        # Ethernet1 / 4        95                   90                     0      0
+        # 0
+        # Ethernet1 / 5        118                  146                    0      0
+        # 0
         p2 = re.compile(
             r'^(?P<interface>[\w\/]+) +(?P<lacp_out_pkts>[\d]+) +(?P<lacp_in_pkts>[\d]+)'
             ' +(?P<marker_in_pkts>[\d]+) +(?P<marker_out_pkts>[\d]+) +( +('
@@ -444,8 +444,10 @@ class ShowPortChannelDatabase(ShowPortChannelDatabaseSchema):
         #     Ports:   Ethernet1/3     [passive] [up]
         #              Ethernet1/4     [passive] [up] *
         #              Ethernet1/5     [passive] [hot-standy]
+        #     Ports:   Ethernet1/25    [on] [up]
+        #              Ethernet1/26    [on] [up] *
         p10 = re.compile(
-            r'^(Ports:)?\s*(?P<interface>[\w/]+)\s+\[(?P<activity>(passive|active)) *\] '
+            r'^(Ports:)?\s*(?P<interface>[\w/]+)\s+\[(?P<activity>(passive|active|on|off)) *\] '
             r'+\['
             r'(?P<status>[\w-]+)\](?P<fop>\s+\*)*$')
 

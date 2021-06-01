@@ -13,7 +13,7 @@ import re
 from genie.metaparser import MetaParser
 from pyats.utils.exceptions import SchemaError
 from genie.metaparser.util.schemaengine import (Any, Optional, Use,
-                                                Schema)
+                                                Schema, ListOf)
 
 
 class ShowPfeStatisticsTrafficSchema(MetaParser):
@@ -841,20 +841,16 @@ class ShowPfeRouteSummarySchema(MetaParser):
     """ Schema for:
             * show pfe route summary
     """
-    def validate_route_table_data(value):
-        if not isinstance(value, list):
-            raise SchemaError('validate_route_table_data is not a list')
-        entry_schema = Schema({'index': str, 'routes': str, 'size': str})
-        # Validate each dictionary in list
-        for item in value:
-            entry_schema.validate(item)
-        return value
 
     schema = {
         'slot': {
             Any(): {
                 'route-tables': {
-                    Any(): Use(validate_route_table_data),
+                    Any(): ListOf({
+                        'index': str,
+                        'routes': str,
+                        'size': str
+                    }),
                 }
             }
         }

@@ -18,6 +18,9 @@ __pycache__/
 # Pycharm files
 .idea
 
+# pyenv
+.python-version
+
 # Rope files
 .ropeproject
 

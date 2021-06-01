@@ -1,0 +1,230 @@
+Interface GigabitEthernet0/0 "", is administratively down, line protocol is up
+  Hardware is net_virtio, BW 1000 Mbps, DLY 10 usec
+	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
+	Input flow control is unsupported, output flow control is unsupported
+	Available but not configured via nameif
+	MAC address 5254.00ff.b546, MTU not set
+	IP address unassigned
+	0 packets input, 0 bytes, 0 no buffer
+	Received 0 broadcasts, 0 runts, 0 giants
+	0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+	0 pause input, 0 resume input
+	0 L2 decode drops
+	0 packets output, 0 bytes, 0 underruns
+	0 pause output, 0 resume output
+	0 output errors, 0 collisions, 0 interface resets
+	0 late collisions, 0 deferred
+	0 input reset drops, 0 output reset drops
+	input queue (blocks free curr/low): hardware (0/0)
+	output queue (blocks free curr/low): hardware (0/0)
+  Control Point Interface States:
+	Interface number is 3
+	Interface config status is active
+	Interface state is not active
+Interface GigabitEthernet0/1 "", is administratively down, line protocol is up
+  Hardware is net_virtio, BW 1000 Mbps, DLY 10 usec
+	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
+	Input flow control is unsupported, output flow control is unsupported
+	Available but not configured via nameif
+	MAC address 5254.00ff.2183, MTU not set
+	IP address unassigned
+	0 packets input, 0 bytes, 0 no buffer
+	Received 0 broadcasts, 0 runts, 0 giants
+	0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+	0 pause input, 0 resume input
+	0 L2 decode drops
+	0 packets output, 0 bytes, 0 underruns
+	0 pause output, 0 resume output
+	0 output errors, 0 collisions, 0 interface resets
+	0 late collisions, 0 deferred
+	0 input reset drops, 0 output reset drops
+	input queue (blocks free curr/low): hardware (0/0)
+	output queue (blocks free curr/low): hardware (0/0)
+  Control Point Interface States:
+	Interface number is 4
+	Interface config status is active
+	Interface state is not active
+Interface GigabitEthernet0/2 "", is administratively down, line protocol is up
+  Hardware is net_virtio, BW 1000 Mbps, DLY 10 usec
+	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
+	Input flow control is unsupported, output flow control is unsupported
+	Available but not configured via nameif
+	MAC address 5254.00ff.2593, MTU not set
+	IP address unassigned
+	0 packets input, 0 bytes, 0 no buffer
+	Received 0 broadcasts, 0 runts, 0 giants
+	0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+	0 pause input, 0 resume input
+	0 L2 decode drops
+	0 packets output, 0 bytes, 0 underruns
+	0 pause output, 0 resume output
+	0 output errors, 0 collisions, 0 interface resets
+	0 late collisions, 0 deferred
+	0 input reset drops, 0 output reset drops
+	input queue (blocks free curr/low): hardware (0/0)
+	output queue (blocks free curr/low): hardware (0/0)
+  Control Point Interface States:
+	Interface number is 5
+	Interface config status is active
+	Interface state is not active
+Interface GigabitEthernet0/3 "", is administratively down, line protocol is up
+  Hardware is net_virtio, BW 1000 Mbps, DLY 10 usec
+	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
+	Input flow control is unsupported, output flow control is unsupported
+	Available but not configured via nameif
+	MAC address 5254.00ff.e50c, MTU not set
+	IP address unassigned
+	0 packets input, 0 bytes, 0 no buffer
+	Received 0 broadcasts, 0 runts, 0 giants
+	0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+	0 pause input, 0 resume input
+	0 L2 decode drops
+	0 packets output, 0 bytes, 0 underruns
+	0 pause output, 0 resume output
+	0 output errors, 0 collisions, 0 interface resets
+	0 late collisions, 0 deferred
+	0 input reset drops, 0 output reset drops
+	input queue (blocks free curr/low): hardware (0/0)
+	output queue (blocks free curr/low): hardware (0/0)
+  Control Point Interface States:
+	Interface number is 6
+	Interface config status is active
+	Interface state is not active
+Interface GigabitEthernet0/4 "", is administratively down, line protocol is up
+  Hardware is net_virtio, BW 1000 Mbps, DLY 10 usec
+	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
+	Input flow control is unsupported, output flow control is unsupported
+	Available but not configured via nameif
+	MAC address 5254.00ff.60b0, MTU not set
+	IP address unassigned
+	0 packets input, 0 bytes, 0 no buffer
+	Received 0 broadcasts, 0 runts, 0 giants
+	0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+	0 pause input, 0 resume input
+	0 L2 decode drops
+	0 packets output, 0 bytes, 0 underruns
+	0 pause output, 0 resume output
+	0 output errors, 0 collisions, 0 interface resets
+	0 late collisions, 0 deferred
+	0 input reset drops, 0 output reset drops
+	input queue (blocks free curr/low): hardware (0/0)
+	output queue (blocks free curr/low): hardware (0/0)
+  Control Point Interface States:
+	Interface number is 7
+	Interface config status is active
+	Interface state is not active
+Interface GigabitEthernet0/5 "", is administratively down, line protocol is up
+  Hardware is net_virtio, BW 1000 Mbps, DLY 10 usec
+	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
+	Input flow control is unsupported, output flow control is unsupported
+	Available but not configured via nameif
+	MAC address 5254.00ff.b31b, MTU not set
+	IP address unassigned
+	0 packets input, 0 bytes, 0 no buffer
+	Received 0 broadcasts, 0 runts, 0 giants
+	0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+	0 pause input, 0 resume input
+	0 L2 decode drops
+	0 packets output, 0 bytes, 0 underruns
+	0 pause output, 0 resume output
+	0 output errors, 0 collisions, 0 interface resets
+	0 late collisions, 0 deferred
+	0 input reset drops, 0 output reset drops
+	input queue (blocks free curr/low): hardware (0/0)
+	output queue (blocks free curr/low): hardware (0/0)
+  Control Point Interface States:
+	Interface number is 8
+	Interface config status is active
+	Interface state is not active
+Interface GigabitEthernet0/6 "", is administratively down, line protocol is up
+  Hardware is net_virtio, BW 1000 Mbps, DLY 10 usec
+	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
+	Input flow control is unsupported, output flow control is unsupported
+	Available but not configured via nameif
+	MAC address 5254.00ff.33cf, MTU not set
+	IP address unassigned
+	0 packets input, 0 bytes, 0 no buffer
+	Received 0 broadcasts, 0 runts, 0 giants
+	0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+	0 pause input, 0 resume input
+	0 L2 decode drops
+	0 packets output, 0 bytes, 0 underruns
+	0 pause output, 0 resume output
+	0 output errors, 0 collisions, 0 interface resets
+	0 late collisions, 0 deferred
+	0 input reset drops, 0 output reset drops
+	input queue (blocks free curr/low): hardware (0/0)
+	output queue (blocks free curr/low): hardware (0/0)
+  Control Point Interface States:
+	Interface number is 9
+	Interface config status is active
+	Interface state is not active
+Interface Internal-Data0/0 "nlp_int_tap", is up, line protocol is up
+  Hardware is en_vtun rev00, BW Unknown Speed-Capability, DLY 1000 usec
+	(Full-duplex), (1000 Mbps)
+	Input flow control is unsupported, output flow control is unsupported
+	MAC address 0000.01ff.0001, MTU 1500
+	IP address 169.254.1.1, subnet mask 255.255.255.248
+	10 packets input, 896 bytes, 0 no buffer
+	Received 0 broadcasts, 0 runts, 0 giants
+	0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+	0 pause input, 0 resume input
+	0 L2 decode drops
+	5 packets output, 370 bytes, 0 underruns
+	0 pause output, 0 resume output
+	0 output errors, 0 collisions, 0 interface resets
+	0 late collisions, 0 deferred
+	0 input reset drops, 0 output reset drops
+	input queue (blocks free curr/low): hardware (0/0)
+	output queue (blocks free curr/low): hardware (0/0)
+  Traffic Statistics for "nlp_int_tap":
+	10 packets input, 756 bytes
+	5 packets output, 300 bytes
+	10 packets dropped
+      1 minute input rate 0 pkts/sec,  0 bytes/sec
+      1 minute output rate 0 pkts/sec,  0 bytes/sec
+      1 minute drop rate, 0 pkts/sec
+      5 minute input rate 0 pkts/sec,  0 bytes/sec
+      5 minute output rate 0 pkts/sec,  0 bytes/sec
+      5 minute drop rate, 0 pkts/sec
+  Control Point Interface States:
+	Interface number is 10
+	Interface config status is active
+	Interface state is active
+Interface Management0/0 "management", is up, line protocol is up
+  Hardware is net_virtio, BW 1000 Mbps, DLY 10 usec
+	Auto-Duplex(Full-duplex), Auto-Speed(1000 Mbps)
+	Input flow control is unsupported, output flow control is unsupported
+	MAC address 5254.00ff.bbcd, MTU 1500
+	IP address 10.224.128.27, subnet mask 255.255.254.0
+	1872 packets input, 161997 bytes, 0 no buffer
+	Received 0 broadcasts, 0 runts, 0 giants
+	0 input errors, 0 CRC, 0 frame, 0 overrun, 0 ignored, 0 abort
+	0 pause input, 0 resume input
+	0 L2 decode drops
+	2486 packets output, 347875 bytes, 0 underruns
+	0 pause output, 0 resume output
+	0 output errors, 0 collisions, 0 interface resets
+	0 late collisions, 0 deferred
+	0 input reset drops, 0 output reset drops
+	input queue (blocks free curr/low): hardware (0/0)
+	output queue (blocks free curr/low): hardware (0/0)
+  Traffic Statistics for "management":
+	1872 packets input, 131463 bytes
+	2486 packets output, 283239 bytes
+	214 packets dropped
+      1 minute input rate 0 pkts/sec,  0 bytes/sec
+      1 minute output rate 0 pkts/sec,  0 bytes/sec
+      1 minute drop rate, 0 pkts/sec
+      5 minute input rate 0 pkts/sec,  0 bytes/sec
+      5 minute output rate 0 pkts/sec,  0 bytes/sec
+      5 minute drop rate, 0 pkts/sec
+	Management-only interface. Blocked 0 through-the-device packets
+		0 IPv4 packets originated from management network
+		0 IPv4 packets destined to management network
+		0 IPv6 packets originated from management network
+		0 IPv6 packets destined to management network
+  Control Point Interface States:
+	Interface number is 2
+	Interface config status is active
+	Interface state is active

@@ -34,6 +34,8 @@ BUILD_DIR     = $(shell pwd)/__build__
 DIST_DIR      = $(BUILD_DIR)/dist
 PROD_USER     = pyadm@pyats-ci
 PROD_PKGS     = /auto/pyats/packages
+STAGING_PKGS  = /auto/pyats/staging/packages
+STAGING_EXT_PKGS  = /auto/pyats/staging/packages_external
 PYTHON        = python
 TESTCMD       = runAll --path=$(shell pwd)/tests
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
@@ -50,26 +52,29 @@ ifeq ($(MAKECMDGOALS), devnet)
 endif
 
 .PHONY: clean package distribute develop undevelop help devnet\
-        docs test install_build_deps uninstall_build_deps
+        docs test install_build_deps uninstall_build_deps distribute_staging\
+        distribute_staging_external
 
 help:
 	@echo "Please use 'make <target>' where <target> is one of"
 	@echo ""
-	@echo "package               Build the package"
-	@echo "test                  Test the package"
-	@echo "distribute            Distribute the package to internal Cisco PyPi server"
-	@echo "clean                 Remove build artifacts"
-	@echo "develop               Build and install development package"
-	@echo "undevelop             Uninstall development package"
-	@echo "docs                  Build Sphinx documentation for this package"
-	@echo "devnet                Build DevNet package."
-	@echo "install_build_deps    install pyats-distutils"
-	@echo "uninstall_build_deps  Remove pyats-distutils"
-	@echo "compile		 		 Compile all python modules to c"
-	@echo "coverage_all			 Run code coverage on all test files"
-	@echo "pylint_all			 Run python linter on all python modules"
-	@echo "json					 Build json files"
-	@echo "changelogs			 Build compiled changelog file"
+	@echo "package                       Build the package"
+	@echo "test                          Test the package"
+	@echo "distribute                    Distribute the package to internal Cisco PyPi server"
+	@echo "distribute_staging            Distribute build pkgs to staging area"
+	@echo "distribute_staging_external   Distribute build pkgs to external staging area"
+	@echo "clean                         Remove build artifacts"
+	@echo "develop                       Build and install development package"
+	@echo "undevelop                     Uninstall development package"
+	@echo "docs                          Build Sphinx documentation for this package"
+	@echo "devnet                        Build DevNet package."
+	@echo "install_build_deps            install pyats-distutils"
+	@echo "uninstall_build_deps          Remove pyats-distutils"
+	@echo "compile		 		         Compile all python modules to c"
+	@echo "coverage_all			         Run code coverage on all test files"
+	@echo "pylint_all			         Run python linter on all python modules"
+	@echo "json					         Build json files"
+	@echo "changelogs			         Build compiled changelog file"
 	@echo ""
 	@echo "     --- build arguments ---"
 	@echo " DEVNET=true              build for devnet style (cythonized, no ut)"
@@ -142,7 +147,7 @@ develop:
 	@echo "Building and installing $(PKG_NAME) development distributable: $@"
 	@echo ""
 
-	@pip uninstall -y $(RELATED_PKGS)
+	@pip uninstall -y $(RELATED_PKGS) || true
 	@pip install $(DEPENDENCIES)
 
 	@$(PYTHON) setup.py develop --no-deps
@@ -190,6 +195,28 @@ distribute:
 	@echo "Done."
 	@echo ""
 
+distribute_staging:
+	@echo ""
+	@echo "--------------------------------------------------------------------"
+	@echo "Copying all distributable to $(STAGING_PKGS)"
+	@test -d $(DIST_DIR) || { echo "Nothing to distribute! Exiting..."; exit 1; }
+	@ssh -q $(PROD_USER) 'test -e $(STAGING_PKGS)/$(PKG_NAME) || mkdir $(STAGING_PKGS)/$(PKG_NAME)'
+	@scp $(DIST_DIR)/* $(PROD_USER):$(STAGING_PKGS)/$(PKG_NAME)/
+	@echo ""
+	@echo "Done."
+	@echo ""
+
+distribute_staging_external:
+	@echo ""
+	@echo "--------------------------------------------------------------------"
+	@echo "Copying all distributable to $(STAGING_EXT_PKGS)"
+	@test -d $(DIST_DIR) || { echo "Nothing to distribute! Exiting..."; exit 1; }
+	@ssh -q $(PROD_USER) 'test -e $(STAGING_EXT_PKGS)/$(PKG_NAME) || mkdir $(STAGING_EXT_PKGS)/$(PKG_NAME)'
+	@scp $(DIST_DIR)/* $(PROD_USER):$(STAGING_EXT_PKGS)/$(PKG_NAME)/
+	@echo ""
+	@echo "Done."
+	@echo ""
+
 json:
 	@echo ""
 	@echo "--------------------------------------------------------------------"
@@ -205,7 +232,7 @@ changelogs:
 	@echo "--------------------------------------------------------------------"
 	@echo "Generating changelog file"
 	@echo ""
-	@python "./tools/changelog_script.py" "./changelog/undistributed" --output "./changelog/undistributed.rst"
+	@python -c "from ciscodistutils.make_changelog import main; main('./changelog/undistributed', './changelog/undistributed.rst')"
 	@echo ""
 	@echo "Done."
 	@echo ""

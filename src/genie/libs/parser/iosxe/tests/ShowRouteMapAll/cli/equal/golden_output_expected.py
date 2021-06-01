@@ -1,5 +1,21 @@
 expected_output = {
+  "rtp": {
+    "statements": {
+      "10": {
+        "actions": {
+          "set_next_hop_self": False,
+          "route_disposition": "permit"
+        },
+        "conditions": {
+          "match_prefix_list_v6": "cisco&&2",
+          "match_nexthop_in_v6": ["cisco"]
+        },
+        "policy_routing_matches": { "packets": 0, "bytes": 0 }
+      }
+    }
+  },
   "test": {
+    "description": "hello!",
     "statements": {
       "10": {
         "actions": {
@@ -10,7 +26,10 @@ expected_output = {
         },
         "conditions": {
           "match_interface": "GigabitEthernet1",
-          "match_nexthop_in_v6": ["test"]
+          "match_nexthop_in": ["FILTER25", "FILTER.26"],
+          "match_nexthop_in_v6": ["test"],
+          "match_community_list": "DENY50000! DENY50000",
+          "match_ext_community_list": "DENY50000 DENY50000!",
         },
         "policy_routing_matches": { "packets": 0, "bytes": 0 }
       }
@@ -50,7 +69,7 @@ expected_output = {
           "set_next_hop_v6": ["2001:DB8:3::1"]
         },
         "conditions": {
-          "match_prefix_list": "test test2",
+          "match_prefix_list": "test test_2 test&3",
           "match_level_eq": "level-1-2",
           "match_interface": "GigabitEthernet1 GigabitEthernet2",
           "match_as_path_list": "100",

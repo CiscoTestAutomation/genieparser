@@ -1,6 +1,6 @@
 '''
 * 'show sdwan zonebfwdp sessions'
-
+* 'show sdwan zbfw zonepair-statistics'
 '''
 # Python
 import re
@@ -119,3 +119,183 @@ class ShowSdwanZonebfwdpSessions(ShowSdwanZonebfwdpSessionsSchema):
                 continue
         
         return(ret_dict)
+
+
+class ShowSdwanZbfwStatisticsSchema(MetaParser):
+    schema = {
+        'zonepair_name': {
+            Any(): {
+                'src_zone_name': str,
+                'dst_zone_name': str,
+                'policy_name': str,
+                'class_entry': {
+                    Any():{
+                        'zonepair_name': str,
+                        'class_action': str,
+                        'pkts_counter': int,
+                        'bytes_counter': int,
+                        'attempted_conn': int,
+                        'current_active_conn': int,
+                        'max_active_conn': int,
+                        'current_halfopen_conn': int,
+                        'max_halfopen_conn': int,
+                        'current_terminating_conn': int,
+                        'max_terminating_conn': int,
+                        'time_since_last_session_create': int,
+                        Optional('match_entry'): {
+                            Any(): {
+                                'seq_num': int,
+                                Optional('match_crit'): str,
+                                'match_type': str
+                            }
+                        },
+                        Optional('proto_entry'):{
+                            int: {
+                                'protocol_name': str,
+                                'byte_counters': int,
+                                'pkt_counters': int
+                            }
+                        },
+                        'l7_policy_name': str      
+                    }
+                },   
+                Optional('l7_class_entry'): {
+                    Any(): {
+                        'parent_class_name': str,
+                        'child_class_action': str,
+                        'pkts_counter': int,
+                        'bytes_counter': int,
+                        'attempted_conn': int,
+                        'current_active_conn': int,
+                        'max_active_conn': int,
+                        'current_halfopen_conn': int,
+                        'max_halfopen_conn': int,
+                        'current_terminating_conn': int,
+                        'max_terminating_conn': int,
+                        'time_since_last_session_create': int,
+                        Optional('l7_match_entry'): {
+                            Any(): {
+                                'byte_counters': int,
+                                'pkt_counters': int
+                            }
+                        }
+                    }
+                }          
+            }
+        }
+    }        
+
+
+
+class ShowSdwanZbfwStatistics(ShowSdwanZbfwStatisticsSchema):
+    """Parser for show sdwan zbfw zonepair-statistics
+    parser class - implements detail parsing mechanisms for cli output.
+    """
+
+    cli_command = 'show sdwan zbfw zonepair-statistics'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        #zbfw zonepair-statistics ZP_lanZone_lanZone_Is_-902685811
+        #p1 = re.compile(r'^zbfw zonepair-statistics (?P<zp_name>\S+)$')
+        p1 = re.compile(r'^zbfw\s+zonepair-statistics\s+(?P<zp_name>\S+)$')
+
+        #fw-traffic-class-entry Isn4451ZbfPolicy-seq-1-cm_
+        p2 = re.compile(r'^(?P<class_name>(fw-traffic-class-entry|fw-l7-traffic-class-entry)) (?P<class_entry>\S+)$')
+                        
+        #fw-tc-match-entry "match-any Isn4451ZbfPolicy-svrf1-l4-cm_" 11
+        #p3 = re.compile(r'^fw-tc-match-entry "(?P<match_crit>\S+)\s+(?P<tc_entry>[\w\d\s-]+)"\s(?P<tc_num>\S+)$')
+        p3 = re.compile(r'^fw-tc-match-entry\s+"(?P<match_crit>\S+)\s+(?P<tc_entry>[\w\d\s-]+)"\s+(?P<tc_num>\S+)$')
+
+        #fw-tc-match-entry Isn4451ZbfPolicy-seq-vrf5-acl_ 3
+        #p4 = re.compile(r'^fw-tc-match-entry (?P<tc_entry>[\w\d\s-]+)\s(?P<tc_num>\S+)$')
+        p4 = re.compile(r'^fw-tc-match-entry\s+(?P<tc_entry>[\w\d\s-]+)\s(?P<tc_num>\S+)$')
+
+        #fw-tc-proto-entry 1
+        #p5 = re.compile(r'^(?P<match_name>fw-tc-proto-entry|fw-l7-tc-match-app-entry)\s+(?P<entry_val>[\w\d\-]+)$')
+        p5 = re.compile(r'^(?P<match_name>fw-tc-proto-entry|fw-l7-tc-match-app-entry)\s+(?P<entry_val>[\w\d\-]+)$')
+
+        #l7-policy-name                 NONE
+        p6 = re.compile(r'^(?P<entry_name>l7-policy-name)\s+(?P<entry_val>\S+)$')
+
+        #src-zone-name lanZone
+        #p5 = re.compile(r'^(?P<key>\S+)\s+(?P<value>\S+)$')
+        p7 = re.compile(r'^(?P<key>\S+)\s+\"?(?P<value>[\w\s\d\-\_]+)\"?$')
+
+
+        ret_dict = {}
+        last_dict_ptr = {}
+        for line in out.splitlines():
+            line = line.strip()
+
+            #zbfw zonepair-statistics ZP_lanZone_lanZone_Is_-902685811
+            m = p1.match(line)      
+            if m:
+                groups = m.groupdict()
+                feature_dict = ret_dict.setdefault('zonepair_name', {}).setdefault(groups['zp_name'], {})
+                last_dict_ptr = feature_dict
+                continue
+
+            #fw-traffic-class-entry Isn4451ZbfPolicy-seq-1-cm_
+            m = p2.match(line)      
+            if m:
+                groups = m.groupdict()
+                if(groups['class_name'] == 'fw-l7-traffic-class-entry'):
+                    class_dict = feature_dict.setdefault('l7_class_entry', {}).setdefault(groups['class_entry'], {})
+                else:
+                    class_dict = feature_dict.setdefault('class_entry', {}).setdefault(groups['class_entry'], {})
+                last_dict_ptr = class_dict
+                continue
+
+            #fw-tc-match-entry "match-any Isn4451ZbfPolicy-svrf1-l4-cm_" 11
+            m = p3.match(line)
+            if m:
+                groups = m.groupdict()                
+                tc_dict = class_dict.setdefault('match_entry', {}).setdefault(groups['tc_entry'], {})
+                tc_dict.update({'seq_num': int(groups['tc_num'])})
+                tc_dict.update({'match_crit': (groups['match_crit'])})
+                last_dict_ptr = tc_dict
+                continue
+
+            m = p4.match(line)
+            if m:
+                groups = m.groupdict()
+                tc_dict = class_dict.setdefault('match_entry', {}).setdefault(groups['tc_entry'], {})
+                tc_dict.update({'seq_num': int(groups['tc_num'])})
+                last_dict_ptr = tc_dict
+                continue
+
+            m = p5.match(line)
+            if m:
+                groups = m.groupdict()
+                if(groups['match_name'] == 'fw-l7-tc-match-app-entry'):
+                    tc1_dict = class_dict.setdefault('l7_match_entry', {}).setdefault(groups['entry_val'], {})
+                else:
+                    tc1_dict = class_dict.setdefault('proto_entry', {}).setdefault(int(groups['entry_val']), {})
+
+                    #tc1_dict = class_dict.setdefault(groups['entry_name'], {})
+                    #tc1_dict.update({'seq_num': int(groups['tc_num'])})
+                last_dict_ptr = tc1_dict
+                continue
+
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                class_dict.update({groups['entry_name'].replace('-', '_'): (groups['entry_val'])})
+                continue
+
+            #src-zone-name lanZone
+            m = p7.match(line)
+            if m:
+                groups = m.groupdict()
+                if groups['key'].replace('-', '_').strip() in ['class_action','src_zone_name','dst_zone_name','policy_name','zonepair_name','class_action','protocol_name','match_type','parent_class_name','child_class_action']:
+                    last_dict_ptr.update({groups['key'].replace('-', '_'): groups['value']})
+                else:
+                    last_dict_ptr.update({groups['key'].replace('-', '_'): int(groups['value'])})
+                    continue
+
+        return(ret_dict) 

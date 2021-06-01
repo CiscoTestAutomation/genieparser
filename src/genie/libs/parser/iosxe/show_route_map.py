@@ -88,7 +88,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
         p1_2 = re.compile(r'^\s*(?P<clause_type>[a-zA-Z]+) +clauses:$')
 
         # description <description>
-        p1_1 = re.compile(r'^\s*description +(?P<description>[a-zA-Z0-9]+)$')
+        p1_1 = re.compile(r'^\s*description +(?P<description>.+)$')
 
         # as-path (as-path filter): aspathlist1
         p2 = re.compile(r'^\s*as-path *\(as-path *filter\):'
@@ -100,20 +100,20 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
 
         # ip address prefix-lists: test-test
         p3 = re.compile(r'^\s*ip *address *prefix-lists:'
-                        r' *(?P<match_prefix_list>[a-zA-Z0-9\s]+)$')
+                        r' *(?P<match_prefix_list>.+)$')
 
         #ip next-hop prefix-lists: test
         #ip next-hop (access-lists): 1
         p4 =  re.compile(r'^\s*ip *next-hop *(?P<match_type>[a-zA-Z0-9\S\(\)]+):'
-                         r' *(?P<match_nexthop_in>[a-zA-Z0-9\S]+)$')
+                         r' *(?P<match_nexthop_in>.+)$')
 
-        # ipv6 address prefix-lists: test-test
-        p5 = re.compile(r'^\s*ipv6 *address *prefix-lists:'
-                        r' *(?P<match_prefix_list_v6>[a-zA-Z0-9\S]+)$')
+        # ipv6 address prefix-list test-test
+        p5 = re.compile(r'^\s*ipv6 *address *prefix-list(?:s\:)?'
+                        r' *(?P<match_prefix_list_v6>.+)$')
 
-        # ipv6 next-hop prefix-lists: test2
-        p6 = re.compile(r'^\s*ipv6 *next-hop *prefix-lists:'
-                        r' *(?P<match_nexthop_in_v6>[a-zA-Z0-9\-\s]+)$')
+        # ipv6 next-hop prefix-list test2
+        p6 = re.compile(r'^\s*ipv6 *next-hop *prefix-list(?:s\:)?'
+                        r' *(?P<match_nexthop_in_v6>.+)$')
 
         #interface GigabitEthernet1
         p7 = re.compile(r'^\s*interface *(?P<match_interface>[a-zA-Z0-9\/\s]+)$')
@@ -123,14 +123,14 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
 
         #community  (community-list filter): test3
         p10 = re.compile(r'^\s*community *\(community-list *filter\):'
-                         r' *(?P<match_community_list>[a-z0-9\-\s]+)$')
+                         r' *(?P<match_community_list>.+)$')
 
         #route-type: level-1 level-2
         p11 = re.compile(r'^\s*route-type *(?P<match_level_eq>[a-z0-9\-\s]+)$')
 
         # extcommunity  (extcommunity-list filter): testing
         p11_1 = re.compile(r'^\s*extcommunity *\(extcommunity-list *filter\):'
-                           r' *(?P<match_ext_community_list>[a-zA-Z]+)$')
+                           r' *(?P<match_ext_community_list>.+)$')
 
         # ip next-hop 10.64.4.4
         # ip next-hop 10.4.1.1 10.16.2.2
@@ -276,18 +276,18 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
                 ['match_nexthop_in'] = m.groupdict()['match_nexthop_in'].split()
                 continue
 
-            # ipv6 address prefix-lists: test-test
+            # ipv6 address prefix-list test-test
             m = p5.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
                 ['match_prefix_list_v6'] = str(m.groupdict()['match_prefix_list_v6'])
                 continue
 
-            # ipv6 next-hop prefix-lists: test2
+            # ipv6 next-hop prefix-list test2
             m = p6.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
-                ['match_nexthop_in_v6'] = str(m.groupdict()['match_nexthop_in_v6'])
+                ['match_nexthop_in_v6'] = m.groupdict()['match_nexthop_in_v6'].split()
                 continue
 
             #interface GigabitEthernet1
@@ -330,8 +330,7 @@ class ShowRouteMapAll(ShowRouteMapAllSchema):
             m = p11_1.match(line)
             if m:
                 route_map_dict[name]['statements'][statements]['conditions']\
-                ['match_ext_community_list'] = str(m.groupdict()\
-                ['match_ext_community_list'])
+                ['match_ext_community_list'] = str(m.groupdict()['match_ext_community_list'])
                 continue
 
             # ip next-hop 10.64.4.4

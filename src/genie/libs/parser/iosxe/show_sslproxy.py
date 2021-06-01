@@ -24,8 +24,8 @@ class ShowSslproxyStatusSchema(MetaParser):
             'min_tls_ver': str,
         },
         'status': {
-            'ssl_proxy_operational_state': str,
-            'tcp_proxy_operational_state': str,
+            Optional('ssl_proxy_operational_state'): str,
+            Optional('tcp_proxy_operational_state'): str,
             'clear_mode': str,
         }
     }
@@ -34,7 +34,7 @@ class ShowSslproxyStatusSchema(MetaParser):
 class ShowSslproxyStatus(ShowSslproxyStatusSchema):
 
     """ Parser for "show sslproxy status" """
-    
+
     cli_command = "show sslproxy status"
 
     def cli(self, output=None):
@@ -149,6 +149,7 @@ class ShowSslProxyStatisticsSchema(MetaParser):
                 Optional("endpoint_alert"): int,
                 Optional("fin_rst_received_during_handshake"): int,
                 Optional("pushdown_by_sc"): int,
+                Optional("ism_flow_create_failure"): int,
                 Optional("pushdown_default"): int
             },
             "dropped_connection_reasons":{
@@ -176,6 +177,7 @@ class ShowSslProxyStatisticsSchema(MetaParser):
                 Optional("memory_allocation_failure"): int,
                 Optional("memory_access_failure"): int,
                 Optional("abort_on_ssl_parse_failure"): int,
+                Optional("failed_to_save_orig_client_hello"):int,
                 Optional("invalid_ssl_record_header"): int,
                 Optional("unable_to_send_hs_message_to_ism"): int,
                 Optional("fail_to_get_memory_from_pool_in_ism"): int
@@ -229,6 +231,7 @@ class ShowSslProxyStatisticsSchema(MetaParser):
             "proxy_server":{
                 "lwssl_flow_create": int,
                 "lwssl_flow_delete": int,
+                Optional("lfs_mem_alloc_failure"): int,
                 "fin_generated_by_sc": int,
                 "rst_generated_by_sc": int,
                 "close_notify_sent": int
@@ -236,6 +239,7 @@ class ShowSslProxyStatisticsSchema(MetaParser):
             "proxy_client":{
                 "lwssl_flow_create": int,
                 "lwssl_flow_delete": int,
+                Optional("lfs_mem_alloc_failure"): int,
                 "fin_generated_by_sc": int,
                 "rst_generated_by_sc": int,
                 "close_notify_sent": int
@@ -314,6 +318,9 @@ class ShowSslProxyStatisticsSchema(MetaParser):
                     Optional("ssl_resumption_session_tkt"): int,
                     Optional("ssl_fallback_to_full_hs"): int,
                     Optional("ssl_failed_renego"): int,
+                    Optional("ssl_cert_validation_success"):int,
+                    Optional("ssl_cert_validation_reqs"):int,
+                    Optional("cert_validation_failures"):int,
                     Optional("ssl_server_cert_validation_reqs"): int,
                     Optional("ssl_server_cert_validation_success"): int,
                     Optional("server_cert_verify_failed_expired"): int,
@@ -478,7 +485,7 @@ class ShowSslProxyStatistics(ShowSslProxyStatisticsSchema):
         # OCSP Stapling:
         p26 = re.compile(r'^OCSP +Stapling:$')
 
-        # Note - Due to large output limited the sample match string comments 
+        # Note - Due to large output limited the sample match string comments
         # Total Connections                  : 0
         # Proxied Connections                : 0
         # Non-proxied Connections            : 0
