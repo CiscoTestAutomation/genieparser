@@ -24,14 +24,14 @@ expected_output = {
                                                                         'local_interface_id': 6,
                                                                         'neighbor_interface_id': 6,
                                                                         'neighbor_router_id': '96.96.96.96',
-                                                                        'type': 'transit ' 'network'
+                                                                        'type': 'transit network'
                                                                     },
                                                                     2: {
                                                                         'link_metric': 1,
                                                                         'local_interface_id': 7,
                                                                         'neighbor_interface_id': 6,
                                                                         'neighbor_router_id': '95.95.95.95',
-                                                                        'type': 'another ' 'router ' '(point-to-point)'
+                                                                        'type': 'another router (point-to-point)'
                                                                     }
                                                                 },
                                                             },
@@ -42,9 +42,9 @@ expected_output = {
                                                                 'checksum': '0x440',
                                                                 'length': 56,
                                                                 'lsa_id': 0,
-                                                                'options': 'V6-Bit ' 'E-Bit ' 'R-Bit ' 'DC-Bit',
+                                                                'options': 'V6-Bit E-Bit R-Bit DC-Bit',
                                                                 'seq_num': '80000013',
-                                                                'type': 'Router ' 'Links'
+                                                                'type': 'Router Links'
                                                             }
                                                         }
                                                     },
@@ -60,14 +60,14 @@ expected_output = {
                                                                         'local_interface_id': 7,
                                                                         'neighbor_interface_id': 7,
                                                                         'neighbor_router_id': '96.96.96.96',
-                                                                        'type': 'another ' 'router ' '(point-to-point)'
+                                                                        'type': 'another router (point-to-point)'
                                                                     },
                                                                     2: {
                                                                         'link_metric': 1,
                                                                         'local_interface_id': 6,
                                                                         'neighbor_interface_id': 7,
                                                                         'neighbor_router_id': '25.97.1.1',
-                                                                        'type': 'another ' 'router ' '(point-to-point)'
+                                                                        'type': 'another router (point-to-point)'
                                                                     }
                                                                 },
                                                             },
@@ -78,10 +78,10 @@ expected_output = {
                                                                 'checksum': '0x6fda',
                                                                 'length': 56,
                                                                 'lsa_id': 0,
-                                                                'options': 'V6-Bit ' 'E-Bit ' 'R-Bit ' 'DC-Bit',
+                                                                'options': 'V6-Bit E-Bit R-Bit DC-Bit',
                                                                 'routing_bit_enable': True,
                                                                 'seq_num': '80000003',
-                                                                'type': 'Router ' 'Links'
+                                                                'type': 'Router Links'
                                                             }
                                                         }
                                                     },
@@ -97,14 +97,14 @@ expected_output = {
                                                                         'local_interface_id': 6,
                                                                         'neighbor_interface_id': 6,
                                                                         'neighbor_router_id': '96.96.96.96',
-                                                                        'type': 'transit ' 'network'
+                                                                        'type': 'transit network'
                                                                     },
                                                                     2: {
                                                                         'link_metric': 10,
                                                                         'local_interface_id': 7,
                                                                         'neighbor_interface_id': 7,
                                                                         'neighbor_router_id': '95.95.95.95',
-                                                                        'type': 'another ' 'router ' '(point-to-point)'
+                                                                        'type': 'another router (point-to-point)'
                                                                     }
                                                                 }
                                                             },
@@ -115,10 +115,10 @@ expected_output = {
                                                                 'checksum': '0xc572',
                                                                 'length': 56,
                                                                 'lsa_id': 0,
-                                                                'options': 'V6-Bit ' 'E-Bit ' 'R-Bit ' 'DC-Bit',
+                                                                'options': 'V6-Bit E-Bit R-Bit DC-Bit',
                                                                 'routing_bit_enable': True,
                                                                 'seq_num': '80000010',
-                                                                'type': 'Router ' 'Links'
+                                                                'type': 'Router Links'
                                                             }
                                                         }
                                                     }
