@@ -263,8 +263,8 @@ class ShowIpMroute(ShowIpMrouteSchema):
             # LISP0.4100, (172.24.0.3, 232.0.0.199), Forward/Sparse, 00:10:33/stopped
             p5 = re.compile(r'^(?P<outgoing_interface>[a-zA-Z0-9\/\.\-]+),'
                              '( +VCD +(?P<vcd>\d+),)?'
-                             ' +(?P<state_mode>[\w\/-]+),'
                              '( \(((?P<lisp_mcast_source>[0-9\.,]+), (?P<lisp_mcast_group>[0-9\.,]+)+)\),)?'
+                             ' +(?P<state_mode>[\w\/-]+),'
                              ' +(?P<uptime>[a-zA-Z0-9\:]+)\/'
                              '(?P<expire>[\w\:]+)'
                              '(, *(?P<flags>\w+))?$')
