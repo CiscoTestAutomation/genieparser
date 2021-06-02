@@ -985,6 +985,388 @@ class ShowOspfv3Interface(ShowOspfv3InterfaceSchema):
         return ret_dict
 
 
+class ShowOspfv3VrfAllInclusiveDatabaseRouterSchema(MetaParser):
+    """Schema for show ospfv3 vrf all-inclusive database router"""
+    schema = {
+        "vrf": {
+            Any(): {
+                "address_family": {
+                    Any(): {
+                        "instance": {
+                            Any(): {
+                                Optional("areas"): {
+                                    Any(): {
+                                        "database": {
+                                            "lsa_types": {
+                                                Any(): {
+                                                    "lsa_type": int,
+                                                    "lsas": {
+                                                        Any(): {
+                                                            "lsa_id": int,
+                                                            "adv_router": str,
+                                                            "ospfv3": {
+                                                                "header": {
+                                                                    "options": str,
+                                                                    "lsa_id": int,
+                                                                    "age": int,
+                                                                    "type": str,
+                                                                    "adv_router": str,
+                                                                    "seq_num": str,
+                                                                    "checksum": str,
+                                                                    "length": int,
+                                                                    Optional(
+                                                                        "routing_bit_enable"
+                                                                    ): bool,
+                                                                    Optional(
+                                                                        "as_boundary_router"
+                                                                    ): bool,
+                                                                },
+                                                                "body": {
+                                                                    "num_of_links": int,
+                                                                    "links": {
+                                                                        Any(): {
+                                                                            "type": str,
+                                                                            "link_metric": int,
+                                                                            "local_interface_id": int,
+                                                                            "neighbor_interface_id": int,
+                                                                            "neighbor_router_id": str,
+                                                                        },
+                                                                    },
+                                                                },
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+class ShowOspfv3VrfAllInclusiveDatabaseRouter(ShowOspfv3VrfAllInclusiveDatabaseRouterSchema):
+    ''' Parser for:
+        *'show ospfv3 vrf all-inclusive database router'
+    '''
+
+    cli_command = ['show ospfv3 vrf all-inclusive database router']
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Init vars
+        ret_dict = {}
+        address_family = "ipv6"
+
+        #Lsa Types
+        # 1: Router
+        # 2: Network Link
+        # 3: Summary
+        # 3: Summary Network
+        # 3: Summary Net
+        # 4: Summary ASB
+        # 5: Type-5 AS External
+        # 8: Link (Type-8)
+        # 9: Intra Area Prefix'
+        # 10: Opaque Area
+
+        lsa_type_mapping = {
+            'router': 1,
+            'net': 2,
+            'summary': 3,
+            'summary net': 3,
+            'summary asb': 4,
+            'external': 5,
+            'link (type-8)': 8,
+            'intra area prefix': 9,
+            'opaque': 10
+        }
+
+        # OSPFv3 Router with ID (96.96.96.96) (Process ID mpls1 VRF default)
+        p1 = re.compile(r'^OSPFv3 +Router +with +ID +\((?P<router_id>(\S+))\) +\(Process +ID +(?P<instance>(\S+))(?: +VRF +(?P<vrf>(\S+)))?\)$')
+        
+        # Router Link States (Area 0)
+        p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
+                        ' +(?P<area>(\S+))\)$')
+
+        # Routing Bit Set on this LSA
+        p3 = re.compile(r"^Routing +Bit +Set +on +this +LSA$")
+
+        # LS age: 1472
+        p4 = re.compile(r"^LS +age: +(?P<age>(\d+))$")
+ 
+        # Options: (V6-Bit E-Bit R-Bit DC-Bit)
+        p5 = re.compile(r"^Options: +\((?P<options>(.*))\)$")
+
+        # LS Type: Router Links
+        p6 = re.compile(r"^LS +Type: +(?P<lsa_type>(.*))$")
+        
+        # Link State ID: 0
+        p7 = re.compile(r"^Link +State +ID: +(?P<lsa_id>(\d+))" "(?: +\(.*\))?$")
+
+        # Advertising Router: 25.97.1.1
+        p8 = re.compile(r"^Advertising +Router: +(?P<adv_router>(\S+))$")
+
+        # LS Seq Number: 80000007
+        p9 = re.compile(r"^LS +Seq +Number: +(?P<ls_seq_num>(\S+))$")
+
+        # Checksum: 0x2132
+        p10 = re.compile(r"^Checksum: +(?P<checksum>(\S+))$")
+
+        # Length: 56
+        p11 = re.compile(r"^Length: +(?P<length>(\d+))$")
+
+        # AS Boundary Router
+        p12 = re.compile(r"^AS +Boundary +Router$")
+
+        # Number of Links: 2
+        p13 = re.compile(r"^Number +of +(l|L)inks *: +(?P<num>(\d+))$")
+   
+        # Link connected to: a Transit Network
+        p14_1 = re.compile(r"^Link +connected +to: +a +(?P<type>(.*))$")
+        # Link connected to: another Router (point-to-point)
+        p14_2 = re.compile(r"^Link +connected +to: +(?P<type>(.*))$")
+
+        # Link Metric: 65535
+        p15 = re.compile(r"^Link +Metric: +(?P<link_metric>(\d+))$")
+
+        # Local Interface ID: 7
+        p16 = re.compile(r"^Local +Interface +ID: +(?P<local_interface_id>(\d+))$")
+
+        # Neighbor Interface ID: 6
+        # Neighbor (DR) Interface ID: 6
+        p17 = re.compile(r"^Neighbor.*Interface +ID: +(?P<neighbor_interface_id>(\d+))$")
+
+        # Neighbor Router ID: 95.95.95.95
+        # Neighbor (DR) Router ID: 96.96.96.96
+        p18 = re.compile(r"^Neighbor.*Router +ID: +(?P<neighbor_router_id>(\S+))$")
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # OSPFv3 Router with ID (96.96.96.96) (Process ID mpls1 VRF default)
+            m = p1.match(line)
+            if m:
+                router_id = str(m.groupdict()["router_id"])
+                instance = str(m.groupdict()["instance"])
+                if m.groupdict()["vrf"]:
+                    vrf = str(m.groupdict()["vrf"])
+                else:
+                    vrf = "default"
+
+                inst_dict = (
+                    ret_dict.setdefault("vrf", {})
+                    .setdefault(vrf, {})
+                    .setdefault("address_family", {})
+                    .setdefault(address_family, {})
+                    .setdefault("instance", {})
+                    .setdefault(instance, {})
+                )
+                continue
+
+            # Router Link States (Area 0)
+            m = p2.match(line)
+            if m:
+                # get lsa_type
+                lsa_type_key = m.groupdict()['lsa_type'].lower()
+                if lsa_type_key in lsa_type_mapping:
+                    lsa_type = lsa_type_mapping[lsa_type_key]
+
+                # Set area
+                if m.groupdict()["area"]:
+                    try:
+                        int(m.groupdict()["area"])
+                        area = str(IPAddress(str(m.groupdict()["area"])))
+                    except Exception:
+                        area = str(m.groupdict()["area"])
+                else:
+                    area = "0.0.0.0"
+
+                # Create dict structure
+                type_dict = (
+                    inst_dict.setdefault("areas", {})
+                    .setdefault(area, {})
+                    .setdefault("database", {})
+                    .setdefault("lsa_types", {})
+                    .setdefault(lsa_type, {})
+                )
+
+                # Set lsa_type
+                type_dict["lsa_type"] = lsa_type
+                continue
+
+            # Routing Bit Set on this LSA
+            m = p3.match(line)
+            if m:
+                routing_bit_enable = True
+                continue
+
+            # LS age: 1472
+            m = p4.match(line)
+            if m:
+                age = int(m.groupdict()["age"])
+                continue
+
+            # Options: (V6-Bit E-Bit R-Bit DC-Bit)
+            m = p5.match(line)
+            if m:
+                options = str(m.groupdict()["options"])
+                continue
+
+            # LS Type: Router Links
+            m = p6.match(line)
+            if m:
+                lsa_type = str(m.groupdict()["lsa_type"])
+                continue
+
+            # Link State ID: 0
+            m = p7.match(line)
+            if m:
+                lsa_id = int(m.groupdict()["lsa_id"])
+                continue
+
+            # Advertising Router: 25.97.1.1
+            m = p8.match(line)
+            if m:
+                adv_router = str(m.groupdict()["adv_router"])
+                lsa = str(lsa_id) + " " + adv_router
+
+                # Reset counters for this lsa
+                link_idx = 0
+
+                # Create schema structure
+                lsa_dict = type_dict.setdefault("lsas", {}).setdefault(lsa, {})
+
+                # Set keys under 'lsa'
+                lsa_dict["adv_router"] = adv_router
+                try:
+                    lsa_dict["lsa_id"] = lsa_id
+                except Exception:
+                    pass
+
+                # Set header dict
+                header_dict = lsa_dict.setdefault("ospfv3", {}).setdefault("header", {})
+
+                # Set db_dict
+                db_dict = lsa_dict.setdefault("ospfv3", {}).setdefault("body", {})
+
+                # Set previously parsed values
+                try:
+                    header_dict["routing_bit_enable"] = routing_bit_enable
+                    del routing_bit_enable
+                except Exception:
+                    pass
+                try:
+                    header_dict["age"] = age
+                    del age
+                except Exception:
+                    pass
+                try:
+                    header_dict["options"] = options
+                    del options
+                except Exception:
+                    pass
+                try:
+                    header_dict["type"] = lsa_type
+                    del lsa_type
+                except Exception:
+                    pass
+                try:
+                    header_dict["lsa_id"] = lsa_id
+                    del lsa_id
+                except Exception:
+                    pass
+                try:
+                    header_dict["adv_router"] = adv_router
+                    del adv_router
+                except Exception:
+                    pass
+
+            # LS Seq Number: 80000007
+            m = p9.match(line)
+            if m:
+                header_dict["seq_num"] = str(m.groupdict()["ls_seq_num"])
+                continue
+
+            # Checksum: 0x2132
+            m = p10.match(line)
+            if m:
+                header_dict["checksum"] = str(m.groupdict()["checksum"])
+                continue
+
+            # Length: 56
+            m = p11.match(line)
+            if m:
+                header_dict["length"] = int(m.groupdict()["length"])
+                continue
+            
+            # AS Boundary Router
+            m = p12.match(line)
+            if m:
+                header_dict["as_boundary_router"] = True
+                continue
+            
+            # Number of Links: 2
+            m = p13.match(line)
+            if m:
+                db_dict["num_of_links"] = int(m.groupdict()["num"])
+                continue
+
+            # Link connected to: a Transit Network
+            m = p14_1.match(line)
+            if m:
+                link_type = str(m.groupdict()["type"]).lower()
+                continue
+
+            # Link connected to: another Router (point-to-point)
+            m = p14_2.match(line)
+            if m:
+                link_type = str(m.groupdict()["type"]).lower()
+                continue
+
+            # Link Metric: 65535
+            m = p15.match(line)
+            if m:
+                link_idx = len(db_dict.get("links", {})) + 1
+                link_dict = db_dict.setdefault("links", {}).setdefault(link_idx, {})
+
+                link_dict["type"] = link_type
+                link_dict["link_metric"] = int(m.groupdict()["link_metric"])
+                continue
+
+            # Local Interface ID: 7
+            m = p16.match(line)
+            if m:
+                link_dict["local_interface_id"] = int(m.groupdict()["local_interface_id"])
+                continue
+
+            # Neighbor Interface ID: 6
+            # Neighbor (DR) Interface ID: 6
+            m = p17.match(line)
+            if m:
+                link_dict["neighbor_interface_id"] = int(m.groupdict()["neighbor_interface_id"])
+                continue
+
+            # Neighbor Router ID: 95.95.95.95
+            # Neighbor (DR) Router ID: 96.96.96.96
+            m = p18.match(line)
+            if m:
+                link_dict["neighbor_router_id"] = str(m.groupdict()["neighbor_router_id"])
+                continue        
+
+        return ret_dict
+
+
 class ShowOspfv3VrfAllInclusiveDatabasePrefixSchema(MetaParser):
     ''' Schema for:
         * 'show ospfv3 vrf all-inclusive database prefix'
@@ -1131,15 +1513,15 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
 
         # Number of Prefixes: 3
         p14 = re.compile(r'^Number +of +Prefixes: +(?P<number_of_prefix>(\S+))$')
-        
+
         # Prefix Address: 2001:1100::1001
         p15 = re.compile(r'^Prefix +Address: +(?P<prefix_address>(\S+))$')
 
         # Prefix Length: 128, Options: None, Metric: 65535, Priority: Medium
         p16 = re.compile(
-            r'^Prefix +Length: +(?P<prefix_length>(\d+))\s*,'  
-            ' +Options: +(?P<options>(\S+))\s*,' 
-            ' +Metric: +(?P<metric>(\d+))\s*,' 
+            r'^Prefix +Length: +(?P<prefix_length>(\d+))\s*,'
+            ' +Options: +(?P<options>(\S+))\s*,'
+            ' +Metric: +(?P<metric>(\d+))\s*,'
             ' +Priority: +(?P<priority>(\S+))$'
         )
 
@@ -1335,5 +1717,5 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
                 prefix_dict["metric"] = int(m.groupdict()["metric"])
                 prefix_dict["priority"] = str(m.groupdict()["priority"])
                 continue
-        
+
         return ret_dict

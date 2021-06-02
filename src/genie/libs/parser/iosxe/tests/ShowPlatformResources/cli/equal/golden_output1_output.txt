@@ -1,0 +1,7 @@
+**State Acronym: H - Healthy, W - Warning, C - Critical                                             
+Resource                 Usage                 Max             Warning         Critical        State
+----------------------------------------------------------------------------------------------------
+RP0 (ok, active)                                                                               H    
+ Control Processor       0.78%                 100%            80%             85%             H    
+  DRAM                   3084MB(79%)           3863MB          90%             95%             H    
+
