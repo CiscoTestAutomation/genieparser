@@ -1473,7 +1473,7 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
         }
 
         # OSPFv3 Router with ID (25.97.1.1) (Process ID mpls1 VRF default)
-        p1 = re.compile(r'^OSPFv3 +Router +with +ID +\((?P<router_id>(\S+))\) +\(Process +ID +(?P<instance>(\S+))(?: +VRF +(?P<vrf>(\S+)))?\)$')
+        p1 = re.compile(r'^OSPFv3 +Router +with +ID +\(\S+\) +\(Process +ID +(?P<instance>(\S+))(?: +VRF +(?P<vrf>(\S+)))?\)$')
 
         # Intra Area Prefix Link States (Area 0)
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
@@ -1531,7 +1531,6 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
 
             m = p1.match(line)
             if m:
-                router_id = str(m.groupdict()["router_id"])
                 instance = str(m.groupdict()["instance"])
                 if m.groupdict()["vrf"]:
                     vrf = str(m.groupdict()["vrf"])
@@ -1632,31 +1631,11 @@ class ShowOspfv3VrfAllInclusiveDatabasePrefix(ShowOspfv3VrfAllInclusiveDatabaseP
                 )
 
                 # Set previously parsed values
-                try:
-                    header_dict["routing_bit_enable"] = routing_bit_enable
-                    del routing_bit_enable
-                except Exception:
-                    pass
-                try:
-                    header_dict["age"] = age
-                    del age
-                except Exception:
-                    pass
-                try:
-                    header_dict["type"] = lsa_type
-                    del lsa_type
-                except Exception:
-                    pass
-                try:
-                    header_dict["lsa_id"] = lsa_id
-                    del lsa_id
-                except Exception:
-                    pass
-                try:
-                    header_dict["adv_router"] = adv_router
-                    del adv_router
-                except Exception:
-                    pass
+                header_dict["routing_bit_enable"] = routing_bit_enable
+                header_dict["age"] = age
+                header_dict["type"] = lsa_type
+                header_dict["lsa_id"] = lsa_id
+                header_dict["adv_router"] = adv_router
 
             # LS Seq Number: 0x80000002
             m = p8.match(line)
