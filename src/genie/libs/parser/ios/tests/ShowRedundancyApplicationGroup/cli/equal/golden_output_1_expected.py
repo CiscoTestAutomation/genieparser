@@ -1,4 +1,4 @@
-expected_output={
+expected_output = {
     "fault_state_group_id": {
         "1": {
             "runtime_priority": {
