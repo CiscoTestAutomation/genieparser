@@ -1,6 +1,6 @@
 expected_output =  {
     "vrf": {
-        "default": {
+        "DEVICE_VN": {
             "address_family": {
                 "ipv4": {
                     "multicast_group": {
