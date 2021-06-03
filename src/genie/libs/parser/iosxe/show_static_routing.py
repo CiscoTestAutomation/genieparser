@@ -82,7 +82,7 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
                 continue
             # Static local RIB for default
             # Static local RIB for default-thing
-            p1 = re.compile(r'^\s*Static +local +RIB +for +(?P<vrf>[\w?-]+)$')
+            p1 = re.compile(r'^\s*Static +local +RIB +for +(?P<vrf>[\w-]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -268,7 +268,7 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
 
             # IPv6 Static routes Table - default
             # IPv6 Static routes Table - default-table
-            p1 = re.compile(r'^\s*IPv6 +Static +routes +Table -+ (?P<vrf>[\w?-]+)$')
+            p1 = re.compile(r'^\s*IPv6 +Static +routes +Table -+ (?P<vrf>[\w-]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
