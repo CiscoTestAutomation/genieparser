@@ -1,20 +1,18 @@
 expected_output = {
     "group_id": {
         "1": {
+            "group_name": "group1",
             "administrative_state": "No Shutdown",
-            "peer_comm": "Yes",
+            "aggregate_operational_state": "Up",
+            "my_role": "STANDBY",
             "peer_role": "ACTIVE",
             "peer_presence": "Yes",
-            "my_role": "STANDBY",
-            "group_name": "group1",
-            "aggregate_oper_state": "Up",
+            "peer_comm": "Yes",
+            "peer_progression_started": "Yes",
             "rf_domain": {
-                "btob-one": {
-                    "rf_state": "STANDBY HOT",
-                    "peer_rf_state": "ACTIVE"
-                }
+                "btob-one": {"rf_state": "STANDBY HOT", "peer_rf_state": "ACTIVE"}
             },
-            "peer_progression_started": "Yes"
         }
     }
 }
+
