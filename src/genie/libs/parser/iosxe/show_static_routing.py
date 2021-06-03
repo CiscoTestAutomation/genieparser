@@ -5,8 +5,8 @@ show_static_route.py
 import re
 from genie.metaparser import MetaParser
 from genie.metaparser.util.schemaengine import Schema, \
-                                         Any, \
-                                         Optional
+    Any, \
+    Optional
 
 
 # ====================================================
@@ -57,7 +57,7 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
        show ip static route
        show ip static route vrf <vrf>
     """
-    cli_command = ['show ip static route vrf {vrf}','show ip static route']
+    cli_command = ['show ip static route vrf {vrf}', 'show ip static route']
     exclude = ['unnumbered', 'interface_ref',
                '(Tunnel.*)', 'joined_group_addresses', 'ipv6']
 
@@ -82,7 +82,7 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
                 continue
             # Static local RIB for default
             # Static local RIB for default-thing
-            p1 = re.compile(r'^\s*Static +local +RIB +for +(?P<vrf>[\w-]+)$')
+            p1 = re.compile(r'^Static +local +RIB +for +(?P<vrf>[\w-]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -268,7 +268,7 @@ class ShowIpv6StaticDetail(ShowIpv6StaticDetailSchema):
 
             # IPv6 Static routes Table - default
             # IPv6 Static routes Table - default-table
-            p1 = re.compile(r'^\s*IPv6 +Static +routes +Table -+ (?P<vrf>[\w-]+)$')
+            p1 = re.compile(r'^IPv6 +Static +routes +Table +- +(?P<vrf>[\w-]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
