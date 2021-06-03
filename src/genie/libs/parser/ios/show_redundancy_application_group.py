@@ -1,3 +1,8 @@
+"""
+IOS Parsers for the following show commands:
+    * show redundancy application group {group_id}
+    * show redundancy application group all
+"""
 # Python
 import re
 
@@ -7,11 +12,6 @@ from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
 
 from genie.libs.parser.iosxe.show_redundancy_application_group \
     import ShowRedundancyApplicationGroup as ShowRedundancyApplicationGroup_iosxe
-"""
-IOS Parsers for the following show commands:
-    * show redundancy application group {group_id}
-    * show redundancy application group all
-"""
 
 
 class ShowRedundancyApplicationGroup(ShowRedundancyApplicationGroup_iosxe):

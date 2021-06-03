@@ -1,3 +1,8 @@
+"""
+IOSXE Parsers for the following show commands:
+    * show redundancy application group {group_id}
+    * show redundancy application group all
+"""
 # Python
 import re
 
