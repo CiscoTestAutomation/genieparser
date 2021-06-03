@@ -37,127 +37,120 @@ class ShowInterfaceSchema(MetaParser):
     """Schema for show interface"""
 
     schema = {
-        Any():
-            {
-                Optional('description'): str,
-                Optional('types'): str,
-                Optional('parent_interface'): str,
-                'oper_status': str,
-                Optional('admin_state'): str,
-                Optional('dedicated_interface'): bool,
-                Optional('line_protocol'): str,
-                Optional('autostate'): bool,
-                Optional('link_state'): str,
-                Optional('phys_address'): str,
-                Optional('port_speed'): str,
-                Optional('mtu'): int,
-                'enabled': bool,
-                Optional('mac_address'): str,
-                Optional('auto_negotiate'): bool,
-                Optional('duplex_mode'): str,
-                Optional('port_mode'): str,
-                Optional('auto_mdix'): str,
-                Optional('switchport_monitor'): str,
-                Optional('efficient_ethernet'): str,
-                Optional('last_link_flapped'): str,
-                Optional('interface_reset'): int,
-                Optional('ethertype'): str,
-                Optional('beacon'): str,
-                Optional('medium'): str,
-                Optional('reliability'): str,
-                Optional('txload'): str,
-                Optional('rxload'): str,
-                Optional('delay'): int,
-                Optional('media_type'): str,
-                Optional('flow_control'):
-                    {
-                        Optional('receive'): bool,
-                        Optional('send'): bool,
-                    },
-                Optional('port_channel'):
-                    {
-                        Optional('port_channel_member'): bool,
-                        Optional('port_channel_int'): str,
-                        Optional('port_channel_member_intfs'): list
-                    },
-                Optional('bandwidth'): int,
-                Optional('counters'):
-                    {
-                        Optional('rate'):
-                            {
-                                Optional('load_interval'): int,
-                                Optional('in_rate'): int,
-                                Optional('in_rate_pkts'): int,
-                                Optional('out_rate'): int,
-                                Optional('out_rate_pkts'): int,
-                                Optional('in_rate_bps'): int,
-                                Optional('in_rate_pps'): int,
-                                Optional('out_rate_bps'): int,
-                                Optional('out_rate_pps'): int,
-                            },
-                        Optional('in_unicast_pkts'): int,
-                        Optional('in_multicast_pkts'): int,
-                        Optional('in_broadcast_pkts'): int,
-                        Optional('in_discards'): int,
-                        Optional('in_crc_errors'): int,
-                        Optional('in_oversize_frames'): int,
-                        Optional('in_pkts'): int,
-                        Optional('in_mac_pause_frames'): int,
-                        Optional('in_jumbo_packets'): int,
-                        Optional('in_storm_suppression_packets'): int,
-                        Optional('in_storm_suppression_bytes'): int,
-                        Optional('in_runts'): int,
-                        Optional('in_oversize_frame'): int,
-                        Optional('in_overrun'): int,
-                        Optional('in_underrun'): int,
-                        Optional('in_ignored'): int,
-                        Optional('in_watchdog'): int,
-                        Optional('in_bad_etype_drop'): int,
-                        Optional('in_unknown_protos'): int,
-                        Optional('in_if_down_drop'): int,
-                        Optional('in_with_dribble'): int,
-                        Optional('in_discard'): int,
-                        Optional('in_octets'): int,
-                        Optional('in_errors'): int,
-                        Optional('in_short_frame'): int,
-                        Optional('in_no_buffer'): int,
-                        Optional('out_pkts'): int,
-                        Optional('out_unicast_pkts'): int,
-                        Optional('out_multicast_pkts'): int,
-                        Optional('out_broadcast_pkts'): int,
-                        Optional('out_discard'): int,
-                        Optional('out_octets'): int,
-                        Optional('out_jumbo_packets'): int,
-                        Optional('out_errors'): int,
-                        Optional('out_collision'): int,
-                        Optional('out_deferred'): int,
-                        Optional('out_late_collision'): int,
-                        Optional('out_lost_carrier'): int,
-                        Optional('out_no_carrier'): int,
-                        Optional('out_babble'): int,
-                        Optional('last_clear'): str,
-                        Optional('tx'): bool,
-                        Optional('rx'): bool,
-                        Optional('out_mac_pause_frames'): int,
-                    },
-                Optional('encapsulations'):
-                    {
-                        Optional('encapsulation'): str,
-                        Optional('first_dot1q'): str,
-                        Optional('native_vlan'): int,
-                    },
-                Optional('ipv4'):
-                    {
-                        Any():
-                            {
-                                Optional('ip'): str,
-                                Optional('prefix_length'): str,
-                                Optional('secondary'): bool,
-                                Optional('route_tag'): str
-                            },
-                    },
+        Any(): {
+            Optional("description"): str,
+            Optional("types"): str,
+            Optional("parent_interface"): str,
+            "oper_status": str,
+            Optional("admin_state"): str,
+            Optional("dedicated_interface"): bool,
+            Optional("line_protocol"): str,
+            Optional("autostate"): bool,
+            Optional("link_state"): str,
+            Optional("phys_address"): str,
+            Optional("port_speed"): str,
+            Optional("mtu"): int,
+            "enabled": bool,
+            Optional("mac_address"): str,
+            Optional("auto_negotiate"): bool,
+            Optional("duplex_mode"): str,
+            Optional("port_mode"): str,
+            Optional("auto_mdix"): str,
+            Optional("switchport_monitor"): str,
+            Optional("efficient_ethernet"): str,
+            Optional("last_link_flapped"): str,
+            Optional("interface_reset"): int,
+            Optional("ethertype"): str,
+            Optional("beacon"): str,
+            Optional("medium"): str,
+            Optional("reliability"): str,
+            Optional("txload"): str,
+            Optional("rxload"): str,
+            Optional("delay"): int,
+            Optional("media_type"): str,
+            Optional("flow_control"): {
+                Optional("receive"): bool,
+                Optional("send"): bool,
             },
+            Optional("port_channel"): {
+                Optional("port_channel_member"): bool,
+                Optional("port_channel_int"): str,
+                Optional("port_channel_member_intfs"): list,
+            },
+            Optional("bandwidth"): int,
+            Optional("counters"): {
+                Optional("rate"): {
+                    Optional("load_interval"): int,
+                    Optional("in_rate"): int,
+                    Optional("in_rate_pkts"): int,
+                    Optional("out_rate"): int,
+                    Optional("out_rate_pkts"): int,
+                    Optional("in_rate_bps"): int,
+                    Optional("in_rate_pps"): int,
+                    Optional("out_rate_bps"): int,
+                    Optional("out_rate_pps"): int,
+                },
+                Optional("in_unicast_pkts"): int,
+                Optional("in_multicast_pkts"): int,
+                Optional("in_broadcast_pkts"): int,
+                Optional("in_discards"): int,
+                Optional("in_crc_errors"): int,
+                Optional("in_oversize_frames"): int,
+                Optional("in_pkts"): int,
+                Optional("in_mac_pause_frames"): int,
+                Optional("in_jumbo_packets"): int,
+                Optional("in_storm_suppression_packets"): int,
+                Optional("in_storm_suppression_bytes"): int,
+                Optional("in_runts"): int,
+                Optional("in_oversize_frame"): int,
+                Optional("in_overrun"): int,
+                Optional("in_underrun"): int,
+                Optional("in_ignored"): int,
+                Optional("in_watchdog"): int,
+                Optional("in_bad_etype_drop"): int,
+                Optional("in_unknown_protos"): int,
+                Optional("in_if_down_drop"): int,
+                Optional("in_with_dribble"): int,
+                Optional("in_discard"): int,
+                Optional("in_octets"): int,
+                Optional("in_errors"): int,
+                Optional("in_short_frame"): int,
+                Optional("in_no_buffer"): int,
+                Optional("out_pkts"): int,
+                Optional("out_unicast_pkts"): int,
+                Optional("out_multicast_pkts"): int,
+                Optional("out_broadcast_pkts"): int,
+                Optional("out_discard"): int,
+                Optional("out_octets"): int,
+                Optional("out_jumbo_packets"): int,
+                Optional("out_errors"): int,
+                Optional("out_collision"): int,
+                Optional("out_deferred"): int,
+                Optional("out_late_collision"): int,
+                Optional("out_lost_carrier"): int,
+                Optional("out_no_carrier"): int,
+                Optional("out_babble"): int,
+                Optional("last_clear"): str,
+                Optional("tx"): bool,
+                Optional("rx"): bool,
+                Optional("out_mac_pause_frames"): int,
+            },
+            Optional("encapsulations"): {
+                Optional("encapsulation"): str,
+                Optional("first_dot1q"): str,
+                Optional("native_vlan"): int,
+            },
+            Optional("ipv4"): {
+                Any(): {
+                    Optional("ip"): str,
+                    Optional("prefix_length"): str,
+                    Optional("secondary"): bool,
+                    Optional("route_tag"): str,
+                },
+            },
+        },
     }
+
 
 
 # ===========================
@@ -169,6 +162,37 @@ class ShowInterface(ShowInterfaceSchema):
     """Parser for show interface, show interface <interface>"""
 
     cli_command = ['show interface', 'show interface {interface}']
+    exclude = [
+        'in_unicast_pkts',
+        'out_unicast_pkts',
+        'in_octets',
+        'out_octets',
+        'in_pkts',
+        'out_pkts',
+        'in_multicast_pkts',
+        'out_multicast_pkts',
+        'in_rate',
+        'out_rate',
+        'in_broadcast_pkts',
+        'out_broadcast_pkts',
+        'last_link_flapped',
+        'in_rate_pkts',
+        'out_rate_pkts',
+        'out_rate_bps',
+        'in_rate_bps',
+        'interface_reset',
+        'in_rate_pps',
+        'out_rate_pps',
+        'last_clear',
+        'out_jumbo_packets',
+        'in_jumbo_packets',
+        'rxload',
+        'txload',
+        'in_errors',
+        'mac_address',
+        'phys_address',
+        'in_crc_errors',
+        'reliability']
 
     def cli(self, interface="", output=None):
         if output is None:
@@ -798,11 +822,12 @@ class ShowInterface(ShowInterfaceSchema):
                 if port_channel_member_intfs:
                     if 'port_channel' not in interface_dict[interface]:
                         interface_dict[interface]['port_channel'] = {}
-                    interface_dict[interface]['port_channel'] \
-                        ['port_channel_member'] = True
-                    interface_dict[interface]['port_channel'] \
-                        ['port_channel_member_intfs'] = [Common.convert_intf_name(item) \
-                                                         for item in port_channel_member_intfs.split(',')]
+
+                    interface_dict[interface]['port_channel']['port_channel_member'] = True
+
+                    interface_dict[interface]['port_channel']['port_channel_member_intfs'] =\
+                        [Common.convert_intf_name(item) for item in port_channel_member_intfs.split(',')]
+
                 continue
 
             # EEE (efficient-ethernet) : n/a
@@ -4672,80 +4697,61 @@ class ShowInterfaceTransceiverDetails(ShowInterfaceTransceiverDetailsSchema):
             m = p38.match(line)
             if m:
                 values = m.groupdict()
-                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['temp']] = {'current': values['curr'],
-                                                                                         'high_alarm': values[
-                                                                                             'high_alarm'], \
-                                                                                         'low_alarm': values[
-                                                                                             'low_alarm'],
-                                                                                         'high_warning': values[
-                                                                                             'high_warn'],
-                                                                                         'low_warning': values[
-                                                                                             'low_warn'],
-                                                                                         'alarm': str(values['alarm'])}
+                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['temp']] = {
+                    'current': values['curr'],
+                    'high_alarm': values['high_alarm'],
+                    'low_alarm': values['low_alarm'],
+                    'high_warning': values['high_warn'],
+                    'low_warning': values['low_warn'],
+                    'alarm': str(values['alarm'])}
 
             # Voltage        3.33 V         3.63 V      2.97 V      3.46 V        3.13 V
             m = p39.match(line)
             if m:
                 values = m.groupdict()
-                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['voltage']] = {'current': values['curr'],
-                                                                                            'high_alarm': values[
-                                                                                                'high_alarm'], \
-                                                                                            'low_alarm': values[
-                                                                                                'low_alarm'],
-                                                                                            'high_warning': values[
-                                                                                                'high_warn'],
-                                                                                            'low_warning': values[
-                                                                                                'low_warn'],
-                                                                                            'alarm': str(
-                                                                                                values['alarm'])}
+                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['voltage']] = {
+                    'current': values['curr'],
+                    'high_alarm': values['high_alarm'],
+                    'low_alarm': values['low_alarm'],
+                    'high_warning': values['high_warn'],
+                    'low_warning': values['low_warn'],
+                    'alarm': str(values['alarm'])}
 
             # Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
             m = p40.match(line)
             if m:
                 values = m.groupdict()
-                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['current']] = {'current': values['curr'],
-                                                                                            'high_alarm': values[
-                                                                                                'high_alarm'], \
-                                                                                            'low_alarm': values[
-                                                                                                'low_alarm'],
-                                                                                            'high_warning': values[
-                                                                                                'high_warn'],
-                                                                                            'low_warning': values[
-                                                                                                'low_warn'],
-                                                                                            'alarm': str(
-                                                                                                values['alarm'])}
+                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['current']] = {
+                    'current': values['curr'],
+                    'high_alarm': values['high_alarm'],
+                    'low_alarm': values['low_alarm'],
+                    'high_warning': values['high_warn'],
+                    'low_warning': values['low_warn'],
+                    'alarm': str(values['alarm'])}
 
             # Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
             m = p41.match(line)
             if m:
                 values = m.groupdict()
-                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['tx_power']] = {'current': values['curr'],
-                                                                                             'high_alarm': values[
-                                                                                                 'high_alarm'], \
-                                                                                             'low_alarm': values[
-                                                                                                 'low_alarm'],
-                                                                                             'high_warning': values[
-                                                                                                 'high_warn'],
-                                                                                             'low_warning': values[
-                                                                                                 'low_warn'],
-                                                                                             'alarm': str(
-                                                                                                 values['alarm'])}
+                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['tx_power']] = {
+                    'current': values['curr'],
+                    'high_alarm': values['high_alarm'],
+                    'low_alarm': values['low_alarm'],
+                    'high_warning': values['high_warn'],
+                    'low_warning': values['low_warn'],
+                    'alarm': str(values['alarm'])}
 
             # Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
             m = p42.match(line)
             if m:
                 values = m.groupdict()
-                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['rx_power']] = {'current': values['curr'],
-                                                                                             'high_alarm': values[
-                                                                                                 'high_alarm'], \
-                                                                                             'low_alarm': values[
-                                                                                                 'low_alarm'],
-                                                                                             'high_warning': values[
-                                                                                                 'high_warn'],
-                                                                                             'low_warning': values[
-                                                                                                 'low_warn'],
-                                                                                             'alarm': str(
-                                                                                                 values['alarm'])}
+                parsed_xcvr_dict[interface]['lane_number'][xcvr_lane][values['rx_power']] = {
+                    'current': values['curr'],
+                    'high_alarm': values['high_alarm'],
+                    'low_alarm': values['low_alarm'],
+                    'high_warning': values['high_warn'],
+                    'low_warning': values['low_warn'],
+                    'alarm': str(values['alarm'])}
 
             # Transmit Fault Count = 0
             m = p43.match(line)
