@@ -928,7 +928,6 @@ class ShowPlatform(ShowPlatformSchema):
 
         return platform_dict
 
-<<<<<<< HEAD
 
 # ============================================================
 #  Schema for 'show platform software fed active ifm mappings'
@@ -971,10 +970,13 @@ class ShowPlatformIfmMapping(ShowPlatformIfmMappingSchema):
                 cmd = self.cli_command[0].format(switch=switch,state=state)            
             else:
                 cmd = self.cli_command[1]
+         
+            # Execute command to get output from device	 
             out = self.device.execute(cmd)            
         else:
             out = output
-                   	
+
+        # TwentyFiveGigE1/0/1       0x8        1   0   1    20     0      16   4    1    1    NIF  Y  
         p1 = re.compile(r'^(?P<interface>\S+) +(?P<ifId>\S+) +(?P<inst>\d+) +(?P<asic>\d+) +(?P<core>\d+) +(?P<port>\d+) +(?P<sbPort>\d+) +(?P<mac>\d+) +(?P<cntx>\d+) +(?P<lpn>\d+) +(?P<gpn>\d+) +(?P<type>\w+) +(?P<act>\w+)$') 	
         
         # initial variables
@@ -984,7 +986,8 @@ class ShowPlatformIfmMapping(ShowPlatformIfmMappingSchema):
             line = line.strip()
             if not line: 
                 continue
-        
+
+            # TwentyFiveGigE1/0/1       0x8        1   0   1    20     0      16   4    1    1    NIF  Y
             m = p1.match(line)
             if m:
                 group    = m.groupdict()		
@@ -1019,7 +1022,8 @@ class ShowPlatformIfmMapping(ShowPlatformIfmMappingSchema):
                 continue            
             
         return ret_dict
-=======
+
+
 # ========================================
 # Parser for 'show platform software'
 # ========================================
@@ -1168,4 +1172,3 @@ class ShowPlatformSoftware(ShowPlatformSoftwareSchema):
         return ret_dict
 
 
->>>>>>> 931994d26576dedee8be8fcf9fe555ed0b42389b
