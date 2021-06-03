@@ -12,8 +12,8 @@
     * show ipv6 interface
     * show interfaces accounting
     * show interfaces status
-    * show interface {interface} transceiver
-    * show interface {interface} transceiver detail
+    * show interfaces {interface} transceiver
+    * show interfaces {interface} transceiver detail
 """
 
 import os
@@ -28,7 +28,7 @@ from pyats.log.utils import banner
 import xmltodict
 try:
     import iptools
-    # from cnetconf import testmodel
+    from cnetconf import testmodel
 except (ImportError, OSError):
     pass
 
@@ -201,14 +201,14 @@ class ShowInterfaces(ShowInterfacesSchema):
 
     cli_command = ['show interfaces','show interfaces {interface}']
     exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts',
-        'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts',
-        'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts',
-        'last_output', 'out_unknown_protocl_drops', 'last_input',
-        'input_queue_drops', 'out_interface_resets', 'rxload',
-        'txload', 'last_clear', 'in_crc_errors', 'in_errors',
-        'in_giants', 'unnumbered', 'mac_address', 'phys_address',
-        'out_lost_carrier', '(Tunnel.*)', 'input_queue_flushes',
-        'reliability']
+               'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts',
+               'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts',
+               'last_output', 'out_unknown_protocl_drops', 'last_input',
+               'input_queue_drops', 'out_interface_resets', 'rxload',
+               'txload', 'last_clear', 'in_crc_errors', 'in_errors',
+               'in_giants', 'unnumbered', 'mac_address', 'phys_address',
+               'out_lost_carrier', '(Tunnel.*)', 'input_queue_flushes',
+               'reliability']
 
     def cli(self,interface="",output=None):
         if output is None:
@@ -3556,8 +3556,8 @@ class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
             * show interfaces {interface} transceiver detail
         """
 
-    cli_command = ['show interface {interface} transceiver detail',
-                   'show interface transceiver detail']
+    cli_command = ['show interfaces {interface} transceiver detail',
+                   'show interfaces transceiver detail']
 
     def cli(self, interface=None, output=None):
         if output is None:

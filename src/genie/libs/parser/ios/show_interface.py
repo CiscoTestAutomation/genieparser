@@ -48,8 +48,8 @@ class ShowInterfaces(ShowInterfaces_iosxe):
     """parser for show interfaces"""
     exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts',
                'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts',
-               'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts'
-                                                        'last_output', 'out_unknown_protocl_drops', 'last_input',
+               'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts',
+               'last_output', 'out_unknown_protocl_drops', 'last_input',
                'input_queue_drops', 'out_interface_resets',
                'rxload', 'txload', 'last_clear', 'in_crc_errors',
                'in_errors', 'in_giants', 'unnumbered', 'mac_address',
