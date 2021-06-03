@@ -378,6 +378,7 @@ class ShowNveInterfaceDetailSchema(MetaParser):
             Optional('host_reach_mode'): str,
             Optional('source_if'): str,
             Optional('primary_ip'): str,
+            Optional('anycast_if'): str,
             Optional('secondary_ip'): str,
             Optional('src_if_state'): str,
             Optional('ir_cap_mode'): str,
@@ -486,7 +487,10 @@ class ShowNveInterfaceDetail(ShowNveInterfaceDetailSchema):
         p26 = re.compile(r'Multisite +dci-advertise-pip +configured: +(?P<multisite_dci_advertise_pip>\S+)')
         
         for nve in nve_list:
-            out = self.device.execute(self.cli_command.format(interface=nve))
+            if not output:
+                out = self.device.execute(self.cli_command.format(interface=nve))
+            else:
+                out = output
             for line in out.splitlines():
                 if line:
                     line = line.rstrip()
