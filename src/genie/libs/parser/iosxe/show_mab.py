@@ -17,15 +17,18 @@ from genie.metaparser.util.schemaengine import Any, Optional, Or
 # ====================================================
 class ShowMabAllDetailsSchema(MetaParser):
     schema = {
-        Any(): {
-            'mac_auth_bypass': str,
-            'mab_client_ist':{
-                Optional('client_mac'): str,
-                Optional('session_id'): str,
-                Optional('mab_sm_state'): str,
-                Optional('authen_status'): str,
-            }
-        },
+        'interfaces': {
+            Any(): {
+                'mac_auth_bypass': str,
+                'client_mac':{
+                    Any(): {
+                        Optional('session_id'): str,
+                        Optional('mab_sm_state'): str,
+                        Optional('authen_status'): str,
+                    },
+                },
+            },
+        }
     }
 
 
@@ -57,6 +60,7 @@ class ShowMabAllDetails(ShowMabAllDetailsSchema):
 
         ret_dict = {}
         interface_dict = {}
+        mac_dict = {}
         client_dict = {}
 
         if output is None:
@@ -70,7 +74,7 @@ class ShowMabAllDetails(ShowMabAllDetailsSchema):
             # MAB details for GigabitEthernet2/0/2
             res = p1.match(line)
             if res:
-                interface_dict = ret_dict.setdefault(res.group(2), {})
+                interface_dict = ret_dict.setdefault('interfaces', {}).setdefault(res.group(2), {})
                 continue
             
             # Mac-Auth-Bypass = Enabled
@@ -82,7 +86,7 @@ class ShowMabAllDetails(ShowMabAllDetailsSchema):
             # MAB Client List
             res = p3.match(line)
             if res:
-                client_dict = interface_dict.setdefault('mab_client_ist', {})
+                mac_dict = interface_dict.setdefault('client_mac', {})
 
             # My Client MAC = 0000.0001.0003
             # My Session ID = 000000000000000C82FA130E
@@ -90,7 +94,10 @@ class ShowMabAllDetails(ShowMabAllDetailsSchema):
             res = p4.match(line)
             if res:
                 key_string = (re.sub(r'\s+', '_', res.group(2))).lower()
-                client_dict.update({key_string: res.group(3)})
+                if key_string == 'client_mac':
+                    client_dict = mac_dict.setdefault(res.group(3), {})
+                else:
+                    client_dict.update({key_string: res.group(3)})
 
             # My MAB SM state = TERMINATE
             res = p5.match(line)
@@ -98,5 +105,3 @@ class ShowMabAllDetails(ShowMabAllDetailsSchema):
                 client_dict.update(res.groupdict())
 
         return ret_dict
-
-
