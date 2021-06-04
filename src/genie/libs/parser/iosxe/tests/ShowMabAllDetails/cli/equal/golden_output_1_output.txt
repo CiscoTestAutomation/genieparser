@@ -20,6 +20,11 @@ My Session ID = 000000000000000C82FA130E
 My MAB SM state = TERMINATE
 My Authen Status = SUCCESS
 
+My Client MAC = 0000.0001.0004
+My Session ID = 000000000000000C82FA130F
+My MAB SM state = TERMINATE
+My Authen Status = SUCCESS
+
 MAB details for GigabitEthernet2/0/3
 -------------------------------------
 Mac-Auth-Bypass = Enabled
