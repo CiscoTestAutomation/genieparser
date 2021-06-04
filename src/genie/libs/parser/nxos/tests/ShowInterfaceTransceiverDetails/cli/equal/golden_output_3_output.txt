@@ -1,0 +1,245 @@
+Ethernet1/44
+    transceiver is present
+    type is QSFP-100G-AOC2M
+    name is CISCO-DELTA
+    part number is QAOC-100G4F1A02C
+    revision is A
+    serial number is DTS2419B340-B
+    nominal bitrate is 25500 MBit/sec
+    cisco id is 17
+    cisco extended id number is 156
+    cisco part number is 10-3173-03
+    cisco product id is QSFP-100G-AOC2M
+    cisco version id is V03
+
+DOM is not supported
+
+Ethernet1/45
+    transceiver is present
+    type is QSFP-40G-CR4
+    name is CISCO-TYCO
+    part number is 2821248-3
+    revision is D
+    serial number is TED2027JJ2T-B
+    nominal bitrate is 10300 MBit/sec per channel
+    Link length supported for copper is 1 m
+    cisco id is 13
+    cisco extended id number is 16
+    cisco part number is 37-1322-03
+    cisco product id is QSFP-H40G-CU1M
+    cisco version id is V03
+
+DOM is not supported
+
+Ethernet1/46
+    transceiver is present
+    type is QSFP-40G-CR4
+    name is CISCO-TYCO
+    part number is 2821248-3
+    revision is D
+    serial number is TED2027JJ2T-A
+    nominal bitrate is 10300 MBit/sec per channel
+    Link length supported for copper is 1 m
+    cisco id is 13
+    cisco extended id number is 16
+    cisco part number is 37-1322-03
+    cisco product id is QSFP-H40G-CU1M
+    cisco version id is V03
+
+DOM is not supported
+
+Ethernet1/47
+    transceiver is present
+    type is QSFP-DD-400G-DR4
+    name is CISCO-INNOLIGHT
+    part number is T-DP4CNH-NCI
+    revision is 2B
+    serial number is INL24173686
+    nominal bitrate is 425000 MBit/sec per channel
+    cisco id is 0x18
+    cisco part number is 10-3320-01
+    cisco product id is QDD-400G-DR4-S
+    cisco version id is V01
+    firmware version is 204.154
+    Link length SMF is 0.5 km
+    Nominal transmitter wavelength is 1311.00 nm
+    Wavelength tolerance is 6.500 nm
+    host lane count is 8
+    media lane count is 4
+    max module temperature is 75 deg C
+    min module temperature is 0 deg C
+    min operational voltage is 3.14 V
+    vendor OUI is 447c7f
+    date code is 200422
+    clei code is CMUIAUPCAA
+    power class is 6 (12.0 W maximum)
+    max power is 12.00 W
+    near-end lanes used none
+    far-end lane code for 8 lanes Undefined
+    media interface is 1310 nm EML
+    Advertising code is Optical Interfaces: SMF
+    Host electrical interface code is 400GAUI-8 C2M (Annex 120E)
+    media interface advertising code is 400GBASE-DR4 (Cl 124)
+
+Lane Number:1 Network Lane
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   22.99 C        80.00 C     -5.00 C     75.00 C        0.00 C
+    Voltage        3.34 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+    Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+    Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+Lane Number:2 Network Lane
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   22.99 C        80.00 C     -5.00 C     75.00 C        0.00 C
+    Voltage        3.34 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+    Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+    Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+Lane Number:3 Network Lane
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   22.99 C        80.00 C     -5.00 C     75.00 C        0.00 C
+    Voltage        3.34 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+    Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+    Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+Lane Number:4 Network Lane
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   22.99 C        80.00 C     -5.00 C     75.00 C        0.00 C
+    Voltage        3.34 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current           N/A       120.00 mA    20.00 mA   110.00 mA      30.00 mA
+    Tx Power          N/A         6.99 dBm   -6.90 dBm    3.99 dBm     -2.90 dBm
+    Rx Power          N/A         6.99 dBm   -9.91 dBm    3.99 dBm     -5.90 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+Ethernet1/48
+    transceiver is present
+    type is QSFP-H40G-AOC7M
+    name is CISCO-FINISAR
+    part number is FCBN410QE2C07-C3
+    revision is A
+    serial number is FIW234501JT-B
+    nominal bitrate is 10300 MBit/sec per channel
+    cisco id is 13
+    cisco extended id number is 16
+    cisco part number is 10-2930-03
+    cisco product id is QSFP-H40G-AOC7M
+    cisco version id is V03
+
+DOM is not supported
+
+Ethernet1/49
+    transceiver is present
+    type is QSFP-H40G-AOC3M
+    name is CISCO-FINISAR
+    part number is FCBN410QE2C03-C2
+    revision is A
+    serial number is FIW232200C5-A
+    nominal bitrate is 10300 MBit/sec per channel
+    cisco id is 13
+    cisco extended id number is 16
+    cisco part number is 10-2927-02
+    cisco product id is QSFP-H40G-AOC3M
+    cisco version id is V02
+
+DOM is not supported
+
+Ethernet1/50
+    transceiver is present
+    type is QSFP-100G-PSM4
+    name is CISCO-LUXTERA
+    part number is LUX42604BO
+    revision is B
+    serial number is CVR2225001K
+    nominal bitrate is 25500 MBit/sec
+    Link length supported for 9/125um fiber is 500 m
+    cisco id is 17
+    cisco extended id number is 220
+    cisco part number is 10-3144-01
+    cisco product id is QSFP-100G-PSM4-S
+    cisco version id is V01
+
+Lane Number:1 Network Lane
+            SFP Detail Diagnostics Information (internal calibration)
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   16.58 C        75.00 C     -5.00 C     70.00 C        0.00 C
+    Voltage        3.27 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current       47.25 mA      125.30 mA    10.50 mA   120.00 mA      14.00 mA
+    Tx Power          N/A         4.99 dBm  -13.46 dBm    1.99 dBm     -9.43 dBm
+    Rx Power     -13.97 dBm  -    4.99 dBm  -16.77 dBm    1.99 dBm    -12.67 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+Lane Number:2 Network Lane
+            SFP Detail Diagnostics Information (internal calibration)
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   16.58 C        75.00 C     -5.00 C     70.00 C        0.00 C
+    Voltage        3.27 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current       47.25 mA      125.30 mA    10.50 mA   120.00 mA      14.00 mA
+    Tx Power          N/A         4.99 dBm  -13.46 dBm    1.99 dBm     -9.43 dBm
+    Rx Power     -14.68 dBm  -    4.99 dBm  -16.77 dBm    1.99 dBm    -12.67 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+Lane Number:3 Network Lane
+            SFP Detail Diagnostics Information (internal calibration)
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   16.58 C        75.00 C     -5.00 C     70.00 C        0.00 C
+    Voltage        3.27 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current       47.25 mA      125.30 mA    10.50 mA   120.00 mA      14.00 mA
+    Tx Power          N/A         4.99 dBm  -13.46 dBm    1.99 dBm     -9.43 dBm
+    Rx Power     -15.08 dBm  -    4.99 dBm  -16.77 dBm    1.99 dBm    -12.67 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning
+
+Lane Number:4 Network Lane
+            SFP Detail Diagnostics Information (internal calibration)
+    ----------------------------------------------------------------------------
+                Current              Alarms                  Warnings
+                Measurement     High        Low         High          Low
+    ----------------------------------------------------------------------------
+    Temperature   16.58 C        75.00 C     -5.00 C     70.00 C        0.00 C
+    Voltage        3.27 V         3.63 V      2.97 V      3.46 V        3.13 V
+    Current       47.25 mA      125.30 mA    10.50 mA   120.00 mA      14.00 mA
+    Tx Power          N/A         4.99 dBm  -13.46 dBm    1.99 dBm     -9.43 dBm
+    Rx Power     -13.66 dBm  -    4.99 dBm  -16.77 dBm    1.99 dBm    -12.67 dBm
+    Transmit Fault Count = 0
+    ----------------------------------------------------------------------------
+    Note: ++  high-alarm; +  high-warning; --  low-alarm; -  low-warning

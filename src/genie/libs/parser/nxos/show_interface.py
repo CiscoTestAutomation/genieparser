@@ -2848,9 +2848,10 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         p1 = re.compile(r'^Port +VRF +Status +IP Address +Speed +MTU$')
 
         # mgmt0  --           up     172.25.143.76                           1000     1500
+        # mgmt0  --           up     172.25.143.76                           --     1500
         p2 = re.compile(r'^(?P<port>[a-zA-Z0-9]+) +(?P<vrf>[a-zA-Z0-9\-]+)'
                         r' +(?P<status>[a-zA-Z]+) +(?P<ip_address>(\S+))'
-                        r' +(?P<speed>[0-9]+) +(?P<mtu>[0-9]+)$')
+                        r' +(?P<speed>\S+) +(?P<mtu>[0-9]+)$')
 
         # Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
         p3 = re.compile(r'^Ethernet +VLAN +Type +Mode +Status +Reason +Speed'
@@ -4442,6 +4443,10 @@ class ShowInterfaceTransceiverDetails(ShowInterfaceTransceiverDetailsSchema):
 
         p37 = re.compile(r'^\s*(?P<lane>Lane)\s+Number:(?P<lane_num>\d+\s+Network\s+Lane)')
 
+        # SFP Detail Diagnostics Information
+        # SFP Detail Diagnostics Information (internal calibration)
+        p37_1 = re.compile(r'^SFP\s+Detail\s+Diagnostics\s+Information(\s+\(internal\s+calibration\))?$')
+
         p38 = re.compile(r'^\s*(?P<temp>Temperature)\s+'
                       r'(?P<curr>[0-9.NAna/-]+)\s?C?(\s+)?'
                       r'(?P<alarm>[+-]+)?\s+'
@@ -4686,6 +4691,16 @@ class ShowInterfaceTransceiverDetails(ShowInterfaceTransceiverDetailsSchema):
               parsed_xcvr_dict[interface]['lane_number'].setdefault(xcvr_lane, {})
               continue
 
+            # SFP Detail Diagnostics Information
+            # SFP Detail Diagnostics Information (internal calibration)
+            m = p37_1.match(line)
+            if m:
+              if not 'lane_number' in parsed_xcvr_dict[interface]:
+                parsed_xcvr_dict[interface]['dom_supported'] = True
+                xcvr_lane = '0 SFP Detail Diagnostics Information'
+                parsed_xcvr_dict[interface].setdefault('lane_number', {})
+                parsed_xcvr_dict[interface]['lane_number'].setdefault(xcvr_lane, {})
+              continue
 
             # Temperature   24.18 C        80.00 C     -5.00 C     75.00 C        0.00 C
             m = p38.match(line)
