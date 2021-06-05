@@ -765,6 +765,7 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
 
         # Defines the regex for the first line of device output. Example is:
         # EIGRP-IPv4 Interfaces for AS(1)
+        # EIGRP-IPv6 VR(cisco) Address-Family Interfaces for AS(20)
         p1 = re.compile(
             r'EIGRP\-(?P<address_family>IPv4|IPv6)\s+(VR\((?P<name>\w+)\)\s+Address\-Family\s+)?'
             r'Interfaces\s+for\s+AS\(\s*(?P<auto_sys>[\S]+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$'
@@ -816,6 +817,7 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
         )
 
         #   Authentication mode is not set
+        #   Authentication mode is md5,  key-chain is "test"
         p12 = re.compile(
             r'^Authentication +mode +is\s+(?P<authentication>[A-Za-z0-9\-]+|not set)'
             r'(, +key\-chain +is\s+(")?(?P<key_chain>not set|[A-Za-z0-9\-]+))?(")?'
@@ -827,6 +829,7 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
 
             # Processes the matched patterns for the first line of output
             # EIGRP-IPv4 Interfaces for AS(1)
+            # EIGRP-IPv6 VR(cisco) Address-Family Interfaces for AS(20)
             m = p1.match(line)
 
             if m:
@@ -836,7 +839,7 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                     setdefault('default', {}).setdefault('eigrp_instance', {}). \
                     setdefault(auto_sys, {}).setdefault('address_family', {}). \
                     setdefault(group['address_family'].lower(), {})
-                if 'name' in group and group['name']:
+                if group['name']:
                     instance_dict.update({'name': group['name']})
                     instance_dict.update({'named_mode': True if group['name'] else False})
                 else:
@@ -877,6 +880,7 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                 int_dict['pend_routes'] = int(group['pend_routes'])
                 continue
 
+            # Hello-interval is 5, Hold-time is 15
             m = p5.match(line)
             if m:
                 group = m.groupdict()
@@ -884,6 +888,7 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                 int_dict.update({'hold_time': int(group['hold_time'])})
                 continue
 
+            # Split-horizon is enabled
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -894,6 +899,7 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                 int_dict.update({'split_horizon_enabled': split_horizon_state})
                 continue
 
+            # Packetized sent/expedited: 0/0
             m = p7.match(line)
             if m:
                 group = m.groupdict()
@@ -901,6 +907,7 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                 int_dict.update({'packetized_expedited': int(group['expedited'])})
                 continue
 
+            # Hello's sent/expedited: 597/1
             m = p8.match(line)
             if m:
                 group = m.groupdict()
@@ -908,6 +915,7 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                 int_dict.update({'hello_expedited': int(group['expedited'])})
                 continue
 
+            #  Un/reliable mcasts: 0/0  Un/reliable ucasts: 0/0
             m = p9.match(line)
             if m:
                 group = m.groupdict()
@@ -917,6 +925,7 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                 int_dict.update({'reliable_ucasts': int(group['reliable_ucast'])})
                 continue
 
+            # Mcast exceptions: 0  CR packets: 0  ACKs suppressed: 0
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -925,6 +934,7 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                 int_dict.update({'acks_suppressed': int(group['ack_suppressed'])})
                 continue
 
+            #   Retransmissions sent: 0  Out-of-sequence rcvd: 0
             m = p11.match(line)
             if m:
                 group = m.groupdict()
@@ -932,12 +942,14 @@ class ShowEigrpInterfacesSuperParser(ShowEigrpInterfacesSchema):
                 int_dict.update({'out_of_sequence_rcvd': int(group['out_of_sequence_rcvd'])})
                 continue
 
+            #   Authentication mode is not set
+            #   Authentication mode is md5,  key-chain is "test"
             m = p12.match(line)
             if m:
                 group = m.groupdict()
-                if 'authentication' in group and group['authentication'] != 'not':
+                if group['authentication'] != 'not':
                     int_dict.update({'authentication_mode': group['authentication']})
-                    if 'key_chain' in group and group['key_chain'] != 'not':
+                    if group['key_chain'] != 'not':
                         int_dict.update({'key_chain': group['key_chain']})
                 continue
 

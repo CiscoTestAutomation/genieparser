@@ -132,7 +132,6 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 dict_session.update({'status': status})
                 dict_session.update({'ike_count': ike_count})
                 dict_session.update({'child_sa_count': child_sa_count})
-                dict_tunnels = dict_session.setdefault('tunnels', {})
                 continue
 
             # 3752379 2001:db8:2:1::1/500 2001:db8:2:1::2/500 READY INITIATOR
@@ -144,6 +143,7 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 remote = group['remote']
                 status = group['status']
                 role = group['role']
+                dict_tunnels = dict_session.setdefault('tunnels', {})
                 dict_tunnel = dict_tunnels.setdefault(
                     '{}-{}'.format(local, remote), {}
                 )
@@ -169,7 +169,7 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 dict_tunnel.update({'dh_group': dh_group})
                 dict_tunnel.update({'authentication_sign': auth_sign})
                 dict_tunnel.update({'authentication_verify': auth_verify})
-                if 'keysize' in group and group['keysize']:
+                if group['keysize']:
                     dict_tunnel.update({
                         'key_size': int(group['keysize'])
                     })
@@ -183,8 +183,6 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
                 active_time = int(group['active_time'])
                 dict_tunnel.update({'lifetime_secs': life_time})
                 dict_tunnel.update({'activetime_secs': active_time})
-                child_sas = dict_tunnel.setdefault('child_sa', {})
-                child_sa_index = 0
                 continue
 
             # Child sa: local selector  2001:db8:1:1::/0 -
@@ -193,6 +191,7 @@ class ShowCryptoIkev2Sa(ShowCryptoIkev2SaSchema):
             if m:
                 group = m.groupdict()
                 local_selector = group['local_selector']
+                child_sas = dict_tunnel.setdefault('child_sa', {})
                 child_sa = child_sas.setdefault(child_sa_index, {})
                 child_sa.update({'local_selector': str(local_selector)})
                 child_sa_index = child_sa_index + 1
