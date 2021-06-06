@@ -14,6 +14,8 @@ IOSXR parsers for the following show commands:
     * show ospf vrf all-inclusive database opaque-area
     * show ospf database
     * show ospf mpls1 database
+    * show ospf {process_id} database router
+    * show ospf all-inclusive database router
 """
 
 # Python
@@ -5348,10 +5350,11 @@ class ShowOspfDatabaseSchema(MetaParser):
         },
     },
 }
+
+
 # =============================================================
 #  Parser for 'show ospf database', 'show ospf <process_id> database'
 # =============================================================
-
 class ShowOspfDatabase(ShowOspfDatabaseSchema):
     """ Parser for show ospf database, show ospf <process_id> database
     """
@@ -5531,5 +5534,20 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 ospfv2_dict['checksum'] = group['checksum']
                 ospfv2_dict['opaque_id'] = int(group['opaque_id'])
                 continue
+
+        return ret_dict
+
+
+class ShowOspfDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseParser, ShowOspfVrfAllInclusiveDatabaseRouterSchema):
+    """Parser for show ospf database router"""
+    cli_command = ['show ospf {process_id} database router', 'show ospf all-inclusive database router']
+
+    def cli(self, process_id=None, output=None):
+        if process_id:
+            output = self.device.execute(self.cli_command[0].format(process_id=process_id))
+        else:
+            output = self.device.execute(self.cli_command[1])
+
+        ret_dict = super().cli(cmd=output, db_type="router", output=None)
 
         return ret_dict
