@@ -130,16 +130,15 @@ class ShowUsers(ShowUsersSchema):
         else:
             out = output
 
-        # === WORKING ===
         #     Line       User       Host(s)              Idle       Location
         #    3 vty 1     testuser   idle                 00:41:43   10.0.0.2
         # *  4 vty 1     admin      idle                 00:00:00   xxx-xxxxxxx-nitro2.cisco.com
         # *  2 vty 0     admin      idle                 00:00:00
         # *  0 con 0                idle                 01:58
-        # === BROKEN ===
         #    10 vty 0               Virtual-Access2      0          1212321
-        p1 = re.compile(r'^(?P<active>\* +)?(?P<line>(\d+ \w+ \d+)) +(?P<user>(\S+))? '
-                        r'+(?P<host>\S+) +(?P<idle>[\d\:]+)( +(?P<location>\S+))?$')
+        p1 = re.compile(r'^(?:(?P<active>\*))?( +)?(?P<line>\d+ \S+ \d+)(?: {1,7}(?P<user>\S+))? '
+                        r'+(?P<host>\S+) +(?P<idle>\S+)(?: +(?P<location>\S+))?')
+        # counting spaces from 1-7, check if class errors in future releases
 
         #                                                    			 foo-bar.cisco.com
         p1_1 = re.compile(r'^(?P<location>\S+)$')
