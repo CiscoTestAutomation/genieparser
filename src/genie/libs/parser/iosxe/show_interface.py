@@ -12,7 +12,9 @@
     * show ipv6 interface
     * show interfaces accounting
     * show interfaces status
+    * show interfaces transceiver
     * show interfaces {interface} transceiver
+    * show interfaces transceiver detail
     * show interfaces {interface} transceiver detail
 """
 
@@ -3552,7 +3554,8 @@ class ShowInterfacesTransceiverDetailSchema(MetaParser):
 
 
 class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
-    """parser for 
+    """parser for
+            * show interfaces transceiver detail
             * show interfaces {interface} transceiver detail
         """
 
@@ -3653,6 +3656,7 @@ class ShowInterfacesTransceiverSchema(MetaParser):
 class ShowInterfacesTransceiver(ShowInterfacesTransceiverSchema):
     """
     parser for
+        * show interfaces transceiver
         * show interfaces {interface} transceiver
     """
 

@@ -10,7 +10,9 @@
     * show ipv6 interface
     * show interfaces accounting
     * show interfaces status
+    * show interfaces transciever
     * show interfaces {interface} transceiver
+    * show interfaces transceiver detail
     * show interfaces {interface} transceiver detail
 
     # TODO: Need find replacement command for IOSXE 'show interface <intf> counters'
@@ -138,7 +140,8 @@ class ShowInterfacesStatus(ShowInterfacesStatus_iosxe):
 class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetail_iosxe):
     """
     Parser for:
-        show interfaces <interface> transceiver detail
+        * show interfaces transceiver detail
+        * show interfaces <interface> transceiver detail
     """
     pass
 
@@ -146,6 +149,7 @@ class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetail_iosxe):
 class ShowInterfacesTransceiver(ShowInterfacesTransceiver_iosxe):
     """
     Parser for:
-         show interfaces <interface> transceiver
+        * show interfaces transciever
+        * show interfaces <interface> transceiver
     """
     pass
