@@ -26,8 +26,8 @@ class ShowRedundancyApplicationGroupSchema(MetaParser):
                     Any(): {
                         Optional("runtime_priority"): int,
                         Optional("rg_faults_rg_state"): str,
-                        Optional("total_switchovers_from_faults"): int,
-                        Optional("total_down/up_state_changes_from_faults"): int
+                        Optional("total_switchovers_due_to_faults"): int,
+                        Optional("total_down_or_up_state_changes_due_to_faults"): int
                     }
                 },
                 "administrative_state": str,
@@ -314,8 +314,8 @@ class ShowRedundancyApplicationGroup(ShowRedundancyApplicationGroupSchema):
                     fault_states_group: {
                         'runtime_priority': runtime_priority,
                         'rg_faults_rg_state': rg_faults_rg_state,
-                        'total_switchovers_from_faults': total_switchovers,
-                        'total_down/up_state_changes_from_faults': total_state_changes
+                        'total_switchovers_due_to_faults': total_switchovers,
+                        'total_down_or_up_state_changes_due_to_faults': total_state_changes
                     }
                 }}
                 continue

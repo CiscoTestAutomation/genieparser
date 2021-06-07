@@ -5,8 +5,8 @@ expected_output = {
                 "1": {
                     "runtime_priority": 200,
                     "rg_faults_rg_state": "Up",
-                    "total_switchovers_from_faults": 0,
-                    "total_down/up_state_changes_from_faults": 0,
+                    "total_switchovers_due_to_faults": 0,
+                    "total_down_or_up_state_changes_due_to_faults": 0,
                 }
             },
             "group_name": "group1",
@@ -83,8 +83,8 @@ expected_output = {
                 "2": {
                     "runtime_priority": 175,
                     "rg_faults_rg_state": "Up",
-                    "total_switchovers_from_faults": 0,
-                    "total_down/up_state_changes_from_faults": 0,
+                    "total_switchovers_due_to_faults": 0,
+                    "total_down_or_up_state_changes_due_to_faults": 0,
                 }
             },
             "group_name": "group2",
