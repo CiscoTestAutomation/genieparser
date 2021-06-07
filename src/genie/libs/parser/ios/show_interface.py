@@ -10,6 +10,8 @@
     * show ipv6 interface
     * show interfaces accounting
     * show interfaces status
+    * show interfaces {interface} transceiver
+    * show interfaces {interface} transceiver detail
 
     # TODO: Need find replacement command for IOSXE 'show interface <intf> counters'
 """
