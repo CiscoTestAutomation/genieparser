@@ -136,8 +136,9 @@ class ShowUsers(ShowUsersSchema):
         # *  2 vty 0     admin      idle                 00:00:00
         # *  0 con 0                idle                 01:58
         #    10 vty 0               Virtual-Access2      0          1212321
+        #    0 con 0                idle
         p1 = re.compile(r'^(?:(?P<active>\*))?( +)?(?P<line>\d+ \S+ \d+)(?: {1,7}(?P<user>\S+))? '
-                        r'+(?P<host>\S+) +(?P<idle>\S+)(?: +(?P<location>\S+))?')
+                        r'+(?P<host>\S+)( +)?(?P<idle>\S+)?(?: +(?P<location>\S+))?')
         # counting spaces from 1-7, check if class errors in future releases
 
         #                                                    			 foo-bar.cisco.com
@@ -171,6 +172,9 @@ class ShowUsers(ShowUsersSchema):
                 if not group['user']:
                     del group['user']
 
+                if not group['idle']:
+                    del group['idle']
+
                 line_dict = ret_dict.setdefault('line', {}).setdefault(term_line, {})
                 line_dict.update(group)
                 line_dict.update({'active': active})
@@ -203,5 +207,4 @@ class ShowUsers(ShowUsersSchema):
 
                 inter_flag = True
 
-        print(ret_dict)
         return ret_dict
