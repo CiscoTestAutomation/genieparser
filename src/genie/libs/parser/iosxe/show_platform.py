@@ -6760,9 +6760,9 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
         p1 = re.compile(r'CAM +Utilization +for +ASIC  +\[+(?P<asic>(\d+))\]$')
 
         #CTS Cell Matrix/VPN
-        #label                  EM           O       16384        0    0.00%        0        0        0        0
+        #Label                  EM           O       16384        0    0.00%        0        0        0        0
         #CTS Cell Matrix/VPN
-        #label                  TCAM         O        1024        1    0.10%        0        0        0        1
+        #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
         # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
         # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
         p2 = re.compile(r'(?P<table>.*(\S+)) +(?P<subtype>\S+) +(?P<dir>\S+) +(?P<max>\d+) +(?P<used>\d+) +(?P<used_percent>\S+\%) +(?P<v4>\d+) +(?P<v6>\d+) +(?P<mpls>\d+) +(?P<other>\d+)$')
@@ -6780,17 +6780,17 @@ class ShowPlatformTcamUtilization(ShowPlatformTcamUtilizationSchema):
                 continue
 
             #CTS Cell Matrix/VPN
-            #label                  EM           O       16384        0    0.00%        0        0        0        0
+            #Label                  EM           O       16384        0    0.00%        0        0        0        0
             #CTS Cell Matrix/VPN
-            #label                  TCAM         O        1024        1    0.10%        0        0        0        1
+            #Label                  TCAM         O        1024        1    0.10%        0        0        0        1
             # Mac Address Table      EM           I       16384       44    0.27%        0        0        0       44
             # Mac Address Table      TCAM         I        1024       21    2.05%        0        0        0       21
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 table_ = group.pop('table')
-                if table_ == 'label':
-                    table_ = 'CTS Cell Matrix/VPN label'
+                if table_ == 'Label':
+                    table_ = 'CTS Cell Matrix/VPN Label'
                 subtype_ = group.pop('subtype')
                 dir_ = group.pop('dir')
                 dir_dict = asic_dict.setdefault('table', {}). \
