@@ -220,7 +220,7 @@ class ShowUsers(ShowUsersSchema):
 
         interface_result = pg.oper_fill_tabular(device_output=out,
                                                 device_os='iosxe',
-                                                index=[0,1],
+                                                index=[0, 1],
                                                 header_fields=['Interface', 'User', 'Mode', 'Idle', 'Peer Address'])
 
         interface_entries = interface_result.entries
@@ -246,8 +246,8 @@ class ShowUsers(ShowUsersSchema):
             for k in intf_dicts.keys():
                 curr_dict = intf_dicts[k]
 
-                user_sub_dict = user_dict.setdefault('user', {}).\
-                                          setdefault(curr_dict['User'], {})
+                user_sub_dict = user_dict.setdefault('user', {}). \
+                    setdefault(curr_dict['User'], {})
 
                 user_sub_dict.update({'idle': curr_dict['Idle'],
                                       'mode': curr_dict['Mode']})
