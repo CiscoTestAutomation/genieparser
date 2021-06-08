@@ -2122,4 +2122,8 @@ class ShowPolicyMapTypeControlSubscriberBindingPolicyName (ShowPolicyMapTypeCont
                         ret_dict['interfaces_list'].append(m['int'])
             return ret_dict
 
+        else :
+             return {}
+             
+             
         
