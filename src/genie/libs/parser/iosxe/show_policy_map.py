@@ -2116,12 +2116,10 @@ class ShowPolicyMapTypeControlSubscriberBindingPolicyName (ShowPolicyMapTypeCont
                 line =line.strip()
                 m=p1.match(line)
                 if m :
-                   if m['pname'].strip() != '' :
+                   if m['pname'] :
                         ret_dict['policy_map_name']=m['pname'].strip()
-                   if m['int']   != '' :
-                        ret_dict['interfaces_list'].append(m['int'].strip())
+                   if m['int']  :
+                        ret_dict['interfaces_list'].append(m['int'])
             return ret_dict
-#=======================================================================================                 
-
 
         
