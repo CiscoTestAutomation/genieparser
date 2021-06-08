@@ -10,6 +10,7 @@ IOSXE parsers for the following show commands:
     * 'show policy-map target service-group {num}',
     * 'show policy-map control-plane'
     * 'show policy-map interface',
+    * 'show policy-map type control subscriber binding <policymap name>',
 '''
 
 # Python
@@ -2072,5 +2073,63 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             if m:
                 class_map_dict['queue_limit_packets'] = int(m.groupdict()['queue_limit_packets'])
                 continue
+
+        return ret_dict
+        
+
+#================================================================================
+#Schema for :
+#   * "show policy-map type control subscriber binding <policymap name>" 
+#================================================================================
+class ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema (MetaParser) :
+    '''Schema for :
+    * "show policy-map type control subscriber binding <policymap name>" '''  
+    
+    schema = {
+        "policy_map_name" : str,
+        "interfaces_list" : list,
+    }
+
+
+#=================================================================================
+#Parser for:
+#   * "show policy-map type control subscriber binding <policymap name>" 
+# ================================================================================
+class ShowPolicyMapTypeControlSubscriberBindingPolicyName(ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema) :
+    '''Parser for :
+    *"show policy-map type control subscriber binding <policymap name>" '''
+      
+    cli_command = ['show policy-map type control subscriber binding {policy_map_name}']           
+
+    def cli(self,policy_map_name="",output=None):      
+        if output is None:
+            cmd = self.cli_command[0].format(policy_map_name=policy_map_name)
+            output = self.device.execute(cmd)          
+        
+        ret_dict = {}
+
+        #PMAP_DefaultWiredDot1xClosedAuth_1X_MAB          Gi1/0/1
+        p1 = re.compile('^(?P<pname>\S+)?\s+(?P<int>[\w\/]+)$')
+
+        #                                                 Gi1/1/1
+        p2 = re.compile('^(?P<int>[\w\/]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # PMAP_DefaultWiredDot1xClosedAuth_1X_MAB         Gi1/0/1
+            # dot1x_group                                     Gi1/0/1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['policy_map_name'] = group['pname']
+                ret_dict.setdefault('interfaces_list', []).append(group['int'])
+                continue
+        
+            # Gi1/1/1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('interfaces_list', []).append(group['int'])
 
         return ret_dict
