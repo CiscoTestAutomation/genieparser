@@ -125,7 +125,7 @@ class ShowUsers(ShowUsersSchema):
     cli_command = 'show users'
 
     def cli(self, output=None):
-        if not output:
+        if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
@@ -137,9 +137,10 @@ class ShowUsers(ShowUsersSchema):
         # *  0 con 0                idle                 01:58
         #    10 vty 0               Virtual-Access2      0          1212321
         #    0 con 0                idle
-        p1 = re.compile(r'^(?:(?P<active>\*))?( +)?(?P<line>\d+ \S+ \d+)(?: {1,7}(?P<user>\S+))? '
+        # *   2 vty 0         user1           idle            0   SERVICE1.CISCO.COM
+        p1 = re.compile(r'^(?:(?P<active>\*))?( +)?(?P<line>\d+ \S+ \d+)(?: {1,9}(?P<user>\S+))? '
                         r'+(?P<host>\S+)( +)?(?P<idle>\S+)?(?: +(?P<location>\S+))?')
-        # counting spaces from 1-7, check if class errors in future releases
+        # counting spaces from 1-9, check if class errors in future releases
 
         #                                                    			 foo-bar.cisco.com
         p1_1 = re.compile(r'^(?P<location>\S+)$')
