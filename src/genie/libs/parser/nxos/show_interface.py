@@ -2,19 +2,39 @@
 
 NXOS parsers for the following show commands:
     * show interface
-    * show vrf all interface
+    * show interface {interface}
+    * show ip interface {interface} vrf {vrf}
+    * show ip interface {interface} vrf all
+    * show ip interface vrf {vrf}
     * show ip interface vrf all
-    * show ipv6 interface detail vrf all
+    * show vrf {vrf} interface {interface}
+    * show vrf all interface {interface}
+    * show vrf {vrf} interface
+    * show vrf all interface
     * show interface switchport
+    * show interface {interface} switchport
+    * show ipv6 interface {interface} vrf {vrf}
+    * show ipv6 interface {interface} vrf all
+    * show ipv6 interface vrf {vrf}
+    * show ipv6 interface vrf all
     * show ip interface brief
-    * show ip interface brief | vlan
+    * show ip interface brief | include Vlan
     * show interface brief
     * show interface {interface} brief
     * show running-config interface {interface}
+    * show nve interface {interface} detail
+    * show ip interface brief vrf all | include {ip}
+    * show ip interface brief vrf all
+    * show interface description
+    * show interface {interface} description
     * show interface status
     * show interface {interface} status
+    * show interface capabilities
     * show interface {interface} capabilities
-    * show interface {interface} transciever details
+    * show interface transceiver
+    * show interface {interface} transceiver
+    * show interface transceiver details
+    * show interface {interface} transceiver details
     * show interface fec
     * show interface hardware-mappings
 '''
@@ -205,6 +225,7 @@ class ShowInterface(ShowInterfaceSchema):
         # Vlan1 is down (Administratively down), line protocol is down, autostate enabled
         # Vlan200 is down (VLAN/BD is down), line protocol is down, autostate enabled
         # Vlan23 is administratively down (Administratively down), line protocol is down, autostate enabled
+        # Vlan3378 is down (VLAN/BD does not exist), line protocol is down, autostate enabled
         # Ethernet2/2 is up
         # Ethernet1/10 is down (Link not connected)
         # Ethernet1/1 is down (DCX-No ACK in 100 PDUs)
@@ -220,7 +241,7 @@ class ShowInterface(ShowInterfaceSchema):
                         r'SFP +validation +failed|Channel +admin +down))?'
                         r'(administratively\s+(?P<admin_1>(down)))?\s*'
                         r'(\(Administratively\s*(?P<admin_2>(down))\))?'
-                        r'(\(VLAN\/BD\s+is+\s+(down|up)\))?'
+                        r'(\(VLAN\/BD\s+((is\s+(down|up))|does\s+not\s+exist)\))?'
                         r'(,\s*line\s+protocol\s+is\s+(?P<line_protocol>\w+))?'
                         r'(,\s+autostate\s+(?P<autostate>\S+))?'
                         r'(\(No\s+operational\s+members\))?'
@@ -232,7 +253,8 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(\(\S+ErrDisabled\))?'
                         r'(\(XCVR\s+not\s+inserted\))?'
                         r'(\(No\s+operational\s+members\))?'
-                        r'(\(.*ACK.*\))?$')
+                        r'(\(.*ACK.*\))?'
+                        r'(\(inactive\))?$')
 
         # admin state is up
         # admin state is up,
@@ -256,7 +278,12 @@ class ShowInterface(ShowInterfaceSchema):
                         r' *\(bia *(?P<phys_address>[a-z0-9\.]+)\)$')
 
         #Description: desc
-        p4 = re.compile(r'^Description: *(?P<description>.*)$')
+        p4 = re.compile(r'^Description:\s*(?P<description>.*)$')
+
+        #Description: VLAN information Internet Address is 10.10.10.1/24
+        p4_1 = re.compile(r'^Description:\s*(?P<description>.*)'
+                          r'\s+Internet\s+Address\s+is\s+(?P<ip>[0-9\.]+)'
+                          r'\/(?P<prefix_length>[0-9]+)$')
 
         #Internet Address is 10.4.4.4/24 secondary tag 10
         p5 = re.compile(r'^Internet *Address *is *(?P<ip>[0-9\.]+)'
@@ -570,13 +597,34 @@ class ShowInterface(ShowInterfaceSchema):
                             ['phys_address'] = phys_address
                 continue
 
-            #Description: desc
+            # Description: VLAN information Internet Address is 10.10.10.1/24
+            m = p4_1.match(line)
+            if m:
+                group = m.groupdict()
+                description = group['description']
+                interface_dict[interface]['description'] = description
+
+                ip = group['ip']
+                prefix_length = str(m.groupdict()['prefix_length'])
+
+                address = ip + '/' + prefix_length
+
+                interface_dict[interface].setdefault('ipv4', {})
+                add_dict = interface_dict[interface]['ipv4'].\
+                    setdefault(address, {})
+
+                add_dict['ip'] = ip
+                add_dict['prefix_length'] = prefix_length
+                continue
+
+            # Description: desc
             m = p4.match(line)
             if m:
                 description = m.groupdict()['description']
 
                 interface_dict[interface]['description'] = description
                 continue
+
 
             #Internet Address is 10.4.4.4/24 secondary tag 10
             m = p5.match(line)
@@ -2820,9 +2868,10 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         p1 = re.compile(r'^Port +VRF +Status +IP Address +Speed +MTU$')
 
         # mgmt0  --           up     172.25.143.76                           1000     1500
+        # mgmt0  --           up     172.25.143.76                           --     1500
         p2 = re.compile(r'^(?P<port>[a-zA-Z0-9]+) +(?P<vrf>[a-zA-Z0-9\-]+)'
                         r' +(?P<status>[a-zA-Z]+) +(?P<ip_address>(\S+))'
-                        r' +(?P<speed>[0-9]+) +(?P<mtu>[0-9]+)$')
+                        r' +(?P<speed>\S+) +(?P<mtu>[0-9]+)$')
 
         # Ethernet      VLAN    Type Mode   Status  Reason                   Speed     Port
         p3 = re.compile(r'^Ethernet +VLAN +Type +Mode +Status +Reason +Speed'
@@ -3340,12 +3389,16 @@ class ShowNveInterface(ShowNveInterfaceSchema):
 # ============================================
 class ShowIpInterfaceBriefVrfAllSchema(MetaParser):
     """Schema for show ip interface brief vrf all"""
-    schema = {'interface':
-                {Any():
-                    {Optional('ip_address'): str,
-                     Optional('interface_status'): str}
-                },
+    schema = {
+        'interface': {
+            Any(): {
+                Optional('vrf'): str,
+                Optional('ip_address'): str,
+                Optional('interface_status'): str
             }
+        }
+    }
+
 
 # ============================================
 # Schema for 'show ip interface brief vrf all'
@@ -3377,32 +3430,32 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
             out = self.device.execute(cmd)
         else:
             out = output
-        interface_dict = {}
+
+        # IP Interface Status for VRF "default"(1)
+        p1 = re.compile(r'^IP Interface Status for VRF "(?P<vrf>(\S+))"')
 
         # mgmt0                10.255.5.169    protocol-up/link-up/admin-up
-        p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
-            '+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-z\-\/]+)$')
+        p2 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
+                        r'+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-z\-\/]+)$')
 
+        ret_dict = {}
         for line in out.splitlines():
             line = line.rstrip()
 
-            m = p.match(line)
+            m = p1.match(line)
             if m:
-                interface = m.groupdict()['interface']
-
-                if 'interface' not in interface_dict:
-                    interface_dict['interface'] = {}
-                if interface not in interface_dict['interface']:
-                    interface_dict['interface'][interface] = {}
-
-                interface_dict['interface'][interface]['ip_address'] = \
-                    str(m.groupdict()['ip_address'])
-                interface_dict['interface'][interface]['interface_status'] = \
-                    str(m.groupdict()['interface_status'])
-
+                vrf = m.groupdict()['vrf']
                 continue
 
-        return interface_dict
+            m = p2.match(line)
+            if m:
+                interface_dict = ret_dict.setdefault('interface', {}).setdefault(m.groupdict()['interface'], {})
+                interface_dict.update({'vrf': vrf})
+                interface_dict.update({'ip_address': m.groupdict()['ip_address']})
+                interface_dict.update({'interface_status': m.groupdict()['interface_status']})
+                continue
+
+        return ret_dict
 
 #############################################################################
 # Parser For show interface Description
@@ -4414,6 +4467,10 @@ class ShowInterfaceTransceiverDetails(ShowInterfaceTransceiverDetailsSchema):
 
         p37 = re.compile(r'^\s*(?P<lane>Lane)\s+Number:(?P<lane_num>\d+\s+Network\s+Lane)')
 
+        # SFP Detail Diagnostics Information
+        # SFP Detail Diagnostics Information (internal calibration)
+        p37_1 = re.compile(r'^SFP\s+Detail\s+Diagnostics\s+Information(\s+\(internal\s+calibration\))?$')
+
         p38 = re.compile(r'^\s*(?P<temp>Temperature)\s+'
                       r'(?P<curr>[0-9.NAna/-]+)\s?C?(\s+)?'
                       r'(?P<alarm>[+-]+)?\s+'
@@ -4658,6 +4715,16 @@ class ShowInterfaceTransceiverDetails(ShowInterfaceTransceiverDetailsSchema):
               parsed_xcvr_dict[interface]['lane_number'].setdefault(xcvr_lane, {})
               continue
 
+            # SFP Detail Diagnostics Information
+            # SFP Detail Diagnostics Information (internal calibration)
+            m = p37_1.match(line)
+            if m:
+              if not 'lane_number' in parsed_xcvr_dict[interface]:
+                parsed_xcvr_dict[interface]['dom_supported'] = True
+                xcvr_lane = '0 SFP Detail Diagnostics Information'
+                parsed_xcvr_dict[interface].setdefault('lane_number', {})
+                parsed_xcvr_dict[interface]['lane_number'].setdefault(xcvr_lane, {})
+              continue
 
             # Temperature   24.18 C        80.00 C     -5.00 C     75.00 C        0.00 C
             m = p38.match(line)
