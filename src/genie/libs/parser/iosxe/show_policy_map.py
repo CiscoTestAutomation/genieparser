@@ -2084,46 +2084,52 @@ class ShowPolicyMap(ShowPolicyMapSchema):
 class ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema (MetaParser) :
     '''Schema for :
     * "show policy-map type control subscriber binding <policymap name>" '''  
-    schema={
+    
+    schema = {
         "policy_map_name" : str,
-        "interfaces_list" : list
+        "interfaces_list" : list,
     }
+
+
 #=================================================================================
 #Parser for:
 #   * "show policy-map type control subscriber binding <policymap name>" 
 # ================================================================================
-class ShowPolicyMapTypeControlSubscriberBindingPolicyName (ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema) :
+class ShowPolicyMapTypeControlSubscriberBindingPolicyName(ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema) :
     '''Parser for :
     *"show policy-map type control subscriber binding <policymap name>" '''
       
     cli_command = ['show policy-map type control subscriber binding {policy_map_name}']           
+
     def cli(self,policy_map_name="",output=None):      
         if output is None:
             cmd = self.cli_command[0].format(policy_map_name=policy_map_name)
-            out = self.device.execute(cmd)      
-        else:
-            out = output     
-        if (out) :                     
-            ret_dict={'policy_map_name':'','interfaces_list':[]}
-            #Gunner-3M#show policy-map type control subscriber binding PMAP_DefaultWiredDot1xClosedAuth_1X_MAB
-            #Policy Name                                  Bound To Interface(s)
-            #-----------                                  ---------------------
-            #PMAP_DefaultWiredDot1xClosedAuth_1X_MAB          Gi1/0/1
-            #			                              Gi1/1/1
-            #                                                 Te1/1/1
-            p1=re.compile('^(?P<pname>.*\s+|'')(?P<int>[\w/]+)$')
-            for line in out.splitlines():
-                line =line.strip()
-                m=p1.match(line)
-                if m :
-                   if m['pname'] :
-                        ret_dict['policy_map_name']=m['pname'].strip()
-                   if m['int']  :
-                        ret_dict['interfaces_list'].append(m['int'])
-            return ret_dict
-
-        else :
-             return {}
-             
-             
+            output = self.device.execute(cmd)          
         
+        ret_dict = {}
+
+        #PMAP_DefaultWiredDot1xClosedAuth_1X_MAB          Gi1/0/1
+        p1 = re.compile('^(?P<pname>\S+)?\s+(?P<int>[\w\/]+)$')
+
+        #                                                 Gi1/1/1
+        p2 = re.compile('^(?P<int>[\w\/]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # PMAP_DefaultWiredDot1xClosedAuth_1X_MAB         Gi1/0/1
+            # dot1x_group                                     Gi1/0/1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['policy_map_name'] = group['pname']
+                ret_dict.setdefault('interfaces_list', []).append(group['int'])
+                continue
+        
+            # Gi1/1/1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('interfaces_list', []).append(group['int'])
+
+        return ret_dict
