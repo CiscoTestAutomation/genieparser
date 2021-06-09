@@ -81,36 +81,36 @@ class ShowVrrpSchema(MetaParser):
                         'master_advertisement_interval_secs': float,
                         Optional('master_advertisement_expiration_secs'): float,
                         'master_down_interval_secs': Or(float, str),
-                        Optional('flags'): str
-                    },
-                    Optional('address_family'): {
-                        'ipv6': {
-                            Optional('description'): str,
-                            'state': str,
-                            Optional('state_duration'): {
-                                'minutes': int,
-                                'seconds': float,
-                            },
-                            'virtual_ip_address': str,
-                            'virtual_secondary_addresses': list,
-                            'virtual_mac_address': str,
-                            'advertise_interval_secs': float,
-                            'preemption': str,
-                            'priority': int,
-                            Optional('track_object'): {
-                                Any(): {
-                                    Optional('decrement'): int,
-                                    Optional('state'): str,
-                                }
-                            },
-                            Optional('auth_text'): str,
-                            'master_router_ip': str,
-                            Optional('master_router'): str,
-                            'master_router_priority': int,
-                            'master_advertisement_interval_secs': float,
-                            Optional('master_advertisement_expiration_secs'): float,
-                            'master_down_interval_secs': Or(float, str),
-                            Optional('flags'): str
+                        Optional('flags'): str,
+                        Optional('address_family'): {
+                            'ipv6': {
+                                Optional('description'): str,
+                                'state': str,
+                                Optional('state_duration'): {
+                                    'minutes': int,
+                                    'seconds': float,
+                                },
+                                'virtual_ip_address': str,
+                                'virtual_secondary_addresses': list,
+                                'virtual_mac_address': str,
+                                'advertise_interval_secs': float,
+                                'preemption': str,
+                                'priority': int,
+                                Optional('track_object'): {
+                                    Any(): {
+                                        Optional('decrement'): int,
+                                        Optional('state'): str,
+                                    }
+                                },
+                                Optional('auth_text'): str,
+                                'master_router_ip': str,
+                                Optional('master_router'): str,
+                                'master_router_priority': int,
+                                'master_advertisement_interval_secs': float,
+                                Optional('master_advertisement_expiration_secs'): float,
+                                'master_down_interval_secs': Or(float, str),
+                                Optional('flags'): str
+                            }
                         }
                     }
                 }
@@ -158,7 +158,7 @@ class ShowVrrp(ShowVrrpSchema):
             r'^(?P<interface>[\w,\.\/]+)\s+-\s+Group\s(?P<group_number>\d+)(\s+-\s+Address-Family\s+(?P<address_family>IPv4|IPv6))?$')
 
         #State is Master
-        p2 = re.compile(r'State is (?P<state>(Master|MASTER|UP|Init|INIT))$')
+        p2 = re.compile(r'State is (?P<state>(Master|MASTER|Up|UP|Init|INIT))$')
 
         # State duration 8 mins 40.214 secs
         p2_1 = re.compile(r'^State\s+duration\s+(?P<minutes>\d+)\s+mins\s+(?P<seconds>[\d\.]+)\s+secs$')
@@ -250,14 +250,13 @@ class ShowVrrp(ShowVrrpSchema):
                     .setdefault(interface, {})\
                     .setdefault('group', {})\
                     .setdefault(vrrp_group, {})
-                # if group['address_family'] == 'IPv6':
-                #     vrrp_dict = result_dict.setdefault('interface', {})\
-                #         .setdefault(interface, {})\
-                #         .setdefault('group', {})\
-                #         .setdefault(vrrp_group, {})\
-                #         .setdefault('address_family', {})\
-                #         .setdefault('ipv6', {})
-                    # vrrp_dict = vrrp_dict.set
+                if group['address_family'] == 'IPv6':
+                    vrrp_dict = result_dict.setdefault('interface', {})\
+                    .setdefault(interface, {})\
+                    .setdefault('group', {})\
+                    .setdefault(vrrp_group, {})\
+                    .setdefault('address_family', {})\
+                    .setdefault('ipv6', {})
                 continue
 
             # State is Master
@@ -465,9 +464,6 @@ class ShowVrrp(ShowVrrpSchema):
                     vrrp_dict['description'] = group['description']
                 continue
 
-
-        # print("WOOOOOOOOOOO", vrrp_dict)
-        # print("WOOOOOOOOOOO", result_dict)
         return result_dict
 
 

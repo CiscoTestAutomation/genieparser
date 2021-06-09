@@ -1,3 +1,18 @@
+Vlan33 - Group 10 - Address-Family IPv4
+  Description is "WORKING-VRRP"
+  State is MASTER
+  State duration 8 mins 40.214 secs
+  Virtual IP address is 17.0.0.154
+  Virtual MAC address is 0000.5E00.010A
+  Advertisement interval is 1000 msec
+  Preemption enabled
+  Priority is 150
+    Track object 1 state UP decrement 70
+  Master Router is 17.0.0.1 (local), priority is 150
+  Master Advertisement interval is 1000 msec (expires in 46 msec)
+  Master Down interval is unknown
+  FLAGS: 1/1
+
 Vlan33 - Group 10 - Address-Family IPv6
   Description is "WORKING-VRRP"
   State is MASTER
