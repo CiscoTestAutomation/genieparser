@@ -164,6 +164,7 @@ class ShowVrrp(ShowVrrpSchema):
         p2_1 = re.compile(r'^State\s+duration\s+(?P<minutes>\d+)\s+mins\s+(?P<seconds>[\d\.]+)\s+secs$')
 
         # Virtual IP address is 10.2.0.10
+        # Virtual IP address is FE80::1
         p3 = re.compile(r'^Virtual +IP +address is (?P<vir_ip>[\w\.\:]+)$')
 
         # Virtual secondary IP addresses:
@@ -178,7 +179,7 @@ class ShowVrrp(ShowVrrpSchema):
 
         # Advertisement interval is 3.000 sec
         p7 = re.compile(
-            r'^Advertisement +interval +is (?P<advrt_interval>[\w,\.]+)\s+(?P<unit>\w+)$')
+            r'^Advertisement +interval +is (?P<advrt_interval>[\d,\.]+)\s+(?P<unit>\w+)$')
 
         #Preemption is enabled
         p8 = re.compile(r'^Preemption +is (?P<state>\w+)$')
@@ -187,13 +188,13 @@ class ShowVrrp(ShowVrrpSchema):
         p9 = re.compile(r'^Preemption (?P<state>\w+)$')
 
         # min delay is 0.000 sec
-        p10 = re.compile(r'^min +delay +is (?P<delay>[\w,\.]+) +sec$')
+        p10 = re.compile(r'^min +delay +is (?P<delay>[\d,\.]+) +sec$')
 
-        #Priority is 115
-        p11 = re.compile(r'^Priority +is +(?P<priority>\w+)$')
+        # Priority is 115
+        p11 = re.compile(r'^Priority +is +(?P<priority>\d+)$')
 
         # Priority 100
-        p12 = re.compile(r'^Priority (?P<priority>\w+)$')
+        p12 = re.compile(r'^Priority (?P<priority>\d+)$')
 
         # VRRS Group name DC_LAN
         p13 = re.compile(r'^VRRS +Group +name (?P<vrrs_grp_name>[\w,\_]+)$')
@@ -206,6 +207,7 @@ class ShowVrrp(ShowVrrpSchema):
         p15 = re.compile(r'^Authentication +text \"(?P<type>[\w,\"]+)\"$')
 
         # Master Router is 10.2.0.1 (local), priority is 100
+        # Master Router is FE80::2A3:D1FF:FE45:BEC5 (local), priority is 150
         p16 = re.compile(
             r'^Master +Router +is (?P<mast_ip_addr>[\w,\.\:]+) \((?P<server>\S+)\), +priority +is (?P<digit>\d+)$')
 
@@ -217,17 +219,18 @@ class ShowVrrp(ShowVrrpSchema):
         # Master Down interval is 9.609 sec
         # Master Down interval is unknown
         p18 = re.compile(
-            r'^Master +Down +interval +is (?P<mast_down_interval>[\d,\.\w]+)( +sec)?$')
+            r'^Master +Down +interval +is (?P<mast_down_interval>[\w,\.]+)( +sec)?$')
 
         # Master Router is 192.168.1.233, priority is 120
+        # Master Router is FE80::2A3:D1FF:FE45:BEC5, priority is 150
         p19 = re.compile(
-            r'^Master +Router +is (?P<mast_ip_addr>[\w,\.]+)+, +priority +is (?P<digit>\d+)$')
+            r'^Master +Router +is (?P<mast_ip_addr>[\w,\.\:]+)+, +priority +is (?P<digit>\d+)$')
 
         # FLAGS: 1/1
         p20 = re.compile(r'^FLAGS:\s+(?P<flags>[\d\/]+)$')
 
         # Description is "WORKING-VRRP"
-        p21 = re.compile(r'Description\s+is\s+(?P<description>\S+)')
+        p21 = re.compile(r'Description\s+is\s+(?P<description>\S+)$')
 
         # DC-LAN Subnet
         p21_1 = re.compile(r'^(?P<description>[\S\s]+)$')
