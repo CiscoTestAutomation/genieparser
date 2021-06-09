@@ -524,15 +524,15 @@ class ShowIsisInterfaceSchema(MetaParser):
                             Any(): {
                                 'name': str,
                                 'status': str,
-                                'ipv4': str,
-                                'ipv4_subnet': str,
-                                'ipv6': {
+                                Optional('ipv4'): str,
+                                Optional('ipv4_subnet'): str,
+                                Optional('ipv6'): {
                                     Any(): {
                                         'state': str,
                                     }
                                 },
-                                'ipv6_subnet': str,
-                                'ipv6_link_local_address': str,
+                                Optional('ipv6_subnet'): str,
+                                Optional('ipv6_link_local_address'): str,
                                 'authentication': {
                                     Any(): { # level_1 level_2
                                         Optional('authentication_type'): {
