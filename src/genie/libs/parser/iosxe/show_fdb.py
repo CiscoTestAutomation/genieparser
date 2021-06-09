@@ -368,3 +368,65 @@ class ShowMacAddressTableLearning(ShowMacAddressTableLearningSchema):
                 continue
 
         return ret_dict
+
+
+# ====================================================================
+#  Schema for 'show mac address-table address 0017.0100.0001 vlan 10'
+# ====================================================================
+class ShowMacAddressMacVlanSchema(MetaParser):
+    """Schema for show mac address-table address 0017.0100.0001 vlan 10"""
+    
+    schema = {'macAddress':
+                 {Any(): 
+                     {'VlanID' : str,
+                      'Type'   : str,     
+                      'Ports'  : str  				
+                    }                
+                },
+            }
+
+# ====================================================================
+#  Parser for 'show mac address-table address 20bb.c05e.5351 vlan 100'
+# ====================================================================
+class ShowMacAddressMacVlan(ShowMacAddressMacVlanSchema):
+
+    """ Parser for show mac address-table address 0017.0100.0001 vlan 10"""
+
+    cli_command = 'show mac address-table address {mac} vlan {vlan}'
+
+    def cli(self, mac="", vlan="", output=None):
+       
+        if output is None:
+            cmd = self.cli_command.format(mac=mac,vlan=vlan) 
+            # Execute command to get output from device            
+            out = self.device.execute(cmd)            
+        else:
+            out = output
+
+        # 10    0017.0100.0001    DYNAMIC     Fo1/0/24
+        p1 = re.compile(r'^(?P<vlanid>\d+) +(?P<mac>[\w\.]+) +(?P<type>\w+) +(?P<port>\S+)$') 	
+        
+        # initial variables
+        ret_dict = {}
+        
+        for line in out.splitlines():
+            line = line.strip()
+            if not line: 
+                continue
+
+            # 10    0017.0100.0001    DYNAMIC     Fo1/0/24
+            m = p1.match(line)
+            if m:
+                group    = m.groupdict()  
+                vlanId  = group['vlanid']
+                macAddr = group['mac']
+                typ     = group['type']
+                intf    = group['port']
+
+                final_dict = ret_dict.setdefault('macAddress',{}).setdefault(macAddr,{})
+                final_dict['VlanID'] = vlanId
+                final_dict['Type']   = typ
+                final_dict['Ports']  = intf
+                continue
+
+        return ret_dict                
