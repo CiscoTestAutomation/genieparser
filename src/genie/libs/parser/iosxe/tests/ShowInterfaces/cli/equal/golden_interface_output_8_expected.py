@@ -1,13 +1,13 @@
 expected_output = {
    "TenGigabitEthernet1/0/2":{
       "port_channel":{
-         "port_channel_member":false
+         "port_channel_member": False
       },
-      "enabled":true,
+      "enabled": True,
       "line_protocol":"up",
       "oper_status":"up",
-      "connected":true,
-      "err_disabled":false,
+      "connected": True,
+      "err_disabled": False,
       "type":"Ten Gigabit Ethernet",
       "mac_address":"682c.7b3f.f002",
       "phys_address":"682c.7b3f.f002",
@@ -26,8 +26,8 @@ expected_output = {
       "port_speed":"10gb/s",
       "media_type":"100/1000/2.5G/5G/10GBaseTX",
       "flow_control":{
-         "receive":true,
-         "send":false
+         "receive": True,
+         "send": False
       },
       "arp_type":"arpa",
       "arp_timeout":"04:00:00",
