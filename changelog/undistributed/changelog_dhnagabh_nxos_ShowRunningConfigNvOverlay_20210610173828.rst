@@ -1,7 +1,8 @@
-Fix
-
-    nxos
-            Modified ShowRunningConfigNvOverlay
-                Added ingress_replication_protocol_bgp key to the method
-
+--------------------------------------------------------------------------------
+                                Fix
+--------------------------------------------------------------------------------
+* NXOS
+    * Modified ShowRunningConfigNvOverlay:
+      * Added key <ingress_replication_protocol_bgp> to schema
+      * Added regex pattern <p17> and related code
 
