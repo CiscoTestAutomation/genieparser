@@ -14,6 +14,8 @@ IOSXR parsers for the following show commands:
     * show ospf vrf all-inclusive database opaque-area
     * show ospf database
     * show ospf mpls1 database
+    * show ospf {process_id} database router
+    * show ospf all-inclusive database router
 """
 
 # Python
@@ -5348,10 +5350,11 @@ class ShowOspfDatabaseSchema(MetaParser):
         },
     },
 }
+
+
 # =============================================================
 #  Parser for 'show ospf database', 'show ospf <process_id> database'
 # =============================================================
-
 class ShowOspfDatabase(ShowOspfDatabaseSchema):
     """ Parser for show ospf database, show ospf <process_id> database
     """
@@ -5396,7 +5399,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         # Initializes the Python dictionary variable
         parsed_dict = {}
 
-        #OSPF Router with ID (25.97.1.1) (Process ID mpls1)
+        #OSPF Router with ID (10.94.1.1) (Process ID mpls1)
         p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\) '
                         r'+\(Process +ID +(?P<instance>(\S+))(?:, +VRF +(?P<vrf>(\S+)))?\)$')
 
@@ -5405,12 +5408,12 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
                         ' +(?P<area>(\S+))\)$')
 
-        #25.97.1.1       25.97.1.1       86          0x800080ff 0x0043de 5
+        #10.94.1.1       10.94.1.1       86          0x800080ff 0x0043de 5
         p3 = re.compile(
             "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)\s+"
             "(?P<seq_num>[\w]+)\s+(?P<checksum>[\w]+)\s(?P<link_count>[\w]+)$")
 
-        #1.0.0.0         25.97.1.1       54          0x8003b136     0x009cb2        0
+        #10.1.0.0         10.94.1.1       54          0x8003b136     0x009cb2        0
         p4 = re.compile(
             "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)"
             "\s+(?P<seq_num>[\w]+)\s+(?P<checksum>[\w]+)\s+(?P<opaque_id>[\w]+)$")
@@ -5419,7 +5422,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
         for line in output.splitlines():
             line = line.strip()
 
-            # OSPF Router with ID (25.97.1.1) (Process ID mpls1)
+            # OSPF Router with ID (10.94.1.1) (Process ID mpls1)
             m = p1.match(line)
 
             if m:
@@ -5477,7 +5480,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
 
 
             #To process the router link states
-            # 25.97.1.1       25.97.1.1       86          0x800080ff 0x0043de 5
+            # 10.94.1.1       10.94.1.1       86          0x800080ff 0x0043de 5
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -5505,7 +5508,7 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
                 continue
 
             # To process the type_10_opaque_link_states
-            # 1.0.0.0         25.97.1.1       54          0x8003b136 0x009cb2        0
+            # 10.1.0.0         10.94.1.1       54          0x8003b136 0x009cb2        0
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -5534,6 +5537,22 @@ class ShowOspfDatabase(ShowOspfDatabaseSchema):
 
         return ret_dict
 
+
+class ShowOspfDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseParser, ShowOspfVrfAllInclusiveDatabaseRouterSchema):
+    """Parser for show ospf database router"""
+    cli_command = ['show ospf {process_id} database router', 'show ospf all-inclusive database router']
+
+    def cli(self, process_id=None, output=None):
+        if process_id:
+            output = self.device.execute(self.cli_command[0].format(process_id=process_id))
+        else:
+            output = self.device.execute(self.cli_command[1])
+
+        ret_dict = super().cli(cmd=output, db_type="router", output=None)
+
+        return ret_dict
+
+
 # ======================================================
 # schema for:
 #   * show ospf neighbor
@@ -5553,7 +5572,7 @@ class ShowOspfNeighborSchema(MetaParser):
         'vrfs': {
             Any(): {
                 'neighbors': {
-                    Optional(Any()): {  # neighbor_id
+                    Optional(Any()): {
                         'priority': str,
                         'state': str,
                         'dead_time': str,
