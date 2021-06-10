@@ -3446,6 +3446,7 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
                         r'+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-z\-\/]+)$')
 
         ret_dict = {}
+        vrf = None
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -3454,10 +3455,20 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
                 vrf = m.groupdict()['vrf']
                 continue
 
+            # workaround code inserts a check for blank lines which resets VRF information back to None.
+            # in conjunction with an existence check in p2's match this will ensure that the vrf variable
+            # always exists preventing a variable referenced before assignment error with certain niche outputs
+            if not line:
+                if vrf:
+                    vrf = None
+
             m = p2.match(line)
             if m:
                 interface_dict = ret_dict.setdefault('interface', {}).setdefault(m.groupdict()['interface'], {})
-                interface_dict.update({'vrf': vrf})
+
+                if vrf:
+                    interface_dict.update({'vrf': vrf})
+
                 interface_dict.update({'ip_address': m.groupdict()['ip_address']})
                 interface_dict.update({'interface_status': m.groupdict()['interface_status']})
                 continue
