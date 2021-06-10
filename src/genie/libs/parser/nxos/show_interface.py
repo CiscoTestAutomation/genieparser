@@ -3446,16 +3446,12 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
                         r'+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-z\-\/]+)$')
 
         ret_dict = {}
+        # sets empty variable so it always exists. Useful for cases such as:
+        # CH-P2-TOR-1# show ip interface brief vrf all | include 172.27.230.58
+        # mgmt0                172.27.230.58   protocol-up/link-up/admin-up
         vrf = None
         for line in out.splitlines():
             line = line.rstrip()
-
-            # workaround code inserts a check for blank lines which resets VRF information back to None.
-            # in conjunction with an existence check in p2's match this will ensure that the vrf variable
-            # always exists preventing a variable referenced before assignment error with certain niche outputs
-            if not line:
-                vrf = None
-                continue
 
             m = p1.match(line)
             if m:
