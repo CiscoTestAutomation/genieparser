@@ -1,0 +1,63 @@
+show ospfv3 vrf all-inclusive database prefix
+Wed May 19 10:56:22.128 JST
+
+            OSPFv3 Router with ID (99.99.99.99) (Process ID mpls1 VRF default)
+
+            Intra Area Prefix Link States (Area 0)
+
+  Routing Bit Set on this LSA
+  LS age: 1784
+  LS Type: Intra-Area-Prefix-LSA
+  Link State ID: 0
+  Advertising Router: 95.95.95.95
+  LS Seq Number: 8000081f
+  Checksum: 0x2ce8
+  Length: 76
+  Referenced LSA Type: 2001
+  Referenced Link State ID: 0
+  Referenced Advertising Router: 95.95.95.95
+  Number of Prefixes: 3
+  Prefix Address: 2001:200:10::
+  Prefix Length: 64, Options: None, Metric: 10, Priority: Low
+  Prefix Address: 2001:100:20::
+  Prefix Length: 64, Options: None, Metric: 1, Priority: Low
+  Prefix Address: 95::95
+  Prefix Length: 128, Options: LA , Metric: 0, Priority: Medium
+
+  Routing Bit Set on this LSA
+  LS age: 501
+  LS Type: Intra-Area-Prefix-LSA
+  Link State ID: 0
+  Advertising Router: 96.96.96.96
+  LS Seq Number: 80000822
+  Checksum: 0xd641
+  Length: 76
+  Referenced LSA Type: 2001
+  Referenced Link State ID: 0
+  Referenced Advertising Router: 96.96.96.96
+  Number of Prefixes: 3
+  Prefix Address: 2001:100:10::
+  Prefix Length: 64, Options: None, Metric: 1, Priority: Low
+  Prefix Address: 2001:200:10::
+  Prefix Length: 64, Options: None, Metric: 10, Priority: Low
+  Prefix Address: 96::96
+  Prefix Length: 128, Options: LA , Metric: 0, Priority: Medium
+
+  Routing Bit Set on this LSA
+  LS age: 1000
+  LS Type: Intra-Area-Prefix-LSA
+  Link State ID: 0
+  Advertising Router: 99.99.99.99
+  LS Seq Number: 80000059
+  Checksum: 0x2e86
+  Length: 76
+  Referenced LSA Type: 2001
+  Referenced Link State ID: 0
+  Referenced Advertising Router: 99.99.99.99
+  Number of Prefixes: 3
+  Prefix Address: 2001:100:10::
+  Prefix Length: 64, Options: None, Metric: 1, Priority: Low
+  Prefix Address: 2001:100:20::
+  Prefix Length: 64, Options: None, Metric: 1, Priority: Low
+  Prefix Address: 2001:1100::1001
+  Prefix Length: 128, Options: LA , Metric: 0, Priority: Medium

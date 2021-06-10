@@ -5552,6 +5552,7 @@ class ShowOspfDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseParser, ShowOspfVrfA
 
         return ret_dict
 
+
 # ======================================================
 # schema for:
 #   * show ospf neighbor

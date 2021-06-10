@@ -1,7 +1,7 @@
 Switch  Ports    Model                Serial No.   MAC address     Hw Ver.       Sw Ver.
 ------  -----   ---------             -----------  --------------  -------       --------
-1       8      C9300-8V              33JK23NN4B3  0150.529B.C980  V02           2021-03-03_18.
-Switch/Stack Mac Address : 0150.529B.C980 - Local Mac Address
+1       8      C9300-8V              33JK23NN4B3  0150.52FF.651C  V02           2021-03-03_18.
+Switch/Stack Mac Address : 0150.52FF.651C - Local Mac Address
 Mac persistency wait time: Indefinite
                                    Current
 Switch#   Role        Priority      State

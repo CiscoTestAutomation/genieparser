@@ -1,0 +1,7 @@
+Policy Name                                  Bound To Interface(s)
+-----------                                  ---------------------
+dot1x_group                                     Gi1/0/1
+                                                Gi1/1/1
+                                                Te1/1/1
+
+

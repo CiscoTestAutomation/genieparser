@@ -3430,11 +3430,7 @@ class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema)
                         '(?P<free>\d+) +\((?P<free_percentage>[\d\s]+)\%\) +'
                         '(?P<committed>\d+) +\((?P<committed_percentage>[\d\s]+)\%\)$')
 
-        p3 = re.compile(r'^(?P<slot>\S+)? *(?P<cpu>\d+) +'
-                        '(?P<user>[\d\.]+) +(?P<system>[\d\.]+) +'
-                        '(?P<nice_process>[\d\.]+) +(?P<idle>[\d\.]+) +'
-                        '(?P<irq>[\d\.]+) +(?P<sirq>[\d\.]+) +'
-                        '(?P<waiting>[\d\.]+)$')
+        p3 = re.compile(r'^((?P<slot>\S+) +)?(?P<cpu>\d+) +(?P<user>[\d\.]+) +(?P<system>[\d\.]+) +(?P<nice_process>[\d\.]+) +(?P<idle>[\d\.]+) +(?P<irq>[\d\.]+) +(?P<sirq>[\d\.]+) +(?P<waiting>[\d\.]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5985,7 +5981,7 @@ class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchem
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                callsite = int(group['callsite'])
+                callsite = group['callsite']
                 one_callsite_dict = callsite_dict.setdefault(callsite, {})
                 one_callsite_dict['thread'] = int(group['thread'])
                 one_callsite_dict['diff_byte'] = int(group['diffbyte'])
@@ -6003,7 +5999,7 @@ class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
                 {'allocs': int,
                  'frees': int,
                  'call_diff': int,
-                 'callsite': int,
+                 'callsite': str,
                  'thread_id': int}
         }
 
@@ -6050,7 +6046,7 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                one_backtrace_dict['callsite'] = int(group['callsite'])
+                one_backtrace_dict['callsite'] = group['callsite']
                 one_backtrace_dict['thread_id'] = int(group['thread_id'])
                 continue
 
@@ -7037,7 +7033,7 @@ class ShowPlatformResourcesSchema(MetaParser):
             }
             }
         },
-        'esp': {
+        Optional('esp'): {
             Any(): {
                 'state': str,
                 'role': str,
