@@ -1,7 +1,0 @@
---------------------------------------------------------------------------------
-                                Fix
---------------------------------------------------------------------------------
-* IOSXE
-    * Modified ShowInterfaces:
-      * Updated regex pattern p11 to accomodate media types with a period (ex 2.5G)
-
