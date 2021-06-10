@@ -41,13 +41,13 @@ class ShowMerakiSchema(MetaParser):
             {Optional('switch'):
                 {Any():
                      {
-                     Optional('switch_no'): str,
-                     Optional('PID'): str,
-                     Optional('Serial_Number'): str,
-                     Optional('Meraki_SN'): str,
-                     Optional('Mac_Addr'): str,
-                     Optional('Conversion_Status'): str, 
-                     Optional('Current_Mode'): str   }, }, },
+                     'switch_num': int,
+                     'pid': str,
+                     'serial_number': str,
+                     'meraki_sn': str,
+                     'mac_addr': str,
+                     'conversion_status': str, 
+                     'current_mode': str   }, }, },
     }
 
 
@@ -67,22 +67,17 @@ class ShowMeraki(ShowMerakiSchema):
 
 
 #        1       C9300-24T  FJC2311T0DA Q5EE-DJYN-CRGR  4cbc.4812.3550   Registered         C9K-C
-
 #        2       C9300-24U  FJC1527A0BC N/A             4cbc.4812.2881   ACT2 write failed  C9K-C
-
 #        3       C9300-48UX FJC2317T0DT Q3EA-AZYP-WDFH  4cbc.4812.2501   Registered         C9K-C
-
 #        4       C9300-48TX FJC2311T0AJ N/A             5cbc.4812.3479   Timeout            C9K-C
 
 
-
-        p1 = re.compile ( r'^(?P<switch_no>\d+)(?P<PID>\s+\w+\d+\-\d+\w+)(?P<Serial_Number>\s+[a-zA-Z0-9]+)(?P<Meraki_SN>\s+[a-zA-Z0-9\/\-]+)(?P<Mac_Addr>\s+[a-zA-Z0-9\.]+)(?P<Conversion_Status>\s+[a-zA-Z0-9\s]+)(?P<Current_Mode>\s+[a-zA-Z0-9\-]+)')
+        p1 = re.compile ( r'^(?P<switch_num>\d+)(?P<pid>\s+\w+\d+\-\d+\w+)(?P<serial_number>\s+[a-zA-Z0-9]+)(?P<meraki_sn>\s+[a-zA-Z0-9\/\-]*)(?P<mac_addr>\s+[a-zA-Z0-9\.]*)(?P<conversion_status>\s+[a-zA-Z0-9\s\/\-]+)(?P<current_mode>\s+[a-zA-Z0-9\-]+)')
 
         parsed_dict = {}
         switch_id_index = 1
         for line in out.splitlines():
             line = line.strip()
-            print("result after splitting the line :",line)
             result = p1.match(line)
             device_dict = parsed_dict.setdefault('meraki', {}) \
                         .setdefault('switch', {}).setdefault(switch_id_index, {})
@@ -92,13 +87,13 @@ class ShowMeraki(ShowMerakiSchema):
                 switch_id_index += 1
 
                 group = result.groupdict()
-                device_dict['switch_no'] = group['switch_no'].strip()
-                device_dict['PID'] = group['PID'].strip()
-                device_dict['Serial_Number'] = group['Serial_Number'].strip()
-                device_dict['Meraki_SN'] = group['Meraki_SN'].strip()
-                device_dict['Mac_Addr'] = group['Mac_Addr'].strip()
-                device_dict['Conversion_Status'] = group['Conversion_Status'].strip()
-                device_dict['Current_Mode'] = group['Current_Mode'].strip()
+                device_dict['switch_num'] = int(group['switch_num'])
+                device_dict['pid'] = group['pid'].strip()
+                device_dict['serial_number'] = group['serial_number'].strip()
+                device_dict['meraki_sn'] = group['meraki_sn'].strip()
+                device_dict['mac_addr'] = group['mac_addr'].strip()
+                device_dict['conversion_status'] = group['conversion_status'].strip()
+                device_dict['current_mode'] = group['current_mode'].strip()
                 continue
 
         return parsed_dict
