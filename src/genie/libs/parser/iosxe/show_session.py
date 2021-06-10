@@ -185,7 +185,7 @@ class ShowUsers(ShowUsersSchema):
             if m:
                 if not inter_flag:
                     line_dict.update(m.groupdict())
-                else inter_flag:
+                else:
                     intf_dict.update({'peer_address': m.groupdict()['location']})
 
             #  unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
