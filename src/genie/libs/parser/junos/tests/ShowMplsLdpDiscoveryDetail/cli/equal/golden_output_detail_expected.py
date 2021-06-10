@@ -1,6 +1,6 @@
 expected_output = {
     "vrf": {
-        "local_ldp_identifier": "25.97.1.1:0",
+        "local_ldp_identifier": "10.94.1.1:0",
         "vrfs": [
             {
                 "vrf_name": "default",
@@ -10,17 +10,17 @@ expected_output = {
                         "xmit": "True",
                         "recv": "True",
                         "vrf_hex": "0x60000000",
-                        "source_ip_addr": "100.20.0.1",
-                        "transport_ip_addr": "25.97.1.1",
+                        "source_ip_addr": "10.120.0.1",
+                        "transport_ip_addr": "10.94.1.1",
                         "hello_interval_ms": "5000",
                         "hello_due_time_ms": "563",
                         "quick_start": "enabled",
                         "ldp_id": {
-                            "network_addr": "95.95.95.95:0",
+                            "network_addr": "10.145.95.95:0",
                             "ldp_entries": [
                                 {
-                                    "source_ip_addr": "100.20.0.2",
-                                    "transport_ip_addr": "95.95.95.95",
+                                    "source_ip_addr": "10.120.0.2",
+                                    "transport_ip_addr": "10.145.95.95",
                                     "holdtime_sec": "15",
                                     "proposed_local": "15",
                                     "proposed_peer": "45",
@@ -48,17 +48,17 @@ expected_output = {
                         "xmit": "True",
                         "recv": "True",
                         "vrf_hex": "0x60000000",
-                        "source_ip_addr": "100.10.0.1",
-                        "transport_ip_addr": "25.97.1.1",
+                        "source_ip_addr": "10.115.0.1",
+                        "transport_ip_addr": "10.94.1.1",
                         "hello_interval_ms": "5000",
                         "hello_due_time_ms": "2900",
                         "quick_start": "enabled",
                         "ldp_id": {
-                            "network_addr": "96.96.96.96:0",
+                            "network_addr": "10.144.96.96:0",
                             "ldp_entries": [
                                 {
-                                    "source_ip_addr": "100.10.0.2",
-                                    "transport_ip_addr": "96.96.96.96",
+                                    "source_ip_addr": "10.115.0.2",
+                                    "transport_ip_addr": "10.144.96.96",
                                     "holdtime_sec": "15",
                                     "proposed_local": "15",
                                     "proposed_peer": "15",

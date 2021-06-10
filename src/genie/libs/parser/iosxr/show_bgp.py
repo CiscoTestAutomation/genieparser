@@ -6778,7 +6778,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
         # Gateway: reachable, non-Connected route, prefix length 32
         p8 = re.compile(r'^Gateway:\s+((?P<gateway>[\s\S]+))$')
 
-        # Resolving Route: 16.16.16.16/32 (static)
+        # Resolving Route: 10.4.16.16/32 (static)
         p9 = re.compile(r'^Resolving Route:\s+((?P<resolving_route>[\s\S]+))$')        
 
         # Paths: 0
@@ -6902,7 +6902,7 @@ class ShowBgpNexthops(ShowBgpNexthopsSchema):
                 first_interface_handle_dict.update({'gateway':group['gateway']})
                 continue         
             
-            # Resolving Route: 16.16.16.16/32 (static)
+            # Resolving Route: 10.4.16.16/32 (static)
             m = p9.match(line)
             if m:
                 group = m.groupdict()

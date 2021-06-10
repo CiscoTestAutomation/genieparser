@@ -1,0 +1,1 @@
+mgmt0                172.27.230.58   protocol-up/link-up/admin-up

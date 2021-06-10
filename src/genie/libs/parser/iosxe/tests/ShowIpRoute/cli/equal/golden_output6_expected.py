@@ -4,8 +4,8 @@ expected_output = {
             "address_family": {
                 "ipv4": {
                     "routes": {
-                        "17.0.0.1/32": {
-                            "route": "17.0.0.1/32",
+                        "10.34.0.1/32": {
+                            "route": "10.34.0.1/32",
                             "active": True,
                             "metric": 0,
                             "route_preference": 1,
@@ -20,8 +20,8 @@ expected_output = {
                                 }
                             }
                         },
-                        "17.0.0.2/32": {
-                            "route": "17.0.0.2/32",
+                        "10.34.0.2/32": {
+                            "route": "10.34.0.2/32",
                             "active": True,
                             "source_protocol_codes": "C p",
                             "source_protocol": "connected",
@@ -33,8 +33,8 @@ expected_output = {
                                 }
                             }
                         },
-                        "18.0.0.0/16": {
-                            "route": "18.0.0.0/16",
+                        "10.69.0.0/16": {
+                            "route": "10.69.0.0/16",
                             "active": True,
                             "metric": 0,
                             "route_preference": 1,
@@ -44,13 +44,13 @@ expected_output = {
                                 "next_hop_list": {
                                     1: {
                                         "index": 1,
-                                        "next_hop": "17.0.0.1"
+                                        "next_hop": "10.34.0.1"
                                     }
                                 }
                             }
                         },
-                        "80.1.1.0/24": {
-                            "route": "80.1.1.0/24",
+                        "10.186.1.0/24": {
+                            "route": "10.186.1.0/24",
                             "active": True,
                             "metric": 0,
                             "route_preference": 1,
@@ -60,7 +60,7 @@ expected_output = {
                                 "next_hop_list": {
                                     1: {
                                         "index": 1,
-                                        "next_hop": "12.0.0.1",
+                                        "next_hop": "10.144.0.1",
                                         "vrf": "red"
                                     }
                                 }
@@ -92,8 +92,8 @@ expected_output = {
                                 }
                             }
                         },
-                        "100.0.0.0/24": {
-                            "route": "100.0.0.0/24",
+                        "10.55.0.0/24": {
+                            "route": "10.55.0.0/24",
                             "active": True,
                             "metric": 0,
                             "route_preference": 20,
@@ -103,7 +103,7 @@ expected_output = {
                                 "next_hop_list": {
                                     1: {
                                         "index": 1,
-                                        "next_hop": "12.0.0.1",
+                                        "next_hop": "10.144.0.1",
                                         "updated": "00:00:09",
                                         "vrf": "red"
                                     }
