@@ -456,7 +456,7 @@ class ShowVrrp(ShowVrrpSchema):
             m = p21.match(line)
             if m:
                 group = m.groupdict()
-                vrrp_dict['description'] = group['description']
+                vrrp_dict['description'] = group['description'].replace('"', '')
                 continue
 
             # DC-LAN Subnet

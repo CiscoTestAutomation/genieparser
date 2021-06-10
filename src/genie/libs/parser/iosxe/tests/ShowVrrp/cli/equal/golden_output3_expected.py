@@ -3,7 +3,7 @@ expected_output = {
         "Vlan33": {
             "group": {
                 10: {
-                    "description": '"WORKING-VRRP"',
+                    "description": 'WORKING-VRRP',
                     "state": "MASTER",
                     "state_duration": {"minutes": 8, "seconds": 40.214},
                     "virtual_ip_address": "17.0.0.154",
@@ -21,7 +21,7 @@ expected_output = {
                     "flags": "1/1",
                     "address_family": {
                         "ipv6": {
-                            "description": '"WORKING-VRRP"',
+                            "description": 'WORKING-VRRP',
                             "state": "MASTER",
                             "state_duration": {"minutes": 8, "seconds": 40.213},
                             "virtual_ip_address": "FE80::1",
