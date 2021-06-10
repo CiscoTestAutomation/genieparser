@@ -3446,6 +3446,10 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
                         r'+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-z\-\/]+)$')
 
         ret_dict = {}
+        # sets empty variable so it always exists. Useful for cases such as:
+        # CH-P2-TOR-1# show ip interface brief vrf all | include 172.27.230.58
+        # mgmt0                172.27.230.58   protocol-up/link-up/admin-up
+        vrf = None
         for line in out.splitlines():
             line = line.rstrip()
 
@@ -3457,7 +3461,10 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
             m = p2.match(line)
             if m:
                 interface_dict = ret_dict.setdefault('interface', {}).setdefault(m.groupdict()['interface'], {})
-                interface_dict.update({'vrf': vrf})
+
+                if vrf:
+                    interface_dict.update({'vrf': vrf})
+
                 interface_dict.update({'ip_address': m.groupdict()['ip_address']})
                 interface_dict.update({'interface_status': m.groupdict()['interface_status']})
                 continue
