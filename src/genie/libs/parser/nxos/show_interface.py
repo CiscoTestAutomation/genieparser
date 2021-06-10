@@ -3450,17 +3450,19 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
         for line in out.splitlines():
             line = line.rstrip()
 
-            m = p1.match(line)
-            if m:
-                vrf = m.groupdict()['vrf']
-                continue
-
             # workaround code inserts a check for blank lines which resets VRF information back to None.
             # in conjunction with an existence check in p2's match this will ensure that the vrf variable
             # always exists preventing a variable referenced before assignment error with certain niche outputs
             if not line:
                 if vrf:
                     vrf = None
+                    continue
+
+            m = p1.match(line)
+            if m:
+                vrf = m.groupdict()['vrf']
+                continue
+
 
             m = p2.match(line)
             if m:
