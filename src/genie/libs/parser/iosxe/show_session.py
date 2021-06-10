@@ -101,7 +101,7 @@ class ShowUsersSchema(MetaParser):
                 'active': bool,
                 Optional('user'): str,
                 'host': str,
-                'idle': str,
+                Optional('idle'): str,
                 Optional('location'): str, 
             },
         },
@@ -130,134 +130,82 @@ class ShowUsers(ShowUsersSchema):
         else:
             out = output
 
+        #     Line       User       Host(s)              Idle       Location
+        #    3 vty 1     testuser   idle                 00:41:43   10.0.0.2
+        # *  4 vty 1     admin      idle                 00:00:00   xxx-xxxxxxx-nitro2.cisco.com
+        # *  2 vty 0     admin      idle                 00:00:00
+        # *  0 con 0                idle                 01:58
+        #    10 vty 0               Virtual-Access2      0          1212321
+        #    0 con 0                idle
+        # *   2 vty 0         user1           idle            0   SERVICE1.CISCO.COM
+        p1 = re.compile(r'^(?:(?P<active>\*))?( +)?(?P<line>\d+ \S+ \d+)(?: {1,9}(?P<user>\S+))? '
+                        r'+(?P<host>\S+)( +)?(?P<idle>\S+)?(?: +(?P<location>\S+))?')
+        # counting spaces from 1-9, check if class errors in future releases
+
+        #                                                    			 foo-bar.cisco.com
+        p1_1 = re.compile(r'^(?P<location>\S+)$')
+
+        #  Interface    User               Mode         Idle     Peer Address
+        #  unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
+        p2 = re.compile(r'^(?P<interface>\S+) +(?P<user>\S+) +(?P<mode>\S+) '
+                        r'+(?P<idle>[\d\:]+)( +(?P<peer_address>\S+)?)?$')
+
         # initial return dictionary
         ret_dict = {}
+        inter_flag = False
+        for line in out.splitlines():
+            line = line.strip()
 
-        pg_result = pg.oper_fill_tabular(device_output=out, device_os='iosxe',
-                                         index=[1],
-                                         header_fields=[' ', ' Line', 'User', 'Host\(s\)', 'Idle', '  Location'],
-                                         label_fields=['busy', 'line', 'user', 'host', 'idle', 'location'],
-                                         table_terminal_pattern='Interface\s+User\s+Mode\s+Idle\s+Peer\s+Address')
-
-        # returns a dictionary
-        pg_entries = pg_result.entries
-        line_dict = {}
-
-        # ============= iosxe pg_entries ================
-        # {'2 vty 0': {'busy': '',
-        #      'host': 'idle',
-        #      'idle': '00:35:32',
-        #      'line': '2 vty 0',
-        #      'location': '10.0.0.1',
-        #      'user': 'nos'},
-        #   '4 vty 2': {'busy': '*',
-        #              'host': 'idle',
-        #              'idle': '00:00:07',
-        #              'line': '4 vty 2',
-        #              'location': '10.0.0.3',
-        #              'user': 'testuser'}}
-
-        # ============= ios pg_entries ================
-        # {'*  0 con 0': {'busy': '',
-        #         'host': 'idle',
-        #         'idle': '01:58',
-        #         'line': '*  0 con 0',
-        #         'location': '',
-        #         'user': ''},
-        #  '10 vty 0': {'busy': '',
-        #               'host': 'Virtual-Access2',
-        #               'idle': '0',
-        #               'line': '10 vty 0',
-        #               'location': '1212321',
-        #               'user': ''}}
-
-        for k in pg_entries.keys():
-
-            curr_dict = pg_entries[k]
-
-            # ----------------------------
-            # Check keys and assign values
-            # ----------------------------
-
-            # 'busy'
-            busy = False
-            if '*' in curr_dict['busy'] or '*' in k:
-                busy = True
-
-            # may have empty values:
-            # 'user'
-            # 'host'
-            # 'location'
-            for empty in ['user', 'host', 'location']:
-                if curr_dict[empty] == '':
-                    del curr_dict[empty]
-
-            # ----------------------------
-            # Build the parsed output
-            # ----------------------------
-
-            # handle ios sample output:
-            # 'line': '*  0 con 0',
-            line_pattern = re.compile(r'\*\s+(?P<line>[\s\S]+)')
-            m = line_pattern.match(curr_dict['line'])
+            # *  4 vty 1     admin      idle                 00:00:00 xxx-xxxxxxx-nitro2.cisco.com
+            m = p1.match(line)
             if m:
-                line_val = m.groupdict()['line']
-            else:
-                line_val = curr_dict['line']
+                group = m.groupdict()
+                term_line = group.pop('line')
+                if group['active']:
+                    active = True
+                else:
+                    active = False
+                del group['active']
 
-            line_sub_dict = line_dict.setdefault(line_val, {})
-            for key in ['user', 'host', 'idle', 'location']:
-                if key in curr_dict:
-                    line_sub_dict[key] = curr_dict[key]
-            line_sub_dict['active'] = busy
+                if not group['location']:
+                    del group['location']
 
-        if bool(line_dict):
-            ret_dict.setdefault('line', line_dict)
+                if not group['user']:
+                    del group['user']
 
-        # Interface    User               Mode         Idle     Peer Address
-        # unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
-        # unknown      a(ONEP)            com.cisco.sy 00:00:49
+                if not group['idle']:
+                    del group['idle']
 
-        interface_result = pg.oper_fill_tabular(device_output=out,
-                                                device_os='iosxe',
-                                                index=[0, 1],
-                                                header_fields=['Interface', 'User', 'Mode', 'Idle', 'Peer Address'])
+                line_dict = ret_dict.setdefault('line', {}).setdefault(term_line, {})
+                line_dict.update(group)
+                line_dict.update({'active': active})
 
-        interface_entries = interface_result.entries
+            #                                                    			 foo-bar.cisco.com
+            m = p1_1.match(line)
+            if m:
+                if not inter_flag:
+                    line_dict.update(m.groupdict())
+                else:
+                    intf_dict.update({'peer_address': m.groupdict()['location']})
 
-        # ========= interface_entries =====================
-        # {'unknown': {'NETCONF(ONEP)': {'Idle': '00:00:49',
-        #                        'Interface': 'unknown',
-        #                        'Mode': 'com.cisco.ne',
-        #                        'Peer Address': '',
-        #                        'User': 'NETCONF(ONEP)'},
-        #              'a(ONEP)': {'Idle': '00:00:49',
-        #                       'Interface': 'unknown',
-        #                       'Mode': 'com.cisco.sy',
-        #                       'Peer Address': '',
-        #                       'User': 'a(ONEP)'}}}
+            #  unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                intf = group['interface']
+                intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {}).\
+                    setdefault('user', {}).setdefault(group['user'], {})
 
-        if bool(interface_entries):
-            column1_key = [*interface_entries.keys()][0]
-            intf_dicts = interface_entries[column1_key]
+                intf_dict.update({
+                    'mode': group['mode'],
+                    'idle': group['idle'],
+                    })
 
-            user_dict = {}
-            interface_dict = {}
-            for k in intf_dicts.keys():
-                curr_dict = intf_dicts[k]
+                if not group['peer_address']:
+                    del group['peer_address']
+                else:
+                    intf_dict.update({'peer_address': group['peer_address']})
 
-                user_sub_dict = user_dict.setdefault('user', {}). \
-                    setdefault(curr_dict['User'], {})
-
-                user_sub_dict.update({'idle': curr_dict['Idle'],
-                                      'mode': curr_dict['Mode']})
-
-                if curr_dict['Peer Address']:
-                    user_sub_dict['peer_address'] = curr_dict['Peer Address']
-
-                interface_dict.setdefault(curr_dict['Interface'], user_dict)
-
-            if bool(interface_dict):
-                ret_dict.setdefault('interface', interface_dict)
+                inter_flag = True
 
         return ret_dict
