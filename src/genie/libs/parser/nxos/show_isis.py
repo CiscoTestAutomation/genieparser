@@ -533,11 +533,11 @@ class ShowIsisInterfaceSchema(MetaParser):
                                 },
                                 Optional('ipv6_subnet'): str,
                                 Optional('ipv6_link_local_address'): str,
-                                'authentication': {
+                                Optional('authentication'): {
                                     Any(): { # level_1 level_2
                                         Optional('authentication_type'): {
                                         },
-                                        'auth_check': str,
+                                        Optional('auth_check'): str,
                                     },
                                 },
                                 'index': str,
