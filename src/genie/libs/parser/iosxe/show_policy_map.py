@@ -421,7 +421,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         p2_1_1 = re.compile(r'^priority +level +(?P<priority_level>(\d+))$')
 
         # 8 packets, 800 bytes
-        p3 = re.compile(r'^(?P<packets>(\d+)) packets, (?P<bytes>(\d+)) +bytes')
+        p3 = re.compile(r'^(?P<packets>(\d+)) packets(, (?P<bytes>(\d+)) +bytes)?')
 
         # 5 minute offered rate 0000 bps, drop rate 0000 bps
         p4 = re.compile(r'^(?P<interval>(\d+)) +minute +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
@@ -722,9 +722,10 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 group = m.groupdict()
                 packets = group['packets'].strip()
-                bytes = group['bytes'].strip()
                 class_map_dict['packets'] = int(packets)
-                class_map_dict['bytes'] = int(bytes)
+                if 'bytes' in group and group['bytes']:
+                    bytes = group['bytes'].strip()
+                    class_map_dict['bytes'] = int(bytes)
                 continue
 
             # 5 minute offered rate 0000 bps, drop rate 0000 bps
