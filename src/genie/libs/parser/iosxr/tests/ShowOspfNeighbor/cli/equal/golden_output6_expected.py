@@ -1,5 +1,4 @@
 expected_output = {
-    'process_name': 'mpls1',
     'vrfs': {
         'all-inclusive': {
             'neighbors': {
