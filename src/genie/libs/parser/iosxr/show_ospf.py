@@ -5819,7 +5819,13 @@ class ShowOspfInterfaceSchema(MetaParser):
                                                 "multi_area_intf_count"
                                             ): int,
                                         },
-                                        Optional("neighbors"): list
+                                        Optional("neighbors"): {
+                                            Any(): {
+                                                Optional('bdr_router_id'): str,
+                                                Optional('dr_router_id'): str,
+                                                Optional('router_id'): str,
+                                            }
+                                        }
                                     },
                                 },
                             },
@@ -5855,7 +5861,8 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
         if output is None:
             if process_name and interface_name:
                 out = self.device.execute(
-                    self.cli_command[3].format(process_name=process_name, interface_name=interface_name)
+                    self.cli_command[3].format(process_name=process_name, 
+                                               interface_name=interface_name)
                 )
             elif interface_name:
                 out = self.device.execute(
@@ -6006,7 +6013,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                     .setdefault('instance', {})
 
                 ospf_dict = instance_dict.setdefault(ospf_instance, {})
-
                 continue
 
             # Loopback0 is up, line protocol is up
@@ -6022,12 +6028,13 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 # initializing some keys
                 interface_dict['name'] = interface
                 interface_dict['demand_circuit'] = False
-                interface_dict['enable'] = True if interface_enable == 'up' else False
-                interface_dict['line_protocol'] = True if line_protocol == 'up' else False
+                interface_dict['enable'] = \
+                    True if interface_enable == 'up' else False
+                interface_dict['line_protocol'] = \
+                    True if line_protocol == 'up' else False
 
                 # initialize bfd state
                 interface_dict.setdefault('bfd', {}).setdefault('enable', False)
-
                 continue
 
             # Internet Address 10.36.3.3/32, Area 0
@@ -6047,8 +6054,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
                     interface_dict['sid'] = sid
                     interface_dict['strict_spf_sid'] = strict_spf_sid
-
-                    continue
+                continue
 
             # Process ID mpls1, Router ID 25.97.1.1, Network Type LOOPBACK, Cost: 1
             m = p5.match(line)
@@ -6063,7 +6069,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['interface_type'] = interface_type
                 interface_dict['process_id'] = process_id
                 interface_dict['cost'] = int(cost)
-
                 continue
 
             # Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 1500, MaxPktSz 1500
@@ -6085,7 +6090,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                     interface_dict['mtu'] = int(mtu)
                 if max_pkt_sz:
                     interface_dict['max_pkt_sz'] = int(max_pkt_sz)
-
                 continue
 
             # Designated Router (ID) 10.64.4.4, Interface address 10.3.4.4
@@ -6096,7 +6100,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
                 interface_dict['dr_router_id'] = dr_router_id
                 interface_dict['dr_ip_addr'] = dr_ip_addr
-
                 continue
 
             # Backup Designated router (ID) 10.36.3.3, Interface address 10.3.4.3
@@ -6107,7 +6110,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
                 interface_dict['bdr_router_id'] = bdr_router_id
                 interface_dict['bdr_ip_addr'] = bdr_ip_addr
-
                 continue
 
             # Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
@@ -6122,16 +6124,13 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['dead_interval'] = int(dead_interval)
                 interface_dict['wait_interval'] = int(wait_interval)
                 interface_dict['retransmit_interval'] = int(retransmit_interval)
-
                 continue
 
             # Hello due in 00:00:07:171
             m = p10_1.match(line)
             if m:
                 hello_timer = m.groupdict()['hello_timer']
-
                 interface_dict['hello_timer'] = hello_timer
-
                 continue
 
             # No Hellos (Passive interface)
@@ -6147,7 +6146,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 flood_queue_length = m.groupdict()['length']
                 interface_dict['index'] = index
                 interface_dict['flood_queue_length'] = int(flood_queue_length)
-
                 continue
 
             # Next 0(0)/0(0)
@@ -6163,9 +6161,10 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 last_flood_scan_length = m.groupdict()['num']
                 max_flood_scan_length = m.groupdict()['max']
 
-                interface_dict['last_flood_scan_length'] = int(last_flood_scan_length)
-                interface_dict['max_flood_scan_length'] = int(max_flood_scan_length)
-
+                interface_dict['last_flood_scan_length'] = \
+                    int(last_flood_scan_length)
+                interface_dict['max_flood_scan_length'] = \
+                    int(max_flood_scan_length)
                 continue
 
             # Last flood scan time is 0 msec, maximum is 0 msec
@@ -6174,9 +6173,10 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 last_flood_scan_time_msec = m.groupdict()['time1']
                 max_flood_scan_time_msec = m.groupdict()['time2']
 
-                interface_dict['last_flood_scan_time_msec'] = int(last_flood_scan_time_msec)
-                interface_dict['max_flood_scan_time_msec'] = int(max_flood_scan_time_msec)
-
+                interface_dict['last_flood_scan_time_msec'] = \
+                    int(last_flood_scan_time_msec)
+                interface_dict['max_flood_scan_time_msec'] = \
+                    int(max_flood_scan_time_msec)
                 continue
 
             # LS Ack List: current length 0, high water mark 5
@@ -6189,7 +6189,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['ls_ack_list'] = ls_ack_list
                 interface_dict['ls_ack_list_length'] = int(ls_ack_list_length)
                 interface_dict['high_water_mark'] = int(high_water_mark)
-
                 continue
 
             # Neighbor Count is 1, Adjacent neighbor count is 1
@@ -6204,7 +6203,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
                 # initialize 'neighbors'
                 neighbors = interface_dict.setdefault('neighbors', {})
-
                 continue
 
             # Adjacent with neighbor 10.64.4.4  (Designated Router)
@@ -6220,15 +6218,14 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                     inner_neighbor_dict['bdr_router_id'] = neighbor_id
                 else:
                     inner_neighbor_dict['router_id'] = neighbor_id
-
                 continue
 
             # Suppress hello for 0 neighbor(s)
             m = p18.match(line)
             if m:
                 num_nbrs_suppress_hello = m.groupdict()['sup']
-                statistic_dict['num_nbrs_suppress_hello'] = int(num_nbrs_suppress_hello)
-
+                statistic_dict['num_nbrs_suppress_hello'] = \
+                    int(num_nbrs_suppress_hello)
                 continue
 
             # Multi-area interface Count is 0
@@ -6236,8 +6233,8 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             m = p19.match(line)
             if m:
                 multi_area_intf_count = m.groupdict()['count']
-                statistic_dict['multi_area_intf_count'] = int(multi_area_intf_count)
-
+                statistic_dict['multi_area_intf_count'] = \
+                    int(multi_area_intf_count)
                 continue
 
             # Label stack Primary label 0 Backup label 0 SRTE label 0
@@ -6251,7 +6248,6 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 label_stack_dict['primary_label'] = primary_label
                 label_stack_dict['backup_label'] = backup_label
                 label_stack_dict['srte_label'] = srte_label
-
                 continue
 
             # Forward reference No, Unnumbered no,  Bandwidth 1000000
@@ -6262,9 +6258,9 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 bandwidth = m.groupdict()['bandwidth']
 
                 interface_dict['forward_reference'] = forward_reference
-                interface_dict['unnumbered'] = False if unnumbered_bool == 'no' else True
+                interface_dict['unnumbered'] = \
+                    False if unnumbered_bool == 'no' else True
                 interface_dict['bandwidth'] = int(bandwidth)
-
                 continue
 
             # BFD enabled, BFD interval 150 msec, BFD multiplier 3, Mode: Default
@@ -6279,16 +6275,14 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
                 interface_dict['bfd']['multiplier'] = int(multiplier)
                 if mode:
                     interface_dict['bfd']['mode'] = mode
-
                 continue
 
             # Non-Stop Forwarding (NSF) enabled
             m = p23.match(line)
             if m:
                 nsf_status = m.groupdict()['nsf_status']
-
-                interface_dict['nsf_enabled'] = True if nsf_status == 'enabled' else False
-
+                interface_dict['nsf_enabled'] = \
+                    True if nsf_status == 'enabled' else False
                 continue
 
             # # Configured as demand circuit
@@ -6307,7 +6301,8 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             m = p27.match(line)
             if m:
                 interface_dict['donotage_lsa'] = False
-                interface_dict['total_dcbitless_lsa'] = int(m.groupdict()['num'])
+                interface_dict['total_dcbitless_lsa'] = \
+                    int(m.groupdict()['num'])
                 continue
 
             # Loopback interface is treated as a stub Host
