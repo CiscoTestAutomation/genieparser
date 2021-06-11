@@ -387,8 +387,7 @@ class SuperFileBasedTesting(aetest.Testcase):
                         # this works to ignore outdated classes that use tcl
                         if not hasattr(local_class, 'cli_command'):
                             if _show_missing_unittests:
-                                log.warning(f'{local_class} is based on tcl,\nwhich is no longer supported.\n'
-                                            f'skipping...')
+                                log.warning(f"{operating_system} {local_class.__name__} has no cli_command defined.")
                             continue
 
                         self.parsers_list.append({
