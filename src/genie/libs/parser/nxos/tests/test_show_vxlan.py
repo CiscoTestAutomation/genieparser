@@ -1826,6 +1826,11 @@ class TestShowRunningConfigNvOverlay(unittest.TestCase):
                     'multisite_ingress_replication': True,
                     'mcast_group': "231.200.1.1"
                 },
+                10203: {
+                    'vni': 10203,
+                    'associated_vrf': False,
+                    'ingress_replication_protocol_bgp': True
+                },
             },
         },
         'multisite': {
@@ -1882,6 +1887,9 @@ interface nve1
   member vni 10202
     multisite ingress-replication
     mcast-group 231.200.1.1
+  member vni 10203
+    ingress-replication protocol bgp
+    
  
 interface Ethernet1/1
   evpn multisite fabric-tracking
