@@ -10,6 +10,7 @@ IOSXE parsers for the following show commands:
     * 'show policy-map target service-group {num}',
     * 'show policy-map control-plane'
     * 'show policy-map interface',
+    * 'show policy-map type control subscriber binding <policymap name>',
 '''
 
 # Python
@@ -306,7 +307,7 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                         Optional('extended_limit'): int,
                                         Optional('bandwidth_remaining_ratio'): int,
                                         Optional('conformed'): {
-                                            'packets': int,
+                                            Optional('packets'): int,
                                             'bytes': int,
                                             'bps': int,
                                             Optional('actions'): {
@@ -314,7 +315,7 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                             }
                                         },
                                         Optional('exceeded'): {
-                                            'packets': int,
+                                            Optional('packets'): int,
                                             'bytes': int,
                                             'bps': int,
                                             Optional('actions'): {
@@ -391,10 +392,11 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         queue_stats = 0
         priority_dict = {}
         priority_level_status = False
+
         # Control Plane
         # GigabitEthernet0/1/5
         # Something else
-        p0 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
+        p0 = re.compile(r'^(?P<top_level>(Control Plane|Giga.*|FiveGiga.*|[Pp]seudo.*|Fast.*|[Ss]erial.*|'
                          'Ten.*|[Ee]thernet.*|[Tt]unnel.*))$')
 
         # Port-channel1: Service Group 1
@@ -421,6 +423,9 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # 8 packets, 800 bytes
         p3 = re.compile(r'^(?P<packets>(\d+)) packets, (?P<bytes>(\d+)) +bytes')
+
+        # 8 packets
+        p3_1 = re.compile(r'^(?P<packets>(\d+)) packets')
 
         # 5 minute offered rate 0000 bps, drop rate 0000 bps
         p4 = re.compile(r'^(?P<interval>(\d+)) +minute +offered +rate +(?P<offered_rate>(\d+)) bps, +drop +rate +(?P<drop_rate>(\d+)) bps$')
@@ -461,11 +466,18 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # conformed 8 packets, 800 bytes; actions:
         p8 = re.compile(r'^conformed (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
 
+        # conformed 800 bytes; actions:
+        p8_0 = re.compile(r'^conformed +(?P<bytes>\d+) bytes; actions:$')
+
         # conformed 15 packets, 6210 bytes; action:transmit
         p8_1 = re.compile(r'^conformed (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes;'
                           r' action:(?P<action>(\w+))$')
+        
         # exceeded 0 packets, 0 bytes; actions:
         p9 = re.compile(r'^exceeded (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
+
+        # exceeded 0 bytes; actions:
+        p9_0 = re.compile(r'^exceeded +(?P<bytes>\d+) bytes; actions:$')
 
         # exceeded 5 packets, 5070 bytes; action:drop
         p9_1 = re.compile(r'^exceeded (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes;'
@@ -492,7 +504,8 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # set-mpls-exp-imposition-transmit 7
         # set-dscp-transmit ef
         # filter 'Queueing' and 'random-detect'
-        p12 = re.compile(r'^(?![Qr])(?P<action>[\w\-]+)( +(?P<value>[\w]+))?$')
+        # set-dscp-transmit dscp table policed-dscp
+        p12 = re.compile(r'^(?![Qr])(?P<action>drop|transmit|start|set-qos-transmit|set-mpls-exp-imposition-transmit|set-dscp-transmit|filter)( +(?P<value>.+))?$')
 
         # QoS Set
         p13 = re.compile(r'^QoS +Set+$')
@@ -697,7 +710,6 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 class_map_dict = policy_name_dict.setdefault('class_map', {}).\
                                                   setdefault(class_map, {})
                 class_map_dict['match_evaluation'] = class_match.replace('(', '').replace(')', '')
-
                 continue
 
             # queue stats for all priority classes:
@@ -724,6 +736,14 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 bytes = group['bytes'].strip()
                 class_map_dict['packets'] = int(packets)
                 class_map_dict['bytes'] = int(bytes)
+                continue
+
+            # 8 packets
+            m = p3_1.match(line)
+            if m:
+                group = m.groupdict()
+                packets = group['packets'].strip()
+                class_map_dict['packets'] = int(packets)
                 continue
 
             # 5 minute offered rate 0000 bps, drop rate 0000 bps
@@ -821,6 +841,17 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 conf_action_dict = conformed_dict.setdefault('actions', {})
                 continue
 
+            # conformed 0 bytes; actions:
+            m = p8_0.match(line)
+            if m:
+                conformed_line = True
+                exceeded_line = False
+                violated_line = False
+                conformed_dict = police_dict.setdefault('conformed', {})
+                conformed_dict['bytes'] = int(m.groupdict()['bytes'])
+                conf_action_dict = conformed_dict.setdefault('actions', {})
+                continue
+
             # conformed 15 packets, 6210 bytes; action:transmit
             m = p8_1.match(line)
             if m:
@@ -840,6 +871,17 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 exceeded_line = True
                 exceeded_dict = police_dict.setdefault('exceeded', {})
                 exceeded_dict['packets'] = int(m.groupdict()['packets'])
+                exceeded_dict['bytes'] = int(m.groupdict()['bytes'])
+                exc_action_dict = exceeded_dict.setdefault('actions', {})
+                continue
+
+            # exceeded 0 bytes; actions:
+            m = p9_0.match(line)
+            if m:
+                conformed_line = False
+                violated_line = False
+                exceeded_line = True
+                exceeded_dict = police_dict.setdefault('exceeded', {})
                 exceeded_dict['bytes'] = int(m.groupdict()['bytes'])
                 exc_action_dict = exceeded_dict.setdefault('actions', {})
                 continue
@@ -1328,7 +1370,7 @@ class ShowPolicyMapInterfaceInput(ShowPolicyMapTypeSuperParser, ShowPolicyMapTyp
                    'show policy-map interface {interface} input'
                    ]
 
-    def cli(self, interface, class_name='', output=None):
+    def cli(self, interface='', class_name='', output=None):
 
         if output is None:
             # Build command
@@ -2072,5 +2114,63 @@ class ShowPolicyMap(ShowPolicyMapSchema):
             if m:
                 class_map_dict['queue_limit_packets'] = int(m.groupdict()['queue_limit_packets'])
                 continue
+
+        return ret_dict
+        
+
+#================================================================================
+#Schema for :
+#   * "show policy-map type control subscriber binding <policymap name>" 
+#================================================================================
+class ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema (MetaParser) :
+    '''Schema for :
+    * "show policy-map type control subscriber binding <policymap name>" '''  
+    
+    schema = {
+        "policy_map_name" : str,
+        "interfaces_list" : list,
+    }
+
+
+#=================================================================================
+#Parser for:
+#   * "show policy-map type control subscriber binding <policymap name>" 
+# ================================================================================
+class ShowPolicyMapTypeControlSubscriberBindingPolicyName(ShowPolicyMapTypeControlSubscriberBindingPolicyName_Schema) :
+    '''Parser for :
+    *"show policy-map type control subscriber binding <policymap name>" '''
+      
+    cli_command = ['show policy-map type control subscriber binding {policy_map_name}']           
+
+    def cli(self,policy_map_name="",output=None):      
+        if output is None:
+            cmd = self.cli_command[0].format(policy_map_name=policy_map_name)
+            output = self.device.execute(cmd)          
+        
+        ret_dict = {}
+
+        #PMAP_DefaultWiredDot1xClosedAuth_1X_MAB          Gi1/0/1
+        p1 = re.compile('^(?P<pname>\S+)?\s+(?P<int>[\w\/]+)$')
+
+        #                                                 Gi1/1/1
+        p2 = re.compile('^(?P<int>[\w\/]+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+            
+            # PMAP_DefaultWiredDot1xClosedAuth_1X_MAB         Gi1/0/1
+            # dot1x_group                                     Gi1/0/1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['policy_map_name'] = group['pname']
+                ret_dict.setdefault('interfaces_list', []).append(group['int'])
+                continue
+        
+            # Gi1/1/1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict.setdefault('interfaces_list', []).append(group['int'])
 
         return ret_dict

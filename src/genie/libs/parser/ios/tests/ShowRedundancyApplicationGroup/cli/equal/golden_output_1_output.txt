@@ -1,0 +1,110 @@
+Faults states Group 1 info: 
+	Runtime priority: [200]
+		RG Faults RG State: Up. 
+			Total # of switchovers due to faults:           0
+			Total # of down/up state changes due to faults: 0
+Group ID:1
+Group Name:group1
+
+Administrative State: No Shutdown
+Aggregate operational state : Up
+My Role: STANDBY
+Peer Role: ACTIVE
+Peer Presence: Yes
+Peer Comm: Yes
+Peer Progression Started: Yes
+
+RF Domain: btob-one
+	 RF state: STANDBY HOT
+	 Peer RF state: ACTIVE
+
+
+RG Protocol RG 1
+------------------
+	Role: Standby
+	Negotiation: Enabled
+	Priority: 200
+	Protocol state: Standby-hot
+	Ctrl Intf(s) state: Up
+	Active Peer: address 9.1.1.1, priority 200, intf Po10.100
+	Standby Peer: Local
+	Log counters:
+		role change to active: 0
+		role change to standby: 1
+		disable events: rg down state 0, rg shut 0
+		ctrl intf events: up 1, down 1, admin_down 0
+		reload events: local request 0, peer request 0
+
+RG Media Context for RG 1
+--------------------------
+	Ctx State: Standby
+	Protocol ID: 1
+	Media type: Default
+	Control Interface: Port-channel10.100
+	Current Hello timer: 3000
+	Configured Hello timer: 3000, Hold timer: 9000
+	Peer Hello timer: 3000, Peer Hold timer: 9000
+	Stats:
+		Pkts 144780, Bytes 8976360, HA Seq 0, Seq Number 144780, Pkt Loss 0
+		Authentication not configured
+		Authentication Failure: 0
+		Reload Peer: TX 0, RX 0
+		Resign: TX 0, RX 0
+	Active Peer: Present. Hold Timer: 9000
+		Pkts 144772, Bytes 4922248, HA Seq 0, Seq Number 145489, Pkt Loss 0
+
+
+Faults states Group 2 info: 
+	Runtime priority: [175]
+		RG Faults RG State: Up. 
+			Total # of switchovers due to faults:           0
+			Total # of down/up state changes due to faults: 0
+Group ID:2
+Group Name:group2
+
+Administrative State: No Shutdown
+Aggregate operational state : Up
+My Role: STANDBY
+Peer Role: ACTIVE
+Peer Presence: Yes
+Peer Comm: Yes
+Peer Progression Started: Yes
+
+RF Domain: btob-two
+	 RF state: STANDBY HOT
+	 Peer RF state: ACTIVE
+
+
+RG Protocol RG 2
+------------------
+	Role: Standby
+	Negotiation: Enabled
+	Priority: 175
+	Protocol state: Standby-hot
+	Ctrl Intf(s) state: Up
+	Active Peer: address 9.1.1.1, priority 175, intf Po10.100
+	Standby Peer: Local
+	Log counters:
+		role change to active: 0
+		role change to standby: 1
+		disable events: rg down state 0, rg shut 0
+		ctrl intf events: up 1, down 1, admin_down 0
+		reload events: local request 0, peer request 0
+
+RG Media Context for RG 2
+--------------------------
+	Ctx State: Standby
+	Protocol ID: 1
+	Media type: Default
+	Control Interface: Port-channel10.100
+	Current Hello timer: 3000
+	Configured Hello timer: 3000, Hold timer: 9000
+	Peer Hello timer: 3000, Peer Hold timer: 9000
+	Stats:
+		Pkts 144780, Bytes 8976360, HA Seq 0, Seq Number 144780, Pkt Loss 0
+		Authentication not configured
+		Authentication Failure: 0
+		Reload Peer: TX 0, RX 0
+		Resign: TX 0, RX 0
+	Active Peer: Present. Hold Timer: 9000
+		Pkts 144772, Bytes 4922248, HA Seq 0, Seq Number 145489, Pkt Loss 0
