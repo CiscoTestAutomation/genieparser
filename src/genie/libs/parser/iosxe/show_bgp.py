@@ -1092,20 +1092,15 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
         # Local vxlan vtep:
         # Local irb vxlan vtep
         p11 = re.compile(r'^Local\s+(irb\s+)?vxlan\s+vtep\:$')
-        # p11_1 = re.compile(r'^Local +irb +vxlan +vtep\:$')
 
         # bdi:BDI200
         # core-bdi:BDI200
         p12 = re.compile(r'^(core-)?bdi\:(?P<bdi>[A-Z0-9]+)$')
-        # p12_1 = re.compile(r'^core-bdi\:(?P<bdi>[A-Z0-9]+)$')
 
         # vrf:evpn1, vni:30000
         # vrf:evpn1, l3-vni:30000
         p13 = re.compile(r'^vrf\:(?P<vrf>[a-zA-Z0-9]+)\,'
                          r'\s+(.+-)?vni\:(?P<vni>[0-9]+)$')
-
-        # p13_1 = re.compile(r'^vrf\:(?P<vrf>[a-zA-Z0-9]+)\,'
-        #                    r' +l3-vni\:(?P<vni>[0-9]+)$')
 
         # local router mac:001E.7AFF.FCD2
         p14 = re.compile(r'^local +router +mac\:'
@@ -1784,7 +1779,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 continue
 
             # Local vxlan vtep:
-            m = p11.match(line) or p11_1.match(line)
+            m = p11.match(line)
             if m:
                 if 'local_vxlan_vtep' not in subdict:
                     subdict['local_vxlan_vtep'] = {}
@@ -1796,7 +1791,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
             # local router mac:001E.7AFF.FCD2
             # encap:8
             # vtep-ip:10.21.33.33
-            m = p12.match(line) or p12_1.match(line) or p14.match(line)\
+            m = p12.match(line) or p14.match(line)\
                 or p15.match(line) or p16.match(line)
             if m and local_vxlan_vtep:
                 group = m.groupdict()
@@ -1805,7 +1800,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 continue
 
             # vrf:evpn1, vni:30000
-            m = p13.match(line) or p13_1.match(line)
+            m = p13.match(line)
             if m and local_vxlan_vtep:
                 subdict['local_vxlan_vtep']['vrf'] = m.groupdict()['vrf']
                 subdict['local_vxlan_vtep']['vni'] = m.groupdict()['vni']
