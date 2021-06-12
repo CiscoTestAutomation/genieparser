@@ -9,4 +9,4 @@
 
         3       C9300-48UX FJC2317T0DT Q3EA-AZYP-WDFH  4cbc.4812.2501   Registered         C9K-C
 
-        4       C9300-48TX FJC2311T0AJ N/A             5cbc.4812.3479   Timeout            C9K-C
+        4       C9300-48TX FJC2311T0AJ N/A             5cbc.4812.3479   N/A            C9K-C
