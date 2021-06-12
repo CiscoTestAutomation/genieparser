@@ -69,7 +69,7 @@ class ShowMeraki(ShowMerakiSchema):
 #        1       C9300-24T  FJC2311T0DA Q5EE-DJYN-CRGR  4cbc.4812.3550   Registered         C9K-C
 #        2       C9300-24U  FJC1527A0BC N/A             4cbc.4812.2881   ACT2 write failed  C9K-C
 #        3       C9300-48UX FJC2317T0DT Q3EA-AZYP-WDFH  4cbc.4812.2501   Registered         C9K-C
-#        4       C9300-48TX FJC2311T0AJ N/A             5cbc.4812.3479   Timeout            C9K-C
+#        4       C9300-48TX FJC2311T0AJ N/A             5cbc.4812.3479   N/A                C9K-C
 
 
         p1 = re.compile ( r'^(?P<switch_num>\d+)(?P<pid>\s+\w+\d+\-\d+\w+)(?P<serial_number>\s+[a-zA-Z0-9]+)(?P<meraki_sn>\s+[a-zA-Z0-9\/\-]*)(?P<mac_addr>\s+[a-zA-Z0-9\.]*)(?P<conversion_status>\s+[a-zA-Z0-9\s\/\-]+)(?P<current_mode>\s+[a-zA-Z0-9\-]+)')
