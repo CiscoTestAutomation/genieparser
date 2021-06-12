@@ -400,7 +400,6 @@ class ShowPowerInlineUpoePlus(ShowPowerInlineUpoePlusSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            print(line)
   
 #           ----------- ------ ---- ----------  --------- --------- ------- -----------
 #		Gi1/0/4     auto   SP   on            4.0       3.8       1       Ieee PD
@@ -409,7 +408,6 @@ class ShowPowerInlineUpoePlus(ShowPowerInlineUpoePlusSchema):
 
 
             m = p1.match(line)
-            print(m)
             if m:
                 group = m.groupdict()
                 intf = Common.convert_intf_name(group.pop('intf'))
@@ -424,6 +422,5 @@ class ShowPowerInlineUpoePlus(ShowPowerInlineUpoePlusSchema):
                 intf_dict.update({k: v for k, v in group.items() if 'n/a' not in v})
 
                 continue
-        print(ret_dict)
         return ret_dict
 
