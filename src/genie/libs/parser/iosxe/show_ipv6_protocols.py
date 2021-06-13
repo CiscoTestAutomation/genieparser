@@ -31,14 +31,7 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                             Any(): {
                                 Optional('instance'): {
                                     Any(): {
-                                        Optional('output_delay'): int,
-                                        Optional('automatic_network_summarization_in_effect'): bool,
-                                        Optional('incoming_route_metric'): {
-                                            'added': str,
-                                            'list': str,
-                                        },
                                         Optional('network'): list,
-                                        Optional('default_redistribution_metric'): int,
                                         'redistribute': {
                                             Any(): {
                                                 Any(): {
@@ -83,8 +76,6 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                                         'eigrp_id': int,
                                         Optional('name'): str,
                                         'named_mode': bool,
-                                        Optional('outgoing_filter_list'): str,
-                                        Optional('incoming_filter_list'): str,
                                         Optional('passive_interfaces'): list,
                                         'metric_weight': {
                                             'k1': int,
@@ -138,8 +129,6 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                                             }
                                         },
                                         'router_id': str,
-                                        Optional('outgoing_filter_list'): str,
-                                        Optional('incoming_filter_list'): str,
                                         'total_stub_area': int,
                                         'total_normal_area': int,
                                         'total_nssa_area': int,
@@ -184,10 +173,7 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                             'default': {
                                 'address_family': {
                                     'ipv6': {
-                                        Optional('outgoing_filter_list'): str,
-                                        Optional('incoming_filter_list'): str,
                                         'igp_sync': bool,
-                                        Optional('maximum_path'): int,
                                         Optional('preference'): {
                                             'multi_values': {
                                                 'external': int,
@@ -237,11 +223,8 @@ class ShowIpv6ProtocolsSchema(MetaParser):
                             Any(): {
                                 'instance': {
                                     Any(): {
-                                        'outgoing_filter_list': str,
-                                        'incoming_filter_list': str,
                                         Optional('redistributing'): str,
                                         Optional('address_summarization'): list,
-                                        Optional('maximum_path'): int,
                                         'preference': {
                                             'single_value': {
                                                 'all': int
@@ -313,11 +296,11 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         passive_interfaces = False
         passive_intfs = []
 
-        # Routing Protocol is "ospf 1"
-        # Routing Protocol is "bgp 100"
-        # Routing Protocol is "isis"
-        # Routing Protocol is "isis banana"
-        # Routing Protocol is "eigrp 1"
+        # IPv6 Routing Protocol is "ospf 1"
+        # IPv6 Routing Protocol is "bgp 100"
+        # IPv6 Routing Protocol is "isis"
+        # IPv6 Routing Protocol is "isis banana"
+        # IPv6 Routing Protocol is "eigrp 1"
         p1 = re.compile(r"^IPv6 Routing +Protocol +is"
                         r" +\"(?P<protocol>(ospf|bgp|isis|eigrp|rip))"
                         r"(?: *(?P<pid>(\S+)))?\"$")
@@ -330,14 +313,13 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # Router ID 10.4.1.1
         p3 = re.compile(r"^Router +ID +(?P<router_id>(\S+))$")
 
-        # Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+        # Number of areas: 1 normal, 0 stub, 0 nssa
         p4 = re.compile(r"^Number +of +areas:"
                         r" +(?P<normal>(\d+)) +normal,"
                         r" +(?P<stub>(\d+)) +stub, +(?P<nssa>(\d+)) +nssa$")
 
         # EIGRP-IPv6 VR(pyats) Address-Family Protocol for AS(20)
-        # EIGRP-IPv4 Neighbors for AS(100)
-        # EIGRP-IPv4 Neighbors for AS(100) VRF(VRF1)
+        # EIGRP-IPv6 Protocol for AS(20)
         p5 = re.compile(
             r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s+(VR\((?P<name>\w+)\)\s+Address\-Family\s+)?'
             'Protocol\s+for\s+AS\(\s*(?P<as_num>[\S]+)\)\s*(?:VRF\((?P<vrf>\S+)\))?$'
@@ -346,7 +328,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         # Routing for Networks:
         p6_1 = re.compile(r"^Routing +for +Networks:$")
 
-        # Interfaces Configured Explicitly (Area 0):
+        # Interfaces (Area 0):
         # Interfaces:
         p6_2 = re.compile(
             r"^Interfaces"
@@ -408,68 +390,63 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
         p11_5 = re.compile(r'^Maximum +metric +variance\s+(?P<max_variance>\d+)$')
 
         # IGP synchronization is disabled
-        p13 = re.compile(r"^IGP +synchronization +is +(?P<igp>(enabled|disabled))$")
+        p12 = re.compile(r"^IGP +synchronization +is +(?P<igp>(enabled|disabled))$")
 
         # Automatic route summarization is disabled
-        p14 = re.compile(r"^Automatic +route +summarization +is"
+        p13 = re.compile(r"^Automatic +route +summarization +is"
                           " +(?P<route>(enabled|disabled))$")
 
         # Distance: external 20 internal 200 local 200
         # Distance:external 20 internal 200 local 200
-        p15 = re.compile(
+        p14 = re.compile(
             r"^Distance: *external +(?P<external>(\d+)) +internal"
             r" +(?P<internal>(\d+)) +local +(?P<local>(\d+))$"
         )
 
         # Redistributing: isis banana
-        p16 = re.compile(r"^Redistributing: +(?P<redistributing>([a-zA-Z\_\s]+))$")
+        p15 = re.compile(r"^Redistributing: +(?P<redistributing>([a-zA-Z\_\s]+))$")
 
         # 10.0.0.84 0.0.0.3 area 11
         # 10.0.0.88 0.0.0.3 area 11
         # 192.168.0.10 0.0.0.0 area 11
-        p17 = re.compile(r'(?P<address>[\d\.]+)\s+(?P<mask>[\d\.]+)\s+area\s+(?P<area>[\d\.]+)')
+        p16 = re.compile(r'(?P<address>[\d\.]+)\s+(?P<mask>[\d\.]+)\s+area\s+(?P<area>[\d\.]+)')
 
         passive_interface_flag = False
         routing_network_flag = False
         neighbors_flag = False
 
         # Sending updates every 10 seconds, next due in 8 seconds
-        p106 = re.compile(
+        p17 = re.compile(
             r'^\s*Sending +updates every +(?P<update_interval>\d+) +seconds, +next +due +in (?P<next_update>\d+) +(seconds|sec)$')
 
         # Redistributing protocol ospf 1 with metric 5 (internal, external 1 & 2, nssa-external 1 & 2) include-connected
         # Redistributing protocol bgp 65003 with metric 4 route-map test
         # Redistributing protocol eigrp 10 with metric 4 include-connected
-        p109 = re.compile(
+        p18 = re.compile(
             r'^\s*Redistributing +protocol +(?P<redistribute>\w+)( +(?P<instance>[A-Za-z0-9]+))?( +with( +transparent)?'
             r' +metric( +(?P<metric>\d+))?)?( +\([A-Za-z0-9\-,&\s]+\))?( +route-map +(?P<route_policy>[\w\-]+))?'
             r'( +(?P<include_connected>include\-connected))?$'
         )
 
         # Neighbor(s):
-        p110 = re.compile(r'^\s*Neighbor\(s\):$')
+        p19 = re.compile(r'^\s*Neighbor\(s\):$')
 
         # 172.16.121.101                                        ACCEPT_SCI_RICHEMONT
         # 192.168.1.176                                         INTERNET_EDGE_IN
         # 192.168.1.177                                         INTERNET_EDGE_IN
         # 192.168.0.9
-        p111 = re.compile(r'(?P<neighbor>[\d\.\:\w]+)\s*(?P<route_map>[\w]+)?')
-
-        # Passive Interface(s):
-        p112 = re.compile(r'^\s*Passive +Interface\(s\):$')
-
-        #   GigabitEthernet2.100
-        p113 = re.compile(r'^\s*(?P<passive_interface>[\w\.]+)$')
+        p20 = re.compile(r'(?P<neighbor>[\d\.\:\w]+)\s*(?P<route_map>[\w]+)?')
 
         network_list = []
 
         for line in out.splitlines():
             line = line.strip()
 
-            # Routing Protocol is "ospf 1"
-            # Routing Protocol is "bgp 100"
-            # Routing Protocol is "isis banana"
-            # Routing Protocol is "eigrp 1"
+            # IPv6 Routing Protocol is "ospf 1"
+            # IPv6 Routing Protocol is "bgp 100"
+            # IPv6 Routing Protocol is "isis"
+            # IPv6 Routing Protocol is "isis banana"
+            # IPv6 Routing Protocol is "eigrp 1"
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -577,8 +554,10 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                 redistribute_dict = eigrp_dict.setdefault('redistribute', {})
                 continue
 
-            # Redistributing: connected, static, rip
-            m = p109.match(line)
+            # Redistributing protocol ospf 1 with metric 5 (internal, external 1 & 2, nssa-external 1 & 2) include-connected
+            # Redistributing protocol bgp 65003 with metric 4 route-map test
+            # Redistributing protocol eigrp 10 with metric 4 include-connected
+            m = p18.match(line)
             if m:
                 group = m.groupdict()
                 source_proto_dict = redistribute_dict.setdefault(group['redistribute'], {})
@@ -623,7 +602,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                 ospf_dict['router_id'] = str(m.groupdict()['router_id'])
                 continue
 
-            # Number of areas in this router is 1. 1 normal 0 stub 0 nssa
+            # Number of areas: 1 normal, 0 stub, 0 nssa
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -888,7 +867,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                 eigrp_topology.update({'max_variance': int(group['max_variance'])})
 
             # IGP synchronization is disabled
-            m = p13.match(line)
+            m = p12.match(line)
             if m:
                 if 'enabled' in m.groupdict()['igp']:
                     bgp_dict['igp_sync'] = True
@@ -896,7 +875,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                     bgp_dict['igp_sync'] = False
 
             # Automatic route summarization is disabled
-            m = p14.match(line)
+            m = p13.match(line)
             if m:
                 if 'enabled' in m.groupdict()['route']:
                     bgp_dict['automatic_route_summarization'] = True
@@ -904,7 +883,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                     bgp_dict['automatic_route_summarization'] = False
 
             # Distance: external 20 internal 200 local 200
-            m = p15.match(line)
+            m = p14.match(line)
             if m:
                 group = m.groupdict()
                 if protocol == 'bgp':
@@ -915,7 +894,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                 continue
 
             # Sending updates every 60 seconds, next due in 0 sec
-            m = p106.match(line)
+            m = p17.match(line)
             if m:
                 group = m.groupdict()
                 timers_dict = bgp_dict.setdefault('timers', {})
@@ -924,7 +903,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                 continue
 
             # Redistributing: isis banana
-            m = p16.match(line)
+            m = p15.match(line)
             if m:
                 if protocol == 'isis':
                     isis_dict['redistributing'] = m.groupdict()['redistributing']
@@ -933,7 +912,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
             # 10.0.0.84 0.0.0.3 area 11
             # 10.0.0.88 0.0.0.3 area 11
             # 192.168.0.10 0.0.0.0 area 11
-            m = p17.match(line)
+            m = p16.match(line)
             if m:
                 group = m.groupdict()
                 address = group['address']
@@ -948,7 +927,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
                 continue
 
             # Neighbor(s):
-            m = p110.match(line)
+            m = p19.match(line)
             if m:
                 neighbors_flag = True
 
@@ -958,7 +937,7 @@ class ShowIpv6Protocols(ShowIpv6ProtocolsSchema):
             # 192.168.1.176                                         INTERNET_EDGE_IN
             # 192.168.1.177                                         INTERNET_EDGE_IN
             # 192.168.0.9
-            m = p111.match(line)
+            m = p20.match(line)
             if m:
                 if neighbors_flag:
                     group = m.groupdict()
