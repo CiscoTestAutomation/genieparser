@@ -1,3 +1,5 @@
+Only one changelog file should be included per pull request
+
 Templates
 =========
 
