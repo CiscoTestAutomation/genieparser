@@ -392,7 +392,6 @@ class ShowLogging(ShowLoggingSchema):
             # link down),
             m = p12.match(line)
             if m:
-                print('MATCH 12!')
                 group = m.groupdict()
                 logging_dict['link'] = group['link']
                 continue
@@ -400,7 +399,6 @@ class ShowLogging(ShowLoggingSchema):
             # 787 message lines logged,
             m = p13.match(line)
             if m:
-                print('MATCH 13!')
                 group = m.groupdict()
                 logging_dict['message_lines_logged'] = int(
                     group['message_lines_logged'])
@@ -409,7 +407,6 @@ class ShowLogging(ShowLoggingSchema):
             # 0 message lines rate-limited,
             m = p14.match(line)
             if m:
-                print('MATCH 14!')
                 group = m.groupdict()
                 logging_dict['message_lines_rate_limited'] = int(
                     group['message_lines_rate_limited'])
@@ -418,7 +415,6 @@ class ShowLogging(ShowLoggingSchema):
             # 0 message lines dropped-by-MD,
             m = p15.match(line)
             if m:
-                print('MATCH 15!')
                 group = m.groupdict()
                 logging_dict['message_lines_dropped_by_md'] = int(
                     group['message_lines_dropped_by_md'])
@@ -427,7 +423,6 @@ class ShowLogging(ShowLoggingSchema):
             # xml disabled, sequence number disabled
             m = p16.match(line)
             if m:
-                print('MATCH 16!')
                 group = m.groupdict()
                 logging_dict['xml'] = group['xml']
                 logging_dict['sequence_number'] = group['sequence_number']
@@ -437,14 +432,12 @@ class ShowLogging(ShowLoggingSchema):
             m = p17.match(line)
             if m:
                 # do nothing, but need to parse for skipping this line
-                print('MATCH 17!')
                 continue
 
             # Vlan200
             # Vlan200                         VRF-A
             m = p18.match(line)
             if m:
-                print('MATCH 18!')
                 group = m.groupdict()
                 logging_source_dict = {}
                 if group['vrf']:
