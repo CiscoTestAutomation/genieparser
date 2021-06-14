@@ -865,8 +865,8 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
         route_code_dict['reply_Status'] = ['r']
         route_code_dict['sia_Status'] = ['s']
 
-        # EIGRP-IPv4 Topology Table for AS(10)/ID(13.0.0.2)
-        # EIGRP-IPv4 Topology Table for AS(10)/ID(13.0.0.2) VRF(red)
+        # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2)
+        # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2) VRF(red)
         r1 = re.compile(r'^EIGRP\-(?P<address_family>IPv4|IPv6)\s*'
         'Topology\s*Table\s*for\s*\w+\(\s*(?P<as_num>\d+)\)\/\w+\(\s*(?P<eigrp_id>\S+)\)\s*'
         '(?:VRF\((?P<vrf>\S+)\))?$')
@@ -877,16 +877,16 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
         'Topology\s*Table\s*for\s*\w+\(\s*(?P<as_num>\d+)\)\/\w+\(\s*(?P<eigrp_id>\S+)\)\s*'
         '(?:VRF\((?P<vrf>\S+)\))?$')
 
-        # P 13.0.0.0/16, 1 successors, FD is 2816
-        # P 3.3.3.3/32, 1 successors, FD is 130816
-        # P 1.1.1.1/32, 1 successors, FD is 2816, tag is 900
+        # P 10.169.0.0/16, 1 successors, FD is 2816
+        # P 10.36.3.3/32, 1 successors, FD is 130816
+        # P 10.4.1.1/32, 1 successors, FD is 2816, tag is 900
         # P 2001:0DB8:3::/64, 1 successors, FD is 281600
         r3 = re.compile(r'^(?P<code>[\w\*]+)\s*(?P<network>\S+),\s*'
         '(?P<successor_count>[\d])\s*successors,\s*FD\s*is\s*(?P<fd>[\d]+)?,'
         '?( +tag\s*is\s*(?P<tag>[\S]+))?$')
 
         # via Connected, GigabitEthernet0/0/0
-        # via 13.0.0.1 (130816/128256), GigabitEthernet0/0/0
+        # via 10.169.0.1 (130816/128256), GigabitEthernet0/0/0
         # via +Redistributed (2816/0)
         # via Connected, Ethernet1/0
         r4 = re.compile(r'^\s*via\s*[+]?(?P<known_via>[\S]+).,*? *\(?(?P<route_preference>[\d\/]+)?\)?,?( +(?P<interface>[\S]+))?$')
@@ -900,8 +900,8 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
         for line in out.splitlines():
             line = line.strip()
             
-            # EIGRP-IPv4 Topology Table for AS(10)/ID(13.0.0.2)
-            # EIGRP-IPv4 Topology Table for AS(10)/ID(13.0.0.2) VRF(red)
+            # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2)
+            # EIGRP-IPv4 Topology Table for AS(10)/ID(10.169.0.2) VRF(red)
             result = r1.match(line)
             if result:
                 address_family = result.groupdict()['address_family']
@@ -928,9 +928,9 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
                     vrf = 'default'
                 continue
 
-            # P 13.0.0.0/16, 1 successors, FD is 2816
-            # P 3.3.3.3/32, 1 successors, FD is 130816
-            # P 1.1.1.1/32, 1 successors, FD is 2816, tag is 900
+            # P 10.169.0.0/16, 1 successors, FD is 2816
+            # P 10.36.3.3/32, 1 successors, FD is 130816
+            # P 10.4.1.1/32, 1 successors, FD is 2816, tag is 900
             # P 2001:0DB8:3::/64, 1 successors, FD is 281600
             result = r3.match(line)
             if result:
@@ -963,7 +963,7 @@ class ShowEigrpTopologySuperParser(ShowIpEigrpTopologySchema):
                 continue
             
             # via Connected, GigabitEthernet0/0/0
-            # via 13.0.0.1 (130816/128256), GigabitEthernet0/0/0
+            # via 10.169.0.1 (130816/128256), GigabitEthernet0/0/0
             # via +Redistributed (2816/0)
             # via Connected, Ethernet1/0
             result = r4.match(line)

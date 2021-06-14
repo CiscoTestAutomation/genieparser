@@ -59,7 +59,7 @@ entirely, consider extending the existing functionality to accomodate your
 requirements. Think broader than just your parser, let's make it useful for 
 everybody!
 
-[check existing parsers]: https://pubhub.devnetcloud.com/media/pyats-packages/docs/genie/genie_libs/#/parsers
+[check existing parsers]: https://pubhub.devnetcloud.com/media/genie-feature-browser/docs/#/parsers
 
 
 # Writing New Parsers
