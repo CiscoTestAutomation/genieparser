@@ -10,6 +10,7 @@ Templates
         * <Added|Modified> <Class>:
             * <New Show Command|Command>
 
+.. code-block::
 
     --------------------------------------------------------------------------------
                                 Fix
@@ -22,7 +23,7 @@ Templates
 Examples
 ========
 
-1.
+1. A new parser class that has 4 associated show commands:
 
 .. code-block::
 
@@ -37,7 +38,7 @@ Examples
             * show routing {ip} vrf {vrf}
             
 
-2.
+2. An existing parser that has had a new show command added to it: 
 
 .. code-block::
 
@@ -48,7 +49,7 @@ Examples
         * Modified ShowCryptoPkiCertificates:
             * show crypto pki certificates {trustpoint_name}
 
-3.
+3. Two existing parsers that have been fixed/modified. 
 
 .. code-block::
 
@@ -63,7 +64,7 @@ Examples
         * Modified ShowTrack:
             * Added keys <key3>, <key4> into the schema.
 
-4.
+4. A new parser with 1 associated show command and an existing parser that has been fixed/modified
 
 .. code-block::
             
@@ -81,6 +82,4 @@ Examples
         * Modified ShowVersion:
             * Changed <key1>, <key2> from schema to Optional.
             * Updated regex pattern <p1> to accommodate various outputs.
-            
-        * Modified ShowTrack:
-            * Added keys <key3>, <key4> into the schema.
+
