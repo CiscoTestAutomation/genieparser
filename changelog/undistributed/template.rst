@@ -22,6 +22,8 @@ Templates
 Examples
 ========
 
+1.
+
 .. code-block::
 
     --------------------------------------------------------------------------------
@@ -35,6 +37,7 @@ Examples
             * show routing {ip} vrf {vrf}
             
 
+2.
 
 .. code-block::
 
@@ -44,6 +47,8 @@ Examples
     * IOSXE
         * Modified ShowCryptoPkiCertificates:
             * show crypto pki certificates {trustpoint_name}
+
+3.
 
 .. code-block::
 
@@ -58,6 +63,7 @@ Examples
         * Modified ShowTrack:
             * Added keys <key3>, <key4> into the schema.
 
+4.
 
 .. code-block::
             
