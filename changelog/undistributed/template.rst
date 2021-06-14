@@ -27,16 +27,51 @@ Examples
     --------------------------------------------------------------------------------
                                 New
     --------------------------------------------------------------------------------
-    * IOSXE
-        * Added ShowIpArp:
-            * show ip arp
-            * show ip arp vrf {vrf}
+    * NXOS
+        * Added ShowRoutingVrfAll:
+            * show routing vrf all
+            * show routing vrf {vrf}
+            * show routing {ip} vrf all
+            * show routing {ip} vrf {vrf}
+            
 
+
+.. code-block::
+
+    --------------------------------------------------------------------------------
+                                New
+    --------------------------------------------------------------------------------
+    * IOSXE
+        * Modified ShowCryptoPkiCertificates:
+            * show crypto pki certificates {trustpoint_name}
+
+.. code-block::
 
     --------------------------------------------------------------------------------
                                 Fix
     --------------------------------------------------------------------------------
     * IOS
+        * Modified ShowVersion:
+            * Changed <key1>, <key2> from schema to Optional.
+            * Updated regex pattern <p1> to accommodate various outputs.
+            
+        * Modified ShowTrack:
+            * Added keys <key3>, <key4> into the schema.
+
+
+.. code-block::
+            
+    --------------------------------------------------------------------------------
+                                New
+    --------------------------------------------------------------------------------
+    * IOSXE
+        * Modified ShowCryptoPkiCertificates:
+            * show crypto pki certificates {trustpoint_name}
+    
+    --------------------------------------------------------------------------------
+                                Fix
+    --------------------------------------------------------------------------------
+    * NXOS
         * Modified ShowVersion:
             * Changed <key1>, <key2> from schema to Optional.
             * Updated regex pattern <p1> to accommodate various outputs.
