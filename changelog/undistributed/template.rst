@@ -40,6 +40,7 @@ Examples
             * show routing {ip} vrf {vrf}
             
 
+|
 2. An existing parser that has had a new show command added to it: 
 
 .. code-block::
@@ -51,7 +52,8 @@ Examples
         * Modified ShowCryptoPkiCertificates:
             * show crypto pki certificates {trustpoint_name}
 
-3. Two existing parsers that have been fixed/modified. 
+|
+3. Two existing parsers that have been fixed/modified. Combine templates as necessary. 
 
 .. code-block::
 
@@ -66,6 +68,7 @@ Examples
         * Modified ShowTrack:
             * Added keys <key3>, <key4> into the schema.
 
+|
 4. A new parser with 1 associated show command and an existing parser that has been fixed/modified
 
 .. code-block::
