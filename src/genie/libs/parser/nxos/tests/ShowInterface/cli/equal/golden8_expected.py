@@ -19,6 +19,8 @@ expected_output = {
             "mtu": 1500,
             "bandwidth": 1000000,
             "reliability": "255/255",
+            "mac_address": "1234.5678.90ab",
+            "types": "EtherSVI",
             "txload": "1/255",
             "rxload": "1/255",
             "encapsulations": {

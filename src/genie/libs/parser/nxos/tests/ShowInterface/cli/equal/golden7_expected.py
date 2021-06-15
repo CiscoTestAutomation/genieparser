@@ -14,6 +14,8 @@ expected_output = {
             "reliability": "255/255",
             "txload": "1/255",
             "rxload": "1/255",
+            "mac_address": "000c.29ff.f8a2",
+            "types": "EtherSVI",
             "encapsulations": {
                 "encapsulation": "arpa"
             }
