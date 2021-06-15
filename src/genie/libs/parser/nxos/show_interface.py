@@ -282,7 +282,7 @@ class ShowInterface(ShowInterfaceSchema):
 
 
         # Hardware is EtherSVI, address is  547f.ee6d.7d7c
-        p3_1 = re.compile(r'^ *Hardware is  *(?P<types>[a-zA-Z0-9\/\s]+), '
+        p3_1 = re.compile(r'^Hardware is  *(?P<types>[a-zA-Z0-9\/\s]+), '
                           r'address is *(?P<mac_address>[a-z0-9\.]+)$')
 
         # Description: desc
