@@ -605,16 +605,15 @@ class ShowInterface(ShowInterfaceSchema):
                     ['phys_address'] = phys_address
                 continue
 
-            else:
-                # Hardware is EtherSVI, address is  547f.ee6d.7d7c
-                m = p3_1.match(line)
-                if m:
-                    types = m.groupdict()['types']
-                    interface_dict[interface]['types'] = types
-                    mac_address = m.groupdict()['mac_address']
-                    interface_dict[interface] \
-                        ['mac_address'] = mac_address
-                    continue
+            # Hardware is EtherSVI, address is  547f.ee6d.7d7c
+            m = p3_1.match(line)
+            if m:
+                types = m.groupdict()['types']
+                interface_dict[interface]['types'] = types
+                mac_address = m.groupdict()['mac_address']
+                interface_dict[interface] \
+                    ['mac_address'] = mac_address
+                continue
 
             # Description: VLAN information Internet Address is 10.10.10.1/24
             m = p4_1.match(line)
