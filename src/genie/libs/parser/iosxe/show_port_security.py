@@ -44,7 +44,9 @@ class ShowPortSecuritySchema(MetaParser):
                 'security_violation_cnt': int,
                 'security_action': str,
             }
-        }
+        },
+        'total_addr_in_system': int,
+        'max_addr_limit_in_system': int
     }
 
 
@@ -74,7 +76,12 @@ class ShowPortSecurity(ShowPortSecuritySchema):
                         r'(?P<current_addr_cnt>[\d]+)\s+'
                         r'(?P<security_violation_cnt>[\d]+)\s+'
                         r'(?P<security_action>[\w]+)$)')
-
+        # Total Addresses in System (excluding one mac per port)     : 0
+        p2 = re.compile(r'^Total +Addresses +in +System +\(excluding +one +mac +per +port\)\s+\:\s('
+                        r'?P<total_addr_in_system>\d+)$')
+        # Max Addresses limit in System (excluding one mac per port) : 4096
+        p3 = re.compile(r'^Max +Addresses +limit +in +System +\(excluding +one +mac +per +port\)\s+\:\s('
+                        r'?P<max_addr_limit_in_system>\d+)$')
         for line in out.splitlines():
             line = line.strip()
             m = p1.match(line)
@@ -88,10 +95,19 @@ class ShowPortSecurity(ShowPortSecuritySchema):
                 intf_dict[interface]['security_violation_cnt'] = int(group['security_violation_cnt'])
                 intf_dict[interface]['security_action'] = group['security_action']
                 continue
-
+            # Total Addresses in System (excluding one mac per port)     : 0
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['total_addr_in_system'] = int(group['total_addr_in_system'])
+                continue
+            # Max Addresses limit in System (excluding one mac per port) : 4096
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['max_addr_limit_in_system'] = int(group['max_addr_limit_in_system'])
+                continue
         return ret_dict
-
-
 # ==================================================================================
 # Parser for 'show port-security interface {interface} '
 # ==================================================================================
@@ -188,63 +204,75 @@ class ShowPortSecurityInterface(ShowPortSecurityInterfaceSchema):
         intf_dict ={}
         for line in out.splitlines():
             line = line.strip()
+            # Port Security              : Enabled
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict = {}
                 intf_dict['port_security'] = group['port_security']
                 continue
+            # Port Status                : Secure-up
             m = p2.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict['port_status'] = group['port_status']
                 continue
+            # Violation Mode             : Shutdown
             m = p3.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict['violation_mode'] = group['violation_mode']
                 continue
+            # Aging Time                 : 0 mins
             m = p4.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict['aging_time'] = group['aging_time']
                 continue
+            # Aging Type                 : Absolute
             m = p5.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict['aging_type'] = group['aging_type']
                 continue
+            # SecureStatic Address Aging : Disabled
             m = p6.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict['secure_static_addr_aging'] = group['secure_static_addr_aging']
                 continue
+            # Maximum MAC Addresses      : 2
             m = p7.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict['max_mac_addr'] = int(group['max_mac_addr'])
                 continue
+            # Total MAC Addresses        : 1
             m = p8.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict['total_mac_addr'] = int(group['total_mac_addr'])
                 continue
+            # Configured MAC Addresses   : 0
             m = p9.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict['cfg_mac_addr'] = int(group['cfg_mac_addr'])
                 continue
+            # Sticky MAC Addresses       : 0
             m = p10.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict['sticky_mac_addr'] = int(group['sticky_mac_addr'])
                 continue
+            # Last Source Address:Vlan   : 0050.56be.3bd9:200
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 intf_dict['last_src_addr'] = group['last_src_addr']
                 intf_dict['last_src_addr_vlan'] = int(group['last_src_addr_vlan'])
                 continue
+            # Security Violation Count   : 0
             m = p12.match(line)
             if m:
                 group = m.groupdict()

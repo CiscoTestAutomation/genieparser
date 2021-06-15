@@ -18,6 +18,7 @@ expected_output = {
             'security_violation_cnt': 0,
             'security_action': 'Shutdown'
         }
-    }
-
+    },
+    'total_addr_in_system': 0,
+    'max_addr_limit_in_system': 4096
 }
