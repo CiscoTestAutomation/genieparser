@@ -1,0 +1,64 @@
+Bridge group: g1, bridge-domain: bd1, id: 0, state: up, ShgId: 0, MSTi: 0
+MAC learning: enabled
+MAC withdraw: disabled
+Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+MAC aging time: 300 s, Type: inactivity
+MAC limit: 4000, Action: none, Notification: syslog
+MAC limit reached: yes
+Security: disabled
+DHCPv4 snooping: disabled
+MTU: 1500
+Filter MAC addresses:
+ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up)
+List of ACs:
+    AC: GigabitEthernet0/1/0/0, state is up
+    Type Ethernet
+    MTU 1500; XC ID 0x2000001; interworking none; MSTi 0 (unprotected)
+    MAC learning: enabled
+    Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+    MAC aging time: 300 s, Type: inactivity
+    MAC limit: 4000, Action: none, Notification: syslog
+    MAC limit reached: yes
+    Security: disabled
+    DHCPv4 snooping: disabled
+    Static MAC addresses:
+        0000.0000.0000
+        0001.00ff.0205
+    Statistics:
+        packet totals: receive 3919680,send 9328
+        byte totals: receive 305735040,send 15022146
+List of Access PWs:
+List of VFIs:
+    VFI 1
+    PW: neighbor 10.4.1.1, PW ID 1, state is up ( established )
+        PW class mpls, XC ID 0xff000001
+        Encapsulation MPLS, protocol LDP
+        PW type Ethernet, control word disabled, interworking none
+        PW backup disable delay 0 sec
+        Sequencing not set
+                MPLS         Local                          Remote
+        ------------ ------------------------------ -------------------------
+        Label        16003                          16003
+        Group ID     0x0                            0x0
+        Interface    1                              1
+        MTU          1500                           1500
+        Control word disabled                       disabled
+        PW type      Ethernet                       Ethernet
+        VCCV CV type 0x2                            0x2
+                     (LSP ping verification)        (LSP ping verification)
+        VCCV CC type 0x2                            0x2
+                     (router alert label)           (router alert label)
+        ------------ ------------------------------ -------------------------
+        Create time: 12/03/2008 14:03:00 (17:17:30 ago)
+        Last time status changed: 13/03/2008 05:57:58 (01:22:31 ago)
+        MAC withdraw message: send 0 receive 0
+        Static MAC addresses:
+        Statistics:
+        packet totals: receive 3918814, send 3918024
+        byte totals: receive 305667492, send 321277968
+    VFI Statistics:
+        drops: illegal VLAN 0, illegal length 0
