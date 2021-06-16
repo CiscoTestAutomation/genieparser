@@ -12,6 +12,10 @@ IOSXR parsers for the following show commands:
     * show ospf vrf all-inclusive database summary
     * show ospf vrf all-inclusive database external
     * show ospf vrf all-inclusive database opaque-area
+    * show ospf database
+    * show ospf mpls1 database
+    * show ospf {process_id} database router
+    * show ospf all-inclusive database router
 """
 
 # Python
@@ -5296,3 +5300,426 @@ class ShowOspfVrfAllInclusiveDatabaseOpaqueArea(
         else:
             cmd = self.cli_command[0]
         return super().cli(cmd=cmd, db_type="opaque", output=output)
+
+
+# =============================================================
+# Schema for 'show ospf database', 'show ospf <process_id> database'
+# =============================================================
+class ShowOspfDatabaseSchema(MetaParser):
+    """Schema for show ospf database, show ospf <process_id> database
+    """
+    schema = {
+    'vrf': {
+        Any(): {
+            'address_family': {
+                Any(): {
+                    'instance': {
+                        Any(): {
+                            "router_id": str,
+                            Optional('area'): {
+                                Any(): {
+                                    "area_id": int,
+                                    'database': {
+                                        'lsa_types': {
+                                            Any(): {
+                                                'lsa_type': int,
+                                                'lsas': {
+                                                    Any(): {
+                                                        'adv_router': str,
+                                                        'link_id': str,
+                                                        'ospf': {
+                                                            'header': {
+                                                                'age': int,
+                                                                'seq_num': str,
+                                                                'checksum': str,
+                                                                Optional('link_count'): int,
+                                                                Optional('opaque_id'): int
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+
+
+# =============================================================
+#  Parser for 'show ospf database', 'show ospf <process_id> database'
+# =============================================================
+class ShowOspfDatabase(ShowOspfDatabaseSchema):
+    """ Parser for show ospf database, show ospf <process_id> database
+    """
+    cli_command = ['show ospf database', 'show ospf {process_id} database']
+
+    def cli(self, process_id=None, output=None):
+        if not output:
+            if process_id:
+                output = self.device.execute(self.cli_command[1].format(process_id=process_id))
+            else:
+                output = self.device.execute(self.cli_command[0])
+
+
+        # Init vars
+        ret_dict = {}
+        address_family = 'ipv4'
+
+        #Lsa Types
+        # 1: Router
+        # 2: Network Link
+        # 3: Summary
+        # 3: Summary Network
+        # 3: Summary Net
+        # 4: Summary ASB
+        # 5: Type-5 AS External
+        # 8: Link (Type-8)
+        # 9: Intra Area Prefix'
+        # 10: Opaque Area
+
+        lsa_type_mapping = {
+            'router': 1,
+            'net': 2,
+            'summary': 3,
+            'summary net': 3,
+            'summary asb': 4,
+            'external': 5,
+            'link (type-8)': 8,
+            'intra area prefix': 9,
+            'type-10 opaque link area': 10
+        }
+
+        # Initializes the Python dictionary variable
+        parsed_dict = {}
+
+        #OSPF Router with ID (10.94.1.1) (Process ID mpls1)
+        p1 = re.compile(r'^OSPF +Router +with +ID +\((?P<router_id>(\S+))\) '
+                        r'+\(Process +ID +(?P<instance>(\S+))(?:, +VRF +(?P<vrf>(\S+)))?\)$')
+
+        #Router Link States (Area 0)
+        #Type-10 Opaque Link Area Link States (Area 0)
+        p2 = re.compile(r'^(?P<lsa_type>([a-zA-Z0-9\s\D]+)) +Link +States +\(Area'
+                        ' +(?P<area>(\S+))\)$')
+
+        #10.94.1.1       10.94.1.1       86          0x800080ff 0x0043de 5
+        p3 = re.compile(
+            "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)\s+"
+            "(?P<seq_num>[\w]+)\s+(?P<checksum>[\w]+)\s(?P<link_count>[\w]+)$")
+
+        #10.1.0.0         10.94.1.1       54          0x8003b136     0x009cb2        0
+        p4 = re.compile(
+            "^(?P<link_id>[\w\.]+)\s+(?P<adv_router>[\w\.]+)\s+(?P<age>[\w]+)"
+            "\s+(?P<seq_num>[\w]+)\s+(?P<checksum>[\w]+)\s+(?P<opaque_id>[\w]+)$")
+
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # OSPF Router with ID (10.94.1.1) (Process ID mpls1)
+            m = p1.match(line)
+
+            if m:
+                group = m.groupdict()
+                router_id = group['router_id']
+                instance = group['instance']
+                if group['vrf']:
+                    vrf = group['vrf']
+                else:
+                    vrf = 'default'
+
+                # Create dict
+                ospf_dict = ret_dict.setdefault('vrf', {}). \
+                    setdefault(vrf, {}). \
+                    setdefault('address_family', {}). \
+                    setdefault(address_family, {}). \
+                    setdefault('instance', {}). \
+                    setdefault(instance, {})
+                continue
+
+
+            # Router Link States (Area 0)
+            # Type-10 Opaque Link Area Link States (Area 0)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                lsa_type_key = group['lsa_type'].lower()
+                if lsa_type_key in lsa_type_mapping:
+                    lsa_type = lsa_type_mapping[lsa_type_key]
+                else:
+                    continue
+
+                # Set area
+                if group['area']:
+                    try:
+                        int(group['area'])
+                        area = str(IPAddress(str(group['area'])))
+                    except Exception:
+                        area = str(group['area'])
+                else:
+                    area = '0.0.0.0'
+
+                ospf_dict['router_id'] = router_id
+                area_dict = ospf_dict.setdefault('area', {}). \
+                    setdefault(area, {})
+                area_dict['area_id'] = int(group['area'])
+
+                lsa_type_dict = area_dict.setdefault('database', {}). \
+                    setdefault('lsa_types', {}). \
+                    setdefault(lsa_type, {})
+
+                # Set lsa_type
+                lsa_type_dict['lsa_type'] = lsa_type
+                continue
+
+
+            #To process the router link states
+            # 10.94.1.1       10.94.1.1       86          0x800080ff 0x0043de 5
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                link_id = group['link_id']
+                adv_router = group['adv_router']
+                age = int(group['age'])
+                seq = group['seq_num']
+                checksum = group['checksum']
+                link_count = group['link_count']
+                linkid_advrouter = link_id + " " + adv_router
+
+                # Create lsas dict
+                lsas_dict = lsa_type_dict.setdefault('lsas', {}). \
+                    setdefault(linkid_advrouter, {})
+                lsas_dict['adv_router'] = adv_router
+                lsas_dict['link_id'] = link_id
+
+                # osfpv2 dict
+                ospfv2_dict = lsas_dict.setdefault('ospf', {}). \
+                    setdefault('header', {})
+                ospfv2_dict['age'] = age
+                ospfv2_dict['seq_num'] = seq
+                ospfv2_dict['checksum'] = group['checksum']
+                ospfv2_dict['link_count'] = int(group['link_count'])
+                continue
+
+            # To process the type_10_opaque_link_states
+            # 10.1.0.0         10.94.1.1       54          0x8003b136 0x009cb2        0
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                link_id = group['link_id']
+                adv_router = group['adv_router']
+                age = int(group['age'])
+                seq = group['seq_num']
+                checksum = group['checksum']
+                link_count = group['opaque_id']
+                linkid_advrouter = link_id + " " + adv_router
+
+                # Create lsas dict
+                lsas_dict = lsa_type_dict.setdefault('lsas', {}). \
+                    setdefault(linkid_advrouter, {})
+                lsas_dict['adv_router'] = adv_router
+                lsas_dict['link_id'] = link_id
+
+                # osfpv2 dict
+                ospfv2_dict = lsas_dict.setdefault('ospf', {}). \
+                    setdefault('header', {})
+                ospfv2_dict['age'] = age
+                ospfv2_dict['seq_num'] = seq
+                ospfv2_dict['checksum'] = group['checksum']
+                ospfv2_dict['opaque_id'] = int(group['opaque_id'])
+                continue
+
+        return ret_dict
+
+
+class ShowOspfDatabaseRouter(ShowOspfVrfAllInclusiveDatabaseParser, ShowOspfVrfAllInclusiveDatabaseRouterSchema):
+    """Parser for show ospf database router"""
+    cli_command = ['show ospf {process_id} database router', 'show ospf all-inclusive database router']
+
+    def cli(self, process_id=None, output=None):
+        if process_id:
+            output = self.device.execute(self.cli_command[0].format(process_id=process_id))
+        else:
+            output = self.device.execute(self.cli_command[1])
+
+        ret_dict = super().cli(cmd=output, db_type="router", output=None)
+
+        return ret_dict
+
+
+# ======================================================
+# schema for:
+#   * show ospf neighbor
+#   * show ospf {process_name} neighbor
+#   * show ospf vrf {vrf} neighbor
+#   * show ospf {process} vrf {vrf} neighbor
+# ======================================================
+class ShowOspfNeighborSchema(MetaParser):
+    """Schema detail for:
+          * show ospf neighbor
+          * show ospf {process_name} neighbor
+          * show ospf vrf {vrf} neighbor
+          * show ospf {process} vrf {vrf} neighbor
+     """
+    schema = {
+        Optional('process_name'): str,
+        'vrfs': {
+            Any(): {
+                'neighbors': {
+                    Optional(Any()): {  # neighbor_id
+                        'priority': str,
+                        'state': str,
+                        'dead_time': str,
+                        'address': str,
+                        'interface': str,
+                        'up_time': str
+                    }
+                },
+                Optional('total_neighbor_count'): int
+            }
+        }
+    }
+
+
+# ======================================================
+# parser for:
+#   * show ospf neighbor
+#   * show ospf {process_name} neighbor
+#   * show ospf vrf {vrf} neighbor
+#   * show ospf {process} vrf {vrf} neighbor
+# ======================================================
+class ShowOspfNeighbor(ShowOspfNeighborSchema):
+    """parser details for:
+        * show ospf neighbor
+        * show ospf {process_name} neighbor
+        * show ospf vrf {vrf} neighbor
+        * show ospf {process} vrf {vrf} neighbor
+    """
+
+    cli_command = ['show ospf neighbor', 'show ospf {process_name} neighbor',
+                   'show ospf vrf {vrf} neighbor', 'show ospf {process_name} vrf {vrf} neighbor']
+
+    def cli(self, process_name='', vrf='', output=None):
+        if output is None:
+            if process_name and vrf:
+                out = self.device.execute(
+                    self.cli_command[3].format(process_name=process_name, vrf=vrf))
+            elif process_name:
+                out = self.device.execute(
+                    self.cli_command[1].format(process_name=process_name))
+            elif vrf:
+                out = self.device.execute(
+                    self.cli_command[2].format(vrf=vrf))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        ret_dict = {}
+
+
+        # Neighbors for OSPF
+        p1 = re.compile(r'^Neighbors +for +OSPF')
+        # Neighbors for OSPFv3 mpls1
+        p1_1 = re.compile(r'^Neighbors +for +OSPF\w* +(?P<process_name>\w+)$')
+        # Neighbors for OSPFv3 mpls1, VRF 1
+        p1_2 = re.compile(r'Neighbors +for +OSPF\w* +(?P<process_name>\w+), VRF +(?P<vrf>\S+)')
+
+        # Neighbor ID     Pri   State           Dead Time   Address         Interface
+        # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
+        # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
+        # 192.168.199.137 1    FULL/DR       0:00:31    172.31.80.37      GigabitEthernet 0/3/0/2
+        p2 = re.compile(r'^(?P<neighbor_id>\S+)\s+(?P<priority>\d+) +(?P<state>[A-Z]+/\s*[A-Z-]*)'
+                        r' +(?P<dead_time>(\d+:){2}\d+) +(?P<address>[\d\.\/]+) +(?P<interface>\w+\s*\S+)$')
+
+        # Neighbor is up for 2d18h
+        p3 = re.compile(r'^Neighbor +is +up +for +(?P<up_time>\S+)$')
+
+        # Total neighbor count: 2
+        p4 = re.compile(r'^Total +neighbor +count: +(?P<total_neighbor_count>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Neighbors for OSPF
+            m = p1.match(line)
+            if m:
+                # Neighbors for OSPFv3 mpls1
+                m = p1_1.match(line)
+                if m:
+                    process_name = m.groupdict()['process_name']
+
+                    ret_dict['process_name'] = process_name
+                    vrfs_dict = ret_dict.setdefault('vrfs', {})
+
+                    vrf_dict = vrfs_dict.setdefault('default', {})
+                    neighbors_dict = vrf_dict.setdefault('neighbors', {})
+                    continue
+
+                # Neighbors for OSPFv3 mpls1, VRF 1
+                m = p1_2.match(line)
+                if m:
+                    process_name = m.groupdict()['process_name']
+                    vrf_name = m.groupdict()['vrf']
+
+                    ret_dict['process_name'] = process_name
+                    vrfs_dict = ret_dict.setdefault('vrfs', {})
+
+                    vrf_dict = vrfs_dict.setdefault(vrf_name, {})
+                    neighbors_dict = vrf_dict.setdefault('neighbors', {})
+                    continue
+
+                # Neighbors for OSPF
+                vrfs_dict = ret_dict.setdefault('vrfs', {})
+                if vrf:
+                    vrf_dict = vrfs_dict.setdefault(vrf, {})
+                else:
+                    vrf_dict = vrfs_dict.setdefault('default', {})
+                neighbors_dict = vrf_dict.setdefault('neighbors', {})
+
+                continue
+
+            # Neighbor ID     Pri   State           Dead Time   Address         Interface
+            # 100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
+            # 95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
+            # 192.168.199.137 1    FULL/DR       0:00:31    172.31.80.37      GigabitEthernet 0/3/0/2
+            m = p2.match(line)
+            if m:
+                neighbor_id = m.groupdict()['neighbor_id']
+                priority = m.groupdict()['priority']
+                state = m.groupdict()['state']
+                dead_time = m.groupdict()['dead_time']
+                address = m.groupdict()['address']
+                interface = m.groupdict()['interface']
+
+                neighbor_dict = neighbors_dict.setdefault(neighbor_id, {})
+
+                neighbor_dict['priority'] = priority
+                neighbor_dict['state'] = state
+                neighbor_dict['dead_time'] = dead_time
+                neighbor_dict['address'] = address
+                neighbor_dict['interface'] = interface
+
+                continue
+
+            # Neighbor is up for 2d18h
+            m = p3.match(line)
+            if m:
+                up_time = m.groupdict()['up_time']
+                neighbor_dict['up_time'] = up_time
+
+                continue
+
+            # Total neighbor count: 2
+            m = p4.match(line)
+            if m:
+                total_neighbor_count = m.groupdict()['total_neighbor_count']
+                vrf_dict['total_neighbor_count'] = int(total_neighbor_count)
+
+        return ret_dict

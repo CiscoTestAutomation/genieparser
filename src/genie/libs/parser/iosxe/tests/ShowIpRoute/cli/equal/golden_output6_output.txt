@@ -16,15 +16,15 @@ Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
 
 Gateway of last resort is not set
 
-      17.0.0.0/32 is subnetted, 2 subnets
-S   %    17.0.0.1 [1/0] via 192.168.16.1
-C   p    17.0.0.2 is directly connected, Loopback0
-      18.0.0.0/16 is subnetted, 1 subnets
-S   &    18.0.0.0 [1/0] via 17.0.0.1
-      80.0.0.0/24 is subnetted, 1 subnets
-S   +    80.1.1.0 [1/0] via 12.0.0.1 (red)
+      10.34.0.0/32 is subnetted, 2 subnets
+S   %    10.34.0.1 [1/0] via 192.168.16.1
+C   p    10.34.0.2 is directly connected, Loopback0
+      10.69.0.0/16 is subnetted, 1 subnets
+S   &    10.69.0.0 [1/0] via 10.34.0.1
+      10.25.0.0/24 is subnetted, 1 subnets
+S   +    10.186.1.0 [1/0] via 10.144.0.1 (red)
       192.168.16.0/24 is variably subnetted, 2 subnets, 2 masks
 C        192.168.16.0/24 is directly connected, Ethernet0/1
 L        192.168.16.2/32 is directly connected, Ethernet0/1
-      100.0.0.0/24 is subnetted, 1 subnets
-B   +    100.0.0.0 [20/0] via 12.0.0.1 (red), 00:00:09
+      10.55.0.0/24 is subnetted, 1 subnets
+B   +    10.55.0.0 [20/0] via 10.144.0.1 (red), 00:00:09

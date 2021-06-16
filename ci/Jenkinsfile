@@ -77,14 +77,22 @@ pipeline {
             }
         }
 
-
         stage("Run folder_parsing_job") {
             steps {
                 sh """
                 . /scratch/genieparser-env/bin/activate
                 cd tests
+                python folder_parsing_job.py
+                """
+            }
+        }
 
-                coverage run --include '*/parser/*' --omit '*/tests/*' folder_parsing_job.py --no-mail --no-archive
+        stage("Run folder_parsing_job (coverage)") {
+            steps {
+                sh """
+                . /scratch/genieparser-env/bin/activate
+                cd tests
+                coverage run --include '*/parser/*' --omit '*/tests/*' folder_parsing_job.py -f --no-mail --no-archive
                 coverage html
                 """
                 publishHTML (target: [

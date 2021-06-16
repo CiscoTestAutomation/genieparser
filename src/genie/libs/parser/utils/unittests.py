@@ -371,7 +371,7 @@ class SuperFileBasedTesting(aetest.Testcase):
                     # Each "globals()" is checked to see if it has a cli attribute, if so, assumed to be a parser. The _osxe, is
                     # since the ios module often refers to the iosxe parser, leveraging this naming convention.
                     if hasattr(local_class, "cli") and not name.endswith("_iosxe"):
-     
+
                         if not folder_root_equal.exists():
                             if _show_missing_unittests or _class:
                                 if token:
@@ -381,6 +381,13 @@ class SuperFileBasedTesting(aetest.Testcase):
                                     log.warning(f'Equal unittests for {operating_system} -> {name} don\'t exist')
                                     glo_values.missingParsers.append(f" {operating_system} -> {name}")
                             glo_values.missingCount += 1
+                            continue
+
+                        # skips over classes that do not contain the local variable cli_command
+                        # this works to ignore outdated classes that use tcl
+                        if not hasattr(local_class, 'cli_command'):
+                            if _show_missing_unittests:
+                                log.warning(f"{operating_system} {local_class.__name__} has no cli_command defined.")
                             continue
 
                         self.parsers_list.append({
@@ -729,7 +736,7 @@ def _parse_args(
     }
 
 def main(**kwargs):
-    
+
     parsed_args = _parse_args(**kwargs)
 
     if parsed_args['_number'] and (not parsed_args['_class'] or not parsed_args['_number']):
@@ -748,12 +755,13 @@ def main(**kwargs):
         )
     else:
         # Used for `python folder_parsing_job.py`
-        aetest.main(
+        result = aetest.main(
             testable=__file__,
             runtime=runtime,
             reporter=FailedReporter(),
             **parsed_args
         )
+        aetest.exit_cli_code(result)
 
 
 if __name__ == "__main__":

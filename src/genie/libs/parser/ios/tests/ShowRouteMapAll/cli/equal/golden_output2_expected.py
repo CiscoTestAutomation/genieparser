@@ -79,7 +79,9 @@ expected_output = {
           "set_next_hop_self": False,
           "route_disposition": "permit"
         },
-        "conditions": {},
+        "conditions": {
+          "match_community_list": "CL-HUB-ORIGINATE"
+        },
         "policy_routing_matches": { "packets": 0, "bytes": 0 }
       }
     }

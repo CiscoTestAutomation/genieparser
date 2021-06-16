@@ -1,0 +1,66 @@
+dmf1#show authentication sessions interface Gi4/0/18 details
+            Interface:  GigabitEthernet4/0/18
+               IIF-ID:  0x2B5A8BE5
+          MAC Address:  0800.273f.f427
+         IPv6 Address:  fe80::7635:22a5:7597:2429
+         IPv4 Address:  10.15.1.233
+            User-Name:  08-00-27-3F-F4-27
+               Status:  Authorized
+               Domain:  DATA
+       Oper host mode:  multi-auth
+     Oper control dir:  in
+      Session timeout:  N/A
+  Acct update timeout:  300s (local), Remaining: 48s
+    Common Session ID:  86010F8900002F29A505F344
+      Acct Session ID:  0x00003487
+               Handle:  0x73000fc1
+       Current Policy:  C3PL_ISE_210
+
+
+Local Policies:
+        Service Template: DEFAULT_LINKSEC_POLICY_SHOULD_SECURE (priority 150)
+      Security Policy:  Should Secure
+
+Server Policies:
+              ACS ACL: xACSACLx-IP-PERMIT_ALL_IPV4_TRAFFIC-57f6b0d3
+
+
+Method status list:
+       Method           State
+        dot1x           Stopped
+          mab           Authc Success
+
+----------------------------------------
+
+            Interface:  GigabitEthernet4/0/18
+               IIF-ID:  0x273804C8
+          MAC Address:  1062.e519.072e
+         IPv6 Address:  Unknown
+         IPv4 Address:  10.15.1.176
+            User-Name:  J2XD0170154
+               Status:  Authorized
+               Domain:  DATA
+       Oper host mode:  multi-auth
+     Oper control dir:  in
+      Session timeout:  64800s (server), Remaining: 24177s
+       Timeout action:  Reauthenticate
+  Acct update timeout:  300s (local), Remaining: 208s
+    Common Session ID:  86010F8900002F28A5016B11
+      Acct Session ID:  0x00003951
+               Handle:  0x21000fc0
+       Current Policy:  C3PL_ISE_210
+
+
+Local Policies:
+        Service Template: DEFAULT_LINKSEC_POLICY_SHOULD_SECURE (priority 150)
+      Security Policy:  Should Secure
+
+Server Policies:
+              ACS ACL: xACSACLx-IP-PERMIT_ALL_IPV4_TRAFFIC-57f6b0d3
+      Session-Timeout: 64800 sec
+
+
+Method status list:
+       Method           State
+        dot1x           Authc Success
+          mab           Stopped

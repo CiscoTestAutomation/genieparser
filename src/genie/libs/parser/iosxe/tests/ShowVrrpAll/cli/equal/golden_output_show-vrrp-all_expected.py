@@ -5,7 +5,7 @@ expected_output = {
                 10: {
                     'state': 'Master',
                     'virtual_ip_address': '10.13.120.254',
-                    'virtual_mac_address': '0000.5e00.010a',
+                    'virtual_mac_address': '0000.5eff.010a',
                     'advertise_interval_secs': 1.0,
                     'preemption': 'enabled',
                     'priority': 100,
@@ -29,7 +29,7 @@ expected_output = {
                 13: {
                     'state': 'Master',
                     'virtual_ip_address': '10.13.115.254',
-                    'virtual_mac_address': '0000.5e00.010d',
+                    'virtual_mac_address': '0000.5eff.010d',
                     'advertise_interval_secs': 1.0,
                     'preemption': 'enabled',
                     'priority': 100,

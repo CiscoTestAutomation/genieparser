@@ -166,6 +166,10 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
                         Optional('periodic_acct_timeout'): str,
                         Optional('timeout_action'): str,
                         Optional('restart_timeout'): str,
+                        Optional('unauth_timeout'): {
+                            Optional('timeout'): str,
+                            Optional('remaining'): str,
+                        },
                         Optional('session_uptime'): str,
                         'status': str,
                         'domain': str,
@@ -297,6 +301,12 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         # Server Policies:
         p12 = re.compile(r'^Server +Policies\:$')
 
+        # Restart timeout:  60s, Remaining: 44s
+        p13 = re.compile(r'(Restart\s*timeout)\s*:\s*(?P<restart_timeout>.*)')
+
+        # Unauth timeout:  10s, Remaining: 5s
+        p14 = re.compile(r'(Unauth\s*timeout)\s*:\s*(?P<timeout>\w+)(\s*,\s*Remaining\s*:\s*(?P<remaining>\w*))?')
+
         # initial return dictionary
         ret_dict = {}
         hold_dict = {}
@@ -316,7 +326,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             #   Security Status:  Link Unsecure
             m = p10.match(line)
             if m:
-                group = m.groupdict()            
+                group = m.groupdict()
                 if policies_flag:
                     if index != 1:
                         index += 1
@@ -337,7 +347,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                             {'security_status': group['policy_status']})
 
                 continue
-                
+
             # *      Security Policy:  None      Security Status:  Link Unsecured*
             m = p10_1.match(line)
             if m:
@@ -353,7 +363,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                     security_dict.update({'security_policy': group['policy_status']})
                     security_dict.update({'security_status': group['policy_status2']})
                 continue
-                        
 
             # Session timeout:  43200s(local), Remaining: 31799s
             # Session timeout:  N/A
@@ -369,10 +378,23 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                     session_dict.update({'remaining': group['remaining']})
 
                 continue
+            
+            # Restart timeout:  10s, Remaining: 5s
+            m13 = p13.match(line)
+            if m13:
+                mac_dict.update(m13.groupdict())
+                continue
+
+            # Unauth timeout:  60s, Remaining: 44s
+            m14 = p14.match(line)
+            if m14:
+                unauth_dict = mac_dict.setdefault('unauth_timeout', {})
+                unauth_dict.update(m14.groupdict())
+                continue
 
             # match these lines:
             #             Interface:  GigabitEthernet3/0/2
-            #                IIF-ID:  0x1055240000001F6 
+            #                IIF-ID:  0x1055240000001F6
             #           MAC Address:  0010.00ff.1011
             #          IPv6 Address:  Unknown
             #          IPv4 Address:  192.0.2.1
@@ -381,7 +403,6 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             #                Domain:  DATA
             #        Oper host mode:  single-host
             #      Oper control dir:  both
-            #       Session timeout:  N/A
             #     Common Session ID:  AC14FC0A0000101200E28D62
             #       Acct Session ID:  Unknown
             #                Handle:  0xDB003227
@@ -397,10 +418,10 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
                 known_list = ['interface', 'iif_id', 'mac_address', 
                               'ipv6_address', 'ipv4_address', 'user_name', 
                               'status', 'domain', 'oper_host_mode', 
-                              'oper_control_dir', 'session_timeout', 
+                              'oper_control_dir',
                               'common_session_id', 'acct_session_id', 
                               'handle', 'current_policy', 'authorized_by',
-                              'periodic_acct_timeout', 'restart_timeout',
+                              'periodic_acct_timeout',
                               'session_uptime', 'timeout_action', 'ip_address',
                               'idle_timeout', 'vlan_policy']
 
@@ -414,6 +435,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
 
                     if 'interfaces' in ret_dict.keys():
                         if key == 'mac_address':
+                            index = 1
                             mac_dict = intf_dict.setdefault(group['value'], {})
                         elif key == 'iif_id':
                             hold_dict.update({'argument': key, 'value': group['value']})

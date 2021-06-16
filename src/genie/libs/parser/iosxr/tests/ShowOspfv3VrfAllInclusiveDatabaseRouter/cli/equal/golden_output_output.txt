@@ -1,0 +1,78 @@
+Thu May 20 08:35:38.941 JST
+
+            OSPFv3 Router with ID (25.97.1.1) (Process ID mpls1 VRF default)
+
+            Router Link States (Area 0)
+
+  LS age: 31
+  Options: (V6-Bit E-Bit R-Bit DC-Bit)
+  LS Type: Router Links
+  Link State ID: 0
+  Advertising Router: 25.97.1.1
+  LS Seq Number: 80000013
+  Checksum: 0x440
+  Length: 56
+  AS Boundary Router
+  Number of Links: 2
+
+    Link connected to: a Transit Network
+    Link Metric: 1
+    Local Interface ID: 6
+      Neighbor (DR) Interface ID: 6
+      Neighbor (DR) Router ID: 96.96.96.96
+
+    Link connected to: another Router (point-to-point)
+    Link Metric: 1
+    Local Interface ID: 7
+      Neighbor Interface ID: 6
+      Neighbor Router ID: 95.95.95.95
+
+
+  Routing Bit Set on this LSA
+  LS age: 789
+  Options: (V6-Bit E-Bit R-Bit DC-Bit)
+  LS Type: Router Links
+  Link State ID: 0
+  Advertising Router: 95.95.95.95
+  LS Seq Number: 80000003
+  Checksum: 0x6fda
+  Length: 56
+  AS Boundary Router
+  Number of Links: 2
+
+    Link connected to: another Router (point-to-point)
+    Link Metric: 10
+    Local Interface ID: 7
+      Neighbor Interface ID: 7
+      Neighbor Router ID: 96.96.96.96
+
+    Link connected to: another Router (point-to-point)
+    Link Metric: 1
+    Local Interface ID: 6
+      Neighbor Interface ID: 7
+      Neighbor Router ID: 25.97.1.1
+
+
+  Routing Bit Set on this LSA
+  LS age: 32
+  Options: (V6-Bit E-Bit R-Bit DC-Bit)
+  LS Type: Router Links
+  Link State ID: 0
+  Advertising Router: 96.96.96.96
+  LS Seq Number: 80000010
+  Checksum: 0xc572
+  Length: 56
+  AS Boundary Router
+  Number of Links: 2
+
+    Link connected to: a Transit Network
+    Link Metric: 1
+    Local Interface ID: 6
+      Neighbor (DR) Interface ID: 6
+      Neighbor (DR) Router ID: 96.96.96.96
+
+    Link connected to: another Router (point-to-point)
+    Link Metric: 10
+    Local Interface ID: 7
+      Neighbor Interface ID: 7
+      Neighbor Router ID: 95.95.95.95
