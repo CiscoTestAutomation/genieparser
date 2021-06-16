@@ -71,22 +71,26 @@ if you only update the parser class without modifying/creating the schema, pleas
 - [ ] 2. create changelog for your pull request.
 - [ ] 3. make sure GitHub Actions checks passed.
 
-# How to write 'changelog':
-1. A few examples are added into changelog/undistributed/template.rst:
+# How to write a 'changelog' for your contribution:
+1. Become familiarized with the examples at [changelog/undistributed/template.rst](https://github.com/CiscoTestAutomation/genieparser/blob/master/changelog/undistributed/template.rst). Changelogs must be written in the same style as the examples found there:
 ```
-* IOS
-* Modified ShowVersion:
-    * Changed <key1>, <key2> from schema to Optional.
+--------------------------------------------------------------------------------
+                            Fix
+--------------------------------------------------------------------------------
+* NXOS
+    * Modified ShowVersion:
+        * Changed <key1>, <key2> from schema to Optional.
         * Updated regex pattern <p1> to accommodate various outputs.
-        * Added keys <key3>, <key4> into the schema.
 ```
-Please take it as a reference, and avoid to create vague logs, such as 'Updated regex.' 
 
-2. How to generate an unique number for file name:
+When writing about what was changed, avoid using vague statements such as 'Updated regex' or 'Fixed bug'. 
+If modifying an existing parser, then specify the schema keys and regex patterns that have been changed. 
+
+2. The changelog (singular) that accompanies a contribution must have a unique file name and be in `genieparser/changelog/undistributed/`. If you need help generating a unique file name, then enter the following bash/terminal command to generate a sufficiently unique number (linux and mac only):
 ```
->>>from datetime import datetime
->>>datetime.utcnow().strftime('%Y%m%d%H%M%S')
-'20200807212611'
+$ date "+%Y%m%d%H%M%S"
 ```
+Put a short description in the name of the changelog file and then appended this number at the end of the file. 
+For example, `genieparser/changelog/undistributed/changelog_show_interface_iosxe_20200807212611.rst` 
 
 > Copyright (c) 2020 Cisco Systems, Inc. and/or its affiliates
