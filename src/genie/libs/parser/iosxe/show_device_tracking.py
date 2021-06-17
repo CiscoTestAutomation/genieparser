@@ -65,7 +65,7 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         # S   10.22.12.10                            7081.05ff.eb41     E0/0       228   0100  10330mn REACHABLE  N/A
         # ND  10.22.8.10                             7081.05ff.eb42     E0/1       226   0005  235mn   STALE      try 0 73072 s
         # ND  10.22.4.10                             7081.05ff.eb43     E0/2       224   0005  60s     REACHABLE  250 s
-        # L   10.22.0.10                             7081.05ff.eb40     E0/3       222   0005  3mn     REACHABLE  83 s try 0
+        # ND  10.22.0.10                             7081.05ff.eb40     E0/3       222   0005  3mn     REACHABLE  83 s try 0
         # L   10.10.68.10                            7081.05ff.eb40     Vl243      243   0100  10330mn REACHABLE
 
         # Binding Table has 10 entries, 0 dynamic (limit 200000)
