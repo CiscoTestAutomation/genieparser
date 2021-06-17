@@ -1017,7 +1017,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                             }
                         },
                         Optional('vfi'): {
-                            'num_vfi': Or(int),
+                            'num_vfi': int,
                             Any(): {
                                 Optional('state'): str,
                                 'neighbor': {
