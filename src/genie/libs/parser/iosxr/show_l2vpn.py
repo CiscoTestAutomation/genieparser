@@ -1017,7 +1017,7 @@ class ShowL2vpnBridgeDomainDetailSchema(MetaParser):
                             }
                         },
                         Optional('vfi'): {
-                            'num_vfi': Or(int, str),
+                            'num_vfi': Or(int),
                             Any(): {
                                 Optional('state'): str,
                                 'neighbor': {
@@ -1420,7 +1420,7 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         # VCCV CV type 0x2                            0x0
         # Avoid show commands: show l2vpn xconnect detail
         # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
-        p33 = re.compile(r'^(?P<mpls>[\S ]{1,12}\S) +(?P<local>[\S ]+\S) +(?P<remote>[\S ]+)$')
+        p33 = re.compile(r'^(?P<mpls>.{1,12}\S) +(?P<local>.+\S) +(?P<remote>.+)$')
 
         p33_1 = re.compile(r'^\((?P<local>.+)(\) +\()(?P<remote>.+)\)$')
 
