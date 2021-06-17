@@ -56,6 +56,11 @@ expected_output = {
                     'multisite_ingress_replication': True,
                     'mcast_group': "231.200.1.1"
                 },
+                10203: {
+                    'vni': 10203,
+                    'associated_vrf': False,
+                    'ingress_replication_protocol_bgp': True
+                },
             },
         },
         'multisite': {

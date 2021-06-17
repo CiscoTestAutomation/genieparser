@@ -71,10 +71,10 @@ class ShowLoggingSchema(MetaParser):
             },
             'monitor': {
                 'status': str, # 'enabled'|'disabled'
-                'level': str,
-                'messages_logged': int,
-                'xml': str,
-                'filtering': str,
+                Optional('level'): str,
+                Optional('messages_logged'): int,
+                Optional('xml'): str,
+                Optional('filtering'): str,
                 Optional('discriminator'): str,
                 Optional('messages_rate_limited'): int,
                 Optional('messages_dropped_by_md'): int,
@@ -132,9 +132,10 @@ class ShowLoggingSchema(MetaParser):
                         'xml': str, # 'enabled'|'disabled'
                         'sequence_number': str, # 'enabled'|'disabled'
                         'filtering': str, # 'enabled'|'disabled'
+                        Optional('vrf'): str,
                         Optional('logging_source_interface'): {
                             Any(): str, # 'Vlan200': <vrf>
-                        }
+                        },
                     }
                 }
             }
@@ -178,79 +179,82 @@ class ShowLogging(ShowLoggingSchema):
         # Init vars
         log_lines = []
 
-        #Syslog logging: enabled (0 messages dropped, 0 messages rate-limited, 0 flushes, 0 overruns, xml disabled, filtering disabled)
-        p1 = re.compile(r'Syslog +logging: +(?P<enable_disable>\S+) +\(+(?P<messages_dropped>\d+) '
+        # Syslog logging: enabled (0 messages dropped, 0 messages rate-limited, 0 flushes, 0 overruns, xml disabled, filtering disabled)
+        p1 = re.compile(r'^Syslog +logging: +(?P<enable_disable>\S+) +\(+(?P<messages_dropped>\d+) '
                         r'+messages +dropped, +(?P<messages_rate_limited>\d+) +messages +rate-limited, '
                         r'+(?P<flushes>\d+) +flushes, +(?P<overruns>\d+) +overruns, +xml +(?P<xml>\S+), '
                         r'filtering +(?P<filtering>\S+)\)$')
 
-        #Console logging: disabled
-        p2 = re.compile(r'(?P<tag>\S+) +logging: +(?P<status>\S+)$')
+        # Console logging: disabled
+        p2 = re.compile(r'^(?P<tag>\S+) +logging: +(?P<status>\S+)$')
 
-        #Monitor logging: level debugging, 13 messages logged, xml disabled,
-        #Console logging: level debugging, 9789 messages logged, xml disabled,
-        p3 = re.compile(r'(?P<tag>\S+) +logging: +level '
+        # Monitor logging: level debugging, 13 messages logged, xml disabled,
+        # Console logging: level debugging, 9789 messages logged, xml disabled,
+        p3 = re.compile(r'^(?P<tag>\S+) +logging: +level '
                         r'+(?P<level>\S+), +(?P<messages_logged>\d+) '
                         r'+messages +logged, +xml +(?P<xml>\S+),$')
 
-        #filtering disabled
-        p4 = re.compile(r'filtering +(?P<filtering>\S+)$')
+        # filtering disabled
+        p4 = re.compile(r'^filtering +(?P<filtering>\S+)$')
 
-        #Exception Logging: size (4096 bytes)
-        p6 = re.compile(r'Exception +Logging: size +\((?P<size_bytes>\d+) +bytes+\)$')
+        # Exception Logging: size (4096 bytes)
+        p6 = re.compile(r'^Exception +Logging: size +\((?P<size_bytes>\d+) +bytes+\)$')
 
-        #Count and timestamp logging messages: disabled
-        p7 = re.compile(r'Count +and +timestamp +logging +messages: '
+        # Count and timestamp logging messages: disabled
+        p7 = re.compile(r'^Count +and +timestamp +logging +messages: '
                         r'+(?P<count_and_time_stamp_logging_messages>\S+)$')
 
-        #File logging: disabled
-        p8 = re.compile(r'(?P<tag>File +logging): +(?P<status>\S+)$')
+        # File logging: disabled
+        p8 = re.compile(r'^(?P<tag>File +logging): +(?P<status>\S+)$')
 
-        #Persistent logging: disabled
-        #Persistent logging: enabled, url bootflash:/syslog, disk space 104857600 bytes, file size 10485760 bytes, batch size 4096 bytes
-        p9 = re.compile(r'Persistent\s+logging:\s+(?P<status>\w+)(,\s+url\s+(?P<url>[\w:/]+),\s+disk\s+space\s+(?P<disk_space_bytes>\d+)\s+bytes,\s+file\s+size\s+(?P<file_size_bytes>\d+)\s+bytes,\s+batch\s+size\s+(?P<batch_size_bytes>\d+)\s+bytes)?$')
+        # Persistent logging: disabled
+        # Persistent logging: enabled, url bootflash:/syslog, disk space 104857600 bytes, file size 10485760 bytes, batch size 4096 bytes
+        p9 = re.compile(r'^Persistent\s+logging:\s+(?P<status>\w+)(,\s+url\s+(?P<url>[\w:/]+),\s+disk\s+space\s+(?P<disk_space_bytes>\d+)\s+bytes,\s+file\s+size\s+(?P<file_size_bytes>\d+)\s+bytes,\s+batch\s+size\s+(?P<batch_size_bytes>\d+)\s+bytes)?$')
 
-        #Trap logging: level informational, 1570 message lines logged
-        p10 = re.compile(r'(?P<tag>Trap) +logging: +level +'
+        # Trap logging: level informational, 1570 message lines logged
+        p10 = re.compile(r'^(?P<tag>Trap) +logging: +level +'
                          r'(?P<level>\S+), +(?P<message_lines_logged>\d+) '
                          r'+message +lines +logged$')
 
-        #Logging to 192.168.1.3  (tcp port 1514, audit disabled,
-        p11 = re.compile(r'Logging +to (?P<logging_to>[\d\.]+) +\((?P<protocol>\S+) '
-                        r'+port +(?P<port>\d+), +audit +(?P<audit>\S+),$')
+        # Logging to 192.168.1.3  (tcp port 1514, audit disabled,
+        # Logging to 55.55.55.70  (Mgmt-vrf) (udp port 514, audit disabled,
+        p11 = re.compile(r'^Logging +to (?P<logging_to>[\d\.]+) +'
+                         r'(\((?P<vrf>(\S+))\) +)?'
+                         r'\((?P<protocol>\S+) '
+                         r'+port +(?P<port>\d+), +audit +(?P<audit>\S+),$')
 
-        #link down),
-        p12 = re.compile(r'link +(?P<link>\S+)\),$')
+        # link down),
+        p12 = re.compile(r'^link +(?P<link>\S+)\),$')
 
-        #787 message lines logged,
-        p13 = re.compile(r'(?P<message_lines_logged>\d+) +message +lines +logged,$')
+        # 787 message lines logged,
+        p13 = re.compile(r'^(?P<message_lines_logged>\d+) +message +lines +logged,$')
 
-        #0 message lines rate-limited,
-        p14 = re.compile(r'(?P<message_lines_rate_limited>\d+) '
+        # 0 message lines rate-limited,
+        p14 = re.compile(r'^(?P<message_lines_rate_limited>\d+) '
                          r'+message +lines +rate-limited,$')
 
-        #0 message lines dropped-by-MD,
-        p15 = re.compile(r'(?P<message_lines_dropped_by_md>\d+) '
+        # 0 message lines dropped-by-MD,
+        p15 = re.compile(r'^(?P<message_lines_dropped_by_md>\d+) '
                          r'+message +lines +dropped-by-MD,$')
 
-        #xml disabled, sequence number disabled
-        p16 = re.compile(r'xml +(?P<xml>\S+), +sequence +number +(?P<sequence_number>\S+)$')
+        # xml disabled, sequence number disabled
+        p16 = re.compile(r'^xml +(?P<xml>\S+), +sequence +number +(?P<sequence_number>\S+)$')
 
-        #Logging Source-Interface:       VRF Name:
-        p17 = re.compile(r'Logging Source-Interface: +VRF +Name:$')
+        # Logging Source-Interface:       VRF Name:
+        p17 = re.compile(r'^Logging Source-Interface: +VRF +Name:$')
 
-        #Vlan200
-        p18 = re.compile(r'(?P<interface>\S+)+(?P<vrf>\S+)?$')
+        # Vlan200
+        p18 = re.compile(r'^(?P<interface>\S+)+(?P<vrf>\S+)?$')
 
-        #Log Buffer (32000 bytes):
-        p19 = re.compile(r'Log +Buffer +\((?P<vrf>\d+) +bytes+\):$')
+        # Log Buffer (32000 bytes):
+        p19 = re.compile(r'^Log +Buffer +\((?P<vrf>\d+) +bytes+\):$')
 
         ret_dict = {}
         for line in out.splitlines():
 
             line = line.strip()
 
-            #Syslog logging: enabled (0 messages dropped, 0 messages rate-limited, 0 flushes, 0 overruns, xml disabled, filtering disabled)
+            # Syslog logging: enabled (0 messages dropped, 0 messages rate-limited, 0 flushes, 0 overruns, xml disabled, filtering disabled)
             m = p1.match(line)
             if m:
                 group = m.groupdict()
@@ -277,7 +281,7 @@ class ShowLogging(ShowLoggingSchema):
                 sys_log_entry[inner_key] = parent_dict
                 continue
 
-            #Console logging: disabled
+            # Console logging: disabled
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -286,8 +290,8 @@ class ShowLogging(ShowLoggingSchema):
                     'status', group['status'])
                 continue
 
-            #Monitor logging: level debugging, 13 messages logged, xml disabled,
-            #Console logging: level debugging, 9789 messages logged, xml disabled,
+            # Monitor logging: level debugging, 13 messages logged, xml disabled,
+            # Console logging: level debugging, 9789 messages logged, xml disabled,
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -300,7 +304,7 @@ class ShowLogging(ShowLoggingSchema):
                 logging_entry[current_tag].setdefault('xml', group['xml'])
                 continue
 
-            #filtering disabled
+            # filtering disabled
             m = p4.match(line)
             if m:
                 group = m.groupdict()
@@ -315,7 +319,7 @@ class ShowLogging(ShowLoggingSchema):
                         'filtering', group['filtering'])
                 continue
 
-            #Exception Logging: size (4096 bytes)
+            # Exception Logging: size (4096 bytes)
             m = p6.match(line)
             if m:
                 group = m.groupdict()
@@ -323,7 +327,7 @@ class ShowLogging(ShowLoggingSchema):
                 logging_entry['exception'] = exception_dict
                 continue
 
-            #Count and timestamp logging messages: disabled
+            # Count and timestamp logging messages: disabled
             m = p7.match(line)
             if m:
                 group = m.groupdict()
@@ -331,7 +335,7 @@ class ShowLogging(ShowLoggingSchema):
                     'count_and_time_stamp_logging_messages']
                 continue
 
-            #File logging: disabled
+            # File logging: disabled
             m = p8.match(line)
             if m:
                 group = m.groupdict()
@@ -339,8 +343,8 @@ class ShowLogging(ShowLoggingSchema):
                 logging_entry['file'] = file_dict
                 continue
 
-            #Persistent logging: disabled
-            #Persistent logging: enabled, url bootflash:/syslog, disk space 104857600 bytes, file size 10485760 bytes, batch size 4096 bytes
+            # Persistent logging: disabled
+            # Persistent logging: enabled, url bootflash:/syslog, disk space 104857600 bytes, file size 10485760 bytes, batch size 4096 bytes
             m = p9.match(line)
             if m:
                 group = m.groupdict()
@@ -352,7 +356,7 @@ class ShowLogging(ShowLoggingSchema):
                             if 'bytes' in item else group[item])
                 continue
 
-            #Trap logging: level informational, 1570 message lines logged
+            # Trap logging: level informational, 1570 message lines logged
             m = p10.match(line)
             if m:
                 group = m.groupdict()
@@ -366,7 +370,8 @@ class ShowLogging(ShowLoggingSchema):
                 logging_entry['trap'] = trap_dict
                 continue
 
-            #Logging to 192.168.1.3  (tcp port 1514, audit disabled,
+            # Logging to 192.168.1.3  (tcp port 1514, audit disabled,
+            # Logging to 55.55.55.70  (Mgmt-vrf) (udp port 514, audit disabled,
             m = p11.match(line)
             if m:
                 group = m.groupdict()
@@ -377,18 +382,21 @@ class ShowLogging(ShowLoggingSchema):
                 logging_dict['port'] = int(group['port'])
                 logging_dict['audit'] = group['audit']
 
+                if group['vrf']:
+                    logging_dict['vrf'] = group['vrf']
+
                 outer_logging_dict.update({current_logging_to: logging_dict})
                 trap_dict['logging_to'] = outer_logging_dict
                 continue
 
-            #link down),
+            # link down),
             m = p12.match(line)
             if m:
                 group = m.groupdict()
                 logging_dict['link'] = group['link']
                 continue
 
-            #787 message lines logged,
+            # 787 message lines logged,
             m = p13.match(line)
             if m:
                 group = m.groupdict()
@@ -396,7 +404,7 @@ class ShowLogging(ShowLoggingSchema):
                     group['message_lines_logged'])
                 continue
 
-            #0 message lines rate-limited,
+            # 0 message lines rate-limited,
             m = p14.match(line)
             if m:
                 group = m.groupdict()
@@ -404,7 +412,7 @@ class ShowLogging(ShowLoggingSchema):
                     group['message_lines_rate_limited'])
                 continue
 
-            #0 message lines dropped-by-MD,
+            # 0 message lines dropped-by-MD,
             m = p15.match(line)
             if m:
                 group = m.groupdict()
@@ -412,7 +420,7 @@ class ShowLogging(ShowLoggingSchema):
                     group['message_lines_dropped_by_md'])
                 continue
 
-            #xml disabled, sequence number disabled
+            # xml disabled, sequence number disabled
             m = p16.match(line)
             if m:
                 group = m.groupdict()
@@ -420,14 +428,14 @@ class ShowLogging(ShowLoggingSchema):
                 logging_dict['sequence_number'] = group['sequence_number']
                 continue
 
-            #Logging Source-Interface:       VRF Name:
+            # Logging Source-Interface:       VRF Name:
             m = p17.match(line)
             if m:
                 # do nothing, but need to parse for skipping this line
                 continue
 
-            #Vlan200
-            #Vlan200                         VRF-A
+            # Vlan200
+            # Vlan200                         VRF-A
             m = p18.match(line)
             if m:
                 group = m.groupdict()
@@ -442,7 +450,7 @@ class ShowLogging(ShowLoggingSchema):
                 logging_dict['logging_source_interface'] = logging_source_dict
                 continue
 
-            #Log Buffer (32000 bytes):
+            # Log Buffer (32000 bytes):
             m = p19.match(line)
             if m:
                 group = m.groupdict()

@@ -1,0 +1,11 @@
+Line       User       Host(s)              Idle       Location
+   0 con 0     admin      idle             00:01:30
+*  2 vty 0     admin      idle             00:00:00
+                                                   			 foo-bar.cisco.com
+   3 vty 1     admin      idle             00:01:25 xxx-xxxxxxx-nitro1.cisco.com
+   4 vty 2     admin      idle             00:12:34
+                                                    xxx-xxxxxxx-nitro2.cisco.com
+
+Interface    User               Mode         Idle     Peer Address
+unknown      NETCONF(ONEP)      com.cisco.ne 00:00:49
+                                                    foo-int.cisco.com
