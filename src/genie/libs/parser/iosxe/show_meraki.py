@@ -3,6 +3,7 @@
 IOSXE parsers for the following show command:
 
     * 'show meraki'
+    * 'show meraki switch <>'
 
 '''
 
