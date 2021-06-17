@@ -54,44 +54,48 @@ expected_output = {
             "state": "REACHABLE"
         },
         6: {
-            "dev_code": "L",
+            "dev_code": "S",
             "network_layer_address": "10.22.12.10",
-            "link_layer_address": "7081.05ff.eb40",
-            "interface": "Vl228",
+            "link_layer_address": "7081.05ff.eb41",
+            "interface": "E0/0",
             "vlan_id": 228,
             "pref_level_code": 100,
             "age": "10330mn",
-            "state": "REACHABLE"
+            "state": "REACHABLE",
+            "time_left": "N/A"
         },
         7: {
-            "dev_code": "L",
+            "dev_code": "ND",
             "network_layer_address": "10.22.8.10",
-            "link_layer_address": "7081.05ff.eb40",
-            "interface": "Vl226",
+            "link_layer_address": "7081.05ff.eb42",
+            "interface": "E0/1",
             "vlan_id": 226,
-            "pref_level_code": 100,
-            "age": "10329mn",
-            "state": "REACHABLE"
+            "pref_level_code": 5,
+            "age": "235mn",
+            "state": "STALE",
+            "time_left": "try 0 73072 s"
         },
         8: {
-            "dev_code": "L",
+            "dev_code": "ND",
             "network_layer_address": "10.22.4.10",
-            "link_layer_address": "7081.05ff.eb40",
-            "interface": "Vl224",
+            "link_layer_address": "7081.05ff.eb43",
+            "interface": "E0/2",
             "vlan_id": 224,
-            "pref_level_code": 100,
-            "age": "10329mn",
-            "state": "REACHABLE"
+            "pref_level_code": 5,
+            "age": "60s",
+            "state": "REACHABLE",
+            "time_left": "250 s"
         },
         9: {
-            "dev_code": "L",
+            "dev_code": "ND",
             "network_layer_address": "10.22.0.10",
-            "link_layer_address": "7081.05ff.eb40",
-            "interface": "Vl222",
+            "link_layer_address": "7081.05ff.eb44",
+            "interface": "E0/3",
             "vlan_id": 222,
-            "pref_level_code": 100,
-            "age": "10329mn",
-            "state": "REACHABLE"
+            "pref_level_code": 5,
+            "age": "3mn",
+            "state": "REACHABLE",
+            "time_left": "83 s try 0"
         },
         10: {
             "dev_code": "L",
