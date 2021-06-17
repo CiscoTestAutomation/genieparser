@@ -17,18 +17,6 @@ from genie.metaparser.util.schemaengine import Schema, \
     Default, \
     Use
 
-'''
-Device#show port-security                                  
-Secure Port  MaxSecureAddr  CurrentAddr  SecurityViolation  Security Action
-                (Count)       (Count)          (Count)
----------------------------------------------------------------------------
-    Te4/0/4              2            1                  0         Shutdown
----------------------------------------------------------------------------
-Total Addresses in System (excluding one mac per port)     : 0
-Max Addresses limit in System (excluding one mac per port) : 4096
-'''
-
-
 # ==============================================
 # Parser for 'show port-security'
 # ==============================================
@@ -62,6 +50,29 @@ class ShowPortSecurity(ShowPortSecuritySchema):
             out = self.device.execute(self.cli_command)
         else:
             out = output
+
+        ''' Actual Output
+        Device#show port-security                                  
+        Secure Port  MaxSecureAddr  CurrentAddr  SecurityViolation  Security Action
+                        (Count)       (Count)          (Count)
+        ---------------------------------------------------------------------------
+            Te4/0/4              2            1                  0         Shutdown
+        ---------------------------------------------------------------------------
+        Total Addresses in System (excluding one mac per port)     : 0
+        Max Addresses limit in System (excluding one mac per port) : 4096
+        #expected_output = {
+        'interfaces': {
+                'Te2/0/4': {
+                    'max_secure_addr_cnt': 5,
+                    'current_addr_cnt': 3,
+                    'security_violation_cnt': 0,
+                    'security_action': 'Shutdown'
+                }
+             },
+            'total_addr_in_system': 0,
+            'max_addr_limit_in_system': 4096
+         }
+        '''
 
         # initial return dictionary
         ret_dict = {}
@@ -175,30 +186,30 @@ class ShowPortSecurityInterface(ShowPortSecurityInterfaceSchema):
             'sec_violation_cnt': 0
             }'''
         # Port Security              : Enabled
-        p1 = re.compile(r'^Port +Security\s+\:\s(?P<port_security>\w+)$')
+        p1 = re.compile(r'^Port\sSecurity\s+\:\s(?P<port_security>\w+)$')
         # Port Status                : Secure-up
-        p2 = re.compile(r'^Port +Status\s+\:\s(?P<port_status>[\w\-]+)$')
+        p2 = re.compile(r'^Port\sStatus\s+\:\s(?P<port_status>[\w\-]+)$')
         # Violation Mode             : Shutdown
-        p3 = re.compile(r'^Violation +Mode\s+\:\s(?P<violation_mode>\w+)$')
+        p3 = re.compile(r'^Violation\sMode\s+\:\s(?P<violation_mode>\w+)$')
         # Aging Time                 : 0 mins
-        p4 = re.compile(r'^Aging +Time\s+\:\s(?P<aging_time>\w+\s\w+)$')
+        p4 = re.compile(r'^Aging\sTime\s+\:\s(?P<aging_time>\w+\s\w+)$')
         # Aging Type                 : Absolute
-        p5 = re.compile(r'^Aging +Type\s+\:\s(?P<aging_type>\w+)$')
+        p5 = re.compile(r'^Aging\sType\s+\:\s(?P<aging_type>\w+)$')
         # SecureStatic Address Aging : Disabled
-        p6 = re.compile(r'^SecureStatic +Address +Aging\s+\:\s(?P<secure_static_addr_aging>\w+)$')
+        p6 = re.compile(r'^SecureStatic\sAddress\sAging\s+\:\s(?P<secure_static_addr_aging>\w+)$')
         # Maximum MAC Addresses      : 2
-        p7 = re.compile(r'^Maximum +MAC +Addresses\s+\:\s(?P<max_mac_addr>\d+)$')
+        p7 = re.compile(r'^Maximum\sMAC\sAddresses\s+\:\s(?P<max_mac_addr>\d+)$')
         # Total MAC Addresses        : 1
-        p8 = re.compile(r'^Total +MAC +Addresses\s+\:\s(?P<total_mac_addr>\d+)$')
+        p8 = re.compile(r'^Total\sMAC\sAddresses\s+\:\s(?P<total_mac_addr>\d+)$')
         # Configured MAC Addresses   : 0
-        p9 = re.compile(r'^Configured +MAC +Addresses\s+\:\s(?P<cfg_mac_addr>\d+)$')
+        p9 = re.compile(r'^Configured\sMAC\sAddresses\s+\:\s(?P<cfg_mac_addr>\d+)$')
         # Sticky MAC Addresses       : 0
-        p10 = re.compile(r'^Sticky +MAC +Addresses\s+\:\s(?P<sticky_mac_addr>\d+)$')
+        p10 = re.compile(r'^Sticky\sMAC\sAddresses\s+\:\s(?P<sticky_mac_addr>\d+)$')
         # Last Source Address:Vlan   : 0050.56be.3bd9:200
-        p11 = re.compile(r'^Last +Source +Address\:Vlan\s+\:\s'
+        p11 = re.compile(r'^Last\sSource\sAddress\:Vlan\s+\:\s'
                          r'(?P<last_src_addr>\w+\.\w+\.\w+)\:(?P<last_src_addr_vlan>\d+)$')
         # Security Violation Count   : 0
-        p12 = re.compile(r'^Security +Violation +Count\s+\:\s(?P<sec_violation_cnt>\d+)$')
+        p12 = re.compile(r'^Security\sViolation\sCount\s+\:\s(?P<sec_violation_cnt>\d+)$')
 
         # initial return dictionary
         intf_dict ={}
