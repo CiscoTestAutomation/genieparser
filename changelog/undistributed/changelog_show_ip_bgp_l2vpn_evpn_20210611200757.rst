@@ -11,11 +11,11 @@
       * Added pmsi_data object under prefixes in "ShowBgpAllDetailSchema"
       * Added igmpmld object under prefixes in "ShowBgpAllDetailSchema"
       * Added 4 regexp in ShowBgpDetailSuperParser
-        ** p3_3 to handle all EVPN route-types
-        ** p8_6 to handle PMSI attribute Flags
-        ** p19 to handle IGMP/MLD filter
+        * p3_3 to handle all EVPN route-types
+        * p8_6 to handle PMSI attribute Flags
+        * p19 to handle IGMP/MLD filter
       * Modified 3 regexp in ShowBgpDetailSuperParser
-        ** p11 to handle local IRB vxlan vtep
-        ** p12 to handle core bdi
-        ** p13 to handle evpn l3-vni
+        * p11 to handle local IRB vxlan vtep
+        * p12 to handle core bdi
+        * p13 to handle evpn l3-vni
       * Added folder based unittests
