@@ -16,18 +16,22 @@ class ShowKeyChainSchema(MetaParser):
         * show key chain
     '''
     schema = {
-        Any(): {
+        'key_chains': {
             Any(): {
-                'key_string': str,
-                'accept_lifetime': {
-                    'start': str,
-                    'end': str,
-                    'is_valid': bool
-                },
-                'send_lifetime': {
-                    'start': str,
-                    'end': str,
-                    'is_valid': bool
+                'keys': {
+                    Any(): {
+                        'key_string': str,
+                        'accept_lifetime': {
+                            'start': str,
+                            'end': str,
+                            'is_valid': bool
+                        },
+                        'send_lifetime': {
+                            'start': str,
+                            'end': str,
+                            'is_valid': bool
+                        },
+                    },
                 },
             },
         },
@@ -81,7 +85,13 @@ class ShowKeyChain(ShowKeyChainSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                key_chain_dict = parsed_dict.setdefault(group['name'], {})
+                key_chain_dict = parsed_dict.setdefault(
+                    'key_chains', {}
+                ).setdefault(
+                    group['name'], {}
+                ).setdefault(
+                    'keys', {}
+                )
                 continue
 
             # key 1 -- text "cisco123"
