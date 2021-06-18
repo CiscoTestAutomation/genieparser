@@ -47,7 +47,7 @@ class ShowPortSecurity(ShowPortSecuritySchema):
     def cli(self, output=None):
 
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(self.cli_command[0])
         else:
             out = output
 
