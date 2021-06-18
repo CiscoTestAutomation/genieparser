@@ -3331,7 +3331,6 @@ class ShowInterfacesLink(ShowInterfacesLinkSchema):
                         r'(?P<down_time>(\d+[dw]\d+[dh])|(\d{2}:\d{2}:\d{2}))'
                         r'(?:\s+(?P<up_time>(\d+[dw]\d+[dh])|(\d{2}:\d{2}:\d{2})))?$')
 
-
         for line in out.splitlines():
             line = line.strip()
 
