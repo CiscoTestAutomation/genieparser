@@ -83,7 +83,7 @@ compile:
 	@echo ""
 	@echo "Compiling to C code"
 	@echo --------------------------
-	@pip install cisco-distutils || true
+	@pip install cisco-distutils --upgrade || true
 	$(CYTHON_CMD) 
 	@echo "Done Compiling"
 	@echo ""
