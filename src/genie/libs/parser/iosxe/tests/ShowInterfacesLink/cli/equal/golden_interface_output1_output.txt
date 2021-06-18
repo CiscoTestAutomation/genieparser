@@ -1,0 +1,14 @@
+ 
+show interfaces link
+    
+Port           Name               Down Time      Up Time
+Gi1/0/1                           00:00:00
+Gi1/0/2                           1d3h
+Gi1/0/3                           00:00:00       05:00:00
+Gi1/0/4                           7w4d           00:01:00
+Gi1/0/5                           00:00:00       4d5h
+Gi1/0/6                           1d5h           4d5h
+Gi1/0/7        foo                1d5h           4d5h
+Gi1/0/8        foo bar            1d5h           4d5h
+Gi1/0/9        foo                1d5h               
+Gi1/0/10       foo bar            1d5h
