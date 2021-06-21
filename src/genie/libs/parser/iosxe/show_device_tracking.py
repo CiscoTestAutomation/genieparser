@@ -27,7 +27,7 @@ class ShowDeviceTrackingDatabaseSchema(MetaParser):
                 "state": str
             }
         }
-    }   
+    }
 
 
 # ==================================
@@ -282,3 +282,998 @@ class ShowDeviceTrackingDatabaseInterface(ShowDeviceTrackingDatabaseInterfaceSch
                         device_info_obj[new_key].update(new_group)
 
         return device_info_obj
+
+# ========================
+# Schema for:
+#   * 'show device-tracking database details'
+# ========================
+class ShowDeviceTrackingDatabaseDetailsSchema(MetaParser):
+    '''Schema for:
+        * 'show device-tracking database details'
+    '''
+
+    schema = {
+        "binding_table_configuration": {
+            "max/box": str,
+            "max/port": str,
+            "max/vlan": str,
+            "max/mac": str,
+        },
+        "binding_table_count": {
+            "dynamic": int,
+            "local": int,
+            "total": int,
+        },
+        "binding_table_state_count": {
+            Optional("verify"): int,
+            Optional("reachable"): int,
+            Optional("stale"): int,
+            Optional("down"): int,
+            Optional("total"): int,
+        },
+        "device": {
+            int: {
+                "dev_code": str,
+                "network_layer_address": str,
+                "link_layer_address": str,
+                "interface": str,
+                "mode": str,
+                "vlan_id": int,
+                "pref_level_code": int,
+                "age": str,
+                "state": str,
+                Optional("time_left"): str,
+                "filter": str,
+                "in_crimson": str,
+                "client_id": str,
+                Optional("policy"): str,
+            },
+        },
+    }
+
+
+# ========================
+# Parser for:
+#   * 'show device-tracking database details'
+# ========================
+class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema):
+    '''Parser for:
+        * 'show device-tracking database details'
+    '''
+
+    cli_command = 'show device-tracking database details'
+
+    def cli(self, output=None):
+
+        if not output:
+            output = self.device.execute(self.cli_command)
+
+        device_tracking_database_details_dict = {}
+        device_index = 0
+        last_key = ''
+
+        #  Binding table configuration:
+        #  -----------git st-----------------
+        #  max/box  : no limit
+        #  max/vlan : no limit
+        #  max/port : no limit
+        #  max/mac  : no limit
+
+        #  Binding table current counters:
+        #  ------------------------------
+        #  dynamic  : 2
+        #  local    : 0
+        #  total    : 4
+
+        #  Binding table counters by state:
+        #  ----------------------------------
+        #  VERIFY     : 1
+        #  REACHABLE  : 2
+        #  DOWN       : 1
+        #    total    : 4
+
+        # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+        # Preflevel flags (prlvl):
+        # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
+        # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
+        # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
+
+
+        #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
+        # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       6mn        VERIFY     292 s try 3      no         yes          0000.0000.0000
+        # ND  FE80::A595:24BF:CA8A:8242                0050.56b0.afed(R)      Twe1/0/42  access     39  (  39)      0005       76s        REACHABLE  228 s try 0      yes        yes          0000.0000.0000     test (Device-tracking)
+        # ND  FE80::32CB:2A4A:B558:324B                0050.56b0.babc(R)      Twe1/0/42  access     39  (  39)      0005       3mn        REACHABLE  66 s             yes        yes          0000.0000.0000     test (Device-tracking)
+        # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       18702mn    DOWN       N/A              no         yes          0000.0000.0000
+
+        #  Binding table configuration:
+        binding_table_configuration_capture = re.compile(r'^Binding\s+table\s+configuration:$')
+        #  Binding table current counters:
+        binding_table_counter_capture = re.compile(r'^Binding\s+table\s+current\s+counters:$')
+        #  Binding table counters by state:
+        binding_table_state_capture = re.compile(r'^Binding\s+table\s+counters\s+by\s+state:$')
+
+        #  max/box  : no limit
+        #  max/vlan : no limit
+        #  max/port : no limit
+        #  max/mac  : no limit
+        #  dynamic  : 2
+        #  local    : 0
+        #  total    : 4
+        #  VERIFY     : 1
+        #  REACHABLE  : 2
+        #  DOWN       : 1
+        #    total    : 4
+        binding_table_info = re.compile(r'^(?P<parameter>(\S+))\s+:\s+(?P<info>(\S+)|(\S+\s+\S+))$')
+
+        #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
+        device_header_capture = re.compile(r'^Network\s+Layer\s+Address\s+Link\s+Layer\s+Address\s+Interface\s+mode\s+vlan\(prim\)\s+prlvl\s+age\s+state\s+Time\s+left\s+Filter\s+In\s+Crimson\s+Client\s+ID\s+Policy\s+\(feature\)$')
+
+        # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       6mn        VERIFY     292 s try 3      no         yes          0000.0000.0000
+        # ND  FE80::A595:24BF:CA8A:8242                0050.56b0.afed(R)      Twe1/0/42  access     39  (  39)      0005       76s        REACHABLE  228 s try 0      yes        yes          0000.0000.0000     test (Device-tracking)
+        # ND  FE80::32CB:2A4A:B558:324B                0050.56b0.babc(R)      Twe1/0/42  access     39  (  39)      0005       3mn        REACHABLE  66 s             yes        yes          0000.0000.0000     test (Device-tracking)
+        # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       18702mn    DOWN       N/A              no         yes          0000.0000.0000
+        device_info_capture = re.compile(r'^(?P<dev_code>(\S+))\s+(?P<network_layer_address>(\S+))'
+                                         r'\s+(?P<link_layer_address>(\S+))\s+(?P<interface>(\S+))'
+                                         r'\s+(?P<mode>(\S+))\s+(?P<vlan_id>(\d+))\s+\(\s+\d+\)'
+                                         r'\s+(?P<pref_level_code>(\d+))\s+(?P<age>(\S+))'
+                                         r'\s+(?P<state>(\S+))\s+(?P<time_left>(try\s\d\s\d+\ss)|(N\/A)|(\d+\ss\stry\s\d)|(\d+\ss))?'
+                                        #  r'\s+(?P<state>(\S+))\s+(?P<time_left>(N\/A))?'
+
+                                         r'\s+(?P<filter>(yes|no))\s+(?P<in_crimson>(\S+))'
+                                         r'\s+(?P<client_id>(\S+))(\s+(?P<policy>(\S+)|(\S+\s+\S+)))?$')
+
+        optional_parameters = [
+            'time_left',
+            'policy',
+        ]
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            #  Binding table configuration:
+            match = binding_table_configuration_capture.match(line)
+            if match:
+                last_key = "binding_table_configuration"
+                device_tracking_database_details_dict.setdefault(last_key, {})
+                continue
+
+            #  Binding table current counters:
+            match = binding_table_counter_capture.match(line)
+            if match:
+                last_key = "binding_table_count"
+                device_tracking_database_details_dict.setdefault(last_key, {})
+                continue
+
+            #  Binding table counters by state:
+            match = binding_table_state_capture.match(line)
+            if match:
+                last_key = "binding_table_state_count"
+                device_tracking_database_details_dict.setdefault(last_key, {})
+                continue
+
+            #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
+            match = device_header_capture.match(line)
+            if match:
+                last_key = "device"
+                device_tracking_database_details_dict.setdefault(last_key, {})
+                continue
+
+            if last_key:
+                #  max/box  : no limit
+                #  max/vlan : no limit
+                #  max/port : no limit
+                #  max/mac  : no limit
+                #  dynamic  : 2
+                #  local    : 0
+                #  total    : 4
+                #  VERIFY     : 1
+                #  REACHABLE  : 2
+                #  DOWN       : 1
+                #    total    : 4
+                match = binding_table_info.match(line)
+                if match:
+                    groups = match.groupdict()
+                    key = groups['parameter'].lower()
+                    value = groups['info']
+                    if value.isdigit():
+                        device_tracking_database_details_dict[last_key][key] = int(value)
+                    else:
+                        device_tracking_database_details_dict[last_key][key] = value
+                    continue
+
+                # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       6mn        VERIFY     292 s try 3      no         yes          0000.0000.0000
+                # ND  FE80::A595:24BF:CA8A:8242                0050.56b0.afed(R)      Twe1/0/42  access     39  (  39)      0005       76s        REACHABLE  228 s try 0      yes        yes          0000.0000.0000     test (Device-tracking)
+                # ND  FE80::32CB:2A4A:B558:324B                0050.56b0.babc(R)      Twe1/0/42  access     39  (  39)      0005       3mn        REACHABLE  66 s             yes        yes          0000.0000.0000     test (Device-tracking)
+                # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       18702mn    DOWN       N/A              no         yes          0000.0000.0000
+                match = device_info_capture.match(line)
+                if match:
+                    device_index += 1
+                    groups = match.groupdict()
+                    for parameter in optional_parameters:
+                        if groups[parameter] == None:
+                            groups[parameter] = ''
+
+                    if not device_tracking_database_details_dict.get(last_key, {}):
+                        device_tracking_database_details_dict.setdefault(last_key, {})
+
+                    device_dict = device_tracking_database_details_dict.setdefault(last_key, {}) \
+                                                                    .setdefault(device_index, {})
+
+                    print(device_tracking_database_details_dict)
+
+                    for key, value in groups.items():
+                        if value.isdigit():
+                            device_dict[key] = int(value)
+                        else:
+                            device_dict[key] = value
+
+        return device_tracking_database_details_dict
+
+
+# ========================
+# Schema for:
+#   * 'show device-tracking policy {policy_name}'
+# ========================
+class ShowDeviceTrackingPolicySchema(MetaParser):
+    '''Schema for:
+        * 'show device-tracking policy {policy_name}'
+    '''
+
+    schema = {
+        "configuration": {
+            Optional("trusted_port"): str,
+            "security_level": str,
+            "device_role": str,
+            Optional("data_glean"): str,
+            Optional("prefix_glean"): str,
+            Any(): {
+                "is_gleaning": str,
+                Optional("protecting_prefix_list"): str,
+            },
+            Optional("protocol_unkn"): str,
+            Optional("limit_address_count"): {
+                Optional('ipv4'): int,
+                Optional('ipv6'): int,
+            },
+            Optional("cache_guard"): str,
+            Optional("tracking"): str,
+        },
+        Optional("device"): {
+            Optional(int): {
+                "target": str,
+                "policy_type": str,
+                "policy_name": str,
+                "feature": str,
+                "tgt_range": str,
+            },
+        },
+    }
+
+
+# ========================
+# Parser for:
+#   * 'show device-tracking policy {policy_name}'
+# ========================
+class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
+    '''Parser for:
+        * 'show device-tracking policy {policy_name}'
+    '''
+
+    cli_command = 'show device-tracking policy {policy_name}'
+
+    def cli(self, policy_name, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(policy_name=policy_name)
+            output = self.device.execute(cmd)
+
+        device_tracking_policy_dict = {}
+        device_index = 0
+        last_key = ''
+
+        # Device-tracking policy test configuration:
+        #   trusted-port
+        #   security-level guard
+        #   device-role node
+        #   data-glean log-only
+        #   prefix-glean only
+        #   gleaning from Neighbor Discovery protecting prefix-list qux
+        #   gleaning from DHCP6 protecting prefix-list baz
+        #   gleaning from ARP protecting prefix-list foo
+        #   gleaning from DHCP4 protecting prefix-list bar
+        #   gleaning from protocol unkn protecting prefix-list quux
+        #   limit address-count for IPv4 per mac 5
+        #   limit address-count for IPv6 per mac 1
+        #   cache poisoning guard enabled all
+        #   tracking disable
+        # Policy test is applied on the following targets:
+        # Target               Type  Policy               Feature        Target range
+        # Twe1/0/42            PORT  test                 Device-tracking vlan all
+
+        # Device-tracking policy test configuration:
+        device_tracking_policy_configuration_header_capture = re.compile(r'^Device-tracking\s+policy\s+\S+\s+configuration:$')
+
+        #   trusted-port
+        device_tracking_policy_trusted_port_capture = re.compile(r'^(?P<trusted_port>(trusted-port))$')
+
+        #   security-level guard
+        device_tracking_policy_security_level_capture = re.compile(r'^security-level\s+(?P<security_level>(\S+))$')
+
+        #   device-role node
+        device_tracking_policy_device_role_capture = re.compile(r'^device-role\s+(?P<device_role>(\S+))$')
+
+        #   data-glean log-only
+        device_tracking_policy_data_glean_capture = re.compile(r'^data-glean\s+(?P<data_glean>(\S+))$')
+
+        #   prefix-glean only
+        device_tracking_policy_prefix_glean_capture = re.compile(r'^prefix-glean\s+(?P<prefix_glean>(\S+))$')
+
+
+        #   gleaning from Neighbor Discovery protecting prefix-list qux
+        #   gleaning from DHCP6 protecting prefix-list baz
+        #   gleaning from ARP protecting prefix-list foo
+        #   gleaning from DHCP4 protecting prefix-list bar
+        #   gleaning from protocol unkn protecting prefix-list quux
+        device_tracking_policy_gleaning_capture = re.compile(
+            r'^(?P<is_gleaning>((NOT\s+)?gleaning))\s+from\s+(?P<protocol>(\S+\s+\S+|\S+))'
+            r'\s+protecting\s+prefix-list(?P<protecting_prefix_list>(\S+\s+\S+|\S+))$'
+        )
+
+        #   limit address-count for IPv4 per mac 5
+        #   limit address-count for IPv6 per mac 1
+        device_tracking_policy_limit_address_count_capture = re.compile(
+            r'^limit\s+address-count\s+for\s+(?P<version>(IPv\d))\s+per\s+mac\s+(?P<limit_address_count>(\d+))$')
+
+        #   cache poisoning guard enabled all
+        device_tracking_policy_cache_guard_capture = re.compile(
+            r'^cache\s+poisoning\s+guard\s+enabled\s+(?P<cache_guard>(\S+))$')
+
+        #   tracking disable
+        device_tracking_policy_tracking_capture = re.compile(r'^tracking\s(\(.*\))?\s(?P<tracking>(\S+))$')
+
+        # Target               Type  Policy               Feature        Target range
+        device_tracking_policy_targets_header_capture = re.compile(r'^Target\s+Type\s+Policy\s+Feature\s+Target\s+range$')
+
+        # Twe1/0/42            PORT  test                 Device-tracking vlan all
+        device_tracking_policy_capture = re.compile(r'^(?P<target>(\S+|vlan\s+\d+))\s+(?P<policy_type>(\S+))'
+                                                    r'\s+(?P<policy_name>(\S+))\s+(?P<feature>(\S+))'
+                                                    r'\s+(?P<tgt_range>vlan\s+\S+)$')
+
+        capture_list = [
+            device_tracking_policy_trusted_port_capture,
+            device_tracking_policy_security_level_capture,
+            device_tracking_policy_device_role_capture,
+            device_tracking_policy_data_glean_capture,
+            device_tracking_policy_prefix_glean_capture,
+            device_tracking_policy_gleaning_capture,
+            device_tracking_policy_limit_address_count_capture,
+            device_tracking_policy_cache_guard_capture,
+            device_tracking_policy_tracking_capture,
+            device_tracking_policy_capture
+        ]
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Device-tracking policy test configuration:
+            match = device_tracking_policy_configuration_header_capture.match(line)
+            if match:
+                last_key = 'configuration'
+                device_tracking_policy_dict.setdefault(last_key, {})
+                continue
+
+            # Target               Type  Policy               Feature        Target range
+            match = device_tracking_policy_targets_header_capture.match(line)
+            if match:
+                last_key = 'device'
+                device_tracking_policy_dict.setdefault(last_key, {})
+                continue
+
+            if last_key:
+                for capture in capture_list:
+                    match = capture.match(line)
+                    if match:
+                        groups = match.groupdict()
+
+                        if capture == device_tracking_policy_trusted_port_capture:
+                            for key, _ in groups.items():
+                                device_tracking_policy_dict[last_key][key] = 'yes'
+                        elif capture == device_tracking_policy_limit_address_count_capture:
+                            limit_key = 'limit_address_count'
+                            limit_value = groups[limit_key]
+                            version = groups['version'].lower()
+
+                            device_dict = device_tracking_policy_dict.setdefault(last_key, {}) \
+                                                                     .setdefault(limit_key, {})
+                            device_dict[version] = int(limit_value)
+                        elif capture == device_tracking_policy_gleaning_capture:
+                            protocol = groups['protocol']
+                            if protocol == 'Neighbor Discovery':
+                                protocol = 'nd'
+                            elif protocol == 'protocol unkn':
+                                protocol = 'protocol_unkn'
+                            protocol = protocol.lower()
+                            del groups['protocol']
+
+                            device_dict = device_tracking_policy_dict.setdefault(last_key, {}) \
+                                                                     .setdefault(protocol, {})
+
+                            for key, value in groups.items():
+                                device_dict[key] = value
+                        elif capture == device_tracking_policy_capture:
+                            device_index += 1
+                            device_dict = device_tracking_policy_dict.setdefault(last_key, {}) \
+                                                                     .setdefault(device_index, {})
+
+                            for key, value in groups.items():
+                                device_dict[key] = value
+                        else:
+                            for key, value in groups.items():
+                                device_tracking_policy_dict[last_key][key] = value
+
+        return device_tracking_policy_dict
+
+
+# ========================
+# Schema for:
+#   * 'show ipv6 nd raguard policy {policy_name}'
+# ========================
+class ShowRAGuardPolicySchema(MetaParser):
+    '''Schema for:
+        * 'show ipv6 nd raguard policy {policy_name}'
+    '''
+
+    schema = {
+        "configuration": {
+            "device_role": str,
+            Optional("max_hop_limit"): int,
+            Optional("min_hop_limit"): int,
+            Optional("managed_config_flag"): str,
+            Optional("other_config_flag"): str,
+            Optional("max_router_preference"): str,
+            Optional("match_ra_prefix"): str,
+            Optional("match_ipv6_access_list"): str,
+            Optional("trusted_port"): str
+        },
+        Optional("device"): {
+            Optional(int): {
+                "target": str,
+                "policy_type": str,
+                "policy_name": str,
+                "feature": str,
+                "tgt_range": str,
+            },
+        },
+    }
+
+
+# ========================
+# Parser for:
+#   * 'show ipv6 nd raguard policy {policy_name}'
+# ========================
+class ShowRAGuardPolicy(ShowRAGuardPolicySchema):
+    '''Parser for:
+        * 'show ipv6 nd raguard policy {policy_name}'
+    '''
+
+    cli_command = 'show ipv6 nd raguard policy {policy_name}'
+
+    def cli(self, policy_name, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(policy_name=policy_name)
+            output = self.device.execute(cmd)
+
+        ipv6_nd_raguard_dict = {}
+        device_index = 0
+        last_key = ''
+
+        # RA guard policy asdf configuration:
+        #   trusted-port
+        #   device-role router
+        #   hop-limit minimum 1
+        #   hop-limit maximum 3
+        #   managed-config-flag on
+        #   other-config-flag on
+        #   router-preference maximum high
+        #   match ra prefix-list bar
+        #   match ipv6 access-list foo
+        # Policy asdf is applied on the following targets:
+        # Target               Type  Policy               Feature        Target range
+        # Twe1/0/42            PORT  asdf                 RA guard       vlan all
+
+        # RA guard policy asdf configuration:
+        ipv6_nd_raguard_configuration_header_capture = re.compile(r'^RA\s+guard\s+policy\s+\S+\s+configuration:$')
+
+        #   trusted-port
+        ipv6_nd_ragaurd_trusted_port_capture = re.compile(r'^(?P<trusted_port>(trusted-port))$')
+
+        #   device-role router
+        ipv6_nd_ragaurd_device_role_capture = re.compile(r'^device-role\s+(?P<device_role>(\S+))$')
+
+        #   hop-limit minimum 1
+        ipv6_nd_ragaurd_min_hop_limit_capture = re.compile(r'^hop-limit\s+minimum\s+(?P<min_hop_limit>(\d+))$')
+
+        #   hop-limit maximum 3
+        ipv6_nd_ragaurd_max_hop_limit_capture = re.compile(r'^hop-limit\s+maximum\s+(?P<max_hop_limit>(\d+))$')
+
+        #   managed-config-flag on
+        ipv6_nd_ragaurd_managed_config_flag_capture = re.compile(r'^managed-config-flag\s+(?P<managed_config_flag>(\S+))$')
+
+        #   other-config-flag on
+        ipv6_nd_ragaurd_other_config_flag_capture = re.compile(r'^other-config-flag\s+(?P<other_config_flag>(\S+))$')
+
+        #   router-preference maximum high
+        ipv6_nd_ragaurd_max_router_preference_capture = re.compile(r'^router-preference\s+maximum\s+(?P<max_router_preference>(\S+))$')
+
+        #   match ra prefix-list bar
+        ipv6_nd_ragaurd_match_ra_prefix_list_capture = re.compile(r'^match\s+ra\s+prefix-list\s+(?P<match_ra_prefix>(\S+))$')
+
+        #   match ipv6 access-list foo
+        ipv6_nd_ragaurd_match_ipv6_access_list_capture = re.compile(r'^match\s+ipv6\s+access-list\s+(?P<match_ipv6_access_list>(\S+))$')
+
+        # Target               Type  Policy               Feature        Target range
+        ipv6_nd_raguard_targets_header_capture = re.compile(r'^Target\s+Type\s+Policy\s+Feature\s+Target\s+range$')
+
+        # Twe1/0/42            PORT  asdf                 RA guard       vlan all
+        ipv6_nd_raguard_target_capture = re.compile(r'^(?P<target>(\S+|vlan\s+\d+))\s+(?P<policy_type>(\S+))'
+                                                    r'\s+(?P<policy_name>(\S+))\s+(?P<feature>(\S+|\S+\s\S+))'
+                                                    r'\s+(?P<tgt_range>vlan\s+\S+)$')
+
+        capture_list = [
+            ipv6_nd_ragaurd_device_role_capture,
+            ipv6_nd_ragaurd_trusted_port_capture,
+            ipv6_nd_ragaurd_max_hop_limit_capture,
+            ipv6_nd_ragaurd_min_hop_limit_capture,
+            ipv6_nd_ragaurd_managed_config_flag_capture,
+            ipv6_nd_ragaurd_other_config_flag_capture,
+            ipv6_nd_ragaurd_max_router_preference_capture,
+            ipv6_nd_ragaurd_match_ra_prefix_list_capture,
+            ipv6_nd_ragaurd_match_ipv6_access_list_capture,
+        ]
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Source guard policy test configuration:
+            match = ipv6_nd_raguard_configuration_header_capture.match(line)
+            if match:
+                last_key = "configuration"
+                ipv6_nd_raguard_dict.setdefault(last_key, {})
+                continue
+
+            # Target               Type  Policy               Feature        Target range
+            match = ipv6_nd_raguard_targets_header_capture.match(line)
+            if match:
+                last_key = 'device'
+                ipv6_nd_raguard_dict.setdefault(last_key, {})
+                continue
+
+            # Add all subsequent lines to the last parsed key
+            if last_key == 'configuration':
+                for capture in capture_list:
+                    match = capture.match(line)
+                    if match:
+                        groups = match.groupdict()
+                        for key, value in groups.items():
+                            if key == 'trusted_port':
+                                ipv6_nd_raguard_dict[last_key][key] = 'yes'
+                                continue
+
+                            if value.isdigit():
+                                ipv6_nd_raguard_dict[last_key][key] = int(value)
+                            else:
+                                ipv6_nd_raguard_dict[last_key][key] = value
+
+
+            if last_key == 'device':
+                match = ipv6_nd_raguard_target_capture.match(line)
+                if match:
+                    groups = match.groupdict()
+                    device_index += 1
+                    device_dict = ipv6_nd_raguard_dict.setdefault('device', {}).setdefault(device_index, {})
+
+                    for key, value in groups.items():
+                        device_dict[key] = value
+
+        import pprint
+        pprint.pprint(ipv6_nd_raguard_dict)
+        return ipv6_nd_raguard_dict
+
+
+# ========================
+# Schema for:
+#   * 'show ipv6 source-guard policy {policy_name}'
+# ========================
+class ShowSourceGuardPolicySchema(MetaParser):
+    '''Schema for:
+        * 'show ipv6 source-guard policy {policy_name}'
+    '''
+
+    schema = {
+        "configuration": {
+            "validate_address": str,
+            Optional("validate_prefix"): str,
+            Optional("permit"): str,
+            Optional("trusted"): str,
+            Optional("deny"): str,
+        },
+        Optional("device"): {
+            Optional(int): {
+                "target": str,
+                "policy_type": str,
+                "policy_name": str,
+                "feature": str,
+                "tgt_range": str,
+            },
+        },
+    }
+
+
+# ========================
+# Parser for:
+#   * 'show ipv6 source-guard policy {policy_name}'
+# ========================
+class ShowSourceGuardPolicy(ShowSourceGuardPolicySchema):
+    '''Parser for:
+        * 'show ipv6 source-guard policy {policy_name}'
+    '''
+
+    cli_command = 'show ipv6 source-guard policy {policy_name}'
+
+    def cli(self, policy_name, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(policy_name=policy_name)
+            output = self.device.execute(cmd)
+
+        ipv6_source_guard_dict = {}
+        device_index = 0
+        last_key = ''
+
+        # Source guard policy test1 configuration:
+        #   trusted
+        #   validate prefix
+        #   validate address
+        #   permit link-local
+        #   deny global-autoconf
+        # Policy test1 is applied on the following targets:
+        # Target               Type  Policy               Feature        Target range
+        # Twe1/0/42            PORT  test1                Source guard   vlan all
+
+        # Source guard policy test1 configuration:
+        ipv6_source_guard_configuration_header_capture = re.compile(r'^Source\s+guard\s+policy\s+\S+\s+configuration:$')
+
+        #   trusted
+        ipv6_source_guard_trusted_capture = re.compile(r'^(?P<trusted_port>(trusted-port))$')
+
+        #   validate prefix
+        ipv6_source_guard_prefix_capture = re.compile(r'^(?P<validate_address>(validate\s+prefix))$')
+
+        #   validate address
+        ipv6_source_guard_address_capture = re.compile(r'^(?P<validate_prefix>(validate\s+address))$')
+
+        #   permit link-local
+        ipv6_source_guard_permit_capture = re.compile(r'^permit\s+(?P<permit>(\S+))$')
+
+        #   deny global-autoconf
+        ipv6_source_guard_deny_capture = re.compile(r'^deny\s+(?P<deny>(\S+))$')
+
+       # Target               Type  Policy               Feature        Target range
+        ipv6_source_guard_targets_header_capture = re.compile(r'^Target\s+Type\s+Policy\s+Feature\s+Target\s+range$')
+
+        # Twe1/0/42            PORT  test1                Source guard   vlan all
+        ipv6_source_guard_target_capture = re.compile(r'^(?P<target>(\S+|vlan\s+\d+))\s+(?P<policy_type>(\S+))'
+                                                      r'\s+(?P<policy_name>(\S+))\s+(?P<feature>(\S+|\S+\s\S+))'
+                                                      r'\s+(?P<tgt_range>vlan\s+\S+)$')
+
+        capture_list = [
+            ipv6_source_guard_trusted_capture,
+            ipv6_source_guard_prefix_capture,
+            ipv6_source_guard_address_capture,
+            ipv6_source_guard_permit_capture,
+            ipv6_source_guard_deny_capture,
+        ]
+
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Source guard policy test1 configuration:
+            match = ipv6_source_guard_configuration_header_capture.match(line)
+            if match:
+                last_key = 'configuration'
+                ipv6_source_guard_dict.setdefault(last_key, {})
+                continue
+
+            # Policy test1 is applied on the following targets:
+            match = ipv6_source_guard_targets_header_capture.match(line)
+            if match:
+                last_key = 'device'
+                ipv6_source_guard_dict.setdefault(last_key, {})
+                continue
+
+            # Add all subsequent lines to the last parsed key
+            if last_key == "configuration":
+                for capture in capture_list:
+                    match = capture.match(line)
+                    if match:
+                        groups = match.groupdict()
+
+                        for key, value in groups.items():
+                            if capture == ipv6_source_guard_trusted_capture or \
+                                capture == ipv6_source_guard_prefix_capture or \
+                                capture == ipv6_source_guard_address_capture:
+                                ipv6_source_guard_dict[last_key][key] = 'yes'
+                            else:
+                                ipv6_source_guard_dict[last_key][key] = value
+
+            if last_key == 'device':
+                match = ipv6_source_guard_target_capture.match(line)
+                if match:
+                    groups = match.groupdict()
+                    device_index += 1
+                    device_dict = ipv6_source_guard_dict.setdefault(last_key, {}).setdefault(device_index, {})
+
+                    for key, value in groups.items():
+                        device_dict[key] = value
+
+        return ipv6_source_guard_dict
+
+
+# ========================
+# Schema for:
+#   * 'show device-tracking counters vlan {vlanid}'
+# ========================
+class ShowDeviceTrackingCountersVlanIDSchema(MetaParser):
+    '''Schema for:
+        * 'show device-tracking counters vlan {vlanid}'
+    '''
+
+    schema = {
+        "vlanid": {
+            int: {
+                Any(): {
+                    Optional("protocol"): str,
+                    Optional("ndp"): str,
+                    Optional("dhcpv6"): str,
+                    Optional("arp"): str,
+                    Optional("dhcpv4"): str,
+                    Optional("acd&dad"): str,
+                    Optional("type"): str,
+                    Optional("probe_send"): str,
+                    Optional("probe_reply"): str,
+                    Any(): {
+                        Optional("protocol"): str,
+                        Optional("message"): str,
+                        Optional("dropped"): int,
+                        },
+                },
+            },
+        },
+    }
+
+
+# ========================
+# Parser for:
+#   * 'show device-tracking counters vlan {vlanid}'
+# ========================
+class ShowDeviceTrackingCountersVlanID(ShowDeviceTrackingCountersVlanIDSchema):
+    '''Parser for:
+        * 'show device-tracking counters vlan {vlanid}'
+    '''
+
+    cli_command = 'show device-tracking counters vlan {vlanid}'
+
+    def cli(self, vlanid, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(vlanid=vlanid)
+            output = self.device.execute(cmd)
+
+        device_tracking_counters_vlanid_dict = {}
+        last_key = ''
+
+        # Received messages on vlan 39   :
+        # Protocol        Protocol message
+        # NDP             RS[15543] NS[5181] NA[10]
+        # DHCPv6
+        # ARP
+        # DHCPv4
+        # ACD&DAD         --[5181]
+
+        # Received Broadcast/Multicast messages on vlan 39   :
+        # Protocol        Protocol message
+        # NDP             RS[15543] NS[5181] NA[10]
+        # DHCPv6
+        # ARP
+        # DHCPv4
+
+        # Bridged messages from vlan 39   :
+        # Protocol        Protocol message
+        # NDP             RS[15543] NS[8299]
+        # DHCPv6
+        # ARP
+        # DHCPv4
+        # ACD&DAD         --[5171]
+
+        # Broadcast/Multicast converted to unicast messages from vlan 39   :
+        # Protocol        Protocol message
+        # NDP
+        # DHCPv6
+        # ARP
+        # DHCPv4
+        # ACD&DAD
+
+        # Probe message on vlan 39   :
+        # Type            Protocol message
+        # PROBE_SEND      NS[3128]
+        # PROBE_REPLY     NA[10]
+
+        # Limited Broadcast to Local message on vlan 39   :
+        # Type            Protocol message
+        # NDP
+        # DHCPv6
+        # ARP
+        # DHCPv4
+
+        # Dropped messages on vlan 39   :
+        # Feature             Protocol Msg [Total dropped]
+        # Device-tracking:    NDP      NS  [10]
+        #                     reason:  Silent drop [10]
+
+        #                             NA  [10]
+        #                     reason:  Silent drop [10]
+
+        # ACD&DAD:            --       --  [10]
+
+
+        # Faults on vlan 39   :
+
+        # Received messages on vlan 39   :
+        received_messages_capture = re.compile(r'^Received\s+messages\s+on\s+vlan\s+\d+\s+:$')
+
+        # Received Broadcast/Multicast messages on vlan 39   :
+        received_broadcast_multicast_messages_capture = re.compile(r'^Received\s+Broadcast/Multicast\s+messages\s+on\s+vlan\s+\d+\s+:$')
+
+        # Bridged messages from vlan 39   :
+        bridged_messages_capture = re.compile(r'^Bridged\s+messages\s+from\s+vlan\s+\d+\s+:$')
+
+        # Broadcast/Multicast converted to unicast messages from vlan 39   :
+        broadcast_multicast_to_unicast_messages_capture = re.compile(r'^Broadcast/Multicast\s+converted\s+to\s+unicast\s+messages\s+from\s+vlan\s+\d+\s+:$')
+
+       # Probe message on vlan 39   :
+        probe_message_capture = re.compile(r'^Probe\s+message\s+on\s+vlan\s+\d+\s+:$')
+
+        # Limited Broadcast to Local message on vlan 39   :
+        limited_broadcast_to_local_messages_capture = re.compile(r'^Limited\s+Broadcast\s+to\s+Local\s+message\s+on\s+vlan\s+\d+\s+:$')
+
+        # Dropped messages on vlan 39   :
+        dropped_messages_capture = re.compile(r'^Dropped\s+messages\s+on\s+vlan\s+\d+\s+:$')
+
+        # Faults on vlan 39   :
+        faults_capture = re.compile(r'^Faults\s+on\s+vlan\s+\d+\s+:$')
+
+        # Protocol        Protocol message
+        # NDP             RS[15543] NS[5181] NA[10]
+        # DHCPv6
+        # ARP
+        # DHCPv4
+        # ACD&DAD         --[5181]
+        protocol_info = re.compile(r'^(?P<protocol>(Protocol))\s+(?P<message>(.*))$')
+        ndp_info = re.compile(r'^(?P<protocol>(NDP))\s+(?P<message>(.*))?')
+        dpch6_info = re.compile(r'^(?P<protocol>(DHCPv6))\s+(?P<message>(.*))?$')
+        arp_info = re.compile(r'^(?P<protocol>(ARP))\s+(?P<message>(.*))?$')
+        dhcp4_info = re.compile(r'^(?P<protocol>(DHCPv4))\s+(?P<message>(.*))?$')
+        acd_dad_info = re.compile(r'^(?P<protocol>(ACD&DAD))\s+(?P<message>(.*))?$')
+
+        # PROBE_SEND      NS[3128]
+        # PROBE_REPLY     NA[10]
+        probe_info = re.compile(r'^(?P<protocol>(PROBE_\S+))\s+(?P<message>(.*))?')
+
+        # Device-tracking:    NDP      NS  [10]
+        dropped_message_info = re.compile(r'^(?P<feature>((?!reason)\S+)):\s+(?P<protocol>(\S+))'
+                                          r'\s+(?P<message>(\S+))\s+\[(?P<dropped>(\d+))\]$')
+
+        capture_list = [
+            ndp_info,
+            dpch6_info,
+            arp_info,
+            dhcp4_info,
+            acd_dad_info,
+            probe_info,
+            dropped_message_info,
+        ]
+
+        message_dict = device_tracking_counters_vlanid_dict.setdefault('vlanid', {}) \
+                                                            .setdefault(int(vlanid), {})
+        for line in output.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            # Received messages on vlan 39   :
+            match = received_messages_capture.match(line)
+            if match:
+                last_key = "received"
+                message_dict.setdefault(last_key, {})
+                continue
+
+            # Received Broadcast/Multicast messages on vlan 39   :
+            match = received_broadcast_multicast_messages_capture.match(line)
+            if match:
+                last_key = "received_broadcast_multicast"
+                message_dict.setdefault(last_key, {})
+                continue
+
+            # Bridged messages from vlan 39   :
+            match = bridged_messages_capture.match(line)
+            if match:
+                last_key = "bridged"
+                message_dict.setdefault(last_key, {})
+                continue
+
+            # Broadcast/Multicast converted to unicast messages from vlan 39   :
+            match = broadcast_multicast_to_unicast_messages_capture.match(line)
+            if match:
+                last_key = "broadcast_multicast_to_unicast"
+                message_dict.setdefault(last_key, {})
+                continue
+
+            # Probe message on vlan 39   :
+            match = probe_message_capture.match(line)
+            if match:
+                last_key = "probe"
+                message_dict.setdefault(last_key, {})
+                continue
+
+            # Limited Broadcast to Local message on vlan 39   :
+            match = limited_broadcast_to_local_messages_capture.match(line)
+            if match:
+                last_key = "limited_broadcast_to_local"
+                message_dict.setdefault(last_key, {})
+                continue
+
+            # Dropped messages on vlan 39   :
+            match = dropped_messages_capture.match(line)
+            if match:
+                last_key = "dropped"
+                message_dict.setdefault(last_key, {})
+                continue
+
+            # Faults on vlan 39   :
+            match = faults_capture.match(line)
+            if match:
+                last_key = "faults"
+                message_dict.setdefault(last_key, {})
+                continue
+
+            # Add all subsequent lines to the last parsed key
+            if last_key:
+                for capture in capture_list:
+                    match = capture.match(line)
+                    if match:
+                        groups = match.groupdict()
+                        if capture == dropped_message_info:
+                            feature = groups['feature']
+                            message_dict.setdefault(last_key, {}).setdefault(feature, {})
+                            del groups['feature']
+
+                            for key, value in groups.items():
+                                if value.isdigit():
+                                    message_dict[last_key][feature][key] = int(value)
+                                else:
+                                    message_dict[last_key][feature][key] = value.lower()
+                        else:
+                            protocol = groups['protocol'].lower()
+                            message = groups['message']
+                            message_dict[last_key][protocol] = message
+
+        return device_tracking_counters_vlanid_dict

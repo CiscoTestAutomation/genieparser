@@ -1,0 +1,32 @@
+ Binding table configuration:
+ -----------git st-----------------
+ max/box  : no limit
+ max/vlan : no limit
+ max/port : no limit
+ max/mac  : no limit
+
+ Binding table current counters:
+ ------------------------------
+ dynamic  : 2
+ local    : 0
+ total    : 4
+
+ Binding table counters by state:
+ ----------------------------------
+ VERIFY     : 1
+ REACHABLE  : 2
+ DOWN       : 1
+   total    : 4
+
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
+0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
+0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
+
+
+    Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
+S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       6mn        VERIFY     292 s try 3      no         yes          0000.0000.0000
+ND  FE80::A595:24BF:CA8A:8242                0050.56b0.afed(R)      Twe1/0/42  access     39  (  39)      0005       76s        REACHABLE  228 s try 0      yes        yes          0000.0000.0000     test (Device-tracking)
+ND  FE80::32CB:2A4A:B558:324B                0050.56b0.babc(R)      Twe1/0/42  access     39  (  39)      0005       3mn        REACHABLE  66 s             yes        yes          0000.0000.0000     test (Device-tracking)
+S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       18702mn    DOWN       N/A              no         yes          0000.0000.0000
