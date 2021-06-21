@@ -50,53 +50,53 @@ class ShowVariablesSystemSchema(MetaParser):
                 Optional('ucode_root_path'): str,
                 Optional('vcm_rules_path'): str,
             },
-            Optional('hostname'): str,
-            'term': list,
-            'gdb_pdebug': str,
-            Optional('dir_prefix'): str,
-            Optional('tcl_library'): str,
-            'job_id': int,
-            'instance_id': int,
-            Optional('sysmgr_tuple'): str,
-            'sysmgr_node': str,
-            'exit_status': int,
-            'sysmgr_restart_reason': int,
-            'aaa_user': str,
-            'exec_pid': int,
-            'taskid_map_size': int,
-            'home': str,
-            'tmpdir': str,
-            'pwd': str,
-            Optional('node_watcher'): int,
-            Optional('tty_uart_driver'): str,
-            Optional('ld_preload'): str,
-            Optional('boot_dir'): str,
-            Optional('dir'): str,
-            Optional('user'): str,
-            Optional('libvirt_default_uri'): str,
-            Optional('iox_disable_startup'): int,
-            Optional('ps1'): str,
-            Optional('iox_disable_sysmgr'): int,
-            Optional('memdbg_blacklist'): str,
-            Optional('shlvl'): int,
-            Optional('terminfo'): str,
-            Optional('connect_dir'): str,
-            Optional('upstart_instance'): str,
-            Optional('memdbg_enable'): int,
-            Optional('upstart_events'): str,
-            Optional('iox'): int,
-            Optional('rlimit'): int,
-            Optional('connect_command'): str,
-            Optional('boot_iox'): int,
-            Optional('upstart_job'): str,
-            Optional('iox_no_config'): int,
-            Optional('confreg'): int,
-            Optional('pcie_debug'): str,
-            Optional('_'): str,
-            Optional('sysmgr_vs_started'): int,
-            Optional('respawn_count'): int,
-            Optional('tty_category'): int,
-            Optional('tty_port'): int
+        Optional('hostname'): str,
+        'term': list,
+        'gdb_pdebug': str,
+        Optional('dir_prefix'): str,
+        Optional('tcl_library'): str,
+        'job_id': int,
+        'instance_id': int,
+        Optional('sysmgr_tuple'): str,
+        'sysmgr_node': str,
+        'exit_status': int,
+        'sysmgr_restart_reason': int,
+        'aaa_user': str,
+        'exec_pid': int,
+        'taskid_map_size': int,
+        'home': str,
+        'tmpdir': str,
+        'pwd': str,
+        Optional('node_watcher'): int,
+        Optional('tty_uart_driver'): str,
+        Optional('ld_preload'): str,
+        Optional('boot_dir'): str,
+        Optional('dir'): str,
+        Optional('user'): str,
+        Optional('libvirt_default_uri'): str,
+        Optional('iox_disable_startup'): int,
+        Optional('ps1'): str,
+        Optional('iox_disable_sysmgr'): int,
+        Optional('memdbg_blacklist'): str,
+        Optional('shlvl'): int,
+        Optional('terminfo'): str,
+        Optional('connect_dir'): str,
+        Optional('upstart_instance'): str,
+        Optional('memdbg_enable'): int,
+        Optional('upstart_events'): str,
+        Optional('iox'): int,
+        Optional('rlimit'): int,
+        Optional('connect_command'): str,
+        Optional('boot_iox'): int,
+        Optional('upstart_job'): str,
+        Optional('iox_no_config'): int,
+        Optional('confreg'): int,
+        Optional('pcie_debug'): str,
+        Optional('_'): str,
+        Optional('sysmgr_vs_started'): int,
+        Optional('respawn_count'): int,
+        Optional('tty_category'): int,
+        Optional('tty_port'): int
     }
 
 
@@ -137,7 +137,7 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
             'iox_disable_startup': 1
         }
 
-        # find path variables and do an individual path parse later, this will not catch LOADPATH or PATH because it
+        # find path variables and do an individual parse later, this will not catch LOADPATH or PATH because it
         # lacks the _
         p1 = re.compile(r'^.+_PATH=.+$')
 
@@ -147,8 +147,7 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
 
         term_list = []
         ret_dict = {}
-        path_dict = ret_dict.setdefault('paths', {})
-
+        path_dict = {}
 
         for line in out.splitlines():
             line.strip()
@@ -161,6 +160,7 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
                 path_name = mp.groupdict()['key'].lower()
                 path_value = mp.groupdict()['value']
 
+                path_dict = ret_dict.setdefault('paths', {})
                 path_dict.update({path_name: path_value})
 
                 continue
@@ -182,6 +182,8 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
                     continue
 
                 elif key == 'path' or key == 'loadpath':
+                    path_dict = ret_dict.setdefault('paths', {})
+
                     path_dict.update({key: value})
                     # path_dict[key] = value
 
@@ -191,24 +193,5 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
                     ret_dict.update({key: value})
 
                     continue
-
-        # # ret_dict = {'hostname': {hostname: {'paths': path_dict, 'term': term_list}}}
-        #     ret_dict.update({
-        #         'hostname': {
-        #             hostname: {
-        #                 'paths': path_dict,
-        #                 'term': term_list,
-        #                 **sys_vars_dict  # dictionary expansion operator, automatically merges the dictionaries
-        #             }
-        #         }
-        #     })
-
-        # print(hostname)
-        # print(term_list)
-        # print(path_dict)
-        # print(sys_vars_dict)
-        #
-        # print(ret_dict)
-        # print(sys_vars_dict)
 
         return ret_dict
