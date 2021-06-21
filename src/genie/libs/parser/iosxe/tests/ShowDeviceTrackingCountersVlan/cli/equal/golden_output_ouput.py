@@ -31,7 +31,7 @@ expected_output = {
                     "dropped": 15
                 }
             },
-            "faults": {}
+            "fault": ["DHCPv6_REQUEST_NAK[1]"]
         }
     }
 }

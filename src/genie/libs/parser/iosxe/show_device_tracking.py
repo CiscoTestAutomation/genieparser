@@ -532,7 +532,6 @@ class ShowDeviceTrackingPolicySchema(MetaParser):
                 "is_gleaning": str,
                 Optional("protecting_prefix_list"): str,
             },
-            Optional("protocol_unkn"): str,
             Optional("limit_address_count"): {
                 Optional('ipv4'): int,
                 Optional('ipv6'): int,
@@ -618,7 +617,7 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
         #   gleaning from protocol unkn protecting prefix-list quux
         device_tracking_policy_gleaning_capture = re.compile(
             r'^(?P<is_gleaning>((NOT\s+)?gleaning))\s+from\s+(?P<protocol>(\S+\s+\S+|\S+))'
-            r'\s+protecting\s+prefix-list(?P<protecting_prefix_list>(\S+\s+\S+|\S+))$'
+            r'\s+protecting\s+prefix-list\s+(?P<protecting_prefix_list>(\S+))$'
         )
 
         #   limit address-count for IPv4 per mac 5
@@ -631,7 +630,7 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
             r'^cache\s+poisoning\s+guard\s+enabled\s+(?P<cache_guard>(\S+))$')
 
         #   tracking disable
-        device_tracking_policy_tracking_capture = re.compile(r'^tracking\s(\(.*\))?\s(?P<tracking>(\S+))$')
+        device_tracking_policy_tracking_capture = re.compile(r'^tracking\s(\(.*\)\s)?(?P<tracking>(\S+))$')
 
         # Target               Type  Policy               Feature        Target range
         device_tracking_policy_targets_header_capture = re.compile(r'^Target\s+Type\s+Policy\s+Feature\s+Target\s+range$')
@@ -951,7 +950,7 @@ class ShowSourceGuardPolicy(ShowSourceGuardPolicySchema):
         ipv6_source_guard_configuration_header_capture = re.compile(r'^Source\s+guard\s+policy\s+\S+\s+configuration:$')
 
         #   trusted
-        ipv6_source_guard_trusted_capture = re.compile(r'^(?P<trusted_port>(trusted-port))$')
+        ipv6_source_guard_trusted_capture = re.compile(r'^(?P<trusted>(trusted))$')
 
         #   validate prefix
         ipv6_source_guard_prefix_capture = re.compile(r'^(?P<validate_address>(validate\s+prefix))$')
@@ -1056,6 +1055,7 @@ class ShowDeviceTrackingCountersVlanIDSchema(MetaParser):
                         Optional("dropped"): int,
                         },
                 },
+                Optional("faults"): list,
             },
         },
     }
@@ -1136,6 +1136,7 @@ class ShowDeviceTrackingCountersVlanID(ShowDeviceTrackingCountersVlanIDSchema):
 
 
         # Faults on vlan 39   :
+        #   DHCPv6_REQUEST_NAK[1]
 
         # Received messages on vlan 39   :
         received_messages_capture = re.compile(r'^Received\s+messages\s+on\s+vlan\s+\d+\s+:$')
@@ -1181,6 +1182,9 @@ class ShowDeviceTrackingCountersVlanID(ShowDeviceTrackingCountersVlanIDSchema):
         # Device-tracking:    NDP      NS  [10]
         dropped_message_info = re.compile(r'^(?P<feature>((?!reason)\S+)):\s+(?P<protocol>(\S+))'
                                           r'\s+(?P<message>(\S+))\s+\[(?P<dropped>(\d+))\]$')
+
+        #   DHCPv6_REQUEST_NAK[1]
+        fault_info = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR)))$')
 
         capture_list = [
             ndp_info,
@@ -1252,7 +1256,7 @@ class ShowDeviceTrackingCountersVlanID(ShowDeviceTrackingCountersVlanIDSchema):
             match = faults_capture.match(line)
             if match:
                 last_key = "faults"
-                message_dict.setdefault(last_key, {})
+                message_dict.setdefault(last_key, [])
                 continue
 
             # Add all subsequent lines to the last parsed key
@@ -1271,6 +1275,9 @@ class ShowDeviceTrackingCountersVlanID(ShowDeviceTrackingCountersVlanIDSchema):
                                     message_dict[last_key][feature][key] = int(value)
                                 else:
                                     message_dict[last_key][feature][key] = value.lower()
+                        elif capture == fault_info:
+                            message = groups['fault']
+                            message_dict[last_key].append(message)
                         else:
                             protocol = groups['protocol'].lower()
                             message = groups['message']

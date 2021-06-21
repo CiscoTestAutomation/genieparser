@@ -11,8 +11,8 @@ Device-tracking policy test configuration:
   gleaning from protocol unkn protecting prefix-list quux
   limit address-count for IPv4 per mac 5
   limit address-count for IPv6 per mac 1
-  cache poisoning guard enabled all
-  tracking disable
+  cache poisoning guard enabled ipv4
+  tracking enable
 Policy test is applied on the following targets:
 Target               Type  Policy               Feature        Target range
 Twe1/0/42            PORT  test                 Device-tracking vlan all

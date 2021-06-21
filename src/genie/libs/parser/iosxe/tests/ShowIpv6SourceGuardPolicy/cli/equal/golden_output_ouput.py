@@ -1,5 +1,6 @@
 expected_output = {
     "configuration": {
+        "trusted": "yes",
         "validate_address": "yes",
         "validate_prefix": "yes",
         "permit": "link-local",
