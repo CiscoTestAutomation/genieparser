@@ -36,7 +36,7 @@ class ShowClassMapSchema(MetaParser):
 class ShowClassMap(ShowClassMapSchema):
     """Parser for show class-map"""
 
-    cli_command = ['show class-map, show class-map {class_map}']
+    cli_command = ['show class-map', 'show class-map {class_map}']
 
     def cli(self, class_map='', output=None):
         if output is None:
