@@ -44,7 +44,7 @@ class ShowClassMap(ShowClassMapSchema):
                 cmd = self.cli_command[1].format(class_map=class_map)
             else:
                 cmd = self.cli_command[0]
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(cmd)
         else:
             out = output
 
