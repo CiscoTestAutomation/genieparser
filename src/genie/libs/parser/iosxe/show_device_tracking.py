@@ -368,7 +368,7 @@ class ShowDeviceTrackingPolicies(ShowDeviceTrackingPoliciesSchema):
         lines = out.splitlines()
         
         if len(lines) == 0:
-            return device_tracking_policies_dict
+            return {}
 
         #Target     Type   Policy     Feature        Target range
         policy_info_header_capture_match = policy_info_header_capture.match(lines[0].strip())
@@ -398,6 +398,5 @@ class ShowDeviceTrackingPolicies(ShowDeviceTrackingPoliciesSchema):
                 device_tracking_policies_dict['policies'][policy_index]['policy_name'] = policy_name
                 device_tracking_policies_dict['policies'][policy_index]['feature'] = feature
                 device_tracking_policies_dict['policies'][policy_index]['tgt_range'] = tgt_range
-                continue
 
         return device_tracking_policies_dict
