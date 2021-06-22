@@ -1,4 +1,4 @@
-"""  show_platform.py
+"""  show_power.py
 
 IOSXE parsers for the following show command:
 
