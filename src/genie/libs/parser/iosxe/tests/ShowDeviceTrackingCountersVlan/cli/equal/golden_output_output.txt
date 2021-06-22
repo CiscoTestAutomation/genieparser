@@ -1,25 +1,25 @@
 Received messages on vlan 39   :
 Protocol        Protocol message
-NDP             RS[15543] NS[5181] NA[10]
+NDP             RS[72027] NS[24009] NA[19]
 DHCPv6
 ARP
 DHCPv4
-ACD&DAD         --[5181]
+ACD&DAD         --[24009]
 
 Received Broadcast/Multicast messages on vlan 39   :
 Protocol        Protocol message
-NDP             RS[15543] NS[5181] NA[10]
+NDP             RS[72027] NS[24009] NA[19]
 DHCPv6
 ARP
 DHCPv4
 
 Bridged messages from vlan 39   :
 Protocol        Protocol message
-NDP             RS[15543] NS[8299]
+NDP             RS[68084] NS[34315]
 DHCPv6
-ARP
+ARP             REQ[132]
 DHCPv4
-ACD&DAD         --[5171]
+ACD&DAD         --[23994]
 
 Broadcast/Multicast converted to unicast messages from vlan 39   :
 Protocol        Protocol message
@@ -31,8 +31,8 @@ ACD&DAD
 
 Probe message on vlan 39   :
 Type            Protocol message
-PROBE_SEND      NS[3128]
-PROBE_REPLY     NA[10]
+PROBE_SEND      NS[10321] REQ[132]
+PROBE_REPLY     NA[19]
 
 Limited Broadcast to Local message on vlan 39   :
 Type            Protocol message
@@ -43,13 +43,13 @@ DHCPv4
 
 Dropped messages on vlan 39   :
 Feature             Protocol Msg [Total dropped]
-Device-tracking:    NDP      NS  [10]
-                    reason:  Silent drop [10]
+Device-tracking:    NDP      NS  [15]
+                    reason:  Silent drop [15]
 
-                            NA  [10]
-                    reason:  Silent drop [10]
+                             NA  [19]
+                    reason:  Silent drop [19]
 
-ACD&DAD:            --       --  [10]
+ACD&DAD:            --       --  [15]
 
 
-Faults on vlan 39   : 
+Faults on vlan 39   :

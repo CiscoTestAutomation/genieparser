@@ -1,36 +1,36 @@
 expected_output = {
     "vlanid": {
-        "39": {
+        39: {
             "received": {
                 "ndp": {
-                    "RS": 71763,
-                    "NS": 23921,
+                    "RS": 72027,
+                    "NS": 24009,
                     "NA": 19
                 },
-                "acd&dad": 23921
+                "acd&dad": 24009
             },
             "received_broadcast_multicast": {
                 "ndp": {
-                    "RS": 71763,
-                    "NS": 23921,
+                    "RS": 72027,
+                    "NS": 24009,
                     "NA": 19
                 }
             },
             "bridged": {
                 "ndp": {
-                    "RS": 67820,
-                    "NS": 34227
+                    "RS": 68084,
+                    "NS": 34315
                 },
                 "arp": {
-                    "REQ": 113
+                    "REQ": 132
                 },
-                "acd&dad": 23906
+                "acd&dad": 23994
             },
             "broadcast_multicast_to_unicast": {},
             "probe": {
                 "probe_send": {
                     "NS": 10321,
-                    "REQ": 113
+                    "REQ": 132
                 },
                 "probe_reply": {
                     "NA": 19

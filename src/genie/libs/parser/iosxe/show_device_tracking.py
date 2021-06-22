@@ -353,7 +353,7 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         last_key = ''
 
         #  Binding table configuration:
-        #  -----------git st-----------------
+        #  ----------------------------
         #  max/box  : no limit
         #  max/vlan : no limit
         #  max/port : no limit
@@ -361,14 +361,14 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
 
         #  Binding table current counters:
         #  ------------------------------
-        #  dynamic  : 2
-        #  local    : 0
+        #  dynamic  : 1
+        #  local    : 1
         #  total    : 4
 
         #  Binding table counters by state:
         #  ----------------------------------
-        #  VERIFY     : 1
-        #  REACHABLE  : 2
+        #  REACHABLE  : 1
+        #  STALE      : 2
         #  DOWN       : 1
         #    total    : 4
 
@@ -380,10 +380,10 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
 
 
         #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
-        # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       6mn        VERIFY     292 s try 3      no         yes          0000.0000.0000
-        # ND  FE80::A595:24BF:CA8A:8242                0050.56b0.afed(R)      Twe1/0/42  access     39  (  39)      0005       76s        REACHABLE  228 s try 0      yes        yes          0000.0000.0000     test (Device-tracking)
-        # ND  FE80::32CB:2A4A:B558:324B                0050.56b0.babc(R)      Twe1/0/42  access     39  (  39)      0005       3mn        REACHABLE  66 s             yes        yes          0000.0000.0000     test (Device-tracking)
-        # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       18702mn    DOWN       N/A              no         yes          0000.0000.0000
+        # ND  100.100.100.1                            dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0024       92mn       STALE      83192 s          no         no           0000.0000.0000     test (Device-tracking)
+        # L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
+        # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
+        # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
 
         #  Binding table configuration:
         binding_table_configuration_capture = re.compile(r'^Binding\s+table\s+configuration:$')
@@ -396,11 +396,11 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         #  max/vlan : no limit
         #  max/port : no limit
         #  max/mac  : no limit
-        #  dynamic  : 2
-        #  local    : 0
+        #  dynamic  : 1
+        #  local    : 1
         #  total    : 4
-        #  VERIFY     : 1
-        #  REACHABLE  : 2
+        #  REACHABLE  : 1
+        #  STALE      : 2
         #  DOWN       : 1
         #    total    : 4
         binding_table_info = re.compile(r'^(?P<parameter>(\S+))\s+:\s+(?P<info>(\S+)|(\S+\s+\S+))$')
@@ -408,10 +408,10 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
         device_header_capture = re.compile(r'^Network\s+Layer\s+Address\s+Link\s+Layer\s+Address\s+Interface\s+mode\s+vlan\(prim\)\s+prlvl\s+age\s+state\s+Time\s+left\s+Filter\s+In\s+Crimson\s+Client\s+ID\s+Policy\s+\(feature\)$')
 
-        # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       6mn        VERIFY     292 s try 3      no         yes          0000.0000.0000
-        # ND  FE80::A595:24BF:CA8A:8242                0050.56b0.afed(R)      Twe1/0/42  access     39  (  39)      0005       76s        REACHABLE  228 s try 0      yes        yes          0000.0000.0000     test (Device-tracking)
-        # ND  FE80::32CB:2A4A:B558:324B                0050.56b0.babc(R)      Twe1/0/42  access     39  (  39)      0005       3mn        REACHABLE  66 s             yes        yes          0000.0000.0000     test (Device-tracking)
-        # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       18702mn    DOWN       N/A              no         yes          0000.0000.0000
+        # ND  100.100.100.1                            dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0024       92mn       STALE      83192 s          no         no           0000.0000.0000     test (Device-tracking)
+        # L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
+        # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
+        # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
         device_info_capture = re.compile(r'^(?P<dev_code>(\S+))\s+(?P<network_layer_address>(\S+))'
                                          r'\s+(?P<link_layer_address>(\S+))\s+(?P<interface>(\S+))'
                                          r'\s+(?P<mode>(\S+))\s+(?P<vlan_id>(\d+))\s+\(\s+\d+\)'
@@ -465,11 +465,11 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
                 #  max/vlan : no limit
                 #  max/port : no limit
                 #  max/mac  : no limit
-                #  dynamic  : 2
-                #  local    : 0
+                #  dynamic  : 1
+                #  local    : 1
                 #  total    : 4
-                #  VERIFY     : 1
-                #  REACHABLE  : 2
+                #  REACHABLE  : 1
+                #  STALE      : 2
                 #  DOWN       : 1
                 #    total    : 4
                 match = binding_table_info.match(line)
@@ -483,10 +483,10 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
                         device_tracking_database_details_dict[last_key][key] = value
                     continue
 
-                # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       6mn        VERIFY     292 s try 3      no         yes          0000.0000.0000
-                # ND  FE80::A595:24BF:CA8A:8242                0050.56b0.afed(R)      Twe1/0/42  access     39  (  39)      0005       76s        REACHABLE  228 s try 0      yes        yes          0000.0000.0000     test (Device-tracking)
-                # ND  FE80::32CB:2A4A:B558:324B                0050.56b0.babc(R)      Twe1/0/42  access     39  (  39)      0005       3mn        REACHABLE  66 s             yes        yes          0000.0000.0000     test (Device-tracking)
-                # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       18702mn    DOWN       N/A              no         yes          0000.0000.0000
+                # ND  100.100.100.1                            dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0024       92mn       STALE      83192 s          no         no           0000.0000.0000     test (Device-tracking)
+                # L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
+                # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
+                # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
                 match = device_info_capture.match(line)
                 if match:
                     device_index += 1
@@ -500,8 +500,6 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
 
                     device_dict = device_tracking_database_details_dict.setdefault(last_key, {}) \
                                                                     .setdefault(device_index, {})
-
-                    print(device_tracking_database_details_dict)
 
                     for key, value in groups.items():
                         if value.isdigit():
@@ -721,7 +719,7 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
 # Schema for:
 #   * 'show ipv6 nd raguard policy {policy_name}'
 # ========================
-class ShowRAGuardPolicySchema(MetaParser):
+class ShowIpv6RaGuardPolicySchema(MetaParser):
     '''Schema for:
         * 'show ipv6 nd raguard policy {policy_name}'
     '''
@@ -754,7 +752,7 @@ class ShowRAGuardPolicySchema(MetaParser):
 # Parser for:
 #   * 'show ipv6 nd raguard policy {policy_name}'
 # ========================
-class ShowRAGuardPolicy(ShowRAGuardPolicySchema):
+class ShowIpv6RaGuardPolicy(ShowIpv6RaGuardPolicySchema):
     '''Parser for:
         * 'show ipv6 nd raguard policy {policy_name}'
     '''
@@ -881,8 +879,6 @@ class ShowRAGuardPolicy(ShowRAGuardPolicySchema):
                     for key, value in groups.items():
                         device_dict[key] = value
 
-        import pprint
-        pprint.pprint(ipv6_nd_raguard_dict)
         return ipv6_nd_raguard_dict
 
 
@@ -890,7 +886,7 @@ class ShowRAGuardPolicy(ShowRAGuardPolicySchema):
 # Schema for:
 #   * 'show ipv6 source-guard policy {policy_name}'
 # ========================
-class ShowSourceGuardPolicySchema(MetaParser):
+class ShowIpv6SourceGuardPolicySchema(MetaParser):
     '''Schema for:
         * 'show ipv6 source-guard policy {policy_name}'
     '''
@@ -919,7 +915,7 @@ class ShowSourceGuardPolicySchema(MetaParser):
 # Parser for:
 #   * 'show ipv6 source-guard policy {policy_name}'
 # ========================
-class ShowSourceGuardPolicy(ShowSourceGuardPolicySchema):
+class ShowIpv6SourceGuardPolicy(ShowIpv6SourceGuardPolicySchema):
     '''Parser for:
         * 'show ipv6 source-guard policy {policy_name}'
     '''
@@ -1035,7 +1031,7 @@ class ShowSourceGuardPolicy(ShowSourceGuardPolicySchema):
 # Schema for:
 #   * 'show device-tracking counters vlan {vlanid}'
 # ========================
-class ShowDeviceTrackingCountersVlanIDSchema(MetaParser):
+class ShowDeviceTrackingCountersVlanSchema(MetaParser):
     '''Schema for:
         * 'show device-tracking counters vlan {vlanid}'
     '''
@@ -1066,7 +1062,7 @@ class ShowDeviceTrackingCountersVlanIDSchema(MetaParser):
 # Parser for:
 #   * 'show device-tracking counters vlan {vlanid}'
 # ========================
-class ShowDeviceTrackingCountersVlanID(ShowDeviceTrackingCountersVlanIDSchema):
+class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
     '''Parser for:
         * 'show device-tracking counters vlan {vlanid}'
     '''
@@ -1197,13 +1193,14 @@ class ShowDeviceTrackingCountersVlanID(ShowDeviceTrackingCountersVlanIDSchema):
             dropped_message_info,
         ]
 
-        message_dict = device_tracking_counters_vlanid_dict.setdefault('vlanid', {}) \
-                                                            .setdefault(int(vlanid), {})
         for line in output.splitlines():
             line = line.strip()
             if not line:
                 continue
 
+            if not device_tracking_counters_vlanid_dict:
+                message_dict = device_tracking_counters_vlanid_dict.setdefault('vlanid', {}) \
+                                                                   .setdefault(int(vlanid), {})
             # Received messages on vlan 39   :
             match = received_messages_capture.match(line)
             if match:

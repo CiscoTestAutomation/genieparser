@@ -1,5 +1,5 @@
  Binding table configuration:
- -----------git st-----------------
+ ----------------------------
  max/box  : no limit
  max/vlan : no limit
  max/port : no limit
@@ -7,14 +7,14 @@
 
  Binding table current counters:
  ------------------------------
- dynamic  : 2
- local    : 0
+ dynamic  : 1
+ local    : 1
  total    : 4
 
  Binding table counters by state:
  ----------------------------------
- VERIFY     : 1
- REACHABLE  : 2
+ REACHABLE  : 1
+ STALE      : 2
  DOWN       : 1
    total    : 4
 
@@ -26,7 +26,7 @@ Preflevel flags (prlvl):
 
 
     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
-S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       6mn        VERIFY     292 s try 3      no         yes          0000.0000.0000
-ND  FE80::A595:24BF:CA8A:8242                0050.56b0.afed(R)      Twe1/0/42  access     39  (  39)      0005       76s        REACHABLE  228 s try 0      yes        yes          0000.0000.0000     test (Device-tracking)
-ND  FE80::32CB:2A4A:B558:324B                0050.56b0.babc(R)      Twe1/0/42  access     39  (  39)      0005       3mn        REACHABLE  66 s             yes        yes          0000.0000.0000     test (Device-tracking)
-S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       18702mn    DOWN       N/A              no         yes          0000.0000.0000
+ND  100.100.100.1                            dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0024       92mn       STALE      83192 s          no         no           0000.0000.0000     test (Device-tracking)
+L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
+S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
+S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
