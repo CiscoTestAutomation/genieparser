@@ -1422,6 +1422,8 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
         # Avoid Date and Time: Wed Sep 25 20:09:36.362 UTC
         p33 = re.compile(r'^(?P<mpls>.{1,12}\S) +(?P<local>.+\S) +(?P<remote>.+)$')
 
+        # (control word)                 (control word)
+        # (router alert label)           (router alert label)
         p33_1 = re.compile(r'^\((?P<local>.+)(\) +\()(?P<remote>.+)\)$')
 
         # ------------ ------------------------------ -----------------------------
@@ -2608,11 +2610,12 @@ class ShowL2vpnBridgeDomainDetail(ShowL2vpnBridgeDomainDetailSchema):
                         mpls_dict.update({'remote': remote})
                 continue
 
+            # (control word)                 (control word)
+            # (router alert label)           (router alert label)
             m = p33_1.match(line)
             if m:
-                if label_found:
-                    if interface_found:
-                        mpls_dict.update({'local': m.groupdict()['local']})
-                        mpls_dict.update({'remote': m.groupdict()['remote']})
+                if label_found and interface_found:
+                    mpls_dict.update({'local': m.groupdict()['local']})
+                    mpls_dict.update({'remote': m.groupdict()['remote']})
 
         return ret_dict
