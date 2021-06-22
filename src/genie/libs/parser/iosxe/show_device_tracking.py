@@ -143,7 +143,7 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
                 continue
             # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
             elif device_info_capture_database.match(line):
-                device_index = device_index + 1
+                device_index += 1
                 device_info_capture_database_match = device_info_capture_database.match(line)
                 groups = device_info_capture_database_match.groupdict()
                 dev_code = groups['dev_code']
@@ -364,16 +364,23 @@ class ShowDeviceTrackingPolicies(ShowDeviceTrackingPoliciesSchema):
         policy_info_capture = re.compile(
             r"^(?P<target>(\S+)|(vlan\s+\S+))\s+(?P<policy_type>[a-zA-Z]+)\s+"
             r"(?P<policy_name>\S+)\s+(?P<feature>(\S+\s?)+)\s+(?P<tgt_range>vlan\s+\S+)$")
-        for line in out.splitlines():
+
+        lines = out.splitlines()
+        
+        #Target     Type   Policy     Feature        Target range
+        policy_info_header_capture_match = policy_info_header_capture.match(lines[0].strip())
+        if policy_info_header_capture_match:
+            group = policy_info_header_capture_match.groupdict()
+        else:
+            return {'policies':{}}
+        
+        for line in lines[1:]:
             line = line.strip()
-
-            if policy_info_header_capture.match(line):
-                policy_info_header_capture_match = policy_info_header_capture.match(line)
-                group = policy_info_header_capture_match.groupdict()
-
-            elif policy_info_capture.match(line):
-                policy_index = policy_index + 1
-                policy_info_capture_match = policy_info_capture.match(line)
+            
+            # vlan 39    VLAN   test1    Device-tracking  vlan all
+            policy_info_capture_match = policy_info_capture.match(line)
+            if policy_info_capture_match:
+                policy_index += 1
                 group = policy_info_capture_match.groupdict()
 
                 target = group['target']
