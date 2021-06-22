@@ -953,10 +953,10 @@ class ShowSourceGuardPolicy(ShowSourceGuardPolicySchema):
         ipv6_source_guard_trusted_capture = re.compile(r'^(?P<trusted>(trusted))$')
 
         #   validate prefix
-        ipv6_source_guard_prefix_capture = re.compile(r'^(?P<validate_address>(validate\s+prefix))$')
+        ipv6_source_guard_prefix_capture = re.compile(r'^(?P<validate_prefix>(validate\s+prefix))$')
 
         #   validate address
-        ipv6_source_guard_address_capture = re.compile(r'^(?P<validate_prefix>(validate\s+address))$')
+        ipv6_source_guard_address_capture = re.compile(r'^(?P<validate_address>((NOT\s)?validate\s+address))$')
 
         #   permit link-local
         ipv6_source_guard_permit_capture = re.compile(r'^permit\s+(?P<permit>(\S+))$')
@@ -1008,9 +1008,13 @@ class ShowSourceGuardPolicy(ShowSourceGuardPolicySchema):
 
                         for key, value in groups.items():
                             if capture == ipv6_source_guard_trusted_capture or \
-                                capture == ipv6_source_guard_prefix_capture or \
-                                capture == ipv6_source_guard_address_capture:
+                                capture == ipv6_source_guard_prefix_capture:
                                 ipv6_source_guard_dict[last_key][key] = 'yes'
+                            elif capture == ipv6_source_guard_address_capture:
+                                description = 'yes'
+                                if "NOT" in value:
+                                    description = 'no'
+                                ipv6_source_guard_dict[last_key][key] = description
                             else:
                                 ipv6_source_guard_dict[last_key][key] = value
 
