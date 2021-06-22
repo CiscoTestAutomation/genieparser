@@ -1,7 +1,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 
 # ==================================
@@ -1045,14 +1045,11 @@ class ShowDeviceTrackingCountersVlanIDSchema(MetaParser):
             int: {
                 Any(): {
                     Optional("protocol"): str,
-                    Optional("ndp"): str,
-                    Optional("dhcpv6"): str,
-                    Optional("arp"): str,
-                    Optional("dhcpv4"): str,
-                    Optional("acd&dad"): str,
+                    Optional("acd&dad"): int,
                     Optional("type"): str,
-                    Optional("probe_send"): str,
-                    Optional("probe_reply"): str,
+                    Optional(Or("ndp","dhcpv6","arp","dhcpv4","probe_send","probe_reply")): {
+                        Optional(Any()): int,
+                    },
                     Any(): {
                         Optional("protocol"): str,
                         Optional("message"): str,
@@ -1177,7 +1174,7 @@ class ShowDeviceTrackingCountersVlanID(ShowDeviceTrackingCountersVlanIDSchema):
         dpch6_info = re.compile(r'^(?P<protocol>(DHCPv6))\s+(?P<message>(.*))?$')
         arp_info = re.compile(r'^(?P<protocol>(ARP))\s+(?P<message>(.*))?$')
         dhcp4_info = re.compile(r'^(?P<protocol>(DHCPv4))\s+(?P<message>(.*))?$')
-        acd_dad_info = re.compile(r'^(?P<protocol>(ACD&DAD))\s+(?P<message>(.*))?$')
+        acd_dad_info = re.compile(r'^(?P<protocol>(ACD&DAD))\s+\S+\[(?P<message>(\d+))\]?$')
 
         # PROBE_SEND      NS[3128]
         # PROBE_REPLY     NA[10]
@@ -1282,9 +1279,21 @@ class ShowDeviceTrackingCountersVlanID(ShowDeviceTrackingCountersVlanIDSchema):
                         elif capture == fault_info:
                             message = groups['fault']
                             message_dict[last_key].append(message)
-                        else:
+                        elif capture == acd_dad_info:
                             protocol = groups['protocol'].lower()
                             message = groups['message']
-                            message_dict[last_key][protocol] = message
+                            message_dict[last_key][protocol] = int(message)
+                        else:
+                            protocol = groups['protocol'].lower()
+                            messages = groups['message'].split()
+                            message_dict.setdefault(last_key, {}).setdefault(protocol, {})
+                            packet_capture = re.compile(r'^(?P<packet>(\S+))\[(?P<num>(\d+))\]$')
+                            for message in messages:
+                                packet_match = packet_capture.match(message)
+                                if packet_match:
+                                    packet_groups = packet_match.groupdict()
+                                    packet = packet_groups['packet']
+                                    num = packet_groups['num']
+                                    message_dict[last_key][protocol][packet] = int(num)
 
         return device_tracking_counters_vlanid_dict

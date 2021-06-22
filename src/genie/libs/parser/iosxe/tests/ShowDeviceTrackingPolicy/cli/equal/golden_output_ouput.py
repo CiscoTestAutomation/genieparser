@@ -33,7 +33,7 @@ expected_output = {
         "tracking": "enable"
     },
     "device": {
-        "1": {
+        1: {
             "target": "Twe1/0/42",
             "policy_type": "PORT",
             "policy_name": "test",
