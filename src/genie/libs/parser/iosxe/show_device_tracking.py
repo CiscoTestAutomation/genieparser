@@ -386,7 +386,7 @@ class ShowDeviceTrackingPolicies(ShowDeviceTrackingPoliciesSchema):
                 target = group['target']
                 policy_type = group['policy_type']
                 policy_name = group['policy_name']
-                feature = group['feature']
+                feature = group['feature'].strip()
                 tgt_range = group['tgt_range']
 
                 if not device_tracking_policies_dict.get('policies', {}):

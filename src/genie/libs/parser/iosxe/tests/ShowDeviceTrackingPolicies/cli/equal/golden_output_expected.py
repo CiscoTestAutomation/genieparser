@@ -11,14 +11,14 @@ expected_output = {
             'target': 'Twe1/0/42', 
             'policy_type': 'PORT', 
             'policy_name': 'test1', 
-            'feature': 'Source guard ', 
+            'feature': 'Source guard', 
             'tgt_range': 'vlan all'
         },
         3: {
             'target': 'Twe1/0/42', 
             'policy_type': 'PORT', 
             'policy_name': 'asdf', 
-            'feature': 'RA guard ', 
+            'feature': 'RA guard', 
             'tgt_range': 'vlan all'
         },
         4: {
