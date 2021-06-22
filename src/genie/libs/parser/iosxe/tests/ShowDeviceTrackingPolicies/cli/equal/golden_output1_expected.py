@@ -1,3 +1,1 @@
-expected_output = {
-    "policies": {}
-}
+expected_output = {}

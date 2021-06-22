@@ -357,7 +357,7 @@ class ShowDeviceTrackingPolicies(ShowDeviceTrackingPoliciesSchema):
         else:
             out = output
 
-        device_tracking_policies_dict = {'policies':{}}
+        device_tracking_policies_dict = {}
         policy_index = 0
 
         policy_info_header_capture = re.compile(r'^Target\s+Type\s+Policy\s+Feature\s+Target\s+range$')
@@ -368,7 +368,7 @@ class ShowDeviceTrackingPolicies(ShowDeviceTrackingPoliciesSchema):
         lines = out.splitlines()
         
         if len(lines) == 0:
-            return {}
+            return device_tracking_policies_dict
 
         #Target     Type   Policy     Feature        Target range
         policy_info_header_capture_match = policy_info_header_capture.match(lines[0].strip())
@@ -392,6 +392,8 @@ class ShowDeviceTrackingPolicies(ShowDeviceTrackingPoliciesSchema):
                 feature = group['feature'].strip()
                 tgt_range = group['tgt_range']
 
+                if not device_tracking_policies_dict.get('policies', {}):
+                    device_tracking_policies_dict['policies'] = {}
                 device_tracking_policies_dict['policies'][policy_index] = {}
                 device_tracking_policies_dict['policies'][policy_index]['target'] = target
                 device_tracking_policies_dict['policies'][policy_index]['policy_type'] = policy_type
