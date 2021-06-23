@@ -417,8 +417,6 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
                                          r'\s+(?P<mode>(\S+))\s+(?P<vlan_id>(\d+))\s+\(\s+\d+\)'
                                          r'\s+(?P<pref_level_code>(\d+))\s+(?P<age>(\S+))'
                                          r'\s+(?P<state>(\S+))\s+(?P<time_left>(try\s\d\s\d+\ss)|(N\/A)|(\d+\ss\stry\s\d)|(\d+\ss))?'
-                                        #  r'\s+(?P<state>(\S+))\s+(?P<time_left>(N\/A))?'
-
                                          r'\s+(?P<filter>(yes|no))\s+(?P<in_crimson>(\S+))'
                                          r'\s+(?P<client_id>(\S+))(\s+(?P<policy>(\S+)|(\S+\s+\S+)))?$')
 
