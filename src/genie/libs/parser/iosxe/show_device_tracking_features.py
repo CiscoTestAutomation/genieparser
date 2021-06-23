@@ -49,7 +49,7 @@ class ShowDeviceTrackingFeatures(ShowDeviceTrackingFeaturesSchema):
 
         p1 = re.compile(r'^(?P<feature>\S+.+\S+)\s+(?P<priority>\d+)\s+(?P<state>\w+)')
 
-        parser_dict = {'features': {}}
+        parser_dict = {}
 
         for line in output.splitlines():
             line = line.strip()
