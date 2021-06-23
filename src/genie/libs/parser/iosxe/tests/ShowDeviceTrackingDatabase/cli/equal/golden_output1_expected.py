@@ -27,7 +27,7 @@ expected_output = {
         },
         3: {
             "dev_code": "ND",
-            "network_layer_address": "10.10.10.10.12",
+            "network_layer_address": "10.10.10.12",
             "link_layer_address": "7081.05ff.eb43",
             "interface": "E0/2",
             "vlan_id": 224,
