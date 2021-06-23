@@ -125,6 +125,12 @@ class ShowStackPowerBudgeting(ShowStackPowerBudgetingSchema):
 
         # initial return dictionary
         ret_dict = {}
+          # Power Stack   PS-A PS-B Power    Alloc    Poe_Avail Consumd Pwr
+     #   	SW Name          (W) (W)   Budgt(W) Power(W) Pwr(W)    Sys/PoE(W)
+     #      -- -------------------- ----- ----- -------- -------- -------- ------------
+     #      1 Powerstack-1   1100 0    1100       575     525      155/0
+     #      2 Powerstack-2   1100 0    1100       575     525      155/0
+     #      -- -------------------- ----- ----- -------- -------- -------- ------------
 
         # initial regexp pattern
         p1 = re.compile(r'^(?P<switch_num>[\d]) +'
@@ -136,6 +142,8 @@ class ShowStackPowerBudgeting(ShowStackPowerBudgetingSchema):
                          '(?P<poe_avail_pwr>\d+) +'
                          '(?P<consumed_pwr_sys_poe>\d+\/\d+)$')
         
+     #       Totals:                               1150    1050      310/0
+
         p2 = re.compile(r'(^Totals:\s+) +'
                          '(?P<total_allocated_pwr_sys_poe>\d+) +'
                          '(?P<total_poe_avail_pwr_sys_poe>\d+) +'
@@ -143,6 +151,7 @@ class ShowStackPowerBudgeting(ShowStackPowerBudgetingSchema):
                          
 
         for line in out.splitlines():
+
             line = line.strip()
 
 
@@ -153,15 +162,14 @@ class ShowStackPowerBudgeting(ShowStackPowerBudgetingSchema):
                 name = group.pop('name')
                 stack_dict = ret_dict.setdefault('power_stack', {})\
                     .setdefault(name, {})
-                stack_dict['switch_num'] = group.pop('switch_num')
-                stack_dict['power_supply_a'] = group.pop('power_supply_a')
-                stack_dict['power_supply_b'] = group.pop('power_supply_b')
-                stack_dict['power_budget'] = group.pop('power_budget')
-                stack_dict['allocated_power'] = group.pop('allocated_power')
-                stack_dict['poe_avail_pwr'] = group.pop('poe_avail_pwr')
+                stack_dict['switch_num'] = group('switch_num')
+                stack_dict['power_supply_a'] = group('power_supply_a')
+                stack_dict['power_supply_b'] = group('power_supply_b')
+                stack_dict['power_budget'] = group('power_budget')
+                stack_dict['allocated_power'] = group('allocated_power')
+                stack_dict['poe_avail_pwr'] = group('poe_avail_pwr')
                 stack_dict['consumed_pwr_sys_poe'] = \
-                    group.pop('consumed_pwr_sys_poe')
-                stack_dict.update({k:int(v) for k, v in group.items()})
+                    group('consumed_pwr_sys_poe')
                 continue
 
             # Totals:                                  575    525      155/0
@@ -171,12 +179,11 @@ class ShowStackPowerBudgeting(ShowStackPowerBudgetingSchema):
                 power_dict = ret_dict.setdefault('total_power', {})\
                     .setdefault('stackpower', {})
                 power_dict['total_allocated_pwr_sys_poe'] = \
-                    group.pop('total_allocated_pwr_sys_poe')
+                    group('total_allocated_pwr_sys_poe')
                 power_dict['total_poe_avail_pwr_sys_poe'] = \
-                    group.pop('total_poe_avail_pwr_sys_poe')
+                    group('total_poe_avail_pwr_sys_poe')
                 power_dict['total_consumed_pwr_sys_poe'] = \
-                    group.pop('total_consumed_pwr_sys_poe')
-                power_dict.update({k:int(v) for k, v in group.items()})
+                    group('total_consumed_pwr_sys_poe')
                 continue
 
         return ret_dict
@@ -391,7 +398,7 @@ class ShowPowerInlineUpoePlus(ShowPowerInlineUpoePlusSchema):
         # Gi1/0/4     auto   SP   on            4.0       3.8       1       Ieee PD
         # Gi1/0/15    auto   SS   on,on         60.0      10.5      6       Ieee PD
         # Gi1/0/23    auto   DS   on,on         45.4      26.9      3,4     Ieee PD
-        p1 = re.compile(r'^(?P<intf>\w+\d+\/\d+\/\d+)\s+(?P<admin_state>[a-zA-Z]+)\s+(?P<type>\w+)\s+(?P<oper_state>[\,\w+]+)\s+(?P<allocated_power>[\d\.]+)\s+(?P<utilized_power>[\d\.]+)\s+(?P<class>[\w\,\/]+)\s+(?P<device>(?=\S).*(?<=\S))$')
+        p1 = re.compile(r'^(?P<intf>[\w\/]+)\s+(?P<admin_state>[a-zA-Z]+)\s+(?P<type>\w+)\s+(?P<oper_state>[\,\w+]+)\s+(?P<allocated_power>[\d\.]+)\s+(?P<utilized_power>[\d\.]+)\s+(?P<class>[\w\,\/]+)\s+(?P<device>.*)$')
 
         for line in out.splitlines():
             line = line.strip()
