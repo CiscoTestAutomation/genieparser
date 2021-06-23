@@ -5725,7 +5725,6 @@ class ShowOspfNeighbor(ShowOspfNeighborSchema):
         return ret_dict
 
 
-
 # ======================================================
 # parser schema for:
 #          * show ospf interface
@@ -5742,11 +5741,11 @@ class ShowOspfInterfaceSchema(MetaParser):
     """
     schema = {
         "vrf": {
-            Any(): {  # VRF information, if no, assign "default"
+            Any(): {
                 "address_family": {
-                    Any(): {  # IPv4 as initial value
+                    Any(): {
                         "instance": {
-                            Any(): {  # here is ospf name
+                            Any(): {
                                 Optional("interfaces"): {
                                     Any(): {
                                         "name": str,
@@ -5862,16 +5861,13 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
             if process_name and interface_name:
                 out = self.device.execute(
                     self.cli_command[3].format(process_name=process_name, 
-                                               interface_name=interface_name)
-                )
+                                               interface_name=interface_name))
             elif interface_name:
                 out = self.device.execute(
-                    self.cli_command[1].format(interface_name=interface_name)
-                )
+                    self.cli_command[1].format(interface_name=interface_name))
             elif process_name:
                 out = self.device.execute(
-                    self.cli_command[2].format(process_name=process_name)
-                )
+                    self.cli_command[2].format(process_name=process_name))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:
@@ -5895,6 +5891,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
         # Internet Address 10.36.3.3/32, Area 0
         p4 = re.compile(r'^Internet +Address +(?P<ip_address>(\d+.){3}\d+/\d+), +Area +(?P<area>\w+)')
+        
         # Internet Address 25.97.1.1/32, Area 0, SID 0, Strict-SPF SID 0
         p4_1 = re.compile(r'^Internet +Address +(?P<ip_address>(\d+.){3}\d+/\d+), +Area +(?P<area>\w+), +SID +'
                           r'(?P<sid>\d+), +Strict-SPF +SID +(?P<strict_spf_sid>\d+)$')
@@ -5923,6 +5920,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
 
         # Hello due in 00:00:07:171
         p10_1 = re.compile(r'^Hello +due +in +(?P<hello_timer>(\S+))$')
+        
         # No Hellos (Passive interface)
         p10_2 = re.compile(r"^No +Hellos +\(Passive +interface\)$")
 
@@ -5983,9 +5981,7 @@ class ShowOspfInterface(ShowOspfInterfaceSchema):
         p26 = re.compile(r"^Run as demand circuit\.$")
 
         # DoNotAge LSA not allowed (Number of DCbitless LSA is 1).
-        p27 = re.compile(
-            r"^DoNotAge +LSA +not +allowed +\(Number +of +DCbitless +LSA +is +(?P<num>(\d+))\)\.$"
-        )
+        p27 = re.compile(r"^DoNotAge +LSA +not +allowed +\(Number +of +DCbitless +LSA +is +(?P<num>(\d+))\)\.$")
 
         # Loopback interface is treated as a stub Host
         p28 = re.compile(r'^Loopback +interface +is +treated +as +a +stub +Host$')
