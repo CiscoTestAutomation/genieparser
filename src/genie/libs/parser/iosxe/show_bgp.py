@@ -2030,22 +2030,72 @@ class ShowIpBgpL2VPNEVPN(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
           * 'show ip bgp {address_family} {evi}'
           * 'show ip bgp {address_family} route-type {rt}'
           * 'show ip bgp {address_family} evi {evi} route-type {rt}'
+          * 'show ip bgp {address_family} route-type {rt} {esi} {eti} {mpls_label}'
+          * 'show ip bgp {address_family} route-type {rt} {esi} {eti}'
+          * 'show ip bgp {address_family} route-type {rt} {esi}'
+          * 'show ip bgp {address_family} route-type {rt} {eti} {mac} {ip}'
+          * 'show ip bgp {address_family} route-type {rt} {eti} {ip}'
+          * 'show ip bgp {address_family} route-type {rt} {esi} {ip}'
+          * 'show ip bgp {address_family} route-type {rt} {eti} {ip} {ip_len}'
+          * 'show ip bgp {address_family} route-type {rt} {eti} {src_ip} {group_ip} {orig_ip}'
+          * 'show ip bgp {address_family} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip}'
+          * 'show ip bgp {address_family} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip} {lg_sync}'
+          * 'show ip bgp {address_family} evi {evi} route-type {rt}'
+          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {mpls_label}', # RT1
+          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti}', # RT1
+          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi}', # RT1
+          * 'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {mac} {ip}', # RT2
+          * 'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {ip}', # RT3
+          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {ip}', # RT4 
+          * 'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {ip} {ip_len}', # RT5 
+          * 'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {src_ip} {group_ip} {orig_ip}', # RT6
+          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip}', # RT7
+          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip} {lg_sync}', # RT8
+          * 'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {mac} {ip}'
     '''
     cli_command = ['show ip bgp {address_family} detail',
                     'show ip bgp {address_family} evi {evi}',
-                    'show ip bgp {address_family} route-type {rt}',
-                    'show ip bgp {address_family} evi {evi} route-type {rt}']
+                    'show ip bgp {address_family} route-type {rt} ',
+                    'show ip bgp {address_family} route-type {rt} {esi} {eti} {mpls_label}', # RT1
+                    'show ip bgp {address_family} route-type {rt} {esi} {eti}', # RT1
+                    'show ip bgp {address_family} route-type {rt} {esi}', # RT1
+                    'show ip bgp {address_family} route-type {rt} {eti} {mac} {ip}', # RT2
+                    'show ip bgp {address_family} route-type {rt} {eti} {ip}', # RT3
+                    'show ip bgp {address_family} route-type {rt} {esi} {ip}', # RT4 
+                    'show ip bgp {address_family} route-type {rt} {eti} {ip} {ip_len}', # RT5 
+                    'show ip bgp {address_family} route-type {rt} {eti} {src_ip} {group_ip} {orig_ip}', # RT6
+                    'show ip bgp {address_family} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip}', # RT7
+                    'show ip bgp {address_family} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip} {lg_sync}', # RT8
+                    'show ip bgp {address_family} evi {evi} route-type {rt}'
+                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {mpls_label}', # RT1
+                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti}', # RT1
+                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi}', # RT1
+                    'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {mac} {ip}', # RT2
+                    'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {ip}', # RT3
+                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {ip}', # RT4 
+                    'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {ip} {ip_len}', # RT5 
+                    'show ip bgp {address_family} evi {evi} route-type {rt} {eti} {src_ip} {group_ip} {orig_ip}', # RT6
+                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip}', # RT7
+                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip} {lg_sync}', # RT8
+                    'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {mac} {ip}']
 
-    def cli(self, address_family='', evi='', rt='', output=None):
+    def cli(self, address_family='', evi='', rt='', output=None, **kwargs):
         if output is None:
             if evi and rt:
-                output = self.device.execute(self.cli_command[3].format(address_family='l2vpn evpn', evi=evi, rt=rt))
+                cmd = self.cli_command[3].format(address_family='l2vpn evpn', evi=evi, rt=rt)
             elif rt and not evi:
-                output = self.device.execute(self.cli_command[2].format(address_family='l2vpn evpn', rt=rt))
+                cmd = self.cli_command[2].format(address_family='l2vpn evpn', rt=rt)
             elif not rt and evi:
-                output = self.device.execute(self.cli_command[1].format(address_family='l2vpn evpn', evi=evi))
+                cmd = self.cli_command[1].format(address_family='l2vpn evpn', evi=evi)
             else:
-                output = self.device.execute(self.cli_command[0].format(address_family='l2vpn evpn'))
+                cmd = self.cli_command[0].format(address_family='l2vpn evpn')
+
+            for arg in ['esi', 'eti', 'mac', 'mpls_label', 'ip', 'ip_len', 'src_ip', 'group_ip', 'orig_ip', 'lg_sync']:
+                    if arg in kwargs and kwargs[arg]:
+                        cmd += ' {}'.format(kwargs[arg])
+
+            # import pdb; pdb.set_trace()
+            output = self.device.execute(cmd)
 
         show_output = output
         if evi and rt:
