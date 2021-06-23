@@ -90,7 +90,7 @@ expected_output = {
             "interface": "Vl222",
             "vlan_id": 222,
             "pref_level_code": 100,
-            "age": "10329mnmn",
+            "age": "10329mn",
             "state": "REACHABLE"
         },
         10: {
