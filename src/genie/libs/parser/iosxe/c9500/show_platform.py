@@ -209,9 +209,9 @@ class ShowVersion(ShowVersionSchema):
         p26 = re.compile(r'^Model +Revision +Number +: '
                          r'+(?P<model_rev_num>\S+)$')
 
-        # Motherboard Revision Number        : 4
+        # Motherboard Revision Number        : A4
         p27 = re.compile(r'^Motherboard +Revision +Number +: '
-                         r'+(?P<mb_rev_num>\d+)$')
+                         r'+(?P<mb_rev_num>\S+)$')
 
         # Model Number                       : C9500-32QC 
         p28 = re.compile(r'^Model +Number +: +(?P<model_num>\S+)$')
