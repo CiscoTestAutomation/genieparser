@@ -154,22 +154,20 @@ class ShowStackPowerBudgeting(ShowStackPowerBudgetingSchema):
 
             line = line.strip()
 
-
-             # 1 Powerstack-1   1100 0    1100       575     525      155/0
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 name = group.pop('name')
                 stack_dict = ret_dict.setdefault('power_stack', {})\
                     .setdefault(name, {})
-                stack_dict['switch_num'] = group('switch_num')
-                stack_dict['power_supply_a'] = group('power_supply_a')
-                stack_dict['power_supply_b'] = group('power_supply_b')
-                stack_dict['power_budget'] = group('power_budget')
-                stack_dict['allocated_power'] = group('allocated_power')
-                stack_dict['poe_avail_pwr'] = group('poe_avail_pwr')
+                stack_dict['switch_num'] = group['switch_num']
+                stack_dict['power_supply_a'] = group['power_supply_a']
+                stack_dict['power_supply_b'] = group['power_supply_b']
+                stack_dict['power_budget'] = group['power_budget']
+                stack_dict['allocated_power'] = group['allocated_power']
+                stack_dict['poe_avail_pwr'] = group['poe_avail_pwr']
                 stack_dict['consumed_pwr_sys_poe'] = \
-                    group('consumed_pwr_sys_poe')
+                    group['consumed_pwr_sys_poe']
                 continue
 
             # Totals:                                  575    525      155/0
@@ -179,11 +177,11 @@ class ShowStackPowerBudgeting(ShowStackPowerBudgetingSchema):
                 power_dict = ret_dict.setdefault('total_power', {})\
                     .setdefault('stackpower', {})
                 power_dict['total_allocated_pwr_sys_poe'] = \
-                    group('total_allocated_pwr_sys_poe')
+                    group['total_allocated_pwr_sys_poe']
                 power_dict['total_poe_avail_pwr_sys_poe'] = \
-                    group('total_poe_avail_pwr_sys_poe')
+                    group['total_poe_avail_pwr_sys_poe']
                 power_dict['total_consumed_pwr_sys_poe'] = \
-                    group('total_consumed_pwr_sys_poe')
+                    group['total_consumed_pwr_sys_poe']
                 continue
 
         return ret_dict
