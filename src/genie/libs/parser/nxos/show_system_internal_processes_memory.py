@@ -81,6 +81,4 @@ class ShowSystemInternalProcessesMemory(ShowSystemInternalProcessesMemorySchema)
                 pid_dict['tty'] = group['tty']
                 pid_dict['time'] = group['time']
 
-        print(ret_dict)
-
         return ret_dict
