@@ -52,8 +52,8 @@ class ShowSystemInternalProcessesMemory(ShowSystemInternalProcessesMemorySchema)
         # 7482 ?        Ssl  00:05:05    158    0 219576 1053628  3.7 /opt/mtx/bin/grpc -i 2626 -I
         # 27344 pts/0    Sl+  00:00:20      0   63 117180 709928  1.9 /isan/bin/vsh.bin
         p1 = re.compile(
-            r'^(?P<pid>\d+)\s+(?P<tty>\S+)\s+(?P<stat>\S+)\s+(?P<time>[\d:]{8})\s+(?P<majflt>\d+)\s+(?P<trs>\d+)\s+'
-            r'(?P<rss>\d+)\s+(?P<vsz>\d+)\s+(?P<mem_percent>[\d.]{2,})\s+(?P<command>.+$)')
+            r'^(?P<pid>\d+)\s+(?P<tty>\S+)\s+(?P<stat>\S+)\s+(?P<time>[\d:]+)\s+(?P<majflt>\d+)\s+(?P<trs>\d+)\s+'
+            r'(?P<rss>\d+)\s+(?P<vsz>\d+)\s+(?P<mem_percent>[\d.]+)\s+(?P<command>.+$)')
 
         ret_dict = {}
 
