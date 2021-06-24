@@ -49,15 +49,11 @@ class ShowSystemInternalProcessesMemory(ShowSystemInternalProcessesMemorySchema)
         else:
             out = output
 
-        # parser should never match
-        # PID TTY      STAT     TIME MAJFLT  TRS   RSS    VSZ %MEM COMMAND
-        # this is field headings and should not be considered
-
         # 7482 ?        Ssl  00:05:05    158    0 219576 1053628  3.7 /opt/mtx/bin/grpc -i 2626 -I
         # 27344 pts/0    Sl+  00:00:20      0   63 117180 709928  1.9 /isan/bin/vsh.bin
         p1 = re.compile(
-            r'(?P<pid>^\d+)\s+(?P<tty>\S+)\s+(?P<stat>\S+)\s+(?P<time>\d+:\d+:\d+)\s+(?P<majflt>\d+)\s+('
-            r'?P<trs>\d+)\s+(?P<rss>\d+)\s+(?P<vsz>\d+)\s+(?P<mem_percent>\d+\.\d+)\s+(?P<command>.+$)')
+            r'^(?P<pid>\d+)\s+(?P<tty>\S+)\s+(?P<stat>\S+)\s+(?P<time>[\d:]{8})\s+(?P<majflt>\d+)\s+(?P<trs>\d+)\s+'
+            r'(?P<rss>\d+)\s+(?P<vsz>\d+)\s+(?P<mem_percent>[\d.]{2,})\s+(?P<command>.+$)')
 
         ret_dict = {}
 
@@ -65,20 +61,23 @@ class ShowSystemInternalProcessesMemory(ShowSystemInternalProcessesMemorySchema)
             stripped_line = line.strip()
 
             # 27344 pts/0    Sl+  00:00:20      0   63 117180 709928  1.9 /isan/bin/vsh.bin
+            # 7482 ?        Ssl  00:05:05    158    0 219576 1053628  3.7 /opt/mtx/bin/grpc -i 2626 -I
             m = p1.match(stripped_line)
             if m:
 
-                pid = int(m.groupdict()['pid'])
-                tty = m.groupdict()['tty']
+                group = m.groupdict()
 
-                ret_dict.setdefault('pid', {}).setdefault(pid, {})
+                pid = int(group['pid'])
 
-                ret_dict.get('pid').get(pid).update({'stat': m.groupdict()['stat'], 'time': m.groupdict()['time'],
-                        'majflt': int(m.groupdict()['majflt']), 'trs': int(m.groupdict()['trs']),
-                        'rss': int(m.groupdict()['rss']), 'vsz': int(m.groupdict()['vsz']),
-                        'mem_percent': float(m.groupdict()['mem_percent']), 'command': m.groupdict()['command']})
+                pid_dict = ret_dict.setdefault('pid', {}).setdefault(pid, {})
 
-                if tty != '?':
-                    ret_dict.get('pid').get(pid).update({'tty': tty})
+                pid_dict['stat'] = group['stat']
+                pid_dict['majflt'] = int(group['majflt'])
+                pid_dict['trs'] = int(group['trs'])
+                pid_dict['rss'] = int(group['rss'])
+                pid_dict['vsz'] = int(group['vsz'])
+                pid_dict['mem_percent'] = float(group['mem_percent'])
+                pid_dict['command'] = group['command']
+                pid_dict['tty'] = group['tty']
 
         return ret_dict
