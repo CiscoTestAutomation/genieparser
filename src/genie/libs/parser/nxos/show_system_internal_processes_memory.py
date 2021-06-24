@@ -79,5 +79,8 @@ class ShowSystemInternalProcessesMemory(ShowSystemInternalProcessesMemorySchema)
                 pid_dict['mem_percent'] = float(group['mem_percent'])
                 pid_dict['command'] = group['command']
                 pid_dict['tty'] = group['tty']
+                pid_dict['time'] = group['time']
+
+        print(ret_dict)
 
         return ret_dict
