@@ -2066,7 +2066,7 @@ class ShowIpBgpL2VPNEVPN(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
                     'show ip bgp {address_family} route-type {rt} {eti} {src_ip} {group_ip} {orig_ip}', # RT6
                     'show ip bgp {address_family} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip}', # RT7
                     'show ip bgp {address_family} route-type {rt} {esi} {eti} {src_ip} {group_ip} {orig_ip} {lg_sync}', # RT8
-                    'show ip bgp {address_family} evi {evi} route-type {rt}'
+                    'show ip bgp {address_family} evi {evi} route-type {rt}',
                     'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti} {mpls_label}', # RT1
                     'show ip bgp {address_family} evi {evi} route-type {rt} {esi} {eti}', # RT1
                     'show ip bgp {address_family} evi {evi} route-type {rt} {esi}', # RT1
