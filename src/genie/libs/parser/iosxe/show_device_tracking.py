@@ -345,8 +345,10 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
 
     def cli(self, output=None):
 
-        if not output:
-            output = self.device.execute(self.cli_command)
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
 
         device_tracking_database_details_dict = {}
         device_index = 0
@@ -425,7 +427,7 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
             'policy',
         ]
 
-        for line in output.splitlines():
+        for line in out.splitlines():
             line = line.strip()
             if not line:
                 continue
@@ -562,7 +564,9 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
 
         if output is None:
             cmd = self.cli_command.format(policy_name=policy_name)
-            output = self.device.execute(cmd)
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         device_tracking_policy_dict = {}
         device_index = 0
@@ -649,7 +653,7 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
             device_tracking_policy_capture
         ]
 
-        for line in output.splitlines():
+        for line in out.splitlines():
             line = line.strip()
             if not line:
                 continue
@@ -761,7 +765,9 @@ class ShowIpv6RaGuardPolicy(ShowIpv6RaGuardPolicySchema):
 
         if output is None:
             cmd = self.cli_command.format(policy_name=policy_name)
-            output = self.device.execute(cmd)
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         ipv6_nd_raguard_dict = {}
         device_index = 0
@@ -831,7 +837,7 @@ class ShowIpv6RaGuardPolicy(ShowIpv6RaGuardPolicySchema):
             ipv6_nd_ragaurd_match_ipv6_access_list_capture,
         ]
 
-        for line in output.splitlines():
+        for line in out.splitlines():
             line = line.strip()
             if not line:
                 continue
@@ -924,7 +930,9 @@ class ShowIpv6SourceGuardPolicy(ShowIpv6SourceGuardPolicySchema):
 
         if output is None:
             cmd = self.cli_command.format(policy_name=policy_name)
-            output = self.device.execute(cmd)
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         ipv6_source_guard_dict = {}
         device_index = 0
@@ -974,7 +982,7 @@ class ShowIpv6SourceGuardPolicy(ShowIpv6SourceGuardPolicySchema):
             ipv6_source_guard_deny_capture,
         ]
 
-        for line in output.splitlines():
+        for line in out.splitlines():
             line = line.strip()
             if not line:
                 continue
@@ -1071,7 +1079,9 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
 
         if output is None:
             cmd = self.cli_command.format(vlanid=vlanid)
-            output = self.device.execute(cmd)
+            out = self.device.execute(cmd)
+        else:
+            out = output
 
         device_tracking_counters_vlanid_dict = {}
         last_key = ''
@@ -1191,7 +1201,7 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
             dropped_message_info,
         ]
 
-        for line in output.splitlines():
+        for line in out.splitlines():
             line = line.strip()
             if not line:
                 continue
