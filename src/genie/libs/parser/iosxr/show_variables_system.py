@@ -163,6 +163,5 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
                     pass
                 finally:
                     ret_dict.update({key: value})
-                    continue
 
         return ret_dict
