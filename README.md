@@ -42,6 +42,9 @@ environment, follow the commands below:
 # clone this repo
 bash$ git clone https://github.com/CiscoTestAutomation/genieparser.git
 
+# source pyats environment
+bash$ source /path/to/pyats_workspace/env.sh (or env.csh)
+
 # put all packages in dev mode
 bash$ cd genieparser
 bash$ make develop
