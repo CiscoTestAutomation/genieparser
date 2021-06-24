@@ -21,7 +21,7 @@ class ShowSystemInternalProcessesMemorySchema(MetaParser):
     schema = {
         'pid':
             {
-                int:
+                Any():
                     {
                         'stat': str,
                         'time': str,
