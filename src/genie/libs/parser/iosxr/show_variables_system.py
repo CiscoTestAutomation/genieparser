@@ -113,32 +113,9 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
         else:
             out = output
 
-        # dictionary of all schema entries that use an int
-        int_dict = {
-            'job_id': 1,
-            'instance_id': 1,
-            'exit_status': 1,
-            'sysmgr_restart_reason': 1,
-            'exec_pid': 1,
-            'taskid_map_size': 1,
-            'node_watcher': 1,
-            'iox_disable_sysmgr': 1,
-            'shlvl': 1,
-            'memdbg_enable': 1,
-            'iox': 1,
-            'rlimit': 1,
-            'boot_iox': 1,
-            'iox_no_config': 1,
-            'confreg': 1,
-            'sysmgr_vs_started': 1,
-            'respawn_count': 1,
-            'tty_category': 1,
-            'tty_port': 1,
-            'iox_disable_startup': 1
-        }
-
         # find path variables and do an individual parse later, this will not catch LOADPATH or PATH because it
         # lacks the _
+        # MIB_PATH = / pkg / mib
         p1 = re.compile(r'^.+_PATH=.+$')
 
         # GDB_PDEBUG=-P1
@@ -152,7 +129,7 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
         for line in out.splitlines():
             line.strip()
 
-            # check if the line is a path
+            # MIB_PATH=/pkg/mib
             m = p1.match(line)
             if m:
                 # if it is, use p2 to get a capture group of the prefix and the path
@@ -162,36 +139,30 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
 
                 path_dict = ret_dict.setdefault('paths', {})
                 path_dict.update({path_name: path_value})
-
                 continue
 
+            # GDB_PDEBUG=-P1
             m = p2.match(line)
             if m:
                 key = m.groupdict()['key'].lower()
                 value = m.groupdict()['value']
 
-                if key in int_dict:
-                    ret_dict.update({key: int(value)})
-
-                    continue
-
-                elif key == 'term':
+                if key == 'term':
                     term_list.append(value)
                     ret_dict.update({'term': term_list})
-
                     continue
 
-                elif key == 'path' or key == 'loadpath':
+                if key == 'path' or key == 'loadpath':
                     path_dict = ret_dict.setdefault('paths', {})
-
                     path_dict.update({key: value})
-                    # path_dict[key] = value
-
                     continue
 
-                else:
+                try:
+                    value = int(value)
+                except ValueError as e:
+                    pass
+                finally:
                     ret_dict.update({key: value})
-
                     continue
 
         return ret_dict
