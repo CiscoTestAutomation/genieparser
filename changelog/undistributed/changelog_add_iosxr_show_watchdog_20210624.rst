@@ -3,4 +3,5 @@
 --------------------------------------------------------------------------------
 * IOSXR
     * Added ShowWatchdogMemoryState:
-        * for 'show watchdog memory-state' and 'show watchdog memory-state Location {location}'
+        * show watchdog memory-state
+        * show watchdog memory-state Location {location}
