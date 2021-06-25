@@ -31,7 +31,7 @@ class ShowSystemInternalProcessesMemorySchema(MetaParser):
                         'vsz': int,
                         'mem_percent': float,
                         'command': str,
-                        Optional('tty'): str
+                        'tty': str
                     }
             }
     }
