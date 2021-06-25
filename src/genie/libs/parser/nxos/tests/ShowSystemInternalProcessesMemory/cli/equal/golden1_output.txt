@@ -1,0 +1,191 @@
+ PID TTY      STAT     TIME MAJFLT  TRS   RSS    VSZ %MEM COMMAND
+ 7482 ?        Ssl  00:05:05    158    0 219576 1053628  3.7 /opt/mtx/bin/grpc -i 2626 -I
+ 6603 ?        Ssl  00:07:48     47    0 209124 951784  3.5 /isan/bin/routing-sw/pim
+ 6851 ?        Ssl  00:05:42     30    0 196108 844116  3.3 /isan/bin/routing-sw/pim6
+ 4128 ?        Ssl  00:01:06     22    0 194248 707912  3.3 /isan/bin/routing-sw/igmp
+ 4124 ?        Ssl  00:00:36     19    0 184352 700876  3.1 /isan/bin/routing-sw/mld
+ 1567 ?        Ss   00:00:06     17    0 174856 372836  2.9 /isan/bin/pixm_vl
+ 4284 ?        Ssl  00:03:41      8    0 173376 1038928  2.9 /isan/bin/routing-sw/mrib -m 4
+ 4287 ?        Ssl  00:02:19      8    0 172188 1049936  2.9 /isan/bin/routing-sw/m6rib -m 4
+ 1597 ?        Ssl  00:00:25     46    0 167052 540396  2.8 /isan/bin/routing-sw/clis -cli /isan/etc/routing-sw/cli
+ 1530 ?        Ssl  03:57:08    273    0 157968 703108  2.6 /isan/bin/svc_ifc_policyelem --x
+ 1708 ?        Ssl  00:01:10      5    0 143908 562528  2.4 /isan/bin/routing-sw/urib
+ 7210 ?        Ssl  00:00:41    260    0 139248 746976  2.3 /opt/mtx/bin/netconf -i 2624 -I
+ 1836 ?        Ssl  00:01:45     11    0 125576 579572  2.1 /isan/bin/routing-sw/arp
+ 7478 ?        Ssl  00:00:29     30    0 124700 695584  2.1 /opt/mtx/bin/restconf
+ 1667 ?        Ss   00:00:03      6    0 122436 441368  2.0 /isan/bin/ascii_cfg_server
+27344 pts/0    Sl+  00:00:20      0   63 117180 709928  1.9 /isan/bin/vsh.bin
+ 1528 ?        Ssl  04:00:58     79    0 115756 697892  1.9 /isan/bin/svc_ifc_eventmgr --x
+ 6995 ?        Ssl  00:08:54      4    0 113328 914112  1.9 /isan/bin/routing-sw/msdp
+ 4127 ?        Ssl  00:00:04     68    0 109160 579300  1.8 /isan/bin/ipfib
+ 1713 ?        Ss   00:00:03     19    0 102644 374180  1.7 /isan/bin/ifmgr
+ 1767 ?        Ssl  00:05:08     11    0 102284 621728  1.7 /isan/bin/routing-sw/u6rib
+ 1569 ?        Ssl  04:10:38     45    0 101608 749440  1.7 /isan/bin/nginx -c /nginx/conf/sysmgr_be_dme.conf -p /var/sysmgr_dme
+ 1987 ?        Ssl  03:05:03     36    0 101600 739200  1.7 /isan/bin/routing-sw/netstack /isan/etc/routing-sw/pm.cfg
+ 9357 ?        Ssl  00:40:34     37    0 95596 674364  1.6 /isan/bin/routing-sw/isis -t test
+ 9392 ?        Ssl  00:17:46     54    0 95208 1014956  1.6 /isan/bin/routing-sw/bgp -t 65000
+ 4126 ?        Ssl  00:05:38      7    0 89628 334700  1.5 /isan/bin/l2rib
+ 2065 ?        Ssl  00:05:36     45    0 88296 528636  1.5 /isan/bin/snmpd -f -s udp:161 udp6:161 tcp:161 tcp6:161
+ 1568 ?        Ss   00:00:05      7    0 86716 328564  1.4 /isan/bin/pixm_gl
+ 4192 ?        Ss   00:00:14     59    0 86636 290420  1.4 /isan/bin/aclqos
+ 6520 ?        Ssl  00:02:29      6    0 85804 578180  1.4 /isan/bin/routing-sw/mcastfwd
+ 6760 ?        Ssl  00:00:02      4    0 83052 595576  1.4 /isan/bin/routing-sw/mcastfwdv6
+ 4216 ?        Ss   00:00:04     77    0 80972 368732  1.3 /isan/bin/ethpm
+ 9322 ?        Ssl  00:45:28     46    0 76952 785932  1.3 /isan/bin/routing-sw/ospf -t 1
+ 4090 ?        Ssl  00:00:08     59    0 76164 402224  1.2 /isan/bin/ppm
+ 4217 ?        Ssl  00:00:04     54    0 75224 373944  1.2 /isan/bin/l2fm
+ 4131 ?        Ss   00:00:03     29    0 74168 342280  1.2 /isan/bin/eth_pcm
+ 4280 ?        Ssl  00:00:09     12    0 73268 380392  1.2 /isan/bin/ufdm
+17345 pts/4    Sl+  00:00:00      0   63 70604 364520  1.2 /isan/bin/vsh.bin
+ 9337 ?        Ssl  00:36:36     39    0 70376 645388  1.1 /isan/bin/routing-sw/ospfv3 -t 1
+ 4121 ?        Ssl  00:00:42      8    0 69684 294280  1.1 /isan/bin/nxpython /isan/bin/nia -s -i 2649 -I
+ 4129 ?        SNs  00:10:20      5    0 69200 379084  1.1 /isan/bin/icam
+ 4181 ?        Ss   00:05:21     50    0 69192 342988  1.1 /isan/bin/ipqosmgr
+ 4146 ?        Ss   00:00:03     18    0 69120 342364  1.1 /isan/bin/eltm
+ 4191 ?        Ss   00:00:16     38    0 68872 346204  1.1 /isan/bin/vlan_mgr
+ 1561 ?        Ssl  00:00:48      0    0 66620 340504  1.1 /isan/sbin/syslogd -n -m 0 -r
+ 1707 ?        Ssl  00:00:02     11    0 66028 607456  1.1 /isan/bin/routing-sw/l3vm
+ 1573 ?        Ssl  00:00:03      7    0 65100 332164  1.1 /isan/bin/feature_mgr
+ 4285 ?        Ssl  09:52:37     36    0 63000 327788  1.0 /isan/bin/mfdm
+ 1766 ?        Ssl  00:31:29      4    0 61624 587096  1.0 /isan/bin/routing-sw/am
+ 4102 ?        Ssl  00:00:25     16    0 61252 635640  1.0 /isan/bin/routing-sw/rpm
+ 8022 ?        Ss   00:15:24     16    0 61240 611792  1.0 /isan/bin/lldp
+ 7378 ?        Ssl  00:00:12      0    0 59860 299880  1.0 /isan/bin/nxpython /isan/bin/restconf -s -i 2625 -I
+ 1642 ?        Ssl  02:20:33      3    0 59700 360716  1.0 /isan/bin/sysinfo
+ 1837 ?        Ssl  00:01:10     16    0 59428 595544  1.0 /isan/bin/routing-sw/icmpv6
+ 1702 ?        Ss   00:00:02      4    0 58912 299692  1.0 /isan/bin/xbm
+ 1668 ?        Ss   00:00:19      5    0 58664 332600  0.9 /isan/bin/securityd
+ 1679 ?        Ss   00:00:10     34    0 58212 332908  0.9 /isan/bin/aclmgr
+ 4110 ?        Ss   00:11:01      3    0 57380 325220  0.9 /isan/bin/pfstat
+ 4231 ?        Ss   00:01:50     16    0 56876 331552  0.9 /isan/bin/stp
+ 7906 ?        S<s  00:01:16     41    0 56492 333188  0.9 /isan/bin/lacp
+ 1525 ?        Ss   00:09:14     41    0 56472 319796  0.9 /isan/bin/pfm
+ 4123 ?        Ss   00:00:06     15    0 55708 445348  0.9 /isan/bin/eth_span
+ 2060 ?        Ss   00:01:59      7    0 55488 482768  0.9 /isan/bin/cdpd
+ 1639 ?        Ss   00:00:05      3    0 55092 321516  0.9 /isan/bin/vdc_mgr
+ 1570 ?        Ssl  00:00:00      7    0 54220 422356  0.9 /isan/bin/mmode
+ 1712 ?        Ss   00:08:47      4    0 54136 325588  0.9 /isan/bin/diagmgr
+ 2064 ?        Ss   00:00:05      1    0 53256 567264  0.9 /isan/bin/otm
+ 4274 ?        Ss   00:00:09     26    0 52452 295424  0.8 /isan/bin/copp
+ 4098 ?        Ss   00:00:02      1    0 51772 294948  0.8 /isan/bin/vman
+ 1563 ?        Ssl  00:00:00     14    0 51752 425112  0.8 /isan/bin/template_manager
+ 4125 ?        Ss   00:00:06     14    0 51608 294008  0.8 /isan/bin/lim
+ 1669 ?        Ss   00:00:21      5    0 51092 327740  0.8 /isan/bin/cert_enrolld
+ 4120 ?        S<s  00:00:47      0    0 51084 598772  0.8 /isan/bin/ntp
+ 1710 ?        Ss   00:00:10      3    0 50816 325956  0.8 /isan/bin/bootvar
+ 2059 ?        Ss   00:00:28      7    0 50648 445412  0.8 /isan/bin/radiusd
+ 1598 ?        Ss   00:00:04     21    0 49736 293816  0.8 /isan/bin/licmgr
+ 1646 ?        Ss   00:00:00      3    0 49712 322676  0.8 /isan/bin/res_mgr
+ 1670 ?        Ss   00:00:22      2    0 49708 290664  0.8 /isan/bin/aaad
+ 2061 ?        Ss   00:00:08      9    0 49696 296316  0.8 /isan/bin/cfs
+ 1658 ?        Ss   00:00:02      3    0 49548 321376  0.8 /isan/bin/evms
+ 2121 ?        SNs  00:00:17      5    0 49432 287292  0.8 /isan/bin/callhome
+ 1665 ?        Ss   00:00:13      2    0 49236 290580  0.8 /isan/bin/clk_mgr
+ 1655 ?        Ssl  00:00:14     10    0 49092 249356  0.8 /isan/bin/kim
+ 4232 ?        Ss   00:00:05      2    0 48928 288924  0.8 /isan/bin/routing-sw/stripcl
+ 1654 ?        Ss   00:00:44      9    0 48680 292612  0.8 /isan/bin/lcm
+ 1644 ?        Ss   00:00:00      3    0 48584 291084  0.8 /isan/bin/sksd
+ 1649 ?        Ss   00:00:16      0    0 48124 322408  0.8 /isan/bin/patch_installer
+ 1575 ?        Ss   00:00:02      1    0 47768 287368  0.8 /isan/bin/capability
+ 4215 ?        Ss   00:00:06      6    0 47768 246372  0.8 /isan/bin/diag_port_lb
+ 1656 ?        Ss   00:00:02      0    0 47564 318516  0.8 /isan/bin/kafka
+ 4288 ?        Ss   00:00:05      1    0 47496 291216  0.8 /isan/bin/l2pt
+ 1652 ?        Ss   00:00:00      0    0 46680 284404  0.7 /isan/bin/mts_mgr
+ 1562 ?        Ss   00:00:36      2    0 46336 319848  0.7 /isan/bin/vshd
+ 1572 ?        Ss   00:00:31      2    0 46256 286296  0.7 /isan/bin/fs_daemon
+ 1657 ?        Ss   00:00:00      1    0 45980 301236  0.7 /isan/bin/issu_helper
+22593 ?        S<s  00:02:32    130    0 45964 315492  0.7 /isan/sbin/sysmgr -V
+ 1641 ?        Ss   00:00:13      1    0 45820 285416  0.7 /isan/bin/ttyd
+ 4107 ?        Ss   00:00:15     24    0 45756 408352  0.7 /isan/bin/pltfm_config
+ 4140 ?        Ss   00:00:03      1    0 45588 284816  0.7 /isan/bin/acllog
+ 4529 ?        Sl   00:05:42     18    0 45048 258800  0.7 /isan/bin/nxpython /isan/python/scripts/icam/main.py 9876 /logflash/icamsql_1_1.db 1048576 4 92
+ 1662 ?        Ss   00:00:15      8    0 43644 526596  0.7 /isan/bin/dhclient
+ 1663 ?        S<s  00:00:28      2    0 40072 251236  0.6 /isan/bin/crdcfg_server -N 1
+ 9303 ?        Ssl  00:13:55     22    0 38208 788088  0.6 /isan/bin/routing-sw/eigrp -t test
+ 1899 ?        Ssl  04:11:58      6    0 36020 279340  0.6 /isan/bin/routing-sw/pm /isan/etc/routing-sw/pm.cfg
+ 9372 ?        Ssl  00:11:38      6    0 28808 513936  0.4 /isan/bin/routing-sw/rip -t 1
+ 4108 ?        Ss   00:00:08      4    0 27924 223376  0.4 /isan/bin/plcmgr
+ 1576 ?        Ssl  00:01:48      6    0 27016 221488  0.4 /isan/bin/bloggerd
+ 1661 ?        Ss   00:05:36      4    0 25344 215048  0.4 /isan/bin/diagclient
+ 4101 ?        Ss   00:00:08     12    0 25060 217796  0.4 /isan/bin/spm
+ 4348 ?        Ss   00:00:01      6    0 24824 216260  0.4 /isan/bin/m2rib
+ 8551 ?        S    00:00:25      0    0 24796  57736  0.4 uwsgi -M --processes 1 --threads 2 -s /tmp/uwsgi.sock --wsgi-file=/nginx/script/json_rpc.py --daemonize /dev/null
+ 4122 ?        Ssl  00:00:02      0    0 23460 495252  0.3 /isan/bin/nbproxy
+ 1565 ?        Ssl  00:00:10      0    0 22984 218192  0.3 /isan/bin/routing-sw/smm -f /isan/etc/routing-sw/smm_shm.cfg
+ 1564 ?        Ss   00:00:00      1    0 22580 211932  0.3 /isan/bin/tamnw
+ 1701 ?        Ss   00:00:35      3    0 22516 220236  0.3 /isan/bin/device_test
+ 1734 ?        Ssl  00:00:03      2    0 22424 221812  0.3 /isan/bin/routing-sw/npacl
+ 4562 ?        S    00:01:50      0    0 22288 252388  0.3 /isan/bin/nxpython /isan/python/scripts/icam/main.py 9876 /logflash/icamsql_1_1.db 1048576 4 92
+ 4564 ?        S    00:01:36      0    0 22288 252388  0.3 /isan/bin/nxpython /isan/python/scripts/icam/main.py 9876 /logflash/icamsql_1_1.db 1048576 4 92
+ 1724 ?        SNs  00:00:03      2    0 22148 233752  0.3 /isan/bin/stats_client
+ 4132 ?        Ssl  00:32:05      1    0 22120 217148  0.3 /isan/bin/routing-sw/ecp
+ 1566 ?        Ss   00:00:16      0    0 21392 214416  0.3 /isan/bin/psshelper -s 219
+ 4286 ?        Ss   00:00:05      8    0 21192 214760  0.3 /isan/bin/mcm
+ 1577 ?        Ss   00:00:16      0    0 21036 211920  0.3 /isan/bin/psshelper -s 398
+ 4139 ?        Ssl  00:00:01      1    0 20832 225096  0.3 /isan/bin/adbm
+ 7283 ?        Sl   00:01:09      1    0 20792  66808  0.3 xosdsd
+ 4283 ?        Ss   00:00:05      2    0 20744 454776  0.3 /isan/bin/sal
+ 1643 ?        Ss   00:00:02      4    0 20180 213156  0.3 /isan/bin/snmpmib_proc
+ 1521 ?        Ss   00:00:00      6    0 20036 214484  0.3 /isan/bin/fw_app
+17434 pts/4    S+   00:00:00      0   63 19752 364592  0.3 /isan/bin/vsh.bin
+ 1711 ?        Ss   00:00:09      3    0 19556 215208  0.3 /isan/bin/crdclient
+ 1638 ?        Ss   00:00:05      1    0 19160 208952  0.3 /isan/bin/vmm
+ 1706 ?        Ss   00:00:02      1    0 19036 209000  0.3 /isan/bin/evmc
+ 1709 ?        Ssl  00:00:00      0    0 18900 221656  0.3 /isan/bin/expl
+ 1651 ?        Ss   00:00:03      0    0 18800 208616  0.3 /isan/bin/mvsh
+17337 ?        Ss   00:00:00      0    0 18708 210424  0.3 in.dcos-telnetd: 172.16.1.254
+ 4281 ?        Ss   00:00:02      0    0 18440 210356  0.3 /isan/bin/u2
+ 1671 ?        Ss   00:00:02      0    0 18272 211392  0.3 /isan/bin/obfl_sup
+ 1519 ?        Ss   00:00:00      2    0 18068 209204  0.3 /isan/bin/sdwrapd
+ 4180 ?        Ss   00:00:00      0    0 17724 208300  0.3 /isan/bin/eth_dstats
+17338 pts/4    Ss   00:00:00      0    0 17692  45800  0.3 login -- admin
+ 1660 ?        Ss   00:00:00      0    0 17544 228884  0.2 /isan/bin/epld_upgrade_stdby
+ 9863 pts/0    Ss   00:00:00      0    0 17472  44944  0.2 login -- admin
+ 1637 ?        Ss   00:00:07      0    0 17400 207996  0.2 /isan/bin/xmlma
+ 1529 ?        Ssl  00:00:13      4    0 17368 225172  0.2 /isan/bin/mts_telemetry_mgr
+ 4179 ?        S<   00:00:56      0    0 17352 207860  0.2 /isan/bin/ntpd -g -f /mnt/pss/ntp.drift -A -Y 65535 -n
+ 1574 ?        Ss   00:00:00      1    0 17148 208188  0.2 /isan/bin/confcheck
+ 1664 ?        Ss   00:00:00      0    0 17116 207944  0.2 /isan/bin/core_daemon
+ 1653 ?        Ss   00:00:00      0    0 16936 208548  0.2 /isan/bin/mping_server
+ 1648 ?        Ss   00:00:04      1    0 16904 209732  0.2 /isan/bin/plog_sup
+ 1640 ?        Ss   00:00:17      0    0 16640 216748  0.2 /isan/bin/usbhsd
+ 2062 ?        Ss   00:00:00      0    0 16352 207380  0.2 /isan/bin/routing-sw/netstack_dummy 267
+ 2063 ?        Ss   00:00:00      0    0 16264 207380  0.2 /isan/bin/routing-sw/netstack_dummy 269
+ 2066 ?        Ss   00:00:00      0    0 16228 207380  0.2 /isan/bin/routing-sw/netstack_dummy 271
+ 1522 ?        Ss   00:00:04      0    0 15996 207404  0.2 /isan/bin/dme_proxy
+ 1527 ?        Ss   00:00:04      0    0 15960 207408  0.2 /isan/bin/dme_bootup_proxy
+ 2072 ?        Ss   00:00:00      1    0 15732 202424  0.2 /isan/bin/routing-sw/dcos-xinetd -syslog local7 -loop 250 -stayalive -reuse -dontfork -f /etc/dcos-xinetd.conf -pidfile /etc/dcos-xinetd.pid
+ 8575 ?        Sl   00:00:00      0    0 14916  66956  0.2 uwsgi -M --processes 1 --threads 2 -s /tmp/uwsgi.sock --wsgi-file=/nginx/script/json_rpc.py --daemonize /dev/null
+ 1650 ?        Ss   00:00:00      6    0 14548  34296  0.2 nginx_f master process /usr/sbin/nginx -c /nginx/conf/sysmgr_be_nxapi.conf -p /var/sysmgr_nxapi
+ 1647 ?        Ss   00:00:16      2    0 11376 191768  0.1 /isan/bin/plugin
+ 1666 ?        Ss   00:00:03      3    0  9832 193080  0.1 /isan/bin/bios_daemon
+ 4111 ?        S    00:00:41      0    0  9192 198312  0.1 nginx_f worker process
+ 4143 ?        S    00:00:41      0    0  9192 198312  0.1 nginx_f worker process
+ 4174 ?        S    00:00:40      0    0  9192 198312  0.1 nginx_f worker process
+ 4089 ?        S    00:00:00      0    0  8888 198312  0.1 nginx_f worker process
+ 8574 ?        S    00:00:00      0    0  7216 215020  0.1 nginx_f worker process
+22627 ?        Sl   00:00:00     30    0  6436 143264  0.1 /usr/sbin/libvirtd --pid-file /var/run/libvirtd.pid
+ 8492 ?        Ss   00:00:00      0    0  5932 214836  0.1 nginx_f master process /tmp/nginx/nginx_1_fe -p /nginx_1_fe
+ 1633 ?        S    00:00:52      5    0  3696   5724  0.0 tamd_proc swtam1 2 0         -id id
+ 1583 ?        S    00:00:42      3    0  3552   5420  0.0 [tams_proc]
+ 7483 ?        S    00:01:03      0    0  2868   3776  0.0 /bin/bash /opt/mtx/bin/restconf-wd
+ 1599 ?        Ss   00:00:01      4    0  2732   3500  0.0 cisco -T sup1 10.1 3 -c /isan/etc/licenses.base:/isan/etc/licenses --lmgrd_start 60ba713d
+ 1025 ?        S    00:00:00      0    0  2600   3504  0.0 /bin/bash /isan/bin/bootflash_sync.sh
+22591 ?        Ss   00:00:00      0    0  2528   3504  0.0 /bin/bash /isan/bin/libvirtd_mon.sh
+ 1571 ?        Ss   00:00:01      4    0  2520   3260  0.0 /isan/bin/lmgrd -l +/dev/null -z -c /isan/etc/licenses.base:/isan/etc/licenses
+22592 ?        Ss   00:00:00      0    0  2508   3508  0.0 /bin/sh /isan/bin/libvirtd.sh
+15966 ?        Ss   00:00:00      0    0  2472  30508  0.0 /usr/sbin/sshd -f /etc/ssh/sshd_config_internal
+ 2079 ?        Ss   00:00:00      0    0  2444  15160  0.0 /usr/bin/incrond
+ 1517 ?        Ss   00:00:00      0    0  2300   3588  0.0 /isan/sbin/xinetd -syslog local7 -loop 250 -stayalive -reuse -dontfork
+17435 pts/4    R+   00:00:00      0  105  1920   9412  0.0 ps -ae -o pid,tname,stat,time,majflt,trs,rss,vsz,pmem,args --sort -rss
+ 1518 ?        Ss   00:00:00      0    0  1804  20332  0.0 /usr/sbin/in.tftpd -l -c -d /var/sysmgr/ftp
+15928 ?        Ss   00:00:00      0    0  1592  10536  0.0 /usr/sbin/rpc.statd -p 32765
+ 1044 ?        S    00:00:00      0    0  1532   6420  0.0 inotifywait -qmre create -o /tmp/tmp.QqZPlP3ysi/inotify_events /var/urifs/
+15923 ?        Ss   00:00:00      0    0  1516  11024  0.0 /usr/sbin/rpc.mountd -p 32767 -f /etc/exports -V 3
+17433 pts/4    S+   00:00:00      0   33  1488   6436  0.0 more
+15567 ?        Ss   00:00:00      0    0  1404   6280  0.0 /sbin/portmap
+    1 ?        Ss   00:00:06      0    0  1352   4208  0.0 init [3]
+20443 ?        Ss   00:00:00      0    0  1168   2552  0.0 /usr/sbin/mcelog --daemon --no-syslog
+ 1681 ?        Ss   00:00:00      0    0   892   4212  0.0 /sbin/klogd -2 -x -c 1
+23131 ?        S    00:00:00      0    0   236   6368  0.0 inotifywait -q -q -e modify /tmp/libvirtd.log
+17425 ?        S    00:00:00      0    0   204   2228  0.0 sleep 10

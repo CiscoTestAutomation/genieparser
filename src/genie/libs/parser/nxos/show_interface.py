@@ -1960,8 +1960,9 @@ class ShowVrfAllInterface(ShowVrfAllInterfaceSchema):
             # Ethernet2/4               default                              1  --
             # Ethernet2/5               default                              1  --
             # Ethernet2/6               default                              1  --
+            # port-channel1101          default                              1  --
 
-            p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\.\/]+)'
+            p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\.\/\-]+)'
                             ' *(?P<vrf>[a-zA-Z0-9]+)'
                             ' *(?P<vrf_id>[0-9]+)'
                             ' *(?P<site_of_origin>[a-zA-Z\-]+)$')
