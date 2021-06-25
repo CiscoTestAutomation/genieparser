@@ -113,8 +113,6 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
         else:
             out = output
 
-        # find path variables and do an individual parse later, this will not catch LOADPATH or PATH because it
-        # lacks the _
         # MIB_PATH = / pkg / mib
         p1 = re.compile(r'^.+_PATH=.+$')
 
@@ -132,7 +130,7 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
             # MIB_PATH=/pkg/mib
             m = p1.match(line)
             if m:
-                # if it is, use p2 to get a capture group of the prefix and the path
+                # use p2 to get a capture group of the prefix and the path
                 mp = p2.match(line)
                 path_name = mp.groupdict()['key'].lower()
                 path_value = mp.groupdict()['value']
@@ -152,16 +150,14 @@ class ShowVariablesSystem(ShowVariablesSystemSchema):
                     ret_dict.update({'term': term_list})
                     continue
 
-                if key == 'path' or key == 'loadpath':
+                if 'path' in key:
                     path_dict = ret_dict.setdefault('paths', {})
                     path_dict.update({key: value})
                     continue
 
                 try:
-                    value = int(value)
+                    ret_dict.update({key: int(value)})
                 except ValueError as e:
-                    pass
-                finally:
                     ret_dict.update({key: value})
 
         return ret_dict
