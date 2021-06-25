@@ -24,10 +24,11 @@ class ShowDeviceTrackingDatabaseSchema(MetaParser):
                 "vlan_id": int,
                 "pref_level_code": int,
                 "age": str,
-                "state": str
+                "state": str,
+                Optional("time_left"): str,
             }
         }
-    }   
+    }
 
 
 # ==================================
@@ -61,10 +62,10 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         # L   10.22.24.10                            7081.05ff.eb40     Vl236      236   0100  10330mn REACHABLE
         # L   10.22.20.10                            7081.05ff.eb40     Vl234      234   0100  10329mn REACHABLE
         # L   10.22.16.10                            7081.05ff.eb40     Vl232      232   0100  10330mn REACHABLE
-        # L   10.22.12.10                            7081.05ff.eb40     Vl228      228   0100  10330mn REACHABLE
-        # L   10.22.8.10                             7081.05ff.eb40     Vl226      226   0100  10329mn REACHABLE
-        # L   10.22.4.10                             7081.05ff.eb40     Vl224      224   0100  10329mn REACHABLE
-        # L   10.22.0.10                             7081.05ff.eb40     Vl222      222   0100  10329mn REACHABLE
+        # S   10.22.12.10                            7081.05ff.eb41     E0/0       228   0100  10330mn REACHABLE  N/A
+        # ND  10.22.8.10                             7081.05ff.eb42     E0/1       226   0005  235mn   STALE      try 0 73072 s
+        # ND  10.22.4.10                             7081.05ff.eb43     E0/2       224   0005  60s     REACHABLE  250 s
+        # ND  10.22.0.10                             7081.05ff.eb40     E0/3       222   0005  3mn     REACHABLE  83 s try 0
         # L   10.10.68.10                            7081.05ff.eb40     Vl243      243   0100  10330mn REACHABLE
 
         # Binding Table has 10 entries, 0 dynamic (limit 200000)
@@ -88,6 +89,12 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
         # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
         device_info_capture = re.compile(
             r"^(?P<dev_code>\S+)\s+(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)$")
+        # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+        device_info_capture_database = re.compile(
+            r"^(?P<dev_code>\S+)\s+"
+            r"(?P<network_layer_address>\S+)\s+(?P<link_layer_address>\S+)\s+"
+            r"(?P<interface>\S+)\s+(?P<vlan_id>\d+)\s+"
+            r"(?P<pref_level_code>\d+)\s+(?P<age>\S+)\s+(?P<state>\S+)\s+(?P<time_left>(try\s\d\s\d+\ss)|(N/A)|(\d+.*)|(\d+\ss\stry\d))$")
 
         device_index = 0
 
@@ -133,6 +140,33 @@ class ShowDeviceTrackingDatabase(ShowDeviceTrackingDatabaseSchema):
             elif device_info_header_capture.match(line):
                 device_info_header_capture_match = device_info_header_capture.match(line)
                 groups = device_info_header_capture_match.groupdict()
+                continue
+            # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+            elif device_info_capture_database.match(line):
+                device_index += 1
+                device_info_capture_database_match = device_info_capture_database.match(line)
+                groups = device_info_capture_database_match.groupdict()
+                dev_code = groups['dev_code']
+                network_layer_address = groups['network_layer_address']
+                link_layer_address = groups['link_layer_address']
+                interface = groups['interface']
+                vlan_id = int(groups['vlan_id'])
+                pref_level_code = int(groups['pref_level_code'])
+                age = groups['age']
+                state = groups['state']
+                time_left = groups['time_left']
+                if not device_tracking_database_dict.get('device', {}):
+                    device_tracking_database_dict['device'] = {}
+                device_tracking_database_dict['device'][device_index] = {}
+                device_tracking_database_dict['device'][device_index].update({'dev_code': dev_code})
+                device_tracking_database_dict['device'][device_index]['network_layer_address'] = network_layer_address
+                device_tracking_database_dict['device'][device_index]['link_layer_address'] = link_layer_address
+                device_tracking_database_dict['device'][device_index]['interface'] = interface
+                device_tracking_database_dict['device'][device_index]['vlan_id'] = vlan_id
+                device_tracking_database_dict['device'][device_index]['pref_level_code'] = pref_level_code
+                device_tracking_database_dict['device'][device_index]['age'] = age
+                device_tracking_database_dict['device'][device_index]['state'] = state
+                device_tracking_database_dict['device'][device_index]['time_left'] = time_left
                 continue
             # L   10.22.66.10                            7081.05ff.eb40     Vl230      230   0100  10194mn REACHABLE
             elif device_info_capture.match(line):
@@ -282,3 +316,89 @@ class ShowDeviceTrackingDatabaseInterface(ShowDeviceTrackingDatabaseInterfaceSch
                         device_info_obj[new_key].update(new_group)
 
         return device_info_obj
+
+
+# =========================================
+# Schema for:
+#  * 'show device-tracking policies'
+# ==========================================
+
+
+class ShowDeviceTrackingPoliciesSchema(MetaParser):
+
+    """Schema for show device-tracking policies"""
+
+    schema = {
+        "policies": {
+            int: {
+                "target": str,
+                "policy_type": str,
+                "policy_name": str,
+                "feature": str,
+                "tgt_range": str,
+            }
+        }
+    }
+
+# ======================================
+# Parser for:
+#  * 'show device-tracking policies'
+# ======================================
+
+
+class ShowDeviceTrackingPolicies(ShowDeviceTrackingPoliciesSchema):
+    """ Parser for show device-tracking policies """
+
+    cli_command = 'show device-tracking policies'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        device_tracking_policies_dict = {}
+        policy_index = 0
+
+        policy_info_header_capture = re.compile(r'^Target\s+Type\s+Policy\s+Feature\s+Target\s+range$')
+        policy_info_capture = re.compile(
+            r"^(?P<target>(\S+)|(vlan\s+\S+))\s+(?P<policy_type>[a-zA-Z]+)\s+"
+            r"(?P<policy_name>\S+)\s+(?P<feature>(\S+\s?)+)\s+(?P<tgt_range>vlan\s+\S+)$")
+
+        lines = out.splitlines()
+        
+        if len(lines) == 0:
+            return device_tracking_policies_dict
+
+        #Target     Type   Policy     Feature        Target range
+        policy_info_header_capture_match = policy_info_header_capture.match(lines[0].strip())
+        if policy_info_header_capture_match:
+            group = policy_info_header_capture_match.groupdict()
+        else:
+            return device_tracking_policies_dict
+        
+        for line in lines[1:]:
+            line = line.strip()
+            
+            # vlan 39    VLAN   test1    Device-tracking  vlan all
+            policy_info_capture_match = policy_info_capture.match(line)
+            if policy_info_capture_match:
+                policy_index += 1
+                group = policy_info_capture_match.groupdict()
+
+                target = group['target']
+                policy_type = group['policy_type']
+                policy_name = group['policy_name']
+                feature = group['feature'].strip()
+                tgt_range = group['tgt_range']
+
+                if not device_tracking_policies_dict.get('policies', {}):
+                    device_tracking_policies_dict['policies'] = {}
+                device_tracking_policies_dict['policies'][policy_index] = {}
+                device_tracking_policies_dict['policies'][policy_index]['target'] = target
+                device_tracking_policies_dict['policies'][policy_index]['policy_type'] = policy_type
+                device_tracking_policies_dict['policies'][policy_index]['policy_name'] = policy_name
+                device_tracking_policies_dict['policies'][policy_index]['feature'] = feature
+                device_tracking_policies_dict['policies'][policy_index]['tgt_range'] = tgt_range
+
+        return device_tracking_policies_dict
