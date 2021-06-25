@@ -22,7 +22,11 @@ from genie.libs.parser.utils.common import Common
 
 
 class ShowStackPowerSchema(MetaParser):
-    """Schema for show stack-power"""
+    """Schema for 
+        * show stack-power
+        * show stack-power budgeting
+    """
+
     schema = {
         'power_stack': {
             Any(): {
@@ -33,16 +37,36 @@ class ShowStackPowerSchema(MetaParser):
                 'allocated_power': int,
                 'unused_power': int,
                 'switch_num': int,
-                'power_supply_num': int
+                'power_supply_num': int,
+                Optional('switches'): {
+                    Any(): {
+                        'power_supply_a': int,
+                        'power_supply_b' : int,
+                        'power_budget': int,
+                        'allocated_power': int,
+                        'available_power': int,
+                        'consumed_power_sys': int,
+                        'consumed_power_poe': int,
+                    },
+                },
             },
-        }
+        },
+        Optional('totals'): {
+            'total_allocated_power': int,
+            'total_available_power': int,
+            'total_consumed_power_sys': int,
+            'total_consumed_power_poe': int,
+        },
     }
 
 
 class ShowStackPower(ShowStackPowerSchema):
-    """Parser for show stack-power"""
+    """Parser for 
+        * show stack-power
+        * show stack-power budgeting
+    """
 
-    cli_command = ['show stack-power']
+    cli_command = ['show stack-power, show stack-power budgeting']
 
     def cli(self,output=None):
         if output is None:
@@ -51,137 +75,71 @@ class ShowStackPower(ShowStackPowerSchema):
         else:
             out = output
 
-        # initial return dictionary
         ret_dict = {}
 
-        # initial regexp pattern
+        # Powerstack-1          SP-PS   Stndaln  715     30      200     485     1    1
         p1 = re.compile(r'^(?P<name>[\w\-]+) *'
-                         '(?P<mode>[\w\-]+) +'
-                         '(?P<topology>[\w\-]+) +'
-                         '(?P<total_power>\d+) +'
-                         '(?P<reserved_power>\d+) +'
-                         '(?P<allocated_power>\d+) +'
-                         '(?P<unused_power>\d+) +'
-                         '(?P<switch_num>\d+) +'
-                         '(?P<power_supply_num>\d+)$')
+                        r'(?P<mode>[\w\-]+) +'
+                        r'(?P<topology>[\w\-]+) +'
+                        r'(?P<total_power>\d+) +'
+                        r'(?P<reserved_power>\d+) +'
+                        r'(?P<allocated_power>\d+) +'
+                        r'(?P<unused_power>\d+) +'
+                        r'(?P<switch_num>\d+) +'
+                        r'(?P<power_supply_num>\d+)$')
+
+        # 1   Powerstack-1         0        0      1200      240        960     129 /0
+        p2 = re.compile(r'^(?P<switch_num>\d+) +'
+                        r'(?P<name>[\w-]+) *'
+                        r'(?P<power_supply_a>\d+) +'
+                        r'(?P<power_supply_b>\d+) +'
+                        r'(?P<power_budget>\d+) +'
+                        r'(?P<allocated_power>\d+) +'
+                        r'(?P<available_power>\d+) +'
+                        r'(?P<consumed_power_sys>\d+)[ \/]+'
+                        r'(?P<consumed_power_poe>\d+)$')
+
+        # Totals:                               1150    1050      310/0
+        p3 = re.compile(r'^Totals: +'
+                        r'(?P<total_allocated_power>\d+) +'
+                        r'(?P<total_available_power>\d+) +'
+                        r'(?P<total_consumed_power_sys>\d+)[ \/]+'
+                        r'(?P<total_consumed_power_poe>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
             
-            # Power Stack           Stack   Stack    Total   Rsvd    Alloc   Unused  Num  Num
-            # Name                  Mode    Topolgy  Pwr(W)  Pwr(W)  Pwr(W)  Pwr(W)  SW   PS
-            # --------------------  ------  -------  ------  ------  ------  ------  ---  ---
             # Powerstack-1          SP-PS   Stndaln  715     30      200     485     1    1
             m = p1.match(line)
             if m:
                 group = m.groupdict()
                 name = group.pop('name')
-                stack_dict = ret_dict.setdefault('power_stack', {}).setdefault(name, {})
+                stack_dict = ret_dict.setdefault('power_stack', {})\
+                                     .setdefault(name, {})
                 stack_dict['mode'] = group.pop('mode')
                 stack_dict['topology'] = group.pop('topology')
-                stack_dict.update(
-                       {k:int(v) for k, v in group.items()})
+                stack_dict.update({k:int(v) for k, v in group.items()})
                 continue
-        return ret_dict
 
-
-class ShowStackPowerBudgetingSchema(MetaParser):
-    """Schema for show stack-power budgeting """
-    schema = {
-        'power_stack': {
-            Any(): {
-                'switch_num': str,
-                'power_supply_a': str,
-                'power_supply_b' : str,
-                'power_budget': str,
-                'allocated_power': str,
-                'poe_avail_pwr': str,
-                'consumed_pwr_sys_poe': str,
-                Optional('total_allocated'): int,
-                Optional('total_available'): int,
-                Optional('total_consumed'): str     
-            },
-        },
-        'total_power': {
-            Any(): {
-                'total_allocated_pwr_sys_poe': str,
-                'total_poe_avail_pwr_sys_poe': str,
-                'total_consumed_pwr_sys_poe': str
-            }
-        }
-    }
-
-
-class ShowStackPowerBudgeting(ShowStackPowerBudgetingSchema):
-    """Parser for show stack-power Budgeting"""
-
-    cli_command = ['show stack-power budgeting']
-
-    def cli(self,output=None):
-        if output is None:
-            out = self.device.execute(self.cli_command)
-        else:
-            out = output
-
-        # initial return dictionary
-        ret_dict = {}
-          # Power Stack   PS-A PS-B Power    Alloc    Poe_Avail Consumd Pwr
-     #   	SW Name          (W) (W)   Budgt(W) Power(W) Pwr(W)    Sys/PoE(W)
-     #      -- -------------------- ----- ----- -------- -------- -------- ------------
-     #      1 Powerstack-1   1100 0    1100       575     525      155/0
-     #      2 Powerstack-2   1100 0    1100       575     525      155/0
-     #      -- -------------------- ----- ----- -------- -------- -------- ------------
-
-        # initial regexp pattern
-        p1 = re.compile(r'^(?P<switch_num>[\d]) +'
-                         '(?P<name>[\w\-\d]+) *'
-                         '(?P<power_supply_a>\d+) +'
-                         '(?P<power_supply_b>\d+) +'
-                         '(?P<power_budget>\d+) +'
-                         '(?P<allocated_power>\d+) +'
-                         '(?P<poe_avail_pwr>\d+) +'
-                         '(?P<consumed_pwr_sys_poe>\d+\/\d+)$')
-        
-     #       Totals:                               1150    1050      310/0
-
-        p2 = re.compile(r'(^Totals:\s+) +'
-                         '(?P<total_allocated_pwr_sys_poe>\d+) +'
-                         '(?P<total_poe_avail_pwr_sys_poe>\d+) +'
-                         '(?P<total_consumed_pwr_sys_poe>\d+\/\d+)$')
-                         
-
-        for line in out.splitlines():
-
-            line = line.strip()
-
-            m = p1.match(line)
+            # 1   Powerstack-1         0        0      1200      240        960     129 /0
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
-                name = group.pop('name')
-                stack_dict = ret_dict.setdefault('power_stack', {})\
-                    .setdefault(name, {})
-                stack_dict['switch_num'] = group['switch_num']
-                stack_dict['power_supply_a'] = group['power_supply_a']
-                stack_dict['power_supply_b'] = group['power_supply_b']
-                stack_dict['power_budget'] = group['power_budget']
-                stack_dict['allocated_power'] = group['allocated_power']
-                stack_dict['poe_avail_pwr'] = group['poe_avail_pwr']
-                stack_dict['consumed_pwr_sys_poe'] = \
-                    group['consumed_pwr_sys_poe']
+                stack_name = group.pop('name')
+                switch_num = group.pop('switch_num')
+                switch_dict = ret_dict.setdefault('power_stack', {})\
+                                      .setdefault(stack_name, {})\
+                                      .setdefault('switches', {})\
+                                      .setdefault(int(switch_num), {})
+                switch_dict.update({k:int(v) for k, v in group.items()})
                 continue
 
-            # Totals:                                  575    525      155/0
-            m = p2.match(line)
-            if m :
+            # Totals:                               1150    1050      310/0
+            m = p3.match(line)
+            if m:
                 group = m.groupdict()
-                power_dict = ret_dict.setdefault('total_power', {})\
-                    .setdefault('stackpower', {})
-                power_dict['total_allocated_pwr_sys_poe'] = \
-                    group['total_allocated_pwr_sys_poe']
-                power_dict['total_poe_avail_pwr_sys_poe'] = \
-                    group['total_poe_avail_pwr_sys_poe']
-                power_dict['total_consumed_pwr_sys_poe'] = \
-                    group['total_consumed_pwr_sys_poe']
+                total_dict = ret_dict.setdefault('totals', {})
+                total_dict.update({k:int(v) for k, v in group.items()})
                 continue
 
         return ret_dict
@@ -243,14 +201,14 @@ class ShowPowerInline(ShowPowerInlineSchema):
 
         # 1          1550.0      147.0      1403.0
         p2 = re.compile(r'^(?P<module>\d+)\s+'
-                         '(?P<available>[\d\.]+)\s+'
-                         '(?P<used>[\d\.]+)\s+'
-                         '(?P<remaining>[\d\.]+)\s*$')
+                        r'(?P<available>[\d\.]+)\s+'
+                        r'(?P<used>[\d\.]+)\s+'
+                        r'(?P<remaining>[\d\.]+)\s*$')
 
         # Available:1170.0(w)  Used:212.2(w)  Remaining:957.8(w)
         p3 = re.compile(r'^\s*[Aa]vailable\:(?P<available>[\d\.]+)\(\w+\)\s+'
-                         '[Uu]sed\:(?P<used>[\d\.]+)\(\w+\)\s+'
-                         '[Rr]emaining\:(?P<remaining>[\d\.]+)\(\w+\)\s*$')
+                        r'[Uu]sed\:(?P<used>[\d\.]+)\(\w+\)\s+'
+                        r'[Rr]emaining\:(?P<remaining>[\d\.]+)\(\w+\)\s*$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -306,13 +264,13 @@ class ShowPowerInlinePrioritySchema(MetaParser):
             Any(): {
                 'admin_state': str,
                 'oper_state': str,
-                Optional('device'): str,
-                'priority': str
+                'admin_priority': str,
             }
         }
     }
 
-class ShowPowerInlinePriority(ShowPowerInlineSchema):
+
+class ShowPowerInlinePriority(ShowPowerInlinePrioritySchema):
     """Parser for show power inline priority
                   show power inline priority <interface>"""
 
@@ -332,10 +290,10 @@ class ShowPowerInlinePriority(ShowPowerInlineSchema):
         ret_dict = {}
 
         #Gi1/0/1    auto   off        low
-        p1 = re.compile(r'^(?P<intf>\w+\d+\/\d+\/\d+)\s*'
-                        r'(?P<admin_state>\w+)\s+'
+        p1 = re.compile(r'^(?P<intf>[\w\/]+)\s+'
+                        r'(?P<admin_state>auto|off|static)\s+'
                         r'(?P<oper_state>\w+)\s+'
-                        r'(?P<priority>\w+)$')
+                        r'(?P<admin_priority>\w+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -346,10 +304,7 @@ class ShowPowerInlinePriority(ShowPowerInlineSchema):
                 group = m.groupdict()
                 intf = group.pop('intf')
                 intf_dict = ret_dict.setdefault('interface', {}).setdefault(intf, {})
-                intf_dict['admin_state'] = group.pop('admin_state')
-                intf_dict['oper_state'] =  group.pop('oper_state')
-                intf_dict['priority'] =  group.pop('priority')
-
+                intf_dict.update(group)
                 continue
 
         return ret_dict
