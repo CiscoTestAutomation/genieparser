@@ -1,35 +1,50 @@
 --------------------------------------------------------------------------------
                                 NEW
 --------------------------------------------------------------------------------
-* IOSXE
-  * New command parsers:
-    * show ipv6 eigrp interfaces
-    * show ipv6 eigrp interfaces detail
-    * show ip eigrp interfaces detail
-    * show ipv6 protocols
-    * show key chain
-  * Modified command parsers:
-    * show ip eigrp interfaces
-      * Adjusting p1 regex to support IPv6 too
-      * Offloading parser to a SuperParser class
-      * support eigrp named mode
-      * adding optional keys to ShowIpEigrpInterfacesSchema schema to support `show ip eigrp interfaces detail parser`
-* IOS
-  * New command parsers:
-    * show ipv6 eigrp interfaces
-    * show ipv6 eigrp interfaces detail
-    * show ip eigrp interfaces detail
-    * show ipv6 protocols
-    * show key chain
-  * Modified command parsers:
-    * show ip eigrp interfaces
-      * Adjusting p1 regex to support IPv6 too
-      * Offloading parser to a SuperParser class
-      * Support eigrp named mode
-      * adding optional keys to ShowIpEigrpInterfacesSchema schema to support `show ip eigrp interfaces detail parser`
 * ASA
-  * New command parsers:
-    * show crypto ikev2 sa
-    * show nameif
-    * show failover
-    * show failover interface
+    * Added ShowCryptoIkev2Sa:
+        * show crypto ikev2 sa
+    * Added ShowNameif:
+        * show nameif
+    * Added ShowFailover:
+        * show failover
+    * Added ShowFailoverInterface:
+        * show failover interface
+        
+* IOSXE
+    * Added ShowIpv6EigrpInterfaces:
+        * show ipv6 eigrp interfaces
+    * Added ShowIpEigrpInterfacesDetail:
+        * show ip eigrp interfaces detail
+    * Added ShowIpv6EigrpInterfacesDetail:
+        * show ipv6 eigrp interfaces detail
+    * Added ShowKeyChain:
+        * show key chain
+    * Added ShowIpv6Protocols:
+        * show ipv6 protocols
+        * show ipv6 protocols vrf {vrf}
+
+* IOS
+    * Added ShowIpv6EigrpInterfaces:
+        * show ipv6 eigrp interfaces
+    * Added ShowIpEigrpInterfacesDetail:
+        * show ip eigrp interfaces detail
+    * Added ShowIpv6EigrpInterfacesDetail:
+        * show ipv6 eigrp interfaces detail
+    * Added ShowKeyChain:
+        * show key chain
+    * Added ShowIpv6Protocols:
+        * show ipv6 protocols
+        * show ipv6 protocols vrf {vrf}
+
+
+--------------------------------------------------------------------------------
+                                FIX
+--------------------------------------------------------------------------------
+* IOSXE
+    * Modified ShowIpEigrpInterfaces:
+        * Adjusting p1 regex to support IPv6 too
+        * Offloading parser to a SuperParser class
+        * Support eigrp named mode
+        * Added Optional keys to ShowIpEigrpInterfacesSchema schema to support `show ip eigrp interfaces detail parser`
+
