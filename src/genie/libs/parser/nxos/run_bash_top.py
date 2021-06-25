@@ -84,7 +84,7 @@ class RunBashTop(RunBashTopSchema):
 
         if not output:
             with self.device.bash_console():
-                out = self.device.execute(self.cli_command.format(count=count))
+                out = self.device.execute(self.cli_command)
         else:
             out = output
 
