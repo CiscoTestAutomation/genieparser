@@ -2055,7 +2055,7 @@ class ShowIpBgpL2VPNEVPN(ShowBgpDetailSuperParser, ShowBgpAllDetailSchema):
     '''
     cli_command = ['show ip bgp {address_family} detail',
                     'show ip bgp {address_family} evi {evi}',
-                    'show ip bgp {address_family} route-type {rt} ',
+                    'show ip bgp {address_family} route-type {rt}',
                     'show ip bgp {address_family} route-type {rt} {esi} {eti} {mpls_label}', # RT1
                     'show ip bgp {address_family} route-type {rt} {esi} {eti}', # RT1
                     'show ip bgp {address_family} route-type {rt} {esi}', # RT1
