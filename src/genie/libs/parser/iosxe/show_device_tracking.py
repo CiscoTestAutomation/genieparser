@@ -343,7 +343,7 @@ class ShowDeviceTrackingDatabaseDetailsSchema(MetaParser):
             Optional("reachable"): int,
             Optional("stale"): int,
             Optional("down"): int,
-            Optional("total"): int,
+            "total": int,
         },
         "device": {
             int: {
@@ -386,7 +386,7 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
 
         device_tracking_database_details_dict = {}
         device_index = 0
-        last_key = ''
+        binding_key = ''
 
         #  Binding table configuration:
         #  ----------------------------
@@ -469,77 +469,76 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
             #  Binding table configuration:
             match = binding_table_configuration_capture.match(line)
             if match:
-                last_key = "binding_table_configuration"
-                device_tracking_database_details_dict.setdefault(last_key, {})
+                binding_key = "binding_table_configuration"
+                device_tracking_database_details_dict.setdefault(binding_key, {})
                 continue
 
             #  Binding table current counters:
             match = binding_table_counter_capture.match(line)
             if match:
-                last_key = "binding_table_count"
-                device_tracking_database_details_dict.setdefault(last_key, {})
+                binding_key = "binding_table_count"
+                device_tracking_database_details_dict.setdefault(binding_key, {})
                 continue
 
             #  Binding table counters by state:
             match = binding_table_state_capture.match(line)
             if match:
-                last_key = "binding_table_state_count"
-                device_tracking_database_details_dict.setdefault(last_key, {})
+                binding_key = "binding_table_state_count"
+                device_tracking_database_details_dict.setdefault(binding_key, {})
                 continue
 
             #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
             match = device_header_capture.match(line)
             if match:
-                last_key = "device"
-                device_tracking_database_details_dict.setdefault(last_key, {})
+                device_tracking_database_details_dict.setdefault('device', {})
                 continue
 
-            if last_key:
-                #  max/box  : no limit
-                #  max/vlan : no limit
-                #  max/port : no limit
-                #  max/mac  : no limit
-                #  dynamic  : 1
-                #  local    : 1
-                #  total    : 4
-                #  REACHABLE  : 1
-                #  STALE      : 2
-                #  DOWN       : 1
-                #    total    : 4
-                match = binding_table_info.match(line)
-                if match:
-                    groups = match.groupdict()
-                    key = groups['parameter'].lower()
-                    value = groups['info']
+            #  max/box  : no limit
+            #  max/vlan : no limit
+            #  max/port : no limit
+            #  max/mac  : no limit
+            #  dynamic  : 1
+            #  local    : 1
+            #  total    : 4
+            #  REACHABLE  : 1
+            #  STALE      : 2
+            #  DOWN       : 1
+            #    total    : 4
+            match = binding_table_info.match(line)
+            if match:
+                groups = match.groupdict()
+                key = groups['parameter'].lower()
+                value = groups['info']
+                binding_table_dict = device_tracking_database_details_dict.setdefault(binding_key, {})
+                if value.isdigit():
+                    binding_table_dict[key] = int(value)
+                else:
+                    binding_table_dict[key] = value
+                continue
+
+            # ND  100.100.100.1                            dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0024       92mn       STALE      83192 s          no         no           0000.0000.0000     test (Device-tracking)
+            # L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
+            # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
+            # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
+            match = device_info_capture.match(line)
+            if match:
+                device_index += 1
+                groups = match.groupdict()
+                for parameter in optional_parameters:
+                    if groups[parameter] == None:
+                        groups[parameter] = ''
+
+                if not device_tracking_database_details_dict.get('device', {}):
+                    device_tracking_database_details_dict.setdefault('device', {})
+
+                device_dict = device_tracking_database_details_dict.setdefault('device', {}) \
+                                                                .setdefault(device_index, {})
+
+                for key, value in groups.items():
                     if value.isdigit():
-                        device_tracking_database_details_dict[last_key][key] = int(value)
+                        device_dict[key] = int(value)
                     else:
-                        device_tracking_database_details_dict[last_key][key] = value
-                    continue
-
-                # ND  100.100.100.1                            dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0024       92mn       STALE      83192 s          no         no           0000.0000.0000     test (Device-tracking)
-                # L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
-                # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
-                # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
-                match = device_info_capture.match(line)
-                if match:
-                    device_index += 1
-                    groups = match.groupdict()
-                    for parameter in optional_parameters:
-                        if groups[parameter] == None:
-                            groups[parameter] = ''
-
-                    if not device_tracking_database_details_dict.get(last_key, {}):
-                        device_tracking_database_details_dict.setdefault(last_key, {})
-
-                    device_dict = device_tracking_database_details_dict.setdefault(last_key, {}) \
-                                                                    .setdefault(device_index, {})
-
-                    for key, value in groups.items():
-                        if value.isdigit():
-                            device_dict[key] = int(value)
-                        else:
-                            device_dict[key] = value
+                        device_dict[key] = value
 
         return device_tracking_database_details_dict
 
@@ -659,7 +658,7 @@ class ShowDeviceTrackingPolicySchema(MetaParser):
             Optional("origin"): str,
             Optional("tracking"): str,
         },
-        Optional("device"): {
+        "device": {
             Optional(int): {
                 "target": str,
                 "policy_type": str,
@@ -692,7 +691,6 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
 
         device_tracking_policy_dict = {}
         device_index = 0
-        last_key = ''
 
         # Device-tracking policy test configuration:
         #   trusted-port
@@ -742,7 +740,7 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
         #   gleaning from protocol unkn protecting prefix-list quux
         device_tracking_policy_gleaning_capture = re.compile(
             r'^(?P<is_gleaning>((NOT\s+)?gleaning))\s+from\s+(?P<protocol>(\S+\s+\S+|\S+))'
-            r'\s+protecting\s+prefix-list\s+(?P<protecting_prefix_list>(\S+))$'
+            r'(\s+protecting\s+prefix-list\s+(?P<protecting_prefix_list>(\S+)))?$'
         )
 
         #   limit address-count for IPv4 per mac 5
@@ -791,58 +789,55 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
             # Device-tracking policy test configuration:
             match = device_tracking_policy_configuration_header_capture.match(line)
             if match:
-                last_key = 'configuration'
-                device_tracking_policy_dict.setdefault(last_key, {})
+                configuration_dict = device_tracking_policy_dict.setdefault('configuration', {})
                 continue
 
             # Target               Type  Policy               Feature        Target range
             match = device_tracking_policy_targets_header_capture.match(line)
             if match:
-                last_key = 'device'
-                device_tracking_policy_dict.setdefault(last_key, {})
+                device_dict = device_tracking_policy_dict.setdefault('device', {})
                 continue
 
-            if last_key:
-                for capture in capture_list:
-                    match = capture.match(line)
-                    if match:
-                        groups = match.groupdict()
+            for capture in capture_list:
+                match = capture.match(line)
+                if match:
+                    groups = match.groupdict()
 
-                        if capture == device_tracking_policy_trusted_port_capture:
-                            for key, _ in groups.items():
-                                device_tracking_policy_dict[last_key][key] = 'yes'
-                        elif capture == device_tracking_policy_limit_address_count_capture:
-                            limit_key = 'limit_address_count'
-                            limit_value = groups[limit_key]
-                            version = groups['version'].lower()
+                    if capture == device_tracking_policy_trusted_port_capture:
+                        for key, _ in groups.items():
+                            configuration_dict[key] = 'yes'
+                    elif capture == device_tracking_policy_limit_address_count_capture:
+                        limit_key = 'limit_address_count'
+                        limit_value = groups[limit_key]
+                        version = groups['version'].lower()
 
-                            device_dict = device_tracking_policy_dict.setdefault(last_key, {}) \
-                                                                     .setdefault(limit_key, {})
-                            device_dict[version] = int(limit_value)
-                        elif capture == device_tracking_policy_gleaning_capture:
-                            protocol = groups['protocol']
-                            if protocol == 'Neighbor Discovery':
-                                protocol = 'nd'
-                            elif protocol == 'protocol unkn':
-                                protocol = 'protocol_unkn'
-                            protocol = protocol.lower()
-                            del groups['protocol']
+                        limit_dict = configuration_dict.setdefault(limit_key, {})
+                        limit_dict[version] = int(limit_value)
+                    elif capture == device_tracking_policy_gleaning_capture:
+                        protocol = groups['protocol']
+                        if protocol == 'Neighbor Discovery':
+                            protocol = 'nd'
+                        elif protocol == 'protocol unkn':
+                            protocol = 'protocol_unkn'
+                        protocol = protocol.lower()
+                        del groups['protocol']
 
-                            device_dict = device_tracking_policy_dict.setdefault(last_key, {}) \
-                                                                     .setdefault(protocol, {})
+                        if groups['protecting_prefix_list'] is None:
+                            del groups['protecting_prefix_list']
 
-                            for key, value in groups.items():
-                                device_dict[key] = value
-                        elif capture == device_tracking_policy_capture:
-                            device_index += 1
-                            device_dict = device_tracking_policy_dict.setdefault(last_key, {}) \
-                                                                     .setdefault(device_index, {})
+                        gleaning_dict = configuration_dict.setdefault(protocol, {})
 
-                            for key, value in groups.items():
-                                device_dict[key] = value
-                        else:
-                            for key, value in groups.items():
-                                device_tracking_policy_dict[last_key][key] = value
+                        for key, value in groups.items():
+                            gleaning_dict[key] = value
+                    elif capture == device_tracking_policy_capture:
+                        device_index += 1
+                        policy_dict = device_dict.setdefault(device_index, {})
+
+                        for key, value in groups.items():
+                            policy_dict[key] = value
+                    else:
+                        for key, value in groups.items():
+                            configuration_dict[key] = value
 
         return device_tracking_policy_dict
 
@@ -868,7 +863,7 @@ class ShowIpv6RaGuardPolicySchema(MetaParser):
             Optional("match_ipv6_access_list"): str,
             Optional("trusted_port"): str
         },
-        Optional("device"): {
+        "device": {
             Optional(int): {
                 "target": str,
                 "policy_type": str,
@@ -901,7 +896,6 @@ class ShowIpv6RaGuardPolicy(ShowIpv6RaGuardPolicySchema):
 
         ipv6_nd_raguard_dict = {}
         device_index = 0
-        last_key = ''
 
         # RA guard policy asdf configuration:
         #   trusted-port
@@ -965,6 +959,7 @@ class ShowIpv6RaGuardPolicy(ShowIpv6RaGuardPolicySchema):
             ipv6_nd_ragaurd_max_router_preference_capture,
             ipv6_nd_ragaurd_match_ra_prefix_list_capture,
             ipv6_nd_ragaurd_match_ipv6_access_list_capture,
+            ipv6_nd_raguard_target_capture,
         ]
 
         for line in out.splitlines():
@@ -975,43 +970,38 @@ class ShowIpv6RaGuardPolicy(ShowIpv6RaGuardPolicySchema):
             # Source guard policy test configuration:
             match = ipv6_nd_raguard_configuration_header_capture.match(line)
             if match:
-                last_key = "configuration"
-                ipv6_nd_raguard_dict.setdefault(last_key, {})
+                configuration_dict = ipv6_nd_raguard_dict.setdefault('configuration', {})
                 continue
 
             # Target               Type  Policy               Feature        Target range
             match = ipv6_nd_raguard_targets_header_capture.match(line)
             if match:
-                last_key = 'device'
-                ipv6_nd_raguard_dict.setdefault(last_key, {})
+                ipv6_nd_raguard_dict.setdefault('device', {})
                 continue
 
             # Add all subsequent lines to the last parsed key
-            if last_key == 'configuration':
-                for capture in capture_list:
-                    match = capture.match(line)
-                    if match:
+            for capture in capture_list:
+                match = capture.match(line)
+                if match:
+                    if capture == ipv6_nd_raguard_target_capture:
+                        groups = match.groupdict()
+                        device_index += 1
+                        device_dict = ipv6_nd_raguard_dict.setdefault('device', {}) \
+                                                          .setdefault(device_index, {})
+
+                        for key, value in groups.items():
+                            device_dict[key] = value
+                    else:
                         groups = match.groupdict()
                         for key, value in groups.items():
                             if key == 'trusted_port':
-                                ipv6_nd_raguard_dict[last_key][key] = 'yes'
+                                configuration_dict[key] = 'yes'
                                 continue
 
                             if value.isdigit():
-                                ipv6_nd_raguard_dict[last_key][key] = int(value)
+                                configuration_dict[key] = int(value)
                             else:
-                                ipv6_nd_raguard_dict[last_key][key] = value
-
-
-            if last_key == 'device':
-                match = ipv6_nd_raguard_target_capture.match(line)
-                if match:
-                    groups = match.groupdict()
-                    device_index += 1
-                    device_dict = ipv6_nd_raguard_dict.setdefault('device', {}).setdefault(device_index, {})
-
-                    for key, value in groups.items():
-                        device_dict[key] = value
+                                configuration_dict[key] = value
 
         return ipv6_nd_raguard_dict
 
@@ -1033,7 +1023,7 @@ class ShowIpv6SourceGuardPolicySchema(MetaParser):
             Optional("trusted"): str,
             Optional("deny"): str,
         },
-        Optional("device"): {
+        "device": {
             Optional(int): {
                 "target": str,
                 "policy_type": str,
@@ -1066,7 +1056,6 @@ class ShowIpv6SourceGuardPolicy(ShowIpv6SourceGuardPolicySchema):
 
         ipv6_source_guard_dict = {}
         device_index = 0
-        last_key = ''
 
         # Source guard policy test1 configuration:
         #   trusted
@@ -1110,6 +1099,7 @@ class ShowIpv6SourceGuardPolicy(ShowIpv6SourceGuardPolicySchema):
             ipv6_source_guard_address_capture,
             ipv6_source_guard_permit_capture,
             ipv6_source_guard_deny_capture,
+            ipv6_source_guard_target_capture
         ]
 
         for line in out.splitlines():
@@ -1120,45 +1110,42 @@ class ShowIpv6SourceGuardPolicy(ShowIpv6SourceGuardPolicySchema):
             # Source guard policy test1 configuration:
             match = ipv6_source_guard_configuration_header_capture.match(line)
             if match:
-                last_key = 'configuration'
-                ipv6_source_guard_dict.setdefault(last_key, {})
+                configuration_dict = ipv6_source_guard_dict.setdefault('configuration', {})
                 continue
 
             # Policy test1 is applied on the following targets:
             match = ipv6_source_guard_targets_header_capture.match(line)
             if match:
-                last_key = 'device'
-                ipv6_source_guard_dict.setdefault(last_key, {})
+                ipv6_source_guard_dict.setdefault('device', {})
                 continue
 
             # Add all subsequent lines to the last parsed key
-            if last_key == "configuration":
-                for capture in capture_list:
-                    match = capture.match(line)
-                    if match:
+            for capture in capture_list:
+                match = capture.match(line)
+                if match:
+                    if capture == ipv6_source_guard_target_capture:
+                        groups = match.groupdict()
+                        device_index += 1
+
+                        device_dict = ipv6_source_guard_dict.setdefault('device', {}) \
+                                                            .setdefault(device_index, {})
+
+                        for key, value in groups.items():
+                            device_dict[key] = value
+                    else:
                         groups = match.groupdict()
 
                         for key, value in groups.items():
                             if capture == ipv6_source_guard_trusted_capture or \
                                 capture == ipv6_source_guard_prefix_capture:
-                                ipv6_source_guard_dict[last_key][key] = 'yes'
+                                configuration_dict[key] = 'yes'
                             elif capture == ipv6_source_guard_address_capture:
                                 description = 'yes'
                                 if "NOT" in value:
                                     description = 'no'
-                                ipv6_source_guard_dict[last_key][key] = description
+                                configuration_dict[key] = description
                             else:
-                                ipv6_source_guard_dict[last_key][key] = value
-
-            if last_key == 'device':
-                match = ipv6_source_guard_target_capture.match(line)
-                if match:
-                    groups = match.groupdict()
-                    device_index += 1
-                    device_dict = ipv6_source_guard_dict.setdefault(last_key, {}).setdefault(device_index, {})
-
-                    for key, value in groups.items():
-                        device_dict[key] = value
+                                configuration_dict[key] = value
 
         return ipv6_source_guard_dict
 
@@ -1176,19 +1163,17 @@ class ShowDeviceTrackingCountersVlanSchema(MetaParser):
         "vlanid": {
             int: {
                 Any(): {
-                    Optional("protocol"): str,
                     Optional("acd&dad"): int,
-                    Optional("type"): str,
                     Optional(Or("ndp","dhcpv6","arp","dhcpv4","probe_send","probe_reply")): {
-                        Optional(Any()): int,
+                        Any(): int,
                     },
                     Any(): {
-                        Optional("protocol"): str,
-                        Optional("message"): str,
-                        Optional("dropped"): int,
-                        },
+                        "protocol": str,
+                        "message": str,
+                        "dropped": int,
+                    },
                 },
-                Optional("faults"): list,
+                "faults": list,
             },
         },
     }
@@ -1214,7 +1199,7 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
             out = output
 
         device_tracking_counters_vlanid_dict = {}
-        last_key = ''
+        message_key = ''
 
         # Received messages on vlan 39   :
         # Protocol        Protocol message
@@ -1305,7 +1290,7 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
         # ACD&DAD         --[5181]
         protocol_info = re.compile(r'^(?P<protocol>(Protocol))\s+(?P<message>(.*))$')
         ndp_info = re.compile(r'^(?P<protocol>(NDP))\s+(?P<message>(.*))?')
-        dpch6_info = re.compile(r'^(?P<protocol>(DHCPv6))\s+(?P<message>(.*))?$')
+        dhcp6_info = re.compile(r'^(?P<protocol>(DHCPv6))\s+(?P<message>(.*))?$')
         arp_info = re.compile(r'^(?P<protocol>(ARP))\s+(?P<message>(.*))?$')
         dhcp4_info = re.compile(r'^(?P<protocol>(DHCPv4))\s+(?P<message>(.*))?$')
         acd_dad_info = re.compile(r'^(?P<protocol>(ACD&DAD))\s+\S+\[(?P<message>(\d+))\]?$')
@@ -1323,7 +1308,7 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
 
         capture_list = [
             ndp_info,
-            dpch6_info,
+            dhcp6_info,
             arp_info,
             dhcp4_info,
             acd_dad_info,
@@ -1342,93 +1327,91 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
             # Received messages on vlan 39   :
             match = received_messages_capture.match(line)
             if match:
-                last_key = "received"
-                message_dict.setdefault(last_key, {})
+                message_key = "received"
+                message_dict.setdefault(message_key, {})
                 continue
 
             # Received Broadcast/Multicast messages on vlan 39   :
             match = received_broadcast_multicast_messages_capture.match(line)
             if match:
-                last_key = "received_broadcast_multicast"
-                message_dict.setdefault(last_key, {})
+                message_key = "received_broadcast_multicast"
+                message_dict.setdefault(message_key, {})
                 continue
 
             # Bridged messages from vlan 39   :
             match = bridged_messages_capture.match(line)
             if match:
-                last_key = "bridged"
-                message_dict.setdefault(last_key, {})
+                message_key = "bridged"
+                message_dict.setdefault(message_key, {})
                 continue
 
             # Broadcast/Multicast converted to unicast messages from vlan 39   :
             match = broadcast_multicast_to_unicast_messages_capture.match(line)
             if match:
-                last_key = "broadcast_multicast_to_unicast"
-                message_dict.setdefault(last_key, {})
+                message_key = "broadcast_multicast_to_unicast"
+                message_dict.setdefault(message_key, {})
                 continue
 
             # Probe message on vlan 39   :
             match = probe_message_capture.match(line)
             if match:
-                last_key = "probe"
-                message_dict.setdefault(last_key, {})
+                message_key = "probe"
+                message_dict.setdefault(message_key, {})
                 continue
 
             # Limited Broadcast to Local message on vlan 39   :
             match = limited_broadcast_to_local_messages_capture.match(line)
             if match:
-                last_key = "limited_broadcast_to_local"
-                message_dict.setdefault(last_key, {})
+                message_key = "limited_broadcast_to_local"
+                message_dict.setdefault(message_key, {})
                 continue
 
             # Dropped messages on vlan 39   :
             match = dropped_messages_capture.match(line)
             if match:
-                last_key = "dropped"
-                message_dict.setdefault(last_key, {})
+                dropped_dict = message_dict.setdefault('dropped', {})
                 continue
 
             # Faults on vlan 39   :
             match = faults_capture.match(line)
             if match:
-                last_key = "faults"
-                message_dict.setdefault(last_key, [])
+                faults_list = message_dict.setdefault('faults', [])
                 continue
 
             # Add all subsequent lines to the last parsed key
-            if last_key:
-                for capture in capture_list:
-                    match = capture.match(line)
-                    if match:
-                        groups = match.groupdict()
-                        if capture == dropped_message_info:
-                            feature = groups['feature']
-                            message_dict.setdefault(last_key, {}).setdefault(feature, {})
-                            del groups['feature']
+            for capture in capture_list:
+                match = capture.match(line)
+                if match:
+                    groups = match.groupdict()
+                    if capture == dropped_message_info:
+                        feature = groups['feature']
+                        dropped_dict.setdefault(feature, {})
+                        del groups['feature']
 
-                            for key, value in groups.items():
-                                if value.isdigit():
-                                    message_dict[last_key][feature][key] = int(value)
-                                else:
-                                    message_dict[last_key][feature][key] = value.lower()
-                        elif capture == fault_info:
-                            message = groups['fault']
-                            message_dict[last_key].append(message)
-                        elif capture == acd_dad_info:
-                            protocol = groups['protocol'].lower()
-                            message = groups['message']
-                            message_dict[last_key][protocol] = int(message)
-                        else:
-                            protocol = groups['protocol'].lower()
-                            messages = groups['message'].split()
-                            message_dict.setdefault(last_key, {}).setdefault(protocol, {})
-                            packet_capture = re.compile(r'^(?P<packet>(\S+))\[(?P<num>(\d+))\]$')
-                            for message in messages:
-                                packet_match = packet_capture.match(message)
-                                if packet_match:
-                                    packet_groups = packet_match.groupdict()
-                                    packet = packet_groups['packet']
-                                    num = packet_groups['num']
-                                    message_dict[last_key][protocol][packet] = int(num)
+                        for key, value in groups.items():
+                            if value.isdigit():
+                                dropped_dict[feature][key] = int(value)
+                            else:
+                                dropped_dict[feature][key] = value.lower()
+                    elif capture == fault_info:
+                        message = groups['fault']
+                        faults_list.append(message)
+                    elif capture == acd_dad_info:
+                        protocol = groups['protocol'].lower()
+                        message = groups['message']
+                        packet_dict = message_dict.setdefault(message_key, {})
+                        packet_dict[protocol] = int(message)
+                    else:
+                        protocol = groups['protocol'].lower()
+                        messages = groups['message'].split()
+                        packet_dict = message_dict.setdefault(message_key, {}).setdefault(protocol, {})
+                        packet_capture = re.compile(r'^(?P<packet>(\S+))\[(?P<num>(\d+))\]$')
+                        for message in messages:
+                            packet_match = packet_capture.match(message)
+                            if packet_match:
+                                packet_groups = packet_match.groupdict()
+                                packet = packet_groups['packet']
+                                num = packet_groups['num']
+                                packet_dict[packet] = int(num)
 
         return device_tracking_counters_vlanid_dict
