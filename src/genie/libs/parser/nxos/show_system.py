@@ -349,10 +349,10 @@ class ShowSystemInternalKernelMeminfoSchema(MetaParser):
         },
         'hardwarecorrupted_kb': int,
         'hugepages': {
-            'hugepages_total_kb': int,
-            'hugepages_free_kb': int,
-            'hugepages_rsvd_kb': int,
-            'hugepages_surp_kb': int,
+            'hugepages_total': int,
+            'hugepages_free': int,
+            'hugepages_rsvd': int,
+            'hugepages_surp': int,
             'hugepagesize_kb': int,
         },
         'directmap4k_kb': int,
@@ -387,11 +387,13 @@ class ShowSystemInternalKernelMeminfo(ShowSystemInternalKernelMeminfoSchema):
         p4 = re.compile(r'(?P<vmalloc_type>Vmalloc.+):\s+(?P<amount>\d+)\skB$')
 
         # HugePages_Surp:        0
+        p5 = re.compile(r'(?P<hugepages_type>Huge.+):\s+(?P<amount>\d+)$')
+
         # Hugepagesize:       2048 kB
-        p5 = re.compile(r'(?P<hugepages_type>Huge.+):\s+(?P<amount>\d+)(\skB)?$')
+        p6 = re.compile(r'(?P<hugepages_type>Huge.+):\s+(?P<amount>\d+)\s+kB$')
 
         # Buffers:           38212 kB
-        p6 = re.compile(r'(?P<key>.+):\s+(?P<amount>\d+)(\skB)?$')
+        p7 = re.compile(r'(?P<key>.+):\s+(?P<amount>\d+)(\skB)?$')
 
         ret_dict = {}
 
@@ -439,8 +441,17 @@ class ShowSystemInternalKernelMeminfo(ShowSystemInternalKernelMeminfoSchema):
                 continue
 
             # HugePages_Surp:        0
-            # Hugepagesize:       2048 kB
             m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                hugepages_dict = ret_dict.setdefault('hugepages', {})
+
+                key = group['hugepages_type'].lower()
+                hugepages_dict[key] = int(group['amount'])
+                continue
+
+            # Hugepagesize:       2048 kB
+            m = p6.match(line)
             if m:
                 group = m.groupdict()
                 hugepages_dict = ret_dict.setdefault('hugepages', {})
@@ -450,7 +461,7 @@ class ShowSystemInternalKernelMeminfo(ShowSystemInternalKernelMeminfoSchema):
                 continue
 
             # Buffers:           38212 kB
-            m = p6.match(line)
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
 
