@@ -1,0 +1,4 @@
+Source guard policy test1 configuration:
+ NOT validate address
+Policy test1 is applied on the following targets:
+Target               Type  Policy               Feature        Target range

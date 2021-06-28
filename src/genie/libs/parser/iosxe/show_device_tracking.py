@@ -389,39 +389,6 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         binding_key = ''
 
         #  Binding table configuration:
-        #  ----------------------------
-        #  max/box  : no limit
-        #  max/vlan : no limit
-        #  max/port : no limit
-        #  max/mac  : no limit
-
-        #  Binding table current counters:
-        #  ------------------------------
-        #  dynamic  : 1
-        #  local    : 1
-        #  total    : 4
-
-        #  Binding table counters by state:
-        #  ----------------------------------
-        #  REACHABLE  : 1
-        #  STALE      : 2
-        #  DOWN       : 1
-        #    total    : 4
-
-        # Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
-        # Preflevel flags (prlvl):
-        # 0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
-        # 0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
-        # 0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
-
-
-        #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
-        # ND  100.100.100.1                            dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0024       92mn       STALE      83192 s          no         no           0000.0000.0000     test (Device-tracking)
-        # L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
-        # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
-        # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
-
-        #  Binding table configuration:
         binding_table_configuration_capture = re.compile(r'^Binding\s+table\s+configuration:$')
         #  Binding table current counters:
         binding_table_counter_capture = re.compile(r'^Binding\s+table\s+current\s+counters:$')
@@ -439,7 +406,7 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
         #  STALE      : 2
         #  DOWN       : 1
         #    total    : 4
-        binding_table_info = re.compile(r'^(?P<parameter>(\S+))\s+:\s+(?P<info>(\S+)|(\S+\s+\S+))$')
+        binding_table_info = re.compile(r'^(?P<parameter>(\S+))\s+:\s+(?P<info>(.*))$')
 
         #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
         device_header_capture = re.compile(r'^Network\s+Layer\s+Address\s+Link\s+Layer\s+Address\s+Interface\s+mode\s+vlan\(prim\)\s+prlvl\s+age\s+state\s+Time\s+left\s+Filter\s+In\s+Crimson\s+Client\s+ID\s+Policy\s+\(feature\)$')
@@ -454,7 +421,7 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
                                          r'\s+(?P<pref_level_code>(\d+))\s+(?P<age>(\S+))'
                                          r'\s+(?P<state>(\S+))\s+(?P<time_left>(try\s\d\s\d+\ss)|(N\/A)|(\d+\ss\stry\s\d)|(\d+\ss))?'
                                          r'\s+(?P<filter>(yes|no))\s+(?P<in_crimson>(\S+))'
-                                         r'\s+(?P<client_id>(\S+))(\s+(?P<policy>(\S+)|(\S+\s+\S+)))?$')
+                                         r'\s+(?P<client_id>(\S+))(\s+(?P<policy>(.*)))?$')
 
         optional_parameters = [
             'time_left',
@@ -466,44 +433,29 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
             if not line:
                 continue
 
-            #  Binding table configuration:
             match = binding_table_configuration_capture.match(line)
             if match:
                 binding_key = "binding_table_configuration"
                 device_tracking_database_details_dict.setdefault(binding_key, {})
                 continue
 
-            #  Binding table current counters:
             match = binding_table_counter_capture.match(line)
             if match:
                 binding_key = "binding_table_count"
                 device_tracking_database_details_dict.setdefault(binding_key, {})
                 continue
 
-            #  Binding table counters by state:
             match = binding_table_state_capture.match(line)
             if match:
                 binding_key = "binding_table_state_count"
                 device_tracking_database_details_dict.setdefault(binding_key, {})
                 continue
 
-            #     Network Layer Address                    Link Layer Address     Interface  mode       vlan(prim)   prlvl      age        state      Time left        Filter     In Crimson   Client ID          Policy (feature)
             match = device_header_capture.match(line)
             if match:
                 device_tracking_database_details_dict.setdefault('device', {})
                 continue
 
-            #  max/box  : no limit
-            #  max/vlan : no limit
-            #  max/port : no limit
-            #  max/mac  : no limit
-            #  dynamic  : 1
-            #  local    : 1
-            #  total    : 4
-            #  REACHABLE  : 1
-            #  STALE      : 2
-            #  DOWN       : 1
-            #    total    : 4
             match = binding_table_info.match(line)
             if match:
                 groups = match.groupdict()
@@ -516,16 +468,12 @@ class ShowDeviceTrackingDatabaseDetails(ShowDeviceTrackingDatabaseDetailsSchema)
                     binding_table_dict[key] = value
                 continue
 
-            # ND  100.100.100.1                            dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0024       92mn       STALE      83192 s          no         no           0000.0000.0000     test (Device-tracking)
-            # L   39.39.39.1                               5c5a.c791.d69f(R)      Vl39       svi        39  (  39)      0100       11591mn    REACHABLE                   no         yes          0000.0000.0000
-            # S   10.10.10.10                              dead.beef.0001(S)      Twe1/0/42  access     39  (  39)      0100       59mn       STALE      N/A              no         yes          0000.0000.0000
-            # S   1000::1                                  000a.000b.000c(D)      Twe1/0/1   trunk      100 ( 100)      0100       30565mn    DOWN       N/A              no         yes          0000.0000.0000
             match = device_info_capture.match(line)
             if match:
                 device_index += 1
                 groups = match.groupdict()
                 for parameter in optional_parameters:
-                    if groups[parameter] == None:
+                    if groups[parameter] is None:
                         groups[parameter] = ''
 
                 if not device_tracking_database_details_dict.get('device', {}):
@@ -693,25 +641,6 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
         device_index = 0
 
         # Device-tracking policy test configuration:
-        #   trusted-port
-        #   security-level guard
-        #   device-role node
-        #   data-glean log-only
-        #   prefix-glean only
-        #   gleaning from Neighbor Discovery protecting prefix-list qux
-        #   gleaning from DHCP6 protecting prefix-list baz
-        #   gleaning from ARP protecting prefix-list foo
-        #   gleaning from DHCP4 protecting prefix-list bar
-        #   gleaning from protocol unkn protecting prefix-list quux
-        #   limit address-count for IPv4 per mac 5
-        #   limit address-count for IPv6 per mac 1
-        #   cache poisoning guard enabled all
-        #   tracking disable
-        # Policy test is applied on the following targets:
-        # Target               Type  Policy               Feature        Target range
-        # Twe1/0/42            PORT  test                 Device-tracking vlan all
-
-        # Device-tracking policy test configuration:
         device_tracking_policy_configuration_header_capture = re.compile(r'^Device-tracking\s+policy\s+\S+\s+configuration:$')
 
         #   trusted-port
@@ -786,13 +715,11 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
             if not line:
                 continue
 
-            # Device-tracking policy test configuration:
             match = device_tracking_policy_configuration_header_capture.match(line)
             if match:
                 configuration_dict = device_tracking_policy_dict.setdefault('configuration', {})
                 continue
 
-            # Target               Type  Policy               Feature        Target range
             match = device_tracking_policy_targets_header_capture.match(line)
             if match:
                 device_dict = device_tracking_policy_dict.setdefault('device', {})
@@ -898,20 +825,6 @@ class ShowIpv6RaGuardPolicy(ShowIpv6RaGuardPolicySchema):
         device_index = 0
 
         # RA guard policy asdf configuration:
-        #   trusted-port
-        #   device-role router
-        #   hop-limit minimum 1
-        #   hop-limit maximum 3
-        #   managed-config-flag on
-        #   other-config-flag on
-        #   router-preference maximum high
-        #   match ra prefix-list bar
-        #   match ipv6 access-list foo
-        # Policy asdf is applied on the following targets:
-        # Target               Type  Policy               Feature        Target range
-        # Twe1/0/42            PORT  asdf                 RA guard       vlan all
-
-        # RA guard policy asdf configuration:
         ipv6_nd_raguard_configuration_header_capture = re.compile(r'^RA\s+guard\s+policy\s+\S+\s+configuration:$')
 
         #   trusted-port
@@ -967,19 +880,16 @@ class ShowIpv6RaGuardPolicy(ShowIpv6RaGuardPolicySchema):
             if not line:
                 continue
 
-            # Source guard policy test configuration:
             match = ipv6_nd_raguard_configuration_header_capture.match(line)
             if match:
                 configuration_dict = ipv6_nd_raguard_dict.setdefault('configuration', {})
                 continue
 
-            # Target               Type  Policy               Feature        Target range
             match = ipv6_nd_raguard_targets_header_capture.match(line)
             if match:
                 ipv6_nd_raguard_dict.setdefault('device', {})
                 continue
 
-            # Add all subsequent lines to the last parsed key
             for capture in capture_list:
                 match = capture.match(line)
                 if match:
@@ -1058,16 +968,6 @@ class ShowIpv6SourceGuardPolicy(ShowIpv6SourceGuardPolicySchema):
         device_index = 0
 
         # Source guard policy test1 configuration:
-        #   trusted
-        #   validate prefix
-        #   validate address
-        #   permit link-local
-        #   deny global-autoconf
-        # Policy test1 is applied on the following targets:
-        # Target               Type  Policy               Feature        Target range
-        # Twe1/0/42            PORT  test1                Source guard   vlan all
-
-        # Source guard policy test1 configuration:
         ipv6_source_guard_configuration_header_capture = re.compile(r'^Source\s+guard\s+policy\s+\S+\s+configuration:$')
 
         #   trusted
@@ -1107,19 +1007,16 @@ class ShowIpv6SourceGuardPolicy(ShowIpv6SourceGuardPolicySchema):
             if not line:
                 continue
 
-            # Source guard policy test1 configuration:
             match = ipv6_source_guard_configuration_header_capture.match(line)
             if match:
                 configuration_dict = ipv6_source_guard_dict.setdefault('configuration', {})
                 continue
 
-            # Policy test1 is applied on the following targets:
             match = ipv6_source_guard_targets_header_capture.match(line)
             if match:
                 ipv6_source_guard_dict.setdefault('device', {})
                 continue
 
-            # Add all subsequent lines to the last parsed key
             for capture in capture_list:
                 match = capture.match(line)
                 if match:
@@ -1202,63 +1099,6 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
         message_key = ''
 
         # Received messages on vlan 39   :
-        # Protocol        Protocol message
-        # NDP             RS[15543] NS[5181] NA[10]
-        # DHCPv6
-        # ARP
-        # DHCPv4
-        # ACD&DAD         --[5181]
-
-        # Received Broadcast/Multicast messages on vlan 39   :
-        # Protocol        Protocol message
-        # NDP             RS[15543] NS[5181] NA[10]
-        # DHCPv6
-        # ARP
-        # DHCPv4
-
-        # Bridged messages from vlan 39   :
-        # Protocol        Protocol message
-        # NDP             RS[15543] NS[8299]
-        # DHCPv6
-        # ARP
-        # DHCPv4
-        # ACD&DAD         --[5171]
-
-        # Broadcast/Multicast converted to unicast messages from vlan 39   :
-        # Protocol        Protocol message
-        # NDP
-        # DHCPv6
-        # ARP
-        # DHCPv4
-        # ACD&DAD
-
-        # Probe message on vlan 39   :
-        # Type            Protocol message
-        # PROBE_SEND      NS[3128]
-        # PROBE_REPLY     NA[10]
-
-        # Limited Broadcast to Local message on vlan 39   :
-        # Type            Protocol message
-        # NDP
-        # DHCPv6
-        # ARP
-        # DHCPv4
-
-        # Dropped messages on vlan 39   :
-        # Feature             Protocol Msg [Total dropped]
-        # Device-tracking:    NDP      NS  [10]
-        #                     reason:  Silent drop [10]
-
-        #                             NA  [10]
-        #                     reason:  Silent drop [10]
-
-        # ACD&DAD:            --       --  [10]
-
-
-        # Faults on vlan 39   :
-        #   DHCPv6_REQUEST_NAK[1]
-
-        # Received messages on vlan 39   :
         received_messages_capture = re.compile(r'^Received\s+messages\s+on\s+vlan\s+\d+\s+:$')
 
         # Received Broadcast/Multicast messages on vlan 39   :
@@ -1324,61 +1164,53 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
             if not device_tracking_counters_vlanid_dict:
                 message_dict = device_tracking_counters_vlanid_dict.setdefault('vlanid', {}) \
                                                                    .setdefault(int(vlanid), {})
-            # Received messages on vlan 39   :
+
             match = received_messages_capture.match(line)
             if match:
                 message_key = "received"
                 message_dict.setdefault(message_key, {})
                 continue
 
-            # Received Broadcast/Multicast messages on vlan 39   :
             match = received_broadcast_multicast_messages_capture.match(line)
             if match:
                 message_key = "received_broadcast_multicast"
                 message_dict.setdefault(message_key, {})
                 continue
 
-            # Bridged messages from vlan 39   :
             match = bridged_messages_capture.match(line)
             if match:
                 message_key = "bridged"
                 message_dict.setdefault(message_key, {})
                 continue
 
-            # Broadcast/Multicast converted to unicast messages from vlan 39   :
             match = broadcast_multicast_to_unicast_messages_capture.match(line)
             if match:
                 message_key = "broadcast_multicast_to_unicast"
                 message_dict.setdefault(message_key, {})
                 continue
 
-            # Probe message on vlan 39   :
             match = probe_message_capture.match(line)
             if match:
                 message_key = "probe"
                 message_dict.setdefault(message_key, {})
                 continue
 
-            # Limited Broadcast to Local message on vlan 39   :
             match = limited_broadcast_to_local_messages_capture.match(line)
             if match:
                 message_key = "limited_broadcast_to_local"
                 message_dict.setdefault(message_key, {})
                 continue
 
-            # Dropped messages on vlan 39   :
             match = dropped_messages_capture.match(line)
             if match:
                 dropped_dict = message_dict.setdefault('dropped', {})
                 continue
 
-            # Faults on vlan 39   :
             match = faults_capture.match(line)
             if match:
                 faults_list = message_dict.setdefault('faults', [])
                 continue
 
-            # Add all subsequent lines to the last parsed key
             for capture in capture_list:
                 match = capture.match(line)
                 if match:
