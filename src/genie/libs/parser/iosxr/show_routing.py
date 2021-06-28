@@ -994,7 +994,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
 
                 if group['to_network']:
                     gw_dict.update({'to_network': group['to_network']})
-        
+
         return ret_dict
 
 
