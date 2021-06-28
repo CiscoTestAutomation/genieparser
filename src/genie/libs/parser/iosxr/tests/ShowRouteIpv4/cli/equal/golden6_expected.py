@@ -1,4 +1,4 @@
-expected_arguments = {
+expected_output = {
         'vrf': {
             'default': {
                 'address_family': {

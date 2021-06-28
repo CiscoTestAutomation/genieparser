@@ -609,9 +609,8 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # Known via "bgp 65161", distance 20, metric 0, candidate default path
         # Known via "ospf 3", distance 110, metric 32001, type extern 1
         # Known via "isis RAN", distance 115, metric 101, candidate default path, type level-2
-        p6 = re.compile(r'^Known +via +\"(?P<known_via>[\w ]+)\", +distance +'
-                r'(?P<distance>\d+), +metric +(?P<metric>\d+)( \(connected\))?'
-                r'(, +type +(?P<type>[\S\s]+))?(, +candidate +default +path)?$')
+        p6 = re.compile(r'^Known +via +"(?P<known_via>[\w ]+)", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+)'
+                        r'( \(connected\))?(, +candidate +default +path)?(, +type +(?P<type>[\S\s]+))?$')
 
         # * directly connected, via GigabitEthernet1.120
         p7 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
