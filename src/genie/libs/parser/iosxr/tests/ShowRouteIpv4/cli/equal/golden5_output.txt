@@ -1,0 +1,19 @@
+Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+A - access/subscriber, a - Application route
+M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+
+Gateway of last resort is 172.16.0.88 to network 0.0.0.0
+
+O*E2 0.0.0.0/0 [110/1] via 172.16.0.88, 3d00h, Bundle-Ether1
+            [110/1] via 172.16.0.96, 3d00h, Bundle-Ether2
+L    10.4.1.1/32 is directly connected, 5w6d, Loopback100
+O    10.1.1.0/24 [110/66036] via 172.16.0.88, 2d23h, Bundle-Ether1
+                [110/66036] via 172.16.0.96, 2d23h, Bundle-Ether2
+O E2 10.10.10.21/32 [110/1] via 172.16.0.88, 3d04h, Bundle-Ether1
+L    10.10.10.255/32 is directly connected, 5w6d, Loopback2112

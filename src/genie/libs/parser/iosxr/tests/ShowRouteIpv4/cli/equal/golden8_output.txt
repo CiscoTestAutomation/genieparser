@@ -1,0 +1,11 @@
+Tue Oct 29 21:32:17.082 UTC
+
+L    10.16.2.2/32 is directly connected, 3w4d, Loopback300
+L    10.12.90.2/32 is directly connected, 3w4d, GigabitEthernet0/0/0/0.390
+L    10.12.110.2/32 is directly connected, 3w4d, GigabitEthernet0/0/0/0.410
+L    10.12.115.2/32 is directly connected, 3w4d, GigabitEthernet0/0/0/0.415
+L    10.12.120.2/32 is directly connected, 3w4d, GigabitEthernet0/0/0/0.420
+L    10.23.90.2/32 is directly connected, 3w4d, GigabitEthernet0/0/0/1.390
+L    10.23.110.2/32 is directly connected, 3w4d, GigabitEthernet0/0/0/1.410
+L    10.23.115.2/32 is directly connected, 3w4d, GigabitEthernet0/0/0/1.415
+L    10.23.120.2/32 is directly connected, 3w4d, GigabitEthernet0/0/0/1.420
