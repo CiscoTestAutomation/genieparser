@@ -4,6 +4,7 @@ expected_output = {
         "security_level": "guard",
         "device_role": "node",
         "data_glean": "log-only",
+        "destination_glean": "log-only",
         "prefix_glean": "only",
         "nd": {
             "is_gleaning": "gleaning",
@@ -30,6 +31,7 @@ expected_output = {
             "ipv6": 1
         },
         "cache_guard": "ipv4",
+        "origin": "fabric",
         "tracking": "enable"
     },
     "device": {

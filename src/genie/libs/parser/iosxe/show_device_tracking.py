@@ -644,6 +644,7 @@ class ShowDeviceTrackingPolicySchema(MetaParser):
             Optional("trusted_port"): str,
             "security_level": str,
             "device_role": str,
+            Optional("destination_glean"): str,
             Optional("data_glean"): str,
             Optional("prefix_glean"): str,
             Any(): {
@@ -655,6 +656,7 @@ class ShowDeviceTrackingPolicySchema(MetaParser):
                 Optional('ipv6'): int,
             },
             Optional("cache_guard"): str,
+            Optional("origin"): str,
             Optional("tracking"): str,
         },
         Optional("device"): {
@@ -726,6 +728,9 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
         #   data-glean log-only
         device_tracking_policy_data_glean_capture = re.compile(r'^data-glean\s+(?P<data_glean>(\S+))$')
 
+        #   destination-glean log-only
+        device_tracking_policy_destination_glean_capture = re.compile(r'^destination-glean\s+(?P<destination_glean>(\S+))$')
+
         #   prefix-glean only
         device_tracking_policy_prefix_glean_capture = re.compile(r'^prefix-glean\s+(?P<prefix_glean>(\S+))$')
 
@@ -749,6 +754,9 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
         device_tracking_policy_cache_guard_capture = re.compile(
             r'^cache\s+poisoning\s+guard\s+enabled\s+(?P<cache_guard>(\S+))$')
 
+        #   origin fabric
+        device_tracking_policy_origin_capture = re.compile(r'^origin\s+(?P<origin>(\S+))$')
+
         #   tracking disable
         device_tracking_policy_tracking_capture = re.compile(r'^tracking\s(\(.*\)\s)?(?P<tracking>(\S+))$')
 
@@ -765,12 +773,14 @@ class ShowDeviceTrackingPolicy(ShowDeviceTrackingPolicySchema):
             device_tracking_policy_security_level_capture,
             device_tracking_policy_device_role_capture,
             device_tracking_policy_data_glean_capture,
+            device_tracking_policy_destination_glean_capture,
             device_tracking_policy_prefix_glean_capture,
             device_tracking_policy_gleaning_capture,
             device_tracking_policy_limit_address_count_capture,
             device_tracking_policy_cache_guard_capture,
+            device_tracking_policy_origin_capture,
             device_tracking_policy_tracking_capture,
-            device_tracking_policy_capture
+            device_tracking_policy_capture,
         ]
 
         for line in out.splitlines():
