@@ -1,4 +1,4 @@
-"""show_hsrp.py
+"""show_standby.py
 
 IOSXE parsers for show commands:
     * 'show standby all'
