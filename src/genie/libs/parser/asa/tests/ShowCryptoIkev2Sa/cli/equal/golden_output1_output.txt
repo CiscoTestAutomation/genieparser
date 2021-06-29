@@ -1,0 +1,15 @@
+
+IKEv2 SAs:
+
+Session-id:1, Status:UP-ACTIVE, IKE count:1, CHILD count:2
+
+Tunnel-id Local                                               Remote                                                  Status         Role
+  3686011 2001:db8:2:1::1/500                                 2001:db8:2:1::2/500                                      READY    INITIATOR
+      Encr: 3DES, Hash: SHA96, DH Grp:2, Auth sign: PSK, Auth verify: PSK
+      Life/Active Time: 43200/880 sec
+Child sa: local selector  2001:db8:1:2::/0 - 2001:db8:1:2:ffff:ffff:ffff:ffff/65535
+          remote selector 2001:db8:3:2::/0 - 2001:db8:3:2:ffff:ffff:ffff:ffff/65535
+          ESP spi in/out: 0xbe064bdc/0x5db6eff3
+Child sa: local selector  2001:db8:1:1::/0 - 2001:db8:1:1:ffff:ffff:ffff:ffff/65535
+          remote selector 2001:db8:3:1::/0 - 2001:db8:3:1:ffff:ffff:ffff:ffff/65535
+          ESP spi in/out: 0x69b865f8/0x978dbbe5

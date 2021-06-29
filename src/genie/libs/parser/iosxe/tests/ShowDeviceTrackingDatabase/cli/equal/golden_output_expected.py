@@ -102,6 +102,17 @@ expected_output = {
             "pref_level_code": 100,
             "age": "10330mn",
             "state": "REACHABLE"
+        },
+        11: {
+            "dev_code": "DH4",
+            "network_layer_address": "10.160.43.197",
+            "link_layer_address": "94d4.69ff.e606",
+            "interface": "Te8/0/37",
+            "vlan_id": 1023,
+            "pref_level_code": 25,
+            "age": "116s",
+            "state": "REACHABLE",
+            "time_left": "191 s try 0(557967 s)"
         }
     }
 }
