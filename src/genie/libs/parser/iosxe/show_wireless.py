@@ -1,7 +1,7 @@
 import re
 
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, Optional
+from genie.metaparser.util.schemaengine import Any, Optional, Or
 
 
 
@@ -2221,7 +2221,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
           "association_id": int,
           "authentication_alogrithm": str,
           "idle_state_timeout": str,
-          "re_authentication_timeout_secs": {
+          Optional("re_authentication_timeout_secs"): {
               "configured": int,
               "remaining_time": int
           },
@@ -2240,7 +2240,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
           "fastlane_support": str,
           "client_active_state": str,
           "power_save": str,
-          "current_rate": float,
+          "current_rate": Or(float, str),
           "supported_rates": list,
           "mobility": {
               "move_count": int,
@@ -2256,7 +2256,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
           "client_entry_create_time_secs": int,
           "policy_type": str,
           "encryption_cipher": str,
-          "authentication_key_management": str,
+          Optional("authentication_key_management"): str,
           "user_defined_private_network": str,
           "user_defined_private_network_drop_unicast": str,
           "encrypted_traffic_analytics": str,
@@ -2283,27 +2283,33 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
                   "method": {
                     str: {
                         "sm_state": str,
-                        "sm_bend_state": str
+                        Optional("sm_bend_state"): str,
+                        Optional("authen_status"): str
                     }
                   }
               },
               "local_policies": {
                   "service_template": {
-                    str : {
-                        "vlan_group": str,
+                    str: {
+                        Optional("vlan_group"): str,
+                        Optional("vlan"): str,
                         "absolute_timer": int
                     }
                   }
               },
               "server_policies": {
-                  "output_sgt": str
+                  Optional("output_sgt"): str,
+                  Optional("url_redirect_acl"): str,
+                  Optional("url_redirect"): str,
               },
               "resultant_policies": {
-                  "output_sgt": str,
+                  Optional("output_sgt"): str,
                   "vlan_name": str,
-                  "vlan_group": str,
+                  Optional("vlan_group"): str,
                   "vlan": int,
-                  "absolute_timer": int
+                  "absolute_timer": int,
+                  Optional("url_redirect_acl"): str,
+                  Optional("url_redirect"): str,
               }
           },
           "dns_snooped_ipv4_addresses": str,
@@ -2353,7 +2359,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
               }
           },
           "eogre": str,
-          "device_info": {
+          Optional("device_info"): {
               "device_type": str,
               "device_name": str,
               "protocol_map": str,
@@ -2369,7 +2375,9 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
               }
           },
           "max_client_protocol_capability": str,
-          "cellular_capability": str
+          "cellular_capability": str,
+          Optional("session_warning_time"): str,
+          Optional("session_timeout"): str,
           }
 
 
@@ -2379,7 +2387,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
 # ====================================
 class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
     """Parser for show wireless client mac {mac_address} detail"""
-    cli_command = 'show wireless client mac detail'
+    cli_command = 'show wireless client mac {mac_address} detail'
           
     def change_data_type(self, value):
         if value.isdigit():
@@ -2627,8 +2635,10 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
         p_max_client_protocol_capability = re.compile(r"^Max\s+Client\s+Protocol\s+Capability:\s+(?P<value>.*)$")
 
         # [key] : [value]
-        p_colon_split = re.compile(r"^(?P<key>[\S\s]+\S)\s*: +(?P<value>\S+)$")
 
+
+        p_colon_split = re.compile(r"^(?P<key>[\S\s]+\S)\s*: +(?P<value>[\S ]+)$")
+        # msut handle key value pairs with spaces in the value
 
         for line in output.splitlines():
             line = line.strip()

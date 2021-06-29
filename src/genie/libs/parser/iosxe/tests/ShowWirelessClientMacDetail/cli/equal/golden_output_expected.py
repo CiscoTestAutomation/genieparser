@@ -221,5 +221,6 @@ expected_output = {
         }
     },
     "max_client_protocol_capability": "802.11n",
-    "cellular_capability": "N/A"
+    "cellular_capability": "N/A",
+    "session_warning_time": "Timer not running",
 }
