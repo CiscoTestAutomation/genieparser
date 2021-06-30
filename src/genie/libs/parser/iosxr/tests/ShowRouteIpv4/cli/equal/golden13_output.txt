@@ -1,0 +1,10 @@
+Wed Apr 22 16:38:25.274 EDT
+
+Routing entry for 172.25.254.37/32
+Known via "bgp 7992", distance 20, metric 0
+Tag 65525, type external
+Installed Feb 6 13:12:22.999 for 10w6d
+Routing Descriptor Blocks
+172.25.253.121, from 172.25.253.121, BGP external
+Route metric is 0
+No advertising protos.
