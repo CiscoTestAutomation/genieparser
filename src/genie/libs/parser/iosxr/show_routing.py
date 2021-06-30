@@ -610,7 +610,7 @@ class ShowRouteIpv4(ShowRouteIpv4Schema):
         # Known via "ospf 3", distance 110, metric 32001, type extern 1
         # Known via "isis RAN", distance 115, metric 101, candidate default path, type level-2
         p6 = re.compile(r'^Known +via +"(?P<known_via>[\w ]+)", +distance +(?P<distance>\d+), +metric +(?P<metric>\d+)'
-                        r'( \(connected\))?(, +candidate +default +path)?(, +type +(?P<type>[\S\s]+))?$')
+                        r'( \(connected\))?(, +candidate +default +path)?(, +type +(?P<type>.+))?$')
 
         # * directly connected, via GigabitEthernet1.120
         p7 = re.compile(r'^(\* +)?directly +connected, via +(?P<interface>\S+)$')
