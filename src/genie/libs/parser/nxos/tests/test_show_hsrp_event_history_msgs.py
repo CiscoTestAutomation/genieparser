@@ -1,0 +1,240 @@
+
+# Python
+import re
+import unittest
+from unittest.mock import Mock
+
+# ATS
+from pyats.topology import Device
+
+# Parser
+from genie.libs.parser.nxos.show_hsrp_event_history_msgs import ShowHsrpEventHistoryMsgs
+# Metaparser
+from genie.metaparser.util.exceptions import SchemaEmptyParserError, SchemaMissingKeyError
+
+
+# ========================================================
+# Unit test for 'show hsrp internal event-history msgs'       
+# ========================================================
+class test_show_hsrp_event_history_msgs(unittest.TestCase):
+    
+    device = Device(name='aDevice')
+    empty_output = {'execute.return_value': ''}
+    
+    golden_parsed_output = {
+        "msgs": {
+            "1": {
+                "date": "2021 May 18",
+                "time": "20:19:32.186346",
+                "proc_name": "hsrp_engine",
+                "msg_type": "E_MTS_RX",
+                "opcode": "MTS_OPC_SDWRAP_DEBUG_DUMP(1530)",
+                "opcode_id": "0X0054059C",
+                "ret_val": "SUCCESS",
+                "src_sap": "42797",
+                "dst_sap": "340",
+                "flags": "None",
+                "ha_seqno": "0X00000000",
+                "rr_token": "0x0054059C",
+                "sync": "UNKNOWN"
+            },
+            "2": {
+                "date": "2021 May 18",
+                "time": "20:19:30.675122",
+                "proc_name": "hsrp_engine",
+                "msg_type": "E_MTS_RX",
+                "opcode": "MTS_OPC_SDWRAP_DEBUG_DUMP(1530)",
+                "opcode_id": "0X00540593",
+                "ret_val": "SUCCESS",
+                "src_sap": "42796",
+                "dst_sap": "340",
+                "flags": "None",
+                "ha_seqno": "0X00000000",
+                "rr_token": "0x00540593",
+                "sync": "UNKNOWN"
+            },
+            "3": {
+                "date": "2021 May 18",
+                "time": "20:19:22.970408",
+                "proc_name": "hsrp_engine",
+                "msg_type": "E_MTS_RX",
+                "opcode": "MTS_OPC_SDWRAP_DEBUG_DUMP(1530)",
+                "opcode_id": "0X00540543",
+                "ret_val": "SUCCESS",
+                "src_sap": "42796",
+                "dst_sap": "340",
+                "flags": "None",
+                "ha_seqno": "0X00000000",
+                "rr_token": "0x00540543",
+                "sync": "UNKNOWN"
+            },
+            "4": {
+                "date": "2021 May 18",
+                "time": "20:19:22.428284",
+                "proc_name": "hsrp_engine",
+                "msg_type": "E_MTS_RX",
+                "opcode": "MTS_OPC_SDWRAP_DEBUG_DUMP(1530)",
+                "opcode_id": "0X0054053C",
+                "ret_val": "SUCCESS",
+                "src_sap": "42795",
+                "dst_sap": "340",
+                "flags": "None",
+                "ha_seqno": "0X00000000",
+                "rr_token": "0x0054053C",
+                "sync": "UNKNOWN"
+            },
+            "5": {
+                "date": "2021 May 18",
+                "time": "20:19:22.388404",
+                "proc_name": "hsrp_engine",
+                "msg_type": "E_MTS_RX",
+                "opcode": "MTS_OPC_SDWRAP_DEBUG_DUMP(1530)",
+                "opcode_id": "0X0054053A",
+                "ret_val": "SUCCESS",
+                "src_sap": "42795",
+                "dst_sap": "340",
+                "flags": "None",
+                "ha_seqno": "0X00000000",
+                "rr_token": "0x0054053A",
+                "sync": "UNKNOWN"
+            },
+            "6": {
+                "date": "2021 May 18",
+                "time": "20:19:01.951649",
+                "proc_name": "hsrp_engine",
+                "msg_type": "E_MTS_RX",
+                "opcode": "MTS_OPC_VSH_ACFG_GEN(7663)",
+                "opcode_id": "0X0053FABA",
+                "ret_val": "SUCCESS",
+                "src_sap": "42701",
+                "dst_sap": "0",
+                "flags": "None",
+                "ha_seqno": "0X00000000",
+                "rr_token": "0x00000000",
+                "sync": "UNKNOWN"
+            },
+            "7": {
+                "date": "2021 May 18",
+                "time": "20:19:01.920943",
+                "proc_name": "hsrp_engine",
+                "msg_type": "E_MTS_RX",
+                "opcode": "MTS_OPC_VSH_ACFG_GEN(7663)",
+                "opcode_id": "0X0053FA40",
+                "ret_val": "SUCCESS",
+                "src_sap": "42697",
+                "dst_sap": "0",
+                "flags": "None",
+                "ha_seqno": "0X00000000",
+                "rr_token": "0x00000000",
+                "sync": "UNKNOWN"
+            },
+            "8": {
+                "date": "2021 May 18",
+                "time": "20:17:47.754675",
+                "proc_name": "hsrp_engine",
+                "msg_type": "E_MTS_RX",
+                "opcode": "MTS_OPC_VSH_ACFG_GEN(7663)",
+                "opcode_id": "0X0053E7BA",
+                "ret_val": "SUCCESS",
+                "src_sap": "42186",
+                "dst_sap": "0",
+                "flags": "None",
+                "ha_seqno": "0X00000000",
+                "rr_token": "0x00000000",
+                "sync": "UNKNOWN"
+            },
+            "9": {
+                "date": "2021 May 18",
+                "time": "20:17:47.738269",
+                "proc_name": "hsrp_engine",
+                "msg_type": "E_MTS_RX",
+                "opcode": "MTS_OPC_VSH_ACFG_GEN(7663)",
+                "opcode_id": "0X0053E759",
+                "ret_val": "SUCCESS",
+                "src_sap": "42187",
+                "dst_sap": "0",
+                "flags": "None",
+                "ha_seqno": "0X00000000",
+                "rr_token": "0x00000000",
+                "sync": "UNKNOWN"
+            },
+            "10": {
+                "date": "2021 May 18",
+                "time": "20:16:35.010410",
+                "proc_name": "hsrp_engine",
+                "msg_type": "E_MTS_RX",
+                "opcode": "MTS_OPC_VSH_ACFG_GEN(7663)",
+                "opcode_id": "0X0053D576",
+                "ret_val": "SUCCESS",
+                "src_sap": "41690",
+                "dst_sap": "0",
+                "flags": "None",
+                "ha_seqno": "0X00000000",
+                "rr_token": "0x00000000",
+                "sync": "UNKNOWN"
+            }
+        }
+    }
+
+    golden_output = {'execute.return_value': '''
+        [1] 2021 May 18 20:19:32.186346 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X0054059C, Ret:SUCCESS
+            Src:0x00001B01/42797, Dst:0x00001B01/340, Flags:None
+            HA_SEQNO:0X00000000, RRtoken:0x0054059C, Sync:UNKNOWN, Payloadsize:300
+            Payload:    
+            0x0000:  01 00 2f 74 6d 70 2f 64 62 67 64 75 6d 70 33 31 
+        [2] 2021 May 18 20:19:30.675122 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X00540593, Ret:SUCCESS
+            Src:0x00001B01/42796, Dst:0x00001B01/340, Flags:None
+            HA_SEQNO:0X00000000, RRtoken:0x00540593, Sync:UNKNOWN, Payloadsize:300
+            Payload:    
+            0x0000:  01 00 2f 74 6d 70 2f 64 62 67 64 75 6d 70 33 31 
+        [3] 2021 May 18 20:19:22.970408 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X00540543, Ret:SUCCESS
+            Src:0x00001B01/42796, Dst:0x00001B01/340, Flags:None
+            HA_SEQNO:0X00000000, RRtoken:0x00540543, Sync:UNKNOWN, Payloadsize:300
+            Payload:    
+            0x0000:  01 00 2f 74 6d 70 2f 64 62 67 64 75 6d 70 33 31 
+        [4] 2021 May 18 20:19:22.428284 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X0054053C, Ret:SUCCESS
+            Src:0x00001B01/42795, Dst:0x00001B01/340, Flags:None
+            HA_SEQNO:0X00000000, RRtoken:0x0054053C, Sync:UNKNOWN, Payloadsize:300
+            Payload:    
+            0x0000:  01 00 2f 74 6d 70 2f 64 62 67 64 75 6d 70 33 31 
+        [5] 2021 May 18 20:19:22.388404 [hsrp_engine] E_MTS_RX    [REQ] Opc:MTS_OPC_SDWRAP_DEBUG_DUMP(1530), Id:0X0054053A, Ret:SUCCESS
+            Src:0x00001B01/42795, Dst:0x00001B01/340, Flags:None
+            HA_SEQNO:0X00000000, RRtoken:0x0054053A, Sync:UNKNOWN, Payloadsize:300
+            Payload:    
+            0x0000:  01 00 2f 74 6d 70 2f 64 62 67 64 75 6d 70 33 31 
+        [6] 2021 May 18 20:19:01.951649 [hsrp_engine] E_MTS_RX    [NOT] Opc:MTS_OPC_VSH_ACFG_GEN(7663), Id:0X0053FABA, Ret:SUCCESS
+            Src:0x00001B01/42701, Dst:0x00001B01/0, Flags:None
+            HA_SEQNO:0X00000000, RRtoken:0x00000000, Sync:UNKNOWN, Payloadsize:3352
+            Payload:    
+            0x0000:  cd a6 00 00 00 02 00 00 ff ff ff ff ff ff ff ff 
+        [7] 2021 May 18 20:19:01.920943 [hsrp_engine] E_MTS_RX    [NOT] Opc:MTS_OPC_VSH_ACFG_GEN(7663), Id:0X0053FA40, Ret:SUCCESS
+            Src:0x00001B01/42697, Dst:0x00001B01/0, Flags:None
+            HA_SEQNO:0X00000000, RRtoken:0x00000000, Sync:UNKNOWN, Payloadsize:3352
+            Payload:    
+            0x0000:  c9 a6 00 00 00 02 00 00 ff ff ff ff ff ff ff ff 
+        [8] 2021 May 18 20:17:47.754675 [hsrp_engine] E_MTS_RX    [NOT] Opc:MTS_OPC_VSH_ACFG_GEN(7663), Id:0X0053E7BA, Ret:SUCCESS
+            Src:0x00001B01/42186, Dst:0x00001B01/0, Flags:None
+            HA_SEQNO:0X00000000, RRtoken:0x00000000, Sync:UNKNOWN, Payloadsize:3352
+            Payload:    
+            0x0000:  ca a4 00 00 00 02 00 00 ff ff ff ff ff ff ff ff 
+        [9] 2021 May 18 20:17:47.738269 [hsrp_engine] E_MTS_RX    [NOT] Opc:MTS_OPC_VSH_ACFG_GEN(7663), Id:0X0053E759, Ret:SUCCESS
+            Src:0x00001B01/42187, Dst:0x00001B01/0, Flags:None
+            HA_SEQNO:0X00000000, RRtoken:0x00000000, Sync:UNKNOWN, Payloadsize:3352
+            Payload:    
+            0x0000:  cb a4 00 00 00 02 00 00 ff ff ff ff ff ff ff ff 
+        [10] 2021 May 18 20:16:35.010410 [hsrp_engine] E_MTS_RX    [NOT] Opc:MTS_OPC_VSH_ACFG_GEN(7663), Id:0X0053D576, Ret:SUCCESS
+            Src:0x00001B01/41690, Dst:0x00001B01/0, Flags:None
+            HA_SEQNO:0X00000000, RRtoken:0x00000000, Sync:UNKNOWN, Payloadsize:3352
+            Payload:    
+            0x0000:  da a2 00 00 00 02 00 00 ff ff ff ff ff ff ff ff 
+        '''}
+
+    def test_show_hsrp_event_history_msgs(self):
+        self.device = Mock(**self.golden_output)
+        obj = ShowHsrpEventHistoryMsgs(device=self.device)
+        parsed_output = obj.parse()
+        self.assertEqual(parsed_output,self.golden_parsed_output)
+
+if __name__ == '__main__':
+    unittest.main()
+
