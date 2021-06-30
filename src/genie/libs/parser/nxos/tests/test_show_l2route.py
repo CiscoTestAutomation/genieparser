@@ -28,7 +28,8 @@ class test_show_l2route_evpn_mac(unittest.TestCase):
         ----------- -------------- ------ ------------- ---------- ----------------
         100         fa16.3eff.2a0c BGP    SplRcv        0          10.166.1.1       
         100         fa16.3eff.6b31 Local  L,            0          Eth1/4         
-        1000        5e01.80ff.0209 VXLAN  Rmac          0          10.166.1.1     
+        1000        5e01.80ff.0209 VXLAN  Rmac          0          10.166.1.1
+        20          aabb.000b.0021 BGP    Rcv           0          2.2.2.2 (Label: 200020)
     '''}
 
     golden_parsed_output = {
@@ -52,6 +53,16 @@ class test_show_l2route_evpn_mac(unittest.TestCase):
                          'next_hops': '10.166.1.1',
                          'prod': 'VXLAN',
                          'seq_no': '0'}
+                    }
+                },
+             '20':
+                {'mac_address':
+                    {'aabb.000b.0021':
+                        {'flags': 'Rcv',
+                         'next_hops': '2.2.2.2',
+                         'prod': 'BGP',
+                         'seq_no': '0',
+                         'label': '200020'}
                     }
                 }
             }

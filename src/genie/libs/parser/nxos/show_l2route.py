@@ -32,7 +32,8 @@ class ShowL2routeEvpnMacSchema(MetaParser):
                         {'prod': str,
                          'flags': str,
                          'seq_no': str,
-                         'next_hops': str}
+                         'next_hops': str,
+                         Optional('label'): str}
                     },
                 }
             },
@@ -68,12 +69,13 @@ class ShowL2routeEvpnMac(ShowL2routeEvpnMacSchema):
             # 100         fa16.3eff.2a0c BGP    SplRcv        0          10.166.1.1
             p1 = re.compile(r'^\s*(?P<topology>[0-9]+) +(?P<mac_address>[a-z0-9\.]+) '
                 '+(?P<prod>[a-zA-Z]+) +(?P<flags>[a-zA-Z\,]+) +(?P<seq_no>[0-9]+) '
-                '+(?P<next_hops>[a-zA-Z0-9\/\.]+)$')
+                '+(?P<next_hops>[a-zA-Z0-9\/\.]+) *(\(Label: +)?(?P<label>[0-9]*)\)?$')
             m = p1.match(line)
             if m:
 
                 topology = str(m.groupdict()['topology'])
                 mac_address = str(m.groupdict()['mac_address'])
+                label = str(m.groupdict()['label'])
 
                 if 'topology' not in ret_dict:
                     ret_dict['topology'] = {}
@@ -92,6 +94,10 @@ class ShowL2routeEvpnMac(ShowL2routeEvpnMacSchema):
                     str(m.groupdict()['seq_no'])
                 ret_dict['topology'][topology]['mac_address'][mac_address]['next_hops'] = \
                     str(m.groupdict()['next_hops'])
+                if label is not '':
+                    ret_dict['topology'][topology]['mac_address'][mac_address]['label'] = \
+                    label
+
 
                 continue
 
