@@ -8417,42 +8417,62 @@ class ShowPlatformSoftwareFedactiveFnfEtAnalyticsFlows(ShowPlatformSoftwareFedac
 
         for line in out.splitlines():
             line = line.strip()
+
+            #Total packets received     : 80
             m1 = p1.match(line)
             if m1:
                 group = m1.groupdict()
                 ret_dict["total-packets-received"] = int(group["total_pkts"])
+
+            #Excess packets received    : 60
             m2 = p2.match(line)
             if m2:
                 group = m2.groupdict()
                 ret_dict["excess-packets-received"] = int(group["excess_pkts"])
+
+            #Excess syn received        : 0
             m3 = p3.match(line)
             if m3:
                 group = m3.groupdict()
                 ret_dict["excess-syn-received"] = int(group["excess_syn"])
+
+            #Total eta records added    : 4
             m4 = p4.match(line)
             if m4:
                 group = m4.groupdict()
                 ret_dict["total-eta-records"] = int(group["tot_eta"])
+
+            #Current eta records        : 0
             m5 = p5.match(line)
             if m5:
                 group = m5.groupdict()
                 ret_dict["current-eta-records"] = int(group["cur_eta"])
+
+            #Total eta splt exported    : 2
             m6 = p6.match(line)
             if m6:
                 group = m6.groupdict()
                 ret_dict["total-eta-splt"] = int(group["eta_splt"])
+
+            #Total eta IDP exported     : 2
             m7 = p7.match(line)
             if m7:
                 group = m7.groupdict()
                 ret_dict["total-eta-idp"] = int(group["eta_idp"])
+
+            #Total eta-fnf records      : 2
             m8 = p8.match(line)
             if m8:
                 group = m8.groupdict()
                 ret_dict["total-eta-fnf"] = int(group["eta_fnf"])
+
+            #Total retransmitted pkts   : 0
             m9 = p9.match(line)
             if m9:
                 group = m9.groupdict()
                 ret_dict["total-packets-retransmitted"] = int(group["retr_pkts"])
+
+            #Total out of order pkts    : 0
             m10 = p10.match(line)
             if m10:
                 group = m10.groupdict()
