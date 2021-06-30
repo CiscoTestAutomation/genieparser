@@ -25,11 +25,13 @@ class ShowL2fibPathListIdSchema(MetaParser):
     """
 
     schema = {
-        Any(): {
-           'type': str,
-           'eth_seg': str,
-           'path_cnt': str,
-           'path_list': list,
+        'path_ids': {
+            Any(): {
+               'type': str,
+               'eth_seg': str,
+               'path_cnt': str,
+               'path_list': list,
+            }
         }
     }
 
@@ -90,7 +92,8 @@ class ShowL2fibPathListId(ShowL2fibPathListIdSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                path_list = parser_dict.setdefault(group['path_list_id'], {})
+                path_ids = parser_dict.setdefault('path_ids', {})
+                path_list = path_ids.setdefault(group['path_list_id'], {})
                 paths = path_list.setdefault('path_list', [])
                 continue
 

@@ -64,19 +64,25 @@ class ShowL2routeEvpnMacIpDetailSchema(MetaParser):
     """
 
     schema = {
-        Any(): {
+        'evi': {
             Any(): {
-                Any(): {
-                    'eth_tag': str,
-                    'mac_addr': str,
-                    'seq_number': str,
-                    'label_2': str,
-                    'esi': str,
-                    'mac_rt_flags': str,
-                    'next_hops': list,
-                },
-            },
-        },
+                'producer': {
+                    Any(): {
+                        'host_ips': {
+                            Any(): {
+                                'eth_tag': str,
+                                'mac_addr': str,
+                                'seq_number': str,
+                                'label_2': str,
+                                'esi': str,
+                                'mac_rt_flags': str,
+                                'next_hops': list,
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
 
@@ -234,7 +240,8 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
             if m:
                 group = m.groupdict()
                 evi = group['evi']
-                evis = parser_dict.setdefault(evi, {})
+                evi_list = parser_dict.setdefault('evi', {})
+                evis = evi_list.setdefault(evi, {})
                 continue
 
             # Ethernet Tag:             0
@@ -248,7 +255,8 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                producers = evis.setdefault(group['producer'], {})
+                producer_list = evis.setdefault('producer', {})
+                producers = producer_list.setdefault(group['producer'], {})
                 continue
 
             # MAC Address:              0012.0012.0012
@@ -262,7 +270,8 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                routes = producers.setdefault(group['host_ip'], {})
+                host_ips = producers.setdefault('host_ips', {})
+                routes = host_ips.setdefault(group['host_ip'], {})
                 next_hops = routes.setdefault('next_hops', [])
                 routes.update({'eth_tag': eth_tag})
                 routes.update({'mac_addr': mac_addr})
