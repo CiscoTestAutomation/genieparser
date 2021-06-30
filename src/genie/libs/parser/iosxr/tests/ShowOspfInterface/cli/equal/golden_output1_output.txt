@@ -1,0 +1,48 @@
+RP/0/RP0/CPU0:R1#show ospf interface
+Mon Apr 12 11:05:23.351 JST
+
+Interfaces for OSPF mpls1
+
+Loopback0 is up, line protocol is up
+  Internet Address 25.97.1.1/32, Area 0, SID 0, Strict-SPF SID 0
+  Label stack Primary label 0 Backup label 0 SRTE label 0
+  Process ID mpls1, Router ID 25.97.1.1, Network Type LOOPBACK, Cost: 1
+  Loopback interface is treated as a stub Host
+GigabitEthernet0/0/0/0 is up, line protocol is up
+  Internet Address 100.10.0.1/30, Area 0, SID 0, Strict-SPF SID 0
+  Label stack Primary label 1 Backup label 3 SRTE label 10
+  Process ID mpls1, Router ID 25.97.1.1, Network Type POINT_TO_POINT, Cost: 1
+  Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 1500, MaxPktSz 1500
+  Forward reference No, Unnumbered no,  Bandwidth 1000000
+  BFD enabled, BFD interval 150 msec, BFD multiplier 3, Mode: Default
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+  Non-Stop Forwarding (NSF) enabled
+    Hello due in 00:00:04:702
+  Index 1/1, flood queue length 0
+  Next 0(0)/0(0)
+  Last flood scan length is 1, maximum is 7
+  Last flood scan time is 0 msec, maximum is 1 msec
+  LS Ack List: current length 0, high water mark 19
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 100.100.100.100
+  Suppress hello for 0 neighbor(s)
+  Multi-area interface Count is 0
+GigabitEthernet0/0/0/1 is up, line protocol is up
+  Internet Address 100.20.0.1/30, Area 0, SID 0, Strict-SPF SID 0
+  Label stack Primary label 1 Backup label 3 SRTE label 10
+  Process ID mpls1, Router ID 25.97.1.1, Network Type POINT_TO_POINT, Cost: 1
+  Transmit Delay is 1 sec, State POINT_TO_POINT, MTU 1500, MaxPktSz 1500
+  Forward reference No, Unnumbered no,  Bandwidth 1000000
+  BFD enabled, BFD interval 150 msec, BFD multiplier 3, Mode: Default
+  Timer intervals configured, Hello 10, Dead 40, Wait 40, Retransmit 5
+  Non-Stop Forwarding (NSF) enabled
+    Hello due in 00:00:08:508
+  Index 2/2, flood queue length 0
+  Next 0(0)/0(0)
+  Last flood scan length is 3, maximum is 9
+  Last flood scan time is 0 msec, maximum is 1 msec
+  LS Ack List: current length 0, high water mark 14
+  Neighbor Count is 1, Adjacent neighbor count is 1
+    Adjacent with neighbor 95.95.95.95
+  Suppress hello for 0 neighbor(s)
+  Multi-area interface Count is 0

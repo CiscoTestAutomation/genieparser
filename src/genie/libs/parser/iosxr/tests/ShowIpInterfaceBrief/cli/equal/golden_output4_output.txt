@@ -1,0 +1,6 @@
+Interface                      IP-Address      Status                Protocol
+Loopback0                      200.0.7.1       Up                    Up      
+MgmtEth0/RSP0/CPU0/0           5.25.27.1       Up                    Up      
+MgmtEth0/RSP0/CPU0/1           unassigned      Shutdown              Down    
+MgmtEth0/RSP1/CPU0/0           5.25.27.2       Up                    Up      
+MgmtEth0/RSP1/CPU0/1           unassigned      Shutdown              Down    
