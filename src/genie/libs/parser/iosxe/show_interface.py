@@ -11,8 +11,13 @@
     * show interfaces <interface>
     * show ipv6 interface
     * show interfaces accounting
+    * show interfaces link
+    * show interfaces {interface} link
     * show interfaces status
-    * show interface {interface} transceiver detail
+    * show interfaces transceiver
+    * show interfaces {interface} transceiver
+    * show interfaces transceiver detail
+    * show interfaces {interface} transceiver detail
 """
 
 import os
@@ -200,14 +205,14 @@ class ShowInterfaces(ShowInterfacesSchema):
 
     cli_command = ['show interfaces','show interfaces {interface}']
     exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts',
-        'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts',
-        'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts',
-        'last_output', 'out_unknown_protocl_drops', 'last_input',
-        'input_queue_drops', 'out_interface_resets', 'rxload',
-        'txload', 'last_clear', 'in_crc_errors', 'in_errors',
-        'in_giants', 'unnumbered', 'mac_address', 'phys_address',
-        'out_lost_carrier', '(Tunnel.*)', 'input_queue_flushes',
-        'reliability']
+               'in_rate', 'in_rate_pkts', 'out_rate', 'out_rate_pkts',
+               'input_queue_size', 'in_broadcast_pkts', 'in_multicast_pkts',
+               'last_output', 'out_unknown_protocl_drops', 'last_input',
+               'input_queue_drops', 'out_interface_resets', 'rxload',
+               'txload', 'last_clear', 'in_crc_errors', 'in_errors',
+               'in_giants', 'unnumbered', 'mac_address', 'phys_address',
+               'out_lost_carrier', '(Tunnel.*)', 'input_queue_flushes',
+               'reliability']
 
     def cli(self,interface="",output=None):
         if output is None:
@@ -294,11 +299,12 @@ class ShowInterfaces(ShowInterfacesSchema):
         # auto-duplex, 10 Gb/s, media type is 10G
         # Full Duplex, 10000Mbps, link type is force-up, media type is SFP-LR
         # Full-duplex, 100Gb/s, link type is force-up, media type is QSFP 100G SR4
+        # Full-duplex, 10Gb/s, media type is 100/1000/2.5G/5G/10GBaseTX
         p11 = re.compile(r'^(?P<duplex_mode>\w+)[\-\s]+[d|D]uplex\, '
                          r'+(?P<port_speed>[\w\s\/]+|[a|A]uto-[S|s]peed|Auto '
                          r'(S|s)peed)(?:(?:\, +link +type +is '
                          r'+(?P<link_type>\S+))?(?:\, *(media +type +is| )'
-                         r'*(?P<media_type>[\w\/\- ]+)?)(?: +media +type)?)?$')
+                         r'*(?P<media_type>[\w\/\-\. ]+)?)(?: +media +type)?)?$')
 
         # input flow-control is off, output flow-control is unsupported
         p12 = re.compile(r'^(input|output) +flow-control +is +(?P<receive>\w+), +'
@@ -3274,6 +3280,82 @@ class ShowInterfacesAccounting(ShowInterfacesAccountingSchema):
 
         return ret_dict
 
+# ====================================================
+#  schema for show interfaces link
+# ====================================================
+class ShowInterfacesLinkSchema(MetaParser):
+    """Schema for:
+        show interfaces link
+        show interfaces {interface} link"""
+
+    schema = {
+        'interfaces': {
+            Any(): {
+                Optional('name'): str,
+                'down_time': str,
+                Optional('up_time'): str,
+            }
+        }
+    }
+
+
+# ====================================================
+#  parser for show interfaces link
+# ====================================================
+class ShowInterfacesLink(ShowInterfacesLinkSchema):
+    """parser for 
+            * show interfaces link
+            * show interfaces {interface} link
+        """
+
+    cli_command = ['show interfaces link',
+                   'show interfaces {interface} link']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                out = self.device.execute(self.cli_command[1].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[0])
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Port           Name               Down Time      Up Time
+        # Gi1/0/1        Foo                 00:00:00       4w5d
+        # Gi1/0/2        foo bar             00:07:00
+                
+        p1 = re.compile(r'^(?P<interface>\S+)'
+                        r'(?:(?P<name>.+?(?=(\d+[dw]\d+[dh])|(\d{2}:\d{2}:\d{2}))))?'
+                        r'(?P<down_time>(\d+[dw]\d+[dh])|(\d{2}:\d{2}:\d{2}))'
+                        r'(?:\s+(?P<up_time>(\d+[dw]\d+[dh])|(\d{2}:\d{2}:\d{2})))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p1.match(line)
+
+            if m:
+                group = m.groupdict()
+        
+                intf_dict = result_dict.setdefault('interfaces', {}).\
+                                        setdefault(Common.convert_intf_name(group['interface']), {})
+                
+                name_val = group['name'].strip()
+                if len(name_val):
+                    intf_dict['name'] = name_val
+
+                keys = ['down_time',
+                        'up_time']
+
+                for k in keys:
+                    if group[k]:
+                        intf_dict[k] = group[k].strip()
+                continue
+
+        return result_dict
+
 
 # ====================================================
 #  schema for show interfaces stats
@@ -3496,47 +3578,77 @@ class ShowInterfacesStatus(ShowInterfacesStatusSchema):
 # ==========================================================
 #  Parser for show interface {interface} transceiver detail
 # ==========================================================
-class ShowInterfaceTransceiverDetailSchema(MetaParser):
+class ShowInterfacesTransceiverDetailSchema(MetaParser):
     """Schema for:
-        show interface {interface} transceiver detail"""
+        show interfaces {interface} transceiver detail"""
 
     schema = {
         'interfaces': {
-            Any(): {# interface name
-                Optional('cisco_extended_id_number'): str,
-                Optional('cisco_id'): str,
-                Optional('cisco_part_number'): str,
-                Optional('cisco_product_id'): str,
-                Optional('cisco_vendor_id'): str,
-                Optional('name'): str,
-                Optional('nominal_bitrate'): str,
-                Optional('number_of_lanes'): str,
-                Optional('part_number'): str,
-                Optional('revision'): str,
-                Optional('serial_number'): str,
-                Optional('transceiver'): str,
+            Any(): {  # interface name
+                'transceiver': str,
                 Optional('type'): str,
-                Any(): str,
+                'Temperature': {
+                    'Value': float,
+                    Optional('Lane'): str,
+                    'HighAlarmThreshold': float,
+                    'HighWarnThreshold': float,
+                    'LowWarnThreshold': float,
+                    'LowAlarmThreshold': float
+                },
+                'Voltage': {
+                    'Value': float,
+                    Optional('Lane'): str,
+                    'HighAlarmThreshold': float,
+                    'HighWarnThreshold': float,
+                    'LowWarnThreshold': float,
+                    'LowAlarmThreshold': float
+                },
+                'Current': {
+                    'Value': float,
+                    Optional('Lane'): str,
+                    'HighAlarmThreshold': float,
+                    'HighWarnThreshold': float,
+                    'LowWarnThreshold': float,
+                    'LowAlarmThreshold': float
+                },
+                'OpticalTX': {
+                    'Value': float,
+                    Optional('Lane'): str,
+                    'HighAlarmThreshold': float,
+                    'HighWarnThreshold': float,
+                    'LowWarnThreshold': float,
+                    'LowAlarmThreshold': float
+                },
+                'OpticalRX': {
+                    'Value': float,
+                    Optional('Lane'): str,
+                    'HighAlarmThreshold': float,
+                    'HighWarnThreshold': float,
+                    'LowWarnThreshold': float,
+                    'LowAlarmThreshold': float
+                },
             }
         }
     }
 
 
-class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
-    """parser for 
-            * show interface {interface} transceiver detail
+class ShowInterfacesTransceiverDetail(ShowInterfacesTransceiverDetailSchema):
+    """parser for
+            * show interfaces transceiver detail
+            * show interfaces {interface} transceiver detail
         """
 
-    cli_command = 'show interface {interface} transceiver detail'
+    cli_command = ['show interfaces {interface} transceiver detail',
+                   'show interfaces transceiver detail']
 
-    def cli(self, interface, output=None):
-
+    def cli(self, interface=None, output=None):
         if output is None:
-            out = self.device.execute(self.cli_command.format(interface=interface))
+            if interface:
+                out = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[1])
         else:
             out = output
-
-        result_dict = {}
 
         # transceiver is present
         # type is 10Gbase-LR
@@ -3544,9 +3656,16 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
         # part number is FTLX1474D3BCL-CS
         p1 = re.compile(r'^(?P<key>[\S\s]+) +is +(?P<value>[\S\s]+)$')
 
-        # number of lanes 1
-        p2 = re.compile(r'^number +of +lanes +(?P<lanes>[\d]+)$')
+        # Voltage            Threshold   Threshold  Threshold  Threshold
+        p3_0 = re.compile(r'(?P<statistic>(Temperature|Voltage|Current|Transmit Power|Receive Power))')
 
+        # Twe2/1/1     25.5                   90.0       85.0       -5.0      -10.0
+        # Twe2/1/1   N/A    5.7                 50.0       40.0        2.0        1.0
+        # Twe2/1/1   N/A    N/A                 50.0       40.0        2.0        1.0
+        p3_1 = re.compile(r'^(?P<port>(\S+)) +(?P<lane>(\S+))? +(?P<value>(\S+)) '
+                          r'+(?P<HAT>(-?[\d\.]+)) +(?P<HWT>(-?[\d\.]+)) +(?P<LWT>(-?[\d\.]+)) +(?P<LAT>(-?[\d\.]+))$')
+
+        result_dict = {}
         for line in out.splitlines():
             line = line.strip()
 
@@ -3557,15 +3676,99 @@ class ShowInterfaceTransceiverDetail(ShowInterfaceTransceiverDetailSchema):
                 group = m.groupdict()
                 key = group['key'].strip().replace(" ", '_').lower()
                 value = group['value'].strip()
-
-                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
-                intf_dict.update({key: value})
+                lanes = None
                 continue
 
-            # number of lanes 1
-            m = p2.match(line)
+            m = p3_0.match(line)
             if m:
-                intf_dict['number_of_lanes'] = m.groupdict()['lanes']
+                stat = m.groupdict()['statistic']
+                if stat == 'Transmit Power':
+                    stat = 'OpticalTX'
+                elif stat == 'Receive Power':
+                    stat = 'OpticalRX'
+                continue
+
+            m = p3_1.match(line)
+            if m:
+                interface = m.groupdict()['port']
+                interface = Common.convert_intf_name(interface)
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(interface, {})
+
+                if key and value:
+                    intf_dict.update({key: value})
+
+                intf_dict[stat] = {}
+                intf_dict[stat]['Value'] = float(m.groupdict()['value'])
+                if m.groupdict()['lane'] is not None:
+                    intf_dict[stat]['Lane'] = m.groupdict()['lane']
+                intf_dict[stat]['HighAlarmThreshold'] = float(m.groupdict()['HAT'])
+                intf_dict[stat]['HighWarnThreshold'] = float(m.groupdict()['HWT'])
+                intf_dict[stat]['LowWarnThreshold'] = float(m.groupdict()['LWT'])
+                intf_dict[stat]['LowAlarmThreshold'] = float(m.groupdict()['LAT'])
+                continue
+
+        return result_dict
+
+
+# ==========================================================
+#  Parser for show interface {interface} transceiver
+# ==========================================================
+class ShowInterfacesTransceiverSchema(MetaParser):
+    """Schema for:
+        * show interfaces {interface} transceiver
+    """
+
+    schema = {
+        'interfaces': {
+            Any(): {  # interface name
+                Optional('port'): str,
+                Optional('temp'): str,
+                Optional('voltage'): str,
+                Optional('current'): str,
+                Optional('opticaltx'): str,
+                Optional('opticalrx'): str,
+            }
+        }
+    }
+
+
+class ShowInterfacesTransceiver(ShowInterfacesTransceiverSchema):
+    """
+    parser for
+        * show interfaces transceiver
+        * show interfaces {interface} transceiver
+    """
+
+    cli_command = ['show interfaces {interface} transceiver', 'show interfaces transceiver']
+
+    def cli(self, interface=None, output=None):
+        if output is None:
+            if interface:
+                out = self.device.execute(self.cli_command[0].format(interface=interface))
+            else:
+                out = self.device.execute(self.cli_command[1])
+
+        else:
+            out = output
+
+        # Gi1/1      40.6       5.09       0.4     -25.2      N/A
+        p = re.compile(r'^(?P<port>([\d\/A-Za-z]+)) +(?P<temp>([\d\.-]+)) '
+                       r'+(?P<voltage>([\d\.-]+)) +(?P<current>([\d\.-]+)) '
+                       r'+(?P<opticaltx>(\S+)) +(?P<opticalrx>(\S+))$')
+
+        result_dict = {}
+        for line in out.splitlines():
+            line = line.strip()
+
+            m = p.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict = result_dict.setdefault('interfaces', {}).setdefault(group['port'], {})
+                intf_dict['temp'] = group['temp']
+                intf_dict['voltage'] = group['voltage']
+                intf_dict['current'] = group['current']
+                intf_dict['opticaltx'] = group['opticaltx']
+                intf_dict['opticalrx'] = group['opticalrx']
                 continue
 
         return result_dict
