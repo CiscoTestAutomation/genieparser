@@ -1,0 +1,42 @@
+Load for five secs: 5%/0%; one minute: 8%; five minutes: 7%
+Time source is NTP, 04:01:38.883 PDT Tue Jun 8 2021
+
+ FiveGigabitEthernet1/0/36 
+
+  Service-policy input: AutoQos-4.0-CiscoPhone-Input-Policy
+
+    Class-map: AutoQos-4.0-Voip-Data-CiscoPhone-Class (match-any)  
+      0 packets
+      Match: cos  5 
+      QoS Set
+        dscp ef
+      police:
+          cir 128000 bps, bc 8000 bytes
+        conformed 0 bytes; actions:
+          transmit 
+        exceeded 0 bytes; actions:
+          set-dscp-transmit dscp table policed-dscp
+        conformed 0000 bps, exceeded 0000 bps
+
+    Class-map: AutoQos-4.0-Voip-Signal-CiscoPhone-Class (match-any)  
+      0 packets
+      Match: cos  3 
+      QoS Set
+        dscp cs3
+      police:
+          cir 32000 bps, bc 8000 bytes
+        conformed 0 bytes; actions:
+          transmit 
+        exceeded 0 bytes; actions:
+          set-dscp-transmit dscp table policed-dscp
+        conformed 0000 bps, exceeded 0000 bps
+
+    Class-map: AutoQos-4.0-Default-Class (match-any)  
+      3035984544 packets
+      Match: access-group name AutoQos-4.0-Acl-Default
+      QoS Set
+        dscp default
+
+    Class-map: class-default (match-any)  
+      4312 packets
+      Match: any 

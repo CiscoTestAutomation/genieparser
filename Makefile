@@ -36,7 +36,7 @@ PROD_USER     = pyadm@pyats-ci
 PROD_PKGS     = /auto/pyats/packages
 STAGING_PKGS  = /auto/pyats/staging/packages
 STAGING_EXT_PKGS  = /auto/pyats/staging/packages_external
-PYTHON        = python
+PYTHON        = python3
 TESTCMD       = runAll --path=$(shell pwd)/tests
 BUILD_CMD     = $(PYTHON) setup.py bdist_wheel --dist-dir=$(DIST_DIR)
 PYPIREPO      = pypitest
@@ -83,6 +83,7 @@ compile:
 	@echo ""
 	@echo "Compiling to C code"
 	@echo --------------------------
+	@pip install cisco-distutils --upgrade || true
 	$(CYTHON_CMD) 
 	@echo "Done Compiling"
 	@echo ""
@@ -222,7 +223,7 @@ json:
 	@echo "--------------------------------------------------------------------"
 	@echo "Generating Parser json file"
 	@echo ""
-	@python -c "from genie.json.make_json import make_genieparser; make_genieparser()"
+	@$(PYTHON) -c "from genie.json.make_json import make_genieparser; make_genieparser()"
 	@echo ""
 	@echo "Done."
 	@echo ""
@@ -232,7 +233,7 @@ changelogs:
 	@echo "--------------------------------------------------------------------"
 	@echo "Generating changelog file"
 	@echo ""
-	@python -c "from ciscodistutils.make_changelog import main; main('./changelog/undistributed', './changelog/undistributed.rst')"
+	@$(PYTHON) -c "from ciscodistutils.make_changelog import main; main('./changelog/undistributed', './changelog/undistributed.rst')"
 	@echo ""
 	@echo "Done."
 	@echo ""

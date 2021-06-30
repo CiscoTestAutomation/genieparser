@@ -1,0 +1,13 @@
+show ip bgp l2vpn evpn route-type 5  0 250.250.250.23 32
+BGP routing table entry for [5][20.0.0.1:31000][0][32][250.250.250.23]/17, version 241
+Paths: (1 available, best #1, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     13        
+  Refresh Epoch 1
+  Local, (Received from a RR-client)
+    20.0.102.3 (via default) from 20.0.102.3 (20.0.102.3)
+      Origin IGP, localpref 100, valid, internal, best
+      EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, VNI Label 31000, MPLS VPN Label 0
+      Extended Community: RT:1000:31000 ENCAP:8 Router MAC:6056.0001.1101
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 23 2021 08:46:34 PST

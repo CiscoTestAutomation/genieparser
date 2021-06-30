@@ -1,0 +1,14 @@
+Mon Apr 12 11:10:38.799 JST
+
+* Indicates MADJ interface
+# Indicates Neighbor awaiting BFD session up
+
+Neighbors for OSPF
+
+Neighbor ID     Pri   State           Dead Time   Address         Interface
+100.100.100.100 1     FULL/  -        00:00:38    100.10.0.2      GigabitEthernet0/0/0/0
+    Neighbor is up for 2d18h
+95.95.95.95     1     FULL/  -        00:00:38    100.20.0.2      GigabitEthernet0/0/0/1
+    Neighbor is up for 2d18h
+
+Total neighbor count: 2

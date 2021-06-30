@@ -9,6 +9,7 @@
 
 from genie.libs.parser.iosxe.show_lldp import ShowLldp as ShowLldp_iosxe,\
                                               ShowLldpEntry as ShowLldpEntry_iosxe,\
+                                              ShowLldpNeighbors as ShowLldpNeighbors_iosxe,\
                                               ShowLldpNeighborsDetail as ShowLldpNeighborsDetail_iosxe,\
                                               ShowLldpTraffic as ShowLldpTraffic_iosxe,\
                                               ShowLldpInterface as ShowLldpInterface_iosxe
@@ -20,6 +21,10 @@ class ShowLldp(ShowLldp_iosxe):
 
 class ShowLldpEntry(ShowLldpEntry_iosxe):
     """Parser for show lldp entry [<WORD>|*]"""
+    pass
+
+class ShowLldpNeighbors(ShowLldpNeighbors_iosxe):
+    '''Parser for show lldp neighbors'''
     pass
 
 class ShowLldpNeighborsDetail(ShowLldpNeighborsDetail_iosxe):
