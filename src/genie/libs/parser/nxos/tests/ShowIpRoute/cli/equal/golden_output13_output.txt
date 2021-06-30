@@ -12,3 +12,5 @@ IP Route Table for VRF "User-VLAN"
     *via 169.254.1.1%LegacyLAN:{101}, [20/0], 38w2d, bgp-64512, external, tag 65002
 10.2.0.0/24, ubest/mbest: 1/0
     *via 172.16.0.1%default-VLAN, [200/0], 02:46:06, bgp-64512, internal, tag 64513 (mpls-vpn)
+10.1.111.0/24, ubest/mbest: 1/0
+    *via 10.84.66.66%default, [200/2000], 00:20:43, bgp-100, internal, tag 200, segid: 601011 (Asymmetric) tunnelid: 0x64646401 encap: VXLAN

@@ -1,0 +1,16 @@
+R3_nx# show isis adjacency vrf all
+IS-IS process: test VRF: default
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+R2_xr           fa16.3eff.4abd  1      UP     00:00:09   Ethernet1/1.115
+R2_xr           fa16.3eff.4abd  2      UP     00:00:07   Ethernet1/1.115
+R1_ios          fa16.3eff.0c11  1      UP     00:00:07   Ethernet1/2.115
+R1_ios          fa16.3eff.0c11  2      UP     00:00:10   Ethernet1/2.115
+
+IS-IS process: test VRF: VRF1
+IS-IS adjacency database:
+Legend: '!': No AF level connectivity in given topology
+System ID       SNPA            Level  State  Hold Time  Interface
+2222.22ff.4444  fa16.3eff.4abd  1      INIT   00:00:32   Ethernet1/1.415
+2222.22ff.4444  fa16.3eff.4abd  2      INIT   00:00:24   Ethernet1/1.415

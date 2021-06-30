@@ -1,0 +1,297 @@
+CGW78-c9500-12#show ip bgp l2vpn evpn route-type 3
+BGP routing table entry for [3][20.0.101.1:10][0][32][20.0.101.1]/17, version 3830
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:23456:210010 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:210010 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 16:11:03 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:210010 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:210010 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 16:11:03 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:23456:210010 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:210010 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 16:11:02 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:210010 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:210010 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 16:11:02 UTC
+BGP routing table entry for [3][20.0.101.1:51][0][32][20.0.101.1]/17, version 4074
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:23456:200051 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200051 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200051 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200051 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:23456:200051 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200051 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200051 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200051 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+BGP routing table entry for [3][20.0.101.1:52][0][32][20.0.101.1]/17, version 4075
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:23456:200052 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200052 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200052 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200052 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:23456:200052 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200052 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200052 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200052 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+BGP routing table entry for [3][20.0.101.1:53][0][32][20.0.101.1]/17, version 4076
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:23456:200053 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200053 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200053 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200053 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:23456:200053 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200053 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200053 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200053 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+BGP routing table entry for [3][20.0.101.1:54][0][32][20.0.101.1]/17, version 4077
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:23456:200054 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200054 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200054 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200054 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:23456:200054 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200054 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200054 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200054 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+BGP routing table entry for [3][20.0.101.1:64][0][32][20.0.101.1]/17, version 4087
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:23456:200064 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200064 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200064 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200064 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:23456:200064 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200064 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200064 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200064 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+BGP routing table entry for [3][20.0.101.1:69][0][32][20.0.101.1]/17, version 4092
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:23456:200069 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200069 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200069 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200069 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:23456:200069 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200069 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 18:18:28 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      Extended Community: RT:150:200069 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:200069 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 18:18:28 UTC
+BGP routing table entry for [3][30.0.107.78:184][0][32][20.0.101.1]/17, version 4420
+Paths: (1 available, best #1, table evi_184)
+  Not advertised to any peer
+  Refresh Epoch 1
+  150, imported path from [3][20.0.101.1:184][0][32][20.0.101.1]/17 (global)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:23456:2000184 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:2000184 tunnel identifier: < Tunnel Endpoint: 20.0.101.1 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 18:18:58 UTC
+BGP routing table entry for [3][30.0.107.78:184][0][32][20.0.101.2]/17, version 3510
+Paths: (1 available, best #1, table evi_184)
+  Not advertised to any peer
+  Refresh Epoch 1
+  150, imported path from [3][20.0.101.2:184][0][32][20.0.101.2]/17 (global)
+    20.0.101.2 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:23456:2000184 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:2000184 tunnel identifier: < Tunnel Endpoint: 20.0.101.2 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 16:11:02 UTC
+BGP routing table entry for [3][30.0.107.78:184][0][32][20.0.101.3]/17, version 2825
+Paths: (1 available, best #1, table evi_184)
+  Not advertised to any peer
+  Refresh Epoch 1
+  150, imported path from [3][20.0.101.3:184][0][32][20.0.101.3]/17 (global)
+    20.0.101.3 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:23456:2000184 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:2000184 tunnel identifier: < Tunnel Endpoint: 20.0.101.3 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 16:10:31 UTC
+BGP routing table entry for [3][30.0.107.78:184][0][32][20.0.101.4]/17, version 5600
+Paths: (1 available, best #1, table evi_184)
+  Not advertised to any peer
+  Refresh Epoch 1
+  150, imported path from [3][20.0.101.4:184][0][32][20.0.101.4]/17 (global)
+    20.0.101.4 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      Extended Community: RT:23456:2000184 ENCAP:8 EVPN Mcast Flags:1
+      PMSI Attribute: Flags:0x0, Tunnel type:IR, length 4, vni:2000184 tunnel identifier: < Tunnel Endpoint: 20.0.101.4 >
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 18:18:59 UTC
