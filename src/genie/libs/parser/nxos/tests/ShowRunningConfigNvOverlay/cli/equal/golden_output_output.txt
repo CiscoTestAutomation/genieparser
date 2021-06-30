@@ -27,6 +27,8 @@ interface nve1
   member vni 10202
     multisite ingress-replication
     mcast-group 231.200.1.1
+  member vni 10203
+    ingress-replication protocol bgp
  
 interface Ethernet1/1
   evpn multisite fabric-tracking

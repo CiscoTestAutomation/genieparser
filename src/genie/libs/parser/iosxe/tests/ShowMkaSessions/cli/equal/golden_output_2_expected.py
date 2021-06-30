@@ -1,0 +1,10 @@
+expected_output = {'sessions': {1: {'ckn': '90',
+                  'inherited': 'NO',
+                  'interface': 'Hu1/0/3.5',
+                  'key-server': 'NO',
+                  'local-txsci': 'f87a.4125.2702/008b',
+                  'macsec-peers': '0',
+                  'peer-rxsci': 'ecce.1346.f902/008d',
+                  'policy-name': '*DEFAULT POLICY*',
+                  'port-id': '139',
+                  'status': 'Secured, no peer'}}}

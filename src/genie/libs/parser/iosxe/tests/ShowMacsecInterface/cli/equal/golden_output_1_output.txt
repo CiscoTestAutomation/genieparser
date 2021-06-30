@@ -1,0 +1,100 @@
+show macsec interface Hu1/0/3.5
+ MACsec is enabled
+  Replay protect : enabled
+  Replay window : 0
+  Include SCI : yes
+  Use ES Enable : no
+  Use SCB Enable : no
+  Admin Pt2Pt MAC : forceTrue(1)
+  Pt2Pt MAC Operational : no
+  Cipher : GCM-AES-128
+  Confidentiality Offset : 0
+
+ Capabilities
+  ICV length : 16
+  Data length change supported: yes
+  Max. Rx SA : 16
+  Max. Tx SA : 16
+  Max. Rx SC : 8
+  Max. Tx SC : 8
+  Validate Frames : strict
+  PN threshold notification support : Yes
+  Ciphers supported : GCM-AES-128
+                      GCM-AES-256
+                      GCM-AES-XPN-128
+                      GCM-AES-XPN-256
+
+ Access control : must secure
+
+ Cleartag Details
+  Type    : one dot1q in clear
+  VlanId1 : 5
+
+ Transmit Secure Channels
+  SCI : F87A41252702008B
+  SC state : inUse(1)
+   Elapsed time : 7w0d
+   Start time : 7w0d
+   Current AN: 1
+   Previous AN: -
+   Next PN: 5021
+   SA State: inUse(1)
+   Confidentiality : yes
+   SAK Unchanged : yes
+   SA Create time : 1d18h
+   SA Start time : 7w0d
+   SC Statistics
+    Auth-only Pkts : 0
+    Auth-only Bytes : 0
+    Encrypted Pkts : 0
+    Encrypted Bytes : 0
+   SA Statistics
+    Auth-only Pkts : 0
+    Auth-only Bytes : 0
+    Encrypted Pkts : 5020
+    Encrypted Bytes : 692606
+
+  Port Statistics
+   Egress untag pkts  0
+   Egress long pkts  0
+
+ Receive Secure Channels
+  SCI : ECCE1346F902008D
+  SC state : inUse(1)
+   Elapsed time : 7w0d
+   Start time : 7w0d
+   Current AN: 1
+   Previous AN: -
+   Next PN: 202
+   RX SA Count: 0
+   SA State: inUse(1)
+   SAK Unchanged : yes
+   SA Create time : 1d18h
+   SA Start time : 7w0d
+   SC Statistics
+    Notvalid pkts 0
+    Invalid pkts 0
+    Valid pkts 0
+    Late pkts 0
+    Uncheck pkts 0
+    Delay pkts 0
+    UnusedSA pkts 0
+    NousingSA pkts 0
+    Validated Bytes 0
+    Decrypted Bytes 0
+   SA Statistics
+    Notvalid pkts 0
+    Invalid pkts 0
+    Valid pkts 200
+    UnusedSA pkts 0
+    NousingSA pkts 0
+    Validated Bytes 0
+    Decrypted Bytes 23980
+
+  Port Statistics
+   Ingress untag pkts  0
+   Ingress notag pkts  48898
+   Ingress badtag pkts  0
+   Ingress unknownSCI pkts  0
+   Ingress noSCI pkts  0
+   Ingress overrun pkts  0
