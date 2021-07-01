@@ -8394,7 +8394,7 @@ class ShowPlatformSoftwareFedactiveFnfEtAnalyticsFlows(ShowPlatformSoftwareFedac
         p3 = re.compile(r'Excess +syn +received +: +(?P<excess_syn>\d+)')
 
         #Total eta records added    : 4
-        p4 = re.compile(r'Total +eta records +added +: +(?P<tot_eta>\d+)')
+        p4 = re.compile(r'Total +eta +records +added +: +(?P<tot_eta>\d+)')
 
         #Current eta records        : 0
         p5 = re.compile(r'Current +eta +records +: +(?P<cur_eta>\d+)')
