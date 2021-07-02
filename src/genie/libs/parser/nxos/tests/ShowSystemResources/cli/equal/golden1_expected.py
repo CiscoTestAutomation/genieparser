@@ -6,7 +6,8 @@ expected_output = {
     'processes': {
         'processes_total': 901,
         'processes_running': 2
-    }, 'cpu_state':
+    },
+    'cpu_state':
         {
             'cpu_state_user': 2.11,
             'cpu_state_kernel': 11.64,

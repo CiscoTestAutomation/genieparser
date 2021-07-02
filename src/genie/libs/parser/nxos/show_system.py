@@ -529,24 +529,25 @@ class ShowSystemResources(ShowSystemResourcesSchema):
             out = output
 
         # Load average:   1 minute: 0.34   5 minutes: 0.40   15 minutes: 0.66
-        p1 = re.compile(
-            r'^Load average\s*:\s+1 minute:\s+(?P<minute_one>\d+\.\d+)\s+5 minutes:\s+(?P<minute_five>\d+\.\d+)\s+'
-            r'15 minutes:\s+(?P<minute_fifteen>\d+\.\d+)$')
+        p1 = re.compile(r'^Load average\s*:\s+1 minute:\s+(?P<minute_one>[\d\.]+)\s+5 minutes:\s+'
+                        r'(?P<minute_five>\d+\.\d+)\s+15 minutes:\s+(?P<minute_fifteen>\d+\.\d+)$')
 
         # Processes   :   901 total, 2 running
-        p2 = re.compile(r'^Processes\s*:\s+(?P<processes_total>\d+)\s+total,\s+(?P<processes_running>\d+)\s+running$')
+        p2 = re.compile(r'^Processes\s*:\s+(?P<processes_total>\d+)\s+total,\s+'
+                        r'(?P<processes_running>\d+)\s+running$')
 
         # CPU states  :   2.11% user,   11.64% kernel,   86.24% idle
         #         CPU0 states  :   3.33% user,   12.22% kernel,   84.44% idle
-        p3 = re.compile(
-            r'^\s*CPU(?P<cpu_num>\d*)\s+states\s+:\s+(?P<user>\d+\.\d+)%\s+user,\s+(?P<kernel>\d+\.\d+)%\s+kernel,\s+'
-            r'(?P<idle>\d+\.\d+)%\s+idle$')
+        p3 = re.compile(r'^CPU(?P<cpu_num>\d*)\s+states\s+:\s+(?P<user>\d+\.\d+)%\s+user,\s+'
+                        r'(?P<kernel>[\d+\.]+)%\s+kernel,\s+(?P<idle>\d+\.\d+)%\s+idle$')
 
         # Memory usage:   5873172K total,   4189652K used,   1683520K free
-        p4 = re.compile(r'^Memory usage\s*:\s+(?P<total>\d+)K total,\s+(?P<used>\d+)K used,\s+(?P<free>\d+)K free$')
+        p4 = re.compile(r'^Memory usage\s*:\s+(?P<total>\d+)K total,\s+'
+                        r'(?P<used>\d+)K used,\s+(?P<free>\d+)K free$')
 
         # Kernel vmalloc:   0K total,   0K free
-        p5 = re.compile(r'^Kernel vmalloc\s*:\s+(?P<total>\d+)K total,\s+(?P<free>\d+)K free$')
+        p5 = re.compile(r'^Kernel vmalloc\s*:\s+(?P<total>\d+)'
+                        r'K total,\s+(?P<free>\d+)K free$')
 
         # Kernel buffers:   144876K Used
         p6 = re.compile(r'^Kernel buffers\s*:\s+(?P<buffers>\d+)K Used$')
@@ -575,7 +576,6 @@ class ShowSystemResources(ShowSystemResourcesSchema):
                 load_avg_dict["load_avg_1min"] = float(group['minute_one'])
                 load_avg_dict["load_avg_5min"] = float(group['minute_five'])
                 load_avg_dict["load_avg_15min"] = float(group['minute_five'])
-
                 continue
 
             # Processes   :   901 total, 2 running
@@ -584,14 +584,12 @@ class ShowSystemResources(ShowSystemResourcesSchema):
                 group = m.groupdict()
 
                 processes_dict = ret_dict.setdefault('processes', {})
-
                 processes_dict["processes_total"] = int(group['processes_total'])
                 processes_dict["processes_running"] = int(group['processes_running'])
-
                 continue
 
             # CPU states  :   2.11% user,   11.64% kernel,   86.24% idle
-            #         CPU0 states  :   3.33% user,   12.22% kernel,   84.44% idle
+            #        CPU0 states  :   3.33% user,   12.22% kernel,   84.44% idle
             m = p3.match(line)
             if m:
                 group = m.groupdict()
@@ -599,17 +597,16 @@ class ShowSystemResources(ShowSystemResourcesSchema):
                 cpu_state_dict = ret_dict.setdefault('cpu_state', {})
 
                 if group['cpu_num']:
-                    cpu_id_dict = cpu_state_dict.setdefault('cpus', {}).setdefault(int(group['cpu_num']), {})
+                    cpu_id_dict = cpu_state_dict.setdefault(
+                        'cpus', {}).setdefault(int(group['cpu_num']), {})
                     cpu_id_dict['cpu_state_user'] = float(group['user'])
                     cpu_id_dict['cpu_state_kernel'] = float(group['kernel'])
                     cpu_id_dict['cpu_state_idle'] = float(group['idle'])
-
                     continue
 
                 cpu_state_dict['cpu_state_user'] = float(group['user'])
                 cpu_state_dict['cpu_state_kernel'] = float(group['kernel'])
                 cpu_state_dict['cpu_state_idle'] = float(group['idle'])
-
                 continue
 
             # Memory usage:   5873172K total,   4189652K used,   1683520K free
@@ -622,7 +619,6 @@ class ShowSystemResources(ShowSystemResourcesSchema):
                 memory_usage_dict['memory_usage_total_kb'] = int(group['total'])
                 memory_usage_dict['memory_usage_used_kb'] = int(group['used'])
                 memory_usage_dict['memory_usage_free_kb'] = int(group['free'])
-
                 continue
 
             # Kernel vmalloc:   0K total,   0K free
@@ -631,10 +627,8 @@ class ShowSystemResources(ShowSystemResourcesSchema):
                 group = m.groupdict()
 
                 kernel_dict = ret_dict.setdefault('kernel', {})
-
                 kernel_dict['kernel_vmalloc_total_kb'] = int(group['total'])
                 kernel_dict['kernel_vmalloc_free_kb'] = int(group['free'])
-
                 continue
 
             # Kernel buffers:   144876K Used
@@ -643,9 +637,7 @@ class ShowSystemResources(ShowSystemResourcesSchema):
                 group = m.groupdict()
 
                 kernel_dict = ret_dict.setdefault('kernel', {})
-
                 kernel_dict['kernel_buffers_kb'] = int(group['buffers'])
-
                 continue
 
             # Kernel cached :   2296916K Used
@@ -654,16 +646,13 @@ class ShowSystemResources(ShowSystemResourcesSchema):
                 group = m.groupdict()
 
                 kernel_dict = ret_dict.setdefault('kernel', {})
-
                 kernel_dict['kernel_cached_kb'] = int(group['cached'])
-
                 continue
 
             # Current memory status: OK
             m = p8.match(line)
             if m:
                 ret_dict["current_memory_status"] = m.groupdict()['status']
-
                 continue
 
         return ret_dict
