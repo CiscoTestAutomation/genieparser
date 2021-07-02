@@ -2,22 +2,30 @@
 # All rights reserved.
 
 expected_output = {
-    'entry': {
+    'evi': {
         1: {
-            11: {
-                0: {
-                    'remote_count': 4,
-                    'local_count': 6,
-                    'dup_count': 1,
+            'bd_id': {
+                11: {
+                    'eth_tag': {
+                        0: {
+                            'remote_count': 4,
+                            'local_count': 6,
+                            'dup_count': 1,
+                        },
+                    },
                 },
             },
         },
         2: {
-            12: {
-                0: {
-                    'remote_count': 2,
-                    'local_count': 2,
-                    'dup_count': 0,
+            'bd_id': {
+                12: {
+                    'eth_tag': {
+                        0: {
+                            'remote_count': 2,
+                            'local_count': 2,
+                            'dup_count': 0,
+                        },
+                    },
                 },
             },
         },

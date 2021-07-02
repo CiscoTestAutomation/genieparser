@@ -53,8 +53,7 @@ import re
 
 # Genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, \
-                                               Optional
+from genie.metaparser.util.schemaengine import Optional
 
 # =================================
 # Schema for 'show l2vpn evpn mac'
@@ -79,12 +78,14 @@ class ShowL2vpnEvpnMacSchema(MetaParser):
     """
 
     schema = {
-        Any(): { # MAC Address
-            'evi': int,
-            'bd_id': int,
-            'esi': str,
-            'etag': int,
-            'next_hops': list,
+        'mac_addr': {
+            str: {
+                'evi': int,
+                'bd_id': int,
+                'esi': str,
+                'eth_tag': int,
+                'next_hops': list,
+            },
         },
     }
 
@@ -178,7 +179,7 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
         # aabb.cc82.2800 2     12    03AA.BB00.0000.0200.0001 0          Et1/0:12
         #                                                                3.3.3.1
         p1 = re.compile(r'^MAC Address\s+EVI\s+(BD|VLAN)\s+ESI\s+Ether Tag\s+Next Hop\(s\)$')
-        p2 = re.compile(r'^(?P<mac>[0-9a-fA-F\.]+)\s+(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<esi>[0-9a-fA-F\.]+)\s+(?P<etag>\d+)\s+(?P<next_hop>[\w\d\s\.:()/]+)$')
+        p2 = re.compile(r'^(?P<mac>[0-9a-fA-F\.]+)\s+(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<esi>[0-9a-fA-F\.]+)\s+(?P<eth_tag>\d+)\s+(?P<next_hop>[\w\d\s\.:()/]+)$')
         p3 = re.compile(r'^(?P<next_hop>[\w\d\s\.:()/]+)$')
 
         parser_dict = {}
@@ -199,12 +200,13 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                mac_vals = parser_dict.setdefault(group['mac'], {})
+                mac_addr_dict = parser_dict.setdefault('mac_addr', {})
+                mac_vals = mac_addr_dict.setdefault(group['mac'], {})
                 mac_vals.update({
                     'evi': int(group['evi']),
                     'bd_id': int(group['bd_id']),
                     'esi': group['esi'],
-                    'etag': int(group['etag']),
+                    'eth_tag': int(group['eth_tag']),
                 })
                 next_hops = mac_vals.setdefault('next_hops', [])
                 next_hops.append(group['next_hop'])
@@ -245,22 +247,24 @@ class ShowL2vpnEvpnMacDetailSchema(MetaParser):
     """
 
     schema = {
-        Any(): { # MAC Address
-            'sticky': bool,
-            'stale': bool,
-            'evi': int,
-            'bd_id': int,
-            'esi': str,
-            'etag': int,
-            'next_hops': list,
-            Optional('local_addr'): str,
-            'seq_num': int,
-            'mac_only_present': bool,
-            'mac_dup_detection': {
-                'status': str,
-                Optional('moves_count'): int,
-                Optional('moves_limit'): int,
-                Optional('expiry_time'): str,
+        'mac_addr': {
+            str: {
+                'sticky': bool,
+                'stale': bool,
+                'evi': int,
+                'bd_id': int,
+                'esi': str,
+                'eth_tag': int,
+                'next_hops': list,
+                Optional('local_addr'): str,
+                'seq_number': int,
+                'mac_only_present': bool,
+                'mac_dup_detection': {
+                    'status': str,
+                    Optional('moves_count'): int,
+                    Optional('moves_limit'): int,
+                    Optional('expiry_time'): str,
+                },
             },
         },
     }
@@ -349,7 +353,7 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
         p4 = re.compile(r'^Ethernet Segment:\s+(?P<esi>[0-9a-fA-F\.]+)$')
 
         # Ethernet Tag ID:            0
-        p5 = re.compile(r'^Ethernet Tag ID:\s+(?P<etag>\d+)$')
+        p5 = re.compile(r'^Ethernet Tag ID:\s+(?P<eth_tag>\d+)$')
 
         # Next Hop(s):                L:17 Ethernet1/0 service instance 12
         #                             L:17 3.3.3.1
@@ -361,7 +365,7 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
         p8 = re.compile(r'^Local Address:\s+(?P<local_addr>[\d\.]+)$')
 
         # Sequence Number:            0
-        p9 = re.compile(r'^Sequence Number:\s+(?P<seq_num>\d+)$')
+        p9 = re.compile(r'^Sequence Number:\s+(?P<seq_number>\d+)$')
 
         # MAC only present:           Yes
         p10 = re.compile(r'^MAC only present:\s+(?P<mac_only_present>(Yes|No))$')
@@ -388,7 +392,8 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                mac_vals = parser_dict.setdefault(group['mac'], {})
+                mac_addr_dict = parser_dict.setdefault('mac_addr', {})
+                mac_vals = mac_addr_dict.setdefault(group['mac'], {})
                 sticky = False
                 stale = False
                 if group['mac_status']:
@@ -426,7 +431,7 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                mac_vals.update({'etag': int(group['etag'])})
+                mac_vals.update({'eth_tag': int(group['eth_tag'])})
                 continue
 
             # Next Hop(s):                L:17 Ethernet1/0 service instance 12
@@ -448,7 +453,7 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                mac_vals.update({'seq_num': int(group['seq_num'])})
+                mac_vals.update({'seq_number': int(group['seq_number'])})
                 continue
 
             # MAC only present:           Yes
@@ -514,13 +519,17 @@ class ShowL2vpnEvpnMacSummarySchema(MetaParser):
     """
 
     schema = {
-        'entry': {
-            Any(): { # EVI
-                Any(): { # BD
-                    Any(): { # Ether Tag
-                        Optional('remote_count'): int,
-                        Optional('local_count'): int,
-                        Optional('dup_count'): int,
+        'evi': {
+            int: {
+                'bd_id': {
+                    int: {
+                        'eth_tag': {
+                            int: {
+                                Optional('remote_count'): int,
+                                Optional('local_count'): int,
+                                Optional('dup_count'): int,
+                            },
+                        },
                     },
                 },
             },
@@ -624,8 +633,8 @@ class ShowL2vpnEvpnMacSummary(ShowL2vpnEvpnMacSummarySchema):
         p2 = re.compile(r'^EVI\s+(BD|VLAN)\s+Ether Tag\s+Remote MAC$')
         p3 = re.compile(r'^EVI\s+(BD|VLAN)\s+Ether Tag\s+Local MAC$')
         p4 = re.compile(r'^EVI\s+(BD|VLAN)\s+Ether Tag\s+Dup MAC$')
-        p5 = re.compile(r'^(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<etag>\d+)\s+(?P<remote_count>\d+)\s+(?P<local_count>\d+)\s+(?P<dup_count>\d+)$')
-        p6 = re.compile(r'^(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<etag>\d+)\s+(?P<count>\d+)$')
+        p5 = re.compile(r'^(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<eth_tag>\d+)\s+(?P<remote_count>\d+)\s+(?P<local_count>\d+)\s+(?P<dup_count>\d+)$')
+        p6 = re.compile(r'^(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<eth_tag>\d+)\s+(?P<count>\d+)$')
         p7 = re.compile(r'^Total\s+(?P<remote_count>\d+)\s+(?P<local_count>\d+)\s+(?P<dup_count>\d+)$')
         p8 = re.compile(r'^Total\s+(?P<count>\d+)$')
 
@@ -665,12 +674,14 @@ class ShowL2vpnEvpnMacSummary(ShowL2vpnEvpnMacSummarySchema):
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                entry_vals = parser_dict.setdefault('entry', {})
-                evi_vals = entry_vals.setdefault(int(group['evi']), {})
-                bd_vals = evi_vals.setdefault(int(group['bd_id']), {})
-                etag_vals = bd_vals.setdefault(int(group['etag']), {})
+                evi_dict = parser_dict.setdefault('evi', {})
+                evi_vals = evi_dict.setdefault(int(group['evi']), {})
+                bd_id_dict = evi_vals.setdefault('bd_id', {})
+                bd_vals = bd_id_dict.setdefault(int(group['bd_id']), {})
+                eth_tag_dict = bd_vals.setdefault('eth_tag', {})
+                eth_tag_vals = eth_tag_dict.setdefault(int(group['eth_tag']), {})
                 if table_mac_types == 'All':
-                    etag_vals.update({
+                    eth_tag_vals.update({
                         'remote_count': int(group['remote_count']),
                         'local_count': int(group['local_count']),
                         'dup_count': int(group['dup_count']),
@@ -681,20 +692,22 @@ class ShowL2vpnEvpnMacSummary(ShowL2vpnEvpnMacSummarySchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                entry_vals = parser_dict.setdefault('entry', {})
-                evi_vals = entry_vals.setdefault(int(group['evi']), {})
-                bd_vals = evi_vals.setdefault(int(group['bd_id']), {})
-                etag_vals = bd_vals.setdefault(int(group['etag']), {})
+                evi_dict = parser_dict.setdefault('evi', {})
+                evi_vals = evi_dict.setdefault(int(group['evi']), {})
+                bd_id_dict = evi_vals.setdefault('bd_id', {})
+                bd_vals = bd_id_dict.setdefault(int(group['bd_id']), {})
+                eth_tag_dict = bd_vals.setdefault('eth_tag', {})
+                eth_tag_vals = eth_tag_dict.setdefault(int(group['eth_tag']), {})
                 if table_mac_types == 'Remote':
-                    etag_vals.update({
+                    eth_tag_vals.update({
                         'remote_count': int(group['count']),
                     })
                 elif table_mac_types == 'Local':
-                    etag_vals.update({
+                    eth_tag_vals.update({
                         'local_count': int(group['count']),
                     })
                 elif table_mac_types == 'Dup':
-                    etag_vals.update({
+                    eth_tag_vals.update({
                         'dup_count': int(group['count']),
                     })
                 continue
