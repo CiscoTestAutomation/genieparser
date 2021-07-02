@@ -80,8 +80,7 @@ import re
 
 # Genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any, \
-                                               Optional
+from genie.metaparser.util.schemaengine import Optional
 
 # ====================================
 # Schema for 'show l2vpn evpn mac ip'
@@ -118,11 +117,13 @@ class ShowL2vpnEvpnMacIpSchema(MetaParser):
     """
 
     schema = {
-        Any(): { # IP Address
-            'evi': int,
-            'bd_id': int,
-            'mac_addr': str,
-            'next_hops': list,
+        'ip_addr': {
+            str: {
+                'evi': int,
+                'bd_id': int,
+                'mac_addr': str,
+                'next_hops': list,
+            },
         },
     }
 
@@ -282,7 +283,8 @@ class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals = parser_dict.setdefault(group['ip'], {})
+                ip_addr_dict = parser_dict.setdefault('ip_addr', {})
+                ip_vals = ip_addr_dict.setdefault(group['ip'], {})
                 ip_vals.update({
                     'evi': int(group['evi']),
                     'bd_id': int(group['bd_id']),
@@ -339,26 +341,28 @@ class ShowL2vpnEvpnMacIpDetailSchema(MetaParser):
     """
 
     schema = {
-        Any(): { # IP Address
-            'stale': bool,
-            'evi': int,
-            'bd_id': int,
-            'mac_addr': str,
-            'esi': str,
-            'etag': int,
-            'next_hops': list,
-            Optional('local_addr'): str,
-            'seq_num': int,
-            'ip_dup_detection': {
-                'status': str,
-                Optional('moves_count'): int,
-                Optional('moves_limit'): int,
-                Optional('expiry_time'): str,
+        'ip_addr': {
+            str: {
+                'stale': bool,
+                'evi': int,
+                'bd_id': int,
+                'mac_addr': str,
+                'esi': str,
+                'eth_tag': int,
+                'next_hops': list,
+                Optional('local_addr'): str,
+                'seq_number': int,
+                'ip_dup_detection': {
+                    'status': str,
+                    Optional('moves_count'): int,
+                    Optional('moves_limit'): int,
+                    Optional('expiry_time'): str,
+                },
+                Optional('last_local_mac_sent'): str,
+                Optional('last_local_mac_learned'): str,
+                Optional('last_remote_mac_received'): str,
+                'label2_included': bool,
             },
-            Optional('last_local_mac_sent'): str,
-            Optional('last_local_mac_learned'): str,
-            Optional('last_remote_mac_received'): str,
-            'label2_included': bool,
         },
     }
 
@@ -484,7 +488,7 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
         p5 = re.compile(r'^Ethernet Segment:\s+(?P<esi>[0-9a-fA-F\.]+)$')
 
         # Ethernet Tag ID:           0
-        p6 = re.compile(r'^Ethernet Tag ID:\s+(?P<etag>\d+)$')
+        p6 = re.compile(r'^Ethernet Tag ID:\s+(?P<eth_tag>\d+)$')
 
         # Next Hop(s):               L:17 Ethernet1/0 service instance 12
         #                            L:17 3.3.3.1
@@ -496,7 +500,7 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
         p9 = re.compile(r'^Local Address:\s+(?P<local_addr>[\d\.]+)$')
 
         # Sequence Number:           0
-        p10 = re.compile(r'^Sequence Number:\s+(?P<seq_num>\d+)$')
+        p10 = re.compile(r'^Sequence Number:\s+(?P<seq_number>\d+)$')
 
         # IP Duplication Detection:  Timer not running
         # IP Duplication Detection:  IP moves 4, limit 5
@@ -531,7 +535,8 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals = parser_dict.setdefault(group['ip'], {})
+                ip_addr_dict = parser_dict.setdefault('ip_addr', {})
+                ip_vals = ip_addr_dict.setdefault(group['ip'], {})
                 stale = False
                 if group['ip_status']:
                     stale = 'stale' in group['ip_status']
@@ -573,7 +578,7 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'etag': int(group['etag'])})
+                ip_vals.update({'eth_tag': int(group['eth_tag'])})
                 continue
 
             # Next Hop(s):               L:17 Ethernet1/0 service instance 12
@@ -595,7 +600,7 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                ip_vals.update({'seq_num': int(group['seq_num'])})
+                ip_vals.update({'seq_number': int(group['seq_number'])})
                 continue
 
             # IP Duplication Detection:  Timer not running
@@ -685,13 +690,17 @@ class ShowL2vpnEvpnMacIpSummarySchema(MetaParser):
     """
 
     schema = {
-        'entry': {
-            Any(): { # EVI
-                Any(): { # BD
-                    Any(): { # Ether Tag
-                        Optional('remote_count'): int,
-                        Optional('local_count'): int,
-                        Optional('dup_count'): int,
+        'evi': {
+            int: {
+                'bd_id': {
+                    int: {
+                        'eth_tag': {
+                            int: {
+                                Optional('remote_count'): int,
+                                Optional('local_count'): int,
+                                Optional('dup_count'): int,
+                            },
+                        },
                     },
                 },
             },
@@ -809,14 +818,14 @@ class ShowL2vpnEvpnMacIpSummary(ShowL2vpnEvpnMacIpSummarySchema):
         p2 = re.compile(r'^EVI\s+(BD|VLAN)\s+Ether Tag\s+Remote IP$')
         p3 = re.compile(r'^EVI\s+(BD|VLAN)\s+Ether Tag\s+Local IP$')
         p4 = re.compile(r'^EVI\s+(BD|VLAN)\s+Ether Tag\s+Dup IP$')
-        p5 = re.compile(r'^(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<etag>\d+)\s+(?P<remote_count>\d+)\s+(?P<local_count>\d+)\s+(?P<dup_count>\d+)$')
-        p6 = re.compile(r'^(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<etag>\d+)\s+(?P<count>\d+)$')
+        p5 = re.compile(r'^(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<eth_tag>\d+)\s+(?P<remote_count>\d+)\s+(?P<local_count>\d+)\s+(?P<dup_count>\d+)$')
+        p6 = re.compile(r'^(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<eth_tag>\d+)\s+(?P<count>\d+)$')
         p7 = re.compile(r'^Total\s+(?P<remote_count>\d+)\s+(?P<local_count>\d+)\s+(?P<dup_count>\d+)$')
         p8 = re.compile(r'^Total\s+(?P<count>\d+)$')
 
         parser_dict = {}
 
-        table_mac_types = None
+        table_mac_ip_types = None
         for line in cli_output.splitlines():
             line = line.strip()
             if not line:
@@ -825,37 +834,39 @@ class ShowL2vpnEvpnMacIpSummary(ShowL2vpnEvpnMacIpSummarySchema):
             # EVI   BD    Ether Tag  Remote MAC Local MAC  Dup MAC
             m = p1.match(line)
             if m:
-                table_mac_types = 'All'
+                table_mac_ip_types = 'All'
                 continue
 
             # EVI   BD    Ether Tag  Remote MAC 
             m = p2.match(line)
             if m:
-                table_mac_types = 'Remote'
+                table_mac_ip_types = 'Remote'
                 continue
 
             # EVI   BD    Ether Tag  Local MAC  
             m = p3.match(line)
             if m:
-                table_mac_types = 'Local'
+                table_mac_ip_types = 'Local'
                 continue
 
             # EVI   BD    Ether Tag  Dup MAC    
             m = p4.match(line)
             if m:
-                table_mac_types = 'Dup'
+                table_mac_ip_types = 'Dup'
                 continue
 
             # 1     11    0          4          5          1
             m = p5.match(line)
             if m:
                 group = m.groupdict()
-                entry_vals = parser_dict.setdefault('entry', {})
-                evi_vals = entry_vals.setdefault(int(group['evi']), {})
-                bd_vals = evi_vals.setdefault(int(group['bd_id']), {})
-                etag_vals = bd_vals.setdefault(int(group['etag']), {})
-                if table_mac_types == 'All':
-                    etag_vals.update({
+                evi_dict = parser_dict.setdefault('evi', {})
+                evi_vals = evi_dict.setdefault(int(group['evi']), {})
+                bd_id_dict = evi_vals.setdefault('bd_id', {})
+                bd_vals = bd_id_dict.setdefault(int(group['bd_id']), {})
+                eth_tag_dict = bd_vals.setdefault('eth_tag', {})
+                eth_tag_vals = eth_tag_dict.setdefault(int(group['eth_tag']), {})
+                if table_mac_ip_types == 'All':
+                    eth_tag_vals.update({
                         'remote_count': int(group['remote_count']),
                         'local_count': int(group['local_count']),
                         'dup_count': int(group['dup_count']),
@@ -866,20 +877,22 @@ class ShowL2vpnEvpnMacIpSummary(ShowL2vpnEvpnMacIpSummarySchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                entry_vals = parser_dict.setdefault('entry', {})
-                evi_vals = entry_vals.setdefault(int(group['evi']), {})
-                bd_vals = evi_vals.setdefault(int(group['bd_id']), {})
-                etag_vals = bd_vals.setdefault(int(group['etag']), {})
-                if table_mac_types == 'Remote':
-                    etag_vals.update({
+                evi_dict = parser_dict.setdefault('evi', {})
+                evi_vals = evi_dict.setdefault(int(group['evi']), {})
+                bd_id_dict = evi_vals.setdefault('bd_id', {})
+                bd_vals = bd_id_dict.setdefault(int(group['bd_id']), {})
+                eth_tag_dict = bd_vals.setdefault('eth_tag', {})
+                eth_tag_vals = eth_tag_dict.setdefault(int(group['eth_tag']), {})
+                if table_mac_ip_types == 'Remote':
+                    eth_tag_vals.update({
                         'remote_count': int(group['count']),
                     })
-                elif table_mac_types == 'Local':
-                    etag_vals.update({
+                elif table_mac_ip_types == 'Local':
+                    eth_tag_vals.update({
                         'local_count': int(group['count']),
                     })
-                elif table_mac_types == 'Dup':
-                    etag_vals.update({
+                elif table_mac_ip_types == 'Dup':
+                    eth_tag_vals.update({
                         'dup_count': int(group['count']),
                     })
                 continue
@@ -889,7 +902,7 @@ class ShowL2vpnEvpnMacIpSummary(ShowL2vpnEvpnMacIpSummarySchema):
             if m:
                 group = m.groupdict()
                 total_vals = parser_dict.setdefault('total', {})
-                if table_mac_types == 'All':
+                if table_mac_ip_types == 'All':
                     total_vals.update({
                         'remote_count': int(group['remote_count']),
                         'local_count': int(group['local_count']),
@@ -902,22 +915,22 @@ class ShowL2vpnEvpnMacIpSummary(ShowL2vpnEvpnMacIpSummarySchema):
             if m:
                 group = m.groupdict()
                 total_vals = parser_dict.setdefault('total', {})
-                if table_mac_types == 'Remote':
+                if table_mac_ip_types == 'Remote':
                     total_vals.update({
                         'remote_count': int(group['count']),
                     })
-                elif table_mac_types == 'Local':
+                elif table_mac_ip_types == 'Local':
                     total_vals.update({
                         'local_count': int(group['count']),
                     })
-                elif table_mac_types == 'Dup':
+                elif table_mac_ip_types == 'Dup':
                     total_vals.update({
                         'dup_count': int(group['count']),
                     })
                 continue
 
         # Header must be invalid if this was never set.
-        if not table_mac_types:
+        if not table_mac_ip_types:
             return {}
 
         return parser_dict
