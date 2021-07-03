@@ -280,6 +280,11 @@ class ShowInterface(ShowInterfaceSchema):
                         r' *address: *(?P<mac_address>[a-z0-9\.]+)'
                         r' *\(bia *(?P<phys_address>[a-z0-9\.]+)\)$')
 
+
+        # Hardware is EtherSVI, address is  547f.ee6d.7d7c
+        p3_1 = re.compile(r'^Hardware is  *(?P<types>[a-zA-Z0-9\/\s]+), '
+                          r'address is *(?P<mac_address>[a-z0-9\.]+)$')
+
         # Description: desc
         p4 = re.compile(r'^Description:\s*(?P<description>.*)$')
 
@@ -585,6 +590,7 @@ class ShowInterface(ShowInterfaceSchema):
                     ['port_channel_int'] = Common.convert_intf_name(port_channel_int)
                 continue
 
+
             # Hardware: Ethernet, address: 5254.00ff.9c38 (bia 5254.00ff.9c38)
             m = p3.match(line)
             if m:
@@ -597,6 +603,16 @@ class ShowInterface(ShowInterfaceSchema):
                     ['mac_address'] = mac_address
                 interface_dict[interface] \
                     ['phys_address'] = phys_address
+                continue
+
+            # Hardware is EtherSVI, address is  547f.ee6d.7d7c
+            m = p3_1.match(line)
+            if m:
+                types = m.groupdict()['types']
+                interface_dict[interface]['types'] = types
+                mac_address = m.groupdict()['mac_address']
+                interface_dict[interface] \
+                    ['mac_address'] = mac_address
                 continue
 
             # Description: VLAN information Internet Address is 10.10.10.1/24
@@ -1944,8 +1960,9 @@ class ShowVrfAllInterface(ShowVrfAllInterfaceSchema):
             # Ethernet2/4               default                              1  --
             # Ethernet2/5               default                              1  --
             # Ethernet2/6               default                              1  --
+            # port-channel1101          default                              1  --
 
-            p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\.\/]+)'
+            p1 = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\.\/\-]+)'
                             ' *(?P<vrf>[a-zA-Z0-9]+)'
                             ' *(?P<vrf_id>[0-9]+)'
                             ' *(?P<site_of_origin>[a-zA-Z\-]+)$')

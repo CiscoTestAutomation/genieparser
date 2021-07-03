@@ -564,3 +564,90 @@ class ShowVlanFilter(ShowVlanFilterSchema):
                 continue
 
         return vlan_dict
+
+
+class ShowVlanIdSchema(MetaParser):
+    """Schema for show vlan id"""
+    schema = {'brdg-mode': str,
+              'bridge-no': str,
+              'mtu': str,
+              'parent': str,
+              'ports': list,
+              'ring-no': str,
+              'said': str,
+              'status': str,
+              'stp': str,
+              'trans1': str,
+              'trans2': str,
+              'type': str,
+              'vlan-id': int,
+              'vlan-name': str
+            }
+
+
+class ShowVlanId(ShowVlanIdSchema):
+    """Parser for show vlan id {vlan_id}"""
+
+    #*************************
+    # schema - class variable
+    #
+    # Purpose is to make sure the parser always return the output
+    # (nested dict) that has the same data structure across all supported
+    # parsing mechanisms (cli(), yang(), xml()).
+    cli_command = 'show vlan id {vlan_id}'
+    def cli(self, vlan_id=None, output=None):
+        cmd = self.cli_command.format(vlan_id=vlan_id)
+        if output is None:
+            # get output from device
+            out = self.device.execute(cmd)
+        else:
+            out = output
+        # initial return dictionary
+
+        vlan_dict = {}
+        p1 = re.compile(r'(?P<vlan_id>\d+) +'
+                    '(?P<vlan_name>\w+) +'
+                    '(?P<status>\w+) +'
+                    '(?P<ports>([a-zA-Z0-9]+\/\d+\/\d+)(.*))')
+        p2 = re.compile(r'(?P<ports>([a-zA-Z0-9]+\/\d+\/\d+)(.*))')
+        p3 = re.compile(r'\d+ +'
+                    '(?P<type>\w+) +'
+                    '(?P<said>\d+) +'
+                    '(?P<mtu>\d+) +'
+                    '(?P<parent>\S+) +'
+                    '(?P<ring_no>\S+) +'
+                    '(?P<bridge_no>\S+) +'
+                    '(?P<stp>\S+) +'
+                    '(?P<brdg_mode>\S+) +'
+                    '(?P<trans1>\d+) +'
+                    '(?P<trans2>\d+)')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                port_list = []
+                vlan_dict['vlan-id'] = int(group['vlan_id'])
+                vlan_dict['vlan-name'] = group['vlan_name']
+                vlan_dict['status'] = group['status']
+                port_list.extend(group['ports'].replace(' ','').split(','))
+                vlan_dict['ports'] = port_list
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                vlan_dict['ports'].extend(group['ports'].replace(' ','').split(','))
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                vlan_dict['type'] = group['type']
+                vlan_dict['said'] = group['said']
+                vlan_dict['mtu'] = group['mtu']
+                vlan_dict['parent'] = group['parent']
+                vlan_dict['ring-no'] = group['ring_no']
+                vlan_dict['bridge-no'] = group['bridge_no']
+                vlan_dict['stp'] = group['stp']
+                vlan_dict['brdg-mode'] = group['brdg_mode']
+                vlan_dict['trans1'] = group['trans1']
+                vlan_dict['trans2'] = group['trans2']
+        return vlan_dict 

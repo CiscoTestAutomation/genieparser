@@ -1,0 +1,217 @@
+CGW78-c9500-12#show ip bgp l2vpn evpn route-type 2
+BGP routing table entry for [2][20.0.101.1:10][0][48][188B9D501231][0][*]/20, version 6086
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 210010
+      Extended Community: RT:23456:210010 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 19:41:47 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:210010 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 19:41:47 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external, best
+      EVPN ESI: 00000000000000000000, Label1 210010
+      Extended Community: RT:23456:210010 ENCAP:8
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 19:41:46 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:210010 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 19:41:46 UTC
+BGP routing table entry for [2][20.0.101.1:10][0][48][188B9D508D17][0][*]/20, version 6087
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 210010
+      Extended Community: RT:23456:210010 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 19:41:47 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:210010 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 19:41:47 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external, best
+      EVPN ESI: 00000000000000000000, Label1 210010
+      Extended Community: RT:23456:210010 ENCAP:8
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 4 2021 19:41:46 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:210010 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 4 2021 19:41:46 UTC
+BGP routing table entry for [2][20.0.101.1:51][0][48][001201000001][0][*]/20, version 652422
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 200051
+      Extended Community: RT:23456:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:02 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:02 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      EVPN ESI: 00000000000000000000, Label1 200051
+      Extended Community: RT:23456:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 7 2021 16:17:01 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:01 UTC
+BGP routing table entry for [2][20.0.101.1:51][0][48][001201000001][32][101.51.1.102]/24, version 652845
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 200051
+      Extended Community: RT:23456:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:02 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:02 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      EVPN ESI: 00000000000000000000, Label1 200051
+      Extended Community: RT:23456:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 7 2021 16:17:01 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:01 UTC
+BGP routing table entry for [2][20.0.101.1:51][0][48][001701000001][0][*]/20, version 651919
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 200051
+      Extended Community: RT:23456:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:42:09 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:02 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      EVPN ESI: 00000000000000000000, Label1 200051
+      Extended Community: RT:23456:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 7 2021 16:42:08 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:200051 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:01 UTC
+BGP routing table entry for [2][20.0.101.1:53][0][48][001201000003][32][101.53.1.102]/24, version 652847
+Paths: (4 available, best #3, table EVPN-BGP-Table)
+  Advertised to update-groups:
+     1         
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 200053
+      Extended Community: RT:23456:200053 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:42:09 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.3 (20.1.150.3)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:200053 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:02 UTC
+  Refresh Epoch 1
+  150
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external, best
+      EVPN ESI: 00000000000000000000, Label1 200053
+      Extended Community: RT:23456:200053 ENCAP:8
+      rx pathid: 0, tx pathid: 0x0
+      Updated on Jun 7 2021 16:42:08 UTC
+  Refresh Epoch 1
+  150, (received-only)
+    20.0.101.1 (via default) from 20.1.150.4 (20.1.150.4)
+      Origin incomplete, localpref 100, valid, external
+      EVPN ESI: 00000000000000000000, Label1 0
+      Extended Community: RT:150:200053 ENCAP:8
+      rx pathid: 0, tx pathid: 0
+      Updated on Jun 7 2021 16:17:01 UTC

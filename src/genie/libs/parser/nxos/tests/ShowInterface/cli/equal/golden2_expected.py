@@ -14,6 +14,8 @@ expected_output = {
             },
             "bandwidth": 1000000,
             "reliability": "255/255",
+            "mac_address": "000c.29ff.f8a2",
+            "types": "EtherSVI",
             "delay": 10
         },
         "Vlan200": {
@@ -31,4 +33,6 @@ expected_output = {
             },
             "bandwidth": 1000000,
             "reliability": "255/255",
+            "mac_address": "000c.29ff.f8a2",
+            "types": "EtherSVI",
             "delay": 10}}
