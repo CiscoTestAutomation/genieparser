@@ -298,3 +298,175 @@ class ShowSystemInternalL2fwderMac(ShowSystemInternalL2fwderMacSchema):
                 continue
 
         return ret_dict
+
+
+class ShowSystemInternalKernelMeminfoSchema(MetaParser):
+    """
+    Schema for show system internal kernel meminfo
+    """
+    schema = {
+        'mem': {
+            'memtotal_kb': int,
+            'memfree_kb': int,
+            'memavailable_kb': int,
+        },
+        'buffers_kb': int,
+        'cached_kb': int,
+        'active': {
+            'active_kb': int,
+            'inactive_kb': int,
+            'active(anon)_kb': int,
+            'inactive(anon)_kb': int,
+            'active(file)_kb': int,
+            'inactive(file)_kb': int,
+        },
+        'unevictable_kb': int,
+        'mlocked_kb': int,
+        'swap': {
+            'swapcached_kb': int,
+            'swaptotal_kb': int,
+            'swapfree_kb': int,
+        },
+        'dirty_kb': int,
+        'writeback_kb': int,
+        'anonpages_kb': int,
+        'mapped_kb': int,
+        'shmem_kb': int,
+        'slab_kb': int,
+        'sreclaimable_kb': int,
+        'sunreclaim_kb': int,
+        'kernelstack_kb': int,
+        'pagetables_kb': int,
+        'nfs_unstable_kb': int,
+        'bounce_kb': int,
+        'writebacktmp_kb': int,
+        'commitlimit_kb': int,
+        'committed_as_kb': int,
+        'vmalloc': {
+            'vmalloctotal_kb': int,
+            'vmallocused_kb': int,
+            'vmallocchunk_kb': int,
+        },
+        'hardwarecorrupted_kb': int,
+        'hugepages': {
+            'hugepages_total': int,
+            'hugepages_free': int,
+            'hugepages_rsvd': int,
+            'hugepages_surp': int,
+            'hugepagesize_kb': int,
+        },
+        'directmap4k_kb': int,
+        'directmap2m_kb': int,
+    }
+
+
+class ShowSystemInternalKernelMeminfo(ShowSystemInternalKernelMeminfoSchema):
+    """
+    Parser for show system internal kernel meminfo
+    """
+
+    cli_command = 'show system internal system internal kernel meminfo'
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # MemTotal:        5873172 kB
+        p1 = re.compile(r'(?P<mem_type>Mem.+):\s+(?P<amount>\d+)\skB$')
+
+        # Active(file):     236740 kB
+        p2 = re.compile(r'(?i)(?P<active_state>[in]*active.*):\s+(?P<amount>\d+)\skB$')
+
+        # SwapTotal:             0 kB
+        p3 = re.compile(r'(?P<swap_type>Swap.+):\s+(?P<amount>\d+)\skB$')
+
+        # VmallocChunk:   34359477316 kB
+        p4 = re.compile(r'(?P<vmalloc_type>Vmalloc.+):\s+(?P<amount>\d+)\skB$')
+
+        # HugePages_Surp:        0
+        p5 = re.compile(r'(?P<hugepages_type>Huge.+):\s+(?P<amount>\d+)$')
+
+        # Hugepagesize:       2048 kB
+        p6 = re.compile(r'(?P<hugepages_type>Huge.+):\s+(?P<amount>\d+)\s+kB$')
+
+        # Buffers:           38212 kB
+        p7 = re.compile(r'(?P<key>.+):\s+(?P<amount>\d+)(\skB)?$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # MemTotal:        5873172 kB
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mem_dict = ret_dict.setdefault('mem', {})
+
+                key = group['mem_type'].lower() + '_kb'
+                mem_dict[key] = int(group['amount'])
+                continue
+
+            # Active(file):     236740 kB
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                active_dict = ret_dict.setdefault('active', {})
+
+                key = group['active_state'].lower() + '_kb'
+                active_dict[key] = int(group['amount'])
+                continue
+
+            # SwapTotal:             0 kB
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                swap_dict = ret_dict.setdefault('swap', {})
+
+                key = group['swap_type'].lower() + '_kb'
+                swap_dict[key] = int(group['amount'])
+                continue
+
+            # VmallocChunk:   34359477316 kB
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                vmalloc_dict = ret_dict.setdefault('vmalloc', {})
+
+                key = group['vmalloc_type'].lower() + '_kb'
+                vmalloc_dict[key] = int(group['amount'])
+                continue
+
+            # HugePages_Surp:        0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                hugepages_dict = ret_dict.setdefault('hugepages', {})
+
+                key = group['hugepages_type'].lower()
+                hugepages_dict[key] = int(group['amount'])
+                continue
+
+            # Hugepagesize:       2048 kB
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                hugepages_dict = ret_dict.setdefault('hugepages', {})
+
+                key = group['hugepages_type'].lower() + '_kb'
+                hugepages_dict[key] = int(group['amount'])
+                continue
+
+            # Buffers:           38212 kB
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+
+                key = group['key'].lower() + '_kb'
+                ret_dict[key] = int(group['amount'])
+                continue
+
+        return ret_dict

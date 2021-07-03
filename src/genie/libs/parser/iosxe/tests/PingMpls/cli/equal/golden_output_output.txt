@@ -1,0 +1,18 @@
+ping mpls ip 4.4.4.4 255.255.255.255 repeat 5
+Sending 5, 72-byte MPLS Echos to 4.4.4.4/32,
+     timeout is 2 seconds, send interval is 0 msec:
+
+Codes: '!' - success, 'Q' - request not sent, '.' - timeout,
+  'L' - labeled output interface, 'B' - unlabeled output interface,
+  'D' - DS Map mismatch, 'F' - no FEC mapping, 'f' - FEC mismatch,
+  'M' - malformed request, 'm' - unsupported tlvs, 'N' - no label entry,
+  'P' - no rx intf label prot, 'p' - premature termination of LSP,
+  'R' - transit router, 'I' - unknown upstream index,
+  'l' - Label switched with FEC change, 'd' - see DDMAP for return code,
+  'X' - unknown return code, 'x' - return code 0
+
+Type escape sequence to abort.
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 1/1/1 ms
+ Total Time Elapsed 4 ms
+

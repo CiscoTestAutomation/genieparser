@@ -1,0 +1,2380 @@
+Sun Jun 13 22:59:28.208 MSK
+Legend: pp = Partially Programmed.
+Bridge group: BS, bridge-domain: BS_1700, id: 385, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 386
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 08/12/2020 12:50:08 (26w5d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether3.1700, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [1700, 1700]
+      MTU 9000; XC ID 0xc0000548; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: TenGigE0/2/0/14.1700, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [1700, 1700]
+      MTU 1526; XC ID 0x1200556; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: BS, bridge-domain: BS_2016, id: 406, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 407
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 20/05/2021 10:30:35 (3w3d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether3.2016, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [2016, 2016]
+      MTU 9000; XC ID 0xc00005a0; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: TenGigE0/2/0/14.2016, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [2016, 2016]
+      MTU 1526; XC ID 0x12005a4; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: B2C, bridge-domain: SEG180, id: 138, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog, trap
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 139
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 22/05/2020 03:04:51 (1y03w ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 1, PWs: 2 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether10.180, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 180
+      Rewrite Tags: []
+      VLAN ranges: [4096, 4096]
+      MTU 9004; XC ID 0xc000019e; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog, trap
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 109 (multicast 0, broadcast 0, unknown unicast 0, unicast 109), sent 173009
+        bytes: received 6976 (multicast 0, broadcast 0, unknown unicast 0, unicast 6976), sent 13241479
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether101.180, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 180
+      Rewrite Tags: []
+      VLAN ranges: [4096, 4096]
+      MTU 9104; XC ID 0xc000063a; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog, trap
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 211212449 (multicast 0, broadcast 14929, unknown unicast 6, unicast 211197667), sent 106570486
+        bytes: received 261086986801 (multicast 0, broadcast 1890891, unknown unicast 720, unicast 261085131250), sent 38098935003
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+    PW: neighbor 10.11.44.8, PW ID 180, state is standby ( all ready )
+      PW class PW_DEFAULT, XC ID 0xa0000131
+      Encapsulation MPLS, protocol LDP
+      Source address 10.11.44.91
+      PW type Ethernet, control word enabled, interworking none
+      PW backup disable delay 0 sec
+      Sequencing not set
+      LSP : Up
+      Load Balance Hashing: src-dst-ip
+      Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=0,Rx=0)
+
+      PW Status TLV in use
+        MPLS         Local                          Remote
+        ------------ ------------------------------ ---------------------------
+        Label        26303                          31
+        Group ID     0x8a                           0x8
+        Interface    Access PW                      [B2C]
+        MTU          1500                           1500
+        Control word enabled                        enabled
+        PW type      Ethernet                       Ethernet
+        VCCV CV type 0x2                            0x12
+                     (LSP ping verification)        (LSP ping verification)
+        VCCV CC type 0x7                            0x3
+                     (control word)                 (control word)
+                     (router alert label)           (router alert label)
+                     (TTL expiry)
+        ------------ ------------------------------ ---------------------------
+      Incoming Status (PW Status TLV):
+        Status code: 0x20 (Standby) in Notification message
+      MIB cpwVcIndex: 2684354865
+      Create time: 22/05/2020 03:04:51 (1y03w ago)
+      Last time status changed: 10/06/2021 02:53:01 (3d20h ago)
+      Last time PW went down: 10/06/2021 02:53:01 (3d20h ago)
+      MAC withdraw messages: sent 0, received 22
+      Forward-class: 0
+      Static MAC addresses:
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog, trap
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+  List of VFIs:
+    VFI SEG180 (up)
+      PW: neighbor 10.11.44.92, PW ID 99180, state is up ( established )
+        PW class PW_DEFAULT, XC ID 0xa0000133
+        Encapsulation MPLS, protocol LDP
+        Source address 10.11.44.91
+        PW type Ethernet, control word enabled, interworking none
+        Sequencing not set
+        LSP : Up
+        Load Balance Hashing: src-dst-ip
+        Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=1,Rx=1)
+
+        PW Status TLV in use
+          MPLS         Local                          Remote
+          ------------ ------------------------------ -------------------------
+          Label        26304                          24276
+          Group ID     0x8a                           0xa5
+          Interface    SEG180                         SEG180
+          MTU          1500                           1500
+          Control word enabled                        enabled
+          PW type      Ethernet                       Ethernet
+          VCCV CV type 0x2                            0x2
+                       (LSP ping verification)        (LSP ping verification)
+          VCCV CC type 0x7                            0x7
+                       (control word)                 (control word)
+                       (router alert label)           (router alert label)
+                       (TTL expiry)                   (TTL expiry)
+          ------------ ------------------------------ -------------------------
+        Incoming Status (PW Status TLV):
+          Status code: 0x0 (Up) in Notification message
+        MIB cpwVcIndex: 2684354867
+        Create time: 22/05/2020 03:04:51 (1y03w ago)
+        Last time status changed: 10/06/2021 02:53:01 (3d20h ago)
+        Last time PW went down: 10/06/2021 02:44:34 (3d20h ago)
+        MAC withdraw messages: sent 47, received 38
+        Forward-class: 0
+        Static MAC addresses:
+        Statistics:
+          packets: received 106567054 (unicast 106408978), sent 211212390
+          bytes: received 38096946147 (unicast 38085596046), sent 261086280143
+          MAC move: 0
+        Storm control drop counters:
+          packets: broadcast 0, multicast 0, unknown unicast 0
+          bytes: broadcast 0, multicast 0, unknown unicast 0
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      VFI Statistics:
+        drops: illegal VLAN 0, illegal length 0
+  List of Access VFIs:
+Bridge group: B2C, bridge-domain: SEG242, id: 252, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog, trap
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1600
+  MIB cvplsConfigIndex: 253
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 06/08/2020 03:00:38 (44w3d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 1, PWs: 2 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether10.242, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 242
+      Rewrite Tags: []
+      VLAN ranges: [4096, 4096]
+      MTU 9004; XC ID 0xc0000308; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog, trap
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 123583
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 8618629
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether101.242, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 242
+      Rewrite Tags: []
+      VLAN ranges: [4096, 4096]
+      MTU 9104; XC ID 0xc00006b0; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog, trap
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 316478673 (multicast 0, broadcast 6886, unknown unicast 2, unicast 316471917), sent 154259031
+        bytes: received 455595024880 (multicast 0, broadcast 680129, unknown unicast 433, unicast 455594448929), sent 16267549475
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+    PW: neighbor 10.11.44.12, PW ID 242, state is standby ( all ready )
+      PW class PW_DEFAULT, XC ID 0xa0000229
+      Encapsulation MPLS, protocol LDP
+      Source address 10.11.44.91
+      PW type Ethernet, control word enabled, interworking none
+      PW backup disable delay 0 sec
+      Sequencing not set
+      LSP : Up
+      Load Balance Hashing: src-dst-ip
+      Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=0,Rx=0)
+
+      PW Status TLV in use
+        MPLS         Local                          Remote
+        ------------ ------------------------------ ---------------------------
+        Label        26468                          65
+        Group ID     0xfc                           0x16
+        Interface    Access PW                      [B2C]
+        MTU          1600                           1600
+        Control word enabled                        enabled
+        PW type      Ethernet                       Ethernet
+        VCCV CV type 0x2                            0x12
+                     (LSP ping verification)        (LSP ping verification)
+        VCCV CC type 0x7                            0x3
+                     (control word)                 (control word)
+                     (router alert label)           (router alert label)
+                     (TTL expiry)
+        ------------ ------------------------------ ---------------------------
+      Incoming Status (PW Status TLV):
+        Status code: 0x20 (Standby) in Notification message
+      MIB cpwVcIndex: 2684355113
+      Create time: 06/08/2020 03:00:38 (44w3d ago)
+      Last time status changed: 10/06/2021 02:53:01 (3d20h ago)
+      Last time PW went down: 10/06/2021 02:53:01 (3d20h ago)
+      MAC withdraw messages: sent 0, received 23
+      Forward-class: 0
+      Static MAC addresses:
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog, trap
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+  List of VFIs:
+    VFI SEG242 (up)
+      PW: neighbor 10.11.44.92, PW ID 99242, state is up ( established )
+        PW class PW_DEFAULT, XC ID 0xa000022b
+        Encapsulation MPLS, protocol LDP
+        Source address 10.11.44.91
+        PW type Ethernet, control word enabled, interworking none
+        Sequencing not set
+        LSP : Up
+        Load Balance Hashing: src-dst-ip
+        Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=1,Rx=1)
+
+        PW Status TLV in use
+          MPLS         Local                          Remote
+          ------------ ------------------------------ -------------------------
+          Label        26469                          24341
+          Group ID     0xfc                           0xe0
+          Interface    SEG242                         SEG242
+          MTU          1600                           1600
+          Control word enabled                        enabled
+          PW type      Ethernet                       Ethernet
+          VCCV CV type 0x2                            0x2
+                       (LSP ping verification)        (LSP ping verification)
+          VCCV CC type 0x7                            0x7
+                       (control word)                 (control word)
+                       (router alert label)           (router alert label)
+                       (TTL expiry)                   (TTL expiry)
+          ------------ ------------------------------ -------------------------
+        Incoming Status (PW Status TLV):
+          Status code: 0x0 (Up) in Notification message
+        MIB cpwVcIndex: 2684355115
+        Create time: 06/08/2020 03:00:38 (44w3d ago)
+        Last time status changed: 10/06/2021 02:53:01 (3d20h ago)
+        Last time PW went down: 10/06/2021 02:44:34 (3d20h ago)
+        MAC withdraw messages: sent 39, received 49
+        Forward-class: 0
+        Static MAC addresses:
+        Statistics:
+          packets: received 154264643 (unicast 154147945), sent 316478076
+          bytes: received 16268069399 (unicast 16260131128), sent 455594105126
+          MAC move: 0
+        Storm control drop counters:
+          packets: broadcast 0, multicast 0, unknown unicast 0
+          bytes: broadcast 0, multicast 0, unknown unicast 0
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      VFI Statistics:
+        drops: illegal VLAN 0, illegal length 0
+  List of Access VFIs:
+Bridge group: B2C, bridge-domain: SEG244, id: 253, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog, trap
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1600
+  MIB cvplsConfigIndex: 254
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 06/08/2020 03:00:38 (44w3d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 1, PWs: 2 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether10.244, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 244
+      Rewrite Tags: []
+      VLAN ranges: [4096, 4096]
+      MTU 9004; XC ID 0xc000030a; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog, trap
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 168583 (multicast 0, broadcast 0, unknown unicast 0, unicast 168583), sent 4000182
+        bytes: received 10789312 (multicast 0, broadcast 0, unknown unicast 0, unicast 10789312), sent 507734366
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether101.244, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 244
+      Rewrite Tags: []
+      VLAN ranges: [4096, 4096]
+      MTU 9104; XC ID 0xc00006b2; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog, trap
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 171074 (multicast 0, broadcast 0, unknown unicast 0, unicast 171075), sent 3705157
+        bytes: received 10948736 (multicast 0, broadcast 0, unknown unicast 0, unicast 10948800), sent 469726393
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+    PW: neighbor 10.11.44.12, PW ID 244, state is standby ( all ready )
+      PW class PW_DEFAULT, XC ID 0xa000022d
+      Encapsulation MPLS, protocol LDP
+      Source address 10.11.44.91
+      PW type Ethernet, control word enabled, interworking none
+      PW backup disable delay 0 sec
+      Sequencing not set
+      LSP : Up
+      Load Balance Hashing: src-dst-ip
+      Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=0,Rx=0)
+
+      PW Status TLV in use
+        MPLS         Local                          Remote
+        ------------ ------------------------------ ---------------------------
+        Label        26470                          177
+        Group ID     0xfd                           0x18
+        Interface    Access PW                      [B2C]
+        MTU          1600                           1600
+        Control word enabled                        enabled
+        PW type      Ethernet                       Ethernet
+        VCCV CV type 0x2                            0x12
+                     (LSP ping verification)        (LSP ping verification)
+        VCCV CC type 0x7                            0x3
+                     (control word)                 (control word)
+                     (router alert label)           (router alert label)
+                     (TTL expiry)
+        ------------ ------------------------------ ---------------------------
+      Incoming Status (PW Status TLV):
+        Status code: 0x20 (Standby) in Notification message
+      MIB cpwVcIndex: 2684355117
+      Create time: 06/08/2020 03:00:38 (44w3d ago)
+      Last time status changed: 10/06/2021 10:46:08 (3d12h ago)
+      Last time PW went down: 05/09/2020 21:19:41 (40w1d ago)
+      MAC withdraw messages: sent 1, received 1
+      Forward-class: 0
+      Static MAC addresses:
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog, trap
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+  List of VFIs:
+    VFI SEG244 (up)
+      PW: neighbor 10.11.44.92, PW ID 99244, state is up ( established )
+        PW class PW_DEFAULT, XC ID 0xa000022f
+        Encapsulation MPLS, protocol LDP
+        Source address 10.11.44.91
+        PW type Ethernet, control word enabled, interworking none
+        Sequencing not set
+        LSP : Up
+        Load Balance Hashing: src-dst-ip
+        Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=1,Rx=1)
+
+        PW Status TLV in use
+          MPLS         Local                          Remote
+          ------------ ------------------------------ -------------------------
+          Label        26471                          24343
+          Group ID     0xfd                           0xe2
+          Interface    SEG244                         SEG244
+          MTU          1600                           1600
+          Control word enabled                        enabled
+          PW type      Ethernet                       Ethernet
+          VCCV CV type 0x2                            0x2
+                       (LSP ping verification)        (LSP ping verification)
+          VCCV CC type 0x7                            0x7
+                       (control word)                 (control word)
+                       (router alert label)           (router alert label)
+                       (TTL expiry)                   (TTL expiry)
+          ------------ ------------------------------ -------------------------
+        Incoming Status (PW Status TLV):
+          Status code: 0x0 (Up) in Notification message
+        MIB cpwVcIndex: 2684355119
+        Create time: 06/08/2020 03:00:38 (44w3d ago)
+        Last time status changed: 10/06/2021 10:37:03 (3d12h ago)
+        MAC withdraw messages: sent 0, received 3
+        Forward-class: 0
+        Static MAC addresses:
+        Statistics:
+          packets: received 4193762 (unicast 193586), sent 339660
+          bytes: received 768650456 (unicast 260916024), sent 21738240
+          MAC move: 0
+        Storm control drop counters:
+          packets: broadcast 0, multicast 0, unknown unicast 0
+          bytes: broadcast 0, multicast 0, unknown unicast 0
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      VFI Statistics:
+        drops: illegal VLAN 0, illegal length 0
+  List of Access VFIs:
+Bridge group: LAB, bridge-domain: 9001, id: 0, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 1
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 01/10/2019 14:18:18 (1y36w ago)
+  No status change since creation
+  ACs: 1 (1 up), VFIs: 1, PWs: 3 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether10.3999, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 3999
+      Rewrite Tags: []
+      VLAN ranges: [1101, 1101]
+      MTU 9004; XC ID 0xc0000002; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+    PW: neighbor 10.11.44.81, PW ID 9001, state is down ( local ready ) (Transport LSP Down)
+      PW class PW_DEFAULT, XC ID 0xa0000003
+      Encapsulation MPLS, protocol LDP
+      Source address 10.11.44.91
+      PW type Ethernet, control word enabled, interworking none
+      PW backup disable delay 0 sec
+      Sequencing not set
+      LSP : Down
+      Load Balance Hashing: src-dst-ip
+      Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=0,Rx=0)
+
+      PW Status TLV in use
+        MPLS         Local                          Remote
+        ------------ ------------------------------ ---------------------------
+        Label        24000                          unknown
+        Group ID     0x0                            0x0
+        Interface    Access PW                      unknown
+        MTU          1500                           unknown
+        Control word enabled                        unknown
+        PW type      Ethernet                       unknown
+        VCCV CV type 0x2                            0x0
+                                                    (none)
+                     (LSP ping verification)
+        VCCV CC type 0x7                            0x0
+                                                    (none)
+                     (control word)
+                     (router alert label)
+                     (TTL expiry)
+        ------------ ------------------------------ ---------------------------
+      MIB cpwVcIndex: 2684354563
+      Create time: 01/10/2019 14:18:18 (1y36w ago)
+      Last time status changed: 21/10/2020 13:24:35 (33w4d ago)
+      Last time PW went down: 21/10/2020 13:18:37 (33w4d ago)
+      MAC withdraw messages: sent 13, received 0
+      Forward-class: 0
+      Static MAC addresses:
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+    PW: neighbor 10.11.44.82, PW ID 9001, state is down ( local ready ) (Transport LSP Down)
+      PW class not set, XC ID 0xa0000005
+      Encapsulation MPLS, protocol LDP
+      Source address 10.11.44.91
+      PW type Ethernet, control word disabled, interworking none
+      PW backup disable delay 0 sec
+      Sequencing not set
+      LSP : Down
+      Load Balance Hashing: src-dst-ip
+
+      PW Status TLV in use
+        MPLS         Local                          Remote
+        ------------ ------------------------------ ---------------------------
+        Label        24001                          unknown
+        Group ID     0x0                            0x0
+        Interface    Access PW                      unknown
+        MTU          1500                           unknown
+        Control word disabled                       unknown
+        PW type      Ethernet                       unknown
+        VCCV CV type 0x2                            0x0
+                                                    (none)
+                     (LSP ping verification)
+        VCCV CC type 0x6                            0x0
+                                                    (none)
+                     (router alert label)
+                     (TTL expiry)
+        ------------ ------------------------------ ---------------------------
+      MIB cpwVcIndex: 2684354565
+      Create time: 01/10/2019 14:18:18 (1y36w ago)
+      Last time status changed: 10/06/2020 01:53:52 (1y00w ago)
+      Last time PW went down: 10/06/2020 01:50:32 (1y00w ago)
+      MAC withdraw messages: sent 0, received 0
+      Forward-class: 0
+      Static MAC addresses:
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+  List of VFIs:
+    VFI Seg101 (up)
+      PW: neighbor 10.11.44.92, PW ID 5000, state is up ( established )
+        PW class PW_DEFAULT, XC ID 0xa0000009
+        Encapsulation MPLS, protocol LDP
+        Source address 10.11.44.91
+        PW type Ethernet, control word enabled, interworking none
+        Sequencing not set
+        LSP : Up
+        Load Balance Hashing: src-dst-ip
+        Flow Label flags configured (Tx=1,Rx=1), negotiated (Tx=1,Rx=1)
+
+        PW Status TLV in use
+          MPLS         Local                          Remote
+          ------------ ------------------------------ -------------------------
+          Label        25636                          24201
+          Group ID     0x0                            0x11c
+          Interface    Seg101                         Seg101
+          MTU          1500                           1500
+          Control word enabled                        enabled
+          PW type      Ethernet                       Ethernet
+          VCCV CV type 0x2                            0x2
+                       (LSP ping verification)        (LSP ping verification)
+          VCCV CC type 0x7                            0x7
+                       (control word)                 (control word)
+                       (router alert label)           (router alert label)
+                       (TTL expiry)                   (TTL expiry)
+          ------------ ------------------------------ -------------------------
+        Incoming Status (PW Status TLV):
+          Status code: 0x0 (Up) in Notification message
+        MIB cpwVcIndex: 2684354569
+        Create time: 22/11/2019 11:48:50 (1y29w ago)
+        Last time status changed: 10/06/2021 02:53:01 (3d20h ago)
+        Last time PW went down: 10/06/2021 02:44:34 (3d20h ago)
+        MAC withdraw messages: sent 16, received 14
+        Forward-class: 0
+        Static MAC addresses:
+        Statistics:
+          packets: received 0 (unicast 0), sent 0
+          bytes: received 0 (unicast 0), sent 0
+          MAC move: 0
+        Storm control drop counters:
+          packets: broadcast 0, multicast 0, unknown unicast 0
+          bytes: broadcast 0, multicast 0, unknown unicast 0
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      VFI Statistics:
+        drops: illegal VLAN 0, illegal length 0
+  List of Access VFIs:
+Bridge group: B1-B, bridge-domain: B1-B, id: 1, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 2
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 15/11/2019 03:52:31 (1y30w ago)
+  No status change since creation
+  ACs: 1 (1 up), VFIs: 1, PWs: 1 (1 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether10.4000, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [4000, 4000]
+      MTU 9000; XC ID 0xc000000e; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 2263727831 (multicast 0, broadcast 0, unknown unicast 0, unicast 2263729426), sent 2601947451
+        bytes: received 1695425622592 (multicast 0, broadcast 0, unknown unicast 0, unicast 1695426199797), sent 2615912696704
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+    VFI B1-B (up)
+      PW: neighbor 10.11.44.92, PW ID 104001, state is up ( established )
+        PW class not set, XC ID 0xa0000007
+        Encapsulation MPLS, protocol LDP
+        Source address 10.11.44.91
+        PW type Ethernet, control word disabled, interworking none
+        Sequencing not set
+        LSP : Up
+        Load Balance Hashing: src-dst-ip
+
+        PW Status TLV in use
+          MPLS         Local                          Remote
+          ------------ ------------------------------ -------------------------
+          Label        24748                          24344
+          Group ID     0x1                            0x118
+          Interface    B1-B                           B1-B
+          MTU          1500                           1500
+          Control word disabled                       disabled
+          PW type      Ethernet                       Ethernet
+          VCCV CV type 0x2                            0x2
+                       (LSP ping verification)        (LSP ping verification)
+          VCCV CC type 0x6                            0x6
+                       (router alert label)           (router alert label)
+                       (TTL expiry)                   (TTL expiry)
+          ------------ ------------------------------ -------------------------
+        Incoming Status (PW Status TLV):
+          Status code: 0x0 (Up) in Notification message
+        MIB cpwVcIndex: 2684354567
+        Create time: 15/11/2019 03:52:31 (1y30w ago)
+        Last time status changed: 10/06/2021 02:53:01 (3d20h ago)
+        Last time PW went down: 10/06/2021 02:44:34 (3d20h ago)
+        MAC withdraw messages: sent 13, received 0
+        Forward-class: 0
+        Static MAC addresses:
+        Statistics:
+          packets: received 2601882205 (unicast 2601882205), sent 2263733637
+          bytes: received 2605419757847 (unicast 2605419757847), sent 1695428286863
+          MAC move: 0
+        Storm control drop counters:
+          packets: broadcast 0, multicast 0, unknown unicast 0
+          bytes: broadcast 0, multicast 0, unknown unicast 0
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      VFI Statistics:
+        drops: illegal VLAN 0, illegal length 0
+  List of Access VFIs:
+Bridge group: Management, bridge-domain: 4010, id: 263, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 264
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 24/09/2020 03:22:47 (37w3d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether20.4010, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [4010, 4010]
+      MTU 1500; XC ID 0xc000042a; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 868 (multicast 0, broadcast 859, unknown unicast 0, unicast 9), sent 1017603
+        bytes: received 55552 (multicast 0, broadcast 54976, unknown unicast 0, unicast 576), sent 61874928
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether3.4010, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [4010, 4010]
+      MTU 9000; XC ID 0xc000033c; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 1017608 (multicast 0, broadcast 1017599, unknown unicast 7, unicast 2), sent 868
+        bytes: received 61875220 (multicast 0, broadcast 61874680, unknown unicast 420, unicast 120), sent 55552
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: Management, bridge-domain: 4090, id: 264, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 265
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 24/09/2020 03:22:47 (37w3d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether20.4090, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [4090, 4090]
+      MTU 1500; XC ID 0xc000042c; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 35510779266 (multicast 0, broadcast 0, unknown unicast 0, unicast 35510779266), sent 67290609967
+        bytes: received 14204488780501 (multicast 0, broadcast 0, unknown unicast 0, unicast 14204488780501), sent 83879978440066
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether3.4090, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [4090, 4090]
+      MTU 9000; XC ID 0xc000033e; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 67289104995 (multicast 0, broadcast 0, unknown unicast 0, unicast 67289104995), sent 35510093704
+        bytes: received 83878025586583 (multicast 0, broadcast 0, unknown unicast 0, unicast 83878025586583), sent 14204351236525
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: Subscriber, bridge-domain: Elf_1124, id: 396, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 397
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 20/04/2021 11:22:55 (7w5d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether20.20011124, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 2001
+      Rewrite Tags: []
+      VLAN ranges: [1124, 1124]
+      MTU 1500; XC ID 0xc000058c; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 398255446 (multicast 0, broadcast 0, unknown unicast 0, unicast 398255446), sent 166337423
+        bytes: received 539316094013 (multicast 0, broadcast 0, unknown unicast 0, unicast 539316094013), sent 36890820969
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether3.20011124, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 2001
+      Rewrite Tags: []
+      VLAN ranges: [1124, 1124]
+      MTU 9000; XC ID 0xc0000570; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 166337150 (multicast 0, broadcast 1051, unknown unicast 0, unicast 166336099), sent 398251507
+        bytes: received 36890796499 (multicast 0, broadcast 71468, unknown unicast 0, unicast 36890725031), sent 539311615942
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: Subscriber, bridge-domain: Recom_2213, id: 371, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 372
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 24/09/2020 03:22:47 (37w3d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether20.21002213, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 2100
+      Rewrite Tags: []
+      VLAN ranges: [2213, 2213]
+      MTU 1500; XC ID 0xc00004fe; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether3.21002213, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 2100
+      Rewrite Tags: []
+      VLAN ranges: [2213, 2213]
+      MTU 9000; XC ID 0xc0000410; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: Subscriber, bridge-domain: Recom_2215, id: 373, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 374
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 24/09/2020 03:22:47 (37w3d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether20.21002215, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 2100
+      Rewrite Tags: []
+      VLAN ranges: [2215, 2215]
+      MTU 1500; XC ID 0xc0000502; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether3.21002215, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 2100
+      Rewrite Tags: []
+      VLAN ranges: [2215, 2215]
+      MTU 9000; XC ID 0xc0000414; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: Subscriber, bridge-domain: Recom_2217, id: 376, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 377
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 25/09/2020 09:43:41 (37w2d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether20.21002217, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 2100
+      Rewrite Tags: []
+      VLAN ranges: [2217, 2217]
+      MTU 1500; XC ID 0xc0000508; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 1857545 (multicast 0, broadcast 0, unknown unicast 0, unicast 1857545), sent 1284464
+        bytes: received 1984810970 (multicast 0, broadcast 0, unknown unicast 0, unicast 1984810970), sent 281697660
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether3.2217, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [2217, 2217]
+      MTU 9000; XC ID 0xc0000506; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 1284475 (multicast 0, broadcast 1, unknown unicast 0, unicast 1284474), sent 1857554
+        bytes: received 276560922 (multicast 0, broadcast 64, unknown unicast 0, unicast 276560858), sent 1977382049
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: Subscriber_MTS, bridge-domain: 1266, id: 256, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 257
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 17/09/2020 03:58:27 (38w3d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether10.1266, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 1023
+      Rewrite Tags: []
+      VLAN ranges: [1266, 1266]
+      MTU 9000; XC ID 0xc0000318; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 3245556280 (multicast 0, broadcast 8763, unknown unicast 166277, unicast 3245382797), sent 1465216351
+        bytes: received 4339841715578 (multicast 0, broadcast 3233500, unknown unicast 149890469, unicast 4339690038523), sent 344268595837
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether3.1266, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [1266, 1266]
+      MTU 9000; XC ID 0xc0000314; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 1465145657 (multicast 338510, broadcast 1736376, unknown unicast 2, unicast 1463070770), sent 3245432086
+        bytes: received 338398661284 (multicast 34838238, broadcast 116685357, unknown unicast 162, unicast 338247137591), sent 4326687483580
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: Subscriber_MTS, bridge-domain: 1267, id: 257, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 258
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 17/09/2020 03:58:27 (38w3d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether10.1267, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 1023
+      Rewrite Tags: []
+      VLAN ranges: [1267, 1267]
+      MTU 9000; XC ID 0xc000031a; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 4603415788 (multicast 0, broadcast 11739, unknown unicast 214080, unicast 4603192922), sent 2355034330
+        bytes: received 5820136906653 (multicast 0, broadcast 4331672, unknown unicast 196243591, unicast 5819937825269), sent 818805396762
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether3.1267, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [1267, 1267]
+      MTU 9000; XC ID 0xc0000316; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 2354966866 (multicast 445231, broadcast 2697447, unknown unicast 23501, unicast 2351800687), sent 4603284751
+        bytes: received 809357601016 (multicast 34967010, broadcast 186220614, unknown unicast 1693794, unicast 809134719598), sent 5801561953485
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: Subscriber_MTS, bridge-domain: 1268, id: 36, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 37
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 13/12/2019 02:49:09 (1y26w ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether10.1268, state is up
+      Type VLAN; Num Ranges: 1
+      Outer Tag: 1012
+      Rewrite Tags: []
+      VLAN ranges: [1268, 1268]
+      MTU 9000; XC ID 0xc000009a; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: Bundle-Ether3.1268, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [1268, 1268]
+      MTU 9000; XC ID 0xc000007c; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: Other_Connect_Tmp, bridge-domain: 1270, id: 157, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 158
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 04/06/2020 13:20:08 (1y01w ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether3.1270, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [1270, 1270]
+      MTU 9000; XC ID 0xc0000242; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 117707 (multicast 117707, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        bytes: received 8004076 (multicast 8004076, broadcast 0, unknown unicast 0, unicast 0), sent 0
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: TenGigE0/2/0/11.1270, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [1270, 1270]
+      MTU 1526; XC ID 0x1200220; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 117708
+        bytes: received 0 (multicast 0, broadcast 0, unknown unicast 0, unicast 0), sent 8004144
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:
+Bridge group: Other_Connect_Tmp, bridge-domain: BS_3986, id: 259, state: up, ShgId: 0, MSTi: 0
+  Coupled state: disabled
+  VINE state: Default
+  MAC learning: enabled
+  MAC withdraw: enabled
+    MAC withdraw for Access PW: enabled
+    MAC withdraw sent on: bridge port up
+    MAC withdraw relaying (access to access): disabled
+  Flooding:
+    Broadcast & Multicast: enabled
+    Unknown unicast: enabled
+  MAC aging time: 300 s, Type: inactivity
+  MAC limit: 4000, Action: none, Notification: syslog
+  MAC limit reached: no, threshold: 75%
+  MAC port down flush: enabled
+  MAC Secure: disabled, Logging: disabled
+  Split Horizon Group: none
+  Dynamic ARP Inspection: disabled, Logging: disabled
+  IP Source Guard: disabled, Logging: disabled
+  DHCPv4 Snooping: disabled
+  DHCPv4 Snooping profile: none
+  IGMP Snooping: disabled
+  IGMP Snooping profile: none
+  MLD Snooping profile: none
+  Storm Control: disabled
+  Bridge MTU: 1500
+  MIB cvplsConfigIndex: 260
+  Filter MAC addresses:
+  Load Balance Hashing: src-dst-ip
+  P2MP PW: disabled
+  Create time: 21/09/2020 15:58:08 (37w6d ago)
+  No status change since creation
+  ACs: 2 (2 up), VFIs: 0, PWs: 0 (0 up), PBBs: 0 (0 up), VNIs: 0 (0 up)
+  List of ACs:
+    AC: Bundle-Ether3.3986, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [3986, 3986]
+      MTU 9000; XC ID 0xc000031e; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 3901995 (multicast 0, broadcast 0, unknown unicast 0, unicast 3901995), sent 6335822
+        bytes: received 275112570 (multicast 0, broadcast 0, unknown unicast 0, unicast 275112570), sent 7269237551
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+    AC: TenGigE0/2/0/11.3986, state is up
+      Type VLAN; Num Ranges: 1
+      Rewrite Tags: []
+      VLAN ranges: [3986, 3986]
+      MTU 1526; XC ID 0x1200322; interworking none
+      MAC learning: enabled
+      Flooding:
+        Broadcast & Multicast: enabled
+        Unknown unicast: enabled
+      MAC aging time: 300 s, Type: inactivity
+      MAC limit: 4000, Action: none, Notification: syslog
+      MAC limit reached: no, threshold: 75%
+      MAC port down flush: enabled
+      MAC Secure: disabled, Logging: disabled
+      Split Horizon Group: none
+      Dynamic ARP Inspection: disabled, Logging: disabled
+      IP Source Guard: disabled, Logging: disabled
+      DHCPv4 Snooping: disabled
+      DHCPv4 Snooping profile: none
+      IGMP Snooping: disabled
+      IGMP Snooping profile: none
+      MLD Snooping profile: none
+      Storm Control: bridge-domain policer
+      Static MAC addresses:
+      Statistics:
+        packets: received 6335693 (multicast 0, broadcast 0, unknown unicast 0, unicast 6335693), sent 3901902
+        bytes: received 7269096652 (multicast 0, broadcast 0, unknown unicast 0, unicast 7269096652), sent 275105988
+        MAC move: 0
+      Storm control drop counters:
+        packets: broadcast 0, multicast 0, unknown unicast 0
+        bytes: broadcast 0, multicast 0, unknown unicast 0
+      Dynamic ARP inspection drop counters:
+        packets: 0, bytes: 0
+      IP source guard drop counters:
+        packets: 0, bytes: 0
+  List of Access PWs:
+  List of VFIs:
+  List of Access VFIs:

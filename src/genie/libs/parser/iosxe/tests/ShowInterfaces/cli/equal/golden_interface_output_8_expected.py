@@ -1,0 +1,89 @@
+expected_output = {
+   "TenGigabitEthernet1/0/2":{
+      "port_channel":{
+         "port_channel_member": False
+      },
+      "enabled": True,
+      "line_protocol":"up",
+      "oper_status":"up",
+      "connected": True,
+      "err_disabled": False,
+      "type":"Ten Gigabit Ethernet",
+      "mac_address":"682c.7b3f.f002",
+      "phys_address":"682c.7b3f.f002",
+      "description":"Nothing",
+      "delay":10,
+      "mtu":9000,
+      "bandwidth":10000000,
+      "reliability":"255/255",
+      "txload":"1/255",
+      "rxload":"1/255",
+      "encapsulations":{
+         "encapsulation":"arpa"
+      },
+      "keepalive":10,
+      "duplex_mode":"full",
+      "port_speed":"10gb/s",
+      "media_type":"100/1000/2.5G/5G/10GBaseTX",
+      "flow_control":{
+         "receive": True,
+         "send": False
+      },
+      "arp_type":"arpa",
+      "arp_timeout":"04:00:00",
+      "last_input":"never",
+      "last_output":"00:00:00",
+      "output_hang":"never",
+      "queues":{
+         "input_queue_size":0,
+         "input_queue_max":2000,
+         "input_queue_drops":0,
+         "input_queue_flushes":0,
+         "total_output_drop":0,
+         "queue_strategy":"fifo",
+         "output_queue_size":0,
+         "output_queue_max":40
+      },
+      "counters":{
+         "rate":{
+            "load_interval":30,
+            "in_rate":16000,
+            "in_rate_pkts":17,
+            "out_rate":0,
+            "out_rate_pkts":0
+         },
+         "last_clear":"never",
+         "in_pkts":8022334658,
+         "in_octets":697880865309,
+         "in_no_buffer":0,
+         "in_multicast_pkts":12712,
+         "in_broadcast_pkts":12712,
+         "in_runts":0,
+         "in_giants":0,
+         "in_throttles":0,
+         "in_errors":0,
+         "in_crc_errors":0,
+         "in_frame":0,
+         "in_overrun":0,
+         "in_ignored":0,
+         "in_watchdog":0,
+         "in_mac_pause_frames":0,
+         "in_with_dribble":0,
+         "out_pkts":97135086285,
+         "out_octets":143406430963466,
+         "out_underruns":0,
+         "out_errors":0,
+         "out_interface_resets":2,
+         "out_collision":0,
+         "out_unknown_protocl_drops":0,
+         "out_babble":0,
+         "out_late_collision":0,
+         "out_deferred":0,
+         "out_lost_carrier":0,
+         "out_no_carrier":0,
+         "out_mac_pause_frames":0,
+         "out_buffer_failure":0,
+         "out_buffers_swapped":0
+      }
+   }
+}

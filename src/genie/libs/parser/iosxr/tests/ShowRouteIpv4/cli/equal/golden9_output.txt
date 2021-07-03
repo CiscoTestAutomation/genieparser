@@ -1,0 +1,9 @@
+Tue Oct 29 21:45:11.042 UTC
+
+Routing entry for 10.23.120.2/32
+Known via "local", distance 0, metric 0 (connected)
+Installed Oct  4 15:47:45.368 for 3w4d
+Routing Descriptor Blocks
+    directly connected, via GigabitEthernet0/0/0/1.420
+    Route metric is 0
+No advertising protos.
