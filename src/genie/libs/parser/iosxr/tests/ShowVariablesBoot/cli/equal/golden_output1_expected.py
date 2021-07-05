@@ -6,7 +6,7 @@ expected_output = {
         'cardtype': '0x101014',
         'iputype': '0x02f52029',
         'vmtype': 'xr-vm quiet virtvm',
-        'bigphysarea': '\"12M\"',
+        'bigphysarea': '12M',
         'chassis_type': '0xef1015',
         'intel_idle_max_cstate': 0,
         'processor_max_cstate': 1,
