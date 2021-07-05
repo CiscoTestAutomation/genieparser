@@ -2,7 +2,7 @@
 # All rights reserved.
 
 expected_output = {"path_ids": {
-                                "12": {
+                                12: {
                                     "eth_seg": "03AA.BB00.0000.0200.0001",
                                     "path_cnt": 2,
                                     "path_list": [
@@ -11,7 +11,7 @@ expected_output = {"path_ids": {
                                     ],
                                     "type": "MPLS_UC"
                                 },
-                                "2": {
+                                2: {
                                     "eth_seg": "0000.0000.0000.0000.0000",
                                     "path_cnt": 1,
                                     "path_list": [
@@ -19,7 +19,7 @@ expected_output = {"path_ids": {
                                     ],
                                     "type": "MPLS_IR"
                                 },
-                                "3": {
+                                3: {
                                     "eth_seg": "0000.0000.0000.0000.0000",
                                     "path_cnt": 1,
                                     "path_list": [
@@ -27,7 +27,7 @@ expected_output = {"path_ids": {
                                     ],
                                     "type": "MPLS_UC"
                                 },
-                                "4": {
+                                4: {
                                     "eth_seg": "0000.0000.0000.0000.0000",
                                     "path_cnt": 1,
                                     "path_list": [
@@ -35,7 +35,7 @@ expected_output = {"path_ids": {
                                     ],
                                     "type": "MPLS_IR"
                                 },
-                                "5": {
+                                5: {
                                     "eth_seg": "03AA.BB00.0000.0200.0001",
                                     "path_cnt": 2,
                                     "path_list": [
@@ -44,7 +44,7 @@ expected_output = {"path_ids": {
                                     ],
                                     "type": "EAD_ES"
                                 },
-                                "6": {
+                                6: {
                                     "eth_seg": "0000.0000.0000.0000.0000",
                                     "path_cnt": 1,
                                     "path_list": [

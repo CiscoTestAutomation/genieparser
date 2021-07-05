@@ -13,6 +13,16 @@ IOS parsers for the following show commands:
     * show l2route evpn mac ip host-ip <ip> next-hop <next_hop> mac-address <mac_addr> esi <esi> detail
     * show l2route evpn mac ip host-ip <ip> producer <producer> mac-address <mac_addr> detail
     * show l2route evpn mac ip host-ip <ip> producer <producer> mac-address <mac_addr> esi <esi> detail
+    * show l2route evpn mac ip host-ip <ip> topology <evi> detail
+    * show l2route evpn mac ip host-ip <ip> topology <evi> esi <esi> detail
+    * show l2route evpn mac ip host-ip <ip> topology <evi> mac-address <mac_addr> detail
+    * show l2route evpn mac ip host-ip <ip> topology <evi> mac-address <mac_addr> esi <esi> detail
+    * show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> detail
+    * show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> esi <esi> detail
+    * show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> mac-address <mac_addr> detail
+    * show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> mac-address <mac_addr> esi <esi> detail
+    * show l2route evpn mac ip host-ip <ip> topology <evi> producer <producer> mac-address <mac_addr> detail
+    * show l2route evpn mac ip host-ip <ip> topology <evi> producer <producer> mac-address <mac_addr> esi <esi> detail
     * show l2route evpn mac ip host-ip <ip> topology <evi:etag> detail
     * show l2route evpn mac ip host-ip <ip> topology <evi:etag> esi <esi> detail
     * show l2route evpn mac ip host-ip <ip> topology <evi:etag> mac-address <mac_addr> detail
@@ -22,7 +32,7 @@ IOS parsers for the following show commands:
     * show l2route evpn mac ip host-ip <ip> topology <evi:etag> next-hop <next_hop> mac-address <mac_addr> detail
     * show l2route evpn mac ip host-ip <ip> topology <evi:etag> next-hop <next_hop> mac-address <mac_addr> esi <esi> detail
     * show l2route evpn mac ip host-ip <ip> topology <evi:etag> producer <producer> mac-address <mac_addr> detail
-    * show l2route evpn mac ip host-ip <ip> topology <evi:etag> producer <producer> mac-address <mac_addr> esi <esi> detaill
+    * show l2route evpn mac ip host-ip <ip> topology <evi:etag> producer <producer> mac-address <mac_addr> esi <esi> detail
 
 
 Copyright (c) 2021 by Cisco Systems, Inc.
@@ -51,6 +61,16 @@ class ShowL2routeEvpnMacIpDetailSchema(MetaParser):
                    show l2route evpn mac ip host-ip <ip> next-hop <next_hop> mac-address <mac_addr> esi <esi> detail
                    show l2route evpn mac ip host-ip <ip> producer <producer> mac-address <mac_addr> detail
                    show l2route evpn mac ip host-ip <ip> producer <producer> mac-address <mac_addr> esi <esi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> esi <esi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> mac-address <mac_addr> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> mac-address <mac_addr> esi <esi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> esi <esi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> mac-address <mac_addr> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> mac-address <mac_addr> esi <esi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> producer <producer> mac-address <mac_addr> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> producer <producer> mac-address <mac_addr> esi <esi> detail
                    show l2route evpn mac ip host-ip <ip> topology <evi:etag> detail
                    show l2route evpn mac ip host-ip <ip> topology <evi:etag> esi <esi> detail
                    show l2route evpn mac ip host-ip <ip> topology <evi:etag> mac-address <mac_addr> detail
@@ -101,6 +121,16 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
                    show l2route evpn mac ip host-ip <ip> next-hop <next_hop> mac-address <mac_addr> esi <esi> detail
                    show l2route evpn mac ip host-ip <ip> producer <producer> mac-address <mac_addr> detail
                    show l2route evpn mac ip host-ip <ip> producer <producer> mac-address <mac_addr> esi <esi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> esi <esi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> mac-address <mac_addr> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> mac-address <mac_addr> esi <esi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> esi <esi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> mac-address <mac_addr> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> mac-address <mac_addr> esi <esi> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> producer <producer> mac-address <mac_addr> detail
+                   show l2route evpn mac ip host-ip <ip> topology <evi> producer <producer> mac-address <mac_addr> esi <esi> detail
                    show l2route evpn mac ip host-ip <ip> topology <evi:etag> detail
                    show l2route evpn mac ip host-ip <ip> topology <evi:etag> esi <esi> detail
                    show l2route evpn mac ip host-ip <ip> topology <evi:etag> mac-address <mac_addr> detail
@@ -125,16 +155,26 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
                    'show l2route evpn mac ip host-ip {ip} next-hop {next_hop} mac-address {mac_addr} esi {esi} detail',
                    'show l2route evpn mac ip host-ip {ip} producer {producer} mac-address {mac_addr} detail',
                    'show l2route evpn mac ip host-ip {ip} producer {producer} mac-address {mac_addr} esi {esi} detail',
-                   'show l2route evpn mac ip host-ip {ip} topology {evi:etag} detail',
-                   'show l2route evpn mac ip host-ip {ip} topology {evi:etag} esi {esi} detail',
-                   'show l2route evpn mac ip host-ip {ip} topology {evi:etag} mac-address {mac_addr} detail',
-                   'show l2route evpn mac ip host-ip {ip} topology {evi:etag} mac-address {mac_addr} esi {esi} detail',
-                   'show l2route evpn mac ip host-ip {ip} topology {evi:etag} next-hop {next_hop} detail',
-                   'show l2route evpn mac ip host-ip {ip} topology {evi:etag} next-hop {next_hop} esi {esi} detail',
-                   'show l2route evpn mac ip host-ip {ip} topology {evi:etag} next-hop {next_hop} mac-address {mac_addr} detail',
-                   'show l2route evpn mac ip host-ip {ip} topology {evi:etag} next-hop {next_hop} mac-address {mac_addr} esi {esi} detail',
-                   'show l2route evpn mac ip host-ip {ip} topology {evi:etag} producer {producer} mac-address {mac_addr} detail',
-                   'show l2route evpn mac ip host-ip {ip} topology {evi:etag} producer {producer} mac-address {mac_addr} esi {esi} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi} esi {esi} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi} mac-address {mac_addr} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi} mac-address {mac_addr} esi {esi} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi} next-hop {next_hop} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi} next-hop {next_hop} esi {esi} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi} next-hop {next_hop} mac-address {mac_addr} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi} next-hop {next_hop} mac-address {mac_addr} esi {esi} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi} producer {producer} mac-address {mac_addr} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi} producer {producer} mac-address {mac_addr} esi {esi} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi}:{etag} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi}:{etag} esi {esi} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi}:{etag} mac-address {mac_addr} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi}:{etag} mac-address {mac_addr} esi {esi} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi}:{etag} next-hop {next_hop} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi}:{etag} next-hop {next_hop} esi {esi} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi}:{etag} next-hop {next_hop} mac-address {mac_addr} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi}:{etag} next-hop {next_hop} mac-address {mac_addr} esi {esi} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi}:{etag} producer {producer} mac-address {mac_addr} detail',
+                   'show l2route evpn mac ip host-ip {ip} topology {evi}:{etag} producer {producer} mac-address {mac_addr} esi {esi} detail',
     ]
 
     def cli(self, output=None, ip=None, esi=None, mac_addr=None, next_hop=None, producer=None, evi=None, etag=None):
@@ -144,28 +184,53 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
                     if etag:
                         if producer:
                             if esi:
-                                cli_cmd = self.cli_command[20].format(ip=ip, evi=evi, etag=etag, producer=producer, mac_addr=mac_addr, esi=esi)
+                                cli_cmd = self.cli_command[30].format(ip=ip, evi=evi, etag=etag, producer=producer, mac_addr=mac_addr, esi=esi)
                             else:
-                                cli_cmd = self.cli_command[19].format(ip=ip, evi=evi, etag=etag, producer=producer, mac_addr=mac_addr)
+                                cli_cmd = self.cli_command[29].format(ip=ip, evi=evi, etag=etag, producer=producer, mac_addr=mac_addr)
                         elif next_hop:
                             if esi:
                                 if mac_addr:
-                                    cli_cmd = self.cli_command[18].format(ip=ip, evi=evi, etag=etag, next_hop=next_hop, mac_addr=mac_addr, esi=esi)
+                                    cli_cmd = self.cli_command[28].format(ip=ip, evi=evi, etag=etag, next_hop=next_hop, mac_addr=mac_addr, esi=esi)
                                 else:
-                                    cli_cmd = self.cli_command[16].format(ip=ip, evi=evi, etag=etag, next_hop=next_hop, esi=esi)
+                                    cli_cmd = self.cli_command[26].format(ip=ip, evi=evi, etag=etag, next_hop=next_hop, esi=esi)
                             elif mac_addr:
-                                cli_cmd = self.cli_command[17].format(ip=ip, evi=evi, etag=etag, next_hop=next_hop, mac_addr=mac_addr)
+                                cli_cmd = self.cli_command[27].format(ip=ip, evi=evi, etag=etag, next_hop=next_hop, mac_addr=mac_addr)
                             else:
-                                cli_cmd = self.cli_command[15].format(ip=ip, evi=evi, etag=etag, next_hop=next_hop)
+                                cli_cmd = self.cli_command[25].format(ip=ip, evi=evi, etag=etag, next_hop=next_hop)
                         elif mac_addr:
                             if esi:
-                                cli_cmd = self.cli_command[14].format(ip=ip, evi=evi, etag=etag, mac_addr=mac_addr, esi=esi)
+                                cli_cmd = self.cli_command[24].format(ip=ip, evi=evi, etag=etag, mac_addr=mac_addr, esi=esi)
                             else:
-                                cli_cmd = self.cli_command[13].format(ip=ip, evi=evi, etag=etag, mac_addr=mac_addr)
+                                cli_cmd = self.cli_command[23].format(ip=ip, evi=evi, etag=etag, mac_addr=mac_addr)
                         elif esi:
-                            cli_cmd = self.cli_command[12].format(ip=ip, evi=evi, etag=etag, esi=esi)
+                            cli_cmd = self.cli_command[22].format(ip=ip, evi=evi, etag=etag, esi=esi)
                         else:
-                            cli_cmd = self.cli_command[11].format(ip=ip, evi=evi, etag=etag)
+                            cli_cmd = self.cli_command[21].format(ip=ip, evi=evi, etag=etag)
+                    else:
+                        if producer:
+                            if esi:
+                                cli_cmd = self.cli_command[20].format(ip=ip, evi=evi, producer=producer, mac_addr=mac_addr, esi=esi)
+                            else:
+                                cli_cmd = self.cli_command[19].format(ip=ip, evi=evi, producer=producer, mac_addr=mac_addr)
+                        elif next_hop:
+                            if esi:
+                                if mac_addr:
+                                    cli_cmd = self.cli_command[18].format(ip=ip, evi=evi, next_hop=next_hop, mac_addr=mac_addr, esi=esi)
+                                else:
+                                    cli_cmd = self.cli_command[16].format(ip=ip, evi=evi, next_hop=next_hop, esi=esi)
+                            elif mac_addr:
+                                cli_cmd = self.cli_command[17].format(ip=ip, evi=evi, next_hop=next_hop, mac_addr=mac_addr)
+                            else:
+                                cli_cmd = self.cli_command[15].format(ip=ip, evi=evi, next_hop=next_hop)
+                        elif mac_addr:
+                            if esi:
+                                cli_cmd = self.cli_command[14].format(ip=ip, evi=evi, mac_addr=mac_addr, esi=esi)
+                            else:
+                                cli_cmd = self.cli_command[13].format(ip=ip, evi=evi, mac_addr=mac_addr)
+                        elif esi:
+                            cli_cmd = self.cli_command[12].format(ip=ip, evi=evi, esi=esi)
+                        else:
+                            cli_cmd = self.cli_command[11].format(ip=ip, evi=evi)
                 else:
                     if producer:
                         if esi:
@@ -239,7 +304,7 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
             m = p1.match(line)
             if m:
                 group = m.groupdict()
-                evi = group['evi']
+                evi = int(group['evi'])
                 evi_list = parser_dict.setdefault('evi', {})
                 evis = evi_list.setdefault(evi, {})
                 continue

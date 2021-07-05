@@ -93,7 +93,7 @@ class ShowL2fibPathListId(ShowL2fibPathListIdSchema):
             if m:
                 group = m.groupdict()
                 path_ids = parser_dict.setdefault('path_ids', {})
-                path_list = path_ids.setdefault(group['path_list_id'], {})
+                path_list = path_ids.setdefault(int(group['path_list_id']), {})
                 paths = path_list.setdefault('path_list', [])
                 continue
 

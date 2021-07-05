@@ -2,7 +2,7 @@
 # All rights reserved.
 
 expected_output = {"evi": {
-                        "2": {
+                        2: {
                             "producer": {
                                 "BGP": {
                                     "host_ips": {
