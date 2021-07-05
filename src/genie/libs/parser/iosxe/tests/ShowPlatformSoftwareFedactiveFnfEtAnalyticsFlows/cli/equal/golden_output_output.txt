@@ -1,0 +1,13 @@
+ET Analytics Flow dump
+
+=================
+Total packets received     : 80
+Excess packets received    : 60
+Excess syn received        : 0
+Total eta records added    : 4
+Current eta records        : 0
+Total eta splt exported    : 2
+Total eta IDP exported     : 2
+Total eta-fnf records      : 2
+Total retransmitted pkts   : 0
+Total out of order pkts    : 0
