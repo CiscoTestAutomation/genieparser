@@ -70,10 +70,10 @@ class ShowL2routeEvpnMacIpDetailSchema(MetaParser):
                     Any(): {
                         'host_ips': {
                             Any(): {
-                                'eth_tag': str,
+                                'eth_tag': int,
                                 'mac_addr': str,
-                                'seq_number': str,
-                                'label_2': str,
+                                'seq_number': int,
+                                'label_2': int,
                                 'esi': str,
                                 'mac_rt_flags': str,
                                 'next_hops': list,
@@ -248,7 +248,7 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                eth_tag = group['eth_tag']
+                eth_tag = int(group['eth_tag'])
                 continue
 
             # Producer Name:            BGP
@@ -281,14 +281,14 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
             m = p6.match(line)
             if m:
                 group = m.groupdict()
-                routes.update({'seq_number': group['seq_number']})
+                routes.update({'seq_number': int(group['seq_number'])})
                 continue
 
             # Label 2:                  0
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                routes.update({'label_2': group['label_2']})
+                routes.update({'label_2': int(group['label_2'])})
                 continue
 
             # ESI:                      0000.0000.0000.0000.0000

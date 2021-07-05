@@ -4,7 +4,7 @@
 expected_output = {"path_ids": {
                                 "12": {
                                     "eth_seg": "03AA.BB00.0000.0200.0001",
-                                    "path_cnt": "2",
+                                    "path_cnt": 2,
                                     "path_list": [
                                         "[MAC]17@3.3.3.1",
                                         "[EVI]17@4.4.4.1"
@@ -13,7 +13,7 @@ expected_output = {"path_ids": {
                                 },
                                 "2": {
                                     "eth_seg": "0000.0000.0000.0000.0000",
-                                    "path_cnt": "1",
+                                    "path_cnt": 1,
                                     "path_list": [
                                         "[IR]16@3.3.3.1"
                                     ],
@@ -21,7 +21,7 @@ expected_output = {"path_ids": {
                                 },
                                 "3": {
                                     "eth_seg": "0000.0000.0000.0000.0000",
-                                    "path_cnt": "1",
+                                    "path_cnt": 1,
                                     "path_list": [
                                         "[MAC]16@2.2.2.1"
                                     ],
@@ -29,7 +29,7 @@ expected_output = {"path_ids": {
                                 },
                                 "4": {
                                     "eth_seg": "0000.0000.0000.0000.0000",
-                                    "path_cnt": "1",
+                                    "path_cnt": 1,
                                     "path_list": [
                                         "[IR]17@2.2.2.1"
                                     ],
@@ -37,7 +37,7 @@ expected_output = {"path_ids": {
                                 },
                                 "5": {
                                     "eth_seg": "03AA.BB00.0000.0200.0001",
-                                    "path_cnt": "2",
+                                    "path_cnt": 2,
                                     "path_list": [
                                         "[None]16@3.3.3.1",
                                         "[None]16@4.4.4.1"
@@ -46,7 +46,7 @@ expected_output = {"path_ids": {
                                 },
                                 "6": {
                                     "eth_seg": "0000.0000.0000.0000.0000",
-                                    "path_cnt": "1",
+                                    "path_cnt": 1,
                                     "path_list": [
                                         "[IR]16@4.4.4.1"
                                     ],

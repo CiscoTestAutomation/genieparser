@@ -29,7 +29,7 @@ class ShowL2fibPathListIdSchema(MetaParser):
             Any(): {
                'type': str,
                'eth_seg': str,
-               'path_cnt': str,
+               'path_cnt': int,
                'path_list': list,
             }
         }
@@ -115,7 +115,7 @@ class ShowL2fibPathListId(ShowL2fibPathListIdSchema):
             m = p4.match(line)
             if m:
                 group = m.groupdict()
-                path_list.update({'path_cnt': group['path_cnt']})
+                path_list.update({'path_cnt': int(group['path_cnt'])})
                 continue
 
             # Paths                         : [MAC]16@2.2.2.1
