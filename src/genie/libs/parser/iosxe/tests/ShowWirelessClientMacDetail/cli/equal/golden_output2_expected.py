@@ -44,7 +44,7 @@ expected_output = {
         'move_count': 0,
         'mobility_role': 'Local',
         'mobility_roam_type': 'None',
-        'mobility_complete_timestamp': '06/15/2021 15:06:12 British'
+        'mobility_complete_timestamp': '06/15/2021 15:06:12 British',
     },
     'client_join_time': '06/15/2021 15:06:12 British',
     'client_state_servers': 'None',
@@ -99,9 +99,9 @@ expected_output = {
             'url_redirect_acl': 'ACL_WEBAUTH_REDIRECT',
             'url_redirect': 'https://<placeholder>-WLAN-ISE.lab.<placeholder>:8443/portal/gateway?sessionId=445A583B000011D9103562E6&portal=f0ae43f0-7159-11e7-a355-005056aba474&action=cwa&token=5041ffbf4f184469c4db42e2a92ea637',
             'vlan_name': 'WLC-DATA',
-            'vlan': 145,
-            'absolute_timer': 1800
-        }
+            'vlan': '145',
+            'absolute_timer': 1800,
+        },
     },
     'dns_snooped_ipv4_addresses': 'None',
     'dns_snooped_ipv6_addresses': 'None',
@@ -111,7 +111,7 @@ expected_output = {
         'short_preamble': 'Not implemented',
         'pbcc': 'Not implemented',
         'channel_agility': 'Not implemented',
-        'listen_interval': 0
+        'listen_interval': 0,
     },
     'fast_bss_transition_details': {
         'reassociation_timeout': 20
@@ -130,18 +130,23 @@ expected_output = {
         'number_of_packets_sent': 2,
         'number_of_policy_errors': 0,
         'radio_signal_strength_indicator_dbm': -37,
-        'signal_to_noise_ration_db': 54},
+        'signal_to_noise_ration_db': 54,
+    },
     'fabric_status': 'Disabled',
     'radio_measurement_enabled_capabilities': {
-        'capabilities': ['Neighbor Report', 'Passive Beacon Measurement', 'Active Beacon Measurement',
-                         'Table Beacon Measurement', 'Statistics Measurement', 'AP Channel Report']
+        'capabilities': [
+            'Neighbor Report',
+            'Passive Beacon Measurement',
+            'Active Beacon Measurement',
+            'Table Beacon Measurement',
+            'Statistics Measurement',
+            'AP Channel Report',
+        ]
     },
     'client_scan_report_time': 'Timer not running',
     'nearby_ap_statistics': {
-        'ap_names': {
-        }
     },
     'eogre': 'Pending Classification',
     'max_client_protocol_capability': '802.11ac Wave 2',
-    'cellular_capability': 'N/A'
+    'cellular_capability': 'N/A',
 }

@@ -3,7 +3,8 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Modified ShowWirelessClientMacDetail:
+        * rewrote parser for better stability
         * added missing argument to cli command
-        * added new optional keys
-        * made several keys in schema optional
-        * current_rate can now be a float or string if the value is the encoding scheme
+        * added new optional keys, made several keys in schema optional
+        * some schema entries are now int or string
+        * added new test to cover schema changes

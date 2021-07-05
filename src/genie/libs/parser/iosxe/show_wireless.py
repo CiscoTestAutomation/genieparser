@@ -2263,7 +2263,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
           "protected_management_frame__802.11w": str,
           "eap_type": str,
           "vlan_override_after_webauth": str,
-          "vlan": str,
+          "vlan": Or(int, str),
           "multicast_vlan": int,
           "wifi_direct_capabilities": {
               "wifi_direct_capable": str
@@ -2281,7 +2281,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
               },
               "auth_method_status_list": {
                   "method": {
-                    str: {
+                    Any(): {
                         "sm_state": str,
                         Optional("sm_bend_state"): str,
                         Optional("authen_status"): str
@@ -2290,9 +2290,9 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
               },
               "local_policies": {
                   "service_template": {
-                    str: {
+                    Any(): {
                         Optional("vlan_group"): str,
-                        Optional("vlan"): str,
+                        Optional("vlan"): Or(int, str),
                         "absolute_timer": int
                     }
                   }
@@ -2306,7 +2306,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
                   Optional("output_sgt"): str,
                   "vlan_name": str,
                   Optional("vlan_group"): str,
-                  "vlan": int,
+                  "vlan": Or(int, str),
                   "absolute_timer": int,
                   Optional("url_redirect_acl"): str,
                   Optional("url_redirect"): str,
@@ -2347,10 +2347,10 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
           },
           "client_scan_report_time": str,
           "nearby_ap_statistics": {
-              "ap_names": {
-                Optional(str): {
+              Optional("ap_names"): {
+                Optional(Any()): {
                   Optional("antenna"): {
-                    Optional(str): {
+                    Optional(Any()): {
                       Optional("seconds_ago"): int,
                       Optional("dbm"): int
                     }
@@ -2365,11 +2365,11 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
               "protocol_map": str,
               "device_os": str,
               "protocols": {
-                str: {
-                  int: {
-                  "type": str,
-                  "data_size": str,
-                  "data": list
+                Any(): {
+                  Any(): {
+                      "type": str,
+                      "data_size": str,
+                      "data": list
                   }
                 }
               }
@@ -2378,7 +2378,7 @@ class ShowWirelessClientMacDetailSchema(MetaParser):
           "cellular_capability": str,
           Optional("session_warning_time"): str,
           Optional("session_timeout"): str,
-          }
+    }
 
 
 # ====================================
@@ -2392,20 +2392,8 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
     arguments:
     mac_address: mac address of the device to be checked, looks like xxxx.yyyy.zzzz
     """
+
     cli_command = 'show wireless client mac {mac_address} detail'
-          
-    # def change_data_type(self, value):
-    #     if value.isdigit():
-    #         value = value.strip()
-    #         value = int(value)
-    #     else:
-    #         try:
-    #             # Change strings to float if possible
-    #             value = float(value)
-    #         except ValueError:
-    #             # if the value is not an int or float, leave it as a string.
-    #             pass
-    #     return value
 
     def cli(self, mac_address="", output=None):
         if output is None:
@@ -2413,45 +2401,8 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
         else:
           output = output
 
-
-        # AP slot : 0
-        # Client State : Associated
-        # Policy Profile : lizzard_b1
-        # Flex Profile : N/A
-        # Wireless LAN Id: 20
-        # WLAN Profile Name: lizzard-l_Global
-        # Wireless LAN Network Name (SSID): lizzard-legacy
-        # BSSID : 70b3.18ff.f478
-        # Connected For : 3233 seconds
-        # Protocol : 802.11n - 2.4 GHz
-        # Channel : 6
-
-        # # Client MAC Address : 0aba.ddff.40c9
-        # p1 = re.compile(r'^Client MAC Address\s+:\s+(?P<mac_addr>\w{4}\.\w{4}\.\w{4})$')
-        #
-        # # Client MAC Type : Locally Administered Address
-        # p2 = re.compile(r'^Client MAC Type\s+:\s+(?P<type>.+)$')
-        #
-        # # Client IPv4 Address : 10.22.4.19
-        # p3 = re.compile(r'^Client IPv4 Address\s+:\s+(?P<ip_addr>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})$')
-        #
-        # # Client IPv6 Addresses : fe80::8ba:ddff:feff:40c9
-        # p4 = re.compile(r'^Client IPv6 Addresses\s+:\s+(?P<ip_addr>[\w\:]+)$')
-        #
-        # # Client Username : aking
-        # p5 = re.compile(r'^Client Username\s+:\s+(?P<username>.+)$')
-        #
-        # # AP MAC Address : 70b3.18ff.f475
-        # p6 = re.compile(r'^AP MAC Address\s+:\s+(?P<mac_addr>\w{4}\.\w{4}\.\w{4})$')
-        #
-        # # AP Name: b1-11-cap9
-        # p7 = re.compile(r'^AP Name\s*:\s+(?P<name>.+)$')
-        #
-        # # AP slot : 0
-        # p7 = re.compile(r'^AP Name\s*:\s+(?P<name>.+)$')
-
-
-        p99 = re.compile(r'^(?P<key>.+?)\s*:\s+(?P<value>.+)$')
+        # Client MAC Address : 0aba.ddff.40c9
+        p0 = re.compile(r'^(?P<key>.+?)\s*:\s+(?P<value>.+)$')
 
         # Re-Authentication Timeout : 36000 sec (Remaining time: 32768 sec)
         p1 = re.compile(r'^Re-Authentication Timeout\s+:\s+(?P<configured>\d+)\s+sec\s+\(Remaining time:\s(?P<remaining>\d+)\s+sec\)$')
@@ -2472,630 +2423,675 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
         p6 = re.compile(r'^Move Count\s+:\s+(?P<count>\d+)$')
 
         # "mobility_role": str,
-        p7 = re.compile(r'^(?P<mobility_type>Mobility [\w ]*?)\s+:\s+(?P<key>.+)$')
+        p7 = re.compile(r'^(?P<mobility_type>Mobility [\w ]*?)\s+:\s+(?P<value>.+)$')
 
+        # WiFi Direct Capabilities:
+        p8 = re.compile(r'^WiFi Direct Capabilities:$')
 
+        # WiFi Direct Capable           : No
+        p9 = re.compile(r'^(?P<wifi_direct_type>WiFi Direct[\w ]*?)\s+:\s+(?P<value>.+)$')
 
+        # Session Manager:
+        p10 = re.compile(r'^Session Manager:$')
 
+        #   Point of Attachment : capwap_90000cc1
+        p11 = re.compile(r'^Point of Attachment\s*:\s+(?P<value>.+)$')
 
+        #   IIF ID             : 0x90000CC1
+        p12 = re.compile(r'^IIF ID\s*:\s+(?P<value>.+)$')
 
+        #   Authorized         : TRUE
+        p13 = re.compile(r'^Authorized\s*:\s+(?P<value>.+)$')
 
+        #   Session timeout    : 36000
+        p14 = re.compile(r'^Session timeout\s*:\s+(?P<value>.+)$')
 
-        # "mobility": {
-        #     "move_count": int,
-        #     "mobility_role": str,
-        #     "mobility_roam_type": str,
-        #     Optional("mobility_complete_timestamp"): str
-        # },
+        #   Common Session ID: B12F400A0002770E4E2B7E5A
+        p15 = re.compile(r'^Common Session ID\s*:\s+(?P<value>.+)$')
 
-        # Mobility:
-        # Move Count                  : 0
-        # Mobility Role               : Local
-        # Mobility Roam Type          : None
-        # Mobility Complete Timestamp : 10/22/2020 08:07:55 IST
+        #   Acct Session ID  : 0x00005912
+        p16 = re.compile(r'^Acct Session ID\s*:\s+(?P<value>.+)$')
 
+        # Last Tried Aaa Server Details:
+        p17 = re.compile(r'^Last Tried Aaa Server Details:$')
 
+        # Server IP : 10.19.10.150
+        p18 = re.compile(r'^Server IP\s*:\s+(?P<value>.+)$')
 
-        # Client MAC Address : 0aba.ddff.40c9
-        # Client MAC Type : Locally Administered Address
-        # Client IPv4 Address : 10.22.4.19
-        # Client IPv6 Addresses : fe80::8ba:ddff:feff:40c9
-        # Client Username : aking
-        # AP MAC Address : 70b3.18ff.f475
-        # AP Name: b1-11-cap9
-        # AP slot : 0
-        # Client State : Associated
-        # Policy Profile : lizzard_b1
-        # Flex Profile : N/A
-        # Wireless LAN Id: 20
-        # WLAN Profile Name: lizzard-l_Global
-        # Wireless LAN Network Name (SSID): lizzard-legacy
-        # BSSID : 70b3.18ff.f478
-        # Connected For : 3233 seconds
-        # Protocol : 802.11n - 2.4 GHz
-        # Channel : 6
-        # Client IIF-ID : 0xa0000012
-        # Association Id : 1
+        # Auth Method Status List
+        p19 = re.compile(r'^Auth Method Status List$')
+
+        # Method : Dot1x
+        p20 = re.compile(r'^Method\s*:\s+(?P<value>.+)$')
+
+        # SM State         : AUTHENTICATED
+        p21 = re.compile(r'^(?P<sm_type>SM [\w ]*?)\s+:\s+(?P<value>.+)$')
+
+        # Authen Status   : Success
+        p22 = re.compile(r'^Authen Status\s*:\s+(?P<value>.+)$')
+
+        # Local Policies:
+        p23 = re.compile(r'^Local Policies:$')
+
+        # Service Template : wlan_svc_lizzard_b1_local (priority 254)
+        p24 = re.compile(r'^Service Template\s*:\s+(?P<value>.+)$')
+
+        # Vlan Group       : b1-vg-data
+        p25 = re.compile(r'^Vlan Group\s*:\s+(?P<value>.+)$')
+
+        # VLAN             : WLC-DATA
+        p26 = re.compile(r'^VLAN\s*:\s+(?P<value>.+)$')
+
+        # Absolute-Timer   : 36000
+        p27 = re.compile(r'^Absolute-Timer\s*:\s+(?P<value>.+)$')
+
+        # Server Policies:
+        p28 = re.compile(r'^Server Policies:$')
+
+        # Output SGT       : 000a-09
+        p29 = re.compile(r'^Output SGT\s*:\s+(?P<value>.+)$')
+
+        # URL Redirect ACL : ACL_WEBAUTH_REDIRECT
+        p30 = re.compile(r'^(?P<url_type>URL[\w ]*?)\s+:\s+(?P<value>.+)$')
+
+        # Resultant Policies:
+        p31 = re.compile(r'^Resultant Policies:$')
+
+        # VLAN Name        : b1-data-1
+        p32 = re.compile(r'^VLAN Name\s*:\s+(?P<value>.+)$')
+
+        # Client Capabilities
+        p33 = re.compile(r'^Client Capabilities$')
+
+        # CF Pollable : Not implemented
+        p34 = re.compile(r'^(?P<cf_type>CF[\w ]*?)\s+:\s+(?P<value>.+)$')
+
+        # Short Preamble : Not implemented
+        p35 = re.compile(r'^Short Preamble\s*:\s+(?P<value>.+)$')
+
+        # PBCC : Not implemented
+        p36 = re.compile(r'^PBCC\s*:\s+(?P<value>.+)$')
+
+        # Channel Agility : Not implemented
+        p37 = re.compile(r'^Channel Agility\s*:\s+(?P<value>.+)$')
+
+        # Listen Interval : 0
+        p38 = re.compile(r'^Listen Interval\s*:\s+(?P<value>.+)$')
+
+        # Fast BSS Transition Details :
+        p39 = re.compile(r'^Fast BSS Transition Details :$')
+
+        # Reassociation Timeout : 0
+        p40 = re.compile(r'^Reassociation Timeout\s*:\s+(?P<value>.+)$')
+
+        # Client Statistics:
+        p41 = re.compile(r'^Client Statistics:$')
+
+        # Number of Bytes Received : 3083748
+        p42 = re.compile(r'^(?P<number_type>Number of[\w ]*?)\s+:\s+(?P<value>.+)$')
+
+        # Radio Signal Strength Indicator : -84 dBm
+        p43 = re.compile(r'^Radio Signal Strength Indicator\s+:\s+(?P<value>-?\d+) dBm$')
+
+        # Signal to Noise Ratio : 10 dB
+        p44 = re.compile(r'^Signal to Noise Ratio\s+:\s+(?P<value>-?\d+) dB$')
+
+        # Radio Measurement Enabled Capabilities
+        p45 = re.compile(r'^Radio Measurement Enabled Capabilities$')
+
+        # Capabilities: Link Measurement, Neighbor Report, Repeated Measurements, Passive Beacon Measurement, Active Beacon Measurement, Table Beacon Measurement, RM MIB
+        p46 = re.compile(r'^Capabilities\s*:\s+(?P<value>[\w, ]+)$')
+
+        # Nearby AP Statistics:
+        p47 = re.compile(r'^Nearby AP Statistics:$')
+
+        # prateekk_cos_1 (slot 1)
+        p48 = re.compile(r'^(?P<ap_name>[\w ]+\(slot \d+\))$')
+
+        # antenna 0: 13 s ago	........ -25  dBm
+        p49 = re.compile(r'^(?P<antenna_num>antenna \d+)\s*:\s+(?P<seconds_ago>\d+) s ago\s+\.+\s+(?P<dbm>-?\d+)\s+dBm$')
+
+        # Device Type      : Android
+        p50 = re.compile(r'^Device Type\s*:\s+(?P<value>.+)$')
+
+        # Device Name      : android-dhcp-10
+        p51 = re.compile(r'^Device Name\s*:\s+(?P<value>.+)$')
+
+        # Protocol Map     : 0x000029  (OUI, DHCP, HTTP)
+        p52 = re.compile(r'^Protocol Map\s*:\s+(?P<value>.+)$')
+
+        # Device OS        : Linux; U; Android 10; RMX1825 Build/QP1A.190711.020
+        p53 = re.compile(r'^Device OS\s*:\s+(?P<value>.+)$')
+
+        # Protocol         : DHCP
+        p54 = re.compile(r'^Protocol\s*:\s+(?P<value>.+)$')
+
+        # Type             : 12   12
+        p55 = re.compile(r'^Type\s*:\s+(?P<value>.+)$')
+
+        # Data             : 0c
+        p56 = re.compile(r'^Data\s*:\s+(?P<value>.+)$')
+
+        # 00000040  31 2e 30 32 30 29                                 |1.020)          |
+        p57 = re.compile(r'^(?P<data>\d{8}\s+[\dabcdef ]+\|.+\|)$')
+
+        # Supported Rates : 24.0,36.0,48.0,54.0
+        p58 = re.compile(r'^Supported Rates\s+:\s+(?P<rates>[\d,\.]+)$')
+
+        # VLAN Override after Webauth : No
+        p59 = re.compile(r'^VLAN Override after Webauth\s*:\s+(?P<value>.+)$')
+
+        # Join Time Of Client : 10/22/2020 08:46:54 IST
+        p60 = re.compile(r'^Join Time Of Client\s*:\s+(?P<time>[\d\/: ]+\w+)$')
+
         # Authentication Algorithm : Open System
-        # Idle state timeout : N/A
-        # Re-Authentication Timeout : 36000 sec (Remaining time: 32768 sec)
-        # Session Warning Time : Timer not running
-        # Input Policy Name  : client-default
-        # Input Policy State : Installed
-        # Input Policy Source : QOS Internal Policy
-        # Output Policy Name  : client-default
-        # Output Policy State : Installed
-        # Output Policy Source : QOS Internal Policy
-        # WMM Support : Enabled
-        # U-APSD Support : Enabled
-        #   U-APSD value : 0
-        #   APSD ACs    : BK, BE, VI, VO
-        # ...OUTPUT OMITTED...
+        p61 = re.compile(r'^Authentication Algorithm\s*:\s+(?P<value>[\w ]+)$')
 
+        # Connected For : 3233 seconds
+        p62 = re.compile(r'^Connected For\s*:\s+(?P<seconds>\d+)\s+seconds$')
 
-        # nearby_ap = ''
-        # section_tracker = []
-        # current_protocol = ''
-        # client_mac_dict = {}
-        # device_section = False
-        # data_counter = 0
-        # data_list = []
-        #
-        # # U-APSD Support : Enabled
-        # p_uapsd = re.compile(r"^U-APSD\s+Support\s+:\s+(?P<status>\S+)$")
-        #
-        # # Client MAC Type : Universally Administered Address
-        # p_client_mac_type = re.compile(r"^Client\s+MAC\s+Type\s+:\s+(?P<value>.*)$")
-        #
-        # # Connected For : 3233 seconds
-        # p_connected = re.compile(r"^Connected\s+For\s+:\s+(?P<value>\d+)\s+seconds$")
-        #
-        # # Protocol : 802.11n - 2.4 GHz
-        # p_protocol = re.compile(r"^Protocol\s+:\s+(?P<value>.*)")
-        #
-        # # Re-Authentication Timeout : 36000 sec (Remaining time: 32768 sec)
-        # p_re_timer = re.compile(r"^Re-Authentication\s+Timeout\s+:\s+(?P<value>\d+)\s+sec\s+\(Remaining\s+time:\s+(?P<remain>\d+)\s+sec\)$")
-        #
-        # # Re-Authentication Timeout : 36000 sec (Timer not running)
-        # p_re_timer_not_running = re.compile(r"^^Re-Authentication\s+Timeout\s+:\s+(?P<value>\d+)\s+sec\s+\(Timer\s+not\s+running\)$")
-        #
-        # # Authentication Algorithm : Open System
-        # p_authen_algorithm = re.compile(r"^Authentication\s+Algorithm\s+:\s+(?P<value>.*)$")
-        #
-        # # Input Policy Source : QOS Internal Policy
-        # p_input_policy_source = re.compile(r"^Input\s+Policy\s+Source\s+:\s+(?P<value>.*)$")
-        #
-        # # Output Policy Source : QOS Internal Policy
-        # p_output_policy_source = re.compile(r"^Output\s+Policy\s+Source\s+:\s+(?P<value>.*)$")
-        #
-        # # APSD ACs    : BK, BE, VI, VO
-        # p_uapsd_ac = re.compile(r"^APSD\s+ACs\s+:\s+(?P<ac>.*)$")
-        #
-        # # Mobility
-        # p_mobility = re.compile(r"^Mobility:$")
-        #
-        # # Mobility Complete Timestamp : 10/22/2020 08:07:55 IST
-        # p_mobility_timestamp = re.compile(r"^Mobility\s+Complete\s+Timestamp\s+:\s+(?P<date>.*)$")
-        #
-        # # Mobility Roam Type          : Unknown
-        # p_mobility_roam = re.compile(r"^Mobility\s+Roam\s+Type\s+:\s+(?P<value>\S+)$")
-        #
-        # # Supported Rates : 24.0,36.0,48.0,54.0
-        # p_supported_rates = re.compile(r"^Supported\s+Rates\s+:\s+(?P<value>.*)$")
-        #
-        # # Client Join Time:
-        # p_client_join = re.compile(r"^Client\s+Join\s+Time:$")
-        #
-        # # Join Time Of Client : 10/22/2020 08:46:54 IST
-        # p_client_join_time = re.compile(r"^Join\s+Time\s+Of\s+Client\s+:\s+(?P<date>.*)$")
-        #
-        # # Last Policy Manager State : IP Learn Complete
-        # p_last_policy = re.compile(r"^Last\s+Policy\s+Manager\s+State\s+:\s+(?P<value>.*)$")
-        #
-        # # Client Entry Create Time : 5572 seconds
-        # p_client_entry_create = re.compile(r"^Client\s+Entry\s+Create\s+Time\s+:\s+(?P<value>\d+)\s+seconds$")
-        #
-        # # Encryption Cipher : CCMP (AES)
-        # p_encryption_cipher = re.compile(r"Encryption\s+Cipher\s+:\s+(?P<value>.*)$")
-        #
-        # # EAP Type : Not Applicable
-        # p_eap_type = re.compile(r"^EAP\s+Type\s+:\s+(?P<value>.*)$")
-        #
-        # # WiFi Direct Capabilities:
-        # p_wifi_capabilities = re.compile(r"WiFi\s+Direct\s+Capabilities:$")
-        #
-        # # Central NAT : DISABLED
-        # p_central_nat = re.compile(r"^Central\s+NAT\s+:\s+(?P<value>\S+)$")
-        #
-        # # Session Manager:
-        # p_session = re.compile(r"^Session\s+Manager:")
-        #
-        # # Last Tried Aaa Server Details:
-        # p_last_tried_aaa = re.compile(r"^Last\s+Tried\s+Aaa\s+Server\s+Details:")
-        #
-        # # Auth Method Status List
-        # p_auth_method = re.compile(r"^Auth\s+Method\s+Status\s+List$")
-        #
-        # # Method : Dot1x
-        # p_auth_method_check = re.compile(r"^Method\s+:\s+(?P<value>\S+)$")
-        #
-        # # Local Policies:
-        # p_local_policies = re.compile(r"^Local\s+Policies:$")
-        #
-        # # Service Template : wlan_svc_lizzard_b1_local (priority 254)
-        # p_service_template = re.compile(r"^Service\s+Template\s+:\s+(?P<template>.*)$")
-        #
-        # # Server Policies:
-        # p_server_policies = re.compile(r"^Server\s+Policies:$")
-        #
-        # # Resultant Policies:
-        # p_resultant_policies = re.compile(r"^Resultant\s+Policies:$")
-        #
-        # # Client Capabilities
-        # p_client_capabilities = re.compile(r"^Client\s+Capabilities$")
-        #
-        # # DNS Snooped IPv4 Addresses : None
-        # p_dns_ipv4 = re.compile(r"^DNS\s+Snooped\s+IPv4\s+Addresses\s+:\s+(?P<value>\S+)$")
-        #
-        # # DNS Snooped IPv6 Addresses : None
-        # p_dns_ipv6 = re.compile(r"^DNS\s+Snooped\s+IPv6\s+Addresses\s+:\s+(?P<value>\S+)$")
-        #
-        # # CF Pollable : Not implemented
-        # p_cf_pollable = re.compile(r"^CF\s+Pollable\s+:\s+(?P<value>.*)$")
-        #
-        # # CF Poll Request : Not implemented
-        # p_cf_poll_request = re.compile(r"^CF\s+Poll\s+Request\s+:\s+(?P<value>.*)$")
-        #
-        # # Short Preamble : Not implemented
-        # p_short_preamble = re.compile(r"^Short\s+Preamble\s+:\s+(?P<value>.*)$")
-        #
-        # # PBCC : Not implemented
-        # p_pbcc = re.compile(r"^PBCC\s+:\s+(?P<value>.*)$")
-        #
-        # # Channel Agility : Not implemented
-        # p_channel_agility = re.compile(r"Channel\s+Agility\s+:\s+(?P<value>.*)$")
-        #
-        # # Fast BSS Transition Details :
-        # p_fast_bss = re.compile(r"^Fast\s+BSS\s+Transition\s+Details\s+:$")
-        #
-        # # Reassociation Timeout : 0
-        # p_reassoc_timeout = re.compile(r"^Reassociation\s+Timeout\s+:\s+(?P<value>\d+)")
-        #
-        # # Client Statistics:
-        # p_client_statistics = re.compile(r"^Client\s+Statistics:$")
-        #
-        # # Fabric status : Disabled
-        # p_fabric_status = re.compile(r"^Fabric\s+status\s+:\s+(?P<value>\S+)$")
-        #
-        # # Radio Measurement Enabled Capabilities
-        # p_radio_measurement = re.compile(r"^Radio\s+Measurement\s+Enabled\s+Capabilities$")
-        #
-        # # Client Scan Report Time : Timer not running
-        # p_client_scan_report = re.compile(r"^Client\s+Scan\s+Report\s+Time\s+:\s+(?P<value>.*)")
-        #
-        # # Radio Signal Strength Indicator : -64 dBm
-        # p_radio_strength = re.compile(r"^Radio\s+Signal\s+Strength\s+Indicator\s+:\s+(?P<value>\S+)\s+dBm$")
-        #
-        # # Signal to Noise Ratio : 30 dB
-        # p_s2n = re.compile(r"^Signal\s+to\s+Noise\s+Ratio\s+:\s+(?P<value>\d+)\s+dB$")
-        #
-        # # Capabilities: Link Measurement, Neighbor Report, Repeated Measurements, Passive Beacon Measurement, Active Beacon Measurement, Table Beacon Measurement, RM MIB
-        # p_capabilities = re.compile(r"Capabilities:\s+(?P<value>.*)")
-        #
-        # # Client Scan Report Time : Timer not running
-        # p_client_scan_report_no = re.compile(r"^Client\s+Scan\s+Report\s+Time\s+:\s+(?P<value>.*)$")
-        #
-        # # Protocol Map     : 0x000029  (OUI, DHCP, HTTP)
-        # p_protocol_map = re.compile(r"Protocol\s+Map\s+:\s+(?P<value>.*)$")
-        #
-        # # Device OS        : Linux; U; Android 10; RMX1825 Build/QP1A.190711.020
-        # p_device_os = re.compile(r"^Device\s+OS\s+:\s+(?P<value>.*)$")
-        #
-        # # Type             : 12   12
-        # p_device_type_data = re.compile(r"^Type\s+:\s+(?P<value>\d+\s+\d+)")
-        #
-        # # Data             : 0c
-        # p_device_data_size = re.compile(r"^Data\s+:\s+(?P<value>\S{2})$")
-        #
-        # # 00000000  00 0c 00 08 72 65 61 6c  6d 65 2d 33               |....realme-3    |
-        # p_device_data = re.compile(r"^(?P<value>0000.*)$")
-        #
-        # # Nearby AP Statistics:
-        # p_nearby_ap = re.compile(r"^Nearby\s+AP\s+Statistics:$")
-        #
-        # # b1-72-cap16 (slot 0)
-        # p_ap = re.compile(r"^(?P<name>.*)\s+\((?P<slot>slot\s+\d+)\)$")
-        #
-        # # antenna 0: 0 s ago	........ -62  dBm
-        # p_ant_0 = re.compile(r"^(?P<ant>\S+\s+\d+):\s+(?P<sec>\d+)\s+s\s+ago\s+........\s+(?P<value>\S+)\s+dBm$")
-        #
-        # # EoGRE : Pending Classification
-        # p_eogre = re.compile(r"^EoGRE\s+:\s+(?P<value>.*)$")
-        #
-        # # Device Type      : Android
-        # p_device_type = re.compile(r"^Device\s+Type\s+:\s+(?P<value>\S+)$")
-        #
-        # # Device Name      : android-dhcp-10
-        # p_device_name = re.compile(r"^Device\s+Name\s+:\s+(?P<value>.*)$")
-        #
-        # # Max Client Protocol Capability: 802.11ac Wave 2
-        # p_max_client_protocol_capability = re.compile(r"^Max\s+Client\s+Protocol\s+Capability:\s+(?P<value>.*)$")
-        #
-        # # [key] : [value]
-        #
-        #
-        # p_colon_split = re.compile(r"^(?P<key>[\S\s]+\S)\s*: +(?P<value>[\S ]+)$")
-        # # msut handle key value pairs with spaces in the value
-        #
-        # for line in output.splitlines():
-        #     line = line.strip()
-        #     if p_uapsd.match(line):
-        #         # U-APSD Support : Enabled
-        #         match = p_uapsd.match(line)
-        #         client_mac_dict.update({ "u_apsd_support": {} })
-        #         client_mac_dict["u_apsd_support"].update({ "status": match.group("status")})
-        #         section_tracker.append("u_apsd_support")
-        #         continue
-        #     elif p_connected.match(line):
-        #         # Connected For : 3233 seconds
-        #         match = p_connected.match(line)
-        #         client_mac_dict.update({ "connected_for_seconds": int(match.group("value")) })
-        #         continue
-        #     elif p_client_mac_type.match(line):
-        #         # Client MAC Type : Universally Administered Address
-        #         match = p_client_mac_type.match(line)
-        #         client_mac_dict.update({ "client_mac_type": match.group("value")})
-        #         continue
-        #     elif p_protocol.match(line) and device_section == False:
-        #         # Protocol : 802.11n - 2.4 GHz
-        #         match = p_protocol.match(line)
-        #         client_mac_dict.update({ "protocol": match.group("value")})
-        #         device_section = True
-        #         continue
-        #     elif p_authen_algorithm.match(line):
-        #         # Authentication Algorithm : Open System
-        #         match = p_authen_algorithm.match(line)
-        #         client_mac_dict.update({ "authentication_alogrithm": match.group("value")})
-        #         continue
-        #     elif p_re_timer.match(line):
-        #         # Re-Authentication Timeout : 36000 sec (Remaining time: 32768 sec)
-        #         match = p_re_timer.match(line)
-        #         client_mac_dict.update({ "re_authentication_timeout_secs": {} })
-        #         client_mac_dict["re_authentication_timeout_secs"].update({ "configured": int(match.group("value")) })
-        #         client_mac_dict["re_authentication_timeout_secs"].update({ "remaining_time": int(match.group("remain")) })
-        #         continue
-        #     elif p_re_timer_not_running.match(line):
-        #         # Re-Authentication Timeout : 36000 sec (Timer not running)
-        #         match = p_re_timer_not_running.match(line)
-        #         client_mac_dict.update({ "re_authentication_timeout_secs": {} })
-        #         client_mac_dict["re_authentication_timeout_secs"].update({ "configured": int(match.group("value")) })
-        #         client_mac_dict["re_authentication_timeout_secs"].update({ "remaining_time": "timer not running" })
-        #         continue
-        #     elif p_input_policy_source.match(line):
-        #         # Input Policy Source : QOS Internal Policy
-        #         match = p_input_policy_source.match(line)
-        #         client_mac_dict.update({ "input_policy_source": match.group("value") })
-        #         continue
-        #     elif p_output_policy_source.match(line):
-        #         # Output Policy Source : QOS Internal Policy
-        #         match = p_output_policy_source.match(line)
-        #         client_mac_dict.update({ "output_policy_source": match.group("value") })
-        #         continue
-        #     elif p_supported_rates.match(line):
-        #         # Supported Rates : 24.0,36.0,48.0,54.0
-        #         match = p_supported_rates.match(line)
-        #         rates_list = [float(x.strip()) for x in match.group("value").split(',')]
-        #         client_mac_dict.update({ "supported_rates": rates_list })
-        #     elif p_uapsd_ac.match(line):
-        #         # APSD ACs    : BK, BE, VI, VO
-        #         section_tracker.pop()
-        #         match = p_uapsd_ac.match(line)
-        #         ac_list = [x.strip() for x in match.group("ac").split(',')]
-        #         client_mac_dict["u_apsd_support"].update({ "apsd_acs": ac_list })
-        #         continue
-        #     elif p_mobility.match(line):
-        #         # Mobility:
-        #         client_mac_dict.update({ "mobility": {} })
-        #         section_tracker.append("mobility")
-        #         continue
-        #     elif p_client_join.match(line):
-        #         # Client Join Time:
-        #         client_mac_dict.update({ "client_join_time": {} })
-        #         section_tracker.append("client_join_time")
-        #         continue
-        #     elif p_client_join_time.match(line):
-        #         # Join Time Of Client : 10/22/2020 08:46:54 IST
-        #         section_tracker.pop()
-        #         match = p_client_join_time.match(line)
-        #         client_mac_dict["client_join_time"] = match.group("date")
-        #         continue
-        #     elif p_eap_type.match(line):
-        #         # EAP Type : Not Applicable
-        #         match = p_eap_type.match(line)
-        #         client_mac_dict.update({ "eap_type" : match.group("value") })
-        #         continue
-        #     elif p_mobility_timestamp.match(line):
-        #         # Mobility Complete Timestamp : 10/22/2020 08:07:55 IST
-        #         match = p_mobility_timestamp.match(line)
-        #         client_mac_dict["mobility"].update({ "mobility_complete_timestamp": match.group("date") })
-        #         continue
-        #     elif p_mobility_roam.match(line):
-        #         # Mobility Roam Type          : Unknown
-        #         section_tracker.pop()
-        #         match = p_mobility_roam.match(line)
-        #         client_mac_dict["mobility"].update({ "mobility_roam_type": match.group("value") })
-        #         continue
-        #     elif p_last_policy.match(line):
-        #         # Last Policy Manager State : IP Learn Complete
-        #         match = p_last_policy.match(line)
-        #         client_mac_dict.update({ "last_policy_manager_state": match.group("value") })
-        #         continue
-        #     elif p_client_entry_create.match(line):
-        #         # Client Entry Create Time : 5572 seconds
-        #         match = p_client_entry_create.match(line)
-        #         client_mac_dict.update({ "client_entry_create_time_secs": int(match.group("value")) })
-        #         continue
-        #     elif p_encryption_cipher.match(line):
-        #         # Encryption Cipher : CCMP (AES)
-        #         match = p_encryption_cipher.match(line)
-        #         client_mac_dict.update({ "encryption_cipher": match.group("value") })
-        #         continue
-        #     elif p_wifi_capabilities.match(line):
-        #         # WiFi Direct Capabilities:
-        #         client_mac_dict.update({ "wifi_direct_capabilities": {} })
-        #         section_tracker.append("wifi_direct_capabilities")
-        #         continue
-        #     elif p_central_nat.match(line):
-        #         # Central NAT : DISABLED
-        #         match = p_central_nat.match(line)
-        #         client_mac_dict.update({ "central_nat": match.group("value") })
-        #         continue
-        #     elif p_session.match(line):
-        #         # Session Manager:
-        #         section_tracker.pop()
-        #         client_mac_dict.update({ "session_manager": {} })
-        #         section_tracker.append("session_manager")
-        #         continue
-        #     elif p_last_tried_aaa.match(line):
-        #         # Last Tried Aaa Server Details:
-        #         client_mac_dict["session_manager"].update({"last_tried_aaa_server_details": {} })
-        #         section_tracker.append("last_tried_aaa_server_details")
-        #         continue
-        #     elif p_dns_ipv4.match(line):
-        #         # DNS Snooped IPv4 Addresses : None
-        #         match = p_dns_ipv4.match(line)
-        #         client_mac_dict.update({ "dns_snooped_ipv4_addresses": match.group("value") })
-        #         continue
-        #     elif p_dns_ipv6.match(line):
-        #         # DNS Snooped IPv6 Addresses : None
-        #         match = p_dns_ipv6.match(line)
-        #         client_mac_dict.update({ "dns_snooped_ipv6_addresses": match.group("value") })
-        #         continue
-        #     elif p_auth_method.match(line):
-        #         # Auth Method Status List
-        #         section_tracker.pop()
-        #         client_mac_dict["session_manager"].update({ "auth_method_status_list": {"method": {} }})
-        #         section_tracker.append("auth_method_status_list")
-        #         section_tracker.append("method")
-        #         continue
-        #     elif p_auth_method_check.match(line):
-        #         # Method : Dot1x
-        #         match = p_auth_method_check.match(line)
-        #         auth_method = match.group("value")
-        #         client_mac_dict["session_manager"]["auth_method_status_list"]["method"].update({ auth_method: {} })
-        #         section_tracker.append(auth_method)
-        #         continue
-        #     elif p_local_policies.match(line):
-        #         # Local Policies:
-        #         section_tracker.pop()
-        #         section_tracker.pop()
-        #         section_tracker.pop()
-        #         client_mac_dict["session_manager"].update({ "local_policies": {"service_template": {} } })
-        #         section_tracker.append("local_policies")
-        #         section_tracker.append("service_template")
-        #         continue
-        #     elif p_service_template.match(line):
-        #         # Service Template : wlan_svc_lizzard_b1_local (priority 254)
-        #         match = p_service_template.match(line)
-        #         template = match.group("template")
-        #         client_mac_dict["session_manager"]["local_policies"]["service_template"].update({ template: {} })
-        #         section_tracker.append(template)
-        #         continue
-        #     elif p_server_policies.match(line):
-        #         # Server Policies:
-        #         section_tracker.pop()
-        #         section_tracker.pop()
-        #         section_tracker.pop()
-        #         client_mac_dict["session_manager"].update({ "server_policies": {} })
-        #         section_tracker.append("server_policies")
-        #         continue
-        #     elif p_resultant_policies.match(line):
-        #         # Resultant Policies:
-        #         section_tracker.pop()
-        #         client_mac_dict["session_manager"].update({ "resultant_policies": {} })
-        #         section_tracker.append("resultant_policies")
-        #         continue
-        #     elif p_client_capabilities.match(line):
-        #         # Client Capabilities
-        #         section_tracker.pop()
-        #         section_tracker.pop()
-        #         client_mac_dict.update({ "client_capabilities": {} })
-        #         section_tracker.append("client_capabilities")
-        #         continue
-        #     elif p_cf_pollable.match(line):
-        #         # CF Pollable : Not implemented
-        #         match = p_cf_pollable.match(line)
-        #         client_mac_dict["client_capabilities"].update({ "cf_pollable": match.group("value") })
-        #         continue
-        #     elif p_cf_poll_request.match(line):
-        #         # CF Poll Request : Not implemented
-        #         match = p_cf_poll_request.match(line)
-        #         client_mac_dict["client_capabilities"].update({ "cf_poll_request": match.group("value") })
-        #         continue
-        #     elif p_short_preamble.match(line):
-        #         # Short Preamble : Not implemented
-        #         match = p_short_preamble.match(line)
-        #         client_mac_dict["client_capabilities"].update({ "short_preamble": match.group("value") })
-        #         continue
-        #     elif p_channel_agility.match(line):
-        #         # Channel Agility : Not implemented
-        #         match = p_channel_agility.match(line)
-        #         client_mac_dict["client_capabilities"].update({ "channel_agility": match.group("value") })
-        #         continue
-        #     elif p_pbcc.match(line):
-        #         # Listen Interval : 0
-        #         match = p_pbcc.match(line)
-        #         client_mac_dict["client_capabilities"].update({ "pbcc": match.group("value") })
-        #         continue
-        #     elif p_fast_bss.match(line):
-        #         # Fast BSS Transition Details :
-        #         section_tracker.pop()
-        #         client_mac_dict.update({ "fast_bss_transition_details": {} })
-        #         continue
-        #     elif p_reassoc_timeout.match(line):
-        #         # Reassociation Timeout : 0
-        #         match = p_reassoc_timeout.match(line)
-        #         client_mac_dict["fast_bss_transition_details"].update({ "reassociation_timeout": int(match.group("value"))})
-        #     elif p_client_statistics.match(line):
-        #         # Client Statistics:
-        #         client_mac_dict.update({"client_statistics": {} })
-        #         section_tracker.append("client_statistics")
-        #         continue
-        #     elif p_fabric_status.match(line):
-        #         # Fabric status : Disabled
-        #         match = p_fabric_status.match(line)
-        #         client_mac_dict.update({ "fabric_status": match.group("value") })
-        #         continue
-        #     elif p_radio_measurement.match(line):
-        #         # Radio Measurement Enabled Capabilities
-        #         section_tracker.pop()
-        #         client_mac_dict.update({ "radio_measurement_enabled_capabilities": {} })
-        #         continue
-        #     elif p_capabilities.match(line):
-        #         # Capabilities: Link Measurement, Neighbor Report, Repeated Measurements, Passive Beacon Measurement, Active Beacon Measurement, Table Beacon Measurement, RM MIB
-        #         match = p_capabilities.match(line)
-        #         cap_list = [x.strip() for x in match.group("value").split(",")]
-        #         client_mac_dict["radio_measurement_enabled_capabilities"].update({ "capabilities": cap_list })
-        #         continue
-        #     elif p_radio_strength.match(line):
-        #         # Radio Signal Strength Indicator : -84 dBm
-        #         match = p_radio_strength.match(line)
-        #         client_mac_dict["client_statistics"].update({ "radio_signal_strength_indicator_dbm": int(match.group("value")) })
-        #         continue
-        #     elif p_s2n.match(line):
-        #         # Signal to Noise Ratio : 30 dB
-        #         match = p_s2n.match(line)
-        #         client_mac_dict["client_statistics"].update({ "signal_to_noise_ration_db": int(match.group("value")) })
-        #         continue
-        #     elif p_nearby_ap.match(line):
-        #         # Nearby AP Statistics:
-        #         client_mac_dict.update({ "nearby_ap_statistics": { "ap_names": {} }})
-        #         continue
-        #     elif p_ap.match(line):
-        #         # b1-72-cap16 (slot 0)
-        #         match = p_ap.match(line)
-        #         nearby_ap = match.group("name") + " (" + match.group("slot") + ")"
-        #         client_mac_dict["nearby_ap_statistics"]["ap_names"].update({ nearby_ap: {} })
-        #         client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap].update({ "antenna": {} })
-        #         continue
-        #     elif p_ant_0.match(line):
-        #         # antenna 0: 0 s ago	........ -62  dBm
-        #         match = p_ant_0.match(line)
-        #         antenna = match.group("ant")
-        #         client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna"].update({ antenna: {} })
-        #         client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna"][antenna].update({ "seconds_ago": int(match.group("sec")) })
-        #         client_mac_dict["nearby_ap_statistics"]["ap_names"][nearby_ap]["antenna"][antenna].update({ "dbm": int(match.group("value")) })
-        #         continue
-        #     elif p_eogre.match(line):
-        #         # EoGRE : Pending Classification
-        #         match = p_eogre.match(line)
-        #         client_mac_dict.update({ "eogre": match.group("value") })
-        #         continue
-        #     elif p_device_type.match(line):
-        #         # Device Type      : Android
-        #         match = p_device_type.match(line)
-        #         client_mac_dict.setdefault("device_info", {} )
-        #         client_mac_dict["device_info"].update({ "device_type": match.group("value") })
-        #         continue
-        #     elif p_device_name.match(line):
-        #         # Device Name      : android-dhcp-10
-        #         match = p_device_name.match(line)
-        #         client_mac_dict["device_info"].update({ "device_name": match.group("value") })
-        #         continue
-        #     elif p_client_scan_report_no.match(line):
-        #         # Client Scan Report Time : Timer not running
-        #         match = p_client_scan_report_no.match(line)
-        #         client_mac_dict.update({ "client_scan_report_time": match.group("value") })
-        #         continue
-        #     elif p_protocol_map.match(line):
-        #         # Protocol Map     : 0x000029  (OUI, DHCP, HTTP)
-        #         match = p_protocol_map.match(line)
-        #         client_mac_dict["device_info"].update({ "protocol_map": match.group("value") })
-        #         continue
-        #     elif p_device_os.match(line):
-        #         # Device OS        : Linux; U; Android 10; RMX1825 Build/QP1A.190711.020`
-        #         match = p_device_os.match(line)
-        #         client_mac_dict["device_info"].update({ "device_os" : match.group("value") })
-        #         continue
-        #     elif p_protocol.match(line) and device_section == True:
-        #         # Protocol         : DHCP
-        #         data_counter = 0
-        #         match = p_protocol.match(line)
-        #         current_protocol = match.group("value")
-        #         client_mac_dict["device_info"].setdefault("protocols", {} )
-        #         client_mac_dict["device_info"]["protocols"].update({ current_protocol: {} })
-        #         device_section = True
-        #         continue
-        #     elif p_device_type_data.match(line):
-        #         # Type             : 12   12
-        #         data_counter += 1
-        #         data_list = []
-        #         match = p_device_type_data.match(line)
-        #         client_mac_dict["device_info"]["protocols"][current_protocol].update({ data_counter: {} })
-        #         client_mac_dict["device_info"]["protocols"][current_protocol][data_counter].update({ "type": match.group("value") })
-        #         continue
-        #     elif p_device_data_size.match(line):
-        #         # Data             : 0c
-        #         match = p_device_data_size.match(line)
-        #         client_mac_dict["device_info"]["protocols"][current_protocol][data_counter].update({ "data_size": match.group("value") })
-        #         continue
-        #     elif p_device_data.match(line):
-        #         # 00000000  00 0c 00 08 72 65 61 6c  6d 65 2d 33               |....realme-3    |
-        #         match = p_device_data.match(line)
-        #         data_list.append(match.group("value"))
-        #         client_mac_dict["device_info"]["protocols"][current_protocol][data_counter].update({ "data": data_list })
-        #         continue
-        #     elif p_max_client_protocol_capability.match(line):
-        #         # Max Client Protocol Capability: 802.11ac Wave 2
-        #         match = p_max_client_protocol_capability.match(line)
-        #         client_mac_dict.update({ "max_client_protocol_capability": match.group("value") })
-        #         continue
-        #     elif p_colon_split.match(line):
-        #         # [key] : [value]
-        #         match = p_colon_split.match(line)
-        #         group = match.groupdict()
-        #
-        #         if group["key"][-1] == ")":
-        #             group["key"] = group["key"][:-1]
-        #
-        #         group["key"] = group["key"].replace(" ", "_").replace("-", "_").replace("(", "_").replace(")", "_").replace("__", "_").lower()
-        #         group["value"] = self.change_data_type(group["value"])
-        #
-        #         if group["key"] == "data":
-        #             continue
-        #
-        #         if len(section_tracker) == 0:
-        #             client_mac_dict.update({ group["key"]: group["value"] })
-        #         elif len(section_tracker) == 1:
-        #             client_mac_dict[section_tracker[-1]].update({ group["key"]: group["value"] })
-        #         elif len(section_tracker) == 2:
-        #             client_mac_dict[section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
-        #         elif len(section_tracker) == 3:
-        #             client_mac_dict[section_tracker[-3]][section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
-        #         elif len(section_tracker) == 4:
-        #             client_mac_dict[section_tracker[-4]][section_tracker[-3]][section_tracker[-2]][section_tracker[-1]].update({ group["key"]: group["value"] })
-        #
-        # return client_mac_dict
+        # Client Entry Create Time : 5572 seconds
+        p63 = re.compile(r'^Client Entry Create Time\s*:\s+(?P<seconds>\d+)\s+seconds$')
+
+        # Client IIF-ID : 0xa0000012
+        p64 = re.compile(r'^Client IIF-ID\s*:\s+(?P<value>\w+)$')
+
+        ret_dict = {}
+        current_subdict = {}
+        data_index = None
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Re-Authentication Timeout : 36000 sec (Remaining time: 32768 sec)
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                re_auth_dict = ret_dict.setdefault('re_authentication_timeout_secs', {})
+                re_auth_dict['configured'] = int(group['configured'])
+                re_auth_dict['remaining_time'] = int(group['remaining'])
+                continue
+
+            # U-APSD Support : Enabled
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                apsd_dict = ret_dict.setdefault('u_apsd_support', {})
+                apsd_dict['status'] = group['status']
+                continue
+
+            # U-APSD value : 0
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                apsd_dict['u_apsd_value'] = int(group['value'])
+                continue
+
+            # APSD ACs    : BK, BE, VI, VO
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                apsd_dict['apsd_acs'] = group['acs'].split(', ')
+                continue
+
+            # Mobility:
+            m = p5.match(line)
+            if m:
+                mobility_dict = ret_dict.setdefault('mobility', {})
+                continue
+
+            # "move_count": int,
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                mobility_dict['move_count'] = int(group['count'])
+                continue
+
+            # "mobility_role": str,
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                mobility_type = group['mobility_type'].lower().replace(' ', '_')
+                value = group['value']
+                mobility_dict[mobility_type] = value
+                continue
+
+            # WiFi Direct Capabilities:
+            m = p8.match(line)
+            if m:
+                wifi_direct_dict = ret_dict.setdefault('wifi_direct_capabilities', {})
+                continue
+
+            # WiFi Direct Capable           : No
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                wifi_direct_type = group['wifi_direct_type'].lower().replace(' ', '_')
+                value = group['value']
+                wifi_direct_dict[wifi_direct_type] = value
+                continue
+
+            # Session Manager:
+            m = p10.match(line)
+            if m:
+                session_dict = ret_dict.setdefault('session_manager', {})
+                continue
+
+            #   Point of Attachment : capwap_90000cc1
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict['point_of_attachment'] = group['value']
+                continue
+
+            #   IIF ID             : 0x90000CC1
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict['iif_id'] = group['value']
+                continue
+
+            #   Authorized         : TRUE
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict['authorized'] = group['value']
+                continue
+
+            #   Session timeout    : 36000
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict['session_timeout'] = int(group['value'])
+                continue
+
+            #   Common Session ID: B12F400A0002770E4E2B7E5A
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict['common_session_id'] = group['value']
+                continue
+
+            #   Acct Session ID  : 0x00005912
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                session_dict['acct_session_id'] = group['value']
+                continue
+
+            # Last Tried Aaa Server Details:
+            m = p17.match(line)
+            if m:
+                last_tried_aaa_dict = session_dict.setdefault('last_tried_aaa_server_details', {})
+                continue
+
+            # Server IP : 10.19.10.150
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                last_tried_aaa_dict['server_ip'] = group['value']
+                continue
+
+            # Auth Method Status List
+            m = p19.match(line)
+            if m:
+                auth_dict = session_dict.setdefault('auth_method_status_list', {}).setdefault('method', {})
+                continue
+
+            # Method : Dot1x
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                method_dict = auth_dict.setdefault(group['value'], {})
+                continue
+
+            # SM State         : AUTHENTICATED
+            m = p21.match(line)
+            if m:
+                group = m.groupdict()
+                sm_type = group['sm_type'].lower().replace(' ', '_')
+                value = group['value']
+                method_dict[sm_type] = value
+                continue
+
+            # Authen Status   : Success
+            m = p22.match(line)
+            if m:
+                group = m.groupdict()
+                method_dict['authen_status'] = group['value']
+                continue
+
+            # Local Policies:
+            m = p23.match(line)
+            if m:
+                group = m.groupdict()
+                local_policy_dict = session_dict.setdefault('local_policies', {})
+                current_subdict = local_policy_dict
+                continue
+
+            # Service Template : wlan_svc_lizzard_b1_local (priority 254)
+            m = p24.match(line)
+            if m:
+                group = m.groupdict()
+                service_dict = local_policy_dict.setdefault('service_template', {}).setdefault(group['value'], {})
+                current_subdict = service_dict
+                continue
+
+            # Vlan Group       : b1-vg-data
+            m = p25.match(line)
+            if m:
+                group = m.groupdict()
+                current_subdict['vlan_group'] = group['value']
+                continue
+
+            # VLAN             : WLC-DATA
+            m = p26.match(line)
+            if m:
+                group = m.groupdict()
+                current_subdict['vlan'] = group['value']
+                continue
+
+            # Absolute-Timer   : 36000
+            m = p27.match(line)
+            if m:
+                group = m.groupdict()
+                current_subdict['absolute_timer'] = int(group['value'])
+                continue
+
+            # Server Policies:
+            m = p28.match(line)
+            if m:
+                server_policies_dict = session_dict.setdefault('server_policies', {})
+                current_subdict = server_policies_dict
+                continue
+
+            # Output SGT       : 000a-09
+            m = p29.match(line)
+            if m:
+                group = m.groupdict()
+                current_subdict['output_sgt'] = group['value']
+                continue
+
+            # URL Redirect ACL : ACL_WEBAUTH_REDIRECT
+            m = p30.match(line)
+            if m:
+                group = m.groupdict()
+                url_type = group['url_type'].lower().replace(' ', '_')
+                value = group['value']
+                current_subdict[url_type] = value
+                continue
+
+            # Resultant Policies:
+            m = p31.match(line)
+            if m:
+                resultant_policies_dict = session_dict.setdefault('resultant_policies', {})
+                current_subdict = resultant_policies_dict
+                continue
+
+            # VLAN Name        : b1-data-1
+            m = p32.match(line)
+            if m:
+                group = m.groupdict()
+                current_subdict['vlan_name'] = group['value']
+                continue
+
+            # Client Capabilities
+            m = p33.match(line)
+            if m:
+                client_cap_dict = ret_dict.setdefault('client_capabilities', {})
+                continue
+
+            # CF Pollable : Not implemented
+            m = p34.match(line)
+            if m:
+                group = m.groupdict()
+                cf_type = group['cf_type'].lower().replace(' ', '_')
+                value = group['value']
+                client_cap_dict[cf_type] = value
+                continue
+
+            # Short Preamble : Not implemented
+            m = p35.match(line)
+            if m:
+                group = m.groupdict()
+                client_cap_dict['short_preamble'] = group['value']
+                continue
+
+            # PBCC : Not implemented
+            m = p36.match(line)
+            if m:
+                group = m.groupdict()
+                client_cap_dict['pbcc'] = group['value']
+                continue
+
+            # Channel Agility : Not implemented
+            m = p37.match(line)
+            if m:
+                group = m.groupdict()
+                client_cap_dict['channel_agility'] = group['value']
+                continue
+
+            # Listen Interval : 0
+            m = p38.match(line)
+            if m:
+                group = m.groupdict()
+                client_cap_dict['listen_interval'] = int(group['value'])
+                continue
+
+            # Fast BSS Transition Details :
+            m = p39.match(line)
+            if m:
+                fast_bss_dict = ret_dict.setdefault('fast_bss_transition_details', {})
+                continue
+
+            # Reassociation Timeout : 0
+            m = p40.match(line)
+            if m:
+                group = m.groupdict()
+                fast_bss_dict['reassociation_timeout'] = int(group['value'])
+                continue
+
+            # Client Statistics:
+            m = p41.match(line)
+            if m:
+                client_stat_dict = ret_dict.setdefault('client_statistics', {})
+                continue
+
+            # Number of Bytes Received : 3083748
+            m = p42.match(line)
+            if m:
+                group = m.groupdict()
+                number_type = group['number_type'].lower().replace(' ', '_')
+                value = group['value']
+                client_stat_dict[number_type] = int(value)
+                continue
+
+            # Radio Signal Strength Indicator : -84 dBm
+            m = p43.match(line)
+            if m:
+                group = m.groupdict()
+                client_stat_dict['radio_signal_strength_indicator_dbm'] = int(group['value'])
+                continue
+
+            # Signal to Noise Ratio : 10 dB
+            m = p44.match(line)
+            if m:
+                group = m.groupdict()
+                client_stat_dict['signal_to_noise_ration_db'] = int(group['value'])
+                continue
+
+            # Radio Measurement Enabled Capabilities
+            m = p45.match(line)
+            if m:
+                radio_cap_dict = ret_dict.setdefault('radio_measurement_enabled_capabilities', {})
+                continue
+
+            # Capabilities: Link Measurement, Neighbor Report, Repeated Measurements, Passive Beacon Measurement, Active Beacon Measurement, Table Beacon Measurement, RM MIB
+            m = p46.match(line)
+            if m:
+                group = m.groupdict()
+                radio_cap_dict['capabilities'] = group['value'].split(', ')
+                continue
+
+            # Nearby AP Statistics:
+            m = p47.match(line)
+            if m:
+                ap_stats_dict = ret_dict.setdefault('nearby_ap_statistics', {})
+                continue
+
+            # prateekk_cos_1 (slot 1)
+            m = p48.match(line)
+            if m:
+                group = m.groupdict()
+                ap_name_dict = ap_stats_dict.setdefault('ap_names', {}).setdefault(group['ap_name'], {})
+                continue
+
+            # antenna 0: 13 s ago	........ -25  dBm
+            m = p49.match(line)
+            if m:
+                group = m.groupdict()
+                antenna_dict = ap_name_dict.setdefault('antenna', {}).setdefault(group['antenna_num'], {})
+                antenna_dict['seconds_ago'] = int(group['seconds_ago'])
+                antenna_dict['dbm'] = int(group['dbm'])
+                continue
+
+            # Device Type      : Android
+            m = p50.match(line)
+            if m:
+                group = m.groupdict()
+                device_info_dict = ret_dict.setdefault('device_info', {})
+                device_info_dict['device_type'] = group['value']
+                continue
+
+            # Device Name      : android-dhcp-10
+            m = p51.match(line)
+            if m:
+                group = m.groupdict()
+                device_info_dict['device_name'] = group['value']
+                continue
+
+            # Protocol Map     : 0x000029  (OUI, DHCP, HTTP)
+            m = p52.match(line)
+            if m:
+                group = m.groupdict()
+                device_info_dict['protocol_map'] = group['value']
+                continue
+
+            # Device OS        : Linux; U; Android 10; RMX1825 Build/QP1A.190711.020
+            m = p53.match(line)
+            if m:
+                group = m.groupdict()
+                device_info_dict['device_os'] = group['value']
+                continue
+
+            # Protocol         : DHCP
+            m = p54.match(line)
+            if m:
+                group = m.groupdict()
+                try:
+                    protocol_dict = device_info_dict.setdefault('protocols', {}).setdefault(group['value'], {})
+                except Exception:
+                    ret_dict['protocol'] = group['value']
+                    continue
+                current_subdict = protocol_dict
+                data_index = None
+                continue
+
+            # Type             : 12   12
+            m = p55.match(line)
+            if m:
+                group = m.groupdict()
+                if data_index:
+                    data_index += 1
+                else:
+                    data_index = 1
+
+                data_dict = protocol_dict.setdefault(data_index, {})
+                current_subdict = data_dict
+                current_subdict['type'] = group['value']
+                continue
+
+            # Data             : 0c
+            m = p56.match(line)
+            if m:
+                group = m.groupdict()
+                current_subdict['data_size'] = group['value']
+                continue
+
+            # 00000000  00 0c 00 08 72 65 61 6c  6d 65 2d 33               |....realme-3    |
+            # 00000010  20 28 4c 69 6e 75 78 3b  20 55 3b 20 41 6e 64 72  | (Linux; U; Andr|
+            # 00000040  31 2e 30 32 30 29                                 |1.020)          |
+            m = p57.match(line)
+            if m:
+                group = m.groupdict()
+                current_subdict.setdefault('data', []).append(group['data'])
+                continue
+
+            # Supported Rates : 24.0,36.0,48.0,54.0
+            m = p58.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['supported_rates'] = [float(x) for x in group['rates'].split(',')]
+                continue
+
+            # VLAN Override after Webauth : No
+            m = p59.match(line)
+            if m:
+                group = m.groupdict()
+                current_subdict = ret_dict
+                ret_dict['vlan_override_after_webauth'] = group['value']
+                continue
+
+            # Join Time Of Client : 10/22/2020 08:46:54 IST
+            m = p60.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['client_join_time'] = group['time']
+                continue
+
+            # Authentication Algorithm : Open System
+            m = p61.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['authentication_alogrithm'] = group['value']
+                continue
+
+            # Connected For : 3233 seconds
+            m = p62.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['connected_for_seconds'] = int(group['seconds'])
+                continue
+
+            # Client Entry Create Time : 5572 seconds
+            m = p63.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['client_entry_create_time_secs'] = int(group['seconds'])
+                continue
+
+            # Client IIF-ID : 0xa0000012
+            m = p64.match(line)
+            if m:
+                group = m.groupdict()
+                ret_dict['client_iif_id'] = group['value']
+                continue
+
+            # Client MAC Address : 0aba.ddff.40c9
+            m = p0.match(line)
+            if m:
+                group = m.groupdict()
+                key = group['key'].lower().replace(' ', '_').replace('(', '').replace(')', '').replace('-', '')
+                value = group['value']
+
+                try:
+                    value = int(value)
+                finally:
+                    ret_dict[key] = value
+                    continue
+
+        return ret_dict
+
     
 # ======================================
 # Schema for:
