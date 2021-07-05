@@ -14,8 +14,6 @@ from genie.metaparser.util.schemaengine import Schema, Optional
 # =======================================
 # Schema for 'show variables boot'
 # =======================================
-
-
 class ShowVariablesBootSchema(MetaParser):
     """Schema for show variables boot"""
 
@@ -44,10 +42,8 @@ class ShowVariablesBootSchema(MetaParser):
     }
 
 # =====================================
-# Parser for 'show ssh session details'
+# Parser for 'show variables boot'
 # =====================================
-
-
 class ShowVariablesBoot(ShowVariablesBootSchema):
     """Parser for show variables boot"""
 
@@ -63,14 +59,14 @@ class ShowVariablesBoot(ShowVariablesBootSchema):
         # Initializes the Python dictionary variable
         parsed_dict = {}
         
-        # Defines the regex
+        # root=/dev/panini_vol_grp/xr_lv68 platform=asr9k boardtype=RP cardtype=0x101014 iputype=0x02f52029 vmtype=xr-vm quiet virtvm bigphysarea="12M" chassis_type=0xef1015 intel_idle.max_cstate=0 processor.max_cstate=1 chassis_serial=FOC2412N8LP chassis_pid=ASR-9901 console=tty0 console=hvc0 prod=1 pci=hpmemsize=0M,hpiosize=0M
         p = re.compile(r'^root=(?P<root>[\w\/]+) +'
                        r'platform=(?P<platform>[\w]+) +'
                        r'boardtype=(?P<boardtype>[\w]+) +'
                        r'cardtype=(?P<cardtype>[\w]+) +'
                        r'iputype=(?P<iputype>[\w]+) +'
                        r'vmtype=(?P<vmtype>[\w -]+) +'
-                       r'bigphysarea=(?P<bigphysarea>\"?[\w]+\"?) +'
+                       r'bigphysarea="?(?P<bigphysarea>[\w]+)"? +'
                        r'chassis_type=(?P<chassis_type>[\w]+) +'
                        r'intel_idle\.max_cstate=(?P<intel_idle_max_cstate>[\d]+) +'
                        r'processor\.max_cstate=(?P<processor_max_cstate>[\d]+) +'
@@ -85,6 +81,7 @@ class ShowVariablesBoot(ShowVariablesBootSchema):
         for line in out.splitlines():
             line = line.strip()
             
+            # root=/dev/panini_vol_grp/xr_lv68 platform=asr9k boardtype=RP cardtype=0x101014 iputype=0x02f52029 vmtype=xr-vm quiet virtvm bigphysarea="12M" chassis_type=0xef1015 intel_idle.max_cstate=0 processor.max_cstate=1 chassis_serial=FOC2412N8LP chassis_pid=ASR-9901 console=tty0 console=hvc0 prod=1 pci=hpmemsize=0M,hpiosize=0M
             m = p.match(line)
             if m:
                 group = m.groupdict()
