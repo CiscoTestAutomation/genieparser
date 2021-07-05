@@ -1,0 +1,46 @@
+VRF: VRF501
+
+
+Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+    D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+    N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+    E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+    i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+    ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+    U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+    A - access/subscriber, a - Application route
+    M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+
+Gateway of last resort is not set
+
+L    192.168.111.1/32 is directly connected, 1d22h, Loopback501
+C    192.168.4.0/24 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.501
+L    192.168.4.1/32 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.501
+
+VRF: VRF502
+
+
+Codes: C - connected, S - static, R - RIP, B - BGP, (>) - Diversion path
+    D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+    N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+    E1 - OSPF external type 1, E2 - OSPF external type 2, E - EGP
+    i - ISIS, L1 - IS-IS level-1, L2 - IS-IS level-2
+    ia - IS-IS inter area, su - IS-IS summary null, * - candidate default
+    U - per-user static route, o - ODR, L - local, G  - DAGR, l - LISP
+    A - access/subscriber, a - Application route
+    M - mobile route, r - RPL, t - Traffic Engineering, (!) - FRR Backup path
+
+Gateway of last resort is not set
+
+B    10.144.0.0/24 [20/0] via 192.168.154.2, 19:38:48
+B    10.144.1.0/24 [20/0] via 192.168.154.2, 19:38:48
+B    10.144.2.0/24 [20/0] via 192.168.154.2, 19:38:48
+L    192.168.4.1/32 is directly connected, 1d22h, Loopback502
+C    192.168.154.0/24 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.502
+L    192.168.154.1/32 is directly connected, 20:03:59, GigabitEthernet0/0/0/0.502
+
+
+VRF: VRF505
+
+
+% No matching routes found

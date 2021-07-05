@@ -1,0 +1,5 @@
+ 
+show interfaces gi1/0/1 link 
+    
+Port           Name               Down Time      Up Time
+Gi1/0/1        foo bar            00:00:00       4d5h
