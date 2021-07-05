@@ -1,0 +1,6 @@
+Flooding suppress policy fspol1 configuration: 
+  Suppressing  NDP
+mode:Proxy all resolution requests
+Policy fspol1 is applied on the following targets: 
+Target               Type  Policy               Feature        Target range
+vlan 1               VLAN  fspol1               Flooding Suppress vlan all

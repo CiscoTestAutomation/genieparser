@@ -2,7 +2,7 @@
 
 IOSXE parsers for the following show commands:
 
-    * show device-tracking-features
+    * show device-tracking features
 
 Copyright (c) 2021 by Cisco Systems, Inc.
 All rights reserved.
@@ -22,13 +22,13 @@ class ShowDeviceTrackingFeaturesSchema(MetaParser):
     """ Schema for show device-tracking features """
 
     schema = {
-        'features': 
-        {Any(): 
-            {'feature': str,
-            'priority': int,
-            'state': str
+        'features': {
+            str: {
+                'feature': str,
+                'priority': int,
+                'state': str
             }
-        },
+        }
     }
 
 # =============================================
@@ -40,13 +40,13 @@ class ShowDeviceTrackingFeatures(ShowDeviceTrackingFeaturesSchema):
     cli_command = 'show device-tracking features'
 
     def cli(self, output=None):
-
+        
         if output is None:
             output = self.device.execute(self.cli_command)
         else:
             output = output
 
-
+        #feature, priority and state
         p1 = re.compile(r'^(?P<feature>\S+.+\S+)\s+(?P<priority>\d+)\s+(?P<state>\w+)')
 
         parser_dict = {}
@@ -54,15 +54,12 @@ class ShowDeviceTrackingFeatures(ShowDeviceTrackingFeaturesSchema):
         for line in output.splitlines():
             line = line.strip()
             m = p1.match(line)
+            
             if m:
-                temp_dict = {}
-                if 'features' not in parser_dict:
-                    parser_dict.setdefault('features', {})
-                g = m.groupdict()
-                temp_dict['feature'] = g['feature']
-                temp_dict['priority'] = int(g['priority'])
-                temp_dict['state'] = g['state']
+                features = parser_dict.setdefault('features', {})
+                feature = features.setdefault(m.groupdict()['feature'], {})
+                feature.update({'feature':  m.groupdict()['feature']})
+                feature.update({'priority': int(m.groupdict()['priority'])})
+                feature.update({'state':  m.groupdict()['state']})
 
-                parser_dict['features'][g['feature']] = temp_dict 
-      
         return parser_dict
