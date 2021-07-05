@@ -1,7 +1,5 @@
 ''' show_radius.py
-
 IOSXE parsers for the following show commands:
-
     * 'show radius statistics'
     * 'show radius server-group all'
 '''
@@ -348,7 +346,7 @@ class ShowRadiusStatistics(ShowRadiusStatisticsSchema):
                         res = p14.match(next_line.strip())
                         if res:
                             radius_latency.setdefault(res.group(1), res.groupdict())
-                        elif p16.match(line):
+                        elif p16.match(next_line):
                             break
                     res = p15.match(next_line.strip())
                     if res:
@@ -374,20 +372,26 @@ class ShowRadiusServerGroupAllSchema(MetaParser):
     """
     Schema for show radius server-group all
     """
-
     schema = {
         Any(): {
-            "sharecount": str,
-            "sg_unconfigured": str,
+            "sharecount": int,
+            "sg_unconfigured": bool,
             "type": str,
-            "memlocks": str,
-            Any(): {
-                "authen": str,
-                "author": str,
-                "acct": str,
-                "server_auto_test_enabled": str,
-                "keywrap_enabled": str,
-            },
+            "memlocks": int,
+            "server":{
+                Any(): {
+                    "auth_port": int,
+                    "acct_port": int,
+                    "server_name": str,
+                    "transactions": {
+                                "authen": int,
+                                "author": int,
+                                "acct": int,
+                        },
+                    "auto_test_enabled": bool,
+                    "keywrap_enabled": bool
+                }
+            }
         },
     }
 
@@ -415,13 +419,13 @@ class ShowRadiusServerGroupAll(ShowRadiusServerGroupAllSchema):
         
         # 'Server(121.0.0.1:1812,1813,data-rad) Transactions:' |
         # 'Server(44AA::1:1812,1813,ipv6-rad) Transactions:'
-        p4 = re.compile(r'(^Server)\s*[(](((\d+\.){3}\d+)|(\w+::\d+))\:\d+\,\d+\,\w+\-(\w+)[)]\s+(Transactions)')
+        p4 = re.compile(r'(^Server)\s*[(](?P<address>((\d+\.){3}\d+)|(\w+::\d+))\s*:\s*(?P<auth_port>\d+)\s*,\s*(?P<acct_port>\d+)\s*,\s*(?P<server_name>.*)\s*[)]\s*Transactions\s*:')
         
         # Authen: 0   Author: 0       Acct: 0
         p5 = re.compile(r'(^Authen)\s*\:\s*(?P<authen>\d+)\s+(Author)\s*\:\s*(?P<author>\d+)\s+(Acct)\s*\:\s*(?P<acct>\d+)\s*')
         
         # Server_auto_test_enabled: FALSE
-        p6 = re.compile(r'(^Server_auto_test_enabled)\s*\:\s*(?P<server_auto_test_enabled>\D+)\s*')
+        p6 = re.compile(r'(^Server_auto_test_enabled)\s*\:\s*(?P<auto_test_enabled>\D+)\s*')
         
         # Keywrap enabled: FALSE
         p7 = re.compile(r'(^Keywrap\s+enabled)\s*\:\s*(?P<keywrap_enabled>\D+)\s*')
@@ -429,7 +433,7 @@ class ShowRadiusServerGroupAll(ShowRadiusServerGroupAllSchema):
         ret_dict = {}
         server_grp = {}
         server_trans = {}
-
+        server_dict = {}
         if output is None:
             out = self.device.execute(cmd)
         else:
@@ -444,28 +448,33 @@ class ShowRadiusServerGroupAll(ShowRadiusServerGroupAllSchema):
 
             res = p2.match(line)
             if res:
-                server_grp.update(res.groupdict())
+                server_grp['sharecount'] = int(res.group('sharecount'))
+                server_grp['sg_unconfigured'] = False if res.group('sg_unconfigured') == 'FALSE' else True
 
             res = p3.match(line)
             if res:
                 server_grp.update(res.groupdict())
+                server_grp['memlocks'] = int(server_grp['memlocks'])
 
             res = p4.match(line)
             if res:
-                key_string = (re.sub(r'\s+', '_', res.group())).lower()
-                server_trans = server_grp.setdefault(key_string, {})
-            
+                server_dict = server_grp.setdefault('server', {}).setdefault(res.group('address'), {})
+                server_dict['auth_port'] = int(res.group('auth_port'))
+                server_dict['acct_port'] = int(res.group('acct_port'))
+                server_dict['server_name'] = res.group('server_name')
+
             res = p5.match(line)
             if res:
-                server_trans.update(res.groupdict())
-                
+                server_trans = server_dict.setdefault('transactions', {})
+                server_trans.update({k:int(v) for k,v in res.groupdict().items()})
+
             res = p6.match(line)
             if res:
-                server_trans.update(res.groupdict())
-
+                server_dict['auto_test_enabled'] = False if res.group('auto_test_enabled') == 'FALSE' else True
 
             res = p7.match(line)
             if res:
-                server_trans.update(res.groupdict())
-                
+                server_dict['keywrap_enabled'] = False if res.group('keywrap_enabled') == 'FALSE' else True
+        
+
         return ret_dict
