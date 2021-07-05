@@ -258,7 +258,6 @@ class ShowRadiusStatistics(ShowRadiusStatisticsSchema):
         for line in istr:
             line = line.strip()
 
-            
             mo = p1.match(line)
             if mo:
                 key_string = (re.sub(r'\s+', '_', mo.group(1))).lower()
