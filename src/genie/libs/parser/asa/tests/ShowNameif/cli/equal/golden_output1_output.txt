@@ -1,0 +1,4 @@
+Interface                Name                     Security
+GigabitEthernet0/0       outside                    0
+GigabitEthernet0/1       inside                   100
+

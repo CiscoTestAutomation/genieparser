@@ -1,0 +1,11 @@
+Thu Jul  1 19:00:22.025 UTC
+
+# Indicates Neighbor awaiting BFD session up
+
+Neighbors for OSPFv3 100, VRF VRF-HELLO
+
+Neighbor ID     Pri   State           Dead Time   Interface ID    Interface
+1.100.1.2       1     FULL/DR         00:00:35    52              GigabitEthernet0/0/0/1.600
+    Neighbor is up for 20:05:13
+
+Total neighbor count: 1
