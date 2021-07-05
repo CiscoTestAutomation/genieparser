@@ -247,6 +247,7 @@
 =======
                                       New                                       
 --------------------------------------------------------------------------------
+<<<<<<< HEAD:changelog/2021/JUNE.rst
 
 * asa
 <<<<<<< HEAD
@@ -256,3 +257,8 @@
     * Added ShowVersion
       * show version
 >>>>>>> d7a88646b (updated asa show version)
+=======
+* ASA
+    * Added ShowVersion:
+        * show version
+>>>>>>> f80777fac (Update and rename JUNE.rst to changelog_ajschroeder_asa_show_version_20210705.rst):changelog/2021/changelog_ajschroeder_asa_show_version_20210705.rst
