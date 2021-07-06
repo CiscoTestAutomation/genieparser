@@ -477,11 +477,4 @@ class ShowRadiusServerGroupAll(ShowRadiusServerGroupAllSchema):
                 server_dict['keywrap_enabled'] = False if res.group('keywrap_enabled') == 'FALSE' else True
         
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         return ret_dict
-=======
-=======
->>>>>>> 82f4f9ee1db7f6d1d63866c335e5ecf9a7bb4459
-        return ret_dict
->>>>>>> 82f4f9ee1db7f6d1d63866c335e5ecf9a7bb4459
