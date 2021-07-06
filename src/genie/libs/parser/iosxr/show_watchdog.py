@@ -36,7 +36,7 @@ class ShowWatchdogMemoryState(ShowWatchdogMemoryStateSchema):
     """
     cli_command = ["show watchdog memory-state", "show watchdog memory-state Location {location}"]
 
-    def cli(self, output=None, location=None):
+    def cli(self, location=None, output=None):
         if not output:
             if location:
                 cmd = self.cli_command[1].format(location=location)
@@ -55,7 +55,7 @@ class ShowWatchdogMemoryState(ShowWatchdogMemoryStateSchema):
         p2 = re.compile(r'^(?P<type>.+\b)\s+:\s+(?P<amount>\d+(\.\d+)?)\s+(?P<unit>\w+\b)$')
 
         #     Memory State        :   Normal
-        p3 = re.compile(r'^(Memory State)\s+:\s+(?P<state>.+)$')
+        p3 = re.compile(r'^(Memory\s+State)\s+:\s+(?P<state>.+)$')
 
         ret_dict = {}
         current_node = ""
