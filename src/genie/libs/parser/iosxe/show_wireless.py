@@ -3086,9 +3086,10 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
 
                 try:
                     value = int(value)
-                finally:
-                    ret_dict[key] = value
+                except ValueError:
+                    pass
 
+                ret_dict[key] = value
                 continue
 
         return ret_dict
