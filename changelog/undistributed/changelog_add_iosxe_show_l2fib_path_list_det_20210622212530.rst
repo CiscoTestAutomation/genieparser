@@ -28,13 +28,13 @@
         * show l2route evpn mac ip host-ip <ip> topology <evi> next-hop <next_hop> mac-address <mac_addr> esi <esi> detail
         * show l2route evpn mac ip host-ip <ip> topology <evi> producer <producer> mac-address <mac_addr> detail
         * show l2route evpn mac ip host-ip <ip> topology <evi> producer <producer> mac-address <mac_addr> esi <esi> detail
-        * show l2route evpn mac ip host-ip <ip> topology <evi:etag> detail
-        * show l2route evpn mac ip host-ip <ip> topology <evi:etag> esi <esi> detail
-        * show l2route evpn mac ip host-ip <ip> topology <evi:etag> mac-address <mac_addr> detail
-        * show l2route evpn mac ip host-ip <ip> topology <evi:etag> mac-address <mac_addr> esi <esi> detail
-        * show l2route evpn mac ip host-ip <ip> topology <evi:etag> next-hop <next_hop> detail
-        * show l2route evpn mac ip host-ip <ip> topology <evi:etag> next-hop <next_hop> esi <esi> detail
-        * show l2route evpn mac ip host-ip <ip> topology <evi:etag> next-hop <next_hop> mac-address <mac_addr> detail
-        * show l2route evpn mac ip host-ip <ip> topology <evi:etag> next-hop <next_hop> mac-address <mac_addr> esi <esi> detail
-        * show l2route evpn mac ip host-ip <ip> topology <evi:etag> producer <producer> mac-address <mac_addr> detail
-        * show l2route evpn mac ip host-ip <ip> topology <evi:etag> producer <producer> mac-address <mac_addr> esi <esi> detail
+        * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> detail
+        * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> esi <esi> detail
+        * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> mac-address <mac_addr> detail
+        * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> mac-address <mac_addr> esi <esi> detail
+        * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> next-hop <next_hop> detail
+        * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> next-hop <next_hop> esi <esi> detail
+        * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> next-hop <next_hop> mac-address <mac_addr> detail
+        * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> next-hop <next_hop> mac-address <mac_addr> esi <esi> detail
+        * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> producer <producer> mac-address <mac_addr> detail
+        * show l2route evpn mac ip host-ip <ip> topology <evi>:<etag> producer <producer> mac-address <mac_addr> esi <esi> detail
