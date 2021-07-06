@@ -58,6 +58,7 @@ class ShowWatchdogMemoryState(ShowWatchdogMemoryStateSchema):
         p3 = re.compile(r'^(Memory\s+State)\s+:\s+(?P<state>.+)$')
 
         ret_dict = {}
+        current_node_dict = {}
         current_node = ""
 
         for line in out.splitlines():
@@ -68,7 +69,7 @@ class ShowWatchdogMemoryState(ShowWatchdogMemoryStateSchema):
             if m:
                 group = m.groupdict()
                 current_node = group['location']
-                ret_dict.setdefault('node', {}).setdefault(current_node, {})
+                current_node_dict = ret_dict.setdefault('node', {}).setdefault(current_node, {})
                 continue
 
             #     Physical Memory     : 4608.0   MB
@@ -82,7 +83,7 @@ class ShowWatchdogMemoryState(ShowWatchdogMemoryStateSchema):
                 if memory_unit == 'GB':
                     memory_amount *= 1000
 
-                ret_dict.get('node').get(current_node).update({memory_type: memory_amount})
+                current_node_dict.update({memory_type: memory_amount})
                 continue
 
             #     Memory State        :   Normal
@@ -90,7 +91,7 @@ class ShowWatchdogMemoryState(ShowWatchdogMemoryStateSchema):
             if m:
                 group = m.groupdict()
                 memory_state = group['state']
-                ret_dict.get('node').get(current_node).update({'state': memory_state})
+                current_node_dict.update({'state': memory_state})
                 continue
 
         return ret_dict
