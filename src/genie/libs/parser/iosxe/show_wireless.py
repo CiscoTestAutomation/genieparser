@@ -3088,7 +3088,8 @@ class ShowWirelessClientMacDetail(ShowWirelessClientMacDetailSchema):
                     value = int(value)
                 finally:
                     ret_dict[key] = value
-                    continue
+
+                continue
 
         return ret_dict
 
