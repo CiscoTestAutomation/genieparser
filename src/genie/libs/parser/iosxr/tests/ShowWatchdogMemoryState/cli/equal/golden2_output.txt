@@ -1,0 +1,6 @@
+Wed Jun 23 20:03:33.644 UTC
+---- node0_RP0_CPU0 ----
+Memory information:
+    Physical Memory     : 4608.0   MB
+    Free Memory         : 1778.925 MB
+    Memory State        :   Normal
