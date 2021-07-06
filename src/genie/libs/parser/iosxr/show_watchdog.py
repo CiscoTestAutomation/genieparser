@@ -12,6 +12,7 @@ from genie.metaparser.util.schemaengine import (Schema, Any, Optional,
 
 # Parser Utils
 from genie.libs.parser.utils.common import Common
+from genie.libs.sdk.apis.utils import unit_convert
 
 
 class ShowWatchdogMemoryStateSchema(MetaParser):
@@ -81,7 +82,7 @@ class ShowWatchdogMemoryState(ShowWatchdogMemoryStateSchema):
                 memory_unit = group['unit']
 
                 if memory_unit == 'GB':
-                    memory_amount *= 1000
+                    memory_amount = unit_convert((str(memory_amount)+'G'), 'M')
 
                 current_node_dict.update({memory_type: memory_amount})
                 continue
