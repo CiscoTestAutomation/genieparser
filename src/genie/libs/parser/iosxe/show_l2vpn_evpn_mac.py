@@ -378,7 +378,7 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
         # MAC Duplication Detection:  Duplicate MAC address detected
         p11 = re.compile(r'^MAC Duplication Detection:\s+(?P<mac_dup_status>[\w\d\s,]+)$')
         p12 = re.compile(r'^MAC moves (?P<moves_count>\d+), limit (?P<moves_limit>\d+)$')
-        p13 = re.compile(r'^\s+Timer expires in (?P<expiry_time>[\d:]+)$')
+        p13 = re.compile(r'^Timer expires in (?P<expiry_time>[\d:]+)$')
 
         parser_dict = {}
 
@@ -478,6 +478,7 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
 
                 m = p12.match(mac_dup_status)
                 if m:
+                    group = m.groupdict()
                     mac_dup_vals.update({
                         'moves_count': int(group['moves_count']),
                         'moves_limit': int(group['moves_limit']),

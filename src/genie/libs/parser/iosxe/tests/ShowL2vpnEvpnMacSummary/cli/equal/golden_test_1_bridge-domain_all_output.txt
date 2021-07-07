@@ -1,0 +1,3 @@
+EVI   BD    Ether Tag  Remote MAC Local MAC  Dup MAC
+----- ----- ---------- ---------- ---------- ----------
+1     11    0          4          6          1
