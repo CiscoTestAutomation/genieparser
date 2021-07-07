@@ -1,5 +1,5 @@
 ''' show_platform.py
-
+-
 IOSXE parsers for the following show commands:
 
     * 'show bootvar'
@@ -21,6 +21,7 @@ IOSXE parsers for the following show commands:
     * 'show platform software yang-management process'
     * 'show platform software yang-management process monitor'
     * 'show platform software yang-management process state'
+    * 'show platform software fed active fnf et-analytics-flows'
 '''
 
 # Python
@@ -7942,3 +7943,538 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareM
             out = output
 
         return super().cli(process=process, alloc_type=alloc_type, output=out)
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceBriefSchema(MetaParser):
+    """ Schema for
+        * show platform software iomd 1/0 macsec interface {interface} brief
+    """
+    schema = {
+        Optional('tx-sc'): {
+            Any(): {
+                'sub-interface': str,
+                'sc-idx': str,
+                'pre-cur-an': str,
+                'sci': str,
+                'sa-vp-rule-idx': str,
+                'cipher': str
+            }
+        },
+        Optional('rx-sc'): {
+            Any(): {
+                'sub-interface': str,
+                'sc-idx': str,
+                'pre-cur-an': str,
+                'sci': str,
+                'sa-vp-rule-idx': str,
+                'cipher': str
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceBrief(ShowPlatformSoftwareIomdMacsecInterfaceBriefSchema):
+    """ Parser for
+        * show platform software iomd 1/0 macsec interface {interface} brief 
+    """
+
+    cli_command = 'show platform software iomd 1/0 macsec interface {interface} brief'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface))
+        else:
+            out = output
+
+        ret_dict = {}
+        #Tx SC
+        p1 = re.compile(r'(.*)Tx SC')
+
+        #Rx SC
+        p2 = re.compile(r'(.*)Rx SC')
+
+        #3/11  |   0    |     3/0    | f87a41252702008b | 50331759/ 2/ 1  |     GCM_AES_128 |
+        p3 = re.compile(r'(?P<if>\d+\/\d+) +\|'
+                        ' +(?P<sc_idx>\d+) +\|'
+                        ' +(?P<pre_cur_an>\d+\/\d+) +\|'
+                        ' +(?P<sci>\S+) +\|'
+                        ' +(?P<idx>\d+\/ \d+\/ \d+) +\|'
+                        ' +(?P<cipher>\S+) +\|'
+                        )
+
+        sess_tx=0
+        sess_rx=0
+        for line in out.splitlines():
+            line = line.strip()
+            m1 = p1.match(line)
+            if m1:
+                sc = 'tx'
+                tx_sc = ret_dict.setdefault('tx-sc', {})
+            m2 = p2.match(line)
+            if m2:
+                sc = 'rx'
+                rx_sc = ret_dict.setdefault('rx-sc', {})
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                if sc == 'tx':
+                    sess_tx+=1
+                    sc_tx_dict = tx_sc.setdefault(sess_tx, {})
+                    sc_tx_dict['sub-interface'] = group['if']
+                    sc_tx_dict['sc-idx'] = group['sc_idx']
+                    sc_tx_dict['pre-cur-an'] = group['pre_cur_an']
+                    sc_tx_dict['sci'] = group['sci']
+                    sc_tx_dict['sa-vp-rule-idx'] = group['idx']
+                    sc_tx_dict['cipher'] = group['cipher']
+                elif sc == 'rx':
+                    sess_rx+=1
+                    sc_rx_dict = rx_sc.setdefault(sess_rx, {})
+                    sc_rx_dict['sub-interface'] = group['if']
+                    sc_rx_dict['sc-idx'] = group['sc_idx']
+                    sc_rx_dict['pre-cur-an'] = group['pre_cur_an']
+                    sc_rx_dict['sci'] = group['sci']
+                    sc_rx_dict['sa-vp-rule-idx'] = group['idx']
+                    sc_rx_dict['cipher'] = group['cipher']
+        return ret_dict
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceDetailSchema(MetaParser):
+    """ Schema for
+        * show platform software iomd 1/0 macsec interface {interface} detail
+    """
+    schema = {
+        Optional('subport-11-tx'): {
+                'bypass': str,
+                'cipher': str,
+                'conf-offset': str,
+                'cur-an': str,
+                'delay-protection': str,
+                'encrypt': str,
+                'end-station': str,
+                'hashkey-len': str,
+                'key-len': str,
+                'next-pn': str,
+                'prev-an': str,
+                'rule-index': str,
+                'sa-index': str,
+                'scb': str,
+                'sci': str,
+                'vlan': str,
+                'vport-index': str
+        },
+        Optional('subport-12-tx'): {
+                'bypass': str,
+                'cipher': str,
+                'conf-offset': str,
+                'cur-an': str,
+                'delay-protection': str,
+                'encrypt': str,
+                'end-station': str,
+                'hashkey-len': str,
+                'key-len': str,
+                'next-pn': str,
+                'prev-an': str,
+                'rule-index': str,
+                'sa-index': str,
+                'scb': str,
+                'sci': str,
+                'vlan': str,
+                'vport-index': str
+        },
+        Optional('subport-11-rx'): {
+                   'bypass': str,
+                   'cipher': str,
+                   'conf-offset': str,
+                   'cur-an': str,
+                   'decrypt-frames': str,
+                   'hashkey-len': str,
+                   'key-len': str,
+                   'next-pn': str,
+                   'prev-an': str,
+                   'replay-protect': str,
+                   'replay-window-size': str,
+                   'rule-index': str,
+                   'sa-index': str,
+                   'sci': str,
+                   'validate-frames': str,
+                   'vport-index': str
+       },
+        Optional('subport-12-rx'): {
+                   'bypass': str,
+                   'cipher': str,
+                   'conf-offset': str,
+                   'cur-an': str,
+                   'decrypt-frames': str,
+                   'hashkey-len': str,
+                   'key-len': str,
+                   'next-pn': str,
+                   'prev-an': str,
+                   'replay-protect': str,
+                   'replay-window-size': str,
+                   'rule-index': str,
+                   'sa-index': str,
+                   'sci': str,
+                   'validate-frames': str,
+                   'vport-index': str
+       }}
+
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceDetail(ShowPlatformSoftwareIomdMacsecInterfaceDetailSchema):
+    """ Parser for
+        * show platform software iomd 1/0 macsec interface {interface} detail
+    """
+
+    cli_command = 'show platform software iomd 1/0 macsec interface {interface} detail'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #Port:3, Subport:11, Tx SC index:0
+        p1 = re.compile(r'Port\:\d+\, Subport\:(.*)\, Tx SC index')
+
+        #Port:3, Subport:11, Rx SC index:0
+        p2 = re.compile(r'Port\:\d+\, Subport\:(.*)\, Rx SC index')
+
+        #Prev AN: 3, Cur AN: 0
+        p3 = re.compile(r'Prev AN\: (?P<prev_an>\d+)\, +'
+                        'Cur AN\: (?P<cur_an>\d+)')
+
+        #SA index: 50331759, vport index: 2, rule index: 1
+        p4 = re.compile(r'SA index\: (?P<sa_index>\d+)\, +'
+                        'vport index\: (?P<vport_index>\d+)\, +'
+                        'rule index\: (?P<rule_index>\d+)')
+
+        #key_len: 16
+        p5 = re.compile(r'^key_len\: (?P<key_len>\d+)$')
+
+        #hashkey_len: 16
+        p6 = re.compile(r'^hashkey_len\: (?P<hashkey_len>\d+)$')
+
+        #bypass: 0
+        p7 = re.compile(r'^bypass\: (?P<bypass>\d+)$')
+
+        #nextPn: 1
+        p8 = re.compile(r'^nextPn\: (?P<nextPn>\d+)$')
+
+        #conf_offset: 0
+        p9 = re.compile(r'^conf_offset\: (?P<conf_offset>\d+)$')
+
+        #encrypt: 1
+        p10 = re.compile(r'^encrypt\: (?P<encrypt>\d+)$')
+
+        #vlan: 1
+        p11 = re.compile(r'^vlan\: (?P<vlan>\d+)$')
+
+        #end_station: 0
+        p12 = re.compile(r'^end_station\: (?P<end_station>\d+)$')
+
+        #scb: 0
+        p13 = re.compile(r'^scb\: (?P<scb>\d+)$')
+
+        #cipher: GCM_AES_128
+        p14 = re.compile(r'^cipher\: (?P<cipher>\S+)$')
+
+        #Delay protection: 0
+        p15 = re.compile(r'^Delay protection\: (?P<delay_protection>\d+)$')
+
+        #replay_protect: 1
+        p16 = re.compile(r'^replay_protect\: (?P<replay_protect>\d+)$')
+
+        #replay_window_size: 0
+        p17 = re.compile(r'^replay_window_size\: (?P<replay_window_size>\d+)$')
+
+        #decrypt_frames: 1
+        p18 = re.compile(r'^decrypt_frames\: (?P<decrypt_frames>\d+)$')
+
+        #validate_frames: 1
+        p19 = re.compile(r'^validate_frames\: (?P<validate_frames>\d+)$')
+
+        #sci:ecce1346f902008c
+        p20 = re.compile(r'^sci\:(?P<sci>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m1 = p1.match(line)
+            if m1:
+                sc = 'tx'
+                subport_tx = m1.group(1)
+                subport_tx_dict = ret_dict.setdefault('subport-{}-tx'.format(subport_tx), {})
+            m2 = p2.match(line)
+            if m2:
+                sc = 'rx'
+                subport_rx = m2.group(1)
+                subport_rx_dict = ret_dict.setdefault('subport-{}-rx'.format(subport_rx), {})
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['prev-an'] = group['prev_an']
+                    subport_tx_dict['cur-an'] = group['cur_an']
+                elif sc == 'rx':
+                    subport_rx_dict['prev-an'] = group['prev_an']
+                    subport_rx_dict['cur-an'] = group['cur_an']
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['sa-index'] = group['sa_index']
+                    subport_tx_dict['vport-index'] = group['vport_index']
+                    subport_tx_dict['rule-index'] = group['rule_index']
+                elif sc == 'rx':
+                    subport_rx_dict['sa-index'] = group['sa_index']
+                    subport_rx_dict['vport-index'] = group['vport_index']
+                    subport_rx_dict['rule-index'] = group['rule_index']
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['key-len'] = group['key_len']
+                elif sc == 'rx':
+                    subport_rx_dict['key-len'] = group['key_len']
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['hashkey-len'] = group['hashkey_len']
+                elif sc == 'rx':
+                    subport_rx_dict['hashkey-len'] = group['hashkey_len']
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['bypass'] = group['bypass']
+                elif sc == 'rx':
+                    subport_rx_dict['bypass'] = group['bypass']
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['next-pn'] = group['nextPn']
+                elif sc == 'rx':
+                    subport_rx_dict['next-pn'] = group['nextPn']
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                if sc == 'tx':
+                   subport_tx_dict['conf-offset'] = group['conf_offset']
+                elif sc == 'rx':
+                   subport_rx_dict['conf-offset'] = group['conf_offset']
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['encrypt'] = group['encrypt']
+                elif sc == 'rx':
+                    subport_rx_dict['encrypt'] = group['encrypt']
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['vlan'] = group['vlan']
+                elif sc == 'rx':
+                    subport_rx_dict['vlan'] = group['vlan']
+            m12 = p12.match(line)
+            if m12:
+                group = m12.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['end-station'] = group['end_station']
+                elif sc == 'rx':
+                    subport_rx_dict['end-station'] = group['end_station']
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['scb'] = group['scb']
+                elif sc == 'rx':
+                    subport_rx_dict['scb'] = group['scb']
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['cipher'] = group['cipher']
+                elif sc == 'rx':
+                    subport_rx_dict['cipher'] = group['cipher']
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['delay-protection'] = group['delay_protection']
+                elif sc == 'rx':
+                    subport_rx_dict['delay-protection'] = group['delay_protection']
+            m16 = p16.match(line)
+            if m16:
+                group = m16.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['replay-protect'] = group['replay_protect']
+                elif sc == 'rx':
+                    subport_rx_dict['replay-protect'] = group['replay_protect']
+            m17 = p17.match(line)
+            if m17:
+                group = m17.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['replay-window-size'] = group['replay_window_size']
+                elif sc == 'rx':
+                    subport_rx_dict['replay-window-size'] = group['replay_window_size']
+            m18 = p18.match(line)
+            if m18:
+                group = m18.groupdict()
+                if sc == 'tx':
+                     subport_tx_dict['decrypt-frames'] = group['decrypt_frames']
+                elif sc == 'rx':
+                     subport_rx_dict['decrypt-frames'] = group['decrypt_frames']
+            m19 = p19.match(line)
+            if m19:
+                group = m19.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['validate-frames'] = group['validate_frames']
+                elif sc == 'rx':
+                    subport_rx_dict['validate-frames'] = group['validate_frames']
+            m20 = p20.match(line)
+            if m20:
+                group = m20.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['sci'] = group['sci']
+                elif sc == 'rx':
+                    subport_rx_dict['sci'] = group['sci']
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareFedactiveFnfEtAnalyticsFlowsSchema(MetaParser):
+    """ Schema for
+        * show platform software fed active fnf et-analytics-flows
+    """
+    schema = {
+            'current-eta-records': int,
+            'excess-packets-received': int,
+            'excess-syn-received': int,
+            'total-eta-fnf': int,
+            'total-eta-idp': int,
+            'total-eta-records': int,
+            'total-eta-splt': int,
+            'total-packets-out-of-order': int,
+            'total-packets-received': int,
+            'total-packets-retransmitted': int
+            }
+
+
+class ShowPlatformSoftwareFedactiveFnfEtAnalyticsFlows(ShowPlatformSoftwareFedactiveFnfEtAnalyticsFlowsSchema):
+    """ Parser for
+        * show platform software fed active fnf et-analytics-flows
+    """
+
+    cli_command = 'show platform software fed active fnf et-analytics-flows'
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #Total packets received     : 80
+        p1 = re.compile(r'Total +packets +received +: +(?P<total_pkts>\d+)')
+
+        #Excess packets received    : 60
+        p2 = re.compile(r'Excess +packets +received +: +(?P<excess_pkts>\d+)')
+
+        #Excess syn received        : 0
+        p3 = re.compile(r'Excess +syn +received +: +(?P<excess_syn>\d+)')
+
+        #Total eta records added    : 4
+        p4 = re.compile(r'Total +eta +records +added +: +(?P<tot_eta>\d+)')
+
+        #Current eta records        : 0
+        p5 = re.compile(r'Current +eta +records +: +(?P<cur_eta>\d+)')
+
+        #Total eta splt exported    : 2
+        p6 = re.compile(r'Total +eta +splt +exported +: +(?P<eta_splt>\d+)')
+
+        #Total eta IDP exported     : 2
+        p7 = re.compile(r'Total +eta +IDP +exported +: +(?P<eta_idp>\d+)')
+
+        #Total eta-fnf records      : 2
+        p8 = re.compile(r'Total +eta\-fnf +records +: +(?P<eta_fnf>\d+)')
+
+        #Total retransmitted pkts   : 0
+        p9 = re.compile(r'Total +retransmitted +pkts +: +(?P<retr_pkts>\d+)')
+
+        #Total out of order pkts    : 0
+        p10 = re.compile(r'Total +out +of +order +pkts +: +(?P<order_pkts>\d+)')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Total packets received     : 80
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                ret_dict["total-packets-received"] = int(group["total_pkts"])
+
+            #Excess packets received    : 60
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                ret_dict["excess-packets-received"] = int(group["excess_pkts"])
+
+            #Excess syn received        : 0
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                ret_dict["excess-syn-received"] = int(group["excess_syn"])
+
+            #Total eta records added    : 4
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                ret_dict["total-eta-records"] = int(group["tot_eta"])
+
+            #Current eta records        : 0
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                ret_dict["current-eta-records"] = int(group["cur_eta"])
+
+            #Total eta splt exported    : 2
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                ret_dict["total-eta-splt"] = int(group["eta_splt"])
+
+            #Total eta IDP exported     : 2
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                ret_dict["total-eta-idp"] = int(group["eta_idp"])
+
+            #Total eta-fnf records      : 2
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                ret_dict["total-eta-fnf"] = int(group["eta_fnf"])
+
+            #Total retransmitted pkts   : 0
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                ret_dict["total-packets-retransmitted"] = int(group["retr_pkts"])
+
+            #Total out of order pkts    : 0
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                ret_dict["total-packets-out-of-order"] = int(group["order_pkts"])
+        return ret_dict

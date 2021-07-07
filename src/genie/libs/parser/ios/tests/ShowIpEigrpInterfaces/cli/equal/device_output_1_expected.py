@@ -5,6 +5,7 @@ expected_output = {
                 "2": {
                     "address_family": {
                         "ipv4": {
+                            "named_mode": False,
                             "interface": {
                                 "GigabitEthernet0/0": {
                                     "peers": 1,

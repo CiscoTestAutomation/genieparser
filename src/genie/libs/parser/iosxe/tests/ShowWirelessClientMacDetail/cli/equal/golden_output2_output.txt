@@ -1,0 +1,126 @@
+Client MAC Address : dca6.325d.150f
+Client MAC Type : Universally Administered Address
+Client IPv4 Address : 46.123.31.1
+Client IPv6 Addresses : fe80::dc86:d296:e307:c8ce
+Client Username : DC-A6-32-5D-15-0F
+AP MAC Address : 10b3.d63e.5ce0
+AP Name: AP084F.A9A2.86A4
+AP slot : 1
+Client State : Associated
+Policy Profile : IOSXE-D1-INETIU-WLANID-512
+Flex Profile : N/A
+Wireless LAN Id: 512
+WLAN Profile Name: IOSXE-D1-INetIU-CWA
+Wireless LAN Network Name (SSID): IOSXE-D1-INetiU-CWA
+BSSID : 10b3.d63e.5cee
+Connected For : 166 seconds
+Protocol : 802.11ac
+Channel : 128
+Client IIF-ID : 0xa0000001
+Association Id : 1
+Authentication Algorithm : Open System
+Idle state timeout : N/A
+Session Timeout : 1800 sec (Timer not running)
+Session Warning Time : Timer not running
+Input Policy Name  : None
+Input Policy State : None
+Input Policy Source : None
+Output Policy Name  : None
+Output Policy State : None
+Output Policy Source : None
+WMM Support : Enabled
+U-APSD Support : Enabled
+  U-APSD value : 0
+  APSD ACs    : BK, BE, VI, VO
+Fastlane Support : Disabled
+Client Active State : Active
+Power Save : OFF
+Current Rate : m9 ss1
+Supported Rates : 9.0,18.0,36.0,48.0,54.0
+Mobility:
+  Move Count                  : 0
+  Mobility Role               : Local
+  Mobility Roam Type          : None
+  Mobility Complete Timestamp : 06/15/2021 15:06:12 British
+Client Join Time:
+  Join Time Of Client : 06/15/2021 15:06:12 British
+Client State Servers : None
+Client ACLs : None
+Policy Manager State: Webauth Pending
+Last Policy Manager State : IP Learn Complete
+Client Entry Create Time : 166 seconds
+Policy Type : N/A
+Encryption Cipher : None
+User Defined (Private) Network : Disabled
+User Defined (Private) Network Drop Unicast : Disabled
+Encrypted Traffic Analytics : No
+Protected Management Frame - 802.11w : No
+EAP Type : Not Applicable
+VLAN Override after Webauth : No
+VLAN : WLC-DATA
+Multicast VLAN : 0
+WiFi Direct Capabilities:
+  WiFi Direct Capable           : No
+Central NAT : DISABLED
+Session Manager:
+  Point of Attachment : capwap_90000004
+  IIF ID             : 0x90000004
+  Authorized         : TRUE
+  Session timeout    : 1800
+  Common Session ID: 445A583B000011D9103562E6
+  Acct Session ID  : 0x0000005e
+  Last Tried Aaa Server Details:
+        Server IP : 120.11.78.100
+  Auth Method Status List
+        Method : MAB
+                SM State        : TERMINATE
+                Authen Status   : Success
+  Local Policies:
+        Service Template : wlan_svc_IOSXE-D1-INETIU-WLANID-512_local (priority 254)
+                VLAN             : WLC-DATA
+                Absolute-Timer   : 1800
+  Server Policies:
+                URL Redirect ACL : ACL_WEBAUTH_REDIRECT
+                URL Redirect     : https://<placeholder>-WLAN-ISE.lab.<placeholder>:8443/portal/gateway?sessionId=445A583B000011D9103562E6&portal=f0ae43f0-7159-11e7-a355-005056aba474&action=cwa&token=5041ffbf4f184469c4db42e2a92ea637
+  Resultant Policies:
+                URL Redirect ACL : ACL_WEBAUTH_REDIRECT
+                URL Redirect     : https://<placeholder>-WLAN-ISE.lab.<placeholder>:8443/portal/gateway?sessionId=445A583B000011D9103562E6&portal=f0ae43f0-7159-11e7-a355-005056aba474&action=cwa&token=5041ffbf4f184469c4db42e2a92ea637
+                VLAN Name        : WLC-DATA
+                VLAN             : 145
+                Absolute-Timer   : 1800
+DNS Snooped IPv4 Addresses : None
+DNS Snooped IPv6 Addresses : None
+Client Capabilities
+  CF Pollable : Not implemented
+  CF Poll Request : Not implemented
+  Short Preamble : Not implemented
+  PBCC : Not implemented
+  Channel Agility : Not implemented
+  Listen Interval : 0
+Fast BSS Transition Details :
+  Reassociation Timeout : 20
+11v BSS Transition : Implemented
+11v DMS Capable : No
+QoS Map Capable : No
+FlexConnect Data Switching : N/A
+FlexConnect Dhcp Status : N/A
+FlexConnect Authentication : N/A
+FlexConnect Central Association : N/A
+Client Statistics:
+  Number of Bytes Received : 208
+  Number of Bytes Sent : 0
+  Number of Packets Received : 4
+  Number of Packets Sent : 2
+  Number of Policy Errors : 0
+  Radio Signal Strength Indicator : -37 dBm
+  Signal to Noise Ratio : 54 dB
+Fabric status : Disabled
+Radio Measurement Enabled Capabilities
+  Capabilities: Neighbor Report, Passive Beacon Measurement, Active Beacon Measurement, Table Beacon Measurement, Statistics Measurement, AP Channel Report
+Client Scan Report Time : Timer not running
+Client Scan Reports
+Assisted Roaming Neighbor List
+Nearby AP Statistics:
+EoGRE : Pending Classification
+Max Client Protocol Capability: 802.11ac Wave 2
+Cellular Capability : N/A

@@ -1,4 +1,4 @@
-"""show_hsrp.py
+"""show_standby.py
 
 IOSXE parsers for show commands:
     * 'show standby all'
@@ -9,54 +9,46 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
-                                         Default, Use
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
-def regexp(expression):
-    def match(value):
-        if re.match(expression,value):
-            return value
-        else:
-            raise TypeError("Value '%s' doesnt match regex '%s'"
-                              %(value,expression))
-    return match
+# ======================================
+#   Schema for 'show standby internal'
+# ======================================
+class ShowStandbyInternalSchema(MetaParser):
+    """Schema for show standby internal"""
+
+    schema = {
+        'hsrp_common_process_state': str,
+        Optional('msgQ_size'): int,
+        Optional('msgQ_max_size'): int,
+        'hsrp_ipv4_process_state': str,
+        'hsrp_ipv6_process_state': str,
+        'hsrp_timer_wheel_state': str,
+        Optional('hsrp_ha_state'): str,
+        Optional('v3_to_v4_transform'): str,
+        Optional('virtual_ip_hash_table'): {
+            Any(): {
+                Any(): {
+                    'ip': str,
+                    'interface': str,
+                    'group': int,
+                }
+            }
+        },
+        Optional('mac_address_table'): {
+            Any(): {
+                'interface': str,
+                'mac_address': str,
+                'group': int,
+            }
+        }
+    }
 
 
 # ======================================
 #   Parser for 'show standby internal'
 # ======================================
-
-class ShowStandbyInternalSchema(MetaParser):
-    """Schema for show standby internal"""
-    schema = \
-        {
-            'hsrp_common_process_state': str,
-            Optional('msgQ_size'): int,
-            Optional('msgQ_max_size'): int,
-            'hsrp_ipv4_process_state': str,
-            'hsrp_ipv6_process_state': str,
-            'hsrp_timer_wheel_state': str,
-            Optional('hsrp_ha_state'): str,
-            Optional('v3_to_v4_transform'): str,
-            Optional('virtual_ip_hash_table'): {
-                Any(): {
-                    Any(): {
-                        'ip': str,
-                        'interface': str,
-                        'group': int,
-                    }
-                }
-            },
-            Optional('mac_address_table'): {
-                Any(): {
-                    'interface': str,
-                    'mac_address': str,
-                    'group': int,
-                }
-            }
-        }
-
 class ShowStandbyInternal(ShowStandbyInternalSchema):
     """Parser for show standby internal"""
 
@@ -71,12 +63,53 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
         # Init vars
         standby_internal_dict = {}
         
+        # HSRP common process running
+        p1 = re.compile(r'HSRP +common +process'
+                        r' +(?P<hsrp_common_process_state>[a-zA-Z\s]+)$')
+
+        # MsgQ size 0, max 2
+        p2 = re.compile(r'MsgQ +size +(?P<msgQ_size>\d+),'
+                        r' +max +(?P<msgQ_max_size>\d+)$')
+
+        # HSRP IPv4 process running
+        p3 = re.compile(r'HSRP +IPv4 +process'
+                        r' +(?P<hsrp_ipv4_process_state>[a-zA-Z\s]+)$')
+
+        # HSRP IPv6 process not running
+        p4 = re.compile(r'HSRP +IPv6 +process'
+                        r' +(?P<hsrp_ipv6_process_state>[a-zA-Z\s]+)$')
+
+        # HSRP Timer wheel running
+        p5 = re.compile(r'HSRP +Timer +wheel'
+                        r' +(?P<hsrp_timer_wheel_state>[a-zA-Z\s]+)$')
+
+        # HSRP HA capable, v3 to v4 transform disabled
+        p6 = re.compile(r'HSRP +HA +(?P<hsrp_ha_state>[a-zA-Z\s]+),'
+                        r' +v3 +to +v4 +transform'
+                        r' +(?P<v3_to_v4_transform>[a-zA-Z\s]+)$')
+
+        # HSRP virtual IP Hash Table (global)
+        # 103 192.168.1.254                    Gi1/0/1    Grp 0
+        # HSRP virtual IPv6 Hash Table (global)
+        # 78  2001:DB8:10:1:1::254             Gi1        Grp 20
+        p7 = re.compile(r'(?P<hsrp>\d+) +(?P<ip>[\w\.\:]+)'
+                        r' +(?P<interface>[\w\/]+) +Grp +(?P<group>\d+)$')
+
+        # HSRP MAC Address Table
+        # 240 Gi1/0/1 0000.0cff.909f
+        p8 = re.compile(r'(?P<hsrp_number>\d+)'
+                        r' +(?P<interface>[\w\/]+)'
+                        r' +(?P<mac_address>[\w\.]+)$')
+
+        # HSRP MAC Address Table
+        # Gi1/0/1 Grp 0
+        p8_1 = re.compile(r'(?P<interface>[\w\/]+) +Grp +(?P<group>\d+)$')
+
+
         for line in out.splitlines():
-            line = line.rstrip()
-            
+            line = line.strip()
+
             # HSRP common process running
-            p1 = re.compile(r'\s*HSRP +common +process'
-                             ' +(?P<hsrp_common_process_state>[a-zA-Z\s]+)$')
             m = p1.match(line)
             if m:
                 stby_internal = standby_internal_dict
@@ -84,8 +117,6 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
                     m.groupdict()['hsrp_common_process_state']
 
             # MsgQ size 0, max 2
-            p2 = re.compile(r'\s*MsgQ +size +(?P<msgQ_size>[0-9]+),'
-                             ' +max +(?P<msgQ_max_size>[0-9]+)$')
             m = p2.match(line)
             if m:
                 stby_internal['msgQ_size'] = int(m.groupdict()['msgQ_size'])
@@ -94,8 +125,6 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
                 continue
 
             # HSRP IPv4 process running
-            p3 = re.compile(r'\s*HSRP +IPv4 +process'
-                             ' +(?P<hsrp_ipv4_process_state>[a-zA-Z\s]+)$')
             m = p3.match(line)
             if m:
                 stby_internal['hsrp_ipv4_process_state'] = \
@@ -103,8 +132,6 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
                 continue
 
             # HSRP IPv6 process not running
-            p4 = re.compile(r'\s*HSRP +IPv6 +process'
-                             ' +(?P<hsrp_ipv6_process_state>[a-zA-Z\s]+)$')
             m = p4.match(line)
             if m:
                 stby_internal['hsrp_ipv6_process_state'] = \
@@ -112,8 +139,6 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
                 continue
 
             # HSRP Timer wheel running
-            p5 = re.compile(r'\s*HSRP +Timer +wheel'
-                             ' +(?P<hsrp_timer_wheel_state>[a-zA-Z\s]+)$')
             m = p5.match(line)
             if m:
                 stby_internal['hsrp_timer_wheel_state'] = \
@@ -121,9 +146,6 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
                 continue
 
             # HSRP HA capable, v3 to v4 transform disabled
-            p6 = re.compile(r'\s*HSRP +HA +(?P<hsrp_ha_state>[a-zA-Z\s]+),'
-                             ' +v3 +to +v4 +transform'
-                             ' +(?P<v3_to_v4_transform>[a-zA-Z\s]+)$')
             m = p6.match(line)
             if m:
                 stby_internal['hsrp_ha_state'] = m.groupdict()['hsrp_ha_state']
@@ -135,9 +157,6 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
             # 103 192.168.1.254                    Gi1/0/1    Grp 0
             # HSRP virtual IPv6 Hash Table (global)
             # 78  2001:DB8:10:1:1::254             Gi1        Grp 20
-            p7 = re.compile(r'\s*(?P<hsrp>[0-9]+) +(?P<ip>[0-9a-zA-Z\.\:]+)'
-                             ' +(?P<interface>[a-zA-Z0-9\/]+)'
-                             ' +Grp +(?P<group>[0-9]+)$')
             m = p7.match(line)
             if m:
                 hsrp = int(m.groupdict()['hsrp'])
@@ -164,9 +183,6 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
 
             # HSRP MAC Address Table
             # 240 Gi1/0/1 0000.0cff.909f
-            p8 = re.compile(r'\s*(?P<hsrp_number>[0-9]+)'
-                             ' +(?P<interface>[a-zA-Z0-9\/]+)'
-                             ' +(?P<mac_address>[a-zA-Z0-9\.]+)$')
             m = p8.match(line)
             if m:
                 # Save last interface
@@ -186,8 +202,6 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
 
             # HSRP MAC Address Table
             # Gi1/0/1 Grp 0
-            p8_1 = re.compile(r'\s*(?P<interface>[a-zA-Z0-9\/]+)'
-                               ' +Grp +(?P<group>[0-9]+)$')
             m = p8_1.match(line)
             if m:
                 interface = m.groupdict()['interface'].lower()
@@ -202,11 +216,10 @@ class ShowStandbyInternal(ShowStandbyInternalSchema):
 # ======================================
 #   Schema for 'show standby all'
 # ======================================
-
 class ShowStandbyAllSchema(MetaParser):
     """Schema for show standby all"""
-    schema = \
-    {
+
+    schema = {
         Any(): {
             Optional('use_bia'): bool,
             Optional('redirects_disable'): bool,
@@ -370,20 +383,17 @@ class ShowStandbyAllSchema(MetaParser):
         }   
     }
 
+
+# ======================================
+#   Parser for 'show standby all'
+# ======================================
 class ShowStandbyAll(ShowStandbyAllSchema):
-    """Parser for show standby all
-    parser class - implements detail parsing mechanisms for cli,yang output.
-    """
-    # *************************
-    # schema - class variable
-    #
-    # Purpose is to make sure the parser always return the output
-    # (nested dict) that has the same data structure across all supported
-    # parsing mechanisms (cli(), yang(), xml()).
+    """Parser for show standby all"""
 
     cli_command = 'show standby all'
+    
     exclude = ['next_hello_sent', 'last_state_change', 'standby_expires_in',
-        'statistics', 'num_state_changes', 'active_expires_in']
+               'statistics', 'num_state_changes', 'active_expires_in']
 
     def cli(self, output=None):
         if output is None:
@@ -400,14 +410,130 @@ class ShowStandbyAll(ShowStandbyAllSchema):
         itf_to_group_num = {}
 
         group_key = {}
+
+        # Ethernet4/1 - Group 0 (version 2)
+        p1 = re.compile(r'(?P<intf>[\w\/\.]+) +\- +Group +(?P<group>\d+)'
+                        r' *(?:\(version +(?P<version>\d+)\))?$')
         
+        # State is Active
+        # State is Disabled
+        # State is Init (protocol not cfgd)
+        p2 = re.compile(r'[sS]tate +is +(?P<hsrp_router_state>\S+)'
+                        r'( +\((?P<hsrp_router_state_reason>.+)\))?')
+
+        # 8 state changes, last state change 1w0d
+        p3 = re.compile(r'(?P<num_state_changes>\d+) +state'
+                        r' +changes, +last +state +change'
+                        r' +(?P<last_state_change>\w+)$')
+
+        # Virtual IP address is 192.168.1.254
+        # Virtual IP address is unknown
+        # Link-Local Virtual IPv6 address is FE80::5:73FF:FEA0:14 (conf auto EUI64)
+        # Link-Local Virtual IPv6 address is FE80::5:73FF:FEA0:A (impl auto EUI64)
+        # Virtual IPv6 address 2001:DB8:10:1:1::254/64
+        p4 = re.compile(r'(?P<v6_type>\S+)? *Virtual +(?P<address_family>\S+) '
+                        r'+address( +is)? +(?P<vip>\S+) ?'
+                        r'(\((?P<vip_conf>.*)\))?$')
+
+        # Secondary virtual IP address 10.1.1.253
+        p5 = re.compile(r'[sS]econdary +virtual +IP +address +'
+                        r'(?P<secondary_ipv4_address>\S+)$')
+
+        # Track object 1 (unknown)
+        p6 = re.compile(r'Track +object +(?P<tracked_object>\d+)'
+                        r' +\((?P<tracked_status>\S+)\)$')
+
+        # Active virtual MAC address is 0000.0cff.909f (MAC In Use)
+        # Active virtual MAC address is unknown (MAC Not In Use)
+        p7 = re.compile(r'Active +virtual +MAC +address +is'
+                        r' +(?P<virtual_mac_address>[\w\.]+)'
+                        r' +\((?P<virtual_mac_address_mac_in_use>'
+                        r'[a-zA-Z\s]+)\)$')
+
+        # Local virtual MAC address is 0000.0cff.909f (v2 default)
+        # Local virtual MAC address is 5254.00ff.afbf (bia)
+        # Local virtual MAC address is aaaa.aaff.5555 (cfgd)
+        p8 = re.compile(r'Local +virtual +MAC +address +is'
+                        r' +(?P<local_virtual_mac_address>[\w\.]+)'
+                        r' +\((?P<local_virtual_mac_address_conf>'
+                        r'[\w\s]+)\)$')
+
+        # Hellotime 1 sec, holdtime 3 sec
+        # Hello time 3 sec, hold time 10 sec
+        # Hello time 999 msec, hold time 10 sec
+        # Hello time 999 msec, hold time 2999 msec
+        # Hello time 9 sec (cfgd 999 msec), hold time 27 sec (cfgd 2999 msec)
+        p9 = re.compile(r'Hello ?time +(?P<hellotime>\d+) (?P<hello_unit>\S+)'
+                        r'( \(cfgd (?P<cfgd_hello_msec>\d)+ msec\))?, +hold '
+                        r'?time +(?P<holdtime>\d+) +(?P<hold_unit>\S+)'
+                        r'( \(cfgd (?P<cfgd_hold_msec>\d+) msec\))?$')
+
+        # Next hello sent in 2.848 secs
+        p10 = re.compile(r'Next +hello +sent +in'
+                         r' +(?P<next_hello_sent>[\d\.]+) secs$')
+
+        # Authentication MD5, key-string "cisco123"
+        # Authentication MD5, key-chain "cisco123"
+        # Authentication MD5, key-string
+        # Authentication text "cisco123"
+        # Authentication "cisco123"
+        # Authentication text, string "cisco123"
+        p11 = re.compile(r'[aA]uthentication +(?P<authentication_type>\w+)?'
+                         r'(, +)?(key-string|key-chain|string)?( +)?'
+                         r'(\"(?P<authentication>\S+)\")?$')
+
+        # MAC refresh 222 secs (next refresh 0 secs)
+        p12 = re.compile(r'MAC refresh (?P<mac_refresh>\d+) secs '
+                         r'\(next refresh (?P<mac_next_refresh>\d+) secs\)$')
+
+        # Preemption enabled, delay min 5 secs, reload 10 secs, sync 20 secs
+        # Preemption enabled
+        p13 = re.compile(r'Preemption +(?P<preempt>[a-zA-Z]+)(?:, +delay +min '
+                         r'+(?P<preempt_min_delay>\d+) +secs,)?'
+                         r'(?: +reload +(?P<preempt_reload_delay>\d+)'
+                         r' +secs,)?(?: +sync'
+                         r' +(?P<preempt_sync_delay>\d+) +secs)?$')
+
+        # Active router is unknown
+        p14 = re.compile(r'Active +router +is'
+                         r' +(?P<active_router>[a-zA-Z\s]+)$')
+
+        # Active router is 10.1.2.1, priority 120 (expires in 0.816 sec)
+        p14_1 = re.compile(r'Active +router +is +(?P<active_router>\S+),'
+                           r' +priority +(?P<ar_priority>\d+)'
+                           r' +\(expires in (?P<active_expires_in>'
+                           r'[\w\.]+) sec\)$')
+
+        # Standby router is unknown 
+        # Standby router is 10.1.1.2, priority 100 (expires in 10.624 sec)
+        p15 = re.compile(r'Standby +router +is +(?P<standby_router>[\w\.]+)'
+                         r'(, +priority +(?P<standby_priority>\d+) +\(expires '
+                         r'+in +(?P<standby_expires_in>\S+) +sec\))?')
+
+        # Priority 100 (default 100)
+        p16 = re.compile(r'Priority +(?P<priority>\d+)'
+                         r' +\(default +(?P<default_priority>\d+)\)$')
+
+        # Priority 100 (configured 100)
+        p17 = re.compile(r'Priority +(?P<priority>\d+) +\(configured'
+                         r' +(?P<configured_priority>\d+)\)$')
+
+        # Group name is "hsrp-Gi1/0/1-0" (default)
+        # Group name is "gandalf" (cfgd)
+        # Group name is "hsrp-Gi4/10.103-100" (default)
+        p18 = re.compile(r'Group +name +is +\"(?P<session_name>[\w\/\-\.]+)\"'
+                         r' +(?:\(default\)|\(cfgd\))$')
+
+        # Following "group10"
+        p19 = re.compile(r'[fF]ollowing +\"(?P<follow>\S+)\"$')
+
+        # HSRP ICMP redirects disabled
+        p20 = re.compile(r'HSRP ICMP redirects disabled')
+
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # Ethernet4/1 - Group 0 (version 2)
-            p1 = re.compile(r'\s*(?P<intf>[a-zA-Z0-9\/\.]+) +\- +Group'
-                             ' +(?P<group>[0-9]+)'
-                             ' *(?:\(version +(?P<version>[0-9]+)\))?$')
             m = p1.match(line)
             if m:
                 num_state_changes = last_state_change = None
@@ -424,8 +550,6 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             # State is Active
             # State is Disabled
             # State is Init (protocol not cfgd)
-            p2 = re.compile(r'\s*[sS]tate +is +(?P<hsrp_router_state>\S+)'
-                '( +\((?P<hsrp_router_state_reason>.+)\))?')
             m = p2.match(line)
             if m:
                 hsrp_router_state = m.groupdict()['hsrp_router_state'].lower()
@@ -435,9 +559,6 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                 continue
 
             # 8 state changes, last state change 1w0d
-            p3 = re.compile(r'\s*(?P<num_state_changes>[0-9]+) +state'
-                             ' +changes, +last +state +change'
-                             ' +(?P<last_state_change>[a-zA-Z0-9]+)$')
             m = p3.match(line)
             if m:
                 num_state_changes = int(m.groupdict()['num_state_changes'])
@@ -449,10 +570,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             # Link-Local Virtual IPv6 address is FE80::5:73FF:FEA0:14 (conf auto EUI64)
             # Link-Local Virtual IPv6 address is FE80::5:73FF:FEA0:A (impl auto EUI64)
             # Virtual IPv6 address 2001:DB8:10:1:1::254/64
-            p5 = re.compile(r'\s*(?P<v6_type>\S+)? *Virtual +'
-                '(?P<address_family>\S+) +address( +is)? +(?P<vip>\S+) ?'
-                '(\((?P<vip_conf>.*)\))?$')
-            m = p5.match(line)
+            m = p4.match(line)
             if m:
                 if m.groupdict()['v6_type']:
                     v6_type = m.groupdict()['v6_type'].lower()
@@ -538,9 +656,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                 continue
 
             # Secondary virtual IP address 10.1.1.253
-            p4 = re.compile(r'\s*[sS]econdary +virtual +IP +address +'
-                '(?P<secondary_ipv4_address>\S+)$')
-            m = p4.match(line)
+            m = p5.match(line)
             if m:
                 if 'secondary_ipv4_addresses' not in group_key:
                     group_key['secondary_ipv4_addresses'] = {}
@@ -552,9 +668,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                     ['address'] = secondary_ipv4_address
 
             # Track object 1 (unknown)
-            p4 = re.compile(r'\s*Track +object +(?P<tracked_object>[0-9]+)'
-                             ' +\((?P<tracked_status>\S+)\)$')
-            m = p4.match(line)
+            m = p6.match(line)
             if m:
                 tracked_object = int(m.groupdict()['tracked_object'])
                 if 'tracked_objects' not in group_key:
@@ -567,11 +681,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
 
             # Active virtual MAC address is 0000.0cff.909f (MAC In Use)
             # Active virtual MAC address is unknown (MAC Not In Use)
-            p6 = re.compile(r'\s*Active +virtual +MAC +address +is'
-                             ' +(?P<virtual_mac_address>[a-zA-Z0-9\.]+)'
-                             ' +\((?P<virtual_mac_address_mac_in_use>'
-                             '[a-zA-Z\s]+)\)$')
-            m = p6.match(line)
+            m = p7.match(line)
             if m:
                 group_key['virtual_mac_address'] = m.groupdict()\
                     ['virtual_mac_address'].lower()
@@ -585,11 +695,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             # Local virtual MAC address is 0000.0cff.909f (v2 default)
             # Local virtual MAC address is 5254.00ff.afbf (bia)
             # Local virtual MAC address is aaaa.aaff.5555 (cfgd)
-            p7 = re.compile(r'\s*Local +virtual +MAC +address +is'
-                             ' +(?P<local_virtual_mac_address>[a-zA-Z0-9\.]+)'
-                             ' +\((?P<local_virtual_mac_address_conf>'
-                             '[a-zA-Z0-9\s]+)\)$')
-            m = p7.match(line)
+            m = p8.match(line)
             if m:
                 group_key['local_virtual_mac_address'] \
                     = m.groupdict()['local_virtual_mac_address']
@@ -608,11 +714,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             # Hello time 999 msec, hold time 10 sec
             # Hello time 999 msec, hold time 2999 msec
             # Hello time 9 sec (cfgd 999 msec), hold time 27 sec (cfgd 2999 msec)
-            p8 = re.compile(r'\s*Hello ?time +(?P<hellotime>[0-9]+) '
-                '(?P<hello_unit>\S+)( \(cfgd (?P<cfgd_hello_msec>\d)+ msec\))?'
-                ', +hold ?time +(?P<holdtime>[0-9]+) +(?P<hold_unit>\S+)'
-                '( \(cfgd (?P<cfgd_hold_msec>\d+) msec\))?$')
-            m = p8.match(line)
+            m = p9.match(line)
             if m:
                 if 'timers' not in group_key:
                     group_key['timers'] = {}
@@ -639,9 +741,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                 continue
 
             # Next hello sent in 2.848 secs
-            p9 = re.compile(r'\s*Next +hello +sent +in'
-                             ' +(?P<next_hello_sent>[0-9\.]+) secs$')
-            m = p9.match(line)
+            m = p10.match(line)
             if m:
                 group_key['timers']['next_hello_sent'] = \
                     float(m.groupdict()['next_hello_sent'])
@@ -649,23 +749,23 @@ class ShowStandbyAll(ShowStandbyAllSchema):
 
             # Authentication MD5, key-string "cisco123"
             # Authentication MD5, key-chain "cisco123"
+            # Authentication MD5, key-string
             # Authentication text "cisco123"
             # Authentication "cisco123"
             # Authentication text, string "cisco123"
-            p10 = re.compile(r'\s*[aA]uthentication +(?P<authentication_type>'
-                '[a-zA-Z0-9]+)?(, +)?(key-string|key-chain|string)?( +)?'
-                '\"(?P<authentication>\S+)\"$')
-            m = p10.match(line)
+            m = p11.match(line)
             if m:
-                group_key['authentication'] = m.groupdict()['authentication']
-                group_key['authentication_type'] \
-                    = m.groupdict()['authentication_type']
+                if m.groupdict()['authentication_type']:
+                    group_key['authentication_type'] \
+                        = m.groupdict()['authentication_type']
+
+                if m.groupdict()['authentication']:
+                    group_key['authentication'] \
+                        = m.groupdict()['authentication']
                 continue
 
             # MAC refresh 222 secs (next refresh 0 secs)
-            p10 = re.compile(r'\s*MAC refresh (?P<mac_refresh>\d+) secs '
-                '\(next refresh (?P<mac_next_refresh>\d+) secs\)$')
-            m = p10.match(line)
+            m = p12.match(line)
             if m:
                 if m.groupdict()['mac_refresh']:
                     standby_all_dict[interface]['mac_refresh'] \
@@ -677,12 +777,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
 
             # Preemption enabled, delay min 5 secs, reload 10 secs, sync 20 secs
             # Preemption enabled
-            p11 = re.compile(r'\s*Preemption +(?P<preempt>[a-zA-Z]+)(?:, +delay'
-                              ' +min +(?P<preempt_min_delay>[0-9]+) +secs,)?'
-                              '(?: +reload +(?P<preempt_reload_delay>[0-9]+)'
-                              ' +secs,)?(?: +sync'
-                              ' +(?P<preempt_sync_delay>[0-9]+) +secs)?$')
-            m = p11.match(line)
+            m = p13.match(line)
             if m:
                 if m.groupdict()['preempt'] is not None:
                     group_key['preempt'] = True
@@ -698,20 +793,13 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                 continue
 
             # Active router is unknown
-            p12 = re.compile(r'\s*Active +router +is'
-                              ' +(?P<active_router>[a-zA-Z\s]+)$')
-            m = p12.match(line)
+            m = p14.match(line)
             if m:
                 group_key['active_router'] = m.groupdict()['active_router']
                 continue
 
             # Active router is 10.1.2.1, priority 120 (expires in 0.816 sec)
-            p12_1 = re.compile(r'\s*Active +router +is'
-                              ' +(?P<active_router>\S+),'
-                              ' +priority +(?P<ar_priority>[0-9]+)'
-                              ' +\(expires in (?P<active_expires_in>'
-                              '[a-zA-Z0-9\.\s]+) sec\)$')
-            m = p12_1.match(line)
+            m = p14_1.match(line)
             if m:
                 active_router = m.groupdict()['active_router']
                 group_key['active_router'] = active_router
@@ -729,11 +817,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
 
             # Standby router is unknown 
             # Standby router is 10.1.1.2, priority 100 (expires in 10.624 sec)
-            p13 = re.compile(r'\s*Standby +router +is +(?P<standby_router>'
-                              '[a-zA-Z0-9\.]+)(, +priority +'
-                              '(?P<standby_priority>\d+) +\(expires +in +'
-                              '(?P<standby_expires_in>\S+) +sec\))?')
-            m = p13.match(line)
+            m = p15.match(line)
             if m:
                 standby_router = m.groupdict()['standby_router']
                 if m.groupdict()['standby_priority']:
@@ -751,9 +835,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                 continue
 
             # Priority 100 (default 100)
-            p14 = re.compile(r'\s*Priority +(?P<priority>[0-9]+)'
-                              ' +\(default +(?P<default_priority>[0-9]+)\)$')
-            m = p14.match(line)
+            m = p16.match(line)
             if m:
                 group_key['priority'] = int(m.groupdict()['priority'])
                 group_key['default_priority'] = \
@@ -761,10 +843,7 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                 continue
 
             # Priority 100 (configured 100)
-            p15 = re.compile(r'\s*Priority +(?P<priority>[0-9]+)'
-                              ' +\(configured'
-                              ' +(?P<configured_priority>[0-9]+)\)$')
-            m = p15.match(line)
+            m = p17.match(line)
             if m:
                 group_key['priority'] = int(m.groupdict()['priority'])
                 group_key['configured_priority'] = \
@@ -774,24 +853,19 @@ class ShowStandbyAll(ShowStandbyAllSchema):
             # Group name is "hsrp-Gi1/0/1-0" (default)
             # Group name is "gandalf" (cfgd)
             # Group name is "hsrp-Gi4/10.103-100" (default)
-            p16 = re.compile(r'\s*Group +name +is'
-                              ' +\"(?P<session_name>[a-zA-Z0-9\/\-\.]+)\"'
-                              ' +(?:\(default\)|\(cfgd\))$')
-            m = p16.match(line)
+            m = p18.match(line)
             if m:
                 group_key['session_name'] = m.groupdict()['session_name']
                 continue
 
             # Following "group10"
-            p17 = re.compile(r'\s*[fF]ollowing +\"(?P<follow>\S+)\"$')
-            m = p17.match(line)
+            m = p19.match(line)
             if m:
                 group_key['follow'] = m.groupdict()['follow']
                 continue            
 
             # HSRP ICMP redirects disabled
-            p17 = re.compile(r'HSRP ICMP redirects disabled')
-            m = p17.match(line)
+            m = p20.match(line)
             if m:
                 standby_all_dict[interface]['redirects_disable'] = True
                 continue
@@ -838,23 +912,29 @@ class ShowStandbyAll(ShowStandbyAllSchema):
                             interface_name = 'Gigabitethernet' + str(gig_number)
                             continue
 
+
 # ======================================
 #   Schema for 'show standby delay'
 # ======================================
-
 class ShowStandbyDelaySchema(MetaParser):
     """Schema for show standby delay"""
-    schema = {
-                Any(): {
-                    'delay': {
-                        'minimum_delay': int,
-                        'reload_delay': int,
-                    }
-                }
-             }
 
+    schema = {
+        Any(): {
+            'delay': {
+                'minimum_delay': int,
+                'reload_delay': int,
+            }
+        }
+    }
+
+
+# ======================================
+#   Parser for 'show standby delay'
+# ======================================
 class ShowStandbyDelay(ShowStandbyDelaySchema):
     """Parser for show standby delay"""
+
     cli_command = 'show standby delay'
 
     def cli(self, output=None):
@@ -866,15 +946,14 @@ class ShowStandbyDelay(ShowStandbyDelaySchema):
         # Init vars
         hsrp_delay_dict = {}
 
-        for line in out.splitlines():
-            line = line.rstrip()
+        # GigabitEthernet1   99      888
+        p1 = re.compile(r'(?P<interface>\S+) +(?P<minimum_delay>\d+) +'
+                        r'(?P<reload_delay>\d+)')
 
-            # Interface          Minimum Reload
-            # (no need to parse above because it's just header)
+        for line in out.splitlines():
+            line = line.strip()
 
             # GigabitEthernet1   99      888
-            p1 = re.compile(r'\s*(?P<interface>\S+) +(?P<minimum_delay>\d+) +'
-                '(?P<reload_delay>\d+)')
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -888,5 +967,3 @@ class ShowStandbyDelay(ShowStandbyDelaySchema):
                     = int(m.groupdict()['reload_delay'])
 
         return hsrp_delay_dict
-
-# vim: ft=python et sw=4

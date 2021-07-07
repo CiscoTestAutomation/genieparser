@@ -1,0 +1,5 @@
+EIGRP-IPv6 Interfaces for AS(10)
+                              Xmit Queue   PeerQ        Mean   Pacing Time   Multicast    Pending
+Interface              Peers  Un/Reliable  Un/Reliable  SRTT   Un/Reliable   Flow Timer   Routes
+Gi0/1                    0        0/0       0/0           0       0/0            0           0
+Lo3                      0        0/0       0/0           0       0/0            0           0

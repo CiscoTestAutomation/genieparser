@@ -1,0 +1,11 @@
+If device is externally calibrated, only calibrated values are printed.
+++ : high alarm, +  : high warning, -  : low warning, -- : low alarm.
+NA or N/A: not applicable, Tx: transmit, Rx: receive.
+mA: milliamperes, dBm: decibels (milliwatts).
+                                         Optical   Optical
+         Temperature  Voltage  Current   Tx Power  Rx Power
+Port     (Celsius)    (Volts)  (mA)      (dBm)     (dBm)
+-------  -----------  -------  --------  --------  --------
+Gi1/1      40.6       5.09       0.4     -25.2      N/A
+Gi2/1      35.5       5.05       0.1     -29.2      N/A
+Gi2/2      49.5       3.30       0.0       7.1     -18.7

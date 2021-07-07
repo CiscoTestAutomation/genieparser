@@ -1,0 +1,8 @@
+        interface folink GigabitEthernet0/2
+                System IP Address: 2001:db8:cafe:ffee::a/127
+                My IP Address    : 2001:db8:cafe:ffee::a
+                Other IP Address : 2001:db8:cafe:ffee::b
+        interface foupdateif GigabitEthernet0/3
+                System IP Address: 2001:db8:cafe:ffae::a/127
+                My IP Address    : 2001:db8:cafe:ffae::a
+                Other IP Address : 2001:db8:cafe:ffae::b

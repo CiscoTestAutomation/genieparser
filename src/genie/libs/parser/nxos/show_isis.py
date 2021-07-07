@@ -1111,7 +1111,8 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
         # System ID       SNPA            Level  State  Hold Time  Interface
         # R2_xr           fa16.3eff.4abd  1      UP     00:00:09   Ethernet1/1.115
         # 2222.22ff.4444  fa16.3eff.4abd  1      INIT   00:00:32   Ethernet1/1.415
-        p2 = re.compile(r'^(?P<sysid>\S+) +(?P<snpa>[\w\.]+) +(?P<level>\d+) '
+        # plum-fx-1       N/A             1-2    UP     00:00:30   Vlan100
+        p2 = re.compile(r'^(?P<sysid>\S+) +(?P<snpa>[/\w\.]+) +(?P<level>[\d-]+) '
                         r'+(?P<state>\S+) +(?P<hold_time>[\d\:]+) +(?P<interface>\S+)$')
 
         for line in out.splitlines():
@@ -1136,7 +1137,7 @@ class ShowIsisAdjacency(ShowIsisAdjacencySchema):
                 group = m.groupdict()
                 sysid = group['sysid']
                 snpa = group['snpa']
-                level = int(group['level'])
+                level = group['level']
                 state = group['state']
                 hold_time = group['hold_time']
                 interface = Common.convert_intf_name(group['interface'])
