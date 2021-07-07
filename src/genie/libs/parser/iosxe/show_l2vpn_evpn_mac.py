@@ -179,12 +179,13 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
         # aabb.cc82.2800 2     12    03AA.BB00.0000.0200.0001 0          Et1/0:12
         #                                                                3.3.3.1
         p1 = re.compile(r'^MAC Address\s+EVI\s+(BD|VLAN)\s+ESI\s+Ether Tag\s+Next Hop\(s\)$')
-        p2 = re.compile(r'^(?P<mac>[0-9a-fA-F\.]+)\s+(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<esi>[0-9a-fA-F\.]+)\s+(?P<eth_tag>\d+)\s+(?P<next_hop>[\w\d\s\.:()/]+)$')
-        p3 = re.compile(r'^(?P<next_hop>[\w\d\s\.:()/]+)$')
+        p2 = re.compile(r'^(?P<mac>[0-9a-fA-F\.]+)\s+(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<esi>[0-9a-fA-F\.]+)\s+(?P<eth_tag>\d+)\s+(?P<next_hop>.+)$')
+        p3 = re.compile(r'^(?P<next_hop>.+)$')
 
         parser_dict = {}
 
         header_validated = False
+        next_hops = None
         for line in cli_output.splitlines():
             line = line.strip()
             if not line:
@@ -216,7 +217,8 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                next_hops.append(group['next_hop'])
+                if next_hops:
+                    next_hops.append(group['next_hop'])
                 continue
 
         if not header_validated:
@@ -358,8 +360,8 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
         # Next Hop(s):                L:17 Ethernet1/0 service instance 12
         #                             L:17 3.3.3.1
         #                             L:17 5.5.5.1
-        p6 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\d\s\.:()/]+)$')
-        p7 = re.compile(r'^(?P<next_hop>[\w\d\s\.:()/]+)$')
+        p6 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>.+)$')
+        p7 = re.compile(r'^(?P<next_hop>.+)$')
 
         # Local Address:              4.4.4.1
         p8 = re.compile(r'^Local Address:\s+(?P<local_addr>[\d\.]+)$')
