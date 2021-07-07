@@ -262,12 +262,13 @@ class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
         # ------------------------- ----- ----- -------------- -------------------------
         # 192.168.11.21             1     11    Duplicate      Et1/0:11
         p1 = re.compile(r'^IP Address\s+EVI\s+(BD|VLAN)\s+MAC Address\s+Next Hop\(s\)$')
-        p2 = re.compile(r'^(?P<ip>[0-9a-fA-F\.:]+)\s+(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<mac>[\d\w\.]+)\s+(?P<next_hop>[\w\d\s\.:()/]+)$')
-        p3 = re.compile(r'^(?P<next_hop>[\w\d\s\.:()/]+)$')
+        p2 = re.compile(r'^(?P<ip>[0-9a-fA-F\.:]+)\s+(?P<evi>\d+)\s+(?P<bd_id>\d+)\s+(?P<mac>[\d\w\.]+)\s+(?P<next_hop>.+)$')
+        p3 = re.compile(r'^(?P<next_hop>.+)$')
 
         parser_dict = {}
 
         header_validated = False
+        next_hops = None
         for line in cli_output.splitlines():
             line = line.strip()
             if not line:
@@ -298,7 +299,8 @@ class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
             m = p3.match(line)
             if m:
                 group = m.groupdict()
-                next_hops.append(group['next_hop'])
+                if next_hops:
+                    next_hops.append(group['next_hop'])
                 continue
 
         if not header_validated:
@@ -493,8 +495,8 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
         # Next Hop(s):               L:17 Ethernet1/0 service instance 12
         #                            L:17 3.3.3.1
         #                            L:17 5.5.5.1
-        p7 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>[\w\d\s\.:()/]+)$')
-        p8 = re.compile(r'^(?P<next_hop>[\w\d\s\.:()/]+)$')
+        p7 = re.compile(r'^Next Hop\(s\):\s+(?P<next_hop>.+)$')
+        p8 = re.compile(r'^(?P<next_hop>.+)$')
 
         # Local Address:             4.4.4.1
         p9 = re.compile(r'^Local Address:\s+(?P<local_addr>[\d\.]+)$')
@@ -508,7 +510,7 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
         # IP Duplication Detection:  Duplicate IP address detected
         p11 = re.compile(r'^IP Duplication Detection:\s+(?P<ip_dup_status>[\w\d\s,]+)$')
         p12 = re.compile(r'^IP moves (?P<moves_count>\d+), limit (?P<moves_limit>\d+)$')
-        p13 = re.compile(r'^\s+Timer expires in (?P<expiry_time>[\d:]+)$')
+        p13 = re.compile(r'^Timer expires in (?P<expiry_time>[\d:]+)$')
 
         # Last Local MAC sent:       aabb.0011.0022
         p14 = re.compile(r'^Last Local MAC sent:\s+(?P<last_local_mac_sent>[0-9a-fA-F\.]+)$')
@@ -615,6 +617,7 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
 
                 m = p12.match(ip_dup_status)
                 if m:
+                    group = m.groupdict()
                     ip_dup_vals.update({
                         'moves_count': int(group['moves_count']),
                         'moves_limit': int(group['moves_limit']),
