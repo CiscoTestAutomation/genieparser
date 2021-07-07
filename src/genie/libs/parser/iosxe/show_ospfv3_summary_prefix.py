@@ -20,13 +20,18 @@ class ShowOspfv3SummaryPrefixSchema(MetaParser):
     schema = {
         'process_id': {
             Any(): {
-                'add_family': str,
-                'rtr_id': str,
-                'null_metric': str,
+                'address_family': str,
+                'router_id': str,
+                'null_route': {
+                    Any(): {
+                        'null_metric': str,
+                    },
+                },
                 'summary': {
                     Any(): {
                         'sum_type': str,
-                        'sum_tag': int
+                        'sum_tag': int,
+                        'sum_metric': int
                     },
                 },
             },
@@ -60,18 +65,18 @@ class ShowOspfv3SummaryPrefix(ShowOspfv3SummaryPrefixSchema):
 
         # init var
         ret_dict = {}
+        ospf_id = ""
 
         # OSPFv3 10000 address-family ipv6 (router-id 10.2.2.21)
         p1 = re.compile(
-            r'^OSPFv3 +(?P<ospf_id>(\d+)) +address-family +(?P<add_family>(\S+)) +\(router-id +(?P<rtr_id>(\S+))\)')
+            r'^OSPFv3 +(?P<ospf_id>(\d+)) +address-family +(?P<address_family>(\S+)) +\(router-id +(?P<router_id>(\S+))\)')
 
         # 10:2::/96           Metric <unreachable>
-        p2 = re.compile(r'^[\d:/]+\s+Metric\s+(?P<null_metric>(\S+$))')
+        p2 = re.compile(r'^(?P<null_prefix>(\S+)) +.* Metric\s+(?P<null_metric>(\S+$))')
 
         # 10:2:2::/96         Metric 111, External metric type 2, Tag 111
-        p3 = re.compile(r'^(?P<sum_prefix>(\S+)) +.* type +(?P<sum_type>(\d)),\s+Tag +(?P<sum_tag>(\S+))')
-
-        #ret_dict = ret_dict.setdefault('process_id')
+        p3 = re.compile(
+            r'^(?P<sum_prefix>(\S+)) +.* Metric\s+(?P<sum_metric>(\d+)),.* +type +(?P<sum_type>(\d)),\s+Tag +(?P<sum_tag>(\S+))')
 
         for line in out.splitlines():
             line = line.strip()
@@ -81,16 +86,20 @@ class ShowOspfv3SummaryPrefix(ShowOspfv3SummaryPrefixSchema):
                 ret_dict['process_id'] = {}
                 ospf_id = group['ospf_id'].strip()
                 ret_dict['process_id'][ospf_id] = {}
+                ret_dict['process_id'][ospf_id]['null_route'] = {}
                 ret_dict['process_id'][ospf_id]['summary'] = {}
-                ret_dict['process_id'][ospf_id]['add_family'] = group['add_family'].strip()
-                ret_dict['process_id'][ospf_id]['rtr_id'] = group['rtr_id'].strip()
+                ret_dict['process_id'][ospf_id]['address_family'] = group['address_family'].strip()
+                ret_dict['process_id'][ospf_id]['router_id'] = group['router_id'].strip()
                 continue
 
             m = p2.search(line)
             if m:
                 group = m.groupdict()
-                ret_dict['process_id'][ospf_id]['null_metric'] = group['null_metric'].strip()
-                continue
+                if group['null_prefix']:
+                    n_prefix = group['null_prefix'].strip()
+                    ret_dict['process_id'][ospf_id]['null_route'][n_prefix] = {}
+                    ret_dict['process_id'][ospf_id]['null_route'][n_prefix]['null_metric'] = group['null_metric'].strip()
+                    continue
 
             m = p3.search(line)
             if m:
@@ -98,8 +107,11 @@ class ShowOspfv3SummaryPrefix(ShowOspfv3SummaryPrefixSchema):
                 if group['sum_prefix'].strip():
                     prefix = group['sum_prefix'].strip()
                     ret_dict['process_id'][ospf_id]['summary'][prefix] = {}
+                    ret_dict['process_id'][ospf_id]['summary'][prefix]['sum_metric'] = int(group['sum_metric'].strip())
                     ret_dict['process_id'][ospf_id]['summary'][prefix]['sum_type'] = group['sum_type'].strip()
                     ret_dict['process_id'][ospf_id]['summary'][prefix]['sum_tag'] = int(group['sum_tag'].strip())
                     continue
+
+        # import pdb; pdb.set_trace()
 
         return ret_dict
