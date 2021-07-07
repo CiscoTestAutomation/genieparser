@@ -1,7 +1,7 @@
 expected_output = { 
    "flooding_supression_policy_config":{
       "policy_name":"fspol1",
-      "supressing":"NDP",
+      "suppressing":"NDP",
       "mode":"Proxy all resolution requests",
       "targets":{
          "vlan 1":{

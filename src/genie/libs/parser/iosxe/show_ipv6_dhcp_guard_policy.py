@@ -56,28 +56,30 @@ class ShowIpv6DhcpGuardPolicy(ShowIpv6DhcpGuardPolicySchema):
         else:
             output = output
 
-        #policy name
-        p = re.compile(r'^\S+\s+\S+\s*\S+\s+(?P<policy_name>\S+)\s+configuration:$')
+        # Dhcp guard policy pol1 configuration:
+        p = re.compile(r'^Dhcp\s+guard\s+policy\s+(?P<policy_name>.+)\s+configuration:$')
         
-        #device role
-        p1 = re.compile(r'^\S+\s+\S+:\s(?P<device_role>\S+\s\S+)$')
+        # Device Role: dhcp server
+        p1 = re.compile(r'^Device\sRole:\s(?P<device_role>dhcp (client|server))$')
 
-        #trusted port
-        p2 = re.compile(r'^(?P<trusted_port>\S+\s+\S+)$')
+        #Trusted Port 
+        p2 = re.compile(r'^(?P<trusted_port>Trusted Port)$')
 
-        #max preference 
+        # Max Preference: 255
         p3 = re.compile(r'^Max Preference:\s+((?P<max_preference>\d+))$')
 
-        #min preference
+        # Min Preference: 0
         p4 = re.compile(r'^Min Preference:(\s+(?P<min_preference>\d+))$')
 
-        #Source Address Match Access List
+        #Source Address Match Access List: acl1
         p5 = re.compile(r'^Source Address Match Access List:\s+(?P<access_list>\S+)$')
 
-        #Prefix List Match Prefix List:
+        #Prefix List Match Prefix List: abc
         p6 = re.compile(r'^Prefix List Match Prefix List:\s+(?P<prefix_list>\S+)$')
 
-        #targets 
+        #Target               Type  Policy               Feature        Target range
+        # vlan 2               VLAN  pol1                 DHCP Guard     vlan all
+        # Et0/0                PORT  pol1                 DHCP Guard     vlanall
         p7 = re.compile(r'^(?P<target>\S+\s*\S+)\s{2,}(?P<type>\S+)\s+\S+\s+(?P<feature>\S+\s\S+)\s+(?P<target_range>\S+.*\S+)$')
 
         parser_dict = {}

@@ -17,13 +17,13 @@ from genie.metaparser.util.schemaengine import Any, Optional
 # ====================================================
 # Schema for 'show flooding-suppression policy <policy name>'
 # ====================================================
-class ShowFloodingSupressionPolicySchema(MetaParser):
+class ShowFloodingSuppressionPolicySchema(MetaParser):
     """ Schema for show flooding-suppression policy <policy name> """
     
     schema = {
         'flooding_supression_policy_config': {
             'policy_name': str,
-            'supressing': str,
+            'suppressing': str,
             'mode': str,
             "targets": {
                 Optional(str): {
@@ -39,7 +39,7 @@ class ShowFloodingSupressionPolicySchema(MetaParser):
 # =============================================
 # Parser for 'show flooding-suppression policy <policy name>'
 # =============================================
-class ShowFloodingSupressionPolicy(ShowFloodingSupressionPolicySchema):
+class ShowFloodingSuppressionPolicy(ShowFloodingSuppressionPolicySchema):
     """ show flooding-suppression policy <policy name> """
 
     cli_command = 'show flooding-suppression policy {policy_name}'
@@ -51,16 +51,18 @@ class ShowFloodingSupressionPolicy(ShowFloodingSupressionPolicySchema):
         else:
             output = output
 
-        #policy name
-        p = re.compile(r'^\S+\s+\S+\s*\S+\s+(?P<policy_name>\S+)\s+configuration:$')
+        #Flooding suppress policy fspol3 configuration:
+        p = re.compile(r'^Flooding suppress policy\s+(?P<policy_name>.+)\s+configuration:$')
         
-        #supressing 
-        p1 = re.compile(r'^\S+\s+(?P<supressing>\S+)$') 
+        #Suppressing  NDP
+        p1 = re.compile(r'^Suppressing\s+(?P<suppressing>\S+)$') 
 
-        #mode 
-        p2 = re.compile(r'^\S+:(?P<mode>.+)')
+        # mode:Proxy multicast resolution requests
+        p2 = re.compile(r'^mode:(?P<mode>.+)')
 
-        #targets 
+        #Target               Type  Policy               Feature        Target range
+        # vlan 2               VLAN  pol1                 DHCP Guard     vlan all
+        # Et0/0                PORT  pol1                 DHCP Guard     vlanall
         p3 = re.compile(r'^(?P<target>\S+\s*\S+)\s{2,}(?P<type>\S+)\s+\S+\s+(?P<feature>\S+\s\S+)\s+(?P<target_range>\S+.*\S+)$')
 
         parser_dict = {}
@@ -78,7 +80,7 @@ class ShowFloodingSupressionPolicy(ShowFloodingSupressionPolicySchema):
 
             m1 = p1.match(line)
             if m1:
-                policy_config_dict.update({'supressing': m1.groupdict()['supressing']})
+                policy_config_dict.update({'suppressing': m1.groupdict()['suppressing']})
                 continue
 
             m2 = p2.match(line)
