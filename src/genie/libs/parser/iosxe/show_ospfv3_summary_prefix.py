@@ -112,6 +112,4 @@ class ShowOspfv3SummaryPrefix(ShowOspfv3SummaryPrefixSchema):
                     ret_dict['process_id'][ospf_id]['summary'][prefix]['sum_tag'] = int(group['sum_tag'].strip())
                     continue
 
-        # import pdb; pdb.set_trace()
-
         return ret_dict
