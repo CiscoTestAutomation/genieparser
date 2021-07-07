@@ -519,7 +519,7 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
         p15 = re.compile(r'^Last Local MAC learned:\s+(?P<last_local_mac_learned>[0-9a-fA-F\.]+)$')
 
         # Last Remote MAC received:  aabb.0011.0022
-        p16 = re.compile(r'^Last Remote MAC received:\s+(?P<last_local_mac_sent>[0-9a-fA-F\.]+)$')
+        p16 = re.compile(r'^Last Remote MAC received:\s+(?P<last_remote_mac_received>[0-9a-fA-F\.]+)$')
 
         # Label2 included:           No
         p17 = re.compile(r'^Label2 included:\s+(?P<label2_included>(Yes|No))$')
