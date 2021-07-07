@@ -13,7 +13,6 @@ expected_output = {
             'next_hops': [
                 'L:17 Ethernet1/0 service instance 12',
                 'L:17 3.3.3.1',
-                'L:17 5.5.5.1',
             ],
             'local_addr': '4.4.4.1',
             'seq_number': 0,
@@ -32,7 +31,6 @@ expected_output = {
             'next_hops': [
                 'L:17 Ethernet1/0 service instance 12',
                 'L:17 3.3.3.1',
-                'L:17 5.5.5.1',
             ],
             'local_addr': '4.4.4.1',
             'seq_number': 0,
@@ -42,7 +40,7 @@ expected_output = {
             'label2_included': False,
         },
         'FE80::A8BB:FF:FE12:2': {
-            'stale': False,
+            'stale': True,
             'evi': 2,
             'bd_id': 12,
             'mac_addr': 'aabb.0012.0002',
@@ -68,7 +66,6 @@ expected_output = {
             'next_hops': [
                 'L:17 Ethernet1/0 service instance 12',
                 'L:17 3.3.3.1',
-                'L:17 5.5.5.1',
             ],
             'local_addr': '4.4.4.1',
             'seq_number': 0,
