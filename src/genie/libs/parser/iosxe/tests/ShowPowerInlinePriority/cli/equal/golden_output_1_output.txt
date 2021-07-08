@@ -1,0 +1,6 @@
+Interface  Admin  Oper       Admin
+           State  State      Priority
+---------- ------ ---------- ----------
+
+Gi1/0/1    auto   off        low     
+Gi1/0/11    auto   off        low     
