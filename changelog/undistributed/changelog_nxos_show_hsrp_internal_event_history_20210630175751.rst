@@ -2,7 +2,9 @@
                                      New
 --------------------------------------------------------------------------
 * nxos
-    * Added Multiple Parsers:
-        * for 'show hsrp internal event-history errors'
-        * for 'show hsrp internal event-history debugs'
+    * Added ShowHsrpEventHistoryErrors for:
+        * 'show hsrp internal event-history errors'
+    * Added ShowHsrpEventHistoryDebugs for:
+        * 'show hsrp internal event-history debugs'
+    * Added ShowHsrpEventHistoryMsgs for:
         * for 'show hsrp internal event-history msgs'
