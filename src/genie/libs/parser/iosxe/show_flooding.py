@@ -57,7 +57,7 @@ class ShowFloodingSuppressionPolicy(ShowFloodingSuppressionPolicySchema):
         #Suppressing  NDP
         p1 = re.compile(r'^Suppressing\s+(?P<suppressing>\S+)$') 
 
-        # mode:Proxy multicast resolution requests
+        #mode:Proxy multicast resolution requests
         p2 = re.compile(r'^mode:(?P<mode>.+)')
 
         #Target               Type  Policy               Feature        Target range
@@ -69,29 +69,37 @@ class ShowFloodingSuppressionPolicy(ShowFloodingSuppressionPolicySchema):
 
         for line in output.splitlines():
             line = line.strip()
-    
-            policy_config_dict = parser_dict.setdefault('flooding_supression_policy_config', {})
-            targets_dict = policy_config_dict.setdefault('targets', {})
 
+            #Flooding suppress policy fspol3 configuration:
             m = p.match(line)
             if m:
+                policy_config_dict = parser_dict.setdefault('flooding_supression_policy_config', {})
                 policy_config_dict.update({'policy_name': m.groupdict()['policy_name']})
                 continue
 
+            #Suppressing  NDP
             m1 = p1.match(line)
             if m1:
+                policy_config_dict = parser_dict.setdefault('flooding_supression_policy_config', {})
                 policy_config_dict.update({'suppressing': m1.groupdict()['suppressing']})
                 continue
-
+            
+            #mode:Proxy multicast resolution requests
             m2 = p2.match(line)
             if m2:
                 policy_config_dict.update({'mode': m2.groupdict()['mode']})
                 continue
 
+            #Target               Type  Policy               Feature        Target range
+            # vlan 2               VLAN  pol1                 DHCP Guard     vlan all
+            # Et0/0                PORT  pol1                 DHCP Guard     vlanall
             m3 = p3.match(line)
             if m3:
+                policy_config_dict = parser_dict.setdefault('flooding_supression_policy_config', {})
+                targets_dict = policy_config_dict.setdefault('targets', {})
                 target = m3.groupdict()['target']
                 target_dict = targets_dict.setdefault(target, {})
+                
                 target_dict.update({'target':  m3.groupdict()['target']})
                 target_dict.update({'type': m3.groupdict()['type']})
                 target_dict.update({'feature': m3.groupdict()['feature']})

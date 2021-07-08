@@ -1291,16 +1291,16 @@ class ShowDeviceTrackingEvents(ShowDeviceTrackingEventsSchema):
             output = output
         
         #fsm_run event 
-        # [Fri Jun 18 22:14:40.000] SSID 0 FSM Feature Table running for event ACTIVE_REGISTER in state CREATING
+        #[Fri Jun 18 22:14:40.000] SSID 0 FSM Feature Table running for event ACTIVE_REGISTER in state CREATING
         p1 = re.compile(r'^\[(?P<timestamp>.+)\]\s+SSID\s+(?P<ssid>\d+)\s+FSM\s+(?P<fsm_name>.*)\s+running\s+for\s+event\s+(?P<event_name>(?<=event\s{1})\S+)\s+in\s+state\s+(?P<event_state>.+)$')
         
         #fsm_transition event 
-        # [Fri Jun 18 22:14:40.000] SSID 0 Transition from CREATING to READY upon event ACTIVE_REGISTER
+        #[Fri Jun 18 22:14:40.000] SSID 0 Transition from CREATING to READY upon event ACTIVE_REGISTER
         p2 = re.compile(r'^\[(?P<timestamp>.+)\]\s+SSID\s+(?P<ssid>\d+)\s+Transition\s+from\s+(?P<prev_state>.+)\s+to\s+(?P<state>.+)\s+upon\s+event\s+(?P<event_name>.+)$')
         
         #bt_entry event
-        # [Wed Jun 30 17:03:14.000] SSID 1 Created Entry origin Static MAC 000a.000a.000a IPV4 1.1.1.1
-        # [Wed Jun 30 17:03:14.000] SSID 1 Entry State changed origin Static MAC 000a.000a.000a IPV4 1.1.1.1
+        #[Wed Jun 30 17:03:14.000] SSID 1 Created Entry origin Static MAC 000a.000a.000a IPV4 1.1.1.1
+        #[Wed Jun 30 17:03:14.000] SSID 1 Entry State changed origin Static MAC 000a.000a.000a IPV4 1.1.1.1
         p3 = re.compile(r'^\[(?P<timestamp>.+)\]\s+SSID\s+(?P<ssid>\d+)\s(?P<entry_state>.+origin)\s+(?P<mac_addr_type>.+)\sMAC\s+(?P<mac_addr>([\w\d]{4}\.*){3})\s+(?P<ip_addr_type>\S+)\s+(?P<ip_addr>[\w\d\.:]+)$')    
         
         parser_dict = {}
@@ -1308,75 +1308,88 @@ class ShowDeviceTrackingEvents(ShowDeviceTrackingEventsSchema):
         
         for line in output.splitlines():
             line = line.strip()
-            ssids = parser_dict.setdefault('ssid', {})
+            
+            #[Fri Jun 18 22:14:40.000] SSID 0 FSM Feature Table running for event ACTIVE_REGISTER in state CREATING
             m1 = p1.match(line)
-        
             if m1:
+                ssids = parser_dict.setdefault('ssid', {})
                 ssid = int(m1.groupdict()['ssid'])
                 timestamp = m1.groupdict()['timestamp']
+
                 ssid_obj = ssids.setdefault(ssid, {})
                 events = ssid_obj.setdefault("events", {})
                 ssid_event_no_dict.setdefault(ssid, 1)
                 event_no = ssid_event_no_dict[ssid]
         
-                event = {}
-                event.update({'ssid': ssid})
-                event.update({'event_type': 'fsm_run'})
-                event.update({'event_name': m1.groupdict()['event_name']})
-                event.update({'fsm_name': m1.groupdict()['fsm_name']})
-                event.update({'timestamp': timestamp})
+                event = {
+                        'ssid': ssid,
+                        'event_type': 'fsm_run',
+                        'event_name': m1.groupdict()['event_name'],
+                        'fsm_name': m1.groupdict()['fsm_name'],
+                        'timestamp': timestamp
+                    }
                 
                 events[event_no] = event
                 ssid_event_no_dict[ssid]+=1
                 continue
             
+            #[Fri Jun 18 22:14:40.000] SSID 0 Transition from CREATING to READY upon event ACTIVE_REGISTER
             m2 = p2.match(line)
             if m2:
+                ssids = parser_dict.setdefault('ssid', {})
                 ssid = int(m2.groupdict()['ssid'])
                 timestamp = m2.groupdict()['timestamp']
+
                 ssid_obj = ssids.setdefault(ssid, {})
                 events = ssid_obj.setdefault("events", {})
                 
                 ssid_event_no_dict.setdefault(ssid, 1)
                 event_no = ssid_event_no_dict[ssid]
                 
-                event = {}
-                event.update({'ssid':  ssid})
-                event.update({'event_type':  'fsm_transition'})
-                event.update({'event_name':  m2.groupdict()['event_name']})
-                event.update({'state':  m2.groupdict()['state']})
-                event.update({'prev_state':  m2.groupdict()['prev_state']})
-                event.update({'timestamp':  timestamp})
+                event = {
+                    'ssid': ssid,
+                    'event_type': 'fsm_transition',
+                    'event_name': m2.groupdict()['event_name'],
+                    'state': m2.groupdict()['state'],
+                    'prev_state': m2.groupdict()['prev_state'],
+                    'timestamp': timestamp
+                }
                 
                 events[event_no] = event
                 ssid_event_no_dict[ssid]+=1
                 continue
                     
+            #[Wed Jun 30 17:03:14.000] SSID 1 Created Entry origin Static MAC 000a.000a.000a IPV4 1.1.1.1
+            #[Wed Jun 30 17:03:14.000] SSID 1 Entry State changed origin Static MAC 000a.000a.000a IPV4 1.1.1.1
             m3 = p3.match(line)
             if m3:
-        
+                ssids = parser_dict.setdefault('ssid', {})
                 ssid = int(m3.groupdict()['ssid'])
                 timestamp = m3.groupdict()['timestamp']
+
                 ssid_obj = ssids.setdefault(ssid, {})
                 events = ssid_obj.setdefault("events", {})
                 
                 ssid_event_no_dict.setdefault(ssid, 1)
                 event_no = ssid_event_no_dict[ssid]
         
-                event = {}
                 mac_addr_type = (m3.groupdict()['mac_addr_type']).lower()
                 mac_addr_type+="_mac"
                 ip_addr_type = (m3.groupdict()['ip_addr_type']).lower()
-                event.update({'ssid': ssid})
-                event.update({'event_type': 'bt_entry'})
-                event.update({'state': m3.groupdict()['entry_state']})
-                event.update({mac_addr_type: m3.groupdict()['mac_addr']})
-                event.update({ip_addr_type: m3.groupdict()['ip_addr']})
-                event.update({'timestamp': timestamp})
+                
+                event = {
+                    'ssid': ssid,
+                    'event_type': 'bt_entry',
+                    'state': m3.groupdict()['entry_state'],
+                    mac_addr_type: m3.groupdict()['mac_addr'],
+                    ip_addr_type: m3.groupdict()['ip_addr'],
+                    'timestamp': timestamp
+                    }
                 
                 events[event_no] = event
                 ssid_event_no_dict[ssid]+=1
                 continue
+
         return parser_dict
 
 # ====================================================
@@ -1420,8 +1433,12 @@ class ShowDeviceTrackingFeatures(ShowDeviceTrackingFeaturesSchema):
 
         for line in output.splitlines():
             line = line.strip()
+
+            # Feature name   priority state
+            # RA guard          192   READY 
+            # Device-tracking   128   READY
+            # Source guard       32   READY 
             m = p1.match(line)
-            
             if m:
                 features = parser_dict.setdefault('features', {})
                 feature = features.setdefault(m.groupdict()['feature'], {})
