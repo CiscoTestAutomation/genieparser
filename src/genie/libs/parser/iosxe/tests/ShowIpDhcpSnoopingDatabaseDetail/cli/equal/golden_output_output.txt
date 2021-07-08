@@ -1,0 +1,24 @@
+Agent URL : tftp://10.1.1.1/directory/file
+Write delay Timer : 300 seconds
+Abort Timer : 300 seconds
+Agent Running : No
+Delay Timer Expiry : 7 (00:00:07)
+Abort Timer Expiry : Not Running
+Last Succeded Time : None
+Last Failed Time : 17:14:25 UTC Sat Jul 7 2001
+Last Failed Reason : Unable to access URL.
+Total Attempts       :       21   Startup Failures :        0
+Successful Transfers :        0   Failed Transfers :       21
+Successful Reads     :        0   Failed Reads     :        0
+Successful Writes    :        0   Failed Writes    :       21
+Media Failures       :        0
+First successful access: Read
+Last ignored bindings counters :
+Binding Collisions    :        0   Expired leases    :        0
+Invalid interfaces    :        0   Unsupported vlans :        0
+Parse failures        :        0
+Last Ignored Time : None
+Total ignored bindings counters:
+Binding Collisions    :        0   Expired leases    :        0
+Invalid interfaces    :        0   Unsupported vlans :        0
+Parse failures        :        0
