@@ -1261,11 +1261,9 @@ class ShowDeviceTrackingEventsSchema(MetaParser):
                     int: {
                     "event_type": str,
                     Optional('event_name'): str, 
-                    Optional('event_state'): str,
                     Optional('prev_state'): str,
                     Optional('state'): str,
                     Optional('fsm_name'): str,
-                    Optional('fsm_state'): str,
                     Optional('ipv4'): str,
                     Optional('static_mac'): str,
                     Optional('ipv6'): str,
