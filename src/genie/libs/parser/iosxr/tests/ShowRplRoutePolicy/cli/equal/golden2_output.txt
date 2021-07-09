@@ -1,0 +1,10 @@
+    Mon Oct 21 19:00:38.337 EDT
+Listing for all Route Policy objects
+route-policy INTERNAL-route
+  if (community matches-any CMT-TP or community matches-any CMT-OLDTP or community matches-any CMT-SBTP or community matches-any CMT-FP) then
+    drop
+  else
+    pass
+  endif
+end-policy
+!
