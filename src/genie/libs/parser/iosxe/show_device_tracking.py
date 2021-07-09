@@ -1140,11 +1140,11 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
         probe_info = re.compile(r'^(?P<protocol>(PROBE_\S+))\s+(?P<message>(.*))?')
 
         # Device-tracking:    NDP      NS  [10]
-        dropped_message_info = re.compile(r'^(?P<feature>((?!reason)\S+)):\s+(?P<protocol>(\S+))'
+        dropped_message_info = re.compile(r'^(?P<feature>((?!reason).*)):\s+(?P<protocol>(\S+))'
                                           r'\s+(?P<message>(\S+))\s+\[(?P<dropped>(\d+))\]$')
 
         #   DHCPv6_REQUEST_NAK[1]
-        fault_info = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR)))$')
+        fault_info = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR))).*$')
 
         capture_list = [
             ndp_info,
@@ -1154,6 +1154,7 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
             acd_dad_info,
             probe_info,
             dropped_message_info,
+            fault_info,
         ]
 
         for line in out.splitlines():
@@ -1247,3 +1248,206 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
                                 packet_dict[packet] = int(num)
 
         return device_tracking_counters_vlanid_dict
+
+
+# ========================
+# Schema for:
+#   * 'show device-tracking counters interface {interface}'
+# ========================
+class ShowDeviceTrackingCountersInterfaceSchema(MetaParser):
+    '''Schema for:
+        * 'show device-tracking counters interface {interface}'
+    '''
+
+    schema = {
+        "interface": {
+            str: {
+                Any(): {
+                    Optional("acd&dad"): int,
+                    Optional(Or("ndp","dhcpv6","arp","dhcpv4","probe_send","probe_reply")): {
+                        Any(): int,
+                    },
+                    Any(): {
+                        "protocol": str,
+                        "message": str,
+                        "dropped": int,
+                    },
+                },
+                "faults": list,
+            },
+        },
+    }
+
+
+# ========================
+# Parser for:
+#   * 'show device-tracking counters interface {interface}'
+# ========================
+class ShowDeviceTrackingCountersInterface(ShowDeviceTrackingCountersInterfaceSchema):
+    '''Parser for:
+        * 'show device-tracking counters interface {interface}'
+    '''
+
+    cli_command = 'show device-tracking counters interface {interface}'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            cmd = self.cli_command.format(interface=interface)
+            out = self.device.execute(cmd)
+        else:
+            out = output
+
+        device_tracking_counters_interface_dict = {}
+        message_key = ''
+
+        # Received messages on Twe1/0/42:
+        received_messages_capture = re.compile(r'^Received\s+messages\s+on\s+\S+:$')
+
+        # Received Broadcast/Multicast messages on Twe1/0/42:
+        received_broadcast_multicast_messages_capture = re.compile(r'^Received\s+Broadcast/Multicast\s+messages\s+on\s+\S+:$')
+
+        # Bridged messages from Twe1/0/42:
+        bridged_messages_capture = re.compile(r'^Bridged\s+messages\s+from\s+\S+:$')
+
+        # Broadcast/Multicast converted to unicast messages from Twe1/0/42:
+        broadcast_multicast_to_unicast_messages_capture = re.compile(r'^Broadcast/Multicast\s+converted\s+to\s+unicast\s+messages\s+from\s+\S+:$')
+
+        # Probe message on Twe1/0/42:
+        probe_message_capture = re.compile(r'^Probe\s+message\s+on\s+\S+:$')
+
+        # Limited Broadcast to Local message on Twe1/0/42:
+        limited_broadcast_to_local_messages_capture = re.compile(r'^Limited\s+Broadcast\s+to\s+Local\s+message\s+on\s+\S+:$')
+
+        # Dropped messages on Twe1/0/42:
+        dropped_messages_capture = re.compile(r'^Dropped\s+messages\s+on\s+\S+:$')
+
+        # Faults on Twe1/0/42:
+        faults_capture = re.compile(r'^Faults\s+on\s+\S+:$')
+
+        # Protocol        Protocol message
+        # NDP             RS[70160] NS[20760] NA[14]
+        # DHCPv6
+        # ARP
+        # DHCPv4
+        # ACD&DAD         --[20760]
+        protocol_info = re.compile(r'^(?P<protocol>(Protocol))\s+(?P<message>(.*))$')
+        ndp_info = re.compile(r'^(?P<protocol>(NDP))\s+(?P<message>(.*))?')
+        dhcp6_info = re.compile(r'^(?P<protocol>(DHCPv6))\s+(?P<message>(.*))?$')
+        arp_info = re.compile(r'^(?P<protocol>(ARP))\s+(?P<message>(.*))?$')
+        dhcp4_info = re.compile(r'^(?P<protocol>(DHCPv4))\s+(?P<message>(.*))?$')
+        acd_dad_info = re.compile(r'^(?P<protocol>(ACD&DAD))\s+\S+\[(?P<message>(\d+))\]?$')
+
+        # PROBE_SEND      NS[19935] REQ[3]
+        # PROBE_REPLY     NA[14]
+        probe_info = re.compile(r'^(?P<protocol>(PROBE_\S+))\s+(?P<message>(.*))?')
+
+        # Flooding Suppress:  NDP      NS  [35]
+        dropped_message_info = re.compile(r'^(?P<feature>((?!reason).*)):\s+(?P<protocol>(\S+))'
+                                          r'\s+(?P<message>(\S+))\s+\[(?P<dropped>(\d+))\]$')
+
+        # DHCPv6_REBIND_NAK[3]
+        fault_info = re.compile(r'^(?P<fault>(FAULT_CODE_INVALID|DHCPv\d_\S+_(TIMEOUT|NAK|ERROR))).*$')
+
+        capture_list = [
+            ndp_info,
+            dhcp6_info,
+            arp_info,
+            dhcp4_info,
+            acd_dad_info,
+            probe_info,
+            dropped_message_info,
+            fault_info,
+        ]
+
+        for line in out.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+
+            if not device_tracking_counters_interface_dict:
+                message_dict = device_tracking_counters_interface_dict.setdefault('interface', {}) \
+                                                                      .setdefault(interface, {})
+
+            match = received_messages_capture.match(line)
+            if match:
+                message_key = "received"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            match = received_broadcast_multicast_messages_capture.match(line)
+            if match:
+                message_key = "received_broadcast_multicast"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            match = bridged_messages_capture.match(line)
+            if match:
+                message_key = "bridged"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            match = broadcast_multicast_to_unicast_messages_capture.match(line)
+            if match:
+                message_key = "broadcast_multicast_to_unicast"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            match = probe_message_capture.match(line)
+            if match:
+                message_key = "probe"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            match = limited_broadcast_to_local_messages_capture.match(line)
+            if match:
+                message_key = "limited_broadcast_to_local"
+                message_dict.setdefault(message_key, {})
+                continue
+
+            match = dropped_messages_capture.match(line)
+            if match:
+                dropped_dict = message_dict.setdefault('dropped', {})
+                continue
+
+            match = faults_capture.match(line)
+            if match:
+                faults_list = message_dict.setdefault('faults', [])
+                continue
+
+            for capture in capture_list:
+                match = capture.match(line)
+                if match:
+                    groups = match.groupdict()
+                    if capture == dropped_message_info:
+                        feature = groups['feature']
+                        dropped_dict.setdefault(feature, {})
+                        del groups['feature']
+
+                        for key, value in groups.items():
+                            if value.isdigit():
+                                dropped_dict[feature][key] = int(value)
+                            else:
+                                dropped_dict[feature][key] = value.lower()
+                    elif capture == fault_info:
+                        message = groups['fault']
+                        faults_list.append(message)
+                    elif capture == acd_dad_info:
+                        protocol = groups['protocol'].lower()
+                        message = groups['message']
+                        packet_dict = message_dict.setdefault(message_key, {})
+                        packet_dict[protocol] = int(message)
+                    else:
+                        protocol = groups['protocol'].lower()
+                        messages = groups['message'].split()
+                        packet_dict = message_dict.setdefault(message_key, {}).setdefault(protocol, {})
+                        packet_capture = re.compile(r'^(?P<packet>(\S+))\[(?P<num>(\d+))\]$')
+                        for message in messages:
+                            packet_match = packet_capture.match(message)
+                            if packet_match:
+                                packet_groups = packet_match.groupdict()
+                                packet = packet_groups['packet']
+                                num = packet_groups['num']
+                                packet_dict[packet] = int(num)
+
+        return device_tracking_counters_interface_dict
