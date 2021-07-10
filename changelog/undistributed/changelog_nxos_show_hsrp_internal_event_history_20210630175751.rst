@@ -7,4 +7,4 @@
     * Added ShowHsrpEventHistoryDebugs for:
         * 'show hsrp internal event-history debugs'
     * Added ShowHsrpEventHistoryMsgs for:
-        * for 'show hsrp internal event-history msgs'
+        * 'show hsrp internal event-history msgs'
