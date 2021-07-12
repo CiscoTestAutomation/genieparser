@@ -195,52 +195,66 @@ class ShowIpDhcpSnoopingDatabase(ShowIpDhcpSnoopingDatabaseSchema):
         
         # Agent URL : 
         p1 = re.compile(r'^Agent URL +: +(?P<agent_url>\S*)$')
+        
         # Write delay Timer : 300 seconds
         p2 = re.compile(r'^Write delay Timer +: +(?P<write_delay_secs>\d+) seconds$')
+        
         # Abort Timer : 300 seconds
         p3 = re.compile(r'^Abort Timer +: +(?P<abort_timer_secs>\d+) seconds$')
+        
         # Agent Running : No
         p4 = re.compile(r'^Agent Running +: +(?P<agent_running>\w+)$')
+        
         # Delay Timer Expiry : Not Running
         p5 = re.compile(r'^Delay Timer Expiry +: +(?P<delay_timer_expiry>.+)$')
+        
         # Abort Timer Expiry : Not Running
         p6 = re.compile(r'^Abort Timer Expiry +: +(?P<abort_timer_expiry>.+)$')
+        
         # Last Succeded Time : None
         p7 = re.compile(r'^Last Succee?ded Time +: +(?P<last_succeeded_time>.+)$')
+        
         # Last Failed Time : None
         p8 = re.compile(r'^Last Failed Time +: +(?P<last_failed_time>.+)$')
+        
         # Last Failed Reason : No failure recorded.
         p9 = re.compile(r'^Last Failed Reason +: +(?P<last_failed_reason>[\w ]+)\.?$')
+        
         # Total Attempts       :        0   Startup Failures :        0
         p10 = re.compile(r'^Total Attempts +: +(?P<total_attempts>\d+) +Startup Failures +: +(?P<startup_failures>\d+)$')
+        
         # Successful Transfers :        0   Failed Transfers :        0
         p11 = re.compile(r'^Successful Transfers +: +(?P<successful_transfers>\d+) +Failed Transfers +: +(?P<failed_transfers>\d+)$')
+        
         # Successful Reads     :        0   Failed Reads     :        0
         p12 = re.compile(r'^Successful Reads +: +(?P<successful_reads>\d+) +Failed Reads +: +(?P<failed_reads>\d+)$')
+        
         # Successful Writes    :        0   Failed Writes    :        0
         p13 = re.compile(r'^Successful Writes +: +(?P<successful_writes>\d+) +Failed Writes +: +(?P<failed_writes>\d+)$')
+        
         # Media Failures       :        0        
         p14 = re.compile(r'^Media Failures +: +(?P<media_failures>\d+)$')
+        
         # First successful access: Read
         p15 = re.compile(r'^First successful access *: +(?P<first_successful_access>\w+)$')
+        
         # Last ignored bindings counters :
         p16 = re.compile(r'^Last ignored bindings counters *:$')
+        
         # Binding Collisions    :        0   Expired leases    :        0
-        p17 = re.compile(r'^Binding Collisions +: +(?P<last_binding_collisions>\d+) +Expired leases +: +(?P<last_expired_leases>\d+)$')
+        p17 = re.compile(r'^Binding Collisions +: +(?P<binding_collisions>\d+) +Expired leases +: +(?P<expired_leases>\d+)$')
+        
         # Invalid interfaces    :        0   Unsupported vlans :        0
-        p18 = re.compile(r'^Invalid interfaces +: +(?P<last_invalid_interfaces>\d+) +Unsupported vlans : +(?P<last_unsupported_vlans>\d+)$')
+        p18 = re.compile(r'^Invalid interfaces +: +(?P<invalid_interfaces>\d+) +Unsupported vlans : +(?P<unsupported_vlans>\d+)$')
+        
         # Parse failures        :        0
-        p19 = re.compile(r'^Parse failures +: +(?P<last_parse_failures>\d+)$')
+        p19 = re.compile(r'^Parse failures +: +(?P<parse_failures>\d+)$')
+        
         # Last Ignored Time : None
         p20 = re.compile(r'^Last Ignored Time +: +(?P<last_ignored_time>.+)$')
-        # Total ignored bindings counters:
+        
+        # Total ignored bindings counters :
         p21 = re.compile(r'^Total ignored bindings counters *:$')
-        # Binding Collisions    :        0   Expired leases    :        0
-        p22 = re.compile(r'^Binding Collisions +: +(?P<total_binding_collisions>\d+) +Expired leases +: +(?P<total_expired_leases>\d+)$')
-        # Invalid interfaces    :        0   Unsupported vlans :        0
-        p23 = re.compile(r'^Invalid interfaces +: +(?P<total_invalid_interfaces>\d+) +Unsupported vlans +: +(?P<total_unsupported_vlans>\d+)$')
-        # Parse failures        :        0
-        p24 = re.compile(r'^Parse failures +: +(?P<total_parse_failures>\d+)$')
         
         # Processes the matched patterns
         for line in out.splitlines():
@@ -350,21 +364,21 @@ class ShowIpDhcpSnoopingDatabase(ShowIpDhcpSnoopingDatabaseSchema):
             # Binding Collisions    :        0   Expired leases    :        0
             m = p17.match(line)
             if m:
-                bindings_dict['binding_collisions'] = int(m.groupdict()['last_binding_collisions'])
-                bindings_dict['expired_leases'] = int(m.groupdict()['last_expired_leases'])
+                bindings_dict['binding_collisions'] = int(m.groupdict()['binding_collisions'])
+                bindings_dict['expired_leases'] = int(m.groupdict()['expired_leases'])
                 continue
             
             # Invalid interfaces    :        0   Unsupported vlans :        0
             m = p18.match(line)
             if m:
-                bindings_dict['invalid_interfaces'] = int(m.groupdict()['last_invalid_interfaces'])
-                bindings_dict['unsupported_vlans'] = int(m.groupdict()['last_unsupported_vlans'])
+                bindings_dict['invalid_interfaces'] = int(m.groupdict()['invalid_interfaces'])
+                bindings_dict['unsupported_vlans'] = int(m.groupdict()['unsupported_vlans'])
                 continue
             
             # Parse failures        :        0
             m = p19.match(line)
             if m:
-                bindings_dict['parse_failures'] = int(m.groupdict()['last_parse_failures'])
+                bindings_dict['parse_failures'] = int(m.groupdict()['parse_failures'])
                 continue
                 
             # Last Ignored Time : None
@@ -372,31 +386,11 @@ class ShowIpDhcpSnoopingDatabase(ShowIpDhcpSnoopingDatabaseSchema):
             if m:
                 detail_dict['last_ignored_time'] = m.groupdict()['last_ignored_time']
                 continue
-                
+            
             # Total ignored bindings counters :
             m = p21.match(line)
             if m:
                 bindings_dict = detail_dict.setdefault('total_ignored_bindings_counters', {})
-                continue
-                
-            # Binding Collisions    :        0   Expired leases    :        0
-            m = p22.match(line)
-            if m:
-                bindings_dict['binding_collisions'] = int(m.groupdict()['total_binding_collisions'])
-                bindings_dict['expired_leases'] = int(m.groupdict()['total_expired_leases'])
-                continue
-            
-            # Invalid interfaces    :        0   Unsupported vlans :        0
-            m = p23.match(line)
-            if m:
-                bindings_dict['invalid_interfaces'] = int(m.groupdict()['total_invalid_interfaces'])
-                bindings_dict['unsupported_vlans'] = int(m.groupdict()['total_unsupported_vlans'])
-                continue
-            
-            # Parse failures        :        0
-            m = p24.match(line)
-            if m:
-                bindings_dict['parse_failures'] = int(m.groupdict()['total_parse_failures'])
                 continue
             
         return ret_dict
