@@ -532,6 +532,7 @@ class ShowSpanningTreeDetailSchema(MetaParser):
                             Optional('port_type'): str,
                             'link_type': str,
                             Optional('internal'): bool,
+                            Optional('peer'): str,
                             Optional('root_guard'): bool,
                             Optional('pvst_simulation'): bool,
                             'counters': {
@@ -638,8 +639,9 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
 
         p15_1 = re.compile(r'^The +port +type +is +(?P<port_type>[\S]+)$')
 
-        p16 = re.compile(r'^Link +type +is +(?P<link_type>[\w\-]+)'
-                         r'(?: +by +default(?:, +(?P<internal>\S+))?)?$')
+        p16 = re.compile(r'^Link +type +is +(?P<link_type>[\w\-]+):?'
+                         r' +by +default,? +?((?P<internal>\w+),?)?'
+                         r' +?(Peer is +?(?P<peer_type>\S+))?$')
 
         p17 = re.compile(r'^PVST\s+Simulation\s+is\s+'
                          r'(?P<pvst_simulation>\w+)\s+by\s+default$')
@@ -704,12 +706,6 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
             if m:
                 inst_dict['topology_changes']  = int(m.groupdict()['topology_changes'])
                 inst_dict['time_since_topology_change'] = m.groupdict()['time_since_topology_change']
-                continue
-
-            #       from Port-channel24
-            m = p19.match(line)
-            if m:
-                inst_dict['topology_from_port'] = m.groupdict()['topology_from_port']
                 continue
 
             # Times:  hold 1, topology change 70, notification 10
@@ -824,14 +820,10 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                     internal_bool = True
 
                 intf_dict['internal'] = internal_bool
-                continue
 
-            # Root guard is enabled
-            m = p20.match(line)
-            if m:
-                group = m.groupdict()
-                intf_dict['root_guard'] = True if 'enabled' in m.groupdict()['root_guard'].lower() \
-                    else False
+                if m.groupdict()['peer_type']:
+                    peer_type = m.groupdict()['peer_type']
+                    intf_dict['peer'] = peer_type
                 continue
 
             # PVST Simulation is enabled by default
@@ -847,6 +839,20 @@ class ShowSpanningTreeDetail(ShowSpanningTreeDetailSchema):
                 counters_dict = intf_dict.setdefault('counters', {})
                 counters_dict['bpdu_sent'] = int(m.groupdict()['bpdu_sent'])
                 counters_dict['bpdu_received'] = int(m.groupdict()['bpdu_received'])
+                continue
+
+            #       from Port-channel24
+            m = p19.match(line)
+            if m:
+                inst_dict['topology_from_port'] = m.groupdict()['topology_from_port']
+                continue
+
+            # Root guard is enabled
+            m = p20.match(line)
+            if m:
+                group = m.groupdict()
+                intf_dict['root_guard'] = True if 'enabled' in m.groupdict()['root_guard'].lower() \
+                    else False
                 continue
 
         return ret_dict
