@@ -419,6 +419,7 @@ class ShowProcessesCpu(ShowProcessesCpuSchema):
 
     def cli(self, output=None):
 
+        global location
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
@@ -457,6 +458,7 @@ class ShowProcessesCpu(ShowProcessesCpuSchema):
                 ret_dict.setdefault('location', {})
                 if not ret_dict['location']:
                     location = 'CPU'
+
                 ret_dict.setdefault('location', {}).setdefault(location, {})
 
                 ret_dict['location'][location].update(
