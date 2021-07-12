@@ -12,6 +12,8 @@
                 * switchport block unicast
                 * switchport block multicast
                 * switchport trunk allowed vlan 820,900-905
+                * ip dhcp snooping trust
+                * ip arp inspection trust
     
     --------------------------------------------------------------------------------
                                 Fix

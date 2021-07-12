@@ -272,6 +272,8 @@ class ShowRunInterfaceSchema(MetaParser):
 				Optional('switchport_protected'): bool,
 				Optional('switchport_block_unicast'): bool,
 				Optional('switchport_block_multicast'): bool,
+				Optional('ip_dhcp_snooping_trust'): bool,
+				Optional('ip_arp_inspection_trust'): bool,
 			}
 		}
 	}
@@ -454,6 +456,12 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
 		# switchport trunk allowed vlan 820,900-905
 		p49 = re.compile(r'^switchport +trunk +allowed +vlan (?P<vlans>[\S\s]+)$')
+
+		# ip dhcp snooping trust
+		p50 = re.compile(r'^ip +dhcp +snooping +trust$')
+
+		# ip arp inspection trust
+		p51 = re.compile(r'^ip +arp +inspection +trust$')
 
 		for line in output.splitlines():
 			line = line.strip()
@@ -832,6 +840,20 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 				group = m.groupdict()
 				intf_dict.update({'switchport_trunk_vlans': group['vlans']})
 				# intf_dict.setdefault('switchport_trunk_vlans', {}).update(group['vlans'])
+				continue
+
+			# ip dhcp snooping trust
+			m = p50.match(line)
+			if m:
+				group = m.groupdict()
+				intf_dict.update({'ip_dhcp_snooping_trust': True})
+				continue
+
+			# ip arp inspection trust
+			m = p51.match(line)
+			if m:
+				group = m.groupdict()
+				intf_dict.update({'ip_arp_inspection_trust': True})
 				continue
 
 		return config_dict
