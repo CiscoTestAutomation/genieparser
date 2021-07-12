@@ -772,7 +772,7 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 			if m:
 				group = m.groupdict()
 				intf_dict.update({'channel_group': {
-									'chg': group['group'],
+									'chg': int(group['group']),
 									'mode': group['mode']},
 								})
 				continue
