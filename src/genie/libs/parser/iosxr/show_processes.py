@@ -419,9 +419,11 @@ class ShowProcessesCpu(ShowProcessesCpuSchema):
 
     def cli(self, output=None):
 
-        global location
-        out = self.device.execute(
-            self.cli_command) if output is None else output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+            
         # initial return dictionary
         ret_dict = {}
         index = 0
