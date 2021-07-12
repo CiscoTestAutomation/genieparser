@@ -419,7 +419,6 @@ class ShowProcessesCpu(ShowProcessesCpuSchema):
 
     def cli(self, output=None):
 
-        global location
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
