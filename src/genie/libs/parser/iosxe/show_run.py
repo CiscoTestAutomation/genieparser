@@ -260,7 +260,7 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('switchport_nonegotiate'): str,
 				Optional('vrf'): str,
 				Optional('channel_group'): {
-						'chg': str,
+						'chg': int,
 						'mode': str,
 				},
 				Optional('power_inline'): {
@@ -437,7 +437,6 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
 		# power inline static max 20000
 		p43 = re.compile(r'^power +inline +(?P<state>never|static)( +max +(?P<max_watts>[\d]+))?$')
-		# p42 = re.compile(r'^power +inline +(?P<state>[\w]+)$')
 
 		# spanning-tree bpdufilter enable
 		p44 = re.compile(r'^spanning-tree +bpdufilter +(?P<bpdufilter>[\S\s]+)$')
@@ -839,7 +838,6 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 			if m:
 				group = m.groupdict()
 				intf_dict.update({'switchport_trunk_vlans': group['vlans']})
-				# intf_dict.setdefault('switchport_trunk_vlans', {}).update(group['vlans'])
 				continue
 
 			# ip dhcp snooping trust
