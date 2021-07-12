@@ -4,6 +4,7 @@ interface GigabitEthernet1/0/2
  switchport mode trunk
  switchport voice vlan 499
  ip flow monitor IPv4_NETFLOW input
+ ip arp inspection trust
  ip arp inspection limit rate 100
  load-interval 30
  power inline static max 30000
@@ -14,5 +15,6 @@ interface GigabitEthernet1/0/2
  switchport block unicast
  switchport block multicast
  ip dhcp snooping limit rate 15
+ ip dhcp snooping trust
  channel-group 23 mode active
 end
