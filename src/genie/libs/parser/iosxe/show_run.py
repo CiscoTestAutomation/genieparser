@@ -253,10 +253,25 @@ class ShowRunInterfaceSchema(MetaParser):
                 Optional('snmp_trap_mac_notification_change_removed'): bool,
                 Optional('spanning_tree_bpduguard'): str,
                 Optional('spanning_tree_portfast'): bool,
+				Optional('spanning_tree_bpdufilter'): str,
                 Optional('switchport_access_vlan'): str,
+				Optional('switchport_trunk_vlans'): str,
                 Optional('switchport_mode'): str,
                 Optional('switchport_nonegotiate'): str,
 				Optional('vrf'): str,
+				Optional('channel_group'): {
+						'chg': str,
+						'mode': str,
+				},
+				Optional('power_inline'): {
+						Optional('state'): str,
+						Optional('max_watts'): str,
+				},
+				Optional('power_inline_port_priority'): str,
+				Optional('flow_monitor_input'): str,
+				Optional('switchport_protected'): bool,
+				Optional('switchport_block_unicast'): bool,
+				Optional('switchport_block_multicast'): bool,
 			}
 		}
 	}
@@ -414,6 +429,31 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 
 		# channel-group 1 mode active
 		p41 = re.compile(r'^channel-group +(?P<group>[\d]+) +mode +(?P<mode>[\w]+)$')
+
+		# power inline port priority high
+		p42 = re.compile(r'^power +inline +port +priority +(?P<power_priority>[\w]+)$')
+
+		# power inline static max 20000
+		p43 = re.compile(r'^power +inline +(?P<state>never|static)( +max +(?P<max_watts>[\d]+))?$')
+		# p42 = re.compile(r'^power +inline +(?P<state>[\w]+)$')
+
+		# spanning-tree bpdufilter enable
+		p44 = re.compile(r'^spanning-tree +bpdufilter +(?P<bpdufilter>[\S\s]+)$')
+
+		# ip flow monitor IPv4NETFLOW input
+		p45 = re.compile(r'^ip +flow +monitor +(?P<flow_monitor_input>[\w]+) +input$')
+
+		# switchport protected
+		p46 = re.compile(r'^switchport +protected$')
+
+		# switchport block unicast
+		p47 = re.compile(r'^switchport +block +unicast$')
+
+		# switchport block multicast
+		p48 = re.compile(r'^switchport +block +multicast$')
+
+		# switchport trunk allowed vlan 820,900-905
+		p49 = re.compile(r'^switchport +trunk +allowed +vlan (?P<vlans>[\S\s]+)$')
 
 		for line in output.splitlines():
 			line = line.strip()
@@ -721,13 +761,77 @@ class ShowRunInterface(ShowRunInterfaceSchema):
 				continue
 
 			# channel-group 1 mode active
-			p41 = re.compile(r'^channel-group +(?P<group>[\d]+) +mode +(?P<mode>[\w]+)$')
 			m = p41.match(line)
 			if m:
 				group = m.groupdict()
-				chg = group['group']
-				mode = group['mode']
-				intf_dict.setdefault('channel-group', {}).setdefault(chg, {}).update({'mode': mode})
+				intf_dict.update({'channel_group': {
+									'chg': group['group'],
+									'mode': group['mode']},
+								})
+				continue
+
+			# power inline port priority high
+			m = p42.match(line)
+			if m:
+				group = m.groupdict()
+				intf_dict.update({'power_inline_port_priority': group['power_priority']})
+
+			# power inline never|static
+			m = p43.match(line)
+			if m:
+				group = m.groupdict()
+				if group['max_watts']:
+					intf_dict.update({'power_inline': {
+									'state': group['state'],
+									'max_watts': group['max_watts']},
+									})
+				else:
+					intf_dict.update({'power_inline': {
+									'state': group['state']},
+									})
+				continue
+			
+			# spanning-tree bpdufilter enable
+			m = p44.match(line)
+			if m:
+				group = m.groupdict()
+				intf_dict.update({'spanning_tree_bpdufilter': group['bpdufilter']})
+				continue
+
+			# ip flow monitor IPv4NETFLOW input
+			m = p45.match(line)
+			if m:
+				group = m.groupdict()
+				intf_dict.update({'flow_monitor_input': group['flow_monitor_input']})
+				continue
+
+			# switchport protected
+			m = p46.match(line)
+			if m:
+				group = m.groupdict()
+				intf_dict.update({'switchport_protected': True})
+				continue
+
+			# switchport block unicast
+			m = p47.match(line)
+			if m:
+				group = m.groupdict()
+				intf_dict.update({'switchport_block_unicast': True})
+				continue
+
+			# switchport block multicast
+			m = p48.match(line)
+			if m:
+				group = m.groupdict()
+				intf_dict.update({'switchport_block_multicast': True})
+				continue
+
+			# switchport trunk allowed vlan 820,900-905
+			m = p49.match(line)
+			if m:
+				group = m.groupdict()
+				intf_dict.update({'switchport_trunk_vlans': group['vlans']})
+				# intf_dict.setdefault('switchport_trunk_vlans', {}).update(group['vlans'])
 				continue
 
 		return config_dict
