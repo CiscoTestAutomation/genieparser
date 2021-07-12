@@ -21,7 +21,7 @@ expected_output = {
             "ip_dhcp_snooping_trust": True,
             "ip_dhcp_snooping_limit_rate": "15",
             "channel_group": {
-                "chg": "23",
+                "chg": 23,
                 "mode": "active"
                 }
         }
