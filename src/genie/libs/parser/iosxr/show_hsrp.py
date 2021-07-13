@@ -11,54 +11,46 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
-                                         Default, Use
+from genie.metaparser.util.schemaengine import Any, Optional
 
 
-def regexp(expression):
-    def match(value):
-        if re.match(expression,value):
-            return value
-        else:
-            raise TypeError("Value '%s' doesnt match regex '%s'"
-                              %(value,expression))
-    return match
+# ======================================
+#   Schema for 'show hsrp summary'
+# ======================================
+class ShowHsrpSummarySchema(MetaParser):
+    """Schema for show hsrp summary"""
 
+    schema = {
+        'address_family': {
+            Any(): {
+                'state': {
+                    Any(): {
+                        'sessions': int,
+                        'slaves': int,
+                        'total': int,
+                    },
+                },
+                'intf_total': int,
+                'intf_up': int,
+                'intf_down': int,
+                'vritual_addresses_total': int,
+                'virtual_addresses_active': int,
+                'virtual_addresses_inactive': int,
+            },
+        },
+        'num_tracked_objects': int,
+        'tracked_objects_up': int,
+        'tracked_objects_down': int,
+        'num_bfd_sessions': int,
+        'bfd_sessions_up': int,
+        'bfd_sessions_down': int,
+        'bfd_sessions_inactive': int,
+    }
+             
 
 # ======================================
 #   Parser for 'show hsrp summary'
 # ======================================
-
-class ShowHsrpSummarySchema(MetaParser):
-    """Schema for show hsrp summary"""
-    schema = \
-                {'address_family': {
-                    Any(): {
-                        'state': {
-                            Any(): {
-                                'sessions': int,
-                                'slaves': int,
-                                'total': int,
-                            },
-                        },
-                        'intf_total': int,
-                        'intf_up': int,
-                        'intf_down': int,
-                        'vritual_addresses_total': int,
-                        'virtual_addresses_active': int,
-                        'virtual_addresses_inactive': int,
-                        },
-                    },
-                    'num_tracked_objects': int,
-                    'tracked_objects_up': int,
-                    'tracked_objects_down': int,
-                    'num_bfd_sessions': int,
-                    'bfd_sessions_up': int,
-                    'bfd_sessions_down': int,
-                    'bfd_sessions_inactive': int,
-                }
-             
-
 class ShowHsrpSummary(ShowHsrpSummarySchema):
     """Parser for show hsrp summary"""
 
@@ -75,15 +67,48 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
         hsrp_summary_dict = {}
         ipv4_set = False
         ipv6_set = False
+
+        # ALL            2      0     2         0      0     0
+        p1 = re.compile(r'(?P<state_name>[a-zA-Z]+)'
+                        r' +(?P<v4_sessions>\d+) +(?P<v4_slaves>\d+)'
+                        r' +(?P<v4_total>\d+) +(?P<v6_sessions>\d+)'
+                        r' +(?P<v6_slaves>\d+) +(?P<v6_total>\d+)$')
         
+        # 2    HSRP IPv4 interfaces    (1    up, 1    down)
+        p2 = re.compile(r'(?P<num_intf>\d+) +HSRP +IPv4 +interfaces'
+                        r' +\(+(?P<intf_up>\d+) +up,'
+                        r' +(?P<intf_down>\d+) +down\)$')
+
+        # 0    HSRP IPv6 interfaces    (0    up, 0    down)
+        p3 = re.compile(r'(?P<num_intf>\d+) +HSRP +IPv6 +interfaces'
+                        r' +\(+(?P<intf_up>\d+) +up,'
+                        r' +(?P<intf_down>\d+) +down\)$')
+
+        # 2    Virtual IPv4 addresses  (1    active, 1    inactive)
+        p4 = re.compile(r'(?P<num_addresses>\d+) +Virtual +IPv4'
+                        r' +addresses +\((?P<active>\d+) +active,'
+                        r' +(?P<inactive>\d+) +inactive\)$')
+
+        # 0    Virtual IPv6 addresses  (0    active, 0    inactive)
+        p5 = re.compile(r'(?P<num_addresses>\d+) +Virtual +IPv6'
+                        r' +addresses +\((?P<active>\d+) +active,'
+                        r' +(?P<inactive>\d+) +inactive\)$')
+
+        # 3    Tracked Objects    (1    up, 2    down)
+        p6 = re.compile(r'\s*(?P<num_tracked_objects>\d+) +Tracked'
+                        r' +Objects +\((?P<tracked_objects_up>\d+) +up,'
+                        r' +(?P<tracked_objects_down>\d+) +down\)$')
+
+        # 0    BFD sessions       (0    up, 0    down, 0    inactive)
+        p7 = re.compile(r'\s*(?P<num_bfd_sessions>\d+) +BFD +sessions'
+                        r' +\((?P<bfd_sessions_up>\d+) +up,'
+                        r' +(?P<bfd_sessions_down>\d+) +down,'
+                        r' +(?P<bfd_sessions_inactive>\d+) +inactive\)$')
+
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
             
             # ALL            2      0     2         0      0     0
-            p1 = re.compile(r'\s*(?P<state_name>[a-zA-Z]+)'
-                             ' +(?P<v4_sessions>[0-9]+) +(?P<v4_slaves>[0-9]+)'
-                             ' +(?P<v4_total>[0-9]+) +(?P<v6_sessions>[0-9]+)'
-                             ' +(?P<v6_slaves>[0-9]+) +(?P<v6_total>[0-9]+)$')
             m = p1.match(line)
             if m:
                 if 'address_family' not in hsrp_summary_dict:
@@ -125,9 +150,6 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                     continue
 
             # 2    HSRP IPv4 interfaces    (1    up, 1    down)
-            p2 = re.compile(r'\s*(?P<num_intf>[0-9]+) +HSRP +IPv4 +interfaces'
-                             ' +\(+(?P<intf_up>[0-9]+) +up,'
-                             ' +(?P<intf_down>[0-9]+) +down\)$')
             m = p2.match(line)
             if m:
                 if ipv4_set:
@@ -137,9 +159,6 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                     continue
 
             # 0    HSRP IPv6 interfaces    (0    up, 0    down)
-            p3 = re.compile(r'\s*(?P<num_intf>[0-9]+) +HSRP +IPv6 +interfaces'
-                             ' +\(+(?P<intf_up>[0-9]+) +up,'
-                             ' +(?P<intf_down>[0-9]+) +down\)$')
             m = p3.match(line)
             if m:
                 if ipv6_set:
@@ -149,9 +168,6 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                     continue
 
             # 2    Virtual IPv4 addresses  (1    active, 1    inactive)
-            p4 = re.compile(r'\s*(?P<num_addresses>[0-9]+) +Virtual +IPv4'
-                             ' +addresses +\((?P<active>[0-9]+) +active,'
-                             ' +(?P<inactive>[0-9]+) +inactive\)$')
             m = p4.match(line)
             if m:
                 if ipv4_set:
@@ -164,9 +180,6 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                     continue
 
             # 0    Virtual IPv6 addresses  (0    active, 0    inactive)
-            p5 = re.compile(r'\s*(?P<num_addresses>[0-9]+) +Virtual +IPv6'
-                             ' +addresses +\((?P<active>[0-9]+) +active,'
-                             ' +(?P<inactive>[0-9]+) +inactive\)$')
             m = p5.match(line)
             if m:
                 if ipv6_set:
@@ -179,9 +192,6 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                     continue
 
             # 3    Tracked Objects    (1    up, 2    down)
-            p6 = re.compile(r'\s*(?P<num_tracked_objects>[0-9]+) +Tracked'
-                             ' +Objects +\((?P<tracked_objects_up>[0-9]+) +up,'
-                             ' +(?P<tracked_objects_down>[0-9]+) +down\)$')
             m = p6.match(line)
             if m:
                 hsrp_summary_dict['num_tracked_objects'] = \
@@ -193,10 +203,6 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
                 continue
 
             # 0    BFD sessions       (0    up, 0    down, 0    inactive)
-            p7 = re.compile(r'\s*(?P<num_bfd_sessions>[0-9]+) +BFD +sessions'
-                             ' +\((?P<bfd_sessions_up>[0-9]+) +up,'
-                             ' +(?P<bfd_sessions_down>[0-9]+) +down,'
-                             ' +(?P<bfd_sessions_inactive>[0-9]+) +inactive\)$')
             m = p7.match(line)
             if m:
                 hsrp_summary_dict['num_bfd_sessions'] = \
@@ -213,9 +219,8 @@ class ShowHsrpSummary(ShowHsrpSummarySchema):
 
 
 # ======================================
-#   Parser for 'show hsrp detail'       
+#   Schema for 'show hsrp detail'       
 # ======================================
-
 class ShowHsrpDetailSchema(MetaParser):
     """Schema for show hsrp detail"""
     schema = {
@@ -383,11 +388,17 @@ class ShowHsrpDetailSchema(MetaParser):
     }
 
 
+# ======================================
+#   Parser for 'show hsrp detail'       
+# ======================================
 class ShowHsrpDetail(ShowHsrpDetailSchema):
     """Parser for show hsrp detail"""
+    
     cli_command = 'show hsrp detail'
-    exclude = ['last_state_change', 'standby_expire', 'active_expire', 'num_state_changes',
-        'last_coup_received', 'last_coup_sent', 'last_resign_received', 'last_resign_sent']
+
+    exclude = ['last_state_change', 'standby_expire', 'active_expire', 
+               'num_state_changes', 'last_coup_received', 'last_coup_sent', 
+               'last_resign_received', 'last_resign_sent']
 
     def cli(self,output=None):
         if output is None:
@@ -398,14 +409,127 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
         # Init vars
         hsrp_detail_dict = {}
         
+        # GigabitEthernet0/0/0/1 - IPv4 Group 5 (version 1)
+        # Bundle-Ether4.1296 - IPv4 Group 1296 (version 2)
+        p1 = re.compile(r'(?P<interface>[\w\/\.-]+)'
+                        r' +\- +(?P<address_family>\w+)'
+                        r' +Group +(?P<group_number>\d+)'
+                        r' +\(version +(?P<version>\d+)\)$')
+
+        # Label group10 (1 slaves)
+        p2 = re.compile(r'[lL]abel +(?P<session_name>\S+) +'
+                        r'\((?P<num_of_slaves>\d+) slaves\)')
+
+        # Slave to group10
+        p3 = re.compile(r'[sS]lave +to +(?P<follow>\S+)$')
+
+        # Local state is Active, priority 110, may preempt
+        # Local state is Init, priority 100, use bia
+        # Local state is Init, priority 100, may preempt, use bia
+        # Local state is Init
+        p4 = re.compile(
+            r'Local +state +is +(?P<hsrp_router_state>[a-zA-Z]+)'
+            r'(, +priority +(?P<priority>\d+))?'
+            r'(?P<preempt>, may preempt)?(?P<use_bia>, use bia)?$')
+
+        # Preemption delay for at least 10 secs
+        p5 = re.compile(r'Preemption +delay +for +at +least'
+                        r' +(?P<preempt_delay>\d+) +secs$')
+                    
+        # Hellotime 1000 msec holdtime 3000 msec
+        p6 = re.compile(r'Hellotime +(?P<hello_msec>\d+) +msec'
+                        r' +holdtime +(?P<hold_msec>\d+) +msec$')
+
+        # Configured hellotime 1000 msec holdtime 3000 msec
+        p7 = re.compile(r'Configured +hellotime'
+                        r' +(?P<cfgd_hello_msec>\d+) msec +holdtime'
+                        r' +(?P<cfgd_hold_msec>\d+) +msec$')
+
+        # Minimum delay 5 sec, reload delay 10 sec
+        p8 = re.compile(r'Minimum +delay +(?P<minimum_delay>\d+) +sec, +'
+                        r'reload +delay +(?P<reload_delay>\d+) +sec$')
+
+        # BFD enabled (GigabitEthernet0/0/0/1, 10.1.1.1): state inactive, interval 15 ms multiplier 3
+        # BFD enabled (Unknown, 0.0.0.0): state inactive, interval 0 ms multiplier 0
+        p9 = re.compile(
+            r'BFD enabled \((?P<bfd_interface_name>\S+), (?P<bfd_address>\S+)\)'
+            r': state (?P<bfd_state>\S+), interval (?P<bfd_interval>\d+) ms '
+            r'multiplier (?P<bfd_detection_multiplier>\d+)$')
+
+        # Hot standby IP address is 192.168.1.254 configured
+        # Hot standby IP address is fe80::205:73ff:fea0:1 configured
+        p10 = re.compile(r'Hot +standby +IP +address +is'
+                         r' +(?P<vip>[\w\:\.]+) +configured$')
+
+        # Active router is 
+        # Active router is 192.168.1.2 expires in 00:00:02
+        # Active router is 192.168.1.2, priority 90 expires in 00:00:02
+        p11 = re.compile(r'Active +router +is +(?P<active_router>([\w\:\.]+)'
+                         r'(, *[\w\.\:]+)?)(, *priority (?P<priority>\d+))?'
+                         r'( *(expired|expires +in +(?P<expire>[\w\:\.]+)))?$')
+
+        # Standby router is unknown expired
+        # Standby router is 192.168.1.2 expires in 00:00:02
+        # Standby router is fe80::5000:1cff:feff:a0b, 5200.1cff.0a0b expires in 00:00:02
+        p12 = re.compile(r'Standby +router +is +(?P<standby_router>([\w\:\.]+)'
+                         r'(, *[\w\.\:]+)?)( *(expired|expires +in +(?P<expire>'
+                         r'[\w\:\.]+)))?$')
+
+        # Standby virtual mac address is 0000.0cff.b30c, state is active
+        p13 = re.compile(r'Standby +virtual +mac +address +is'
+                         r' +(?P<virtual_mac_address>[\w\.]+),'
+                         r' +state +is +(?P<standby_state>[a-zA-Z ]+)$')
+
+        # Authentication text, string "cisco123"
+        p14 = re.compile(r'Authentication +text, +string'
+                         r' +\"(?P<authentication>\w+)\"$')
+
+        # 4 state changes, last state change 2d03h
+        # 2 state changes, last state change 01:18:43
+        p15 = re.compile(r'(?P<num_state_changes>\d+) +state'
+                         r' +changes, +last +state +change'
+                         r' +(?P<last_state_change>[\w\:\.]+)$')
+
+        # Standby ICMP redirects disabled
+        p16 = re.compile(r'Standby ICMP redirects disabled')
+
+        # Last coup sent:       Never
+        # Last coup sent:       Aug 11 08:26:25.272 UTC
+        p17 = re.compile(r'Last +coup +sent: +(?P<last_coup_sent>[\w\s\:\.]+)$')
+
+        # Last coup received:   Never
+        p18 = re.compile(r'Last +coup +received:'
+                         r' +(?P<last_coup_received>[\w\s\:\.]+)$')
+
+        # Last resign sent:     Never
+        p19 = re.compile(r'Last +resign +sent:'
+                         r' +(?P<last_resign_sent>[\w\s\:\.]+)$')
+
+        # Last resign received: Never
+        # Last resign received: Aug 11 08:26:25.272 UTC
+        p20 = re.compile(r'Last +resign +received:'
+                         r' +(?P<last_resign_received>[\w\s\:\.]+)$')
+
+        # Tracking states for 1 object, 1 up:
+        # Tracking states for 2 objects, 1 up:
+        p21 = re.compile(r'Tracking +states +for'
+                         r' +(?P<num_tracked_objects>\d+) +objects?,'
+                         r' +(?P<num_tracked_objects_up>\d+) up:$')
+
+        # Up   banana               Priority decrement: 20
+        # Down   apple               Priority decrement: 50
+        # Up   GigabitEthernet0/0/0/1 Priority decrement: 123
+        p22 = re.compile(r'(?P<tracked_status>\S+) +'
+                         r'((?P<tracked_object>\w+)|'
+                         r'(?P<tracked_interface>[\w\/\.\-]+)) +'
+                         r'Priority +decrement: +'
+                         r'(?P<tracked_object_priority_decrement>\d+)$')
+
         for line in out.splitlines():
-            line = line.rstrip()
+            line = line.strip()
 
             # GigabitEthernet0/0/0/1 - IPv4 Group 5 (version 1)
-            p1 = re.compile(r'\s*(?P<interface>[a-zA-Z0-9\/\.]+)'
-                             ' +\- +(?P<address_family>[a-zA-Z0-9]+)'
-                             ' +Group +(?P<group_number>[0-9]+)'
-                             ' +\(version +(?P<version>[0-9]+)\)$')
+            # Bundle-Ether4.1296 - IPv4 Group 1296 (version 2)
             m = p1.match(line)
             if m:
                 interface = m.groupdict()['interface']
@@ -447,8 +571,6 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Label group10 (1 slaves)
-            p2 = re.compile(r'\s*[lL]abel +(?P<session_name>\S+) +'
-                '\((?P<num_of_slaves>\d+) slaves\)')
             m = p2.match(line)
             if m:
                 group_key['session_name'] = m.groupdict()['session_name']
@@ -456,8 +578,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue            
 
             # Slave to group10
-            p2 = re.compile(r'\s*[sS]lave +to +(?P<follow>\S+)$')
-            m = p2.match(line)
+            m = p3.match(line)
             if m:
                 group_key['follow'] = m.groupdict()['follow']
                 continue
@@ -466,10 +587,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             # Local state is Init, priority 100, use bia
             # Local state is Init, priority 100, may preempt, use bia
             # Local state is Init
-            p2 = re.compile(r'\s*Local +state +is +(?P<hsrp_router_state>'
-                '[a-zA-Z]+)(, +priority +(?P<priority>[0-9]+))?(?P<preempt>, '
-                'may preempt)?(?P<use_bia>, use bia)?$')
-            m = p2.match(line)
+            m = p4.match(line)
             if m:
                 group_key['hsrp_router_state'] \
                     = m.groupdict()['hsrp_router_state'].lower()
@@ -485,17 +603,13 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Preemption delay for at least 10 secs
-            p3 = re.compile(r'\s*Preemption +delay +for +at +least'
-                             ' +(?P<preempt_delay>[0-9]+) +secs$')
-            m = p3.match(line)
+            m = p5.match(line)
             if m:
                 group_key['preempt_delay'] = int(m.groupdict()['preempt_delay'])
                 continue
 
             # Hellotime 1000 msec holdtime 3000 msec
-            p4 = re.compile(r'\s*Hellotime +(?P<hello_msec>[0-9]+) +msec'
-                             ' +holdtime +(?P<hold_msec>[0-9]+) +msec$')
-            m = p4.match(line)
+            m = p6.match(line)
             if m:
                 if 'timers' not in group_key:
                     group_key['timers'] = {}
@@ -508,10 +622,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Configured hellotime 1000 msec holdtime 3000 msec
-            p5 = re.compile(r'\s*Configured +hellotime'
-                             ' +(?P<cfgd_hello_msec>[0-9]+) msec +holdtime'
-                             ' +(?P<cfgd_hold_msec>[0-9]+) +msec$')
-            m = p5.match(line)
+            m = p7.match(line)
             if m:
                 if 'timers' not in group_key:
                     group_key['timers'] = {}
@@ -522,9 +633,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Minimum delay 5 sec, reload delay 10 sec
-            p6 = re.compile(r'\s*Minimum +delay +(?P<minimum_delay>[0-9]+)'
-                ' +sec, +reload +delay +(?P<reload_delay>[0-9]+) +sec$')
-            m = p6.match(line)
+            m = p8.match(line)
             if m:
                 if 'delay' not in hsrp_detail_dict[interface]:
                     hsrp_detail_dict[interface]['delay'] = {}
@@ -536,11 +645,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
 
             # BFD enabled (GigabitEthernet0/0/0/1, 10.1.1.1): state inactive, interval 15 ms multiplier 3
             # BFD enabled (Unknown, 0.0.0.0): state inactive, interval 0 ms multiplier 0
-            p7 = re.compile(r'\s*BFD enabled \((?P<bfd_interface_name>\S+), '
-                '(?P<bfd_address>\S+)\): state (?P<bfd_state>\S+), interval '
-                '(?P<bfd_interval>\d+) ms multiplier '
-                '(?P<bfd_detection_multiplier>\d+)$')
-            m = p7.match(line)
+            m = p9.match(line)
             if m:
                 if 'bfd' not in hsrp_detail_dict[interface]:
                     hsrp_detail_dict[interface]['bfd'] = {}
@@ -560,9 +665,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
 
             # Hot standby IP address is 192.168.1.254 configured
             # Hot standby IP address is fe80::205:73ff:fea0:1 configured
-            p7 = re.compile(r'\s*Hot +standby +IP +address +is'
-                             ' +(?P<vip>[\w\:\.]+) +configured$')
-            m = p7.match(line)
+            m = p10.match(line)
             if m:
                 vip = m.groupdict()['vip'].lower()
                 if ':' not in vip:
@@ -586,12 +689,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             # Active router is 
             # Active router is 192.168.1.2 expires in 00:00:02
             # Active router is 192.168.1.2, priority 90 expires in 00:00:02
-            p8 = re.compile(r'\s*Active +router +is'
-                             ' +(?P<active_router>([\w\:\.]+)(, *[\w\.\:]+)?)'
-                             '(, *priority (?P<priority>\d+))?'
-                             '( *(expired|expires +in +'
-                             '(?P<expire>[\w\:\.]+)))?$')
-            m = p8.match(line)
+            m = p11.match(line)
             if m:
                 role = m.groupdict()['active_router']
                 if role == 'local':
@@ -616,11 +714,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             # Standby router is unknown expired
             # Standby router is 192.168.1.2 expires in 00:00:02
             # Standby router is fe80::5000:1cff:feff:a0b, 5200.1cff.0a0b expires in 00:00:02
-            p9 = re.compile(r'\s*Standby +router +is'
-                             ' +(?P<standby_router>([\w\:\.]+)(, *[\w\.\:]+)?)'
-                             '( *(expired|expires +in +(?P<expire>'
-                             '[\w\:\.]+)))?$')
-            m = p9.match(line)
+            m = p12.match(line)
             if m:
                 role = m.groupdict()['standby_router']
                 if role == 'local':
@@ -643,10 +737,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Standby virtual mac address is 0000.0cff.b30c, state is active
-            p10 = re.compile(r'\s*Standby +virtual +mac +address +is'
-                              ' +(?P<virtual_mac_address>[a-zA-Z0-9\.]+),'
-                              ' +state +is +(?P<standby_state>[a-zA-Z ]+)$')
-            m = p10.match(line)
+            m = p13.match(line)
             if m:
                 group_key['virtual_mac_address'] = \
                     m.groupdict()['virtual_mac_address']
@@ -674,9 +765,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Authentication text, string "cisco123"
-            p11 = re.compile(r'\s*Authentication +text, +string'
-                              ' +\"(?P<authentication>[a-zA-Z0-9]+)\"$')
-            m = p11.match(line)
+            m = p14.match(line)
             if m:
                 group_key['authentication'] = \
                     m.groupdict()['authentication']
@@ -684,10 +773,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
 
             # 4 state changes, last state change 2d03h
             # 2 state changes, last state change 01:18:43
-            p12 = re.compile(r'\s*(?P<num_state_changes>[0-9]+) +state'
-                              ' +changes, +last +state +change'
-                              ' +(?P<last_state_change>[a-zA-Z0-9\:\.]+)$')
-            m = p12.match(line)
+            m = p15.match(line)
             if m:
                 if 'statistics' not in group_key:
                     group_key['statistics'] = {}
@@ -698,17 +784,14 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Standby ICMP redirects disabled
-            p13 = re.compile(r'\s*Standby ICMP redirects disabled')
-            m = p13.match(line)
+            m = p16.match(line)
             if m:
                 hsrp_detail_dict[interface]['redirects_disable'] = True
                 continue
 
             # Last coup sent:       Never
             # Last coup sent:       Aug 11 08:26:25.272 UTC
-            p13 = re.compile(r'\s*Last +coup +sent:'
-                              ' +(?P<last_coup_sent>[\w\s\:\.]+)$')
-            m = p13.match(line)
+            m = p17.match(line)
             if m:
                 if 'redirects_disable' not in hsrp_detail_dict[interface]:
                     hsrp_detail_dict[interface]['redirects_disable'] = False
@@ -719,9 +802,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Last coup received:   Never
-            p14 = re.compile(r'\s*Last +coup +received:'
-                              ' +(?P<last_coup_received>[\w\s\:\.]+)$')
-            m = p14.match(line)
+            m = p18.match(line)
             if m:
                 if 'statistics' not in group_key:
                     group_key['statistics'] = {}
@@ -730,9 +811,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                 continue
 
             # Last resign sent:     Never
-            p15 = re.compile(r'\s*Last +resign +sent:'
-                              ' +(?P<last_resign_sent>[\w\s\:\.]+)$')
-            m = p15.match(line)
+            m = p19.match(line)
             if m:
                 if 'statistics' not in group_key:
                     group_key['statistics'] = {}
@@ -742,9 +821,7 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
 
             # Last resign received: Never
             # Last resign received: Aug 11 08:26:25.272 UTC
-            p16 = re.compile(r'\s*Last +resign +received:'
-                              ' +(?P<last_resign_received>[\w\s\:\.]+)$')
-            m = p16.match(line)
+            m = p20.match(line)
             if m:
                 if 'statistics' not in group_key:
                     group_key['statistics'] = {}
@@ -756,14 +833,10 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
 
             # Tracking states for 1 object, 1 up:
             # Tracking states for 1 objects, 1 up:
-            p17 = re.compile(r'\s*Tracking +states +for'
-                              ' +(?P<num_tracked_objects>[0-9]+) +object(?:s)?,'
-                              ' +(?P<num_tracked_objects_up>[0-9]+) up:$')
-            m = p17.match(line)
+            m = p21.match(line)
             if m:
                 if 'tracked_objects' not in group_key:
                     group_key['tracked_objects'] = {}
-                track_found = True
                 group_key['tracked_objects']['num_tracked_objects'] = \
                     int(m.groupdict()['num_tracked_objects'])
                 group_key['tracked_objects']['num_tracked_objects_up'] = \
@@ -775,14 +848,8 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
             # Up   banana               Priority decrement: 20
             # Down   apple               Priority decrement: 50
             # Up   GigabitEthernet0/0/0/1 Priority decrement: 123
-            p18 = re.compile(r'\s*(?P<tracked_status>\S+) +'
-                '((?P<tracked_object>[a-zA-Z0-9]+)|'
-                '(?P<tracked_interface>[a-zA-Z0-9\/\.\-]+)) +'
-                'Priority +decrement: +'
-                '(?P<tracked_object_priority_decrement>[0-9]+)$')
-            m = p18.match(line)
+            m = p22.match(line)
             if m:
-                # if track_found:
                 tracked_object = m.groupdict()['tracked_object']
                 tracked_interface = m.groupdict()['tracked_interface']
                 if tracked_object:
@@ -809,5 +876,3 @@ class ShowHsrpDetail(ShowHsrpDetailSchema):
                     ['version'][version]['groups'][group_number] = group_key
 
         return hsrp_detail_dict
-
-# vim: ft=python et sw=4
