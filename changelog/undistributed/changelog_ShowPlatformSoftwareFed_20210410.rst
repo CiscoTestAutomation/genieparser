@@ -3,8 +3,8 @@
 --------------------------------------------------------------------------------
 * IOSXE
     * Modified ShowPlatformSoftwareFed:
-        * Updat regex P36 to include objid:ADJ SPECIAL:0 
-        * Updat regex P25 and corresponding schema to include bwalk parameters
+        * Update regex P36 to include objid:ADJ SPECIAL:0
+        * Update regex P25 and corresponding schema to include bwalk parameters
         * Modify regex P11 and corresponding schema to modify flags and pdflags from str to 
         * Modify regex P14 to include label_aal
         * Add blank lines and comments between regex

@@ -8832,7 +8832,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 label_id = int(group['label'])
                 lentry_dict = ret_dict.setdefault('lentry_label', {}).setdefault(label_id, {})
                 lentry_dict['nobj'] = list(str(group['nobj']).split(','))
-                lentry_dict['lentry_hdl'] = str(group['lentry_hdl'])
+                lentry_dict['lentry_hdl'] = group['lentry_hdl']
                 continue
 
             #modify_cnt:1 backwalk_cnt:2
