@@ -1,0 +1,59 @@
+Failover On
+Failover unit Primary
+Failover LAN Interface: folink GigabitEthernet0/2 (up)
+Reconnect timeout 0:00:00
+Unit Poll frequency 300 milliseconds, holdtime 999 milliseconds
+Interface Poll frequency 800 milliseconds, holdtime 5 seconds
+Interface Policy 1
+Monitored Interfaces 2 of 61 maximum
+MAC Address Move Notification Interval not set
+Version: Ours 9.12(2), Mate Unknown
+Serial Number: Ours 9A5GDAFMPL1, Mate Unknown
+Last Failover at: 11:24:17 UTC Apr 17 2021
+        This host: Primary - Active
+                Active time: 30858 (sec)
+                slot 0: ASAv hw/sw rev (/9.12(2)) status (Up Sys)
+                  Interface outside (0.0.0.0/fe80::e8f:c5ff:fe5f:d01): Unknown (Waiting)
+                  Interface inside (0.0.0.0/fe80::e8f:c5ff:fe5f:d02): Unknown (Waiting)
+        Other host: Secondary - Failed
+                Active time: 0 (sec)
+                  Interface outside (0.0.0.0): Unknown (Waiting)
+                  Interface inside (0.0.0.0): Unknown (Waiting)
+
+Stateful Failover Logical Update Statistics
+        Link : foupdateif GigabitEthernet0/3 (administratively down)
+        Stateful Obj    xmit       xerr       rcv        rerr
+        General         0          0          0          0
+        sys cmd         0          0          0          0
+        up time         0          0          0          0
+        RPC services    0          0          0          0
+        TCP conn        0          0          0          0
+        UDP conn        0          0          0          0
+        ARP tbl         0          0          0          0
+        Xlate_Timeout   0          0          0          0
+        IPv6 ND tbl     0          0          0          0
+        VPN IKEv1 SA    0          0          0          0
+        VPN IKEv1 P2    0          0          0          0
+        VPN IKEv2 SA    0          0          0          0
+        VPN IKEv2 P2    0          0          0          0
+        VPN CTCP upd    0          0          0          0
+        VPN SDI upd     0          0          0          0
+        VPN DHCP upd    0          0          0          0
+        SIP Session     0          0          0          0
+        SIP Tx  0          0          0          0
+        SIP Pinhole     0          0          0          0
+        Route Session   0          0          0          0
+        Router ID       0          0          0          0
+        User-Identity   0          0          0          0
+        CTS SGTNAME     0          0          0          0
+        CTS PAC         0          0          0          0
+        TrustSec-SXP    0          0          0          0
+        IPv6 Route      0          0          0          0
+        STS Table       0          0          0          0
+        Umbrella Device-ID      0          0          0          0
+
+        Logical Update Queue Information
+                        Cur     Max     Total
+        Recv Q:         0       0       0
+        Xmit Q:         0       0       0
+

@@ -1,0 +1,13 @@
+Route-policy:
+!
+route-policy OSPF2202BGP
+if tag eq 300 then
+set community DCBQ_VOZ
+set next-hop 10.20.96.53
+set local-preference 330
+elseif tag eq 30 then
+set community DCBQ_VOZ
+set next-hop 10.20.96.53
+set local-preference 310
+endif
+end-policy

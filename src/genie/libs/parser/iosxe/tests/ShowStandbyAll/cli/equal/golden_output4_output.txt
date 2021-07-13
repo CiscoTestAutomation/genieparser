@@ -1,0 +1,30 @@
+2021-06-30 20:43:52,223: %UNICON-INFO: +++ ran-pag-tasik.5 with alias 'cli': executing command 'show standby all' +++
+show standby all
+BDI3147 - Group 31
+  State is Active
+    17 state changes, last state change 12w6d
+  Virtual IP address is 10.190.99.49
+  Active virtual MAC address is 0000.0c07.ac1f (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac1f (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 1.856 secs
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.190.99.51, priority 90 (expires in 11.504 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3147-31" (default)
+  FLAGS: 1/1
+BDI3147 - Group 32
+  State is Active
+    17 state changes, last state change 12w6d
+  Virtual IP address is 10.188.109.1
+  Active virtual MAC address is 0000.0c07.ac20 (MAC In Use)
+    Local virtual MAC address is 0000.0c07.ac20 (v1 default)
+  Hello time 3 sec, hold time 10 sec
+    Next hello sent in 2.496 secs
+  Preemption enabled, delay min 180 secs
+  Active router is local
+  Standby router is 10.188.109.3, priority 90 (expires in 10.576 sec)
+  Priority 110 (configured 110)
+  Group name is "hsrp-BD3147-32" (default)
+  FLAGS: 1/1

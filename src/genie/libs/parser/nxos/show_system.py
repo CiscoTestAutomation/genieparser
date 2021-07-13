@@ -298,3 +298,361 @@ class ShowSystemInternalL2fwderMac(ShowSystemInternalL2fwderMacSchema):
                 continue
 
         return ret_dict
+
+
+class ShowSystemInternalKernelMeminfoSchema(MetaParser):
+    """
+    Schema for show system internal kernel meminfo
+    """
+    schema = {
+        'mem': {
+            'memtotal_kb': int,
+            'memfree_kb': int,
+            'memavailable_kb': int,
+        },
+        'buffers_kb': int,
+        'cached_kb': int,
+        'active': {
+            'active_kb': int,
+            'inactive_kb': int,
+            'active(anon)_kb': int,
+            'inactive(anon)_kb': int,
+            'active(file)_kb': int,
+            'inactive(file)_kb': int,
+        },
+        'unevictable_kb': int,
+        'mlocked_kb': int,
+        'swap': {
+            'swapcached_kb': int,
+            'swaptotal_kb': int,
+            'swapfree_kb': int,
+        },
+        'dirty_kb': int,
+        'writeback_kb': int,
+        'anonpages_kb': int,
+        'mapped_kb': int,
+        'shmem_kb': int,
+        'slab_kb': int,
+        'sreclaimable_kb': int,
+        'sunreclaim_kb': int,
+        'kernelstack_kb': int,
+        'pagetables_kb': int,
+        'nfs_unstable_kb': int,
+        'bounce_kb': int,
+        'writebacktmp_kb': int,
+        'commitlimit_kb': int,
+        'committed_as_kb': int,
+        'vmalloc': {
+            'vmalloctotal_kb': int,
+            'vmallocused_kb': int,
+            'vmallocchunk_kb': int,
+        },
+        'hardwarecorrupted_kb': int,
+        'hugepages': {
+            'hugepages_total': int,
+            'hugepages_free': int,
+            'hugepages_rsvd': int,
+            'hugepages_surp': int,
+            'hugepagesize_kb': int,
+        },
+        'directmap4k_kb': int,
+        'directmap2m_kb': int,
+    }
+
+
+class ShowSystemInternalKernelMeminfo(ShowSystemInternalKernelMeminfoSchema):
+    """
+    Parser for show system internal kernel meminfo
+    """
+
+    cli_command = 'show system internal system internal kernel meminfo'
+
+    def cli(self, output=None):
+
+        if not output:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # MemTotal:        5873172 kB
+        p1 = re.compile(r'(?P<mem_type>Mem.+):\s+(?P<amount>\d+)\skB$')
+
+        # Active(file):     236740 kB
+        p2 = re.compile(r'(?i)(?P<active_state>[in]*active.*):\s+(?P<amount>\d+)\skB$')
+
+        # SwapTotal:             0 kB
+        p3 = re.compile(r'(?P<swap_type>Swap.+):\s+(?P<amount>\d+)\skB$')
+
+        # VmallocChunk:   34359477316 kB
+        p4 = re.compile(r'(?P<vmalloc_type>Vmalloc.+):\s+(?P<amount>\d+)\skB$')
+
+        # HugePages_Surp:        0
+        p5 = re.compile(r'(?P<hugepages_type>Huge.+):\s+(?P<amount>\d+)$')
+
+        # Hugepagesize:       2048 kB
+        p6 = re.compile(r'(?P<hugepages_type>Huge.+):\s+(?P<amount>\d+)\s+kB$')
+
+        # Buffers:           38212 kB
+        p7 = re.compile(r'(?P<key>.+):\s+(?P<amount>\d+)(\skB)?$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # MemTotal:        5873172 kB
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                mem_dict = ret_dict.setdefault('mem', {})
+
+                key = group['mem_type'].lower() + '_kb'
+                mem_dict[key] = int(group['amount'])
+                continue
+
+            # Active(file):     236740 kB
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                active_dict = ret_dict.setdefault('active', {})
+
+                key = group['active_state'].lower() + '_kb'
+                active_dict[key] = int(group['amount'])
+                continue
+
+            # SwapTotal:             0 kB
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                swap_dict = ret_dict.setdefault('swap', {})
+
+                key = group['swap_type'].lower() + '_kb'
+                swap_dict[key] = int(group['amount'])
+                continue
+
+            # VmallocChunk:   34359477316 kB
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                vmalloc_dict = ret_dict.setdefault('vmalloc', {})
+
+                key = group['vmalloc_type'].lower() + '_kb'
+                vmalloc_dict[key] = int(group['amount'])
+                continue
+
+            # HugePages_Surp:        0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                hugepages_dict = ret_dict.setdefault('hugepages', {})
+
+                key = group['hugepages_type'].lower()
+                hugepages_dict[key] = int(group['amount'])
+                continue
+
+            # Hugepagesize:       2048 kB
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                hugepages_dict = ret_dict.setdefault('hugepages', {})
+
+                key = group['hugepages_type'].lower() + '_kb'
+                hugepages_dict[key] = int(group['amount'])
+                continue
+
+            # Buffers:           38212 kB
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+
+                key = group['key'].lower() + '_kb'
+                ret_dict[key] = int(group['amount'])
+                continue
+
+        return ret_dict
+
+
+class ShowSystemResourcesSchema(MetaParser):
+    """
+    Schema for show system resources
+    """
+
+    schema = {
+        'load_avg': {
+            'load_avg_1min': float,
+            'load_avg_5min': float,
+            'load_avg_15min': float,
+        },
+        'processes': {
+            'processes_total': int,
+            'processes_running': int,
+        },
+        'cpu_state': {
+            'cpu_state_user': float,
+            'cpu_state_kernel': float,
+            'cpu_state_idle': float,
+            'cpus': {
+                Any(): {
+                    'cpu_state_user': float,
+                    'cpu_state_kernel': float,
+                    'cpu_state_idle': float,
+                }
+            }
+        },
+        'memory_usage': {
+            'memory_usage_total_kb': int,
+            'memory_usage_used_kb': int,
+            'memory_usage_free_kb': int,
+        },
+        'kernel': {
+            'kernel_vmalloc_total_kb': int,
+            'kernel_vmalloc_free_kb': int,
+            'kernel_buffers_kb': int,
+            'kernel_cached_kb': int,
+        },
+        'current_memory_status': str,
+    }
+
+
+class ShowSystemResources(ShowSystemResourcesSchema):
+    """
+    Parser for show system resources
+    """
+
+    cli_command = 'show system resources'
+
+    def cli(self, output=None):
+        # execute command to get output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # Load average:   1 minute: 0.34   5 minutes: 0.40   15 minutes: 0.66
+        p1 = re.compile(r'^Load average\s*:\s+1 minute:\s+(?P<minute_one>[\d\.]+)\s+5 minutes:\s+'
+                        r'(?P<minute_five>\d+\.\d+)\s+15 minutes:\s+(?P<minute_fifteen>\d+\.\d+)$')
+
+        # Processes   :   901 total, 2 running
+        p2 = re.compile(r'^Processes\s*:\s+(?P<processes_total>\d+)\s+total,\s+'
+                        r'(?P<processes_running>\d+)\s+running$')
+
+        # CPU states  :   2.11% user,   11.64% kernel,   86.24% idle
+        #         CPU0 states  :   3.33% user,   12.22% kernel,   84.44% idle
+        p3 = re.compile(r'^CPU(?P<cpu_num>\d*)\s+states\s+:\s+(?P<user>\d+\.\d+)%\s+user,\s+'
+                        r'(?P<kernel>[\d+\.]+)%\s+kernel,\s+(?P<idle>\d+\.\d+)%\s+idle$')
+
+        # Memory usage:   5873172K total,   4189652K used,   1683520K free
+        p4 = re.compile(r'^Memory usage\s*:\s+(?P<total>\d+)K total,\s+'
+                        r'(?P<used>\d+)K used,\s+(?P<free>\d+)K free$')
+
+        # Kernel vmalloc:   0K total,   0K free
+        p5 = re.compile(r'^Kernel vmalloc\s*:\s+(?P<total>\d+)'
+                        r'K total,\s+(?P<free>\d+)K free$')
+
+        # Kernel buffers:   144876K Used
+        p6 = re.compile(r'^Kernel buffers\s*:\s+(?P<buffers>\d+)K Used$')
+
+        # Kernel cached :   2296916K Used
+        p7 = re.compile(r'^Kernel cached\s*:\s+(?P<cached>\d+)K Used$')
+
+        # Current memory status: OK
+        p8 = re.compile(r'^Current memory status\s*:\s+(?P<status>\w+)$')
+
+        ret_dict = {}
+
+        for line in out.splitlines():
+            if line:
+                line = line.strip()
+            else:
+                continue
+
+            # Load average:   1 minute: 0.34   5 minutes: 0.40   15 minutes: 0.66
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+
+                load_avg_dict = ret_dict.setdefault('load_avg', {})
+
+                load_avg_dict["load_avg_1min"] = float(group['minute_one'])
+                load_avg_dict["load_avg_5min"] = float(group['minute_five'])
+                load_avg_dict["load_avg_15min"] = float(group['minute_five'])
+                continue
+
+            # Processes   :   901 total, 2 running
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+
+                processes_dict = ret_dict.setdefault('processes', {})
+                processes_dict["processes_total"] = int(group['processes_total'])
+                processes_dict["processes_running"] = int(group['processes_running'])
+                continue
+
+            # CPU states  :   2.11% user,   11.64% kernel,   86.24% idle
+            #        CPU0 states  :   3.33% user,   12.22% kernel,   84.44% idle
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+
+                cpu_state_dict = ret_dict.setdefault('cpu_state', {})
+
+                if group['cpu_num']:
+                    cpu_id_dict = cpu_state_dict.setdefault(
+                        'cpus', {}).setdefault(int(group['cpu_num']), {})
+                    cpu_id_dict['cpu_state_user'] = float(group['user'])
+                    cpu_id_dict['cpu_state_kernel'] = float(group['kernel'])
+                    cpu_id_dict['cpu_state_idle'] = float(group['idle'])
+                    continue
+
+                cpu_state_dict['cpu_state_user'] = float(group['user'])
+                cpu_state_dict['cpu_state_kernel'] = float(group['kernel'])
+                cpu_state_dict['cpu_state_idle'] = float(group['idle'])
+                continue
+
+            # Memory usage:   5873172K total,   4189652K used,   1683520K free
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+
+                memory_usage_dict = ret_dict.setdefault('memory_usage', {})
+
+                memory_usage_dict['memory_usage_total_kb'] = int(group['total'])
+                memory_usage_dict['memory_usage_used_kb'] = int(group['used'])
+                memory_usage_dict['memory_usage_free_kb'] = int(group['free'])
+                continue
+
+            # Kernel vmalloc:   0K total,   0K free
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+
+                kernel_dict = ret_dict.setdefault('kernel', {})
+                kernel_dict['kernel_vmalloc_total_kb'] = int(group['total'])
+                kernel_dict['kernel_vmalloc_free_kb'] = int(group['free'])
+                continue
+
+            # Kernel buffers:   144876K Used
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+
+                kernel_dict = ret_dict.setdefault('kernel', {})
+                kernel_dict['kernel_buffers_kb'] = int(group['buffers'])
+                continue
+
+            # Kernel cached :   2296916K Used
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+
+                kernel_dict = ret_dict.setdefault('kernel', {})
+                kernel_dict['kernel_cached_kb'] = int(group['cached'])
+                continue
+
+            # Current memory status: OK
+            m = p8.match(line)
+            if m:
+                ret_dict["current_memory_status"] = m.groupdict()['status']
+                continue
+
+        return ret_dict

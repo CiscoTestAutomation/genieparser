@@ -1,0 +1,3 @@
+RP/0/RSP0/CPU0:R1#show variables boot
+Fri Jun  4 18:27:39.185 UTC
+root=/dev/panini_vol_grp/xr_lv68 platform=asr9k boardtype=RP cardtype=0x101014 iputype=0x02f52029 vmtype=xr-vm quiet virtvm bigphysarea="12M" chassis_type=0xef1015 intel_idle.max_cstate=0 processor.max_cstate=1 chassis_serial=FOC2412N8LP chassis_pid=ASR-9901 console=tty0 console=hvc0 prod=1 pci=hpmemsize=0M,hpiosize=0M
