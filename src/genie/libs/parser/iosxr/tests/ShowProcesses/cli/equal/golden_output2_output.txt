@@ -1,0 +1,22 @@
+RX#show processes
+        Fri Oct  4 18:35:26.878 UTC
+        JID    TID  Stack  pri  state        NAME             rt_pri
+        1      1       0K  20   Sleeping     init             0
+        67110  1574    0K  20   Sleeping     oom.sh           0
+        67134  1598    0K  20   Sleeping     cgroup_oom.sh    0
+        67135  1599    0K  20   Sleeping     oom.sh           0
+        67168  1632    0K  0    Sleeping     cgroup_oom       0
+        67677  2141    0K  20   Sleeping     app_config_back  0
+        67684  2148    0K  20   Sleeping     bash             0
+        67697  2161    0K  20   Sleeping     inotifywait      0
+        67698  2162    0K  20   Sleeping     bash             0
+        67741  2205    0K  20   Sleeping     dbus-daemon      0
+        67775  2239    0K  20   Sleeping     sshd             0
+        67785  2249    0K  20   Sleeping     rpcbind          0
+        67870  2334    0K  20   Sleeping     rngd             0
+        67879  2343    0K  20   Sleeping     syslogd          0
+        67910  2374    0K  20   Sleeping     xinetd           0
+        67945  2409    0K  20   Sleeping     crond            0
+        69064  3528    0K  20   Sleeping     ds_startup.sh    0
+        53     3529    0K  20   Sleeping     dsr              0
+        53     3614    0K  20   Sleeping     lwm_debug_threa  0
