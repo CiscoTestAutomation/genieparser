@@ -1,0 +1,6 @@
+EVI   BD    Ether Tag  Remote MAC 
+----- ----- ---------- ---------- 
+1     11    0          4         
+2     12    0          2         
+
+Total                  6
