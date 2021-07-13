@@ -86,7 +86,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
             # IP Multicast Routing Table for VRF "default" 
             p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
                              ' +[rR]outing +[tT]able +for +VRF '
-                            '+(?P<vrf>[a-zA-Z0-9\"]+)$')
+                            '+(?P<vrf>[\S]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -1001,8 +1001,9 @@ class ShowIpMrouteSummaryVrfAllSchema(MetaParser):
     schema = {'vrf':         
                 {Any():
                     {'address_family':
-                        {Any(): 
-                            {Optional('count_multicast_starg'): str 
+                        {Any(): { 
+                             'count_multicast_starg': str, 
+                             'count_multicast_sg': str 
                             },
                         },
                     }
@@ -1030,6 +1031,8 @@ class ShowIpMrouteSummaryVrfAll(ShowIpMrouteSummaryVrfAllSchema):
                             '+(?P<vrf>[\S]+)$')
             p2 = re.compile(r'^\s*Total +number +of +\(\*,G\) +routes:'
                             r' +(?P<count>[0-9]+)$')
+            p3 = re.compile(r'^\s*Total +number +of +\(S,G\) +routes:'
+                            r' +(?P<count>[0-9]+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -1051,5 +1054,11 @@ class ShowIpMrouteSummaryVrfAll(ShowIpMrouteSummaryVrfAllSchema):
                 count_multicast_starg = m.groupdict()['count']
                 if 'count_multicast_starg' not in mroute_dict['vrf'][vrf]['address_family'][address_family]:
                    mroute_dict['vrf'][vrf]['address_family'][address_family]['count_multicast_starg'] = count_multicast_starg
+                continue
+            m = p3.match(line)
+            if m:
+                count_multicast_sg = m.groupdict()['count']
+                if 'count_multicast_sg' not in mroute_dict['vrf'][vrf]['address_family'][address_family]:
+                   mroute_dict['vrf'][vrf]['address_family'][address_family]['count_multicast_sg'] = count_multicast_sg
                 continue
         return mroute_dict
