@@ -21,6 +21,7 @@ IOSXE parsers for the following show commands:
     * 'show platform software yang-management process'
     * 'show platform software yang-management process monitor'
     * 'show platform software yang-management process state'
+    * 'show platform software fed active fnf et-analytics-flows'
     * 'show platform software fed switch active mpls forwarding label {label} detail'
     * 'show platform software fed active mpls forwarding label {label} detail'
 '''
@@ -607,7 +608,7 @@ class ShowVersion(ShowVersionSchema):
         p57 = re.compile(r'^[Vv]ersion\s+ID\s+\:\s+(?P<version_id>.+)$')
 
         # clei_code_num
-        # CLEI Code Number                : AaalJ00ERT
+        # CLEI Code Number                : AAALJ00ERT
         p58 = re.compile(r'^CLEI\s+[Cc]ode\s+[Nn]umber\s+\:\s+(?P<clei_code_num>.+)$')
 
         # Daughterboard revision number   : A0
@@ -2173,7 +2174,7 @@ class ShowInventory(ShowInventorySchema):
 
                 # PID: ASR1000-RP2       , VID: V02  , SN: JAE153408NJ
                 # PID: ASR1000-RP2       , VID: V03  , SN: JAE1703094H
-                # PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0lb
+                # PID: WS-C3850-24P-E    , VID: V01  , SN: FCW1932D0LB
                 if ('RP' in pid) or ('WS-C' in pid) or ('R' in name):
                     rp_dict = slot_dict.setdefault('rp', {}).\
                         setdefault(pid, {})
@@ -5663,7 +5664,7 @@ class ShowPlatformHardwareQfpStatisticsDrop(ShowPlatformHardwareQfpStatisticsDro
 
         # Global Drop Stats                         Packets                  Octets
         # -------------------------------------------------------------------------
-        # Ipv4Noadj                                       7                     296
+        # Ipv4NoAdj                                       7                     296
         # Ipv4NoRoute                                   181                    7964
         p1 = re.compile(r'^(?P<global_drop_stats>\w+) +(?P<packets>\d+) +(?P<octets>\d+)$')
 
@@ -7945,6 +7946,542 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareM
 
         return super().cli(process=process, alloc_type=alloc_type, output=out)
 
+
+class ShowPlatformSoftwareIomdMacsecInterfaceBriefSchema(MetaParser):
+    """ Schema for
+        * show platform software iomd 1/0 macsec interface {interface} brief
+    """
+    schema = {
+        Optional('tx-sc'): {
+            Any(): {
+                'sub-interface': str,
+                'sc-idx': str,
+                'pre-cur-an': str,
+                'sci': str,
+                'sa-vp-rule-idx': str,
+                'cipher': str
+            }
+        },
+        Optional('rx-sc'): {
+            Any(): {
+                'sub-interface': str,
+                'sc-idx': str,
+                'pre-cur-an': str,
+                'sci': str,
+                'sa-vp-rule-idx': str,
+                'cipher': str
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceBrief(ShowPlatformSoftwareIomdMacsecInterfaceBriefSchema):
+    """ Parser for
+        * show platform software iomd 1/0 macsec interface {interface} brief
+    """
+
+    cli_command = 'show platform software iomd 1/0 macsec interface {interface} brief'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface))
+        else:
+            out = output
+
+        ret_dict = {}
+        #Tx SC
+        p1 = re.compile(r'(.*)Tx SC')
+
+        #Rx SC
+        p2 = re.compile(r'(.*)Rx SC')
+
+        #3/11  |   0    |     3/0    | f87a41252702008b | 50331759/ 2/ 1  |     GCM_AES_128 |
+        p3 = re.compile(r'(?P<if>\d+\/\d+) +\|'
+                        ' +(?P<sc_idx>\d+) +\|'
+                        ' +(?P<pre_cur_an>\d+\/\d+) +\|'
+                        ' +(?P<sci>\S+) +\|'
+                        ' +(?P<idx>\d+\/ \d+\/ \d+) +\|'
+                        ' +(?P<cipher>\S+) +\|'
+                        )
+
+        sess_tx=0
+        sess_rx=0
+        for line in out.splitlines():
+            line = line.strip()
+            m1 = p1.match(line)
+            if m1:
+                sc = 'tx'
+                tx_sc = ret_dict.setdefault('tx-sc', {})
+            m2 = p2.match(line)
+            if m2:
+                sc = 'rx'
+                rx_sc = ret_dict.setdefault('rx-sc', {})
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                if sc == 'tx':
+                    sess_tx+=1
+                    sc_tx_dict = tx_sc.setdefault(sess_tx, {})
+                    sc_tx_dict['sub-interface'] = group['if']
+                    sc_tx_dict['sc-idx'] = group['sc_idx']
+                    sc_tx_dict['pre-cur-an'] = group['pre_cur_an']
+                    sc_tx_dict['sci'] = group['sci']
+                    sc_tx_dict['sa-vp-rule-idx'] = group['idx']
+                    sc_tx_dict['cipher'] = group['cipher']
+                elif sc == 'rx':
+                    sess_rx+=1
+                    sc_rx_dict = rx_sc.setdefault(sess_rx, {})
+                    sc_rx_dict['sub-interface'] = group['if']
+                    sc_rx_dict['sc-idx'] = group['sc_idx']
+                    sc_rx_dict['pre-cur-an'] = group['pre_cur_an']
+                    sc_rx_dict['sci'] = group['sci']
+                    sc_rx_dict['sa-vp-rule-idx'] = group['idx']
+                    sc_rx_dict['cipher'] = group['cipher']
+        return ret_dict
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceDetailSchema(MetaParser):
+    """ Schema for
+        * show platform software iomd 1/0 macsec interface {interface} detail
+    """
+    schema = {
+        Optional('subport-11-tx'): {
+                'bypass': str,
+                'cipher': str,
+                'conf-offset': str,
+                'cur-an': str,
+                'delay-protection': str,
+                'encrypt': str,
+                'end-station': str,
+                'hashkey-len': str,
+                'key-len': str,
+                'next-pn': str,
+                'prev-an': str,
+                'rule-index': str,
+                'sa-index': str,
+                'scb': str,
+                'sci': str,
+                'vlan': str,
+                'vport-index': str
+        },
+        Optional('subport-12-tx'): {
+                'bypass': str,
+                'cipher': str,
+                'conf-offset': str,
+                'cur-an': str,
+                'delay-protection': str,
+                'encrypt': str,
+                'end-station': str,
+                'hashkey-len': str,
+                'key-len': str,
+                'next-pn': str,
+                'prev-an': str,
+                'rule-index': str,
+                'sa-index': str,
+                'scb': str,
+                'sci': str,
+                'vlan': str,
+                'vport-index': str
+        },
+        Optional('subport-11-rx'): {
+                   'bypass': str,
+                   'cipher': str,
+                   'conf-offset': str,
+                   'cur-an': str,
+                   'decrypt-frames': str,
+                   'hashkey-len': str,
+                   'key-len': str,
+                   'next-pn': str,
+                   'prev-an': str,
+                   'replay-protect': str,
+                   'replay-window-size': str,
+                   'rule-index': str,
+                   'sa-index': str,
+                   'sci': str,
+                   'validate-frames': str,
+                   'vport-index': str
+       },
+        Optional('subport-12-rx'): {
+                   'bypass': str,
+                   'cipher': str,
+                   'conf-offset': str,
+                   'cur-an': str,
+                   'decrypt-frames': str,
+                   'hashkey-len': str,
+                   'key-len': str,
+                   'next-pn': str,
+                   'prev-an': str,
+                   'replay-protect': str,
+                   'replay-window-size': str,
+                   'rule-index': str,
+                   'sa-index': str,
+                   'sci': str,
+                   'validate-frames': str,
+                   'vport-index': str
+       }}
+
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceDetail(ShowPlatformSoftwareIomdMacsecInterfaceDetailSchema):
+    """ Parser for
+        * show platform software iomd 1/0 macsec interface {interface} detail
+    """
+
+    cli_command = 'show platform software iomd 1/0 macsec interface {interface} detail'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #Port:3, Subport:11, Tx SC index:0
+        p1 = re.compile(r'Port\:\d+\, Subport\:(.*)\, Tx SC index')
+
+        #Port:3, Subport:11, Rx SC index:0
+        p2 = re.compile(r'Port\:\d+\, Subport\:(.*)\, Rx SC index')
+
+        #Prev AN: 3, Cur AN: 0
+        p3 = re.compile(r'Prev AN\: (?P<prev_an>\d+)\, +'
+                        'Cur AN\: (?P<cur_an>\d+)')
+
+        #SA index: 50331759, vport index: 2, rule index: 1
+        p4 = re.compile(r'SA index\: (?P<sa_index>\d+)\, +'
+                        'vport index\: (?P<vport_index>\d+)\, +'
+                        'rule index\: (?P<rule_index>\d+)')
+
+        #key_len: 16
+        p5 = re.compile(r'^key_len\: (?P<key_len>\d+)$')
+
+        #hashkey_len: 16
+        p6 = re.compile(r'^hashkey_len\: (?P<hashkey_len>\d+)$')
+
+        #bypass: 0
+        p7 = re.compile(r'^bypass\: (?P<bypass>\d+)$')
+
+        #nextPn: 1
+        p8 = re.compile(r'^nextPn\: (?P<nextPn>\d+)$')
+
+        #conf_offset: 0
+        p9 = re.compile(r'^conf_offset\: (?P<conf_offset>\d+)$')
+
+        #encrypt: 1
+        p10 = re.compile(r'^encrypt\: (?P<encrypt>\d+)$')
+
+        #vlan: 1
+        p11 = re.compile(r'^vlan\: (?P<vlan>\d+)$')
+
+        #end_station: 0
+        p12 = re.compile(r'^end_station\: (?P<end_station>\d+)$')
+
+        #scb: 0
+        p13 = re.compile(r'^scb\: (?P<scb>\d+)$')
+
+        #cipher: GCM_AES_128
+        p14 = re.compile(r'^cipher\: (?P<cipher>\S+)$')
+
+        #Delay protection: 0
+        p15 = re.compile(r'^Delay protection\: (?P<delay_protection>\d+)$')
+
+        #replay_protect: 1
+        p16 = re.compile(r'^replay_protect\: (?P<replay_protect>\d+)$')
+
+        #replay_window_size: 0
+        p17 = re.compile(r'^replay_window_size\: (?P<replay_window_size>\d+)$')
+
+        #decrypt_frames: 1
+        p18 = re.compile(r'^decrypt_frames\: (?P<decrypt_frames>\d+)$')
+
+        #validate_frames: 1
+        p19 = re.compile(r'^validate_frames\: (?P<validate_frames>\d+)$')
+
+        #sci:ecce1346f902008c
+        p20 = re.compile(r'^sci\:(?P<sci>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m1 = p1.match(line)
+            if m1:
+                sc = 'tx'
+                subport_tx = m1.group(1)
+                subport_tx_dict = ret_dict.setdefault('subport-{}-tx'.format(subport_tx), {})
+            m2 = p2.match(line)
+            if m2:
+                sc = 'rx'
+                subport_rx = m2.group(1)
+                subport_rx_dict = ret_dict.setdefault('subport-{}-rx'.format(subport_rx), {})
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['prev-an'] = group['prev_an']
+                    subport_tx_dict['cur-an'] = group['cur_an']
+                elif sc == 'rx':
+                    subport_rx_dict['prev-an'] = group['prev_an']
+                    subport_rx_dict['cur-an'] = group['cur_an']
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['sa-index'] = group['sa_index']
+                    subport_tx_dict['vport-index'] = group['vport_index']
+                    subport_tx_dict['rule-index'] = group['rule_index']
+                elif sc == 'rx':
+                    subport_rx_dict['sa-index'] = group['sa_index']
+                    subport_rx_dict['vport-index'] = group['vport_index']
+                    subport_rx_dict['rule-index'] = group['rule_index']
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['key-len'] = group['key_len']
+                elif sc == 'rx':
+                    subport_rx_dict['key-len'] = group['key_len']
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['hashkey-len'] = group['hashkey_len']
+                elif sc == 'rx':
+                    subport_rx_dict['hashkey-len'] = group['hashkey_len']
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['bypass'] = group['bypass']
+                elif sc == 'rx':
+                    subport_rx_dict['bypass'] = group['bypass']
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['next-pn'] = group['nextPn']
+                elif sc == 'rx':
+                    subport_rx_dict['next-pn'] = group['nextPn']
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                if sc == 'tx':
+                   subport_tx_dict['conf-offset'] = group['conf_offset']
+                elif sc == 'rx':
+                   subport_rx_dict['conf-offset'] = group['conf_offset']
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['encrypt'] = group['encrypt']
+                elif sc == 'rx':
+                    subport_rx_dict['encrypt'] = group['encrypt']
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['vlan'] = group['vlan']
+                elif sc == 'rx':
+                    subport_rx_dict['vlan'] = group['vlan']
+            m12 = p12.match(line)
+            if m12:
+                group = m12.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['end-station'] = group['end_station']
+                elif sc == 'rx':
+                    subport_rx_dict['end-station'] = group['end_station']
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['scb'] = group['scb']
+                elif sc == 'rx':
+                    subport_rx_dict['scb'] = group['scb']
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['cipher'] = group['cipher']
+                elif sc == 'rx':
+                    subport_rx_dict['cipher'] = group['cipher']
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['delay-protection'] = group['delay_protection']
+                elif sc == 'rx':
+                    subport_rx_dict['delay-protection'] = group['delay_protection']
+            m16 = p16.match(line)
+            if m16:
+                group = m16.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['replay-protect'] = group['replay_protect']
+                elif sc == 'rx':
+                    subport_rx_dict['replay-protect'] = group['replay_protect']
+            m17 = p17.match(line)
+            if m17:
+                group = m17.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['replay-window-size'] = group['replay_window_size']
+                elif sc == 'rx':
+                    subport_rx_dict['replay-window-size'] = group['replay_window_size']
+            m18 = p18.match(line)
+            if m18:
+                group = m18.groupdict()
+                if sc == 'tx':
+                     subport_tx_dict['decrypt-frames'] = group['decrypt_frames']
+                elif sc == 'rx':
+                     subport_rx_dict['decrypt-frames'] = group['decrypt_frames']
+            m19 = p19.match(line)
+            if m19:
+                group = m19.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['validate-frames'] = group['validate_frames']
+                elif sc == 'rx':
+                    subport_rx_dict['validate-frames'] = group['validate_frames']
+            m20 = p20.match(line)
+            if m20:
+                group = m20.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['sci'] = group['sci']
+                elif sc == 'rx':
+                    subport_rx_dict['sci'] = group['sci']
+
+        return ret_dict
+
+
+class ShowPlatformSoftwareFedactiveFnfEtAnalyticsFlowsSchema(MetaParser):
+    """ Schema for
+        * show platform software fed active fnf et-analytics-flows
+    """
+    schema = {
+            'current-eta-records': int,
+            'excess-packets-received': int,
+            'excess-syn-received': int,
+            'total-eta-fnf': int,
+            'total-eta-idp': int,
+            'total-eta-records': int,
+            'total-eta-splt': int,
+            'total-packets-out-of-order': int,
+            'total-packets-received': int,
+            'total-packets-retransmitted': int
+            }
+
+
+class ShowPlatformSoftwareFedactiveFnfEtAnalyticsFlows(ShowPlatformSoftwareFedactiveFnfEtAnalyticsFlowsSchema):
+    """ Parser for
+        * show platform software fed active fnf et-analytics-flows
+    """
+
+    cli_command = 'show platform software fed active fnf et-analytics-flows'
+
+    def cli(self, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #Total packets received     : 80
+        p1 = re.compile(r'Total +packets +received +: +(?P<total_pkts>\d+)')
+
+        #Excess packets received    : 60
+        p2 = re.compile(r'Excess +packets +received +: +(?P<excess_pkts>\d+)')
+
+        #Excess syn received        : 0
+        p3 = re.compile(r'Excess +syn +received +: +(?P<excess_syn>\d+)')
+
+        #Total eta records added    : 4
+        p4 = re.compile(r'Total +eta +records +added +: +(?P<tot_eta>\d+)')
+
+        #Current eta records        : 0
+        p5 = re.compile(r'Current +eta +records +: +(?P<cur_eta>\d+)')
+
+        #Total eta splt exported    : 2
+        p6 = re.compile(r'Total +eta +splt +exported +: +(?P<eta_splt>\d+)')
+
+        #Total eta IDP exported     : 2
+        p7 = re.compile(r'Total +eta +IDP +exported +: +(?P<eta_idp>\d+)')
+
+        #Total eta-fnf records      : 2
+        p8 = re.compile(r'Total +eta\-fnf +records +: +(?P<eta_fnf>\d+)')
+
+        #Total retransmitted pkts   : 0
+        p9 = re.compile(r'Total +retransmitted +pkts +: +(?P<retr_pkts>\d+)')
+
+        #Total out of order pkts    : 0
+        p10 = re.compile(r'Total +out +of +order +pkts +: +(?P<order_pkts>\d+)')
+
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            #Total packets received     : 80
+            m1 = p1.match(line)
+            if m1:
+                group = m1.groupdict()
+                ret_dict["total-packets-received"] = int(group["total_pkts"])
+
+            #Excess packets received    : 60
+            m2 = p2.match(line)
+            if m2:
+                group = m2.groupdict()
+                ret_dict["excess-packets-received"] = int(group["excess_pkts"])
+
+            #Excess syn received        : 0
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                ret_dict["excess-syn-received"] = int(group["excess_syn"])
+
+            #Total eta records added    : 4
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                ret_dict["total-eta-records"] = int(group["tot_eta"])
+
+            #Current eta records        : 0
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                ret_dict["current-eta-records"] = int(group["cur_eta"])
+
+            #Total eta splt exported    : 2
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                ret_dict["total-eta-splt"] = int(group["eta_splt"])
+
+            #Total eta IDP exported     : 2
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                ret_dict["total-eta-idp"] = int(group["eta_idp"])
+
+            #Total eta-fnf records      : 2
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                ret_dict["total-eta-fnf"] = int(group["eta_fnf"])
+
+            #Total retransmitted pkts   : 0
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                ret_dict["total-packets-retransmitted"] = int(group["retr_pkts"])
+
+            #Total out of order pkts    : 0
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                ret_dict["total-packets-out-of-order"] = int(group["order_pkts"])
+        return ret_dict
+
+
 # =============================================
 # Schema for 'show platform software fed switch active mpls forwarding label <label> detail'
 # Schema for 'show platform software fed active mpls forwarding label <label> detail'
@@ -7984,7 +8521,7 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
                     'nobj0': list,
                     'nobj1': list,
                     'modify': int,
-                    'bwalk': int,     
+                    'bwalk': int,
                 },
                 Optional('label'):{
                     Any():{
@@ -8046,7 +8583,7 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
                 Optional('lb'):{
                     Any():{
                         'ecr_map_objid': int,
-                        'link_type': str, 
+                        'link_type': str,
                         'num_choices': int,
                         'flags': str,
                         'mpls_ecr': int,
@@ -8055,7 +8592,7 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
                         'ecrh': str,
                         'old_ecrh': str,
                         'modify_cnt': int,
-                        'bwalk_cnt': int, 
+                        'bwalk_cnt': int,
                         'subwalk_cnt': int,
                         'finish_cnt': int,
                         Optional('bwalk'):{
@@ -8076,9 +8613,9 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
                 Optional('sw_enh_ecr_scale'):{
                     Any():{
                         'llabel': int,
-                        'eos': int, 
+                        'eos': int,
                         'adjs': int,
-                        'mixed_adj': str, 
+                        'mixed_adj': str,
                         'reprogram_hw': str,
                         'ecrhdl': str,
                         'ecr_hwhdl': str,
@@ -8092,18 +8629,18 @@ class ShowPlatformSoftwareFedSchema(MetaParser):
                                 Optional('l3adj_flags'): str,
                                 Optional('recirc_adj_id'): int,
                                 'sih': str,
-                                'di_id': int, 
+                                'di_id': int,
                                 'rih': str,
                                 Optional('adj_lentry'): str,
                             },
                         },
                     },
-                },    
-           
+                },
+
             }
         }
     }
-    
+
 # ================================================================
 # Parser for:
 #   * 'show platform software fed '
@@ -8131,7 +8668,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
             out = self.device.execute(cmd)
         else:
             out = output
-        
+
 
         #LENTRY:label:22 nobj:(EOS, 142) lentry_hdl:0xde00000a
         p1 = re.compile(r'^LENTRY:label:+(?P<label>\d+)\s+nobj:\(+'
@@ -8163,11 +8700,11 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                         r'(?P<local_label>\d+)\s+flags:+\S:+'
                         r'(?P<flags>[\S\s]+)\s+pdflags:+'
                         r'(?P<pdflags>\S+)$')
-        
+
         #nobj0:(LABEL, 143), nobj1:(LABEL, 141) modify:1 bwalk:0
         p9 = re.compile(r'^nobj0:\(+(?P<nobj0>[\w\,\s]+)+\)+\,\s+nobj1:\(+'
                         r'(?P<nobj1>[\w\,\s]+)+\)\s+modify:+(?P<modify>\d+)\s+bwalk:+(?P<bwalk>\d+)$')
-    
+
         #LABEL:objid:143 link_type:MPLS local_label:22 outlabel:(3, 0)
         p10 = re.compile(r'LABEL:+objid:+(?P<objid>\d+)\s+link_type:+'
                          r'(?P<link_type>\w+)\s+local_label:+'
@@ -8200,7 +8737,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                          r'(?P<ri>\w+)+,\s+ri_id:+(?P<ri_id>\w+)\s+phdl:+'
                          r'(?P<phdl>\w+)+,\s+ref_cnt:+(?P<ref_cnt>\d+)$')
 
-        #si:0x7f02737cc6b8, si_id:0x4027, di_id:0x526d 
+        #si:0x7f02737cc6b8, si_id:0x4027, di_id:0x526d
         p17 = re.compile(r'^si:+(?P<si>\w+)+,\s+si_id:+(?P<si_id>\w+)+,\s+di_id:+(?P<di_id>\w+)$')
 
         #ADJ:objid:71 {link_type:MPLS ifnum:0x7c, adj:0x53000020, si: 0x7ff791190278
@@ -8213,13 +8750,13 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                          r'(?P<link_type>\w+)\s+ifnum:+(?P<ifnum>\w+)+,\s+adj:+'
                          r'(?P<adj>\w+)+,\s+si:+\s(?P<si>\w+)\s+IPv4:+\s+'
                          r'(?P<IPv4>[\d\.]+)\s+\}$')
-        
+
         #LENTRY:label:75 not found...
         p20 = re.compile(r'^LENTRY:label:+(?P<label>\d+)\snot +found\S+$')
-        
+
         #AAL: Handle not found:0
         p21 = re.compile(r'^AAL:\s+Handle\ not\ found:\S$')
-       
+
         #LB:obj_id:38 ecr_map_objid:0 link_type:IP num_choices:2 Flags:0
         p22 = re.compile(r'LB:+obj_id:+(?P<obj_id>\d+)\s+ecr_map_objid:+'
                          r'(?P<ecr_map_objid>\d+)\s+link_type:+'
@@ -8272,7 +8809,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
 
         # sih:0x7f02737e11c8(182) di_id:20499 rih:0x7f02737e0bf8(74)
         p33 = re.compile(r'sih:+(?P<sih>\S+)\s+di_id:(?P<di_id>\d+)\s+rih:+(?P<rih>\S+)$')
-        
+
         # adj_lentry [eos0:0x7f02734123b8 eos1:0x7f02737ec5e8]
         p34 = re.compile(r'adj_lentry\s+(?P<adj_lentry>[\S\s]+)$')
 
@@ -8297,7 +8834,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 lentry_dict['nobj'] = list(str(group['nobj']).split(','))
                 lentry_dict['lentry_hdl'] = str(group['lentry_hdl'])
                 continue
-            
+
             #modify_cnt:1 backwalk_cnt:2
             m = p2.match(line)
             if m:
@@ -8312,7 +8849,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 group = m.groupdict()
                 lentry_dict['lspa_handle'] = str(group['lspa_handle'])
                 continue
-            
+
             #AAL: id:3724541962 lbl:22
             m = p4.match(line)
             if m:
@@ -8339,7 +8876,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 eos1_dict['adj_hdl'] = str(group['adj_hdl'])
                 eos1_dict['hw_hdl'] = str(group['hw_hdl'])
                 continue
-            
+
             #deagg_vrf_id = 0 lspa_handle:0
             m = p7.match(line)
             if m:
@@ -8347,7 +8884,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 aal_dict['deagg_vrf_id'] = int(group['deagg_vrf_id'])
                 aal_dict['lspa_handle'] = str(group['lspa_handle'])
                 continue
-            
+
             #EOS:objid:142 local_label:0 flags:0:() pdflags:0
             m = p8.match(line)
             if m:
@@ -8358,7 +8895,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 eos_dict['flags'] = str(group['flags'])
                 eos_dict['pdflags'] = str(group['pdflags'])
                 continue
-            
+
             #nobj0:(LABEL, 143), nobj1:(LABEL, 141) modify:1 bwalk:0
             m = p9.match(line)
             if m:
@@ -8368,7 +8905,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 ret_dict['lentry_label'][label_id]['eos']['modify']=int(group['modify'])
                 ret_dict['lentry_label'][label_id]['eos']['bwalk'] = int(group['bwalk'])
                 continue
-            
+
             #LABEL:objid:143 link_type:MPLS local_label:22 outlabel:(3, 0)
             m = p10.match(line)
             if m:
@@ -8379,7 +8916,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 label_dict['local_label'] = int(group['local_label'])
                 label_dict['outlabel'] = str(group['outlabel'])
                 continue
-            
+
             #flags:0x18:(POP,PHP,) pdflags:0:(INSTALL_HW_OK,) adj_handle:0x83000039
             m = p11.match(line)
             if m:
@@ -8437,7 +8974,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 labelaal_dict['label_type'] = int(group['label_type'])
                 labelaal_dict['rewrite_type'] = str(group['rewrite_type'])
                 continue
-            
+
             #vlan_id:0 vrf_id:0 ri:0x7f02737cc1e8, ri_id:0x3e phdl:0xab000447, ref_cnt:1
             m = p16.match(line)
             if m:
@@ -8450,7 +8987,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 labelaal_dict['ref_cnt'] = int(group['ref_cnt'])
                 continue
 
-            #si:0x7f02737cc6b8, si_id:0x4027, di_id:0x526d 
+            #si:0x7f02737cc6b8, si_id:0x4027, di_id:0x526d
             m = p17.match(line)
             if m:
                 group = m.groupdict()
@@ -8534,7 +9071,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 lb_dict['aal'] = {}
                 lb_dict['bwalk'] = {}
                 continue
-            
+
             #bwalk:[req:0 in_prog:0 nested:0]
             m = p25.match(line)
             if m:
@@ -8543,7 +9080,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 lb_dict['bwalk']['in_prog'] = int(group['in_prog'])
                 lb_dict['bwalk']['nested'] = int(group['nested'])
                 continue
-            
+
             #AAL: ecr:id:4177526786 af:0 ecr_type:0 ref:3 ecrh:0x7f02737e49f8(28:2)
             m = p26.match(line)
             if m:
@@ -8561,8 +9098,8 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 group = m.groupdict()
                 lb_dict['aal']['hwhdl'] = str(group['hwhdl'])
                 continue
-        
-            #Sw Enh ECR scale: objid:38 llabel:24 eos:1 #adjs:2 mixed_adj:0          
+
+            #Sw Enh ECR scale: objid:38 llabel:24 eos:1 #adjs:2 mixed_adj:0
             m = p28.match(line)
             if m:
                 group = m.groupdict()
@@ -8593,7 +9130,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 ecr_dict['pordermatch'] = int(group['pordermatch'])
                 ecr_dict['ecr_adj'] = {}
                 continue
-            
+
             #ecr_adj: id:1644167265 is_mpls_adj:1 l3adj_flags:0x100000
             m = p31.match(line)
             if m:
@@ -8603,14 +9140,14 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 ecr_dict['ecr_adj'][id1]['is_mpls_adj'] = int(group['is_mpls_adj'])
                 ecr_dict['ecr_adj'][id1]['l3adj_flags'] = str(group['l3adj_flags'])
                 continue
-            
+
             # recirc_adj_id:3120562239
             m = p32.match(line)
             if m:
                 group = m.groupdict()
                 ecr_dict['ecr_adj'][id1]['recirc_adj_id'] = int(group['recirc_adj_id'])
                 continue
-            
+
             # sih:0x7f02737e11c8(182) di_id:20499 rih:0x7f02737e0bf8(74)
             m = p33.match(line)
             if m:
@@ -8626,7 +9163,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 group = m.groupdict()
                 ecr_dict['ecr_adj'][id1]['adj_lentry'] = str(group['adj_lentry'])
                 continue
-            
+
             #ecr_prefix_adj: id:2483028067 (ref:1)
             m = p35.match(line)
             if m:
@@ -8643,8 +9180,7 @@ class ShowPlatformSoftwareFed(ShowPlatformSoftwareFedSchema):
                 id2 = str(group['objid'])
                 lentry_dict['objid'][id2] = {}
                 lentry_dict['objid'][id2]['SPECIAL'] = str(group['SPECIAL'])
-                continue 
-            
+                continue
+
         return ret_dict
 
-    

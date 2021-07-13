@@ -77,7 +77,7 @@ class ShowIpStaticRoute(ShowIpStaticRouteSchema):
         result_dict = {}
         for line in out.splitlines():
             if line:
-                line = line.rstrip()
+                line = line.strip()
             else:
                 continue
             # Static local RIB for default
