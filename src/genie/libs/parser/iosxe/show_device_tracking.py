@@ -205,7 +205,11 @@ class ShowDeviceTrackingDatabaseInterfaceSchema(MetaParser):
     """Schema for show device-tracking database interface {interface}."""
 
     schema = {
-        "binding_table": {"dynamic": int, "entries": int, "limit": int},
+        "binding_table": {
+            "dynamic": int,
+            "entries": int,
+            Optional("limit"): int
+        },
         "network_layer_address": {
             Any(): {
                 "age": str,
@@ -257,63 +261,72 @@ class ShowDeviceTrackingDatabaseInterface(ShowDeviceTrackingDatabaseInterfaceSch
         # L   2001:db8:350b:411::1                         0000.0cff.94fc  Vl1022         1022  0100 42473mn REACHABLE
 
         # Binding Table has 87 entries, 75 dynamic (limit 100000)
-        binding_table_capture = re.compile(
-            r"^Binding Table has (?P<entries>\d+) entries, (?P<dynamic>\d+) dynamic \(limit (?P<limit>\d+)\)$"
-            )
+        # portDB has 2 entries for interface Gi0/1/1, 2 dynamic
+        p1 = re.compile(
+            r"^(.+) +has +(?P<entries>\d+) +entries"
+            r"( +for +interface +\S+)?"
+            r", +(?P<dynamic>\d+) +dynamic( +\(limit +(?P<limit>\d+)\))?$"
+        )
 
         # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
-        tracking_database_capture = re.compile(
-            r"^(?P<code>\S+)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+.*)$"
-            )
-
         # L   10.160.48.1                             0000.0cff.94fe  Vl1024         1024  0100 42473mn REACHABLE
-        local_database_capture = re.compile(
-            r"^(?P<code>L)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)$"
-            )
+        # ND  FE80::E6C7:22FF:FEFF:8239               e4c7.22ff.8239  Gi1/0/24       1023  0005   34s  REACHABLE  268 s
+        p2 = re.compile(
+            r"^(?P<code>\S+)\s+(?P<network_layer_address>"
+            r"\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)"
+            r"\s+(?P<link_layer_address>\S+\.\S+\.\S+)"
+            r"\s+(?P<interface>\S+)\s+(?P<vlan>\d+)"
+            r"\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)"
+            r"\s+(?P<state>\S+)(\s+(?P<time_left>\d+.*))?$"
+        )
 
         device_info_obj = {}
 
-        capture_list = [
-            binding_table_capture,
-            tracking_database_capture,
-            local_database_capture,
-        ]
+        for line in out.splitlines():
+            line = line.strip()
 
-        for capture in capture_list:
-            for line in out.splitlines():
-                line = line.strip()
+            # Binding Table has 87 entries, 75 dynamic (limit 100000)
+            # portDB has 2 entries for interface Gi0/1/1, 2 dynamic
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
 
-                match = capture.match(line)
-                if match:
-                    group = match.groupdict()
+                # convert str to int
+                binding_table_dict = {
+                    k: int(v) for k, v in group.items() if v is not None
+                }
 
-                    if capture == binding_table_capture:
-                        # convert str to int
-                        for item in group:
-                            group[item] = int(group[item])
+                device_info_obj["binding_table"] = binding_table_dict
+                continue
 
-                        new_group = {"binding_table": group}
-                        device_info_obj.update(new_group)
+            # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
 
-                    if (
-                        capture == tracking_database_capture
-                        or capture == local_database_capture
-                    ):
-                        # convert str to int
-                        group["vlan"] = int(group["vlan"])
+                network_layer_address = group["network_layer_address"]
+                # pull a key from dict to use as new_key
+                network_layer_addresses_dict = device_info_obj.setdefault(
+                    "network_layer_address", {})
 
-                        # pull a key from dict to use as new_key
-                        new_key = "network_layer_address"
-                        new_group = {group[new_key]: {}}
+                network_layer_address_dict = network_layer_addresses_dict.\
+                    setdefault(network_layer_address, {})
 
-                        # update then pop new_key from the dict
-                        new_group[group[new_key]].update(group)
-                        new_group[group[new_key]].pop(new_key)
+                network_layer_address_dict.update({
+                    "age": group["age"],
+                    "code": group["code"],
+                    "interface": group["interface"],
+                    "link_layer_address": group["link_layer_address"],
+                    "prlvl": group["prlvl"],
+                    "state": group["state"],
+                    "vlan": int(group["vlan"]),
+                })
 
-                        if not device_info_obj.get(new_key):
-                            device_info_obj[new_key] = {}
+                if group["time_left"]:
+                    network_layer_address_dict["time_left"] = \
+                        group["time_left"]
 
-                        device_info_obj[new_key].update(new_group)
+                continue
 
         return device_info_obj
 
