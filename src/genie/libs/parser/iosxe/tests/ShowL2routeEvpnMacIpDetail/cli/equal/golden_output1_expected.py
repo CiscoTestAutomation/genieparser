@@ -13,7 +13,9 @@ expected_output = {"evi": {
                                             "mac_addr": "0012.0012.0012",
                                             "mac_rt_flags": "BInt(Brm)Dgr",
                                             "next_hops": [
-                                                "L:16 2.2.2.1"
+                                                {
+                                                    "next_hop": "L:16 2.2.2.1"
+                                                }
                                             ],
                                             "seq_number": 0
                                         },
@@ -24,7 +26,9 @@ expected_output = {"evi": {
                                             "mac_addr": "0012.0012.0012",
                                             "mac_rt_flags": "BInt(Brm)Dgr",
                                             "next_hops": [
-                                                "L:16 2.2.2.1"
+                                                {
+                                                    "next_hop": "L:16 2.2.2.1"
+                                                }
                                             ],
                                             "seq_number": 0
                                         },
@@ -35,7 +39,9 @@ expected_output = {"evi": {
                                             "mac_addr": "aabb.cc82.2800",
                                             "mac_rt_flags": "Int(Brm)",
                                             "next_hops": [
-                                                "L:17 4.4.4.1(proxy)"
+                                                {
+                                                    "next_hop": "L:17 4.4.4.1(proxy)"
+                                                }
                                             ],
                                             "seq_number": 0
                                         },
@@ -46,7 +52,9 @@ expected_output = {"evi": {
                                             "mac_addr": "aabb.0012.0002",
                                             "mac_rt_flags": "B()",
                                             "next_hops": [
-                                                "L:16 2.2.2.1"
+                                                {
+                                                    "next_hop": "L:16 2.2.2.1"
+                                                }
                                             ],
                                             "seq_number": 0
                                         }
@@ -61,8 +69,12 @@ expected_output = {"evi": {
                                             "mac_addr": "0012.0012.0012",
                                             "mac_rt_flags": "Int(Brm)Dgl",
                                             "next_hops": [
-                                                "BD12:0",
-                                                "L:17 4.4.4.1"
+                                                {
+                                                    "next_hop": "BD12:0"
+                                                },
+                                                {
+                                                    "next_hop": "L:17 4.4.4.1"
+                                                }
                                             ],
                                             "seq_number": 0
                                         },
@@ -73,7 +85,9 @@ expected_output = {"evi": {
                                             "mac_addr": "0012.0012.0012",
                                             "mac_rt_flags": "Int(Brm)Dgl",
                                             "next_hops": [
-                                                "BD12:0"
+                                                {
+                                                    "next_hop": "BD12:0"
+                                                }
                                             ],
                                             "seq_number": 0
                                         },
@@ -84,7 +98,9 @@ expected_output = {"evi": {
                                             "mac_addr": "aabb.cc82.2800",
                                             "mac_rt_flags": "B(Brm)",
                                             "next_hops": [
-                                                "Et1/0:12"
+                                                {
+                                                    "next_hop": "Et1/0:12"
+                                                }
                                             ],
                                             "seq_number": 0
                                         }

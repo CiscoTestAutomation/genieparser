@@ -13,7 +13,7 @@ import re
 
 # genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, ListOf
 
 
 # ====================================================
@@ -30,7 +30,11 @@ class ShowL2fibPathListIdSchema(MetaParser):
                'type': str,
                'eth_seg': str,
                'path_cnt': int,
-               'path_list': list,
+               'path_list': ListOf(
+                    {
+                      'path': str
+                    }
+                )
             }
         }
     }
@@ -80,9 +84,6 @@ class ShowL2fibPathListId(ShowL2fibPathListIdSchema):
 
         parser_dict = {}
 
-        if not cli_output:
-            return
-
         for line in cli_output.splitlines():
             line = line.strip()
             if not line:
@@ -123,7 +124,9 @@ class ShowL2fibPathListId(ShowL2fibPathListIdSchema):
             if m:
                 group = m.groupdict()
                 path = group['path']
-                paths.append(path)
+                paths_dict = {}
+                paths_dict.update({'path': path})
+                paths.append(paths_dict)
                 continue
 
         return parser_dict

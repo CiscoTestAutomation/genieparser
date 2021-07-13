@@ -43,7 +43,7 @@ import re
 
 # genie
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Any
+from genie.metaparser.util.schemaengine import Any, ListOf
 
 
 # =============================================
@@ -96,7 +96,11 @@ class ShowL2routeEvpnMacIpDetailSchema(MetaParser):
                                 'label_2': int,
                                 'esi': str,
                                 'mac_rt_flags': str,
-                                'next_hops': list,
+                                'next_hops': ListOf(
+                                    {
+                                      'next_hop': str
+                                    }
+                                )
                             }
                         }
                     }
@@ -375,7 +379,9 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                next_hops.append(group['next_hop'])
+                next_hops_dict= {}
+                next_hops_dict.update({'next_hop': group['next_hop']})
+                next_hops.append(next_hops_dict)
                 continue
 
         return parser_dict
