@@ -183,86 +183,22 @@ class ShowL2routeEvpnMacIpDetail(ShowL2routeEvpnMacIpDetailSchema):
 
     def cli(self, output=None, ip=None, esi=None, mac_addr=None, next_hop=None, producer=None, evi=None, etag=None):
         if not output:
+            cli_cmd = 'show l2route evpn mac ip'
             if ip:
-                if evi:
-                    if etag:
-                        evi_etag = "{}:{}".format(evi,etag)
-                        if producer:
-                            if esi:
-                                cli_cmd = self.cli_command[30].format(ip=ip, evi_etag=evi_etag, producer=producer, mac_addr=mac_addr, esi=esi)
-                            else:
-                                cli_cmd = self.cli_command[29].format(ip=ip, evi_etag=evi_etag, producer=producer, mac_addr=mac_addr)
-                        elif next_hop:
-                            if esi:
-                                if mac_addr:
-                                    cli_cmd = self.cli_command[28].format(ip=ip, evi_etag=evi_etag, next_hop=next_hop, mac_addr=mac_addr, esi=esi)
-                                else:
-                                    cli_cmd = self.cli_command[26].format(ip=ip, evi_etag=evi_etag, next_hop=next_hop, esi=esi)
-                            elif mac_addr:
-                                cli_cmd = self.cli_command[27].format(ip=ip, evi_etag=evi_etag, next_hop=next_hop, mac_addr=mac_addr)
-                            else:
-                                cli_cmd = self.cli_command[25].format(ip=ip, evi_etag=evi_etag, next_hop=next_hop)
-                        elif mac_addr:
-                            if esi:
-                                cli_cmd = self.cli_command[24].format(ip=ip, evi_etag=evi_etag, mac_addr=mac_addr, esi=esi)
-                            else:
-                                cli_cmd = self.cli_command[23].format(ip=ip, evi_etag=evi_etag, mac_addr=mac_addr)
-                        elif esi:
-                            cli_cmd = self.cli_command[22].format(ip=ip, evi_etag=evi_etag, esi=esi)
-                        else:
-                            cli_cmd = self.cli_command[21].format(ip=ip, evi_etag=evi_etag)
-                    else:
-                        if producer:
-                            if esi:
-                                cli_cmd = self.cli_command[20].format(ip=ip, evi=evi, producer=producer, mac_addr=mac_addr, esi=esi)
-                            else:
-                                cli_cmd = self.cli_command[19].format(ip=ip, evi=evi, producer=producer, mac_addr=mac_addr)
-                        elif next_hop:
-                            if esi:
-                                if mac_addr:
-                                    cli_cmd = self.cli_command[18].format(ip=ip, evi=evi, next_hop=next_hop, mac_addr=mac_addr, esi=esi)
-                                else:
-                                    cli_cmd = self.cli_command[16].format(ip=ip, evi=evi, next_hop=next_hop, esi=esi)
-                            elif mac_addr:
-                                cli_cmd = self.cli_command[17].format(ip=ip, evi=evi, next_hop=next_hop, mac_addr=mac_addr)
-                            else:
-                                cli_cmd = self.cli_command[15].format(ip=ip, evi=evi, next_hop=next_hop)
-                        elif mac_addr:
-                            if esi:
-                                cli_cmd = self.cli_command[14].format(ip=ip, evi=evi, mac_addr=mac_addr, esi=esi)
-                            else:
-                                cli_cmd = self.cli_command[13].format(ip=ip, evi=evi, mac_addr=mac_addr)
-                        elif esi:
-                            cli_cmd = self.cli_command[12].format(ip=ip, evi=evi, esi=esi)
-                        else:
-                            cli_cmd = self.cli_command[11].format(ip=ip, evi=evi)
+                cli_cmd += ' host-ip {ip}'.format(ip=ip)
+            if evi:
+                if etag:
+                    evi_etag = "{}:{}".format(evi,etag)
+                    cli_cmd += ' topology {evi_etag}'.format(evi_etag=evi_etag)
                 else:
-                    if producer:
-                        if esi:
-                            cli_cmd = self.cli_command[10].format(ip=ip, producer=producer, mac_addr=mac_addr, esi=esi)
-                        else:
-                            cli_cmd = self.cli_command[9].format(ip=ip, producer=producer, mac_addr=mac_addr)
-                    elif next_hop:
-                        if esi:
-                            if mac_addr:
-                                cli_cmd = self.cli_command[8].format(ip=ip, next_hop=next_hop, mac_addr=mac_addr, esi=esi)
-                            else:
-                                cli_cmd = self.cli_command[6].format(ip=ip, next_hop=next_hop, esi=esi)
-                        elif mac_addr:
-                            cli_cmd = self.cli_command[7].format(ip=ip, next_hop=next_hop, mac_addr=mac_addr)
-                        else:
-                            cli_cmd = self.cli_command[5].format(ip=ip, next_hop=next_hop)
-                    elif mac_addr:
-                        if esi:
-                            cli_cmd = self.cli_command[4].format(ip=ip, mac_addr=mac_addr, esi=esi)
-                        else:
-                            cli_cmd = self.cli_command[3].format(ip=ip, mac_addr=mac_addr)
-                    elif esi:
-                        cli_cmd = self.cli_command[2].format(ip=ip, esi=esi)
-                    else:
-                        cli_cmd = self.cli_command[1].format(ip=ip)
-            else:
-                cli_cmd = self.cli_command[0]
+                    cli_cmd += ' topology {evi}'.format(evi=evi)
+            if producer:
+                cli_cmd += ' producer'.format(producer=producer)
+            if mac_addr:
+                cli_cmd += ' mac-address'.format(mac_addr=mac_addr)
+            if esi:
+                cli_cmd += ' esi'.format(esi=esi)
+            cli_cmd += ' detail'
 
             cli_output = self.device.execute(cli_cmd)
         else:
