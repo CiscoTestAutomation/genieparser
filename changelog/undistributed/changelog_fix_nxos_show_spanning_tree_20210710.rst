@@ -3,4 +3,4 @@
 --------------------------------------------------------------------------------
 * NXOS
     * Modify ShowSpanningTreeDetail:
-        * Add "Peer is STP'
+        * Added schema key 'peer_type'
