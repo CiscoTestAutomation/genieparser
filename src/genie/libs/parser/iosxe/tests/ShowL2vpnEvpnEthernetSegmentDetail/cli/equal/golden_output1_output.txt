@@ -1,9 +1,9 @@
 EVPN Ethernet Segment ID: 03AA.BB00.0000.0200.0001
-Interface:              Po1
-Redundancy mode:        all-active
-DF election wait time:  3 seconds
-Split Horizon label:    16
-State:                  Ready
+  Interface:              Po1
+  Redundancy mode:        all-active
+  DF election wait time:  3 seconds
+  Split Horizon label:    16
+  State:                  Ready
   Encapsulation:          mpls
   Ordinal:                1
   Core Isolation:         No
