@@ -1,0 +1,26 @@
+EVPN Ethernet Segment ID: 03AA.BB00.0000.0200.0001
+Interface:              Po1
+Redundancy mode:        all-active
+DF election wait time:  3 seconds
+Split Horizon label:    16
+State:                  Ready
+  Encapsulation:          mpls
+  Ordinal:                1
+  Core Isolation:         No
+  RD:                     4.4.4.3:1
+    Export-RTs:           100:2
+  Forwarder List:         3.3.3.3 4.4.4.3
+
+EVPN Ethernet Segment ID: 03AA.AABB.BBCC.CC00.0001
+  Interface:              Et0/2
+  Redundancy mode:        single-active
+  DF election wait time:  3 seconds
+  Split Horizon label:    16
+  State:                  Ready
+  Encapsulation:          mpls
+  Ordinal:                0
+  Core Isolation:         No
+  RD:                     10.10.10.10:1
+    Export-RTs:           1:1 1:2 1:3 1:65533 1:65534
+  Forwarder List:         10.10.10.10 26.26.26.26
+
