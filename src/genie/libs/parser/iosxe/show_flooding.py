@@ -1,4 +1,4 @@
-''' ShowFloodingSupressionPolicy.py
+''' show_flooding.py
 
 IOSXE parsers for the following show commands:
 
