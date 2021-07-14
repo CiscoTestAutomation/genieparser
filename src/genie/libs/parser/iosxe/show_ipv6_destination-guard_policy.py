@@ -99,5 +99,4 @@ class ShowIpv6DestinationGuardPolicy(ShowIpv6DestinationGuardPolicySchema):
                 destination_guard_policy_dict['entries'][entry_counter]['range'] = rang
 
                 continue
-        pprint.pprint(destination_guard_policy_dict)
         return destination_guard_policy_dict
