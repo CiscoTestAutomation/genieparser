@@ -80,36 +80,37 @@ class ShowOspfv3SummaryPrefix(ShowOspfv3SummaryPrefixSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            m = p1.search(line)
+            m = p1.match(line)
             if m:
                 group = m.groupdict()
                 ret_dict['process_id'] = {}
-                ospf_id = group['ospf_id'].strip()
+                ospf_id = group['ospf_id']
                 ret_dict['process_id'][ospf_id] = {}
                 ret_dict['process_id'][ospf_id]['null_route'] = {}
                 ret_dict['process_id'][ospf_id]['summary'] = {}
-                ret_dict['process_id'][ospf_id]['address_family'] = group['address_family'].strip()
-                ret_dict['process_id'][ospf_id]['router_id'] = group['router_id'].strip()
+                ret_dict['process_id'][ospf_id]['address_family'] = group['address_family']
+                ret_dict['process_id'][ospf_id]['router_id'] = group['router_id']
                 continue
 
-            m = p2.search(line)
+            m = p2.match(line)
             if m:
                 group = m.groupdict()
                 if group['null_prefix']:
-                    n_prefix = group['null_prefix'].strip()
+                    n_prefix = group['null_prefix']
                     ret_dict['process_id'][ospf_id]['null_route'][n_prefix] = {}
-                    ret_dict['process_id'][ospf_id]['null_route'][n_prefix]['null_metric'] = group['null_metric'].strip()
+                    ret_dict['process_id'][ospf_id]['null_route'][n_prefix]['null_metric'] = group['null_metric']
                     continue
 
-            m = p3.search(line)
+            m = p3.match(line)
             if m:
                 group = m.groupdict()
-                if group['sum_prefix'].strip():
-                    prefix = group['sum_prefix'].strip()
+                if group['sum_prefix']:
+                    prefix = group['sum_prefix']
                     ret_dict['process_id'][ospf_id]['summary'][prefix] = {}
-                    ret_dict['process_id'][ospf_id]['summary'][prefix]['sum_metric'] = int(group['sum_metric'].strip())
-                    ret_dict['process_id'][ospf_id]['summary'][prefix]['sum_type'] = group['sum_type'].strip()
-                    ret_dict['process_id'][ospf_id]['summary'][prefix]['sum_tag'] = int(group['sum_tag'].strip())
+                    ret_dict['process_id'][ospf_id]['summary'][prefix]['sum_metric'] = int(group['sum_metric'])
+                    ret_dict['process_id'][ospf_id]['summary'][prefix]['sum_type'] = group['sum_type']
+                    ret_dict['process_id'][ospf_id]['summary'][prefix]['sum_tag'] = int(group['sum_tag'])
                     continue
+
 
         return ret_dict
