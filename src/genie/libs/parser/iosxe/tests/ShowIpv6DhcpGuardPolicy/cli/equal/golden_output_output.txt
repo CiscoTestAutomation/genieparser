@@ -1,0 +1,18 @@
+Dhcp guard policy pol1 configuration:
+	Trusted Port
+Device Role: dhcp server
+	Max Preference: 255
+	Min Preference: 0
+	Source Address Match Access List: acl2
+	Prefix List Match Prefix List: abc
+Policy pol1 is applied on the following targets:
+Target               Type  Policy               Feature        Target range
+vlan 2               VLAN  pol1                 DHCP Guard     vlan all
+vlan 3               VLAN  pol1                 DHCP Guard     vlan all
+vlan 4               VLAN  pol1                 DHCP Guard     vlan all
+vlan 5               VLAN  pol1                 DHCP Guard     vlan all
+vlan 6               VLAN  pol1                 DHCP Guard     vlan all
+vlan 7               VLAN  pol1                 DHCP Guard     vlan all
+vlan 8               VLAN  pol1                 DHCP Guard     vlan all
+vlan 9               VLAN  pol1                 DHCP Guard     vlan all
+vlan 10              VLAN  pol1                 DHCP Guard     vlan all
