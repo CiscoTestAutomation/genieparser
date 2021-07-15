@@ -86,7 +86,7 @@ class ShowIpMrouteVrfAll(ShowIpMrouteVrfAllSchema):
             # IP Multicast Routing Table for VRF "default" 
             p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
                              ' +[rR]outing +[tT]able +for +VRF '
-                            '+(?P<vrf>[\S]+)$')
+                            '+(?P<vrf>\S+)$')
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -995,7 +995,7 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
 # Parser for 'show ip mroute summary vrf all'
 # ===================================
 
-class ShowIpMrouteSummaryVrfAllSchema(MetaParser):
+class ShowIpMrouteSummarySchema(MetaParser):
     """Schema for show ip mroute summary vrf all"""
 
     schema = {'vrf':         
@@ -1003,36 +1003,60 @@ class ShowIpMrouteSummaryVrfAllSchema(MetaParser):
                     {'address_family':
                         {Any(): { 
                              'count_multicast_starg': str, 
-                             'count_multicast_sg': str 
+                             'count_multicast_sg': str,
+                             'count_multicast_starg_prefix': str,
+                             'count_multicast_total': str 
                             },
                         },
                     }
                 },
             }
 
-class ShowIpMrouteSummaryVrfAll(ShowIpMrouteSummaryVrfAllSchema):
-    """Parser for show ip mroute summary vrf all"""
+class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
+    """parser for:
+        show ip mroute summary
+        show ip mroute summary vrf <vrf>
+        show ip mroute summary vrf all"""
 
-    cli_command = 'show ip mroute summary vrf all'
+    cli_command = ['show ip mroute summary vrf {vrf}',
+                   'show ip mroute summary']
+    def cli(self, vrf="", output=None):
+        # finding vrf names
+        vrf_dict = {}
 
-    def cli(self, output=None):
+        if vrf:
+            if vrf == 'all':
+                showparser = ShowVrf(device=self.device)
+                vrfs_list = showparser.parse()
+                for vrf_name in vrfs_list['vrfs'].keys():
+                    vrf_id = vrfs_list['vrfs'][vrf_name]['vrf_id']
+                    vrf_dict.update({vrf_id: vrf_name})
+
+            cmd = self.cli_command[0].format(vrf=vrf)
+        else:
+            vrf = 'default'
+            cmd = self.cli_command[1]
+
         if output is None:
-            out = self.device.execute(self.cli_command)
+            out = self.device.execute(cmd)
         else:
             out = output
 
         mroute_dict = {}
 
+        p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
+                         ' +[rR]outing +[tT]able +for +VRF '
+                         '+(?P<vrf>\S+)$')
+        p2 = re.compile(r'^\s*Total +number +of +\(\*,G\) +routes:'
+                         r' +(?P<count>[0-9]+)$')
+        p3 = re.compile(r'^\s*Total +number +of +\(S,G\) +routes:'
+                         r' +(?P<count>[0-9]+)$')
+        p4 = re.compile(r'^\s*Total +number +of +routes:'
+                         r' +(?P<count>[0-9]+)$')
+        p5 = re.compile(r'^\s*Total +number +of +\(\*,G-prefix\) +routes:'
+                         r' +(?P<count>[0-9]+)$')
         for line in out.splitlines():
-            line = line.rstrip()
-            # IP Multicast Routing Table for VRF "default" 
-            p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
-                             ' +[rR]outing +[tT]able +for +VRF '
-                            '+(?P<vrf>[\S]+)$')
-            p2 = re.compile(r'^\s*Total +number +of +\(\*,G\) +routes:'
-                            r' +(?P<count>[0-9]+)$')
-            p3 = re.compile(r'^\s*Total +number +of +\(S,G\) +routes:'
-                            r' +(?P<count>[0-9]+)$')
+            line = line.strip()
             m = p1.match(line)
             if m:
                 vrf = m.groupdict()['vrf']
@@ -1040,25 +1064,26 @@ class ShowIpMrouteSummaryVrfAll(ShowIpMrouteSummaryVrfAllSchema):
                 address_family = m.groupdict()['address_family'].lower()
                 address_family += 'v4'
 
-                if 'vrf' not in mroute_dict:
-                    mroute_dict['vrf'] = {}
-                if vrf not in mroute_dict['vrf']:
-                    mroute_dict['vrf'][vrf] = {}
-                if 'address_family' not in mroute_dict['vrf'][vrf]:
-                    mroute_dict['vrf'][vrf]['address_family'] = {}
-                if address_family not in mroute_dict['vrf'][vrf]['address_family']:
-                    mroute_dict['vrf'][vrf]['address_family'][address_family] = {}
+                address_family_dict = mroute_dict.setdefault('vrf', {}).setdefault(vrf,{}).setdefault('address_family', {}).setdefault(address_family, {})
                 continue
             m = p2.match(line)
             if m:
                 count_multicast_starg = m.groupdict()['count']
-                if 'count_multicast_starg' not in mroute_dict['vrf'][vrf]['address_family'][address_family]:
-                   mroute_dict['vrf'][vrf]['address_family'][address_family]['count_multicast_starg'] = count_multicast_starg
+                address_family_dict.setdefault('count_multicast_starg', count_mutlicast_starg)
                 continue
             m = p3.match(line)
             if m:
                 count_multicast_sg = m.groupdict()['count']
-                if 'count_multicast_sg' not in mroute_dict['vrf'][vrf]['address_family'][address_family]:
-                   mroute_dict['vrf'][vrf]['address_family'][address_family]['count_multicast_sg'] = count_multicast_sg
+                address_family_dict.setdefault('count_multicast_sg', count_mutlicast_sg)
+                continue
+            m = p4.match(line)
+            if m:
+                count_multicast_total = m.groupdict()['count']
+                address_family_dict.setdefault('count_multicast_total', count_mutlicast_total)
+                continue
+            m = p5.match(line)
+            if m:
+                count_multicast_starg_prefix= m.groupdict()['count']
+                address_family_dict.setdefault('count_multicast_starg_prefix', count_mutlicast_starg_prefix)
                 continue
         return mroute_dict
