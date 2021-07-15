@@ -1728,43 +1728,23 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                    show l2vpn evpn mac remote
     """
 
-    cli_command = ['show l2vpn evpn mac', # 0
-                   'show l2vpn evpn mac address {mac_addr}', # 1
-                   'show l2vpn evpn mac {mac_type}', # 2
-                   'show l2vpn evpn mac bridge-domain {bd_id}', # 3
-                   'show l2vpn evpn mac bridge-domain {bd_id} address {mac_addr}', # 4
-                   'show l2vpn evpn mac bridge-domain {bd_id} {mac_type}', # 5
-                   'show l2vpn evpn mac evi {evi_id}', # 6
-                   'show l2vpn evpn mac evi {evi_id} address {mac_addr}', # 7
-                   'show l2vpn evpn mac evi {evi_id} {mac_type}', # 8
-    ]
-
     def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, evi_id=None):
         if not output:
             # Only these CLI options for mac_type are supported.
             if mac_type and mac_type != 'local' and mac_type != 'remote' and mac_type != 'duplicate':
                 raise Exception("Unsupported mac_type {}".format(mac_type))
+
+            cli_cmd = 'show l2vpn evpn mac'
+
             if bd_id:
-                if mac_addr:
-                    cli_cmd = self.cli_command[4].format(bd_id=bd_id, mac_addr=mac_addr)
-                elif mac_type:
-                    cli_cmd = self.cli_command[5].format(bd_id=bd_id, mac_type=mac_type)
-                else:
-                    cli_cmd = self.cli_command[3].format(bd_id=bd_id)
+                cli_cmd += ' bridge-domain {bd_id}'.format(bd_id=bd_id)
             elif evi_id:
-                if mac_addr:
-                    cli_cmd = self.cli_command[7].format(evi_id=evi_id, mac_addr=mac_addr)
-                elif mac_type:
-                    cli_cmd = self.cli_command[8].format(evi_id=evi_id, mac_type=mac_type)
-                else:
-                    cli_cmd = self.cli_command[6].format(evi_id=evi_id)
-            else:
-                if mac_addr:
-                    cli_cmd = self.cli_command[1].format(mac_addr=mac_addr)
-                elif mac_type:
-                    cli_cmd = self.cli_command[2].format(mac_type=mac_type)
-                else:
-                    cli_cmd = self.cli_command[0]
+                cli_cmd += ' evi {evi_id}'.format(evi_id=evi_id)
+
+            if mac_type:
+                cli_cmd += ' {mac_type}'.format(mac_type=mac_type)
+            elif mac_addr:
+                cli_cmd += ' address {mac_addr}'.format(mac_addr=mac_addr)
 
             cli_output = self.device.execute(cli_cmd)
         else:
@@ -1912,43 +1892,25 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
                    show l2vpn evpn mac remote detail
     """
 
-    cli_command = ['show l2vpn evpn mac detail', # 0
-                   'show l2vpn evpn mac address {mac_addr} detail', # 1
-                   'show l2vpn evpn mac {mac_type} detail', # 2
-                   'show l2vpn evpn mac bridge-domain {bd_id} detail', # 3
-                   'show l2vpn evpn mac bridge-domain {bd_id} address {mac_addr} detail', # 4
-                   'show l2vpn evpn mac bridge-domain {bd_id} {mac_type} detail', # 5
-                   'show l2vpn evpn mac evi {evi_id} detail', # 6
-                   'show l2vpn evpn mac evi {evi_id} address {mac_addr} detail', # 7
-                   'show l2vpn evpn mac evi {evi_id} {mac_type} detail', # 8
-    ]
-
     def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, evi_id=None):
         if not output:
             # Only these CLI options for mac_type are supported.
             if mac_type and mac_type != 'local' and mac_type != 'remote' and mac_type != 'duplicate':
                 raise Exception("Unsupported mac_type {}".format(mac_type))
+
+            cli_cmd = 'show l2vpn evpn mac'
+
             if bd_id:
-                if mac_addr:
-                    cli_cmd = self.cli_command[4].format(bd_id=bd_id, mac_addr=mac_addr)
-                elif mac_type:
-                    cli_cmd = self.cli_command[5].format(bd_id=bd_id, mac_type=mac_type)
-                else:
-                    cli_cmd = self.cli_command[3].format(bd_id=bd_id)
+                cli_cmd += ' bridge-domain {bd_id}'.format(bd_id=bd_id)
             elif evi_id:
-                if mac_addr:
-                    cli_cmd = self.cli_command[7].format(evi_id=evi_id, mac_addr=mac_addr)
-                elif mac_type:
-                    cli_cmd = self.cli_command[8].format(evi_id=evi_id, mac_type=mac_type)
-                else:
-                    cli_cmd = self.cli_command[6].format(evi_id=evi_id)
-            else:
-                if mac_addr:
-                    cli_cmd = self.cli_command[1].format(mac_addr=mac_addr)
-                elif mac_type:
-                    cli_cmd = self.cli_command[2].format(mac_type=mac_type)
-                else:
-                    cli_cmd = self.cli_command[0]
+                cli_cmd += ' evi {evi_id}'.format(evi_id=evi_id)
+
+            if mac_type:
+                cli_cmd += ' {mac_type}'.format(mac_type=mac_type)
+            elif mac_addr:
+                cli_cmd += ' address {mac_addr}'.format(mac_addr=mac_addr)
+
+            cli_cmd += ' detail'
 
             cli_output = self.device.execute(cli_cmd)
         else:
@@ -2197,21 +2159,18 @@ class ShowL2vpnEvpnMacSummary(ShowL2vpnEvpnMacSummarySchema):
             # Only these CLI options for mac_type are supported.
             if mac_type and mac_type != 'local' and mac_type != 'remote' and mac_type != 'duplicate':
                 raise Exception("Unsupported mac_type {}".format(mac_type))
+
+            cli_cmd = 'show l2vpn evpn mac'
+
             if bd_id:
-                if mac_type:
-                    cli_cmd = self.cli_command[3].format(bd_id=bd_id, mac_type=mac_type)
-                else:
-                    cli_cmd = self.cli_command[2].format(bd_id=bd_id)
+                cli_cmd += ' bridge-domain {bd_id}'.format(bd_id=bd_id)
             elif evi_id:
-                if mac_type:
-                    cli_cmd = self.cli_command[5].format(evi_id=evi_id, mac_type=mac_type)
-                else:
-                    cli_cmd = self.cli_command[4].format(evi_id=evi_id)
-            else:
-                if mac_type:
-                    cli_cmd = self.cli_command[1].format(mac_type=mac_type)
-                else:
-                    cli_cmd = self.cli_command[0]
+                cli_cmd += ' evi {evi_id}'.format(evi_id=evi_id)
+
+            if mac_type:
+                cli_cmd += ' {mac_type}'.format(mac_type=mac_type)
+
+            cli_cmd += ' summary'
 
             cli_output = self.device.execute(cli_cmd)
         else:
