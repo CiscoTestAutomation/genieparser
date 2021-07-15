@@ -1020,10 +1020,9 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
 
     cli_command = ['show ip mroute summary vrf {vrf}',
                    'show ip mroute summary']
-    def cli(self, vrf="", output=None):
+    def cli(self, vrf="default", output=None):
         # finding vrf names
         vrf_dict = {}
-
         if vrf:
             if vrf == 'all':
                 showparser = ShowVrf(device=self.device)
@@ -1069,21 +1068,21 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
             m = p2.match(line)
             if m:
                 count_multicast_starg = m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_starg', count_mutlicast_starg)
+                address_family_dict.setdefault('count_multicast_starg', count_multicast_starg)
                 continue
             m = p3.match(line)
             if m:
                 count_multicast_sg = m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_sg', count_mutlicast_sg)
+                address_family_dict.setdefault('count_multicast_sg', count_multicast_sg)
                 continue
             m = p4.match(line)
             if m:
                 count_multicast_total = m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_total', count_mutlicast_total)
+                address_family_dict.setdefault('count_multicast_total', count_multicast_total)
                 continue
             m = p5.match(line)
             if m:
                 count_multicast_starg_prefix= m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_starg_prefix', count_mutlicast_starg_prefix)
+                address_family_dict.setdefault('count_multicast_starg_prefix', count_multicast_starg_prefix)
                 continue
         return mroute_dict
