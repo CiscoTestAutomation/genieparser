@@ -889,6 +889,7 @@ class ShowModuleSchema(MetaParser):
         'slot': {
             Any(): {
                 Optional('rp'): {
+                    'slot': int,
                     'ports': int,
                     'card_type': str,
                     'model': str,
@@ -910,6 +911,7 @@ class ShowModuleSchema(MetaParser):
                     }
                 },
                 Optional('lc'): {
+                    'slot': int,
                     'ports': int,
                     'card_type': str,
                     'model': str,
@@ -930,7 +932,8 @@ class ShowModuleSchema(MetaParser):
                         }
                     }
                 },
-                Optional('other'): {                    
+                Optional('other'): {
+                    'slot': int,
                     'ports': int,
                     'card_type': str,
                     'model': str,
@@ -948,22 +951,22 @@ class ShowModuleSchema(MetaParser):
                             'serial_number': str,
                             'model': str,
                         }
-                    }                    
-                } 
+                    }
+                }
             }
         }
     }
 
 
 class ShowModule(ShowModuleSchema):
-    ''' Parser for commands: 
-        * show module 
+    ''' Parser for commands:
+        * show module
     '''
 
     cli_command = 'show module'
-    
+
     def cli(self, output=None):
-        
+
         if output is None:
             output = self.device.execute(self.cli_command)
 
@@ -974,7 +977,7 @@ class ShowModule(ShowModuleSchema):
         r1 = re.compile(r'(?P<mod>\d)\s+(?P<ports>\d+)\s+(?P<card_type>.+'
                          '(S|s)upervisor.+)\s+(?P<model>\S+)\s+'
                          '(?P<serial_number>\S+)')
-        
+
         # 6    1  1 port 10-Gigabit Ethernet Module      WS-X6502-10GE      SAD062003CM
         # 3   16  Pure SFM-mode 16 port 1000mb GBIC      WS-X6816-GBIC      SAL061218K3
         r2 = re.compile(r'(?P<mod>\d)\s+(?P<ports>\d+)\s+(?P<card_type>.+\d+\s+'
@@ -1019,7 +1022,7 @@ class ShowModule(ShowModuleSchema):
                 module_dict = parsed_output\
                     .setdefault('slot', {})\
                     .setdefault(mod, {})\
-                    .setdefault('rp', {})
+                    .setdefault('rp', {'slot': int(mod)})
 
                 module_dict['ports'] = ports
                 module_dict['card_type'] = card_type
@@ -1042,7 +1045,7 @@ class ShowModule(ShowModuleSchema):
                 module_dict = parsed_output\
                     .setdefault('slot', {})\
                     .setdefault(mod, {})\
-                    .setdefault('lc', {})
+                    .setdefault('lc', {'slot': int(mod)})
 
                 module_dict['ports'] = ports
                 module_dict['card_type'] = card_type
@@ -1064,7 +1067,7 @@ class ShowModule(ShowModuleSchema):
                 module_dict = parsed_output\
                     .setdefault('slot', {})\
                     .setdefault(mod, {})\
-                    .setdefault('other', {})
+                    .setdefault('other', {'slot': int(mod)})
 
                 module_dict['ports'] = ports
                 module_dict['card_type'] = card_type
@@ -1087,13 +1090,13 @@ class ShowModule(ShowModuleSchema):
                 fw = group['fw']
                 sw = group['sw']
                 status = group['status']
-                
+
                 slot_code = [*parsed_output.get('slot', {}).get(mod, {}).keys()][0]
 
                 module_dict = parsed_output\
                     .setdefault('slot', {})\
                     .setdefault(mod, {})\
-                    .setdefault(slot_code, {})
+                    .setdefault(slot_code, {'slot': int(mod)})
 
                 module_dict['mac_address_from'] = mac_from
                 module_dict['mac_address_to'] = mac_to
@@ -1133,7 +1136,7 @@ class ShowModule(ShowModuleSchema):
                 submodule_dict['model'] = model
 
                 continue
-            
+
             # 1  Pass
             result = r6.match(line)
             if result:

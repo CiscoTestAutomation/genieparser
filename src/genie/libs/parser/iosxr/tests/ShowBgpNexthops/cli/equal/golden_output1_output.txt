@@ -1,0 +1,30 @@
+RP/0/RP0/CPU0:F97-sjkIAN103#show bgp nexthops 10.4.16.16
+Tue Oct 13 18:31:28.036 EST
+Nexthop: 10.4.16.16
+  VRF: default
+  Nexthop ID: 0x6000074, Version: 0x0
+  Nexthop Flags: 0x00000000
+  Nexthop Handle: 0x7fba00aafccc
+
+  RIB Related Information:
+  Firsthop interface handle 0x0c001cc0
+    Gateway TBL Id: 0xe0000000    Gateway Flags: 0x00000080
+    Gateway Handle: 0x7fba14059ce0
+    Gateway: reachable, non-Connected route, prefix length 32
+    Resolving Route: 10.4.16.16/32 (static)
+    Paths: 0
+    RIB Nexhop ID: 0x0
+    Status: [Reachable][Not Connected][Not Local]
+    Metric: 0
+    Registration: Asynchronous, Completed: 00:02:15
+    Events: Critical (1)/Non-critical (0)
+    Last Received: 00:02:14 (Critical)
+    Last gw update: (Crit-notif) 00:02:14(rib)
+    Reference Count: 1
+
+  Prefix Related Information
+    Active Tables: [IPv4 Unicast]
+    Metrices: [0x0]
+    Reference Counts: [1]
+  Interface Handle: 0x0
+  Attr ref-count: 4

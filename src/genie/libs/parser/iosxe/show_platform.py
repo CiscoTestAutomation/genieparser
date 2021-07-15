@@ -1,5 +1,5 @@
 ''' show_platform.py
-
+-
 IOSXE parsers for the following show commands:
 
     * 'show bootvar'
@@ -168,9 +168,12 @@ class ShowVersionSchema(MetaParser):
     """Schema for show version"""
     schema = {
         'version': {
+            Optional('xe_version'): str,
             'version_short': str,
             'platform': str,
             'version': str,
+            Optional('label'): str,
+            Optional('build_label'): str,
             'image_id': str,
             'rom': str,
             'image_type': str,
@@ -194,6 +197,8 @@ class ShowVersionSchema(MetaParser):
             Optional('license_type'): str,
             Optional('license_level'): str,
             Optional('next_reload_license_level'): str,
+            Optional('air_license_level'): str,
+            Optional('next_reload_air_license_level'): str,
             Optional('chassis'): str,
             Optional('processor_type'): str,
             Optional('chassis_sn'): str,
@@ -322,6 +327,10 @@ class ShowVersion(ShowVersionSchema):
         suite_flag = False
         license_flag = False
 
+        # Cisco IOS XE Software, Version BLD_POLARIS_DEV_LATEST_20200702_122021_V17_4_0_67_2
+        p0 = re.compile(
+            r'^Cisco +([\S\s]+) +Software, +Version +(?P<xe_version>.*)$')
+
         # version
         # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
         # Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch Software (cat4500e-UNIVERSALK9-M), Version 03.03.02.SG RELEASE SOFTWARE (fc1)
@@ -342,10 +351,12 @@ class ShowVersion(ShowVersionSchema):
         # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
         # Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
         # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.4.20200702:124009 [S2C-build-polaris_dev-116872-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20200702_122021 243]
+        # Cisco IOS Software [Denali], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Experimental Version 16.3.20170410:103306 [v163_mr_throttle-BLD-BLD_V163_MR_THROTTLE_LATEST_20170410_093453 118]
         p3 = re.compile(r'^[Cc]isco +(?P<os>[A-Z]+) +[Ss]oftware(.+)?\, '
                         r'+(?P<platform>.+) +Software +\((?P<image_id>.+)\).+( '
                         r'+Experimental)? +[Vv]ersion '
-                        r'+(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,?.*')
+                        r'+(?P<version>[a-zA-Z0-9\.\:\(\)]+) *,? *'
+                        r'(?P<label>(\[.+?(?P<build_label>BLD_\S+)? \d+\])|.*)$')
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
         p4 = re.compile(r'^Copyright +(.*)$')
@@ -394,9 +405,28 @@ class ShowVersion(ShowVersionSchema):
         # license_level
         p16 = re.compile(r'^\s*[Ll]icense +[Ll]evel\: +(?P<license_level>.+)$')
 
+        # entservices   Type: Permanent
+        p16_1 = re.compile(r'(?P<license_level>\S+) +Type\: +(?P<license_type>\S+)$')
+
+        # AIR License Level: AIR DNA Advantage
+        p16_2 = re.compile(r'^\s*AIR [Ll]icense +[Ll]evel\: +(?P<air_license_level>.+)$')
+
+        ## Technology Package License Information:
+        ## Technology-package                                     Technology-package
+        # Current                        Type                       Next reboot
+        p16_3 = re.compile(r'^Current  +Type  +Next reboot')
+
+        # network-advantage   	Smart License                 	 network-advantage
+        # dna-advantage       	Subscription Smart License    	 dna-advantage
+        p16_4 = re.compile(r'^(?P<license_package>[\w-]+)(?:\s{2,})(?P<package_license_type>(\w+ )+)(?:\s{2,})(?P<next_reload_license_level>\S+)\s*$')
+
         # next_reload_license_level
         p17 = re.compile(r'^[Nn]ext +(reload|reboot) +license +Level\: '
                          r'+(?P<next_reload_license_level>.+)$')
+
+        # Next reload AIR license Level: AIR DNA Advantage
+        p17_1 = re.compile(r'^[Nn]ext +(reload|reboot) +AIR license +Level\: '
+                           r'+(?P<next_reload_air_license_level>.+)$')
 
         # chassis, processor_type, main_mem and rtr_type
         # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
@@ -589,6 +619,15 @@ class ShowVersion(ShowVersionSchema):
         for line in out.splitlines():
             line = line.strip()
 
+            # Cisco IOS XE Software, Version BLD_POLARIS_DEV_LATEST_20200702_122021_V17_4_0_67_2
+            m = p0.match(line)
+            if m:
+                if 'version' not in version_dict:
+                    version_dict['version'] = {}
+                xe_version = m.groupdict()['xe_version']
+                version_dict['version']['xe_version'] = xe_version
+                continue
+
             # version
             # Cisco IOS Software [Everest], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.6.5, RELEASE SOFTWARE (fc3)
             # Cisco IOS Software, IOS-XE Software, Catalyst 4500 L3 Switch Software (cat4500e-UNIVERSALK9-M), Version 03.03.02.SG RELEASE SOFTWARE (fc1)
@@ -616,6 +655,8 @@ class ShowVersion(ShowVersionSchema):
             # Cisco IOS Software [Fuji], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 16.7.1prd4, RELEASE SOFTWARE (fc1)
             # Cisco IOS Software [Fuji], Catalyst L3 Switch Software (CAT3K_CAA-UNIVERSALK9-M), Experimental Version 16.8.20170924:182909 [polaris_dev-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20170924_191550 132]
             # Cisco IOS Software, 901 Software (ASR901-UNIVERSALK9-M), Version 15.6(2)SP4, RELEASE SOFTWARE (fc3)
+            # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.4.20200702:124009 [S2C-build-polaris_dev-116872-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20200702_122021 243]
+            # Cisco IOS Software [Denali], ASR1000 Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Experimental Version 16.3.20170410:103306 [v163_mr_throttle-BLD-BLD_V163_MR_THROTTLE_LATEST_20170410_093453 118]
             m = p3.match(line)
             if m:
                 version = m.groupdict()['version']
@@ -634,6 +675,12 @@ class ShowVersion(ShowVersionSchema):
                         m.groupdict()['version']
                     version_dict['version']['image_id'] = \
                         m.groupdict()['image_id']
+                    if m.groupdict()['label']:
+                        version_dict['version']['label'] = \
+                            m.groupdict()['label']
+                    if m.groupdict()['build_label']:
+                        version_dict['version']['build_label'] = \
+                            m.groupdict()['build_label']
                     if m.groupdict()['os']:
                         version_dict['version']['os'] = m.groupdict()['os']
                     continue
@@ -733,9 +780,6 @@ class ShowVersion(ShowVersionSchema):
             if m:
                 group = m.groupdict()
                 if 'Type:' in group['license_level']:
-                    # entservices   Type: Permanent
-                    p16_1 = re.compile(r'(?P<license_level>\S+) +Type\: '
-                                       r'+(?P<license_type>\S+)')
                     lic_type = group['license_level'].strip()
                     m_1 = p16_1.match(lic_type)
                     group = m_1.groupdict()
@@ -743,6 +787,32 @@ class ShowVersion(ShowVersionSchema):
                     version_dict['version']['license_level'] = group['license_level']
                 else:
                     version_dict['version']['license_level'] = group['license_level']
+                continue
+
+            # AIR License Level: AIR DNA Advantage
+            m = p16_2.match(line)
+            if m:
+                version_dict['version']['air_license_level'] = m.groupdict()['air_license_level']
+                continue
+
+            # Current                        Type                       Next reboot
+            m = p16_3.match(line)
+            if m:
+                version_dict['version'].setdefault('license_package', {})
+                continue
+
+            # network-advantage   	Smart License                 	 network-advantage
+            # dna-advantage       	Subscription Smart License    	 dna-advantage
+            m = p16_4.match(line)
+            if m:
+                group = m.groupdict()
+                license_package = group['license_package']
+                version_dict['version'].setdefault('license_package', {})
+                version_dict['version']['license_package'][license_package] = {
+                    'license_level': license_package,
+                    'license_type': group['package_license_type'].strip(),
+                    'next_reload_license_level': group['next_reload_license_level']
+                }
                 continue
 
             # next_reload_license_level
@@ -753,6 +823,12 @@ class ShowVersion(ShowVersionSchema):
                 version_dict['version']['next_reload_license_level'] = \
                     m.groupdict()['next_reload_license_level']
                 continue
+
+            # Next reload AIR license Level: AIR DNA Advantage
+            m = p17_1.match(line)
+            if m:
+                version_dict['version']['next_reload_air_license_level'] = \
+                    m.groupdict()['next_reload_air_license_level']
 
             # chassis, processor_type, main_mem and rtr_type
             # cisco WS-C3650-24PD (MIPS) processor (revision H0) with 829481K/6147K bytes of memory.
@@ -1245,24 +1321,6 @@ class ShowVersion(ShowVersionSchema):
                                                      table_terminal_pattern=r"(^\n|^\s*$)",
                                                      device_output=out,
                                                      device_os='ios')
-        # switch_number
-        # license table for Cat3850
-        tmp = genie.parsergen.oper_fill_tabular(right_justified=True,
-                                                header_fields=["Current            ",
-                                                               "Type            ",
-                                                               "Next reboot  "],
-                                                label_fields=["license_level",
-                                                              "license_type",
-                                                              "next_reload_license_level"],
-                                                table_terminal_pattern=r"(^\n|^\s*$)",
-                                                device_output=out,
-                                                device_os='iosxe')
-
-        if tmp.entries:
-            res = tmp
-            for key in res.entries.keys():
-                for k, v in res.entries[key].items():
-                    version_dict['version'][k] = v
 
         if tmp2.entries:
             res2 = tmp2
@@ -1293,6 +1351,14 @@ class ShowVersion(ShowVersionSchema):
                         if 'switch_num' != k:
                             version_dict['version']['switch_num'][key][k] = v
                     version_dict['version']['switch_num'][key]['active'] = False
+
+        # Backward compatibility for license_level and license_type
+        if len(version_dict['version'].get('license_package', '')) == 1:
+            k = list(version_dict['version']['license_package'].keys())[0]
+            lic_info = version_dict['version']['license_package'][k]
+            version_dict['version'].setdefault('license_level', lic_info.get('license_level'))
+            version_dict['version'].setdefault('license_type', lic_info.get('license_type'))
+            version_dict['version'].setdefault('next_reload_license_level', lic_info.get('next_reload_license_level'))
 
         return version_dict
 
@@ -1926,6 +1992,7 @@ class ShowInventory(ShowInventorySchema):
         # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
         # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
         # NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
+        # NAME: "1", DESCR: "WS-C3560CX-12PC-S"
         p1 = re.compile(r'^NAME: +\"(?P<name>.*)\",'
                         r' +DESCR: +\"(?P<descr>.*)\"$')
 
@@ -1949,10 +2016,14 @@ class ShowInventory(ShowInventorySchema):
         p1_5 = re.compile(r'^StackPort(?P<slot>(\d+))/(?P<subslot>(\d+))$')
 
         # Fan Tray
-        p1_6 = re.compile(r'^Fan +Tray$')
+        p1_6 = re.compile(r'^Fan +Tray|\d+$')
 
         # Modem 0 on Cellular0/2/0
         p1_7 = re.compile(r'^Modem +(?P<modem>\S+) +on +Cellular(?P<slot>\d+)\/(?P<subslot>.*)$')
+
+        # Slot 2 Linecard
+        # Slot 3 Supervisor
+        p1_8 = re.compile(r'^Slot \d Linecard|Slot \d Supervisor$')        
 
         # PID: ASR-920-24SZ-IM   , VID: V01  , SN: CAT1902V19M
         # PID: SFP-10G-LR        , VID: CSCO , SN: CD180456291
@@ -1962,6 +2033,7 @@ class ShowInventory(ShowInventorySchema):
         # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
         # PID: ISR4331/K9        , VID:      , SN:
         # PID: , VID: 1.0  , SN: 1162722191
+        # PID: WS-C3560CX-12PC-S , VID: V03  , SN: FOC2419L9KY
         p2 = re.compile(r'^PID: +(?P<pid>[\S\s]+)? *, +VID:(?: +(?P<vid>(\S+)))? *,'
                         r' +SN:(?: +(?P<sn>(\S+)))?$')
         for line in out.splitlines():
@@ -1973,6 +2045,7 @@ class ShowInventory(ShowInventorySchema):
             # NAME: "subslot 0/0 transceiver 2", DESCR: "GE T"
             # NAME: "NIM subslot 0/0", DESCR: "Front Panel 3 ports Gigabitethernet Module"
             # NAME: "Modem 0 on Cellular0/2/0", DESCR: "Sierra Wireless EM7455/EM7430"
+            # NAME: "1", DESCR: "WS-C3560CX-12PC-S"
             m = p1.match(line)
 
             if m:
@@ -1983,12 +2056,16 @@ class ShowInventory(ShowInventorySchema):
                 # ------------------------------------------------------------------
                 # Define slot_dict
                 # ------------------------------------------------------------------
+                
+                # Switch 1
+                # module 0
                 m1_1 = p1_1.match(name)
                 if m1_1:
                     slot = m1_1.groupdict()['slot']
                     # Creat slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
+                # Power Supply Module 0
                 m1_2 = p1_2.match(name)
                 if m1_2:
                     slot = name.replace('Power Supply Module ', 'P')
@@ -1998,6 +2075,13 @@ class ShowInventory(ShowInventorySchema):
                 # ------------------------------------------------------------------
                 # Define subslot
                 # ------------------------------------------------------------------
+
+                # SPA subslot 0/0
+                # IM subslot 0/1
+                # NIM subslot 0/0
+                # subslot 0/0 transceiver 0
+                # StackPort1/1
+                # Modem 0 on Cellular0/2/0
                 m = p1_3.match(name) or p1_4.match(name) or p1_5.match(name) or p1_7.match(name)
                 if m:
                     group = m.groupdict()
@@ -2006,11 +2090,21 @@ class ShowInventory(ShowInventorySchema):
                     # Creat slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
 
+                # Fan Tray
                 m1_6 = p1_6.match(name)
                 if m1_6:
                     slot = name.replace(' ', '_')
                     # Create slot_dict
                     slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})
+
+                # Slot 2 Linecard
+                # Slot 3 Supervisor
+                m1_8 = p1_8.match(name)
+                if m1_8:
+                    slot = name.replace(' ', '_')
+                    # Create slot_dict
+                    slot_dict = ret_dict.setdefault('slot', {}).setdefault(slot, {})                    
+                
                 # go to next line
                 continue
 
@@ -2022,6 +2116,7 @@ class ShowInventory(ShowInventorySchema):
             # PID: ISR4331/K9        , VID:      , SN: FDO21520TGH
             # PID: ISR4331/K9        , VID:      , SN:
             # PID: EM7455/EM7430     , VID: 1.0  , SN: 355813070074072
+            # PID: WS-C3560CX-12PC-S , VID: V03  , SN: FOC2419L9KY
             m = p2.match(line)
             if m:
                 group = m.groupdict()
@@ -2091,7 +2186,7 @@ class ShowInventory(ShowInventorySchema):
                 # PID: ASR1002-X         , VID: V07, SN: FOX1111P1M1
                 # PID: ASR1002-HX        , VID:      , SN:
                 elif (('SIP' in pid)  or ('-X' in pid) or \
-                     ('-HX' in pid) or ('module' in name and not ('module F' in name))) and \
+                     ('-HX' in pid) or ('-LC' in pid) or ('module' in name and not ('module F' in name))) and \
                      ('subslot' not in name):
 
                     lc_dict = slot_dict.setdefault('lc', {}).\
@@ -2260,10 +2355,11 @@ class ShowPlatform(ShowPlatformSchema):
         # ------  -----   ---------             -----------  --------------  -------       --------
         #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
         #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
+        #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           2021-03-03_18.
         p3 = re.compile(r'^(?P<switch>\d+) +(?P<ports>\d+) +'
                         r'(?P<model>[\w\-]+) +(?P<serial_no>\w+) +'
                         r'(?P<mac_address>[\w\.\:]+) +'
-                        r'(?P<hw_ver>\w+) +(?P<sw_ver>[\w\.]+)$')
+                        r'(?P<hw_ver>\w+) +(?P<sw_ver>[\s\S]+)$')
 
         #                                     Current
         # Switch#   Role        Priority      State
@@ -2318,6 +2414,7 @@ class ShowPlatform(ShowPlatformSchema):
             # ------  -----   ---------             -----------  --------------  -------       --------
             #  1       32     WS-C3850-24P-E        FCW1947C0HH  0057.d2ff.e71b  V07           16.6.1
             #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           17.05.01
+            #  1       32     C9200-24P             JAD2310213C  dc8c.37ff.ad21  V01           2021-03-03_18.
             m = p3.match(line)
             if m:
                 slot = m.groupdict()['switch']
@@ -3333,11 +3430,7 @@ class ShowPlatformSoftwareStatusControl(ShowPlatformSoftwareStatusControlSchema)
                         '(?P<free>\d+) +\((?P<free_percentage>[\d\s]+)\%\) +'
                         '(?P<committed>\d+) +\((?P<committed_percentage>[\d\s]+)\%\)$')
 
-        p3 = re.compile(r'^(?P<slot>\S+)? *(?P<cpu>\d+) +'
-                        '(?P<user>[\d\.]+) +(?P<system>[\d\.]+) +'
-                        '(?P<nice_process>[\d\.]+) +(?P<idle>[\d\.]+) +'
-                        '(?P<irq>[\d\.]+) +(?P<sirq>[\d\.]+) +'
-                        '(?P<waiting>[\d\.]+)$')
+        p3 = re.compile(r'^((?P<slot>\S+) +)?(?P<cpu>\d+) +(?P<user>[\d\.]+) +(?P<system>[\d\.]+) +(?P<nice_process>[\d\.]+) +(?P<idle>[\d\.]+) +(?P<irq>[\d\.]+) +(?P<sirq>[\d\.]+) +(?P<waiting>[\d\.]+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -5888,7 +5981,7 @@ class ShowPlatformSoftwareMemoryCallsite(ShowPlatformSoftwareMemoryCallsiteSchem
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                callsite = int(group['callsite'])
+                callsite = group['callsite']
                 one_callsite_dict = callsite_dict.setdefault(callsite, {})
                 one_callsite_dict['thread'] = int(group['thread'])
                 one_callsite_dict['diff_byte'] = int(group['diffbyte'])
@@ -5906,7 +5999,7 @@ class ShowPlatformSoftwareMemoryBacktraceSchema(MetaParser):
                 {'allocs': int,
                  'frees': int,
                  'call_diff': int,
-                 'callsite': int,
+                 'callsite': str,
                  'thread_id': int}
         }
 
@@ -5953,7 +6046,7 @@ class ShowPlatformSoftwareMemoryBacktrace(ShowPlatformSoftwareMemoryBacktraceSch
             m = p2.match(line)
             if m:
                 group = m.groupdict()
-                one_backtrace_dict['callsite'] = int(group['callsite'])
+                one_backtrace_dict['callsite'] = group['callsite']
                 one_backtrace_dict['thread_id'] = int(group['thread_id'])
                 continue
 
@@ -6940,7 +7033,7 @@ class ShowPlatformResourcesSchema(MetaParser):
             }
             }
         },
-        'esp': {
+        Optional('esp'): {
             Any(): {
                 'state': str,
                 'role': str,
@@ -7849,3 +7942,408 @@ class ShowPlatformSoftwareMemorySwitchActiveAllocTypeBrief(ShowPlatformSoftwareM
             out = output
 
         return super().cli(process=process, alloc_type=alloc_type, output=out)
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceBriefSchema(MetaParser):
+    """ Schema for
+        * show platform software iomd 1/0 macsec interface {interface} brief
+    """
+    schema = {
+        Optional('tx-sc'): {
+            Any(): {
+                'sub-interface': str,
+                'sc-idx': str,
+                'pre-cur-an': str,
+                'sci': str,
+                'sa-vp-rule-idx': str,
+                'cipher': str
+            }
+        },
+        Optional('rx-sc'): {
+            Any(): {
+                'sub-interface': str,
+                'sc-idx': str,
+                'pre-cur-an': str,
+                'sci': str,
+                'sa-vp-rule-idx': str,
+                'cipher': str
+            }
+        }
+    }
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceBrief(ShowPlatformSoftwareIomdMacsecInterfaceBriefSchema):
+    """ Parser for
+        * show platform software iomd 1/0 macsec interface {interface} brief 
+    """
+
+    cli_command = 'show platform software iomd 1/0 macsec interface {interface} brief'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface))
+        else:
+            out = output
+
+        ret_dict = {}
+        #Tx SC
+        p1 = re.compile(r'(.*)Tx SC')
+
+        #Rx SC
+        p2 = re.compile(r'(.*)Rx SC')
+
+        #3/11  |   0    |     3/0    | f87a41252702008b | 50331759/ 2/ 1  |     GCM_AES_128 |
+        p3 = re.compile(r'(?P<if>\d+\/\d+) +\|'
+                        ' +(?P<sc_idx>\d+) +\|'
+                        ' +(?P<pre_cur_an>\d+\/\d+) +\|'
+                        ' +(?P<sci>\S+) +\|'
+                        ' +(?P<idx>\d+\/ \d+\/ \d+) +\|'
+                        ' +(?P<cipher>\S+) +\|'
+                        )
+
+        sess_tx=0
+        sess_rx=0
+        for line in out.splitlines():
+            line = line.strip()
+            m1 = p1.match(line)
+            if m1:
+                sc = 'tx'
+                tx_sc = ret_dict.setdefault('tx-sc', {})
+            m2 = p2.match(line)
+            if m2:
+                sc = 'rx'
+                rx_sc = ret_dict.setdefault('rx-sc', {})
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                if sc == 'tx':
+                    sess_tx+=1
+                    sc_tx_dict = tx_sc.setdefault(sess_tx, {})
+                    sc_tx_dict['sub-interface'] = group['if']
+                    sc_tx_dict['sc-idx'] = group['sc_idx']
+                    sc_tx_dict['pre-cur-an'] = group['pre_cur_an']
+                    sc_tx_dict['sci'] = group['sci']
+                    sc_tx_dict['sa-vp-rule-idx'] = group['idx']
+                    sc_tx_dict['cipher'] = group['cipher']
+                elif sc == 'rx':
+                    sess_rx+=1
+                    sc_rx_dict = rx_sc.setdefault(sess_rx, {})
+                    sc_rx_dict['sub-interface'] = group['if']
+                    sc_rx_dict['sc-idx'] = group['sc_idx']
+                    sc_rx_dict['pre-cur-an'] = group['pre_cur_an']
+                    sc_rx_dict['sci'] = group['sci']
+                    sc_rx_dict['sa-vp-rule-idx'] = group['idx']
+                    sc_rx_dict['cipher'] = group['cipher']
+        return ret_dict
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceDetailSchema(MetaParser):
+    """ Schema for
+        * show platform software iomd 1/0 macsec interface {interface} detail
+    """
+    schema = {
+        Optional('subport-11-tx'): {
+                'bypass': str,
+                'cipher': str,
+                'conf-offset': str,
+                'cur-an': str,
+                'delay-protection': str,
+                'encrypt': str,
+                'end-station': str,
+                'hashkey-len': str,
+                'key-len': str,
+                'next-pn': str,
+                'prev-an': str,
+                'rule-index': str,
+                'sa-index': str,
+                'scb': str,
+                'sci': str,
+                'vlan': str,
+                'vport-index': str
+        },
+        Optional('subport-12-tx'): {
+                'bypass': str,
+                'cipher': str,
+                'conf-offset': str,
+                'cur-an': str,
+                'delay-protection': str,
+                'encrypt': str,
+                'end-station': str,
+                'hashkey-len': str,
+                'key-len': str,
+                'next-pn': str,
+                'prev-an': str,
+                'rule-index': str,
+                'sa-index': str,
+                'scb': str,
+                'sci': str,
+                'vlan': str,
+                'vport-index': str
+        },
+        Optional('subport-11-rx'): {
+                   'bypass': str,
+                   'cipher': str,
+                   'conf-offset': str,
+                   'cur-an': str,
+                   'decrypt-frames': str,
+                   'hashkey-len': str,
+                   'key-len': str,
+                   'next-pn': str,
+                   'prev-an': str,
+                   'replay-protect': str,
+                   'replay-window-size': str,
+                   'rule-index': str,
+                   'sa-index': str,
+                   'sci': str,
+                   'validate-frames': str,
+                   'vport-index': str
+       },
+        Optional('subport-12-rx'): {
+                   'bypass': str,
+                   'cipher': str,
+                   'conf-offset': str,
+                   'cur-an': str,
+                   'decrypt-frames': str,
+                   'hashkey-len': str,
+                   'key-len': str,
+                   'next-pn': str,
+                   'prev-an': str,
+                   'replay-protect': str,
+                   'replay-window-size': str,
+                   'rule-index': str,
+                   'sa-index': str,
+                   'sci': str,
+                   'validate-frames': str,
+                   'vport-index': str
+       }}
+
+
+
+class ShowPlatformSoftwareIomdMacsecInterfaceDetail(ShowPlatformSoftwareIomdMacsecInterfaceDetailSchema):
+    """ Parser for
+        * show platform software iomd 1/0 macsec interface {interface} detail
+    """
+
+    cli_command = 'show platform software iomd 1/0 macsec interface {interface} detail'
+
+    def cli(self, interface, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command.format(
+                interface=interface))
+        else:
+            out = output
+
+        ret_dict = {}
+
+        #Port:3, Subport:11, Tx SC index:0
+        p1 = re.compile(r'Port\:\d+\, Subport\:(.*)\, Tx SC index')
+
+        #Port:3, Subport:11, Rx SC index:0
+        p2 = re.compile(r'Port\:\d+\, Subport\:(.*)\, Rx SC index')
+
+        #Prev AN: 3, Cur AN: 0
+        p3 = re.compile(r'Prev AN\: (?P<prev_an>\d+)\, +'
+                        'Cur AN\: (?P<cur_an>\d+)')
+
+        #SA index: 50331759, vport index: 2, rule index: 1
+        p4 = re.compile(r'SA index\: (?P<sa_index>\d+)\, +'
+                        'vport index\: (?P<vport_index>\d+)\, +'
+                        'rule index\: (?P<rule_index>\d+)')
+
+        #key_len: 16
+        p5 = re.compile(r'^key_len\: (?P<key_len>\d+)$')
+
+        #hashkey_len: 16
+        p6 = re.compile(r'^hashkey_len\: (?P<hashkey_len>\d+)$')
+
+        #bypass: 0
+        p7 = re.compile(r'^bypass\: (?P<bypass>\d+)$')
+
+        #nextPn: 1
+        p8 = re.compile(r'^nextPn\: (?P<nextPn>\d+)$')
+
+        #conf_offset: 0
+        p9 = re.compile(r'^conf_offset\: (?P<conf_offset>\d+)$')
+
+        #encrypt: 1
+        p10 = re.compile(r'^encrypt\: (?P<encrypt>\d+)$')
+
+        #vlan: 1
+        p11 = re.compile(r'^vlan\: (?P<vlan>\d+)$')
+
+        #end_station: 0
+        p12 = re.compile(r'^end_station\: (?P<end_station>\d+)$')
+
+        #scb: 0
+        p13 = re.compile(r'^scb\: (?P<scb>\d+)$')
+
+        #cipher: GCM_AES_128
+        p14 = re.compile(r'^cipher\: (?P<cipher>\S+)$')
+
+        #Delay protection: 0
+        p15 = re.compile(r'^Delay protection\: (?P<delay_protection>\d+)$')
+
+        #replay_protect: 1
+        p16 = re.compile(r'^replay_protect\: (?P<replay_protect>\d+)$')
+
+        #replay_window_size: 0
+        p17 = re.compile(r'^replay_window_size\: (?P<replay_window_size>\d+)$')
+
+        #decrypt_frames: 1
+        p18 = re.compile(r'^decrypt_frames\: (?P<decrypt_frames>\d+)$')
+
+        #validate_frames: 1
+        p19 = re.compile(r'^validate_frames\: (?P<validate_frames>\d+)$')
+
+        #sci:ecce1346f902008c
+        p20 = re.compile(r'^sci\:(?P<sci>\S+)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+            m1 = p1.match(line)
+            if m1:
+                sc = 'tx'
+                subport_tx = m1.group(1)
+                subport_tx_dict = ret_dict.setdefault('subport-{}-tx'.format(subport_tx), {})
+            m2 = p2.match(line)
+            if m2:
+                sc = 'rx'
+                subport_rx = m2.group(1)
+                subport_rx_dict = ret_dict.setdefault('subport-{}-rx'.format(subport_rx), {})
+            m3 = p3.match(line)
+            if m3:
+                group = m3.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['prev-an'] = group['prev_an']
+                    subport_tx_dict['cur-an'] = group['cur_an']
+                elif sc == 'rx':
+                    subport_rx_dict['prev-an'] = group['prev_an']
+                    subport_rx_dict['cur-an'] = group['cur_an']
+            m4 = p4.match(line)
+            if m4:
+                group = m4.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['sa-index'] = group['sa_index']
+                    subport_tx_dict['vport-index'] = group['vport_index']
+                    subport_tx_dict['rule-index'] = group['rule_index']
+                elif sc == 'rx':
+                    subport_rx_dict['sa-index'] = group['sa_index']
+                    subport_rx_dict['vport-index'] = group['vport_index']
+                    subport_rx_dict['rule-index'] = group['rule_index']
+            m5 = p5.match(line)
+            if m5:
+                group = m5.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['key-len'] = group['key_len']
+                elif sc == 'rx':
+                    subport_rx_dict['key-len'] = group['key_len']
+            m6 = p6.match(line)
+            if m6:
+                group = m6.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['hashkey-len'] = group['hashkey_len']
+                elif sc == 'rx':
+                    subport_rx_dict['hashkey-len'] = group['hashkey_len']
+            m7 = p7.match(line)
+            if m7:
+                group = m7.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['bypass'] = group['bypass']
+                elif sc == 'rx':
+                    subport_rx_dict['bypass'] = group['bypass']
+            m8 = p8.match(line)
+            if m8:
+                group = m8.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['next-pn'] = group['nextPn']
+                elif sc == 'rx':
+                    subport_rx_dict['next-pn'] = group['nextPn']
+            m9 = p9.match(line)
+            if m9:
+                group = m9.groupdict()
+                if sc == 'tx':
+                   subport_tx_dict['conf-offset'] = group['conf_offset']
+                elif sc == 'rx':
+                   subport_rx_dict['conf-offset'] = group['conf_offset']
+            m10 = p10.match(line)
+            if m10:
+                group = m10.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['encrypt'] = group['encrypt']
+                elif sc == 'rx':
+                    subport_rx_dict['encrypt'] = group['encrypt']
+            m11 = p11.match(line)
+            if m11:
+                group = m11.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['vlan'] = group['vlan']
+                elif sc == 'rx':
+                    subport_rx_dict['vlan'] = group['vlan']
+            m12 = p12.match(line)
+            if m12:
+                group = m12.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['end-station'] = group['end_station']
+                elif sc == 'rx':
+                    subport_rx_dict['end-station'] = group['end_station']
+            m13 = p13.match(line)
+            if m13:
+                group = m13.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['scb'] = group['scb']
+                elif sc == 'rx':
+                    subport_rx_dict['scb'] = group['scb']
+            m14 = p14.match(line)
+            if m14:
+                group = m14.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['cipher'] = group['cipher']
+                elif sc == 'rx':
+                    subport_rx_dict['cipher'] = group['cipher']
+            m15 = p15.match(line)
+            if m15:
+                group = m15.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['delay-protection'] = group['delay_protection']
+                elif sc == 'rx':
+                    subport_rx_dict['delay-protection'] = group['delay_protection']
+            m16 = p16.match(line)
+            if m16:
+                group = m16.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['replay-protect'] = group['replay_protect']
+                elif sc == 'rx':
+                    subport_rx_dict['replay-protect'] = group['replay_protect']
+            m17 = p17.match(line)
+            if m17:
+                group = m17.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['replay-window-size'] = group['replay_window_size']
+                elif sc == 'rx':
+                    subport_rx_dict['replay-window-size'] = group['replay_window_size']
+            m18 = p18.match(line)
+            if m18:
+                group = m18.groupdict()
+                if sc == 'tx':
+                     subport_tx_dict['decrypt-frames'] = group['decrypt_frames']
+                elif sc == 'rx':
+                     subport_rx_dict['decrypt-frames'] = group['decrypt_frames']
+            m19 = p19.match(line)
+            if m19:
+                group = m19.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['validate-frames'] = group['validate_frames']
+                elif sc == 'rx':
+                    subport_rx_dict['validate-frames'] = group['validate_frames']
+            m20 = p20.match(line)
+            if m20:
+                group = m20.groupdict()
+                if sc == 'tx':
+                    subport_tx_dict['sci'] = group['sci']
+                elif sc == 'rx':
+                    subport_rx_dict['sci'] = group['sci']
+
+        return ret_dict

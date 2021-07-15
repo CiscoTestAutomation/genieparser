@@ -513,6 +513,7 @@ class ShowIpRouteSchema(MetaParser):
                                             Optional('stale'): bool,
                                             Optional('evpn'): bool,
                                             Optional('segid'): int,
+                                            Optional('asymmetric'): bool,
                                             Optional('tunnelid'): str,
                                             Optional('encap'): str,
                                         },
@@ -587,6 +588,21 @@ class ShowIpRoute(ShowIpRouteSchema):
                     'show ip route']
     exclude = [
         'updated']
+
+    def sort_next_hop_list(self, obj: dict):
+        for key, value in obj.items():
+            if isinstance(value, dict):
+                if key == 'next_hop_list':
+                    # sort based on next_hop then source_protocol
+                    sort_list = sorted(list(value.values()), \
+                            key=lambda k: (k['next_hop'], k['source_protocol']), reverse=False)
+                    sorted_next_hop_list = {}
+                    for index, item in enumerate(sort_list):
+                        item['index'] = index+1
+                        sorted_next_hop_list[index+1] = item
+                    obj[key] = sorted_next_hop_list
+                else:
+                    self.sort_next_hop_list(value)
 
     def cli(self, route=None, protocol=None, vrf=None, interface=None, output=None, cmd=None):
 
@@ -712,12 +728,14 @@ class ShowIpRoute(ShowIpRouteSchema):
         # *via vrf default, Null0, [20/0], 18:11:28, bgp-333, external, tag 333
         # *via 10.55.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
         # *via 2001:db8:626b:2101::3/128, [200/7], 01:51:32, bgp-10001, internal, tag 20001
-        p3 = re.compile(r'^\s*(?P<star>[*]+)?via +(?P<next_hop>[\s\w\:\.\/\%]+),'
+        # *via 100.100.100.1%default, [200/0], 01:25:26, bgp-1000, internal, tag 3000, segid: 601011 (Asymmetric) tunnelid: 0x64646401 encap: VXLAN
+        p3 = re.compile(r'^\s*(?P<star>[*]+)?via +(?P<next_hop>[\s\w\:\.\/\%\!\#\$\*\+\-\;\=\@\^\_\{\}]+),'
                         r'( +(?P<interface>[\w\/\.]+))?,? +\[(?P<route_preference>[\d\/]+)\],'
                         r' +(?P<date>[0-9][\w\:]+)?,?( +(?P<source_protocol>[\w\-]+))?,?'
                         r'( +(?P<source_protocol_status>[\w-]+))?,?( +tag +(?P<tag>[\d]+))?,?'
                         r'( +\((?P<hidden>hidden)\))?'
                         r'\s*(?P<vpn>[a-zA-Z\(\)\-]+)?,?( +segid: +(?P<segid>\d+))?,?'
+                        r'( +\((?P<asymmetric>Asymmetric)\))?'
                         r'( +tunnelid: +(?P<tunnelid>[0-9x]+))?,?( +encap: +(?P<encap>[a-zA-Z0-9]+))?$')
 
         #    tag 100
@@ -801,6 +819,7 @@ class ShowIpRoute(ShowIpRouteSchema):
             # via 10.23.120.2, Eth1/1.120, [120/2], 1w4d, rip-1, rip
             # **via 10.36.3.3%default, [33/0], 5w0d, bgp-100, internal, tag 100 (mpls-vpn)
             # *via 10.55.130.3%default, [33/0], 3d10h, bgp-1, internal, tag 1 (evpn), segid: 50051 tunnelid: 0x64008203 encap: VXLAN
+            # *via 100.100.100.1%default, [200/0], 01:25:26, bgp-1000, internal, tag 3000, segid: 601011 (Asymmetric) tunnelid: 0x64646401 encap: VXLAN
             m = p3.match(line)
             if m:
                 groups = m.groupdict()
@@ -924,6 +943,11 @@ class ShowIpRoute(ShowIpRouteSchema):
                     if segid:
                         index_dict['segid'] = int(segid)
 
+                    asymmetric = True if groups.get('asymmetric') else False
+
+                    if asymmetric:
+                        index_dict['asymmetric'] = asymmetric
+
                     tunnelid = groups['tunnelid']
                     if tunnelid:
                         index_dict['tunnelid'] = tunnelid
@@ -952,6 +976,7 @@ class ShowIpRoute(ShowIpRouteSchema):
                 if groups['tag']:
                     route_dict.update({'tag': int(groups['tag'])})
 
+        self.sort_next_hop_list(result_dict)
         return result_dict
 
 

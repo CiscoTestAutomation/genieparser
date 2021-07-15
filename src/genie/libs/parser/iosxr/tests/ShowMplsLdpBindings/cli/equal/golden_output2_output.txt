@@ -1,0 +1,11 @@
+RP/0/0/CPU0:router# show mpls ldp bindings
+            
+10.9.9.98/32 , rev 6 
+local binding: label:IMP-NULL
+No remote bindings
+
+10.10.2.0/24 , rev 12 
+local binding: label:IMP-NULL
+remote bindings : 
+    lsr:10.255.255.255:0, label:16 
+    lsr:10.256.256.256:0, label:IMP-NULL

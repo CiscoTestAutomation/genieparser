@@ -1,3 +1,12 @@
+# 2021
+
+* [June](2021/JUNE.rst)
+* [May](2021/MAY.rst)
+* [April](2021/APRIL.rst)
+* [March](2021/MARCH.rst)
+* [February](2021/FEBRUARY.rst)
+* [January](2021/JANUARY.rst)
+
 # 2020
 * [January](2020/JANUARY.md)
 * [February](2020/FEBRUARY.md)

@@ -71,8 +71,8 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
         p2 = re.compile(r'^(?P<device_id>\S+) +'
                         '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
-                        '(?P<platform>[\S\s]+) '
-                        '+(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
+                        '(?P<platform>[\S\s]+) +'
+                        '(?P<port_id>(vmnic|Eth|Te|Gig|Fas|Lo|Po|Tu|mgmt|cont)[a-zA-Z0-9\/\-]+)$')
 
         # p3 and p4: If Device Id is not on same line as everything else
         # vsm-p(2094532764140613037)
@@ -94,6 +94,21 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                         '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
                         '(?P<platform>[\S\s]+)$')        
 
+        # p6: For Linux neighbor all in one line
+        # shkothap-lnx        Eth1/1/1       119    R S H     Linux         enp2s0
+        p6 = re.compile(r'^(?P<device_id>\S+) +'
+                        '(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                        '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
+                        '(?P<platform>[Ll]inux[\S\s]*) +'        
+                        '(?P<port_id>[a-z0-9]+)$')
+
+        # p7: For Linux neighbor split in two lines
+        #                    Eth1/1/2       119    R S H     Linux         enp2s1
+        p7 = re.compile(r'^(?P<local_interface>[a-zA-Z]+[\s]*[\d\/\.]+) +'
+                        '(?P<hold_time>\d+) +(?P<capability>[RTBSHIVDrs\s]+) +'
+                        '(?P<platform>[Ll]inux[\S\s]*) +'        
+                        '(?P<port_id>[a-z0-9]+)$')
+
         device_id_index = 0
 
         parsed_dict = {}
@@ -104,6 +119,8 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
             result = p1.match(line)
             if not result:
                 result = p2.match(line)
+            if not result:
+                result = p6.match(line)
     
             if result:
 
@@ -144,6 +161,9 @@ class ShowCdpNeighbors(ShowCdpNeighborsSchema):
                 continue
 
             result = p4.match(line)
+            if not result:
+                result = p7.match(line)
+
             if result:
                 
                 group = result.groupdict()
@@ -397,7 +417,7 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                         {'type': ipv6_address_dict['type']}
 
                 continue
-
+            
             result = advertver_re.match(line)
             if result:
                 devices_dict['advertisement_ver'] = \
@@ -418,6 +438,8 @@ class ShowCdpNeighborsDetail(ShowCdpNeighborsDetailSchema):
                     parsed_sw_ver = '\n'.join(sw_version)
                     
                     result = software_version_re.match(parsed_sw_ver)
+                    if not result:
+                        continue
 
                     devices_dict['software_version'] = \
                         result.group('software_version')

@@ -39,27 +39,30 @@ logger = logging.getLogger(__name__)
 
 class ShowIpInterfaceBriefSchema(MetaParser):
     """Schema for show ip interface brief"""
-    schema = {'interface':
-                {Any():
-                    {Optional('ip_address'): str,
-                    Optional('interface_status'): str,
-                    Optional('protocol_status'): str,
-                    Optional('vrf_name'): str}
-                },
+    schema = {
+        'interface': {
+            Any(): {
+                Optional('ip_address'): str,
+                Optional('interface_status'): str,
+                Optional('protocol_status'): str,
+                Optional('vrf_name'): str
             }
+        },
+    }
 
 
 class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
     """Parser for show ip interface brief"""
-    #*************************
+    # *************************
     # schema - class variable
     #
     # Purpose is to make sure the parser always return the output
     # (nested dict) that has the same data structure across all supported
     # parsing mechanisms (cli(), yang(), xml()).
 
-    cli_command = ['show ip interface brief | include {ip}','show ip interface brief']
-    def cli(self, ip='',output=None):
+    cli_command = ['show ip interface brief | include {ip}', 'show ip interface brief']
+
+    def cli(self, ip='', output=None):
         ''' parsing mechanism: cli
 
         Function cli() defines the cli type output parsing mechanism which
@@ -79,7 +82,7 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
         # BVI123                         10.12.34.56         Up              Up       MyOrg-MyGroup_Channel_Zone
         p = re.compile(r'^\s*(?P<interface>[a-zA-Z0-9\/\.\-]+) '
                        r'+(?P<ip_address>[a-z0-9\.]+) +(?P<interface_status>[a-zA-Z]+) '
-                       r'+(?P<protocol_status>[a-zA-Z]+) +(?P<vrf_name>[\w\:-]+)$')
+                       r'+(?P<protocol_status>[a-zA-Z]+)( +(?P<vrf_name>[\w\:-]+))?$')
 
         interface_dict = {}
         for line in out.splitlines():
@@ -87,9 +90,8 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
 
             m = p.match(line)
             if m:
-                interface = m.groupdict()['interface']
                 group = m.groupdict()
-                del group['interface']
+                interface = group.pop('interface')
 
                 if 'interface' not in interface_dict:
                     interface_dict['interface'] = {}
@@ -97,7 +99,7 @@ class ShowIpInterfaceBrief(ShowIpInterfaceBriefSchema):
                     interface_dict['interface'][interface] = {}
 
                 interface_dict['interface'][interface].update(
-                    {k:v for k,v in group.items()})
+                    {k: v for k, v in group.items() if v is not None})
 
                 continue
 
@@ -374,7 +376,7 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
 
 
         return interface_dict
-        
+
 ################################################################################
 
 #############################################################################
@@ -390,11 +392,11 @@ class ShowInterfacesDetailSchema(MetaParser):
             {Optional('description'): str,
              Optional('types'): str,
              Optional('phys_address'): str,
-             Optional('port_speed'): str,          
+             Optional('port_speed'): str,
              Optional('mtu'): int,
-             Optional('line_protocol'): str,   
-             Optional('oper_status'): str,                 
-             Optional('enabled'): bool,          
+             Optional('line_protocol'): str,
+             Optional('oper_status'): str,
+             Optional('enabled'): bool,
              Optional('mac_address'): str,
              Optional('auto_negotiate'): bool,
              Optional('duplex_mode'): str,
@@ -422,7 +424,7 @@ class ShowInterfacesDetailSchema(MetaParser):
                      Optional('in_rate'): int,
                      Optional('in_rate_pkts'): int,
                      Optional('out_rate'): int,
-                     Optional('out_rate_pkts'): int,                                         
+                     Optional('out_rate_pkts'): int,
                     },
                 Optional('in_discards'): int,
                 Optional('in_unknown_protos'): int,
@@ -475,10 +477,10 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
     """
 
     cli_command = ['show interface detail', 'show interface {interface} detail']
-    exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts', 'in_rate', 
+    exclude = ['in_octets', 'in_pkts', 'out_octets', 'out_pkts', 'in_rate',
         'in_rate_pkts', 'out_rate', 'out_rate_pkts', 'last_link_flapped', 'in_multicast_pkts',
         'out_multicast_pkts', 'last_input', 'last_output', 'in_crc_errors', 'in_frame_errors',
-        'reliability', 'in_discards', 'in_broadcast_pkts', 'out_broadcast_pkts', 'rxload', 'txload', 
+        'reliability', 'in_discards', 'in_broadcast_pkts', 'out_broadcast_pkts', 'rxload', 'txload',
         'interface_state', 'in_unknown_protos', 'last_clear', 'carrier_transitions', 'in_giants']
 
 
@@ -518,7 +520,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 if interface not in interface_detail_dict:
                     interface_detail_dict[interface] = {}
                 interface_detail_dict[interface]['line_protocol'] = line_protocol
-                interface_detail_dict[interface]['oper_status'] = 'down'            
+                interface_detail_dict[interface]['oper_status'] = 'down'
                 interface_detail_dict[interface]['enabled'] = False
                 continue
 
@@ -579,7 +581,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 types = types.replace(",","")
                 types = types.replace("interface","")
                 mac_address = m.groupdict()['mac_address']
-    
+
                 interface_detail_dict[interface]['types'] = types
                 if mac_address:
                     interface_detail_dict[interface]['mac_address'] = str(m.groupdict()['mac_address'])
@@ -640,7 +642,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 interface_detail_dict[interface]['txload'] = txload
                 interface_detail_dict[interface]['rxload'] = rxload
                 continue
-            
+
             # Encapsulation 802.1Q Virtual LAN, VLAN Id 10, 2nd VLAN Id 10,
             p7 = re.compile(r'^\s*Encapsulation +(?P<encapsulation>[a-zA-Z0-9\.\s]+),'
                              ' +VLAN +Id +(?P<first_dot1q>[0-9]+), +2nd +VLAN'
@@ -681,7 +683,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                     interface_detail_dict[interface]['loopback_status']\
                     = m.groupdict()['loopback_status']
                 continue
-            
+
             p7_2 = re.compile(r'^\s*Encapsulation +(?P<encapsulation>[a-zA-Z0-9\.\s]+),'
                                ' +VLAN +Id +(?P<first_dot1q>[0-9]+), +2nd +VLAN +Id'
                                ' +(?P<second_dot1q>[0-9]+),(?: +loopback'
@@ -807,7 +809,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                     interface_detail_dict[interface]['counters'] = {}
                 if 'rate' not in interface_detail_dict[interface]['counters']:
                     interface_detail_dict[interface]['counters']['rate'] = {}
-                
+
                 interface_detail_dict[interface]['counters']['rate']\
                 ['load_interval'] = load_interval
                 interface_detail_dict[interface]['counters']['rate']\
@@ -1021,7 +1023,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 ['in_abort'] = int(m.groupdict()['in_abort'])
                 continue
 
-            # 0 packets output, 0 bytes, 0 total output drops 
+            # 0 packets output, 0 bytes, 0 total output drops
             p16 = re.compile(r'^\s*(?P<out_pkts>[0-9]+) +packets +output,'
                               ' +(?P<out_octets>[0-9]+) +bytes, +(?P<out_discards>[0-9]+)'
                               ' +total +output +drops$')
@@ -1035,7 +1037,7 @@ class ShowInterfacesDetail(ShowInterfacesDetailSchema):
                 interface_detail_dict[interface]['counters']\
                 ['out_discards'] = int(m.groupdict()['out_discards'])
                 continue
-    
+
             # Output 0 broadcast packets, 0 multicast packets
             p17 = re.compile(r'^\s*Output +(?P<out_broadcast_pkts>[0-9]+)'
                               ' +broadcast +packets, +(?P<out_multicast_pkts>[0-9]+)'
@@ -1176,7 +1178,7 @@ class ShowVlanInterface(ShowVlanInterfaceSchema):
 
 
 #############################################################################
-# Parser For show ipv4 vrf all interface 
+# Parser For show ipv4 vrf all interface
 #############################################################################
 
 class ShowIpv4VrfAllInterfaceSchema(MetaParser):
@@ -1189,7 +1191,7 @@ class ShowIpv4VrfAllInterfaceSchema(MetaParser):
              'vrf': str,
              'vrf_id': str,
              Optional('multicast_groups'): list,
-             Optional('multicast_groups_address'): str,             
+             Optional('multicast_groups_address'): str,
              Optional('ipv4'):
                 {Any():
                     {Optional('ip'): str,
@@ -1202,13 +1204,13 @@ class ShowIpv4VrfAllInterfaceSchema(MetaParser):
                  Optional('helper_address'): str,
                  Optional('broadcast_forwarding'): str,
                  Optional('out_access_list'): str,
-                 Optional('in_access_list'): str,  
+                 Optional('in_access_list'): str,
                  Optional('in_common_access_list'): str,
                  Optional('proxy_arp'): str,
                  Optional('icmp_redirects'): str,
                  Optional('icmp_unreachables'): str,
                  Optional('icmp_replies'): str,
-                 Optional('table_id'): str,                    
+                 Optional('table_id'): str,
                  Optional('unnumbered'):
                     {Optional('unnumbered_intf_ref'): str
                     },
@@ -1299,7 +1301,7 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
                 else:
                     if 'unnumbered' not in ipv4_vrf_all_interface_dict[interface]['ipv4']:
                         ipv4_vrf_all_interface_dict[interface]['ipv4']['unnumbered'] = {}
-                    ipv4_vrf_all_interface_dict[interface]['ipv4']['unnumbered']['unnumbered_intf_ref'] = unnumbered_intf_ref  
+                    ipv4_vrf_all_interface_dict[interface]['ipv4']['unnumbered']['unnumbered_intf_ref'] = unnumbered_intf_ref
                 continue
 
             # Internet address is 10.1.1.1/24 with route-tag 50
@@ -1335,7 +1337,7 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
                 ip = m.groupdict()['ip']
                 prefix_length = str(m.groupdict()['prefix_length'])
                 route_tag = m.groupdict()['route_tag']
-    
+
                 address = ip + '/' + prefix_length
                 if 'ipv4' not in ipv4_vrf_all_interface_dict[interface]:
                     ipv4_vrf_all_interface_dict[interface]['ipv4'] = {}
@@ -1344,7 +1346,7 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
                 if route_tag:
                     ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
                     ['route_tag'] = int(m.groupdict()['route_tag'])
-                    
+
                 ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
                 ['ip'] = ip
                 ipv4_vrf_all_interface_dict[interface]['ipv4'][address]\
@@ -1515,9 +1517,9 @@ class ShowIpv4VrfAllInterface(ShowIpv4VrfAllInterfaceSchema):
 
         return ipv4_vrf_all_interface_dict
 
-        
+
 #############################################################################
-# Parser For show ipv6 vrf all interface 
+# Parser For show ipv6 vrf all interface
 #############################################################################
 
 class ShowIpv6VrfAllInterfaceSchema(MetaParser):
@@ -1596,14 +1598,14 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
 
         for line in out.splitlines():
             line = line.strip()
-            
+
             # show ipv6 vrf {vrf} interface {interface}
             # show ipv6 vrf {vrf} interface', 'show ipv6 vrf all interface
             p1 = re.compile(r'^show +[\S\s]+$')
             m = p1.match(line)
             if m:
                 continue
-            
+
             # GigabitEthernet0/0/0/0 is Shutdown, ipv6 protocol is Down, Vrfid is VRF1 (0x60000002)
             # nve100 is Up, ipv6 protocol is Unknown, Vrfid is default (0x60000000)
             p1_1 = re.compile(r'^\s*(?P<interface>\S+) +is +(?P<int_status>[a-zA-Z]+),'
@@ -2028,7 +2030,7 @@ class ShowIpv6VrfAllInterface(ShowIpv6VrfAllInterfaceSchema):
                 ipv6_vrf_all_interface_dict[interface]['ipv6']\
                 ['complete_protocol_adj'] = complete_protocol_adj
                 continue
-            
+
             #Complete glean adjacency: 0
             p17 = re.compile(r'^\s*Complete +glean +adjacency:'
                               ' +(?P<complete_glean_adj>[0-9]+)$')
@@ -2389,12 +2391,12 @@ class ShowInterfaces(ShowInterfacesSchema):
 
         result_dict = {}
 
-        # GigabitEthernet1 is up, line protocol is up 
+        # GigabitEthernet1 is up, line protocol is up
         # TenGigE0/0/0/4 is administratively down, line protocol is administratively down
         p1 = re.compile(r'^(?P<interface>\S+) +is +(?P<enabled>[\w\s]+), '
                          '+line +protocol +is +(?P<line_protocol>[\w\s]+)$')
 
-        # Interface state transitions: 9 
+        # Interface state transitions: 9
         p2 = re.compile(r'^Interface +state +transitions: +(?P<interface_state_transitions>[\d]+)$')
 
         # Hardware is Loopback
@@ -2540,7 +2542,7 @@ class ShowInterfaces(ShowInterfacesSchema):
         # Output 0 broadcast packets, 178045 multicast packets
         p32 = re.compile(r'^Output +(?P<out_broadcast_pkts>\d+) +broadcast +packets, '
                           '+(?P<out_multicast_pkts>\d+) +multicast +packets$')
-        
+
         # 0 output errors, 0 underruns, 0 applique, 0 resets
         p33 = re.compile(r'^(?P<out_errors>[\d]+) +output +errors, '
                           '+(?P<out_underruns>[\d]+) +underruns, '
@@ -2674,10 +2676,10 @@ class ShowInterfaces(ShowInterfacesSchema):
 
                 if first_dot1q:
                     encap_dict['first_dot1q'] = first_dot1q
-                
+
                 if second_dot1q:
                     encap_dict['second_dot1q'] = second_dot1q
-                   
+
                 if loopback:
                     intf_dict['loopback'] = loopback
                 continue
@@ -2836,10 +2838,10 @@ class ShowInterfaces(ShowInterfacesSchema):
                 # covert minutes to seconds
                 if 'minute' in unit:
                     load_interval = load_interval * 60
-                
+
                 rate_dict['load_interval'] = load_interval
                 rate_dict['in_rate'] = in_rate
-                rate_dict['in_rate_pkts'] = in_rate_pkts                    
+                rate_dict['in_rate_pkts'] = in_rate_pkts
                 continue
 
             # 5 minute output rate 0 bits/sec, 0 packets/sec
@@ -2946,11 +2948,11 @@ class ShowInterfaces(ShowInterfacesSchema):
                 continue
 
         return result_dict
-        
+
 #############################################################################
 # Parser For show interfaces Description
 #############################################################################
-        
+
 class ShowInterfacesDescriptionSchema(MetaParser):
     """schema for show interfaces description
     """
@@ -2985,9 +2987,10 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
         result_dict = {}
         index = 1
 
-        # Interface Status Protocol Description
-        # Et0/0 		up	 up
-        p1 = re.compile(r'(?P<interface>(\S+)[^-]) +(?P<status>(\S+)) +(?P<protocol>(\S+))(?: +(?P<description>(\S+)))?$')
+        # Interface 		Status 		Protocol 	Description
+        # PO0/0     		admin down  down 		First POS interface
+        p1 = re.compile(r'^(?P<interface>\S+)\s+(?P<status>\S+([\s+](\S+))?)\s+'
+                        r'(?P<protocol>\S+)\s*(?: +(?P<description>.*))?$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -3005,7 +3008,7 @@ class ShowInterfacesDescription(ShowInterfacesDescriptionSchema):
                     intf_dict['description'] = str(group['description'])
                 else:
                     intf_dict['description'] = ''
-                index += 1                
+                index += 1
                 continue
 
         return result_dict

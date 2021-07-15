@@ -13,7 +13,7 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Use, ListOf
 
 # pyats
 from pyats.utils.exceptions import SchemaError
@@ -385,24 +385,13 @@ class ShowConfigurationSystemNtpSet(ShowConfigurationSystemNtpSetSchema):
 class ShowConfigurationSystemNtpSchema(MetaParser):
     """Schema for: show configuration system ntp """
 
-    def validate_server_list(value):
-        # Pass server list of dict in value
-        if not isinstance(value, list):
-            raise SchemaError('server list is not a list')
-        # Create server list Schema
-        servers = Schema({
-            'name': str,
-        })
-        # Validate each dictionary in list
-        for item in value:
-            servers.validate(item)
-        return value
-
     schema = {
         "configuration": {
             "system": {
                 "ntp": {
-                    Optional("server"): Use(validate_server_list),
+                    Optional("server"): ListOf({
+                        'name': str,
+                    }),
                     Optional("source-address"): {
                         "name": str
                     }

@@ -1,0 +1,7 @@
+Mon Sep 14 15:14:28.051 EST
+
+Peer               GR  NSR  Up Time     Discovery   Addresses     Labels    
+                                        ipv4  ipv6  ipv4  ipv6  ipv4   ipv6 
+-----------------  --  ---  ----------  ----------  ----------  ------------
+10.145.95.95:0      Y   N    00:08:32    1     0     4     0     10     0    
+10.144.96.96:0      Y   N    00:08:32    1     0     3     0     9      0

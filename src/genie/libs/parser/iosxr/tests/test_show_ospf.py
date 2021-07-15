@@ -1,3 +1,4 @@
+
 # Python
 import unittest
 from unittest.mock import Mock
@@ -7277,6 +7278,7 @@ class test_show_ospf_vrf_all_inclusive_database_opaque_area(unittest.TestCase):
         obj = ShowOspfVrfAllInclusiveDatabaseOpaqueArea(device=self.device)
         parsed_output = obj.parse()
         self.assertEqual(parsed_output, self.golden_parsed_output3)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -1,0 +1,20 @@
+interface GigabitEthernet1/0/2
+ description test_of_parser
+ switchport trunk allowed vlan 500,821,900-905
+ switchport mode trunk
+ switchport voice vlan 499
+ ip flow monitor IPv4_NETFLOW input
+ ip arp inspection trust
+ ip arp inspection limit rate 100
+ load-interval 30
+ power inline static max 30000
+ power inline port priority high
+ spanning-tree portfast
+ spanning-tree bpdufilter disable
+ switchport protected
+ switchport block unicast
+ switchport block multicast
+ ip dhcp snooping limit rate 15
+ ip dhcp snooping trust
+ channel-group 23 mode active
+end

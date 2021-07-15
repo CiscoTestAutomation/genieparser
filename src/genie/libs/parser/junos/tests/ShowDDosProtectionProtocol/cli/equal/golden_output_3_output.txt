@@ -1,0 +1,58 @@
+Packet types: 1, Modified: 0, Received traffic: 1, Currently violated: 0
+Currently tracked flows: 0, Total detected flows: 0
+* = User configured value
+
+Protocol Group: RSVP
+
+  Packet type: aggregate (Aggregate for all rsvp traffic)
+    Aggregate policer configuration:
+      Bandwidth:        20000 pps
+      Burst:            20000 packets
+      Recover time:     300 seconds
+      Enabled:          Yes
+    Flow detection configuration:
+      Detection mode: Automatic  Detect time:  3 seconds
+      Log flows:      Yes        Recover time: 60 seconds
+      Timeout flows:  No         Timeout time: 300 seconds
+      Flow aggregation level configuration:
+        Aggregation level   Detection mode  Control mode  Flow rate
+        Subscriber          Automatic       Drop          10 pps
+        Logical interface   Automatic       Drop          10 pps
+        Physical interface  Automatic       Drop          20000 pps
+    System-wide information:
+      Aggregate bandwidth is no longer being violated
+	No. of FPCs that have received excess traffic: 1
+	Last violation started at: 2021-03-10 06:29:50 EST
+	Last violation ended at:   2021-03-10 06:38:21 EST
+	Duration of last violation: 00:08:31 Number of violations: 1
+      Received:  580528875           Arrival rate:     0 pps
+      Dropped:   573259829           Max arrival rate: 1603269 pps
+    Routing Engine information:
+      Bandwidth: 20000 pps, Burst: 20000 packets, enabled
+      Aggregate policer is never violated
+      Received:  4780226             Arrival rate:     0 pps
+      Dropped:   0                   Max arrival rate: 13927 pps
+	Dropped by individual policers: 0
+    FPC slot 0 information:
+      Bandwidth: 100% (20000 pps), Burst: 100% (20000 packets), enabled
+      Aggregate policer is no longer being violated
+	Last violation started at: 2021-03-10 06:29:50 EST
+	Last violation ended at:   2021-03-10 06:38:21 EST
+	Duration of last violation: 00:08:31 Number of violations: 1
+      Received:  580528875           Arrival rate:     0 pps
+      Dropped:   573259829           Max arrival rate: 1603269 pps
+	Dropped by individual policers: 0
+	Dropped by aggregate policer:   573259829
+	Dropped by flow suppression:    0
+      Flow counts:
+        Aggregation level     Current       Total detected   State
+        Subscriber            0             0                Active
+    FPC slot 9 information:
+      Bandwidth: 100% (20000 pps), Burst: 100% (20000 packets), enabled
+      Aggregate policer is never violated
+      Received:  0                   Arrival rate:     0 pps
+      Dropped:   0                   Max arrival rate: 0 pps
+	Dropped by individual policers: 0
+	Dropped by flow suppression:    0
+
+{master}

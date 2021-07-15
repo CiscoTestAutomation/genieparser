@@ -1,0 +1,32 @@
+FPC slot 1, PIC slot 1 information:
+  Type                             24X10GE SFPP
+  State                            Online
+  PIC version                 2.35
+  Uptime			 6 hours, 24 minutes, 1 second
+
+PIC port information:
+                         Fiber                    Xcvr vendor       Wave-    Xcvr
+  Port Cable type        type  Xcvr vendor        part number       length   Firmware
+  1    10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  2    10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  3    10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  4    10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  5    10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  6    10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  7    10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  8    10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  9    10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  10   10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  11   10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  12   10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  13   10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  14   10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  15   10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  16   10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  17   10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  18   10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  19   10GBASE LR        SM    OEM                EXSFP10GE-LRCURV  1310 nm  0.0
+  20   10GBASE LR        SM    OEM                EXSFP10GE-LRCURV  1310 nm  0.0
+  21   10GBASE LR        SM    AVAGO              AFCT-739ASMZ-JU1  1310 nm  0.0
+  22   10GBASE LR        SM    OEM                EXSFP10GE-LRCURV  1310 nm  0.0
+  23   10GBASE LR        SM    OEM                EXSFP10GE-LRCURV  1310 nm  0.0

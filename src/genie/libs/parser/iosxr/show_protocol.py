@@ -393,3 +393,483 @@ class ShowProtocolsAfiAllAll(ShowProtocolsAfiAllAllSchema):
                 continue
 
         return ret_dict
+
+
+class ShowProtocolsSchema(MetaParser):
+    """Schema for show protocols {protocol}"""
+    schema = {
+        'protocols': {
+            Optional('ospf'): {
+                'vrf': {
+                    Any(): {
+                        'address_family': {
+                            Any(): {
+                                'instance': {
+                                    Any(): {
+                                        Optional('preference'): {
+                                            Optional('single_value'): {
+                                                'all': int
+                                            },
+                                            Optional('multi_values'): {
+                                                'granularity': {
+                                                    'detail': {
+                                                        'intra_area': int,
+                                                        'inter_area': int,
+                                                    },
+                                                },
+                                                'external': int,
+                                                },
+                                            },
+                                        'router_id': str,
+                                        Optional('nsf'): bool,
+                                        Optional('redistribution'): {
+                                            Optional('connected'): {
+                                                'enabled': bool,
+                                                Optional('metric'): int},
+                                            Optional('static'): {
+                                                'enabled': bool,
+                                                Optional('metric'): int
+                                            },
+                                            Optional('bgp'): {
+                                                'bgp_id': int,
+                                                Optional('metric'): int
+                                            },
+                                            Optional('ospf'): {
+                                                'ospf_id': int,
+                                                Optional('metric'): int
+                                            },
+                                            Optional('isis'): {
+                                                'isis_id': int,
+                                                Optional('metric'): int
+                                            }
+                                        },
+                                        Optional('areas'): {
+                                            Any(): {
+                                                'interfaces': list,
+                                                Optional('mpls'): {
+                                                    Optional('te'): {
+                                                        Optional('enabled'): bool
+                                                    }
+                                                }
+                                            }
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            Optional('ospfv3'): {
+                'vrf': {
+                    Any(): {
+                        'address_family': {
+                            Any(): {
+                                'instance': {
+                                    Any(): {
+                                        Optional('preference'): {
+                                            Optional('single_value'): {
+                                                'all': int
+                                            },
+                                            Optional('multi_values'): {
+                                                'granularity': {
+                                                    'detail': {
+                                                        'intra_area': int,
+                                                        'inter_area': int,
+                                                    },
+                                                },
+                                                'external': int,
+                                            },
+                                        },
+                                        'router_id': str,
+                                        Optional('nsf'): bool,
+                                        Optional('redistribution'): {
+                                            Optional('connected'): {
+                                                'enabled': bool,
+                                                Optional('metric'): int
+                                            },
+                                            Optional('static'): {
+                                                'enabled': bool,
+                                                Optional('metric'): int
+                                            },
+                                            Optional('bgp'): {
+                                                'bgp_id': int,
+                                                Optional('metric'): int
+                                            },
+                                            Optional('ospf'): {
+                                                'ospf_id': int,
+                                                Optional('metric'): int
+                                            },
+                                            Optional('isis'): {
+                                                'isis_id': int,
+                                                Optional('metric'): int
+                                            }
+                                        },
+                                        Optional('areas'): {
+                                            Any(): {
+                                                'interfaces': list,
+                                                Optional('mpls'): {
+                                                    Optional('te'): {
+                                                        Optional('enabled'): bool
+                                                    }
+                                                }
+                                            }
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            Optional('bgp'): {
+                'bgp_pid': int,
+                Optional('nsr'): {
+                    'enabled': bool,
+                    'current_state': str
+                },
+                Optional('graceful_restart'): {
+                    'enable': bool
+                },
+                Optional('address_family'): {
+                    Any(): {
+                        Optional('distance'): {
+                            Optional('external'): int,
+                            Optional('internal'): int,
+                            Optional('local'): int,
+                        },
+                        Optional('sourced_networks'): list,
+                        Optional('neighbors'): {
+                            Any(): {
+                                'last_update': str,
+                                Optional('gr_enable'): str,
+                                Optional('nsr_state'): str,
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    }
+
+
+class ShowProtocols(ShowProtocolsSchema):
+    """Parser for show protocols {protocol}"""
+    cli_command = 'show protocols {protocol}'
+
+    def cli(self, protocol="", output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        result_dict = {}
+
+        # Routing Protocol OSPF mpls1
+        p1 = re.compile(r'^Routing +Protocol +(?P<protocol>(OSPF(v3)?))'
+                        ' +(?P<pid>\S+)$')
+
+        # Router Id: 10.94.1.1
+        p2 = re.compile(r'^Router +Id: +(?P<router_id>\S+)$')
+
+        # Distance: 110
+        p3 = re.compile(r'^Distance: +(?P<distance>\d+)$')
+
+        # Distance: IntraArea 112 InterArea 113 External/NSSA 114
+        p4 = re.compile(r'^Distance: +IntraArea +(?P<intra>\d+)'
+                        ' +InterArea +(?P<inter>\d+) +External\/NSSA'
+                        ' +(?P<external>\d+)$')
+
+        # Non-Stop Forwarding: Enabled
+        # Non-Stop Forwarding: Disabled
+        p5 = re.compile(r'^Non-Stop +Forwarding:'
+                        ' +(?P<nsf>(Disabled|Enabled))$')
+
+        # Redistribution:
+        #   connected
+        #   connected with metric 10
+        #   static
+        #   static with metric 100
+        p6 = re.compile(r'^(?P<type>(connected|static))(?: +with +metric'
+                        ' +(?P<metric>\d+))?$')
+
+        # Redistribution:
+        #   bgp 100 with metric 111
+        #   isis 10 with metric 3333
+        p7 = re.compile(r'^(?!Area)(?P<prot>\w+) +(?P<pid>\d+)(?: +with'
+                        ' +metric +(?P<metric>\d+))?$')
+
+        # Area 0
+        p8 = re.compile(r'^Area +(?P<area>\S+)$')
+
+        #   MPLS/TE enabled
+        p9 = re.compile(r'^MPLS\/TE +(?P<mpls_te>(enabled|disabled))$')
+
+        #   Loopback0
+        #   GigabitEthernet0/0/0/0
+        #   GigabitEthernet0/0/0/1
+        p10 = re.compile(r'^(?P<interface>(Loopback|(Ten)?GigabitEthernet)'
+                        '[\d\/]+)$')
+
+        # Routing Protocol "BGP 40"
+        p11 = re.compile(r'^Routing +Protocol +\"BGP +(?P<bgp_pid>\d+)\"$')
+
+        # Non-stop routing is enabled
+        p12 = re.compile(r'^Non-stop +routing +is +'
+                         '(?P<nsr>(enabled|disabled))$')
+
+        # Graceful restart is enabled
+        p13 = re.compile(r'^Graceful restart is not +enabled$')
+
+        # Current BGP NSR state - TCP Initial Sync
+        p14 = re.compile(r'^Current +BGP +NSR +state +\-'
+                         ' +(?P<state>([\w\s]+))$')
+
+        # Address Family IPv4 Unicast:
+        # Address Family VPNv6 Unicast:
+        p15 = re.compile(r'^Address +Family +(?P<af>[\w\s\-]+):$')
+
+        # Distance: external 20 internal 200 local 200
+        p16 = re.compile(r'^Distance: +external +(?P<external>\d+) +internal'
+                         ' +(?P<internal>\d+) +local +(?P<local>\d+)$')
+
+        # Sourced Networks:
+        p17 = re.compile(r'^Sourced +Networks:$')
+
+        # 10.100.0.0/16 backdoor
+        # 10.100.1.0/24
+        p18 = re.compile(r'^(?P<src>[\d\.\:\/]+ *(backdoor)?)$')
+
+        # Neighbor          State/Last update received
+        # 10.5.0.2          Idle
+        # Neighbor      State/Last update received  NSR-State  GR-Enabled
+        # 10.64.4.4       08:05:59                    None       No
+        p19 = re.compile(r'^(?P<nbr>[\d\:\.]+) +(?P<last_update>[\w\:]+)'
+                         '( +(?P<nsr_state>\S+) +(?P<gr_enable>No|Yes))?$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Routing Protocol OSPF mpls1
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                instance = group['pid']
+                protocol = group['protocol'].lower()
+                prot_dict = result_dict.setdefault('protocols', {})\
+                                       .setdefault(protocol, {})\
+                                       .setdefault('vrf', {})\
+                                       .setdefault('default', {})\
+                                       .setdefault('address_family', {})\
+                                       .setdefault('ipv4', {})\
+                                       .setdefault('instance', {})\
+                                       .setdefault(instance, {})
+                continue
+
+            # Router Id: 10.94.1.1
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
+                prot_dict['router_id'] = group['router_id']
+                continue
+
+            # Distance: 110
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                sub_dict = prot_dict.setdefault('preference', {})\
+                                    .setdefault('single_value', {})
+
+                sub_dict.update({
+                    'all': int(group['distance'])
+                })
+
+                continue
+
+            # Distance: IntraArea 112 InterArea 113 External/NSSA 114
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                multi_values_dict = prot_dict.setdefault('preference', {})\
+                                             .setdefault('multi_values', {})
+
+                sub_dict = multi_values_dict.setdefault('granularity', {})\
+                                            .setdefault('detail', {})
+
+                sub_dict.update({
+                    'intra_area': int(group['intra']),
+                    'inter_area': int(group['inter'])
+                })
+
+                multi_values_dict.update({
+                    'external': int(group['external'])
+                })
+
+                continue
+
+            # Non-Stop Forwarding: Enabled
+            # Non-Stop Forwarding: Disabled
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                if group['nsf'] == 'Enabled':
+                    prot_dict['nsf'] = True
+                else:
+                    prot_dict['nsf'] = False
+
+                continue
+
+            # Redistribution:
+            #   connected
+            #   connected with metric 10
+            #   static
+            #   static with metric 100
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                redistrib_dict = prot_dict.setdefault('redistribution', {})
+                redist = {
+                    'enabled': True
+                }
+
+                if group['metric']:
+                    redist['metric'] = int(group['metric'])
+
+                redistrib_dict.update({group['type']: redist})
+
+            # Redistribution:
+            #   bgp 100 with metric 111
+            #   isis 10 with metric 3333
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                prot = group['prot'].lower()
+                redistrib_dict = prot_dict.setdefault('redistribution', {})\
+                                          .setdefault(prot, {})
+
+                redistrib_dict[prot + '_id'] = int(group['pid'])
+
+                if m.groupdict()['metric']:
+                    redistrib_dict['metric'] = int(group['metric'])
+                continue
+
+            # Area 0
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                areas_dict = prot_dict.setdefault('areas', {})
+                area_dict = areas_dict.setdefault(group['area'], {})
+                area_dict['interfaces'] = []
+                continue
+
+            # MPLS/TE enabled
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                mpls_dict = area_dict.setdefault('mpls', {})\
+                                     .setdefault('te', {})
+
+                if group['mpls_te'] == 'enabled':
+                    mpls_dict['enabled'] = True
+                else:
+                    mpls_dict['enabled'] = False
+
+                continue
+
+            #   Loopback0
+            #   GigabitEthernet0/0/0/0
+            #   GigabitEthernet0/0/0/1
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                area_dict['interfaces'].append(group['interface'])
+                continue
+
+            # Routing Protocol "BGP 40"
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                prot_dict = result_dict.setdefault('protocols', {})\
+                                       .setdefault('bgp', {})
+                prot_dict['bgp_pid'] = int(group['bgp_pid'])
+                continue
+
+            # Non-stop routing is enabled
+            m = p12.match(line)
+            if m:
+                group = m.groupdict()
+                nsr_dict = prot_dict.setdefault('nsr', {})
+                if group['nsr'] == 'enabled':
+                    nsr_dict['enabled'] = True
+                else:
+                    nsr_dict['enabled'] = False
+                continue
+
+            # Graceful restart is not enabled
+            m = p13.match(line)
+            if m:
+                gr_dict = prot_dict.setdefault('graceful_restart', {})
+                gr_dict['enable'] = False
+                continue
+
+            # Current BGP NSR state - Active Ready
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                nsr_dict = prot_dict.setdefault('nsr', {})
+
+                nsr_dict['current_state'] = group['state'].lower()
+                continue
+
+            # Address Family VPNv6 Unicast:
+            m = p15.match(line)
+            if m:
+                group = m.groupdict()
+                af_dict = prot_dict.setdefault('address_family', {})\
+                                   .setdefault(group['af'], {})
+
+                continue
+
+            # Distance: external 20 internal 200 local 200
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                dist_dict = af_dict.setdefault('distance', {})
+                dist_dict.update({k: int(v) for k, v in group.items()})
+                continue
+
+            # Sourced Networks:
+            m = p17.match(line)
+            if m:
+                sn_dict = af_dict.setdefault('sourced_networks', [])
+                continue
+
+            # 10.100.0.0/16 backdoor
+            # 10.100.1.0/24
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                sn_dict.append(group['src'])
+                continue
+
+            # Neighbor          State/Last update received
+            # 10.5.0.2          Idle
+            # Neighbor      State/Last update received  NSR-State  GR-Enabled
+            # 10.64.4.4       08:05:59                    None       No
+            m = p19.match(line)
+            if m:
+                group = m.groupdict()
+                neighbor = group['nbr']
+                neighbors_dict = af_dict.setdefault('neighbors', {})\
+                                        .setdefault(neighbor, {})
+
+                neighbors_dict['last_update'] = group['last_update']
+
+                if group['nsr_state']:
+                    neighbors_dict['nsr_state'] = group['nsr_state']
+
+                if group['gr_enable']:
+                    neighbors_dict['gr_enable'] = group['gr_enable']
+                continue
+
+        return result_dict

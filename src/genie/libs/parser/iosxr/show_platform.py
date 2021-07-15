@@ -13,6 +13,9 @@ IOSXR parsers for the following show commands:
     * 'show redundancy summary'
     * 'show redundancy'
     * 'dir'
+    * 'dir {directory}'
+    * 'dir location {location}'
+    * 'dir {directory} location {location}'
     * 'show processes memory detail'
     * 'show processes memory detail | include <WORD>'
 '''
@@ -339,6 +342,23 @@ class ShowPlatform(ShowPlatformSchema):
         else:
             out = output
 
+
+        # 0/RSP0/CPU0     A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
+        # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
+        # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
+        # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
+        # 0/1               NCS1K4-1.2T-K9             OPERATIONAL       NSHUT
+        # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
+        # 1/3/3         MSC(SPA)          OC192RPR-XFP       DISABLED        NPWR,SHUT,MON
+        # 1/10/CPU0     FP-X              N/A                UNPOWERED       NPWR,NSHUT,MON
+        
+        p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
+                            '\s+(?P<name>[a-zA-Z0-9\-\.]+)'
+                            '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
+                            '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
+                            '\s+(?P<state>(UNPOWERED|DISABLED|IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
+                            '\s+(?P<config_state>[a-zA-Z\,]+)$')            
+
         # Init vars
         show_platform = {}
         daughtercard_dict = {}
@@ -347,18 +367,7 @@ class ShowPlatform(ShowPlatformSchema):
             entry_is_daughter = False
             line = line.rstrip()
 
-            # 0/RSP0/CPU0     A9K-RSP440-TR(Active)     IOS XR RUN       PWR,NSHUT,MON
-            # 0/0/CPU0        RP(Active)      N/A             IOS XR RUN      PWR,NSHUT,MON
-            # 0/0/CPU0        RP(Active)      N/A             OPERATIONAL      PWR,NSHUT,MON
-            # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
-            # 0/1               NCS1K4-1.2T-K9             OPERATIONAL       NSHUT
-            # 0/0               NCS1K4-OTN-XP              POWERED_ON        NSHUT
-            p1 = re.compile(r'^\s*(?P<node>[a-zA-Z0-9\/]+)'
-                             '\s+(?P<name>[a-zA-Z0-9\-\.]+)'
-                             '(?:\((?P<redundancy_state>[a-zA-Z]+)\))?'
-                             '(?: +(?P<plim>[a-zA-Z0-9(\/|\-| )]+))?'
-                             '\s+(?P<state>(IOS XR RUN|OK|OPERATIONAL|POWERED_ON))'
-                             '\s+(?P<config_state>[a-zA-Z\,]+)$')
+
             m = p1.match(line)
             if m:
                 # Parse regexp
@@ -376,8 +385,11 @@ class ShowPlatform(ShowPlatformSchema):
                 last_entry = str(parse_node.groupdict()['last_entry'])
 
                 # Check if subslot/daughtercard
+                # 0/3/0 
+                # 1/3/0  
                 parse_subslot = re.compile(r'.*(0\/[0-9]\/[0-9]+).*').match(node)
-                if parse_subslot and last_entry.isdigit():
+                parse_subslot2 = re.compile(r'.*(1\/[0-9]\/[0-9]+).*').match(node)
+                if (parse_subslot or parse_subslot2) and last_entry.isdigit():
                     # This entry is a daughtercard/subslot
                     entry_is_daughter = True
                     subslot = last_entry
@@ -1323,6 +1335,16 @@ class ShowRedundancy(ShowRedundancySchema):
                 if 'standby' in str(m.groupdict()['role']).lower():
                     redundancy_dict['node'][node]['standby_node'] = str(m.groupdict()['node'])
                 continue
+            
+            # Partner node (0/RP1/CPU0) is in STANDBY role (eXR)
+            p3_2 =  re.compile(r'\s*Partner *node'
+                                ' *\((?P<node>[a-zA-Z0-9\/]+)\) *is *in'
+                                ' *(?P<role>[a-zA-Z]+) *role$')
+            m = p3_2.match(line)
+            if m:
+                if 'standby' in str(m.groupdict()['role']).lower():
+                    redundancy_dict['node'][node]['standby_node'] = str(m.groupdict()['node'])
+                continue
 
             # Process Redundancy Partner (0/RSP0/CPU0) is in BACKUP role
             p3_3 =  re.compile(r'\s*Process *Redundancy *Partner'
@@ -1501,12 +1523,19 @@ class ShowRedundancy(ShowRedundancySchema):
 # Schema for 'dir'
 # ================
 class DirSchema(MetaParser):
-    """Schema for dir"""
+    """Schema for 
+        * dir
+        * dir {directory}
+        * dir location {location}
+        * dir {directory} location {location}
+    """
+
     schema = {
         'dir': {
             'dir_name': str,
             'total_bytes': str,
             'total_free_bytes': str,
+            Optional('location'): str,
             Optional('files'):
                 {Any():
                     {Optional('size'): str,
@@ -1520,14 +1549,31 @@ class DirSchema(MetaParser):
         }
 
 class Dir(DirSchema):
-    """Parser for dir"""
-    cli_command = ['dir', 'dir {directory}']
+    """Parser for
+        * dir
+        * dir {directory}
+        * dir location {location}
+        * dir {directory} location {location}
+    """
+
+    cli_command = [
+        'dir', 'dir {directory}', 'dir location {location}',
+        'dir {directory} location {location}'
+    ]
+
     exclude = ['size', 'time', 'total_free_bytes', 'date', 'index']
 
-    def cli(self, directory='', output=None):
+    def cli(self, directory='', location='', output=None):
         if output is None:
-            if directory:
-                out = self.device.execute(self.cli_command[1].format(directory=directory))
+            if directory and location:
+                out = self.device.execute(self.cli_command[3].format(
+                    directory=directory, location=location))
+            elif location:
+                out = self.device.execute(
+                    self.cli_command[2].format(location=location))
+            elif directory:
+                out = self.device.execute(
+                    self.cli_command[1].format(directory=directory))
             else:
                 out = self.device.execute(self.cli_command[0])
         else:
@@ -1541,13 +1587,15 @@ class Dir(DirSchema):
 
             # Directory of /misc/scratch
             # Directory of disk0a:/usr
-            p1 = re.compile(r'\s*Directory +of'
-                             ' +(?P<dir_name>[a-zA-Z0-9\:\/]+)$')
+            # Directory of net/node0_RSP1_CPU0/harddisk:/dumper
+            p1 = re.compile(r'\s*Directory\s+of\s+(?P<dir_name>\S+)$')
             m = p1.match(line)
             if m:
                 if 'dir' not in dir_dict:
                     dir_dict['dir'] = {}
                     dir_dict['dir']['dir_name'] = str(m.groupdict()['dir_name'])
+                    if location:
+                        dir_dict['dir']['location'] = location
                 continue
 
             # 1012660 kbytes total (939092 kbytes free)
@@ -1599,8 +1647,6 @@ class Dir(DirSchema):
                 continue
 
         return dir_dict
-
-# vim: ft=python et sw=4
 
 
 class ShowProcessesMemorySchema(MetaParser):

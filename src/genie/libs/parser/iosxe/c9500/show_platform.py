@@ -5,16 +5,20 @@ IOSXE c9500 parsers for the following show commands:
    * show platform
    * show redundancy
    * show inventory
+   * show platform software object-manager switch {switchvirtualstate} {serviceprocessor} statistics
 '''
 
 # Python
 import re
 import logging
+import xmltodict
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional
+from genie.metaparser.util.schemaengine import Schema, Any, Or, Optional, And, Default, Use
 
+# import parser utils
+from genie.libs.parser.utils.common import Common
 
 # ==========================
 #  Schema for 'show version'
@@ -25,14 +29,17 @@ class ShowVersionSchema(MetaParser):
 
     schema = {
                 'version': {
+                    Optional('xe_version'): str,
                     'version_short': str,
                     'os': str,
                     Optional('code_name'): str,
                     'platform': str,
                     'version': str,
+                    Optional('label'): str,
+                    Optional('build_label'): str,
                     'image_id': str,
                     'rom': str,
-                    'bootldr_version': str,                    
+                    'bootldr_version': str,
                     'hostname': str,
                     'uptime': str,
                     'uptime_this_cp': str,
@@ -75,7 +82,7 @@ class ShowVersionSchema(MetaParser):
 #  Parser for 'show version'
 # ==========================
 class ShowVersion(ShowVersionSchema):
-    
+
     """Parser for show version"""
 
     cli_command = ['show version']
@@ -94,13 +101,19 @@ class ShowVersion(ShowVersionSchema):
 
         # version
         # Cisco IOS XE Software, Version 2019-10-31_17.49_makale
+        # Cisco IOS XE Software, Version BLD_POLARIS_DEV_LATEST_20210302_012043
         p0 = re.compile(
-            r'^Cisco +([\S\s]+) +Software, +Version +(?P<ver_short>.*)$')
+            r'^Cisco +([\S\s]+) +Software, +Version +(?P<xe_version>.*)$')
 
         # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.2.20191101:003833 [HEAD-/nobackup/makale/puntject2/polaris 106]
+        # Cisco IOS Software [Bengaluru], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.6.20210302:012459 [S2C-build-polaris_dev-132831-/nobackup/mcpre/BLD-BLD_POLARIS_DEV_LATEST_20210302_012043 149]
         p1 = re.compile(
             r'^Cisco +IOS +Software +\[(?P<code_name>([\S]+))\], +(?P<platform>([\S\s]+)) '
-            r'+Software +\((?P<image_id>.+)\),( +Experimental)? +Version +(?P<version>\S+)+.*$')
+            r'+Software +\((?P<image_id>.+)\),( +Experimental)? +Version +(?P<version>[\d\.:]+),? *'
+            r'(?P<label>(\[.+?(?P<build_label>BLD_\S+)? \d+\])|.*)$')
+
+        # 16.6.5
+        p1_1 = re.compile(r'^(?P<ver_short>\d+\.\d+).*')
 
         # Copyright (c) 1986-2016 by Cisco Systems, Inc.
         p2 = re.compile(r'^Copyright +(.*)$')
@@ -111,7 +124,7 @@ class ShowVersion(ShowVersionSchema):
 
         # ROM: IOS-XE ROMMON
         p4 = re.compile(r'^ROM: +(?P<rom>.+)$')
-        
+
         # BOOTLDR: System Bootstrap, Version 17.1.1[FC2], RELEASE SOFTWARE (P)
         p5 = re.compile(r'^BOOTLDR: +(?P<bootldr_version>[\S\s]+)$')
 
@@ -196,9 +209,9 @@ class ShowVersion(ShowVersionSchema):
         p26 = re.compile(r'^Model +Revision +Number +: '
                          r'+(?P<model_rev_num>\S+)$')
 
-        # Motherboard Revision Number        : 4
+        # Motherboard Revision Number        : A4
         p27 = re.compile(r'^Motherboard +Revision +Number +: '
-                         r'+(?P<mb_rev_num>\d+)$')
+                         r'+(?P<mb_rev_num>\S+)$')
 
         # Model Number                       : C9500-32QC 
         p28 = re.compile(r'^Model +Number +: +(?P<model_num>\S+)$')
@@ -221,21 +234,35 @@ class ShowVersion(ShowVersionSchema):
             line = line.strip()
 
             # Cisco IOS XE Software, Version 2019-10-31_17.49_makale
+            # Cisco IOS XE Software, Version BLD_POLARIS_DEV_LATEST_20210302_012043
             m = p0.match(line)
             if m:
-                version_short = m.groupdict()['ver_short']
                 if 'version' not in ver_dict:
                     version_dict = ver_dict.setdefault('version', {})
-                version_dict['version_short'] = version_short
+                xe_version = m.groupdict()['xe_version']
+                version_dict['xe_version'] = xe_version
                 continue
 
             # Cisco IOS Software [Amsterdam], Catalyst L3 Switch Software (CAT9K_IOSXE), Experimental Version 17.2.20191101:003833 [HEAD-/nobackup/makale/puntject2/polaris 106]
             m = p1.match(line)
             if m:
+                if 'version' not in ver_dict:
+                    version_dict = ver_dict.setdefault('version', {})
+
+                version = m.groupdict()['version']
+                m1_1 = p1_1.match(version)
+                if m1_1:
+                    version_dict['version_short'] = \
+                        m1_1.groupdict()['ver_short']
+
                 version_dict['code_name'] = m.groupdict()['code_name']
                 version_dict['platform'] = m.groupdict()['platform']
                 version_dict['image_id'] = m.groupdict()['image_id']
                 version_dict['version'] = m.groupdict()['version']
+                if m.groupdict()['label']:
+                    version_dict['label'] = m.groupdict()['label']
+                if m.groupdict()['build_label']:
+                    version_dict['build_label'] = m.groupdict()['build_label']
                 continue
 
             # Copyright (c) 1986-2016 by Cisco Systems, Inc.
@@ -900,3 +927,248 @@ class ShowPlatform(ShowPlatformSchema):
                 continue
 
         return platform_dict
+
+
+# ============================================================
+#  Schema for 'show platform software fed active ifm mappings'
+# ============================================================
+class ShowPlatformIfmMappingSchema(MetaParser):
+    """Schema for show platform software fed switch active ifm mappings"""
+    
+    schema = {'interface':
+                 {Any(): 
+                     {'IF_ID': str,
+                      'Inst': str,     
+                      'Asic': str,
+                      'Core': str,
+                      'Port': str,  					
+                      'SubPort': str,
+                      'Mac' : str,
+                      'Cntx': str,
+                      'LPN' : str,
+                      'GPN' : str,
+                      'Type': str,
+                      'Active': str,  				
+                    }                
+                },
+            }
+
+
+# ============================================================
+#  Parser for 'show platform software fed active ifm mappings'
+# ============================================================
+class ShowPlatformIfmMapping(ShowPlatformIfmMappingSchema):
+
+    """ Parser for show platform software fed switch active ifm mappings"""
+
+    cli_command = ['show platform software fed {switch} {state} ifm mappings','show platform software fed active ifm mappings']
+
+    def cli(self, switch="", state="", output=None):
+       
+        if output is None:
+            if switch and state:
+                cmd = self.cli_command[0].format(switch=switch,state=state)            
+            else:
+                cmd = self.cli_command[1]
+         
+            # Execute command to get output from device	 
+            out = self.device.execute(cmd)            
+        else:
+            out = output
+
+        # TwentyFiveGigE1/0/1       0x8        1   0   1    20     0      16   4    1    1    NIF  Y  
+        p1 = re.compile(r'^(?P<interface>\S+) +(?P<ifId>\S+) +(?P<inst>\d+) +(?P<asic>\d+) +(?P<core>\d+) +(?P<port>\d+) +(?P<sbPort>\d+) +(?P<mac>\d+) +(?P<cntx>\d+) +(?P<lpn>\d+) +(?P<gpn>\d+) +(?P<type>\w+) +(?P<act>\w+)$') 	
+        
+        # initial variables
+        ret_dict = {}
+        
+        for line in out.splitlines():
+            line = line.strip()
+            if not line: 
+                continue
+
+            # TwentyFiveGigE1/0/1       0x8        1   0   1    20     0      16   4    1    1    NIF  Y
+            m = p1.match(line)
+            if m:
+                group    = m.groupdict()		
+                intfId   = group['interface']
+                ifId     = group['ifId']
+                instance = group['inst']
+                asic     = group['asic']
+                core     = group['core']
+                port     = group['port']
+                subPort  = group['sbPort']
+                mac      = group['mac']
+                cntx     = group['cntx']
+                lpn      = group['lpn']
+                gpn      = group['gpn']
+                typ     = group['type']
+                active   = group['act']  				
+        
+                final_dict = ret_dict.setdefault('interface',{}).setdefault(intfId,{})
+        
+                final_dict['IF_ID']   = ifId					
+                final_dict['Inst']    = instance
+                final_dict['Asic']    = asic 
+                final_dict['Core']    = core
+                final_dict['Port']    = port
+                final_dict['SubPort'] = subPort
+                final_dict['Mac']     = mac 
+                final_dict['Cntx']    = cntx 
+                final_dict['LPN']     = lpn 
+                final_dict['GPN']     = gpn 
+                final_dict['Type']    = typ
+                final_dict['Active']  = active  				
+                continue            
+            
+        return ret_dict
+
+
+# ========================================
+# Parser for 'show platform software'
+# ========================================
+class ShowPlatformSoftwareSchema(MetaParser):
+
+    ''' Schema for "show Platform software" '''
+
+    schema = {
+        Optional('statistics'):
+                {Optional('object-update'):
+                    {Optional('pending-issue'):int,
+                     Optional('pending-ack'):int,
+                    },
+                Optional('batch-begin'):
+                    {Optional('pending-issue'):int,
+                     Optional('pending-ack'):int,
+                    },
+                Optional('batch-end'):
+                    {Optional('pending-issue'):int,
+                     Optional('pending-ack'):int,
+                    },
+                Optional('command'):
+                    {Optional('pending-ack'):int,
+                    },
+                Optional('total-objects'):int,
+                Optional('stale-objects'): int,
+                Optional('resolve-objects'): int,
+                Optional('childless-delete-objects'): int,
+                Optional('backplane-objects'): int,
+                Optional('error-objects'): int,
+                Optional('number-of-bundles'): int,
+                Optional('paused-types'): int,
+                },
+        }
+
+# ========================================
+# Parser for 'show platform software'
+# ========================================
+class ShowPlatformSoftware(ShowPlatformSoftwareSchema):
+    ''' Parser for
+      "show platform software object-manager switch {switchvirtualstate} {serviceprocessor} statistics"
+    '''
+
+    cli_command = ['show platform software object-manager switch {switchvirtualstate} {serviceprocessor} statistics']
+
+    def cli(self, switchvirtualstate="", serviceprocessor="", output=None):
+        if output is None:
+            cmd = self.cli_command[0].format(switchvirtualstate=switchvirtualstate,
+                                             serviceprocessor=serviceprocessor)
+            output = self.device.execute(cmd)
+
+        # Init vars
+        ret_dict = {}
+
+        #Forwarding Manager Asynchronous Object Manager Statistics
+        p1 = re.compile(r'^Forwarding +Manager +Asynchronous +Object Manager*\s+(?P<statistics>(\S+))$')
+
+        #Object update: Pending-issue: 0, Pending-acknowledgement: 0
+        p2 = re.compile(r'^Object +update:\s+Pending-issue:\s+(?P<pending_issue>\d+), +'
+                         'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
+
+        #Batch begin:   Pending-issue: 0, Pending-acknowledgement: 0
+        p3 = re.compile(r'Batch +begin:\s+Pending-issue:\s+(?P<pending_issue>\d+), +'
+                         'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
+
+        #Batch end:     Pending-issue: 0, Pending-acknowledgement: 0
+        p4 = re.compile(r'Batch +end:\s+Pending-issue:\s+(?P<pending_issue>\d+), +'
+                         'Pending-acknowledgement:\s+(?P<pending_ack>\d+)$')
+
+        #Command:       Pending-acknowledgement: 0
+        p5 = re.compile(r'Command:\s+Pending-acknowledgement:\s+(?P<pending_ack>\d+)')
+
+        #Total-objects: 1231
+        #Stale-objects: 0
+        #Resolve-objects: 0
+        #Childless-delete-objects: 0
+        #Backplane-objects: 0
+        #Error-objects: 0
+        #Number of bundles: 0
+        #Paused-types: 5
+        p6 = re.compile(r'^(?P<key>[\S ]+): +(?P<value>\d+)$')
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #Forwarding Manager Asynchronous Object Manager Statistics
+            m = p1.match(line)
+            if m:
+                stats_dict = ret_dict.setdefault('statistics', {})
+                continue
+
+            #Object update: Pending-issue: 0, Pending-acknowledgement: 0
+            m = p2.match(line)
+            if m:
+                object_update_dict = stats_dict.setdefault('object-update', {})
+                pending_issue = int(m.groupdict()['pending_issue'])
+                pending_ack = int(m.groupdict()['pending_ack'])
+                object_update_dict['pending-issue']= pending_issue
+                object_update_dict['pending-ack']= pending_ack
+                continue
+
+            #Batch begin:   Pending-issue: 0, Pending-acknowledgement: 0
+            m = p3.match(line)
+            if m:
+                batch_begin_dict = stats_dict.setdefault('batch-begin', {})
+                pending_issue = int(m.groupdict()['pending_issue'])
+                pending_ack = int(m.groupdict()['pending_ack'])
+                batch_begin_dict['pending-issue']= pending_issue
+                batch_begin_dict['pending-ack']= pending_ack
+                continue
+
+            #Batch end:     Pending-issue: 0, Pending-acknowledgement: 0
+            m = p4.match(line)
+            if m:
+                batch_end_dict = stats_dict.setdefault('batch-end', {})
+                pending_issue = int(m.groupdict()['pending_issue'])
+                pending_ack = int(m.groupdict()['pending_ack'])
+                batch_end_dict['pending-issue']= pending_issue
+                batch_end_dict['pending-ack']= pending_ack
+                continue
+
+            #Command:       Pending-acknowledgement: 0
+            m = p5.match(line)
+            if m:
+                command_dict = stats_dict.setdefault('command', {})
+                pending_ack = int(m.groupdict()['pending_ack'])
+                command_dict['pending-ack']= pending_ack
+                continue
+
+            #Total-objects: 1231
+            #Stale-objects: 0
+            #Resolve-objects: 0
+            #Childless-delete-objects: 0
+            #Backplane-objects: 0
+            #Error-objects: 0
+            #Number of bundles: 0
+            #Paused-types: 5
+
+            m = p6.match(line)
+            if m:
+                groups = m.groupdict()
+                scrubbed = groups['key'].replace(' ', '-')
+                stats_dict.update({scrubbed.lower(): int(groups['value'])})
+                continue
+
+        return ret_dict
+
+

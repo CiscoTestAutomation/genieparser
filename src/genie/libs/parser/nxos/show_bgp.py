@@ -8980,7 +8980,7 @@ class ShowBgpPolicyStatisticsParser(ShowBgpPolicyStatisticsSchema):
         nei = Common.retrieve_xml_child(root=root, key='__XML__PARAM__neighbor-id')
 
         if hasattr(nei, 'tag'):
-            for item in nei.getchildren():
+            for item in list(nei):
                 if '__XML__value' in item.tag:
                     neighbor = item.text
                     continue
@@ -8988,7 +8988,7 @@ class ShowBgpPolicyStatisticsParser(ShowBgpPolicyStatisticsSchema):
                 # cover the senario that __readonly__ may be mssing when
                 # there are values in the output
                 if '__readonly__' in item.tag:
-                    root = item.getchildren()[0]
+                    root = list(item)[0]
                 else:
                     root = item
         else:
