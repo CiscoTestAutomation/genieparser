@@ -5,6 +5,7 @@ IOSXE parsers for the following commands
     * 'show gnxi state detail'
 """
 
+from collections import defaultdict
 import re
 from enum import Enum
 
@@ -164,16 +165,7 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
         p_oper_status = re.compile(r"Oper status: (?P<oper_status>Down|Up)")
         p_supported = re.compile(r"Supported: (?P<supported>Not supported on this platform|Supported)")
 
-        ret_dict = {"settings": {},
-            "oper_state": {
-                "grpc": {},
-                "config_svc": {},
-                "telemetry_svc": {},
-                "cert_mgmt_svc": {},
-                "os_image_svc": {},
-                "factory_reset_svc": {}
-                }
-            }
+        ret_dict = defaultdict(dict)
 
         for line in out.splitlines():
 
@@ -233,11 +225,6 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
                 ret_dict["oper_state"]["provisioned"] = groups["bootstrapping_state"] == "Provisioned"
 
 
-            match = p_section_gnmi.match(line)
-            if match:
-                groups = match.groupdict()
-
-
             match = p_grpc_section.match(line)
             if match:
                 groups = match.groupdict()
@@ -254,11 +241,6 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
             if match:
                 groups = match.groupdict()
                 current_gnmib_section = self.GnmibSection.GNMI_TELEMETRY
-
-
-            match = p_gnoi_section.match(line)
-            if match:
-                groups = match.groupdict()
 
 
             match = p_cert_section.match(line)
@@ -285,7 +267,7 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
                 if current_gnmib_section == self.GnmibSection.SETTINGS:
                     ret_dict["oper_state"]["admin_enabled"] = _enabled_disabled_to_bool(groups["admin_state"])
                 else:
-                    ret_dict["oper_state"][current_gnmib_section.value]["admin_enabled"] = _enabled_disabled_to_bool(groups["admin_state"])
+                    ret_dict["oper_state"].setdefault(current_gnmib_section.value, {})["admin_enabled"] = _enabled_disabled_to_bool(groups["admin_state"])
 
 
             match = p_oper_status.match(line)
@@ -294,13 +276,13 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
                 if current_gnmib_section == self.GnmibSection.SETTINGS:
                     ret_dict["oper_state"]["oper_up"] = _up_down_to_bool(groups["oper_status"])
                 else:
-                    ret_dict["oper_state"][current_gnmib_section.value]["oper_up"] = _up_down_to_bool(groups["oper_status"])
+                    ret_dict["oper_state"].setdefault(current_gnmib_section.value, {})["oper_up"] = _up_down_to_bool(groups["oper_status"])
 
 
             match = p_supported.match(line)
             if match:
                 groups = match.groupdict()
-                ret_dict["oper_state"][current_gnmib_section.value]["supported"] = groups["supported"] == "Supported"
+                ret_dict["oper_state"].setdefault(current_gnmib_section.value, {})["supported"] = groups["supported"] == "Supported"
 
 
         return ret_dict
