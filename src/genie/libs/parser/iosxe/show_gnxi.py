@@ -10,23 +10,17 @@ import re
 from genie.metaparser import MetaParser
 
 
-def enabled_disabled_to_bool(value : str):
+def _enabled_disabled_to_bool(value : str):
     ''' Returns True if argument string is "Enabled"
         else False
     '''
-    if value == "Enabled":
-        return True
+    return value == "Enabled"
 
-    return False
-
-def up_down_to_bool(value : str):
+def _up_down_to_bool(value : str):
     ''' Returns True if argument string is "Up"
         else False
     '''
-    if value == "Up":
-        return True
-
-    return False
+    return value == "Up"
 
 
 class ShowGnxiStateSchema(MetaParser):
@@ -53,7 +47,7 @@ class ShowGnxiState(ShowGnxiStateSchema):
         else:
             out = output
 
-        gnxi_state_dict = { "oper_state": {} }
+        ret_dict = {}
 
         p_full = re.compile(r"(?P<admin_state>Disabled|Enabled)\s*(?P<oper_status>Down|Up)")
 
@@ -62,13 +56,12 @@ class ShowGnxiState(ShowGnxiStateSchema):
         if matches:
             groups = matches.groupdict()
 
-            gnxi_state_dict["oper_state"]["admin_enabled"] = enabled_disabled_to_bool(groups["admin_state"])
-            gnxi_state_dict["oper_state"]["oper_up"] = up_down_to_bool(groups["oper_status"])
+            ret_dict = { "oper_state": {} }
 
-        else:
-            gnxi_state_dict = {}
+            ret_dict["oper_state"]["admin_enabled"] = _enabled_disabled_to_bool(groups["admin_state"])
+            ret_dict["oper_state"]["oper_up"] = _up_down_to_bool(groups["oper_status"])
 
-        return gnxi_state_dict
+        return ret_dict
 
 
 class ShowGnxiStateDetailSchema(MetaParser):
@@ -134,16 +127,7 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
         else:
             out = output
 
-        gnxi_state_detail_dict = {"settings": {},
-                "oper_state": {
-                    "grpc": {},
-                    "config_svc": {},
-                    "telemetry_svc": {},
-                    "cert_mgmt_svc": {},
-                    "os_image_svc": {},
-                    "factory_reset_svc": {}
-                    }
-                }
+        ret_dict = {}
 
         p_full = re.compile(r"Settings\n"
                 r"=*\n"
@@ -196,48 +180,56 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
         if matches:
             groups = matches.groupdict()
 
+            ret_dict = {"settings": {},
+                "oper_state": {
+                    "grpc": {},
+                    "config_svc": {},
+                    "telemetry_svc": {},
+                    "cert_mgmt_svc": {},
+                    "os_image_svc": {},
+                    "factory_reset_svc": {}
+                    }
+                }
+
             # gnmib settings and configuration
-            gnxi_state_detail_dict["settings"]["insecure_server"] = enabled_disabled_to_bool(groups["insecure_server"])
-            gnxi_state_detail_dict["settings"]["insecure_port"] = int(groups["insecure_port"])
-            gnxi_state_detail_dict["settings"]["secure_server"] = enabled_disabled_to_bool(groups["secure_server"])
-            gnxi_state_detail_dict["settings"]["secure_port"] = int(groups["secure_port"])
-            gnxi_state_detail_dict["settings"]["secure_client_authentication"] = enabled_disabled_to_bool(groups["secure_client_auth"])
-            gnxi_state_detail_dict["settings"]["secure_trustpoint"] = str(groups["secure_trustpoint"])
-            gnxi_state_detail_dict["settings"]["secure_client_trustpoint"] = str(groups["secure_client_trustpoint"])
-            gnxi_state_detail_dict["settings"]["secure_password_authentication"] = enabled_disabled_to_bool(groups["secure_pass_auth"])
+            ret_dict["settings"]["insecure_server"] = _enabled_disabled_to_bool(groups["insecure_server"])
+            ret_dict["settings"]["insecure_port"] = int(groups["insecure_port"])
+            ret_dict["settings"]["secure_server"] = _enabled_disabled_to_bool(groups["secure_server"])
+            ret_dict["settings"]["secure_port"] = int(groups["secure_port"])
+            ret_dict["settings"]["secure_client_authentication"] = _enabled_disabled_to_bool(groups["secure_client_auth"])
+            ret_dict["settings"]["secure_trustpoint"] = str(groups["secure_trustpoint"])
+            ret_dict["settings"]["secure_client_trustpoint"] = str(groups["secure_client_trustpoint"])
+            ret_dict["settings"]["secure_password_authentication"] = _enabled_disabled_to_bool(groups["secure_pass_auth"])
 
             # gnmi broker information
-            gnxi_state_detail_dict["oper_state"]["admin_enabled"] = enabled_disabled_to_bool(groups["admin_state"])
-            gnxi_state_detail_dict["oper_state"]["oper_up"]       = up_down_to_bool(groups["oper_status"])
-            gnxi_state_detail_dict["oper_state"]["provisioned"]   = groups["bootstrapping_state"] == "Provisioned"
+            ret_dict["oper_state"]["admin_enabled"] = _enabled_disabled_to_bool(groups["admin_state"])
+            ret_dict["oper_state"]["oper_up"]       = _up_down_to_bool(groups["oper_status"])
+            ret_dict["oper_state"]["provisioned"]   = groups["bootstrapping_state"] == "Provisioned"
 
             # grpc server information
-            gnxi_state_detail_dict["oper_state"]["grpc"]["admin_enabled"] = enabled_disabled_to_bool(groups["grpc_admin_state"])
-            gnxi_state_detail_dict["oper_state"]["grpc"]["oper_up"] = up_down_to_bool(groups["grpc_oper_status"])
+            ret_dict["oper_state"]["grpc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["grpc_admin_state"])
+            ret_dict["oper_state"]["grpc"]["oper_up"] = _up_down_to_bool(groups["grpc_oper_status"])
 
             # configuration interface information
-            gnxi_state_detail_dict["oper_state"]["config_svc"]["admin_enabled"] = enabled_disabled_to_bool(groups["config_svc_admin_state"])
-            gnxi_state_detail_dict["oper_state"]["config_svc"]["oper_up"] = up_down_to_bool(groups["config_svc_oper_status"])
+            ret_dict["oper_state"]["config_svc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["config_svc_admin_state"])
+            ret_dict["oper_state"]["config_svc"]["oper_up"] = _up_down_to_bool(groups["config_svc_oper_status"])
 
             # telemetry interface information
-            gnxi_state_detail_dict["oper_state"]["telemetry_svc"]["admin_enabled"] = enabled_disabled_to_bool(groups["telemetry_svc_admin_state"])
-            gnxi_state_detail_dict["oper_state"]["telemetry_svc"]["oper_up"] = up_down_to_bool(groups["telemetry_svc_oper_status"])
+            ret_dict["oper_state"]["telemetry_svc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["telemetry_svc_admin_state"])
+            ret_dict["oper_state"]["telemetry_svc"]["oper_up"] = _up_down_to_bool(groups["telemetry_svc_oper_status"])
 
             # certificate management interface information
-            gnxi_state_detail_dict["oper_state"]["cert_mgmt_svc"]["admin_enabled"] = enabled_disabled_to_bool(groups["cert_svc_admin_state"])
-            gnxi_state_detail_dict["oper_state"]["cert_mgmt_svc"]["oper_up"] = up_down_to_bool(groups["cert_svc_oper_status"])
+            ret_dict["oper_state"]["cert_mgmt_svc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["cert_svc_admin_state"])
+            ret_dict["oper_state"]["cert_mgmt_svc"]["oper_up"] = _up_down_to_bool(groups["cert_svc_oper_status"])
 
             # os image interface information
-            gnxi_state_detail_dict["oper_state"]["os_image_svc"]["admin_enabled"] = enabled_disabled_to_bool(groups["os_svc_admin_state"])
-            gnxi_state_detail_dict["oper_state"]["os_image_svc"]["oper_up"] = up_down_to_bool(groups["os_svc_oper_status"])
-            gnxi_state_detail_dict["oper_state"]["os_image_svc"]["supported"] = groups["os_svc_supported"] == "Supported"
+            ret_dict["oper_state"]["os_image_svc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["os_svc_admin_state"])
+            ret_dict["oper_state"]["os_image_svc"]["oper_up"] = _up_down_to_bool(groups["os_svc_oper_status"])
+            ret_dict["oper_state"]["os_image_svc"]["supported"] = groups["os_svc_supported"] == "Supported"
 
             # factory reset interface information
-            gnxi_state_detail_dict["oper_state"]["factory_reset_svc"]["admin_enabled"] = enabled_disabled_to_bool(groups["reset_svc_admin_state"])
-            gnxi_state_detail_dict["oper_state"]["factory_reset_svc"]["oper_up"] = up_down_to_bool(groups["reset_svc_oper_status"])
-            gnxi_state_detail_dict["oper_state"]["factory_reset_svc"]["supported"] = groups["reset_svc_supported"] == "Supported"
+            ret_dict["oper_state"]["factory_reset_svc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["reset_svc_admin_state"])
+            ret_dict["oper_state"]["factory_reset_svc"]["oper_up"] = _up_down_to_bool(groups["reset_svc_oper_status"])
+            ret_dict["oper_state"]["factory_reset_svc"]["supported"] = groups["reset_svc_supported"] == "Supported"
 
-        else:
-            gnxi_state_detail_dict = {}
-
-        return gnxi_state_detail_dict
+        return ret_dict
