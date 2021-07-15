@@ -12,7 +12,7 @@ expected_output = {
             'eth_tag': 0,
             'next_hops': [
                 {
-                    'next_hops': 'L:17 Ethernet1/0 service instance 11',
+                    'next_hop': 'L:17 Ethernet1/0 service instance 11',
                 },
             ],
             'seq_number': 0,
@@ -30,7 +30,7 @@ expected_output = {
             'eth_tag': 0,
             'next_hops': [
                 {
-                    'next_hops': 'L:17 Ethernet1/0 service instance 11',
+                    'next_hop': 'L:17 Ethernet1/0 service instance 11',
                 },
             ],
             'seq_number': 5,
@@ -51,10 +51,10 @@ expected_output = {
             'eth_tag': 0,
             'next_hops': [
                 {
-                    'next_hops': 'L:17 Ethernet1/0 service instance 11',
+                    'next_hop': 'L:17 Ethernet1/0 service instance 11',
                 },
                 {
-                    'next_hops': 'L:16 2.2.2.1',
+                    'next_hop': 'L:16 2.2.2.1',
                 },
             ],
             'local_addr': '1.1.1.1',

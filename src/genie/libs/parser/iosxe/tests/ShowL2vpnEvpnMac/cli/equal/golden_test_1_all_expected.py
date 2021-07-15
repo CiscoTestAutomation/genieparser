@@ -10,7 +10,7 @@ expected_output = {
             'eth_tag': 0,
             'next_hops': [
                 {
-                    'next_hops': 'Et1/0:11',
+                    'next_hop': 'Et1/0:11',
                 },
             ],
         },
@@ -21,7 +21,7 @@ expected_output = {
             'eth_tag': 0,
             'next_hops': [
                 {
-                    'next_hops': 'Et1/0:11',
+                    'next_hop': 'Et1/0:11',
                 },
             ],
         },
@@ -32,7 +32,7 @@ expected_output = {
             'eth_tag': 0,
             'next_hops': [
                 {
-                    'next_hops': 'Duplicate',
+                    'next_hop': 'Duplicate',
                 },
             ],
         },

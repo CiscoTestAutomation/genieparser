@@ -12,7 +12,7 @@ expected_output = {
             'eth_tag': 0,
             'next_hops': [
                 {
-                    'next_hops': 'V:16 2.2.2.1',
+                    'next_hop': 'V:16 2.2.2.1',
                 },
             ],
             'local_addr': '1.1.1.1',
