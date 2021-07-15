@@ -1527,7 +1527,7 @@ class ShowL2vpnEvpnEthernetSegment(ShowL2vpnEvpnEthernetSegmentSchema):
             cli_output = output
 
         #03AA.AABB.BBCC.CC00.0001 Et0/2      single-active   3       16
-        p1 = re.compile(r'^(?P<esi>(\w+\.\w+\.\w+\.\w+\.\w+|N/A)) +(?P<port>\S+) +(?P<redundancy_mode>\S+) +(?P<df_time>\S+) +(?P<sh_label>\S+)$')
+        p1 = re.compile(r'^(?P<esi>(\w+\.\w+\.\w+\.\w+\.\w+)) +(?P<port>\S+) +(?P<redundancy_mode>\S+) +(?P<df_time>\S+) +(?P<sh_label>\S+)$')
         parser_dict = {}
 
         if not cli_output:
