@@ -6,6 +6,7 @@ IOSXE parsers for the following commands
 """
 
 import re
+from enum import Enum
 
 from genie.metaparser import MetaParser
 
@@ -121,115 +122,185 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
     '''
     cli_command = "show gnxi state detail"
 
+    class GnmibSection(Enum):
+        SETTINGS = "settings"
+        GNMI_GRPC = "grpc"
+        GNMI_CONF = "config_svc"
+        GNMI_TELEMETRY = "telemetry_svc"
+        GNOI_CERT = "cert_mgmt_svc"
+        GNOI_OS = "os_image_svc"
+        GNOI_RESET = "factory_reset_svc"
+
+
     def cli(self, output=None):
         if output is None:
             out = self.device.execute(self.cli_command)
         else:
             out = output
 
-        ret_dict = {}
+        current_gnmib_section = self.GnmibSection.SETTINGS
 
-        p_full = re.compile(r"Settings\n"
-                r"=*\n"
-                r"\s\sServer: (?P<insecure_server>Disabled|Enabled)\n"
-                r"\s\sServer port: (?P<insecure_port>\d+)\n"
-                r"\s\sSecure server: (?P<secure_server>Disabled|Enabled)\n"
-                r"\s\sSecure server port: (?P<secure_port>\d+)\n"
-                r"\s\sSecure client authentication: (?P<secure_client_auth>Disabled|Enabled)\n"
-                r"\s\sSecure trustpoint:\s?(?P<secure_trustpoint>.*)\n"
-                r"\s\sSecure client trustpoint:\s?(?P<secure_client_trustpoint>.*)\n"
-                r"\s\sSecure password authentication: (?P<secure_pass_auth>Disabled|Enabled)\n\n"
-                r"GNMI\n"
-                r"====\n"
-                r"\s\sAdmin state: (?P<admin_state>Disabled|Enabled)\n"
-                r"\s\sOper status: (?P<oper_status>Down|Up)\n"
-                r"\s\sState: (?P<bootstrapping_state>Provisioned|Default)\n\n"
-                r"\s\sgRPC Server\n"
-                r"\s\s-*\n"
-                r"\s\s\s\sAdmin state: (?P<grpc_admin_state>Disabled|Enabled)\n"
-                r"\s\s\s\sOper status: (?P<grpc_oper_status>Down|Up)\n\n"
-                r"\s\sConfiguration service\n"
-                r"\s\s-*\n"
-                r"\s\s\s\sAdmin state: (?P<config_svc_admin_state>Disabled|Enabled)\n"
-                r"\s\s\s\sOper status: (?P<config_svc_oper_status>Down|Up)\n\n"
-                r"\s\sTelemetry service\n"
-                r"\s\s-*\n"
-                r"\s\s\s\sAdmin state: (?P<telemetry_svc_admin_state>Disabled|Enabled)\n"
-                r"\s\s\s\sOper status: (?P<telemetry_svc_oper_status>Down|Up)\n\n"
-                r"GNOI\n"
-                r"====\n\n"
-                r"\s\sCert Management service\n"
-                r"\s\s-*\n"
-                r"\s\s\s\sAdmin state: (?P<cert_svc_admin_state>Disabled|Enabled)\n"
-                r"\s\s\s\sOper status: (?P<cert_svc_oper_status>Down|Up)\n\n"
-                r"\s\sOS Image service\n"
-                r"\s\s-*\n"
-                r"\s\s\s\sAdmin state: (?P<os_svc_admin_state>Disabled|Enabled)\n"
-                r"\s\s\s\sOper status: (?P<os_svc_oper_status>Down|Up)\n"
-                r"\s\s\s\sSupported: (?P<os_svc_supported>Not supported on this platform|Supported)\n\n"
-                r"\s\sFactory Reset service\n"
-                r"\s\s-*\n"
-                r"\s\s\s\sAdmin state: (?P<reset_svc_admin_state>Disabled|Enabled)\n"
-                r"\s\s\s\sOper status: (?P<reset_svc_oper_status>Down|Up)\n"
-                r"\s\s\s\sSupported: (?P<reset_svc_supported>Not supported on this platform|Supported)")
+        p_server = re.compile(r"Server: (?P<insecure_server>Disabled|Enabled)")
+        p_server_port = re.compile(r"Server port: (?P<insecure_port>\d+)")
+        p_secure_server = re.compile(r"Secure server: (?P<secure_server>Disabled|Enabled)")
+        p_secure_server_port = re.compile(r"Secure server port: (?P<secure_port>\d+)")
+        p_secure_client_auth = re.compile(r"Secure client authentication: (?P<secure_client_auth>Disabled|Enabled)")
+        p_secure_tp = re.compile(r"Secure trustpoint:\s?(?P<secure_trustpoint>.*)")
+        p_secure_client_tp = re.compile(r"Secure client trustpoint:\s?(?P<secure_client_trustpoint>.*)")
+        p_secure_pwd_auth = re.compile(r"Secure password authentication: (?P<secure_pass_auth>Disabled|Enabled)")
 
-        out = "\n".join(out.splitlines())
+        p_bs_state = re.compile(r"State: (?P<bootstrapping_state>Provisioned|Default)")
 
-        matches = p_full.match(out)
+        p_section_gnmi = re.compile(r"GNMI")
+        p_grpc_section = re.compile(r"gRPC Server")
+        p_conf_section = re.compile(r"Configuration service")
+        p_telemetry_section = re.compile(r"Telemetry service")
+        p_gnoi_section = re.compile(r"GNOI")
+        p_cert_section = re.compile(r"Cert Management service")
+        p_os_section = re.compile(r"OS Image service")
+        p_reset_section = re.compile(r"Factory Reset service")
 
-        if matches:
-            groups = matches.groupdict()
+        p_admin_state = re.compile(r"Admin state: (?P<admin_state>Disabled|Enabled)")
+        p_oper_status = re.compile(r"Oper status: (?P<oper_status>Down|Up)")
+        p_supported = re.compile(r"Supported: (?P<supported>Not supported on this platform|Supported)")
 
-            ret_dict = {"settings": {},
-                "oper_state": {
-                    "grpc": {},
-                    "config_svc": {},
-                    "telemetry_svc": {},
-                    "cert_mgmt_svc": {},
-                    "os_image_svc": {},
-                    "factory_reset_svc": {}
-                    }
+        ret_dict = {"settings": {},
+            "oper_state": {
+                "grpc": {},
+                "config_svc": {},
+                "telemetry_svc": {},
+                "cert_mgmt_svc": {},
+                "os_image_svc": {},
+                "factory_reset_svc": {}
                 }
+            }
 
-            # gnmib settings and configuration
-            ret_dict["settings"]["insecure_server"] = _enabled_disabled_to_bool(groups["insecure_server"])
-            ret_dict["settings"]["insecure_port"] = int(groups["insecure_port"])
-            ret_dict["settings"]["secure_server"] = _enabled_disabled_to_bool(groups["secure_server"])
-            ret_dict["settings"]["secure_port"] = int(groups["secure_port"])
-            ret_dict["settings"]["secure_client_authentication"] = _enabled_disabled_to_bool(groups["secure_client_auth"])
-            ret_dict["settings"]["secure_trustpoint"] = str(groups["secure_trustpoint"])
-            ret_dict["settings"]["secure_client_trustpoint"] = str(groups["secure_client_trustpoint"])
-            ret_dict["settings"]["secure_password_authentication"] = _enabled_disabled_to_bool(groups["secure_pass_auth"])
+        for line in out.splitlines():
 
-            # gnmi broker information
-            ret_dict["oper_state"]["admin_enabled"] = _enabled_disabled_to_bool(groups["admin_state"])
-            ret_dict["oper_state"]["oper_up"]       = _up_down_to_bool(groups["oper_status"])
-            ret_dict["oper_state"]["provisioned"]   = groups["bootstrapping_state"] == "Provisioned"
+            line = line.strip()
 
-            # grpc server information
-            ret_dict["oper_state"]["grpc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["grpc_admin_state"])
-            ret_dict["oper_state"]["grpc"]["oper_up"] = _up_down_to_bool(groups["grpc_oper_status"])
+            match = p_server.match(line)
+            if match:
+                groups = match.groupdict()
+                ret_dict["settings"]["insecure_server"] = _enabled_disabled_to_bool(groups["insecure_server"])
 
-            # configuration interface information
-            ret_dict["oper_state"]["config_svc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["config_svc_admin_state"])
-            ret_dict["oper_state"]["config_svc"]["oper_up"] = _up_down_to_bool(groups["config_svc_oper_status"])
 
-            # telemetry interface information
-            ret_dict["oper_state"]["telemetry_svc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["telemetry_svc_admin_state"])
-            ret_dict["oper_state"]["telemetry_svc"]["oper_up"] = _up_down_to_bool(groups["telemetry_svc_oper_status"])
+            match = p_server_port.match(line)
+            if match:
+                groups = match.groupdict()
+                ret_dict["settings"]["insecure_port"] = int(groups["insecure_port"])
 
-            # certificate management interface information
-            ret_dict["oper_state"]["cert_mgmt_svc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["cert_svc_admin_state"])
-            ret_dict["oper_state"]["cert_mgmt_svc"]["oper_up"] = _up_down_to_bool(groups["cert_svc_oper_status"])
 
-            # os image interface information
-            ret_dict["oper_state"]["os_image_svc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["os_svc_admin_state"])
-            ret_dict["oper_state"]["os_image_svc"]["oper_up"] = _up_down_to_bool(groups["os_svc_oper_status"])
-            ret_dict["oper_state"]["os_image_svc"]["supported"] = groups["os_svc_supported"] == "Supported"
+            match = p_secure_server.match(line)
+            if match:
+                groups = match.groupdict()
+                ret_dict["settings"]["secure_server"] = _enabled_disabled_to_bool(groups["secure_server"])
 
-            # factory reset interface information
-            ret_dict["oper_state"]["factory_reset_svc"]["admin_enabled"] = _enabled_disabled_to_bool(groups["reset_svc_admin_state"])
-            ret_dict["oper_state"]["factory_reset_svc"]["oper_up"] = _up_down_to_bool(groups["reset_svc_oper_status"])
-            ret_dict["oper_state"]["factory_reset_svc"]["supported"] = groups["reset_svc_supported"] == "Supported"
+
+            match = p_secure_server_port.match(line)
+            if match:
+                groups = match.groupdict()
+                ret_dict["settings"]["secure_port"] = int(groups["secure_port"])
+
+
+            match = p_secure_client_auth.match(line)
+            if match:
+                groups = match.groupdict()
+                ret_dict["settings"]["secure_client_authentication"] = _enabled_disabled_to_bool(groups["secure_client_auth"])
+
+
+            match = p_secure_tp.match(line)
+            if match:
+                groups = match.groupdict()
+                ret_dict["settings"]["secure_trustpoint"] = str(groups["secure_trustpoint"])
+
+
+            match = p_secure_client_tp.match(line)
+            if match:
+                groups = match.groupdict()
+                ret_dict["settings"]["secure_client_trustpoint"] = str(groups["secure_client_trustpoint"])
+
+
+            match = p_secure_pwd_auth.match(line)
+            if match:
+                groups = match.groupdict()
+                ret_dict["settings"]["secure_password_authentication"] = _enabled_disabled_to_bool(groups["secure_pass_auth"])
+
+
+            match = p_bs_state.match(line)
+            if match:
+                groups = match.groupdict()
+                ret_dict["oper_state"]["provisioned"] = groups["bootstrapping_state"] == "Provisioned"
+
+
+            match = p_section_gnmi.match(line)
+            if match:
+                groups = match.groupdict()
+
+
+            match = p_grpc_section.match(line)
+            if match:
+                groups = match.groupdict()
+                current_gnmib_section = self.GnmibSection.GNMI_GRPC
+
+
+            match = p_conf_section.match(line)
+            if match:
+                groups = match.groupdict()
+                current_gnmib_section = self.GnmibSection.GNMI_CONF
+
+
+            match = p_telemetry_section.match(line)
+            if match:
+                groups = match.groupdict()
+                current_gnmib_section = self.GnmibSection.GNMI_TELEMETRY
+
+
+            match = p_gnoi_section.match(line)
+            if match:
+                groups = match.groupdict()
+
+
+            match = p_cert_section.match(line)
+            if match:
+                groups = match.groupdict()
+                current_gnmib_section = self.GnmibSection.GNOI_CERT
+
+
+            match = p_os_section.match(line)
+            if match:
+                groups = match.groupdict()
+                current_gnmib_section = self.GnmibSection.GNOI_OS
+
+
+            match = p_reset_section.match(line)
+            if match:
+                groups = match.groupdict()
+                current_gnmib_section = self.GnmibSection.GNOI_RESET
+
+
+            match = p_admin_state.match(line)
+            if match:
+                groups = match.groupdict()
+                if current_gnmib_section == self.GnmibSection.SETTINGS:
+                    ret_dict["oper_state"]["admin_enabled"] = _enabled_disabled_to_bool(groups["admin_state"])
+                else:
+                    ret_dict["oper_state"][current_gnmib_section.value]["admin_enabled"] = _enabled_disabled_to_bool(groups["admin_state"])
+
+
+            match = p_oper_status.match(line)
+            if match:
+                groups = match.groupdict()
+                if current_gnmib_section == self.GnmibSection.SETTINGS:
+                    ret_dict["oper_state"]["oper_up"] = _up_down_to_bool(groups["oper_status"])
+                else:
+                    ret_dict["oper_state"][current_gnmib_section.value]["oper_up"] = _up_down_to_bool(groups["oper_status"])
+
+
+            match = p_supported.match(line)
+            if match:
+                groups = match.groupdict()
+                ret_dict["oper_state"][current_gnmib_section.value]["supported"] = groups["supported"] == "Supported"
+
 
         return ret_dict
