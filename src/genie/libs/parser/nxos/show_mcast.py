@@ -1021,19 +1021,9 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
     cli_command = ['show ip mroute summary vrf {vrf}',
                    'show ip mroute summary']
     def cli(self, vrf="default", output=None):
-        # finding vrf names
-        vrf_dict = {}
-        if vrf:
-            if vrf == 'all':
-                showparser = ShowVrf(device=self.device)
-                vrfs_list = showparser.parse()
-                for vrf_name in vrfs_list['vrfs'].keys():
-                    vrf_id = vrfs_list['vrfs'][vrf_name]['vrf_id']
-                    vrf_dict.update({vrf_id: vrf_name})
-
+        if vrf != 'default':
             cmd = self.cli_command[0].format(vrf=vrf)
         else:
-            vrf = 'default'
             cmd = self.cli_command[1]
 
         if output is None:
@@ -1042,16 +1032,20 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
             out = output
 
         mroute_dict = {}
-
+        #IP Multicast Routing Table for VRF "vxlan-1001" 
         p1 = re.compile(r'^\s*(?P<address_family>[\w\W]+) [mM]ulticast'
                          ' +[rR]outing +[tT]able +for +VRF '
                          '+(?P<vrf>\S+)$')
+        # Total number of (*,G) routes: 34
         p2 = re.compile(r'^\s*Total +number +of +\(\*,G\) +routes:'
                          r' +(?P<count>[0-9]+)$')
+        # Total number of (S,G) routes: 17
         p3 = re.compile(r'^\s*Total +number +of +\(S,G\) +routes:'
                          r' +(?P<count>[0-9]+)$')
+        # Total number of routes: 51
         p4 = re.compile(r'^\s*Total +number +of +routes:'
                          r' +(?P<count>[0-9]+)$')
+        #Total number of (*,G-prefix) routes: 0
         p5 = re.compile(r'^\s*Total +number +of +\(\*,G-prefix\) +routes:'
                          r' +(?P<count>[0-9]+)$')
         for line in out.splitlines():
@@ -1062,7 +1056,6 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
                 vrf = vrf.replace('"',"")
                 address_family = m.groupdict()['address_family'].lower()
                 address_family += 'v4'
-
                 address_family_dict = mroute_dict.setdefault('vrf', {}).setdefault(vrf,{}).setdefault('address_family', {}).setdefault(address_family, {})
                 continue
             m = p2.match(line)
