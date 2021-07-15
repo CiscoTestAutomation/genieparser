@@ -419,8 +419,11 @@ class ShowProcessesCpu(ShowProcessesCpuSchema):
 
     def cli(self, output=None):
 
-        out = self.device.execute(
-            self.cli_command) if output is None else output
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+            
         # initial return dictionary
         ret_dict = {}
         index = 0
@@ -451,6 +454,12 @@ class ShowProcessesCpu(ShowProcessesCpuSchema):
             # CPU utilization for one minute: 0%; five minutes: 0%; fifteen minutes: 0%
             m = p2.match(line)
             if m:
+                ret_dict.setdefault('location', {})
+                if not ret_dict['location']:
+                    location = 'CPU'
+
+                ret_dict.setdefault('location', {}).setdefault(location, {})
+
                 ret_dict['location'][location].update(
                     {k: int(v)
                      for k, v in m.groupdict().items()})

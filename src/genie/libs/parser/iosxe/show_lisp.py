@@ -3420,7 +3420,7 @@ class ShowLispEidTableVrfIpv4DatabaseSchema(MetaParser):
 
     schema = {
         "vrf": {
-            "User": {
+            Any(): {
                 "iid": int,
                 "lsb": str,
                 "total_entries": int,
