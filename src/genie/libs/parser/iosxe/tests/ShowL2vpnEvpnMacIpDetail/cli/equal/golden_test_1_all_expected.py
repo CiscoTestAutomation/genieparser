@@ -11,7 +11,9 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                'L:17 Ethernet1/0 service instance 11',
+                {
+                    'next_hop': 'L:17 Ethernet1/0 service instance 11',
+                },
             ],
             'seq_number': 0,
             'ip_dup_detection': {
@@ -27,7 +29,9 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                'L:17 Ethernet1/0 service instance 11',
+                {
+                    'next_hop': 'L:17 Ethernet1/0 service instance 11',
+                },
             ],
             'seq_number': 5,
             'ip_dup_detection': {
@@ -43,7 +47,9 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                'L:17 Ethernet1/0 service instance 11',
+                {
+                    'next_hop': 'L:17 Ethernet1/0 service instance 11',
+                },
             ],
             'seq_number': 0,
             'ip_dup_detection': {
@@ -60,7 +66,9 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                'L:17 Ethernet1/0 service instance 11',
+                {
+                    'next_hop': 'L:17 Ethernet1/0 service instance 11',
+                },
             ],
             'seq_number': 0,
             'ip_dup_detection': {
@@ -76,8 +84,12 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                'L:17 Ethernet1/0 service instance 11',
-                'L:16 2.2.2.1',
+                {
+                    'next_hop': 'L:17 Ethernet1/0 service instance 11',
+                },
+                {
+                    'next_hop': 'L:16 2.2.2.1',
+                },
             ],
             'local_addr': '1.1.1.1',
             'seq_number': 6,
@@ -94,7 +106,9 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                'L:17 Ethernet1/0 service instance 11',
+                {
+                    'next_hop': 'L:17 Ethernet1/0 service instance 11',
+                },
             ],
             'seq_number': 0,
             'ip_dup_detection': {
@@ -113,7 +127,9 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                'L:16 2.2.2.1',
+                {
+                    'next_hop': 'L:16 2.2.2.1',
+                },
             ],
             'local_addr': '1.1.1.1',
             'seq_number': 0,

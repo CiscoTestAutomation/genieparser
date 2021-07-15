@@ -16,7 +16,9 @@ expected_output = {
             'bd_id': 11,
             'mac_addr': 'aabb.0011.0002',
             'next_hops': [
-                '2.2.2.1',
+                {
+                    'next_hop': '2.2.2.1',
+                },
             ],
         },
     },

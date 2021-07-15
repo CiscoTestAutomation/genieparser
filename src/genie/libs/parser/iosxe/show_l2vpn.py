@@ -102,7 +102,8 @@ from genie.metaparser.util.schemaengine import Schema, \
                                          Or, \
                                          And, \
                                          Default, \
-                                         Use
+                                         Use, \
+                                         ListOf
 
 # import parser utils
 from genie.libs.parser.utils.common import Common
@@ -1663,7 +1664,11 @@ class ShowL2vpnEvpnMacIpSchema(MetaParser):
                 'evi': int,
                 'bd_id': int,
                 'mac_addr': str,
-                'next_hops': list,
+                'next_hops': ListOf(
+                    {
+                        'next_hop': str,
+                    }
+                ),
             },
         },
     }
@@ -1834,7 +1839,7 @@ class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
                     'mac_addr': group['mac'],
                 })
                 next_hops = ip_vals.setdefault('next_hops', [])
-                next_hops.append(group['next_hop'])
+                next_hops.append({'next_hop': group['next_hop']})
                 continue
 
             #                                                      3.3.3.1
@@ -1842,7 +1847,7 @@ class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
             if m:
                 group = m.groupdict()
                 if next_hops:
-                    next_hops.append(group['next_hop'])
+                    next_hops.append({'next_hop': group['next_hop']})
                 continue
 
         if not header_validated:
@@ -1894,7 +1899,11 @@ class ShowL2vpnEvpnMacIpDetailSchema(MetaParser):
                 'mac_addr': str,
                 'esi': str,
                 'eth_tag': int,
-                'next_hops': list,
+                'next_hops': ListOf(
+                    {
+                        'next_hop': str,
+                    }
+                ),
                 Optional('local_addr'): str,
                 'seq_number': int,
                 'ip_dup_detection': {
@@ -2132,7 +2141,7 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
             if m:
                 group = m.groupdict()
                 next_hops = ip_vals.setdefault('next_hops', [])
-                next_hops.append(group['next_hop'])
+                next_hops.append({'next_hop': group['next_hop']})
                 continue
 
             # Local Address:             4.4.4.1
@@ -2209,7 +2218,7 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                next_hops.append(group['next_hop'])
+                next_hops.append({'next_hop': group['next_hop']})
                 continue
 
         return parser_dict
