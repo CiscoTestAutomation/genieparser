@@ -9,7 +9,9 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                'Et1/0:11',
+                {
+                    'next_hops': 'Et1/0:11',
+                },
             ],
         },
         'aabb.0011.0020': {
@@ -18,7 +20,9 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                'Et1/0:11',
+                {
+                    'next_hops': 'Et1/0:11',
+                },
             ],
         },
         'aabb.0011.0021': {
@@ -27,7 +31,9 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                'Duplicate',
+                {
+                    'next_hops': 'Duplicate',
+                },
             ],
         },
     },

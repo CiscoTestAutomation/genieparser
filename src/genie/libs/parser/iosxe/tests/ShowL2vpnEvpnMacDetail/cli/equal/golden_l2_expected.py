@@ -11,7 +11,9 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                'V:16 2.2.2.1',
+                {
+                    'next_hops': 'V:16 2.2.2.1',
+                },
             ],
             'local_addr': '1.1.1.1',
             'seq_number': 0,

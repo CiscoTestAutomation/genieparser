@@ -1700,7 +1700,11 @@ class ShowL2vpnEvpnMacSchema(MetaParser):
                 'bd_id': int,
                 'esi': str,
                 'eth_tag': int,
-                'next_hops': list,
+                'next_hops': ListOf(
+                    {
+                        'next_hop': str,
+                    }
+                ),
             },
         },
     }
@@ -1807,7 +1811,7 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                     'eth_tag': int(group['eth_tag']),
                 })
                 next_hops = mac_vals.setdefault('next_hops', [])
-                next_hops.append(group['next_hop'])
+                next_hops.append({'next_hop': group['next_hop']})
                 continue
 
             #                                                                3.3.3.1
@@ -1815,7 +1819,7 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
             if m:
                 group = m.groupdict()
                 if next_hops:
-                    next_hops.append(group['next_hop'])
+                    next_hops.append({'next_hop': group['next_hop']})
                 continue
 
         if not header_validated:
@@ -1855,7 +1859,11 @@ class ShowL2vpnEvpnMacDetailSchema(MetaParser):
                 'bd_id': int,
                 'esi': str,
                 'eth_tag': int,
-                'next_hops': list,
+                'next_hops': ListOf(
+                    {
+                        'next_hop': str,
+                    }
+                ),
                 Optional('local_addr'): str,
                 'seq_number': int,
                 'mac_only_present': bool,
@@ -2022,7 +2030,7 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
             if m:
                 group = m.groupdict()
                 next_hops = mac_vals.setdefault('next_hops', [])
-                next_hops.append(group['next_hop'])
+                next_hops.append({'next_hop': group['next_hop']})
                 continue
 
             # Local Address:              4.4.4.1
@@ -2078,7 +2086,7 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
             m = p7.match(line)
             if m:
                 group = m.groupdict()
-                next_hops.append(group['next_hop'])
+                next_hops.append({'next_hop': group['next_hop']})
                 continue
 
         return parser_dict
