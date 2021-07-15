@@ -1708,67 +1708,27 @@ class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
                    show l2vpn evpn mac ip remote
     """
 
-    cli_command = ['show l2vpn evpn mac ip', # 0
-                   'show l2vpn evpn mac ip address {ip_addr}', # 1
-                   'show l2vpn evpn mac ip {mac_ip_type}', # 2
-                   'show l2vpn evpn mac ip mac {mac_addr}', # 3
-                   'show l2vpn evpn mac ip mac {mac_addr} address {ip_addr}', # 4
-                   'show l2vpn evpn mac ip bridge-domain {bd_id}', # 5
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} address {ip_addr}', # 6
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} {mac_ip_type}', # 7
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr}', # 8
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ip_addr}', # 9
-                   'show l2vpn evpn mac ip evi {evi_id}', # 10
-                   'show l2vpn evpn mac ip evi {evi_id} address {ip_addr}', # 11
-                   'show l2vpn evpn mac ip evi {evi_id} {mac_ip_type}', # 12
-                   'show l2vpn evpn mac ip evi {evi_id} mac {mac_addr}', # 13
-                   'show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ip_addr}', # 14
-    ]
-
     def cli(self, output=None, mac_addr=None, mac_ip_type=None, bd_id=None, evi_id=None, ip_addr=None):
         if not output:
             # Only these CLI options for mac_ip_type are supported.
             if mac_ip_type and mac_ip_type != 'local' and mac_ip_type != 'remote' and mac_ip_type != 'duplicate':
                 raise Exception("Unsupported mac_ip_type {}".format(mac_ip_type))
+            
+            cli_cmd = 'show l2vpn evpn mac ip'
+
             if bd_id:
-                if mac_addr:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[9].format(bd_id=bd_id, mac_addr=mac_addr, ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[8].format(bd_id=bd_id, mac_addr=mac_addr)
-                elif mac_ip_type:
-                    cli_cmd = self.cli_command[7].format(bd_id=bd_id, mac_ip_type=mac_ip_type)
-                else:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[6].format(bd_id=bd_id, ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[5].format(bd_id=bd_id)
+                cli_cmd += ' bridge-domain {bd_id}'.format(bd_id=bd_id)
             elif evi_id:
-                if mac_addr:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[14].format(evi_id=evi_id, mac_addr=mac_addr, ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[13].format(evi_id=evi_id, mac_addr=mac_addr)
-                elif mac_ip_type:
-                    cli_cmd = self.cli_command[12].format(evi_id=evi_id, mac_ip_type=mac_ip_type)
-                else:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[11].format(evi_id=evi_id, ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[10].format(evi_id=evi_id)
-            else:
-                if mac_addr:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[4].format(mac_addr=mac_addr, ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[3].format(mac_addr=mac_addr)
-                elif mac_ip_type:
-                    cli_cmd = self.cli_command[2].format(mac_ip_type=mac_ip_type)
-                else:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[1].format(ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[0]
+                cli_cmd += ' evi {evi_id}'.format(evi_id=evi_id)
+
+            if mac_ip_type:
+                cli_cmd += ' {mac_ip_type}'.format(mac_ip_type=mac_ip_type)
+            elif mac_addr:
+                cli_cmd += ' mac {mac_addr}'.format(mac_addr=mac_addr)
+                if ip_addr:
+                    cli_cmd += ' address {ip_addr}'.format(ip_addr=ip_addr)
+            elif ip_addr:
+                cli_cmd += ' address {ip_addr}'.format(ip_addr=ip_addr)
 
             cli_output = self.device.execute(cli_cmd)
         else:
@@ -1955,67 +1915,29 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
                    show l2vpn evpn mac ip remote detail
     """
 
-    cli_command = ['show l2vpn evpn mac ip detail', # 0
-                   'show l2vpn evpn mac ip address {ip_addr} detail', # 1
-                   'show l2vpn evpn mac ip {mac_ip_type} detail', # 2
-                   'show l2vpn evpn mac ip mac {mac_addr} detail', # 3
-                   'show l2vpn evpn mac ip mac {mac_addr} address {ip_addr} detail', # 4
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} detail', # 5
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} address {ip_addr}  detail', # 6
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} {mac_ip_type} detail', # 7
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} detail', # 8
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ip_addr} detail', # 9
-                   'show l2vpn evpn mac ip evi {evi_id} detail', # 10
-                   'show l2vpn evpn mac ip evi {evi_id} address {ip_addr} detail', # 11
-                   'show l2vpn evpn mac ip evi {evi_id} {mac_ip_type} detail',  # 12
-                   'show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} detail', # 13
-                   'show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ip_addr} detail', # 14
-    ]
-
     def cli(self, output=None, mac_addr=None, mac_ip_type=None, bd_id=None, evi_id=None, ip_addr=None):
         if not output:
             # Only these CLI options for mac_ip_type are supported.
             if mac_ip_type and mac_ip_type != 'local' and mac_ip_type != 'remote' and mac_ip_type != 'duplicate':
                 raise Exception("Unsupported mac_ip_type {}".format(mac_ip_type))
+
+            cli_cmd = 'show l2vpn evpn mac ip'
+
             if bd_id:
-                if mac_addr:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[9].format(bd_id=bd_id, mac_addr=mac_addr, ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[8].format(bd_id=bd_id, mac_addr=mac_addr)
-                elif mac_ip_type:
-                    cli_cmd = self.cli_command[7].format(bd_id=bd_id, mac_ip_type=mac_ip_type)
-                else:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[6].format(bd_id=bd_id, ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[5].format(bd_id=bd_id)
+                cli_cmd += ' bridge-domain {bd_id}'.format(bd_id=bd_id)
             elif evi_id:
-                if mac_addr:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[14].format(evi_id=evi_id, mac_addr=mac_addr, ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[13].format(evi_id=evi_id, mac_addr=mac_addr)
-                elif mac_ip_type:
-                    cli_cmd = self.cli_command[12].format(evi_id=evi_id, mac_ip_type=mac_ip_type)
-                else:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[11].format(evi_id=evi_id, ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[10].format(evi_id=evi_id)
-            else:
-                if mac_addr:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[4].format(mac_addr=mac_addr, ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[3].format(mac_addr=mac_addr)
-                elif mac_ip_type:
-                    cli_cmd = self.cli_command[2].format(mac_ip_type=mac_ip_type)
-                else:
-                    if ip_addr:
-                        cli_cmd = self.cli_command[1].format(ip_addr=ip_addr)
-                    else:
-                        cli_cmd = self.cli_command[0]
+                cli_cmd += ' evi {evi_id}'.format(evi_id=evi_id)
+
+            if mac_ip_type:
+                cli_cmd += ' {mac_ip_type}'.format(mac_ip_type=mac_ip_type)
+            elif mac_addr:
+                cli_cmd += ' mac {mac_addr}'.format(mac_addr=mac_addr)
+                if ip_addr:
+                    cli_cmd += ' address {ip_addr}'.format(ip_addr=ip_addr)
+            elif ip_addr:
+                cli_cmd += ' address {ip_addr}'.format(ip_addr=ip_addr)
+
+            cli_cmd += ' detail'
 
             cli_output = self.device.execute(cli_cmd)
         else:
@@ -2292,46 +2214,25 @@ class ShowL2vpnEvpnMacIpSummary(ShowL2vpnEvpnMacIpSummarySchema):
                    show l2vpn evpn mac ip summary
     """
 
-    cli_command = ['show l2vpn evpn mac ip summary', # 0
-                   'show l2vpn evpn mac ip {mac_ip_type} summary', # 1
-                   'show l2vpn evpn mac ip mac {mac_addr} summary', # 2
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} summary', # 3
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} {mac_ip_type} summary', # 4
-                   'show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} summary', # 5
-                   'show l2vpn evpn mac ip evi {evi_id} summary', # 6
-                   'show l2vpn evpn mac ip evi {evi_id} {mac_ip_type} summary', # 7
-                   'show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} summary', # 8
-    ]
-
     def cli(self, output=None, mac_ip_type=None, bd_id=None, evi_id=None, mac_addr=None):
         if not output:
             # Only these CLI options for mac_ip_type are supported.
             if mac_ip_type and mac_ip_type != 'local' and mac_ip_type != 'remote' and mac_ip_type != 'duplicate':
                 raise Exception("Unsupported mac_ip_type {}".format(mac_ip_type))
+
+            cli_cmd = 'show l2vpn evpn mac ip'
+
             if bd_id:
-                if mac_ip_type:
-                    cli_cmd = self.cli_command[4].format(bd_id=bd_id, mac_ip_type=mac_ip_type)
-                else:
-                    if mac_addr:
-                        cli_cmd = self.cli_command[5].format(bd_id=bd_id, mac_addr=mac_addr)
-                    else:
-                        cli_cmd = self.cli_command[3].format(bd_id=bd_id)
+                cli_cmd += ' bridge-domain {bd_id}'.format(bd_id=bd_id)
             elif evi_id:
-                if mac_ip_type:
-                    cli_cmd = self.cli_command[7].format(evi_id=evi_id, mac_ip_type=mac_ip_type)
-                else:
-                    if mac_addr:
-                        cli_cmd = self.cli_command[8].format(evi_id=evi_id, mac_addr=mac_addr)
-                    else:
-                        cli_cmd = self.cli_command[6].format(evi_id=evi_id)
-            else:
-                if mac_ip_type:
-                    cli_cmd = self.cli_command[1].format(mac_ip_type=mac_ip_type)
-                else:
-                    if mac_addr:
-                        cli_cmd = self.cli_command[2].format(mac_addr=mac_addr)
-                    else:
-                        cli_cmd = self.cli_command[0]
+                cli_cmd += ' evi {evi_id}'.format(evi_id=evi_id)
+
+            if mac_ip_type:
+                cli_cmd += ' {mac_ip_type}'.format(mac_ip_type=mac_ip_type)
+            elif mac_addr:
+                cli_cmd += ' mac {mac_addr}'.format(mac_addr=mac_addr)
+
+            cli_cmd += ' summary'
 
             cli_output = self.device.execute(cli_cmd)
         else:
