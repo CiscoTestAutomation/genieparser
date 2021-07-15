@@ -1,0 +1,61 @@
+CL1-cat9400-5#show nve peers peer-ip 30.0.107.78
+'M' - MAC entry download flag  'A' - Adjacency download flag
+'4' - IPv4 flag  '6' - IPv6 flag
+
+Interface  VNI      Type Peer-IP          RMAC/Num_RTs   eVNI     state flags UP time
+nve1       3000101  L3CP 30.0.107.78      ac3a.6767.049f 3000101    UP  A/M/4 1w0d
+nve1       200051   L2CP 30.0.107.78      4              200051     UP   N/A  6d20h
+nve1       200052   L2CP 30.0.107.78      4              200052     UP   N/A  6d20h
+nve1       200053   L2CP 30.0.107.78      4              200053     UP   N/A  6d20h
+nve1       200054   L2CP 30.0.107.78      4              200054     UP   N/A  6d20h
+nve1       200055   L2CP 30.0.107.78      4              200055     UP   N/A  6d20h
+nve1       200056   L2CP 30.0.107.78      4              200056     UP   N/A  6d20h
+nve1       200057   L2CP 30.0.107.78      4              200057     UP   N/A  6d20h
+nve1       200058   L2CP 30.0.107.78      4              200058     UP   N/A  6d20h
+nve1       200059   L2CP 30.0.107.78      4              200059     UP   N/A  6d20h
+nve1       200060   L2CP 30.0.107.78      4              200060     UP   N/A  6d20h
+nve1       200061   L2CP 30.0.107.78      4              200061     UP   N/A  6d20h
+nve1       200062   L2CP 30.0.107.78      4              200062     UP   N/A  6d20h
+nve1       200063   L2CP 30.0.107.78      4              200063     UP   N/A  6d20h
+nve1       200064   L2CP 30.0.107.78      4              200064     UP   N/A  6d20h
+nve1       200065   L2CP 30.0.107.78      4              200065     UP   N/A  6d20h
+nve1       200066   L2CP 30.0.107.78      4              200066     UP   N/A  6d20h
+nve1       200067   L2CP 30.0.107.78      4              200067     UP   N/A  6d20h
+nve1       200068   L2CP 30.0.107.78      4              200068     UP   N/A  6d20h
+nve1       200069   L2CP 30.0.107.78      4              200069     UP   N/A  6d20h
+nve1       200070   L2CP 30.0.107.78      4              200070     UP   N/A  6d20h
+nve1       200071   L2CP 30.0.107.78      4              200071     UP   N/A  6d20h
+nve1       200072   L2CP 30.0.107.78      4              200072     UP   N/A  6d20h
+nve1       200073   L2CP 30.0.107.78      4              200073     UP   N/A  6d20h
+nve1       200074   L2CP 30.0.107.78      4              200074     UP   N/A  6d20h
+nve1       200075   L2CP 30.0.107.78      4              200075     UP   N/A  6d20h
+nve1       200076   L2CP 30.0.107.78      1              200076     UP   N/A  6d20h
+nve1       200077   L2CP 30.0.107.78      1              200077     UP   N/A  6d20h
+nve1       200078   L2CP 30.0.107.78      1              200078     UP   N/A  6d20h
+nve1       200079   L2CP 30.0.107.78      1              200079     UP   N/A  6d20h
+nve1       200080   L2CP 30.0.107.78      1              200080     UP   N/A  6d20h
+nve1       200081   L2CP 30.0.107.78      1              200081     UP   N/A  6d20h
+nve1       200082   L2CP 30.0.107.78      1              200082     UP   N/A  6d20h
+nve1       200083   L2CP 30.0.107.78      1              200083     UP   N/A  6d20h
+nve1       200084   L2CP 30.0.107.78      1              200084     UP   N/A  6d20h
+nve1       200085   L2CP 30.0.107.78      1              200085     UP   N/A  6d20h
+nve1       200086   L2CP 30.0.107.78      1              200086     UP   N/A  6d20h
+nve1       200087   L2CP 30.0.107.78      1              200087     UP   N/A  6d20h
+nve1       200088   L2CP 30.0.107.78      1              200088     UP   N/A  6d20h
+nve1       200089   L2CP 30.0.107.78      1              200089     UP   N/A  6d20h
+nve1       200090   L2CP 30.0.107.78      1              200090     UP   N/A  6d20h
+nve1       200091   L2CP 30.0.107.78      1              200091     UP   N/A  6d20h
+nve1       200092   L2CP 30.0.107.78      1              200092     UP   N/A  6d20h
+nve1       200093   L2CP 30.0.107.78      1              200093     UP   N/A  6d20h
+nve1       200094   L2CP 30.0.107.78      1              200094     UP   N/A  6d20h
+nve1       200095   L2CP 30.0.107.78      1              200095     UP   N/A  6d20h
+nve1       200096   L2CP 30.0.107.78      1              200096     UP   N/A  6d20h
+nve1       200097   L2CP 30.0.107.78      1              200097     UP   N/A  6d20h
+nve1       200098   L2CP 30.0.107.78      1              200098     UP   N/A  6d20h
+nve1       200099   L2CP 30.0.107.78      3              200099     UP   N/A  6d20h
+nve1       2000100  L2CP 30.0.107.78      1              2000100    UP   N/A  6d20h
+nve1       2000101  L2CP 30.0.107.78      1              2000101    UP   N/A  6d20h
+nve1       2000102  L2CP 30.0.107.78      7              2000102    UP   N/A  1w1d
+nve1       2000103  L2CP 30.0.107.78      4              2000103    UP   N/A  6d20h
+nve1       2000104  L2CP 30.0.107.78      4              2000104    UP   N/A  6d20h
+nve1       2000105  L2CP 30.0.107.78      4              2000105    UP   N/A  6d20h

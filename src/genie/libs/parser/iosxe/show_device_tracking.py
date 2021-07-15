@@ -206,7 +206,11 @@ class ShowDeviceTrackingDatabaseInterfaceSchema(MetaParser):
     """Schema for show device-tracking database interface {interface}."""
 
     schema = {
-        "binding_table": {"dynamic": int, "entries": int, "limit": int},
+        "binding_table": {
+            "dynamic": int,
+            "entries": int,
+            Optional("limit"): int
+        },
         "network_layer_address": {
             Any(): {
                 "age": str,
@@ -258,63 +262,72 @@ class ShowDeviceTrackingDatabaseInterface(ShowDeviceTrackingDatabaseInterfaceSch
         # L   2001:db8:350b:411::1                         0000.0cff.94fc  Vl1022         1022  0100 42473mn REACHABLE
 
         # Binding Table has 87 entries, 75 dynamic (limit 100000)
-        binding_table_capture = re.compile(
-            r"^Binding Table has (?P<entries>\d+) entries, (?P<dynamic>\d+) dynamic \(limit (?P<limit>\d+)\)$"
-            )
+        # portDB has 2 entries for interface Gi0/1/1, 2 dynamic
+        p1 = re.compile(
+            r"^(.+) +has +(?P<entries>\d+) +entries"
+            r"( +for +interface +\S+)?"
+            r", +(?P<dynamic>\d+) +dynamic( +\(limit +(?P<limit>\d+)\))?$"
+        )
 
         # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
-        tracking_database_capture = re.compile(
-            r"^(?P<code>\S+)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)\s+(?P<time_left>\d+.*)$"
-            )
-
         # L   10.160.48.1                             0000.0cff.94fe  Vl1024         1024  0100 42473mn REACHABLE
-        local_database_capture = re.compile(
-            r"^(?P<code>L)\s+(?P<network_layer_address>\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)\s+(?P<link_layer_address>\S+\.\S+\.\S+)\s+(?P<interface>\S+)\s+(?P<vlan>\d+)\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)\s+(?P<state>\S+)$"
-            )
+        # ND  FE80::E6C7:22FF:FEFF:8239               e4c7.22ff.8239  Gi1/0/24       1023  0005   34s  REACHABLE  268 s
+        p2 = re.compile(
+            r"^(?P<code>\S+)\s+(?P<network_layer_address>"
+            r"\d+\.\d+\.\d+\.\d+|\S+\:\:\S+\:\S+\:\S+\:\S+)"
+            r"\s+(?P<link_layer_address>\S+\.\S+\.\S+)"
+            r"\s+(?P<interface>\S+)\s+(?P<vlan>\d+)"
+            r"\s+(?P<prlvl>\d+)\s+(?P<age>\d+\S+)"
+            r"\s+(?P<state>\S+)(\s+(?P<time_left>\d+.*))?$"
+        )
 
         device_info_obj = {}
 
-        capture_list = [
-            binding_table_capture,
-            tracking_database_capture,
-            local_database_capture,
-        ]
+        for line in out.splitlines():
+            line = line.strip()
 
-        for capture in capture_list:
-            for line in out.splitlines():
-                line = line.strip()
+            # Binding Table has 87 entries, 75 dynamic (limit 100000)
+            # portDB has 2 entries for interface Gi0/1/1, 2 dynamic
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
 
-                match = capture.match(line)
-                if match:
-                    group = match.groupdict()
+                # convert str to int
+                binding_table_dict = {
+                    k: int(v) for k, v in group.items() if v is not None
+                }
 
-                    if capture == binding_table_capture:
-                        # convert str to int
-                        for item in group:
-                            group[item] = int(group[item])
+                device_info_obj["binding_table"] = binding_table_dict
+                continue
 
-                        new_group = {"binding_table": group}
-                        device_info_obj.update(new_group)
+            # DH4 10.160.43.197                           94d4.69ff.e606  Te8/0/37       1023  0025  116s  REACHABLE  191 s try 0(557967 s)
+            m = p2.match(line)
+            if m:
+                group = m.groupdict()
 
-                    if (
-                        capture == tracking_database_capture
-                        or capture == local_database_capture
-                    ):
-                        # convert str to int
-                        group["vlan"] = int(group["vlan"])
+                network_layer_address = group["network_layer_address"]
+                # pull a key from dict to use as new_key
+                network_layer_addresses_dict = device_info_obj.setdefault(
+                    "network_layer_address", {})
 
-                        # pull a key from dict to use as new_key
-                        new_key = "network_layer_address"
-                        new_group = {group[new_key]: {}}
+                network_layer_address_dict = network_layer_addresses_dict.\
+                    setdefault(network_layer_address, {})
 
-                        # update then pop new_key from the dict
-                        new_group[group[new_key]].update(group)
-                        new_group[group[new_key]].pop(new_key)
+                network_layer_address_dict.update({
+                    "age": group["age"],
+                    "code": group["code"],
+                    "interface": group["interface"],
+                    "link_layer_address": group["link_layer_address"],
+                    "prlvl": group["prlvl"],
+                    "state": group["state"],
+                    "vlan": int(group["vlan"]),
+                })
 
-                        if not device_info_obj.get(new_key):
-                            device_info_obj[new_key] = {}
+                if group["time_left"]:
+                    network_layer_address_dict["time_left"] = \
+                        group["time_left"]
 
-                        device_info_obj[new_key].update(new_group)
+                continue
 
         return device_info_obj
 
@@ -1459,3 +1472,207 @@ class ShowDeviceTrackingCountersInterface(ShowDeviceTrackingCountersInterfaceSch
                 continue
 
         return device_tracking_counters_interface_dict
+
+
+# ====================================================
+# Schema for 'show device-tracking events'
+# ====================================================
+class ShowDeviceTrackingEventsSchema(MetaParser):
+    """ Schema for show device-tracking events """
+
+    schema = {
+        'ssid': {
+              int:{
+                "events": {
+                    int: {
+                    "event_type": str,
+                    Optional('event_name'): str,
+                    Optional('prev_state'): str,
+                    Optional('state'): str,
+                    Optional('fsm_name'): str,
+                    Optional('ipv4'): str,
+                    Optional('static_mac'): str,
+                    Optional('ipv6'): str,
+                    Optional('dynamic_mac'): str,
+                    "ssid": int,
+                    "timestamp": str
+                    }
+                }
+              }
+            }
+        }
+
+
+# =============================================
+# Parser for 'show device-tracking events'
+# =============================================
+class ShowDeviceTrackingEvents(ShowDeviceTrackingEventsSchema):
+    """ show device-tracking events """
+
+    cli_command = 'show device-tracking events'
+
+    def cli(self, output=None):
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+            output = output
+
+        #fsm_run event
+        #[Fri Jun 18 22:14:40.000] SSID 0 FSM Feature Table running for event ACTIVE_REGISTER in state CREATING
+        p1 = re.compile(r'^\[(?P<timestamp>.+)\]\s+SSID\s+(?P<ssid>\d+)\s+FSM\s+(?P<fsm_name>.*)\s+running\s+for\s+event\s+(?P<event_name>(?<=event\s{1})\S+)\s+in\s+state\s+(?P<event_state>.+)$')
+
+        #fsm_transition event
+        #[Fri Jun 18 22:14:40.000] SSID 0 Transition from CREATING to READY upon event ACTIVE_REGISTER
+        p2 = re.compile(r'^\[(?P<timestamp>.+)\]\s+SSID\s+(?P<ssid>\d+)\s+Transition\s+from\s+(?P<prev_state>.+)\s+to\s+(?P<state>.+)\s+upon\s+event\s+(?P<event_name>.+)$')
+
+        #bt_entry event
+        #[Wed Jun 30 17:03:14.000] SSID 1 Created Entry origin Static MAC 000a.000a.000a IPV4 1.1.1.1
+        #[Wed Jun 30 17:03:14.000] SSID 1 Entry State changed origin Static MAC 000a.000a.000a IPV4 1.1.1.1
+        p3 = re.compile(r'^\[(?P<timestamp>.+)\]\s+SSID\s+(?P<ssid>\d+)\s(?P<entry_state>.+origin)\s+(?P<mac_addr_type>.+)\sMAC\s+(?P<mac_addr>([\w\d]{4}\.*){3})\s+(?P<ip_addr_type>\S+)\s+(?P<ip_addr>[\w\d\.:]+)$')
+
+        parser_dict = {}
+        ssid_event_no_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            #[Fri Jun 18 22:14:40.000] SSID 0 FSM Feature Table running for event ACTIVE_REGISTER in state CREATING
+            m1 = p1.match(line)
+            if m1:
+                ssids = parser_dict.setdefault('ssid', {})
+                ssid = int(m1.groupdict()['ssid'])
+                timestamp = m1.groupdict()['timestamp']
+
+                ssid_obj = ssids.setdefault(ssid, {})
+                events = ssid_obj.setdefault("events", {})
+                ssid_event_no_dict.setdefault(ssid, 1)
+                event_no = ssid_event_no_dict[ssid]
+
+                event = {
+                        'ssid': ssid,
+                        'event_type': 'fsm_run',
+                        'event_name': m1.groupdict()['event_name'],
+                        'fsm_name': m1.groupdict()['fsm_name'],
+                        'timestamp': timestamp
+                    }
+
+                events[event_no] = event
+                ssid_event_no_dict[ssid]+=1
+                continue
+
+            #[Fri Jun 18 22:14:40.000] SSID 0 Transition from CREATING to READY upon event ACTIVE_REGISTER
+            m2 = p2.match(line)
+            if m2:
+                ssids = parser_dict.setdefault('ssid', {})
+                ssid = int(m2.groupdict()['ssid'])
+                timestamp = m2.groupdict()['timestamp']
+
+                ssid_obj = ssids.setdefault(ssid, {})
+                events = ssid_obj.setdefault("events", {})
+
+                ssid_event_no_dict.setdefault(ssid, 1)
+                event_no = ssid_event_no_dict[ssid]
+
+                event = {
+                    'ssid': ssid,
+                    'event_type': 'fsm_transition',
+                    'event_name': m2.groupdict()['event_name'],
+                    'state': m2.groupdict()['state'],
+                    'prev_state': m2.groupdict()['prev_state'],
+                    'timestamp': timestamp
+                }
+
+                events[event_no] = event
+                ssid_event_no_dict[ssid]+=1
+                continue
+
+            #[Wed Jun 30 17:03:14.000] SSID 1 Created Entry origin Static MAC 000a.000a.000a IPV4 1.1.1.1
+            #[Wed Jun 30 17:03:14.000] SSID 1 Entry State changed origin Static MAC 000a.000a.000a IPV4 1.1.1.1
+            m3 = p3.match(line)
+            if m3:
+                ssids = parser_dict.setdefault('ssid', {})
+                ssid = int(m3.groupdict()['ssid'])
+                timestamp = m3.groupdict()['timestamp']
+
+                ssid_obj = ssids.setdefault(ssid, {})
+                events = ssid_obj.setdefault("events", {})
+
+                ssid_event_no_dict.setdefault(ssid, 1)
+                event_no = ssid_event_no_dict[ssid]
+
+                mac_addr_type = (m3.groupdict()['mac_addr_type']).lower()
+                mac_addr_type+="_mac"
+                ip_addr_type = (m3.groupdict()['ip_addr_type']).lower()
+
+                event = {
+                    'ssid': ssid,
+                    'event_type': 'bt_entry',
+                    'state': m3.groupdict()['entry_state'],
+                    mac_addr_type: m3.groupdict()['mac_addr'],
+                    ip_addr_type: m3.groupdict()['ip_addr'],
+                    'timestamp': timestamp
+                    }
+
+                events[event_no] = event
+                ssid_event_no_dict[ssid]+=1
+                continue
+
+        return parser_dict
+
+
+# ====================================================
+# Schema for 'show device-tracking features
+# ====================================================
+class ShowDeviceTrackingFeaturesSchema(MetaParser):
+    """ Schema for show device-tracking features """
+
+    schema = {
+        'features': {
+            str: {
+                'feature': str,
+                'priority': int,
+                'state': str
+            }
+        }
+    }
+
+
+# =============================================
+# Parser for 'show device-tracking features'
+# =============================================
+class ShowDeviceTrackingFeatures(ShowDeviceTrackingFeaturesSchema):
+    """ show device-tracking features """
+
+    cli_command = 'show device-tracking features'
+
+    def cli(self, output=None):
+
+        if output is None:
+            output = self.device.execute(self.cli_command)
+        else:
+            output = output
+
+        # Feature name   priority state
+        # RA guard          192   READY
+        # Device-tracking   128   READY
+        # Source guard       32   READY
+        p1 = re.compile(r'(?P<feature>.+[^ ])\s+(?P<priority>\d+)\s+(?P<state>\w+)')
+
+        parser_dict = {}
+
+        for line in output.splitlines():
+            line = line.strip()
+
+            # Feature name   priority state
+            # RA guard          192   READY
+            # Device-tracking   128   READY
+            # Source guard       32   READY
+            m = p1.match(line)
+            if m:
+                features = parser_dict.setdefault('features', {})
+                feature = features.setdefault(m.groupdict()['feature'], {})
+                feature.update({'feature':  m.groupdict()['feature']})
+                feature.update({'priority': int(m.groupdict()['priority'])})
+                feature.update({'state':  m.groupdict()['state']})
+
+        return parser_dict

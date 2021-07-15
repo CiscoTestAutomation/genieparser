@@ -1,0 +1,11 @@
+portDB has 2 entries for interface Gi0/1/1, 2 dynamic
+Codes: L - Local, S - Static, ND - Neighbor Discovery, ARP - Address Resolution Protocol, DH4 - IPv4 DHCP, DH6 - IPv6 DHCP, PKT - Other Packet, API - API created
+Preflevel flags (prlvl):
+0001:MAC and LLA match     0002:Orig trunk            0004:Orig access
+0008:Orig trusted trunk    0010:Orig trusted access   0020:DHCP assigned
+0040:Cga authenticated     0080:Cert authenticated    0100:Statically assigned
+
+
+    Network Layer Address                    Link Layer Address     Interface  vlan       prlvl      age        state      Time left
+ARP 120.1.1.67                               0000.0000.0021         Gi0/1/1    19         0005       16s        REACHABLE  34 s
+DH4 120.1.1.10                               0000.0000.0011         Gi0/1/1    19         0024       15s        REACHABLE  36 s(105 s)
