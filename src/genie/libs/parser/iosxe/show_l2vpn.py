@@ -1675,7 +1675,6 @@ class ShowL2vpnEvpnEthernetSegment(ShowL2vpnEvpnEthernetSegmentSchema):
 # Schema for 'show l2vpn evpn mac'
 # =================================
 class ShowL2vpnEvpnMacSchema(MetaParser):
-
     """ Schema for show l2vpn evpn mac
                    show l2vpn evpn mac address <mac_addr>
                    show l2vpn evpn mac bridge-domain <bd_id>
@@ -1714,7 +1713,6 @@ class ShowL2vpnEvpnMacSchema(MetaParser):
 # Parser for 'show l2vpn evpn mac'
 # =================================
 class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
-
     """ Parser for show l2vpn evpn mac
                    show l2vpn evpn mac address <mac_addr>
                    show l2vpn evpn mac bridge-domain <bd_id>
@@ -1731,6 +1729,17 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
                    show l2vpn evpn mac local
                    show l2vpn evpn mac remote
     """
+
+    cli_command = ['show l2vpn evpn mac',
+                   'show l2vpn evpn mac address {mac_addr}',
+                   'show l2vpn evpn mac {mac_type}',
+                   'show l2vpn evpn mac bridge-domain {bd_id}',
+                   'show l2vpn evpn mac bridge-domain {bd_id} address {mac_addr}',
+                   'show l2vpn evpn mac bridge-domain {bd_id} {mac_type}',
+                   'show l2vpn evpn mac evi {evi_id}',
+                   'show l2vpn evpn mac evi {evi_id} address {mac_addr}',
+                   'show l2vpn evpn mac evi {evi_id} {mac_type}',
+    ]
 
     def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, evi_id=None):
         if not output:
@@ -1832,7 +1841,6 @@ class ShowL2vpnEvpnMac(ShowL2vpnEvpnMacSchema):
 # Schema for 'show l2vpn evpn mac detail'
 # ========================================
 class ShowL2vpnEvpnMacDetailSchema(MetaParser):
-
     """ Schema for show l2vpn evpn mac address <mac_addr> detail
                    show l2vpn evpn mac bridge-domain <bd_id> address <mac_addr> detail
                    show l2vpn evpn mac bridge-domain <bd_id> detail
@@ -1882,7 +1890,6 @@ class ShowL2vpnEvpnMacDetailSchema(MetaParser):
 # Parser for 'show l2vpn evpn mac detail'
 # ========================================
 class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
-
     """ Parser for show l2vpn evpn mac address <mac_addr> detail
                    show l2vpn evpn mac bridge-domain <bd_id> address <mac_addr> detail
                    show l2vpn evpn mac bridge-domain <bd_id> detail
@@ -1899,6 +1906,17 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
                    show l2vpn evpn mac local detail
                    show l2vpn evpn mac remote detail
     """
+
+    cli_command = ['show l2vpn evpn mac detail',
+                   'show l2vpn evpn mac address {mac_addr} detail',
+                   'show l2vpn evpn mac {mac_type} detail',
+                   'show l2vpn evpn mac bridge-domain {bd_id} detail',
+                   'show l2vpn evpn mac bridge-domain {bd_id} address {mac_addr} detail',
+                   'show l2vpn evpn mac bridge-domain {bd_id} {mac_type} detail',
+                   'show l2vpn evpn mac evi {evi_id} detail',
+                   'show l2vpn evpn mac evi {evi_id} address {mac_addr} detail',
+                   'show l2vpn evpn mac evi {evi_id} {mac_type} detail',
+    ]
 
     def cli(self, output=None, mac_addr=None, mac_type=None, bd_id=None, evi_id=None):
         if not output:
@@ -2096,7 +2114,6 @@ class ShowL2vpnEvpnMacDetail(ShowL2vpnEvpnMacDetailSchema):
 # Schema for 'show l2vpn evpn mac summary'
 # =========================================
 class ShowL2vpnEvpnMacSummarySchema(MetaParser):
-
     """ Schema for show l2vpn evpn mac bridge-domain <bd_id> duplicate summary
                    show l2vpn evpn mac bridge-domain <bd_id> local summary
                    show l2vpn evpn mac bridge-domain <bd_id> remote summary
@@ -2139,7 +2156,6 @@ class ShowL2vpnEvpnMacSummarySchema(MetaParser):
 # Parser for 'show l2vpn evpn mac summary'
 # =========================================
 class ShowL2vpnEvpnMacSummary(ShowL2vpnEvpnMacSummarySchema):
-
     """ Parser for show l2vpn evpn mac bridge-domain <bd_id> duplicate summary
                    show l2vpn evpn mac bridge-domain <bd_id> local summary
                    show l2vpn evpn mac bridge-domain <bd_id> remote summary
@@ -2154,12 +2170,12 @@ class ShowL2vpnEvpnMacSummary(ShowL2vpnEvpnMacSummarySchema):
                    show l2vpn evpn mac summary
     """
 
-    cli_command = ['show l2vpn evpn mac summary', # 0
-                   'show l2vpn evpn mac {mac_type} summary', # 1
-                   'show l2vpn evpn mac bridge-domain {bd_id} summary', # 2
-                   'show l2vpn evpn mac bridge-domain {bd_id} {mac_type} summary', # 3
-                   'show l2vpn evpn mac evi {evi_id} summary', # 4
-                   'show l2vpn evpn mac evi {evi_id} {mac_type} summary', # 5
+    cli_command = ['show l2vpn evpn mac summary',
+                   'show l2vpn evpn mac {mac_type} summary',
+                   'show l2vpn evpn mac bridge-domain {bd_id} summary',
+                   'show l2vpn evpn mac bridge-domain {bd_id} {mac_type} summary',
+                   'show l2vpn evpn mac evi {evi_id} summary',
+                   'show l2vpn evpn mac evi {evi_id} {mac_type} summary',
     ]
 
     def cli(self, output=None, mac_type=None, bd_id=None, evi_id=None):
