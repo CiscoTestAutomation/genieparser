@@ -141,28 +141,55 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
 
         current_gnmib_section = self.GnmibSection.SETTINGS
 
+        # Server: Enabled
+        # Server: Disabled
         p_server = re.compile(r"Server: (?P<insecure_server>Disabled|Enabled)")
+
+        # Server port: 50052
         p_server_port = re.compile(r"Server port: (?P<insecure_port>\d+)")
+
+        # Secure server: Enabled
+        # Secure server: Disabled
         p_secure_server = re.compile(r"Secure server: (?P<secure_server>Disabled|Enabled)")
+
+        # Secure server port: 9399
         p_secure_server_port = re.compile(r"Secure server port: (?P<secure_port>\d+)")
+
+        # Secure client authentication: Disabled
+        # Secure client authentication: Enabled
         p_secure_client_auth = re.compile(r"Secure client authentication: (?P<secure_client_auth>Disabled|Enabled)")
+
+        # Secure trustpoint: Trustpoint_name_here
         p_secure_tp = re.compile(r"Secure trustpoint:\s?(?P<secure_trustpoint>.*)")
+
+        # Secure client trustpoint: Trustpoint_name_here
         p_secure_client_tp = re.compile(r"Secure client trustpoint:\s?(?P<secure_client_trustpoint>.*)")
+
+        # Secure password authentication: Disabled
+        # Secure password authentication: Enabled
         p_secure_pwd_auth = re.compile(r"Secure password authentication: (?P<secure_pass_auth>Disabled|Enabled)")
 
+        # State: Provisioned
+        # State: Default
         p_bs_state = re.compile(r"State: (?P<bootstrapping_state>Provisioned|Default)")
 
-        p_section_gnmi = re.compile(r"GNMI")
         p_grpc_section = re.compile(r"gRPC Server")
         p_conf_section = re.compile(r"Configuration service")
         p_telemetry_section = re.compile(r"Telemetry service")
-        p_gnoi_section = re.compile(r"GNOI")
         p_cert_section = re.compile(r"Cert Management service")
         p_os_section = re.compile(r"OS Image service")
         p_reset_section = re.compile(r"Factory Reset service")
 
+        # Admin state: Enabled
+        # Admin state: Disabled
         p_admin_state = re.compile(r"Admin state: (?P<admin_state>Disabled|Enabled)")
+
+        # Oper status: Up
+        # Oper status: Down
         p_oper_status = re.compile(r"Oper status: (?P<oper_status>Down|Up)")
+
+        # Supported: Supported
+        # Supported: Not supported on this platform
         p_supported = re.compile(r"Supported: (?P<supported>Not supported on this platform|Supported)")
 
         ret_dict = defaultdict(dict)
