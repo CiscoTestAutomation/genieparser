@@ -51,6 +51,8 @@ class ShowGnxiState(ShowGnxiStateSchema):
 
         ret_dict = {}
 
+        # Disabled         Down
+        # Enabled          Up
         p_full = re.compile(r"(?P<admin_state>Disabled|Enabled)\s*(?P<oper_status>Down|Up)")
 
         matches = p_full.search(out)
