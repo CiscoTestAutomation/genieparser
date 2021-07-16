@@ -68,17 +68,20 @@ class ShowIpv6DestinationGuardPolicy(ShowIpv6DestinationGuardPolicySchema):
         for line in out.splitlines():
             line = line.strip()
 
+            #   enforcement always
+            match = enforcement_capture.match(line)
             if enforcement_capture.match(line):
-                match = enforcement_capture.match(line)
                 groups = match.groupdict()
 
                 enforcement = groups['enforcement']
 
                 destination_guard_policy_dict['enforcement'] = enforcement
                 continue
-            elif entry_capture.match(line):
+
+            # vlan 5               VLAN  poll                 Destination Guard vlan all 
+            match = entry_capture.match(line)
+            if match:
                 entry_counter += 1
-                match = entry_capture.match(line)
                 groups = match.groupdict()
 
                 target = groups['target']
@@ -88,8 +91,8 @@ class ShowIpv6DestinationGuardPolicy(ShowIpv6DestinationGuardPolicySchema):
                 target_type = groups['target_type']
                 rang = groups['range']
 
-                if not destination_guard_policy_dict.get('entries', {}):
-                    destination_guard_policy_dict['entries'] = {}
+                destination_guard_policy_dict.setdefault('entries', {})
+
                 destination_guard_policy_dict['entries'][entry_counter] = {}
                 destination_guard_policy_dict['entries'][entry_counter]['target'] = target
                 destination_guard_policy_dict['entries'][entry_counter]['type'] = type
@@ -97,6 +100,6 @@ class ShowIpv6DestinationGuardPolicy(ShowIpv6DestinationGuardPolicySchema):
                 destination_guard_policy_dict['entries'][entry_counter]['feature'] = feature
                 destination_guard_policy_dict['entries'][entry_counter]['target_type'] = target_type
                 destination_guard_policy_dict['entries'][entry_counter]['range'] = rang
-
                 continue
+
         return destination_guard_policy_dict
