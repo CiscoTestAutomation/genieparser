@@ -167,8 +167,8 @@ class ShowAuthenticationSessionsInterfaceDetailsSchema(MetaParser):
                         Optional('timeout_action'): str,
                         Optional('restart_timeout'): str,
                         Optional('unauth_timeout'): {
-                            Optional('timeout'): str,
-                            Optional('remaining'): str,
+                            Optional('timeout'): int,
+                            Optional('remaining'): int,
                         },
                         Optional('session_uptime'): str,
                         'status': str,
@@ -305,7 +305,7 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
         p13 = re.compile(r'(Restart\s*timeout)\s*:\s*(?P<restart_timeout>.*)')
 
         # Unauth timeout:  10s, Remaining: 5s
-        p14 = re.compile(r'(Unauth\s*timeout)\s*:\s*(?P<timeout>\w+)(\s*,\s*Remaining\s*:\s*(?P<remaining>\w*))?')
+        p14 = re.compile(r'(Unauth\s*timeout)\s*:\s*(?P<timeout>\w+)s(\s*,\s*Remaining\s*:\s*(?P<remaining>\w+)s)?')
 
         # initial return dictionary
         ret_dict = {}
@@ -389,7 +389,8 @@ class ShowAuthenticationSessionsInterfaceDetails(ShowAuthenticationSessionsInter
             m14 = p14.match(line)
             if m14:
                 unauth_dict = mac_dict.setdefault('unauth_timeout', {})
-                unauth_dict.update(m14.groupdict())
+                unauth_dict.update({'timeout': int(m14.group('timeout'))})
+                unauth_dict.update({'remaining': int(m14.group('remaining'))})
                 continue
 
             # match these lines:
