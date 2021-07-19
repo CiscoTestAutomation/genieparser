@@ -1005,12 +1005,28 @@ class ShowIpMrouteSummarySchema(MetaParser):
                              'count_multicast_starg': str, 
                              'count_multicast_sg': str,
                              'count_multicast_starg_prefix': str,
-                             'count_multicast_total': str 
+                             'count_multicast_total': str ,
+                             'groups': 
+                                {Any(): {
+                                   'source_count': str,
+                                   'source': 
+                                     {Any(): {
+                                         'packets': str,
+                                         'bytes': str,
+                                         'aps': str,
+                                         'pps': str,
+                                         'bitrate': str,
+                                         'oifs': str
+                                  },
+                               },
+                              } 
                             },
                         },
                     }
                 },
             }
+         }
+
 
 class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
     """parser for:
@@ -1048,6 +1064,13 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
         #Total number of (*,G-prefix) routes: 0
         p5 = re.compile(r'^\s*Total +number +of +\(\*,G-prefix\) +routes:'
                          r' +(?P<count>[0-9]+)$')
+        #Group: 225.0.0.2/32, Source count: 3
+        p6 = re.compile(r'^\s*Group: +(?P<group_ip>\S+), +Source count: +(?P<src_count>[0-9]+)$')
+        #100.100.100.5   1743         88893           51    0         27.200  bps  1
+        #(*,G)           0            0               0     0         0.000   bps  2
+        p7 = re.compile(r'^\s*(?P<source>\S+) +(?P<packets>[0-9]+) +(?P<bytes>[0-9]+) +(?P<aps>[0-9]+) +(?P<pps>[0-9]+) +'
+                        r'(?P<bitrate>[0-9.]+) +bps +(?P<oifs>[0-9]+)$')
+
         for line in out.splitlines():
             line = line.strip()
             m = p1.match(line)
@@ -1075,7 +1098,19 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
                 continue
             m = p5.match(line)
             if m:
-                count_multicast_starg_prefix= m.groupdict()['count']
+                count_multicast_starg_prefix = m.groupdict()['count']
                 address_family_dict.setdefault('count_multicast_starg_prefix', count_multicast_starg_prefix)
+                continue
+            m = p6.match(line)
+            if m:
+                group_ip = m.groupdict()['group_ip']
+                source_count = m.groupdict()['src_count']
+                group_dict = address_family_dict.setdefault('groups',{}).setdefault(group_ip,{})
+                group_dict.update({'source_count': source_count})    
+                continue
+            m = p7.match(line)
+            if m:
+                src_dict = group_dict.setdefault('source',{}).setdefault(m.groupdict()['source'],{})
+                src_dict.update({'packets': m.groupdict()['packets'],'bytes': m.groupdict()['bytes'],'aps': m.groupdict()['aps'],'pps': m.groupdict()['pps'],'bitrate': m.groupdict()['bitrate'],'oifs': m.groupdict()['oifs']})    
                 continue
         return mroute_dict
