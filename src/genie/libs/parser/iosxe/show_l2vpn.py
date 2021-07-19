@@ -1328,8 +1328,11 @@ class ShowL2vpnEvpnEthernetSegmentDetailSchema(MetaParser):
             'encap_type': str,
             'ordinal': int,
             'core_isolation': str,
-            'rd': str,
-            'export_rt': list,
+            Optional('rd'): {
+                Any (): {
+                    'export_rt': list,
+                },
+            },
             'forwarder_list': list,
         }
     }
@@ -1466,14 +1469,16 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
             m = p10.match(line)
             if m:
                 group = m.groupdict()
-                eth_seg.update({'rd': group['rd']})
+                rd = group['rd']
+                rt_dict = eth_seg.setdefault('rd', {}).setdefault(rd, {})
                 continue
+
             #    Export-RTs:           100:2
             m = p11.match(line)
             if m:
                 group = m.groupdict()
                 export_rt = group['export_rt']
-                export_rt_list = eth_seg.setdefault('export_rt', [])
+                export_rt_list = rt_dict.setdefault('export_rt', [])
                 for item in export_rt.split():
                     export_rt_list.append(item)
                 continue
@@ -1541,10 +1546,12 @@ class ShowL2vpnEvpnEthernetSegment(ShowL2vpnEvpnEthernetSegmentSchema):
                 group = m.groupdict()
                 esi = parser_dict.setdefault('esi', {})
                 eth_seg = esi.setdefault(group['esi'], {}) 
-                eth_seg.update({'port':Common.convert_intf_name(group['port'])})
-                eth_seg.update({'redundancy_mode':group['redundancy_mode']})
-                eth_seg.update({'df_wait_time':int(group['df_time'])})
-                eth_seg.update({'split_horizon_label':int(group['sh_label'])})
+                eth_seg.update({
+                    'port': Common.convert_intf_name(group['port']),
+                    'redundancy_mode': group['redundancy_mode'],
+                    'df_wait_time': int(group['df_time']),
+                    'split_horizon_label': int(group['sh_label'])
+                })
                 continue
 
         return parser_dict

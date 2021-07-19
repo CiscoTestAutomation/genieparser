@@ -11,8 +11,11 @@ expected_output = {
         "encap_type": "mpls",
         "ordinal": 1,
         "core_isolation": "No",
-        "rd": "4.4.4.3:1",
-        "export_rt": ["100:2"],
+        "rd": { 
+            "4.4.4.3:1" : { 
+                "export_rt": ["100:2"],
+                        }
+               },
         "forwarder_list": [
             "3.3.3.3",
             "4.4.4.3"
@@ -27,8 +30,11 @@ expected_output = {
         "encap_type": "mpls",
         "ordinal": 0,
         "core_isolation": "No",
-        "rd": "10.10.10.10:1",
-        "export_rt": ["1:1", "1:2", "1:3", "1:65533", "1:65534"],
+        "rd": { 
+            "10.10.10.10:1" : {
+                "export_rt": ["1:1", "1:2", "1:3", "1:65533", "1:65534"],
+                              }
+              },
         "forwarder_list": [
             "10.10.10.10",
             "26.26.26.26"
