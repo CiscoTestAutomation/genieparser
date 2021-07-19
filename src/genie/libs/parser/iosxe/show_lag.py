@@ -777,6 +777,9 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
         # 10     Po10(SU)        PAgP        Gi1/0/15(P)     Gi1/0/16(P)     
         #                                    Gi1/0/17(P)     
         p5 = re.compile(r'^\s*(?P<ports>[\w\-\/\(\)]+)$')
+        #                                  Te2/0/3(s)      Te3/0/1(s)
+        #                                  Te3/0/2(D)      Te3/0/3(P)
+        p6 = re.compile(r'^\s*(?P<port1>[\w\-\/\(\)]+)\s+(?P<port2>[\w\-\/\(\)]+)$')
 
         for line in out.splitlines():
             if line:
@@ -855,11 +858,11 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                 m1 = ""
                 continue
 
+
             m = p5.match(line)
             if m and intf_dict:
                 group = m.groupdict()
                 ports = group.pop('ports').split()
-
                 for port in ports:
                     port_value = port.split('(')
                     interface = Common.convert_intf_name(port_value[0])
@@ -880,6 +883,31 @@ class ShowEtherchannelSummary(ShowEtherchannelSummarySchema):
                     intf_dict['port_channel']['port_channel_member_intfs'] = sorted(eth_list)
                 continue
 
+
+            m = p6.match(line)
+            if m and intf_dict:
+                group = m.groupdict()
+                ports = [group.pop('port1'), group.pop('port2')]
+
+                for port in ports:
+                    port_value = port.split('(')
+                    interface = Common.convert_intf_name(port_value[0])
+                    state = port_value[1].replace(')', '')
+                    eth_list.append(interface)
+                    port_item = intf_dict['members'].setdefault(interface, {})
+
+                    port_item.update({'interface': interface})
+                    port_item.update({'flags': state})
+                    port_item.update({'bundled': True if state in ['bndl', 'P'] else False})
+
+                    # port_channel
+                    port_item.setdefault('port_channel', {}).update({'port_channel_member': True,
+                                                                     'port_channel_int': name})
+
+                # port_channel
+                if eth_list:
+                    intf_dict['port_channel']['port_channel_member_intfs'] = sorted(eth_list)
+                continue
         return result_dict
 
 
