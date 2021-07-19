@@ -1766,6 +1766,7 @@ class ShowBgpDetailSuperParser(ShowBgpAllDetailSchema):
                 continue
 
             # EVPN ESI: 00000000000000000000, Gateway Address: 0.0.0.0, local vtep: 10.21.33.33, Label 30000
+            # EVPN ESI: 00000000000000000000, Label1 2000101
             m = p10.match(line)
             if m:
                 group = m.groupdict()
