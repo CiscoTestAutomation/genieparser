@@ -1260,7 +1260,8 @@ class ShowDeviceTrackingCountersVlan(ShowDeviceTrackingCountersVlanSchema):
                                 packet_dict[packet] = int(num)
 
         return device_tracking_counters_vlanid_dict
-import pprint
+
+
 # ==================================
 # Schema for:
 #  * 'show device-tracking database mac'
@@ -1294,8 +1295,7 @@ class ShowDeviceTrackingDatabaseMac(ShowDeviceTrackingDatabaseMacSchema):
 
     def cli(self, output=None):
         if output is None:
-            cmd = self.cli_command
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command)
 
         else:
             out = output
@@ -1334,34 +1334,32 @@ class ShowDeviceTrackingDatabaseMac(ShowDeviceTrackingDatabaseMacSchema):
                 state = groups['state']
                 policy = groups['policy']
 
-                device_tracking_database_mac_dict.setdefault('device', {})
+                index_dict = device_tracking_database_mac_dict.setdefault('device', {}).setdefault(device_index, {})
 
-                device_tracking_database_mac_dict['device'][device_index] = {}
-                device_tracking_database_mac_dict['device'][device_index]['link_layer_address'] = lla
-                device_tracking_database_mac_dict['device'][device_index]['interface'] = interface
-                device_tracking_database_mac_dict['device'][device_index]['vlan_id'] = vlan_id
-                device_tracking_database_mac_dict['device'][device_index]['pref_level_code'] = pre_level
-                device_tracking_database_mac_dict['device'][device_index]['state'] = state
-                device_tracking_database_mac_dict['device'][device_index]['policy'] = policy
+                index_dict['link_layer_address'] = lla
+                index_dict['interface'] = interface
+                index_dict['vlan_id'] = vlan_id
+                index_dict['pref_level_code'] = pre_level
+                index_dict['state'] = state
+                index_dict['policy'] = policy
 
-                if groups['time_left'] is not None:
+                if groups['time_left']:
                     time_left = groups['time_left']
-                    device_tracking_database_mac_dict['device'][device_index]['time_left'] = time_left
-                if groups['input_index'] is not None:
+                    index_dict['time_left'] = time_left
+                if groups['input_index']:
                     input_index = int(groups['input_index'])
-                    device_tracking_database_mac_dict['device'][device_index]['input_index'] = input_index
+                    index_dict['input_index'] = input_index
 
                 continue
-        #print("Output:")
         return device_tracking_database_mac_dict
 
 
 # ==================================
 # Schema for:
-#  * 'show device-tracking database mac <mac>'
+#  * 'show device-tracking database mac {mac}'
 # ==================================
 class ShowDeviceTrackingDatabaseMacMacSchema(MetaParser):
-    """Schema for show device-tracking database mac <mac>."""
+    """Schema for show device-tracking database mac {mac}."""
 
     schema = {
         "macDB_count": int,
@@ -1462,21 +1460,20 @@ class ShowDeviceTrackingDatabaseMacMac(ShowDeviceTrackingDatabaseMacMacSchema):
                 age = groups['age']
                 state = groups['state']
 
-                device_tracking_database_mac_dict.setdefault('entries', {})
+                index_dict = device_tracking_database_mac_dict.setdefault('entries', {}).setdefault(entry_num, {})
 
-                device_tracking_database_mac_dict['entries'][entry_num] = {}
-                device_tracking_database_mac_dict['entries'][entry_num]['dev_code'] = code
-                device_tracking_database_mac_dict['entries'][entry_num]['network_layer_address'] = ip
-                device_tracking_database_mac_dict['entries'][entry_num]['link_layer_address'] = lla
-                device_tracking_database_mac_dict['entries'][entry_num]['interface'] = interface
-                device_tracking_database_mac_dict['entries'][entry_num]['vlan_id'] = vlan
-                device_tracking_database_mac_dict['entries'][entry_num]['pref_level_code'] = prlvl
-                device_tracking_database_mac_dict['entries'][entry_num]['age'] = age
-                device_tracking_database_mac_dict['entries'][entry_num]['state'] = state
+                index_dict['dev_code'] = code
+                index_dict['network_layer_address'] = ip
+                index_dict['link_layer_address'] = lla
+                index_dict['interface'] = interface
+                index_dict['vlan_id'] = vlan
+                index_dict['pref_level_code'] = prlvl
+                index_dict['age'] = age
+                index_dict['state'] = state
 
-                if groups['time_left'] is not None:
+                if groups['time_left']:
                     time_left = groups['time_left']
-                    device_tracking_database_mac_dict['entries'][entry_num]['time_left'] = time_left
+                    index_dict['time_left'] = time_left
                 continue
 
         return device_tracking_database_mac_dict
@@ -1484,10 +1481,10 @@ class ShowDeviceTrackingDatabaseMacMac(ShowDeviceTrackingDatabaseMacMacSchema):
 
 # ==================================
 # Schema for:
-#  * 'show device-tracking database mac <mac> details'
+#  * 'show device-tracking database mac {mac} details'
 # ==================================
 class ShowDeviceTrackingDatabaseMacMacDetailsSchema(MetaParser):
-    """Schema for show device-tracking database mac <mac> details."""
+    """Schema for show device-tracking database mac {mac} details."""
 
     schema = {
         "entry_count": int,
@@ -1533,10 +1530,10 @@ class ShowDeviceTrackingDatabaseMacMacDetailsSchema(MetaParser):
 
 # ==================================
 # Parser for:
-#  * 'show device-tracking database mac <mac> details'
+#  * 'show device-tracking database mac {mac} details'
 # ==================================
 class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDetailsSchema):
-    """Parser for show device-tracking database mac <mac> details."""
+    """Parser for show device-tracking database mac {mac} details."""
 
     cli_command = 'show device-tracking database mac {mac} details'
 
@@ -1684,28 +1681,27 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
                 in_crimson = groups['in_crimson']
                 client_id = groups['client_id']
 
-                device_tracking_database_mac_details_dict.setdefault('entries', {})
+                index_dict = device_tracking_database_mac_details_dict.setdefault('entries', {}).setdefault(entry_counter, {})
 
-                device_tracking_database_mac_details_dict['entries'][(entry_counter)] = {}
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['dev_code'] = dev_code
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['network_layer_address'] = network_layer_address
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['link_layer_address'] = lla
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['interface'] = interface
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['mode'] = mode
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['vlan_id'] = vlan
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['pref_level_code'] = prlvl
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['age'] = age
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['state'] = state
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['filter'] = filter
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['in_crimson'] = in_crimson
-                device_tracking_database_mac_details_dict['entries'][entry_counter]['client_id'] = client_id
+                index_dict['dev_code'] = dev_code
+                index_dict['network_layer_address'] = network_layer_address
+                index_dict['link_layer_address'] = lla
+                index_dict['interface'] = interface
+                index_dict['mode'] = mode
+                index_dict['vlan_id'] = vlan
+                index_dict['pref_level_code'] = prlvl
+                index_dict['age'] = age
+                index_dict['state'] = state
+                index_dict['filter'] = filter
+                index_dict['in_crimson'] = in_crimson
+                index_dict['client_id'] = client_id
 
-                if groups['time_left'] is not None:
+                if groups['time_left']:
                     time_left = groups['time_left']
-                    device_tracking_database_mac_details_dict['entries'][entry_counter]['time_left'] = time_left
-                if groups['policy'] is not None:
+                    index_dict['time_left'] = time_left
+                if groups['policy']:
                     policy = groups['policy']
-                    device_tracking_database_mac_details_dict['entries'][entry_counter]['policy'] = policy
+                    index_dict['policy'] = policy
                 continue
 
         return device_tracking_database_mac_details_dict
@@ -1750,8 +1746,7 @@ class ShowDeviceTrackingDatabaseMacDetails(ShowDeviceTrackingDatabaseMacDetailsS
 
     def cli(self, output=None):
         if output is None:
-            cmd = self.cli_command
-            out = self.device.execute(cmd)
+            out = self.device.execute(self.cli_command)
 
         else:
             out = output
@@ -1802,23 +1797,22 @@ class ShowDeviceTrackingDatabaseMacDetails(ShowDeviceTrackingDatabaseMacDetailsS
                 state = groups['state']
                 policy = groups['policy']
 
-                device_tracking_database_mac_details_dict.setdefault('device', {})
+                index_dict = device_tracking_database_mac_details_dict.setdefault('device', {}).setdefault(device_index, {})
 
-                device_tracking_database_mac_details_dict['device'][device_index] = {}
-                device_tracking_database_mac_details_dict['device'][device_index]['dev_code'] = dev_code
-                device_tracking_database_mac_details_dict['device'][device_index]['link_layer_address'] = lla
-                device_tracking_database_mac_details_dict['device'][device_index]['interface'] = interface
-                device_tracking_database_mac_details_dict['device'][device_index]['vlan_id'] = vlan
-                device_tracking_database_mac_details_dict['device'][device_index]['pref_level'] = pref_level
-                device_tracking_database_mac_details_dict['device'][device_index]['state'] = state
-                device_tracking_database_mac_details_dict['device'][device_index]["policy"] = policy
+                index_dict['dev_code'] = dev_code
+                index_dict['link_layer_address'] = lla
+                index_dict['interface'] = interface
+                index_dict['vlan_id'] = vlan
+                index_dict['pref_level'] = pref_level
+                index_dict['state'] = state
+                index_dict["policy"] = policy
 
-                if groups['time_left'] is not None:
+                if groups['time_left']:
                     time_left = groups['time_left']
-                    device_tracking_database_mac_details_dict['device'][device_index]['time_left'] = time_left
-                if groups['input_index'] is not None:
+                    index_dict['time_left'] = time_left
+                if groups['input_index']:
                     input_index = int(groups['input_index'])
-                    device_tracking_database_mac_details_dict['device'][device_index]['input_index'] = input_index
+                    index_dict['input_index'] = input_index
                 continue
 
             #     Attached IP: 10.10.10.11
@@ -1828,10 +1822,9 @@ class ShowDeviceTrackingDatabaseMacDetails(ShowDeviceTrackingDatabaseMacDetailsS
                 groups = match.groupdict()
 
                 ip = groups['ip']
-                device_tracking_database_mac_details_dict['device'][device_index].setdefault('attached', {})
+                attached_dict = device_tracking_database_mac_details_dict['device'][device_index].setdefault('attached', {}).setdefault(attached_counter, {})
 
-                device_tracking_database_mac_details_dict['device'][device_index]['attached'][attached_counter] = {}
-                device_tracking_database_mac_details_dict['device'][device_index]['attached'][attached_counter]['ip'] = ip
+                attached_dict['ip'] = ip
                 continue
 
         return device_tracking_database_mac_details_dict
