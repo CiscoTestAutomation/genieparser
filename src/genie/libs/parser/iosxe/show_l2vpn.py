@@ -18,70 +18,70 @@ IOSXE parsers for the following show commands:
     * show l2vpn evpn ethernet-segment interface {interface} detail
     * show l2vpn evpn ethernet-segment
     * show l2vpn evpn mac ip
-    * show l2vpn evpn mac ip address <ipv4_addr>
-    * show l2vpn evpn mac ip address <ipv4_addr> detail
-    * show l2vpn evpn mac ip address <ipv6_addr>
-    * show l2vpn evpn mac ip address <ipv6_addr> detail
-    * show l2vpn evpn mac ip bridge-domain <bd_id>
-    * show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv4_addr>
-    * show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv4_addr>  detail
-    * show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv6_addr>
-    * show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv6_addr> detail
-    * show l2vpn evpn mac ip bridge-domain <bd_id> detail
-    * show l2vpn evpn mac ip bridge-domain <bd_id> duplicate
-    * show l2vpn evpn mac ip bridge-domain <bd_id> duplicate detail
-    * show l2vpn evpn mac ip bridge-domain <bd_id> duplicate summary
-    * show l2vpn evpn mac ip bridge-domain <bd_id> local
-    * show l2vpn evpn mac ip bridge-domain <bd_id> local detail
-    * show l2vpn evpn mac ip bridge-domain <bd_id> local summary
-    * show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr>
-    * show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv4_addr>
-    * show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv4_addr> detail
-    * show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv6_addr>
-    * show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv6_addr> detail
-    * show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> detail
-    * show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> summary
-    * show l2vpn evpn mac ip bridge-domain <bd_id> remote
-    * show l2vpn evpn mac ip bridge-domain <bd_id> remote detail
-    * show l2vpn evpn mac ip bridge-domain <bd_id> remote summary
-    * show l2vpn evpn mac ip bridge-domain <bd_id> summary
+    * show l2vpn evpn mac ip address {ipv4_addr}
+    * show l2vpn evpn mac ip address {ipv4_addr} detail
+    * show l2vpn evpn mac ip address {ipv6_addr}
+    * show l2vpn evpn mac ip address {ipv6_addr} detail
+    * show l2vpn evpn mac ip bridge-domain {bd_id}
+    * show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv4_addr}
+    * show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv4_addr}  detail
+    * show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv6_addr}
+    * show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv6_addr} detail
+    * show l2vpn evpn mac ip bridge-domain {bd_id} detail
+    * show l2vpn evpn mac ip bridge-domain {bd_id} duplicate
+    * show l2vpn evpn mac ip bridge-domain {bd_id} duplicate detail
+    * show l2vpn evpn mac ip bridge-domain {bd_id} duplicate summary
+    * show l2vpn evpn mac ip bridge-domain {bd_id} local
+    * show l2vpn evpn mac ip bridge-domain {bd_id} local detail
+    * show l2vpn evpn mac ip bridge-domain {bd_id} local summary
+    * show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr}
+    * show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv4_addr}
+    * show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv4_addr} detail
+    * show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv6_addr}
+    * show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv6_addr} detail
+    * show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} detail
+    * show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} summary
+    * show l2vpn evpn mac ip bridge-domain {bd_id} remote
+    * show l2vpn evpn mac ip bridge-domain {bd_id} remote detail
+    * show l2vpn evpn mac ip bridge-domain {bd_id} remote summary
+    * show l2vpn evpn mac ip bridge-domain {bd_id} summary
     * show l2vpn evpn mac ip detail
     * show l2vpn evpn mac ip duplicate
     * show l2vpn evpn mac ip duplicate detail
     * show l2vpn evpn mac ip duplicate summary
-    * show l2vpn evpn mac ip evi <evi_id>
-    * show l2vpn evpn mac ip evi <evi_id> address <ipv4_addr>
-    * show l2vpn evpn mac ip evi <evi_id> address <ipv4_addr> detail
-    * show l2vpn evpn mac ip evi <evi_id> address <ipv6_addr>
-    * show l2vpn evpn mac ip evi <evi_id> address <ipv6_addr> detail
-    * show l2vpn evpn mac ip evi <evi_id> detail
-    * show l2vpn evpn mac ip evi <evi_id> duplicate
-    * show l2vpn evpn mac ip evi <evi_id> duplicate detail
-    * show l2vpn evpn mac ip evi <evi_id> duplicate summary
-    * show l2vpn evpn mac ip evi <evi_id> local
-    * show l2vpn evpn mac ip evi <evi_id> local detail
-    * show l2vpn evpn mac ip evi <evi_id> local summary
-    * show l2vpn evpn mac ip evi <evi_id> mac <mac_addr>
-    * show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv4_addr>
-    * show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv4_addr> detail
-    * show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv6_addr>
-    * show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv6_addr> detail
-    * show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> detail
-    * show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> summary
-    * show l2vpn evpn mac ip evi <evi_id> remote
-    * show l2vpn evpn mac ip evi <evi_id> remote detail
-    * show l2vpn evpn mac ip evi <evi_id> remote summary
-    * show l2vpn evpn mac ip evi <evi_id> summary
+    * show l2vpn evpn mac ip evi {evi_id}
+    * show l2vpn evpn mac ip evi {evi_id} address {ipv4_addr}
+    * show l2vpn evpn mac ip evi {evi_id} address {ipv4_addr} detail
+    * show l2vpn evpn mac ip evi {evi_id} address {ipv6_addr}
+    * show l2vpn evpn mac ip evi {evi_id} address {ipv6_addr} detail
+    * show l2vpn evpn mac ip evi {evi_id} detail
+    * show l2vpn evpn mac ip evi {evi_id} duplicate
+    * show l2vpn evpn mac ip evi {evi_id} duplicate detail
+    * show l2vpn evpn mac ip evi {evi_id} duplicate summary
+    * show l2vpn evpn mac ip evi {evi_id} local
+    * show l2vpn evpn mac ip evi {evi_id} local detail
+    * show l2vpn evpn mac ip evi {evi_id} local summary
+    * show l2vpn evpn mac ip evi {evi_id} mac {mac_addr}
+    * show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv4_addr}
+    * show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv4_addr} detail
+    * show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv6_addr}
+    * show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv6_addr} detail
+    * show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} detail
+    * show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} summary
+    * show l2vpn evpn mac ip evi {evi_id} remote
+    * show l2vpn evpn mac ip evi {evi_id} remote detail
+    * show l2vpn evpn mac ip evi {evi_id} remote summary
+    * show l2vpn evpn mac ip evi {evi_id} summary
     * show l2vpn evpn mac ip local
     * show l2vpn evpn mac ip local detail
     * show l2vpn evpn mac ip local summary
-    * show l2vpn evpn mac ip mac <mac_addr>
-    * show l2vpn evpn mac ip mac <mac_addr> address <ipv4_addr>
-    * show l2vpn evpn mac ip mac <mac_addr> address <ipv4_addr> detail
-    * show l2vpn evpn mac ip mac <mac_addr> address <ipv6_addr>
-    * show l2vpn evpn mac ip mac <mac_addr> address <ipv6_addr> detail
-    * show l2vpn evpn mac ip mac <mac_addr> detail
-    * show l2vpn evpn mac ip mac <mac_addr> summary
+    * show l2vpn evpn mac ip mac {mac_addr}
+    * show l2vpn evpn mac ip mac {mac_addr} address {ipv4_addr}
+    * show l2vpn evpn mac ip mac {mac_addr} address {ipv4_addr} detail
+    * show l2vpn evpn mac ip mac {mac_addr} address {ipv6_addr}
+    * show l2vpn evpn mac ip mac {mac_addr} address {ipv6_addr} detail
+    * show l2vpn evpn mac ip mac {mac_addr} detail
+    * show l2vpn evpn mac ip mac {mac_addr} summary
     * show l2vpn evpn mac ip remote
     * show l2vpn evpn mac ip remote detail
     * show l2vpn evpn mac ip remote summary
@@ -1629,31 +1629,31 @@ class ShowL2vpnEvpnEthernetSegment(ShowL2vpnEvpnEthernetSegmentSchema):
 # ====================================
 class ShowL2vpnEvpnMacIpSchema(MetaParser):
     """ Schema for show l2vpn evpn mac ip
-                   show l2vpn evpn mac ip address <ipv4_addr>
-                   show l2vpn evpn mac ip address <ipv6_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv4_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv6_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> duplicate
-                   show l2vpn evpn mac ip bridge-domain <bd_id> local
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv4_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv6_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> remote
+                   show l2vpn evpn mac ip address {ipv4_addr}
+                   show l2vpn evpn mac ip address {ipv6_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv4_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv6_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} duplicate
+                   show l2vpn evpn mac ip bridge-domain {bd_id} local
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv4_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv6_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} remote
                    show l2vpn evpn mac ip duplicate
-                   show l2vpn evpn mac ip evi <evi_id>
-                   show l2vpn evpn mac ip evi <evi_id> address <ipv4_addr>
-                   show l2vpn evpn mac ip evi <evi_id> address <ipv6_addr>
-                   show l2vpn evpn mac ip evi <evi_id> duplicate
-                   show l2vpn evpn mac ip evi <evi_id> local
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr>
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv4_addr>
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv6_addr>
-                   show l2vpn evpn mac ip evi <evi_id> remote
+                   show l2vpn evpn mac ip evi {evi_id}
+                   show l2vpn evpn mac ip evi {evi_id} address {ipv4_addr}
+                   show l2vpn evpn mac ip evi {evi_id} address {ipv6_addr}
+                   show l2vpn evpn mac ip evi {evi_id} duplicate
+                   show l2vpn evpn mac ip evi {evi_id} local
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr}
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv4_addr}
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv6_addr}
+                   show l2vpn evpn mac ip evi {evi_id} remote
                    show l2vpn evpn mac ip local
-                   show l2vpn evpn mac ip mac <mac_addr>
-                   show l2vpn evpn mac ip mac <mac_addr> address <ipv4_addr>
-                   show l2vpn evpn mac ip mac <mac_addr> address <ipv6_addr>
+                   show l2vpn evpn mac ip mac {mac_addr}
+                   show l2vpn evpn mac ip mac {mac_addr} address {ipv4_addr}
+                   show l2vpn evpn mac ip mac {mac_addr} address {ipv6_addr}
                    show l2vpn evpn mac ip remote
     """
 
@@ -1678,31 +1678,31 @@ class ShowL2vpnEvpnMacIpSchema(MetaParser):
 # ====================================
 class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
     """ Parser for show l2vpn evpn mac ip
-                   show l2vpn evpn mac ip address <ipv4_addr>
-                   show l2vpn evpn mac ip address <ipv6_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv4_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv6_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> duplicate
-                   show l2vpn evpn mac ip bridge-domain <bd_id> local
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv4_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv6_addr>
-                   show l2vpn evpn mac ip bridge-domain <bd_id> remote
+                   show l2vpn evpn mac ip address {ipv4_addr}
+                   show l2vpn evpn mac ip address {ipv6_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv4_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv6_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} duplicate
+                   show l2vpn evpn mac ip bridge-domain {bd_id} local
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv4_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv6_addr}
+                   show l2vpn evpn mac ip bridge-domain {bd_id} remote
                    show l2vpn evpn mac ip duplicate
-                   show l2vpn evpn mac ip evi <evi_id>
-                   show l2vpn evpn mac ip evi <evi_id> address <ipv4_addr>
-                   show l2vpn evpn mac ip evi <evi_id> address <ipv6_addr>
-                   show l2vpn evpn mac ip evi <evi_id> duplicate
-                   show l2vpn evpn mac ip evi <evi_id> local
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr>
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv4_addr>
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv6_addr>
-                   show l2vpn evpn mac ip evi <evi_id> remote
+                   show l2vpn evpn mac ip evi {evi_id}
+                   show l2vpn evpn mac ip evi {evi_id} address {ipv4_addr}
+                   show l2vpn evpn mac ip evi {evi_id} address {ipv6_addr}
+                   show l2vpn evpn mac ip evi {evi_id} duplicate
+                   show l2vpn evpn mac ip evi {evi_id} local
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr}
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv4_addr}
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv6_addr}
+                   show l2vpn evpn mac ip evi {evi_id} remote
                    show l2vpn evpn mac ip local
-                   show l2vpn evpn mac ip mac <mac_addr>
-                   show l2vpn evpn mac ip mac <mac_addr> address <ipv4_addr>
-                   show l2vpn evpn mac ip mac <mac_addr> address <ipv6_addr>
+                   show l2vpn evpn mac ip mac {mac_addr}
+                   show l2vpn evpn mac ip mac {mac_addr} address {ipv4_addr}
+                   show l2vpn evpn mac ip mac {mac_addr} address {ipv6_addr}
                    show l2vpn evpn mac ip remote
     """
 
@@ -1835,32 +1835,32 @@ class ShowL2vpnEvpnMacIp(ShowL2vpnEvpnMacIpSchema):
 # Schema for 'show l2vpn evpn mac ip detail'
 # ===========================================
 class ShowL2vpnEvpnMacIpDetailSchema(MetaParser):
-    """ Schema for show l2vpn evpn mac ip address <ipv4_addr> detail
-                   show l2vpn evpn mac ip address <ipv6_addr> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv4_addr>  detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv6_addr> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> duplicate detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> local detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv4_addr> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv6_addr> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> remote detail
+    """ Schema for show l2vpn evpn mac ip address {ipv4_addr} detail
+                   show l2vpn evpn mac ip address {ipv6_addr} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv4_addr}  detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv6_addr} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} duplicate detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} local detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv4_addr} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv6_addr} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} remote detail
                    show l2vpn evpn mac ip detail
                    show l2vpn evpn mac ip duplicate detail
-                   show l2vpn evpn mac ip evi <evi_id> address <ipv4_addr> detail
-                   show l2vpn evpn mac ip evi <evi_id> address <ipv6_addr> detail
-                   show l2vpn evpn mac ip evi <evi_id> detail
-                   show l2vpn evpn mac ip evi <evi_id> duplicate detail
-                   show l2vpn evpn mac ip evi <evi_id> local detail
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv4_addr> detail
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv6_addr> detail
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> detail
-                   show l2vpn evpn mac ip evi <evi_id> remote detail
+                   show l2vpn evpn mac ip evi {evi_id} address {ipv4_addr} detail
+                   show l2vpn evpn mac ip evi {evi_id} address {ipv6_addr} detail
+                   show l2vpn evpn mac ip evi {evi_id} detail
+                   show l2vpn evpn mac ip evi {evi_id} duplicate detail
+                   show l2vpn evpn mac ip evi {evi_id} local detail
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv4_addr} detail
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv6_addr} detail
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} detail
+                   show l2vpn evpn mac ip evi {evi_id} remote detail
                    show l2vpn evpn mac ip local detail
-                   show l2vpn evpn mac ip mac <mac_addr> address <ipv4_addr> detail
-                   show l2vpn evpn mac ip mac <mac_addr> address <ipv6_addr> detail
-                   show l2vpn evpn mac ip mac <mac_addr> detail
+                   show l2vpn evpn mac ip mac {mac_addr} address {ipv4_addr} detail
+                   show l2vpn evpn mac ip mac {mac_addr} address {ipv6_addr} detail
+                   show l2vpn evpn mac ip mac {mac_addr} detail
                    show l2vpn evpn mac ip remote detail
     """
 
@@ -1899,32 +1899,32 @@ class ShowL2vpnEvpnMacIpDetailSchema(MetaParser):
 # Parser for 'show l2vpn evpn mac ip detail'
 # ===========================================
 class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
-    """ Parser for show l2vpn evpn mac ip address <ipv4_addr> detail
-                   show l2vpn evpn mac ip address <ipv6_addr> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv4_addr>  detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> address <ipv6_addr> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> duplicate detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> local detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv4_addr> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> address <ipv6_addr> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> detail
-                   show l2vpn evpn mac ip bridge-domain <bd_id> remote detail
+    """ Parser for show l2vpn evpn mac ip address {ipv4_addr} detail
+                   show l2vpn evpn mac ip address {ipv6_addr} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv4_addr}  detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} address {ipv6_addr} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} duplicate detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} local detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv4_addr} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} address {ipv6_addr} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} detail
+                   show l2vpn evpn mac ip bridge-domain {bd_id} remote detail
                    show l2vpn evpn mac ip detail
                    show l2vpn evpn mac ip duplicate detail
-                   show l2vpn evpn mac ip evi <evi_id> address <ipv4_addr> detail
-                   show l2vpn evpn mac ip evi <evi_id> address <ipv6_addr> detail
-                   show l2vpn evpn mac ip evi <evi_id> detail
-                   show l2vpn evpn mac ip evi <evi_id> duplicate detail
-                   show l2vpn evpn mac ip evi <evi_id> local detail
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv4_addr> detail
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> address <ipv6_addr> detail
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> detail
-                   show l2vpn evpn mac ip evi <evi_id> remote detail
+                   show l2vpn evpn mac ip evi {evi_id} address {ipv4_addr} detail
+                   show l2vpn evpn mac ip evi {evi_id} address {ipv6_addr} detail
+                   show l2vpn evpn mac ip evi {evi_id} detail
+                   show l2vpn evpn mac ip evi {evi_id} duplicate detail
+                   show l2vpn evpn mac ip evi {evi_id} local detail
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv4_addr} detail
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} address {ipv6_addr} detail
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} detail
+                   show l2vpn evpn mac ip evi {evi_id} remote detail
                    show l2vpn evpn mac ip local detail
-                   show l2vpn evpn mac ip mac <mac_addr> address <ipv4_addr> detail
-                   show l2vpn evpn mac ip mac <mac_addr> address <ipv6_addr> detail
-                   show l2vpn evpn mac ip mac <mac_addr> detail
+                   show l2vpn evpn mac ip mac {mac_addr} address {ipv4_addr} detail
+                   show l2vpn evpn mac ip mac {mac_addr} address {ipv6_addr} detail
+                   show l2vpn evpn mac ip mac {mac_addr} detail
                    show l2vpn evpn mac ip remote detail
     """
 
@@ -2180,19 +2180,19 @@ class ShowL2vpnEvpnMacIpDetail(ShowL2vpnEvpnMacIpDetailSchema):
 # Schema for 'show l2vpn evpn mac ip summary'
 # ============================================
 class ShowL2vpnEvpnMacIpSummarySchema(MetaParser):
-    """ Schema for show l2vpn evpn mac ip bridge-domain <bd_id> duplicate summary
-                   show l2vpn evpn mac ip bridge-domain <bd_id> local summary
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> summary
-                   show l2vpn evpn mac ip bridge-domain <bd_id> remote summary
-                   show l2vpn evpn mac ip bridge-domain <bd_id> summary
+    """ Schema for show l2vpn evpn mac ip bridge-domain {bd_id} duplicate summary
+                   show l2vpn evpn mac ip bridge-domain {bd_id} local summary
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} summary
+                   show l2vpn evpn mac ip bridge-domain {bd_id} remote summary
+                   show l2vpn evpn mac ip bridge-domain {bd_id} summary
                    show l2vpn evpn mac ip duplicate summary
-                   show l2vpn evpn mac ip evi <evi_id> duplicate summary
-                   show l2vpn evpn mac ip evi <evi_id> local summary
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> summary
-                   show l2vpn evpn mac ip evi <evi_id> remote summary
-                   show l2vpn evpn mac ip evi <evi_id> summary
+                   show l2vpn evpn mac ip evi {evi_id} duplicate summary
+                   show l2vpn evpn mac ip evi {evi_id} local summary
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} summary
+                   show l2vpn evpn mac ip evi {evi_id} remote summary
+                   show l2vpn evpn mac ip evi {evi_id} summary
                    show l2vpn evpn mac ip local summary
-                   show l2vpn evpn mac ip mac <mac_addr> summary
+                   show l2vpn evpn mac ip mac {mac_addr} summary
                    show l2vpn evpn mac ip remote summary
                    show l2vpn evpn mac ip summary
     """
@@ -2225,19 +2225,19 @@ class ShowL2vpnEvpnMacIpSummarySchema(MetaParser):
 # Parser for 'show l2vpn evpn mac ip summary'
 # ============================================
 class ShowL2vpnEvpnMacIpSummary(ShowL2vpnEvpnMacIpSummarySchema):
-    """ Parser for show l2vpn evpn mac ip bridge-domain <bd_id> duplicate summary
-                   show l2vpn evpn mac ip bridge-domain <bd_id> local summary
-                   show l2vpn evpn mac ip bridge-domain <bd_id> mac <mac_addr> summary
-                   show l2vpn evpn mac ip bridge-domain <bd_id> remote summary
-                   show l2vpn evpn mac ip bridge-domain <bd_id> summary
+    """ Parser for show l2vpn evpn mac ip bridge-domain {bd_id} duplicate summary
+                   show l2vpn evpn mac ip bridge-domain {bd_id} local summary
+                   show l2vpn evpn mac ip bridge-domain {bd_id} mac {mac_addr} summary
+                   show l2vpn evpn mac ip bridge-domain {bd_id} remote summary
+                   show l2vpn evpn mac ip bridge-domain {bd_id} summary
                    show l2vpn evpn mac ip duplicate summary
-                   show l2vpn evpn mac ip evi <evi_id> duplicate summary
-                   show l2vpn evpn mac ip evi <evi_id> local summary
-                   show l2vpn evpn mac ip evi <evi_id> mac <mac_addr> summary
-                   show l2vpn evpn mac ip evi <evi_id> remote summary
-                   show l2vpn evpn mac ip evi <evi_id> summary
+                   show l2vpn evpn mac ip evi {evi_id} duplicate summary
+                   show l2vpn evpn mac ip evi {evi_id} local summary
+                   show l2vpn evpn mac ip evi {evi_id} mac {mac_addr} summary
+                   show l2vpn evpn mac ip evi {evi_id} remote summary
+                   show l2vpn evpn mac ip evi {evi_id} summary
                    show l2vpn evpn mac ip local summary
-                   show l2vpn evpn mac ip mac <mac_addr> summary
+                   show l2vpn evpn mac ip mac {mac_addr} summary
                    show l2vpn evpn mac ip remote summary
                    show l2vpn evpn mac ip summary
     """
