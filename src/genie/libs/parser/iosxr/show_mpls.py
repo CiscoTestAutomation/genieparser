@@ -1771,22 +1771,22 @@ class ShowMplsLdpParametersSchema(MetaParser):
                 "null-label-ipv4-address": str
             },
             "session": {
-                "session-holdtime-sec": str,
-                "session-keepalive-interval-sec": str,
+                "session-holdtime-sec": int,
+                "session-keepalive-interval-sec": int,
                 "session-backoff": {
-                    "backoff-initial-sec": str,
-                    "backoff-maximum-sec": str
+                    "backoff-initial-sec": int,
+                    "backoff-maximum-sec": int
                 },
                 "global-md5-password": str
             },
             "discovery": {
                 "discovery-link-hellos": {
-                    "link-hellos-hold-time-sec": str,
-                    "link-hellos-interval-sec": str
+                    "link-hellos-hold-time-sec": int,
+                    "link-hellos-interval-sec": int
                 },
                 "discovery-target-hellos": {
-                    "target-hellos-hold-time-sec": str,
-                    "target-hellos-interval-sec": str
+                    "target-hellos-hold-time-sec": int,
+                    "target-hellos-interval-sec": int
                 },
                 "discovery-quick-start": str,
                 "discovery-transport-address": {
@@ -1796,27 +1796,27 @@ class ShowMplsLdpParametersSchema(MetaParser):
             "graceful-restart": {
                 "graceful-restart-status": str,
                 "graceful-restart-reconnect-timeout": {
-                    "reconnect-timeout-time-sec": str,
-                    "reconnect-timeout-forward-state-holdtime-sec": str
+                    "reconnect-timeout-time-sec": int,
+                    "reconnect-timeout-forward-state-holdtime-sec": int
                 }
             },
             "nsr": {
                 "nsr-status": str,
-                Optional("nsr-sync-ed-status"): str
+                Optional("nsr-sync-ed-status"): bool
             },
             "timeouts": {
-                "housekeeping-periodic-timer-timeouts-sec": str,
-                "local-binding-timeouts-sec": str,
-                "forward-state-lsd-timeouts-sec": str
+                "housekeeping-periodic-timer-timeouts-sec": int,
+                "local-binding-timeouts-sec": int,
+                "forward-state-lsd-timeouts-sec": int
             },
-            "delay-af-bind-peer-sec": str,
+            "delay-af-bind-peer-sec": int,
             "max": {
                 "interfaces": {
-                    "max-interfaces-units": str,
-                    Optional("attached-interfaces-units"): str,
-                    Optional("te-tunnel-interfaces-units"): str
+                    "max-interfaces-units": int,
+                    Optional("attached-interfaces-units"): int,
+                    Optional("te-tunnel-interfaces-units"): int
                 },
-                "max-peers-units": str
+                "max-peers-units": int
             },
             "oor-state": {
                 "oor-memory": str
@@ -1857,7 +1857,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
         # Router ID: 10.4.1.1
         p4 = re.compile(r'^Router +ID: +(?P<router_id_ip>[\d.]+)$')
 
-        # Null Labels:
+        # Null Label:
         p5 = re.compile(r'^Null +Label:$')
 
         # IPv4: Implicit
@@ -2006,14 +2006,14 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             m = p8.match(line)
             if m:
                 group = m.groupdict()
-                session_dict['session-holdtime-sec'] = group['hold_time_seconds']
+                session_dict['session-holdtime-sec'] = int(group['hold_time_seconds'])
                 continue
 
             # Keepalive interval: 60 sec
             m = p9.match(line)
             if m:
                 group = m.groupdict()
-                session_dict['session-keepalive-interval-sec'] = group['keepalive_interval_seconds']
+                session_dict['session-keepalive-interval-sec'] = int(group['keepalive_interval_seconds'])
                 continue
 
             # Backoff: Initial:15 sec, Maximum:120 sec
@@ -2021,8 +2021,8 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 backoff_dict = session_dict.setdefault('session-backoff', {})
-                backoff_dict['backoff-initial-sec'] = group['initial_seconds']
-                backoff_dict['backoff-maximum-sec'] = group['maximum_seconds']
+                backoff_dict['backoff-initial-sec'] = int(group['initial_seconds'])
+                backoff_dict['backoff-maximum-sec'] = int(group['maximum_seconds'])
                 continue
 
             # Global MD5 password: Disabled
@@ -2043,8 +2043,8 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 link_hellos_dict = discovery_dict.setdefault('discovery-link-hellos', {})
-                link_hellos_dict['link-hellos-hold-time-sec'] = group['link_hellos_hold_time_seconds']
-                link_hellos_dict['link-hellos-interval-sec'] = group['link_hellos_interval_seconds']
+                link_hellos_dict['link-hellos-hold-time-sec'] = int(group['link_hellos_hold_time_seconds'])
+                link_hellos_dict['link-hellos-interval-sec'] = int(group['link_hellos_interval_seconds'])
                 continue
 
             # Targeted Hellos: Holdtime:90 sec, Interval:10 sec
@@ -2052,8 +2052,8 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             if m:
                 group = m.groupdict()
                 target_hellos_dict = discovery_dict.setdefault('discovery-target-hellos', {})
-                target_hellos_dict['target-hellos-hold-time-sec'] = group['targeted_hellos_hold_time_seconds']
-                target_hellos_dict['target-hellos-interval-sec'] = group['targeted_hellos_interval_seconds']
+                target_hellos_dict['target-hellos-hold-time-sec'] = int(group['targeted_hellos_hold_time_seconds'])
+                target_hellos_dict['target-hellos-interval-sec'] = int(group['targeted_hellos_interval_seconds'])
                 continue
 
             # Quick-start: Enabled (by default)
@@ -2093,9 +2093,12 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             m = p20.match(line)
             if m:
                 group = m.groupdict()
-                reconnect_timeout_dict = graceful_restart_dict.setdefault('graceful-restart-reconnect-timeout', {})
-                reconnect_timeout_dict['reconnect-timeout-time-sec'] = group['reconnect_timeout_seconds']
-                reconnect_timeout_dict['reconnect-timeout-forward-state-holdtime-sec'] = group['forwarding_state_holdtime_seconds']
+                reconnect_timeout_dict =\
+                    graceful_restart_dict.setdefault('graceful-restart-reconnect-timeout', {})
+                reconnect_timeout_dict['reconnect-timeout-time-sec'] =\
+                    int(group['reconnect_timeout_seconds'])
+                reconnect_timeout_dict['reconnect-timeout-forward-state-holdtime-sec'] =\
+                    int(group['forwarding_state_holdtime_seconds'])
                 continue
 
             # NSR: Enabled, Sync-ed
@@ -2106,7 +2109,10 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
                 nrs_dict['nsr-status'] = group['nsr_value']
 
                 if group['synced_value']:
-                    nrs_dict['nsr-sync-ed-status'] = group['synced_value']
+                    if group['synced_value'] == 'Sync-ed':
+                        nrs_dict['nsr-sync-ed-status'] = True
+                    else:
+                        nrs_dict['nsr-sync-ed-status'] = False
                 continue
 
             # Timeouts:
@@ -2119,28 +2125,32 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
             m = p23.match(line)
             if m:
                 group = m.groupdict()
-                timeouts_dict['housekeeping-periodic-timer-timeouts-sec'] = group['housekeeping_periodic_timer_seconds']
+                timeouts_dict['housekeeping-periodic-timer-timeouts-sec'] =\
+                    int(group['housekeeping_periodic_timer_seconds'])
                 continue
 
             # Local binding: 300 sec
             m = p24.match(line)
             if m:
                 group = m.groupdict()
-                timeouts_dict['local-binding-timeouts-sec'] = group['local_binding_seconds']
+                timeouts_dict['local-binding-timeouts-sec'] =\
+                    int(group['local_binding_seconds'])
                 continue
 
             # Forwarding state in LSD: 360 sec
             m = p25.match(line)
             if m:
                 group = m.groupdict()
-                timeouts_dict['forward-state-lsd-timeouts-sec'] = group['forwarding_state_lsd_seconds']
+                timeouts_dict['forward-state-lsd-timeouts-sec'] =\
+                    int(group['forwarding_state_lsd_seconds'])
                 continue
 
             # Delay in AF Binding Withdrawl from peer: 180 sec
             m = p26.match(line)
             if m:
                 group = m.groupdict()
-                parameters_dict['delay-af-bind-peer-sec'] = group['delay_af_binding_peer_seconds']
+                parameters_dict['delay-af-bind-peer-sec'] =\
+                    int(group['delay_af_binding_peer_seconds'])
                 continue
 
             # Max:
@@ -2155,15 +2165,19 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
                 group = m.groupdict()
 
                 max_interfaces_dict = max_dict.setdefault('interfaces', {})
-                max_interfaces_dict['max-interfaces-units'] = group['max_interface_number']
+                max_interfaces_dict['max-interfaces-units'] =\
+                    int(group['max_interface_number'])
 
                 if group['attached_interfaces_number']:
-                    max_interfaces_dict['attached-interfaces-units'] = group['attached_interfaces_number']
+                    max_interfaces_dict['attached-interfaces-units'] =\
+                        int(group['attached_interfaces_number'])
 
                 if group['te_tunnel_number']:
-                    max_interfaces_dict['te-tunnel-interfaces-units'] = group['te_tunnel_number']
+                    max_interfaces_dict['te-tunnel-interfaces-units'] = \
+                        int(group['te_tunnel_number'])
 
-                max_dict['max-peers-units'] = group['peers_number']
+                max_dict['max-peers-units'] = \
+                    int(group['peers_number'])
                 continue
 
             # OOR state
