@@ -21,7 +21,7 @@ expected_output = {
             'eth_tag': 0,
             'next_hops': [
                 {
-                    'next_hop': '3.3.3.1',
+                    'next_hops': '3.3.3.1',
                 },
             ],
         },
@@ -32,13 +32,13 @@ expected_output = {
             'eth_tag': 0,
             'next_hops': [
                 {
-                    'next_hop': 'Et1/0:12',
+                    'next_hops': 'Et1/0:12',
                 },
                 {
-                    'next_hop': '3.3.3.1',
+                    'next_hops': '3.3.3.1',
                 },
                 {
-                    'next_hop': '5.5.5.1',
+                    'next_hops': '5.5.5.1',
                 },
             ],
         },
