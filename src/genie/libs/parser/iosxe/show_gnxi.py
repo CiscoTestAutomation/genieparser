@@ -314,4 +314,4 @@ class ShowGnxiStateDetail(ShowGnxiStateDetailSchema):
                 ret_dict["oper_state"].setdefault(current_gnmib_section.value, {})["supported"] = groups["supported"] == "Supported"
 
 
-        return ret_dict
+        return dict(ret_dict)
