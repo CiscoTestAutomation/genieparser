@@ -998,34 +998,38 @@ class ShowForwardingDistributionMulticastRoute(ShowForwardingDistributionMultica
 class ShowIpMrouteSummarySchema(MetaParser):
     """Schema for show ip mroute summary vrf all"""
 
-    schema = {'vrf':         
-                {Any():
-                    {'address_family':
-                        {Any(): { 
-                             'count_multicast_starg': str, 
-                             'count_multicast_sg': str,
-                             'count_multicast_starg_prefix': str,
-                             'count_multicast_total': str ,
-                             'groups': 
-                                {Any(): {
-                                   'source_count': str,
-                                   'source': 
-                                     {Any(): {
-                                         'packets': str,
-                                         'bytes': str,
-                                         'aps': str,
-                                         'pps': str,
-                                         'bitrate': str,
-                                         'oifs': str
-                                  },
-                               },
-                              } 
-                            },
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'count_multicast_starg': int,
+                        'count_multicast_sg': int,
+                        'count_multicast_starg_prefix': int,
+                        'count_multicast_total': int,
+                        'group_count': int,
+                        'avg_source_per_group': float,
+                        'groups': {
+                            Any(): {
+                                'source_count': int,
+                                'source': {
+                                    Any(): {
+                                        'packets': int,
+                                        'bytes': int,
+                                        'aps': int,
+                                        'pps': int,
+                                        'bitrate': float,
+                                        'bitrate_unit': str,
+                                        'oifs': int
+                                    },
+                                },
+                            }
                         },
-                    }
-                },
-            }
-         }
+                    },
+                }
+            },
+        }
+    }
 
 
 class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
@@ -1064,11 +1068,14 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
         #Total number of (*,G-prefix) routes: 0
         p5 = re.compile(r'^\s*Total +number +of +\(\*,G-prefix\) +routes:'
                          r' +(?P<count>[0-9]+)$')
+        #Group count: 41, rough average sources per group: 3.0
+        p6 = re.compile(r'^\s*Group +count: +(?P<count>[0-9]+),'
+                        r' +rough +average +sources +per +group: +(?P<avg_count>[0-9.]+)$')
         #Group: 225.0.0.2/32, Source count: 3
-        p6 = re.compile(r'^\s*Group: +(?P<group_ip>\S+), +Source count: +(?P<src_count>[0-9]+)$')
+        p7 = re.compile(r'^\s*Group: +(?P<group_ip>\S+), +Source count: +(?P<src_count>[0-9]+)$')
         #100.100.100.5   1743         88893           51    0         27.200  bps  1
         #(*,G)           0            0               0     0         0.000   bps  2
-        p7 = re.compile(r'^\s*(?P<source>\S+) +(?P<packets>[0-9]+) +(?P<bytes>[0-9]+) +(?P<aps>[0-9]+) +(?P<pps>[0-9]+) +'
+        p8 = re.compile(r'^\s*(?P<source>\S+) +(?P<packets>[0-9]+) +(?P<bytes>[0-9]+) +(?P<aps>[0-9]+) +(?P<pps>[0-9]+) +'
                         r'(?P<bitrate>[0-9.]+) +bps +(?P<oifs>[0-9]+)$')
 
         for line in out.splitlines():
@@ -1084,33 +1091,38 @@ class ShowIpMrouteSummary(ShowIpMrouteSummarySchema):
             m = p2.match(line)
             if m:
                 count_multicast_starg = m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_starg', count_multicast_starg)
+                address_family_dict.setdefault('count_multicast_starg', int(count_multicast_starg))
                 continue
             m = p3.match(line)
             if m:
                 count_multicast_sg = m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_sg', count_multicast_sg)
+                address_family_dict.setdefault('count_multicast_sg', int(count_multicast_sg))
                 continue
             m = p4.match(line)
             if m:
                 count_multicast_total = m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_total', count_multicast_total)
+                address_family_dict.setdefault('count_multicast_total', int(count_multicast_total))
                 continue
             m = p5.match(line)
             if m:
                 count_multicast_starg_prefix = m.groupdict()['count']
-                address_family_dict.setdefault('count_multicast_starg_prefix', count_multicast_starg_prefix)
+                address_family_dict.setdefault('count_multicast_starg_prefix', int(count_multicast_starg_prefix))
                 continue
             m = p6.match(line)
+            if m:
+                address_family_dict.setdefault('group_count', int(m.groupdict()['count']))
+                address_family_dict.setdefault('avg_source_per_group', float(m.groupdict()['avg_count']))
+                continue
+            m = p7.match(line)
             if m:
                 group_ip = m.groupdict()['group_ip']
                 source_count = m.groupdict()['src_count']
                 group_dict = address_family_dict.setdefault('groups',{}).setdefault(group_ip,{})
-                group_dict.update({'source_count': source_count})    
+                group_dict.update({'source_count': int(source_count)})    
                 continue
-            m = p7.match(line)
+            m = p8.match(line)
             if m:
                 src_dict = group_dict.setdefault('source',{}).setdefault(m.groupdict()['source'],{})
-                src_dict.update({'packets': m.groupdict()['packets'],'bytes': m.groupdict()['bytes'],'aps': m.groupdict()['aps'],'pps': m.groupdict()['pps'],'bitrate': m.groupdict()['bitrate'],'oifs': m.groupdict()['oifs']})    
+                src_dict.update({'packets': int(m.groupdict()['packets']),'bytes': int(m.groupdict()['bytes']),'aps': int(m.groupdict()['aps']),'pps': int(m.groupdict()['pps']),'bitrate': float(m.groupdict()['bitrate']),'bitrate_unit':'bps','oifs': int(m.groupdict()['oifs'])})    
                 continue
         return mroute_dict
