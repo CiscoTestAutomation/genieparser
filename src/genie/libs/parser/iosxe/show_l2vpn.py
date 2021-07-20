@@ -1431,6 +1431,9 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
                 cli_cmd = self.device.execute(self.cli_command[0].format(interface=interface))
             else:
                 cli_cmd = self.device.execute(self.cli_command[1])
+            cli_output = self.device.execute(cli_cmd)
+        else:
+            cli_output = output
 
         # EVPN Ethernet Segment ID: 03AA.BB00.0000.0200.0001
         p1 = re.compile(r'^EVPN +Ethernet +Segment +ID: +(?P<eth_seg>[0-9a-fA-F\.]+)$')
@@ -1559,7 +1562,10 @@ class ShowL2vpnEvpnEthernetSegmentDetail(ShowL2vpnEvpnEthernetSegmentDetailSchem
                 fwd = group['fwd']
                 fwd_list = eth_seg.setdefault('forwarder_list', [])
                 for item in fwd.split():
-                    fwd_list.append(item)
+                    fwd_list.append(item) 
+                continue
+
+        return parser_dict
 
 # ============================================
 # Schema for 'show l2vpn evpn ethernet-segment'
