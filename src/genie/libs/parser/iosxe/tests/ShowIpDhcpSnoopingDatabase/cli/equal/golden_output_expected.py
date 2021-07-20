@@ -1,0 +1,20 @@
+expected_output = {
+    'agent_url': '',
+    'write_delay_secs': 300,
+    'abort_timer_secs': 300,
+    'agent_running': 'No',
+    'delay_timer_expiry': 'Not Running',
+    'abort_timer_expiry': 'Not Running',
+    'last_succeeded_time': 'None',
+    'last_failed_time': 'None',
+    'last_failed_reason': 'No failure recorded',
+    'total_attempts': 0,
+    'startup_failures': 0,
+    'successful_transfers': 0,
+    'failed_transfers': 0,
+    'successful_reads': 0,
+    'failed_reads': 0,
+    'successful_writes': 0,
+    'failed_writes': 0,
+    'media_failures': 0
+}
