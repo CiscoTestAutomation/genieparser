@@ -48,9 +48,7 @@ expected_output = {
             'bd_id': 11,
             'mac_addr': 'aabb.0011.0021',
             'next_hops': [
-                {
-                    'next_hop': 'Duplicate',
-                },
+                'Duplicate',
             ],
         },
         '2001:11::21': {
@@ -69,7 +67,7 @@ expected_output = {
             'mac_addr': 'aabb.0012.0001',
             'next_hops': [
                 {
-                    'next_hop': '2.2.2.1',
+                    'next_hop': 'Et1/0:11',
                 },
             ],
         },
