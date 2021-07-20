@@ -8,15 +8,9 @@ expected_output = {
             'bd_id': 12,
             'mac_addr': 'aabb.cc82.2800',
             'next_hops': [
-                {
-                    'next_hop': 'Et1/0:12',
-                },
-                {
-                    'next_hop': '3.3.3.1',
-                },
-                {
-                    'next_hop': '5.5.5.1',
-                },
+                'Et1/0:12',
+                '3.3.3.1',
+                '5.5.5.1',
             ],
         },
         '2001:12::3': {
@@ -24,15 +18,9 @@ expected_output = {
             'bd_id': 12,
             'mac_addr': 'aabb.cc82.2800',
             'next_hops': [
-                {
-                    'next_hop': 'Et1/0:12',
-                },
-                {
-                    'next_hop': '3.3.3.1',
-                },
-                {
-                    'next_hop': '5.5.5.1',
-                },
+                'Et1/0:12',
+                '3.3.3.1',
+                '5.5.5.1',
             ],
         },
         'FE80::A8BB:FF:FE12:2': {
@@ -48,15 +36,9 @@ expected_output = {
             'bd_id': 12,
             'mac_addr': 'aabb.cc82.2800',
             'next_hops': [
-                {
-                    'next_hop': 'Et1/0:12',
-                },
-                {
-                    'next_hop': '3.3.3.1',
-                },
-                {
-                    'next_hop': '5.5.5.1',
-                },
+                'Et1/0:12',
+                '3.3.3.1',
+                '5.5.5.1',
             ],
         },
     },

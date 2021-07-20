@@ -11,15 +11,9 @@ expected_output = {
             'esi': '03AA.BB00.0000.0200.0001',
             'eth_tag': 0,
             'next_hops': [
-                {
-                    'next_hop': 'L:17 Ethernet1/0 service instance 12',
-                },
-                {
-                    'next_hop': 'L:17 3.3.3.1',
-                },
-                {
-                    'next_hop': 'L:17 5.5.5.1',
-                },
+                'L:17 Ethernet1/0 service instance 12',
+                'L:17 3.3.3.1',
+                'L:17 5.5.5.1',
             ],
             'local_addr': '4.4.4.1',
             'seq_number': 0,
@@ -36,15 +30,9 @@ expected_output = {
             'esi': '03AA.BB00.0000.0200.0001',
             'eth_tag': 0,
             'next_hops': [
-                {
-                    'next_hop': 'L:17 Ethernet1/0 service instance 12',
-                },
-                {
-                    'next_hop': 'L:17 3.3.3.1',
-                },
-                {
-                    'next_hop': 'L:17 5.5.5.1',
-                },
+                'L:17 Ethernet1/0 service instance 12',
+                'L:17 3.3.3.1',
+                'L:17 5.5.5.1',
             ],
             'local_addr': '4.4.4.1',
             'seq_number': 0,
@@ -61,9 +49,7 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                {
-                    'next_hop': 'L:16 2.2.2.1',
-                },
+                'L:16 2.2.2.1',
             ],
             'local_addr': '4.4.4.1',
             'seq_number': 0,
@@ -80,15 +66,9 @@ expected_output = {
             'esi': '03AA.BB00.0000.0200.0001',
             'eth_tag': 0,
             'next_hops': [
-                {
-                    'next_hop': 'L:17 Ethernet1/0 service instance 12',
-                },
-                {
-                    'next_hop': 'L:17 3.3.3.1',
-                },
-                {
-                    'next_hop': 'L:17 5.5.5.1',
-                },
+                'L:17 Ethernet1/0 service instance 12',
+                'L:17 3.3.3.1',
+                'L:17 5.5.5.1',
             ],
             'local_addr': '4.4.4.1',
             'seq_number': 0,
