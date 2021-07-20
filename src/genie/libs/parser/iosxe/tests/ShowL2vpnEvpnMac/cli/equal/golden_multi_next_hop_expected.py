@@ -9,9 +9,7 @@ expected_output = {
             'esi': '0000.0000.0000.0000.0000',
             'eth_tag': 0,
             'next_hops': [
-                {
-                    'next_hop': '2.2.2.1',
-                },
+                '2.2.2.1',
             ],
         },
         'aabb.cc02.2800': {
@@ -20,9 +18,7 @@ expected_output = {
             'esi': '03AA.BB00.0000.0200.0001',
             'eth_tag': 0,
             'next_hops': [
-                {
-                    'next_hops': '3.3.3.1',
-                },
+                '3.3.3.1',
             ],
         },
         'aabb.cc82.2800': {
@@ -31,15 +27,9 @@ expected_output = {
             'esi': '03AA.BB00.0000.0200.0001',
             'eth_tag': 0,
             'next_hops': [
-                {
-                    'next_hops': 'Et1/0:12',
-                },
-                {
-                    'next_hops': '3.3.3.1',
-                },
-                {
-                    'next_hops': '5.5.5.1',
-                },
+                'Et1/0:12',
+                '3.3.3.1',
+                '5.5.5.1',
             ],
         },
     },
