@@ -1,0 +1,15 @@
+IP Multicast Routing Table for VRF "vxlan-1009"
+Route Statistics unavailable - only liveness detected
+
+Total number of routes: 29
+Total number of (*,G) routes: 11
+Total number of (S,G) routes: 18
+Total number of (*,G-prefix) routes: 0
+Group count: 18, rough average sources per group: 1.0
+
+Group: 225.1.1.17/32, Source count: 1
+Source          packets      bytes           aps   pps       bit-rate     oifs
+(*,G)           6            636             106   0         0.000   bps  1
+1.1.91.67       145          7505            51    0         27.200  bps  1
+
+
