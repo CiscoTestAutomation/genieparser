@@ -1,7 +1,7 @@
 """
 show ip dhcp database
-show ip dhcb snooping database
-show ip dhcb snooping database detail
+show ip dhcp snooping database
+show ip dhcp snooping database detail
 """
 
 # Python
@@ -44,7 +44,7 @@ class ShowIpDhcpDatabase(ShowIpDhcpDatabaseSchema):
     """
     Parser for show ip dhcp database
     """
-    cli_command = "show ip dhcp database"
+    cli_command = 'show ip dhcp database'
 
     def cli(self, output=None):
         if not output:
@@ -131,8 +131,8 @@ class ShowIpDhcpDatabase(ShowIpDhcpDatabaseSchema):
 # ===================================================
 class ShowIpDhcpSnoopingDatabaseSchema(MetaParser):
     """
-    Schema for show ip dhcb snooping database
-               show ip dhcb snooping database detail
+    Schema for show ip dhcp snooping database
+               show ip dhcp snooping database detail
     """
     
     schema = {
@@ -176,13 +176,12 @@ class ShowIpDhcpSnoopingDatabaseSchema(MetaParser):
 
 # ===================================================
 # Parser for 'show ip dhcp snooping database'
-#            'show ip dhcp snooping database detail'
 # ===================================================
 class ShowIpDhcpSnoopingDatabase(ShowIpDhcpSnoopingDatabaseSchema):
     """
-    Parser for show ip dhcb snooping database
+    Parser for show ip dhcp snooping database
     """
-    cli_command = 'show ip dhcb snooping database'
+    cli_command = 'show ip dhcp snooping database'
     
     def cli(self, output=None):
         if output is None:
