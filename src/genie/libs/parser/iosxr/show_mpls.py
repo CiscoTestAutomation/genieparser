@@ -21,8 +21,9 @@ import re
 
 # Metaparser
 from genie.metaparser import MetaParser
-from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, And,\
+from genie.metaparser.util.schemaengine import Schema, Any, Optional, Or, ListOf, And,\
                                          Default, Use
+
 # import parser utils
 from genie.libs.parser.utils.common import Common
 
@@ -495,6 +496,282 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
                 targeted_dict.update({'active': True if group['status'] == 'active' else False})
                 continue
             
+        return result_dict
+
+
+# ==============================================
+#   Show mpls ldp discovery
+# ==============================================
+class ShowMplsLdpDiscoveryDetailSchema(MetaParser):
+    """
+    Schema for show mpls ldp discovery detail
+    """
+    schema = {
+        'vrf': {
+            Optional('local_ldp_identifier'): str,
+            'vrfs': ListOf({
+                'vrf_name': str,
+                'interfaces': ListOf({
+                    Optional('interface'): str,
+                    Optional('vrf_hex'): str,
+                    Optional('source_ip_addr'): str,
+                    Optional('transport_ip_addr'): str,
+                    Optional('xmit'): str,
+                    Optional('recv'): str,
+                    Optional('hello_interval_ms'): str,
+                    Optional('hello_due_time_ms'): str,
+                    Optional('quick_start'): str,
+                    Optional('ldp_id'): {
+                        Optional('network_addr'): str,
+                        "ldp_entries": ListOf({
+                            Optional('source_ip_addr'): str,
+                            Optional('transport_ip_addr'): str,
+                            Optional('holdtime_sec'): str,
+                            Optional('proposed_local'): str,
+                            Optional('proposed_peer'): str,
+                            Optional('expiring_in'): str,
+                            Optional('established_date'): str,
+                            Optional('established_elapsed'): str,
+                            Optional('last_session_connection_failures'): ListOf({
+                                Optional('timestamp'): str,
+                                Optional('reason'): str,
+                                Optional('last_up_for'): str,
+                            })
+                        })
+                    }
+                })
+            })
+        }
+    }
+
+
+class ShowMplsLdpDiscoveryDetail(ShowMplsLdpDiscoveryDetailSchema):
+    """
+        Parser for show mpls ldp discovery detail
+    """
+    cli_command = 'show mpls ldp discovery detail'
+
+    def cli(self, output=None):
+        if output is None:
+            out = self.device.execute(self.cli_command)
+        else:
+            out = output
+
+        # initial return dictionary
+        result_dict = {}
+        discovery_flag = False
+
+        # Local LDP Identifier: 10.94.1.1:0
+        p1 = re.compile(r'^Local +LDP +Identifier: '
+                        '(?P<local_ldp_identifier>[\d\.\:]+)$')
+
+        # Discovery Sources:
+        p2 = re.compile(r'^Discovery +Sources:$')
+
+        # TenGigE0/3/0/0 (0xa0004c0) : xmit/recv
+        p3 = re.compile(r'^(?P<interface>\S+) \((?P<interface_hex>[\w]+)\)'
+                        ' : (?P<xmit>xmit)?\/?(?P<recv>recv)?$')
+
+        # VRF: 'default' (0x60000000)
+        p4 = re.compile(r'^VRF: \'(?P<vrf>\S+)\' +\((?P<vrf_hex>[\w]+)\)$')
+
+        # LDP Id: 10.144.96.96:0
+        p5 = re.compile(r'^(?P<ldp_tdp>\w+) +Id:\s*(?P<ldp_tdp_id>[\S]+)$')
+
+        # Source address: 10.120.0.1; Transport address: 10.94.1.1
+        p6 = re.compile(r'^Source +address: +(?P<source_ip_addr>[\d\.]+);'
+                        ' +Transport +address: +(?P<transport_ip_addr>[\d\.]+)$')
+
+        # Hold time: 15 sec (local:15 sec, peer:45 sec)
+        p7 = re.compile(r'^Hold +time: +(?P<holdtime_sec>\d+) +sec '
+                        '\(local:(?P<proposed_local>\d+) +sec, '
+                        'peer:(?P<proposed_peer>\d+) +sec\)$')
+
+        # (expiring in 11 sec)
+        # (expiring in 14.5 sec)
+        p8 = re.compile(r'^\(expiring +in +(?P<expiring_in>\d.*) +sec\)$')
+
+        # Established: Nov  6 14:39:26.164 (5w2d ago)
+        p9 = re.compile(r'^Established: +(?P<established_date>\S.*) '
+                        '+\((?P<established_elapsed>\S*) +ago\)$')
+
+        # Hello interval: 5 sec (due in 563 msec)
+        p10 = re.compile(r'^Hello +interval: +(?P<hello_interval>\d+) +sec'
+                        ' +\(due +in +(?P<hello_due_time>\S+ +\S+)\)$')
+
+        # Quick-start: Enabled
+        p11 = re.compile(r'^Quick-start: +(?P<quick_start>\S+)$')
+
+        # Last session connection failures:
+        p12 = re.compile(r'^Last +session +connection +failures:$')
+
+        #     Jan  4 05:20:34.814: User cleared session manually
+        #     Jan  4 05:28:48.641: User cleared session manually
+        p13 = re.compile(r'^(?P<timestamp>[A-Z][a-z]{2}\s+[0-9]{1,2}\s[0-9:.]+)'
+                         ':\s+(?P<reason>[\w\s]+)$')
+
+        #         (Last up for 00:06:56)
+        #         (Last up for 00:08:05)
+        p14 = re.compile(r'\(Last +up +for +(?P<last_up_for>[\d:]+)\)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # Local LDP Identifier: 10.94.1.1:0
+            m = p1.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_dict = result_dict.setdefault('vrf', {})
+                ldp_dict.update(
+                    {'local_ldp_identifier': group['local_ldp_identifier']})
+                continue
+
+            # Discovery Sources:
+            m = p2.match(line)
+            if m:
+                discovery_flag = True
+                continue
+
+            # TenGigE0/3/0/0 (0xa0004c0) : xmit/recv
+            m = p3.match(line)
+            if m:
+                group = m.groupdict()
+                interface = group['interface'] if group['interface'] \
+                    else "default"
+
+                interface_dict = {'interface': interface}
+                interface_dict.update(
+                    {'xmit': 'True' if group['xmit'] else 'False'})
+                interface_dict.update(
+                    {'recv': 'True' if group['recv'] else 'False'})
+                continue
+
+            # VRF: 'default' (0x60000000)
+            m = p4.match(line)
+            if m:
+                group = m.groupdict()
+                vrf_name = group['vrf'] if group['vrf'] else "default"
+                vrf_list = result_dict.setdefault('vrf', {}).\
+                    setdefault('vrfs', [])
+
+                vrf = next(
+                    (i for i in vrf_list if i['vrf_name'] == vrf_name), None)
+
+                if vrf is None:
+                    vrf = {'vrf_name': vrf_name, 'interfaces': []}
+                    vrf_list.append(vrf)
+
+                if interface:
+                    vrf_hex = group['vrf_hex']
+                    interface_dict.update({'vrf_hex': vrf_hex})
+                    vrf['interfaces'].append(interface_dict)
+
+                continue
+
+            # LDP Id: 10.144.96.96:0
+            m = p5.match(line)
+            if m:
+                group = m.groupdict()
+                ldp_tdp = group['ldp_tdp'].lower()
+                ldp_tdp_id = group['ldp_tdp_id']
+                if discovery_flag:
+                    ldp_dict = interface_dict.\
+                        setdefault('{}_id'.format(ldp_tdp), {})
+
+                    net_addr = next((i for i in ldp_dict
+                                    if i['network_addr'] == ldp_tdp_id
+                                    ), None)
+
+                    if net_addr is None:
+                        net_addr = {
+                            'network_addr': ldp_tdp_id,
+                            'ldp_entries': []
+                        }
+                        ldp_dict.update(net_addr)
+
+                continue
+
+            # Source address: 10.166.0.57; Transport address: 10.52.31.247
+            m = p6.match(line)
+            if m:
+                group = m.groupdict()
+                if 'source_ip_addr' in interface_dict.keys():
+                    item_dict = {k: v for k, v in group.items() if v}
+                    net_addr['ldp_entries'].append(item_dict)
+                else:
+                    interface_dict.update(
+                        {k: v for k, v in group.items() if v})
+                continue
+
+            # Hold time: 15 sec (local:15 sec, peer:45 sec)
+            m = p7.match(line)
+            if m:
+                group = m.groupdict()
+                item_dict.update(
+                    {k: v for k, v in group.items() if v})
+                continue
+
+            # (expiring in 14.5 sec)
+            m = p8.match(line)
+            if m:
+                group = m.groupdict()
+                item_dict.update(
+                    {'expiring_in': group['expiring_in']})
+
+            m = p9.match(line)
+            if m:
+                group = m.groupdict()
+                item_dict.update({
+                    'established_date': group['established_date'],
+                    'established_elapsed': group['established_elapsed']
+                })
+
+            # Hello interval: 5 sec (due in 563 msec)
+            m = p10.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'hello_interval_ms': str(
+                    1000*int(group['hello_interval']))})
+                if ' sec' in group['hello_due_time']:
+                    hello_due_time_ms = str(
+                        int(1000*float(group['hello_due_time'].split(' ')[0])))
+                else:
+                    hello_due_time_ms = str(
+                        int(group['hello_due_time'].split(' ')[0]))
+                interface_dict.update({'hello_due_time_ms': hello_due_time_ms})
+                continue
+
+            # Quick-start: Enabled
+            m = p11.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update(
+                    {'quick_start': group['quick_start'].lower()})
+                continue
+
+            # Last session connection failures:
+            m = p12.match(line)
+            if m:
+                item_dict['last_session_connection_failures'] = []
+
+            m = p13.match(line)
+            if m:
+                group = m.groupdict()
+                connection_failure_dict = {
+                    'timestamp': group['timestamp'],
+                    'reason': group['reason']
+                }
+
+                item_dict['last_session_connection_failures'].append(
+                    connection_failure_dict)
+                continue
+
+            m = p14.match(line)
+            if m:
+                group = m.groupdict()
+                connection_failure_dict.update(
+                    {'last_up_for': group['last_up_for']})
+
         return result_dict
 
 
@@ -1802,7 +2079,7 @@ class ShowMplsLdpParametersSchema(MetaParser):
             },
             "nsr": {
                 "nsr-status": str,
-                Optional("nsr-sync-ed-status"): bool
+                Optional("nsr-sync-ed-status"): str
             },
             "timeouts": {
                 "housekeeping-periodic-timer-timeouts-sec": int,
@@ -2109,10 +2386,7 @@ class ShowMplsLdpParameters(ShowMplsLdpParametersSchema):
                 nrs_dict['nsr-status'] = group['nsr_value']
 
                 if group['synced_value']:
-                    if group['synced_value'] == 'Sync-ed':
-                        nrs_dict['nsr-sync-ed-status'] = True
-                    else:
-                        nrs_dict['nsr-sync-ed-status'] = False
+                    nrs_dict['nsr-sync-ed-status'] = group['synced_value']
                 continue
 
             # Timeouts:

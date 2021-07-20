@@ -38,7 +38,7 @@ expected_output = {
             },
             "nsr": {
                 "nsr-status": 'Enabled',
-                "nsr-sync-ed-status": True
+                "nsr-sync-ed-status": 'Sync-ed'
             },
             "timeouts": {
                 "housekeeping-periodic-timer-timeouts-sec": 10,
