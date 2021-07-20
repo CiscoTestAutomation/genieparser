@@ -1,0 +1,38 @@
+IP Multicast Routing Table for VRF "default"
+Route Statistics unavailable - only liveness detected
+
+Total number of routes: 165
+Total number of (*,G) routes: 41
+Total number of (S,G) routes: 123
+Total number of (*,G-prefix) routes: 1
+Group count: 41, rough average sources per group: 3.0
+
+Group: 225.0.0.1/32, Source count: 3
+Source          packets      bytes           aps   pps       bit-rate     oifs
+(*,G)           0            0               0     0         0.000   bps  2
+100.100.100.5   1704         86904           51    0         27.200  bps  2
+100.100.100.6   1700         86700           51    0         27.200  bps  1
+100.100.100.11  1879         101104          53    0         27.200  bps  0
+
+Group: 225.0.0.2/32, Source count: 3
+Source          packets      bytes           aps   pps       bit-rate     oifs
+(*,G)           0            0               0     0         0.000   bps  2
+100.100.100.5   1743         88893           51    0         27.200  bps  1
+100.100.100.6   1743         88893           51    0         27.200  bps  1
+100.100.100.11  1891         100806          53    0         27.200  bps  2
+
+IP Multicast Routing Table for VRF "vxlan-1009"
+Route Statistics unavailable - only liveness detected
+
+Total number of routes: 29
+Total number of (*,G) routes: 11
+Total number of (S,G) routes: 18
+Total number of (*,G-prefix) routes: 0
+Group count: 18, rough average sources per group: 1.0
+
+Group: 225.1.1.17/32, Source count: 1
+Source          packets      bytes           aps   pps       bit-rate     oifs
+(*,G)           6            636             106   0         0.000   bps  1
+1.1.91.67       145          7505            51    0         27.200  bps  1
+
+
