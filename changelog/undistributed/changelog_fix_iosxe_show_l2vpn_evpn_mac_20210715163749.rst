@@ -20,7 +20,7 @@
         * show l2vpn evpn mac local
         * show l2vpn evpn mac remote
 
-        Use ListOf for next_hops entry in schema.
+        Changed source file location to src/genie/libs/parser/iosxe/show_l2vpn.py.
 
     * Modified ShowL2vpnEvpnMacDetail
         * show l2vpn evpn mac address <mac_addr> detail
@@ -39,4 +39,4 @@
         * show l2vpn evpn mac local detail
         * show l2vpn evpn mac remote detail
 
-        Use ListOf for next_hops entry in schema.
+        Changed source file location to src/genie/libs/parser/iosxe/show_l2vpn.py.
