@@ -1730,6 +1730,9 @@ class ShowDeviceTrackingDatabaseMacDetailsSchema(MetaParser):
                         "ip": str,
                     }
                 }
+            }
+        }
+    }
 
 # ====================================================
 # Schema for 'show device-tracking events'
