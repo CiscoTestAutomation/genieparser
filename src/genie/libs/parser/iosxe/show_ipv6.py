@@ -371,7 +371,7 @@ class ShowIpv6DhcpGuardPolicy(ShowIpv6DhcpGuardPolicySchema):
             #Max Preference: 255
             m3 = p3.match(line)
             if m3:
-                policy_config_dict = parser_dict.setdefault('dhcp_g/uard_policy_config', {})
+                policy_config_dict = parser_dict.setdefault('dhcp_guard_policy_config', {})
                 policy_config_dict.update({'max_preference': int(m3.groupdict()['max_preference'])})
                 continue
 
