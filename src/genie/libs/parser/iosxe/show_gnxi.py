@@ -10,6 +10,7 @@ import re
 from enum import Enum
 
 from genie.metaparser import MetaParser
+from genie.metaparser.util.schemaengine import Optional
 
 
 def _enabled_disabled_to_bool(value : str):
@@ -105,12 +106,12 @@ class ShowGnxiStateDetailSchema(MetaParser):
                         "admin_enabled": bool,
                         "oper_up": bool
                         },
-                    "os_image_svc": {
+                    Optional("os_image_svc"): {
                         "admin_enabled": bool,
                         "oper_up": bool,
                         "supported": bool
                         },
-                    "factory_reset_svc": {
+                    Optional("factory_reset_svc"): {
                         "admin_enabled": bool,
                         "oper_up": bool,
                         "supported": bool
