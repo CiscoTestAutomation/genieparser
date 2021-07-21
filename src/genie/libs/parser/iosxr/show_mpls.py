@@ -500,7 +500,7 @@ class ShowMplsLdpDiscovery(ShowMplsLdpDiscoverySchema):
 
 
 # ==============================================
-#   Show mpls ldp discovery
+#   Show mpls ldp discovery Detail
 # ==============================================
 class ShowMplsLdpDiscoveryDetailSchema(MetaParser):
     """
@@ -2100,7 +2100,6 @@ class ShowMplsLdpParametersSchema(MetaParser):
             },
         },
     }
-
 
 
 # ==============================================
