@@ -1,0 +1,81 @@
+IP Address:                192.168.11.11
+EVPN Instance:             1
+Bridge Domain:             11
+MAC Address:               aabb.0011.0001
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               L:17 Ethernet1/0 service instance 11
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No
+
+IP Address:                192.168.11.20
+EVPN Instance:             1
+Bridge Domain:             11
+MAC Address:               aabb.0011.0020
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               L:17 Ethernet1/0 service instance 11
+Sequence Number:           5
+IP Duplication Detection:  Timer not running
+Label2 included:           No
+
+IP Address:                192.168.11.21
+EVPN Instance:             1
+Bridge Domain:             11
+MAC Address:               ccdd.0011.0022
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               L:17 Ethernet1/0 service instance 11
+Sequence Number:           0
+IP Duplication Detection:  Duplicate IP address detected
+Last Local MAC sent:       aabb.0011.0022
+Label2 included:           No
+
+IP Address:                2001:11::11
+EVPN Instance:             1
+Bridge Domain:             11
+MAC Address:               aabb.0011.0001
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               L:17 Ethernet1/0 service instance 11
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No
+
+IP Address:                2001:11::20
+EVPN Instance:             1
+Bridge Domain:             11
+MAC Address:               aabb.0011.0021
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               L:17 Ethernet1/0 service instance 11
+                           L:16 2.2.2.1
+Local Address:             1.1.1.1
+Sequence Number:           6
+IP Duplication Detection:  Timer not running
+Label2 included:           No
+
+IP Address:                2001:11::21
+EVPN Instance:             1
+Bridge Domain:             11
+MAC Address:               aabb.0011.0023
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               L:17 Ethernet1/0 service instance 11
+Sequence Number:           0
+IP Duplication Detection:  IP moves 4, limit 5
+                           Timer expires in 09:21:25
+Label2 included:           No
+
+IP Address:                192.168.12.11
+EVPN Instance:             2
+Bridge Domain:             12
+MAC Address:               aabb.0012.0001
+Ethernet Segment:          0000.0000.0000.0000.0000
+Ethernet Tag ID:           0
+Next Hop(s):               L:16 2.2.2.1
+Local Address:             1.1.1.1
+Sequence Number:           0
+IP Duplication Detection:  Timer not running
+Label2 included:           No
