@@ -1,0 +1,40 @@
+ Power Supply Status:
+   12AV  Supply: +12.100 V Normal
+   1.5V  Supply: +1.510 V Normal
+   1.25V Supply: +1.250 V Normal
+   2.5V  Supply: +2.500 V Normal
+   1.05V Supply: +1.080 V Normal
+   1.2V  Supply: +1.200 V Normal
+   1.8V  Supply: +1.780 V Normal
+   0.75V Supply: +0.760 V Normal
+   1V    Supply: +1.000 V Normal
+   3.3V  Supply: +3.240 V Normal
+   5V    Supply: +4.920 V Normal
+ Fan Status:
+ Fan 1 Operation: Normal, is running at 53   percent speed 
+
+ Fan 2 Operation: Normal, is running at 53   percent speed 
+
+ Fan 3 Operation: Normal, is running at 54   percent speed 
+
+
+ Alert settings:
+   Board temperature, temperature warning: Enabled
+   Threshold: 90 (high) -40 (low) DegC
+   Inlet temperature, temperature warning: Enabled
+   Threshold: 80 (high) -40 (low) DegC
+ Board Temperature: Normal
+   Board temperature,  temperature = 44 (C), Normal
+   Inlet temperature,  temperature = 30 (C), Normal
+
+ Environmental monitor experienced the following events:
+   SeqNum           Event              State             Time
+       1  :  Environmental monitor : "started " at 20:57:52 UTC Wed Jul 22 2015.
+
+
+ External Alarms :
+
+ALARM CONTACT 1 is not asserted
+ALARM CONTACT 2 is not asserted
+ALARM CONTACT 3 is not asserted
+ALARM CONTACT 4 is not asserted
