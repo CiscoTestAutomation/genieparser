@@ -331,6 +331,22 @@ class ShowPolicyMapTypeSchema(MetaParser):
                                             }
                                         },
                                     },
+                                    Optional('afd_wred_stats'): {
+                                        'virtual_class': {
+                                            Any(): {
+                                                'dscp': int,
+                                                'min': int,
+                                                'max': int,
+                                                'transmit_bytes': int,
+                                                'transmit_packets': int,
+                                                'random_drop_bytes': int,
+                                                'random_drop_packets': int,
+                                                'afd_weight': int
+                                            }
+                                        },
+                                        'total_drops_bytes': int,
+                                        'total_drops_packets': int
+                                    },
                                 },
                             },
                             Optional('queue_stats_for_all_priority_classes'): {
@@ -472,7 +488,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
         # conformed 15 packets, 6210 bytes; action:transmit
         p8_1 = re.compile(r'^conformed (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes;'
                           r' action:(?P<action>(\w+))$')
-        
+
         # exceeded 0 packets, 0 bytes; actions:
         p9 = re.compile(r'^exceeded (?P<packets>(\d+)) packets, +(?P<bytes>(\d+)) bytes; actions:$')
 
@@ -641,12 +657,28 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
 
         # bandwidth remaining 70%
         p40 = re.compile(r'^bandwidth +remaining +(?P<bandwidth_remaining_percent>(\d+))%$')
-        
+
         # Priority: Strict, b/w exceed drops: 0
         p41 = re.compile(r'^Priority: +(?P<type>(\w+)), +b/w exceed drops: +(?P<exceed_drops>(\d+))$')
 
         # cos 5
         p42 = re.compile(r'^(?P<key>cos)\s+(?P<value>\d+)$')
+
+        # Virtual Class   min/max        Transmit                     Random drop                 AFD Weight
+        # 0          10 / 20        (Byte)33459183360             27374016                     12
+        p43 = re.compile(r'^(?P<virtual_class>\d+)\s+(?P<min>\d+)\s*/\s*(?P<max>\d+)\s+\(Byte\)(?P<tx_bytes>\d+)\s+(?P<random_drop_bytes>\d+)\s+(?P<afd_weight>\d+)\s*$')
+
+        #                                (Pkts)68692637637             0
+        p44 = re.compile(r'^\(Pkts\)(?P<tx_packets>\d+)\s+(?P<random_drop_packets>\d+)')
+
+        #         dscp : 1
+        p45 = re.compile(r'^dscp\s*:\s*(?P<dscp>\d+)$')
+
+        #     Total Drops(Bytes)   : 0
+        p46 = re.compile(r'^Total Drops\(Bytes\)\s*:\s*(?P<total_drops_bytes>\d+)$')
+
+        #     Total Drops(Packets) : 0
+        p47 = re.compile(r'^Total Drops\(Packets\)\s*:\s*(?P<total_drops_packets>\d+)$')
 
         for line in out.splitlines():
             line = line.strip()
@@ -1284,7 +1316,7 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
             if m:
                 class_map_dict['bandwidth_remaining_percent'] = int(m.groupdict()['bandwidth_remaining_percent'])
                 continue
-                
+
             # Priority: Strict, b/w exceed drops: 0
             m = p41.match(line)
             if m:
@@ -1292,7 +1324,45 @@ class ShowPolicyMapTypeSuperParser(ShowPolicyMapTypeSchema):
                 pri_dict['type'] = m.groupdict()['type']
                 pri_dict['exceed_drops'] = int(m.groupdict()['exceed_drops'])
                 continue
-                
+
+            # Virtual Class   min/max        Transmit                     Random drop                 AFD Weight
+            # 0          10 / 20        (Byte)33459183360             27374016                     12
+            m = p43.match(line)
+            if m:
+                afd_wred_dict = class_map_dict.setdefault('afd_wred_stats', {})
+                afc_wred_vc_dict = afd_wred_dict.setdefault('virtual_class', {}).setdefault(int(m.groupdict()['virtual_class']), {})
+                afc_wred_vc_dict['min'] = int(m.groupdict()['min'])
+                afc_wred_vc_dict['max'] = int(m.groupdict()['max'])
+                afc_wred_vc_dict['transmit_bytes'] = int(m.groupdict()['tx_bytes'])
+                afc_wred_vc_dict['random_drop_bytes'] = int(m.groupdict()['random_drop_bytes'])
+                afc_wred_vc_dict['afd_weight'] = int(m.groupdict()['afd_weight'])
+                continue
+
+            #                                (Pkts)68692637637             0
+            m = p44.match(line)
+            if m:
+                afc_wred_vc_dict['transmit_packets'] = int(m.groupdict()['tx_packets'])
+                afc_wred_vc_dict['random_drop_packets'] = int(m.groupdict()['random_drop_packets'])
+                continue
+
+            #         dscp : 1
+            m = p45.match(line)
+            if m:
+                afc_wred_vc_dict['dscp'] = int(m.groupdict()['dscp'])
+                continue
+
+            #     Total Drops(Bytes)   : 0
+            m = p46.match(line)
+            if m:
+                afd_wred_dict['total_drops_bytes'] = int(m.groupdict()['total_drops_bytes'])
+                continue
+
+            #     Total Drops(Packets) : 0
+            m = p47.match(line)
+            if m:
+                afd_wred_dict['total_drops_packets'] = int(m.groupdict()['total_drops_packets'])
+                continue
+
         return ret_dict
 
 
