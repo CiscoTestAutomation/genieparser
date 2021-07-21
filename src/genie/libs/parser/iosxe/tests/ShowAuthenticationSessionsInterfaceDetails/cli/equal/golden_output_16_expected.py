@@ -23,7 +23,10 @@ expected_output = {
                     },
                     "oper_control_dir": "both",
                     "oper_host_mode": "multi-auth",
-                    "restart_timeout": "60s, Remaining: 44s",
+                    "restart_timeout": {
+                        "remaining": 44,
+                        "timeout": 60
+                    },
                     "session_timeout": {"type": "N/A"},
                     "status": "Authorized",
                     "unauth_timeout": {"remaining": 5, "timeout": 10},
