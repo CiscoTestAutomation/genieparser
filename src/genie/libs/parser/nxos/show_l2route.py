@@ -94,7 +94,7 @@ class ShowL2routeEvpnMac(ShowL2routeEvpnMacSchema):
                     str(m.groupdict()['seq_no'])
                 ret_dict['topology'][topology]['mac_address'][mac_address]['next_hops'] = \
                     str(m.groupdict()['next_hops'])
-                if label is not '':
+                if label:
                     ret_dict['topology'][topology]['mac_address'][mac_address]['label'] = \
                     label
 
