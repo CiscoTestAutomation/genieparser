@@ -7323,13 +7323,14 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 group = m.groupdict()
                 next_hop = group['next_hop']
                 status_dict = af_dict.setdefault('next_hops', {}).setdefault(next_hop, {})
-
-                status_dict['status'] = group['status'].replace("[", "").split("]")[:-1]
-                status_dict['metric'] =  int(group['metric'])
-                status_dict['tbl_id'] = group['tbl_id']
-                status_dict['notf'] = group['notf']
-                status_dict['last_rib_event'] = group['last_rib_event']
-                status_dict['ref_count'] = group['ref_count']
+                status_dict.update({
+                    'status' : group['status'].replace("[", "").split("]")[:-1],
+                    'metric' :  int(group['metric']),
+                    'tbl_id' : group['tbl_id'],
+                    'notf' : group['notf'],
+                    'last_rib_event' : group['last_rib_event'],
+                    'ref_count' : group['ref_count']
+                })
                 continue
 
             # 2000:108:10:10::1
@@ -7344,12 +7345,14 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
             m = p19.match(line)
             if m:
                 group = m.groupdict()
-                status_dict['status'] = group['status'].replace("[", "").split("]")[:-1]
-                status_dict['metric'] = int(group['metric'])
-                status_dict['tbl_id'] = group['tbl_id']
-                status_dict['notf'] = group['notf']
-                status_dict['last_rib_event'] = group['last_rib_event']
-                status_dict['ref_count'] = group['ref_count']
+                status_dict.update({
+                    'status': group['status'].replace("[", "").split("]")[:-1],
+                    'metric': int(group['metric']),
+                    'tbl_id': group['tbl_id'],
+                    'notf': group['notf'],
+                    'last_rib_event': group['last_rib_event'],
+                    'ref_count': group['ref_count']
+                })
                 continue
 
         return ret_dict
