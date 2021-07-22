@@ -7079,7 +7079,7 @@ class ShowBgpAllAllNexthopsSchema(MetaParser):
                         Optional('epe_standby_version'): int,
                         Optional('next_hops'):{
                             Any():{
-                                'status': Any(),
+                                'status': ListOf(str),
                                 'metric': int,
                                 'tbl_id': str,
                                 'notf': str,
@@ -7158,22 +7158,28 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
         p13 = re.compile(r'^Non-critical +Trigger +Delay: +(?P<non_critical_trigger_delay>[\S\s]+)$')
 
         #Nexthop Version: 1, RIB version: 1
-        p14 = re.compile(r'^Nexthop +Version: +(?P<next_hop_version>[\d]+), +RIB +version: +(?P<rib_version>[\d]+)$')
+        p14 = re.compile(r'^Nexthop +Version: +(?P<next_hop_version>[\d]+), +RIB +version:'
+                         r' +(?P<rib_version>[\d]+)$')
 
         #EPE Table Version: 1, EPE Label version: 1
-        p15 = re.compile(r'^EPE +Table +Version: +(?P<epe_table_version>[\d]+), +EPE +Label +version: +(?P<epe_label_version>[\d]+)$')
+        p15 = re.compile(r'^EPE +Table +Version: +(?P<epe_table_version>[\d]+), +EPE +Label '
+                         r'+version: +(?P<epe_label_version>[\d]+)$')
 
         #EPE Downloaded Version: 1, EPE Standby Version: 1
-        p16 = re.compile(r'^EPE +Downloaded +Version: +(?P<epe_downloaded_version>[\d]+), +EPE +Standby +Version: +(?P<epe_standby_version>[\d]+)$')
+        p16 = re.compile(r'^EPE +Downloaded +Version: +(?P<epe_downloaded_version>[\d]+), '
+                         r'+EPE +Standby +Version: +(?P<epe_standby_version>[\d]+)$')
 
         #108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        1/4
-        p17 = re.compile('^(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<status>[\S]+)\s+(?P<metric>\d+)\s+(?P<tbl_id>\S+)\s+(?P<notf>\S+)\s+(?P<last_rib_event>\S+\s\(\w+\))\s+(?P<ref_count>\S+)$')
+        p17 = re.compile('^(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<status>[\S]+)\s+'
+                         '(?P<metric>\d+)\s+(?P<tbl_id>\S+)\s+(?P<notf>\S+)\s+(?P<last_rib_event>\S+'
+                         '\s\(\w+\))\s+(?P<ref_count>\S+)$')
 
         #2000:108:10:10::1
         p18 = re.compile(r'^(?P<next_hop_ipv6>[a-fA-F\d\:]+)$')
 
         #[R][NC][NL]          1   e0800000   1/0    00:12:06 (Cri)        0/3
-        p19 = re.compile(r'^(?P<status>[\S]+)\s+(?P<metric>\d+)\s+(?P<tbl_id>\S+)\s+(?P<notf>\S+)\s+(?P<last_rib_event>\S+\s\(\w+\))\s+(?P<ref_count>\S+)$')
+        p19 = re.compile(r'^(?P<status>[\S]+)\s+(?P<metric>\d+)\s+(?P<tbl_id>\S+)\s+(?P<notf>\S+)\s+'
+                         r'(?P<last_rib_event>\S+\s\(\w+\))\s+(?P<ref_count>\S+)$')
 
         for line in out.splitlines():
             line = line.strip()
