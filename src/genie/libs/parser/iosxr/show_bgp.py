@@ -7133,7 +7133,7 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
         p5 = re.compile(r'^Time +Spent: +(?P<time_spent_secs>[\d\.]+) secs$')
 
         # Received: 00:00:00
-        p6 = re.compile(r'^Received: +(?P<received>[\S\s]+)$')
+        p6 = re.compile(r'^Received: +(?P<received>.+)$')
 
         # Bestpaths Deleted: 0
         p7 = re.compile(r'^Bestpaths +Deleted: +(?P<best_paths_deleted>[\S\s]+)$')
@@ -7158,7 +7158,7 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
 
         # Nexthop Version: 1, RIB version: 1
         p14 = re.compile(r'^Nexthop +Version: +(?P<next_hop_version>[\d]+), +RIB +version:'
-                         r' +(?P<rib_version>[\d]+)$')
+                         r' +(?P<rib_version>\d+)$')
 
         # EPE Table Version: 1, EPE Label version: 1
         p15 = re.compile(r'^EPE +Table +Version: +(?P<epe_table_version>[\d]+), +EPE +Label '
@@ -7293,8 +7293,10 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 group = m.groupdict()
                 next_hop_version = int(group['next_hop_version'])
                 rib_version = int(group['rib_version'])
-                af_dict.setdefault('next_hop_version', next_hop_version)
-                af_dict.setdefault('rib_version', rib_version)
+                af_dict.update({
+                    'next_hop_version': next_hop_version,
+                    'rib_version': rib_version
+                })
                 continue
 
             # EPE Table Version: 1, EPE Label version: 1
@@ -7303,8 +7305,10 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 group = m.groupdict()
                 epe_table_version = int(group['epe_table_version'])
                 epe_label_version = int(group['epe_label_version'])
-                af_dict.setdefault('epe_table_version', epe_table_version)
-                af_dict.setdefault('epe_label_version', epe_label_version)
+                af_dict.update({
+                    'epe_table_version': epe_table_version,
+                    'epe_label_version': epe_label_version
+                })
                 continue
 
             # EPE Downloaded Version: 1, EPE Standby Version: 1
@@ -7313,8 +7317,10 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 group = m.groupdict()
                 epe_downloaded_version = int(group['epe_downloaded_version'])
                 epe_standby_version = int(group['epe_standby_version'])
-                af_dict.setdefault('epe_downloaded_version', epe_downloaded_version)
-                af_dict.setdefault('epe_standby_version', epe_standby_version)
+                af_dict.update({
+                    'epe_downloaded_version': epe_downloaded_version,
+                    'epe_standby_version': epe_standby_version
+                })
                 continue
 
             # 108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        1/4
