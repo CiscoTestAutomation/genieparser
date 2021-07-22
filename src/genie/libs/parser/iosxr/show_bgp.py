@@ -7196,29 +7196,24 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 def_dict = vrf_dict.setdefault('default', {})
 
                 # define af_dict dictionary and set to 'address_family'
-                af_dict = def_dict.setdefault('address_family', {})
-
-                # define af_dict dictionary and set to 'address_family'
-                af_dict = af_dict.setdefault(address_family, {})
+                af_dict = def_dict.setdefault('address_family', {})\
+                          .setdefault(address_family, {})
                 continue
 
             # Total Nexthop Processing
             m = p2.match(line)
             if m:
                 ref_dict = af_dict.setdefault('total_next_hop', {})
-                ref_dict = af_dict['total_next_hop']
 
             # Maximum Nexthop Processing
             m = p3.match(line)
             if m:
                 ref_dict = af_dict.setdefault('maximum_next_hop', {})
-                ref_dict = af_dict['maximum_next_hop']
 
             # Last Notification Processing
             m = p4.match(line)
             if m:
                 ref_dict = af_dict.setdefault('last_notification', {})
-                ref_dict = af_dict['last_notification']
 
             # Time Spent: 0.000 secs
             m = p5.match(line)
