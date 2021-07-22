@@ -4,17 +4,17 @@ expected_output = {
       "address_family": {
         "VPNv4 Unicast": {
           "total_next_hop": {
-            "time_spent": "0.000 secs"
+            "time_spent_secs": 0.0
           },
           "maximum_next_hop": {
             "received": "00:00:00",
             "best_paths_deleted": 0,
             "best_paths_changed": 0,
-            "time_spent": "0.000 secs"
+            "time_spent_secs": 0.0
           },
           "last_notification": {
             "received": "00:12:06",
-            "time_spent": "0.000 secs"
+            "time_spent_secs": 0.0
           },
           "gateway_address_family": "IPv4 Unicast",
           "table_id": "0xe0000000",

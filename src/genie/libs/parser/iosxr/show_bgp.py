@@ -7054,17 +7054,17 @@ class ShowBgpAllAllNexthopsSchema(MetaParser):
                 'address_family': {
                     Any(): {
                         Optional('total_next_hop'):{
-                            'time_spent': str
+                            'time_spent_secs': float
                         },
                         Optional('maximum_next_hop'): {
                             'received': str,
                             'best_paths_deleted': int,
                             'best_paths_changed': int,
-                            'time_spent': str
+                            'time_spent_secs': float
                         },
                         Optional('last_notification'): {
                             'received': str,
-                            'time_spent': str
+                            'time_spent_secs': float
                         },
                         Optional('gateway_address_family'): str,
                         Optional('table_id'): str,
@@ -7114,33 +7114,32 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
         # Initialize dictionaries
         ret_dict = {}
 
-        #reference flag
-        time_ref_flag = "total_next_hop"
-        received_ref_flag = "max_next_hop"
+        # reference dict
+        ref_dict = {}
 
-        #Address Family: VPNv4 Unicast
+        # Address Family: VPNv4 Unicast
         p1 =  re.compile(r'^Address +Family: +(?P<address_family>[\S\s]+)$')
 
-        #Time Spent: 0.000 secs
-        p2 = re.compile(r'^Time +Spent: +(?P<time_spent>[\S\s]+)$')
+        # Total Nexthop Processing
+        p2 = re.compile(r'^Total +Nexthop +Processing$')
 
-        #Received: 00:00:00
-        p3 = re.compile(r'^Received: +(?P<received>[\S\s]+)$')
+        # Maximum Nexthop Processing
+        p3 = re.compile(r'^Maximum +Nexthop +Processing$')
 
-        #Bestpaths Deleted: 0
-        p4 = re.compile(r'^Bestpaths +Deleted: +(?P<best_paths_deleted>[\S\s]+)$')
-
-        #Bestpaths Changed: 0
-        p5 = re.compile(r'^Bestpaths +Changed: +(?P<best_paths_changed>[\S\s]+)$')
+        # Last Notification Processing
+        p4 = re.compile(r'^Last +Notification +Processing$')
 
         # Time Spent: 0.000 secs
-        p6 = re.compile(r'^Time +Spent: +(?P<time_spent>[\S\s]+)$')
+        p5 = re.compile(r'^Time +Spent: +(?P<time_spent_secs>[\d\.]+) secs$')
 
-        #Received: 00:00:00
-        p7 = re.compile(r'^Received: +(?P<received>[\S\s]+)$')
+        # Received: 00:00:00
+        p6 = re.compile(r'^Received: +(?P<received>[\S\s]+)$')
 
-        #Time Spent: 0.000 secs
-        p8 = re.compile(r'^Time +Spent: +(?P<time_spent>[\S\s]+)$')
+        # Bestpaths Deleted: 0
+        p7 = re.compile(r'^Bestpaths +Deleted: +(?P<best_paths_deleted>[\S\s]+)$')
+
+        # Bestpaths Changed: 0
+        p8 = re.compile(r'^Bestpaths +Changed: +(?P<best_paths_changed>[\S\s]+)$')
 
         # Gateway Address Family: IPv4 Unicast
         p9 = re.compile(r'^Gateway +Address +Family: +(?P<gateway_address_family>[\S\s]+)$')
@@ -7148,36 +7147,36 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
         # Table ID: 0xe0000000
         p10 = re.compile(r'^Table +ID: +(?P<table_id>[\S\s]+)$')
 
-        #Nexthop Count: 2
+        # Nexthop Count: 2
         p11 = re.compile(r'^Nexthop +Count: +(?P<next_hop_count>[\S\s]+)$')
 
-        #Critical Trigger Delay: 0msec
+        # Critical Trigger Delay: 0msec
         p12 = re.compile(r'^Critical +Trigger +Delay: +(?P<critical_trigger_delay>[\S\s]+)$')
 
         # Non-critical Trigger Delay: 10000msec
         p13 = re.compile(r'^Non-critical +Trigger +Delay: +(?P<non_critical_trigger_delay>[\S\s]+)$')
 
-        #Nexthop Version: 1, RIB version: 1
+        # Nexthop Version: 1, RIB version: 1
         p14 = re.compile(r'^Nexthop +Version: +(?P<next_hop_version>[\d]+), +RIB +version:'
                          r' +(?P<rib_version>[\d]+)$')
 
-        #EPE Table Version: 1, EPE Label version: 1
+        # EPE Table Version: 1, EPE Label version: 1
         p15 = re.compile(r'^EPE +Table +Version: +(?P<epe_table_version>[\d]+), +EPE +Label '
                          r'+version: +(?P<epe_label_version>[\d]+)$')
 
-        #EPE Downloaded Version: 1, EPE Standby Version: 1
+        # EPE Downloaded Version: 1, EPE Standby Version: 1
         p16 = re.compile(r'^EPE +Downloaded +Version: +(?P<epe_downloaded_version>[\d]+), '
                          r'+EPE +Standby +Version: +(?P<epe_standby_version>[\d]+)$')
 
-        #108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        1/4
+        # 108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        1/4
         p17 = re.compile('^(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+(?P<status>[\S]+)\s+'
                          '(?P<metric>\d+)\s+(?P<tbl_id>\S+)\s+(?P<notf>\S+)\s+(?P<last_rib_event>\S+'
                          '\s\(\w+\))\s+(?P<ref_count>\S+)$')
 
-        #2000:108:10:10::1
+        # 2000:108:10:10::1
         p18 = re.compile(r'^(?P<next_hop_ipv6>[a-fA-F\d\:]+)$')
 
-        #[R][NC][NL]          1   e0800000   1/0    00:12:06 (Cri)        0/3
+        # [R][NC][NL]          1   e0800000   1/0    00:12:06 (Cri)        0/3
         p19 = re.compile(r'^(?P<status>[\S]+)\s+(?P<metric>\d+)\s+(?P<tbl_id>\S+)\s+(?P<notf>\S+)\s+'
                          r'(?P<last_rib_event>\S+\s\(\w+\))\s+(?P<ref_count>\S+)$')
 
@@ -7203,29 +7202,42 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 af_dict = af_dict.setdefault(address_family, {})
                 continue
 
-            # Time Spent: 0.000 secs
+            # Total Nexthop Processing
             m = p2.match(line)
             if m:
+                ref_dict = af_dict.setdefault('total_next_hop', {})
+                ref_dict = af_dict['total_next_hop']
+
+            # Maximum Nexthop Processing
+            m = p3.match(line)
+            if m:
+                ref_dict = af_dict.setdefault('maximum_next_hop', {})
+                ref_dict = af_dict['maximum_next_hop']
+
+            # Last Notification Processing
+            m = p4.match(line)
+            if m:
+                ref_dict = af_dict.setdefault('last_notification', {})
+                ref_dict = af_dict['last_notification']
+
+            # Time Spent: 0.000 secs
+            m = p5.match(line)
+            if m:
                 group = m.groupdict()
-                time_spent = group['time_spent']
-                if time_ref_flag == "total_next_hop":
-                    af_dict.setdefault('total_next_hop', {'time_spent':time_spent})
-                    time_ref_flag = "max_next_hop"
-                    continue
+                time_spent_secs = float(group['time_spent_secs'])
+                ref_dict.update({'time_spent_secs':time_spent_secs})
+                continue
 
             # Received: 00:00:00
-            m = p3.match(line)
+            m = p6.match(line)
             if m:
                 group = m.groupdict()
                 received = group['received']
-                af_dict.setdefault('maximum_next_hop', {})
-                if received_ref_flag == "max_next_hop":
-                    af_dict['maximum_next_hop']['received'] = received
-                    received_ref_flag = "last_notification"
-                    continue
+                ref_dict.update({'received' : received})
+                continue
 
             # Bestpaths Deleted: 0
-            m = p4.match(line)
+            m = p7.match(line)
             if m:
                 group = m.groupdict()
                 best_path_deleted = int(group['best_paths_deleted'])
@@ -7233,43 +7245,12 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 continue
 
             # Bestpaths Changed: 0
-            m = p5.match(line)
+            m = p8.match(line)
             if m:
                 group = m.groupdict()
                 best_path_changed = int(group['best_paths_changed'])
                 af_dict['maximum_next_hop']['best_paths_changed'] =  best_path_changed
                 continue
-
-            #  Time Spent: 0.000 secs
-            m = p6.match(line)
-            if m:
-                group = m.groupdict()
-                time_spent = group['time_spent']
-                if time_ref_flag == "max_next_hop":
-                    af_dict['maximum_next_hop']['time_spent'] = time_spent
-                    time_ref_flag = "last_notification"
-                    continue
-
-            # Received: 00:00:00
-            m = p7.match(line)
-            if m:
-                group = m.groupdict()
-                received = group['received']
-                af_dict.setdefault('last_notification', {})
-                if received_ref_flag == "last_notification":
-                    af_dict['last_notification']['received'] = received
-                    received_ref_flag = "max_next_hop"
-                    continue
-
-            # Time Spent: 0.000 secs
-            m = p8.match(line)
-            if m:
-                group = m.groupdict()
-                time_spent = group['time_spent']
-                if time_ref_flag == "last_notification":
-                    af_dict['last_notification']['time_spent'] = time_spent
-                    time_ref_flag = "total_next_hop"
-                    continue
 
             # Gateway Address Family: IPv4 Unicast
             m = p9.match(line)
@@ -7295,7 +7276,7 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 af_dict.setdefault('next_hop_count', next_hop_count)
                 continue
 
-            #Critical Trigger Delay: 0msec
+            # Critical Trigger Delay: 0msec
             m = p12.match(line)
             if m:
                 group = m.groupdict()
@@ -7303,7 +7284,7 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 af_dict.setdefault('critical_trigger_delay', critical_trigger_delay)
                 continue
 
-            #Non-critical Trigger Delay: 10000msec
+            # Non-critical Trigger Delay: 10000msec
             m = p13.match(line)
             if m:
                 group = m.groupdict()
@@ -7311,7 +7292,7 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 af_dict.setdefault('non_critical_trigger_delay', non_critical_trigger_delay)
                 continue
 
-            #Nexthop Version: 1, RIB version: 1
+            # Nexthop Version: 1, RIB version: 1
             m = p14.match(line)
             if m:
                 group = m.groupdict()
@@ -7321,7 +7302,7 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 af_dict.setdefault('rib_version', rib_version)
                 continue
 
-            #EPE Table Version: 1, EPE Label version: 1
+            # EPE Table Version: 1, EPE Label version: 1
             m = p15.match(line)
             if m:
                 group = m.groupdict()
@@ -7341,7 +7322,7 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
                 af_dict.setdefault('epe_standby_version', epe_standby_version)
                 continue
 
-            #108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        1/4
+            # 108.10.10.1     [R][NC][NL]          2   e0000000   1/0    00:13:49 (Cri)        1/4
             m = p17.match(line)
             if m:
                 group = m.groupdict()
