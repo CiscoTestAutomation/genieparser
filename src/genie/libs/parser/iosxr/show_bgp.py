@@ -42,6 +42,8 @@ IOSXR parsers for the following show commands:
     * 'show bgp instance all sessions'
     * 'show bgp instance {instance} sessions'
     * 'show bgp egress-engineering'
+    * 'show bgp all all nexthops'
+    * 'show bgp {address_family} {ip_address} brief'
 """
 
 # Python
@@ -7363,3 +7365,93 @@ class ShowBgpAllAllNexthops(ShowBgpAllAllNexthopsSchema):
 
         return ret_dict
 
+
+# ==========================================================
+# Schema for 'show bgp {address_family} {ip_address} brief'
+# ==========================================================
+class ShowBgpBriefSchema(MetaParser):
+    '''Schema for:
+        * 'show bgp {address_family} {ip_address} brief'
+    '''
+
+    schema = {
+        'vrf': {
+            Any(): {
+                'address_family': {
+                    Any(): {
+                        'network':{
+                            Any():{
+                                'next_hop': str,
+                                'metric': int,
+                                'locprf': int,
+                                'weight': int,
+                                'path': str
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+# ==========================================================
+# Parser for 'show bgp {address_family} {ip_address} brief'
+# ==========================================================
+class ShowBgpBrief(ShowBgpBriefSchema):
+    '''Parser for:
+        * 'show bgp {address_family} {ip_address} brief'
+    '''
+
+    cli_command = ['show bgp {address_family} {ip_address} brief']
+
+    def cli(self, address_family, ip_address, output=None):
+
+        if output is None:
+            out = self.device.execute(self.cli_command[0].\
+                                      format(address_family=address_family,\
+                                      ip_address=ip_address))
+        else:
+            out = output
+
+        # Initialize dictionaries
+        ret_dict = {}
+
+        # *> 111.111.111.111/32 108.10.0.2               0           100 65401 i
+        # *                     108.11.0.2               0             0 65401 i
+        p1 = re.compile('^.* (?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+                        '(?P<metric>\d+)\s+(?P<locprf>\d+)\s+(?P<weight>\d+)\s+'
+                        '(?P<path>\D)$')
+
+        for line in out.splitlines():
+            line = line.strip()
+
+            # *> 111.111.111.111/32 108.10.0.2               0           100 65401 i
+            # *                     108.11.0.2               0             0 65401 i
+            m = p1.match(line)
+            if m:
+                # define vrf_dict dictionary and set to 'vrf'
+                vrf_dict = ret_dict.setdefault('vrf', {})
+
+                # define def_dict dictionary and assigned to vrf_dict
+                def_dict = vrf_dict.setdefault('default', {})
+
+                # define af_dict dictionary and set to 'address_family'
+                af_dict = def_dict.setdefault('address_family', {}) \
+                    .setdefault(address_family, {})
+
+                # define net_dict and assigned to af_dict dictionary
+                net_dict = af_dict.setdefault('network', {}) \
+                    .setdefault(ip_address, {})
+
+                group = m.groupdict()
+
+                net_dict.update({
+                    'next_hop': group['next_hop'],
+                    'metric': int(group['metric']),
+                    'locprf': int(group['locprf']),
+                    'weight': int(group['weight']),
+                    'path': group['path']
+                })
+                continue
+
+        return ret_dict
