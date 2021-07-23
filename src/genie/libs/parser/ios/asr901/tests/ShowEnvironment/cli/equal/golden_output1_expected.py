@@ -13,7 +13,7 @@ expected_output = {
             "status": "Normal"
         }
     },
-    "PowerSupply": {
+    "power_supply": {
         "0.75V": {
             "status": "Normal",
             "volt": "+0.760"
