@@ -1,5 +1,5 @@
 expected_output = {
-    "Fan": {
+    "fan": {
         "fan1": {
             "speed": "53",
             "status": "Normal"
