@@ -11,3 +11,6 @@
     * Added ShowPowerInlineUpoePlus:
         * show power inline upoe-plus
         * show power inline upoe-plus {interface}
+    * Added ShowStackPowerDetail:
+       * show stack-power detail
+       * Added keys and regexex to incoperate detail output for powerstack
