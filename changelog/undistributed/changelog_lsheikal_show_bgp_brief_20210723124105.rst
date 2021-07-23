@@ -3,5 +3,5 @@
 --------------------------------------------------------------------------------
 
 * IOSXR
-    * Modified show_bgp:
+    * Added ShowBgpBrief:
         * Added 'show bgp {address_family} {ip_address} brief'
