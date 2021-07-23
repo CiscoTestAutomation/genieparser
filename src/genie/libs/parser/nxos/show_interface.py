@@ -258,7 +258,7 @@ class ShowInterface(ShowInterfaceSchema):
                         r'(\(No\s+operational\s+members\))?'
                         r'(\(.*ACK.*\))?'
                         r'(\(inactive\))?'
-                        r'(\(Hardware\sfailure\))?$')
+                        r'(\(Hardware\s+failure\))?$')
 
         # admin state is up
         # admin state is up,
