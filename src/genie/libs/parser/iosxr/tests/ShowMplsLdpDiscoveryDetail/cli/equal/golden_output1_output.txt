@@ -1,0 +1,38 @@
+show mpls ldp discovery detail
+Thu Mar 11 10:14:55.852 JST
+
+Local LDP Identifier: 17.17.17.17:0
+Discovery Sources:
+  Interfaces:
+    HundredGigE0/0/0/0 (0x4000100) : xmit/recv
+      VRF: 'default' (0x60000000)
+      Source address: 10.10.10.1; Transport address: 17.17.17.17
+      Hello interval: 5 sec (due in 563 msec)
+      Quick-start: Enabled
+      LDP Id: 141.141.141.141:0
+          Source address: 10.10.10.2; Transport address: 141.141.141.141
+          Hold time: 15 sec (local:15 sec, peer:15 sec)
+                     (expiring in 10.4 sec)
+          Established: Mar 11 09:41:07.477 (00:33:46 ago)
+          Last session connection failures:
+             Jan  4 05:20:34.814: User cleared session manually
+                 (Last up for 00:06:56)
+             Jan  4 05:28:48.641: User cleared session manually
+                 (Last up for 00:08:11)
+
+    TenGigE0/2/0/0 (0x8000180) : xmit
+      VRF: 'default' (0x60000000)
+      Source address: 100.20.0.1; Transport address: 17.17.17.17
+      Hello interval: 5 sec (due in 3.4 sec)
+      Quick-start: Enabled
+
+    TenGigE0/2/0/3 (0x8000240) : recv
+      VRF: 'default' (0x60000000)
+      Source address: 100.10.0.1; Transport address: 17.17.17.17
+      Hello interval: 5 sec (due in 3.6 sec)
+      Quick-start: Enabled
+      LDP Id: 107.107.107.107:0
+          Source address: 100.10.0.2; Transport address: 107.107.107.107
+          Hold time: 15 sec (local:15 sec, peer:15 sec)
+                     (expiring in 10.3 sec)
+          Established: Mar 11 09:31:57.896 (00:42:55 ago)
