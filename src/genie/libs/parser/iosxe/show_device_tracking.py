@@ -1705,35 +1705,6 @@ class ShowDeviceTrackingDatabaseMacMacDetails(ShowDeviceTrackingDatabaseMacMacDe
 
         return device_tracking_database_mac_details_dict
 
-
-# ==================================
-# Schema for:
-#  * 'show device-tracking database mac details'
-# ==================================
-class ShowDeviceTrackingDatabaseMacDetailsSchema(MetaParser):
-    """Schema for show device-tracking database mac details"""
-
-    schema = {
-        "device": {
-            int: {
-                "dev_code": str,
-                "link_layer_address": str,
-                "interface": str,
-                "vlan_id": int,
-                "pref_level": str,
-                "state": str,
-                Optional("time_left"): str,
-                "policy": str,
-                Optional("input_index"): int,
-                Optional("attached"): {
-                    int: {
-                        "ip": str,
-                    }
-                }
-            }
-        }
-    }
-
 # ====================================================
 # Schema for 'show device-tracking events'
 # ====================================================
@@ -1933,7 +1904,35 @@ class ShowDeviceTrackingFeatures(ShowDeviceTrackingFeaturesSchema):
                 feature.update({'state':  m.groupdict()['state']})
 
         return parser_dict
-              
+
+# ==================================
+# Schema for:
+#  * 'show device-tracking database mac details'
+# ==================================
+class ShowDeviceTrackingDatabaseMacDetailsSchema(MetaParser):
+    """Schema for show device-tracking database mac details"""
+
+    schema = {
+        "device": {
+            int: {
+                "dev_code": str,
+                "link_layer_address": str,
+                "interface": str,
+                "vlan_id": int,
+                "pref_level": str,
+                "state": str,
+                Optional("time_left"): str,
+                "policy": str,
+                Optional("input_index"): int,
+                Optional("attached"): {
+                    int: {
+                        "ip": str,
+                    }
+                }
+            }
+        }
+    }
+
 # ==================================
 # Parser for:
 #  * 'show device-tracking database mac details'
