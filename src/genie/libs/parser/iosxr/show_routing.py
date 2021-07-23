@@ -1469,14 +1469,14 @@ class ShowRouteAllSummary(ShowRouteAllSummarySchema):
             out = self.device.execute(cmd)
         else:
             out = output
-        
+
         # VRF: VRF_NAME
         p1 = re.compile(r'^VRF: (?P<vrf>.*)')
         # IPv4 Unicast:
         p2 = re.compile(r'(?P<address_family>^IPv.*)+:')
         # connected                        0          0          0           0
         p3 = re.compile(
-            r'^(?P<protocol>[a-zA-Z0-9(\-|\_)]+) +(?P<instance>[a-zA-Z0-9(\-|\_)]+)* * +('
+            r'^(?P<protocol>[a-zA-Z0-9(\-|\_)]+) +(?P<instance>[a-zA-Z0-9\.(\-|\_)]+)* * +('
             r'?P<routes>\d+) +(?P<backup>\d+) +(?P<deleted>\d+) +(?P<memory_bytes>\d+)')
 
         ret_dict = {}
