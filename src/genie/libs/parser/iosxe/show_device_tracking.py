@@ -1452,7 +1452,7 @@ class ShowDeviceTrackingCountersInterface(ShowDeviceTrackingCountersInterfaceSch
             m = p11.match(line)
             if m:
                 groups = m.groupdict()
-                feature = groups['feature'].lower().replace('&', '_').replace(' ', '_')
+                feature = groups['feature'].replace('&', '_')
                 feature_dict = dropped_dict.setdefault('feature', {}).setdefault(feature, {})
                 del groups['feature']
 

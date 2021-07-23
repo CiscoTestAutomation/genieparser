@@ -48,12 +48,12 @@ expected_output = {
                 "limited_broadcast_to_local": {},
                 "dropped": {
                     "feature": {
-                        "flooding_suppress": {
+                        "Flooding Suppress": {
                             "protocol": "ndp",
                             "message": "ns",
                             "dropped": 35
                         },
-                        "acd_dad": {
+                        "ACD_DAD": {
                             "protocol": "--",
                             "message": "--",
                             "dropped": 47
