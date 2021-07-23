@@ -7379,13 +7379,16 @@ class ShowBgpBriefSchema(MetaParser):
             Any(): {
                 'address_family': {
                     Any(): {
-                        'network':{
-                            Any():{
-                                'next_hop': str,
-                                'metric': int,
-                                'locprf': int,
-                                'weight': int,
-                                'path': str
+                        'network': {
+                            Any(): {
+                                'next_hops': {
+                                    Any(): {
+                                        'metric': int,
+                                        'locprf': int,
+                                        'weight': int,
+                                        'path': str
+                                    }
+                                }
                             }
                         }
                     }
@@ -7418,7 +7421,7 @@ class ShowBgpBrief(ShowBgpBriefSchema):
 
         # *> 111.111.111.111/32 108.10.0.2               0           100 65401 i
         # *                     108.11.0.2               0             0 65401 i
-        p1 = re.compile('^.* (?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
+        p1 = re.compile('^.*\s(?P<next_hop>\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})\s+'
                         '(?P<metric>\d+)\s+(?P<locprf>\d+)\s+(?P<weight>\d+)\s+'
                         '(?P<path>\D)$')
 
@@ -7437,16 +7440,20 @@ class ShowBgpBrief(ShowBgpBriefSchema):
 
                 # define af_dict dictionary and set to 'address_family'
                 af_dict = def_dict.setdefault('address_family', {}) \
-                    .setdefault(address_family, {})
+                          .setdefault(address_family, {})
 
                 # define net_dict and assigned to af_dict dictionary
                 net_dict = af_dict.setdefault('network', {}) \
-                    .setdefault(ip_address, {})
+                           .setdefault(ip_address, {})
 
                 group = m.groupdict()
+                next_hop = group['next_hop']
 
-                net_dict.update({
-                    'next_hop': group['next_hop'],
+                # define next_hops_dict and assigned to net_dict dictionary
+                next_hops_dict = net_dict.setdefault('next_hops', {}) \
+                                 .setdefault(next_hop, {})
+
+                next_hops_dict.update({
                     'metric': int(group['metric']),
                     'locprf': int(group['locprf']),
                     'weight': int(group['weight']),
