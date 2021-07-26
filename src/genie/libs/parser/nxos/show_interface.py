@@ -22,6 +22,7 @@ NXOS parsers for the following show commands:
     * show interface brief
     * show interface {interface} brief
     * show running-config interface {interface}
+    * show running-config | section ^interface
     * show nve interface {interface} detail
     * show ip interface brief vrf all | include {ip}
     * show ip interface brief vrf all
@@ -3061,11 +3062,17 @@ class ShowInterfaceBrief(ShowInterfaceBriefSchema):
         return parsed_dict
 
 
-# =================================================
-# Schema for 'show running-config interface <WORD>'
-# =================================================
+# ==============================================================================
+# Schema for 'show running-config interface {interface} or | section ^interface
+# ==============================================================================
 class ShowRunningConfigInterfaceSchema(MetaParser):
-    """Schema for show running-config interface <WORD>"""
+    """Schema for
+        show running-config interface
+        show running-config | section ^interface
+        show running-config interface
+
+    The 2nd and 3rd cmd returns the same result. The reason to have them both is so that users can use either
+    """
 
     schema = {'interface':
                   {Any():
@@ -3092,28 +3099,48 @@ class ShowRunningConfigInterfaceSchema(MetaParser):
                                   Optional('suppress_arp'): bool,
                                   }
                              },
+                        Optional('mtu'): int,
+                        Optional('ip_address'): str,
+                        Optional('vrf_member'): str,
                         }
                    },
               }
 
 
-# =================================================
-# Parser for 'show running-config interface <WORD>'
-# =================================================
+# ======================================================
+# Parser for 'show running-config interface {interface}'
+# ======================================================
 class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
-    """Parser for show running-config interface <WORD>"""
+    """Parser for
+        show running-config interface {interface},
+        show running-config | section ^interface,
+        show running-config interface
 
-    cli_command = 'show running-config interface {interface}'
+        The 2nd and 3rd cmd returns the same result. The reason to have them both is so that users can use either
 
-    def cli(self, interface, output=None):
+    """
 
+    cli_command = ['show running-config interface {interface}',
+                   'show running-config | section ^interface',
+                   'show running-config interface']
+
+    def cli(self, interface=None, output=None):
+        # Determine command
         if output is None:
-            out = self.device.execute(self.cli_command.format(interface=interface))
+            if interface:
+                cmd = self.cli_command[0].format(interface=interface)
+            elif 'section ^interface' in self.cli_command:
+                cmd = self.cli_command[1]
+            else:
+                cmd = self.cli_command[2]
+            # Execute command
+            output = self.device.execute(cmd)
+            out = output
         else:
             out = output
-
         # Init vars
         ret_dict = {}
+        interface_dict = {}
 
         for line in out.splitlines():
             line = line.strip()
@@ -3276,12 +3303,43 @@ class ShowRunningConfigInterface(ShowRunningConfigInterfaceSchema):
                 interface_dict.update({'description': m.groupdict()['description']})
                 continue
 
-            # vpc
+            # vpc ID, for port-channels only
             p15 = re.compile(r'^vpc +(?P<vpc>\S+)$')
             m = p15.match(line)
             if m:
                 group = m.groupdict()
                 interface_dict.update({'vpc': group['vpc']})
+                continue
+
+            # mtu 1500
+            p16 = re.compile(r'^mtu +(?P<mtu>\S+)$')
+            m = p16.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'mtu': int(group['mtu'])})
+                continue
+
+            # ip address 10.10.6.73/30
+            p17 = re.compile(r'^ip address +(?P<ip_address>[a-z0-9\.]+.*)$')
+            m = p17.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'ip_address': group['ip_address']})
+                continue
+
+            # vrf member TEST
+            p18 = re.compile(r'^vrf member +(?P<vrf_member>\S+)$')
+            m = p18.match(line)
+            if m:
+                group = m.groupdict()
+                interface_dict.update({'vrf_member': group['vrf_member']})
+                continue
+
+            # no switchport
+            p19 = re.compile(r'^no switchport$')
+            m = p19.match(line)
+            if m:
+                interface_dict.update({'switchport': False})
                 continue
 
         return ret_dict
@@ -3425,7 +3483,7 @@ class ShowIpInterfaceBriefVrfAllSchema(MetaParser):
 
 
 # ============================================
-# Schema for 'show ip interface brief vrf all'
+# Parser for 'show ip interface brief vrf all'
 # ============================================
 class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
     """Parser for show ip interface brief vrf all"""
@@ -3490,7 +3548,7 @@ class ShowIpInterfaceBriefVrfAll(ShowIpInterfaceBriefVrfAllSchema):
 
 
 #############################################################################
-# Parser For show interface Description
+# Schema For show interface Description
 #############################################################################
 
 class ShowInterfaceDescriptionSchema(MetaParser):
