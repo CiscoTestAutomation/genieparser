@@ -7388,12 +7388,15 @@ class ShowPlatformSoftwareYangManagementProcessState(ShowPlatformSoftwareYangMan
             out = output
 
         # Confd Status: Started
-        p1 = re.compile(r'^Confd +Status: +(?P<status>\S+)$')
+        # Confd Status: Not Running
+        p1 = re.compile(r'^Confd +Status: +(?P<status>.+)$')
 
         # pubd                 Running             Active
         # gnmib                Not Running         Not Applicable
+        # ndbmand              Not Running         Down
+        # pubd                 Running             Reset
         p2 = re.compile(r'^(?P<process>\S+) +(?P<status>(Running|Not +Running)) +'
-                        r'(?P<state>(Active|Not +Active|Not +Applicable))$')
+                        r'(?P<state>(Active|Not +Active|Not +Applicable|Down|Reset))$')
 
         ret_dict = dict()
 
@@ -7409,6 +7412,7 @@ class ShowPlatformSoftwareYangManagementProcessState(ShowPlatformSoftwareYangMan
 
             # pubd                 Running             Active
             # gnmib                Not Running         Not Applicable
+            # ndbmand              Not Running         Down
             m = p2.match(line)
             if m:
                 group = m.groupdict()
